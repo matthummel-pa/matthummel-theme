@@ -1,0 +1,5 @@
+<svg width="256" height="256" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MH monogram">
+<style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap'); text{font-family:'Space Grotesk',sans-serif;}</style>
+<rect width="120" height="120" rx="30" fill="#2F6B4E"/>
+<text x="60" y="80" text-anchor="middle" font-size="56" font-weight="700" fill="#FBFAF7">MH</text>
+</svg>

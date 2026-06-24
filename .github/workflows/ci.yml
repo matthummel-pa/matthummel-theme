@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Composer install
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHP lint (Pint)
+        run: vendor/bin/pint --test
+        continue-on-error: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install JS deps
+        run: npm install --no-audit --no-fund
+
+      - name: Build assets
+        run: npm run build

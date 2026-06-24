@@ -1,0 +1,6 @@
+<svg width="460" height="110" viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matt Hummel">
+<style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap'); .sg{font-family:'Space Grotesk',sans-serif;} .in{font-family:'Inter',sans-serif;}</style>
+<text class="sg" x="230" y="56" text-anchor="middle" font-size="46" font-weight="700" fill="#17191E">Matt Hummel</text>
+<rect x="152" y="72" width="156" height="5" rx="2.5" fill="#2F6B4E"/>
+<text class="in" x="230" y="98" text-anchor="middle" font-size="14" font-weight="500" fill="#5C636C">Web · WordPress · Power Platform</text>
+</svg>

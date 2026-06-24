@@ -1,0 +1,13 @@
+/node_modules
+/vendor
+/public/*
+!/public/.gitkeep
+.env
+.env.*
+*.log
+npm-debug.log
+*.bak
+.DS_Store
+Thumbs.db
+.idea
+.vscode
