@@ -1,0 +1,64 @@
+/* Keepary — Tailwind CSS v4
+   matthummel.com brand: modern flat design, gradient backgrounds,
+   bold white typography, clean UI-inspired layout */
+
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #2563eb;
+  --color-brand-violet: #7c3aed;
+  --color-ink: #1e2235;
+}
+
+/* Reusable brand gradient */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+}
+
+@utility bg-brand-gradient-soft {
+  background-image: linear-gradient(135deg, #eff4ff 0%, #f4efff 100%);
+}
+
+/* ---------- dark mode (toggled via Settings; .dark on <html>) ---------- */
+.dark { color-scheme: dark; }
+.dark body { background: #0e1122; color: #e3e6f3; }
+.dark .bg-slate-100 { background-color: #0e1122 !important; }
+.dark .bg-white { background-color: #181c30 !important; }
+.dark .bg-slate-50 { background-color: #131730 !important; }
+.dark .border-slate-200 { border-color: #2b3050 !important; }
+.dark .border-slate-300 { border-color: #3a4060 !important; }
+.dark .text-ink { color: #e3e6f3 !important; }
+.dark .text-slate-600 { color: #aeb5d4 !important; }
+.dark .text-slate-500 { color: #9aa2c4 !important; }
+.dark .text-slate-400 { color: #7d85a8 !important; }
+.dark .bg-brand-gradient-soft { background-image: linear-gradient(135deg, #1c2342 0%, #271d44 100%) !important; }
+.dark .bg-emerald-50 { background-color: #0d2b1e !important; }
+.dark .bg-red-50 { background-color: #331216 !important; }
+.dark input, .dark select, .dark textarea { background-color: #131730; color: #e3e6f3; }
+.dark .border-4.border-white { border-color: #181c30 !important; }
+
+/* ---------- accessibility (toggled via Settings) ---------- */
+html.a11y-large { font-size: 18px; }
+html.a11y-xlarge { font-size: 20px; }
+
+.a11y-contrast .border-slate-200 { border-color: #475569 !important; }
+.a11y-contrast .text-slate-500, .a11y-contrast .text-slate-400 { color: #334155 !important; }
+.a11y-contrast.dark .text-slate-500, .a11y-contrast.dark .text-slate-400 { color: #cbd5e1 !important; }
+.a11y-contrast a, .a11y-contrast .text-brand-blue { text-decoration: underline; }
+.a11y-contrast :focus-visible { outline: 3px solid #7c3aed !important; outline-offset: 2px; }
+
+.a11y-reduce-motion *, .a11y-reduce-motion *::before, .a11y-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+.a11y-dyslexic body, .a11y-dyslexic input, .a11y-dyslexic textarea, .a11y-dyslexic select, .a11y-dyslexic button {
+  font-family: "Comic Sans MS", "Trebuchet MS", Verdana, system-ui, sans-serif !important;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+}
+.a11y-dyslexic p, .a11y-dyslexic li { line-height: 1.7 !important; }
+
+.a11y-underline a { text-decoration: underline !important; }

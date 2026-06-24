@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="TOCflow — WordPress Table of Contents block">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22503a"/>
+      <stop offset="0.55" stop-color="#2f6f4e"/>
+      <stop offset="1" stop-color="#3f936a"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#0c2a1d" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- icon mark -->
+  <rect x="96" y="150" width="150" height="150" rx="34" fill="#ffffff"/>
+  <g>
+    <circle cx="133" cy="190" r="10" fill="#2f6f4e"/>
+    <rect x="153" y="182" width="70" height="16" rx="8" fill="#2f6f4e"/>
+    <circle cx="153" cy="238" r="8" fill="#7cc6a1"/>
+    <rect x="170" y="230" width="53" height="16" rx="8" fill="#a9ddc4"/>
+    <circle cx="153" cy="280" r="8" fill="#7cc6a1"/>
+    <rect x="170" y="272" width="53" height="16" rx="8" fill="#a9ddc4"/>
+  </g>
+
+  <!-- wordmark + tagline -->
+  <text x="290" y="232" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="104" font-weight="800" letter-spacing="-2.5" fill="#ffffff">TOCflow</text>
+  <text x="294" y="290" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="34" font-weight="600" fill="#d6efe1">A server-rendered Table of Contents block for WordPress</text>
+
+  <!-- feature pills -->
+  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="22" font-weight="600">
+    <rect x="96" y="380" width="220" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.3)"/>
+    <text x="124" y="413" fill="#eafff4">Auto-built outline</text>
+    <rect x="332" y="380" width="170" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.3)"/>
+    <text x="360" y="413" fill="#eafff4">Accessible</text>
+    <rect x="518" y="380" width="185" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.3)"/>
+    <text x="546" y="413" fill="#eafff4">SEO-friendly</text>
+    <rect x="719" y="380" width="110" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.3)"/>
+    <text x="747" y="413" fill="#eafff4">Free</text>
+  </g>
+
+  <text x="96" y="540" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="24" font-weight="600" fill="#aedcc4">github.com/matthummel-pa/tocflow</text>
+
+  <!-- decorative outline card -->
+  <g filter="url(#sh)" opacity="0.97">
+    <rect x="930" y="170" width="270" height="300" rx="16" fill="#ffffff"/>
+  </g>
+  <text x="958" y="214" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#1b1b1b">On this page</text>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="15.5">
+    <circle cx="962" cy="248" r="3" fill="#3b3b3b"/><text x="974" y="253" fill="#2f6f4e">Getting Started</text>
+    <circle cx="988" cy="278" r="3" fill="#6b6b6b"/><text x="1000" y="283" fill="#2f6f4e">Installation</text>
+    <circle cx="988" cy="308" r="3" fill="#6b6b6b"/><text x="1000" y="313" fill="#2f6f4e">Adding the Block</text>
+    <circle cx="962" cy="338" r="3" fill="#3b3b3b"/><text x="974" y="343" fill="#2f6f4e">Customizing Output</text>
+    <circle cx="988" cy="368" r="3" fill="#6b6b6b"/><text x="1000" y="373" fill="#2f6f4e">Heading Levels</text>
+    <circle cx="1014" cy="398" r="3" fill="#8a8a8a"/><text x="1026" y="403" fill="#2f6f4e">H2, H3, H4</text>
+    <circle cx="962" cy="428" r="3" fill="#3b3b3b"/><text x="974" y="433" fill="#2f6f4e">Troubleshooting</text>
+  </g>
+</svg>

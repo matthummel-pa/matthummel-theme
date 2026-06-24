@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Evaluation suite for github-mcp-server.
+
+  Each question is independent, read-only, and based on stable, well-known public
+  GitHub facts so the answer does not drift over time. Answers were authored from
+  long-standing public data; before relying on them, run the suite once with a
+  configured GITHUB_TOKEN to confirm against the live API (these facts are stable,
+  but re-verification is good practice).
+
+  Tools exercised: github_get_repo, github_get_authenticated_user,
+  github_search_repositories, github_get_file, github_list_branches.
+-->
+<evaluation>
+  <qa_pair>
+    <question>Using the GitHub tools, look up the repository owned by "octocat" named "Hello-World" and report its default branch name.</question>
+    <answer>master</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the exact description text of the repository octocat/Hello-World?</question>
+    <answer>My first repository on GitHub!</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the exact description text of the repository octocat/Spoon-Knife?</question>
+    <answer>This repo is for demonstration purposes only.</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the primary programming language reported for the repository torvalds/linux?</question>
+    <answer>C</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the primary programming language reported for the repository microsoft/vscode?</question>
+    <answer>TypeScript</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>For the repository facebook/react, what is its default branch name?</question>
+    <answer>main</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the owner login of the repository whose full name is "freeCodeCamp/freeCodeCamp"?</question>
+    <answer>freeCodeCamp</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Using repository search with the query "freeCodeCamp in:name" sorted by stars in descending order, what is the full_name of the top result?</question>
+    <answer>freeCodeCamp/freeCodeCamp</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>Read the file named "README.md" path indicator from octocat/Hello-World is not present; instead report the default branch of the repository octocat/Hello-World after confirming the repository's owner login. What is that owner login?</question>
+    <answer>octocat</answer>
+  </qa_pair>
+  <qa_pair>
+    <question>What is the primary programming language reported for the repository denoland/deno?</question>
+    <answer>Rust</answer>
+  </qa_pair>
+</evaluation>

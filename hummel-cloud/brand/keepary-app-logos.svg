@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="680" height="360" role="img" aria-label="Keepary app logos">
+  <rect width="680" height="360" fill="#f6f7fb"/>
+  <style>
+    .lab{font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:13px;font-weight:700;fill:#1e2235}
+    .gl{fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <g transform="translate(0,0)">
+    <!-- row helper: each tile 56x56 rounded 14 -->
+    <!-- HUB violet -->
+    <g transform="translate(40,40)"><rect width="56" height="56" rx="14" fill="#8b5cf6"/><g class="gl" transform="translate(16,16) scale(1)"><rect x="0" y="0" width="9" height="9" rx="2"/><rect x="13" y="0" width="9" height="9" rx="2"/><rect x="0" y="13" width="9" height="9" rx="2"/><rect x="13" y="13" width="9" height="9" rx="2"/></g></g>
+    <text class="lab" x="68" y="116" text-anchor="middle">Hub</text>
+
+    <!-- VAULT blue -->
+    <g transform="translate(150,40)"><rect width="56" height="56" rx="14" fill="#3b82f6"/><g class="gl" transform="translate(15,14)"><rect x="0" y="9" width="26" height="18" rx="4"/><path d="M5 9V5a8 8 0 0 1 16 0v4"/><circle cx="13" cy="18" r="2.2" fill="#fff" stroke="none"/></g></g>
+    <text class="lab" x="178" y="116" text-anchor="middle">Vault</text>
+
+    <!-- PULSE rose -->
+    <g transform="translate(260,40)"><rect width="56" height="56" rx="14" fill="#f43f5e"/><g class="gl" transform="translate(15,16)"><path d="M0 16l9-9 7 7 10-10"/><path d="M20 4h6v6"/></g></g>
+    <text class="lab" x="288" y="116" text-anchor="middle">Pulse</text>
+
+    <!-- STUDIO amber -->
+    <g transform="translate(370,40)"><rect width="56" height="56" rx="14" fill="#f59e0b"/><g class="gl" transform="translate(14,16)"><path d="M0 8v8h5l13 6V2L5 8z"/><path d="M23 7a6 6 0 0 1 0 10"/></g></g>
+    <text class="lab" x="398" y="116" text-anchor="middle">Studio</text>
+
+    <!-- SCRIBE emerald -->
+    <g transform="translate(480,40)"><rect width="56" height="56" rx="14" fill="#10b981"/><g class="gl" transform="translate(16,14)"><rect x="0" y="0" width="24" height="28" rx="4"/><path d="M5 8h14"/><path d="M5 14h14"/><path d="M5 20h8"/></g></g>
+    <text class="lab" x="508" y="116" text-anchor="middle">Scribe</text>
+
+    <!-- TASKS teal -->
+    <g transform="translate(40,170)"><rect width="56" height="56" rx="14" fill="#14b8a6"/><g class="gl" transform="translate(15,15)"><rect x="0" y="0" width="26" height="26" rx="5"/><path d="M6 13l5 5 9-10"/></g></g>
+    <text class="lab" x="68" y="246" text-anchor="middle">Tasks</text>
+
+    <!-- AGENDA indigo -->
+    <g transform="translate(150,170)"><rect width="56" height="56" rx="14" fill="#6366f1"/><g class="gl" transform="translate(15,13)"><rect x="0" y="3" width="26" height="24" rx="4"/><path d="M0 10h26"/><path d="M7 0v6"/><path d="M19 0v6"/></g></g>
+    <text class="lab" x="178" y="246" text-anchor="middle">Agenda</text>
+
+    <!-- CARD pink -->
+    <g transform="translate(260,170)"><rect width="56" height="56" rx="14" fill="#ec4899"/><g class="gl" transform="translate(15,15)"><circle cx="13" cy="9" r="5"/><path d="M2 26a11 11 0 0 1 22 0"/></g></g>
+    <text class="lab" x="288" y="246" text-anchor="middle">Card</text>
+
+    <!-- SETTINGS slate -->
+    <g transform="translate(370,170)"><rect width="56" height="56" rx="14" fill="#64748b"/><g class="gl" transform="translate(14,14)"><circle cx="14" cy="14" r="5"/><path d="M14 1v4M14 23v4M1 14h4M23 14h4M5 5l3 3M20 20l3 3M20 8l3-3M5 23l3-3"/></g></g>
+    <text class="lab" x="398" y="246" text-anchor="middle">Settings</text>
+
+    <!-- CONSOLE dark -->
+    <g transform="translate(480,170)"><rect width="56" height="56" rx="14" fill="#334155"/><g class="gl" transform="translate(15,13)"><path d="M13 1l11 4v8c0 7-5 11.5-11 14C7 24.5 2 20 2 13V5z"/><path d="M7 14l4 4 7-7"/></g></g>
+    <text class="lab" x="508" y="246" text-anchor="middle">Console</text>
+  </g>
+
+  <text x="40" y="320" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="14" font-weight="700" fill="#6b7287">Keepary app icons — each tab gets its own colored logo, M365-style.</text>
+</svg>

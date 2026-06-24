@@ -1,0 +1,25 @@
+{
+  "name": "matthummel",
+  "version": "1.0.0",
+  "description": "Custom Sage 11 WordPress theme for matthummel.com — Blade + Tailwind v4, with live GitHub-powered project case studies.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wordpress",
+    "wordpress-theme",
+    "sage",
+    "roots",
+    "acorn",
+    "blade",
+    "tailwindcss",
+    "vite",
+    "portfolio-theme"
+  ],
+  "author": "Matt Hummel",
+  "license": "MIT",
+  "repository": {
+    "url": "git+https://github.com/matthummel-pa/matthummel-theme.git"
+  }
+}

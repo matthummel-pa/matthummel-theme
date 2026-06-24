@@ -1,0 +1,19 @@
+{
+	"name": "tocflow",
+	"version": "0.1.0",
+	"description": "A lightweight Table of Contents block for the WordPress block editor.",
+	"author": "Matt",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^32.4.1"
+	}
+}
