@@ -419,3 +419,81 @@
   .footer-col li { margin: 6px 0; }
   @media (max-width: 780px) { .footer-widgets { grid-template-columns: 1fr; } }
 }
+
+/* ----------------------------------------------------------------------
+   Dark mode
+---------------------------------------------------------------------- */
+@layer components {
+  html.mh-dark {
+    --color-khaki: #15171b;
+    --color-cream: #1c1f24;
+    --color-card: #1e2228;
+    --color-ink: #f3f1ea;
+    --color-heading: #f3f1ea;
+    --color-body: #d4d2cb;
+    --color-muted: #9a978d;
+    --color-line: #2c2f36;
+    --color-border: #2c2f36;
+    --color-green-tint: #1f2a24;
+  }
+  html.mh-dark .top-bar { background: #1c1f24; color: #d4d2cb; }
+  html.mh-dark .content-info { background: #121418; color: #d4d2cb; }
+  html.mh-dark .mh-popout { background: #1c1f24; color: #f3f1ea; }
+  html.mh-dark .btn-outline { background: #1e2228; color: #f3f1ea; }
+  html.mh-dark .code-block, html.mh-dark .post-prose pre { background: #0b0d11; }
+
+  .mh-theme-toggle { background: none; border: 0; cursor: pointer; color: var(--color-ink); font-size: 18px; line-height: 1; padding: 6px; display: inline-flex; align-items: center; }
+  .mh-theme-toggle:hover { color: var(--color-green); }
+  .mh-theme-toggle .mh-icon-light { display: none; }
+  html.mh-dark .mh-theme-toggle .mh-icon-dark { display: none; }
+  html.mh-dark .mh-theme-toggle .mh-icon-light { display: inline; }
+}
+
+/* Dark mode — UNLAYERED so it overrides the Customizer :root vars and Font Awesome */
+html.mh-dark {
+  --color-khaki: #15171b;
+  --color-cream: #1c1f24;
+  --color-card: #1e2228;
+  --color-ink: #f3f1ea;
+  --color-heading: #f3f1ea;
+  --color-body: #d4d2cb;
+  --color-muted: #9a978d;
+  --color-line: #2c2f36;
+  --color-border: #2c2f36;
+  --color-green-tint: #1f2a24;
+}
+.mh-theme-toggle .mh-icon-light { display: none; }
+html.mh-dark .mh-theme-toggle .mh-icon-dark { display: none; }
+html.mh-dark .mh-theme-toggle .mh-icon-light { display: inline-block; }
+
+/* ----------------------------------------------------------------------
+   Block patterns + styles
+---------------------------------------------------------------------- */
+@layer components {
+  .mh-callout { background: var(--color-green-tint); border-left: 3px solid var(--color-green); border-radius: 0 10px 10px 0; padding: 16px 20px; }
+  .mh-callout p { margin: 0; }
+  .mh-cta-band { background: var(--color-card); border: 1px solid var(--color-line); border-radius: 16px; padding: 40px 28px; }
+  .mh-cta-band h2 { font-family: var(--font-display); color: var(--color-ink); margin: 0 0 .4em; }
+  .mh-stat-strip h3 { font-family: var(--font-display); font-weight: 700; font-size: 34px; color: var(--color-ink); margin: 0; letter-spacing: -0.02em; }
+  .mh-stat-strip p { color: var(--color-muted); font-size: 14px; margin: 4px 0 0; }
+  .mh-faq .wp-block-details { border-bottom: 1px solid var(--color-line); padding: 12px 0; }
+  .mh-faq summary { font-family: var(--font-display); font-weight: 600; cursor: pointer; color: var(--color-ink); }
+  .is-style-mh-card { background: var(--color-card); border: 1px solid var(--color-line); border-radius: 14px; padding: 24px; }
+}
+
+/* ----------------------------------------------------------------------
+   Reading UX: progress bar, TOC, code copy
+---------------------------------------------------------------------- */
+@layer components {
+  .mh-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--color-green); z-index: 100; transition: width .1s linear; }
+  .mh-toc { max-width: 720px; margin: 4px auto 10px; padding: 16px 20px; background: var(--color-cream); border: 1px solid var(--color-line); border-radius: 12px; }
+  .mh-toc-title { font-family: var(--font-body); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--color-muted); margin: 0 0 8px; }
+  .mh-toc ul { list-style: none; margin: 0; padding: 0; }
+  .mh-toc li { margin: 4px 0; }
+  .mh-toc li.mh-toc-sub { padding-left: 16px; }
+  .mh-toc a { color: var(--color-green); text-decoration: none; font-size: 15px; }
+  .mh-toc a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .post-prose pre { position: relative; }
+  .mh-copy { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,.1); color: #e6edf7; border: 1px solid rgba(255,255,255,.22); border-radius: 6px; padding: 4px 10px; font: 600 12px/1 var(--font-body); cursor: pointer; }
+  .mh-copy:hover { background: rgba(255,255,255,.2); }
+}

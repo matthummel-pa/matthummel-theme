@@ -66,6 +66,13 @@
     </a>
   @endif
 
+  @if (get_theme_mod('mh_dark_enable', true))
+    <button class="mh-theme-toggle" type="button" aria-label="{{ __('Toggle dark mode', 'matthummel') }}" aria-pressed="false">
+      <i class="fa-solid fa-moon mh-icon-dark" aria-hidden="true"></i>
+      <i class="fa-solid fa-sun mh-icon-light" aria-hidden="true"></i>
+    </button>
+  @endif
+
   <button class="menu-toggle" aria-expanded="false" aria-controls="mh-popout" aria-label="{{ __('Open menu', 'matthummel') }}">
     <span class="bars" aria-hidden="true"></span>
     <span class="menu-toggle-label">{{ __('Menu', 'matthummel') }}</span>
