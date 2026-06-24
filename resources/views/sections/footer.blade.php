@@ -5,8 +5,25 @@
 @php
   $mhFoot = \App\mh_footer();
   $mhFootSoc = \App\mh_social_links();
+  $cols = max(1, min(4, (int) get_theme_mod('mh_footer_cols', 3)));
+  $hasFooterWidgets = false;
+  for ($i = 1; $i <= $cols; $i++) {
+    if (is_active_sidebar("footer-{$i}")) { $hasFooterWidgets = true; break; }
+  }
 @endphp
 <footer class="content-info">
+  @if ($hasFooterWidgets)
+    <div class="footer-widgets footer-widgets--cols-{{ $cols }}">
+      @for ($i = 1; $i <= $cols; $i++)
+        <div class="footer-col">
+          @if (is_active_sidebar("footer-{$i}"))
+            @php(dynamic_sidebar("footer-{$i}"))
+          @endif
+        </div>
+      @endfor
+    </div>
+  @endif
+
   @if (is_active_sidebar('sidebar-footer'))
     @php(dynamic_sidebar('sidebar-footer'))
   @endif

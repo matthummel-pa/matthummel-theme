@@ -85,3 +85,32 @@ add_action('mh_head_end', function () {
         . '}';
     echo "\n<style id=\"mh-theme-vars\">" . $css . "</style>\n";
 }, 11);
+
+/** Footer column widget areas (block-based widgets). */
+add_action('widgets_init', function () {
+    for ($i = 1; $i <= 4; $i++) {
+        register_sidebar([
+            'name'          => sprintf(__('Footer Column %d', 'matthummel'), $i),
+            'id'            => "footer-{$i}",
+            'description'   => __('Drop any blocks here. Shown when "Footer columns" includes this column.', 'matthummel'),
+            'before_widget' => '<section class="widget %2$s">',
+            'after_widget'  => '</section>',
+            'before_title'  => '<h2 class="footer-widget-title">',
+            'after_title'   => '</h2>',
+        ]);
+    }
+});
+
+/** Footer column count control (added to the Footer & Header section). */
+add_action('customize_register', function ($wp) {
+    if ($wp->get_section('mh_footer_section')) {
+        $wp->add_setting('mh_footer_cols', ['default' => 3, 'sanitize_callback' => 'absint']);
+        $wp->add_control('mh_footer_cols', [
+            'label'       => __('Footer columns', 'matthummel'),
+            'description' => __('Add blocks to each column in Appearance > Widgets (Footer Column 1-4).', 'matthummel'),
+            'section'     => 'mh_footer_section',
+            'type'        => 'select',
+            'choices'     => [1 => '1 column', 2 => '2 columns', 3 => '3 columns', 4 => '4 columns'],
+        ]);
+    }
+}, 24);
