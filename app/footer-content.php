@@ -72,3 +72,16 @@ add_action('customize_register', function ($wp) {
         $wp->add_control($c[0], ['label' => $c[1], 'section' => 'mh_content_section', 'type' => $c[2]]);
     }
 }, 23);
+
+/** Emit Customizer-driven theme colors as CSS variables (keeps markup free of inline styles). */
+add_action('mh_head_end', function () {
+    $tb = function_exists('App\\mh_topbar') ? mh_topbar() : ['bg' => 'var(--color-ink)', 'text' => '#fff'];
+    $po = function_exists('App\\mh_popout') ? mh_popout() : ['bg' => '#17191e', 'text' => '#fff'];
+    $ft = mh_footer();
+    $css = ':root{'
+        . '--mh-topbar-bg:' . $tb['bg'] . ';--mh-topbar-text:' . $tb['text'] . ';'
+        . '--mh-popout-bg:' . $po['bg'] . ';--mh-popout-text:' . $po['text'] . ';'
+        . '--mh-footer-bg:' . $ft['bg'] . ';--mh-footer-text:' . $ft['text'] . ';'
+        . '}';
+    echo "\n<style id=\"mh-theme-vars\">" . $css . "</style>\n";
+}, 11);

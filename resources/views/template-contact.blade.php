@@ -17,11 +17,11 @@
 
     @php($mhContactIntro = get_theme_mod('mh_contact_intro', ''))
     @if ($mhContactIntro)
-      <div class="entry-content post-prose" style="padding-inline:0">{!! wp_kses_post(wpautop($mhContactIntro)) !!}</div>
+      <div class="entry-content post-prose">{!! wp_kses_post(wpautop($mhContactIntro)) !!}</div>
     @endif
 
     @if (get_the_content())
-      <div class="entry-content post-prose" style="padding-inline:0">
+      <div class="entry-content post-prose">
         @php(the_content())
       </div>
     @endif

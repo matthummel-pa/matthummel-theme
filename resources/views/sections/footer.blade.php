@@ -2,8 +2,11 @@
   @include('partials.cta')
 @endif
 
-@php($mhFoot = \App\mh_footer(); $mhFootSoc = \App\mh_social_links())
-<footer class="content-info" style="background:{{ $mhFoot['bg'] }};color:{{ $mhFoot['text'] }}">
+@php
+  $mhFoot = \App\mh_footer();
+  $mhFootSoc = \App\mh_social_links();
+@endphp
+<footer class="content-info">
   @if (is_active_sidebar('sidebar-footer'))
     @php(dynamic_sidebar('sidebar-footer'))
   @endif
