@@ -20,9 +20,22 @@
 
       @include('sections.header')
 
-      <main id="main" class="main">
-        @yield('content')
-      </main>
+      @php($mhLayout = \App\mh_active_layout())
+      <div class="main-wrap @if ($mhLayout['sidebar']) main-wrap--sidebar @endif">
+        <main id="main" class="main">
+          @yield('content')
+        </main>
+
+        @if ($mhLayout['sidebar'])
+          <aside class="mh-sidebar-area" aria-label="{{ __('Sidebar', 'matthummel') }}">
+            @if (is_active_sidebar('sidebar-primary'))
+              @php(dynamic_sidebar('sidebar-primary'))
+            @else
+              <p class="mh-sidebar-empty">{{ __('Add widgets in Appearance → Widgets (Primary Sidebar).', 'matthummel') }}</p>
+            @endif
+          </aside>
+        @endif
+      </div>
 
       @hasSection('sidebar')
         <aside class="sidebar">

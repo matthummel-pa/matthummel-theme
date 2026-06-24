@@ -15,6 +15,11 @@
       <p class="form-error">{{ __('Sorry, something went wrong. Please check the fields and try again.', 'matthummel') }}</p>
     @endif
 
+    @php($mhContactIntro = get_theme_mod('mh_contact_intro', ''))
+    @if ($mhContactIntro)
+      <div class="entry-content post-prose" style="padding-inline:0">{!! wp_kses_post(wpautop($mhContactIntro)) !!}</div>
+    @endif
+
     @if (get_the_content())
       <div class="entry-content post-prose" style="padding-inline:0">
         @php(the_content())

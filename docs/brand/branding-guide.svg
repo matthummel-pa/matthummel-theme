@@ -1,0 +1,88 @@
+<svg width="900" height="1180" viewBox="0 0 900 1180" xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk','Inter',system-ui,sans-serif">
+  <rect width="900" height="1180" fill="#FBFAF7"/>
+  <style>
+    .h{font-family:'Space Grotesk',sans-serif;font-weight:700;fill:#17191E}
+    .lbl{font-family:'Inter',system-ui,sans-serif;font-weight:600;fill:#5C636C;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .body{font-family:'Inter',system-ui,sans-serif;fill:#2B2F36;font-size:14px}
+    .mono{font-family:'JetBrains Mono','Consolas',monospace;fill:#5C636C;font-size:12px}
+  </style>
+
+  <!-- Header -->
+  <rect x="56" y="56" width="64" height="64" rx="16" fill="#2F6B4E"/>
+  <text x="88" y="98" text-anchor="middle" class="h" font-size="32" fill="#fff">MH</text>
+  <text x="140" y="86" class="h" font-size="30">Matt Hummel</text>
+  <text x="142" y="110" class="lbl">Brand Guide — Paper + Space Grotesk</text>
+  <line x1="56" y1="150" x2="844" y2="150" stroke="#E6E2D9"/>
+
+  <!-- Colors -->
+  <text x="56" y="196" class="lbl">Color palette</text>
+  <!-- neutrals -->
+  <g>
+    <rect x="56"  y="214" width="120" height="84" rx="10" fill="#FBFAF7" stroke="#E6E2D9"/>
+    <rect x="190" y="214" width="120" height="84" rx="10" fill="#FFFFFF" stroke="#E6E2D9"/>
+    <rect x="324" y="214" width="120" height="84" rx="10" fill="#17191E"/>
+    <rect x="458" y="214" width="120" height="84" rx="10" fill="#2B2F36"/>
+    <rect x="592" y="214" width="120" height="84" rx="10" fill="#5C636C"/>
+    <rect x="726" y="214" width="118" height="84" rx="10" fill="#E6E2D9"/>
+    <text x="60" y="322" class="body" font-weight="600">Paper</text><text x="60" y="340" class="mono">#FBFAF7</text>
+    <text x="194" y="322" class="body" font-weight="600">Surface</text><text x="194" y="340" class="mono">#FFFFFF</text>
+    <text x="328" y="322" class="body" font-weight="600">Ink</text><text x="328" y="340" class="mono">#17191E</text>
+    <text x="462" y="322" class="body" font-weight="600">Body</text><text x="462" y="340" class="mono">#2B2F36</text>
+    <text x="596" y="322" class="body" font-weight="600">Muted</text><text x="596" y="340" class="mono">#5C636C</text>
+    <text x="730" y="322" class="body" font-weight="600">Line</text><text x="730" y="340" class="mono">#E6E2D9</text>
+  </g>
+  <!-- brand/action -->
+  <g>
+    <rect x="56"  y="372" width="160" height="84" rx="10" fill="#2F6B4E"/>
+    <rect x="230" y="372" width="160" height="84" rx="10" fill="#255840"/>
+    <rect x="404" y="372" width="160" height="84" rx="10" fill="#EAF1EC" stroke="#E6E2D9"/>
+    <rect x="578" y="372" width="160" height="84" rx="10" fill="#1357C6"/>
+    <text x="60" y="480" class="body" font-weight="600">Brand green</text><text x="60" y="498" class="mono">#2F6B4E</text>
+    <text x="234" y="480" class="body" font-weight="600">Green hover</text><text x="234" y="498" class="mono">#255840</text>
+    <text x="408" y="480" class="body" font-weight="600">Green tint</text><text x="408" y="498" class="mono">#EAF1EC</text>
+    <text x="582" y="480" class="body" font-weight="600">Link</text><text x="582" y="498" class="mono">#1357C6</text>
+  </g>
+  <line x1="56" y1="536" x2="844" y2="536" stroke="#E6E2D9"/>
+
+  <!-- Typography -->
+  <text x="56" y="580" class="lbl">Typography</text>
+  <text x="56" y="632" class="h" font-size="48">Bold display headings</text>
+  <text x="58" y="656" class="lbl">Space Grotesk · 600–700 · headings</text>
+  <text x="56" y="704" class="body" font-size="18">Body copy is set in Inter for clean, scannable reading at comfortable line height.</text>
+  <text x="58" y="728" class="lbl">Inter · 400–600 · body</text>
+  <rect x="56" y="748" width="420" height="40" rx="8" fill="#0F1729"/>
+  <text x="72" y="773" class="mono" fill="#E6EDF7">npm run build  // JetBrains Mono · code</text>
+  <line x1="56" y1="820" x2="844" y2="820" stroke="#E6E2D9"/>
+
+  <!-- Buttons + components -->
+  <text x="56" y="864" class="lbl">Buttons &amp; components</text>
+  <rect x="56" y="884" width="150" height="46" rx="8" fill="#2F6B4E"/>
+  <text x="131" y="912" text-anchor="middle" font-family="'Inter',sans-serif" font-weight="600" font-size="15" fill="#fff">Primary</text>
+  <rect x="222" y="884" width="150" height="46" rx="8" fill="#FFFFFF" stroke="#E6E2D9"/>
+  <text x="297" y="912" text-anchor="middle" font-family="'Inter',sans-serif" font-weight="600" font-size="15" fill="#17191E">Secondary</text>
+  <rect x="392" y="888" width="120" height="38" rx="19" fill="#FFFFFF" stroke="#E6E2D9"/>
+  <text x="452" y="912" text-anchor="middle" font-family="'Inter',sans-serif" font-weight="500" font-size="14" fill="#17191E">Tech pill</text>
+
+  <!-- card -->
+  <rect x="56" y="956" width="360" height="150" rx="16" fill="#FFFFFF" stroke="#E6E2D9"/>
+  <text x="80" y="996" class="lbl">June 22, 2026 · Matt Hummel</text>
+  <text x="80" y="1028" class="h" font-size="22">Post card title</text>
+  <text x="80" y="1058" class="body">An editorial card with meta, ink title, excerpt,</text>
+  <text x="80" y="1078" class="body">and a green “Read more →” link.</text>
+  <text x="80" y="1098" font-family="'Inter',sans-serif" font-weight="600" font-size="14" fill="#2F6B4E">Read more →</text>
+
+  <!-- stat badges -->
+  <g>
+    <rect x="440" y="956" width="120" height="80" rx="12" fill="#FFFFFF" stroke="#E6E2D9"/>
+    <text x="500" y="1000" text-anchor="middle" class="h" font-size="26">128</text>
+    <text x="500" y="1022" text-anchor="middle" class="lbl">Stars</text>
+    <rect x="572" y="956" width="120" height="80" rx="12" fill="#FFFFFF" stroke="#E6E2D9"/>
+    <text x="632" y="1000" text-anchor="middle" class="h" font-size="26">14</text>
+    <text x="632" y="1022" text-anchor="middle" class="lbl">Forks</text>
+    <rect x="704" y="956" width="120" height="80" rx="12" fill="#FFFFFF" stroke="#E6E2D9"/>
+    <text x="764" y="1000" text-anchor="middle" class="h" font-size="26">PHP</text>
+    <text x="764" y="1022" text-anchor="middle" class="lbl">Lang</text>
+  </g>
+
+  <text x="56" y="1150" class="mono">matthummel.com · Sage 11 · Blade · Tailwind v4</text>
+</svg>
