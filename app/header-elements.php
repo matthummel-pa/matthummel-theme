@@ -33,6 +33,11 @@ add_action('customize_register', function ($wp) {
     $wp->add_setting('mh_nav_social', ['default' => true, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_nav_social', ['label' => __('Show social icons in navigation bar', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $sel($wp, 'mh_nav_social_align', __('Navigation social position', 'matthummel'), $align, 'none');
+    // Hide social icons on mobile (<=640px) per bar.
+    $wp->add_setting('mh_social_nav_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_social_nav_hide_mobile', ['label' => __('Hide navigation social on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    $wp->add_setting('mh_social_top_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_social_top_hide_mobile', ['label' => __('Hide top bar social on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'icons');
     $sel($wp, 'mh_social_size', __('Social icon size', 'matthummel'), ['14' => '14px', '16' => '16px', '18' => '18px', '20' => '20px', '24' => '24px', '28' => '28px'], '18');
     $sel($wp, 'mh_social_shape', __('Social icon shape', 'matthummel'), ['none' => __('Plain', 'matthummel'), 'circle' => __('Circle', 'matthummel'), 'rounded' => __('Rounded', 'matthummel'), 'square' => __('Square', 'matthummel')], 'none');
@@ -90,6 +95,14 @@ add_action('mh_head_end', function () {
     $sa = $map(get_theme_mod('mh_nav_social_align', 'none'));
     if ($sa !== '') {
         $css .= '.banner .social{' . $sa . '}';
+    }
+
+    // Hide social icons on mobile (<=640px) per bar.
+    if (get_theme_mod('mh_social_nav_hide_mobile', false)) {
+        $css .= '@media(max-width:640px){.banner .social{display:none!important;}}';
+    }
+    if (get_theme_mod('mh_social_top_hide_mobile', false)) {
+        $css .= '@media(max-width:640px){.top-bar-social{display:none!important;}}';
     }
 
     // Icon styling for header social links (only when display = icons).
