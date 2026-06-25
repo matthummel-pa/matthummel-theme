@@ -9,6 +9,105 @@ namespace App;
  */
 class Github
 {
+    /** Shared request args (UA, Accept, optional auth token). */
+    protected static function args(string $accept = 'application/vnd.github+json'): array
+    {
+        $h = ['User-Agent' => 'matthummel.com', 'Accept' => $accept];
+        $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
+        if ($token !== '') {
+            $h['Authorization'] = 'token ' . $token;
+        }
+        return ['timeout' => 12, 'headers' => $h];
+    }
+
+    /** Cache TTL in seconds (from the Projects setting). */
+    protected static function ttl(): int
+    {
+        return max(1, (int) (function_exists('get_theme_mod') ? get_theme_mod('mh_proj_cache_hours', 6) : 6)) * HOUR_IN_SECONDS;
+    }
+
+    /** Fetch + cache a user/org profile. */
+    public static function fetchUser(string $user): array
+    {
+        $key = 'mh_ghu_' . md5($user);
+        if (($d = get_transient($key)) !== false) {
+            return $d;
+        }
+        $d = [];
+        $r = wp_remote_get("https://api.github.com/users/{$user}", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            $j = json_decode(wp_remote_retrieve_body($r), true);
+            $d = [
+                'login'        => $j['login'] ?? $user,
+                'name'         => $j['name'] ?? ($j['login'] ?? $user),
+                'bio'          => $j['bio'] ?? '',
+                'avatar'       => $j['avatar_url'] ?? '',
+                'url'          => $j['html_url'] ?? '',
+                'followers'    => (int) ($j['followers'] ?? 0),
+                'following'    => (int) ($j['following'] ?? 0),
+                'public_repos' => (int) ($j['public_repos'] ?? 0),
+            ];
+        }
+        set_transient($key, $d, self::ttl());
+        return $d;
+    }
+
+    /** Fetch + cache a user's repos (sorted, forks excluded). */
+    public static function fetchRepos(string $user, int $count = 6, string $sort = 'updated'): array
+    {
+        $count = max(1, min(30, $count));
+        $sort  = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
+        $key   = 'mh_ghr_' . md5($user . $sort . $count);
+        if (($d = get_transient($key)) !== false) {
+            return $d;
+        }
+        $out = [];
+        $r = wp_remote_get("https://api.github.com/users/{$user}/repos?per_page={$count}&sort={$sort}", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                if (! empty($j['fork'])) {
+                    continue;
+                }
+                $out[] = [
+                    'name'  => $j['name'] ?? '',
+                    'full'  => $j['full_name'] ?? '',
+                    'desc'  => $j['description'] ?? '',
+                    'stars' => (int) ($j['stargazers_count'] ?? 0),
+                    'forks' => (int) ($j['forks_count'] ?? 0),
+                    'lang'  => $j['language'] ?? '',
+                    'url'   => $j['html_url'] ?? '',
+                ];
+            }
+        }
+        set_transient($key, $out, self::ttl());
+        return $out;
+    }
+
+    /** Fetch + cache recent releases for a repo. */
+    public static function fetchReleases(string $owner, string $repo, int $count = 5): array
+    {
+        $count = max(1, min(20, $count));
+        $key   = 'mh_ghrel_' . md5("{$owner}/{$repo}/{$count}");
+        if (($d = get_transient($key)) !== false) {
+            return $d;
+        }
+        $out = [];
+        $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/releases?per_page={$count}", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                $out[] = [
+                    'tag'        => $j['tag_name'] ?? '',
+                    'name'       => ($j['name'] ?? '') ?: ($j['tag_name'] ?? ''),
+                    'url'        => $j['html_url'] ?? '',
+                    'date'       => isset($j['published_at']) ? date_i18n(get_option('date_format'), strtotime($j['published_at'])) : '',
+                    'prerelease' => ! empty($j['prerelease']),
+                ];
+            }
+        }
+        set_transient($key, $out, self::ttl());
+        return $out;
+    }
+
     /** Fetch + cache repo data. */
     public static function fetch(string $owner, string $repo): array
     {
