@@ -36,6 +36,8 @@ add_action('customize_register', function ($wp) {
     // Hide social icons on mobile (<=640px) per bar.
     $wp->add_setting('mh_social_nav_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_social_nav_hide_mobile', ['label' => __('Hide navigation social on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    $wp->add_setting('mh_social_nav_hide_desktop', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_social_nav_hide_desktop', ['label' => __('Hide navigation social on desktop', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $wp->add_setting('mh_social_top_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_social_top_hide_mobile', ['label' => __('Hide top bar social on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     // Hide CTA buttons on mobile (<=640px) per bar.
@@ -105,6 +107,9 @@ add_action('mh_head_end', function () {
     // Hide social icons on mobile (<=640px) per bar.
     if (get_theme_mod('mh_social_nav_hide_mobile', false)) {
         $css .= '@media(max-width:640px){.banner .social{display:none!important;}}';
+    }
+    if (get_theme_mod('mh_social_nav_hide_desktop', false)) {
+        $css .= '@media(min-width:641px){.banner .social{display:none!important;}}';
     }
     if (get_theme_mod('mh_social_top_hide_mobile', false)) {
         $css .= '@media(max-width:640px){.top-bar-social{display:none!important;}}';
