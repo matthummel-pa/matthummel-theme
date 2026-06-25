@@ -17,6 +17,7 @@ function mh_ann_defaults()
         'mh_ann_bg'      => '#17191e',
         'mh_ann_color'   => '#ffffff',
         'mh_ann_dismiss' => true,
+        'mh_ann_hide_mobile' => false,
         'mh_ann_start'   => '',
         'mh_ann_end'     => '',
     ];
@@ -57,6 +58,9 @@ add_action('customize_register', function ($wp) {
     $wp->add_setting('mh_ann_dismiss', ['default' => true, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_ann_dismiss', ['label' => __('Allow visitors to dismiss', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'checkbox']);
 
+    $wp->add_setting('mh_ann_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_ann_hide_mobile', ['label' => __('Hide on mobile', 'matthummel'), 'description' => __('Hides the bar on screens 640px and narrower.', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'checkbox']);
+
     $wp->add_setting('mh_ann_start', ['default' => '', 'sanitize_callback' => 'sanitize_text_field']);
     $wp->add_control('mh_ann_start', ['label' => __('Start date (optional)', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'date']);
     $wp->add_setting('mh_ann_end', ['default' => '', 'sanitize_callback' => 'sanitize_text_field']);
@@ -88,11 +92,13 @@ function mh_ann_render()
     $bg      = sanitize_hex_color(mh_ann('mh_ann_bg')) ?: '#17191e';
     $col     = sanitize_hex_color(mh_ann('mh_ann_color')) ?: '#ffffff';
     $dismiss = (bool) mh_ann('mh_ann_dismiss');
+    $hideMob = (bool) mh_ann('mh_ann_hide_mobile');
     $ltext   = (string) mh_ann('mh_ann_ltext');
     $lurl    = (string) mh_ann('mh_ann_lurl');
     $ver     = substr(md5((string) $start . (string) $end . $text . $ltext . $lurl), 0, 8);
 
-    echo '<div class="mh-ann" data-ver="' . esc_attr($ver) . '" style="background:' . esc_attr($bg) . ';color:' . esc_attr($col) . '">';
+    $cls = 'mh-ann' . ($hideMob ? ' mh-ann--hide-mobile' : '');
+    echo '<div class="' . esc_attr($cls) . '" data-ver="' . esc_attr($ver) . '" style="background:' . esc_attr($bg) . ';color:' . esc_attr($col) . '">';
     echo '<div class="mh-ann-inner">';
     echo '<span class="mh-ann-msg">' . wp_kses_post($text) . '</span>';
     if ($lurl !== '' && $ltext !== '') {
@@ -103,7 +109,7 @@ function mh_ann_render()
         echo '<button class="mh-ann-x" aria-label="' . esc_attr__('Dismiss', 'matthummel') . '" style="color:' . esc_attr($col) . '">&times;</button>';
     }
     echo '</div>';
-    echo '<style>.mh-ann{position:relative;font-size:14px;}.mh-ann-inner{max-width:1180px;margin:0 auto;padding:8px 40px;text-align:center;}.mh-ann-inner *{color:inherit;}.mh-ann-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:20px;line-height:1;cursor:pointer;opacity:.8;}.mh-ann-x:hover{opacity:1;}.mh-ann.is-hidden{display:none;}</style>';
+    echo '<style>.mh-ann{position:relative;font-size:14px;}.mh-ann-inner{max-width:1180px;margin:0 auto;padding:8px 40px;text-align:center;}.mh-ann-inner *{color:inherit;}.mh-ann-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:20px;line-height:1;cursor:pointer;opacity:.8;}.mh-ann-x:hover{opacity:1;}.mh-ann.is-hidden{display:none;}@media(max-width:640px){.mh-ann--hide-mobile{display:none!important;}}</style>';
     if ($dismiss) {
         echo "<script>(function(){var b=document.querySelector('.mh-ann');if(!b)return;var k='mh-ann-'+b.getAttribute('data-ver');try{if(localStorage.getItem(k)==='1'){b.classList.add('is-hidden');}}catch(e){}var x=b.querySelector('.mh-ann-x');if(x)x.addEventListener('click',function(){b.classList.add('is-hidden');try{localStorage.setItem(k,'1');}catch(e){}});})();</script>";
     }
