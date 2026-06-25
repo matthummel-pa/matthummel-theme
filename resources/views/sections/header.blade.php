@@ -1,6 +1,12 @@
+@php
+  $mhSoc = \App\mh_social_links();
+@endphp
+
 @if (is_active_sidebar('topbar'))
   <div class="top-bar">
-    <div class="top-bar-inner">@php(dynamic_sidebar('topbar'))@endphp</div>
+    <div class="top-bar-inner">
+      @php dynamic_sidebar('topbar'); @endphp
+    </div>
   </div>
 @endif
 
@@ -27,7 +33,9 @@
   @endif
 
   @if (is_active_sidebar('navbar'))
-    <div class="nav-blocks">@php(dynamic_sidebar('navbar'))@endphp</div>
+    <div class="nav-blocks">
+      @php dynamic_sidebar('navbar'); @endphp
+    </div>
   @endif
 
   @if (get_theme_mod('mh_dark_enable', true))
@@ -56,12 +64,18 @@
   @php
     $popCols = max(1, min(4, (int) get_theme_mod('mh_popout_block_cols', 1)));
     $hasPopBlocks = false;
-    for ($i = 1; $i <= $popCols; $i++) { if (is_active_sidebar("popout-{$i}")) { $hasPopBlocks = true; break; } }
+    for ($i = 1; $i <= $popCols; $i++) {
+        if (is_active_sidebar("popout-{$i}")) { $hasPopBlocks = true; break; }
+    }
   @endphp
   @if ($hasPopBlocks)
     <div class="mh-popout-blocks mh-popout-blocks--cols-{{ $popCols }}">
       @for ($i = 1; $i <= $popCols; $i++)
-        <div class="mh-popout-col">@if (is_active_sidebar("popout-{$i}")) @php(dynamic_sidebar("popout-{$i}")) @endif</div>
+        <div class="mh-popout-col">
+          @if (is_active_sidebar("popout-{$i}"))
+            @php dynamic_sidebar("popout-{$i}"); @endphp
+          @endif
+        </div>
       @endfor
     </div>
   @endif
