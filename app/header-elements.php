@@ -29,6 +29,15 @@ add_action('customize_register', function ($wp) {
     $sel($wp, 'mh_darkicon_align', __('Dark-mode icon position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_popbtn_align', __('Menu (popout) button position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_cta_align', __('Header button (CTA) position', 'matthummel'), $align, 'none');
+    $sel($wp, 'mh_social_location', __('Social links location', 'matthummel'), ['auto' => __('Default', 'matthummel'), 'topbar' => __('Top bar', 'matthummel'), 'navbar' => __('Navigation bar', 'matthummel'), 'both' => __('Both', 'matthummel'), 'none' => __('Hide', 'matthummel')], 'auto');
+    $sel($wp, 'mh_social_align', __('Social links position', 'matthummel'), $align, 'none');
+    $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'text');
+    $sel($wp, 'mh_social_size', __('Social icon size', 'matthummel'), ['14' => '14px', '16' => '16px', '18' => '18px', '20' => '20px', '24' => '24px', '28' => '28px'], '18');
+    $sel($wp, 'mh_social_shape', __('Social icon shape', 'matthummel'), ['none' => __('Plain', 'matthummel'), 'circle' => __('Circle', 'matthummel'), 'rounded' => __('Rounded', 'matthummel'), 'square' => __('Square', 'matthummel')], 'none');
+    foreach ([['mh_social_color', __('Social icon color', 'matthummel')], ['mh_social_bg', __('Social icon background (chip)', 'matthummel')], ['mh_social_hover', __('Social icon hover color', 'matthummel')]] as $cc) {
+        $wp->add_setting($cc[0], ['default' => '', 'sanitize_callback' => 'sanitize_hex_color']);
+        $wp->add_control(new \WP_Customize_Color_Control($wp, $cc[0], ['label' => $cc[1], 'section' => 'mh_nav_section']));
+    }
 
     $ord = ['1' => __('1 (top)', 'matthummel'), '2' => '2', '3' => __('3 (bottom)', 'matthummel')];
     $sel($wp, 'mh_bar_ann', __('Stack order: Announcement bar', 'matthummel'), $ord, '1');
@@ -68,6 +77,32 @@ add_action('mh_head_end', function () {
         $m = $map(get_theme_mod($mod, 'none'));
         if ($m !== '') {
             $css .= $sel . '{' . $m . '}';
+        }
+    }
+    $sa = $map(get_theme_mod('mh_social_align', 'none'));
+    if ($sa !== '') {
+        $css .= '.banner .social{' . $sa . '}.top-bar-social{' . $sa . '}';
+    }
+
+    // Icon styling for header social links (only when display = icons).
+    if (get_theme_mod('mh_social_style', 'text') === 'icons') {
+        $size  = max(10, absint(get_theme_mod('mh_social_size', 18)));
+        $shape = get_theme_mod('mh_social_shape', 'none');
+        $color = sanitize_hex_color(get_theme_mod('mh_social_color', ''));
+        $bg    = sanitize_hex_color(get_theme_mod('mh_social_bg', ''));
+        $hover = sanitize_hex_color(get_theme_mod('mh_social_hover', ''));
+        $chip  = $shape !== 'none';
+        $pad   = $chip ? max(5, (int) round($size * 0.5)) : 0;
+        $radius = $shape === 'circle' ? '50%' : ($shape === 'rounded' ? (string) max(4, (int) round($size * 0.35)) . 'px' : '0');
+        $base = '.top-bar-social.is-icons,.social.is-icons';
+        $css .= $base . '{display:inline-flex;align-items:center;gap:' . ($chip ? '8' : '14') . 'px;list-style:none;margin:0;padding:0;}';
+        $css .= $base . ' li{margin:0;}';
+        $css .= $base . ' a{display:inline-flex;align-items:center;justify-content:center;padding:' . $pad . 'px;border-radius:' . $radius . ';transition:color .15s ease,background .15s ease,transform .15s ease;'
+            . ($color ? 'color:' . $color . ';' : 'color:currentColor;')
+            . ($chip && $bg ? 'background:' . $bg . ';' : '') . '}';
+        $css .= $base . ' a svg{width:' . $size . 'px;height:' . $size . 'px;fill:currentColor;display:block;}';
+        if ($hover) {
+            $css .= $base . ' a:hover{color:' . $hover . ';transform:translateY(-1px);}';
         }
     }
 
