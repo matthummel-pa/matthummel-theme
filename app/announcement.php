@@ -71,7 +71,8 @@ function mh_ann_render()
     }
     $done = true;
 
-    if (! mh_ann('mh_ann_enable') || ! is_active_sidebar('messagebar')) {
+    $text = trim((string) mh_ann('mh_ann_text'));
+    if (! mh_ann('mh_ann_enable') || $text === '') {
         return;
     }
     $today = current_time('Y-m-d');
@@ -87,12 +88,16 @@ function mh_ann_render()
     $bg      = sanitize_hex_color(mh_ann('mh_ann_bg')) ?: '#17191e';
     $col     = sanitize_hex_color(mh_ann('mh_ann_color')) ?: '#ffffff';
     $dismiss = (bool) mh_ann('mh_ann_dismiss');
-    $sw      = get_option('sidebars_widgets');
-    $ver     = substr(md5((string) $start . (string) $end . wp_json_encode($sw['messagebar'] ?? [])), 0, 8);
+    $ltext   = (string) mh_ann('mh_ann_ltext');
+    $lurl    = (string) mh_ann('mh_ann_lurl');
+    $ver     = substr(md5((string) $start . (string) $end . $text . $ltext . $lurl), 0, 8);
 
     echo '<div class="mh-ann" data-ver="' . esc_attr($ver) . '" style="background:' . esc_attr($bg) . ';color:' . esc_attr($col) . '">';
     echo '<div class="mh-ann-inner">';
-    dynamic_sidebar('messagebar');
+    echo '<span class="mh-ann-msg">' . wp_kses_post($text) . '</span>';
+    if ($lurl !== '' && $ltext !== '') {
+        echo ' <a class="mh-ann-link" href="' . esc_url($lurl) . '" style="color:inherit;text-decoration:underline;">' . esc_html($ltext) . ' &rarr;</a>';
+    }
     echo '</div>';
     if ($dismiss) {
         echo '<button class="mh-ann-x" aria-label="' . esc_attr__('Dismiss', 'matthummel') . '" style="color:' . esc_attr($col) . '">&times;</button>';

@@ -29,9 +29,11 @@ add_action('customize_register', function ($wp) {
     $sel($wp, 'mh_darkicon_align', __('Dark-mode icon position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_popbtn_align', __('Menu (popout) button position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_cta_align', __('Header button (CTA) position', 'matthummel'), $align, 'none');
-    $sel($wp, 'mh_social_location', __('Social links location', 'matthummel'), ['auto' => __('Default', 'matthummel'), 'topbar' => __('Top bar', 'matthummel'), 'navbar' => __('Navigation bar', 'matthummel'), 'both' => __('Both', 'matthummel'), 'none' => __('Hide', 'matthummel')], 'auto');
-    $sel($wp, 'mh_social_align', __('Social links position', 'matthummel'), $align, 'none');
-    $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'text');
+    // Navbar social: dedicated show/hide + L/C/R position (theme-options driven).
+    $wp->add_setting('mh_nav_social', ['default' => true, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_nav_social', ['label' => __('Show social icons in navigation bar', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    $sel($wp, 'mh_nav_social_align', __('Navigation social position', 'matthummel'), $align, 'none');
+    $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'icons');
     $sel($wp, 'mh_social_size', __('Social icon size', 'matthummel'), ['14' => '14px', '16' => '16px', '18' => '18px', '20' => '20px', '24' => '24px', '28' => '28px'], '18');
     $sel($wp, 'mh_social_shape', __('Social icon shape', 'matthummel'), ['none' => __('Plain', 'matthummel'), 'circle' => __('Circle', 'matthummel'), 'rounded' => __('Rounded', 'matthummel'), 'square' => __('Square', 'matthummel')], 'none');
     foreach ([['mh_social_color', __('Social icon color', 'matthummel')], ['mh_social_bg', __('Social icon background (chip)', 'matthummel')], ['mh_social_hover', __('Social icon hover color', 'matthummel')]] as $cc) {
@@ -85,13 +87,13 @@ add_action('mh_head_end', function () {
             $css .= $sel . '{' . $m . '}';
         }
     }
-    $sa = $map(get_theme_mod('mh_social_align', 'none'));
+    $sa = $map(get_theme_mod('mh_nav_social_align', 'none'));
     if ($sa !== '') {
-        $css .= '.banner .social{' . $sa . '}.top-bar-social{' . $sa . '}';
+        $css .= '.banner .social{' . $sa . '}';
     }
 
     // Icon styling for header social links (only when display = icons).
-    if (get_theme_mod('mh_social_style', 'text') === 'icons') {
+    if (get_theme_mod('mh_social_style', 'icons') === 'icons') {
         $size  = max(10, absint(get_theme_mod('mh_social_size', 18)));
         $shape = get_theme_mod('mh_social_shape', 'none');
         $color = sanitize_hex_color(get_theme_mod('mh_social_color', ''));
@@ -198,17 +200,8 @@ add_action('widgets_init', function () {
             'after_title'   => '</h4>',
         ]);
     }
-    foreach (['topbar' => __('Top bar', 'matthummel'), 'messagebar' => __('Message bar', 'matthummel'), 'navbar' => __('Navigation bar', 'matthummel')] as $id => $name) {
-        register_sidebar([
-            'name'          => sprintf(__('%s blocks', 'matthummel'), $name),
-            'id'            => $id,
-            'description'   => __('Blocks shown in this header bar.', 'matthummel'),
-            'before_widget' => '<div class="mh-bar-widget %2$s">',
-            'after_widget'  => '</div>',
-            'before_title'  => '<span class="screen-reader-text">',
-            'after_title'   => '</span>',
-        ]);
-    }
+    // The top bar, message bar, and navigation bar are configured via Theme Options
+    // (Customizer), not widgets — so no bar widget areas are registered here.
 });
 
 /** Popout block-column layout (only when popout widgets exist). */

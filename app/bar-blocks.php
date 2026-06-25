@@ -57,7 +57,7 @@ function mh_block_bar_social()
     if (empty($links)) {
         return mh_bar_rest_note(__('No social links set (Customizer -> Menu & Popout).', 'matthummel'));
     }
-    $style = get_theme_mod('mh_social_style', 'text');
+    $style = get_theme_mod('mh_social_style', 'icons');
     $out = '<ul class="social' . ($style === 'icons' ? ' is-icons' : '') . '" aria-label="' . esc_attr__('Social links', 'matthummel') . '">';
     foreach ($links as $s) {
         $inner = $style === 'icons' ? mh_social_icon($s['key']) : esc_html($s['label']);
@@ -123,3 +123,31 @@ function mh_block_bar_contact()
     }
     return '<span class="top-bar-contact">' . wp_kses_post($c) . '</span>';
 }
+
+/**
+ * Editor-only CSS. The block/widgets editor canvas (incl. the Customizer "Widgets"
+ * panel) doesn't load the theme's front-end stylesheet, so the SSR previews of the
+ * bar blocks fall back to browser defaults — social icons render at intrinsic SVG
+ * size and inherit the editor's blue link color, stacked as a bulleted list.
+ * This scopes them to a sensible inline row so the preview matches the front end.
+ */
+add_action('enqueue_block_editor_assets', function () {
+    $css = <<<'CSS'
+/* mh bar-block editor previews */
+[data-type^="mh/bar-"] .social{display:flex;flex-wrap:wrap;align-items:center;gap:14px;list-style:none;margin:0;padding:0;}
+[data-type^="mh/bar-"] .social li{margin:0;padding:0;list-style:none;}
+[data-type^="mh/bar-"] .social li::marker{content:"";}
+[data-type^="mh/bar-"] .social a{display:inline-flex;align-items:center;color:#3b3f46;text-decoration:none;line-height:0;box-shadow:none;}
+[data-type^="mh/bar-"] .social a:hover{color:#0f1115;}
+[data-type^="mh/bar-"] .social svg{width:20px;height:20px;display:block;fill:currentColor;}
+[data-type^="mh/bar-"] .social.is-icons a{padding:0;}
+[data-type^="mh/bar-"] .nav{display:flex;flex-wrap:wrap;align-items:center;gap:16px;list-style:none;margin:0;padding:0;font-size:14px;}
+[data-type^="mh/bar-"] .nav li{list-style:none;margin:0;}
+[data-type^="mh/bar-"] .nav a{text-decoration:none;color:#17191e;}
+[data-type^="mh/bar-"] .header-cta,[data-type^="mh/bar-"] .btn{display:inline-block;font-size:13px;padding:8px 16px;border-radius:6px;background:#1f6f43;color:#fff;text-decoration:none;}
+[data-type^="mh/bar-"] .brand-name{font-weight:600;text-decoration:none;color:#17191e;}
+CSS;
+    wp_register_style('mh-bar-editor', false, [], '1');
+    wp_enqueue_style('mh-bar-editor');
+    wp_add_inline_style('mh-bar-editor', $css);
+});

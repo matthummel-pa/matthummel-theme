@@ -1,11 +1,33 @@
 @php
-  $mhSoc = \App\mh_social_links();
+  $tb        = \App\mh_topbar();
+  $mhSoc     = \App\mh_social_links();
+  $socStyle  = get_theme_mod('mh_social_style', 'icons');
+  $socIcons  = $socStyle === 'icons';
+  $navSocial = (bool) get_theme_mod('mh_nav_social', true);
 @endphp
 
-@if (is_active_sidebar('topbar'))
-  <div class="top-bar">
+@if ($tb['enable'])
+  <div class="top-bar" style="background:{{ $tb['bg'] }};color:{{ $tb['text'] }};">
     <div class="top-bar-inner">
-      @php dynamic_sidebar('topbar'); @endphp
+      @if ($tb['contact'])
+        <div class="top-bar-contact">{!! wp_kses_post($tb['contact']) !!}</div>
+      @endif
+      <div class="top-bar-right">
+        @if ($tb['show_social'] && $mhSoc)
+          <ul class="top-bar-social{{ $socIcons ? ' is-icons' : '' }}" aria-label="{{ __('Social links', 'matthummel') }}">
+            @foreach ($mhSoc as $s)
+              <li>
+                <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener">
+                  @if ($socIcons){!! \App\mh_social_icon($s['key']) !!}@else{{ $s['label'] }}@endif
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        @endif
+        @if ($tb['cta_text'] && $tb['cta_url'])
+          <a class="top-bar-cta" href="{{ esc_url($tb['cta_url']) }}">{{ $tb['cta_text'] }}</a>
+        @endif
+      </div>
     </div>
   </div>
 @endif
@@ -32,10 +54,22 @@
     </nav>
   @endif
 
-  @if (is_active_sidebar('navbar'))
-    <div class="nav-blocks">
-      @php dynamic_sidebar('navbar'); @endphp
-    </div>
+  @if ($navSocial && $mhSoc)
+    <ul class="social{{ $socIcons ? ' is-icons' : '' }}" aria-label="{{ __('Social links', 'matthummel') }}">
+      @foreach ($mhSoc as $s)
+        <li>
+          <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener">
+            @if ($socIcons){!! \App\mh_social_icon($s['key']) !!}@else{{ $s['label'] }}@endif
+          </a>
+        </li>
+      @endforeach
+    </ul>
+  @endif
+
+  @if (apply_filters('matthummel/show_header_cta', true))
+    <a class="btn header-cta" href="{{ esc_url(apply_filters('matthummel/header_cta_url', 'https://dev.to/mattbuildsapps')) }}">
+      {{ apply_filters('matthummel/header_cta_label', __('Find me on Dev.to', 'matthummel')) }}
+    </a>
   @endif
 
   @if (get_theme_mod('mh_dark_enable', true))
