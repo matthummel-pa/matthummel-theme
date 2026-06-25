@@ -31,7 +31,7 @@
   @if ($mhFoot['show_social'] && $mhFootSoc)
     <div class="footer-socials">
       @foreach ($mhFootSoc as $s)
-        <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener" target="_blank"><i class="{{ $s['icon'] }}" aria-hidden="true"></i></a>
+        <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener" target="_blank">{!! \App\mh_social_icon($s['key']) !!}</a>
       @endforeach
     </div>
   @endif

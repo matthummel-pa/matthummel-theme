@@ -40,6 +40,10 @@
   },
   "require": {
     "php": ">=8.3",
+    "blade-ui-kit/blade-heroicons": "^2.7",
+    "blade-ui-kit/blade-icons": "^1.10",
+    "codeat3/blade-simple-icons": "^8.12",
+    "mallardduck/blade-lucide-icons": "^1.26",
     "roots/acorn": "^6.0"
   },
   "require-dev": {

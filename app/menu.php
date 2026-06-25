@@ -4,26 +4,27 @@
  * Off-canvas popout menu + social icon system.
  * - Hamburger toggle, shown per breakpoint (desktop/tablet/mobile).
  * - Slide-in panel with solid or gradient background + text color.
- * - Curated Font Awesome brand icons, each with a custom URL.
+ * - Social icons are rendered as inline SVGs via Blade Icons (Simple Icons),
+ *   each with a custom URL. (Font Awesome removed.)
  */
 
 namespace App;
 
-/** Available social/icon networks: key => [label, Font Awesome class, default url]. */
+/** Available social/icon networks: key => [label, default url]. */
 function mh_socials_map()
 {
     return [
-        'linkedin'  => ['LinkedIn', 'fa-brands fa-linkedin-in', 'https://www.linkedin.com/in/matthummel'],
-        'github'    => ['GitHub', 'fa-brands fa-github', 'https://github.com/matthummel-pa'],
-        'devto'     => ['Dev.to', 'fa-brands fa-dev', 'https://dev.to/mattbuildsapps'],
-        'x'         => ['X', 'fa-brands fa-x-twitter', ''],
-        'bluesky'   => ['Bluesky', 'fa-brands fa-bluesky', ''],
-        'youtube'   => ['YouTube', 'fa-brands fa-youtube', ''],
-        'instagram' => ['Instagram', 'fa-brands fa-instagram', ''],
-        'facebook'  => ['Facebook', 'fa-brands fa-facebook-f', ''],
-        'mastodon'  => ['Mastodon', 'fa-brands fa-mastodon', ''],
-        'email'     => ['Email', 'fa-solid fa-envelope', ''],
-        'rss'       => ['RSS', 'fa-solid fa-rss', ''],
+        'linkedin'  => ['LinkedIn', 'https://www.linkedin.com/in/matthummel'],
+        'github'    => ['GitHub', 'https://github.com/matthummel-pa'],
+        'devto'     => ['Dev.to', 'https://dev.to/mattbuildsapps'],
+        'x'         => ['X', ''],
+        'bluesky'   => ['Bluesky', ''],
+        'youtube'   => ['YouTube', ''],
+        'instagram' => ['Instagram', ''],
+        'facebook'  => ['Facebook', ''],
+        'mastodon'  => ['Mastodon', ''],
+        'email'     => ['Email', ''],
+        'rss'       => ['RSS', ''],
     ];
 }
 
@@ -32,9 +33,14 @@ function mh_social_links()
 {
     $out = [];
     foreach (mh_socials_map() as $key => $info) {
-        $url = get_theme_mod("mh_social_{$key}", $info[2]);
+        $url = get_theme_mod("mh_social_{$key}", $info[1]);
         if (! empty($url)) {
-            $out[] = ['label' => $info[0], 'icon' => $info[1], 'url' => $url];
+            $out[] = [
+                'key'   => $key,
+                'label' => $info[0],
+                'url'   => $url,
+                'icon'  => mh_social_icon_name($key),
+            ];
         }
     }
     return $out;
@@ -54,11 +60,6 @@ function mh_popout()
         'text' => get_theme_mod('mh_popout_text', '#ffffff'),
     ];
 }
-
-/** Font Awesome (brand + solid icons). */
-add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', [], '6.5.1');
-}, 7);
 
 /** Which breakpoints show the hamburger instead of the inline nav. */
 add_filter('body_class', function ($c) {
@@ -104,10 +105,16 @@ add_action('customize_register', function ($wp) {
     $wp->add_setting('mh_popout_angle', ['default' => 160, 'sanitize_callback' => 'absint']);
     $wp->add_control('mh_popout_angle', ['label' => __('Gradient angle (deg)', 'matthummel'), 'section' => 'mh_popout_section', 'type' => 'number', 'input_attrs' => ['min' => 0, 'max' => 360, 'step' => 5]]);
 
-    // Social URL fields
+    // Social URL fields — each shows its Blade icon next to the network name.
     foreach (mh_socials_map() as $key => $info) {
-        $wp->add_setting("mh_social_{$key}", ['default' => $info[2], 'sanitize_callback' => 'esc_url_raw']);
-        $wp->add_control("mh_social_{$key}", ['label' => sprintf(__('%s URL', 'matthummel'), $info[0]), 'section' => 'mh_popout_section', 'type' => 'url']);
+        $preview = mh_social_icon($key, 'mh-soc-admin', ['width' => 16, 'height' => 16]);
+        $wp->add_setting("mh_social_{$key}", ['default' => $info[1], 'sanitize_callback' => 'esc_url_raw']);
+        $wp->add_control("mh_social_{$key}", [
+            'label'       => sprintf(__('%s URL', 'matthummel'), $info[0]),
+            'description' => '<span class="mh-soc-admin-row" style="display:inline-flex;align-items:center;gap:6px;color:#50575e">' . $preview . esc_html($info[0]) . '</span>',
+            'section'     => 'mh_popout_section',
+            'type'        => 'url',
+        ]);
     }
 }, 22);
 

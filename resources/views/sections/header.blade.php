@@ -68,8 +68,8 @@
 
   @if (get_theme_mod('mh_dark_enable', true))
     <button class="mh-theme-toggle" type="button" aria-label="{{ __('Toggle dark mode', 'matthummel') }}" aria-pressed="false">
-      <i class="fa-solid fa-moon mh-icon-dark" aria-hidden="true"></i>
-      <i class="fa-solid fa-sun mh-icon-light" aria-hidden="true"></i>
+      {!! \App\mh_icon('heroicon-o-moon', 'mh-icon-dark') !!}
+      {!! \App\mh_icon('heroicon-o-sun', 'mh-icon-light') !!}
     </button>
   @endif
 
@@ -93,7 +93,7 @@
     <div class="mh-popout-socials">
       @foreach ($mhSoc as $s)
         <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener" target="_blank">
-          <i class="{{ $s['icon'] }}" aria-hidden="true"></i>
+          {!! \App\mh_social_icon($s['key']) !!}
         </a>
       @endforeach
     </div>
