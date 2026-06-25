@@ -71,7 +71,11 @@ function mh_ann_render()
     }
     $done = true;
 
-    if (! mh_ann('mh_ann_enable') || trim((string) mh_ann('mh_ann_text')) === '') {
+    if (! mh_ann('mh_ann_enable')) {
+        return;
+    }
+    $hasBlocks = is_active_sidebar('messagebar');
+    if (trim((string) mh_ann('mh_ann_text')) === '' && ! $hasBlocks) {
         return;
     }
     // schedule window
@@ -97,6 +101,11 @@ function mh_ann_render()
     echo '<div class="mh-ann-inner"><span class="mh-ann-msg">' . $text . '</span>';
     if ($lurl && $ltxt) {
         echo ' <a class="mh-ann-link" href="' . $lurl . '" style="color:' . esc_attr($col) . '">' . $ltxt . ' &rarr;</a>';
+    }
+    if ($hasBlocks) {
+        echo '<span class="mh-ann-blocks">';
+        dynamic_sidebar('messagebar');
+        echo '</span>';
     }
     echo '</div>';
     if ($dismiss) {

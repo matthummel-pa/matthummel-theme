@@ -8,9 +8,12 @@
   ]);
 @endphp
 
-@if ($mhTopbar['enable'])
+@if ($mhTopbar['enable'] || is_active_sidebar('topbar'))
   <div class="top-bar">
     <div class="top-bar-inner">
+      @if (is_active_sidebar('topbar'))
+        <div class="top-bar-blocks">@php(dynamic_sidebar('topbar'))@endphp</div>
+      @endif
       @if ($mhTopbar['contact'])
         <div class="top-bar-contact">{!! wp_kses_post($mhTopbar['contact']) !!}</div>
       @endif
@@ -52,6 +55,10 @@
     </nav>
   @endif
 
+  @if (is_active_sidebar('navbar'))
+    <div class="nav-blocks">@php(dynamic_sidebar('navbar'))@endphp</div>
+  @endif
+
   @if (! $mhTopbar['enable'] && $socials)
     <ul class="social" aria-label="{{ __('Social links', 'matthummel') }}">
       @foreach ($socials as $label => $url)
@@ -87,6 +94,19 @@
     <nav class="mh-popout-nav" aria-label="{{ __('Popout menu', 'matthummel') }}">
       {!! wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'mh-popout-menu', 'echo' => false, 'container' => false]) !!}
     </nav>
+  @endif
+
+  @php
+    $popCols = max(1, min(4, (int) get_theme_mod('mh_popout_block_cols', 1)));
+    $hasPopBlocks = false;
+    for ($i = 1; $i <= $popCols; $i++) { if (is_active_sidebar("popout-{$i}")) { $hasPopBlocks = true; break; } }
+  @endphp
+  @if ($hasPopBlocks)
+    <div class="mh-popout-blocks mh-popout-blocks--cols-{{ $popCols }}">
+      @for ($i = 1; $i <= $popCols; $i++)
+        <div class="mh-popout-col">@if (is_active_sidebar("popout-{$i}")) @php(dynamic_sidebar("popout-{$i}")) @endif</div>
+      @endfor
+    </div>
   @endif
 
   @if ($mhSoc)
