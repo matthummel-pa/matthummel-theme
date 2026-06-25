@@ -79,7 +79,7 @@ add_action('customize_register', function ($wp) {
     /* Layout width */
     $wp->add_section('mh_layout', ['title' => __('Content width', 'matthummel'), 'panel' => 'mh_theme_options']);
     $wp->add_setting('mh_container', ['default' => $d['mh_container'], 'sanitize_callback' => 'absint']);
-    $wp->add_control('mh_container', ['label' => __('Content width (px)', 'matthummel'), 'section' => 'mh_layout', 'type' => 'number', 'input_attrs' => ['min' => 900, 'max' => 1600, 'step' => 10]]);
+    $wp->add_control('mh_container', ['label' => __('Content width', 'matthummel'), 'section' => 'mh_layout', 'type' => 'select', 'choices' => mh_width_options()]);
 
     /* Header */
     $wp->add_section('mh_header', ['title' => __('Header button', 'matthummel'), 'panel' => 'mh_theme_options']);
@@ -145,3 +145,25 @@ add_action('mh_head_end', function () {
 
     echo "\n<style id=\"mh-customizer\">" . $css . "</style>\n";
 });
+
+
+/** Standard content-width options (px) for select controls. */
+function mh_width_options($include_preset = false)
+{
+    $opts = [];
+    if ($include_preset) {
+        $opts['0'] = __('Use preset (default)', 'matthummel');
+    }
+    return $opts + [
+        '720'  => '720px (narrow)',
+        '960'  => '960px (small)',
+        '1080' => '1080px (medium)',
+        '1140' => '1140px (standard)',
+        '1180' => '1180px (default)',
+        '1200' => '1200px',
+        '1280' => '1280px (large)',
+        '1320' => '1320px',
+        '1440' => '1440px (extra wide)',
+        '1600' => '1600px (max)',
+    ];
+}

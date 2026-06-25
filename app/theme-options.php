@@ -140,11 +140,11 @@ add_action('customize_register', function ($wp) {
             'sanitize_callback' => 'absint',
         ]);
         $wp->add_control("mh_layout_{$type}_maxwidth", [
-            'label'       => sprintf(__('%s — custom width (px)', 'matthummel'), $label),
-            'description' => __('Exact content width. Overrides the preset when set. 0 = use preset. Standard: 1140 / 1200 / 1280 / 1320 / 1440.', 'matthummel'),
+            'label'       => sprintf(__('%s — custom width', 'matthummel'), $label),
+            'description' => __('Overrides the preset above when set. "Use preset" follows the width preset.', 'matthummel'),
             'section'     => 'mh_layout_section',
-            'type'        => 'number',
-            'input_attrs' => ['min' => 0, 'max' => 1920, 'step' => 10],
+            'type'        => 'select',
+            'choices'     => \App\mh_width_options(true),
         ]);
 
         $wp->add_setting("mh_layout_{$type}_sidebar", [

@@ -3,22 +3,54 @@
   "version": 3,
   "settings": {
     "appearanceTools": true,
+    "useRootPaddingAwareAlignments": true,
     "layout": { "contentSize": "760px", "wideSize": "1180px" },
     "color": {
       "defaultPalette": false,
+      "defaultGradients": false,
+      "defaultDuotone": false,
       "custom": true,
+      "customGradient": true,
+      "customDuotone": true,
+      "link": true,
+      "heading": true,
+      "button": true,
+      "caption": true,
+      "background": true,
+      "text": true,
       "palette": [
         { "slug": "paper", "color": "#fbfaf7", "name": "Paper" },
         { "slug": "surface", "color": "#ffffff", "name": "Surface" },
+        { "slug": "cream", "color": "#f4f2ec", "name": "Cream" },
         { "slug": "ink", "color": "#17191e", "name": "Ink" },
         { "slug": "body", "color": "#2b2f36", "name": "Body" },
         { "slug": "muted", "color": "#5c636c", "name": "Muted" },
         { "slug": "green", "color": "#2f6b4e", "name": "Brand green" },
+        { "slug": "green-ink", "color": "#255840", "name": "Green hover" },
         { "slug": "green-tint", "color": "#eaf1ec", "name": "Green tint" },
         { "slug": "line", "color": "#e6e2d9", "name": "Line" }
+      ],
+      "gradients": [
+        { "slug": "green", "name": "Green", "gradient": "linear-gradient(135deg, #2f6b4e 0%, #255840 100%)" },
+        { "slug": "ink", "name": "Ink", "gradient": "linear-gradient(135deg, #17191e 0%, #2b2f36 100%)" },
+        { "slug": "paper-fade", "name": "Paper fade", "gradient": "linear-gradient(180deg, #fbfaf7 0%, #f4f2ec 100%)" }
+      ],
+      "duotone": [
+        { "slug": "green-ink", "name": "Green / Ink", "colors": ["#17191e", "#2f6b4e"] },
+        { "slug": "paper-green", "name": "Paper / Green", "colors": ["#2f6b4e", "#fbfaf7"] }
       ]
     },
     "typography": {
+      "fluid": true,
+      "customFontSize": true,
+      "lineHeight": true,
+      "letterSpacing": true,
+      "textTransform": true,
+      "textDecoration": true,
+      "fontStyle": true,
+      "fontWeight": true,
+      "dropCap": true,
+      "writingMode": false,
       "fontFamilies": [
         { "slug": "display", "name": "Geist", "fontFamily": "\"Geist\", system-ui, sans-serif" },
         { "slug": "body", "name": "Inter", "fontFamily": "\"Inter\", system-ui, -apple-system, sans-serif" },
@@ -31,6 +63,33 @@
         { "slug": "x-large", "size": "32px", "name": "X-Large" },
         { "slug": "huge", "size": "clamp(40px, 6vw, 64px)", "name": "Huge" }
       ]
-    }
+    },
+    "spacing": {
+      "units": ["px", "em", "rem", "%", "vw", "vh"],
+      "padding": true,
+      "margin": true,
+      "blockGap": true,
+      "customSpacingSize": true,
+      "spacingSizes": [
+        { "slug": "20", "size": "0.5rem", "name": "XS" },
+        { "slug": "30", "size": "1rem", "name": "S" },
+        { "slug": "40", "size": "1.5rem", "name": "M" },
+        { "slug": "50", "size": "2.5rem", "name": "L" },
+        { "slug": "60", "size": "4rem", "name": "XL" },
+        { "slug": "70", "size": "6rem", "name": "XXL" }
+      ]
+    },
+    "border": { "color": true, "radius": true, "style": true, "width": true },
+    "shadow": {
+      "defaultPresets": false,
+      "presets": [
+        { "slug": "soft", "name": "Soft", "shadow": "0 6px 20px rgba(23,25,30,.08)" },
+        { "slug": "lift", "name": "Lift", "shadow": "0 12px 30px rgba(23,25,30,.12)" },
+        { "slug": "ring", "name": "Ring", "shadow": "0 0 0 1px #e6e2d9" }
+      ]
+    },
+    "dimensions": { "minHeight": true, "aspectRatio": true },
+    "position": { "sticky": true },
+    "background": { "backgroundImage": true, "backgroundSize": true }
   }
 }

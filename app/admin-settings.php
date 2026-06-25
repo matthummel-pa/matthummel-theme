@@ -18,6 +18,13 @@ function mh_admin_defaults()
             $base["mh_layout_{$t}_sidebar"]  = $v['sidebar'];
         }
     }
+    $base = array_merge($base, [
+        'mh_topbar_enable' => false, 'mh_topbar_contact' => '', 'mh_topbar_show_social' => true,
+        'mh_topbar_cta_text' => '', 'mh_topbar_cta_url' => '', 'mh_topbar_bg' => 'ink', 'mh_topbar_text' => 'white',
+        'mh_nav_fullwidth' => false, 'mh_header_width' => 1180, 'mh_header_height' => 0, 'mh_header_gap' => 28,
+        'mh_logo_order' => 1, 'mh_nav_order' => 2, 'mh_social_order' => 3, 'mh_cta_order' => 4,
+        'mh_popout_desktop' => false, 'mh_popout_tablet' => true, 'mh_popout_mobile' => true,
+    ]);
     return $base;
 }
 
@@ -38,7 +45,7 @@ function mh_admin_schema()
     $layoutFields = [];
     foreach ($labels as $t => $lab) {
         $layoutFields[] = ['key' => "mh_layout_{$t}_width", 'label' => "{$lab} — width preset", 'type' => 'select', 'choices' => $w];
-        $layoutFields[] = ['key' => "mh_layout_{$t}_maxwidth", 'label' => "{$lab} — custom width (px)", 'type' => 'number', 'desc' => '0 = use preset. Standard: 1140 / 1200 / 1280 / 1320 / 1440.'];
+        $layoutFields[] = ['key' => "mh_layout_{$t}_maxwidth", 'label' => "{$lab} — custom width", 'type' => 'select', 'choices' => mh_width_options(true)];
         $layoutFields[] = ['key' => "mh_layout_{$t}_sidebar", 'label' => "{$lab} — show sidebar", 'type' => 'checkbox'];
     }
 
@@ -56,10 +63,29 @@ function mh_admin_schema()
             ['key' => 'mh_color_body', 'label' => __('Body text', 'matthummel'), 'type' => 'color'],
             ['key' => 'mh_font_heading', 'label' => __('Heading font', 'matthummel'), 'type' => 'select', 'choices' => $fontChoices],
             ['key' => 'mh_font_body', 'label' => __('Body font', 'matthummel'), 'type' => 'select', 'choices' => $fontChoices],
-            ['key' => 'mh_container', 'label' => __('Default content width (px)', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_container', 'label' => __('Default content width', 'matthummel'), 'type' => 'select', 'choices' => mh_width_options()],
         ]],
         'layout' => ['icon' => 'dashicons-screenoptions', 'label' => __('Layout', 'matthummel'), 'fields' => $layoutFields],
-        'header' => ['icon' => 'dashicons-editor-kitchensink', 'label' => __('Header', 'matthummel'), 'fields' => [], 'note' => __('Header builder — top utility bar, off-canvas popout menu, and social icons — is the next update. It will be editable here and in the Customizer.', 'matthummel')],
+        'header' => ['icon' => 'dashicons-editor-kitchensink', 'label' => __('Header', 'matthummel'), 'fields' => [
+            ['key' => 'mh_nav_fullwidth', 'label' => __('Full-width menu', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_header_width', 'label' => __('Header width', 'matthummel'), 'type' => 'select', 'choices' => mh_width_options()],
+            ['key' => 'mh_header_height', 'label' => __('Header height (px, 0 = auto)', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_header_gap', 'label' => __('Header gap (px)', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_logo_order', 'label' => __('Logo position', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_nav_order', 'label' => __('Menu position', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_social_order', 'label' => __('Social links position', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_cta_order', 'label' => __('Button position', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_topbar_enable', 'label' => __('Enable top bar', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_topbar_contact', 'label' => __('Top bar contact text', 'matthummel'), 'type' => 'text'],
+            ['key' => 'mh_topbar_show_social', 'label' => __('Top bar social links', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_topbar_cta_text', 'label' => __('Top bar button text', 'matthummel'), 'type' => 'text'],
+            ['key' => 'mh_topbar_cta_url', 'label' => __('Top bar button URL', 'matthummel'), 'type' => 'text'],
+            ['key' => 'mh_topbar_bg', 'label' => __('Top bar background', 'matthummel'), 'type' => 'select', 'choices' => mh_palette_choices()],
+            ['key' => 'mh_topbar_text', 'label' => __('Top bar text color', 'matthummel'), 'type' => 'select', 'choices' => mh_palette_choices()],
+            ['key' => 'mh_popout_desktop', 'label' => __('Menu icon on desktop', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_popout_tablet', 'label' => __('Menu icon on tablet', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_popout_mobile', 'label' => __('Menu icon on mobile', 'matthummel'), 'type' => 'checkbox'],
+        ]],
         'footer' => ['icon' => 'dashicons-editor-insertmore', 'label' => __('Footer', 'matthummel'), 'fields' => [], 'note' => __('Footer builder (columns, widgets, colors) is coming next.', 'matthummel')],
         'projects' => ['icon' => 'dashicons-portfolio', 'label' => __('Projects', 'matthummel'), 'fields' => [], 'note' => __('Projects admin (GitHub owner/repo, screenshots, list columns, dashboard) is coming next.', 'matthummel')],
     ];
@@ -248,7 +274,7 @@ add_action('admin_post_mh_save_theme_settings', function () {
                     $val = sanitize_text_field($raw);
                     break;
                 default:
-                    $val = ($key === 'mh_cta_url') ? esc_url_raw($raw) : sanitize_text_field($raw);
+                    $val = (substr($key, -4) === '_url') ? esc_url_raw($raw) : sanitize_text_field($raw);
             }
             set_theme_mod($key, $val);
         }

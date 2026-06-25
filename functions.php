@@ -50,7 +50,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'customizer', 'contact', 'theme-options', 'admin-settings', 'menu', 'projects-admin', 'footer-content', 'dark-mode', 'blocks', 'reading'])
+collect(['setup', 'filters', 'theme-supports', 'customizer', 'contact', 'theme-options', 'admin-settings', 'menu', 'projects-admin', 'footer-content', 'dark-mode', 'blocks', 'reading', 'nav-options', 'header-layout', 'extras'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(
