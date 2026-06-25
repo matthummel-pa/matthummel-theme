@@ -57,6 +57,12 @@ add_action('customize_register', function ($wp) {
     $wp->add_control('mh_topbar_align', ['label' => __('Top bar item alignment', 'matthummel'), 'section' => 'mh_topbar_section', 'type' => 'select', 'choices' => $jal]);
     $wp->add_setting('mh_msgbar_align', ['default' => 'none', 'sanitize_callback' => 'sanitize_key']);
     $wp->add_control('mh_msgbar_align', ['label' => __('Message bar item alignment', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'select', 'choices' => $jal]);
+
+    $wopts = ['0' => __('Default', 'matthummel'), 'full' => __('Full width', 'matthummel')] + (function_exists('App\\mh_width_options') ? mh_width_options() : []);
+    $wp->add_setting('mh_topbar_width', ['default' => '0', 'sanitize_callback' => 'sanitize_text_field']);
+    $wp->add_control('mh_topbar_width', ['label' => __('Top bar width', 'matthummel'), 'section' => 'mh_topbar_section', 'type' => 'select', 'choices' => $wopts]);
+    $wp->add_setting('mh_msgbar_width', ['default' => '0', 'sanitize_callback' => 'sanitize_text_field']);
+    $wp->add_control('mh_msgbar_width', ['label' => __('Message bar width', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'select', 'choices' => $wopts]);
 }, 13);
 
 add_action('mh_head_end', function () {
@@ -145,6 +151,25 @@ add_action('mh_head_end', function () {
     $mba = $jmap(get_theme_mod('mh_msgbar_align', 'none'));
     if ($mba) {
         $css .= '.mh-ann-inner{display:flex;align-items:center;gap:14px;text-align:left;justify-content:' . $mba . ';}';
+    }
+
+    // Bar widths (constrain the inner content; background stays full-width).
+    $bw = function ($v) {
+        if ($v === 'full') {
+            return 'max-width:none;';
+        }
+        if ($v && $v !== '0') {
+            return 'max-width:' . absint($v) . 'px;';
+        }
+        return '';
+    };
+    $tw = $bw(get_theme_mod('mh_topbar_width', '0'));
+    if ($tw !== '') {
+        $css .= '.top-bar .top-bar-inner{' . $tw . '}';
+    }
+    $mw = $bw(get_theme_mod('mh_msgbar_width', '0'));
+    if ($mw !== '') {
+        $css .= '.mh-ann .mh-ann-inner{' . $mw . '}';
     }
 
     // Base styling for blocks placed in the bars (only when those areas are in use).
