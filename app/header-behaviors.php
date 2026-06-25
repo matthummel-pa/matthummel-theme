@@ -2,6 +2,7 @@
 
 /**
  * Header behaviors: sticky, shrink-on-scroll, and transparent (overlay) header.
+ * Controls live in the consolidated "Header Layout" section (mh_headerlayout_section).
  * Adds body classes + scoped CSS/JS. No template edits required.
  */
 
@@ -11,23 +12,18 @@ add_action('customize_register', function ($wp) {
     if (! $wp->get_panel('mh_theme_options')) {
         $wp->add_panel('mh_theme_options', ['title' => __('Theme Options', 'matthummel'), 'priority' => 30]);
     }
-    $wp->add_section('mh_headerbe_section', [
-        'title' => __('Header Behavior', 'matthummel'),
-        'panel' => 'mh_theme_options',
-        'description' => __('Sticky, shrink-on-scroll, and transparent overlay header options.', 'matthummel'),
-    ]);
 
     $wp->add_setting('mh_header_sticky', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
-    $wp->add_control('mh_header_sticky', ['label' => __('Sticky header', 'matthummel'), 'section' => 'mh_headerbe_section', 'type' => 'checkbox']);
+    $wp->add_control('mh_header_sticky', ['label' => __('Sticky header', 'matthummel'), 'section' => 'mh_headerlayout_section', 'type' => 'checkbox']);
 
     $wp->add_setting('mh_header_shrink', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
-    $wp->add_control('mh_header_shrink', ['label' => __('Shrink on scroll (needs sticky)', 'matthummel'), 'section' => 'mh_headerbe_section', 'type' => 'checkbox']);
+    $wp->add_control('mh_header_shrink', ['label' => __('Shrink on scroll (needs sticky)', 'matthummel'), 'section' => 'mh_headerlayout_section', 'type' => 'checkbox']);
 
     $wp->add_setting('mh_header_transparent', ['default' => 'none', 'sanitize_callback' => 'sanitize_key']);
     $wp->add_control('mh_header_transparent', [
-        'label' => __('Transparent overlay header', 'matthummel'),
-        'section' => 'mh_headerbe_section',
-        'type' => 'select',
+        'label'   => __('Transparent overlay header', 'matthummel'),
+        'section' => 'mh_headerlayout_section',
+        'type'    => 'select',
         'choices' => ['none' => __('Off', 'matthummel'), 'front' => __('Front page only', 'matthummel'), 'all' => __('All pages', 'matthummel')],
     ]);
 }, 23);

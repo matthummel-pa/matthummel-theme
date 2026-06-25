@@ -15,7 +15,7 @@ function mh_project_metabox($post)
 {
     wp_nonce_field('mh_project_save', 'mh_project_nonce');
     $fields = [
-        '_mh_gh_owner' => [__('GitHub owner', 'matthummel'), 'matthummel-pa'],
+        '_mh_gh_owner' => [__('GitHub owner', 'matthummel'), (function_exists('get_theme_mod') ? get_theme_mod('mh_proj_owner', 'matthummel-pa') : 'matthummel-pa')],
         '_mh_gh_repo'  => [__('GitHub repo', 'matthummel'), $post->post_name],
         '_mh_eyebrow'  => [__('Eyebrow / label', 'matthummel'), 'GitHub Project'],
         '_mh_demo_url' => [__('Live demo URL', 'matthummel'), 'https://'],
@@ -66,7 +66,7 @@ add_filter('manage_projects_posts_columns', function ($cols) {
 
 add_action('manage_projects_posts_custom_column', function ($col, $post_id) {
     if ($col === 'mh_repo') {
-        $owner = get_post_meta($post_id, '_mh_gh_owner', true) ?: 'matthummel-pa';
+        $owner = get_post_meta($post_id, '_mh_gh_owner', true) ?: get_theme_mod('mh_proj_owner', 'matthummel-pa');
         $repo  = get_post_meta($post_id, '_mh_gh_repo', true);
         if ($repo) {
             echo '<a href="' . esc_url("https://github.com/{$owner}/{$repo}") . '" target="_blank" rel="noopener">' . esc_html("{$owner}/{$repo}") . '</a>';

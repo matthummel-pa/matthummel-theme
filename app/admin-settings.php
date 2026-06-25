@@ -24,6 +24,9 @@ function mh_admin_defaults()
         'mh_nav_fullwidth' => false, 'mh_header_width' => 1180, 'mh_header_height' => 0, 'mh_header_gap' => 28,
         'mh_logo_order' => 1, 'mh_nav_order' => 2, 'mh_social_order' => 3, 'mh_cta_order' => 4,
         'mh_popout_desktop' => false, 'mh_popout_tablet' => true, 'mh_popout_mobile' => true,
+        'mh_footer_social' => true, 'mh_footer_cols' => 3, 'mh_footer_bg' => 'paper', 'mh_footer_bg_custom' => '',
+        'mh_footer_textc' => 'body', 'mh_footer_text_custom' => '', 'mh_sticky_header' => false,
+        'mh_proj_owner' => 'matthummel-pa', 'mh_gh_token' => '', 'mh_proj_cache_hours' => 6, 'mh_gh_client_id' => '',
     ]);
     return $base;
 }
@@ -86,8 +89,23 @@ function mh_admin_schema()
             ['key' => 'mh_popout_tablet', 'label' => __('Menu icon on tablet', 'matthummel'), 'type' => 'checkbox'],
             ['key' => 'mh_popout_mobile', 'label' => __('Menu icon on mobile', 'matthummel'), 'type' => 'checkbox'],
         ]],
-        'footer' => ['icon' => 'dashicons-editor-insertmore', 'label' => __('Footer', 'matthummel'), 'fields' => [], 'note' => __('Footer builder (columns, widgets, colors) is coming next.', 'matthummel')],
-        'projects' => ['icon' => 'dashicons-portfolio', 'label' => __('Projects', 'matthummel'), 'fields' => [], 'note' => __('Projects admin (GitHub owner/repo, screenshots, list columns, dashboard) is coming next.', 'matthummel')],
+        'footer' => ['icon' => 'dashicons-editor-insertmore', 'label' => __('Footer', 'matthummel'), 'fields' => [
+            ['key' => 'mh_footer_social', 'label' => __('Show social icons in footer', 'matthummel'), 'type' => 'checkbox'],
+            ['key' => 'mh_footer_cols', 'label' => __('Footer columns', 'matthummel'), 'type' => 'select', 'choices' => ['1' => '1', '2' => '2', '3' => '3', '4' => '4']],
+            ['key' => 'mh_footer_bg', 'label' => __('Footer background', 'matthummel'), 'type' => 'select', 'choices' => mh_palette_choices()],
+            ['key' => 'mh_footer_bg_custom', 'label' => __('Footer background (custom hex)', 'matthummel'), 'type' => 'color'],
+            ['key' => 'mh_footer_textc', 'label' => __('Footer text color', 'matthummel'), 'type' => 'select', 'choices' => mh_palette_choices()],
+            ['key' => 'mh_footer_text_custom', 'label' => __('Footer text (custom hex)', 'matthummel'), 'type' => 'color'],
+            ['key' => 'mh_footer_text', 'label' => __('Footer tagline', 'matthummel'), 'type' => 'textarea'],
+            ['key' => 'mh_sticky_header', 'label' => __('Sticky header', 'matthummel'), 'type' => 'checkbox'],
+        ], 'note' => __('Footer columns map to block widget areas under Appearance > Widgets.', 'matthummel')],
+        'projects' => ['icon' => 'dashicons-portfolio', 'label' => __('Projects', 'matthummel'), 'fields' => [
+            ['key' => 'mh_proj_owner', 'label' => __('Default GitHub owner', 'matthummel'), 'type' => 'text', 'desc' => __('Used for the live repo data when a project has no owner set.', 'matthummel')],
+            ['key' => 'mh_gh_token', 'label' => __('GitHub API token (optional)', 'matthummel'), 'type' => 'text', 'desc' => __('A read-only token raises the GitHub API rate limit. Stored as a theme setting.', 'matthummel')],
+            ['key' => 'mh_proj_cache_hours', 'label' => __('GitHub data cache (hours)', 'matthummel'), 'type' => 'number'],
+            ['key' => 'mh_gh_client_id', 'label' => __('GitHub OAuth Client ID', 'matthummel'), 'type' => 'text', 'desc' => __('Public Client ID from your GitHub OAuth App (Device Flow enabled). Needed for "Connect with GitHub".', 'matthummel')],
+            ['key' => 'mh_gh_connect', 'label' => __('GitHub connection', 'matthummel'), 'type' => 'github_connect'],
+        ], 'note' => __('Per-project owner/repo, eyebrow and demo URL are set on each project via the Project Details box.', 'matthummel')],
     ];
 }
 
@@ -123,6 +141,11 @@ function mh_render_field($f)
     echo '<label for="' . esc_attr($key) . '">' . esc_html($f['label']) . '</label>';
     echo '<div class="mh-field-control">';
     switch ($type) {
+        case 'github_connect':
+            if (function_exists('App\\mh_gh_connect_widget')) {
+                mh_gh_connect_widget();
+            }
+            break;
         case 'textarea':
             echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3">' . esc_textarea($val) . '</textarea>';
             break;
@@ -255,6 +278,9 @@ add_action('admin_post_mh_save_theme_settings', function () {
         foreach ($tab['fields'] as $f) {
             $key  = $f['key'];
             $type = $f['type'];
+            if ($type === 'github_connect') {
+                continue;
+            }
             if ($type === 'checkbox') {
                 set_theme_mod($key, isset($_POST[$key]));
                 continue;

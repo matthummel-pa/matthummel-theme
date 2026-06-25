@@ -77,23 +77,20 @@ add_action('customize_register', function ($wp) {
     $wp->add_control('mh_font_body', ['label' => __('Body font', 'matthummel'), 'section' => 'mh_type', 'type' => 'select', 'choices' => $choices]);
 
     /* Layout width */
-    $wp->add_section('mh_layout', ['title' => __('Content width', 'matthummel'), 'panel' => 'mh_theme_options']);
     $wp->add_setting('mh_container', ['default' => $d['mh_container'], 'sanitize_callback' => 'absint']);
-    $wp->add_control('mh_container', ['label' => __('Content width', 'matthummel'), 'section' => 'mh_layout', 'type' => 'select', 'choices' => mh_width_options()]);
+    $wp->add_control('mh_container', ['label' => __('Content width', 'matthummel'), 'section' => 'mh_layout_section', 'type' => 'select', 'choices' => mh_width_options()]);
 
     /* Header */
-    $wp->add_section('mh_header', ['title' => __('Header button', 'matthummel'), 'panel' => 'mh_theme_options']);
     $wp->add_setting('mh_show_cta', ['default' => $d['mh_show_cta'], 'sanitize_callback' => 'wp_validate_boolean']);
-    $wp->add_control('mh_show_cta', ['label' => __('Show header button', 'matthummel'), 'section' => 'mh_header', 'type' => 'checkbox']);
+    $wp->add_control('mh_show_cta', ['label' => __('Show header button', 'matthummel'), 'section' => 'mh_headerlayout_section', 'type' => 'checkbox']);
     $wp->add_setting('mh_cta_text', ['default' => $d['mh_cta_text'], 'sanitize_callback' => 'sanitize_text_field']);
-    $wp->add_control('mh_cta_text', ['label' => __('Button text', 'matthummel'), 'section' => 'mh_header', 'type' => 'text']);
+    $wp->add_control('mh_cta_text', ['label' => __('Button text', 'matthummel'), 'section' => 'mh_headerlayout_section', 'type' => 'text']);
     $wp->add_setting('mh_cta_url', ['default' => $d['mh_cta_url'], 'sanitize_callback' => 'esc_url_raw']);
-    $wp->add_control('mh_cta_url', ['label' => __('Button URL', 'matthummel'), 'section' => 'mh_header', 'type' => 'url']);
+    $wp->add_control('mh_cta_url', ['label' => __('Button URL', 'matthummel'), 'section' => 'mh_headerlayout_section', 'type' => 'url']);
 
     /* Footer */
-    $wp->add_section('mh_footer', ['title' => __('Footer text', 'matthummel'), 'panel' => 'mh_theme_options']);
     $wp->add_setting('mh_footer_text', ['default' => $d['mh_footer_text'], 'sanitize_callback' => 'wp_kses_post']);
-    $wp->add_control('mh_footer_text', ['label' => __('Footer tagline', 'matthummel'), 'section' => 'mh_footer', 'type' => 'textarea']);
+    $wp->add_control('mh_footer_text', ['label' => __('Footer tagline', 'matthummel'), 'section' => 'mh_footer_section', 'type' => 'textarea']);
 });
 
 /* Wire values into the theme's existing filter hooks */

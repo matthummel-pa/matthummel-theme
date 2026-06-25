@@ -23,6 +23,10 @@ class Github
             'User-Agent' => 'matthummel.com',
             'Accept' => 'application/vnd.github+json',
         ]];
+        $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
+        if ($token !== '') {
+            $jargs['headers']['Authorization'] = 'token ' . $token;
+        }
 
         $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}", $jargs);
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
@@ -42,15 +46,17 @@ class Github
             $data['release'] = $jr['tag_name'] ?? '';
         }
 
-        $rm = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/readme", ['timeout' => 12, 'headers' => [
-            'User-Agent' => 'matthummel.com',
-            'Accept' => 'application/vnd.github.html',
-        ]]);
+        $rmHeaders = ['User-Agent' => 'matthummel.com', 'Accept' => 'application/vnd.github.html'];
+        if ($token !== '') {
+            $rmHeaders['Authorization'] = 'token ' . $token;
+        }
+        $rm = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/readme", ['timeout' => 12, 'headers' => $rmHeaders]);
         if (! is_wp_error($rm) && wp_remote_retrieve_response_code($rm) === 200) {
             $data['intro'] = self::readmeIntro(wp_remote_retrieve_body($rm));
         }
 
-        set_transient($key, $data, 6 * HOUR_IN_SECONDS);
+        $ttl = max(1, (int) (function_exists('get_theme_mod') ? get_theme_mod('mh_proj_cache_hours', 6) : 6));
+        set_transient($key, $data, $ttl * HOUR_IN_SECONDS);
 
         return $data;
     }
