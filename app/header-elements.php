@@ -102,15 +102,25 @@ add_action('mh_head_end', function () {
         $chip  = $shape !== 'none';
         $pad   = $chip ? max(5, (int) round($size * 0.5)) : 0;
         $radius = $shape === 'circle' ? '50%' : ($shape === 'rounded' ? (string) max(4, (int) round($size * 0.35)) . 'px' : '0');
-        $base = '.top-bar-social.is-icons,.social.is-icons';
-        $css .= $base . '{display:inline-flex;align-items:center;gap:' . ($chip ? '8' : '14') . 'px;list-style:none;margin:0;padding:0;}';
-        $css .= $base . ' li{margin:0;}';
-        $css .= $base . ' a{display:inline-flex;align-items:center;justify-content:center;padding:' . $pad . 'px;border-radius:' . $radius . ';transition:color .15s ease,background .15s ease,transform .15s ease;'
+        // Distribute each suffix across BOTH base selectors. Appending e.g. " a svg"
+        // to a comma-grouped base only qualifies the LAST member, so the first
+        // (".top-bar-social.is-icons", the <ul>) would match bare and inherit the
+        // descendant's display:block — collapsing the list to a stack. This helper
+        // keeps every rule scoped to the intended element on both bars.
+        $bases = ['.top-bar-social.is-icons', '.social.is-icons'];
+        $grp = function ($suffix) use ($bases) {
+            return implode(',', array_map(static function ($b) use ($suffix) {
+                return $b . $suffix;
+            }, $bases));
+        };
+        $css .= $grp('') . '{display:inline-flex;align-items:center;gap:' . ($chip ? '8' : '14') . 'px;list-style:none;margin:0;padding:0;}';
+        $css .= $grp(' li') . '{margin:0;list-style:none;}';
+        $css .= $grp(' a') . '{display:inline-flex;align-items:center;justify-content:center;padding:' . $pad . 'px;border-radius:' . $radius . ';transition:color .15s ease,background .15s ease,transform .15s ease;'
             . ($color ? 'color:' . $color . ';' : 'color:currentColor;')
             . ($chip && $bg ? 'background:' . $bg . ';' : '') . '}';
-        $css .= $base . ' a svg{width:' . $size . 'px;height:' . $size . 'px;fill:currentColor;display:block;}';
+        $css .= $grp(' a svg') . '{width:' . $size . 'px;height:' . $size . 'px;fill:currentColor;display:block;}';
         if ($hover) {
-            $css .= $base . ' a:hover{color:' . $hover . ';transform:translateY(-1px);}';
+            $css .= $grp(' a:hover') . '{color:' . $hover . ';transform:translateY(-1px);}';
         }
     }
 
