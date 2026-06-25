@@ -71,14 +71,9 @@ function mh_ann_render()
     }
     $done = true;
 
-    if (! mh_ann('mh_ann_enable')) {
+    if (! mh_ann('mh_ann_enable') || ! is_active_sidebar('messagebar')) {
         return;
     }
-    $hasBlocks = is_active_sidebar('messagebar');
-    if (trim((string) mh_ann('mh_ann_text')) === '' && ! $hasBlocks) {
-        return;
-    }
-    // schedule window
     $today = current_time('Y-m-d');
     $start = mh_ann('mh_ann_start');
     $end   = mh_ann('mh_ann_end');
@@ -89,30 +84,21 @@ function mh_ann_render()
         return;
     }
 
-    $bg   = sanitize_hex_color(mh_ann('mh_ann_bg')) ?: '#17191e';
-    $col  = sanitize_hex_color(mh_ann('mh_ann_color')) ?: '#ffffff';
-    $text = wp_kses_post(mh_ann('mh_ann_text'));
-    $lurl = esc_url(mh_ann('mh_ann_lurl'));
-    $ltxt = esc_html(mh_ann('mh_ann_ltext'));
+    $bg      = sanitize_hex_color(mh_ann('mh_ann_bg')) ?: '#17191e';
+    $col     = sanitize_hex_color(mh_ann('mh_ann_color')) ?: '#ffffff';
     $dismiss = (bool) mh_ann('mh_ann_dismiss');
-    $ver  = substr(md5($text . $lurl . $ltxt), 0, 8); // re-show if content changes
+    $sw      = get_option('sidebars_widgets');
+    $ver     = substr(md5((string) $start . (string) $end . wp_json_encode($sw['messagebar'] ?? [])), 0, 8);
 
     echo '<div class="mh-ann" data-ver="' . esc_attr($ver) . '" style="background:' . esc_attr($bg) . ';color:' . esc_attr($col) . '">';
-    echo '<div class="mh-ann-inner"><span class="mh-ann-msg">' . $text . '</span>';
-    if ($lurl && $ltxt) {
-        echo ' <a class="mh-ann-link" href="' . $lurl . '" style="color:' . esc_attr($col) . '">' . $ltxt . ' &rarr;</a>';
-    }
-    if ($hasBlocks) {
-        echo '<span class="mh-ann-blocks">';
-        dynamic_sidebar('messagebar');
-        echo '</span>';
-    }
+    echo '<div class="mh-ann-inner">';
+    dynamic_sidebar('messagebar');
     echo '</div>';
     if ($dismiss) {
         echo '<button class="mh-ann-x" aria-label="' . esc_attr__('Dismiss', 'matthummel') . '" style="color:' . esc_attr($col) . '">&times;</button>';
     }
     echo '</div>';
-    echo '<style>.mh-ann{position:relative;font-size:14px;}.mh-ann-inner{max-width:1180px;margin:0 auto;padding:9px 40px;text-align:center;}.mh-ann-link{font-weight:600;text-decoration:underline;white-space:nowrap;}.mh-ann-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:20px;line-height:1;cursor:pointer;opacity:.8;}.mh-ann-x:hover{opacity:1;}.mh-ann.is-hidden{display:none;}</style>';
+    echo '<style>.mh-ann{position:relative;font-size:14px;}.mh-ann-inner{max-width:1180px;margin:0 auto;padding:8px 40px;text-align:center;}.mh-ann-inner *{color:inherit;}.mh-ann-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:20px;line-height:1;cursor:pointer;opacity:.8;}.mh-ann-x:hover{opacity:1;}.mh-ann.is-hidden{display:none;}</style>';
     if ($dismiss) {
         echo "<script>(function(){var b=document.querySelector('.mh-ann');if(!b)return;var k='mh-ann-'+b.getAttribute('data-ver');try{if(localStorage.getItem(k)==='1'){b.classList.add('is-hidden');}}catch(e){}var x=b.querySelector('.mh-ann-x');if(x)x.addEventListener('click',function(){b.classList.add('is-hidden');try{localStorage.setItem(k,'1');}catch(e){}});})();</script>";
     }

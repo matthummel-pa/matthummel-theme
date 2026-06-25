@@ -1,45 +1,6 @@
-@php
-  $mhTopbar = \App\mh_topbar();
-  $mhSoc    = \App\mh_social_links();
-  $socials = apply_filters('matthummel/socials', [
-    'LinkedIn' => 'https://www.linkedin.com/in/matthummel',
-    'Dev.to'   => 'https://dev.to/mattbuildsapps',
-    'GitHub'   => 'https://github.com/matthummel-pa',
-  ]);
-  $mhSocLoc = get_theme_mod('mh_social_location', 'auto');
-  $socTop = ($mhSocLoc === 'auto') ? ($mhTopbar['enable'] && $mhTopbar['show_social']) : in_array($mhSocLoc, ['topbar', 'both'], true);
-  $socNav = ($mhSocLoc === 'auto') ? (! $mhTopbar['enable']) : in_array($mhSocLoc, ['navbar', 'both'], true);
-  $socStyle = get_theme_mod('mh_social_style', 'text');
-@endphp
-
-@if ($mhTopbar['enable'] || is_active_sidebar('topbar') || $socTop)
+@if (is_active_sidebar('topbar'))
   <div class="top-bar">
-    <div class="top-bar-inner">
-      @if (is_active_sidebar('topbar'))
-        <div class="top-bar-blocks">@php(dynamic_sidebar('topbar'))@endphp</div>
-      @endif
-      @if ($mhTopbar['contact'])
-        <div class="top-bar-contact">{!! wp_kses_post($mhTopbar['contact']) !!}</div>
-      @endif
-      <div class="top-bar-right">
-        @if ($socTop && ($socStyle === 'icons' ? $mhSoc : $socials))
-          <ul class="top-bar-social {{ $socStyle === 'icons' ? 'is-icons' : '' }}" aria-label="{{ __('Social links', 'matthummel') }}">
-            @if ($socStyle === 'icons')
-              @foreach ($mhSoc as $s)
-                <li><a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener">{!! \App\mh_social_icon($s['key']) !!}</a></li>
-              @endforeach
-            @else
-              @foreach ($socials as $label => $url)
-                <li><a href="{{ esc_url($url) }}" rel="me noopener">{{ $label }}</a></li>
-              @endforeach
-            @endif
-          </ul>
-        @endif
-        @if ($mhTopbar['cta_text'] && $mhTopbar['cta_url'])
-          <a class="top-bar-cta" href="{{ esc_url($mhTopbar['cta_url']) }}">{{ $mhTopbar['cta_text'] }}</a>
-        @endif
-      </div>
-    </div>
+    <div class="top-bar-inner">@php(dynamic_sidebar('topbar'))@endphp</div>
   </div>
 @endif
 
@@ -67,26 +28,6 @@
 
   @if (is_active_sidebar('navbar'))
     <div class="nav-blocks">@php(dynamic_sidebar('navbar'))@endphp</div>
-  @endif
-
-  @if ($socNav && ($socStyle === 'icons' ? $mhSoc : $socials))
-    <ul class="social {{ $socStyle === 'icons' ? 'is-icons' : '' }}" aria-label="{{ __('Social links', 'matthummel') }}">
-      @if ($socStyle === 'icons')
-        @foreach ($mhSoc as $s)
-          <li><a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener">{!! \App\mh_social_icon($s['key']) !!}</a></li>
-        @endforeach
-      @else
-        @foreach ($socials as $label => $url)
-          <li><a href="{{ esc_url($url) }}" rel="me noopener">{{ $label }}</a></li>
-        @endforeach
-      @endif
-    </ul>
-  @endif
-
-  @if (apply_filters('matthummel/show_header_cta', true))
-    <a class="btn header-cta" href="{{ esc_url(apply_filters('matthummel/header_cta_url', 'https://dev.to/mattbuildsapps')) }}">
-      {{ apply_filters('matthummel/header_cta_label', __('Find me on Dev.to', 'matthummel')) }}
-    </a>
   @endif
 
   @if (get_theme_mod('mh_dark_enable', true))
