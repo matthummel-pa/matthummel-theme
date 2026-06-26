@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+﻿import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin'
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
@@ -9,6 +9,7 @@ if (! process.env.APP_URL) {
 }
 
 export default defineConfig({
+  server: { host: 'localhost', port: 3000, strictPort: true, cors: true },
   base: '/wp-content/themes/matthummel/public/build/',
   plugins: [
     tailwindcss(),
