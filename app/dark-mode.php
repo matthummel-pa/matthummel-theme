@@ -34,3 +34,24 @@ add_action('wp_footer', function () {
     }
     echo "<script>(function(){var b=document.querySelector('.mh-theme-toggle');if(!b)return;function set(d){document.documentElement.classList.toggle('mh-dark',d);try{localStorage.setItem('mh-theme',d?'dark':'light');}catch(e){}b.setAttribute('aria-pressed',d?'true':'false');}b.setAttribute('aria-pressed',document.documentElement.classList.contains('mh-dark')?'true':'false');b.addEventListener('click',function(){set(!document.documentElement.classList.contains('mh-dark'));});})();</script>\n";
 }, 60);
+
+/**
+ * Dark-mode navbar surface. By default the .banner is transparent and just blends
+ * into the dark page background, so it doesn't read as a distinct bar. Give it an
+ * explicit darker tone + guaranteed light text/icons in dark mode. Emitted at a
+ * late mh_head_end priority and with !important so it also wins over the optional
+ * sticky-header background (which is hard-coded light).
+ */
+add_action('mh_head_end', function () {
+    if (! get_theme_mod('mh_dark_enable', true)) {
+        return;
+    }
+    echo "\n<style id=\"mh-dark-navbar\">"
+        . 'html.mh-dark .banner{background:#1c1f24!important;border-bottom:1px solid #2c2f36;}'
+        . 'html.mh-dark .banner,html.mh-dark .banner .brand,html.mh-dark .banner .brand-name,'
+        . 'html.mh-dark .banner .nav-primary .nav a,html.mh-dark .banner .menu-toggle,'
+        . 'html.mh-dark .banner .mh-theme-toggle,html.mh-dark .banner .social a{color:#f3f1ea;}'
+        . 'html.mh-dark .banner .brand small{color:#9a978d;}'
+        . 'html.mh-dark .banner .nav-primary .nav a:hover{color:#fff;}'
+        . "</style>\n";
+}, 20);
