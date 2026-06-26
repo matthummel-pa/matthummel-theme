@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "resources",
+    "paths": {
+      "@fonts/*": ["fonts/*"],
+      "@images/*": ["images/*"],
+      "@scripts/*": ["scripts/*"],
+      "@styles/*": ["styles/*"]
+    }
+  },
+  "files": ["vite.config.js"],
+  "include": ["resources"],
+  "exclude": ["node_modules", "public"]
+}
