@@ -45,6 +45,9 @@ add_action('customize_register', function ($wp) {
     $wp->add_control('mh_topcta_hide_mobile', ['label' => __('Hide top bar button on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $wp->add_setting('mh_navcta_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_navcta_hide_mobile', ['label' => __('Hide navbar button on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    // Shrink the logo area on mobile so the header fits on one row.
+    $wp->add_setting('mh_logo_shrink_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_logo_shrink_mobile', ['label' => __('Shrink logo on mobile (fit one row)', 'matthummel'), 'description' => __('Smaller logo mark + name and hides the tagline at ≤640px.', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'icons');
     $sel($wp, 'mh_social_size', __('Social icon size', 'matthummel'), ['14' => '14px', '16' => '16px', '18' => '18px', '20' => '20px', '24' => '24px', '28' => '28px'], '18');
     $sel($wp, 'mh_social_shape', __('Social icon shape', 'matthummel'), ['none' => __('Plain', 'matthummel'), 'circle' => __('Circle', 'matthummel'), 'rounded' => __('Rounded', 'matthummel'), 'square' => __('Square', 'matthummel')], 'none');
@@ -119,6 +122,15 @@ add_action('mh_head_end', function () {
     }
     if (get_theme_mod('mh_navcta_hide_mobile', false)) {
         $css .= '@media(max-width:640px){.banner .header-cta{display:none!important;}}';
+    }
+    if (get_theme_mod('mh_logo_shrink_mobile', false)) {
+        $css .= '@media(max-width:640px){'
+            . '.banner{gap:14px;}'
+            . '.banner .brand{gap:8px;}'
+            . '.banner .brand-mark svg{width:30px;height:30px;border-radius:8px;}'
+            . '.banner .brand-name{font-size:16px;}'
+            . '.banner .brand small{display:none;}'
+            . '}';
     }
 
     // Icon styling for header social links (only when display = icons).
