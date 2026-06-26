@@ -4,6 +4,39 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-06-26
+
+### Added
+- **`resources/css/page-templates.css`** — major additions: `.page-hero` (dark ink home hero with pulsing badge, terminal box, CTA actions), `.page-section` / `.page-section--cream` / `.page-section--border-top` (generic page section wrappers), `.page-section-eyebrow` / `.page-section-title` / `.page-section-lead` (section typography), `.about-page-hero` / `.resources-page-hero` / `.resume-page-hero` (dark ink heroes per page), `.about-hero-ctas` (dark hero button row), `.resources-category-chips` / `.resources-chip` (category pill chips), `.resource-section` / `.resource-section-title` / `.resource-section-desc` / `.resource-cards` / `.resource-card` / `.resource-channel-list` (resources page layout), `.resume-page-hero` with `.resume-meta` / `.resume-links` / `.resume-download-btn`, `.timeline-body ul` bullet list styling, dark-mode overrides for all new hero sections.
+
+### Changed
+- **Home page (ID 17)** — rebuilt from scratch: dark ink `.page-hero` with pulsing availability badge, large heading, terminal box (`$ whoami → matt hummel · full-stack developer`), stat strip (15+ / 5+ / 50+ / 100%), 3-column `.skills-grid` (Front-End / Back-End & Platforms / SEO & Growth), latest posts block, dark `.cta-card` (Open to select side projects).
+- **About page (ID 25)** — rebuilt from scratch: dark ink `.about-page-hero` with heading + intro + LinkedIn/contact CTAs, 4-stat cream strip, 3-col `.skills-grid` (Front-End / Back-End / Performance & Accessibility), 2-col `.focus-grid` (WordPress / Power Platform), `.about-bio` journey narrative (3 sections), dark `.cta-card`.
+- **Résumé page (ID 15)** — rebuilt from scratch: dark ink `.resume-page-hero` with name / meta / links / download button, full `.resume-timeline` (3 roles with bullet lists), 3-col `.skills-grid` with `.skills-tag-wrap` tag pills, `.resume-timeline` certs section, dark `.cta-card`.
+- **Resources page (ID 21)** — rebuilt from scratch: dark ink `.resources-page-hero` with category chips, resource sections for MS Learn / YouTube channels / Blogs / Power Automate / Personal Favourites — all using `.resource-cards` / `.resource-card` layout, `.resource-channel-list` for personal picks, dark `.cta-card`.
+- **`resources/views/front-page.blade.php`** — fixed Blade `@php(post_class())` bug; replaced with `implode(get_post_class())` + `@php the_content(); @endphp`.
+- **`resources/views/template-about.blade.php`** — same Blade fix.
+- **`resources/views/template-resume.blade.php`** — same Blade fix.
+- **`resources/views/template-resources.blade.php`** — same Blade fix.
+
+## [1.6.0] - 2026-06-26
+
+### Added
+- **`resources/css/page-templates.css`** — full redesign; added new CSS blocks for `.site-header` (sticky frosted-glass header with brand mark, primary nav, social icons, dark toggle, "Hire Me" CTA), `.blog-page-header` (dark ink full-bleed hero), `.blog-hero-card` (2-column hero card with image + body), `.blog-card-grid` / `.blog-grid-card` (responsive 2–3 column grid), `.blog-post-tag`, `.blog-post-meta`, `.blog-read-more`, `.blog-pagination`, `.blog-empty`, `.mh-progress` (reading progress bar), `.post-hero` (dark ink post hero), `.post-featured-img`, `.post-layout` / `.post-main`, `.mh-toc` (table of contents), `.post-author-bio`, `.post-prev-next`, `.mh-copy` (code copy button).
+- **`resources/js/reading-progress.js`** — standalone module: scroll-driven reading progress bar, JS-generated table of contents from H2/H3 headings (min 3 headings), and copy buttons on code blocks.
+- **`resources/js/app.js`** — wires up dark mode toggle (localStorage persist), popout mobile menu (open/close/overlay/keyboard), and imports `reading-progress.js`.
+
+### Changed
+- **`resources/views/sections/header.blade.php`** — complete rewrite from old `.banner` layout to new `.site-header` / `.site-header-inner` with green MH logo mark, primary nav, social icons list, dark-mode toggle button, "Hire Me" CTA, and hamburger-triggered popout menu.
+- **`resources/views/template-blog.blade.php`** — complete rewrite; replaced old `.blog-grid` / `.blog-card` layout with new dark page header + featured hero card (first post) + responsive grid of remaining posts. Removed `@php(post_class())` inline directive (broke Blade parser); uses plain class strings instead.
+- **`resources/views/archive.blade.php`** — same new hero + grid layout as `template-blog.blade.php` for category/tag/date archive URLs.
+- **`resources/views/partials/content-single.blade.php`** — complete rewrite; replaced old `.post-single-header` layout with new `.post-hero` (dark ink), `.post-featured-img`, `.post-layout`, `.mh-toc`, `.post-prose`, `.post-author-bio`, `.post-prev-next`. Removed `@php(post_class())` directive; uses plain `class=""` strings. Removed `$pagination()` callable (unavailable in partials context); uses direct WordPress functions.
+
+### Fixed
+- **Nav menu labels** — renamed menu items: Home, Resources, Contact, About (via `fix-nav.ps1`). Removed Privacy Policy and Accessibility Statement items.
+- **Site title** — was displaying "portfolio"; corrected to "Matt Hummel" in WordPress options.
+- **Blade `@php(func('arg'))` bug** — `@php(post_class('some-class'))` with quoted string argument causes Blade's regex parser to treat everything after the second parenthesis as literal HTML. Fixed by extracting PHP computations into standalone `@php ... @endphp` blocks before the HTML element.
+
 ## [1.5.0] - 2026-06-26
 
 ### Changed
