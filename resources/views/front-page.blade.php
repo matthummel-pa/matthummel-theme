@@ -1,17 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-  <section class="home-hero container">
-    <p class="eyebrow">{{ __('Web · WordPress · Power Platform', 'matthummel') }}</p>
-    <h1 class="display-title is-hero">{{ __('Clean, fast software for the web and Microsoft 365.', 'matthummel') }}</h1>
-    <p class="lead">{{ __("I'm Matt Hummel, a full-stack developer. I write about web development, WordPress, and the Power Platform, and share the tools I build on GitHub.", 'matthummel') }}</p>
-    <div class="btn-row">
-      @php($projectsLink = get_post_type_archive_link('projects'))
-      @if ($projectsLink)
-        <a class="btn" href="{{ esc_url($projectsLink) }}">{{ __('View projects', 'matthummel') }}</a>
+  @php
+    $heroCols = max(1, min(3, (int) get_theme_mod('mh_hero_cols', 1)));
+    $heroImg  = get_theme_mod('mh_hero_img', '');
+    $heroImg2 = get_theme_mod('mh_hero_img2', '');
+    $heroBg   = get_theme_mod('mh_hero_bg', '');
+    $heroAnim = get_theme_mod('mh_hero_anim', 'zoom-in');
+    $heroAnimAttr = $heroAnim !== 'none' ? ' data-anim="' . esc_attr($heroAnim) . '"' : '';
+  @endphp
+  <section class="home-hero container mh-hero">
+    @if ($heroBg)
+      <span class="mh-hero-overlay" aria-hidden="true"></span>
+    @endif
+    <div class="mh-hero-inner">
+      <div class="mh-hero-content"{!! $heroAnimAttr !!}>
+        <p class="eyebrow">{{ __('Web · WordPress · Power Platform', 'matthummel') }}</p>
+        <h1 class="display-title is-hero">{{ __('Clean, fast software for the web and Microsoft 365.', 'matthummel') }}</h1>
+        <p class="lead">{{ __("I'm Matt Hummel, a full-stack developer. I write about web development, WordPress, and the Power Platform, and share the tools I build on GitHub.", 'matthummel') }}</p>
+        <div class="btn-row">
+          @php($projectsLink = get_post_type_archive_link('projects'))
+          @if ($projectsLink)
+            <a class="btn" href="{{ esc_url($projectsLink) }}">{{ __('View projects', 'matthummel') }}</a>
+          @endif
+          @php($blogLink = get_option('page_for_posts') ? get_permalink(get_option('page_for_posts')) : home_url('/blog/'))
+          <a class="btn btn-outline" href="{{ esc_url($blogLink) }}">{{ __('Read the blog', 'matthummel') }}</a>
+        </div>
+      </div>
+      @if ($heroCols >= 2 && $heroImg)
+        <div class="mh-hero-media"{!! $heroAnimAttr !!}>
+          <img src="{{ esc_url($heroImg) }}" alt="" loading="eager" decoding="async">
+        </div>
       @endif
-      @php($blogLink = get_option('page_for_posts') ? get_permalink(get_option('page_for_posts')) : home_url('/blog/'))
-      <a class="btn btn-outline" href="{{ esc_url($blogLink) }}">{{ __('Read the blog', 'matthummel') }}</a>
+      @if ($heroCols >= 3 && $heroImg2)
+        <div class="mh-hero-media"{!! $heroAnimAttr !!}>
+          <img src="{{ esc_url($heroImg2) }}" alt="" loading="eager" decoding="async">
+        </div>
+      @endif
     </div>
   </section>
 
