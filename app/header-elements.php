@@ -48,6 +48,9 @@ add_action('customize_register', function ($wp) {
     // Shrink the logo area on mobile so the header fits on one row.
     $wp->add_setting('mh_logo_shrink_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_logo_shrink_mobile', ['label' => __('Shrink logo on mobile (fit one row)', 'matthummel'), 'description' => __('Smaller logo mark + name and hides the tagline at ≤640px.', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    // Hide the "Menu" text on the popout button on mobile (icon only).
+    $wp->add_setting('mh_menu_label_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_menu_label_hide_mobile', ['label' => __('Hide "Menu" label on mobile (icon only)', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $sel($wp, 'mh_social_style', __('Social links display', 'matthummel'), ['text' => __('Text', 'matthummel'), 'icons' => __('Icons', 'matthummel')], 'icons');
     $sel($wp, 'mh_social_size', __('Social icon size', 'matthummel'), ['14' => '14px', '16' => '16px', '18' => '18px', '20' => '20px', '24' => '24px', '28' => '28px'], '18');
     $sel($wp, 'mh_social_shape', __('Social icon shape', 'matthummel'), ['none' => __('Plain', 'matthummel'), 'circle' => __('Circle', 'matthummel'), 'rounded' => __('Rounded', 'matthummel'), 'square' => __('Square', 'matthummel')], 'none');
@@ -131,6 +134,9 @@ add_action('mh_head_end', function () {
             . '.banner .brand-name{font-size:16px;}'
             . '.banner .brand small{display:none;}'
             . '}';
+    }
+    if (get_theme_mod('mh_menu_label_hide_mobile', false)) {
+        $css .= '@media(max-width:640px){.menu-toggle .menu-toggle-label{display:none;}.menu-toggle{gap:0;}}';
     }
 
     // Icon styling for header social links (only when display = icons).
