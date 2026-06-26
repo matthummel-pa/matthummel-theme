@@ -6,88 +6,125 @@
 
 @section('content')
 
-{{-- ── PAGE HEADER ─────────────────────────────────────────────────── --}}
-<header class="page-header container" data-anim="fade-up">
-  <h1 class="display-title is-hero">{{ get_the_title() }}</h1>
-  @if (get_the_excerpt())
-    <p class="lead">{{ get_the_excerpt() }}</p>
-  @else
-    <p class="lead">{{ __('Lessons, tutorials, and real-world examples from building for the web and Microsoft 365.', 'matthummel') }}</p>
-  @endif
-</header>
+{{-- ── Blog index page header ─────────────────────────────────────────────── --}}
+<div class="blog-page-header">
+  <div class="container">
+    <span class="eyebrow">The Blog</span>
+    <h1 class="display-xl blog-index-title">{{ get_the_title() ?: 'Blog' }}</h1>
+    @php $excerpt = strip_tags(get_the_excerpt()); @endphp
+    <p class="lead">{{ $excerpt ?: 'WordPress tutorials, Power Platform guides, and dev notes from Gettysburg, PA.' }}</p>
+  </div>
+</div>
 
-<hr class="rule">
-
-{{-- ── CATEGORY FILTER ─────────────────────────────────────────────── --}}
+{{-- ── Posts ────────────────────────────────────────────────────────────────── --}}
 @php
   $activeCat = isset($_GET['cat']) ? (int) $_GET['cat'] : 0;
-  $cats = get_categories(['hide_empty' => true, 'orderby' => 'count', 'order' => 'DESC', 'number' => 12]);
-@endphp
-@if ($cats)
-  <nav class="filter-bar container" aria-label="{{ __('Filter by category', 'matthummel') }}">
-    <a class="filter-pill{{ !$activeCat ? ' is-active' : '' }}" href="{{ get_permalink() }}">{{ __('All', 'matthummel') }}</a>
-    @foreach ($cats as $cat)
-      <a class="filter-pill{{ $activeCat === $cat->term_id ? ' is-active' : '' }}"
-         href="{{ esc_url(get_category_link($cat->term_id)) }}">{{ $cat->name }}</a>
-    @endforeach
-  </nav>
-@endif
-
-{{-- ── POST GRID ────────────────────────────────────────────────────── --}}
-@php
   $paged = get_query_var('paged') ?: 1;
-  $posts = new \WP_Query([
-    'post_type'      => 'post',
-    'posts_per_page' => 12,
-    'paged'          => $paged,
-    'cat'            => $activeCat ?: 0,
+  $thePosts = new \WP_Query([
+    'post_type'           => 'post',
+    'posts_per_page'      => 12,
+    'paged'               => $paged,
+    'cat'                 => $activeCat ?: 0,
     'ignore_sticky_posts' => false,
   ]);
 @endphp
 
-<section class="blog-section container">
-  @if ($posts->have_posts())
-    <div class="blog-grid">
-      @while ($posts->have_posts()) @php($posts->the_post())
-        <article class="blog-card" data-anim="fade-up">
-          <a href="{{ get_permalink() }}" class="blog-card-link">
-            @if (has_post_thumbnail())
-              <div class="blog-card-thumb">
-                {!! get_the_post_thumbnail(null, 'medium_large', ['loading' => 'lazy', 'decoding' => 'async']) !!}
-              </div>
-            @endif
-            <div class="blog-card-body">
-              @php($category = get_the_category())
-              @if ($category)
-                <span class="blog-card-cat">{{ $category[0]->name }}</span>
-              @endif
-              <h2 class="blog-card-title">{!! get_the_title() !!}</h2>
-              <p class="blog-card-excerpt">{{ wp_trim_words(get_the_excerpt(), 22) }}</p>
-              <footer class="blog-card-meta">
-                <time datetime="{{ get_the_date('c') }}">{{ get_the_date() }}</time>
-                <span class="blog-card-read">{{ __('Read →', 'matthummel') }}</span>
-              </footer>
-            </div>
-          </a>
-        </article>
-      @endwhile
-    </div>
+<div class="container blog-index-body">
+  @if ($thePosts->have_posts())
+    @php $postCount = 0; @endphp
 
-    {{-- Pagination --}}
-    @if ($posts->max_num_pages > 1)
-      <nav class="pagination" aria-label="{{ __('Blog pagination', 'matthummel') }}">
+    @while ($thePosts->have_posts())
+      @php
+        $thePosts->the_post();
+        $postCount++;
+        $catList = get_the_category();
+        $words   = str_word_count(strip_tags(get_the_content()));
+        $mins    = max(1, round($words / 200));
+      @endphp
+
+      @if ($postCount === 1)
+        {{-- Featured / first post: large hero card --}}
+        <article class="blog-hero-card" id="post-{{ get_the_ID() }}">
+          @if (has_post_thumbnail())
+            <a class="blog-hero-img" href="{{ get_permalink() }}" aria-hidden="true" tabindex="-1">
+              {!! get_the_post_thumbnail(get_the_ID(), 'large') !!}
+            </a>
+          @else
+            <div class="blog-hero-img blog-hero-img--placeholder" aria-hidden="true">
+              <div class="blog-placeholder-inner"></div>
+            </div>
+          @endif
+          <div class="blog-hero-body">
+            @if ($catList)
+              <span class="blog-post-tag">{{ $catList[0]->name }}</span>
+            @endif
+            <h2 class="blog-hero-title">
+              <a href="{{ get_permalink() }}">{!! get_the_title() !!}</a>
+            </h2>
+            <p class="blog-post-meta">
+              <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
+              &middot; {{ $mins }} min read
+            </p>
+            <div class="blog-hero-excerpt">{!! get_the_excerpt() !!}</div>
+            <a class="btn blog-hero-cta" href="{{ get_permalink() }}">Read article →</a>
+          </div>
+        </article>
+
+        {{-- Start the grid --}}
+        <div class="blog-card-grid">
+
+      @else
+        {{-- Regular grid card --}}
+        <article class="blog-grid-card" id="post-{{ get_the_ID() }}">
+          @if (has_post_thumbnail())
+            <a class="blog-grid-img" href="{{ get_permalink() }}" aria-hidden="true" tabindex="-1">
+              {!! get_the_post_thumbnail(get_the_ID(), 'medium') !!}
+            </a>
+          @else
+            <div class="blog-grid-img blog-grid-img--placeholder" aria-hidden="true">
+              <div class="blog-placeholder-inner"></div>
+            </div>
+          @endif
+          <div class="blog-grid-body">
+            @if ($catList)
+              <span class="blog-post-tag">{{ $catList[0]->name }}</span>
+            @endif
+            <h2 class="blog-grid-title">
+              <a href="{{ get_permalink() }}">{!! get_the_title() !!}</a>
+            </h2>
+            <p class="blog-post-meta">
+              <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
+              &middot; {{ $mins }} min read
+            </p>
+            <div class="blog-grid-excerpt">{!! get_the_excerpt() !!}</div>
+            <a class="blog-read-more" href="{{ get_permalink() }}">Read more →</a>
+          </div>
+        </article>
+      @endif
+    @endwhile
+
+    @if ($postCount > 1)
+      </div>{{-- close .blog-card-grid --}}
+    @endif
+
+    @if ($thePosts->max_num_pages > 1)
+      <nav class="blog-pagination" aria-label="Posts navigation">
         {!! paginate_links([
-          'total'     => $posts->max_num_pages,
+          'total'     => $thePosts->max_num_pages,
           'current'   => $paged,
-          'prev_text' => '← ' . __('Newer', 'matthummel'),
-          'next_text' => __('Older', 'matthummel') . ' →',
+          'prev_text' => '← Older posts',
+          'next_text' => 'Newer posts →',
         ]) !!}
       </nav>
     @endif
+
   @else
-    <p>{{ __('No posts found.', 'matthummel') }}</p>
+    <div class="blog-empty">
+      <p class="lead">No posts yet — check back soon.</p>
+      <a class="btn" href="{{ home_url('/') }}">← Back home</a>
+    </div>
   @endif
-</section>
-@php(wp_reset_postdata())
+</div>
+@php wp_reset_postdata(); @endphp
 
 @endsection

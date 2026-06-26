@@ -1,25 +1,111 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="page-header container">
-    <h1 class="display-title is-hero">{!! get_the_archive_title() !!}</h1>
-    @if (get_the_archive_description())
-      <div class="archive-desc">{!! get_the_archive_description() !!}</div>
-    @endif
-  </div>
 
+{{-- ── Blog index page header ─────────────────────────────────────────────── --}}
+<div class="blog-page-header">
   <div class="container">
-    @if (have_posts())
-      <div class="post-list">
-        @while(have_posts()) @php(the_post())
-          @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-        @endwhile
-      </div>
-      <nav class="posts-nav" aria-label="{{ __('Posts', 'sage') }}">
-        {!! get_the_posts_navigation() !!}
-      </nav>
+    <span class="eyebrow">The Blog</span>
+    <h1 class="display-xl blog-index-title">{!! get_the_archive_title() !!}</h1>
+    @if (get_the_archive_description())
+      <p class="lead">{!! strip_tags(get_the_archive_description()) !!}</p>
     @else
-      <p class="post-prose">{{ __('Nothing here yet.', 'matthummel') }}</p>
+      <p class="lead">WordPress tutorials, Power Platform guides, and dev notes from Gettysburg, PA.</p>
     @endif
   </div>
+</div>
+
+{{-- ── Posts ────────────────────────────────────────────────────────────────── --}}
+<div class="container blog-index-body">
+  @if (have_posts())
+    @php $postCount = 0; @endphp
+    @while(have_posts())
+      @php
+        the_post();
+        $postCount++;
+        $catList = get_the_category();
+        $words   = str_word_count(strip_tags(get_the_content()));
+        $mins    = max(1, round($words / 200));
+      @endphp
+
+      @if ($postCount === 1)
+        {{-- Featured / first post: large hero card --}}
+        <article class="blog-hero-card" id="post-{{ get_the_ID() }}">
+          @if (has_post_thumbnail())
+            <a class="blog-hero-img" href="{{ get_permalink() }}" aria-hidden="true" tabindex="-1">
+              {!! get_the_post_thumbnail(get_the_ID(), 'large') !!}
+            </a>
+          @else
+            <div class="blog-hero-img blog-hero-img--placeholder" aria-hidden="true">
+              <div class="blog-placeholder-inner"></div>
+            </div>
+          @endif
+          <div class="blog-hero-body">
+            @if ($catList)
+              <span class="blog-post-tag">{{ $catList[0]->name }}</span>
+            @endif
+            <h2 class="blog-hero-title">
+              <a href="{{ get_permalink() }}">{!! get_the_title() !!}</a>
+            </h2>
+            <p class="blog-post-meta">
+              <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
+              &middot; {{ $mins }} min read
+            </p>
+            <div class="blog-hero-excerpt">{!! get_the_excerpt() !!}</div>
+            <a class="btn blog-hero-cta" href="{{ get_permalink() }}">Read article →</a>
+          </div>
+        </article>
+
+        {{-- Start the grid --}}
+        <div class="blog-card-grid">
+
+      @else
+        {{-- Regular grid card --}}
+        <article class="blog-grid-card" id="post-{{ get_the_ID() }}">
+          @if (has_post_thumbnail())
+            <a class="blog-grid-img" href="{{ get_permalink() }}" aria-hidden="true" tabindex="-1">
+              {!! get_the_post_thumbnail(get_the_ID(), 'medium') !!}
+            </a>
+          @else
+            <div class="blog-grid-img blog-grid-img--placeholder" aria-hidden="true">
+              <div class="blog-placeholder-inner"></div>
+            </div>
+          @endif
+          <div class="blog-grid-body">
+            @if ($catList)
+              <span class="blog-post-tag">{{ $catList[0]->name }}</span>
+            @endif
+            <h2 class="blog-grid-title">
+              <a href="{{ get_permalink() }}">{!! get_the_title() !!}</a>
+            </h2>
+            <p class="blog-post-meta">
+              <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
+              &middot; {{ $mins }} min read
+            </p>
+            <div class="blog-grid-excerpt">{!! get_the_excerpt() !!}</div>
+            <a class="blog-read-more" href="{{ get_permalink() }}">Read more →</a>
+          </div>
+        </article>
+      @endif
+    @endwhile
+
+    @if ($postCount > 1)
+      </div>{{-- close .blog-card-grid --}}
+    @endif
+
+    <nav class="blog-pagination" aria-label="Posts navigation">
+      {!! get_the_posts_navigation([
+        'prev_text' => '← Older posts',
+        'next_text' => 'Newer posts →',
+      ]) !!}
+    </nav>
+
+  @else
+    <div class="blog-empty">
+      <p class="lead">No posts yet — check back soon.</p>
+      <a class="btn" href="{{ home_url('/') }}">← Back home</a>
+    </div>
+  @endif
+</div>
+
 @endsection
