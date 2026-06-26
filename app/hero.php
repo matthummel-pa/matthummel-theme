@@ -43,6 +43,14 @@ add_action('customize_register', function ($wp) {
         'description' => __('Homepage hero: columns, content position, images, background cover and entrance animation.', 'matthummel'),
     ]);
 
+    // Editable hero copy (defaults match the built-in text so nothing changes until edited).
+    $wp->add_setting('mh_hero_eyebrow', ['default' => __('Web · WordPress · Power Platform', 'matthummel'), 'sanitize_callback' => 'sanitize_text_field']);
+    $wp->add_control('mh_hero_eyebrow', ['label' => __('Eyebrow (small label above title)', 'matthummel'), 'section' => 'mh_hero_section', 'type' => 'text']);
+    $wp->add_setting('mh_hero_title', ['default' => __('Clean, fast software for the web and Microsoft 365.', 'matthummel'), 'sanitize_callback' => 'sanitize_text_field']);
+    $wp->add_control('mh_hero_title', ['label' => __('Hero title (H1)', 'matthummel'), 'section' => 'mh_hero_section', 'type' => 'textarea']);
+    $wp->add_setting('mh_hero_subtext', ['default' => __("I'm Matt Hummel, a full-stack developer. I write about web development, WordPress, and the Power Platform, and share the tools I build on GitHub.", 'matthummel'), 'sanitize_callback' => 'sanitize_textarea_field']);
+    $wp->add_control('mh_hero_subtext', ['label' => __('Hero subtext (paragraph)', 'matthummel'), 'section' => 'mh_hero_section', 'type' => 'textarea']);
+
     $sel('mh_hero_cols', __('Columns', 'matthummel'), ['1' => '1', '2' => '2', '3' => '3'], '1', 'mh_hero_section');
     $sel('mh_hero_align_h', __('Content horizontal position', 'matthummel'), ['left' => __('Left', 'matthummel'), 'center' => __('Center', 'matthummel'), 'right' => __('Right', 'matthummel')], 'center', 'mh_hero_section');
     $sel('mh_hero_align_v', __('Content vertical position', 'matthummel'), ['top' => __('Top', 'matthummel'), 'center' => __('Center', 'matthummel'), 'bottom' => __('Bottom', 'matthummel')], 'center', 'mh_hero_section');

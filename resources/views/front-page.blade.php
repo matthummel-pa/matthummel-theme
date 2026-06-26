@@ -8,6 +8,9 @@
     $heroBg   = get_theme_mod('mh_hero_bg', '');
     $heroAnim = get_theme_mod('mh_hero_anim', 'zoom-in');
     $heroAnimAttr = $heroAnim !== 'none' ? ' data-anim="' . esc_attr($heroAnim) . '"' : '';
+    $heroEyebrow = get_theme_mod('mh_hero_eyebrow', __('Web · WordPress · Power Platform', 'matthummel'));
+    $heroTitle   = get_theme_mod('mh_hero_title', __('Clean, fast software for the web and Microsoft 365.', 'matthummel'));
+    $heroSub     = get_theme_mod('mh_hero_subtext', __("I'm Matt Hummel, a full-stack developer. I write about web development, WordPress, and the Power Platform, and share the tools I build on GitHub.", 'matthummel'));
   @endphp
   <section class="home-hero container mh-hero">
     @if ($heroBg)
@@ -15,9 +18,9 @@
     @endif
     <div class="mh-hero-inner">
       <div class="mh-hero-content"{!! $heroAnimAttr !!}>
-        <p class="eyebrow">{{ __('Web · WordPress · Power Platform', 'matthummel') }}</p>
-        <h1 class="display-title is-hero">{{ __('Clean, fast software for the web and Microsoft 365.', 'matthummel') }}</h1>
-        <p class="lead">{{ __("I'm Matt Hummel, a full-stack developer. I write about web development, WordPress, and the Power Platform, and share the tools I build on GitHub.", 'matthummel') }}</p>
+        @if ($heroEyebrow)<p class="eyebrow">{{ $heroEyebrow }}</p>@endif
+        @if ($heroTitle)<h1 class="display-title is-hero">{{ $heroTitle }}</h1>@endif
+        @if ($heroSub)<p class="lead">{!! nl2br(e($heroSub)) !!}</p>@endif
         <div class="btn-row">
           @php($projectsLink = get_post_type_archive_link('projects'))
           @if ($projectsLink)
