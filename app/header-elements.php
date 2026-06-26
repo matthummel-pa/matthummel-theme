@@ -45,6 +45,11 @@ add_action('customize_register', function ($wp) {
     $wp->add_control('mh_topcta_hide_mobile', ['label' => __('Hide top bar button on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     $wp->add_setting('mh_navcta_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_navcta_hide_mobile', ['label' => __('Hide navbar button on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    $wp->add_setting('mh_navcta_hide_tablet', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_navcta_hide_tablet', ['label' => __('Hide navbar button on tablet', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
+    // Keep the top bar on one line at tablet widths (641–1024px) instead of wrapping.
+    $wp->add_setting('mh_topbar_oneline_tablet', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
+    $wp->add_control('mh_topbar_oneline_tablet', ['label' => __('Keep top bar on one line (tablet)', 'matthummel'), 'description' => __('Prevents the top bar from wrapping at 641–1024px.', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
     // Shrink the logo area on mobile so the header fits on one row.
     $wp->add_setting('mh_logo_shrink_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_logo_shrink_mobile', ['label' => __('Shrink logo on mobile (fit one row)', 'matthummel'), 'description' => __('Smaller logo mark + name and hides the tagline at ≤640px.', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
@@ -125,6 +130,12 @@ add_action('mh_head_end', function () {
     }
     if (get_theme_mod('mh_navcta_hide_mobile', false)) {
         $css .= '@media(max-width:640px){.banner .header-cta{display:none!important;}}';
+    }
+    if (get_theme_mod('mh_navcta_hide_tablet', false)) {
+        $css .= '@media(min-width:641px) and (max-width:1024px){.banner .header-cta{display:none!important;}}';
+    }
+    if (get_theme_mod('mh_topbar_oneline_tablet', false)) {
+        $css .= '@media(min-width:641px) and (max-width:1024px){.top-bar-inner{flex-wrap:nowrap;gap:12px;}.top-bar-contact{flex-wrap:nowrap;white-space:nowrap;}}';
     }
     if (get_theme_mod('mh_logo_shrink_mobile', false)) {
         $css .= '@media(max-width:640px){'
