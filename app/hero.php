@@ -46,6 +46,8 @@ add_action('customize_register', function ($wp) {
     $sel('mh_hero_cols', __('Columns', 'matthummel'), ['1' => '1', '2' => '2', '3' => '3'], '1', 'mh_hero_section');
     $sel('mh_hero_align_h', __('Content horizontal position', 'matthummel'), ['left' => __('Left', 'matthummel'), 'center' => __('Center', 'matthummel'), 'right' => __('Right', 'matthummel')], 'center', 'mh_hero_section');
     $sel('mh_hero_align_v', __('Content vertical position', 'matthummel'), ['top' => __('Top', 'matthummel'), 'center' => __('Center', 'matthummel'), 'bottom' => __('Bottom', 'matthummel')], 'center', 'mh_hero_section');
+    $sel('mh_hero_content_maxw', __('Content max width', 'matthummel'), ['0' => __('Default', 'matthummel'), '420' => '420px', '480' => '480px', '560' => '560px', '640' => '640px', '760' => '760px', 'full' => __('Full', 'matthummel')], '0', 'mh_hero_section');
+    $sel('mh_hero_content_gap', __('Content spacing', 'matthummel'), ['0' => __('Default', 'matthummel'), '8' => __('Tight', 'matthummel'), '16' => __('Normal', 'matthummel'), '26' => __('Roomy', 'matthummel'), '40' => __('Extra', 'matthummel')], '0', 'mh_hero_section');
     $sel('mh_hero_img_side', __('Image side (2 columns)', 'matthummel'), ['right' => __('Right', 'matthummel'), 'left' => __('Left', 'matthummel')], 'right', 'mh_hero_section');
 
     $wp->add_setting('mh_hero_img', ['default' => '', 'sanitize_callback' => 'esc_url_raw']);
@@ -104,10 +106,31 @@ add_action('mh_head_end', function () {
         }
     }
 
-    $talign = $ah === 'left' ? 'left' : ($ah === 'right' ? 'right' : 'center');
-    $jc     = $ah === 'left' ? 'flex-start' : ($ah === 'right' ? 'flex-end' : 'center');
-    $css .= '.mh-hero .mh-hero-content{text-align:' . $talign . ';}';
-    $css .= '.mh-hero .btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:' . $jc . ';}';
+    // Content is a flex column so the alignment moves EVERY item (eyebrow, title,
+    // lead, buttons) — not just the buttons. We also neutralise the children's own
+    // auto-margins / text-align (e.g. .lead has margin:0 auto + text-align:center).
+    $ai = $ah === 'left' ? 'flex-start' : ($ah === 'right' ? 'flex-end' : 'center');
+    $ta = $ah === 'left' ? 'left' : ($ah === 'right' ? 'right' : 'center');
+    $css .= '.mh-hero .mh-hero-content{display:flex;flex-direction:column;align-items:' . $ai . ';}';
+    $css .= '.mh-hero .mh-hero-content > *{margin-left:0;margin-right:0;text-align:' . $ta . ';max-width:100%;}';
+    $css .= '.mh-hero .btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:' . $ai . ';}';
+
+    // Content max-width + (for single-column heroes) block position.
+    $maxw = (string) get_theme_mod('mh_hero_content_maxw', '0');
+    if ($maxw !== '0' && $maxw !== 'full') {
+        $css .= '.mh-hero .mh-hero-content{max-width:' . absint($maxw) . 'px;}';
+        if ($cols < 2) {
+            $bm = $ah === 'left' ? '0 auto 0 0' : ($ah === 'right' ? '0 0 0 auto' : '0 auto');
+            $css .= '.mh-hero .mh-hero-content{margin:' . $bm . ';}';
+        }
+    }
+
+    // Content spacing (gap between copy items).
+    $gap = absint(get_theme_mod('mh_hero_content_gap', 0));
+    if ($gap > 0) {
+        $css .= '.mh-hero .mh-hero-content{gap:' . $gap . 'px;}';
+        $css .= '.mh-hero .mh-hero-content > *{margin-top:0;margin-bottom:0;}';
+    }
 
     if ($minh && $minh !== '0') {
         $h     = $minh === '100vh' ? '100vh' : (absint($minh) . 'px');
