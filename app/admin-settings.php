@@ -25,7 +25,7 @@ function mh_admin_defaults()
         'mh_logo_order' => 1, 'mh_nav_order' => 2, 'mh_social_order' => 3, 'mh_cta_order' => 4,
         'mh_popout_desktop' => false, 'mh_popout_tablet' => true, 'mh_popout_mobile' => true,
         'mh_footer_social' => true, 'mh_footer_cols' => 3, 'mh_footer_bg' => 'paper', 'mh_footer_bg_custom' => '',
-        'mh_footer_textc' => 'body', 'mh_footer_text_custom' => '', 'mh_sticky_header' => false,
+        'mh_footer_textc' => 'body', 'mh_footer_text_custom' => '',
         'mh_proj_owner' => 'matthummel-pa', 'mh_gh_token' => '', 'mh_proj_cache_hours' => 6, 'mh_gh_client_id' => '',
     ]);
     return $base;
@@ -97,7 +97,6 @@ function mh_admin_schema()
             ['key' => 'mh_footer_textc', 'label' => __('Footer text color', 'matthummel'), 'type' => 'select', 'choices' => mh_palette_choices()],
             ['key' => 'mh_footer_text_custom', 'label' => __('Footer text (custom hex)', 'matthummel'), 'type' => 'color'],
             ['key' => 'mh_footer_text', 'label' => __('Footer tagline', 'matthummel'), 'type' => 'textarea'],
-            ['key' => 'mh_sticky_header', 'label' => __('Sticky header', 'matthummel'), 'type' => 'checkbox'],
         ], 'note' => __('Footer columns map to block widget areas under Appearance > Widgets.', 'matthummel')],
         'projects' => ['icon' => 'dashicons-portfolio', 'label' => __('Projects', 'matthummel'), 'fields' => [
             ['key' => 'mh_proj_owner', 'label' => __('Default GitHub owner', 'matthummel'), 'type' => 'text', 'desc' => __('Used for the live repo data when a project has no owner set.', 'matthummel')],

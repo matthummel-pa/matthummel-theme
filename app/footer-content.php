@@ -16,14 +16,6 @@ function mh_footer()
     ];
 }
 
-/** Sticky header body class. */
-add_filter('body_class', function ($c) {
-    if (get_theme_mod('mh_sticky_header', false)) {
-        $c[] = 'mh-sticky-header';
-    }
-    return $c;
-});
-
 /** Wire the global CTA to Customizer values (cta.blade uses these filters). */
 add_filter('matthummel/cta_heading', function ($d) { $v = get_theme_mod('mh_cta_heading', ''); return $v !== '' ? $v : $d; });
 add_filter('matthummel/cta_text', function ($d) { $v = get_theme_mod('mh_cta_body', ''); return $v !== '' ? $v : $d; });
@@ -39,9 +31,7 @@ add_action('customize_register', function ($wp) {
     /* Footer */
     $wp->add_section('mh_footer_section', ['title' => __('Footer & Header', 'matthummel'), 'panel' => 'mh_theme_options']);
 
-    $wp->add_setting('mh_sticky_header', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
-    $wp->add_control('mh_sticky_header', ['label' => __('Sticky header', 'matthummel'), 'section' => 'mh_footer_section', 'type' => 'checkbox']);
-
+    // (Sticky header lives in Header Layout → mh_header_sticky; the old duplicate here was removed.)
     $wp->add_setting('mh_footer_social', ['default' => true, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_footer_social', ['label' => __('Show social icons in footer', 'matthummel'), 'section' => 'mh_footer_section', 'type' => 'checkbox']);
 
