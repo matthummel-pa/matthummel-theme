@@ -62,24 +62,42 @@ Three places hold settings:
 - **Enable top bar**, **contact text**, **show social links**, **button text/URL**, **background** and **text color** (palette).
 
 ### Navigation
-- Full flexbox control of the menu: **direction, justify, align, align-content, wrap, gap**.
+- Full flexbox control of the primary menu: **direction, justify, align, align-content, wrap, gap**.
 - Menu item box/type: **padding, min-height, font-size, weight, transform, letter-spacing, radius, color, hover color**.
-- Popout (off-canvas) appearance controls.
 
 ### Menu & Popout
 - **Use menu icon on desktop / tablet / mobile** — where the hamburger replaces the inline nav.
-- **Panel background** — solid or gradient (start, end, angle).
-- **Text / icon color**.
+- **Panel background** — solid or gradient (start, end, angle), **text / icon color**.
+- **Popout width**, **menu columns** and **block columns** (desktop), plus **popout item styling** (align, padding, font, weight, transform, gap).
+
+### Social Icons
+- **Show social icons in navigation bar** + **position** (left / center / right).
+- **Display** (text or icons), **size, shape, color, chip background, hover color**.
 - **Social URLs** — LinkedIn, GitHub, Dev.to, X, Bluesky, YouTube, Instagram, Facebook, Mastodon, Email, RSS (each shows its Blade icon).
 
 ### Announcement Bar
-- **Show bar**, **message**, **link text/URL**, **background/text color**, **dismissible** (remembered per visitor), and optional **start/end dates** for scheduling.
+- **Show bar**, **message**, **link text/URL**, **background/text color**, **dismissible** (remembered per visitor), **hide on mobile**, and optional **start/end dates** for scheduling.
+
+### Hero
+- **Copy** — editable **eyebrow**, **H1 title**, and **sub-paragraph** (clear a field to hide that element).
+- **Layout** — **columns** (1–3: content + side image + 2nd image), **content position** (horizontal & vertical), **content max-width** + **spacing**, with **tablet/mobile** max-width overrides.
+- **Flexbox (advanced)** — direction, justify, align, wrap, gap on the hero container.
+- **Media** — **side image / illustration** (+ 2nd for 3-column), **image side**, or a **background cover image** with **overlay %** and **min-height**.
+- **Image finder** (per image control) — search **Openverse** (no key), **Unsplash**/**Pexels** (optional keys → fields in this section), or generate a free **AI** image; the pick is imported to the Media Library and set.
+- **Entrance animation** — fade-up/in, zoom, pop, blur, slide.
+
+### Animations
+- **Enable on-scroll animations** (site-wide), **effect** (fade-up/in, zoom, pop, blur, slide), and **speed** (fast/normal/slow). Honours `prefers-reduced-motion`.
+
+### Responsive (mobile & tablet)
+- **Hide on mobile/tablet** — navigation social (mobile/desktop), top-bar social, top-bar button, navbar button (mobile + tablet), the "Menu" label, and shrink the logo on mobile.
+- **Keep top bar on one line** (tablet), and **per-breakpoint inner widths** for the top bar, navbar, and message bar (tablet + mobile). Mobile = ≤640px, tablet = 641–1024px.
 
 ### Dark Mode
 - **Enable dark mode toggle** and **default mode** (light / dark / auto by system).
 
 ### Footer & Header
-- **Sticky header**, **show social icons in footer**.
+- **Show social icons in footer**. *(Sticky header lives in Header Layout.)*
 - **Footer background / text** — palette choice or custom hex.
 - **Footer columns** — 1–4 (each maps to a block widget area under Appearance → Widgets).
 - **Footer tagline**.

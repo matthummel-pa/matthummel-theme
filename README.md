@@ -35,6 +35,16 @@ Setup, a full settings reference, FAQ, and help live on the GitHub Pages site (a
 - **Footer builder** — 1–4 columns mapped to block **widget areas**, palette/custom colors, social icons, tagline.
 - **Announcement bar** — message + link, colors, dismissible (remembered), with optional start/end **scheduling**.
 
+### Hero & animations
+- **Hero builder** — editable **eyebrow / H1 / sub-paragraph**, 1–3 **columns** (content + side image/illustration), content position (horizontal & vertical), content **max-width + spacing** with tablet/mobile overrides, and full **flexbox** control (direction, justify, align, wrap, gap).
+- **Hero media** — upload a **side image / illustration** (and a 2nd for 3-column), or a **background cover image** with an overlay slider + min-height; comfortable side padding and clean mobile stacking are handled automatically.
+- **Built-in image finder** — search **Openverse** (no key), **Unsplash** and **Pexels** (optional free keys), or **generate an AI image** (free, no key) right in the Customizer. The pick is imported into your **Media Library** (self-hosted, not hot-linked) and set as the hero image.
+- **On-scroll animations** — site-wide reveal effects (fade-up/in, zoom, pop, blur, slide) with speed control + a hero entrance animation; respects `prefers-reduced-motion` and never leaves content hidden if JS fails.
+
+### Responsive controls
+- **Per-device visibility** — independently hide social icons, the top-bar / navbar buttons, and the "Menu" label on **mobile (≤640px)** and/or **tablet (641–1024px)**; show navbar social on mobile-only or desktop-only.
+- **Per-breakpoint widths** — top bar, navbar, and message bar inner widths for tablet and mobile; keep the top bar on one line at tablet; shrink the logo on mobile to fit one row.
+
 ### Icons & blocks
 - **Blade Icons** — Simple Icons (`si-`), Heroicons (`heroicon-o-`), Lucide (`lucide-`), and a local `mh-` set. Font Awesome removed.
 - **Social Icons block** — inline SVGs; pulls from site social links by default; size, shape, brand/mono, colors, hover, alignment.
@@ -62,7 +72,7 @@ Setup, a full settings reference, FAQ, and help live on the GitHub Pages site (a
 - **Accessible & responsive** — semantic landmarks, focus states, skip link, WCAG-AA pairings, fluid `clamp()` type, mobile-first.
 
 ### Settings, white-label & onboarding
-- **Theme Options Customizer** (19 consolidated sections) + a tabbed **Appearance → Theme Settings** admin panel (General, Design, Layout, Header, Footer, Projects).
+- **Theme Options Customizer** — logically-ordered, focused sections (Colors, Typography, Header Layout, Navigation, Menu & Popout, Social Icons, Top Bar, Announcement, Hero, Animations, Footer, Layout, Responsive, Dark Mode, SEO, Performance, Custom Code, Newsletter, Cookie Notice, Extras, White Label) + a tabbed **Appearance → Theme Settings** admin panel (General, Design, Layout, Header, Footer, Projects).
 - **Import / export / reset** all settings as JSON (Theme Tools).
 - **White-label** — branded login screen, admin footer text.
 - **Onboarding** — "Get started" dashboard widget + one-click **starter pages + primary menu**.
