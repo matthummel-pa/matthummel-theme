@@ -6,7 +6,8 @@
 @extends('layouts.app')
 
 @section('content')
-  <article @php(post_class('page-about')) aria-label="{{ get_the_title() }}">
-    @php(the_content())
+  @php $postClasses = implode(' ', get_post_class('page-about')); @endphp
+  <article class="{{ $postClasses }}" aria-label="{{ get_the_title() }}">
+    @php the_content(); @endphp
   </article>
 @endsection
