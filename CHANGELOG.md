@@ -4,20 +4,19 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-06-26
+## [1.2.0] - 2026-06-26
 
 ### Added
-- **Google Fonts library** — expanded font picker from 10 to 47 fonts across 6 categories (Modern Sans, Geometric/Grotesk, Humanist Sans, Classic Serif, Display, Monospace) plus System stack; all wrapped in `matthummel/fonts` filter for extensibility.
-- **Style Kit one-click presets** — fixed; JS moved to `customize_controls_enqueue_scripts` so kit settings queue for Save correctly.
-- **Social links in Quick Setup** — all 11 platforms (GitHub, LinkedIn, Dev.to, X, Bluesky, Instagram, YouTube, Facebook, Mastodon, Email, RSS) now appear in the Quick Setup Customizer panel.
-- **Social Links tab in Theme Settings** — Appearance → Theme Settings now includes a Social Links tab driven by the `matthummel/admin_schema` filter.
-- **Navigation social position live preview** — `mh_nav_social_align` now uses `postMessage` transport with a preview iframe JS handler for instant updates without page reload.
-- **Content import from matthummel.com** — 8 pages imported (About, Contact, Projects, Résumé, Blog, Resources, Home, Accessibility Statement) with all inline CSS/styles stripped; plain content and layout only.
+- **`mh/section` block** — page-builder wrapper with background colour/image + overlay, padding top/bottom (none/sm/md/lg/xl), container width (narrow/contained/wide/full), text colour override, and optional horizontal rule above. InnerBlocks inside, server-side rendered outer wrapper so CSS variables always apply. Live preview in editor.
+- **`matthummel` block category** — all `mh/*` blocks now appear under their own "Matthummel" group in the block inserter, registered via `block_categories_all` filter.
+- **Block Patterns** — 11 pre-built patterns in the `matthummel` category: hero, stats, skills, focus, timeline, CTA band, resource groups, project cards, about page (full), résumé page (full), two-column text+image. Insert via Inserter → Patterns → Matthummel.
+- **Pattern Library admin page** (Appearance → Pattern Library) — shows all registered matthummel patterns with descriptions, keywords, copy-name buttons, plus tips for using Synced Patterns (reusable blocks).
+- **`blocks.css`** — dedicated accessibility-first stylesheet for all `mh/*` blocks. Covers section padding/width utilities, all block component styles, visible focus rings (`:focus-visible`), reduced-motion, forced-colours/high-contrast, and print safety. Imported via `app.css`.
+- **Simplified page templates** — About, Résumé, and Resources templates now render `the_content()` only; blocks drive the layout via patterns.
+- **`functions.php`** — added `blocks-bespoke`, `block-section`, `block-patterns`, and `pattern-library` to the Sage file loader array.
 
-### Fixed
-- `mh_nav_social_align` setting now updates the preview live (was requiring full page refresh).
-- `mh_admin_schema()` now applies the `matthummel/admin_schema` filter so registered tab extensions (e.g. Social Links) actually appear.
-- Removed duplicate `mh_social_links()` declaration that caused a PHP fatal error on load.
+### Changed
+- All 6 bespoke block JS editors updated: `category: 'widgets'` → `category: 'matthummel'` so they appear in the correct inserter group.
 
 ## [1.1.0] - 2026-06-25
 

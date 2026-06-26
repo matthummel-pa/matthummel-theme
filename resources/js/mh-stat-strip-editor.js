@@ -24,7 +24,7 @@
     title: __('Stat Strip', 'matthummel'),
     description: __('A row of highlighted stats/numbers (About page, hero sections).', 'matthummel'),
     icon: 'chart-bar',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['stats', 'numbers', 'counter', 'about'],
     attributes: {
       stats:   { type: 'string', default: '[{"value":"15+","label":"Years experience"},{"value":"100+","label":"Projects"},{"value":"2","label":"Platforms"},{"value":"100%","label":"Remote"}]' },

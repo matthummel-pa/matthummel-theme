@@ -9,7 +9,7 @@
     title: __('CTA Band', 'matthummel'),
     description: __('A call-to-action section with heading, body, and button. Dark, green, or light variants.', 'matthummel'),
     icon: 'megaphone',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['cta', 'call to action', 'band', 'section', 'button'],
     attributes: {
       heading: { type: 'string', default: 'Open to select side projects' },

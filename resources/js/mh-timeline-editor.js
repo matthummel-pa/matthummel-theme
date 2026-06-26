@@ -24,7 +24,7 @@
     title: __('Timeline', 'matthummel'),
     description: __('Work history / career timeline. Used on the Résumé page.', 'matthummel'),
     icon: 'list-view',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['timeline', 'resume', 'experience', 'history', 'work'],
     attributes: {
       entries: { type: 'string', default: '[{"dates":"2021–Present","title":"Senior Power Platform Consultant","org":"Various clients · Remote","body":"Power Apps, Power Automate, SharePoint, M365 integrations."}]' }

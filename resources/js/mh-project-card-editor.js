@@ -9,7 +9,7 @@
     title: __('Project Card', 'matthummel'),
     description: __('A bespoke project card with image, tags, and links. Use inside columns for a manual project grid.', 'matthummel'),
     icon: 'portfolio',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['project', 'card', 'portfolio', 'work'],
     attributes: {
       heading:   { type: 'string', default: 'Project Title' },

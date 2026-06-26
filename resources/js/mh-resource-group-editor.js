@@ -24,7 +24,7 @@
     title: __('Resource Group', 'matthummel'),
     description: __('A card of curated external links with a heading and emoji. Used on the Resources page.', 'matthummel'),
     icon: 'list-ul',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['resources', 'links', 'list', 'curated'],
     attributes: {
       heading: { type: 'string', default: 'Resources' },

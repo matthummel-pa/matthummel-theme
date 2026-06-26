@@ -24,7 +24,7 @@
     title: __('Skills Grid', 'matthummel'),
     description: __('Grid of skill or feature cards — 2 or 3 columns.', 'matthummel'),
     icon: 'columns',
-    category: 'widgets',
+    category: 'matthummel',
     keywords: ['skills', 'features', 'cards', 'grid'],
     attributes: {
       cards:   { type: 'string', default: '[{"title":"Front-End","body":"HTML, CSS, JS, React, Tailwind"},{"title":"Back-End","body":"PHP, WordPress, Node.js, APIs"},{"title":"Accessibility","body":"WCAG 2.1, Core Web Vitals"}]' },
