@@ -1,0 +1,76 @@
+================================================================================
+  MATTHUMMEL-THEME — ERROR TRACKING LOG
+  Auto-updated by sync-errors.ps1 | Committed to GitHub on each run
+================================================================================
+
+FORMAT
+  [STATUS]  RESOLVED | OPEN | SUPPRESSED
+  [SOURCE]  File + line where error originates
+  [FIX]     What was done / what is pending
+
+================================================================================
+SESSION: 2026-06-26  (initial import + dev stack setup)
+================================================================================
+
+── RESOLVED ─────────────────────────────────────────────────────────────────
+
+[RESOLVED] PHP Fatal — Maximum execution time exceeded (30 s)
+  Source : wp-admin/includes/class-wp-filesystem-direct.php:173
+  Trigger: WordPress auto-update ran during dev session, hit PHP default 30s limit
+  Fix    : max_execution_time = 300 set in C:\tools\php83\php.ini
+           AUTOMATIC_UPDATER_DISABLED = true added to wp-config.php
+  First  : 2026-06-26 14:13:52 UTC
+  Last   : 2026-06-26 14:13:52 UTC
+
+[RESOLVED] PHP Deprecated — is_file(): Passing null to parameter #1 ($filename)
+  Source : vendor/roots/acorn/src/Roots/Acorn/Bootloader.php:367
+  Trigger: Acorn Bootloader::closest() traverses to filesystem root when no
+           .env file is present; returns null; PHP 8.3 deprecated null coercion
+  Fix    : Created .env (APP_ENV=local, APP_DEBUG=true) in theme root
+           Acorn upgraded v4.0.0 → v6.2.0 (git reset --hard origin/main)
+           which resolves this internally in newer Bootloader
+  First  : 2026-06-26 14:20:39 UTC
+  Last   : 2026-06-26 15:28:04 UTC  (stopped after .env + upgrade)
+
+[RESOLVED] wp-admin White Screen (PHP timeout)
+  Source : wp-admin/includes/class-wp-filesystem-direct.php:173
+  Trigger: Same as "Maximum execution time" fatal above — wp-admin loaded
+           during background auto-update attempt
+  Fix    : See max_execution_time fix above
+
+[RESOLVED] wp-admin White Screen (wrong router)
+  Source : wp-server-router.php (custom PHP dev-server router)
+  Trigger: All directory requests including /wp-admin/ were forwarded to
+           WordPress front-end index.php instead of wp-admin/index.php
+  Fix    : wp-server-router.php rewritten — detects /wp-admin paths and
+           routes to wp-admin/index.php; specific .php files routed directly
+
+[RESOLVED] Vite outDir/publicDir overlap warning
+  Source : vite.config.js
+  Trigger: Vite 6 warned when outDir and publicDir pointed at same folder
+  Fix    : publicDir: false set in vite.config.js
+
+[RESOLVED] Composer autoload not finding Acorn
+  Source : functions.php → \Roots\bootloader()
+  Trigger: roots/acorn added to composer.json but autoloader not regenerated
+  Fix    : composer dump-autoload -o run after composer require
+
+── OPEN ──────────────────────────────────────────────────────────────────────
+
+[OPEN] Vite build — empty editor chunk
+  Source : resources/scripts/editor.js
+  Trigger: editor.js has no meaningful content; Vite generates 0-byte chunk
+  Fix    : Populate editor.js with block editor customizations when needed
+  Note   : Non-breaking warning, safe to ignore until block editor work begins
+
+[OPEN] caniuse-lite database outdated
+  Source : npm / browserslist
+  Trigger: Build warns to run: npx update-browserslist-db@latest
+  Fix    : Run: npx update-browserslist-db@latest  (low priority)
+
+── SUPPRESSED (by design) ────────────────────────────────────────────────────
+
+[SUPPRESSED] WP_DEBUG_DISPLAY = false
+  Reason : Debug errors log to debug.log only; never displayed on front-end
+
+================================================================================
