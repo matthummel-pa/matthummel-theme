@@ -74,3 +74,31 @@ SESSION: 2026-06-26  (initial import + dev stack setup)
   Reason : Debug errors log to debug.log only; never displayed on front-end
 
 ================================================================================
+
+================================================================================
+SESSION SYNC: 2026-06-26 10:53
+================================================================================
+
+[RESOLVED] Theme reset to v1.1.0 from GitHub (matthummel-pa/matthummel-theme)
+  Action : git reset --hard origin/main
+  Result : Full feature set restored: hero builder, Customizer reorganization,
+           scroll animations, Style Kits, admin settings page, dark mode,
+           icon library, typography controls, Social Icons section
+
+[NEW] app/social-links.php — Social platform URL Customizer section
+  Panel  : Theme Options -> Social Links (priority 40)
+  Stores : mh_social_{github,linkedin,devto,twitter,bluesky,instagram,youtube,rss}
+  Helper : mh_social_links() returns active links array
+  Filter : matthummel/social_platforms, matthummel/social_links
+  Admin  : Extends admin settings schema via matthummel/admin_schema filter
+
+[NEW] app/quick-setup.php — Quick Setup Customizer panel
+  Panel  : Standalone at priority 25 (above Theme Options)
+  Shares : Same theme_mod keys as Theme Options (changes sync both ways)
+  Sections: Branding (brand color, bg), Typography, Header CTA,
+            Social (top 4 platforms), Footer tagline, Style Kits
+  Feature: Style Kit postMessage handler applies presets live in preview
+
+[OPEN] Vite dev server requires manual restart after git reset --hard
+  Note   : public/hot is deleted by reset; run npm run dev or dev-start.ps1
+
