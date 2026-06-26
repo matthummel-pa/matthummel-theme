@@ -43,6 +43,7 @@ add_action('customize_register', function ($wp) {
                         <button type="button" class="mh-if-tab" data-src="unsplash"><?php esc_html_e('Unsplash', 'matthummel'); ?></button>
                         <button type="button" class="mh-if-tab" data-src="pexels"><?php esc_html_e('Pexels', 'matthummel'); ?></button>
                         <button type="button" class="mh-if-tab" data-src="ai"><?php esc_html_e('AI', 'matthummel'); ?></button>
+                        <button type="button" class="mh-if-tab" data-src="canva"><?php esc_html_e('Canva', 'matthummel'); ?></button>
                     </div>
                     <div class="mh-if-searchrow">
                         <input type="text" class="mh-if-q" placeholder="<?php esc_attr_e('Search images…', 'matthummel'); ?>">

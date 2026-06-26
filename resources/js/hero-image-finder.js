@@ -31,12 +31,93 @@
         source = t.getAttribute('data-src');
         results.innerHTML = '';
         setNote('');
+        var searchRow = root.querySelector('.mh-if-searchrow');
+        searchRow.style.display = source === 'canva' ? 'none' : 'flex';
         q.placeholder = source === 'ai' ? 'Describe an image to generate…' : 'Search images…';
         go.textContent = source === 'ai' ? 'Generate' : 'Search';
         if (source === 'unsplash' && !cfg.hasUnsplash) setNote('Add an Unsplash API key in the Hero section to use this source.');
         if (source === 'pexels' && !cfg.hasPexels) setNote('Add a Pexels API key in the Hero section to use this source.');
+        if (source === 'canva') renderCanva();
       });
     });
+
+    function renderCanva() {
+      var canva = window.mhCanva || {};
+      results.innerHTML = '';
+      var wrap = el('div', 'mh-if-aiwrap');
+      // Open the Canva editor in a new tab.
+      var open = el('button', 'button mh-if-use', 'Open Canva editor ↗');
+      open.type = 'button';
+      open.addEventListener('click', function () { window.open(canva.editor || 'https://www.canva.com/create', '_blank', 'noopener'); });
+      wrap.appendChild(open);
+      // Import any image URL (e.g. a Canva export link).
+      var row = el('div', 'mh-if-searchrow');
+      row.style.marginTop = '6px';
+      var urlIn = el('input', 'mh-if-q');
+      urlIn.type = 'text';
+      urlIn.placeholder = 'Paste an image URL to import…';
+      var imp = el('button', 'button', 'Import');
+      imp.type = 'button';
+      imp.addEventListener('click', function () {
+        var u = (urlIn.value || '').trim();
+        if (!u) { setNote('Paste an image URL first.'); return; }
+        importAndSet(u, wrap);
+      });
+      row.appendChild(urlIn);
+      row.appendChild(imp);
+      wrap.appendChild(row);
+      results.appendChild(wrap);
+      // Connected: list designs.
+      if (canva.connected) {
+        var loadBtn = el('button', 'button button-primary mh-if-use', 'Load my Canva designs');
+        loadBtn.type = 'button';
+        loadBtn.style.marginTop = '6px';
+        loadBtn.addEventListener('click', loadCanvaDesigns);
+        wrap.appendChild(loadBtn);
+        setNote('Connected. Load your designs, or import an image URL.');
+      } else {
+        setNote('Tip: connect your Canva account in Theme Options → Canva to list designs here.');
+      }
+    }
+
+    function loadCanvaDesigns() {
+      setNote('Loading your Canva designs…');
+      fetch(cfg.rest + 'mh/v1/canva-designs', { headers: { 'X-WP-Nonce': cfg.nonce } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d && d.error) { setNote('Canva: ' + d.error.replace('not_connected', 'not connected') + '.'); return; }
+          if (!d || !d.length) { setNote('No designs found.'); return; }
+          var grid = el('div', 'mh-if-results');
+          d.forEach(function (it) {
+            if (!it.thumb) return;
+            var b = el('button', 'mh-if-tile');
+            b.type = 'button';
+            b.style.backgroundImage = 'url("' + it.thumb + '")';
+            b.title = it.title || '';
+            b.addEventListener('click', function () { exportCanva(it.id, b); });
+            grid.appendChild(b);
+          });
+          results.appendChild(grid);
+          setNote(d.length + ' designs — click one to export & use it.');
+        })
+        .catch(function () { setNote('Could not load designs.'); });
+    }
+
+    function exportCanva(designId, tile) {
+      if (tile) tile.classList.add('is-loading');
+      setNote('Exporting design from Canva…');
+      fetch(cfg.rest + 'mh/v1/canva-export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': cfg.nonce },
+        body: JSON.stringify({ design_id: designId })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d && d.url) { importAndSet(d.url, tile); }
+          else { setNote('Export failed' + (d && d.error ? ': ' + d.error : '') + '.'); if (tile) tile.classList.remove('is-loading'); }
+        })
+        .catch(function () { setNote('Export request failed.'); if (tile) tile.classList.remove('is-loading'); });
+    }
 
     function setImage(url) {
       var s = wp.customize(settingId);
