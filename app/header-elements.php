@@ -88,6 +88,20 @@ add_action('customize_register', function ($wp) {
     $wp->add_control('mh_topbar_width', ['label' => __('Top bar width', 'matthummel'), 'section' => 'mh_topbar_section', 'type' => 'select', 'choices' => $wopts]);
     $wp->add_setting('mh_msgbar_width', ['default' => '0', 'sanitize_callback' => 'sanitize_text_field']);
     $wp->add_control('mh_msgbar_width', ['label' => __('Message bar width', 'matthummel'), 'section' => 'mh_ann_section', 'type' => 'select', 'choices' => $wopts]);
+
+    // Per-breakpoint inner widths for the three bars (constrain inner content; bg stays full-width).
+    $barw = [
+        'mh_topbar_width_tablet' => __('Top bar width (tablet)', 'matthummel'),
+        'mh_topbar_width_mobile' => __('Top bar width (mobile)', 'matthummel'),
+        'mh_nav_width_tablet'    => __('Navbar width (tablet)', 'matthummel'),
+        'mh_nav_width_mobile'    => __('Navbar width (mobile)', 'matthummel'),
+        'mh_msgbar_width_tablet' => __('Message bar width (tablet)', 'matthummel'),
+        'mh_msgbar_width_mobile' => __('Message bar width (mobile)', 'matthummel'),
+    ];
+    foreach ($barw as $id => $label) {
+        $wp->add_setting($id, ['default' => '0', 'sanitize_callback' => 'sanitize_text_field']);
+        $wp->add_control($id, ['label' => $label, 'section' => 'mh_nav_section', 'type' => 'select', 'choices' => $wopts]);
+    }
 }, 13);
 
 add_action('mh_head_end', function () {
@@ -240,6 +254,28 @@ add_action('mh_head_end', function () {
     $mw = $bw(get_theme_mod('mh_msgbar_width', '0'));
     if ($mw !== '') {
         $css .= '.mh-ann .mh-ann-inner{' . $mw . '}';
+    }
+
+    // Per-breakpoint bar widths (tablet 641–1024px, mobile ≤640px). Navbar = .banner.
+    $tabletW = '';
+    foreach ([['mh_topbar_width_tablet', '.top-bar .top-bar-inner'], ['mh_nav_width_tablet', '.banner'], ['mh_msgbar_width_tablet', '.mh-ann .mh-ann-inner']] as $r) {
+        $v = $bw(get_theme_mod($r[0], '0'));
+        if ($v !== '') {
+            $tabletW .= $r[1] . '{' . $v . '}';
+        }
+    }
+    if ($tabletW !== '') {
+        $css .= '@media(min-width:641px) and (max-width:1024px){' . $tabletW . '}';
+    }
+    $mobileW = '';
+    foreach ([['mh_topbar_width_mobile', '.top-bar .top-bar-inner'], ['mh_nav_width_mobile', '.banner'], ['mh_msgbar_width_mobile', '.mh-ann .mh-ann-inner']] as $r) {
+        $v = $bw(get_theme_mod($r[0], '0'));
+        if ($v !== '') {
+            $mobileW .= $r[1] . '{' . $v . '}';
+        }
+    }
+    if ($mobileW !== '') {
+        $css .= '@media(max-width:640px){' . $mobileW . '}';
     }
 
     // Base styling for blocks placed in the bars (only when those areas are in use).
