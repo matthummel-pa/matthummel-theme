@@ -278,6 +278,13 @@ add_action('mh_head_end', function () {
         $css .= '@media(max-width:640px){' . $mobileW . '}';
     }
 
+    // Tablet: push the menu (popout) button to the right edge so its inset mirrors
+    // the logo's left padding (both sit at the banner's 28px side padding).
+    $css .= '@media(min-width:641px) and (max-width:1024px){'
+        . '.banner .brand{margin-right:auto;}'
+        . '.banner .menu-toggle{margin-left:0;padding-right:0;}'
+        . '}';
+
     // Base styling for blocks placed in the bars (only when those areas are in use).
     if (is_active_sidebar('topbar') || is_active_sidebar('messagebar') || is_active_sidebar('navbar')) {
         $css .= '.top-bar-blocks,.mh-ann-blocks,.nav-blocks{display:inline-flex;align-items:center;gap:14px;}'
