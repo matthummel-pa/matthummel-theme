@@ -4,6 +4,29 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-06-26
+
+### Changed
+- **`front-page.blade.php`** — rewritten to render `the_content()` from the static front page instead of hardcoded Customizer theme mods. Blocks now drive the home page layout, consistent with About/Résumé/Resources templates.
+- **Home page (ID 17)** — updated with real matthummel.com copy: "Hi, I'm Matt Hummel · WordPress & Power Platform Developer in Gettysburg, PA", bento stat strip (10+ yrs web, 5+ yrs PP, 50+ projects), three-column "What I do" section (Front-End / Back-End & Platforms / SEO & Growth), Latest Posts block, ink CTA band.
+- **About page (ID 25)** — updated with real copy: "Hey, I'm Matt Hummel / Senior Power Platform Consultant at Saliense Consulting", terminal box showing real role/company/location, stat strip (5+ PP / 10+ web / 50+ projects), Power Apps + Automate + SharePoint three-column section, My Journey narrative, full tech stack grid, Outside of Tech, ink CTA.
+- **Résumé page (ID 15)** — updated with real resume: dark header with name/title/links/download, three experience roles (Saliense Consulting 2022–present, Higher Ed 2015–2022, Earlier Roles 2012–2015) with bullet lists, three-column skills grid (Power Platform / M365 / Web Dev), certs section, ink CTA.
+- **Resources page (ID 21)** — updated with real matthummel.com resources: ink hero, MS Learn section with recommended modules, YouTube channels (Shane Young, Reza Dorrani, April Dunnam, Matthew Devaney), blog recommendations, Power Automate resources, personal favourites, ink CTA.
+
+### Fixed
+- **`show_on_front` option** — set to `page` with `page_on_front = 17` so the home page renders the static front page instead of the blog roll.
+- **Page templates** — confirmed `_wp_page_template` for pages 25/15/21 use filename-only keys matching Sage's registration (e.g. `template-about.blade.php`), not full paths.
+
+## [1.4.0] - 2026-06-26
+
+### Added
+- **Page content populated** — Home (ID 17), About (ID 25), Résumé (ID 15), and Resources (ID 21) pages now have full block content matching the 2025-26 design mockups.
+- **Page templates set** — About, Résumé, and Resources pages have their `_wp_page_template` meta set to the correct Blade templates via WP-CLI `eval-file`.
+- Home page: dark ink hero with `.badge-available` pulsing dot, `.display-xl` heading, `.code-accent` line, stat strip on cream band, asymmetric `.proj-bento` featured project grid, ink CTA band.
+- About page: ink hero with terminal box showing whoami output, stat strip, skills grid, experience timeline, ink CTA.
+- Résumé page: ink header with download CV button, full experience timeline, 3-column skills grid, ink CTA with outline/filled button pair.
+- Resources page: ink hero, two full resource group sections (WordPress, Power Platform, Dev tools, Design, Accessibility, Performance), ink CTA.
+
 ## [1.3.0] - 2026-06-26
 
 ### Added
