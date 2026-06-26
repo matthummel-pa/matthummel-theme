@@ -1,6 +1,7 @@
 @import "tailwindcss" theme(static);
 @import "./page-templates.css";
 @import "./blocks.css";
+@import "./design-language.css";
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";

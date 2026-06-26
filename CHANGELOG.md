@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-26
+
+### Added
+- **`design-language.css`** — full design system CSS for 2025-26 developer site trends: `.display-xl`/`.display-lg` oversized headings, `.eyebrow` labels, `.lead` paragraphs, `.badge-available` animated green availability dot, `.terminal-box` with `term-*` line classes, `.bento-grid` variants (4/3/2/2-1/3-2 columns), `.bento-card` with dark/tint modifiers, `.proj-featured`/`.proj-secondary`/`.proj-stack` project bento layout, `.blog-featured-card`, `.read-progress` bar, `.skills-pill-list`, `.filter-tabs`, `.resume-header`, `.code-accent` inline monospace. Reduced-motion and forced-colours support.
+- **12 block patterns** — complete redesign of all patterns using the new design language: dark ink heroes with availability badge and terminal box, asymmetric bento stat grids, skills/timeline/resource sections with eyebrow labels, featured project bento layout, full About page and Résumé page compositions, two-column split layout.
+- Imported `design-language.css` into `app.css`.
+
+### Changed
+- All existing patterns rewritten to use `.display-xl`, `.eyebrow`, `.lead`, `.badge-available`, and `.terminal-box` classes so pages look consistent with the mockup designs.
+
 ## [1.2.0] - 2026-06-26
 
 ### Added
