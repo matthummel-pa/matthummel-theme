@@ -48,6 +48,16 @@ add_action('customize_register', function ($wp) {
     $sel('mh_hero_align_v', __('Content vertical position', 'matthummel'), ['top' => __('Top', 'matthummel'), 'center' => __('Center', 'matthummel'), 'bottom' => __('Bottom', 'matthummel')], 'center', 'mh_hero_section');
     $sel('mh_hero_content_maxw', __('Content max width', 'matthummel'), ['0' => __('Default', 'matthummel'), '420' => '420px', '480' => '480px', '560' => '560px', '640' => '640px', '760' => '760px', 'full' => __('Full', 'matthummel')], '0', 'mh_hero_section');
     $sel('mh_hero_content_gap', __('Content spacing', 'matthummel'), ['0' => __('Default', 'matthummel'), '8' => __('Tight', 'matthummel'), '16' => __('Normal', 'matthummel'), '26' => __('Roomy', 'matthummel'), '40' => __('Extra', 'matthummel')], '0', 'mh_hero_section');
+    $cw = ['0' => __('Default', 'matthummel'), '320' => '320px', '380' => '380px', '420' => '420px', '480' => '480px', '560' => '560px', '640' => '640px', 'full' => __('Full', 'matthummel')];
+    $sel('mh_hero_content_maxw_tablet', __('Content max width (tablet)', 'matthummel'), $cw, '0', 'mh_hero_section');
+    $sel('mh_hero_content_maxw_mobile', __('Content max width (mobile)', 'matthummel'), $cw, '0', 'mh_hero_section');
+
+    // Advanced flexbox controls for the hero layout container.
+    $sel('mh_hero_flex_dir', __('Flexbox: direction', 'matthummel'), ['0' => __('Default', 'matthummel'), 'row' => __('Row', 'matthummel'), 'row-reverse' => __('Row reverse', 'matthummel'), 'column' => __('Column', 'matthummel'), 'column-reverse' => __('Column reverse', 'matthummel')], '0', 'mh_hero_section');
+    $sel('mh_hero_flex_justify', __('Flexbox: justify (main axis)', 'matthummel'), ['0' => __('Default', 'matthummel'), 'flex-start' => __('Start', 'matthummel'), 'center' => __('Center', 'matthummel'), 'flex-end' => __('End', 'matthummel'), 'space-between' => __('Space between', 'matthummel'), 'space-around' => __('Space around', 'matthummel'), 'space-evenly' => __('Space evenly', 'matthummel')], '0', 'mh_hero_section');
+    $sel('mh_hero_flex_align', __('Flexbox: align (cross axis)', 'matthummel'), ['0' => __('Default', 'matthummel'), 'flex-start' => __('Start', 'matthummel'), 'center' => __('Center', 'matthummel'), 'flex-end' => __('End', 'matthummel'), 'stretch' => __('Stretch', 'matthummel'), 'baseline' => __('Baseline', 'matthummel')], '0', 'mh_hero_section');
+    $sel('mh_hero_flex_wrap', __('Flexbox: wrap', 'matthummel'), ['0' => __('Default', 'matthummel'), 'wrap' => __('Wrap', 'matthummel'), 'nowrap' => __('No wrap', 'matthummel'), 'wrap-reverse' => __('Wrap reverse', 'matthummel')], '0', 'mh_hero_section');
+    $sel('mh_hero_flex_gap', __('Flexbox: gap', 'matthummel'), ['0' => __('Default', 'matthummel'), '16' => '16px', '24' => '24px', '32' => '32px', '48' => '48px', '64' => '64px'], '0', 'mh_hero_section');
     $sel('mh_hero_img_side', __('Image side (2 columns)', 'matthummel'), ['right' => __('Right', 'matthummel'), 'left' => __('Left', 'matthummel')], 'right', 'mh_hero_section');
 
     $wp->add_setting('mh_hero_img', ['default' => '', 'sanitize_callback' => 'esc_url_raw']);
@@ -130,6 +140,63 @@ add_action('mh_head_end', function () {
     if ($gap > 0) {
         $css .= '.mh-hero .mh-hero-content{gap:' . $gap . 'px;}';
         $css .= '.mh-hero .mh-hero-content > *{margin-top:0;margin-bottom:0;}';
+    }
+
+    // Always keep comfortable side padding so content never touches the device edge.
+    $css .= '.mh-hero{padding-left:clamp(20px,5vw,28px);padding-right:clamp(20px,5vw,28px);box-sizing:border-box;}';
+
+    // Per-breakpoint content max-width (tablet 641–1024, mobile ≤640). On a single
+    // column we also re-apply the block position so it stays put when narrowed.
+    $bwv = function ($v) {
+        if ($v === 'full') {
+            return 'none';
+        }
+        return ($v !== '' && $v !== '0') ? absint($v) . 'px' : '';
+    };
+    $bm  = $ah === 'left' ? '0 auto 0 0' : ($ah === 'right' ? '0 0 0 auto' : '0 auto');
+    $pos = $cols < 2 ? 'margin:' . $bm . ';' : '';
+    $mt  = $bwv((string) get_theme_mod('mh_hero_content_maxw_tablet', '0'));
+    if ($mt !== '') {
+        $css .= '@media(min-width:641px) and (max-width:1024px){.mh-hero .mh-hero-content{max-width:' . $mt . ';' . $pos . '}}';
+    }
+    $mm = $bwv((string) get_theme_mod('mh_hero_content_maxw_mobile', '0'));
+    if ($mm !== '') {
+        $css .= '@media(max-width:640px){.mh-hero .mh-hero-content{max-width:' . $mm . ';' . $pos . '}}';
+    }
+
+    // Multi-column: tighten the column gap as it narrows and stack to full width on mobile.
+    if ($cols >= 2) {
+        $css .= '@media(max-width:880px){.mh-hero .mh-hero-inner{gap:26px;}}';
+        $css .= '@media(max-width:640px){.mh-hero .mh-hero-inner{gap:20px;}.mh-hero .mh-hero-content,.mh-hero .mh-hero-media{flex:1 1 100%;}}';
+    }
+
+    // Advanced flexbox overrides on the hero layout container (apply when chosen).
+    $clean = function ($v) {
+        return preg_replace('/[^a-z-]/', '', (string) $v);
+    };
+    $flex = '';
+    $fd = (string) get_theme_mod('mh_hero_flex_dir', '0');
+    $fj = (string) get_theme_mod('mh_hero_flex_justify', '0');
+    $fa = (string) get_theme_mod('mh_hero_flex_align', '0');
+    $fw = (string) get_theme_mod('mh_hero_flex_wrap', '0');
+    $fg = absint(get_theme_mod('mh_hero_flex_gap', 0));
+    if ($fd !== '0') {
+        $flex .= 'flex-direction:' . $clean($fd) . ';';
+    }
+    if ($fj !== '0') {
+        $flex .= 'justify-content:' . $clean($fj) . ';';
+    }
+    if ($fa !== '0') {
+        $flex .= 'align-items:' . $clean($fa) . ';';
+    }
+    if ($fw !== '0') {
+        $flex .= 'flex-wrap:' . $clean($fw) . ';';
+    }
+    if ($fg > 0) {
+        $flex .= 'gap:' . $fg . 'px;';
+    }
+    if ($flex !== '') {
+        $css .= '.mh-hero .mh-hero-inner{display:flex;' . $flex . '}';
     }
 
     if ($minh && $minh !== '0') {
