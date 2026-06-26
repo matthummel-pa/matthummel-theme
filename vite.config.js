@@ -10,7 +10,7 @@ if (! process.env.APP_URL) {
 
 export default defineConfig({
   server: { host: 'localhost', port: 3000, strictPort: true, cors: true },
-  base: '/wp-content/themes/matthummel/public/build/',
+  base: '/wp-content/themes/matthummel-theme/public/build/',
   plugins: [
     tailwindcss(),
     laravel({
