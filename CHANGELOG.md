@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-06-26
+
+### Changed
+- **`resources/css/page-templates.css`** — full visual redesign: stat numbers now green + clamp(2rem→2.75rem) with spring hover; `.skill-card` gets animated left-accent bar on hover + `.skill-card-icon` icon bubble; `.focus-card` top-border accent + spring lift; `.cta-card` dual radial-gradient glows + full z-index stack; `.resume-timeline` gains continuous vertical gradient line + pulsing `@keyframes dot-pulse` on current role dot; `.resource-card` now a flex column with button-style `.resource-card-link`; `.resource-channel-list` restructured with border-bottom rows; `.page-hero` adds dot-grid `::before` + top-right green radial glow `::after`; `.about-page-hero`, `.resources-page-hero`, `.resume-page-hero` all gain radial glow; dark-mode overrides for stat/skill/focus/resource/cta cards.
+- **`content-home.html`** — new file replacing inline `set-page-home.php` string; skill cards gain `.skill-card-icon` divs (🌐⚙️📈); improved subtitle and CTA copy.
+- **`content-about.html`** — skills and focus cards updated with icons (🌐🚀✅ / 📄⚡); focus card icon spans added; bio headings and copy refined.
+- **`content-resume.html`** — skill cards gain icons (⚡☁️🌐); resume links gain emoji prefixes; timeline bullet lists expanded; certs section updated with PL-400 path.
+- **`content-resources.html`** — section titles gain emoji prefixes (🎓🎬📄🔄⭐); resource card links updated to button-style; channel list copy refined; personal favourites context improved.
+
 ## [1.7.0] - 2026-06-26
 
 ### Added
