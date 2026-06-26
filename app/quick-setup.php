@@ -102,17 +102,28 @@ add_action('customize_register', function (\WP_Customize_Manager $wp) {
     $wp->add_section('mh_qs_social', [
         'title'       => __('Social Links', 'matthummel'),
         'panel'       => 'mh_quick_setup',
-        'description' => __('The most-used platforms. All platforms available in Theme Options → Social Links.', 'matthummel'),
+        'description' => __('Enter a URL to show that platform\'s icon. Leave blank to hide it.', 'matthummel'),
         'priority'    => 40,
     ]);
 
-    $quickSocial = ['github' => 'GitHub', 'linkedin' => 'LinkedIn', 'devto' => 'Dev.to', 'twitter' => 'X / Twitter'];
-    foreach ($quickSocial as $key => $label) {
-        $platforms = function_exists('App\\mh_social_platforms') ? mh_social_platforms() : [];
-        $default   = $platforms[$key]['default'] ?? '';
+    // Show all platforms (keys match mh_social_platforms() and menu.php's mh_socials_map)
+    $platforms = function_exists('App\\mh_social_platforms') ? mh_social_platforms() : [
+        'github'    => ['label' => 'GitHub',     'default' => ''],
+        'linkedin'  => ['label' => 'LinkedIn',   'default' => ''],
+        'devto'     => ['label' => 'Dev.to',     'default' => ''],
+        'x'         => ['label' => 'X (Twitter)','default' => ''],
+        'bluesky'   => ['label' => 'Bluesky',    'default' => ''],
+        'instagram' => ['label' => 'Instagram',  'default' => ''],
+        'youtube'   => ['label' => 'YouTube',    'default' => ''],
+        'facebook'  => ['label' => 'Facebook',   'default' => ''],
+        'mastodon'  => ['label' => 'Mastodon',   'default' => ''],
+        'email'     => ['label' => 'Email',      'default' => ''],
+        'rss'       => ['label' => 'RSS Feed',   'default' => ''],
+    ];
+    foreach ($platforms as $key => $p) {
         $wp->add_control("mh_qs_social_{$key}", [
             'settings' => "mh_social_{$key}",
-            'label'    => $label,
+            'label'    => $p['label'],
             'section'  => 'mh_qs_social',
             'type'     => 'url',
         ]);
@@ -162,29 +173,33 @@ add_action('customize_register', function (\WP_Customize_Manager $wp) {
 
 }, 26);
 
-/* ── Style-Kit postMessage handler (applies kit mods on select change) ───── */
-add_action('customize_preview_init', function () {
+/* ── Style-Kit controls-pane handler ─────────────────────────────────────── *
+ * Must run in the CONTROLS pane (customize_controls_enqueue_scripts), not the
+ * preview iframe. Calling wp.customize(key).set() from the controls side
+ * updates both the control UI and triggers the transport, so the change is
+ * actually queued for Save.
+ */
+add_action('customize_controls_enqueue_scripts', function () {
     if (! function_exists('App\\mh_style_kits')) {
         return;
     }
     $kits_json = wp_json_encode(mh_style_kits());
     wp_add_inline_script(
-        'customize-preview',
-        "
-        (function(){
+        'customize-controls',
+        "(function(){
             var kits = {$kits_json};
             wp.customize('mh_qs_apply_kit', function(setting){
                 setting.bind(function(kit){
-                    if(!kit || !kits[kit]) return;
+                    if (!kit || !kits[kit]) return;
                     var mods = kits[kit].mods || {};
                     Object.keys(mods).forEach(function(key){
-                        if(wp.customize.instance(key)){
-                            wp.customize.instance(key).set(mods[key]);
-                        }
+                        var s = wp.customize(key);
+                        if (s) { s.set(mods[key]); }
                     });
+                    // Reset selector to placeholder so picking the same kit again still fires
+                    setTimeout(function(){ setting.set(''); }, 100);
                 });
             });
-        })();
-        "
+        })();"
     );
 });

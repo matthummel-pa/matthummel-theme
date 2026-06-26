@@ -4,6 +4,21 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-06-26
+
+### Added
+- **Google Fonts library** — expanded font picker from 10 to 47 fonts across 6 categories (Modern Sans, Geometric/Grotesk, Humanist Sans, Classic Serif, Display, Monospace) plus System stack; all wrapped in `matthummel/fonts` filter for extensibility.
+- **Style Kit one-click presets** — fixed; JS moved to `customize_controls_enqueue_scripts` so kit settings queue for Save correctly.
+- **Social links in Quick Setup** — all 11 platforms (GitHub, LinkedIn, Dev.to, X, Bluesky, Instagram, YouTube, Facebook, Mastodon, Email, RSS) now appear in the Quick Setup Customizer panel.
+- **Social Links tab in Theme Settings** — Appearance → Theme Settings now includes a Social Links tab driven by the `matthummel/admin_schema` filter.
+- **Navigation social position live preview** — `mh_nav_social_align` now uses `postMessage` transport with a preview iframe JS handler for instant updates without page reload.
+- **Content import from matthummel.com** — 8 pages imported (About, Contact, Projects, Résumé, Blog, Resources, Home, Accessibility Statement) with all inline CSS/styles stripped; plain content and layout only.
+
+### Fixed
+- `mh_nav_social_align` setting now updates the preview live (was requiring full page refresh).
+- `mh_admin_schema()` now applies the `matthummel/admin_schema` filter so registered tab extensions (e.g. Social Links) actually appear.
+- Removed duplicate `mh_social_links()` declaration that caused a PHP fatal error on load.
+
 ## [1.1.0] - 2026-06-25
 
 ### Added

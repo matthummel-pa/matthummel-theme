@@ -52,7 +52,7 @@ function mh_admin_schema()
         $layoutFields[] = ['key' => "mh_layout_{$t}_sidebar", 'label' => "{$lab} — show sidebar", 'type' => 'checkbox'];
     }
 
-    return [
+    return apply_filters('matthummel/admin_schema', [
         'general' => ['icon' => 'dashicons-admin-settings', 'label' => __('General', 'matthummel'), 'fields' => [
             ['key' => 'mh_cta_text', 'label' => __('Header button text', 'matthummel'), 'type' => 'text'],
             ['key' => 'mh_cta_url', 'label' => __('Header button URL', 'matthummel'), 'type' => 'text'],
@@ -105,7 +105,7 @@ function mh_admin_schema()
             ['key' => 'mh_gh_client_id', 'label' => __('GitHub OAuth Client ID', 'matthummel'), 'type' => 'text', 'desc' => __('Public Client ID from your GitHub OAuth App (Device Flow enabled). Needed for "Connect with GitHub".', 'matthummel')],
             ['key' => 'mh_gh_connect', 'label' => __('GitHub connection', 'matthummel'), 'type' => 'github_connect'],
         ], 'note' => __('Per-project owner/repo, eyebrow and demo URL are set on each project via the Project Details box.', 'matthummel')],
-    ];
+    ]);
 }
 
 /** Top-level admin menu. */

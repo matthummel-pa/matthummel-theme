@@ -23,16 +23,21 @@ add_action('customize_register', function ($wp) {
         $wp->add_setting($id, ['default' => $default, 'sanitize_callback' => 'sanitize_key']);
         $wp->add_control($id, ['label' => $label, 'section' => 'mh_nav_section', 'type' => 'select', 'choices' => $choices]);
     };
+    // postMessage variant — updates preview instantly without a full reload.
+    $selPM = function ($wp, $id, $label, $choices, $default) {
+        $wp->add_setting($id, ['default' => $default, 'sanitize_callback' => 'sanitize_key', 'transport' => 'postMessage']);
+        $wp->add_control($id, ['label' => $label, 'section' => 'mh_nav_section', 'type' => 'select', 'choices' => $choices]);
+    };
 
     $align = ['none' => __('Default', 'matthummel'), 'left' => __('Left', 'matthummel'), 'center' => __('Center', 'matthummel'), 'right' => __('Right', 'matthummel')];
     $sel($wp, 'mh_logo_align', __('Logo position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_darkicon_align', __('Dark-mode icon position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_popbtn_align', __('Menu (popout) button position', 'matthummel'), $align, 'none');
     $sel($wp, 'mh_cta_align', __('Header button (CTA) position', 'matthummel'), $align, 'none');
-    // Navbar social: dedicated show/hide + L/C/R position (theme-options driven).
+    // Navbar social: show/hide uses refresh; position uses postMessage for instant preview.
     $wp->add_setting('mh_nav_social', ['default' => true, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_nav_social', ['label' => __('Show social icons in navigation bar', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
-    $sel($wp, 'mh_nav_social_align', __('Navigation social position', 'matthummel'), $align, 'none');
+    $selPM($wp, 'mh_nav_social_align', __('Navigation social position', 'matthummel'), $align, 'none');
     // Hide social icons on mobile (<=640px) per bar.
     $wp->add_setting('mh_social_nav_hide_mobile', ['default' => false, 'sanitize_callback' => 'wp_validate_boolean']);
     $wp->add_control('mh_social_nav_hide_mobile', ['label' => __('Hide navigation social on mobile', 'matthummel'), 'section' => 'mh_nav_section', 'type' => 'checkbox']);
@@ -297,6 +302,27 @@ add_action('mh_head_end', function () {
     }
 }, 14);
 
+
+/* ── postMessage preview handler for nav social position ─────────────────── */
+add_action('customize_preview_init', function () {
+    wp_add_inline_script(
+        'customize-preview',
+        "(function(){
+            var alignMap = { left: 'margin-right:auto;', right: 'margin-left:auto;', center: 'margin-left:auto;margin-right:auto;' };
+            wp.customize('mh_nav_social_align', function(setting){
+                setting.bind(function(val){
+                    var el = document.getElementById('mh-nav-social-pos');
+                    if (!el) {
+                        el = document.createElement('style');
+                        el.id = 'mh-nav-social-pos';
+                        document.head.appendChild(el);
+                    }
+                    el.textContent = alignMap[val] ? '.banner .social{' + alignMap[val] + '}' : '';
+                });
+            });
+        })();"
+    );
+});
 
 /** Block widget columns for the off-canvas popout (Appearance -> Widgets). */
 add_action('widgets_init', function () {
