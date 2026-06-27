@@ -148,7 +148,8 @@
     </div>
 
     <div class="project-card-grid">
-      @while ($mhProjects->have_posts()) @php($mhProjects->the_post())
+      @while ($mhProjects->have_posts())
+      @php $mhProjects->the_post(); @endphp
       @php
         $isFeatured = (bool) get_post_meta(get_the_ID(), '_mh_featured', true);
         $techStack  = get_post_meta(get_the_ID(), '_mh_tech_stack', true);
@@ -193,7 +194,7 @@
   </div>
 </section>
 @endif
-@php(wp_reset_postdata())
+@php wp_reset_postdata(); @endphp
 @endif
 
 {{-- ── CTA ────────────────────────────────────────────────────────────── --}}
