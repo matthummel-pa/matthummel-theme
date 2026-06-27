@@ -4,6 +4,18 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-06-26
+
+### Fixed — Dark/light mode CSS audit and accessibility pass
+
+- **`resources/css/app.css`** — added missing `--color-paper: #fbfaf7` to `@theme`. This token was referenced in hero `color:` declarations and `.project-hero-btn--outline` but never defined, causing those properties to resolve to `initial` (browser default) — making text dark on dark hero backgrounds.
+- **`resources/css/app.css`** — added dark mode rule for `.form-error`: light-pink card (`#fbeaea`, `#8a2b22`) now overrides to dark-red treatment (`#2a1515`, `#f08080`, `#4a2828`) in `html.mh-dark`.
+- **`resources/css/app.css`** — added dark mode `.btn-outline` border and hover-state overrides so ghost buttons use the correct dark-mode line color rather than the light-mode `#e6e2d9`.
+- **`resources/css/app.css`** — added dark mode sticky-header glass effect: `rgba(21,23,27,.95)` with `backdrop-filter: blur(12px)` ensuring the nav is readable against any hero below it.
+- **`resources/css/page-templates.css`** — added `html.mh-dark .project-page-hero` and `html.mh-dark .project-single-hero` background overrides (`#0c0e11`). Both heroes were hardcoded to `#17191e` with no dark-mode rule, so they stayed at the lighter shade while every other hero correctly deepened in dark mode.
+- **`resources/css/page-templates.css`** — added `html.mh-dark .blog-hero-img { background: #1c1f24 }`. The blog hero image placeholder used `var(--color-ink)` which resolves to `#f3f1ea` (cream) in dark mode — now correctly dark.
+- **`resources/css/page-templates.css`** — added dark mode filter-pill overrides for `.projects-filter-btn` / `.project-filter-btn` so category chips use dark card colours in dark mode.
+
 ## [1.9.5] - 2026-06-26
 
 ### Fixed

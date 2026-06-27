@@ -1430,13 +1430,24 @@ html.mh-dark .project-card-thumb--placeholder { background: linear-gradient(135d
 /* ======================================================================
    DARK MODE OVERRIDES
 ====================================================================== */
-html.mh-dark .page-hero           { background: #0c0e11; }
-html.mh-dark .about-page-hero     { background: #0c0e11; }
-html.mh-dark .resources-page-hero { background: #0c0e11; }
-html.mh-dark .resume-page-hero    { background: #0c0e11; }
+/* Heroes */
+html.mh-dark .page-hero            { background: #0c0e11; }
+html.mh-dark .about-page-hero      { background: #0c0e11; }
+html.mh-dark .resources-page-hero  { background: #0c0e11; }
+html.mh-dark .resume-page-hero     { background: #0c0e11; }
+html.mh-dark .project-page-hero    { background: #0c0e11; }
+html.mh-dark .project-single-hero  { background: #0c0e11; }
+html.mh-dark .blog-hero-img        { background: #1c1f24; }
+
+/* Content sections */
 html.mh-dark .page-section--cream { background: #1b1d22; }
 html.mh-dark .stat-item           { background: #1e2126; border-color: #2a2d34; }
 html.mh-dark .skill-card          { background: #1e2126; border-color: #2a2d34; }
 html.mh-dark .focus-card          { background: #1e2126; border-color: #2a2d34; }
 html.mh-dark .resource-card       { background: #1e2126; border-color: #2a2d34; }
 html.mh-dark .cta-card            { background: #0c0e11; }
+
+/* Project cards + GitHub panels */
+html.mh-dark .projects-filter-btn,
+html.mh-dark .project-filter-btn  { background: #1e2228; border-color: #2c2f36; color: #f3f1ea; }
+html.mh-dark .project-filter-btn.is-active { background: var(--color-green); border-color: var(--color-green); color: #fff; }

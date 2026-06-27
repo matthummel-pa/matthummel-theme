@@ -12,6 +12,7 @@
 ---------------------------------------------------------------------- */
 @theme {
   --color-khaki:      #fbfaf7; /* page background (Paper) */
+  --color-paper:      #fbfaf7; /* fixed warm-white — for text ON dark heroes */
   --color-cream:      #f4f2ec; /* subtle alt surface */
   --color-card:       #ffffff; /* card surface */
   --color-green:      #2f6b4e; /* brand / buttons / links (AA on Paper) */
@@ -442,8 +443,13 @@
   html.mh-dark .top-bar { background: #1c1f24; color: #d4d2cb; }
   html.mh-dark .content-info { background: #121418; color: #d4d2cb; }
   html.mh-dark .mh-popout { background: #1c1f24; color: #f3f1ea; }
-  html.mh-dark .btn-outline { background: #1e2228; color: #f3f1ea; }
+  html.mh-dark .btn-outline { background: #1e2228; color: #f3f1ea; border-color: #2c2f36; }
+  html.mh-dark .btn-outline:hover { background: #252930; color: #f3f1ea; }
   html.mh-dark .code-block, html.mh-dark .post-prose pre { background: #0b0d11; }
+  html.mh-dark .form-error { background: #2a1515; color: #f08080; border-color: #4a2828; }
+  html.mh-dark .mini-card { background: var(--color-card); border-color: var(--color-line); }
+  html.mh-dark .pill { background: var(--color-card); border-color: var(--color-line); color: var(--color-ink); }
+  html.mh-dark body.mh-sticky-header .banner { background: rgba(21,23,27,.95); backdrop-filter: blur(12px); }
 
   .mh-theme-toggle { background: none; border: 0; cursor: pointer; color: var(--color-ink); font-size: 18px; line-height: 1; padding: 6px; display: inline-flex; align-items: center; }
   .mh-theme-toggle:hover { color: var(--color-green); }
