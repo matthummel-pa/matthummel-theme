@@ -1,25 +1,11 @@
 // Theme scripts
 import './reading-progress.js';
 
-// Dark mode toggle
+// Dark mode is handled entirely by dark-mode.php (inline head + footer scripts).
+// mh-theme key in localStorage, 'dark'/'light' values.
+// Do NOT duplicate the toggle logic here — two listeners cancel each other out.
+
 document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.querySelector('.mh-theme-toggle');
-  const html   = document.documentElement;
-
-  // Init from localStorage
-  if (localStorage.getItem('mh-dark') === '1') {
-    html.classList.add('mh-dark');
-    toggle && toggle.setAttribute('aria-pressed', 'true');
-  }
-
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const isDark = html.classList.toggle('mh-dark');
-      localStorage.setItem('mh-dark', isDark ? '1' : '0');
-      toggle.setAttribute('aria-pressed', String(isDark));
-    });
-  }
-
   // Popout menu
   const menuToggle  = document.querySelector('.menu-toggle');
   const popout      = document.getElementById('mh-popout');
