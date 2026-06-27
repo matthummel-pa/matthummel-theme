@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.5] - 2026-06-26
+
+### Fixed
+- **`resources/views/single-projects.blade.php`** — replaced all four `@php(func())` inline patterns with `@php func(); @endphp` block form (lines 4, 137, 182, 220). The inline form compiles to `<?php(func())` without a closing `?>`, leaving subsequent PHP blocks in an open context and causing parse errors on every single project page visit.
+- **`resources/views/template-projects.blade.php`** — same `@php(func())` fix for `$mhProjects->the_post()` and `wp_reset_postdata()` calls.
+- **`app/setup.php`** — changed `'has_archive' => true` to `'has_archive' => false` for the `projects` CPT. With the rewrite slug matching the `projects` page slug, WordPress was serving the CPT archive template instead of the page template, making `template-projects.blade.php` unreachable.
+- **`config/view.php`** — added Acorn view config override pointing compiled views to `wp-content/uploads/acorn-views`. Resolves a Windows file-permission conflict where compiled view files created by the `mhumm` PHP server process could not be overwritten by the `dad` user running the development toolchain, causing persistent "Access is denied" errors on template recompilation.
+- **`resources/css/page-templates.css`** — changed `.project-page-hero` and `.project-single-hero` `background` from `var(--color-ink)` to hardcoded `#17191e`. In `html.mh-dark` mode, `--color-ink` resolves to `#f3f1ea` (cream text colour), making dark heroes render with a light cream background.
+
 ## [1.9.0] - 2026-06-26
 
 ### Added
