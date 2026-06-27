@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-@while(have_posts()) @php(the_post())
+@while(have_posts())
+@php the_post(); @endphp
 @php
   $pid       = get_the_ID();
   $owner     = get_post_meta($pid, '_mh_gh_owner', true) ?: apply_filters('matthummel/github_owner', 'matthummel-pa');
@@ -134,7 +135,7 @@
       @php $mhBody = trim(get_the_content()) @endphp
       @if ($mhBody)
         <div class="project-content entry-content">
-          @php(the_content())
+          @php the_content(); @endphp
         </div>
       @endif
 
@@ -179,7 +180,8 @@
       <a class="section-view-all" href="{{ $projArchive ? get_permalink($projArchive) : '/projects/' }}">All projects →</a>
     </div>
     <div class="project-related-grid">
-      @while ($mhRelated->have_posts()) @php($mhRelated->the_post())
+      @while ($mhRelated->have_posts())
+      @php $mhRelated->the_post(); @endphp
       @php
         $rTech  = get_post_meta(get_the_ID(), '_mh_tech_stack', true);
         $rPills = $rTech ? array_slice(array_map('trim', explode(',', $rTech)), 0, 3) : [];
@@ -217,7 +219,7 @@
     </div>
   </div>
 </section>
-@php(wp_reset_postdata())
+@php wp_reset_postdata(); @endphp
 @endif
 
 @endwhile
