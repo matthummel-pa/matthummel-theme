@@ -718,7 +718,7 @@ html.mh-dark .mh-toc             { background: var(--color-cream); }
 
 /* ── Project archive hero ─────────────────────────────────────────── */
 .project-page-hero {
-  background: var(--color-ink); color: var(--color-paper);
+  background: #17191e; color: var(--color-paper);
   padding: clamp(64px, 10vw, 112px) 0 clamp(48px, 7vw, 80px);
   position: relative; overflow: hidden;
 }
@@ -741,7 +741,7 @@ html.mh-dark .mh-toc             { background: var(--color-cream); }
 .project-page-hero h1 {
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(2.75rem, 8vw, 5.5rem); letter-spacing: -0.035em;
-  color: var(--color-paper); line-height: 1.04; margin: 0 0 20px;
+  color: #fbfaf7; line-height: 1.04; margin: 0 0 20px;
 }
 .project-page-hero .lead {
   color: rgba(251,250,247,.65); font-size: clamp(1rem, 2vw, 1.125rem);
@@ -862,7 +862,7 @@ html.mh-dark .mh-toc             { background: var(--color-cream); }
 
 /* ── Single project hero ──────────────────────────────────────────── */
 .project-single-hero {
-  background: var(--color-ink); color: var(--color-paper);
+  background: #17191e; color: var(--color-paper);
   padding: clamp(56px, 9vw, 104px) 0 clamp(48px, 7vw, 80px);
   position: relative; overflow: hidden;
 }
@@ -885,7 +885,7 @@ html.mh-dark .mh-toc             { background: var(--color-cream); }
 .project-single-title {
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(2.25rem, 6vw, 4.25rem); letter-spacing: -0.03em;
-  color: var(--color-paper); line-height: 1.07; margin: 0 0 20px;
+  color: #fbfaf7; line-height: 1.07; margin: 0 0 20px;
 }
 .project-single-desc {
   font-size: clamp(.95rem, 1.8vw, 1.1rem); color: rgba(251,250,247,.65);
