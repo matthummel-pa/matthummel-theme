@@ -4,6 +4,19 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-06-26
+
+### Added
+- **`resources/views/template-projects.blade.php`** — complete redesign: dark ink hero with live GitHub stat strip (public_repos count from `Github::fetchUser()`), sticky category filter pills (All / GitHub / WordPress / Power Platform derived from taxonomy), "Live from GitHub" section using `Github::fetchRepos()` server-side with bento-style repo cards (name, desc, language dot, star count, fork count), manual CPT projects grid with featured project support, section-header layout with view-all links, CTA card at bottom. Filter pill URLs use `add_query_arg()` for clean category switching.
+- **`resources/views/single-projects.blade.php`** — complete redesign: dark ink hero with category eyebrow (GitHub icon if repo linked), large project title, description (GitHub API desc → fallback to excerpt), tech stack pills (`_mh_tech_stack` meta), action buttons (Live site / GitHub / README), GitHub stats band (stars, forks, language dot, license, release tag, `owner/repo` link), featured image with rounded bottom corners, project body (post content + GitHub README intro from `Github::render()`), related projects section filtered by same taxonomy term.
+- **`app/projects-admin.php`** — two new meta fields: `_mh_tech_stack` (comma-separated tech stack displayed as pills) and `_mh_featured` (checkbox, featured projects get a larger card in the grid); REST endpoint `GET /wp-json/mh/v1/github-repos?user=&count=&sort=` that proxies `Github::fetchRepos()` with transient caching via the existing engine.
+- **`resources/css/page-templates.css`** — full projects CSS section: `.project-page-hero` (dark ink + dot-grid + radial glow, matching other page heroes), `.gh-live-strip` + `.gh-live-link` (GitHub stats in hero), `.projects-filter` (filter pill nav), `.github-repos-grid` + `.github-repo-card` (live repo cards with hover lift), `.section-header` + `.section-title` + `.section-view-all` (reusable section layout), `.project-card-grid` + `.project-card--featured` (2-col featured card), `.project-card-eyebrow`, `.tech-pill`, `.project-single-hero` (single post dark ink hero), `.project-single-title`, `.project-tech-pills`, `.project-hero-btn` variants (primary/outline/ghost), `.project-gh-stats` + `.project-gh-stats-inner` + `.gh-stat-item` (GitHub stats band), `.project-featured-img`, `.project-body`, `.project-shot-grid`, `.project-related-grid`; dark mode overrides for all new components.
+- **`seed-projects.php`** — WP-CLI eval-file script that creates taxonomy terms (GitHub Projects, WordPress, Power Platform), creates the `Bradley Goldsmith Law` project post with `_mh_demo_url=https://bradleygoldsmithlaw.com`, `_mh_tech_stack=WordPress,Custom Theme,PHP,CSS3,JavaScript,SEO`, `_mh_featured=1`, assigns the WordPress category, flushes rewrite rules. Idempotent — safe to re-run.
+- **`deploy-v190.ps1`** — full deploy script: syncs CSS, JS, Blade templates, and `app/*.php` files; runs `npm run build`; seeds projects via WP-CLI eval-file; ensures Projects page exists with correct template; flushes rewrites; clears Acorn caches; commits and pushes `v1.9.0`.
+
+### Changed
+- **`resources/views/archive-projects.blade.php`** — left as-is (CPT archive); primary projects experience is via the `template-projects.blade.php` page template.
+
 ## [1.8.0] - 2026-06-26
 
 ### Changed
