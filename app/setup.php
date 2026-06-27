@@ -196,7 +196,7 @@ add_action('init', function () {
             'edit_item' => __('Edit Project', 'matthummel'),
         ],
         'public' => true,
-        'has_archive' => true,
+        'has_archive' => false,
         'menu_icon' => 'dashicons-portfolio',
         'rewrite' => ['slug' => 'projects'],
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'],
