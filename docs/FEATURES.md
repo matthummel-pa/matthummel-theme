@@ -6,10 +6,11 @@ What the 3.x Sage theme does, and where it lives.
 
 | Feature | Notes | Code |
 | --- | --- | --- |
+| Page content fields | Edit copy in wp-admin without a deploy (`mh_f_*` meta) | `app/page-fields.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Hello, writing, snippets, example sites, optional help | `resources/views/partials/home.blade.php` |
 | About / Now | Bio, two shops, current focus | `template-about.blade.php`, `template-now.blade.php` |
-| Work | Ridges & Valleys concepts + category filter | `template-projects.blade.php`, `mh_studio_projects()` |
+| Work | Ridges & Valleys concepts + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()` |
 | Services | WordPress, Power Platform, full-stack, fixes | `template-services.blade.php` |
 | Code | Featured repos, live GitHub, snippets | `template-code.blade.php`, `App\Github` |
 | Writing | Blog index; categories unchanged | `index.blade.php`, `archive.blade.php` |

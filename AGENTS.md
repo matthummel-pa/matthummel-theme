@@ -4,8 +4,8 @@ This repository is the **Matt Hummel** WordPress theme — Sage 11.2.1 (Roots) w
 Tailwind v4, Vite, and Acorn. The repo root *is* the theme folder.
 
 A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Github.php`,
-`resources/css/portfolio.css`, and the `template-*.blade.php` views. Stock Sage files
-(`app/setup.php`, `app/filters.php`) stay close to upstream.
+`app/page-fields.php`, `resources/css/portfolio.css`, and the `template-*.blade.php` views.
+Page copy is edited in wp-admin (**Page content (theme)**), not hardcoded in Blade.
 
 Sage docs (also listed in `.cursor/docs.json`):
 
@@ -57,3 +57,5 @@ Gotchas:
   activate the theme, then `wp rewrite structure '/%postname%/'`.
 - Portfolio pages seed once via `mh_seed_portfolio_pages()` (`mh_portfolio_seeded_v2`).
   Existing posts and categories are never deleted.
+- Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
+  keys in `app/page-fields.php`, then `\App\field()` in the template.

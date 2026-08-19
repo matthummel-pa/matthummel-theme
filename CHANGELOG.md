@@ -2,6 +2,20 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.3 — 2026-08-19
+
+### Added
+
+- Ridges-style **Page content (theme)** fields on Home, About, Now, Services, Contact, Code, Work, and Writing
+- Repeaters for example sites, featured repos, snippets, and About place cards
+- Footer sentence edited from the Home fields
+
+### Changed
+
+- Page copy is no longer hardcoded in Blade; templates read `\App\field()` with the same defaults
+- Sample posts rewritten as real snippet notes (skip link + shortcode)
+- Now page dated August 2026
+
 ## 3.0.2 — 2026-08-19
 
 ### Added

@@ -5,25 +5,25 @@
 
 @section('content')
 @php
-  $repos = \App\mh_featured_repos();
-  $snips = \App\mh_code_snippets();
+  $repos = \App\mh_code_page_repos();
+  $snips = \App\mh_code_page_snips();
   $live  = \App\Github::fetchRepos('matthummel-pa', 8, 'updated');
 @endphp
 
 <header class="page-header container">
-  <h1 class="display-title is-hero">Code you can copy.</h1>
-  <p class="lead">Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Questions are welcome on the <a href="{{ home_url('/contact/') }}">contact</a> page.</p>
+  <h1 class="display-title is-hero">{{ \App\field('code_h1', __('Code you can copy.', 'sage')) }}</h1>
+  <p class="lead">{!! \App\field_html('code_lede', __('Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')) !!}</p>
 </header>
 
 <section class="pf-section">
   <div class="container">
-    <h2 class="display-title is-section">Featured repos</h2>
-    <p>Open these on GitHub. Fork them if they help.</p>
+    <h2 class="display-title is-section">{{ \App\field('code_feat_h2', __('Featured repos', 'sage')) }}</h2>
+    <p>{{ \App\field('code_feat_intro', __('Open these on GitHub. Fork them if they help.', 'sage')) }}</p>
     <div class="pf-grid">
       @foreach ($repos as $r)
         <article class="pf-card">
           <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}</a></h3>
-          <p>{{ $r['desc'] }} {{ implode(', ', $r['tags']) }}.</p>
+          <p>{{ $r['desc'] }}@if (! empty($r['tags'])) {{ implode(', ', $r['tags']) }}.@endif</p>
         </article>
       @endforeach
     </div>
@@ -33,7 +33,7 @@
 @if ($live)
 <section class="pf-section">
   <div class="container">
-    <h2 class="display-title is-section">Live from GitHub</h2>
+    <h2 class="display-title is-section">{{ \App\field('code_live_h2', __('Live from GitHub', 'sage')) }}</h2>
     <div class="pf-grid">
       @foreach ($live as $r)
         <article class="pf-card">
@@ -50,15 +50,15 @@
         </article>
       @endforeach
     </div>
-    <p><a href="https://github.com/matthummel-pa?tab=repositories">All public repos</a></p>
+    <p><a href="https://github.com/matthummel-pa?tab=repositories">{{ \App\field('code_live_all', __('All public repos', 'sage')) }}</a></p>
   </div>
 </section>
 @endif
 
 <section class="pf-section">
   <div class="container">
-    <h2 class="display-title is-section">Snippets</h2>
-    <p class="lead">Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.</p>
+    <h2 class="display-title is-section">{{ \App\field('code_snip_h2', __('Snippets', 'sage')) }}</h2>
+    <p class="lead">{{ \App\field('code_snip_intro', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.', 'sage')) }}</p>
     @foreach ($snips as $s)
       <article class="snippet-card">
         <h3>{{ $s['title'] }}</h3>

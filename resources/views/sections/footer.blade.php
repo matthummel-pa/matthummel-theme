@@ -5,7 +5,7 @@
   <div class="container footer-grid">
     <div>
       <p class="brand-name footer-brand">Matt Hummel</p>
-      <p>Notes, code, and Gettysburg work. Visitors, new developers, and business owners are welcome.</p>
+      <p>{{ \App\field('footer_blurb', __('Notes, code, and Gettysburg work. Visitors, new developers, and business owners are welcome.', 'sage'), \App\mh_front_id()) }}</p>
     </div>
     @if (has_nav_menu('primary_navigation'))
       <nav aria-label="{{ __('Footer', 'sage') }}">

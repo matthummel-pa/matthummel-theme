@@ -53,7 +53,13 @@ If pages already exist from an earlier seed (`mh_portfolio_seeded_v2`), they are
 
 To use a different headshot: Appearance → Customize → Profile photo. Leave it empty to keep `resources/images/matt-hummel.jpg`.
 
-## 5. Fallback
+## 5. Edit page copy
+
+Each portfolio page has a **Page content (theme)** box (same pattern as Ridges & Valleys). Leave a field blank to keep the built-in default. Repeaters restore the built-in list if you remove every row.
+
+Do not hardcode new sentences in Blade — add a row in `app/page-fields.php` and read it with `\App\field('key', __('Default', 'sage'))`.
+
+## 6. Fallback
 
 Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
