@@ -15,7 +15,8 @@ add_action('init', function () {
         return;
     }
 
-    $back = wp_get_referer() ?: home_url('/');
+    $contact = get_page_by_path('contact');
+    $back = $contact instanceof \WP_Post ? get_permalink($contact) : home_url('/contact/');
     $back = remove_query_arg('contact', $back);
 
     $redirect = function ($status) use ($back) {
