@@ -14,17 +14,18 @@ namespace App;
 function mh_socials_map()
 {
     return [
-        'linkedin'  => ['LinkedIn', 'https://www.linkedin.com/in/matthummel'],
         'github'    => ['GitHub', 'https://github.com/matthummel-pa'],
-        'devto'     => ['Dev.to', 'https://dev.to/mattbuildsapps'],
+        'linkedin'  => ['LinkedIn', 'https://www.linkedin.com/in/matt-hummel-pa'],
+        'devto'     => ['Dev.to', 'https://dev.to/matthummel'],
+        'bluesky'   => ['Bluesky', 'https://bsky.app/profile/matthummel.bsky.social'],
+        'reddit'    => ['Reddit', 'https://www.reddit.com/user/matt-hummel'],
         'x'         => ['X', ''],
-        'bluesky'   => ['Bluesky', ''],
         'youtube'   => ['YouTube', ''],
         'instagram' => ['Instagram', ''],
         'facebook'  => ['Facebook', ''],
         'mastodon'  => ['Mastodon', ''],
         'email'     => ['Email', ''],
-        'rss'       => ['RSS', ''],
+        'rss'       => ['RSS', home_url('/feed/')],
     ];
 }
 

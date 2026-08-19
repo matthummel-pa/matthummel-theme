@@ -2,34 +2,36 @@
 @import "./page-templates.css";
 @import "./blocks.css";
 @import "./design-language.css";
+@import "./portfolio.css";
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
 
-/* ----------------------------------------------------------------------
-   Design tokens — Paper + Space Grotesk system (trend #3: minimalism)
-   Token NAMES kept stable; values updated so all components inherit.
----------------------------------------------------------------------- */
+/* Blue + gray portfolio tokens. Old names (--color-green, --color-khaki) map
+   to the new palette so leftover components inherit without a full rewrite. */
 @theme {
-  --color-khaki:      #fbfaf7; /* page background (Paper) */
-  --color-paper:      #fbfaf7; /* fixed warm-white — for text ON dark heroes */
-  --color-cream:      #f4f2ec; /* subtle alt surface */
-  --color-card:       #ffffff; /* card surface */
-  --color-green:      #2f6b4e; /* brand / buttons / links (AA on Paper) */
-  --color-green-ink:  #255840; /* hover */
-  --color-green-tint: #eaf1ec; /* soft fill */
-  --color-ink:        #17191e; /* headings / darkest text */
-  --color-body:       #2b2f36; /* body text */
-  --color-muted:      #5c636c; /* eyebrows / labels / meta */
-  --color-heading:    #17191e; /* display headings now ink, not khaki */
-  --color-line:       #e6e2d9; /* hairlines / card borders */
-  --color-border:     #e6e2d9;
+  --color-khaki:      #f4f6f9;
+  --color-paper:      #f8fafc;
+  --color-cream:      #eef2f7;
+  --color-card:       #ffffff;
+  --color-green:      #1d4ed8;
+  --color-green-ink:  #1e40af;
+  --color-green-tint: #dbeafe;
+  --color-ink:        #0f172a;
+  --color-body:       #334155;
+  --color-muted:      #475569;
+  --color-heading:    #0f172a;
+  --color-line:       #e2e8f0;
+  --color-border:     #e2e8f0;
+  --color-blue:       #1d4ed8;
+  --color-blue-ink:   #1e40af;
+  --color-blue-soft:  #eff6ff;
 
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono:    "JetBrains Mono", "Menlo", "Consolas", monospace;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-body:    "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono:    "IBM Plex Mono", "Menlo", "Consolas", monospace;
 
-  --radius-btn: 8px;
+  --radius-btn: 6px;
 }
 
 /* ----------------------------------------------------------------------

@@ -1,4 +1,6 @@
-{{-- Front page --}}
+{{--
+  Template Name: Home
+--}}
 @extends('layouts.app')
 
 @section('content')
