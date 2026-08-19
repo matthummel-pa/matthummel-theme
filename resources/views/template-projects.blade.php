@@ -16,10 +16,11 @@
 <header class="page-header container">
   <p class="eyebrow">Work</p>
   <h1 class="display-title is-hero">Ridges &amp; Valleys work.</h1>
-  <p class="lead">These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Each one is a real WordPress shape — menus, bookings, maps, and local search — not a slide deck.</p>
-  @if (!empty($ghUser['public_repos']))
-    <p class="pf-meta">Also {{ (int) $ghUser['public_repos'] }} public repos on <a href="https://github.com/matthummel-pa">GitHub</a>.</p>
-  @endif
+    <p class="lead">These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Each one is a real WordPress shape — menus, bookings, maps, and local search — not a slide deck.
+      @if (! empty($ghUser['public_repos']))
+        Also {{ (int) $ghUser['public_repos'] }} public repos on <a href="https://github.com/matthummel-pa">GitHub</a>.
+      @endif
+    </p>
 </header>
 
 <div class="container" style="padding-bottom:3rem">
