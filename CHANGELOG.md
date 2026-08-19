@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.10 — 2026-08-19
+
+### Changed
+
+- FTP deploy prefers the live FSE `matthummel` folder (and SiteGround `www/<domain>/public_html`) over a Sage dump under a generic `public_html/`
+
 ## 3.0.9 — 2026-08-19
 
 ### Changed
