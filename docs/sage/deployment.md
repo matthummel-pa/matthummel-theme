@@ -14,11 +14,13 @@ Optional on the server after upload: `wp acorn optimize` (caches config and Blad
 
 ## This repo
 
-GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push to `main`, then FTP-uploads to:
+GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push to `main`, then **parallel FTP** (`lftp mirror --parallel=12`) to:
 
 `wp-content/themes/matthummel`
 
-on SiteGround.
+on SiteGround. The first upload is still the slow one (thousands of files in `vendor/`). Later deploys only send changed files and should take a few minutes.
+
+Faster still (not wired up): SiteGround **SSH + rsync**. That needs extra secrets (`SITEGROUND_SSH_HOST`, key). FTP is what we have today.
 
 Workflow: edit in Cursor → commit → merge/push `main` → Action deploys → https://matthummel.com updates.
 

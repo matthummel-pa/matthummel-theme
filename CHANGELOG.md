@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.4 — 2026-08-19
+
+### Changed
+
+- SiteGround deploy uses parallel `lftp` instead of file-by-file FTP-Deploy-Action
+
 ## 3.0.3 — 2026-08-19
 
 ### Added
