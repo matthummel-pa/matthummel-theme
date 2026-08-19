@@ -11,8 +11,8 @@
   --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-btn: 999px;
-  --radius-card: 1.25rem;
+  --radius-btn: 8px;
+  --radius-card: 10px;
 
   --color-khaki: #eef2f7;
   --color-cream: #f7f9fc;

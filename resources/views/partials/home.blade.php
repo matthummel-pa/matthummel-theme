@@ -1,51 +1,42 @@
 @php
   $posts = \App\mh_latest_posts(3);
   $repos = \App\mh_featured_repos();
-  $work  = array_slice(\App\mh_studio_projects(), 0, 4);
+  $work  = array_slice(\App\mh_studio_projects(), 0, 3);
 @endphp
 
 <section class="hero">
-  <div class="container hero-grid">
-    <div class="hero-copy">
-      <p class="eyebrow">WordPress · Power Platform · Full-stack</p>
-      <h1 class="display-title is-hero">I build sites and apps people can actually use.</h1>
-      <p class="lead">Matt Hummel. Gettysburg, PA. Sage themes, Microsoft Power Platform, and small full-stack tools. Clear words. Fast pages. Code you can own.</p>
-      <div class="btn-row">
-        <a class="btn" href="{{ home_url('/contact/') }}">Start a project</a>
-        <a class="btn btn-outline" href="{{ home_url('/projects/') }}">See the work</a>
-      </div>
+  <div class="container reader">
+    <p class="eyebrow">WordPress · Power Platform · Full-stack</p>
+    <h1 class="display-title is-hero">I build sites and apps people can actually use.</h1>
+    <p class="lead">Matt Hummel. Gettysburg, PA. Sage themes, Microsoft Power Platform, and small full-stack tools. Clear words. Fast pages. Code you can own.</p>
+    <div class="btn-row">
+      <a class="btn" href="{{ home_url('/contact/') }}">Start a project</a>
+      <a class="btn btn-outline" href="{{ home_url('/projects/') }}">See the work</a>
     </div>
-    <aside class="hero-panel" aria-label="{{ __('Snapshot', 'matthummel') }}">
-      <div class="hero-orb" aria-hidden="true"></div>
-      <dl class="stat-stack">
-        <div>
-          <dt>15+</dt>
-          <dd>Years on the web</dd>
-        </div>
-        <div>
-          <dt>3</dt>
-          <dd>Lanes I ship in</dd>
-        </div>
-        <div>
-          <dt>PA</dt>
-          <dd>Based in Gettysburg</dd>
-        </div>
-      </dl>
-    </aside>
+    <dl class="stat-row">
+      <div>
+        <dt>15+</dt>
+        <dd>Years on the web</dd>
+      </div>
+      <div>
+        <dt>3</dt>
+        <dd>Lanes I ship in</dd>
+      </div>
+      <div>
+        <dt>PA</dt>
+        <dd>Gettysburg</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
 <section class="pf-section" aria-labelledby="partner-heading">
-  <div class="container split">
-    <div>
-      <p class="eyebrow">About</p>
-      <h2 id="partner-heading" class="display-title is-section">A builder you can hand the keys to.</h2>
-    </div>
-    <div>
-      <p class="lead">Most sites fail because they are heavy, vague, or locked to a page builder. I keep the stack small. You own the hosting. You own the code.</p>
-      <p>I work full-time on Power Platform. I take a few WordPress and full-stack jobs on the side. If it is not a fit, I say so.</p>
-      <a class="text-link" href="{{ home_url('/about/') }}">More about me</a>
-    </div>
+  <div class="container reader">
+    <p class="eyebrow">About</p>
+    <h2 id="partner-heading" class="display-title is-section">A builder you can hand the keys to.</h2>
+    <p class="lead">Most sites fail because they are heavy, vague, or locked to a page builder. I keep the stack small. You own the hosting. You own the code.</p>
+    <p>I work full-time on Power Platform. I take a few WordPress and full-stack jobs on the side. If it is not a fit, I say so.</p>
+    <p><a class="text-link" href="{{ home_url('/about/') }}">More about me</a></p>
   </div>
 </section>
 
