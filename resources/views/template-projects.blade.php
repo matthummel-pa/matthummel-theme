@@ -11,19 +11,19 @@
   sort($cats);
   $pageUrl = get_permalink();
   $shown = $cat === '' ? $all : array_values(array_filter($all, fn ($p) => ($p['cat'] ?? '') === $cat));
-  $ghUser = \App\Github::fetchUser('matthummel-pa');
+  $ghUser = \App\Github::fetchUser(\App\mh_github_login());
 @endphp
 
 <header class="page-header container">
   <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
     <p class="lead">{{ \App\field('work_lede', __('These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. They show a real WordPress shape — menus, bookings, maps — so a business owner can picture a site, and a new developer can see how the pieces fit.', 'sage')) }}
       @if (! empty($ghUser['public_repos']))
-        Open-source code is on <a href="https://github.com/matthummel-pa">GitHub</a> ({{ (int) $ghUser['public_repos'] }} public repos).
+        Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}">GitHub</a>@if (! empty($ghUser['public_repos'])) ({{ (int) $ghUser['public_repos'] }} public repos)@endif.
       @endif
     </p>
 </header>
 
-<div class="container" style="padding-bottom:3rem">
+<div class="container wide" style="padding-bottom:3rem">
   <nav class="filter-row" aria-label="{{ __('Filter by type', 'matthummel') }}">
     <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}">All</a>
     @foreach ($cats as $c)
@@ -36,7 +36,14 @@
       <article class="work-card" id="{{ $p['slug'] }}">
         <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
         <h2>{{ $p['title'] }}</h2>
-        <p>{{ $p['blurb'] }}@if (! empty($p['tech'])) {{ implode(', ', $p['tech']) }}.@endif</p>
+        <p>{{ $p['blurb'] }}</p>
+        @if (! empty($p['tech']))
+          <p class="pill-row">
+            @foreach ($p['tech'] as $t)
+              <span class="pill">{{ $t }}</span>
+            @endforeach
+          </p>
+        @endif
       </article>
     @endforeach
   </div>

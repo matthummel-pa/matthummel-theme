@@ -7,6 +7,23 @@
 
 namespace App;
 
+function mh_github_login(): string
+{
+    return 'matthummel-pa';
+}
+
+/** Website listed on the GitHub profile (Ridges & Valleys), with a https fallback. */
+function mh_github_blog_url(?array $gh = null): string
+{
+    $gh = $gh ?? Github::fetchUser(mh_github_login());
+    $blog = trim((string) ($gh['blog'] ?? ''));
+    if ($blog === '') {
+        return 'https://ridgesandvalleys.com';
+    }
+
+    return preg_match('#^https?://#i', $blog) ? $blog : 'https://'.$blog;
+}
+
 function mh_portfolio_social_defaults(): array
 {
     return [
@@ -68,6 +85,24 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Sage', 'Local SEO'],
         ],
     ];
+}
+
+/** Featured repos plus recent public GitHub work (forks and the profile repo skipped). */
+function mh_home_github_repos(int $limit = 6): array
+{
+    $featured = mh_code_page_repos();
+    $live = Github::fetchRepos(mh_github_login(), 12, 'updated');
+    $names = array_map(static fn ($r) => strtolower((string) ($r['name'] ?? '')), $featured);
+    foreach ($live as $r) {
+        $name = strtolower((string) ($r['name'] ?? ''));
+        if ($name === '' || in_array($name, $names, true)) {
+            continue;
+        }
+        $featured[] = $r;
+        $names[] = $name;
+    }
+
+    return array_slice($featured, 0, max(1, $limit));
 }
 
 /** Ridges & Valleys concept work for the Projects page. */
@@ -335,7 +370,7 @@ function mh_profile_photo_url(int $size = 160): string
         return get_theme_file_uri($rel);
     }
 
-    $user = Github::fetchUser('matthummel-pa');
+    $user = Github::fetchUser(mh_github_login());
     if (! empty($user['avatar'])) {
         $sep = str_contains((string) $user['avatar'], '?') ? '&' : '?';
 

@@ -70,30 +70,49 @@ function mh_home_fields(): array
 {
     return [
         __('Hero', 'sage') => [
-            ['home_h1', __('Heading', 'sage'), 'text', __('Hello. I’m Matt.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I live in Gettysburg, Pennsylvania. This site is a notebook: writing you can read, code you can copy, and example WordPress sites for local shops. Neighbors, new developers, and business owners are all welcome.', 'sage')],
+            ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('Gettysburg, PA', 'sage')],
+            ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
+            ['home_role', __('Role line', 'sage'), 'text', __('Full-Stack Web Developer with experience in WordPress and PowerPlatform.', 'sage')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build clear websites and tools — writing you can read, code you can copy, and example WordPress sites for local shops. Neighbors, new developers, and business owners are welcome.', 'sage')],
+            ['home_cta_primary', __('Primary button', 'sage'), 'text', __('See example sites', 'sage')],
+            ['home_cta_secondary', __('Secondary button', 'sage'), 'text', __('Let’s work together', 'sage')],
             ['home_link_writing', __('Writing link label', 'sage'), 'text', __('Writing', 'sage')],
             ['home_link_code', __('Code link label', 'sage'), 'text', __('Code and snippets', 'sage')],
-            ['home_link_work', __('Example sites link label', 'sage'), 'text', __('Example sites', 'sage')],
+            ['home_link_about', __('About link label', 'sage'), 'text', __('About', 'sage')],
             ['home_link_hello', __('Contact link label', 'sage'), 'text', __('Say hello', 'sage')],
         ],
+        __('Stack', 'sage') => [
+            ['home_stack_kicker', __('Kicker', 'sage'), 'text', __('Tools I ship with', 'sage')],
+            ['home_stack_h2', __('Heading', 'sage'), 'text', __('Stack', 'sage')],
+            ['home_stack', __('Tools (one per line)', 'sage'), 'lines', ['WordPress', 'Sage / Blade', 'PHP', 'JavaScript', 'React', 'Power Apps', 'Power Automate', 'SharePoint', 'HTML & CSS', 'Git']],
+        ],
+        __('Right now', 'sage') => [
+            ['home_now_kicker', __('Kicker', 'sage'), 'text', __('Right now', 'sage')],
+            ['home_now_h2', __('Heading', 'sage'), 'text', __('Power Platform by day. WordPress after hours.', 'sage')],
+            ['home_now_link', __('Now page link', 'sage'), 'text', __('What I’m doing now', 'sage')],
+            ['home_link_services', __('Services link', 'sage'), 'text', __('How I can help', 'sage')],
+        ],
         __('Writing section', 'sage') => [
+            ['home_write_kicker', __('Kicker', 'sage'), 'text', __('Notes from the bench', 'sage')],
             ['home_write_h2', __('Heading', 'sage'), 'text', __('Writing', 'sage')],
             ['home_write_intro', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, Power Platform, and shipping as one person. Many posts include snippets you can paste into a theme or a plugin file.', 'sage')],
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts will show up here. Categories stay as they are.', 'sage')],
             ['home_write_all', __('All posts label', 'sage'), 'text', __('All posts', 'sage')],
         ],
         __('Code section', 'sage') => [
+            ['home_code_kicker', __('Kicker', 'sage'), 'text', __('Public on GitHub', 'sage')],
             ['home_code_h2', __('Heading', 'sage'), 'text', __('Code to borrow', 'sage')],
             ['home_code_intro', __('Intro', 'sage'), 'textarea', __('Public repos on GitHub, plus short snippets. Fork them, copy them, or ask if a line is unclear.', 'sage')],
             ['home_code_more', __('More link label', 'sage'), 'text', __('More repos and snippets', 'sage')],
         ],
         __('Example sites section', 'sage') => [
+            ['home_work_kicker', __('Kicker', 'sage'), 'text', __('Studio concepts', 'sage')],
             ['home_work_h2', __('Heading', 'sage'), 'text', __('Example sites', 'sage')],
             ['home_work_intro', __('Intro (basic HTML ok)', 'sage'), 'html', __('Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops. Useful if you run a local business and want to see what a clear WordPress site can look like.', 'sage')],
             ['home_work_more', __('More link label', 'sage'), 'text', __('All example sites', 'sage')],
         ],
         __('Help section', 'sage') => [
+            ['home_help_kicker', __('Kicker', 'sage'), 'text', __('A question is enough', 'sage')],
             ['home_help_h2', __('Heading', 'sage'), 'text', __('If you need a hand', 'sage')],
             ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('I work full-time on Microsoft Power Platform. In spare hours I still help with WordPress sites, small apps, and cleanup (speed, accessibility, search).', 'sage')],
             ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Read <a href="/services/">how I can help</a>, or <a href="/contact/">send a note</a>. A question about a post or a snippet is just as welcome as a build request.', 'sage')],

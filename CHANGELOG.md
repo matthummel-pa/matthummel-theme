@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.8 — 2026-08-19
+
+### Changed
+
+- Home landing restyled in the spirit of a personal advocate site: oversized name, two CTAs, tool chips, card grids, navy bands
+- Graphic mix of slate and `#2563EB` (hero mesh, stack chips, rounded cards) without copying another portfolio
+- Wider layout, pill buttons, navy footer; contrast, skip link, and `prefers-reduced-motion` kept
+- Home, About, and footer pull live GitHub profile data (name, bio, location, website, hireable, repo/follower counts, account year) and mix featured repos with recent public work
+
 ## 3.0.7 — 2026-08-19
 
 ### Changed
