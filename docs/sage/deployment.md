@@ -18,7 +18,7 @@ GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push t
 
 `wp-content/themes/matthummel`
 
-on SiteGround. The first upload is still the slow one (thousands of files in `vendor/`). Later deploys only send changed files and should take a few minutes.
+on SiteGround. The first upload is still the slow one (thousands of files in `vendor/`). Later deploys only send changed files. Parallel FTP is capped at 4 connections so SiteGround does not reject extra logins.
 
 Faster still (not wired up): SiteGround **SSH + rsync**. That needs extra secrets (`SITEGROUND_SSH_HOST`, key). FTP is what we have today.
 

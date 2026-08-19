@@ -50,13 +50,15 @@ jobs:
           printf 'machine %s\nlogin %s\npassword %s\n' "$FTP_HOST" "$FTP_USER" "$FTP_PASS" > "$HOME/.netrc"
           lftp "ftp://$FTP_HOST" -e "
             set ssl:verify-certificate no
+            set ftp:ssl-allow no
             set ftp:passive-mode true
             set net:max-retries 3
             set net:timeout 30
+            set net:connection-limit 4
             set xfer:clobber on
             cd $FTP_DIR
             lcd $GITHUB_WORKSPACE
-            mirror -R --parallel=12 --no-perms --no-umask \
+            mirror -R --parallel=4 --no-perms --no-umask \
               --exclude-glob .git/ \
               --exclude-glob .github/ \
               --exclude-glob node_modules/ \
