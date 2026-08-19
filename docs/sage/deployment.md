@@ -26,7 +26,7 @@ If the secret points at `public_html/` or `wp-content/themes/` (the parent), Sag
 
 The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
 
-Live PHP is currently **8.2.33**. Composer allows `>=8.2`. Prefer PHP 8.3 in SiteGround Site Tools when you can, so it matches local/CI.
+Live SiteGround PHP is **8.2.33**. Sage 11 / Acorn 6 need **8.3+**. Activating this theme on 8.2 fatals (`Composer detected issues in your platform`). Raise PHP in SiteGround Site Tools before switching themes.
 
 A second in-progress deploy is cancelled (`concurrency: siteground-deploy`).
 

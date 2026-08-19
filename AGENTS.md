@@ -18,7 +18,7 @@ Sage docs (also listed in `.cursor/docs.json`):
 
 Live deploys: Appearance → **Update Theme** in wp-admin (needs a GitHub PAT) dispatches
 `.github/workflows/deploy.yml`. A push to `main` runs the same workflow. Do not upload
-`node_modules`. PHP 8.3 is used in CI and this Cloud environment. Production SiteGround is PHP **8.2.33** today; the theme requires `>=8.2`. Prefer raising Site Tools to 8.3 when you can.
+`node_modules`. PHP 8.3 is required (CI, Composer, Acorn 6). Production SiteGround is still PHP **8.2.33** until you change it in Site Tools; Sage will fatal there until PHP is 8.3.
 
 ## Cursor Cloud specific instructions
 
