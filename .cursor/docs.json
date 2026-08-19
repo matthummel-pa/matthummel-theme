@@ -1,0 +1,20 @@
+{
+  "docs": [
+    {
+      "name": "Sage",
+      "url": "https://roots.io/sage/docs/"
+    },
+    {
+      "name": "Sage theme templates",
+      "url": "https://roots.io/sage/docs/theme-templates/"
+    },
+    {
+      "name": "Sage compiling assets",
+      "url": "https://roots.io/sage/docs/compiling-assets/"
+    },
+    {
+      "name": "Sage deployment",
+      "url": "https://roots.io/sage/docs/deployment/"
+    }
+  ]
+}

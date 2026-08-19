@@ -7,7 +7,13 @@ A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Git
 `resources/css/portfolio.css`, and the `template-*.blade.php` views. Stock Sage files
 (`app/setup.php`, `app/filters.php`) stay close to upstream.
 
-For Sage itself see [the Roots Sage docs](https://roots.io/sage/docs/installation/).
+Sage docs (also listed in `.cursor/docs.json`):
+
+- https://roots.io/sage/docs/
+- https://roots.io/sage/docs/theme-templates/
+- Local notes: `docs/sage/`
+
+Live deploys: merge/push `main` → `.github/workflows/deploy.yml` builds assets and FTP-uploads to SiteGround `wp-content/themes/matthummel`. Do not upload `node_modules`. PHP 8.3 must match production.
 
 ## Cursor Cloud specific instructions
 
