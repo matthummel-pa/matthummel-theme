@@ -27,7 +27,7 @@
         <span class="mh-icon-light" aria-hidden="true">Light</span>
       </button>
 
-      <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'matthummel') }}</a>
+      <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'matthummel') }}</a>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mh-popout" aria-label="{{ __('Open menu', 'matthummel') }}">
         <span class="bars" aria-hidden="true"></span>
@@ -56,5 +56,5 @@
       @endforeach
     </ul>
   @endif
-  <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'matthummel') }}</a>
+  <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'matthummel') }}</a>
 </aside>

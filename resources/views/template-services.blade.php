@@ -5,8 +5,8 @@
 
 @section('content')
   <header class="page-header container">
-    <h1 class="display-title is-hero">Small jobs. Clear scope. Honest fit.</h1>
-    <p class="lead">I work full-time as a Power Platform developer. I take a few side projects. If it is not a fit, I will say so.</p>
+    <h1 class="display-title is-hero">Help when you need it.</h1>
+    <p class="lead">Most of this site is free to read and copy. If you run a business, a nonprofit, or a small team and you need a site or an internal app, I can sometimes help. I have a full-time Power Platform job, so I take a few extra projects at a time.</p>
   </header>
 
   <section class="pf-section">
@@ -14,19 +14,19 @@
       <div class="svc-list">
         <article class="svc-item">
           <h2>WordPress sites</h2>
-          <p>New sites, rescues, and Sage 11 themes. Fast pages, WCAG 2.2 AA, and a handoff you can edit.</p>
+          <p>New sites, rescues, and Sage 11 themes. Fast pages you can edit, with a handoff you understand.</p>
         </article>
         <article class="svc-item">
           <h2>Power Platform</h2>
-          <p>Power Apps, Power Automate, and SharePoint. Replace paper and email chains with an app the team can run.</p>
+          <p>Power Apps, Power Automate, and SharePoint. Replace paper and long email chains with an app the team can run.</p>
         </article>
         <article class="svc-item">
-          <h2>Full-stack apps</h2>
-          <p>When WordPress is the wrong tool. React, APIs, and data layers — like Keepary on GitHub.</p>
+          <h2>Small apps</h2>
+          <p>When WordPress is the wrong tool. React, APIs, and data — like Keepary on GitHub, which you can read.</p>
         </article>
         <article class="svc-item">
-          <h2>Fixes that matter</h2>
-          <p>Speed, accessibility, and SEO cleanup. A punch list, not a mystery rewrite.</p>
+          <h2>Cleanup</h2>
+          <p>Speed, accessibility, and search. A short list of fixes, explained in plain words.</p>
         </article>
       </div>
     </div>
@@ -34,9 +34,8 @@
 
   <section class="pf-section">
     <div class="container measure">
-      <h2 class="display-title is-section">What I do not take</h2>
-      <p>Paid ads, full social management, or giant content retainers. Local Gettysburg marketing lives at Ridges &amp; Valleys. This site is for code, writing, and a few build jobs.</p>
-      <a class="btn" href="{{ home_url('/contact/') }}">Ask about a project</a>
+      <h2 class="display-title is-section">A fair picture</h2>
+      <p>I don’t run ads or social accounts for clients. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="{{ home_url('/contact/') }}">write a short note</a> and tell me what you’re trying to do.</p>
     </div>
   </section>
 @endsection

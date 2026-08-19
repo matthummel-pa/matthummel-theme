@@ -11,13 +11,14 @@
 @endphp
 
 <header class="page-header container">
-  <h1 class="display-title is-hero">Repos and snippets.</h1>
-  <p class="lead">I keep the useful bits public. Start with the repos I care about most. Then browse live GitHub. Copy the snippets if they help.</p>
+  <h1 class="display-title is-hero">Code you can copy.</h1>
+  <p class="lead">Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Questions are welcome on the <a href="{{ home_url('/contact/') }}">contact</a> page.</p>
 </header>
 
 <section class="pf-section">
   <div class="container">
     <h2 class="display-title is-section">Featured repos</h2>
+    <p>Open these on GitHub. Fork them if they help.</p>
     <div class="pf-grid">
       @foreach ($repos as $r)
         <article class="pf-card">
@@ -57,7 +58,7 @@
 <section class="pf-section">
   <div class="container">
     <h2 class="display-title is-section">Snippets</h2>
-    <p class="lead">Short bits I reuse. Grade-school comments. Production habits.</p>
+    <p class="lead">Tiny examples. Same style I use in blog posts. Paste them, then change the names to match your theme.</p>
     @foreach ($snips as $s)
       <article class="snippet-card">
         <h3>{{ $s['title'] }}</h3>

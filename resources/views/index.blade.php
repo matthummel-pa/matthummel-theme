@@ -5,8 +5,8 @@
   $devto = \App\mh_devto_posts(5);
 @endphp
   <header class="page-header container">
-    <h1 class="display-title is-hero">{{ $title ?? __('Notes I can stand behind.', 'matthummel') }}</h1>
-    <p class="lead">Tutorials and lessons on WordPress, Power Platform, and shipping as one person. Categories stay the same. I also post on DEV.to and talk about the work on Bluesky and Reddit.</p>
+    <h1 class="display-title is-hero">{{ $title ?? __('Writing, with code when it helps.', 'matthummel') }}</h1>
+    <p class="lead">Tutorials and notes on WordPress, Power Platform, and shipping as one person. Look for copy-paste snippets in the posts. Categories stay the same. I also write on DEV.to.</p>
   </header>
 
   <div class="container" style="padding-bottom:3rem">

@@ -5,8 +5,8 @@
 
 @section('content')
   <header class="page-header container">
-    <h1 class="display-title is-hero">Write me a short note.</h1>
-    <p class="lead">Gettysburg, PA. I usually reply in one or two business days. Best for blog notes, a WordPress or Power Platform question, or a small project.</p>
+    <h1 class="display-title is-hero">Say hello.</h1>
+    <p class="lead">Questions about a post, a snippet, or GitHub are welcome. So is a note from a shop or a team that needs a WordPress or Power Platform hand. I usually reply in one or two business days.</p>
   </header>
 
   <div class="contact-wrap">
@@ -42,10 +42,10 @@
         <label for="cf-message">{{ __('Message', 'matthummel') }}</label>
         <textarea id="cf-message" name="mh_message" rows="6" required></textarea>
       </div>
-      <button class="btn" type="submit">{{ __('Send', 'matthummel') }}</button>
+      <button class="btn" type="submit">{{ __('Send hello', 'matthummel') }}</button>
     </form>
 
-    <h2 class="display-title is-section" style="margin-top:2.5rem">Elsewhere</h2>
+    <h2 class="display-title is-section" style="margin-top:2.5rem">Find me elsewhere</h2>
     <ul class="elsewhere">
       <li><a href="https://github.com/matthummel-pa" rel="me">GitHub</a></li>
       <li><a href="https://dev.to/matthummel" rel="me">DEV.to</a></li>

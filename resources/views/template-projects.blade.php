@@ -14,10 +14,10 @@
 @endphp
 
 <header class="page-header container">
-  <h1 class="display-title is-hero">Ridges &amp; Valleys work.</h1>
-    <p class="lead">These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Each one is a real WordPress shape — menus, bookings, maps, and local search — not a slide deck.
+  <h1 class="display-title is-hero">Example sites.</h1>
+    <p class="lead">These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. They show a real WordPress shape — menus, bookings, maps — so a business owner can picture a site, and a new developer can see how the pieces fit.
       @if (! empty($ghUser['public_repos']))
-        Also {{ (int) $ghUser['public_repos'] }} public repos on <a href="https://github.com/matthummel-pa">GitHub</a>.
+        Open-source code is on <a href="https://github.com/matthummel-pa">GitHub</a> ({{ (int) $ghUser['public_repos'] }} public repos).
       @endif
     </p>
 </header>
@@ -40,6 +40,6 @@
     @endforeach
   </div>
 
-  <p style="margin-top:2rem">Open-source code lives on the <a href="{{ home_url('/code/') }}">Code</a> page. Studio site: <a href="https://ridgesandvalleys.com">ridgesandvalleys.com</a>.</p>
+  <p style="margin-top:2rem">Repos and snippets: <a href="{{ home_url('/code/') }}">Code</a>. Studio site: <a href="https://ridgesandvalleys.com">ridgesandvalleys.com</a>.</p>
 </div>
 @endsection
