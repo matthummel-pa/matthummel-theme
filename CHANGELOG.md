@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.9 — 2026-08-19
+
+### Changed
+
+- FTP deploy finds the live `matthummel` theme folder even when Sage was previously dumped elsewhere and the live `style.css` is not tagged as FSE
+
 ## 3.0.8 — 2026-08-19
 
 ### Changed
