@@ -35,15 +35,29 @@ jobs:
       - name: Build Vite assets
         run: npm run build
 
+      - name: Locate live WordPress theme folder on FTP
+        id: ftpdir
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
+        run: python3 .github/scripts/siteground-ftp-locate.py
+
+      - name: Fail if the live theme folder was not found
+        if: steps.ftpdir.outputs.mode == 'failed' || steps.ftpdir.outputs.deploy_dir == ''
+        run: |
+          echo "Could not locate wp-content/themes/matthummel over FTP."
+          exit 1
+
       - name: Upload theme over FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
-          # Must be the live theme directory, not public_html/ or wp-content/themes/.
-          # Example: /public_html/wp-content/themes/matthummel/
+          # Resolved at runtime: live ``matthummel/`` on PHP 8.3+, otherwise ``matthummel-sage/``.
           server: ${{ secrets.SITEGROUND_FTP_HOST }}
           username: ${{ secrets.SITEGROUND_FTP_USER }}
           password: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          server-dir: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
+          server-dir: ${{ steps.ftpdir.outputs.deploy_dir }}
           protocol: ftp
           exclude: |
             **/.git*

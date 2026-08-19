@@ -18,7 +18,7 @@ Sage docs (also listed in `.cursor/docs.json`):
 
 Live deploys: Appearance → **Update Theme** in wp-admin (needs a GitHub PAT) dispatches
 `.github/workflows/deploy.yml`. A push to `main` runs the same workflow. Do not upload
-`node_modules`. PHP 8.3 is required (CI, Composer, Acorn 6). Production SiteGround is still PHP **8.2.33** until you change it in Site Tools; Sage will fatal there until PHP is 8.3.
+`node_modules`. PHP 8.3 is required (CI, Composer, Acorn 6). Production SiteGround is still PHP **8.2.33** until you change it in Site Tools; Sage will fatal there until PHP is 8.3. Deploy therefore uploads Sage to `matthummel-sage` on 8.2 and restyles the live FSE palette; on 8.3+ it swaps Sage into the active `matthummel` folder.
 
 ## Cursor Cloud specific instructions
 
