@@ -65,3 +65,7 @@ Gotchas:
   (Actions read/write, Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
   Same pipeline as pushing `main`. WP-CLI: `wp mh theme-update`. The Cursor Cloud
   `gh` token cannot dispatch workflows (403); use Matt’s PAT, not the agent token.
+- WPVibe MCP (`.cursor/mcp.json`) uses `npx mcp-remote` against `https://mcp.wpvibe.ai/mcp`.
+  Do not open that URL in a browser — it is an API endpoint (often a blank white page).
+  Connect it in Cursor Settings → MCP; a browser window should open for email sign-in.
+  Theme edits need the WPVibe plugin on the live site, then draft → preview → publish.
