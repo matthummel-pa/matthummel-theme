@@ -11,20 +11,21 @@
   --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-btn: 8px;
-  --radius-card: 10px;
+  --radius-btn: 999px;
+  --radius-card: 1.15rem;
 
-  --color-khaki: #eef2f7;
-  --color-cream: #f7f9fc;
+  --color-khaki: #e8eef6;
+  --color-cream: #f4f7fb;
   --color-blue: #2563eb;
   --color-blue-ink: #1d4ed8;
   --color-blue-soft: #dbeafe;
-  --color-navy: #0f172a;
-  --color-slate: #475569;
-  --color-ink: #0f172a;
-  --color-paper: #f4f7fb;
-  --color-body: #475569;
-  --color-muted: #64748b;
-  --color-line: #dbe3ee;
+  --color-navy: #0b1220;
+  --color-slate: #334155;
+  --color-ink: #0b1220;
+  --color-paper: #eef2f7;
+  --color-body: #334155;
+  --color-muted: #475569;
+  --color-line: #c5d0de;
   --color-focus: #2563eb;
+  --color-card: #ffffff;
 }

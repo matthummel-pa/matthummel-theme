@@ -67,7 +67,7 @@ class Github
     /** Fetch + cache a user/org profile. */
     public static function fetchUser(string $user): array
     {
-        $key = 'mh_ghu_'.md5($user);
+        $key = 'mh_ghu2_'.md5($user);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -81,9 +81,13 @@ class Github
                 'bio' => $j['bio'] ?? '',
                 'avatar' => $j['avatar_url'] ?? '',
                 'url' => $j['html_url'] ?? '',
+                'location' => $j['location'] ?? '',
+                'blog' => $j['blog'] ?? '',
+                'hireable' => ! empty($j['hireable']),
                 'followers' => (int) ($j['followers'] ?? 0),
                 'following' => (int) ($j['following'] ?? 0),
                 'public_repos' => (int) ($j['public_repos'] ?? 0),
+                'created' => isset($j['created_at']) ? (string) substr((string) $j['created_at'], 0, 4) : '',
             ];
         }
         set_transient($key, $d, self::ttl());
@@ -96,26 +100,34 @@ class Github
     {
         $count = max(1, min(30, $count));
         $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
-        $key = 'mh_ghr_'.md5($user.$sort.$count);
+        $key = 'mh_ghr2_'.md5($user.$sort.$count);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
         $out = [];
-        $r = wp_remote_get("https://api.github.com/users/{$user}/repos?per_page={$count}&sort={$sort}", self::args());
+        $r = wp_remote_get("https://api.github.com/users/{$user}/repos?per_page=30&sort={$sort}&type=owner", self::args());
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
                 if (! empty($j['fork'])) {
                     continue;
                 }
+                $name = (string) ($j['name'] ?? '');
+                if ($name === '' || strcasecmp($name, $user) === 0) {
+                    continue;
+                }
                 $out[] = [
-                    'name' => $j['name'] ?? '',
+                    'name' => $name,
                     'full' => $j['full_name'] ?? '',
                     'desc' => $j['description'] ?? '',
                     'stars' => (int) ($j['stargazers_count'] ?? 0),
                     'forks' => (int) ($j['forks_count'] ?? 0),
                     'lang' => $j['language'] ?? '',
                     'url' => $j['html_url'] ?? '',
+                    'homepage' => $j['homepage'] ?? '',
                 ];
+                if (count($out) >= $count) {
+                    break;
+                }
             }
         }
         set_transient($key, $out, self::ttl());

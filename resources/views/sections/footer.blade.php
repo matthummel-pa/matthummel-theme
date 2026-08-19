@@ -2,7 +2,7 @@
   $mhSoc = \App\mh_social_links();
 @endphp
 <footer class="site-footer">
-  <div class="container footer-grid">
+  <div class="container wide footer-grid">
     <div>
       <p class="brand-name footer-brand">Matt Hummel</p>
       <p>{{ \App\field('footer_blurb', __('Notes, code, and Gettysburg work. Visitors, new developers, and business owners are welcome.', 'sage'), \App\mh_front_id()) }}</p>
@@ -26,5 +26,5 @@
       </ul>
     @endif
   </div>
-  <p class="footer-copy">&copy; {{ date('Y') }} Matt Hummel · Sage 11</p>
+  <p class="footer-copy">&copy; {{ date('Y') }} Matt Hummel</p>
 </footer>

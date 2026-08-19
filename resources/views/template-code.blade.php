@@ -7,7 +7,7 @@
 @php
   $repos = \App\mh_code_page_repos();
   $snips = \App\mh_code_page_snips();
-  $live  = \App\Github::fetchRepos('matthummel-pa', 8, 'updated');
+  $live  = \App\Github::fetchRepos(\App\mh_github_login(), 8, 'updated');
 @endphp
 
 <header class="page-header container">
@@ -50,7 +50,7 @@
         </article>
       @endforeach
     </div>
-    <p><a href="https://github.com/matthummel-pa?tab=repositories">{{ \App\field('code_live_all', __('All public repos', 'sage')) }}</a></p>
+    <p><a href="https://github.com/{{ \App\mh_github_login() }}?tab=repositories">{{ \App\field('code_live_all', __('All public repos', 'sage')) }}</a></p>
   </div>
 </section>
 @endif

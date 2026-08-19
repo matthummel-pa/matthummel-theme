@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <header class="page-header container hero-intro">
+  <header class="page-header container wide hero-intro">
     @include('partials.profile-photo', ['size' => 96, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
     <div>
       <h1 class="display-title is-hero">{{ \App\field('about_h1', __('Glad you’re here.', 'sage')) }}</h1>
@@ -22,7 +22,7 @@
   </section>
 
   <section class="pf-section">
-    <div class="container">
+    <div class="container wide">
       <h2 class="display-title is-section">{{ \App\field('about_places_h2', __('Two places I publish', 'sage')) }}</h2>
       <div class="pf-grid">
         @foreach (\App\field_rows('about_places', [
