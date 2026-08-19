@@ -6,7 +6,7 @@
   $work  = array_slice(\App\mh_work_page_items(), 0, 6);
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $ghUrl = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
-  $ghBlog = ! empty($gh['blog']) ? (preg_match('#^https?://#i', $gh['blog']) ? $gh['blog'] : 'https://'.$gh['blog']) : 'https://ridgesandvalleys.com';
+  $ghBlog = \App\mh_github_blog_url($gh);
   $stack = \App\field_lines('home_stack', [
     __('WordPress', 'sage'),
     __('Sage / Blade', 'sage'),

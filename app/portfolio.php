@@ -12,6 +12,18 @@ function mh_github_login(): string
     return 'matthummel-pa';
 }
 
+/** Website listed on the GitHub profile (Ridges & Valleys), with a https fallback. */
+function mh_github_blog_url(?array $gh = null): string
+{
+    $gh = $gh ?? Github::fetchUser(mh_github_login());
+    $blog = trim((string) ($gh['blog'] ?? ''));
+    if ($blog === '') {
+        return 'https://ridgesandvalleys.com';
+    }
+
+    return preg_match('#^https?://#i', $blog) ? $blog : 'https://'.$blog;
+}
+
 function mh_portfolio_social_defaults(): array
 {
     return [
