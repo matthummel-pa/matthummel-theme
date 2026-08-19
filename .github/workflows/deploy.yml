@@ -38,6 +38,8 @@ jobs:
       - name: Upload theme over FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
+          # Must be the live theme directory, not public_html/ or wp-content/themes/.
+          # Example: /public_html/wp-content/themes/matthummel/
           server: ${{ secrets.SITEGROUND_FTP_HOST }}
           username: ${{ secrets.SITEGROUND_FTP_USER }}
           password: ${{ secrets.SITEGROUND_FTP_PASSWORD }}

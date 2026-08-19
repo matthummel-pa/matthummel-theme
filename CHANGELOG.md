@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.6 — 2026-08-19
+
+### Changed
+
+- Composer PHP requirement is `>=8.2` so the theme matches live SiteGround (8.2.33)
+- Deployment docs: FTP remote dir must be the `matthummel` theme folder; WPVibe is for connect/activate, not Sage builds
+- Cloud Agent notes for adding WPVibe as an HTTP MCP on cursor.com/agents
+
 ## 3.0.5 — 2026-08-19
 
 ### Added
