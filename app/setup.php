@@ -93,6 +93,7 @@ add_action('after_setup_theme', function () {
      * @link https://developer.wordpress.org/block-editor/developers/themes/theme-support/#disabling-the-default-block-patterns
      */
     remove_theme_support('core-block-patterns');
+    add_filter('should_load_remote_block_patterns', '__return_false');
 
     /**
      * Enable plugins to manage the document title.
@@ -160,57 +161,4 @@ add_action('widgets_init', function () {
         'name' => __('Footer', 'sage'),
         'id' => 'sidebar-footer',
     ] + $config);
-});
-
-/**
- * Enqueue Google Fonts (Fraunces display + Inter body).
- */
-add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style(
-        'matthummel-fonts',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
-        [],
-        null
-    );
-}, 5);
-
-add_action('admin_enqueue_scripts', function () {
-    wp_enqueue_style(
-        'matthummel-fonts',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
-        [],
-        null
-    );
-}, 5);
-
-/**
- * Register the "projects" custom post type (case studies) + taxonomy,
- * so the theme is self-contained for local development.
- */
-add_action('init', function () {
-    register_post_type('projects', [
-        'labels' => [
-            'name' => __('Projects', 'matthummel'),
-            'singular_name' => __('Project', 'matthummel'),
-            'add_new_item' => __('Add New Project', 'matthummel'),
-            'edit_item' => __('Edit Project', 'matthummel'),
-        ],
-        'public' => true,
-        'has_archive' => false,
-        'menu_icon' => 'dashicons-portfolio',
-        'rewrite' => ['slug' => 'projects'],
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'],
-        'show_in_rest' => true,
-    ]);
-
-    register_taxonomy('project_categories', 'projects', [
-        'labels' => [
-            'name' => __('Project Categories', 'matthummel'),
-            'singular_name' => __('Project Category', 'matthummel'),
-        ],
-        'public' => true,
-        'hierarchical' => true,
-        'show_in_rest' => true,
-        'rewrite' => ['slug' => 'project-category'],
-    ]);
 });

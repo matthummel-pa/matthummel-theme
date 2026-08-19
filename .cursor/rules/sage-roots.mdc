@@ -1,0 +1,52 @@
+---
+description: Roots Sage 11 theme conventions for matthummel.com. Use official Sage docs before inventing WordPress template or Vite patterns.
+alwaysApply: true
+---
+
+# Sage (Roots)
+
+This repo is a Sage 11.2.1 WordPress theme. Follow official docs, not classic PHP themes or page builders.
+
+## Docs (always prefer these)
+
+- Sage index: https://roots.io/sage/docs/
+- Theme templates: https://roots.io/sage/docs/theme-templates/
+- Compiling assets: https://roots.io/sage/docs/compiling-assets/
+- Deployment: https://roots.io/sage/docs/deployment/
+
+Local copies live in `docs/sage/`.
+
+## Templates
+
+WordPress template hierarchy still applies. Blade files live in `resources/views/`.
+
+| File | Role |
+| --- | --- |
+| `layouts/app.blade.php` | Base wrap (header, `#main`, footer). Itself wrapped by root `index.php`. |
+| `index.blade.php` | Blog/home-of-posts, categories, authors, generic archives |
+| `page.blade.php` | Default single page |
+| `single.blade.php` | Single post |
+| `search.blade.php` | Search results |
+| `404.blade.php` | Not found |
+| `front-page.blade.php` | Static front page |
+| `template-*.blade.php` | Named page templates (Home, About, Work, …) |
+
+Sage 11 keeps chrome in `sections/` (`header`, `footer`, `sidebar`), not `partials/header`. Put reusable chunks in `partials/`.
+
+Examples from the [theme templates docs](https://roots.io/sage/docs/theme-templates/):
+
+- Author archives → copy `index.blade.php` to `author.blade.php`
+- CPT `gallery` archive → `archive-gallery.blade.php`
+- Page titled About → `page-about.blade.php` (we prefer explicit `template-about.blade.php` page templates instead)
+
+Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Matt asks. Portfolio helpers stay in `app/portfolio.php`, `app/contact.php`, `app/Github.php`.
+
+## Assets
+
+- Edit `vite.config.js` `base` if the WordPress theme folder name changes. Live folder is `matthummel`.
+- `npm run build` writes `public/build/` (gitignored). The site fatals without a Vite manifest.
+- `npm run dev` is local HMR only; production uses the built manifest.
+
+## Deploy
+
+Push/merge to `main` runs GitHub Actions: Composer + `npm run build`, then FTP to SiteGround `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.

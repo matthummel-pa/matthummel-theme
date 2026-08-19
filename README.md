@@ -1,179 +1,75 @@
-# Matt Hummel — WordPress Theme
+# Matt Hummel theme
 
-> **⚠️ ARCHIVED — superseded by [Pressroot](https://github.com/matthummel-pa/pressroot).**
-> This theme was productized into Pressroot, which now powers matthummel.com and
-> receives all new development (header/footer designer, WCAG contrast guard, setup
-> wizard, site types, AI builder). This repository is frozen at v2.0.0 as a
-> historical record — no further updates.
+Sage 11 WordPress theme for [matthummel.com](https://matthummel.com).
 
-A bespoke **Sage 11 (Roots)** WordPress theme that powers matthummel.com — built
-around a minimalist **"Paper + Geist"** design system. Server-rendered, accessible,
-mobile-first, deliberately light on plugins, and packed with premium theme-options.
+The repo root **is** the theme folder. On the live site it lives at
+`wp-content/themes/matthummel`.
 
-> Stack: Sage 11 · Blade · Tailwind CSS v4 · Vite · Acorn (Laravel-in-WordPress) · PHP 8.3
+## What this is
 
-### 📖 [Support & documentation → matthummel-pa.github.io/matthummel-theme](https://matthummel-pa.github.io/matthummel-theme/)
+A stock [Roots Sage](https://roots.io/sage/) 11.2.1 install plus a thin portfolio layer:
 
-Setup, a full settings reference, FAQ, and help live on the GitHub Pages site (and in
-[SUPPORT.md](SUPPORT.md)). Questions or bugs → [open an issue](https://github.com/matthummel-pa/matthummel-theme/issues).
+| Piece | Role |
+| --- | --- |
+| Blade page templates | Home, About, Work, Services, Code, Writing, Contact, Now |
+| `app/portfolio.php` | Social links, Ridges & Valleys work list, GitHub highlights, DEV.to feed, one-time page seed |
+| `app/contact.php` | Plugin-free contact form |
+| `app/Github.php` | Cached GitHub API helper |
+| `resources/css/portfolio.css` | Blue/gray, reader-width type (Plus Jakarta Sans) |
 
----
-
-## Features
-
-### Design system & theming
-- **Tokens-first design** — colors, type scale, and spacing are Tailwind v4 `@theme` variables; the whole site re-skins from one place.
-- **Style Kits** — one-click presets (Editorial, Sage Classic, Warm Sand, Midnight, Mono Slate) under *Appearance → Theme Tools*.
-- **Colors** — brand/button, page background, headings, body — as live CSS-variable overrides (no rebuild).
-- **Typography** — heading/body font (10 families) + base size, line-heights, letter-spacing.
-- **Typography (advanced)** — separate nav/button fonts, per-element weights, nav casing, body spacing, and responsive base sizes for tablet/mobile.
-- **Extras** — underline links, button + card radius, text-selection color, scroll-to-top button.
-- **Dark mode** — toggle with light / dark / auto (system) default and no-flash loading.
-- **`theme.json`** — unlocks spacing, border, shadow, fluid typography, gradient, and duotone controls in the block editor.
-
-### Header, nav & footer
-- **Header Layout** — full-width menu, header width/height/gap, element order (logo/nav/social/button), and the header CTA button.
-- **Header behaviors** — sticky, shrink-on-scroll, and transparent overlay (off / front page / all).
-- **Navigation** — full flexbox control (direction, justify, align, wrap, gap) plus per-item box/type styling.
-- **Menu & off-canvas popout** — hamburger per breakpoint, solid/gradient panel, social icons.
-- **Menu-item icons + mega menu** — add `mh-ic-<icon>` or `mh-mega` classes in Appearance → Menus.
-- **Top utility bar** — contact text, social, and a CTA above the main nav.
-- **Footer builder** — 1–4 columns mapped to block **widget areas**, palette/custom colors, social icons, tagline.
-- **Announcement bar** — message + link, colors, dismissible (remembered), with optional start/end **scheduling**.
-
-### Hero & animations
-- **Hero builder** — editable **eyebrow / H1 / sub-paragraph**, 1–3 **columns** (content + side image/illustration), content position (horizontal & vertical), content **max-width + spacing** with tablet/mobile overrides, and full **flexbox** control (direction, justify, align, wrap, gap).
-- **Hero media** — upload a **side image / illustration** (and a 2nd for 3-column), or a **background cover image** with an overlay slider + min-height; comfortable side padding and clean mobile stacking are handled automatically.
-- **Built-in image finder** — search **Openverse** (no key), **Unsplash** and **Pexels** (optional free keys), or **generate an AI image** (free, no key) right in the Customizer. The pick is imported into your **Media Library** (self-hosted, not hot-linked) and set as the hero image.
-- **On-scroll animations** — site-wide reveal effects (fade-up/in, zoom, pop, blur, slide) with speed control + a hero entrance animation; respects `prefers-reduced-motion` and never leaves content hidden if JS fails.
-
-### Responsive controls
-- **Per-device visibility** — independently hide social icons, the top-bar / navbar buttons, and the "Menu" label on **mobile (≤640px)** and/or **tablet (641–1024px)**; show navbar social on mobile-only or desktop-only.
-- **Per-breakpoint widths** — top bar, navbar, and message bar inner widths for tablet and mobile; keep the top bar on one line at tablet; shrink the logo on mobile to fit one row.
-
-### Icons & blocks
-- **Blade Icons** — Simple Icons (`si-`), Heroicons (`heroicon-o-`), Lucide (`lucide-`), and a local `mh-` set. Font Awesome removed.
-- **Social Icons block** — inline SVGs; pulls from site social links by default; size, shape, brand/mono, colors, hover, alignment.
-- **Icon (Blade) block** — drop in any Blade icon by name.
-- **Post Grid block** — query posts/projects/pages into a responsive card grid.
-- **Starter patterns** — Hero, Pricing, Testimonials, Logo cloud, Feature grid, CTA band, Stat strip, FAQ, Callout.
-- **Card block style** for groups/columns.
-
-### Content & integrations
-- **Live GitHub project pages** — `app/Github.php` pulls repo metadata, stars/forks, latest release, and the README intro (cached); **Connect with GitHub** (OAuth device flow) raises the API rate limit. Per-project owner/repo/eyebrow/demo via the Project Details box.
-- **Plugin-free contact form** — nonce, honeypot, validation, `wp_mail`.
-- **Newsletter** — `[mh_newsletter]` (Mailchimp-ready) with configurable action/heading/button.
-- **Cookie notice** — configurable, dismissible, remembered.
-- **Code injection** — head / body / footer scripts + a live Custom CSS box.
-
-### Reading experience
-- **Auto table of contents**, **reading-progress bar**, **estimated read time**, and **copy buttons** on code blocks for single posts.
-
-### Performance
-- Toggle off emojis, oEmbed/wp-embed, jQuery Migrate, XML-RPC/pingbacks, dashicons (logged-out); clean `wp_head`; defer scripts; preconnect.
-- **Self-hosted fonts** — *Appearance → Local Fonts* downloads woff2 locally and removes the Google request + preconnect.
-
-### SEO & accessibility
-- **SEO + JSON-LD** — Open Graph, Twitter cards, Person/Organization, WebSite, Article, BreadcrumbList; `[mh_breadcrumbs]`. Auto-disables under Rank Math/Yoast.
-- **Accessible & responsive** — semantic landmarks, focus states, skip link, WCAG-AA pairings, fluid `clamp()` type, mobile-first.
-
-### Settings, white-label & onboarding
-- **Theme Options Customizer** — logically-ordered, focused sections (Colors, Typography, Header Layout, Navigation, Menu & Popout, Social Icons, Top Bar, Announcement, Hero, Animations, Footer, Layout, Responsive, Dark Mode, SEO, Performance, Custom Code, Newsletter, Cookie Notice, Extras, White Label) + a tabbed **Appearance → Theme Settings** admin panel (General, Design, Layout, Header, Footer, Projects).
-- **Import / export / reset** all settings as JSON (Theme Tools).
-- **White-label** — branded login screen, admin footer text.
-- **Onboarding** — "Get started" dashboard widget + one-click **starter pages + primary menu**.
-
-## Shortcodes & blocks
-
-| Type | Name |
-|---|---|
-| Blocks | `mh/social-links` · `mh/icon` · `mh/post-grid` |
-| Patterns | Hero · Pricing · Testimonials · Logo cloud · Feature grid · CTA band · Stat strip · FAQ · Callout |
-| Shortcodes | `[mh_newsletter]` · `[mh_breadcrumbs]` · `[mh_github]` |
+Existing WordPress **posts and categories are never deleted**. Gutenberg block patterns (core and remote) are turned off.
 
 ## Requirements
 
-| Tool | Version |
-|---|---|
-| PHP | 8.3+ |
-| Composer | 2.x |
-| Node | 20.19+ or 22.12+ |
-| WordPress | 6.6+ |
+- PHP 8.3
+- Node 22
+- Composer 2
+- WordPress 6.6+
 
-Icon packs are Composer dependencies: `blade-ui-kit/blade-icons`, `codeat3/blade-simple-icons`, `blade-ui-kit/blade-heroicons`, `mallardduck/blade-lucide-icons`.
-
-## Quick start (local)
+## Local develop
 
 ```bash
 composer install
 npm install
-npm run build      # or: npm run dev  (Vite HMR)
+npm run build
 ```
 
-Activate **Matt Hummel**, then open **Appearance → Theme Tools** to apply a Style Kit.
-For a full no-Docker local stack (WP-CLI + SQLite + `wp server`), see **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
-
-## Build & deploy
+Point WordPress at this folder **named** `matthummel` so it matches `vite.config.js` `base`:
 
 ```bash
-composer install --no-dev --optimize-autoloader
-npm install && npm run build
+ln -sfn /path/to/matthummel-theme wp-content/themes/matthummel
+wp theme activate matthummel
 ```
 
-Ship the theme folder **including** `vendor/` and `public/build/`. `node_modules/` is
-never deployed. See **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** for the release flow.
+- Dev CSS/JS: `npm run dev`
+- PHP style: `vendor/bin/pint --test`
 
-## Templates (`resources/views/`)
-
-| File | Renders |
-|---|---|
-| `front-page.blade.php` | Home / landing |
-| `index.blade.php` | Blog index |
-| `single.blade.php` | Single post (reading view: TOC, progress, read time) |
-| `page.blade.php` | Static page |
-| `template-contact.blade.php` | Contact page + form |
-| `archive.blade.php` | Category / tag / date archive |
-| `archive-projects.blade.php` | Projects grid (with filtering) |
-| `single-projects.blade.php` | Single project (live GitHub data) |
-| `search.blade.php` · `404.blade.php` | Search results · Not found |
-
-## Project structure
-
-```
-matthummel/
-├── app/                 # theme modules (registered in functions.php)
-│   ├── setup.php · theme-supports.php · customizer.php · extras.php
-│   ├── icons.php · social-block.php · blocks-dynamic.php · patterns-extra.php
-│   ├── performance.php · fonts-local.php · seo.php · integrations.php
-│   ├── header-layout.php · header-behaviors.php · nav-options.php · menu.php · menu-icons.php
-│   ├── announcement.php · footer-content.php · typography.php · dark-mode.php · reading.php
-│   ├── settings-io.php · admin-settings.php · whitelabel.php
-│   ├── projects-admin.php · github-connect.php · Github.php · contact.php · blocks.php
-│   └── Providers/       # Acorn service provider
-├── config/blade-icons.php
-├── resources/
-│   ├── css/app.css      # Tailwind v4 @theme tokens + components
-│   ├── js/              # block editors (plain JS, no build)
-│   ├── svg/             # local mh- icon set
-│   └── views/           # Blade templates
-├── theme.json           # block editor settings
-├── public/build/        # compiled assets (generated)
-├── functions.php        # Acorn bootstrap + module registration
-└── style.css            # theme header
-```
+Cursor Cloud WordPress notes: [`AGENTS.md`](AGENTS.md).
 
 ## Documentation
 
-- **[Support & settings reference](https://matthummel-pa.github.io/matthummel-theme/)** — GitHub Pages
-- **[SUPPORT.md](SUPPORT.md)** — direct-link support page
-- **[docs/THEME-SETTINGS.md](docs/THEME-SETTINGS.md)** — every setting, catalogued
-- **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** · **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** · **[docs/BRAND-DESIGN-SYSTEM.md](docs/BRAND-DESIGN-SYSTEM.md)**
+| Doc | What’s in it |
+| --- | --- |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [docs/FEATURES.md](docs/FEATURES.md) | Feature log |
+| [docs/INSTALL.md](docs/INSTALL.md) | WordPress install after a deploy |
+| [docs/sage/](docs/sage/) | Sage templates, Vite, SiteGround deploy |
+| [Sage docs](https://roots.io/sage/docs/) | Official Roots reference |
+| [Theme templates](https://roots.io/sage/docs/theme-templates/) | WordPress template hierarchy in Sage |
 
-## Contributing
+## Live deploys
 
-See **[CONTRIBUTING.md](CONTRIBUTING.md)**. Branch from `main`, use Conventional Commits,
-run `npm run build` + `vendor/bin/pint`, open a PR.
+1. Merge or push `main`.
+2. GitHub Action **Deploy to SiteGround** runs `composer install --no-dev`, `npm run build`, and FTP-uploads the theme (not `node_modules`).
+3. In wp-admin, confirm **Matt Hummel** is the active theme (see [docs/INSTALL.md](docs/INSTALL.md)).
+
+Repo secrets:
+
+- `SITEGROUND_FTP_HOST`
+- `SITEGROUND_FTP_USER`
+- `SITEGROUND_FTP_PASSWORD`
+- `SITEGROUND_FTP_REMOTE_DIR` (example: `/public_html/wp-content/themes/matthummel/`)
 
 ## License
 
-[MIT](LICENSE) © Matt Hummel. Built on [Sage](https://roots.io/sage/) by Roots.
+MIT. Sage is MIT ([Roots](https://roots.io/sage/)).

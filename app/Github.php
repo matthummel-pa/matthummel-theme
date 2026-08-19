@@ -15,8 +15,9 @@ class Github
         $h = ['User-Agent' => 'matthummel.com', 'Accept' => $accept];
         $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
         if ($token !== '') {
-            $h['Authorization'] = 'token ' . $token;
+            $h['Authorization'] = 'token '.$token;
         }
+
         return ['timeout' => 12, 'headers' => $h];
     }
 
@@ -29,7 +30,7 @@ class Github
     /** Fetch + cache a user/org profile. */
     public static function fetchUser(string $user): array
     {
-        $key = 'mh_ghu_' . md5($user);
+        $key = 'mh_ghu_'.md5($user);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -38,17 +39,18 @@ class Github
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             $j = json_decode(wp_remote_retrieve_body($r), true);
             $d = [
-                'login'        => $j['login'] ?? $user,
-                'name'         => $j['name'] ?? ($j['login'] ?? $user),
-                'bio'          => $j['bio'] ?? '',
-                'avatar'       => $j['avatar_url'] ?? '',
-                'url'          => $j['html_url'] ?? '',
-                'followers'    => (int) ($j['followers'] ?? 0),
-                'following'    => (int) ($j['following'] ?? 0),
+                'login' => $j['login'] ?? $user,
+                'name' => $j['name'] ?? ($j['login'] ?? $user),
+                'bio' => $j['bio'] ?? '',
+                'avatar' => $j['avatar_url'] ?? '',
+                'url' => $j['html_url'] ?? '',
+                'followers' => (int) ($j['followers'] ?? 0),
+                'following' => (int) ($j['following'] ?? 0),
                 'public_repos' => (int) ($j['public_repos'] ?? 0),
             ];
         }
         set_transient($key, $d, self::ttl());
+
         return $d;
     }
 
@@ -56,8 +58,8 @@ class Github
     public static function fetchRepos(string $user, int $count = 6, string $sort = 'updated'): array
     {
         $count = max(1, min(30, $count));
-        $sort  = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
-        $key   = 'mh_ghr_' . md5($user . $sort . $count);
+        $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
+        $key = 'mh_ghr_'.md5($user.$sort.$count);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -69,17 +71,18 @@ class Github
                     continue;
                 }
                 $out[] = [
-                    'name'  => $j['name'] ?? '',
-                    'full'  => $j['full_name'] ?? '',
-                    'desc'  => $j['description'] ?? '',
+                    'name' => $j['name'] ?? '',
+                    'full' => $j['full_name'] ?? '',
+                    'desc' => $j['description'] ?? '',
                     'stars' => (int) ($j['stargazers_count'] ?? 0),
                     'forks' => (int) ($j['forks_count'] ?? 0),
-                    'lang'  => $j['language'] ?? '',
-                    'url'   => $j['html_url'] ?? '',
+                    'lang' => $j['language'] ?? '',
+                    'url' => $j['html_url'] ?? '',
                 ];
             }
         }
         set_transient($key, $out, self::ttl());
+
         return $out;
     }
 
@@ -87,7 +90,7 @@ class Github
     public static function fetchReleases(string $owner, string $repo, int $count = 5): array
     {
         $count = max(1, min(20, $count));
-        $key   = 'mh_ghrel_' . md5("{$owner}/{$repo}/{$count}");
+        $key = 'mh_ghrel_'.md5("{$owner}/{$repo}/{$count}");
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -96,22 +99,23 @@ class Github
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
                 $out[] = [
-                    'tag'        => $j['tag_name'] ?? '',
-                    'name'       => ($j['name'] ?? '') ?: ($j['tag_name'] ?? ''),
-                    'url'        => $j['html_url'] ?? '',
-                    'date'       => isset($j['published_at']) ? date_i18n(get_option('date_format'), strtotime($j['published_at'])) : '',
+                    'tag' => $j['tag_name'] ?? '',
+                    'name' => ($j['name'] ?? '') ?: ($j['tag_name'] ?? ''),
+                    'url' => $j['html_url'] ?? '',
+                    'date' => isset($j['published_at']) ? date_i18n(get_option('date_format'), strtotime($j['published_at'])) : '',
                     'prerelease' => ! empty($j['prerelease']),
                 ];
             }
         }
         set_transient($key, $out, self::ttl());
+
         return $out;
     }
 
     /** Fetch + cache repo data. */
     public static function fetch(string $owner, string $repo): array
     {
-        $key = 'mh_gh_' . md5($owner . '/' . $repo);
+        $key = 'mh_gh_'.md5($owner.'/'.$repo);
 
         if (($data = get_transient($key)) !== false) {
             return $data;
@@ -124,19 +128,19 @@ class Github
         ]];
         $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
         if ($token !== '') {
-            $jargs['headers']['Authorization'] = 'token ' . $token;
+            $jargs['headers']['Authorization'] = 'token '.$token;
         }
 
         $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}", $jargs);
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             $j = json_decode(wp_remote_retrieve_body($r), true);
-            $data['desc']    = $j['description'] ?? '';
-            $data['stars']   = (int) ($j['stargazers_count'] ?? 0);
-            $data['forks']   = (int) ($j['forks_count'] ?? 0);
-            $data['lang']    = $j['language'] ?? '';
+            $data['desc'] = $j['description'] ?? '';
+            $data['stars'] = (int) ($j['stargazers_count'] ?? 0);
+            $data['forks'] = (int) ($j['forks_count'] ?? 0);
+            $data['lang'] = $j['language'] ?? '';
             $data['license'] = (isset($j['license']['spdx_id']) && $j['license']['spdx_id'] !== 'NOASSERTION')
                 ? $j['license']['spdx_id'] : '';
-            $data['url']     = $j['html_url'] ?? '';
+            $data['url'] = $j['html_url'] ?? '';
         }
 
         $rel = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/releases/latest", $jargs);
@@ -147,7 +151,7 @@ class Github
 
         $rmHeaders = ['User-Agent' => 'matthummel.com', 'Accept' => 'application/vnd.github.html'];
         if ($token !== '') {
-            $rmHeaders['Authorization'] = 'token ' . $token;
+            $rmHeaders['Authorization'] = 'token '.$token;
         }
         $rm = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/readme", ['timeout' => 12, 'headers' => $rmHeaders]);
         if (! is_wp_error($rm) && wp_remote_retrieve_response_code($rm) === 200) {
@@ -194,17 +198,29 @@ class Github
         $out = '<div class="mh-gh">';
 
         if (in_array('desc', $show, true) && ! empty($d['desc'])) {
-            $out .= '<p class="lead">' . esc_html($d['desc']) . '</p>';
+            $out .= '<p class="lead">'.esc_html($d['desc']).'</p>';
         }
 
         if (in_array('stats', $show, true)) {
             $items = [];
-            if (isset($d['stars']))    $items[] = '<li><strong>' . number_format($d['stars']) . '</strong><span>Stars</span></li>';
-            if (isset($d['forks']))    $items[] = '<li><strong>' . number_format($d['forks']) . '</strong><span>Forks</span></li>';
-            if (! empty($d['lang']))   $items[] = '<li><strong>' . esc_html($d['lang']) . '</strong><span>Language</span></li>';
-            if (! empty($d['license']))$items[] = '<li><strong>' . esc_html($d['license']) . '</strong><span>License</span></li>';
-            if (! empty($d['release']))$items[] = '<li><strong>' . esc_html($d['release']) . '</strong><span>Release</span></li>';
-            if ($items) $out .= '<ul class="stat-grid">' . implode('', $items) . '</ul>';
+            if (isset($d['stars'])) {
+                $items[] = '<li><strong>'.number_format($d['stars']).'</strong><span>Stars</span></li>';
+            }
+            if (isset($d['forks'])) {
+                $items[] = '<li><strong>'.number_format($d['forks']).'</strong><span>Forks</span></li>';
+            }
+            if (! empty($d['lang'])) {
+                $items[] = '<li><strong>'.esc_html($d['lang']).'</strong><span>Language</span></li>';
+            }
+            if (! empty($d['license'])) {
+                $items[] = '<li><strong>'.esc_html($d['license']).'</strong><span>License</span></li>';
+            }
+            if (! empty($d['release'])) {
+                $items[] = '<li><strong>'.esc_html($d['release']).'</strong><span>Release</span></li>';
+            }
+            if ($items) {
+                $out .= '<ul class="stat-grid">'.implode('', $items).'</ul>';
+            }
         }
 
         if (in_array('intro', $show, true) && ! empty($d['intro'])) {
@@ -213,9 +229,9 @@ class Github
                 'code' => [], 'pre' => [], 'ul' => [], 'ol' => [], 'li' => [], 'br' => [],
                 'h3' => [], 'h4' => [], 'blockquote' => [],
             ];
-            $out .= '<div class="readme-prose">' . wp_kses($d['intro'], $allowed) . '</div>';
+            $out .= '<div class="readme-prose">'.wp_kses($d['intro'], $allowed).'</div>';
         }
 
-        return $out . '</div>';
+        return $out.'</div>';
     }
 }

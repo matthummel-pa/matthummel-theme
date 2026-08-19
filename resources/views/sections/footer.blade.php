@@ -1,45 +1,30 @@
-@if (is_singular('projects'))
-  @include('partials.cta')
-@endif
-
 @php
-  $mhFoot = \App\mh_footer();
-  $mhFootSoc = \App\mh_social_links();
-  $cols = max(1, min(4, (int) get_theme_mod('mh_footer_cols', 3)));
-  $hasFooterWidgets = false;
-  for ($i = 1; $i <= $cols; $i++) {
-    if (is_active_sidebar("footer-{$i}")) { $hasFooterWidgets = true; break; }
-  }
+  $mhSoc = \App\mh_social_links();
 @endphp
-<footer class="content-info">
-  @if ($hasFooterWidgets)
-    <div class="footer-widgets footer-widgets--cols-{{ $cols }}">
-      @for ($i = 1; $i <= $cols; $i++)
-        <div class="footer-col">
-          @if (is_active_sidebar("footer-{$i}"))
-            @php(dynamic_sidebar("footer-{$i}"))
-          @endif
-        </div>
-      @endfor
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="brand-name footer-brand">Matt Hummel</p>
+      <p>Developer in Gettysburg, PA. WordPress, Power Platform, and full-stack.</p>
     </div>
-  @endif
-
-  @if (is_active_sidebar('sidebar-footer'))
-    @php(dynamic_sidebar('sidebar-footer'))
-  @endif
-
-  @if ($mhFoot['show_social'] && $mhFootSoc)
-    <div class="footer-socials">
-      @foreach ($mhFootSoc as $s)
-        <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener" target="_blank">{!! \App\mh_social_icon($s['key']) !!}</a>
-      @endforeach
-    </div>
-  @endif
-
-  @php($mhFooterText = apply_filters('matthummel/footer_text', ''))
-  @if ($mhFooterText)
-    <p class="footer-tagline">{!! wp_kses_post($mhFooterText) !!}</p>
-  @endif
-
-  <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ __('Built with Sage.', 'matthummel') }}</p>
+    @if (has_nav_menu('primary_navigation'))
+      <nav aria-label="{{ __('Footer', 'sage') }}">
+        {!! wp_nav_menu([
+          'theme_location' => 'primary_navigation',
+          'menu_class'     => 'footer-nav',
+          'echo'           => false,
+          'container'      => false,
+          'depth'          => 1,
+        ]) !!}
+      </nav>
+    @endif
+    @if ($mhSoc)
+      <ul class="elsewhere">
+        @foreach ($mhSoc as $s)
+          <li><a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a></li>
+        @endforeach
+      </ul>
+    @endif
+  </div>
+  <p class="footer-copy">&copy; {{ date('Y') }} Matt Hummel · Sage 11</p>
 </footer>

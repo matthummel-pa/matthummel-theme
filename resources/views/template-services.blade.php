@@ -1,32 +1,42 @@
 {{--
   Template Name: Services
 --}}
-
 @extends('layouts.app')
 
 @section('content')
-  @include('partials.page-header')
+  <header class="page-header container">
+    <h1 class="display-title is-hero">Small jobs. Clear scope. Honest fit.</h1>
+    <p class="lead">I work full-time as a Power Platform developer. I take a few side projects. If it is not a fit, I will say so.</p>
+  </header>
 
-  <div class="container">
-    @if (get_the_content())
-      <div class="entry-content post-prose">@php(the_content())</div>
-    @endif
-
-    <div class="card-grid services-grid">
-      <div class="service-card">
-        <h3>{{ __('Web Development', 'matthummel') }}</h3>
-        <p>{{ __('Fast, accessible sites and web apps — modern front-end, performance, and SEO.', 'matthummel') }}</p>
-      </div>
-      <div class="service-card">
-        <h3>{{ __('WordPress Development', 'matthummel') }}</h3>
-        <p>{{ __('Custom themes, Gutenberg blocks, and code-first Sage builds without page-builder bloat.', 'matthummel') }}</p>
-      </div>
-      <div class="service-card">
-        <h3>{{ __('Power Platform', 'matthummel') }}</h3>
-        <p>{{ __('Power Apps, Power Automate, and Dataverse solutions across Microsoft 365.', 'matthummel') }}</p>
+  <section class="pf-section">
+    <div class="container">
+      <div class="svc-list">
+        <article class="svc-item">
+          <h2>WordPress sites</h2>
+          <p>New sites, rescues, and Sage 11 themes. Fast pages, WCAG 2.2 AA, and a handoff you can edit.</p>
+        </article>
+        <article class="svc-item">
+          <h2>Power Platform</h2>
+          <p>Power Apps, Power Automate, and SharePoint. Replace paper and email chains with an app the team can run.</p>
+        </article>
+        <article class="svc-item">
+          <h2>Full-stack apps</h2>
+          <p>When WordPress is the wrong tool. React, APIs, and data layers — like Keepary on GitHub.</p>
+        </article>
+        <article class="svc-item">
+          <h2>Fixes that matter</h2>
+          <p>Speed, accessibility, and SEO cleanup. A punch list, not a mystery rewrite.</p>
+        </article>
       </div>
     </div>
-  </div>
+  </section>
 
-  @include('partials.cta')
+  <section class="pf-section">
+    <div class="container measure">
+      <h2 class="display-title is-section">What I do not take</h2>
+      <p>Paid ads, full social management, or giant content retainers. Local Gettysburg marketing lives at Ridges &amp; Valleys. This site is for code, writing, and a few build jobs.</p>
+      <a class="btn" href="{{ home_url('/contact/') }}">Ask about a project</a>
+    </div>
+  </section>
 @endsection
