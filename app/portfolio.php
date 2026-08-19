@@ -105,6 +105,12 @@ function mh_code_snippets(): array
 {
     return [
         [
+            'title' => 'A tiny WordPress shortcode',
+            'lang' => 'php',
+            'note' => 'Paste into a plugin or your theme PHP. Then type [hello] in a post. Good first snippet for a blog.',
+            'code' => "add_shortcode('hello', function () {\n    return '<p>Hello from a shortcode.</p>';\n});",
+        ],
+        [
             'title' => 'Skip to content that actually works',
             'lang' => 'html',
             'note' => 'Keep the first focusable control a skip link. Hide it until it has focus.',
@@ -115,6 +121,24 @@ function mh_code_snippets(): array
             'lang' => 'css',
             'note' => 'Cap body text around 65 characters. Short lines are easier at a 6–8 grade level.',
             'code' => ".prose {\n  max-width: 65ch;\n  font-size: 1.125rem;\n  line-height: 1.7;\n}",
+        ],
+        [
+            'title' => 'One brand color, reused',
+            'lang' => 'css',
+            'note' => 'Change --brand once. Links and buttons can share it. Same idea as this theme.',
+            'code' => ":root {\n  --brand: #2563EB;\n}\n\na {\n  color: var(--brand);\n}",
+        ],
+        [
+            'title' => 'Safe link in Blade',
+            'lang' => 'blade',
+            'note' => 'Escape URLs and labels you did not write yourself.',
+            'code' => '<a href="{{ esc_url($url) }}">{{ esc_html($label) }}</a>',
+        ],
+        [
+            'title' => 'Get the current page title in Blade',
+            'lang' => 'blade',
+            'note' => 'Sage templates already have $title. Use get_the_title() if you are not on a standard loop.',
+            'code' => "{{ \$title }}\n{{-- or --}}\n{{ get_the_title() }}",
         ],
         [
             'title' => 'Fetch GitHub without hammering the API',

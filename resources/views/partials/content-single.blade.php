@@ -65,6 +65,10 @@
           @php the_content(); @endphp
         </div>
 
+        <p class="post-share-note">
+          Extra copy-paste examples live on the <a href="{{ home_url('/code/') }}">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="{{ home_url('/contact/') }}">Say hello</a>.
+        </p>
+
         {{-- Author bio --}}
         <div class="post-author-bio">
           <img
@@ -77,7 +81,7 @@
           <div class="post-author-bio-body">
             <p class="post-author-bio-name">{{ get_the_author() }}</p>
             <p class="post-author-bio-desc">
-              {{ get_the_author_meta('description') ?: 'WordPress & Power Platform Developer based in Gettysburg, PA. Building fast, accessible websites and reliable business apps.' }}
+              {{ get_the_author_meta('description') ?: 'I write notes from Gettysburg, Pennsylvania, and share WordPress snippets you can paste into a theme. New developers and local business owners are welcome here.' }}
             </p>
           </div>
         </div>

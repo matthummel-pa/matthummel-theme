@@ -5,8 +5,8 @@
 
 @section('content')
   <header class="page-header container">
-    <h1 class="display-title is-hero">Help when you need it.</h1>
-    <p class="lead">Most of this site is free to read and copy. If you run a business, a nonprofit, or a small team and you need a site or an internal app, I can sometimes help. I have a full-time Power Platform job, so I take a few extra projects at a time.</p>
+    <h1 class="display-title is-hero">If you want a hand.</h1>
+    <p class="lead">Most of this site is free to read and copy. If you run a shop, a nonprofit, or a small team and a WordPress site or an internal app would help, you can write. I have a full-time Power Platform job, so I only take a few extra projects at a time.</p>
   </header>
 
   <section class="pf-section">
@@ -14,11 +14,11 @@
       <div class="svc-list">
         <article class="svc-item">
           <h2>WordPress sites</h2>
-          <p>New sites, rescues, and Sage 11 themes. Fast pages you can edit, with a handoff you understand.</p>
+          <p>New sites, old sites that need care, and Sage 11 themes. Pages you can edit, explained in plain words.</p>
         </article>
         <article class="svc-item">
           <h2>Power Platform</h2>
-          <p>Power Apps, Power Automate, and SharePoint. Replace paper and long email chains with an app the team can run.</p>
+          <p>Power Apps, Power Automate, and SharePoint. Everyday work that still lives in email or spreadsheets can often live in a small app instead.</p>
         </article>
         <article class="svc-item">
           <h2>Small apps</h2>

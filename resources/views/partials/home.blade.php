@@ -1,7 +1,7 @@
 @php
   $posts = \App\mh_latest_posts(3);
   $repos = \App\mh_featured_repos();
-  $snips = array_slice(\App\mh_code_snippets(), 0, 2);
+  $snips = array_slice(\App\mh_code_snippets(), 0, 3);
   $work  = array_slice(\App\mh_studio_projects(), 0, 3);
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 @endphp

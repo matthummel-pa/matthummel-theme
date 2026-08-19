@@ -514,6 +514,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   line-height: 1.75;
 }
 .post-prose :where(h2, h3) { margin-top: 1.6em; }
+.post-share-note {
+  max-width: 65ch;
+  margin: 0 auto 1.5rem;
+  color: var(--color-muted);
+}
 .post-author-bio {
   max-width: 65ch;
   margin: 2.5rem auto;

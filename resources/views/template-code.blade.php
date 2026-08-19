@@ -58,7 +58,7 @@
 <section class="pf-section">
   <div class="container">
     <h2 class="display-title is-section">Snippets</h2>
-    <p class="lead">Tiny examples. Same style I use in blog posts. Paste them, then change the names to match your theme.</p>
+    <p class="lead">Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.</p>
     @foreach ($snips as $s)
       <article class="snippet-card">
         <h3>{{ $s['title'] }}</h3>

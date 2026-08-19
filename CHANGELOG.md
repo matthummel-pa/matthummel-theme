@@ -2,6 +2,16 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.1 — 2026-08-19
+
+Welcoming copy for visitors, new developers, and business owners. Sharing first; paid help is optional.
+
+### Changed
+
+- Home leads with hello, writing, snippets, and example sites
+- Services, About, Contact, and post footers drop consultant pitch
+- Extra beginner snippets on `/code/` (shortcode, CSS variables, Blade)
+
 ## 3.0.0 — 2026-08-19
 
 Replace the Pressroot-era module theme with stock Sage 11.2.1 and a thin portfolio layer.

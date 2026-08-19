@@ -13,7 +13,7 @@
     <div class="container measure">
       <h2 class="display-title is-section">How I got here</h2>
       <p>I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.</p>
-      <p>Later I added full-stack work and Microsoft 365. Now I can help with a public site and the internal app that runs the work behind it.</p>
+      <p>Later I learned full-stack work and Microsoft 365. Day to day I still mix a public site with the quieter tools a team uses behind it.</p>
       <p>On GitHub I keep it short: full-stack web developer with WordPress and Power Platform. That’s still true.</p>
     </div>
   </section>

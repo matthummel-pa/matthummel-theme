@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 | Feature | Notes | Code |
 | --- | --- | --- |
-| Home | Reader-width intro, services, selected work, repos, writing, contact line | `resources/views/partials/home.blade.php` |
+| Home | Hello, writing, snippets, example sites, optional help | `resources/views/partials/home.blade.php` |
 | About / Now | Bio, two shops, current focus | `template-about.blade.php`, `template-now.blade.php` |
 | Work | Ridges & Valleys concepts + category filter | `template-projects.blade.php`, `mh_studio_projects()` |
 | Services | WordPress, Power Platform, full-stack, fixes | `template-services.blade.php` |
