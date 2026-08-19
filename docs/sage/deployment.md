@@ -17,7 +17,7 @@ Optional on the server after upload: `wp acorn optimize` (caches config and Blad
 GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push to `main`, then finds `wp-content/themes/matthummel` over FTP (walks ancestors/`public_html`, not only an FSE `style.css` beside `SITEGROUND_FTP_REMOTE_DIR`). That secret is only a hint.
 
 - PHP **8.3+**: the FSE copy is renamed to `matthummel-fse-backup` and Sage is uploaded into `matthummel` (the active slug).
-- PHP **8.2**: Sage is uploaded to `matthummel-sage` so the public site does not fatal. The live FSE `theme.json` palette is still updated to Sage blue-gray. Raise PHP in Site Tools, then push `main` again to swap Sage into `matthummel`.
+- If the locator cannot log in, FTP still uploads to `SITEGROUND_FTP_REMOTE_DIR` so a flaky login does not skip the whole deploy
 
 The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
 

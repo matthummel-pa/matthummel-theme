@@ -39,6 +39,8 @@ def log(msg: str) -> None:
 
 
 def connect() -> ftplib.FTP:
+    import socket
+
     raw = os.environ["FTP_HOST"].strip()
     host = raw.replace("ftp://", "").replace("ftps://", "").split("/")[0]
     if ":" in host:
@@ -49,26 +51,31 @@ def connect() -> ftplib.FTP:
     user = os.environ["FTP_USER"]
     password = os.environ["FTP_PASS"]
 
+    targets: list[str] = []
+    try:
+        for info in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
+            ip = info[4][0]
+            if ip not in targets:
+                targets.append(ip)
+    except Exception as exc:
+        log(f"IPv4 resolve failed ({type(exc).__name__}); using hostname")
+    if host not in targets:
+        targets.append(host)
+
     errors: list[str] = []
-    for use_tls in (True, False):
-        try:
-            ftp: ftplib.FTP
-            if use_tls:
-                ftp = ftplib.FTP_TLS(timeout=60)
-            else:
-                ftp = ftplib.FTP(timeout=60)
-            ftp.connect(host, port)
-            ftp.login(user, password)
-            if use_tls:
-                try:
-                    ftp.prot_p()
-                except Exception:
-                    pass
-            ftp.set_pasv(True)
-            log(f"FTP login ok ({'tls' if use_tls else 'plain'}), pwd={ftp.pwd()}")
-            return ftp
-        except Exception as exc:
-            errors.append(f"{'tls' if use_tls else 'plain'}: {type(exc).__name__}")
+    # Plain FTP only (same protocol as FTP-Deploy-Action). Prefer IPv4.
+    for attempt in range(1, 4):
+        for target in targets:
+            try:
+                ftp = ftplib.FTP(timeout=12)
+                ftp.connect(target, port, timeout=12)
+                ftp.login(user, password)
+                ftp.set_pasv(True)
+                log(f"FTP login ok (plain, attempt {attempt})")
+                return ftp
+            except Exception as exc:
+                errors.append(f"plain@{attempt}: {type(exc).__name__}")
+        log(f"FTP login attempt {attempt} failed; retrying")
     raise RuntimeError("FTP login failed (" + ", ".join(errors) + ")")
 
 

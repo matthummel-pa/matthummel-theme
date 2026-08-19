@@ -6,7 +6,7 @@ All notable changes to this theme are recorded here.
 
 ### Changed
 
-- FTP deploy finds the live `matthummel` theme folder even when Sage was previously dumped elsewhere and the live `style.css` is not tagged as FSE
+- FTP locator uses plain IPv4 with retries; if login still fails, the deploy falls back to `SITEGROUND_FTP_REMOTE_DIR`
 
 ## 3.0.8 — 2026-08-19
 
