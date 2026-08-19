@@ -2,9 +2,6 @@
 
 Sage 11 WordPress theme for [matthummel.com](https://matthummel.com).
 
-The repo root **is** the theme folder. On the live site it lives at
-`wp-content/themes/matthummel`.
-
 ## What this is
 
 A stock [Roots Sage](https://roots.io/sage/) 11.2.1 install plus a thin portfolio layer:
@@ -57,18 +54,6 @@ Cursor Cloud WordPress notes: [`AGENTS.md`](AGENTS.md).
 | [Sage docs](https://roots.io/sage/docs/) | Official Roots reference |
 | [Theme templates](https://roots.io/sage/docs/theme-templates/) | WordPress template hierarchy in Sage |
 
-## Live deploys
-
-1. Merge or push `main`.
-2. GitHub Action **Deploy to SiteGround** runs `composer install --no-dev`, `npm run build`, and FTP-uploads the theme (not `node_modules`).
-3. In wp-admin, confirm **Matt Hummel** is the active theme (see [docs/INSTALL.md](docs/INSTALL.md)).
-
-Repo secrets:
-
-- `SITEGROUND_FTP_HOST`
-- `SITEGROUND_FTP_USER`
-- `SITEGROUND_FTP_PASSWORD`
-- `SITEGROUND_FTP_REMOTE_DIR` (example: `/public_html/wp-content/themes/matthummel/`)
 
 ## License
 
