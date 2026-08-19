@@ -317,6 +317,53 @@ function mh_seed_portfolio_pages(): void
     update_option('mh_portfolio_seeded_v2', true);
 }
 
+/**
+ * Profile photo: Customizer upload, then bundled headshot, then GitHub, then Gravatar.
+ */
+function mh_profile_photo_url(int $size = 160): string
+{
+    $id = (int) get_theme_mod('mh_profile_photo', 0);
+    if ($id > 0) {
+        $src = wp_get_attachment_image_url($id, [$size, $size]);
+        if (is_string($src) && $src !== '') {
+            return $src;
+        }
+    }
+
+    $rel = 'resources/images/matt-hummel.jpg';
+    if (is_readable(get_theme_file_path($rel))) {
+        return get_theme_file_uri($rel);
+    }
+
+    $user = Github::fetchUser('matthummel-pa');
+    if (! empty($user['avatar'])) {
+        $sep = str_contains((string) $user['avatar'], '?') ? '&' : '?';
+
+        return $user['avatar'].$sep.'s='.$size;
+    }
+
+    $email = (string) get_option('admin_email');
+
+    return $email !== '' ? (string) get_avatar_url($email, ['size' => $size]) : '';
+}
+
+add_action('customize_register', function (\WP_Customize_Manager $wp): void {
+    $wp->add_section('mh_identity', [
+        'title' => __('Profile photo', 'sage'),
+        'priority' => 32,
+    ]);
+    $wp->add_setting('mh_profile_photo', [
+        'default' => 0,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp->add_control(new \WP_Customize_Media_Control($wp, 'mh_profile_photo', [
+        'label' => __('Photo', 'sage'),
+        'description' => __('Used next to your name in the header, and larger on Home and About. A square crop works best. Leave empty to keep the photo bundled with the theme.', 'sage'),
+        'section' => 'mh_identity',
+        'mime_type' => 'image',
+    ]));
+});
+
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
         'mh-fonts',

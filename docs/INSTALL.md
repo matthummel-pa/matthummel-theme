@@ -51,6 +51,8 @@ On first activation, `mh_seed_portfolio_pages()` creates Home, About, Work (`/pr
 
 If pages already exist from an earlier seed (`mh_portfolio_seeded_v2`), they are left as-is.
 
+To use a different headshot: Appearance → Customize → Profile photo. Leave it empty to keep `resources/images/matt-hummel.jpg`.
+
 ## 5. Fallback
 
 Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.

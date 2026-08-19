@@ -4,9 +4,12 @@
 @extends('layouts.app')
 
 @section('content')
-  <header class="page-header container">
-    <h1 class="display-title is-hero">Glad you’re here.</h1>
-    <p class="lead">I’m Matt. I live in Gettysburg, PA. I write about the web, share code, and sometimes help a shop or a team with a site or an app. Plain language. Pages that are easy to use.</p>
+  <header class="page-header container hero-intro">
+    @include('partials.profile-photo', ['size' => 96, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
+    <div>
+      <h1 class="display-title is-hero">Glad you’re here.</h1>
+      <p class="lead">I’m Matt. I live in Gettysburg, PA. I write about the web, share code, and sometimes help a shop or a team with a site or an app. Plain language. Pages that are easy to use.</p>
+    </div>
   </header>
 
   <section class="pf-section">

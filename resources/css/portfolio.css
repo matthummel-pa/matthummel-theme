@@ -173,16 +173,43 @@ a:hover { color: var(--color-blue-ink); }
   text-decoration: none;
   color: var(--color-ink);
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
+.profile-photo {
+  display: block;
+  object-fit: cover;
+  border-radius: 999px;
+  background: var(--color-line);
+  flex-shrink: 0;
+}
+.profile-photo--header {
   width: 2rem;
   height: 2rem;
-  border-radius: 6px;
-  background: var(--color-ink);
-  color: #fff;
-  font: 700 0.7rem/1 var(--font-display);
-  letter-spacing: 0;
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+.hero-intro {
+  display: flex;
+  gap: 1.15rem;
+  align-items: flex-start;
+}
+.hero-intro .display-title.is-hero { margin-top: 0.15rem; }
+.profile-photo--hero {
+  width: 5.75rem;
+  height: 5.75rem;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--color-line);
+}
+.profile-photo--post {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.profile-photo--bio {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+@media (max-width: 520px) {
+  .hero-intro { align-items: center; }
+  .profile-photo--hero {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
 }
 .brand-name { font-weight: 700; letter-spacing: -0.02em; font-size: .95rem; }
 .header-nav { margin-left: auto; }
@@ -612,7 +639,10 @@ html.mh-dark .site-footer,
 html.mh-dark .mh-popout,
 html.mh-dark .contact-form input,
 html.mh-dark .contact-form textarea { background: #111827; }
-html.mh-dark .brand-mark { background: var(--color-blue); }
+html.mh-dark .profile-photo--header,
+html.mh-dark .profile-photo--hero {
+  box-shadow: 0 0 0 2px #111827, 0 0 0 3px var(--color-line);
+}
 
 .visually-hidden {
   position: absolute !important;

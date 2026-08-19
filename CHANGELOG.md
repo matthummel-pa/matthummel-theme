@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.2 — 2026-08-19
+
+### Added
+
+- Profile photo next to the site name in the header (circular crop)
+- Larger photo on Home and About, beside the greeting
+- Same photo on post bylines and the author bio
+- Appearance → Customize → Profile photo to replace the bundled headshot
+
 ## 3.0.1 — 2026-08-19
 
 Welcoming copy for visitors, new developers, and business owners. Sharing first; paid help is optional.

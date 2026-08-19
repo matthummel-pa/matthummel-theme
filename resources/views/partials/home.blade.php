@@ -7,15 +7,18 @@
 @endphp
 
 <section class="hero">
-  <div class="container reader">
-    <h1 class="display-title is-hero">Hello. I’m Matt.</h1>
-    <p class="lead">I live in Gettysburg, PA. This site is a notebook: posts you can read, code you can copy, and example WordPress sites for local shops. New developers, neighbors, and business owners are all welcome.</p>
-    <p>
-      <a href="{{ $writing }}">Writing</a>
-      · <a href="{{ home_url('/code/') }}">Code and snippets</a>
-      · <a href="{{ home_url('/projects/') }}">Example sites</a>
-      · <a href="{{ home_url('/contact/') }}">Say hello</a>
-    </p>
+  <div class="container reader hero-intro">
+    @include('partials.profile-photo', ['size' => 96, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
+    <div>
+      <h1 class="display-title is-hero">Hello. I’m Matt.</h1>
+      <p class="lead">I live in Gettysburg, PA. This site is a notebook: posts you can read, code you can copy, and example WordPress sites for local shops. New developers, neighbors, and business owners are all welcome.</p>
+      <p>
+        <a href="{{ $writing }}">Writing</a>
+        · <a href="{{ home_url('/code/') }}">Code and snippets</a>
+        · <a href="{{ home_url('/projects/') }}">Example sites</a>
+        · <a href="{{ home_url('/contact/') }}">Say hello</a>
+      </p>
+    </div>
   </div>
 </section>
 

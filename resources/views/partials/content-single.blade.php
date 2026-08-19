@@ -23,13 +23,7 @@
       <h1 class="post-hero-title p-name">{!! get_the_title() !!}</h1>
 
       <div class="post-hero-meta">
-        <img
-          class="post-hero-avatar"
-          src="{{ esc_url(get_avatar_url(get_the_author_meta('ID'), ['size' => 40])) }}"
-          alt="{{ get_the_author() }}"
-          width="40" height="40"
-          loading="lazy"
-        >
+        @include('partials.profile-photo', ['size' => 40, 'class' => 'profile-photo profile-photo--post', 'decorative' => true])
         <span class="post-hero-author">{{ get_the_author() }}</span>
         <span class="post-hero-sep" aria-hidden="true">&middot;</span>
         <time class="dt-published" datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
@@ -71,13 +65,7 @@
 
         {{-- Author bio --}}
         <div class="post-author-bio">
-          <img
-            class="post-author-bio-avatar"
-            src="{{ esc_url(get_avatar_url(get_the_author_meta('ID'), ['size' => 72])) }}"
-            alt="{{ get_the_author() }}"
-            width="72" height="72"
-            loading="lazy"
-          >
+          @include('partials.profile-photo', ['size' => 72, 'class' => 'profile-photo profile-photo--bio'])
           <div class="post-author-bio-body">
             <p class="post-author-bio-name">{{ get_the_author() }}</p>
             <p class="post-author-bio-desc">
