@@ -18,7 +18,15 @@ GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push t
 
 `wp-content/themes/matthummel`
 
-on SiteGround. The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
+on SiteGround. `SITEGROUND_FTP_REMOTE_DIR` must be **that theme folder**, including the trailing slash, for example:
+
+`/public_html/wp-content/themes/matthummel/`
+
+If the secret points at `public_html/` or `wp-content/themes/` (the parent), Sage files never replace the live theme. After a deploy, Appearance → Themes should show **Matt Hummel 3.0.x** with description “Sage 11…”. If it still says a block/FSE theme, the FTP path is wrong.
+
+The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
+
+Live SiteGround PHP is **8.2.33**. Sage 11 / Acorn 6 need **8.3+**. Activating this theme on 8.2 fatals (`Composer detected issues in your platform`). Raise PHP in SiteGround Site Tools before switching themes.
 
 A second in-progress deploy is cancelled (`concurrency: siteground-deploy`).
 
@@ -42,6 +50,15 @@ Same as Ridges & Valleys. On the live site (or any install of this theme):
 WP-CLI: `wp mh theme-update`. Optional constant: `MH_GITHUB_TOKEN` in wp-config.php.
 
 The first time this updater itself is missing on the server, push `main` once so FTP can drop the new PHP files. After that, use the button.
+
+## WPVibe (AI on the live site)
+
+The **WPVibe** plugin (`vibe-ai`) is installed on matthummel.com. It does **not** build Sage (no Vite/Composer). Use it to connect, inspect, run WP-CLI, and activate the theme **after** files are on the server.
+
+1. Add WPVibe as an **HTTP** MCP server (`https://mcp.wpvibe.ai/mcp`) in Cursor **and** in [Cloud Agents MCP](https://cursor.com/agents). Cloud Agents do not load project `.cursor/mcp.json` and do **not** support `mcp-remote`.
+2. Sign in with email + 6-digit code.
+3. In wp-admin → WPVibe, finish Connect so the badge is not “Not Connected”.
+4. Ask the agent to `list_sites` → `site_info` → `run_wp_cli` (`theme list`, `theme activate matthummel`).
 
 ## Blade templates must not be public
 

@@ -18,7 +18,7 @@ Sage docs (also listed in `.cursor/docs.json`):
 
 Live deploys: Appearance → **Update Theme** in wp-admin (needs a GitHub PAT) dispatches
 `.github/workflows/deploy.yml`. A push to `main` runs the same workflow. Do not upload
-`node_modules`. PHP 8.3 must match production.
+`node_modules`. PHP 8.3 is required (CI, Composer, Acorn 6). Production SiteGround is still PHP **8.2.33** until you change it in Site Tools; Sage will fatal there until PHP is 8.3.
 
 ## Cursor Cloud specific instructions
 
@@ -65,7 +65,15 @@ Gotchas:
   (Actions read/write, Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
   Same pipeline as pushing `main`. WP-CLI: `wp mh theme-update`. The Cursor Cloud
   `gh` token cannot dispatch workflows (403); use Matt’s PAT, not the agent token.
-- WPVibe MCP (`.cursor/mcp.json`) uses `npx mcp-remote` against `https://mcp.wpvibe.ai/mcp`.
-  Do not open that URL in a browser — it is an API endpoint (often a blank white page).
-  Connect it in Cursor Settings → MCP; a browser window should open for email sign-in.
-  Theme edits need the WPVibe plugin on the live site, then draft → preview → publish.
+- WPVibe desktop Cursor: `.cursor/mcp.json` uses `npx mcp-remote` against
+  `https://mcp.wpvibe.ai/mcp`. Do not open that URL in a browser — it is an API
+  endpoint (often a blank white page). Connect it in Cursor Settings → MCP; a
+  browser window should open for email sign-in.
+- WPVibe Cloud Agents: only MCP servers added at https://cursor.com/agents are
+  loaded (HTTP URL `https://mcp.wpvibe.ai/mcp`, then OAuth). Project
+  `.cursor/mcp.json` is not loaded here; `mcp-remote` is not supported on Cloud
+  Agents. Plugin is on the live site (`vibe-ai`). Theme **files** still ship via
+  FTP into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
+  WPVibe then connects, lists themes, and activates — it cannot replace
+  `npm run build` / Composer for Sage. Theme edits on a connected site: draft →
+  preview → publish.
