@@ -65,14 +65,8 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
-            'name' => 'pressroot',
-            'desc' => 'A Sage 11 theme framework: headers, heroes, GitHub project pages, and a deep options system.',
-            'url'  => 'https://github.com/matthummel-pa/pressroot',
-            'tags' => ['Sage', 'WordPress', 'Blade'],
-        ],
-        [
             'name' => 'ridgesandvalleys',
-            'desc' => 'The Ridges & Valleys Studio site. Sage on Pressroot, with local SEO, accessibility, and Gettysburg work.',
+            'desc' => 'The Ridges & Valleys Studio site. Sage 11, local SEO, accessibility, and Gettysburg work.',
             'url'  => 'https://github.com/matthummel-pa/ridgesandvalleys',
             'tags' => ['WordPress', 'Sage', 'Local SEO'],
         ],

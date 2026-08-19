@@ -1,16 +1,9 @@
 # Matt Hummel — WordPress Theme
 
-> **⚠️ ARCHIVED — superseded by [Pressroot](https://github.com/matthummel-pa/pressroot).**
-> This theme was productized into Pressroot, which now powers matthummel.com and
-> receives all new development (header/footer designer, WCAG contrast guard, setup
-> wizard, site types, AI builder). This repository is frozen at v2.0.0 as a
-> historical record — no further updates.
+A **Sage 11 (Roots)** developer portfolio for matthummel.com. Blue and gray,
+accessible, readable, and light on plugins. No Kadence or Pressroot admin.
 
-A bespoke **Sage 11 (Roots)** WordPress theme that powers matthummel.com — built
-around a minimalist **"Paper + Geist"** design system. Server-rendered, accessible,
-mobile-first, deliberately light on plugins, and packed with premium theme-options.
-
-> Stack: Sage 11 · Blade · Tailwind CSS v4 · Vite · Acorn (Laravel-in-WordPress) · PHP 8.3
+> Stack: Sage 11 · Blade · Tailwind CSS v4 · Vite · Acorn · PHP 8.3
 
 ### 📖 [Support & documentation → matthummel-pa.github.io/matthummel-theme](https://matthummel-pa.github.io/matthummel-theme/)
 
