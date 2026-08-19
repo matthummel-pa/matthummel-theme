@@ -295,8 +295,8 @@ function mh_seed_portfolio_pages(): void
 
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
-        'mh-plex',
-        'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap',
+        'mh-fonts',
+        'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap',
         [],
         null
     );

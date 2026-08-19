@@ -30,9 +30,9 @@
     @endforeach
   </nav>
 
-  <div class="pf-grid">
+  <div class="work-grid">
     @foreach ($shown as $p)
-      <article class="pf-card" id="{{ $p['slug'] }}">
+      <article class="work-card" id="{{ $p['slug'] }}">
         <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
         <h2>{{ $p['title'] }}</h2>
         <p>{{ $p['blurb'] }}</p>

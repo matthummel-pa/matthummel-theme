@@ -6,23 +6,25 @@
 @source "../**/*.js";
 
 @theme {
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-btn: 6px;
+  --radius-btn: 999px;
+  --radius-card: 1.25rem;
 
-  --color-khaki: #e8eef5;
-  --color-cream: #f1f5f9;
-  --color-blue: #1d4ed8;
-  --color-blue-ink: #1e3a8a;
-  --color-navy: #1e3a5f;
-  --color-slate: #334155;
+  --color-khaki: #eef2f7;
+  --color-cream: #f7f9fc;
+  --color-blue: #2563eb;
+  --color-blue-ink: #1d4ed8;
+  --color-blue-soft: #dbeafe;
+  --color-navy: #0f172a;
+  --color-slate: #475569;
   --color-ink: #0f172a;
-  --color-paper: #f8fafc;
-  --color-body: #334155;
-  --color-muted: #475569;
-  --color-line: #cbd5e1;
-  --color-focus: #1d4ed8;
+  --color-paper: #f4f7fb;
+  --color-body: #475569;
+  --color-muted: #64748b;
+  --color-line: #dbe3ee;
+  --color-focus: #2563eb;
 }

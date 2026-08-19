@@ -5,12 +5,7 @@
 <header class="site-header" id="site-header">
   <div class="site-header-inner">
     <a class="brand" href="{{ home_url('/') }}" rel="home">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="120" height="120" rx="22"/>
-          <text x="60" y="82" text-anchor="middle">MH</text>
-        </svg>
-      </span>
+      <span class="brand-mark" aria-hidden="true">MH</span>
       <span class="brand-name">Matt Hummel</span>
     </a>
 
@@ -27,16 +22,6 @@
     @endif
 
     <div class="header-actions">
-      @if ($mhSoc)
-        <ul class="header-social" aria-label="{{ __('Social profiles', 'matthummel') }}">
-          @foreach (array_slice($mhSoc, 0, 5) as $s)
-            <li>
-              <a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a>
-            </li>
-          @endforeach
-        </ul>
-      @endif
-
       <button class="mh-theme-toggle" type="button" aria-label="{{ __('Toggle dark mode', 'matthummel') }}" aria-pressed="false">
         <span class="mh-icon-dark" aria-hidden="true">Dark</span>
         <span class="mh-icon-light" aria-hidden="true">Light</span>
@@ -63,6 +48,13 @@
         'container'      => false,
       ]) !!}
     </nav>
+  @endif
+  @if ($mhSoc)
+    <ul class="elsewhere">
+      @foreach ($mhSoc as $s)
+        <li><a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a></li>
+      @endforeach
+    </ul>
   @endif
   <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'matthummel') }}</a>
 </aside>
