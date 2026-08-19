@@ -5,11 +5,10 @@
 
 @section('content')
   <header class="page-header container">
-    <p class="eyebrow">Now</p>
     <h1 class="display-title is-hero">What I’m doing now.</h1>
     <p class="lead">A short, honest list. Updated with this redesign.</p>
   </header>
-  <section class="pf-section pf-section--alt">
+  <section class="pf-section">
     <div class="container measure">
       <ul>
         <li>Full-time Power Platform work.</li>

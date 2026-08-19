@@ -2,7 +2,6 @@
 
 @section('content')
   <header class="page-header container">
-    <p class="eyebrow">{{ __('Writing', 'matthummel') }}</p>
     <h1 class="display-title is-hero">{!! get_the_archive_title() !!}</h1>
   </header>
   <div class="container" style="padding-bottom:3rem">

@@ -5,7 +5,6 @@
 
 @section('content')
   <header class="page-header container">
-    <p class="eyebrow">Contact</p>
     <h1 class="display-title is-hero">Write me a short note.</h1>
     <p class="lead">Gettysburg, PA. I usually reply in one or two business days. Best for blog notes, a WordPress or Power Platform question, or a small project.</p>
   </header>

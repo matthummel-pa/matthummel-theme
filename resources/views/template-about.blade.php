@@ -5,12 +5,11 @@
 
 @section('content')
   <header class="page-header container">
-    <p class="eyebrow">About</p>
     <h1 class="display-title is-hero">A developer who cares how things feel to use.</h1>
     <p class="lead">I’m Matt. I live in Gettysburg, PA. I have spent 15+ years building for the web. I write in plain language. I ship accessible sites. I work full-time on the Microsoft Power Platform and I still like making WordPress and full-stack apps on the side.</p>
   </header>
 
-  <section class="pf-section pf-section--alt">
+  <section class="pf-section">
     <div class="container measure">
       <h2 class="display-title is-section">How I got here</h2>
       <p>I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.</p>
@@ -35,7 +34,7 @@
     </div>
   </section>
 
-  <section class="pf-section pf-section--alt">
+  <section class="pf-section">
     <div class="container measure">
       <h2 class="display-title is-section">How I work</h2>
       <ul>

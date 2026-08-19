@@ -326,17 +326,6 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-bottom: 1px solid var(--color-line);
   border-radius: 0;
   padding: 1rem 0;
-  display: grid;
-  grid-template-columns: 2.25rem 1fr;
-  gap: .35rem .85rem;
-}
-.svc-item .svc-num { grid-row: 1 / span 2; padding-top: .2rem; }
-.svc-num {
-  display: block;
-  font: 600 0.8rem/1.4 var(--font-display);
-  letter-spacing: .04em;
-  color: var(--color-blue);
-  margin-bottom: 0;
 }
 .svc-item h2,
 .svc-item h3 { margin: 0; font-size: 1.05rem; font-weight: 700; }

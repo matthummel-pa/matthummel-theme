@@ -14,7 +14,6 @@
 @endphp
 
 <header class="page-header container">
-  <p class="eyebrow">Work</p>
   <h1 class="display-title is-hero">Ridges &amp; Valleys work.</h1>
     <p class="lead">These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Each one is a real WordPress shape — menus, bookings, maps, and local search — not a slide deck.
       @if (! empty($ghUser['public_repos']))
@@ -36,12 +35,7 @@
       <article class="work-card" id="{{ $p['slug'] }}">
         <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
         <h2>{{ $p['title'] }}</h2>
-        <p>{{ $p['blurb'] }}</p>
-        <div class="pill-row">
-          @foreach ($p['tech'] as $t)
-            <span class="pill">{{ $t }}</span>
-          @endforeach
-        </div>
+        <p>{{ $p['blurb'] }} {{ implode(', ', $p['tech']) }}.</p>
       </article>
     @endforeach
   </div>
