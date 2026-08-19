@@ -14,15 +14,10 @@ Optional on the server after upload: `wp acorn optimize` (caches config and Blad
 
 ## This repo
 
-GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push to `main`, then FTP-uploads to:
+GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push to `main`, then finds the live WordPress theme folder over FTP (looks for the FSE `style.css` under `wp-content/themes/matthummel`). `SITEGROUND_FTP_REMOTE_DIR` is only a hint.
 
-`wp-content/themes/matthummel`
-
-on SiteGround. `SITEGROUND_FTP_REMOTE_DIR` must be **that theme folder**, including the trailing slash, for example:
-
-`/public_html/wp-content/themes/matthummel/`
-
-If the secret points at `public_html/` or `wp-content/themes/` (the parent), Sage files never replace the live theme. After a deploy, Appearance → Themes should show **Matt Hummel 3.0.x** with description “Sage 11…”. If it still says a block/FSE theme, the FTP path is wrong.
+- PHP **8.3+**: the FSE copy is renamed to `matthummel-fse-backup` and Sage is uploaded into `matthummel` (the active slug).
+- PHP **8.2**: Sage is uploaded to `matthummel-sage` so the public site does not fatal. The live FSE `theme.json` palette is still updated to Sage blue-gray. Raise PHP in Site Tools, then push `main` again to swap Sage into `matthummel`.
 
 The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
 

@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.7 — 2026-08-19
+
+### Changed
+
+- SiteGround deploy locates the live `wp-content/themes/matthummel` folder over FTP instead of trusting a possibly wrong `SITEGROUND_FTP_REMOTE_DIR`
+- If live PHP is still 8.2, Sage uploads to `matthummel-sage` (so the FSE site stays up) and the live FSE `theme.json` palette is updated to Sage blue-gray (`#2563EB` / slate)
+- If live PHP is 8.3+, the FSE folder is renamed to `matthummel-fse-backup` and Sage is uploaded into `matthummel`
+
 ## 3.0.6 — 2026-08-19
 
 ### Changed
