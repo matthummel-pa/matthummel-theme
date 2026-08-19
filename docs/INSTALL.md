@@ -1,6 +1,6 @@
 # Install the theme in WordPress
 
-Do this **after** files are on the server (GitHub deploy or a manual upload).
+Do this **after** files are on the server (Update Theme in wp-admin, a `main` push, or a manual upload).
 
 ## 1. Folder name
 
@@ -62,6 +62,10 @@ Do not hardcode new sentences in Blade — add a row in `app/page-fields.php` an
 ## 6. Fallback
 
 Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
+
+## 7. Later deploys
+
+Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`).
 
 ## Local Cursor Cloud
 

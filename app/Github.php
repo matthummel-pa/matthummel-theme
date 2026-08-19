@@ -7,16 +7,53 @@ namespace App;
  * Mirrors the matthummel.com [mh_github] feature: repo metadata,
  * latest release, and a cleaned README intro — cached for 6 hours.
  */
+
+/** Optional GitHub token: wp-config constant, then Customizer / updater setting. */
+function github_token(): string
+{
+    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && MH_GITHUB_TOKEN !== '') {
+        return trim(MH_GITHUB_TOKEN);
+    }
+    $mod = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
+
+    return (string) apply_filters('mh/github_token', $mod);
+}
+
+/** Request headers for the GitHub API. */
+function github_headers(): array
+{
+    $headers = [
+        'Accept' => 'application/vnd.github+json',
+        'X-GitHub-Api-Version' => '2022-11-28',
+        'User-Agent' => 'matthummel-theme/3 (+'.(function_exists('home_url') ? home_url('/') : 'https://matthummel.com').')',
+    ];
+    $token = github_token();
+    if ($token !== '') {
+        $headers['Authorization'] = 'Bearer '.$token;
+    }
+
+    return $headers;
+}
+
+/** GET a GitHub API URL; returns decoded data or null. */
+function github_get(string $url): ?array
+{
+    $res = wp_remote_get($url, ['timeout' => 12, 'headers' => github_headers()]);
+    if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+        return null;
+    }
+    $data = json_decode((string) wp_remote_retrieve_body($res), true);
+
+    return is_array($data) ? $data : null;
+}
+
 class Github
 {
     /** Shared request args (UA, Accept, optional auth token). */
     protected static function args(string $accept = 'application/vnd.github+json'): array
     {
-        $h = ['User-Agent' => 'matthummel.com', 'Accept' => $accept];
-        $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
-        if ($token !== '') {
-            $h['Authorization'] = 'token '.$token;
-        }
+        $h = github_headers();
+        $h['Accept'] = $accept;
 
         return ['timeout' => 12, 'headers' => $h];
     }
@@ -122,14 +159,7 @@ class Github
         }
 
         $data = [];
-        $jargs = ['timeout' => 12, 'headers' => [
-            'User-Agent' => 'matthummel.com',
-            'Accept' => 'application/vnd.github+json',
-        ]];
-        $token = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
-        if ($token !== '') {
-            $jargs['headers']['Authorization'] = 'token '.$token;
-        }
+        $jargs = ['timeout' => 12, 'headers' => github_headers()];
 
         $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}", $jargs);
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
@@ -149,10 +179,8 @@ class Github
             $data['release'] = $jr['tag_name'] ?? '';
         }
 
-        $rmHeaders = ['User-Agent' => 'matthummel.com', 'Accept' => 'application/vnd.github.html'];
-        if ($token !== '') {
-            $rmHeaders['Authorization'] = 'token '.$token;
-        }
+        $rmHeaders = github_headers();
+        $rmHeaders['Accept'] = 'application/vnd.github.html';
         $rm = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/readme", ['timeout' => 12, 'headers' => $rmHeaders]);
         if (! is_wp_error($rm) && wp_remote_retrieve_response_code($rm) === 200) {
             $data['intro'] = self::readmeIntro(wp_remote_retrieve_body($rm));
