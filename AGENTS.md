@@ -65,9 +65,15 @@ Gotchas:
   (Actions read/write, Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
   Same pipeline as pushing `main`. WP-CLI: `wp mh theme-update`. The Cursor Cloud
   `gh` token cannot dispatch workflows (403); use Matt’s PAT, not the agent token.
-- WPVibe: plugin is on the live site (`vibe-ai`). Cloud Agents only see MCP servers added at
-  https://cursor.com/agents (HTTP URL `https://mcp.wpvibe.ai/mcp`, then OAuth). Project
-  `.cursor/mcp.json` is not loaded here; `mcp-remote` is not supported on Cloud Agents.
-  Theme **files** still ship via FTP into `wp-content/themes/matthummel/` (not the parent
-  `themes/` folder). WPVibe then connects, lists themes, and activates — it cannot replace
-  `npm run build` / Composer for Sage.
+- WPVibe desktop Cursor: `.cursor/mcp.json` uses `npx mcp-remote` against
+  `https://mcp.wpvibe.ai/mcp`. Do not open that URL in a browser — it is an API
+  endpoint (often a blank white page). Connect it in Cursor Settings → MCP; a
+  browser window should open for email sign-in.
+- WPVibe Cloud Agents: only MCP servers added at https://cursor.com/agents are
+  loaded (HTTP URL `https://mcp.wpvibe.ai/mcp`, then OAuth). Project
+  `.cursor/mcp.json` is not loaded here; `mcp-remote` is not supported on Cloud
+  Agents. Plugin is on the live site (`vibe-ai`). Theme **files** still ship via
+  FTP into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
+  WPVibe then connects, lists themes, and activates — it cannot replace
+  `npm run build` / Composer for Sage. Theme edits on a connected site: draft →
+  preview → publish.
