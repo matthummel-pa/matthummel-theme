@@ -2,6 +2,12 @@
 
 Do this **after** files are on the server (Update Theme in wp-admin, a `main` push, or a manual upload).
 
+## 0. PHP 8.3 on SiteGround (required)
+
+Sage fatals on 8.2. In SiteGround **Site Tools → Devs → PHP Manager**, set `matthummel.com` to **8.3** (or 8.4). Then flush SuperCacher.
+
+The live site is still the June **block** theme. GitHub has been uploading Sage into a `public_html/…/matthummel` folder that is **not** what nginx serves. After a deploy, in **Site Tools → Site → File Manager** search `style.css` under themes: the copy dated **June 2026** (~2 KB, no “Sage 11” in the header) is the live theme. That is the folder WordPress uses.
+
 ## 1. Folder name
 
 The theme directory must be `matthummel`:
