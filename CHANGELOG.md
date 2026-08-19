@@ -6,7 +6,8 @@ All notable changes to this theme are recorded here.
 
 ### Changed
 
-- SiteGround deploy uses parallel `lftp` instead of file-by-file FTP-Deploy-Action
+- SiteGround deploy cancels overlapping runs (`concurrency`)
+- Keep the proven FTP-Deploy-Action (first full upload succeeded; later runs are incremental). Parallel lftp was rejected by SiteGround with 530.
 
 ## 3.0.3 — 2026-08-19
 
