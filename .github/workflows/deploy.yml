@@ -32,7 +32,7 @@ jobs:
         run: npm run build
 
       - name: Upload theme over FTP
-          uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.SITEGROUND_FTP_HOST }}
           username: ${{ secrets.SITEGROUND_FTP_USER }}

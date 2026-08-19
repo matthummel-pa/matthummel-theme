@@ -1,0 +1,39 @@
+# Changelog
+
+All notable changes to this theme are recorded here.
+
+## 3.0.0 — 2026-08-19
+
+Replace the Pressroot-era module theme with stock Sage 11.2.1 and a thin portfolio layer.
+
+### Added
+
+- Sage 11.2.1 (Blade, Tailwind v4, Vite, Acorn)
+- Portfolio pages: Home, About, Work, Services, Code, Writing, Contact, Now
+- Plugin-free contact form (`mh_contact`, nonce, honeypot)
+- Cached GitHub user/repo helper and DEV.to feed
+- Ridges & Valleys studio project list (filters on Work)
+- One-time page/menu seed (`mh_portfolio_seeded_v2`); never deletes posts or categories
+- Dark mode toggle (localStorage `mh-theme`)
+- Skip link, 3px focus, `prefers-reduced-motion`
+- GitHub Actions CI (build + Pint) and FTP deploy to SiteGround on `main`
+- Cursor Sage docs assets (`.cursor/docs.json`, `docs/sage/`)
+- Theme `.htaccess` to deny public `*.blade.php`
+
+### Changed
+
+- Visual system: Plus Jakarta Sans, cool gray canvas, `#2563EB` blue, ~65ch measure
+- Header/footer socials as text links (no icon packs)
+- Vite `base` set to `/wp-content/themes/matthummel/public/build/`
+- Contact success redirect always returns to `/contact/`
+
+### Removed
+
+- Pressroot/Kadence-era PHP modules (theme options, pattern library, custom Gutenberg blocks)
+- Bud, yarn.lock, Blade Icons, CPT project templates
+- Consultant landing tropes: numbered 01–04 blocks, uppercase eyebrows, FAQ/process modules, tag pills, striped bands
+- Core and remote WordPress block patterns
+
+## 2.0.0
+
+Prior Pressroot-based releases (see git history on older tags). Superseded by 3.0.0.

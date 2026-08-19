@@ -12,6 +12,9 @@ Sage docs (also listed in `.cursor/docs.json`):
 - https://roots.io/sage/docs/
 - https://roots.io/sage/docs/theme-templates/
 - Local notes: `docs/sage/`
+- Feature log: `docs/FEATURES.md`
+- Install after deploy: `docs/INSTALL.md`
+- Changelog: `CHANGELOG.md`
 
 Live deploys: merge/push `main` → `.github/workflows/deploy.yml` builds assets and FTP-uploads to SiteGround `wp-content/themes/matthummel`. Do not upload `node_modules`. PHP 8.3 must match production.
 
