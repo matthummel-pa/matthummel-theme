@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.5 — 2026-08-19
+
+### Added
+
+- Appearance → **Update Theme** (same as Ridges & Valleys): one click dispatches `.github/workflows/deploy.yml`, which builds Sage and FTP-uploads to SiteGround
+- GitHub token field on that page and in Appearance → Customize → GitHub (`mh_gh_token`); optional `MH_GITHUB_TOKEN` in wp-config.php
+- WP-CLI: `wp mh theme-update`
+
 ## 3.0.4 — 2026-08-19
 
 ### Changed

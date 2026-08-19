@@ -16,7 +16,9 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
 
-Live deploys: merge/push `main` → `.github/workflows/deploy.yml` builds assets and FTP-uploads to SiteGround `wp-content/themes/matthummel`. Do not upload `node_modules`. PHP 8.3 must match production.
+Live deploys: Appearance → **Update Theme** in wp-admin (needs a GitHub PAT) dispatches
+`.github/workflows/deploy.yml`. A push to `main` runs the same workflow. Do not upload
+`node_modules`. PHP 8.3 must match production.
 
 ## Cursor Cloud specific instructions
 
@@ -59,3 +61,7 @@ Gotchas:
   Existing posts and categories are never deleted.
 - Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
   keys in `app/page-fields.php`, then `\App\field()` in the template.
+- Deploy from WordPress: Appearance → Update Theme. Needs a fine-grained GitHub PAT
+  (Actions read/write, Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
+  Same pipeline as pushing `main`. WP-CLI: `wp mh theme-update`. The Cursor Cloud
+  `gh` token cannot dispatch workflows (403); use Matt’s PAT, not the agent token.

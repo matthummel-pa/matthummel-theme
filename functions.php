@@ -20,6 +20,8 @@ if (! file_exists($composer = __DIR__.'/vendor/autoload.php')) {
 
 require $composer;
 
+require_once __DIR__.'/app/Github.php';
+
 /*
 |--------------------------------------------------------------------------
 | Register The Bootloader
@@ -50,7 +52,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'contact', 'portfolio', 'page-fields'])
+collect(['setup', 'filters', 'contact', 'portfolio', 'page-fields', 'theme-updater'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

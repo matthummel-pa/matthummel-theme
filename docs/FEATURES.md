@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 | Feature | Notes | Code |
 | --- | --- | --- |
-| Page content fields | Edit copy in wp-admin without a deploy (`mh_f_*` meta) | `app/page-fields.php` |
+| Theme updater | Appearance → Update Theme dispatches GitHub Actions FTP deploy | `app/theme-updater.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Hello, writing, snippets, example sites, optional help | `resources/views/partials/home.blade.php` |
 | About / Now | Bio, two shops, current focus | `template-about.blade.php`, `template-now.blade.php` |
@@ -25,7 +25,7 @@ What the 3.x Sage theme does, and where it lives.
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours |
-| GitHub | Transients; optional `mh_gh_token` theme mod |
+| GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN` |
 
 ## Intentionally not included
 

@@ -22,14 +22,26 @@ on SiteGround. The **first** upload of `vendor/` is slow (many small files). Aft
 
 A second in-progress deploy is cancelled (`concurrency: siteground-deploy`).
 
-Workflow: edit in Cursor → commit → merge/push `main` → Action deploys → https://matthummel.com updates.
+Workflow: Appearance → Update Theme (or push `main`) → Action builds + FTP → https://matthummel.com updates.
 
-Required GitHub Actions secrets:
+Required GitHub Actions secrets (FTP):
 
 - `SITEGROUND_FTP_HOST`
 - `SITEGROUND_FTP_USER`
 - `SITEGROUND_FTP_PASSWORD`
 - `SITEGROUND_FTP_REMOTE_DIR` (example: `/public_html/wp-content/themes/matthummel/`)
+
+## Update from wp-admin
+
+Same as Ridges & Valleys. On the live site (or any install of this theme):
+
+1. Create a fine-grained PAT scoped to `matthummel-theme` with **Actions: Read and write** and **Contents: Read-only**.
+2. Appearance → Update Theme → paste token → Save.
+3. Click **Update theme from GitHub**. That calls `workflow_dispatch` on `deploy.yml`.
+
+WP-CLI: `wp mh theme-update`. Optional constant: `MH_GITHUB_TOKEN` in wp-config.php.
+
+The first time this updater itself is missing on the server, push `main` once so FTP can drop the new PHP files. After that, use the button.
 
 ## Blade templates must not be public
 
