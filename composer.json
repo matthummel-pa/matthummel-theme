@@ -2,28 +2,12 @@
   "name": "matthummel/theme",
   "type": "wordpress-theme",
   "license": "MIT",
-  "description": "Custom Sage theme for matthummel.com",
-  "homepage": "https://roots.io/sage/",
+  "description": "Sage 11 theme for matthummel.com",
+  "homepage": "https://matthummel.com",
   "authors": [
     {
-      "name": "Ben Word",
-      "email": "ben@benword.com",
-      "homepage": "https://github.com/retlehs"
-    },
-    {
-      "name": "Scott Walkinshaw",
-      "email": "scott.walkinshaw@gmail.com",
-      "homepage": "https://github.com/swalkinshaw"
-    },
-    {
-      "name": "QWp6t",
-      "email": "hi@qwp6t.me",
-      "homepage": "https://github.com/qwp6t"
-    },
-    {
-      "name": "Brandon Nifong",
-      "email": "brandon@tendency.me",
-      "homepage": "https://github.com/log1x"
+      "name": "Matt Hummel",
+      "homepage": "https://matthummel.com"
     }
   ],
   "keywords": [
@@ -40,10 +24,6 @@
   },
   "require": {
     "php": ">=8.3",
-    "blade-ui-kit/blade-heroicons": "^2.7",
-    "blade-ui-kit/blade-icons": "^1.10",
-    "codeat3/blade-simple-icons": "^8.12",
-    "mallardduck/blade-lucide-icons": "^1.26",
     "roots/acorn": "^6.0"
   },
   "require-dev": {

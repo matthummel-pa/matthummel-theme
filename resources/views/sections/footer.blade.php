@@ -1,5 +1,5 @@
 @php
-  $mhFootSoc = \App\mh_social_links();
+  $mhSoc = \App\mh_social_links();
 @endphp
 <footer class="content-info">
   @if (has_nav_menu('primary_navigation'))
@@ -14,19 +14,13 @@
     </nav>
   @endif
 
-  @if ($mhFootSoc)
-    <div class="footer-socials">
-      @foreach ($mhFootSoc as $s)
-        <a href="{{ esc_url($s['url']) }}" aria-label="{{ $s['label'] }}" rel="me noopener" target="_blank">
-          {!! \App\mh_social_icon($s['key']) !!}
-        </a>
+  @if ($mhSoc)
+    <ul class="elsewhere">
+      @foreach ($mhSoc as $s)
+        <li><a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a></li>
       @endforeach
-    </div>
+    </ul>
   @endif
 
-  <p>Also on <a href="https://dev.to/matthummel" rel="me">DEV.to</a>,
-    <a href="https://bsky.app/profile/matthummel.bsky.social" rel="me">Bluesky</a>,
-    <a href="https://www.reddit.com/user/matt-hummel" rel="me">Reddit</a>,
-    and <a href="https://github.com/matthummel-pa" rel="me">GitHub</a>.</p>
-  <p>&copy; {{ date('Y') }} Matt Hummel · Gettysburg, PA · Built with Sage 11.</p>
+  <p>&copy; {{ date('Y') }} Matt Hummel · Gettysburg, PA · Sage 11.</p>
 </footer>

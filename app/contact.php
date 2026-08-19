@@ -33,8 +33,8 @@ add_action('init', function () {
         $redirect('success');
     }
 
-    $name    = sanitize_text_field($_POST['mh_name'] ?? '');
-    $email   = sanitize_email($_POST['mh_email'] ?? '');
+    $name = sanitize_text_field($_POST['mh_name'] ?? '');
+    $email = sanitize_email($_POST['mh_email'] ?? '');
     $subject = sanitize_text_field($_POST['mh_subject'] ?? '');
     $message = sanitize_textarea_field($_POST['mh_message'] ?? '');
 
@@ -42,12 +42,12 @@ add_action('init', function () {
         $redirect('error');
     }
 
-    $to      = get_option('admin_email');
+    $to = get_option('admin_email');
     $subject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
-    $body    = "Name: {$name}\nEmail: {$email}\n\n{$message}";
-    $headers = ['Reply-To: ' . $name . ' <' . $email . '>'];
+    $body = "Name: {$name}\nEmail: {$email}\n\n{$message}";
+    $headers = ['Reply-To: '.$name.' <'.$email.'>'];
 
-    wp_mail($to, '[matthummel.com] ' . $subject, $body, $headers);
+    wp_mail($to, '[matthummel.com] '.$subject, $body, $headers);
 
     $redirect('success');
 });

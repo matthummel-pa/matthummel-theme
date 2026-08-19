@@ -10,43 +10,40 @@ namespace App;
 function mh_portfolio_social_defaults(): array
 {
     return [
-        'github'   => 'https://github.com/matthummel-pa',
+        'github' => 'https://github.com/matthummel-pa',
         'linkedin' => 'https://www.linkedin.com/in/matt-hummel-pa',
-        'devto'    => 'https://dev.to/matthummel',
-        'bluesky'  => 'https://bsky.app/profile/matthummel.bsky.social',
-        'reddit'   => 'https://www.reddit.com/user/matt-hummel',
-        'rss'      => home_url('/feed/'),
+        'devto' => 'https://dev.to/matthummel',
+        'bluesky' => 'https://bsky.app/profile/matthummel.bsky.social',
+        'reddit' => 'https://www.reddit.com/user/matt-hummel',
+        'rss' => home_url('/feed/'),
     ];
 }
 
-add_filter('matthummel/social_platforms', function (array $platforms): array {
-    $defaults = mh_portfolio_social_defaults();
-    $platforms['reddit'] = [
-        'label'   => 'Reddit',
-        'icon'    => 'si-reddit',
-        'default' => $defaults['reddit'],
+function mh_social_links(): array
+{
+    $labels = [
+        'github' => 'GitHub',
+        'linkedin' => 'LinkedIn',
+        'devto' => 'DEV.to',
+        'bluesky' => 'Bluesky',
+        'reddit' => 'Reddit',
+        'rss' => 'RSS',
     ];
-    foreach ($defaults as $key => $url) {
-        if (isset($platforms[$key])) {
-            $platforms[$key]['default'] = $url;
+
+    $links = [];
+    foreach (mh_portfolio_social_defaults() as $key => $url) {
+        if ($url === '') {
+            continue;
         }
+        $links[] = [
+            'key' => $key,
+            'label' => $labels[$key] ?? ucfirst($key),
+            'url' => $url,
+        ];
     }
 
-    return $platforms;
-});
-
-add_filter('matthummel/social_icon_names', function (array $map): array {
-    $map['reddit'] = 'si-reddit';
-
-    return $map;
-});
-
-add_filter('matthummel/social_colors', function (array $c): array {
-    $c['reddit'] = '#FF4500';
-    $c['email']  = '#1d4ed8';
-
-    return $c;
-});
+    return $links;
+}
 
 /** Featured GitHub codebases to highlight on Code and Home. */
 function mh_featured_repos(): array
@@ -55,19 +52,19 @@ function mh_featured_repos(): array
         [
             'name' => 'keepary',
             'desc' => 'A private family app I built end to end. React, Vite, Tailwind, and Supabase. Real sign-in, invites, and posts.',
-            'url'  => 'https://github.com/matthummel-pa/keepary',
+            'url' => 'https://github.com/matthummel-pa/keepary',
             'tags' => ['React', 'Supabase', 'Full-stack'],
         ],
         [
             'name' => 'tocflow',
             'desc' => 'A free WordPress table of contents block. It reads your headings and builds a clear, accessible outline.',
-            'url'  => 'https://github.com/matthummel-pa/tocflow',
+            'url' => 'https://github.com/matthummel-pa/tocflow',
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
             'name' => 'ridgesandvalleys',
             'desc' => 'The Ridges & Valleys Studio site. Sage 11, local SEO, accessibility, and Gettysburg work.',
-            'url'  => 'https://github.com/matthummel-pa/ridgesandvalleys',
+            'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
             'tags' => ['WordPress', 'Sage', 'Local SEO'],
         ],
     ];
@@ -109,21 +106,21 @@ function mh_code_snippets(): array
     return [
         [
             'title' => 'Skip to content that actually works',
-            'lang'  => 'html',
-            'note'  => 'Keep the first focusable control a skip link. Hide it until it has focus.',
-            'code'  => '<a class="skip-link" href="#main">Skip to main content</a>',
+            'lang' => 'html',
+            'note' => 'Keep the first focusable control a skip link. Hide it until it has focus.',
+            'code' => '<a class="skip-link" href="#main">Skip to main content</a>',
         ],
         [
             'title' => 'Readable line length',
-            'lang'  => 'css',
-            'note'  => 'Cap body text around 65 characters. Short lines are easier at a 6–8 grade level.',
-            'code'  => ".prose {\n  max-width: 65ch;\n  font-size: 1.125rem;\n  line-height: 1.7;\n}",
+            'lang' => 'css',
+            'note' => 'Cap body text around 65 characters. Short lines are easier at a 6–8 grade level.',
+            'code' => ".prose {\n  max-width: 65ch;\n  font-size: 1.125rem;\n  line-height: 1.7;\n}",
         ],
         [
             'title' => 'Fetch GitHub without hammering the API',
-            'lang'  => 'php',
-            'note'  => 'Cache the response. Respect rate limits. Show a fallback if GitHub is down.',
-            'code'  => "\$key = 'mh_ghu_' . md5(\$user);\n\$data = get_transient(\$key);\nif (false === \$data) {\n    \$data = mh_fetch_github_user(\$user);\n    set_transient(\$key, \$data, 6 * HOUR_IN_SECONDS);\n}",
+            'lang' => 'php',
+            'note' => 'Cache the response. Respect rate limits. Show a fallback if GitHub is down.',
+            'code' => "\$key = 'mh_ghu_' . md5(\$user);\n\$data = get_transient(\$key);\nif (false === \$data) {\n    \$data = mh_fetch_github_user(\$user);\n    set_transient(\$key, \$data, 6 * HOUR_IN_SECONDS);\n}",
         ],
     ];
 }
@@ -151,8 +148,8 @@ function mh_devto_posts(int $limit = 5): array
                 foreach ($xml->channel->item as $item) {
                     $posts[] = [
                         'title' => (string) $item->title,
-                        'url'   => (string) $item->link,
-                        'date'  => (string) $item->pubDate,
+                        'url' => (string) $item->link,
+                        'date' => (string) $item->pubDate,
                     ];
                 }
             }
@@ -167,20 +164,20 @@ function mh_devto_posts(int $limit = 5): array
 function mh_latest_posts(int $limit = 3): array
 {
     $q = new \WP_Query([
-        'post_type'           => 'post',
-        'posts_per_page'      => $limit,
+        'post_type' => 'post',
+        'posts_per_page' => $limit,
         'ignore_sticky_posts' => true,
-        'no_found_rows'       => true,
+        'no_found_rows' => true,
     ]);
     $out = [];
     foreach ($q->posts as $p) {
         $cats = get_the_category($p->ID);
         $out[] = [
             'title' => get_the_title($p),
-            'url'   => get_permalink($p),
-            'date'  => get_the_date('', $p),
-            'ex'    => wp_trim_words(get_the_excerpt($p), 28),
-            'cat'   => ($cats && ! is_wp_error($cats)) ? $cats[0]->name : '',
+            'url' => get_permalink($p),
+            'date' => get_the_date('', $p),
+            'ex' => wp_trim_words(get_the_excerpt($p), 28),
+            'cat' => ($cats && ! is_wp_error($cats)) ? $cats[0]->name : '',
         ];
     }
     wp_reset_postdata();
@@ -198,13 +195,13 @@ function mh_seed_portfolio_pages(): void
     }
 
     $pages = [
-        'home'     => ['title' => 'Home', 'template' => 'template-home.blade.php'],
-        'about'    => ['title' => 'About', 'template' => 'template-about.blade.php'],
+        'home' => ['title' => 'Home', 'template' => 'template-home.blade.php'],
+        'about' => ['title' => 'About', 'template' => 'template-about.blade.php'],
         'projects' => ['title' => 'Work', 'template' => 'template-projects.blade.php'],
         'services' => ['title' => 'Services', 'template' => 'template-services.blade.php'],
-        'code'     => ['title' => 'Code', 'template' => 'template-code.blade.php'],
-        'contact'  => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
-        'now'      => ['title' => 'Now', 'template' => 'template-now.blade.php'],
+        'code' => ['title' => 'Code', 'template' => 'template-code.blade.php'],
+        'contact' => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
+        'now' => ['title' => 'Now', 'template' => 'template-now.blade.php'],
     ];
 
     $ids = [];
@@ -213,14 +210,15 @@ function mh_seed_portfolio_pages(): void
         if ($existing instanceof \WP_Post) {
             $ids[$slug] = $existing->ID;
             update_post_meta($existing->ID, '_wp_page_template', $meta['template']);
+
             continue;
         }
         $id = wp_insert_post([
-            'post_title'  => $meta['title'],
-            'post_name'   => $slug,
+            'post_title' => $meta['title'],
+            'post_name' => $slug,
             'post_status' => 'publish',
-            'post_type'   => 'page',
-            'post_content'=> '',
+            'post_type' => 'page',
+            'post_content' => '',
         ]);
         if ($id && ! is_wp_error($id)) {
             $ids[$slug] = (int) $id;
@@ -231,11 +229,11 @@ function mh_seed_portfolio_pages(): void
     $blog = get_page_by_path('blog');
     if (! $blog) {
         $blogId = wp_insert_post([
-            'post_title'  => 'Writing',
-            'post_name'   => 'blog',
+            'post_title' => 'Writing',
+            'post_name' => 'blog',
             'post_status' => 'publish',
-            'post_type'   => 'page',
-            'post_content'=> '',
+            'post_type' => 'page',
+            'post_content' => '',
         ]);
         if ($blogId && ! is_wp_error($blogId)) {
             $ids['blog'] = (int) $blogId;
@@ -272,12 +270,12 @@ function mh_seed_portfolio_pages(): void
             continue;
         }
         wp_update_nav_menu_item($menuId, 0, [
-            'menu-item-title'     => get_the_title($ids[$slug]),
-            'menu-item-object'    => 'page',
+            'menu-item-title' => get_the_title($ids[$slug]),
+            'menu-item-object' => 'page',
             'menu-item-object-id' => $ids[$slug],
-            'menu-item-type'      => 'post_type',
-            'menu-item-status'    => 'publish',
-            'menu-item-position'  => $n++,
+            'menu-item-type' => 'post_type',
+            'menu-item-status' => 'publish',
+            'menu-item-position' => $n++,
         ]);
     }
 
@@ -304,7 +302,7 @@ add_action('wp_enqueue_scripts', function () {
     );
 }, 5);
 
-add_action('after_switch_theme', __NAMESPACE__ . '\\mh_seed_portfolio_pages');
+add_action('after_switch_theme', __NAMESPACE__.'\\mh_seed_portfolio_pages');
 add_action('init', function () {
     if (! get_option('mh_portfolio_seeded_v2') && ! wp_installing()) {
         mh_seed_portfolio_pages();

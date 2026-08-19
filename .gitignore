@@ -3,12 +3,4 @@
 /public/*
 !/public/.gitkeep
 .env
-.env.*
-*.log
-!error-tracking.log
 npm-debug.log
-*.bak
-.DS_Store
-Thumbs.db
-.idea
-.vscode
