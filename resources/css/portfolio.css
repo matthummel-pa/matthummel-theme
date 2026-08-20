@@ -377,6 +377,10 @@ html:not(.mh-dark) .mh-icon-light { display: none; }
   overflow: auto;
 }
 body.mh-popout-open .mh-popout { transform: none; }
+.admin-bar .mh-popout { top: 32px; }
+@media screen and (max-width: 782px) {
+  .admin-bar .mh-popout { top: 46px; }
+}
 .mh-popout-head {
   display: flex;
   align-items: center;
@@ -386,8 +390,8 @@ body.mh-popout-open .mh-popout { transform: none; }
 }
 .mh-popout-kicker {
   margin: 0;
-  font: 800 .72rem/1.2 var(--font-display);
-  letter-spacing: .12em;
+  font: 800 .8rem/1.2 var(--font-display);
+  letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--color-blue);
 }
@@ -417,7 +421,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   color: var(--color-ink);
   text-decoration: none;
   transform: translateX(0);
-  transition: transform .22s ease, color .22s ease, background-color .22s ease;
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1), color .22s ease, background-color .22s ease, padding-left .28s cubic-bezier(.22, 1, .36, 1);
 }
 .mh-popout-menu a::before {
   content: "";
@@ -429,12 +433,13 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   background: var(--color-blue);
   transform: scaleY(0);
   transform-origin: center;
-  transition: transform .22s ease;
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1);
 }
 .mh-popout-menu a:hover,
 .mh-popout-menu a:focus-visible,
 .mh-popout-menu .current-menu-item > a {
-  transform: translateX(.45rem);
+  transform: translateX(.55rem);
+  padding-left: 1.35rem;
   color: var(--color-blue);
   background: color-mix(in srgb, var(--color-blue-soft) 70%, transparent);
 }
