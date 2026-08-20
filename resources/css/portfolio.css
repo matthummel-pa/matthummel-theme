@@ -1625,6 +1625,48 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
   text-transform: uppercase;
   color: var(--color-blue);
 }
+.side-card--fold {
+  padding-top: .7rem;
+  padding-bottom: .7rem;
+}
+.side-card--fold > .side-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin: 0;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+}
+.side-card--fold > .side-card-title::-webkit-details-marker,
+.mh-toc--inline > .mh-toc-title::-webkit-details-marker {
+  display: none;
+}
+.side-card--fold > .side-card-title::after,
+.mh-toc--inline > .mh-toc-title::after {
+  content: "+";
+  font: 800 1.15rem/1 var(--font-display);
+  color: var(--color-ink);
+}
+.side-card--fold[open] > .side-card-title::after,
+.mh-toc--inline[open] > .mh-toc-title::after {
+  content: "-";
+}
+.side-card--fold[open] > .side-card-title {
+  margin-bottom: .7rem;
+}
+.mh-toc--inline > .mh-toc-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  margin: 0;
+}
+.mh-toc--inline[open] > .mh-toc-title { margin-bottom: .5rem; }
 .side-summary {
   margin: 0;
   font-size: 1rem;

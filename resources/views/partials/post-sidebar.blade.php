@@ -7,23 +7,25 @@
 @endphp
 <aside class="post-sidebar" aria-label="{{ __('Post sidebar', 'sage') }}">
   @if ($summary !== '')
-    <section class="side-card" aria-labelledby="side-summary-h">
-      <h2 id="side-summary-h" class="side-card-title">{{ __('Summary', 'sage') }}</h2>
+    <details class="side-card side-card--fold">
+      <summary class="side-card-title">{{ __('Summary', 'sage') }}</summary>
       <p class="side-summary">{{ $summary }}</p>
-    </section>
+    </details>
   @endif
 
   @if ($toc)
-    <nav class="side-card side-card--toc" aria-labelledby="side-toc-h">
-      <h2 id="side-toc-h" class="side-card-title">{{ __('On this page', 'sage') }}</h2>
-      <ol class="side-toc">
-        @foreach ($toc as $item)
-          <li class="side-toc-h{{ $item['level'] }}">
-            <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
-          </li>
-        @endforeach
-      </ol>
-    </nav>
+    <details class="side-card side-card--toc side-card--fold">
+      <summary class="side-card-title">{{ __('On this page', 'sage') }}</summary>
+      <nav class="side-toc-wrap" aria-label="{{ __('On this page', 'sage') }}">
+        <ol class="side-toc">
+          @foreach ($toc as $item)
+            <li class="side-toc-h{{ $item['level'] }}">
+              <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
+            </li>
+          @endforeach
+        </ol>
+      </nav>
+    </details>
   @endif
 
   <section class="side-card" aria-labelledby="side-search-h">

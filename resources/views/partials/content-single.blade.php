@@ -52,14 +52,14 @@
         @endif
 
         @if ($toc)
-          <nav class="mh-toc mh-toc--inline" aria-labelledby="toc-inline-h">
-            <p id="toc-inline-h" class="mh-toc-title">{{ __('On this page', 'sage') }}</p>
+          <details class="mh-toc mh-toc--inline">
+            <summary class="mh-toc-title">{{ __('On this page', 'sage') }}</summary>
             <ol>
               @foreach ($toc as $item)
                 <li class="side-toc-h{{ $item['level'] }}"><a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a></li>
               @endforeach
             </ol>
-          </nav>
+          </details>
         @endif
 
         <div class="entry-content e-content post-prose" id="post-prose">

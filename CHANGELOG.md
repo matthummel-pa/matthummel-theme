@@ -15,6 +15,7 @@ All notable changes to this theme are recorded here.
 - Page and post heroes use the home navy gradient and blobs, without the drifting animation
 - Single posts leave more space between the hero and the article column
 - Comments use Write/Preview, ASCII markdown (**bold**, _italic_, `code`), reply mail, and no smart punctuation
+- Summary and On this page start closed and open with a toggle
 
 ## 3.0.12 — 2026-08-20
 
