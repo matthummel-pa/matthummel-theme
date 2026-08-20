@@ -1613,7 +1613,7 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
 .side-card {
   background: var(--color-card);
   border: 2px solid var(--color-ink);
-  border-radius: var(--radius-card);
+  border-radius: 0;
   box-shadow: 5px 5px 0 var(--color-blue-ink);
   padding: 1.15rem 1.15rem 1.25rem;
   margin-bottom: 1.15rem;
@@ -1700,7 +1700,7 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
 .mh-toc--inline {
   display: none;
   border: 2px solid var(--color-ink);
-  border-radius: var(--radius-card);
+  border-radius: 0;
   padding: 1rem 1.15rem;
   margin: 0 0 1.5rem;
   box-shadow: 5px 5px 0 var(--color-blue-ink);
