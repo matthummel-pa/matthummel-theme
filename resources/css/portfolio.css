@@ -1359,9 +1359,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .error-404 { padding: var(--space-section) 0 5rem; }
 .error-links { margin-top: 1.5rem; }
 
-.contact-main { padding-bottom: var(--space-section); }
-.page-header.contact-hero {
-  padding-bottom: clamp(4.75rem, 9vw, 7.25rem);
+.contact-main {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
 }
 .page-header.contact-hero .lead { margin-bottom: 0; }
 .contact-split {

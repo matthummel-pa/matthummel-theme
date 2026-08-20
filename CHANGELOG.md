@@ -7,6 +7,7 @@ All notable changes to this theme are recorded here.
 ### Changed
 
 - Writing hub leaves section-sized space under the hero and above the footer (same rhythm as single posts)
+- Contact form block uses the same space under the hero and above the footer
 
 ## 3.0.15 — 2026-08-20
 
