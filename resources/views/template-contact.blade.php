@@ -10,9 +10,9 @@
     $mhOk = $mhStatus === 'success';
     $oldName = \App\mh_contact_old('name');
     $oldEmail = \App\mh_contact_old('email');
-    $oldWho = \App\mh_contact_old('who');
-    $oldSubject = \App\mh_contact_old('subject');
-    $oldMessage = \App\mh_contact_old('message');
+    $oldWho = \App\mh_contact_prefill('who');
+    $oldSubject = \App\mh_contact_prefill('subject');
+    $oldMessage = \App\mh_contact_prefill('message');
     $invalid = \App\mh_contact_old_errors();
   @endphp
 

@@ -37,6 +37,52 @@ function mh_contact_old_errors(): array
     return array_values(array_filter(array_map('strval', $draft['errors'])));
 }
 
+function mh_contact_prefill(string $key, string $default = ''): string
+{
+    $fromDraft = mh_contact_old($key);
+    if ($fromDraft !== '') {
+        return $fromDraft;
+    }
+
+    $allowedWho = ['developer', 'learning', 'business', 'agency', 'other'];
+    if ($key === 'who') {
+        $who = isset($_GET['who']) ? sanitize_key(wp_unslash($_GET['who'])) : '';
+        if (in_array($who, $allowedWho, true)) {
+            return $who;
+        }
+    }
+
+    if ($key === 'subject' && isset($_GET['subject'])) {
+        return sanitize_text_field(wp_unslash($_GET['subject']));
+    }
+
+    if ($key === 'message' && isset($_GET['message'])) {
+        return sanitize_textarea_field(wp_unslash($_GET['message']));
+    }
+
+    $slug = isset($_GET['project']) ? sanitize_title(wp_unslash($_GET['project'])) : '';
+    if ($slug === '') {
+        return $default;
+    }
+
+    $item = mh_work_item_by_slug($slug);
+    $title = (string) ($item['title'] ?? $slug);
+    $share = mh_work_permalink($slug);
+    $concept = (string) ($item['concept'] ?? '');
+
+    return match ($key) {
+        'who' => 'business',
+        'subject' => sprintf(__('Use the %s concept', 'sage'), $title),
+        'message' => implode("\n", array_values(array_filter([
+            sprintf(__('I would like to use the “%s” concept for my site.', 'sage'), $title),
+            '',
+            sprintf(__('Project on this site: %s', 'sage'), $share),
+            $concept !== '' ? sprintf(__('Concept page: %s', 'sage'), $concept) : '',
+        ]))),
+        default => $default,
+    };
+}
+
 function mh_contact_tips(): array
 {
     return [

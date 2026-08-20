@@ -352,6 +352,11 @@ function page_field_map(): array
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
                 ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
+                ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
+                ['work_cta_view', __('View concept label', 'sage'), 'text', __('View concept', 'sage')],
+                ['work_cta_use', __('Use concept label', 'sage'), 'text', __('Use this concept', 'sage')],
+                ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
+                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio concepts, not client case studies. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
             ],
             __('Example sites', 'sage') => [
                 ['work_items', __('Sites', 'sage'), 'repeater', $workItems, [

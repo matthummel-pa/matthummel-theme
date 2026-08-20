@@ -8,7 +8,7 @@ function setView(list, view) {
   });
 }
 
-async function copyText(text) {
+export async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
     return true;

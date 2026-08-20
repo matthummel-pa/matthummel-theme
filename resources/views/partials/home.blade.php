@@ -125,7 +125,7 @@
       @foreach ($work as $p)
         <article class="lift-card">
           <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
-          <h3>{{ $p['title'] }}</h3>
+          <h3><a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a></h3>
           <p>{{ $p['blurb'] }}</p>
           @if (! empty($p['tech']))
             <p class="pill-row">

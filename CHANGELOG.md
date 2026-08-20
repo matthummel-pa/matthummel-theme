@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.15 — 2026-08-20
+
+### Changed
+
+- Work hub: featured concept, search, type counts, Grid/List, unique View/Use/Share/Copy actions
+- Share copies a deep link (`/projects/#slug`); Use this concept prefills the contact form
+- Bottom CTA for visitors who want a site in the same shape; home example titles link to that hash
+
 ## 3.0.14 — 2026-08-20
 
 ### Changed

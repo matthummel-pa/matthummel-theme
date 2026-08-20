@@ -11,7 +11,7 @@ What the 3.x Sage theme does, and where it lives.
 | Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
 | Page / post heroes | Same navy gradient + blobs as Home, still (no wander animation) | `partials/page-hero.blade.php`, `partials/hero-graphic.blade.php` |
 | About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
-| Work | Ridges & Valleys concepts + screenshots + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()`, `resources/images/work/` |
+| Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured + live GitHub cards: View code, Live demo, stack icons | `template-code.blade.php`, `App\Github` |
 | Writing | Featured latest post, search/RSS/copy, Grid/List, topic counts, DEV.to cards, RSS subscribe strip; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |

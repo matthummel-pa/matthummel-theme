@@ -260,6 +260,40 @@ function mh_studio_project_categories(): array
     return $cats;
 }
 
+function mh_work_item_by_slug(string $slug): ?array
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return null;
+    }
+    $page = get_page_by_path('projects');
+    $id = $page instanceof \WP_Post ? (int) $page->ID : null;
+    foreach (mh_work_page_items($id) as $item) {
+        if (($item['slug'] ?? '') === $slug) {
+            return $item;
+        }
+    }
+
+    return null;
+}
+
+function mh_work_permalink(string $slug, ?string $pageUrl = null): string
+{
+    $page = $pageUrl ?: home_url('/projects/');
+
+    return $page.'#'.sanitize_title($slug);
+}
+
+function mh_work_contact_url(array $project): string
+{
+    $slug = sanitize_title((string) ($project['slug'] ?? ''));
+
+    return add_query_arg([
+        'project' => $slug,
+        'who' => 'business',
+    ], home_url('/contact/'));
+}
+
 function mh_code_snippets(): array
 {
     return [
