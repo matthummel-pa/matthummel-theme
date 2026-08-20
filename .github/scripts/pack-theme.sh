@@ -2,8 +2,11 @@
 # Pack a built Sage theme (vendor + public/build, no node_modules) for WordPress install.
 set -euo pipefail
 
-root="$(pwd)"
+root="$(cd "$(pwd)" && pwd)"
 out="${1:-$root/matthummel.zip}"
+if [[ "$out" != /* ]]; then
+  out="$root/$out"
+fi
 stage="$(mktemp -d)"
 trap 'rm -rf "$stage"' EXIT
 

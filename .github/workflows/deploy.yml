@@ -39,7 +39,7 @@ jobs:
         run: npm run build
 
       - name: Pack WordPress theme zip
-        run: bash .github/scripts/pack-theme.sh matthummel.zip
+        run: bash .github/scripts/pack-theme.sh "$GITHUB_WORKSPACE/matthummel.zip"
 
       - name: Publish GitHub Release (theme-latest)
         uses: softprops/action-gh-release@v2
