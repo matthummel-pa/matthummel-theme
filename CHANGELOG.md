@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.17 — 2026-08-20
+
+### Changed
+
+- More space under headings: page heroes, section titles, cards, post copy, and sidebar labels
+
 ## 3.0.16 — 2026-08-20
 
 ### Changed

@@ -251,7 +251,7 @@ body::after {
   margin-bottom: .6rem;
 }
 .poster:nth-child(odd) .poster-no { color: #60a5fa; }
-.poster h3 { margin: 0 0 .4rem; font-size: 1.35rem; }
+.poster h3 { margin: 0 0 .7rem; font-size: 1.35rem; }
 .poster p { margin: 0; }
 
 .work-grid--magazine {
