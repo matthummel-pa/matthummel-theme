@@ -867,6 +867,13 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   letter-spacing: 0.014em;
   font-weight: 500;
 }
+.post-prose p,
+.post-prose li,
+.post-prose .wp-block-paragraph {
+  font-size: 1.375rem;
+  line-height: 1.85;
+  letter-spacing: 0.014em;
+}
 .post-prose :where(p, ul, ol, blockquote, pre, figure) {
   margin: 0 0 1.5em;
 }
