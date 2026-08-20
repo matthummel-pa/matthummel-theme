@@ -34,12 +34,12 @@
 
 @section('content')
   <header class="page-header container wide hero-intro">
-    @include('partials.profile-photo', ['size' => 96, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
     <div>
       <p class="eyebrow">{{ \App\field('about_kicker', __('About', 'sage')) }}</p>
       <h1 class="display-title is-hero">{{ \App\field('about_h1', __('Glad you’re here.', 'sage')) }}</h1>
       <p class="lead">{{ \App\field('about_lede', $aboutLede) }}</p>
     </div>
+    @include('partials.profile-photo', ['size' => 300, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
   </header>
 
   @include('partials.audience')
