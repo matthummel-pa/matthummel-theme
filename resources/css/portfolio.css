@@ -67,6 +67,8 @@ a:hover { color: var(--color-blue-ink); }
   max-width: 42rem;
   margin-inline: auto;
   padding-inline: var(--page-gutter);
+  min-width: 0;
+  box-sizing: border-box;
 }
 .container.wide,
 .site-header-inner,
@@ -474,6 +476,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   overflow: hidden;
   display: flex;
   align-items: center;
+  min-width: 0;
   min-height: 88vh;
   min-height: calc(100svh - 5.25rem);
   padding: clamp(5rem, 11vh, 8.5rem) 0;
@@ -492,8 +495,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   position: relative;
   z-index: 1;
   width: 100%;
-}
-.hero-inner {
+  max-width: min(var(--page-max), 100%);
+  min-width: 0;
+  box-sizing: border-box;
+  padding-inline: var(--page-gutter);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 2.25rem;
@@ -514,8 +519,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
     padding: 3.75rem 0 3.5rem;
   }
   .hero-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
+    padding-inline: var(--page-gutter);
   }
   .hero-inner > .profile-photo--hero {
     grid-column: 1;
