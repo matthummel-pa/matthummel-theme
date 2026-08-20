@@ -8,18 +8,37 @@ function setView(list, view) {
   });
 }
 
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.left = '-9999px';
+    document.body.appendChild(field);
+    field.select();
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch {
+      ok = false;
+    }
+    field.remove();
+    return ok;
+  }
+}
+
 async function copyRss(button) {
   const url = button.getAttribute('data-rss');
   if (!url) {
     return;
   }
   const label = button.textContent;
-  try {
-    await navigator.clipboard.writeText(url);
-    button.textContent = 'Copied';
-  } catch {
-    window.prompt('Copy this RSS URL', url);
-  }
+  const ok = await copyText(url);
+  button.textContent = ok ? 'Copied' : 'Copy failed';
   window.setTimeout(() => {
     button.textContent = label;
   }, 1600);
