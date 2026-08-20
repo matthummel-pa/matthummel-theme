@@ -1,10 +1,9 @@
 @php
-  $mhSoc = \App\mh_social_links();
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $footerName = $gh['name'] ?: 'Matt Hummel';
   $footerBlurb = __('Notes, code, and Gettysburg work. Developers, shops, and agencies are welcome.', 'sage');
   if (! empty($gh['location'])) {
-          $footerBlurb = sprintf(
+      $footerBlurb = sprintf(
           /* translators: %s: GitHub location */
           __('Notes, code, and work from %s. Developers, shops, and agencies are welcome.', 'sage'),
           $gh['location']
@@ -38,13 +37,7 @@
         ]) !!}
       </nav>
     @endif
-    @if ($mhSoc)
-      <ul class="elsewhere">
-        @foreach ($mhSoc as $s)
-          <li><a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a></li>
-        @endforeach
-      </ul>
-    @endif
+    @include('partials.social')
   </div>
   <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}</p>
 </footer>

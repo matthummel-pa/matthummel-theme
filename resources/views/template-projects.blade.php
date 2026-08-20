@@ -42,7 +42,7 @@
         @if (! empty($p['tech']))
           <p class="pill-row">
             @foreach ($p['tech'] as $t)
-              <span class="pill">{{ $t }}</span>
+              <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
             @endforeach
           </p>
         @endif

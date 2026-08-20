@@ -88,7 +88,10 @@
     </header>
     <ul class="stack-grid">
       @foreach ($stack as $tool)
-        <li>{{ $tool }}</li>
+        <li>
+          {!! \App\mh_svg_icon($tool) !!}
+          <span>{{ $tool }}</span>
+        </li>
       @endforeach
     </ul>
   </div>
@@ -132,7 +135,7 @@
           @if (! empty($p['tech']))
             <p class="pill-row">
               @foreach ($p['tech'] as $t)
-                <span class="pill">{{ $t }}</span>
+                <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
               @endforeach
             </p>
           @endif

@@ -244,6 +244,88 @@ function mh_latest_posts(int $limit = 3): array
     return $out;
 }
 
+function mh_popular_posts(int $limit = 5, int $exclude = 0): array
+{
+    $q = new \WP_Query([
+        'post_type' => 'post',
+        'posts_per_page' => $limit,
+        'post__not_in' => $exclude ? [$exclude] : [],
+        'ignore_sticky_posts' => true,
+        'no_found_rows' => true,
+        'orderby' => [
+            'comment_count' => 'DESC',
+            'date' => 'DESC',
+        ],
+    ]);
+    $out = [];
+    foreach ($q->posts as $p) {
+        $out[] = [
+            'title' => get_the_title($p),
+            'url' => get_permalink($p),
+            'date' => get_the_date('', $p),
+        ];
+    }
+
+    return $out;
+}
+
+function mh_post_summary(\WP_Post $post): string
+{
+    $excerpt = trim((string) $post->post_excerpt);
+    if ($excerpt !== '') {
+        return wp_strip_all_tags($excerpt);
+    }
+
+    return wp_trim_words(wp_strip_all_tags($post->post_content), 48);
+}
+
+/**
+ * Add heading ids and return [html, toc[]].
+ *
+ * @return array{0: string, 1: array<int, array{level: int, id: string, text: string}>}
+ */
+function mh_content_with_toc(string $html): array
+{
+    $toc = [];
+    $used = [];
+    $html = (string) preg_replace_callback(
+        '/<h([23])(\s[^>]*)?>(.*?)<\/h\1>/is',
+        static function ($m) use (&$toc, &$used) {
+            $level = (int) $m[1];
+            $attrs = $m[2] ?? '';
+            $inner = $m[3];
+            $text = trim(wp_strip_all_tags($inner));
+            if ($text === '') {
+                return $m[0];
+            }
+            $id = '';
+            if (preg_match('/\sid=(["\'])([^"\']+)\1/i', $attrs, $idm)) {
+                $id = $idm[2];
+            } else {
+                $base = sanitize_title($text) ?: 'section';
+                $id = $base;
+                $n = 2;
+                while (isset($used[$id])) {
+                    $id = $base.'-'.$n;
+                    $n++;
+                }
+                $attrs .= ' id="'.esc_attr($id).'"';
+            }
+            $used[$id] = true;
+            $toc[] = [
+                'level' => $level,
+                'id' => $id,
+                'text' => $text,
+            ];
+
+            return '<h'.$level.$attrs.'>'.$inner.'</h'.$level.'>';
+        },
+        $html
+    );
+
+    return [$html, $toc];
+}
+
 /**
  * Create standard portfolio pages once. Never deletes posts or categories.
  */

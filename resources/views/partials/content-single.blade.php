@@ -1,19 +1,21 @@
 {{-- Reading progress bar --}}
-<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="{{ __('Reading progress', 'sage') }}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
 @php
   $postId   = get_the_ID();
+  $postObj  = get_post($postId);
   $postCats = get_the_category();
-  $words    = str_word_count(strip_tags(get_the_content()));
-  $readMins = max(1, round($words / 200));
+  $raw      = apply_filters('the_content', $postObj ? $postObj->post_content : get_the_content());
+  [$bodyHtml, $toc] = \App\mh_content_with_toc($raw);
+  $summary  = $postObj instanceof \WP_Post ? \App\mh_post_summary($postObj) : '';
+  $words    = str_word_count(wp_strip_all_tags($bodyHtml));
+  $readMins = max(1, (int) round($words / 200));
 @endphp
 
 <article class="post-single h-entry" id="post-{{ $postId }}">
 
-  {{-- Post hero header --}}
   <header class="post-hero">
-    <div class="container post-hero-inner">
-
+    <div class="container wide post-hero-inner">
       @if ($postCats)
         <a class="post-hero-tag" href="{{ esc_url(get_category_link($postCats[0]->term_id)) }}">
           {{ $postCats[0]->name }}
@@ -30,40 +32,39 @@
         <span class="post-hero-sep" aria-hidden="true">&middot;</span>
         <span class="post-hero-read">{{ $readMins }} min read</span>
       </div>
-
     </div>
   </header>
 
-  {{-- Featured image --}}
   @if (has_post_thumbnail())
     <div class="post-featured-img">
-      <div class="container">
+      <div class="container wide">
         {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el']) !!}
       </div>
     </div>
   @endif
 
-  {{-- Post layout --}}
-  <div class="container">
+  <div class="container wide post-shell">
     <div class="post-layout">
       <div class="post-main">
+        @if ($toc)
+          <nav class="mh-toc mh-toc--inline" aria-labelledby="toc-inline-h">
+            <p id="toc-inline-h" class="mh-toc-title">{{ __('On this page', 'sage') }}</p>
+            <ol>
+              @foreach ($toc as $item)
+                <li class="side-toc-h{{ $item['level'] }}"><a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a></li>
+              @endforeach
+            </ol>
+          </nav>
+        @endif
 
-        {{-- Table of contents (populated by JS from headings) --}}
-        <div id="mh-toc-placeholder" class="mh-toc" style="display:none" aria-label="Table of contents">
-          <p class="mh-toc-title">Contents</p>
-          <ul id="mh-toc-list"></ul>
-        </div>
-
-        {{-- Post body --}}
         <div class="entry-content e-content post-prose" id="post-prose">
-          @php the_content(); @endphp
+          {!! $bodyHtml !!}
         </div>
 
         <p class="post-share-note">
           {!! \App\field_html('write_share_note', __('Extra copy-paste examples live on the <a href="/code/">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
         </p>
 
-        {{-- Author bio --}}
         <div class="post-author-bio">
           @include('partials.profile-photo', ['size' => 72, 'class' => 'profile-photo profile-photo--bio'])
           <div class="post-author-bio-body">
@@ -74,16 +75,15 @@
           </div>
         </div>
 
-        {{-- Prev / Next navigation --}}
         @php
           $prevPost = get_previous_post();
           $nextPost = get_next_post();
         @endphp
         @if ($prevPost || $nextPost)
-          <nav class="post-prev-next" aria-label="Post navigation">
+          <nav class="post-prev-next" aria-label="{{ __('Post navigation', 'sage') }}">
             @if ($prevPost)
               <a class="post-prev-next-link" href="{{ get_permalink($prevPost) }}">
-                <span class="post-prev-next-dir">← Previous</span>
+                <span class="post-prev-next-dir">{{ __('Previous', 'sage') }}</span>
                 <span class="post-prev-next-title">{{ get_the_title($prevPost) }}</span>
               </a>
             @else
@@ -91,7 +91,7 @@
             @endif
             @if ($nextPost)
               <a class="post-prev-next-link post-prev-next-link--next" href="{{ get_permalink($nextPost) }}">
-                <span class="post-prev-next-dir">Next →</span>
+                <span class="post-prev-next-dir">{{ __('Next', 'sage') }}</span>
                 <span class="post-prev-next-title">{{ get_the_title($nextPost) }}</span>
               </a>
             @endif
@@ -99,9 +99,9 @@
         @endif
 
         @php comments_template(); @endphp
+      </div>
 
-      </div>{{-- /.post-main --}}
-    </div>{{-- /.post-layout --}}
-  </div>{{-- /.container --}}
-
+      @include('partials.post-sidebar', ['postId' => $postId, 'summary' => $summary, 'toc' => $toc])
+    </div>
+  </div>
 </article>

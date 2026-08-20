@@ -1,7 +1,3 @@
-@php
-  $mhSoc = \App\mh_social_links();
-@endphp
-
 <header class="site-header" id="site-header">
   <div class="site-header-inner">
     <a class="brand" href="{{ home_url('/') }}" rel="home">
@@ -21,9 +17,9 @@
     @endif
 
     <div class="header-actions">
-      <button class="mh-theme-toggle" type="button" aria-label="{{ __('Toggle dark mode', 'matthummel') }}" aria-pressed="false">
-        <span class="mh-icon-dark" aria-hidden="true">Dark</span>
-        <span class="mh-icon-light" aria-hidden="true">Light</span>
+      <button class="mh-theme-toggle" type="button" aria-pressed="false">
+        <span class="mh-icon-dark">{{ __('Dark', 'sage') }}</span>
+        <span class="mh-icon-light">{{ __('Light', 'sage') }}</span>
       </button>
 
       <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'matthummel') }}</a>
@@ -48,12 +44,6 @@
       ]) !!}
     </nav>
   @endif
-  @if ($mhSoc)
-    <ul class="elsewhere">
-      @foreach ($mhSoc as $s)
-        <li><a href="{{ esc_url($s['url']) }}" rel="me noopener" target="_blank">{{ $s['label'] }}</a></li>
-      @endforeach
-    </ul>
-  @endif
+  @include('partials.social')
   <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'matthummel') }}</a>
 </aside>

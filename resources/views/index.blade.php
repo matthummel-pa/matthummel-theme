@@ -36,11 +36,7 @@
       </ul>
     @endif
 
-    <p style="margin-top:1.5rem">{{ \App\field('write_follow', __('Follow along:', 'sage'), $writeId) }}
-      <a href="https://dev.to/matthummel" rel="me noopener" target="_blank">DEV.to<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a> ·
-      <a href="https://bsky.app/profile/matthummel.bsky.social" rel="me noopener" target="_blank">Bluesky<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a> ·
-      <a href="https://www.reddit.com/user/matt-hummel" rel="me noopener" target="_blank">Reddit<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a> ·
-      <a href="{{ home_url('/feed/') }}">RSS</a>
-    </p>
+    <p class="write-follow">{{ \App\field('write_follow', __('Follow along:', 'sage'), $writeId) }}</p>
+    @include('partials.social', ['labeled' => true])
   </div>
 @endsection

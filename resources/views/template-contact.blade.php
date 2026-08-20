@@ -58,14 +58,11 @@
     <aside class="contact-aside" aria-labelledby="elsewhere-heading">
       <h2 id="elsewhere-heading" class="display-title is-section">{{ \App\field('cnt_else_h2', __('Find me elsewhere', 'sage')) }}</h2>
       <p>{{ \App\field('cnt_aside', __('Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is the Gettysburg studio site.', 'sage')) }}</p>
-      <ul class="elsewhere">
-        <li><a href="https://github.com/matthummel-pa" rel="me noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-        <li><a href="https://dev.to/matthummel" rel="me noopener" target="_blank">DEV.to<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-        <li><a href="https://bsky.app/profile/matthummel.bsky.social" rel="me noopener" target="_blank">Bluesky<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-        <li><a href="https://www.reddit.com/user/matt-hummel" rel="me noopener" target="_blank">Reddit<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-        <li><a href="https://www.linkedin.com/in/matt-hummel-pa" rel="me noopener" target="_blank">LinkedIn<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-        <li><a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></li>
-      </ul>
+      @include('partials.social', ['labeled' => true, 'links' => array_merge(\App\mh_social_links(), [[
+        'key' => 'globe',
+        'label' => 'Ridges & Valleys',
+        'url' => 'https://ridgesandvalleys.com',
+      ]])])
     </aside>
   </div>
 @endsection

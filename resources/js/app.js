@@ -15,6 +15,10 @@ function initDarkMode() {
     const sync = () => {
       const dark = root.classList.contains('mh-dark');
       button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      button.setAttribute(
+        'aria-label',
+        dark ? 'Switch to light mode' : 'Switch to dark mode'
+      );
     };
     sync();
     button.addEventListener('click', () => {
@@ -38,7 +42,36 @@ function initPopoutMenu() {
   const setOpen = (open) => {
     document.body.classList.toggle('mh-popout-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    overlay?.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (open) {
+      close?.focus();
+    } else {
+      toggle.focus();
+    }
   };
+
+  menu.setAttribute('aria-hidden', 'true');
+  overlay?.setAttribute('aria-hidden', 'true');
+
+  menu.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab' || !document.body.classList.contains('mh-popout-open')) {
+      return;
+    }
+    const focusable = [...menu.querySelectorAll('a, button')].filter((el) => !el.hasAttribute('disabled'));
+    if (!focusable.length) {
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
   toggle.addEventListener('click', () => {
     setOpen(!document.body.classList.contains('mh-popout-open'));
@@ -97,9 +130,60 @@ function initHeroBlobs() {
   });
 }
 
+function initReadingProgress() {
+  const bar = document.querySelector('#mh-progress');
+  const prose = document.querySelector('#post-prose');
+  if (!bar || !prose) {
+    return;
+  }
+
+  const onScroll = () => {
+    const rect = prose.getBoundingClientRect();
+    const start = window.scrollY + rect.top - 80;
+    const end = start + prose.offsetHeight - window.innerHeight;
+    const raw = end <= start ? 1 : (window.scrollY - start) / (end - start);
+    const value = Math.max(0, Math.min(100, Math.round(raw * 100)));
+    bar.style.width = `${value}%`;
+    bar.setAttribute('aria-valuenow', String(value));
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+function initTocSpy() {
+  const links = document.querySelectorAll('.side-toc a, .mh-toc a');
+  if (!links.length) {
+    return;
+  }
+  const map = new Map();
+  links.forEach((a) => {
+    const id = decodeURIComponent((a.getAttribute('href') || '').replace('#', ''));
+    const el = id ? document.getElementById(id) : null;
+    if (el) {
+      map.set(el, a);
+    }
+  });
+  if (!map.size || !('IntersectionObserver' in window)) {
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const a = map.get(entry.target);
+      if (!a) {
+        return;
+      }
+      a.classList.toggle('is-active', entry.isIntersecting);
+    });
+  }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+  map.forEach((_, el) => io.observe(el));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   initPopoutMenu();
   initMotion();
   initHeroBlobs();
+  initReadingProgress();
+  initTocSpy();
 });
