@@ -1824,6 +1824,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   background: rgba(255, 255, 255, .18);
 }
 .page-block { padding-bottom: var(--space-section); }
+.write-hub {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
 .main { min-height: 50vh; }
 
 html.mh-dark {
