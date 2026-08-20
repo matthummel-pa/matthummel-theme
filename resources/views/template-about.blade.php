@@ -7,11 +7,11 @@
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $ghBlog = \App\mh_github_blog_url($gh);
-  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop or a team with a site or an app. Plain language. Pages that are easy to use.', 'sage');
+  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a site or an app.', 'sage');
   if (! empty($gh['location']) && ! empty($gh['bio'])) {
       $aboutLede = sprintf(
           /* translators: 1: GitHub location, 2: GitHub bio */
-          __('I’m Matt. I live in %1$s. On GitHub: %2$s I write about the web, share code, and sometimes help a shop or a team with a site or an app.', 'sage'),
+          __('I’m Matt. I live in %1$s. On GitHub: %2$s I write about the web, share code, and sometimes help a shop, a team, or an agency with a site or an app.', 'sage'),
           $gh['location'],
           rtrim((string) $gh['bio'], '.').'.'
       );
@@ -40,23 +40,31 @@
   <header class="page-header container wide hero-intro">
     @include('partials.profile-photo', ['size' => 96, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
     <div>
+      <p class="eyebrow">{{ \App\field('about_kicker', __('About', 'sage')) }}</p>
       <h1 class="display-title is-hero">{{ \App\field('about_h1', __('Glad you’re here.', 'sage')) }}</h1>
       <p class="lead">{{ \App\field('about_lede', $aboutLede) }}</p>
     </div>
   </header>
 
-  <section class="pf-section">
-    <div class="container measure">
-      <h2 class="display-title is-section">{{ \App\field('about_story_h2', __('How I got here', 'sage')) }}</h2>
-      <p>{{ \App\field('about_p1', __('I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.', 'sage')) }}</p>
-      <p>{{ \App\field('about_p2', __('Later I learned full-stack work and Microsoft 365. Day to day I still mix a public site with the quieter tools a team uses behind it.', 'sage')) }}</p>
-      <p>{{ \App\field('about_p3', $aboutGh) }}</p>
-      <p>
-        <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub profile', 'sage') }}</a>
-        @if (! empty($gh['hireable']))
-          · {{ __('Available for hire', 'sage') }}
-        @endif
-      </p>
+  @include('partials.audience')
+
+  <section class="pf-section pf-section--alt">
+    <div class="container wide split about-split">
+      <div>
+        <h2 class="display-title is-section">{{ \App\field('about_story_h2', __('How I got here', 'sage')) }}</h2>
+        <p>{{ \App\field('about_p1', __('I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.', 'sage')) }}</p>
+        <p>{{ \App\field('about_p2', __('Later I learned full-stack work and Microsoft 365. Day to day I still mix a public site with the quieter tools a team uses behind it.', 'sage')) }}</p>
+      </div>
+      <div class="about-gh">
+        <p class="eyebrow">{{ __('GitHub', 'sage') }}</p>
+        <p>{{ \App\field('about_p3', $aboutGh) }}</p>
+        <p>
+          <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub profile', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+          @if (! empty($gh['hireable']))
+            · {{ __('Available for hire', 'sage') }}
+          @endif
+        </p>
+      </div>
     </div>
   </section>
 
@@ -71,7 +79,7 @@
           <article class="pf-card">
             <h3>
               @if (! empty($place['url']))
-                <a href="{{ esc_url($place['url']) }}">{{ $place['title'] }}</a>
+                <a href="{{ esc_url($place['url']) }}" rel="noopener" target="_blank">{{ $place['title'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
               @else
                 {{ $place['title'] }}
               @endif
@@ -83,10 +91,10 @@
     </div>
   </section>
 
-  <section class="pf-section">
-    <div class="container measure">
+  <section class="pf-section pf-section--alt">
+    <div class="container wide">
       <h2 class="display-title is-section">{{ \App\field('about_values_h2', __('How I like to work', 'sage')) }}</h2>
-      <ul>
+      <ol class="value-grid">
         @foreach (\App\field_lines('about_values', [
           __('Plain words, about a 6–8 grade reading level.', 'sage'),
           __('Accessible pages as a default, not a later patch.', 'sage'),
@@ -95,7 +103,7 @@
         ]) as $item)
           <li>{{ $item }}</li>
         @endforeach
-      </ul>
+      </ol>
       <p>{!! \App\field_html('about_links', __('<a href="/now/">What I’m doing now</a> · <a href="/contact/">Say hello</a>', 'sage')) !!}</p>
     </div>
   </section>

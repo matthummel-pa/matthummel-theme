@@ -10,19 +10,20 @@
   $live  = \App\Github::fetchRepos(\App\mh_github_login(), 8, 'updated');
 @endphp
 
-<header class="page-header container">
+<header class="page-header container wide">
+  <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('code_h1', __('Code you can copy.', 'sage')) }}</h1>
-  <p class="lead">{!! \App\field_html('code_lede', __('Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')) !!}</p>
+  <p class="lead">{!! \App\field_html('code_lede', __('Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Agencies and shops can treat this as a sample of how I write. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')) !!}</p>
 </header>
 
-<section class="pf-section">
+<section class="pf-section pf-section--alt">
   <div class="container">
     <h2 class="display-title is-section">{{ \App\field('code_feat_h2', __('Featured repos', 'sage')) }}</h2>
     <p>{{ \App\field('code_feat_intro', __('Open these on GitHub. Fork them if they help.', 'sage')) }}</p>
     <div class="pf-grid">
       @foreach ($repos as $r)
         <article class="pf-card">
-          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}</a></h3>
+          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></h3>
           <p>{{ $r['desc'] }}@if (! empty($r['tags'])) {{ implode(', ', $r['tags']) }}.@endif</p>
         </article>
       @endforeach
@@ -37,7 +38,7 @@
     <div class="pf-grid">
       @foreach ($live as $r)
         <article class="pf-card">
-          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}</a></h3>
+          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></h3>
           @if (! empty($r['desc']))
             <p>{{ $r['desc'] }}</p>
           @endif
@@ -50,12 +51,12 @@
         </article>
       @endforeach
     </div>
-    <p><a href="https://github.com/{{ \App\mh_github_login() }}?tab=repositories">{{ \App\field('code_live_all', __('All public repos', 'sage')) }}</a></p>
+    <p><a href="https://github.com/{{ \App\mh_github_login() }}?tab=repositories" rel="noopener" target="_blank">{{ \App\field('code_live_all', __('All public repos', 'sage')) }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></p>
   </div>
 </section>
 @endif
 
-<section class="pf-section">
+<section class="pf-section pf-section--alt">
   <div class="container">
     <h2 class="display-title is-section">{{ \App\field('code_snip_h2', __('Snippets', 'sage')) }}</h2>
     <p class="lead">{{ \App\field('code_snip_intro', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.', 'sage')) }}</p>

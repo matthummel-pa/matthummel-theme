@@ -3,6 +3,8 @@
 @section('content')
   @while(have_posts()) @php(the_post())
     @include('partials.page-header')
-    @includeFirst(['partials.content-page', 'partials.content'])
+    <div class="container measure" style="padding-bottom:3rem">
+      @include('partials.content-page')
+    </div>
   @endwhile
 @endsection

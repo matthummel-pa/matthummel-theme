@@ -2,11 +2,11 @@
   $mhSoc = \App\mh_social_links();
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $footerName = $gh['name'] ?: 'Matt Hummel';
-  $footerBlurb = __('Notes, code, and Gettysburg work. Visitors, new developers, and business owners are welcome.', 'sage');
+  $footerBlurb = __('Notes, code, and Gettysburg work. Developers, shops, and agencies are welcome.', 'sage');
   if (! empty($gh['location'])) {
-      $footerBlurb = sprintf(
+          $footerBlurb = sprintf(
           /* translators: %s: GitHub location */
-          __('Notes, code, and work from %s. Visitors, new developers, and business owners are welcome.', 'sage'),
+          __('Notes, code, and work from %s. Developers, shops, and agencies are welcome.', 'sage'),
           $gh['location']
       );
   }
@@ -15,9 +15,19 @@
   <div class="container wide footer-grid">
     <div>
       <p class="brand-name footer-brand">{{ $footerName }}</p>
-      <p>{{ \App\field('footer_blurb', $footerBlurb, \App\mh_front_id()) }}</p>
+      <p>{{ \App\field('footer_blurb', $footerBlurb ?: __('Notes, code, and Gettysburg work. Developers, shops, and agencies are welcome.', 'sage'), \App\mh_front_id()) }}</p>
     </div>
-    @if (has_nav_menu('primary_navigation'))
+    @if (has_nav_menu('footer_navigation'))
+      <nav aria-label="{{ __('Footer', 'sage') }}">
+        {!! wp_nav_menu([
+          'theme_location' => 'footer_navigation',
+          'menu_class'     => 'footer-nav',
+          'echo'           => false,
+          'container'      => false,
+          'depth'          => 1,
+        ]) !!}
+      </nav>
+    @elseif (has_nav_menu('primary_navigation'))
       <nav aria-label="{{ __('Footer', 'sage') }}">
         {!! wp_nav_menu([
           'theme_location' => 'primary_navigation',

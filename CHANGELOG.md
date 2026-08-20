@@ -2,6 +2,16 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.11 — 2026-08-20
+
+### Changed
+
+- Pages are custom-field layouts only: Gutenberg editor and patterns off for `page`; leftover block HTML cleared on theme-templated pages (privacy policy left alone)
+- Unique Blade layouts for About, Services, Work, Code, Now, Contact, Writing, 404, and Search — no `the_content()` on pages
+- Page titles use oversized ExtraBold type, tight tracking, and a short blue mark; inner pages match the home hero weight
+- Primary + footer menus; home “four doors” for developers, learners, shops, and agencies
+- Contact form asks who you are; 44px tap targets; new-window text on external links
+
 ## 3.0.10 — 2026-08-19
 
 ### Changed

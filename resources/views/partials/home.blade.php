@@ -35,23 +35,23 @@
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, Pennsylvania', 'sage')) }}</p>
       <h1 id="hero-heading" class="display-title is-hero">{{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}</h1>
       <p class="hero-roles">{{ \App\field('home_role', $gh['bio'] ?: __('Full-stack web developer. WordPress and Power Platform.', 'sage')) }}</p>
-      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build clear websites and tools — writing you can read, code you can copy, and example WordPress sites for local shops. Neighbors, new developers, and business owners are welcome.', 'sage')) }}</p>
+      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build clear WordPress sites and small apps. Developers can copy the code. Shops and agencies can see how a site should feel. People learning the web can read the posts in plain words.', 'sage')) }}</p>
       <p class="btn-row">
         <a class="btn btn-on-dark" href="{{ home_url('/projects/') }}">{{ \App\field('home_cta_primary', __('See example sites', 'sage')) }}</a>
         <a class="btn btn-ghost" href="{{ home_url('/contact/') }}">{{ \App\field('home_cta_secondary', ! empty($gh['hireable']) ? __('Let’s work together', 'sage') : __('Say hello', 'sage')) }}</a>
-        <a class="btn btn-ghost" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub', 'sage') }}</a>
+        <a class="btn btn-ghost" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
       </p>
       @if (! empty($gh['public_repos']) || ! empty($gh['followers']))
         <dl class="stat-row stat-row--on-dark">
           @if (! empty($gh['public_repos']))
             <div>
-              <dt><a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['public_repos']) }}</a></dt>
+              <dt><a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['public_repos']) }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></dt>
               <dd>{{ __('Public repos', 'sage') }}</dd>
             </div>
           @endif
           @if (! empty($gh['followers']))
             <div>
-              <dt><a href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['followers']) }}</a></dt>
+              <dt><a href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['followers']) }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></dt>
               <dd>{{ __('Followers', 'sage') }}</dd>
             </div>
           @endif
@@ -66,7 +66,7 @@
       <p class="hero-quick">
         <a href="{{ $writing }}">{{ \App\field('home_link_writing', __('Writing', 'sage')) }}</a>
         <a href="{{ home_url('/code/') }}">{{ \App\field('home_link_code', __('Code and snippets', 'sage')) }}</a>
-        <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Ridges &amp; Valleys</a>
+        <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Ridges &amp; Valleys<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
         <a href="{{ home_url('/about/') }}">{{ \App\field('home_link_about', __('About', 'sage')) }}</a>
       </p>
     </div>
@@ -88,6 +88,13 @@
     </ul>
   </div>
 </section>
+
+@include('partials.audience', [
+  'kicker' => \App\field('home_who_kicker', __('Who this is for', 'sage')),
+  'heading' => \App\field('who_h2', __('Four doors in', 'sage')),
+  'intro' => \App\field('who_intro', __('Same site. Different starting points.', 'sage')),
+  'alt' => true,
+])
 
 <section class="pf-section pf-section--navy" aria-labelledby="now-heading">
   <div class="container wide now-card">
@@ -167,7 +174,7 @@
     <div class="card-grid">
       @foreach ($repos as $r)
         <article class="lift-card">
-          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}</a></h3>
+          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></h3>
           @if (! empty($r['desc']))
             <p>{{ $r['desc'] }}</p>
           @endif

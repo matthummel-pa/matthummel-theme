@@ -38,6 +38,15 @@ add_action('init', function () {
     $email = sanitize_email($_POST['mh_email'] ?? '');
     $subject = sanitize_text_field($_POST['mh_subject'] ?? '');
     $message = sanitize_textarea_field($_POST['mh_message'] ?? '');
+    $whoKey = sanitize_key($_POST['mh_who'] ?? '');
+    $whoLabels = [
+        'developer' => __('A developer', 'sage'),
+        'learning' => __('Learning the web', 'sage'),
+        'business' => __('A shop or team', 'sage'),
+        'agency' => __('A marketing agency', 'sage'),
+        'other' => __('Something else', 'sage'),
+    ];
+    $who = $whoLabels[$whoKey] ?? '';
 
     if ($name === '' || ! is_email($email) || $message === '') {
         $redirect('error');
@@ -45,7 +54,11 @@ add_action('init', function () {
 
     $to = get_option('admin_email');
     $subject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
-    $body = "Name: {$name}\nEmail: {$email}\n\n{$message}";
+    $body = "Name: {$name}\nEmail: {$email}";
+    if ($who !== '') {
+        $body .= "\nWho: {$who}";
+    }
+    $body .= "\n\n{$message}";
     $headers = ['Reply-To: '.$name.' <'.$email.'>'];
 
     wp_mail($to, '[matthummel.com] '.$subject, $body, $headers);

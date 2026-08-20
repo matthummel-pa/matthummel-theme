@@ -59,13 +59,6 @@ add_filter('theme_file_path', function ($path, $file) {
 }, 10, 2);
 
 /**
- * Disable on-demand block asset loading.
- *
- * @link https://core.trac.wordpress.org/ticket/61965
- */
-add_filter('should_load_separate_core_block_assets', '__return_false');
-
-/**
  * Register the initial theme setup.
  *
  * @return void
@@ -85,6 +78,7 @@ add_action('after_setup_theme', function () {
      */
     register_nav_menus([
         'primary_navigation' => __('Primary Navigation', 'sage'),
+        'footer_navigation' => __('Footer Navigation', 'sage'),
     ]);
 
     /**
@@ -94,6 +88,7 @@ add_action('after_setup_theme', function () {
      */
     remove_theme_support('core-block-patterns');
     add_filter('should_load_remote_block_patterns', '__return_false');
+    add_filter('should_load_separate_core_block_assets', '__return_true');
 
     /**
      * Enable plugins to manage the document title.

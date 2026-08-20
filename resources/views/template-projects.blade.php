@@ -14,20 +14,22 @@
   $ghUser = \App\Github::fetchUser(\App\mh_github_login());
 @endphp
 
-<header class="page-header container">
+<header class="page-header container wide">
+  <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
-    <p class="lead">{{ \App\field('work_lede', __('These are studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. They show a real WordPress shape — menus, bookings, maps — so a business owner can picture a site, and a new developer can see how the pieces fit.', 'sage')) }}
-      @if (! empty($ghUser['public_repos']))
-        Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}">GitHub</a>@if (! empty($ghUser['public_repos'])) ({{ (int) $ghUser['public_repos'] }} public repos)@endif.
-      @endif
-    </p>
+  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.', 'sage')) }}
+    @if (! empty($ghUser['public_repos']))
+      Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}" rel="noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+      ({{ (int) $ghUser['public_repos'] }} public repos).
+    @endif
+  </p>
 </header>
 
 <div class="container wide" style="padding-bottom:3rem">
   <nav class="filter-row" aria-label="{{ __('Filter by type', 'matthummel') }}">
-    <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}">All</a>
+    <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" @if ($cat === '') aria-current="page" @endif>{{ __('All', 'sage') }}</a>
     @foreach ($cats as $c)
-      <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', $c, $pageUrl)) }}">{{ $c }}</a>
+      <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', $c, $pageUrl)) }}" @if ($cat === $c) aria-current="true" @endif>{{ $c }}</a>
     @endforeach
   </nav>
 
@@ -48,6 +50,6 @@
     @endforeach
   </div>
 
-  <p style="margin-top:2rem">{!! \App\field_html('work_foot', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com">ridgesandvalleys.com</a>.', 'sage')) !!}</p>
+  <p style="margin-top:2rem">{!! \App\field_html('work_foot', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')) !!}</p>
 </div>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <header class="page-header container">
+  <header class="page-header container wide">
     <h1 class="display-title is-hero">{!! get_the_archive_title() !!}</h1>
   </header>
   <div class="container" style="padding-bottom:3rem">

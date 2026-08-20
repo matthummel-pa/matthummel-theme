@@ -8,13 +8,14 @@ What the 3.x Sage theme does, and where it lives.
 | --- | --- | --- |
 | Theme updater | Appearance → Update Theme dispatches GitHub Actions FTP deploy | `app/theme-updater.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Bold blue/gray landing; live GitHub bio, stats, and repos | `resources/views/partials/home.blade.php`, `App\Github` |
-| About / Now | Bio, two shops, current focus | `template-about.blade.php`, `template-now.blade.php` |
+| Home | Bold blue/gray landing; live GitHub bio, stats, and repos; audience cards | `resources/views/partials/home.blade.php`, `App\Github` |
+| About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
 | Work | Ridges & Valleys concepts + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()` |
-| Services | WordPress, Power Platform, full-stack, fixes | `template-services.blade.php` |
+| Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured repos, live GitHub, snippets | `template-code.blade.php`, `App\Github` |
 | Writing | Blog index; categories unchanged | `index.blade.php`, `archive.blade.php` |
-| Contact | POST `mh_contact`, nonce, honeypot | `template-contact.blade.php`, `app/contact.php` |
+| Contact | Split form + elsewhere; audience select; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
+| Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
 | Dark mode | `html.mh-dark`, `localStorage mh-theme` | `resources/js/app.js` |
 | Mobile menu | Slide-over `#mh-popout` | `sections/header.blade.php` |
 
@@ -30,7 +31,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Intentionally not included
 
 - Page builders, Kadence, theme-options admin
-- Gutenberg pattern library
+- Gutenberg pattern library on pages (posts still use the block editor)
 - Fake testimonials or “3x revenue” style landing modules
 - Custom post type for projects (Work is a page + PHP list)
 
