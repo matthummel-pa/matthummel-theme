@@ -1,8 +1,7 @@
 {
   "mcpServers": {
     "wpvibe": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.wpvibe.ai/mcp"]
+      "url": "https://mcp.wpvibe.ai/mcp"
     }
   }
 }

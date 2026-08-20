@@ -6,6 +6,8 @@ All notable changes to this theme are recorded here.
 
 ### Changed
 
+- WPVibe MCP uses native HTTP (`https://mcp.wpvibe.ai/mcp`) in `.cursor/mcp.json`; Cloud Agents still need the same URL added at cursor.com/agents (no `mcp-remote`)
+
 - Dark mode meets WCAG contrast: lighter links and eyebrows, distinct muted text, visible borders, `color-scheme: dark`
 - Outline buttons, skill pills, contact fields, skip link, and “elsewhere” cards keep readable text on dark surfaces
 - Focus rings use `--color-focus`; form errors and autofill stay visible in dark mode
