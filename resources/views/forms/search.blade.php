@@ -6,9 +6,11 @@
 
     <input
       type="search"
-      placeholder="{!! esc_attr_x('Search &hellip;', 'placeholder', 'sage') !!}"
+      class="js-mh-search"
+      placeholder="{{ esc_attr($placeholder ?? _x('Search …', 'placeholder', 'sage')) }}"
       value="{!! get_search_query() !!}"
       name="s"
+      autocomplete="off"
     >
   </label>
 

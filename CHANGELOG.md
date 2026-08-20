@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.14 — 2026-08-20
+
+### Changed
+
+- Writing hub: featured latest post, search/RSS toolbar, Grid/List view, topic counts, `/` to search
+- RSS subscribe strip (copy feed URL) on Writing and topic archives
+- DEV.to items render as cards; post cards mark snippets with a Code badge
+- Search results reuse the same writing tools and card layout
+
 ## 3.0.13 — 2026-08-20
 
 ### Changed

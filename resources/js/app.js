@@ -4,6 +4,7 @@ import.meta.glob([
 ]);
 
 import { initCodeBlocks } from './code-blocks.js';
+import { initWritingTools } from './writing-tools.js';
 
 function preferredTheme() {
   try {
@@ -443,4 +444,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactStatus();
   initComments();
   initCodeBlocks();
+  initWritingTools();
 });

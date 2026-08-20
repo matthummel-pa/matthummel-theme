@@ -2,12 +2,14 @@
   $thumb = \App\mh_post_card_image(get_the_ID());
   $minutes = \App\mh_reading_minutes(get_the_ID());
   $cats = get_the_category();
+  $hasCode = \App\mh_post_has_code(get_the_ID());
+  $featured = ! empty($featured);
 @endphp
-<article @php(post_class('post-card'))>
+<article @php(post_class(['post-card', $featured ? 'post-card--featured' : '']))>
   <a class="post-card-hit" href="{{ get_permalink() }}"><span class="visually-hidden">{{ get_the_title() }}</span></a>
   @if ($thumb !== '')
     <span class="post-shot" aria-hidden="true">
-      <img src="{{ esc_url($thumb) }}" alt="" width="960" height="540" loading="lazy" decoding="async">
+      <img src="{{ esc_url($thumb) }}" alt="" width="960" height="540" loading="{{ $featured ? 'eager' : 'lazy' }}" decoding="async">
     </span>
   @else
     <span class="post-shot post-shot--fallback" aria-hidden="true">
@@ -15,10 +17,16 @@
     </span>
   @endif
   <div class="post-body">
+    @if ($featured)
+      <p class="eyebrow">{{ __('Latest', 'sage') }}</p>
+    @endif
     <p class="post-meta">
       <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
       <span aria-hidden="true"> · </span>
       {{ sprintf(_n('%d min read', '%d min read', $minutes, 'sage'), $minutes) }}
+      @if ($hasCode)
+        <span class="post-badge">{{ __('Code', 'sage') }}</span>
+      @endif
     </p>
     @if ($cats && ! is_wp_error($cats))
       <p class="post-cats">

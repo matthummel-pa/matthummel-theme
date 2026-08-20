@@ -329,10 +329,12 @@ function mh_devto_posts(int $limit = 5): array
             $xml = simplexml_load_string($body);
             if ($xml && isset($xml->channel->item)) {
                 foreach ($xml->channel->item as $item) {
+                    $desc = trim(wp_strip_all_tags(html_entity_decode((string) $item->description, ENT_QUOTES, 'UTF-8')));
                     $posts[] = [
                         'title' => (string) $item->title,
                         'url' => (string) $item->link,
                         'date' => (string) $item->pubDate,
+                        'ex' => $desc !== '' ? wp_trim_words($desc, 22) : '',
                     ];
                 }
             }
@@ -386,6 +388,26 @@ function mh_post_card_image(int $post_id): string
     $src = get_the_post_thumbnail_url($post_id, 'medium_large');
 
     return is_string($src) ? $src : '';
+}
+
+function mh_post_has_code(\WP_Post|int $post): bool
+{
+    $post = get_post($post);
+    if (! $post instanceof \WP_Post) {
+        return false;
+    }
+
+    return (bool) preg_match(
+        '/```|<pre[\s>]|wp-block-code|wp-block-syntaxhighlighter|class=["\'][^"\']*language-/',
+        (string) $post->post_content
+    );
+}
+
+function mh_published_post_count(): int
+{
+    $counts = wp_count_posts('post');
+
+    return isset($counts->publish) ? (int) $counts->publish : 0;
 }
 
 function mh_popular_posts(int $limit = 5, int $exclude = 0): array
