@@ -15,6 +15,7 @@ All notable changes to this theme are recorded here.
 - Positioning copy leads with full-stack work (WordPress, plugins, other web apps); Power Platform stays in the mix but is not the day job
 - Cards and grids use ink borders, blue offset shadows, ExtraBold titles, and a navy featured tile
 - Headings and body use rounded Nunito (Black for display titles); Plus Jakarta Sans is gone
+- Body copy is larger with more line and paragraph space, in the style of a modern blog
 
 ## 3.0.10 — 2026-08-19
 

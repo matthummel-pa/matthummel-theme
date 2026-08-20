@@ -31,10 +31,13 @@ body {
   background: var(--color-paper);
   color: var(--color-body);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
-  line-height: 1.7;
+  font-size: 1.25rem;
+  line-height: 1.8;
   font-weight: 500;
+  letter-spacing: 0.012em;
 }
+p { margin: 0 0 1.4em; }
+p:last-child { margin-bottom: 0; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
@@ -63,7 +66,7 @@ a:hover { color: var(--color-blue-ink); }
 .site-header-inner {
   max-width: 72rem;
 }
-.measure, .reader { max-width: 42rem; }
+.measure, .reader { max-width: 40rem; }
 
 .btn {
   display: inline-flex;
@@ -109,13 +112,13 @@ a:hover { color: var(--color-blue-ink); }
 }
 .eyebrow--on-dark { color: #93c5fd; }
 .lead {
-  font-size: 1.125rem;
-  line-height: 1.7;
+  font-size: clamp(1.28rem, 2.1vw, 1.45rem);
+  line-height: 1.75;
   color: var(--color-body);
-  max-width: 40rem;
-  margin: 0 0 1.1rem;
-  font-weight: 400;
-  letter-spacing: 0;
+  max-width: 38rem;
+  margin: 0 0 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   text-wrap: pretty;
 }
 .lead--on-dark { color: #cbd5e1; max-width: 36rem; }
@@ -462,8 +465,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .now-card { padding: 0; }
 .sec-intro {
   margin: 0;
-  max-width: 38rem;
+  max-width: 40rem;
   color: var(--color-body);
+  font-size: 1.2rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
 }
 .sec-head { margin-bottom: 1.75rem; align-items: flex-end; }
 
@@ -854,20 +860,36 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .post-hero-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: #cbd5e1; font-size: .95rem; }
 .post-hero-avatar, .post-author-bio-avatar { border-radius: 999px; }
 .post-prose {
-  max-width: 65ch;
-  margin: 2rem auto;
-  font-size: 1.125rem;
+  max-width: 40rem;
+  margin: 2.5rem auto 3rem;
+  font-size: 1.375rem;
+  line-height: 1.85;
+  letter-spacing: 0.014em;
+  font-weight: 500;
+}
+.post-prose :where(p, ul, ol, blockquote, pre, figure) {
+  margin: 0 0 1.5em;
+}
+.post-prose :where(p, li) {
+  text-wrap: pretty;
+}
+.post-prose :where(h2, h3) {
+  margin: 2em 0 .7em;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+.post-prose li { margin: 0 0 .45em; }
+.post-prose li:last-child { margin-bottom: 0; }
+.post-share-note {
+  max-width: 40rem;
+  margin: 0 auto 1.75rem;
+  color: var(--color-muted);
+  font-size: 1.15rem;
   line-height: 1.75;
 }
-.post-prose :where(h2, h3) { margin-top: 1.6em; }
-.post-share-note {
-  max-width: 65ch;
-  margin: 0 auto 1.5rem;
-  color: var(--color-muted);
-}
 .post-author-bio {
-  max-width: 65ch;
-  margin: 2.5rem auto;
+  max-width: 40rem;
+  margin: 2.75rem auto;
   display: flex;
   gap: 1rem;
   padding: 1.25rem;
@@ -876,7 +898,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   background: #fff;
 }
 .post-prev-next {
-  max-width: 65ch;
+  max-width: 40rem;
   margin: 1.5rem auto 3rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
