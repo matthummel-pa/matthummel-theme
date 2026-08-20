@@ -1264,7 +1264,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 .post-hero {
   color: #e2e8f0;
-  padding: var(--space-section) 0 3.5rem;
+  padding: var(--space-section) 0 clamp(3.25rem, 5vw, 4.25rem);
 }
 .post-hero-inner {
   position: relative;
@@ -1568,7 +1568,10 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
   pointer-events: none;
 }
 
-.post-shell { padding-bottom: var(--space-section); }
+.post-shell {
+  padding-top: clamp(3rem, 6.5vw, 5.25rem);
+  padding-bottom: var(--space-section);
+}
 .post-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 20rem);
