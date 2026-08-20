@@ -75,7 +75,7 @@ body::after {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 4.25rem 0 3.25rem;
+  padding: var(--space-section) 0;
 }
 .page-mast-art {
   position: absolute;

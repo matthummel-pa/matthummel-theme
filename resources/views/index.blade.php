@@ -13,7 +13,7 @@
     <p class="lead">{{ \App\field('write_lede', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build. I also write on DEV.to.', 'sage'), $writeId) }}</p>
   </header>
 
-  <div class="container wide" style="padding-bottom:3rem">
+  <div class="container wide page-block">
     @if (! have_posts())
       <p>{{ __('No posts yet.', 'sage') }}</p>
       {!! get_search_form(false) !!}

@@ -6,7 +6,7 @@
 @section('content')
   @while(have_posts()) @php(the_post())
     @include('partials.page-header')
-    <div class="container measure" style="padding-bottom:3rem">
+    <div class="container measure page-block">
       @include('partials.content-page')
     </div>
   @endwhile

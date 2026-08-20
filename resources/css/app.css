@@ -15,7 +15,9 @@
     --radius-btn: 999px;
     --radius-card: 1.5rem;
     --page-max: 80rem;
-    --page-gutter: 1.5rem;
+    --page-gutter: 1.75rem;
+    --space-section: clamp(4.75rem, 8.5vw, 7.5rem);
+    --space-grid: 2.15rem;
 
   --color-khaki: #e8eef6;
   --color-cream: #f4f7fb;

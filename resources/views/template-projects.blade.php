@@ -25,7 +25,7 @@
   </p>
 </header>
 
-<div class="container wide" style="padding-bottom:3rem">
+<div class="container wide page-block">
   <nav class="filter-row" aria-label="{{ __('Filter by type', 'matthummel') }}">
     <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" @if ($cat === '') aria-current="page" @endif>{{ __('All', 'sage') }}</a>
     @foreach ($cats as $c)

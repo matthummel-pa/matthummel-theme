@@ -25,6 +25,7 @@ All notable changes to this theme are recorded here.
 - Work screenshots are cropped to one 16:9 size so the grid stays even
 - Writing post cards use a 3/2/1 column grid from desktop down to phone
 - Code repo cards (featured and live) are square, with View code, Live demo, and GitHub language/topic icons
+- Home hero is taller (about a viewport) with more section padding and wider grid gaps sitewide
 
 ## 3.0.10 — 2026-08-19
 

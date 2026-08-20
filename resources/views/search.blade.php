@@ -7,7 +7,7 @@
     <p class="lead">{{ sprintf(__('Showing results for “%s”', 'sage'), get_search_query()) }}</p>
   </div>
 
-  <div class="container wide" style="padding-bottom:3rem">
+  <div class="container wide page-block">
     @if (! have_posts())
       <p class="archive-desc">{{ __('Nothing matched. Try another search, or browse Writing and Code.', 'sage') }}</p>
       <div class="search-wrap">{!! get_search_form(false) !!}</div>
