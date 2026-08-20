@@ -64,11 +64,11 @@ def connect() -> ftplib.FTP:
 
     errors: list[str] = []
     # Plain FTP only (same protocol as FTP-Deploy-Action). Prefer IPv4.
-    for attempt in range(1, 4):
+    for attempt in range(1, 6):
         for target in targets:
             try:
-                ftp = ftplib.FTP(timeout=12)
-                ftp.connect(target, port, timeout=12)
+                ftp = ftplib.FTP(timeout=30)
+                ftp.connect(target, port, timeout=30)
                 ftp.login(user, password)
                 ftp.set_pasv(True)
                 log(f"FTP login ok (plain, attempt {attempt})")

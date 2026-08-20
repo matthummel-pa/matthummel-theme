@@ -19,6 +19,7 @@ GitHub Actions (`.github/workflows/deploy.yml`) does steps 1–3 on every push t
 - PHP **8.3+**: the FSE copy is renamed to `matthummel-fse-backup` and Sage is uploaded into `matthummel` (the active slug).
 - PHP **8.2** or unknown: Sage uploads beside live FSE as `matthummel-sage` (site stays up). Raise PHP in Site Tools → Devs → PHP Manager to **8.3**, then push `main` again.
 - If the locator cannot log in, FTP still uploads to `SITEGROUND_FTP_REMOTE_DIR` so a flaky login does not skip the whole deploy
+- FTP upload waits up to 3 minutes per operation so a slow SiteGround control socket does not fail immediately
 
 The **first** upload of `vendor/` is slow (many small files). After that, the action only sends changed files.
 
