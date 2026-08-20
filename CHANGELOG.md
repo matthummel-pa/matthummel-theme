@@ -28,7 +28,7 @@ All notable changes to this theme are recorded here.
 - Home hero is taller (about a viewport) with more section padding and wider grid gaps sitewide
 - About header photo sits to the right of the copy at 300×300
 - Home / About / Services “who this is for” is a 2×2 grid with icons, numbered doors, and a link on each card
-- SiteGround FTP deploy waits longer on a slow control socket before giving up
+- Theme updates install a GitHub Release zip over HTTPS (Appearance → Update Theme); SiteGround FTP is optional and must not block the build
 
 ## 3.0.10 — 2026-08-19
 

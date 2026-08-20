@@ -1,4 +1,4 @@
-name: Deploy to SiteGround
+name: Deploy theme
 
 on:
   push:
@@ -9,8 +9,11 @@ concurrency:
   group: siteground-deploy
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +38,30 @@ jobs:
       - name: Build Vite assets
         run: npm run build
 
+      - name: Pack WordPress theme zip
+        run: bash .github/scripts/pack-theme.sh matthummel.zip
+
+      - name: Publish GitHub Release (theme-latest)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: theme-latest
+          name: Latest theme build
+          body: |
+            Built Sage theme (Composer vendor + Vite `public/build`).
+            Commit: ${{ github.sha }}
+            Install from wp-admin → Appearance → Update Theme, or unzip into `wp-content/themes/matthummel/` via SiteGround File Manager.
+          files: matthummel.zip
+          fail_on_unmatched_files: true
+          make_latest: true
+          target_commitish: ${{ github.sha }}
+
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: matthummel-theme
+          path: matthummel.zip
+          if-no-files-found: error
+
       - name: Locate live WordPress theme folder on FTP
         id: ftpdir
         continue-on-error: true
@@ -45,10 +72,10 @@ jobs:
           FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
         run: python3 .github/scripts/siteground-ftp-locate.py
 
-      - name: Upload theme over FTP
+      - name: Upload theme over FTP (optional)
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
-          # Locator path when found; otherwise SITEGROUND_FTP_REMOTE_DIR.
           server: ${{ secrets.SITEGROUND_FTP_HOST }}
           username: ${{ secrets.SITEGROUND_FTP_USER }}
           password: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
@@ -63,3 +90,4 @@ jobs:
             **/node_modules/**
             **/.env*
             **/docs/**
+            **/matthummel.zip

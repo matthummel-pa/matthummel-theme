@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 | Feature | Notes | Code |
 | --- | --- | --- |
-| Theme updater | Appearance → Update Theme dispatches GitHub Actions FTP deploy | `app/theme-updater.php` |
+| Theme updater | Appearance → Update Theme installs the GitHub `theme-latest` zip over HTTPS (FTP optional) | `app/theme-updater.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
 | About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |

@@ -16,9 +16,11 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
 
-Live deploys: Appearance → **Update Theme** in wp-admin (needs a GitHub PAT) dispatches
-`.github/workflows/deploy.yml`. A push to `main` runs the same workflow. Do not upload
-`node_modules`. PHP 8.3 is required (CI, Composer, Acorn 6). Production SiteGround is still PHP **8.2.33** until you change it in Site Tools; Sage will fatal there until PHP is 8.3. Deploy therefore uploads Sage to `matthummel-sage` on 8.2 and restyles the live FSE palette; on 8.3+ it swaps Sage into the active `matthummel` folder.
+Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
+On the live site, Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).
+FTP remains an optional, best-effort step in `.github/workflows/deploy.yml`.
+The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
+WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
 
 ## Cursor Cloud specific instructions
 
@@ -62,9 +64,10 @@ Gotchas:
 - Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
   keys in `app/page-fields.php`, then `\App\field()` in the template.
 - Deploy from WordPress: Appearance → Update Theme. Needs a fine-grained GitHub PAT
-  (Actions read/write, Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
-  Same pipeline as pushing `main`. WP-CLI: `wp mh theme-update`. The Cursor Cloud
-  `gh` token cannot dispatch workflows (403); use Matt’s PAT, not the agent token.
+  (Contents read) saved on that screen or as `MH_GITHUB_TOKEN`. That **installs the
+  GitHub zip** over HTTPS. Optional: Actions read/write to click “Rebuild zip on GitHub”.
+  WP-CLI: `wp mh theme-update`. The Cursor Cloud `gh` token cannot create releases or
+  dispatch workflows (403); use Matt’s PAT on the live site, not the agent token.
 - WPVibe desktop Cursor: `.cursor/mcp.json` uses `npx mcp-remote` against
   `https://mcp.wpvibe.ai/mcp`. Do not open that URL in a browser — it is an API
   endpoint (often a blank white page). Connect it in Cursor Settings → MCP; a
