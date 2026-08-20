@@ -9,6 +9,87 @@ namespace App;
 /** Clean archive titles ("Category: Foo" -> "Foo"). */
 add_filter('get_the_archive_title_prefix', '__return_empty_string');
 
+function mh_contact_draft_key(): string
+{
+    $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+    return 'mh_cf_'.md5($ip.'|'.$ua);
+}
+
+function mh_contact_old(string $key, string $default = ''): string
+{
+    $draft = get_transient(mh_contact_draft_key());
+    if (! is_array($draft)) {
+        return $default;
+    }
+
+    return (string) ($draft[$key] ?? $default);
+}
+
+function mh_contact_tips(): array
+{
+    return [
+        [
+            'title' => __('Who you are', 'sage'),
+            'text' => __('Developer, learner, shop, or agency. One line is enough. It changes how I reply.', 'sage'),
+        ],
+        [
+            'title' => __('What you need', 'sage'),
+            'text' => __('A URL, a snippet name, or a sentence about the site or plugin. Skip the long brief.', 'sage'),
+        ],
+        [
+            'title' => __('When you need it', 'sage'),
+            'text' => __('A rough date helps. If you are only asking about code, say that — no timeline needed.', 'sage'),
+        ],
+    ];
+}
+
+function mh_contact_expect(): array
+{
+    return [
+        [
+            'title' => __('A real reply', 'sage'),
+            'text' => __('I write back in one or two business days, Eastern Time. If I cannot help, I say so.', 'sage'),
+        ],
+        [
+            'title' => __('No ads or social retainers', 'sage'),
+            'text' => __('I do not run ads or social accounts. Local Gettysburg marketing lives at Ridges & Valleys.', 'sage'),
+        ],
+        [
+            'title' => __('Public code stays free', 'sage'),
+            'text' => __('You can copy repos and snippets without writing. A note is kind, not required.', 'sage'),
+        ],
+    ];
+}
+
+function mh_contact_else_links(): array
+{
+    $notes = [
+        'github' => __('Repos, READMEs, and issues.', 'sage'),
+        'linkedin' => __('Work history and a quieter inbox.', 'sage'),
+        'devto' => __('Writing, cross-posted.', 'sage'),
+        'bluesky' => __('Occasional notes.', 'sage'),
+        'reddit' => __('Same handle, when I am there.', 'sage'),
+        'rss' => __('New posts, no algorithm.', 'sage'),
+        'globe' => __('Gettysburg studio site.', 'sage'),
+    ];
+
+    $links = mh_social_links();
+    $links[] = [
+        'key' => 'globe',
+        'label' => 'Ridges & Valleys',
+        'url' => 'https://ridgesandvalleys.com',
+    ];
+
+    foreach ($links as &$link) {
+        $link['note'] = $notes[$link['key'] ?? ''] ?? '';
+    }
+    unset($link);
+
+    return $links;
+}
+
 /** Handle the contact form submission (template-contact.blade.php). */
 add_action('init', function () {
     if (! isset($_POST['action']) || $_POST['action'] !== 'mh_contact') {
@@ -20,7 +101,7 @@ add_action('init', function () {
     $back = remove_query_arg('contact', $back);
 
     $redirect = function ($status) use ($back) {
-        wp_safe_redirect(add_query_arg('contact', $status, $back));
+        wp_safe_redirect(add_query_arg('contact', $status, $back).'#contact-status');
         exit;
     };
 
@@ -31,6 +112,7 @@ add_action('init', function () {
 
     // Honeypot: bots fill this; pretend success and bail.
     if (! empty($_POST['mh_hp'])) {
+        delete_transient(mh_contact_draft_key());
         $redirect('success');
     }
 
@@ -48,12 +130,21 @@ add_action('init', function () {
     ];
     $who = $whoLabels[$whoKey] ?? '';
 
+    $draft = [
+        'name' => $name,
+        'email' => (string) ($_POST['mh_email'] ?? ''),
+        'who' => $whoKey,
+        'subject' => $subject,
+        'message' => $message,
+    ];
+
     if ($name === '' || ! is_email($email) || $message === '') {
+        set_transient(mh_contact_draft_key(), $draft, 10 * MINUTE_IN_SECONDS);
         $redirect('error');
     }
 
     $to = get_option('admin_email');
-    $subject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
+    $mailSubject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
     $body = "Name: {$name}\nEmail: {$email}";
     if ($who !== '') {
         $body .= "\nWho: {$who}";
@@ -61,7 +152,8 @@ add_action('init', function () {
     $body .= "\n\n{$message}";
     $headers = ['Reply-To: '.$name.' <'.$email.'>'];
 
-    wp_mail($to, '[matthummel.com] '.$subject, $body, $headers);
+    wp_mail($to, '[matthummel.com] '.$mailSubject, $body, $headers);
+    delete_transient(mh_contact_draft_key());
 
     $redirect('success');
 });

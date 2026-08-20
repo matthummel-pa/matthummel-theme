@@ -93,7 +93,7 @@ function initMotion() {
   document.documentElement.classList.add('mh-motion');
 
   const nodes = document.querySelectorAll(
-    '.page-mast, .page-header, .pf-section, .cta-band, .hero-copy, .poster, .who-card, .work-card, .lift-card, .pf-card, .contact-stage, .error-404'
+    '.page-mast, .page-header, .pf-section, .cta-band, .hero-copy, .poster, .who-card, .work-card, .lift-card, .pf-card, .contact-form-panel, .contact-aside, .error-404'
   );
   if (!nodes.length || !('IntersectionObserver' in window)) {
     nodes.forEach((el) => el.classList.add('is-in'));
@@ -179,6 +179,13 @@ function initTocSpy() {
   map.forEach((_, el) => io.observe(el));
 }
 
+function initContactStatus() {
+  const status = document.querySelector('#contact-status');
+  if (status instanceof HTMLElement) {
+    status.focus({ preventScroll: false });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   initPopoutMenu();
@@ -186,4 +193,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroBlobs();
   initReadingProgress();
   initTocSpy();
+  initContactStatus();
 });

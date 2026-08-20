@@ -28,6 +28,7 @@ All notable changes to this theme are recorded here.
 - Home hero is taller (about a viewport) with more section padding and wider grid gaps sitewide
 - About header photo sits to the right of the copy at 300×300
 - Home / About / Services “who this is for” is a 2×2 grid with icons, numbered doors, and a link on each card
+- Contact page adds what-to-send and what-happens-next sections; form and “find me elsewhere” sit on the same page grid with square corners
 
 ## 3.0.10 — 2026-08-19
 

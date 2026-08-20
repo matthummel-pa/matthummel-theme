@@ -300,10 +300,10 @@ body::after {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(16rem, .9fr);
   gap: 0;
-  max-width: 72rem;
+  max-width: var(--page-max);
   margin: 0 auto 3.5rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-card);
+  border: 2px solid var(--color-ink);
+  border-radius: 0;
   overflow: hidden;
   background: #fff;
 }

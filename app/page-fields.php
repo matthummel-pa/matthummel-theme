@@ -282,14 +282,38 @@ function page_field_map(): array
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
                 ['cnt_h1', __('Heading', 'sage'), 'text', __('Say hello.', 'sage')],
                 ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site, a plugin, or another web app. I usually reply in one or two business days.', 'sage')],
-                ['cnt_who_label', __('Audience label', 'sage'), 'text', __('I am…', 'sage')],
+            ],
+            __('Form', 'sage') => [
+                ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
+                ['cnt_form_intro', __('Intro', 'sage'), 'textarea', __('Name, email, and a few sentences are enough. I read every note. This form is the reliable inbox.', 'sage')],
+                ['cnt_who_label', __('Audience label', 'sage'), 'text', __('Who you are', 'sage')],
+                ['cnt_message_hint', __('Message hint', 'sage'), 'text', __('A few sentences is enough. Paste a URL if you have one. No need for a long brief.', 'sage')],
+                ['cnt_reply_note', __('Note under submit', 'sage'), 'text', __('I usually reply in one or two business days (Eastern Time).', 'sage')],
                 ['cnt_success', __('Success message', 'sage'), 'text', __('Thanks. I got it and will write back soon.', 'sage')],
-                ['cnt_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the fields and try again.', 'sage')],
+                ['cnt_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
                 ['cnt_submit', __('Submit button', 'sage'), 'text', __('Send hello', 'sage')],
             ],
             __('Elsewhere', 'sage') => [
                 ['cnt_else_h2', __('Heading', 'sage'), 'text', __('Find me elsewhere', 'sage')],
                 ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is the Gettysburg studio site.', 'sage')],
+            ],
+            __('What to send', 'sage') => [
+                ['cnt_tips_kicker', __('Kicker', 'sage'), 'text', __('A useful note', 'sage')],
+                ['cnt_tips_h2', __('Heading', 'sage'), 'text', __('What to send', 'sage')],
+                ['cnt_tips_intro', __('Intro', 'sage'), 'textarea', __('You do not need a pitch deck. These three things help me reply in the right shape.', 'sage')],
+                ['cnt_tips', __('Cards', 'sage'), 'repeater', mh_contact_tips(), [
+                    ['title', __('Title', 'sage'), 'text'],
+                    ['text', __('Text', 'sage'), 'textarea'],
+                ]],
+            ],
+            __('What happens next', 'sage') => [
+                ['cnt_expect_kicker', __('Kicker', 'sage'), 'text', __('After you hit send', 'sage')],
+                ['cnt_expect_h2', __('Heading', 'sage'), 'text', __('What happens next', 'sage')],
+                ['cnt_expect_intro', __('Intro', 'sage'), 'textarea', __('A fair picture of how I use this inbox.', 'sage')],
+                ['cnt_expect', __('Cards', 'sage'), 'repeater', mh_contact_expect(), [
+                    ['title', __('Title', 'sage'), 'text'],
+                    ['text', __('Text', 'sage'), 'textarea'],
+                ]],
             ],
         ],
         'template-code.blade.php' => [

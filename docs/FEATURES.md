@@ -14,7 +14,7 @@ What the 3.x Sage theme does, and where it lives.
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured + live GitHub cards: View code, Live demo, stack icons | `template-code.blade.php`, `App\Github` |
 | Writing | Blog index in a 3/2/1 card grid; search, topics, read time, covers | `index.blade.php`, `archive.blade.php` |
-| Contact | Split form + elsewhere; audience select; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
+| Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
 | Dark mode | `html.mh-dark`, `localStorage mh-theme` | `resources/js/app.js` |
 | Mobile menu | Slide-over `#mh-popout` | `sections/header.blade.php` |
