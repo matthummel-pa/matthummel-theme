@@ -20,11 +20,21 @@ function mh_contact_draft_key(): string
 function mh_contact_old(string $key, string $default = ''): string
 {
     $draft = get_transient(mh_contact_draft_key());
-    if (! is_array($draft)) {
+    if (! is_array($draft) || $key === 'errors') {
         return $default;
     }
 
     return (string) ($draft[$key] ?? $default);
+}
+
+function mh_contact_old_errors(): array
+{
+    $draft = get_transient(mh_contact_draft_key());
+    if (! is_array($draft) || ! isset($draft['errors']) || ! is_array($draft['errors'])) {
+        return [];
+    }
+
+    return array_values(array_filter(array_map('strval', $draft['errors'])));
 }
 
 function mh_contact_tips(): array
@@ -136,9 +146,20 @@ add_action('init', function () {
         'who' => $whoKey,
         'subject' => $subject,
         'message' => $message,
+        'errors' => [],
     ];
 
-    if ($name === '' || ! is_email($email) || $message === '') {
+    if ($name === '') {
+        $draft['errors'][] = 'name';
+    }
+    if (! is_email($email)) {
+        $draft['errors'][] = 'email';
+    }
+    if ($message === '') {
+        $draft['errors'][] = 'message';
+    }
+
+    if ($draft['errors'] !== []) {
         set_transient(mh_contact_draft_key(), $draft, 10 * MINUTE_IN_SECONDS);
         $redirect('error');
     }

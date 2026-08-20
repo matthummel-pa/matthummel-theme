@@ -13,6 +13,7 @@
     $oldWho = \App\mh_contact_old('who');
     $oldSubject = \App\mh_contact_old('subject');
     $oldMessage = \App\mh_contact_old('message');
+    $invalid = \App\mh_contact_old_errors();
   @endphp
 
   <header class="page-header container wide">
@@ -44,11 +45,11 @@
           <div class="contact-form__row">
             <div class="field">
               <label for="cf-name">{{ __('Name', 'sage') }} <span class="field-req" aria-hidden="true">*</span><span class="visually-hidden"> {{ __('required', 'sage') }}</span></label>
-              <input id="cf-name" type="text" name="mh_name" autocomplete="name" required aria-required="true" value="{{ $oldName }}"@if ($mhError && $oldName === '') aria-invalid="true" aria-describedby="contact-status"@endif>
+              <input id="cf-name" type="text" name="mh_name" autocomplete="name" required aria-required="true" value="{{ $oldName }}"@if (in_array('name', $invalid, true)) aria-invalid="true" aria-describedby="contact-status"@endif>
             </div>
             <div class="field">
               <label for="cf-email">{{ __('Email', 'sage') }} <span class="field-req" aria-hidden="true">*</span><span class="visually-hidden"> {{ __('required', 'sage') }}</span></label>
-              <input id="cf-email" type="email" name="mh_email" autocomplete="email" inputmode="email" required aria-required="true" aria-describedby="cf-email-hint" value="{{ $oldEmail }}"@if ($mhError && $oldEmail === '') aria-invalid="true"@endif>
+              <input id="cf-email" type="email" name="mh_email" autocomplete="email" inputmode="email" required aria-required="true" aria-describedby="cf-email-hint{{ in_array('email', $invalid, true) ? ' contact-status' : '' }}" value="{{ $oldEmail }}"@if (in_array('email', $invalid, true)) aria-invalid="true"@endif>
               <p class="field-hint" id="cf-email-hint">{{ __('I only use this to reply. No list. No newsletter.', 'sage') }}</p>
             </div>
           </div>
@@ -72,7 +73,7 @@
 
           <div class="field">
             <label for="cf-message">{{ __('Message', 'sage') }} <span class="field-req" aria-hidden="true">*</span><span class="visually-hidden"> {{ __('required', 'sage') }}</span></label>
-            <textarea id="cf-message" name="mh_message" rows="8" required aria-required="true" aria-describedby="cf-message-hint" enterkeyhint="enter"@if ($mhError && $oldMessage === '') aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
+            <textarea id="cf-message" name="mh_message" rows="8" required aria-required="true" aria-describedby="cf-message-hint{{ in_array('message', $invalid, true) ? ' contact-status' : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
             <p class="field-hint" id="cf-message-hint">{{ \App\field('cnt_message_hint', __('A few sentences is enough. Paste a URL if you have one. No need for a long brief.', 'sage')) }}</p>
           </div>
 
