@@ -197,6 +197,7 @@
         </article>
       @endforeach
     </div>
+    <div class="snippet-grid">
     @foreach ($snips as $s)
       <article class="snippet-card">
         <h3>{{ $s['title'] }}</h3>
@@ -204,6 +205,7 @@
         <pre class="snippet"><code>{{ $s['code'] }}</code></pre>
       </article>
     @endforeach
+    </div>
   </div>
 </section>
 

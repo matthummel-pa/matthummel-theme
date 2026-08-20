@@ -13,6 +13,8 @@ All notable changes to this theme are recorded here.
 - Primary + footer menus; home “four doors” for developers, learners, shops, and agencies
 - Contact form asks who you are; 44px tap targets; new-window text on external links
 - Positioning copy leads with full-stack work (WordPress, plugins, other web apps); Power Platform stays in the mix but is not the day job
+- Cards and grids use ink borders, blue offset shadows, ExtraBold titles, and a navy featured tile
+- Headings and body use rounded Nunito (Black for display titles); Plus Jakarta Sans is gone
 
 ## 3.0.10 — 2026-08-19
 

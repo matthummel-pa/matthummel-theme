@@ -33,18 +33,41 @@ body::after {
 .who-card,
 .work-card,
 .pf-card,
+.post-card,
+.snippet-card,
+.svc-item,
+.process-list li,
+.value-grid li,
+.now-list li,
 .poster,
 .about-gh,
 .contact-aside {
-  transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s cubic-bezier(.16, 1, .3, 1), background .25s, color .25s, border-color .25s;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s cubic-bezier(.16, 1, .3, 1), background .25s, color .25s, border-color .25s;
 }
 .lift-card:hover,
 .who-card:hover,
 .work-card:hover,
 .pf-card:hover,
+.post-card:hover,
+.snippet-card:hover,
+.svc-item:hover,
+.process-list li:hover,
 .poster:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 22px 44px rgba(11, 18, 32, .12);
+  transform: translate(-4px, -4px);
+  box-shadow: 11px 11px 0 var(--color-blue);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lift-card:hover,
+  .who-card:hover,
+  .work-card:hover,
+  .pf-card:hover,
+  .post-card:hover,
+  .snippet-card:hover,
+  .svc-item:hover,
+  .process-list li:hover,
+  .poster:hover {
+    transform: none;
+  }
 }
 
 /* Editorial masts */
@@ -207,10 +230,11 @@ body::after {
   position: relative;
   overflow: hidden;
   min-height: 14rem;
-  padding: 1.6rem 1.5rem 1.4rem;
+  padding: 1.7rem 1.55rem 1.5rem;
   background: #fff;
-  border: 1px solid var(--color-line);
+  border: 2px solid var(--color-ink);
   border-radius: var(--radius-card);
+  box-shadow: 7px 7px 0 var(--color-blue);
 }
 .poster:nth-child(odd) {
   background: var(--color-navy);
@@ -380,12 +404,14 @@ body::after {
 .who-card::before {
   content: counter(who, decimal-leading-zero);
   position: absolute;
-  right: .7rem;
-  top: .35rem;
-  font: 800 2.4rem/1 var(--font-display);
-  letter-spacing: -.06em;
-  color: color-mix(in srgb, var(--color-blue) 18%, transparent);
+  right: .75rem;
+  top: .55rem;
+  font: 800 2.75rem/1 var(--font-display);
+  letter-spacing: -.08em;
+  color: color-mix(in srgb, var(--color-blue) 28%, transparent);
+  pointer-events: none;
 }
+.who-card:nth-child(4n+1)::before { color: rgba(147, 197, 253, .35); }
 .who-grid { counter-reset: who; }
 .who-card { counter-increment: who; }
 

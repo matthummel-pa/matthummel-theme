@@ -60,6 +60,7 @@
   <div class="container">
     <h2 class="display-title is-section">{{ \App\field('code_snip_h2', __('Snippets', 'sage')) }}</h2>
     <p class="lead">{{ \App\field('code_snip_intro', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.', 'sage')) }}</p>
+    <div class="snippet-grid">
     @foreach ($snips as $s)
       <article class="snippet-card">
         <h3>{{ $s['title'] }}</h3>
@@ -67,6 +68,7 @@
         <pre class="snippet"><code>{{ $s['code'] }}</code></pre>
       </article>
     @endforeach
+    </div>
   </div>
 </section>
 @endsection

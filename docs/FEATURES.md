@@ -37,4 +37,4 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Stack
 
-Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+
+Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Nunito

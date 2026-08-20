@@ -399,14 +399,16 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]));
 });
 
-add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style(
-        'mh-fonts',
-        'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap',
-        [],
-        null
-    );
-}, 5);
+function mh_font_stylesheet(): string
+{
+    return 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap';
+}
+
+$enqueueFonts = static function (): void {
+    wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
+};
+add_action('wp_enqueue_scripts', $enqueueFonts, 5);
+add_action('enqueue_block_editor_assets', $enqueueFonts, 5);
 
 add_action('after_switch_theme', __NAMESPACE__.'\\mh_seed_portfolio_pages');
 add_action('init', function () {
