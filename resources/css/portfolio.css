@@ -813,7 +813,21 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   background: #fff;
   color: #0b1220;
 }
-.work-card--featured .eyebrow { color: #93c5fd; }
+.work-card.work-card--featured {
+  background: var(--color-navy);
+  color: #cbd5e1;
+  border-color: var(--color-navy);
+}
+.work-card--featured .btn {
+  background: var(--color-blue);
+  color: #fff;
+  border-color: var(--color-blue);
+}
+.work-card--featured .btn-ghost {
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
+}
 .work-grid.is-list {
   grid-template-columns: 1fr;
 }

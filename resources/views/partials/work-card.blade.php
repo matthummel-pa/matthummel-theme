@@ -41,7 +41,7 @@
     @endif
     <div class="work-actions">
       @if ($concept !== '')
-        <a class="btn btn-outline" href="{{ esc_url($concept) }}" rel="noopener" target="_blank">
+        <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($concept) }}" rel="noopener" target="_blank">
           {{ \App\field('work_cta_view', __('View concept', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s (opens in a new window)', 'sage'), $title) }}</span>
         </a>
       @endif
@@ -50,7 +50,7 @@
       </a>
       <button
         type="button"
-        class="btn btn-outline"
+        class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}"
         data-share-project
         data-share-url="{{ esc_url($shareUrl) }}"
         data-share-title="{{ esc_attr($title) }}"
