@@ -91,7 +91,7 @@ function mh_featured_repos(): array
 function mh_home_github_repos(int $limit = 6): array
 {
     $featured = mh_code_page_repos();
-    $live = Github::fetchRepos(mh_github_login(), 12, 'updated');
+    $live = mh_github_live_repos(12);
     $names = array_map(static fn ($r) => strtolower((string) ($r['name'] ?? '')), $featured);
     foreach ($live as $r) {
         $name = strtolower((string) ($r['name'] ?? ''));
@@ -103,6 +103,109 @@ function mh_home_github_repos(int $limit = 6): array
     }
 
     return array_slice($featured, 0, max(1, $limit));
+}
+
+function mh_title_label(string $text): string
+{
+    $text = trim((string) preg_replace('/[\-_]+/', ' ', $text));
+    $text = trim((string) preg_replace('/\s+/', ' ', $text));
+    if ($text === '') {
+        return '';
+    }
+    $acronyms = [
+        'wp' => 'WP', 'php' => 'PHP', 'css' => 'CSS', 'html' => 'HTML', 'js' => 'JS',
+        'seo' => 'SEO', 'api' => 'API', 'ui' => 'UI', 'ux' => 'UX', 'toc' => 'TOC',
+        'scss' => 'SCSS', 'ts' => 'TS',
+    ];
+    $out = [];
+    foreach (explode(' ', $text) as $part) {
+        $low = strtolower($part);
+        $out[] = $acronyms[$low] ?? ucfirst($low);
+    }
+
+    return implode(' ', $out);
+}
+
+function mh_repo_demo_url(string $homepage): string
+{
+    $homepage = trim($homepage);
+    if ($homepage === '') {
+        return '';
+    }
+    if (! preg_match('#^https?://#i', $homepage)) {
+        $homepage = 'https://'.$homepage;
+    }
+
+    return esc_url_raw($homepage) ?: '';
+}
+
+function mh_repo_card(array $repo): array
+{
+    $name = (string) ($repo['name'] ?? '');
+    $url = (string) ($repo['url'] ?? '');
+    $owner = mh_github_login();
+    $meta = [];
+    if ($name !== '' && ($url === '' || empty($repo['homepage']) && empty($repo['topics']) && empty($repo['lang']))) {
+        $meta = Github::fetchRepoMeta($owner, $name);
+    }
+    $desc = trim((string) ($repo['desc'] ?? ''));
+    if ($desc === '') {
+        $desc = (string) ($meta['desc'] ?? '');
+    }
+    if ($url === '') {
+        $url = (string) ($meta['url'] ?? '');
+    }
+    if ($url === '' && $name !== '') {
+        $url = 'https://github.com/'.$owner.'/'.$name;
+    }
+    $homepage = mh_repo_demo_url((string) ($repo['homepage'] ?? $meta['homepage'] ?? ''));
+    $langs = [];
+    if ($name !== '') {
+        $langs = Github::fetchLanguages($owner, $name);
+    }
+    if ($langs === [] && ! empty($repo['lang'])) {
+        $langs = [(string) $repo['lang']];
+    } elseif ($langs === [] && ! empty($meta['lang'])) {
+        $langs = [(string) $meta['lang']];
+    }
+    $tags = $repo['tags'] ?? [];
+    if (is_string($tags)) {
+        $tags = array_values(array_filter(array_map('trim', explode(',', $tags))));
+    }
+    $topics = $repo['topics'] ?? $meta['topics'] ?? [];
+    $skip = [
+        'website', 'website-design', 'website-development', 'vibe-coding',
+        'toc', 'table-of-contents', 'accessibility',
+    ];
+    $stack = [];
+    foreach (array_merge($langs, $tags, $topics) as $item) {
+        $raw = trim((string) $item);
+        if ($raw === '' || in_array(strtolower($raw), $skip, true)) {
+            continue;
+        }
+        $label = mh_title_label($raw);
+        $key = strtolower($label);
+        if ($label === '' || isset($stack[$key])) {
+            continue;
+        }
+        $stack[$key] = $label;
+    }
+
+    return [
+        'name' => $name,
+        'title' => mh_title_label($name),
+        'desc' => $desc,
+        'url' => $url,
+        'demo' => $homepage,
+        'stack' => array_values(array_slice($stack, 0, 6)),
+        'stars' => (int) ($repo['stars'] ?? $meta['stars'] ?? 0),
+        'lang' => (string) ($repo['lang'] ?? $meta['lang'] ?? ''),
+    ];
+}
+
+function mh_github_live_repos(int $limit = 8): array
+{
+    return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));
 }
 
 /** Ridges & Valleys concept work for the Projects page. */

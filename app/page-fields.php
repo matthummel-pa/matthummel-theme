@@ -369,7 +369,7 @@ function mh_code_page_repos(?int $post_id = null): array
 {
     $rows = field_rows('code_repos', [], $post_id);
     if ($rows === []) {
-        return mh_featured_repos();
+        return array_map(__NAMESPACE__.'\\mh_repo_card', mh_featured_repos());
     }
     $out = [];
     foreach ($rows as $r) {
@@ -377,12 +377,12 @@ function mh_code_page_repos(?int $post_id = null): array
         if (is_string($tags)) {
             $tags = array_values(array_filter(array_map('trim', explode(',', $tags))));
         }
-        $out[] = [
+        $out[] = mh_repo_card([
             'name' => (string) ($r['name'] ?? ''),
             'desc' => (string) ($r['desc'] ?? ''),
             'url' => (string) ($r['url'] ?? ''),
             'tags' => $tags,
-        ];
+        ]);
     }
 
     return $out;

@@ -193,23 +193,7 @@
     </header>
     <div class="card-grid">
       @foreach ($repos as $r)
-        <article class="lift-card">
-          <h3><a href="{{ $r['url'] }}" rel="noopener" target="_blank">{{ $r['name'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></h3>
-          @if (! empty($r['desc']))
-            <p>{{ $r['desc'] }}</p>
-          @endif
-          <p class="pill-row">
-            @foreach (($r['tags'] ?? []) as $t)
-              <span class="pill">{{ $t }}</span>
-            @endforeach
-            @if (! empty($r['lang']))
-              <span class="pill">{{ $r['lang'] }}</span>
-            @endif
-            @if (! empty($r['stars']))
-              <span class="pill">{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
-            @endif
-          </p>
-        </article>
+        @include('partials.repo-card', ['r' => $r])
       @endforeach
     </div>
     <div class="snippet-grid">

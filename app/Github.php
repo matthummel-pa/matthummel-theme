@@ -100,7 +100,7 @@ class Github
     {
         $count = max(1, min(30, $count));
         $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
-        $key = 'mh_ghr2_'.md5($user.$sort.$count);
+        $key = 'mh_ghr3_'.md5($user.$sort.$count);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -115,6 +115,7 @@ class Github
                 if ($name === '' || strcasecmp($name, $user) === 0) {
                     continue;
                 }
+                $topics = $j['topics'] ?? [];
                 $out[] = [
                     'name' => $name,
                     'full' => $j['full_name'] ?? '',
@@ -124,6 +125,7 @@ class Github
                     'lang' => $j['language'] ?? '',
                     'url' => $j['html_url'] ?? '',
                     'homepage' => $j['homepage'] ?? '',
+                    'topics' => is_array($topics) ? $topics : [],
                 ];
                 if (count($out) >= $count) {
                     break;
@@ -133,6 +135,55 @@ class Github
         set_transient($key, $out, self::ttl());
 
         return $out;
+    }
+
+    /** Language names for a repo, largest first. Cached. */
+    public static function fetchLanguages(string $owner, string $repo): array
+    {
+        $owner = rawurlencode($owner);
+        $repo = rawurlencode($repo);
+        $key = 'mh_ghlang_'.md5($owner.'/'.$repo);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+        $out = [];
+        $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}/languages", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            $j = json_decode(wp_remote_retrieve_body($r), true);
+            if (is_array($j)) {
+                arsort($j);
+                $out = array_values(array_map('strval', array_keys($j)));
+            }
+        }
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /** One-repo extras when the list payload is thin (featured cards). */
+    public static function fetchRepoMeta(string $owner, string $repo): array
+    {
+        $key = 'mh_ghmeta_'.md5($owner.'/'.$repo);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+        $d = [];
+        $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            $j = json_decode(wp_remote_retrieve_body($r), true);
+            $topics = $j['topics'] ?? [];
+            $d = [
+                'desc' => (string) ($j['description'] ?? ''),
+                'stars' => (int) ($j['stargazers_count'] ?? 0),
+                'lang' => (string) ($j['language'] ?? ''),
+                'url' => (string) ($j['html_url'] ?? ''),
+                'homepage' => (string) ($j['homepage'] ?? ''),
+                'topics' => is_array($topics) ? $topics : [],
+            ];
+        }
+        set_transient($key, $d, self::ttl());
+
+        return $d;
     }
 
     /** Fetch + cache recent releases for a repo. */
