@@ -272,8 +272,8 @@ add_filter('pre_comment_content', function (string $content): string {
 }, 5);
 
 add_filter('comment_text', function (string $text): string {
-    if (str_contains($text, '<p>') || str_contains($text, '<li>') || str_contains($text, '<blockquote>')) {
-        return $text;
+    if (preg_match('/<[a-z][\s\S]*>/i', $text)) {
+        return wpautop($text);
     }
 
     return mh_comment_from_markdown($text);

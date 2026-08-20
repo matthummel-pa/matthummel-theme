@@ -283,16 +283,23 @@ function renderCommentMarkdown(raw) {
     out.push('</ul>');
   }
   text = out.join('\n');
+  text = text
+    .replace(/(<\/(?:blockquote|ul|pre)>)\n/g, '$1\n\n')
+    .replace(/\n(<(?:blockquote|ul|pre)>)/g, '\n\n$1');
   slots.forEach(([key, html]) => {
     text = text.replaceAll(key, html);
   });
   text = text
     .split(/\n{2,}/)
     .map((block) => {
-      if (block.startsWith('<pre') || block.startsWith('<ul') || block.startsWith('<blockquote')) {
-        return block;
+      const trimmed = block.trim();
+      if (!trimmed) {
+        return '';
       }
-      return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+      if (/^<(pre|ul|blockquote|ol)\b/i.test(trimmed)) {
+        return trimmed.replace(/\n/g, '');
+      }
+      return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
     })
     .join('');
   return text || '<p></p>';
