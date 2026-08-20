@@ -7,13 +7,15 @@
 @source "../**/*.js";
 
 @theme {
-  --font-sans: Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-display: Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-body: Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-heading: Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-btn: 999px;
-  --radius-card: 1.5rem;
+    --font-sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-display: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-body: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-heading: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --radius-btn: 999px;
+    --radius-card: 1.5rem;
+    --page-max: 80rem;
+    --page-gutter: 1.5rem;
 
   --color-khaki: #e8eef6;
   --color-cream: #f4f7fb;

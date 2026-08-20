@@ -13,7 +13,7 @@ What the 3.x Sage theme does, and where it lives.
 | Work | Ridges & Valleys concepts + screenshots + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()`, `resources/images/work/` |
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured repos, live GitHub, snippets | `template-code.blade.php`, `App\Github` |
-| Writing | Blog index in a 3/2/1 card grid; categories unchanged | `index.blade.php`, `archive.blade.php` |
+| Writing | Blog index in a 3/2/1 card grid; search, topics, read time, covers | `index.blade.php`, `archive.blade.php` |
 | Contact | Split form + elsewhere; audience select; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
 | Dark mode | `html.mh-dark`, `localStorage mh-theme` | `resources/js/app.js` |
@@ -37,4 +37,4 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Stack
 
-Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Nunito
+Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Inter + IBM Plex Sans

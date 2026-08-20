@@ -258,11 +258,31 @@ function mh_latest_posts(int $limit = 3): array
             'date' => get_the_date('', $p),
             'ex' => wp_trim_words(get_the_excerpt($p), 28),
             'cat' => ($cats && ! is_wp_error($cats)) ? $cats[0]->name : '',
+            'minutes' => mh_reading_minutes($p),
+            'thumb' => mh_post_card_image((int) $p->ID),
         ];
     }
     wp_reset_postdata();
 
     return $out;
+}
+
+function mh_reading_minutes(\WP_Post|int $post): int
+{
+    $post = get_post($post);
+    if (! $post instanceof \WP_Post) {
+        return 1;
+    }
+    $words = str_word_count(wp_strip_all_tags((string) $post->post_content));
+
+    return max(1, (int) ceil($words / 200));
+}
+
+function mh_post_card_image(int $post_id): string
+{
+    $src = get_the_post_thumbnail_url($post_id, 'medium_large');
+
+    return is_string($src) ? $src : '';
 }
 
 function mh_popular_posts(int $limit = 5, int $exclude = 0): array
@@ -504,7 +524,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
 
 function mh_font_stylesheet(): string
 {
-    return 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap';
+    return 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@600;700;800;900&display=swap';
 }
 
 $enqueueFonts = static function (): void {
@@ -512,6 +532,16 @@ $enqueueFonts = static function (): void {
 };
 add_action('wp_enqueue_scripts', $enqueueFonts, 5);
 add_action('enqueue_block_editor_assets', $enqueueFonts, 5);
+add_filter('style_loader_tag', function (string $html, string $handle): string {
+    if ($handle !== 'mh-fonts') {
+        return $html;
+    }
+
+    $pre = '<link rel="preconnect" href="https://fonts.googleapis.com">'."\n";
+    $pre .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'."\n";
+
+    return $pre.$html;
+}, 10, 2);
 
 add_action('after_switch_theme', __NAMESPACE__.'\\mh_seed_portfolio_pages');
 add_action('init', function () {

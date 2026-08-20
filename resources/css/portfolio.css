@@ -18,6 +18,10 @@
 }
 
 html { scroll-behavior: smooth; }
+:root {
+  --page-max: 80rem;
+  --page-gutter: 1.5rem;
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -31,20 +35,20 @@ body {
   background: var(--color-paper);
   color: var(--color-body);
   font-family: var(--font-body);
-  font-size: 1.3125rem;
-  line-height: 1.85;
-  font-weight: 500;
-  letter-spacing: 0.012em;
+  font-size: 1.1875rem;
+  line-height: 1.7;
+  font-weight: 400;
+  letter-spacing: 0;
 }
-p { margin: 0 0 1.4em; }
+p { margin: 0 0 1.25em; }
 p:last-child { margin-bottom: 0; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--color-ink);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
@@ -60,11 +64,12 @@ a:hover { color: var(--color-blue-ink); }
   width: 100%;
   max-width: 42rem;
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: var(--page-gutter);
 }
 .container.wide,
-.site-header-inner {
-  max-width: 80rem;
+.site-header-inner,
+.footer-copy {
+  max-width: var(--page-max);
 }
 .measure, .reader { max-width: 40rem; }
 
@@ -127,9 +132,9 @@ a:hover { color: var(--color-blue-ink); }
   text-align: left;
   color: var(--color-ink);
   font-family: var(--font-display);
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: .98;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: .96;
   text-wrap: balance;
 }
 .display-title.is-hero {
@@ -206,9 +211,9 @@ a:hover { color: var(--color-blue-ink); }
   .admin-bar .site-header { top: 46px; }
 }
 .site-header-inner {
-  max-width: 80rem;
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 1.05rem 1.5rem;
+  padding: 1.05rem var(--page-gutter);
   display: flex;
   align-items: center;
   gap: 1.15rem;
@@ -258,7 +263,7 @@ a:hover { color: var(--color-blue-ink); }
 .brand-name {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.045em;
   font-size: 1.2rem;
 }
 .header-nav { margin-left: auto; }
@@ -584,17 +589,20 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   min-height: 0;
 }
 .lift-card { min-height: 100%; }
+.work-card,
+.post-card {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
 .post-card {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
+.post-card .post-body { flex: 1 1 auto; display: flex; flex-direction: column; }
 .post-card .post-card-excerpt { flex: 1 1 auto; }
-.post-card .post-card-more { margin-top: auto; }
-.work-card {
-  padding: 0;
-  overflow: hidden;
-}
+.post-card .post-card-more { margin-top: auto; position: relative; z-index: 2; }
 .work-shot {
   display: block;
   width: 100%;
@@ -611,11 +619,95 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   object-position: top center;
   display: block;
 }
-.work-body {
+.work-body,
+.post-body {
   padding: 1.35rem 1.5rem 1.5rem;
 }
 .work-grid > .work-card:first-child .work-shot {
   border-bottom-color: #1e3a8a;
+}
+.post-shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0f172a;
+  border-bottom: 2px solid var(--color-ink);
+  color: #e2e8f0;
+  text-decoration: none;
+}
+.post-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.post-shot-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem 1.1rem;
+  background:
+    linear-gradient(165deg, #1e3a8a 0%, #0b1220 70%);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.65rem;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+.post-card-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.post-card .post-cat,
+.post-card .post-card-title a {
+  position: relative;
+  z-index: 2;
+}
+.post-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0 0 .65rem;
+}
+.post-cat {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: .15rem .5rem;
+  border: 1px solid var(--color-ink);
+  background: var(--color-blue-soft);
+  color: var(--color-ink);
+  text-decoration: none;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.post-cat:hover { background: var(--color-ink); color: #fff; }
+.write-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 1.25rem;
+}
+.search-wrap--inline {
+  margin: 0;
+  flex: 1 1 16rem;
+  max-width: 28rem;
+}
+.search-wrap--inline .search-form {
+  display: flex;
+  gap: .5rem;
+}
+.search-wrap--inline input[type="search"] {
+  flex: 1 1 auto;
+  min-height: 44px;
 }
 .lift-card h3,
 .who-card h3,
@@ -922,10 +1014,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .post-prose {
   max-width: 40rem;
   margin: 2.5rem auto 3rem;
-  font-size: 1.375rem;
-  line-height: 1.85;
-  letter-spacing: 0.014em;
-  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.75;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 .post-prose p,
 .post-prose li,
@@ -1019,15 +1111,12 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   gap: 1.5rem;
   grid-template-columns: 1.4fr 1fr 1fr;
   margin-bottom: 1.25rem;
-  max-width: 72rem;
 }
 .footer-brand { font-size: 1.25rem; margin: 0 0 .4rem; }
 .footer-nav { display: flex; flex-direction: column; gap: .45rem; list-style: none; padding: 0; margin: 0; }
 .footer-nav a { text-decoration: none; font-weight: 700; }
 .footer-copy {
-  max-width: 80rem;
   margin: 0 auto;
-  padding: 0 1.25rem;
   color: #e2e8f0;
   font-size: .95rem;
 }
@@ -1081,6 +1170,7 @@ html.mh-dark .process-list li:first-child {
   border-color: #2563eb;
 }
 html.mh-dark .filter-pill { background: #111827; color: #f8fafc; border-color: #f8fafc; }
+html.mh-dark .post-cat { background: #1e3a8a; color: #f8fafc; border-color: #93c5fd; }
 html.mh-dark .mh-theme-toggle,
 html.mh-dark .menu-toggle {
   color: #f8fafc;

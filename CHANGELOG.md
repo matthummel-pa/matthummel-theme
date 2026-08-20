@@ -14,7 +14,9 @@ All notable changes to this theme are recorded here.
 - Contact form asks who you are; 44px tap targets; new-window text on external links
 - Positioning copy leads with full-stack work (WordPress, plugins, other web apps); Power Platform stays in the mix but is not the day job
 - Cards and grids use ink borders, blue offset shadows, ExtraBold titles, and a navy featured tile
-- Headings and body use rounded Nunito (Black for display titles); Plus Jakarta Sans is gone
+- Headings use Inter (Helvetica-style, extra bold); body uses IBM Plex Sans next to IBM Plex Mono
+- Page gutters match the navbar and footer (80rem, 1.5rem)
+- Work and post cards are square-cornered; post cards add cover, topic, read time, and a full-card hit target
 - Body copy is larger with more line and paragraph space, in the style of a modern blog
 - WCAG 2.2 / Section 508: button and text contrast, 44px targets, mobile menu focus trap, social icons with names
 - Single posts: wider left column, right sidebar (summary, TOC, search, popular, topics, RSS), auto heading ids

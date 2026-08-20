@@ -157,10 +157,22 @@
     </header>
     <div class="card-grid card-grid--3">
       @forelse ($posts as $post)
-        <article class="lift-card">
-          <p class="pf-meta">{{ $post['date'] }}@if ($post['cat']) · {{ $post['cat'] }}@endif</p>
-          <h3 class="post-card-title"><a href="{{ $post['url'] }}">{{ $post['title'] }}</a></h3>
-          <p>{{ $post['ex'] }}</p>
+        <article class="post-card">
+          <a class="post-card-hit" href="{{ $post['url'] }}"><span class="visually-hidden">{{ $post['title'] }}</span></a>
+          @if (! empty($post['thumb']))
+            <span class="post-shot" aria-hidden="true">
+              <img src="{{ esc_url($post['thumb']) }}" alt="" width="960" height="540" loading="lazy" decoding="async">
+            </span>
+          @else
+            <span class="post-shot" aria-hidden="true">
+              <span class="post-shot-fallback">{{ wp_trim_words($post['title'], 4, '') }}</span>
+            </span>
+          @endif
+          <div class="post-body">
+            <p class="post-meta">{{ $post['date'] }}@if ($post['cat']) · {{ $post['cat'] }}@endif @if (! empty($post['minutes'])) · {{ sprintf(_n('%d min read', '%d min read', $post['minutes'], 'sage'), $post['minutes']) }}@endif</p>
+            <h3 class="post-card-title"><a href="{{ $post['url'] }}" tabindex="-1">{{ $post['title'] }}</a></h3>
+            <p>{{ $post['ex'] }}</p>
+          </div>
         </article>
       @empty
         <p>{{ \App\field('home_write_empty', __('New posts will show up here. Categories stay as they are.', 'sage')) }}</p>

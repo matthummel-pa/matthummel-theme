@@ -39,5 +39,5 @@
     @endif
     @include('partials.social')
   </div>
-  <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}</p>
+  <p class="footer-copy container wide">&copy; {{ date('Y') }} {{ $footerName }}</p>
 </footer>

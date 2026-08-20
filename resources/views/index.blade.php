@@ -4,6 +4,8 @@
 @php
   $devto = \App\mh_devto_posts(5);
   $writeId = \App\mh_writing_id();
+  $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
+  $cats = get_categories(['hide_empty' => true]);
 @endphp
   <header class="page-header container wide">
     <p class="eyebrow">{{ \App\field('write_kicker', __('Writing', 'sage'), $writeId) }}</p>
@@ -15,6 +17,18 @@
     @if (! have_posts())
       <p>{{ __('No posts yet.', 'sage') }}</p>
       {!! get_search_form(false) !!}
+    @else
+    <div class="write-tools">
+      <div class="search-wrap search-wrap--inline">{!! get_search_form(false) !!}</div>
+    </div>
+    @endif
+    @if ($cats)
+      <nav class="filter-row" aria-label="{{ __('Filter by topic', 'sage') }}">
+        <a class="filter-pill is-active" href="{{ esc_url($writeUrl) }}" aria-current="page">{{ __('All', 'sage') }}</a>
+        @foreach ($cats as $c)
+          <a class="filter-pill" href="{{ esc_url(get_category_link($c)) }}">{{ $c->name }}</a>
+        @endforeach
+      </nav>
     @endif
 
     <div class="post-list">
