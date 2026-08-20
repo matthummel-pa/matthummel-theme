@@ -3,6 +3,8 @@ import.meta.glob([
   '../fonts/**',
 ]);
 
+import { initCodeBlocks } from './code-blocks.js';
+
 function preferredTheme() {
   try {
     const stored = window.localStorage.getItem('mh-theme');
@@ -440,4 +442,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTocSpy();
   initContactStatus();
   initComments();
+  initCodeBlocks();
 });

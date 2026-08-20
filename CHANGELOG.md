@@ -16,6 +16,7 @@ All notable changes to this theme are recorded here.
 - Single posts leave more space between the hero and the article column
 - Comments use Write/Preview, ASCII markdown (**bold**, _italic_, `code`), reply mail, and no smart punctuation
 - Summary and On this page start closed and open with a toggle
+- Post and snippet code uses VS Code-style windows with Dark+ highlighting and Copy
 
 ## 3.0.12 — 2026-08-20
 

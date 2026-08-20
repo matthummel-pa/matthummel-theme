@@ -20,6 +20,7 @@ What the 3.x Sage theme does, and where it lives.
 | Dark mode | `html.mh-dark`, icon toggle, `prefers-color-scheme` until saved | `layouts/app.blade.php`, `resources/js/app.js`, `html.mh-dark` in `portfolio.css` |
 | Mobile menu | Slide-over `#mh-popout` with hover motion and compact socials | `sections/header.blade.php` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
+| Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 
 ## Content helpers
 
