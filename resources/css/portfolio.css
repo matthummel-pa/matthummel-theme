@@ -1569,7 +1569,7 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
 }
 
 .post-shell {
-  padding-top: clamp(3rem, 6.5vw, 5.25rem);
+  padding-top: var(--space-section);
   padding-bottom: var(--space-section);
 }
 .post-layout {
