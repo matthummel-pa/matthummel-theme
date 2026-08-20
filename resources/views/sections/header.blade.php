@@ -17,7 +17,7 @@
     @endif
 
     <div class="header-actions">
-      <button class="mh-theme-toggle" type="button" aria-pressed="false">
+      <button class="mh-theme-toggle" type="button" aria-pressed="false" aria-label="{{ __('Switch to dark mode', 'sage') }}">
         <span class="mh-icon-dark">{{ __('Dark', 'sage') }}</span>
         <span class="mh-icon-light">{{ __('Light', 'sage') }}</span>
       </button>

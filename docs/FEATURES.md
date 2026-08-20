@@ -16,7 +16,7 @@ What the 3.x Sage theme does, and where it lives.
 | Writing | Blog index in a 3/2/1 card grid; search, topics, read time, covers | `index.blade.php`, `archive.blade.php` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
-| Dark mode | `html.mh-dark`, `localStorage mh-theme` | `resources/js/app.js` |
+| Dark mode | `html.mh-dark`, `prefers-color-scheme` until saved, `localStorage mh-theme` | `layouts/app.blade.php`, `resources/js/app.js`, `html.mh-dark` in `portfolio.css` |
 | Mobile menu | Slide-over `#mh-popout` | `sections/header.blade.php` |
 
 ## Content helpers

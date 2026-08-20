@@ -2,6 +2,16 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.12 — 2026-08-20
+
+### Changed
+
+- Dark mode meets WCAG contrast: lighter links and eyebrows, distinct muted text, visible borders, `color-scheme: dark`
+- Outline buttons, skill pills, contact fields, skip link, and “elsewhere” cards keep readable text on dark surfaces
+- Focus rings use `--color-focus`; form errors and autofill stay visible in dark mode
+- Theme follows `prefers-color-scheme` until you pick Dark/Light (saved in `localStorage`)
+- Paper grain in dark mode is quieter so body copy stays readable
+
 ## 3.0.11 — 2026-08-20
 
 ### Changed

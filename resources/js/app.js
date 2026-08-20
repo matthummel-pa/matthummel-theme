@@ -3,28 +3,45 @@ import.meta.glob([
   '../fonts/**',
 ]);
 
-function initDarkMode() {
-  const root = document.documentElement;
-  const stored = window.localStorage.getItem('mh-theme');
-
-  if (stored === 'dark') {
-    root.classList.add('mh-dark');
+function preferredTheme() {
+  try {
+    const stored = window.localStorage.getItem('mh-theme');
+    if (stored === 'dark' || stored === 'light') {
+      return stored;
+    }
+  } catch {
+    /* private mode */
   }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.documentElement.classList.toggle('mh-dark', theme === 'dark');
+}
+
+function syncThemeToggle(button) {
+  const dark = document.documentElement.classList.contains('mh-dark');
+  button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+  button.setAttribute(
+    'aria-label',
+    dark ? 'Switch to light mode' : 'Switch to dark mode'
+  );
+}
+
+function initDarkMode() {
+  applyTheme(preferredTheme());
 
   document.querySelectorAll('.mh-theme-toggle').forEach((button) => {
-    const sync = () => {
-      const dark = root.classList.contains('mh-dark');
-      button.setAttribute('aria-pressed', dark ? 'true' : 'false');
-      button.setAttribute(
-        'aria-label',
-        dark ? 'Switch to light mode' : 'Switch to dark mode'
-      );
-    };
-    sync();
+    syncThemeToggle(button);
     button.addEventListener('click', () => {
-      const next = root.classList.toggle('mh-dark') ? 'dark' : 'light';
-      window.localStorage.setItem('mh-theme', next);
-      sync();
+      const next = document.documentElement.classList.contains('mh-dark') ? 'light' : 'dark';
+      applyTheme(next);
+      try {
+        window.localStorage.setItem('mh-theme', next);
+      } catch {
+        /* private mode */
+      }
+      document.querySelectorAll('.mh-theme-toggle').forEach(syncThemeToggle);
     });
   });
 }
