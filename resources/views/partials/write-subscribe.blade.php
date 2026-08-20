@@ -9,7 +9,7 @@
   </div>
   <div class="write-subscribe-row">
     <code class="write-rss-url">{{ esc_html($rss) }}</code>
-    <button type="button" class="btn" data-copy-rss data-rss="{{ esc_url($rss) }}">{{ __('Copy RSS', 'sage') }}</button>
+    <button type="button" class="btn" data-copy-rss data-rss="{{ esc_url($rss) }}" aria-live="polite">{{ __('Copy RSS', 'sage') }}</button>
     <a class="btn btn-outline" href="{{ esc_url($rss) }}">{{ __('Open feed', 'sage') }}</a>
   </div>
 </section>

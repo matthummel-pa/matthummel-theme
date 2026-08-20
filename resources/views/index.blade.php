@@ -22,14 +22,17 @@
     @else
       @if ($showFeatured)
         @php(the_post())
-        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
       @endif
-
-      <div class="post-list" data-post-list>
-        @while(have_posts())
-          @php(the_post())
-          @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-        @endwhile
+      <div class="post-stack" data-post-list>
+        @if ($showFeatured)
+          @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
+        @endif
+        <div class="post-list">
+          @while(have_posts())
+            @php(the_post())
+            @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
+          @endwhile
+        </div>
       </div>
 
       <nav class="posts-nav" aria-label="{{ __('Posts', 'sage') }}">

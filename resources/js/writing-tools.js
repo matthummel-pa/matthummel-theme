@@ -32,15 +32,20 @@ export async function copyText(text) {
 }
 
 async function copyRss(button) {
-  const url = button.getAttribute('data-rss');
+  const nearby = button.closest('.write-subscribe')?.querySelector('.write-rss-url')?.textContent?.trim();
+  const url = button.getAttribute('data-rss') || nearby;
   if (!url) {
     return;
   }
-  const label = button.textContent;
+  if (!button.hasAttribute('data-idle-label')) {
+    button.setAttribute('data-idle-label', button.textContent.trim());
+  }
+  const idle = button.getAttribute('data-idle-label');
+  button.setAttribute('aria-live', 'polite');
   const ok = await copyText(url);
   button.textContent = ok ? 'Copied' : 'Copy failed';
   window.setTimeout(() => {
-    button.textContent = label;
+    button.textContent = idle;
   }, 1600);
 }
 
