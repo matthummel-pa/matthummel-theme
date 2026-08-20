@@ -21,6 +21,7 @@ All notable changes to this theme are recorded here.
 - Skill chips and social links use icons; navbar is roomier
 - Work cards use screenshots from the Ridges & Valleys concept pages (image links to the concept)
 - Work screenshots are cropped to one 16:9 size so the grid stays even
+- Writing post cards use a 3/2/1 column grid from desktop down to phone
 
 ## 3.0.10 — 2026-08-19
 

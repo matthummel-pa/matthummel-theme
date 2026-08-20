@@ -4,7 +4,7 @@
   <header class="page-header container wide">
     <h1 class="display-title is-hero">{!! get_the_archive_title() !!}</h1>
   </header>
-  <div class="container" style="padding-bottom:3rem">
+  <div class="container wide" style="padding-bottom:3rem">
     @if (! have_posts())
       <p>{{ __('No posts yet.', 'sage') }}</p>
     @endif
