@@ -229,7 +229,6 @@ a:hover { color: var(--color-blue-ink); }
 .profile-photo--hero {
   width: 6rem;
   height: 6rem;
-}
   box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 0 8px rgba(37, 99, 235, .45);
 }
 .profile-photo--post {
@@ -243,6 +242,10 @@ a:hover { color: var(--color-blue-ink); }
 @media (max-width: 720px) {
   .hero-intro { align-items: center; }
   .profile-photo--hero {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+  .hero-inner > .profile-photo--hero {
     width: 300px;
     height: 300px;
   }
@@ -387,6 +390,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   grid-row: 1;
   width: 300px;
   height: 300px;
+  box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 0 8px rgba(37, 99, 235, .45);
 }
 @media (max-width: 720px) {
   .hero { padding: 2.75rem 0 2.5rem; }
