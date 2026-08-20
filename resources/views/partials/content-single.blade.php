@@ -28,10 +28,16 @@
       <div class="post-hero-meta">
         @include('partials.profile-photo', ['size' => 40, 'class' => 'profile-photo profile-photo--post', 'decorative' => true])
         <span class="post-hero-author">{{ get_the_author() }}</span>
-        <span class="post-hero-sep" aria-hidden="true">&middot;</span>
+        <span class="post-hero-sep" aria-hidden="true">|</span>
         <time class="dt-published" datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
-        <span class="post-hero-sep" aria-hidden="true">&middot;</span>
+        <span class="post-hero-sep" aria-hidden="true">|</span>
         <span class="post-hero-read">{{ $readMins }} min read</span>
+        @if (comments_open() || get_comments_number())
+          <span class="post-hero-sep" aria-hidden="true">|</span>
+          <a class="post-hero-comments" href="#comments">
+            {{ sprintf(_n('%s comment', '%s comments', get_comments_number(), 'sage'), number_format_i18n((int) get_comments_number())) }}
+          </a>
+        @endif
       </div>
     </div>
   </header>

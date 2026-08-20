@@ -203,6 +203,227 @@ function initContactStatus() {
   }
 }
 
+function asciiComment(text) {
+  return text
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D\u00AB\u00BB]/g, '"')
+    .replace(/\u2014/g, '--')
+    .replace(/[\u2013\u2212]/g, '-')
+    .replace(/\u2026/g, '...')
+    .replace(/\u00A0/g, ' ');
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderCommentMarkdown(raw) {
+  let text = asciiComment(String(raw || '').replace(/\r\n?/g, '\n'));
+  const slots = [];
+  const stash = (html) => {
+    const key = `%%MH${slots.length}%%`;
+    slots.push([key, html]);
+    return key;
+  };
+  text = text.replace(/```(?:[a-zA-Z0-9_-]+)?\n([\s\S]*?)```/g, (_, code) => (
+    stash(`<pre><code>${escapeHtml(code.replace(/\n$/, ''))}</code></pre>`)
+  ));
+  text = text.replace(/`([^`\n]+)`/g, (_, code) => stash(`<code>${escapeHtml(code)}</code>`));
+  text = escapeHtml(text);
+  text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" rel="nofollow ugc">$1</a>');
+  text = text.replace(/\*\*(.+?)\*\*/gs, '<strong>$1</strong>');
+  text = text.replace(/(?<![A-Za-z0-9*])\*(?!\*)(.+?)(?<!\*)\*(?![A-Za-z0-9*])/gs, '<em>$1</em>');
+  text = text.replace(/(?<![A-Za-z0-9])_([^_\n]+)_(?![A-Za-z0-9])/g, '<em>$1</em>');
+
+  const lines = text.split('\n');
+  const out = [];
+  let inList = false;
+  let inQuote = false;
+  lines.forEach((line) => {
+    const quote = line.match(/^&gt;\s?(.*)$/);
+    if (quote) {
+      if (inList) {
+        out.push('</ul>');
+        inList = false;
+      }
+      if (!inQuote) {
+        out.push('<blockquote>');
+        inQuote = true;
+      }
+      out.push(quote[1]);
+      return;
+    }
+    if (inQuote) {
+      out.push('</blockquote>');
+      inQuote = false;
+    }
+    const item = line.match(/^[-*]\s+(.+)$/);
+    if (item) {
+      if (!inList) {
+        out.push('<ul>');
+        inList = true;
+      }
+      out.push(`<li>${item[1]}</li>`);
+      return;
+    }
+    if (inList) {
+      out.push('</ul>');
+      inList = false;
+    }
+    out.push(line);
+  });
+  if (inQuote) {
+    out.push('</blockquote>');
+  }
+  if (inList) {
+    out.push('</ul>');
+  }
+  text = out.join('\n');
+  slots.forEach(([key, html]) => {
+    text = text.replaceAll(key, html);
+  });
+  text = text
+    .split(/\n{2,}/)
+    .map((block) => {
+      if (block.startsWith('<pre') || block.startsWith('<ul') || block.startsWith('<blockquote')) {
+        return block;
+      }
+      return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+    })
+    .join('');
+  return text || '<p></p>';
+}
+
+function wrapCommentSelection(textarea, before, after, fallback) {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+  const selected = value.slice(start, end) || fallback;
+  const next = value.slice(0, start) + before + selected + after + value.slice(end);
+  textarea.value = asciiComment(next);
+  const caret = start + before.length + selected.length;
+  textarea.setSelectionRange(start + before.length, caret);
+  textarea.focus();
+  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function initComments() {
+  const list = document.querySelector('.comment-list');
+  document.querySelectorAll('[data-comment-sort]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('[data-comment-sort]').forEach((other) => {
+        other.classList.toggle('is-active', other === button);
+      });
+      if (!list) {
+        return;
+      }
+      const items = [...list.children];
+      if (button.getAttribute('data-comment-sort') === 'newest') {
+        items.reverse();
+      }
+      items.forEach((item) => list.appendChild(item));
+    });
+  });
+
+  document.querySelectorAll('.comment-copy-link').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const url = button.getAttribute('data-copy') || '';
+      try {
+        await navigator.clipboard.writeText(url);
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Copy failed';
+      }
+      window.setTimeout(() => {
+        button.textContent = 'Copy link';
+      }, 1600);
+    });
+  });
+
+  const textarea = document.querySelector('#comment');
+  const preview = document.querySelector('#comment-preview');
+  const count = document.querySelector('#comment-count');
+  if (!(textarea instanceof HTMLTextAreaElement)) {
+    return;
+  }
+
+  const sync = () => {
+    textarea.value = asciiComment(textarea.value);
+    if (count) {
+      count.textContent = `${textarea.value.length} / 8000`;
+    }
+    if (preview) {
+      preview.innerHTML = textarea.value.trim()
+        ? renderCommentMarkdown(textarea.value)
+        : '';
+    }
+  };
+  textarea.addEventListener('input', sync);
+  textarea.addEventListener('paste', () => {
+    window.setTimeout(sync, 0);
+  });
+  sync();
+
+  document.querySelectorAll('[data-comment-tool]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const tool = button.getAttribute('data-comment-tool');
+      const map = {
+        bold: ['**', '**', 'bold'],
+        italic: ['_', '_', 'italic'],
+        code: ['`', '`', 'code'],
+        quote: ['> ', '', 'quote'],
+        ul: ['- ', '', 'item'],
+        link: ['[', '](https://)', 'text'],
+      };
+      const spec = map[tool];
+      if (spec) {
+        wrapCommentSelection(textarea, spec[0], spec[1], spec[2]);
+      }
+    });
+  });
+
+  document.querySelectorAll('.comment-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const write = tab.id === 'comment-tab-write';
+      document.querySelector('#comment-tab-write')?.setAttribute('aria-selected', write ? 'true' : 'false');
+      document.querySelector('#comment-tab-preview')?.setAttribute('aria-selected', write ? 'false' : 'true');
+      document.querySelector('#comment-tab-write')?.classList.toggle('is-active', write);
+      document.querySelector('#comment-tab-preview')?.classList.toggle('is-active', !write);
+      document.querySelector('#comment-panel-write')?.toggleAttribute('hidden', !write);
+      document.querySelector('#comment-panel-preview')?.toggleAttribute('hidden', write);
+      if (!write) {
+        sync();
+      } else {
+        textarea.focus();
+      }
+    });
+  });
+
+  textarea.addEventListener('keydown', (event) => {
+    const meta = event.metaKey || event.ctrlKey;
+    if (meta && event.key.toLowerCase() === 'b') {
+      event.preventDefault();
+      wrapCommentSelection(textarea, '**', '**', 'bold');
+    }
+    if (meta && event.key.toLowerCase() === 'i') {
+      event.preventDefault();
+      wrapCommentSelection(textarea, '_', '_', 'italic');
+    }
+    if (meta && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      wrapCommentSelection(textarea, '[', '](https://)', 'text');
+    }
+    if (meta && event.key === 'Enter') {
+      event.preventDefault();
+      textarea.form?.requestSubmit();
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   initPopoutMenu();
@@ -211,4 +432,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initReadingProgress();
   initTocSpy();
   initContactStatus();
+  initComments();
 });

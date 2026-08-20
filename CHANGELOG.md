@@ -14,6 +14,7 @@ All notable changes to this theme are recorded here.
 - Header is in document flow on small screens (not sticky) so it scrolls away with the page
 - Page and post heroes use the home navy gradient and blobs, without the drifting animation
 - Single posts leave more space between the hero and the article column
+- Comments use Write/Preview, ASCII markdown (**bold**, _italic_, `code`), reply mail, and no smart punctuation
 
 ## 3.0.12 — 2026-08-20
 
