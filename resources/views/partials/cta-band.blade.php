@@ -1,6 +1,6 @@
 @php
   $ctaTitle = $title ?? __('Say hello', 'sage');
-  $ctaText = $text ?? __('A question about a post, a snippet, or a WordPress build is enough.', 'sage');
+  $ctaText = $text ?? __('A question about a post, a snippet, or a WordPress, plugin, or web-app build is enough.', 'sage');
   $ctaLabel = $label ?? __('Send a note', 'sage');
   $ctaHref = $href ?? home_url('/contact/');
 @endphp

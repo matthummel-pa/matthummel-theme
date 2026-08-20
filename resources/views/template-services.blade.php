@@ -7,7 +7,7 @@
   <header class="page-header container wide">
     <p class="eyebrow">{{ \App\field('svc_kicker', __('Services', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('svc_h1', __('If you want a hand.', 'sage')) }}</h1>
-    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you run a shop, a nonprofit, a small team, or an agency that needs a WordPress or Power Platform hand, you can write. I have a full-time Power Platform job, so I only take a few extra projects at a time.', 'sage')) }}</p>
+    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.', 'sage')) }}</p>
   </header>
 
   @include('partials.audience', ['alt' => true])
@@ -17,10 +17,10 @@
       <h2 class="display-title is-section">{{ \App\field('svc_ways_h2', __('Ways I can help', 'sage')) }}</h2>
       <ol class="svc-list svc-list--numbered">
         @foreach (\App\field_rows('svc_items', [
-          ['title' => __('WordPress sites', 'sage'), 'text' => __('New sites, old sites that need care, and Sage 11 themes. Pages you can edit, explained in plain words.', 'sage')],
-          ['title' => __('Power Platform', 'sage'), 'text' => __('Power Apps, Power Automate, and SharePoint. Everyday work that still lives in email or spreadsheets can often live in a small app instead.', 'sage')],
-          ['title' => __('Small apps', 'sage'), 'text' => __('When WordPress is the wrong tool. React, APIs, and data — like Keepary on GitHub, which you can read.', 'sage')],
-          ['title' => __('Cleanup', 'sage'), 'text' => __('Speed, accessibility, and search. A short list of fixes, explained in plain words.', 'sage')],
+          ['title' => __('WordPress sites', 'sage'), 'text' => __('New sites, old sites that need care, and themes you can edit. Plain words. Pages that work.', 'sage')],
+          ['title' => __('WordPress plugins', 'sage'), 'text' => __('Small plugins that do one job well. You can read the code. You can change it.', 'sage')],
+          ['title' => __('Other web apps', 'sage'), 'text' => __('When WordPress is the wrong tool. React, APIs, and data — like Keepary on GitHub.', 'sage')],
+          ['title' => __('Power Platform', 'sage'), 'text' => __('Some Power Apps and Power Automate work, when a spreadsheet should be a small app instead. This is not my main focus.', 'sage')],
         ]) as $item)
           <li class="svc-item">
             <h3>{{ $item['title'] }}</h3>
@@ -54,7 +54,7 @@
       <h2 class="display-title is-section">{{ \App\field('svc_faq_h2', __('Quick answers', 'sage')) }}</h2>
       <div class="faq-list">
         @foreach (\App\field_rows('svc_faq', [
-          ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress or Power Platform build. You keep the client relationship. I stay the developer.', 'sage')],
+          ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the client. I stay the developer.', 'sage')],
           ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
           ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Local Gettysburg marketing lives at Ridges & Valleys. This site is for building and sharing.', 'sage')],
         ]) as $faq)

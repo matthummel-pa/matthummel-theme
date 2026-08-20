@@ -61,7 +61,7 @@ add_action('wp_enqueue_scripts', function () {
  */
 function mh_clear_page_block_content(): void
 {
-    if (get_option('mh_cleared_page_blocks_v2')) {
+    if (get_option('mh_cleared_page_blocks_v3')) {
         return;
     }
 
@@ -81,9 +81,6 @@ function mh_clear_page_block_content(): void
         if (in_array($id, $skip, true)) {
             continue;
         }
-        if (empty(page_field_map()[page_template_key($id)])) {
-            continue;
-        }
         $content = (string) get_post_field('post_content', $id, 'raw');
         if ($content === '') {
             continue;
@@ -94,10 +91,96 @@ function mh_clear_page_block_content(): void
         ]);
     }
 
-    update_option('mh_cleared_page_blocks_v2', true);
+    update_option('mh_cleared_page_blocks_v3', true);
 }
 
 add_action('init', __NAMESPACE__.'\\mh_clear_page_block_content', 45);
+
+/**
+ * Drop saved page fields that still lead with Power Platform-as-day-job copy
+ * so theme defaults (full-stack: WordPress, plugins, other web apps) show.
+ */
+function mh_reset_power_platform_focus_copy(): void
+{
+    if (get_option('mh_copy_fullstack_v1')) {
+        return;
+    }
+
+    $needles = [
+        'power platform by day',
+        'full-time power platform',
+        'full-time power apps',
+        'i build power apps and wordpress',
+        'power apps, power automate, and wordpress',
+        'power apps, automate, and wordpress',
+        'power apps, automate, and custom wordpress',
+        'wordpress and powerplatform',
+        'wordpress and power platform',
+        'power platform / wordpress',
+        'i write about power platform',
+        'power platform, wordpress, git',
+        'power platform, wordpress, and the messy',
+        'power apps, power automate, wordpress',
+        'instead of a spreadsheet',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $all = get_post_meta($id);
+        if (! is_array($all)) {
+            continue;
+        }
+        foreach ($all as $key => $values) {
+            if (! is_string($key) || ! str_starts_with($key, 'mh_f_')) {
+                continue;
+            }
+            $raw = $values[0] ?? '';
+            $val = maybe_unserialize($raw);
+            $blob = strtolower(is_array($val) ? (string) wp_json_encode($val) : (string) $val);
+            $drop = false;
+            foreach ($needles as $needle) {
+                if (str_contains($blob, $needle)) {
+                    $drop = true;
+                    break;
+                }
+            }
+            if (! $drop && $key === 'mh_f_home_stack' && is_array($val)) {
+                $first = strtolower(trim((string) ($val[0] ?? '')));
+                if (str_starts_with($first, 'power')) {
+                    $drop = true;
+                }
+            }
+            if (! $drop && $key === 'mh_f_svc_items' && is_array($val)) {
+                $firstTitle = strtolower((string) ($val[0]['title'] ?? ''));
+                if (str_contains($firstTitle, 'power')) {
+                    $drop = true;
+                }
+            }
+            if ($drop) {
+                delete_post_meta($id, $key);
+            }
+        }
+    }
+
+    $tagline = strtolower((string) get_option('blogdescription', ''));
+    foreach ($needles as $needle) {
+        if (str_contains($tagline, $needle)) {
+            update_option('blogdescription', 'Full-stack developer. WordPress, plugins, and other web apps.');
+            break;
+        }
+    }
+
+    update_option('mh_copy_fullstack_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_reset_power_platform_focus_copy', 46);
 
 /** Who this site is for — reused on Home, About, Services. */
 function mh_who_items(): array
@@ -105,19 +188,19 @@ function mh_who_items(): array
     return [
         [
             'title' => __('Developers', 'sage'),
-            'text' => __('Fork the repos, copy the snippets, ask about a line. Sage, PHP, React, and Power Platform notes without a course funnel.', 'sage'),
+            'text' => __('Copy the code. Fork a repo. Ask if a line is unclear.', 'sage'),
         ],
         [
-            'title' => __('People learning the web', 'sage'),
-            'text' => __('Plain words, short examples, and pages that work on a phone and a keyboard. Start on Code, then read a post.', 'sage'),
+            'title' => __('People learning', 'sage'),
+            'text' => __('Short notes. Tiny examples. Pages that work on a phone.', 'sage'),
         ],
         [
             'title' => __('Shops and teams', 'sage'),
-            'text' => __('WordPress you can edit, or a small Power App instead of another spreadsheet. I take a few of these beside a full-time job.', 'sage'),
+            'text' => __('A WordPress site you can edit, a plugin, or another web app that fits the work.', 'sage'),
         ],
         [
-            'title' => __('Marketing agencies', 'sage'),
-            'text' => __('When a client needs a real WordPress build — theme, bookings, shop, accessibility — and you want a developer who writes things down.', 'sage'),
+            'title' => __('Agencies', 'sage'),
+            'text' => __('When a client needs a WordPress site, a plugin, or another web app, and you want a developer who writes things down.', 'sage'),
         ],
     ];
 }

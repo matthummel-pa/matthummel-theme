@@ -9,15 +9,15 @@
   $ghBlog = \App\mh_github_blog_url($gh);
   $stack = \App\field_lines('home_stack', [
     __('WordPress', 'sage'),
-    __('Sage / Blade', 'sage'),
+    __('Plugins', 'sage'),
     __('PHP', 'sage'),
     __('JavaScript', 'sage'),
     __('React', 'sage'),
-    __('Power Apps', 'sage'),
-    __('Power Automate', 'sage'),
-    __('SharePoint', 'sage'),
     __('HTML & CSS', 'sage'),
     __('Git', 'sage'),
+    __('Sage / Blade', 'sage'),
+    __('Power Apps', 'sage'),
+    __('Power Automate', 'sage'),
   ]);
   foreach ($repos as $r) {
       $lang = trim((string) ($r['lang'] ?? ''));
@@ -38,8 +38,8 @@
     <div class="hero-copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, Pennsylvania', 'sage')) }}</p>
       <h1 id="hero-heading" class="display-title is-hero">{{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}</h1>
-      <p class="hero-roles">{{ \App\field('home_role', $gh['bio'] ?: __('Full-stack web developer. WordPress and Power Platform.', 'sage')) }}</p>
-      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build clear WordPress sites and small apps. Developers can copy the code. Shops and agencies can see how a site should feel. People learning the web can read the posts in plain words.', 'sage')) }}</p>
+      <p class="hero-roles">{{ \App\field('home_role', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')) }}</p>
+      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')) }}</p>
       <p class="btn-row">
         <a class="btn btn-on-dark" href="{{ home_url('/projects/') }}">{{ \App\field('home_cta_primary', __('See example sites', 'sage')) }}</a>
         <a class="btn btn-ghost" href="{{ home_url('/contact/') }}">{{ \App\field('home_cta_secondary', ! empty($gh['hireable']) ? __('Let’s work together', 'sage') : __('Say hello', 'sage')) }}</a>
@@ -104,8 +104,8 @@
 <section class="pf-section pf-section--navy" aria-labelledby="now-heading">
   <div class="container wide now-card">
     <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_now_kicker', __('Right now', 'sage')) }}</p>
-    <h2 id="now-heading" class="display-title is-section">{{ \App\field('home_now_h2', __('Power Platform by day. WordPress after hours.', 'sage')) }}</h2>
-    <p class="lead lead--on-dark">{{ \App\field('home_help_p1', __('I work full-time on Microsoft Power Platform. In spare hours I still help with WordPress sites, small apps, and cleanup (speed, accessibility, search).', 'sage')) }}</p>
+    <h2 id="now-heading" class="display-title is-section">{{ \App\field('home_now_h2', __('WordPress, plugins, and other web apps.', 'sage')) }}</h2>
+    <p class="lead lead--on-dark">{{ \App\field('home_help_p1', __('I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.', 'sage')) }}</p>
     <p class="btn-row">
       <a class="btn btn-on-dark" href="{{ home_url('/now/') }}">{{ \App\field('home_now_link', __('What I’m doing now', 'sage')) }}</a>
       <a class="btn btn-ghost" href="{{ home_url('/services/') }}">{{ \App\field('home_link_services', __('How I can help', 'sage')) }}</a>
@@ -148,7 +148,7 @@
       <div>
         <p class="eyebrow">{{ \App\field('home_write_kicker', __('Notes from the bench', 'sage')) }}</p>
         <h2 id="write-heading" class="display-title is-section">{{ \App\field('home_write_h2', __('Writing', 'sage')) }}</h2>
-        <p class="sec-intro">{{ \App\field('home_write_intro', __('WordPress, Power Platform, and shipping as one person. Many posts include snippets you can paste into a theme.', 'sage')) }}</p>
+        <p class="sec-intro">{{ \App\field('home_write_intro', __('Notes on WordPress, plugins, and other web apps. Many posts include snippets you can paste into a theme or a plugin.', 'sage')) }}</p>
       </div>
       <a class="text-link" href="{{ $writing }}">{{ \App\field('home_write_all', __('All posts', 'sage')) }}</a>
     </header>

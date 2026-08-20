@@ -72,8 +72,8 @@ function mh_home_fields(): array
         __('Hero', 'sage') => [
             ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('Gettysburg, PA', 'sage')],
             ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
-            ['home_role', __('Role line', 'sage'), 'text', __('Full-Stack Web Developer with experience in WordPress and PowerPlatform.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build clear WordPress sites and small apps. Developers can copy the code. Shops and agencies can see how a site should feel. People learning the web can read the posts in plain words.', 'sage')],
+            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')],
             ['home_cta_primary', __('Primary button', 'sage'), 'text', __('See example sites', 'sage')],
             ['home_cta_secondary', __('Secondary button', 'sage'), 'text', __('Let’s work together', 'sage')],
             ['home_link_writing', __('Writing link label', 'sage'), 'text', __('Writing', 'sage')],
@@ -84,18 +84,18 @@ function mh_home_fields(): array
         __('Stack', 'sage') => [
             ['home_stack_kicker', __('Kicker', 'sage'), 'text', __('Tools I ship with', 'sage')],
             ['home_stack_h2', __('Heading', 'sage'), 'text', __('Stack', 'sage')],
-            ['home_stack', __('Tools (one per line)', 'sage'), 'lines', ['WordPress', 'Sage / Blade', 'PHP', 'JavaScript', 'React', 'Power Apps', 'Power Automate', 'SharePoint', 'HTML & CSS', 'Git']],
+            ['home_stack', __('Tools (one per line)', 'sage'), 'lines', ['WordPress', 'Plugins', 'PHP', 'JavaScript', 'React', 'HTML & CSS', 'Git', 'Sage / Blade', 'Power Apps', 'Power Automate']],
         ],
         __('Right now', 'sage') => [
             ['home_now_kicker', __('Kicker', 'sage'), 'text', __('Right now', 'sage')],
-            ['home_now_h2', __('Heading', 'sage'), 'text', __('Power Platform by day. WordPress after hours.', 'sage')],
+            ['home_now_h2', __('Heading', 'sage'), 'text', __('WordPress, plugins, and other web apps.', 'sage')],
             ['home_now_link', __('Now page link', 'sage'), 'text', __('What I’m doing now', 'sage')],
             ['home_link_services', __('Services link', 'sage'), 'text', __('How I can help', 'sage')],
         ],
         __('Writing section', 'sage') => [
             ['home_write_kicker', __('Kicker', 'sage'), 'text', __('Notes from the bench', 'sage')],
             ['home_write_h2', __('Heading', 'sage'), 'text', __('Writing', 'sage')],
-            ['home_write_intro', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, Power Platform, and shipping as one person. Many posts include snippets you can paste into a theme or a plugin file.', 'sage')],
+            ['home_write_intro', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Many posts include snippets you can paste into a theme or a plugin.', 'sage')],
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts will show up here. Categories stay as they are.', 'sage')],
             ['home_write_all', __('All posts label', 'sage'), 'text', __('All posts', 'sage')],
         ],
@@ -114,7 +114,7 @@ function mh_home_fields(): array
         __('Help section', 'sage') => [
             ['home_help_kicker', __('Kicker', 'sage'), 'text', __('A question is enough', 'sage')],
             ['home_help_h2', __('Heading', 'sage'), 'text', __('If you need a hand', 'sage')],
-            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('I work full-time on Microsoft Power Platform. In spare hours I still help with WordPress sites, small apps, and cleanup (speed, accessibility, search).', 'sage')],
+            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.', 'sage')],
             ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Read <a href="/services/">how I can help</a>, or <a href="/contact/">send a note</a>. A question about a post or a snippet is just as welcome as a build request.', 'sage')],
         ],
         __('Who this is for', 'sage') => [
@@ -137,10 +137,10 @@ function page_field_map(): array
     $home = mh_home_fields();
 
     $svcItems = [
-        ['title' => __('WordPress sites', 'sage'), 'text' => __('New sites, old sites that need care, and Sage 11 themes. Pages you can edit, explained in plain words.', 'sage')],
-        ['title' => __('Power Platform', 'sage'), 'text' => __('Power Apps, Power Automate, and SharePoint. Everyday work that still lives in email or spreadsheets can often live in a small app instead.', 'sage')],
-        ['title' => __('Small apps', 'sage'), 'text' => __('When WordPress is the wrong tool. React, APIs, and data — like Keepary on GitHub, which you can read.', 'sage')],
-        ['title' => __('Cleanup', 'sage'), 'text' => __('Speed, accessibility, and search. A short list of fixes, explained in plain words.', 'sage')],
+        ['title' => __('WordPress sites', 'sage'), 'text' => __('New sites, old sites that need care, and themes you can edit. Plain words. Pages that work.', 'sage')],
+        ['title' => __('WordPress plugins', 'sage'), 'text' => __('Small plugins that do one job well. You can read the code. You can change it.', 'sage')],
+        ['title' => __('Other web apps', 'sage'), 'text' => __('When WordPress is the wrong tool. React, APIs, and data — like Keepary on GitHub.', 'sage')],
+        ['title' => __('Power Platform', 'sage'), 'text' => __('Some Power Apps and Power Automate work, when a spreadsheet should be a small app instead. This is not my main focus.', 'sage')],
     ];
 
     $placeItems = [
@@ -186,7 +186,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('Glad you’re here.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a site or an app. Plain language. Pages that are easy to use.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language. Pages that are easy to use.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -199,8 +199,8 @@ function page_field_map(): array
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here', 'sage')],
                 ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.', 'sage')],
-                ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('Later I learned full-stack work and Microsoft 365. Day to day I still mix a public site with the quieter tools a team uses behind it.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('On GitHub I keep it short: full-stack web developer with WordPress and Power Platform. That’s still true.', 'sage')],
+                ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('Then I learned full-stack work: sites, plugins, and other web apps. I still use Power Platform when it fits. It is not the main thing I do.', 'sage')],
+                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('On GitHub I keep it short: full-stack developer. WordPress, plugins, and other web apps.', 'sage')],
             ],
             __('Two places', 'sage') => [
                 ['about_places_h2', __('Heading', 'sage'), 'text', __('Two places I publish', 'sage')],
@@ -229,11 +229,11 @@ function page_field_map(): array
             ],
             __('List', 'sage') => [
                 ['now_items', __('Items', 'sage'), 'lines', [
-                    __('Full-time Power Platform work.', 'sage'),
+                    __('Full-stack work: WordPress, plugins, and other web apps.', 'sage'),
                     __('Raising kids in Gettysburg. Nights and weekends are scarce, so I keep extra projects small.', 'sage'),
                     __('This Sage 11 site is a notebook: writing, snippets, and example shops.', 'sage'),
                     __('Sharing notes on this blog, DEV.to, Bluesky, and Reddit.', 'sage'),
-                    __('Helping with a few WordPress and Power Platform builds when I have room — including work for agencies who need a developer, not another marketer.', 'sage'),
+                    __('Helping with a few extra builds when I have room — sites, plugins, and sometimes Power Platform.', 'sage'),
                 ]],
                 ['now_link', __('Link label', 'sage'), 'text', __('Say hello', 'sage')],
             ],
@@ -242,7 +242,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['svc_kicker', __('Kicker', 'sage'), 'text', __('Services', 'sage')],
                 ['svc_h1', __('Heading', 'sage'), 'text', __('If you want a hand.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you run a shop, a nonprofit, a small team, or an agency that needs a WordPress or Power Platform hand, you can write. I have a full-time Power Platform job, so I only take a few extra projects at a time.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -273,7 +273,7 @@ function page_field_map(): array
             __('Quick answers', 'sage') => [
                 ['svc_faq_h2', __('Heading', 'sage'), 'text', __('Quick answers', 'sage')],
                 ['svc_faq', __('Questions', 'sage'), 'repeater', [
-                    ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress or Power Platform build. You keep the client relationship. I stay the developer.', 'sage')],
+                    ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the client. I stay the developer.', 'sage')],
                     ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
                     ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Local Gettysburg marketing lives at Ridges & Valleys. This site is for building and sharing.', 'sage')],
                 ], [
@@ -288,7 +288,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
                 ['cnt_h1', __('Heading', 'sage'), 'text', __('Say hello.', 'sage')],
-                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Questions about a post, a snippet, or GitHub are welcome. So is a note from a shop, a team, or an agency that needs a WordPress or Power Platform hand. I usually reply in one or two business days.', 'sage')],
+                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site, a plugin, or another web app. I usually reply in one or two business days.', 'sage')],
                 ['cnt_who_label', __('Audience label', 'sage'), 'text', __('I am…', 'sage')],
                 ['cnt_success', __('Success message', 'sage'), 'text', __('Thanks. I got it and will write back soon.', 'sage')],
                 ['cnt_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the fields and try again.', 'sage')],
@@ -351,11 +351,11 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Writing', 'sage')],
                 ['write_h1', __('Heading', 'sage'), 'text', __('Writing, with snippets when they help.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, Power Platform, and shipping as one person. Developers can copy the examples. Shops and agencies can see how I explain a build. Categories stay put. I also write on DEV.to.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build. I also write on DEV.to.', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],
                 ['write_follow', __('Follow line', 'sage'), 'text', __('Follow along:', 'sage')],
                 ['write_share_note', __('Note under each post', 'sage'), 'html', __('Extra copy-paste examples live on the <a href="/code/">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage')],
-                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write notes from Gettysburg, Pennsylvania, and share WordPress snippets you can paste into a theme. Developers, shops, and agencies are welcome here.', 'sage')],
+                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write notes from Gettysburg, Pennsylvania, and share WordPress, plugin, and other web-app snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
             ],
         ],
     ];

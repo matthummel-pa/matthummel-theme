@@ -12,6 +12,7 @@ All notable changes to this theme are recorded here.
 - Hero blue gradient blobs drift slowly around the banner (off when `prefers-reduced-motion`)
 - Primary + footer menus; home “four doors” for developers, learners, shops, and agencies
 - Contact form asks who you are; 44px tap targets; new-window text on external links
+- Positioning copy leads with full-stack work (WordPress, plugins, other web apps); Power Platform stays in the mix but is not the day job
 
 ## 3.0.10 — 2026-08-19
 

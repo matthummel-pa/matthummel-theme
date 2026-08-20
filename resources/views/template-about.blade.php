@@ -7,32 +7,28 @@
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $ghBlog = \App\mh_github_blog_url($gh);
-  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a site or an app.', 'sage');
-  if (! empty($gh['location']) && ! empty($gh['bio'])) {
+  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app.', 'sage');
+  if (! empty($gh['location'])) {
       $aboutLede = sprintf(
-          /* translators: 1: GitHub location, 2: GitHub bio */
-          __('I’m Matt. I live in %1$s. On GitHub: %2$s I write about the web, share code, and sometimes help a shop, a team, or an agency with a site or an app.', 'sage'),
-          $gh['location'],
-          rtrim((string) $gh['bio'], '.').'.'
+          /* translators: %s: GitHub location */
+          __('I’m Matt. I live in %s. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app.', 'sage'),
+          $gh['location']
       );
   }
-  $aboutGh = __('On GitHub I keep it short: full-stack web developer with WordPress and Power Platform. That’s still true.', 'sage');
-  if (! empty($gh['bio'])) {
-      $aboutGh = $gh['bio'];
-      if (! empty($gh['created'])) {
-          $aboutGh .= ' '.sprintf(
-              /* translators: %s: year the GitHub account was created */
-              __('On GitHub since %s.', 'sage'),
-              $gh['created']
-          );
-      }
-      if (! empty($gh['public_repos'])) {
-          $aboutGh .= ' '.sprintf(
-              /* translators: %s: public repository count */
-              __('%s public repositories.', 'sage'),
-              number_format_i18n((int) $gh['public_repos'])
-          );
-      }
+  $aboutGh = __('On GitHub I keep it short: full-stack developer. WordPress, plugins, and other web apps.', 'sage');
+  if (! empty($gh['created'])) {
+      $aboutGh .= ' '.sprintf(
+          /* translators: %s: year the GitHub account was created */
+          __('On GitHub since %s.', 'sage'),
+          $gh['created']
+      );
+  }
+  if (! empty($gh['public_repos'])) {
+      $aboutGh .= ' '.sprintf(
+          /* translators: %s: public repository count */
+          __('%s public repositories.', 'sage'),
+          number_format_i18n((int) $gh['public_repos'])
+      );
   }
 @endphp
 
@@ -53,7 +49,7 @@
       <div>
         <h2 class="display-title is-section">{{ \App\field('about_story_h2', __('How I got here', 'sage')) }}</h2>
         <p>{{ \App\field('about_p1', __('I started by building WordPress sites for higher-ed marketing teams. That taught me to care about what people need, not just the stack.', 'sage')) }}</p>
-        <p>{{ \App\field('about_p2', __('Later I learned full-stack work and Microsoft 365. Day to day I still mix a public site with the quieter tools a team uses behind it.', 'sage')) }}</p>
+        <p>{{ \App\field('about_p2', __('Then I learned full-stack work: sites, plugins, and other web apps. I still use Power Platform when it fits. It is not the main thing I do.', 'sage')) }}</p>
       </div>
       <div class="about-gh">
         <p class="eyebrow">{{ __('GitHub', 'sage') }}</p>

@@ -68,19 +68,19 @@ function mh_featured_repos(): array
     return [
         [
             'name' => 'keepary',
-            'desc' => 'A private family app I built end to end. React, Vite, Tailwind, and Supabase. Real sign-in, invites, and posts.',
+            'desc' => 'A private family app. Sign-in, invites, and posts. You can read the code.',
             'url' => 'https://github.com/matthummel-pa/keepary',
             'tags' => ['React', 'Supabase', 'Full-stack'],
         ],
         [
             'name' => 'tocflow',
-            'desc' => 'A free WordPress table of contents block. It reads your headings and builds a clear, accessible outline.',
+            'desc' => 'A free WordPress tool that lists your headings so people can jump around a long page.',
             'url' => 'https://github.com/matthummel-pa/tocflow',
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
             'name' => 'ridgesandvalleys',
-            'desc' => 'The Ridges & Valleys Studio site. Sage 11, local SEO, accessibility, and Gettysburg work.',
+            'desc' => 'The Gettysburg studio site. Clear pages for local shops, inns, and tours.',
             'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
             'tags' => ['WordPress', 'Sage', 'Local SEO'],
         ],
@@ -109,22 +109,22 @@ function mh_home_github_repos(int $limit = 6): array
 function mh_studio_projects(): array
 {
     return [
-        ['slug' => 'hallowed-ground', 'title' => 'Hallowed Ground Battlefield Tours', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'A licensed-guide site with day and after-dark paths, five tours, and a battlefield map. Built as a Sage and WooCommerce handoff.', 'tech' => ['Sage', 'WooCommerce', 'Maps']],
-        ['slug' => 'first-shot', 'title' => 'First Shot Food & History Tours', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'A walking-tour site with a calendar booking flow, add-ons, and a demo payment path.', 'tech' => ['WordPress', 'Bookings']],
-        ['slug' => 'field-of-valor', 'title' => 'Field of Valor History Co.', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'An editorial history-tour site for Gettysburg travelers. Clear tours, easy contact.', 'tech' => ['WordPress', 'SEO']],
-        ['slug' => 'keystone-homes', 'title' => 'Keystone Homes & Land', 'cat' => 'Real estate', 'place' => 'Gettysburg, PA', 'blurb' => 'Land and farms listings with grid and map views, acreage filters, and financing tools.', 'tech' => ['WordPress', 'Maps', 'Filters']],
-        ['slug' => 'ridgeline-realty', 'title' => 'Ridgeline Realty', 'cat' => 'Real estate', 'place' => 'Gettysburg, PA', 'blurb' => 'A realty concept with filterable listings and a live mortgage calculator.', 'tech' => ['WordPress', 'JavaScript']],
-        ['slug' => 'ridgeline-outfitters', 'title' => 'Ridgeline Outfitters', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'Outdoor gear shop with filters, quick view, a wishlist, and a free-shipping bar in the cart.', 'tech' => ['WooCommerce']],
-        ['slug' => 'diamond-ridge', 'title' => 'Diamond & Ridge Mercantile', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'A downtown shop concept with a full product catalog, slide-in cart, and checkout.', 'tech' => ['WooCommerce']],
-        ['slug' => 'diamonds-threads', 'title' => 'Diamonds & Threads', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'A vintage-inspired boutique site for Adams County. Character first, still easy to shop.', 'tech' => ['WooCommerce']],
-        ['slug' => 'cannon-crumb', 'title' => 'Cannon & Crumb', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'An all-day cafe with a filterable menu and a real online-ordering cart.', 'tech' => ['WordPress', 'Ordering']],
-        ['slug' => 'field-musket', 'title' => 'Field & Musket Tavern', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'A farm-to-table tavern with a seasonal menu and a clear reservation path.', 'tech' => ['WordPress']],
-        ['slug' => 'pintfield', 'title' => 'Pintfield Creamery', 'cat' => 'Restaurants', 'place' => 'Gettysburg & Adams County, PA', 'blurb' => 'A creamery site with a live 32-flavor scoop board, online ordering, and three locations.', 'tech' => ['WordPress', 'Ordering']],
-        ['slug' => 'reveille', 'title' => 'Reveille Kitchen & Bar', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'A downtown farm-to-table restaurant. Menu first, with online reservations.', 'tech' => ['WordPress']],
-        ['slug' => 'cupola-field', 'title' => 'The Cupola & Field Hotel', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'A modern boutique hotel with a live reservation engine and guest-request tools.', 'tech' => ['WordPress', 'Bookings']],
-        ['slug' => 'lantern-laurel', 'title' => 'The Lantern & Laurel Inn', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'A nine-room heritage inn with a direct booking bar and a warm, quiet identity.', 'tech' => ['WordPress', 'Bookings']],
-        ['slug' => 'willoughby', 'title' => 'Willoughby Run Inn', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'An elegant boutique-inn concept built to win direct bookings in Gettysburg.', 'tech' => ['WordPress', 'Bookings']],
-        ['slug' => 'herr-ridge', 'title' => 'Herr Ridge Cottage B&B', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'A cozy bed-and-breakfast site that turns searches into booked stays.', 'tech' => ['WordPress', 'SEO']],
+        ['slug' => 'hallowed-ground', 'title' => 'Hallowed Ground Battlefield Tours', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'A guide site with day and night tours and a battlefield map.', 'tech' => ['Sage', 'WooCommerce', 'Maps']],
+        ['slug' => 'first-shot', 'title' => 'First Shot Food & History Tours', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'Walking tours with a simple booking calendar.', 'tech' => ['WordPress', 'Bookings']],
+        ['slug' => 'field-of-valor', 'title' => 'Field of Valor History Co.', 'cat' => 'Tours', 'place' => 'Gettysburg, PA', 'blurb' => 'History tours for visitors. Clear list. Easy contact.', 'tech' => ['WordPress', 'SEO']],
+        ['slug' => 'keystone-homes', 'title' => 'Keystone Homes & Land', 'cat' => 'Real estate', 'place' => 'Gettysburg, PA', 'blurb' => 'Land and farms. Grid, map, and simple filters.', 'tech' => ['WordPress', 'Maps', 'Filters']],
+        ['slug' => 'ridgeline-realty', 'title' => 'Ridgeline Realty', 'cat' => 'Real estate', 'place' => 'Gettysburg, PA', 'blurb' => 'Listings you can filter, plus a mortgage calculator.', 'tech' => ['WordPress', 'JavaScript']],
+        ['slug' => 'ridgeline-outfitters', 'title' => 'Ridgeline Outfitters', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'Outdoor gear with filters, a wishlist, and a cart.', 'tech' => ['WooCommerce']],
+        ['slug' => 'diamond-ridge', 'title' => 'Diamond & Ridge Mercantile', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'A downtown shop with products, a cart, and checkout.', 'tech' => ['WooCommerce']],
+        ['slug' => 'diamonds-threads', 'title' => 'Diamonds & Threads', 'cat' => 'Retail', 'place' => 'Gettysburg, PA', 'blurb' => 'A boutique shop that is easy to browse.', 'tech' => ['WooCommerce']],
+        ['slug' => 'cannon-crumb', 'title' => 'Cannon & Crumb', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'A cafe menu you can filter, plus online ordering.', 'tech' => ['WordPress', 'Ordering']],
+        ['slug' => 'field-musket', 'title' => 'Field & Musket Tavern', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'A tavern menu and a clear way to book a table.', 'tech' => ['WordPress']],
+        ['slug' => 'pintfield', 'title' => 'Pintfield Creamery', 'cat' => 'Restaurants', 'place' => 'Gettysburg & Adams County, PA', 'blurb' => 'A scoop board, online orders, and three shops.', 'tech' => ['WordPress', 'Ordering']],
+        ['slug' => 'reveille', 'title' => 'Reveille Kitchen & Bar', 'cat' => 'Restaurants', 'place' => 'Gettysburg, PA', 'blurb' => 'Menu first. Reserve a table online.', 'tech' => ['WordPress']],
+        ['slug' => 'cupola-field', 'title' => 'The Cupola & Field Hotel', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'A small hotel with a simple booking path.', 'tech' => ['WordPress', 'Bookings']],
+        ['slug' => 'lantern-laurel', 'title' => 'The Lantern & Laurel Inn', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'Nine rooms. Book direct on the site.', 'tech' => ['WordPress', 'Bookings']],
+        ['slug' => 'willoughby', 'title' => 'Willoughby Run Inn', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'An inn site built to take bookings, not just look pretty.', 'tech' => ['WordPress', 'Bookings']],
+        ['slug' => 'herr-ridge', 'title' => 'Herr Ridge Cottage B&B', 'cat' => 'Hotels', 'place' => 'Gettysburg, PA', 'blurb' => 'A bed-and-breakfast site that helps people book a stay.', 'tech' => ['WordPress', 'SEO']],
     ];
 }
 
@@ -416,5 +416,5 @@ add_action('init', function () {
 }, 30);
 
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
-add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, Power Platform, and full-stack jobs on the side. Write a short note and I will reply in one or two business days.', 'matthummel'));
+add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
