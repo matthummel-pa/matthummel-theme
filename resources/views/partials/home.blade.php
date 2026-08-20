@@ -28,9 +28,13 @@
 @endphp
 
 <section class="hero" aria-labelledby="hero-heading">
-  <div class="hero-graphic" aria-hidden="true"></div>
+  <div class="hero-graphic" aria-hidden="true">
+    <span class="hero-blob hero-blob--1"></span>
+    <span class="hero-blob hero-blob--2"></span>
+    <span class="hero-blob hero-blob--3"></span>
+    <span class="hero-blob hero-blob--4"></span>
+  </div>
   <div class="container wide hero-inner">
-    @include('partials.profile-photo', ['size' => 160, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
     <div class="hero-copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, Pennsylvania', 'sage')) }}</p>
       <h1 id="hero-heading" class="display-title is-hero">{{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}</h1>
@@ -70,6 +74,7 @@
         <a href="{{ home_url('/about/') }}">{{ \App\field('home_link_about', __('About', 'sage')) }}</a>
       </p>
     </div>
+    @include('partials.profile-photo', ['size' => 160, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
   </div>
 </section>
 

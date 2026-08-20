@@ -363,30 +363,40 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   isolation: isolate;
   overflow: hidden;
   padding: 4.25rem 0 3.75rem;
-  background:
-    radial-gradient(1200px 480px at 85% -10%, rgba(37, 99, 235, .55), transparent 55%),
-    linear-gradient(165deg, #0b1220 0%, #15233d 46%, #1e3a8a 120%);
+  background: linear-gradient(165deg, #0b1220 0%, #15233d 46%, #1e3a8a 120%);
   color: #e2e8f0;
 }
 .hero .display-title { color: #fff; }
 .hero-graphic {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(18rem 18rem at 8% 118%, #334155 0 42%, transparent 43%),
-    radial-gradient(22rem 22rem at 102% 70%, rgba(59, 130, 246, .35) 0 40%, transparent 41%);
+  overflow: hidden;
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
 }
 .hero-inner {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 2.25rem;
   align-items: center;
 }
+.hero-copy { min-width: 0; }
+.hero-inner > .profile-photo--hero {
+  justify-self: end;
+  grid-column: 2;
+  grid-row: 1;
+}
 @media (max-width: 720px) {
   .hero { padding: 2.75rem 0 2.5rem; }
-  .hero-inner { grid-template-columns: 1fr; justify-items: start; }
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+  }
 }
 .hero-roles {
   font: 700 1.15rem/1.45 var(--font-display);

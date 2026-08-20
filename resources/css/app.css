@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./portfolio.css";
+@import "./graphic.css";
 
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
