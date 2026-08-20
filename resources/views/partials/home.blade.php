@@ -74,7 +74,7 @@
         <a href="{{ home_url('/about/') }}">{{ \App\field('home_link_about', __('About', 'sage')) }}</a>
       </p>
     </div>
-    @include('partials.profile-photo', ['size' => 160, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
+    @include('partials.profile-photo', ['size' => 200, 'class' => 'profile-photo profile-photo--hero', 'eager' => true])
   </div>
 </section>
 

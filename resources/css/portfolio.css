@@ -218,11 +218,6 @@ a:hover { color: var(--color-blue-ink); }
   background: var(--color-line);
   flex-shrink: 0;
 }
-.profile-photo--header {
-  width: 2.25rem;
-  height: 2.25rem;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--color-blue);
-}
 .hero-intro {
   display: flex;
   gap: 1.15rem;
@@ -232,8 +227,8 @@ a:hover { color: var(--color-blue-ink); }
   margin-top: 0.15rem;
 }
 .profile-photo--hero {
-  width: 8.5rem;
-  height: 8.5rem;
+  width: 10.625rem;
+  height: 10.625rem;
   box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 0 8px rgba(37, 99, 235, .45);
 }
 .profile-photo--post {
@@ -247,8 +242,8 @@ a:hover { color: var(--color-blue-ink); }
 @media (max-width: 720px) {
   .hero-intro { align-items: center; }
   .profile-photo--hero {
-    width: 5.5rem;
-    height: 5.5rem;
+    width: 6.875rem;
+    height: 6.875rem;
   }
 }
 .brand-name { font-weight: 800; letter-spacing: -0.03em; font-size: 1rem; }
@@ -964,9 +959,6 @@ html.mh-dark .contact-form input,
 html.mh-dark .contact-form textarea,
 html.mh-dark .contact-form select { background: #111827; }
 html.mh-dark .site-footer { background: #020617; }
-html.mh-dark .profile-photo--header {
-  box-shadow: 0 0 0 2px #111827, 0 0 0 3px var(--color-blue);
-}
 html.mh-dark .profile-photo--hero {
   box-shadow: 0 0 0 4px rgba(15, 23, 42, .6), 0 0 0 8px rgba(37, 99, 235, .55);
 }

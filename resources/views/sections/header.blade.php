@@ -5,7 +5,6 @@
 <header class="site-header" id="site-header">
   <div class="site-header-inner">
     <a class="brand" href="{{ home_url('/') }}" rel="home">
-      @include('partials.profile-photo', ['size' => 32, 'class' => 'profile-photo profile-photo--header', 'decorative' => true, 'eager' => true])
       <span class="brand-name">Matt Hummel</span>
     </a>
 
