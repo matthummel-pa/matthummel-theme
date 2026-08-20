@@ -1639,9 +1639,16 @@ html.mh-dark .form-error { background: #7f1d1d; color: #fecaca; }
   cursor: pointer;
   list-style: none;
 }
-.side-card--fold > .side-card-title::-webkit-details-marker,
-.mh-toc--inline > .mh-toc-title::-webkit-details-marker {
+.side-card--fold:not([open]) > :not(summary),
+.mh-toc--inline:not([open]) > :not(summary) {
   display: none;
+}
+.side-card--fold > .side-card-title::-webkit-details-marker,
+.mh-toc--inline > .mh-toc-title::-webkit-details-marker,
+.side-card--fold > .side-card-title::marker,
+.mh-toc--inline > .mh-toc-title::marker {
+  display: none;
+  content: none;
 }
 .side-card--fold > .side-card-title::after,
 .mh-toc--inline > .mh-toc-title::after {
