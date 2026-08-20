@@ -16,7 +16,7 @@
     $invalid = \App\mh_contact_old_errors();
   @endphp
 
-  <header class="page-header container wide">
+  <header class="page-header contact-hero container wide">
     <p class="eyebrow">{{ \App\field('cnt_kicker', __('Contact', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}</h1>
     <p class="lead">{{ \App\field('cnt_lede', __('Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site, a plugin, or another web app. I usually reply in one or two business days.', 'sage')) }}</p>

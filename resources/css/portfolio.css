@@ -909,28 +909,31 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .error-links { margin-top: 1.5rem; }
 
 .contact-main { padding-bottom: var(--space-section); }
+.page-header.contact-hero {
+  padding-bottom: clamp(4.75rem, 9vw, 7.25rem);
+}
+.page-header.contact-hero .lead { margin-bottom: 0; }
 .contact-split {
   display: grid;
   gap: var(--space-grid);
   grid-template-columns: minmax(0, 1.15fr) minmax(16rem, .85fr);
-  align-items: stretch;
+  align-items: start;
 }
 @media (max-width: 800px) {
   .contact-split { grid-template-columns: 1fr; }
 }
-.contact-form-panel,
-.contact-aside {
-  border-radius: 0;
-  padding: 1.7rem 1.65rem 1.8rem;
-  min-height: 100%;
-}
 .contact-form-panel {
-  background: var(--color-card);
-  border: 2px solid var(--color-ink);
-  box-shadow: 7px 7px 0 var(--color-blue);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  min-height: 0;
+  border-radius: 0;
 }
 .contact-form-panel .sec-intro { margin: 0 0 1.25rem; max-width: none; }
 .contact-aside {
+  border-radius: 0;
+  padding: 1.7rem 1.65rem 1.8rem;
   background: var(--color-navy);
   color: #cbd5e1;
   border: 2px solid var(--color-navy);
@@ -1345,7 +1348,6 @@ html.mh-dark .site-header,
 html.mh-dark .hero-panel,
 html.mh-dark .pf-section--alt,
 html.mh-dark .mh-popout,
-html.mh-dark .contact-form-panel,
 html.mh-dark .contact-form input,
 html.mh-dark .contact-form textarea,
 html.mh-dark .contact-form select { background: #111827; }
