@@ -20,6 +20,7 @@ All notable changes to this theme are recorded here.
 - Single posts: wider left column, right sidebar (summary, TOC, search, popular, topics, RSS), auto heading ids
 - Skill chips and social links use icons; navbar is roomier
 - Work cards use screenshots from the Ridges & Valleys concept pages (image links to the concept)
+- Work screenshots are cropped to one 16:9 size so the grid stays even
 
 ## 3.0.10 — 2026-08-19
 

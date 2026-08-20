@@ -43,12 +43,12 @@
         @if ($shot !== '')
           @if ($concept !== '')
             <a class="work-shot" href="{{ esc_url($concept) }}" rel="noopener" target="_blank">
-              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s from Ridges & Valleys', 'sage'), $p['title'])) }}" width="960" height="480" loading="lazy" decoding="async">
+              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s from Ridges & Valleys', 'sage'), $p['title'])) }}" width="960" height="540" loading="lazy" decoding="async">
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
             </a>
           @else
             <div class="work-shot">
-              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s', 'sage'), $p['title'])) }}" width="960" height="480" loading="lazy" decoding="async">
+              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s', 'sage'), $p['title'])) }}" width="960" height="540" loading="lazy" decoding="async">
             </div>
           @endif
         @endif
