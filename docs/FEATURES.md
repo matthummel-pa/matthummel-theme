@@ -8,7 +8,7 @@ What the 3.x Sage theme does, and where it lives.
 | --- | --- | --- |
 | Theme updater | Appearance → Update Theme dispatches GitHub Actions FTP deploy | `app/theme-updater.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; audience cards | `resources/views/partials/home.blade.php`, `App\Github` |
+| Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
 | About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
 | Work | Ridges & Valleys concepts + screenshots + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()`, `resources/images/work/` |
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |

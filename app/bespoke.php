@@ -182,27 +182,81 @@ function mh_reset_power_platform_focus_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_reset_power_platform_focus_copy', 46);
 
+/** Repeater fields for audience cards (Home, About, Services). */
+function mh_who_item_fields(): array
+{
+    return [
+        ['title', __('Title', 'sage'), 'text'],
+        ['text', __('Text', 'sage'), 'textarea'],
+        ['icon', __('Icon key', 'sage'), 'text'],
+        ['href', __('Link', 'sage'), 'url'],
+        ['cta', __('Link label', 'sage'), 'text'],
+    ];
+}
+
 /** Who this site is for — reused on Home, About, Services. */
 function mh_who_items(): array
 {
+    $writing = get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/');
+
     return [
         [
             'title' => __('Developers', 'sage'),
             'text' => __('Copy the code. Fork a repo. Ask if a line is unclear.', 'sage'),
+            'icon' => 'code',
+            'href' => home_url('/code/'),
+            'cta' => __('Browse the code', 'sage'),
         ],
         [
             'title' => __('People learning', 'sage'),
             'text' => __('Short notes. Tiny examples. Pages that work on a phone.', 'sage'),
+            'icon' => 'book-open',
+            'href' => $writing,
+            'cta' => __('Read the writing', 'sage'),
         ],
         [
             'title' => __('Shops and teams', 'sage'),
             'text' => __('A WordPress site you can edit, a plugin, or another web app that fits the work.', 'sage'),
+            'icon' => 'briefcase',
+            'href' => home_url('/services/'),
+            'cta' => __('See how I can help', 'sage'),
         ],
         [
             'title' => __('Agencies', 'sage'),
             'text' => __('When a client needs a WordPress site, a plugin, or another web app, and you want a developer who writes things down.', 'sage'),
+            'icon' => 'users',
+            'href' => home_url('/contact/'),
+            'cta' => __('Say hello', 'sage'),
         ],
     ];
+}
+
+/** Audience cards with saved copy filled in from theme defaults (icon, link, CTA). */
+function mh_who_page_items(?int $post_id = null): array
+{
+    $defaults = mh_who_items();
+    $rows = field_rows('who_items', $defaults, $post_id);
+    $out = [];
+
+    foreach ($rows as $i => $row) {
+        $row = is_array($row) ? $row : [];
+        $base = $defaults[$i] ?? [];
+        $pick = static function (string $key) use ($row, $base): string {
+            $val = trim((string) ($row[$key] ?? ''));
+
+            return $val !== '' ? $val : (string) ($base[$key] ?? '');
+        };
+
+        $out[] = [
+            'title' => $pick('title'),
+            'text' => $pick('text'),
+            'icon' => $pick('icon') ?: 'code',
+            'href' => $pick('href'),
+            'cta' => $pick('cta'),
+        ];
+    }
+
+    return $out !== [] ? $out : $defaults;
 }
 
 /** Primary + footer menus. Safe to re-run; replaces those two menus only. */

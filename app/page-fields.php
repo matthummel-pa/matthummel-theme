@@ -121,10 +121,7 @@ function mh_home_fields(): array
             ['home_who_kicker', __('Kicker', 'sage'), 'text', __('Who this is for', 'sage')],
             ['who_h2', __('Heading', 'sage'), 'text', __('Four doors in', 'sage')],
             ['who_intro', __('Intro', 'sage'), 'textarea', __('Same site. Different starting points.', 'sage')],
-            ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), [
-                ['title', __('Title', 'sage'), 'text'],
-                ['text', __('Text', 'sage'), 'textarea'],
-            ]],
+            ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), mh_who_item_fields()],
         ],
         __('Footer (site-wide)', 'sage') => [
             ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Notes, code, and Gettysburg work. Developers, shops, and agencies are welcome.', 'sage')],
@@ -193,10 +190,7 @@ function page_field_map(): array
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
                 ['who_intro', __('Intro', 'sage'), 'textarea', __('Developers, people learning the web, shops, and agencies can all use this site. Pick the door that fits.', 'sage')],
-                ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), [
-                    ['title', __('Title', 'sage'), 'text'],
-                    ['text', __('Text', 'sage'), 'textarea'],
-                ]],
+                ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), mh_who_item_fields()],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here', 'sage')],
@@ -249,10 +243,7 @@ function page_field_map(): array
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
                 ['who_intro', __('Intro', 'sage'), 'textarea', __('Developers, people learning the web, shops, and agencies can all use this site. Pick the door that fits.', 'sage')],
-                ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), [
-                    ['title', __('Title', 'sage'), 'text'],
-                    ['text', __('Text', 'sage'), 'textarea'],
-                ]],
+                ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), mh_who_item_fields()],
             ],
             __('Ways I can help', 'sage') => [
                 ['svc_ways_h2', __('Heading', 'sage'), 'text', __('Ways I can help', 'sage')],
@@ -456,6 +447,7 @@ function field_group_hint(string $label): string
     $hints = [
         __('Hero', 'sage') => __('Top of the home page, next to the photo.', 'sage'),
         __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
+        __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
         __('Example sites', 'sage') => __('Each row is one concept site. Empty the list to restore the built-in set.', 'sage'),
         __('Snippets', 'sage') => __('Copy-paste examples shown on the Code page and a few on Home. Empty the list to restore the built-in set.', 'sage'),
         __('Featured repos', 'sage') => __('Hand-picked GitHub projects. Empty the list to restore the built-in set.', 'sage'),

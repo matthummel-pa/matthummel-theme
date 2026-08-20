@@ -400,20 +400,8 @@ body::after {
   mix-blend-mode: soft-light;
 }
 
-.who-card { position: relative; overflow: hidden; }
-.who-card::before {
-  content: counter(who, decimal-leading-zero);
-  position: absolute;
-  right: .75rem;
-  top: .55rem;
-  font: 800 2.75rem/1 var(--font-display);
-  letter-spacing: -.08em;
-  color: color-mix(in srgb, var(--color-blue) 28%, transparent);
-  pointer-events: none;
-}
-.who-card:nth-child(4n+1)::before { color: rgba(147, 197, 253, .35); }
 .who-grid { counter-reset: who; }
-.who-card { counter-increment: who; }
+.who-card { counter-increment: who; overflow: hidden; }
 
 html.mh-dark .poster:nth-child(even),
 html.mh-dark .contact-stage,

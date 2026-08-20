@@ -1,7 +1,7 @@
 @php
   $whoHeading = $heading ?? \App\field('who_h2', __('Who this site is for', 'sage'));
   $whoIntro = $intro ?? \App\field('who_intro', __('Developers, people learning the web, shops, and agencies can all use this site. Pick the door that fits.', 'sage'));
-  $whoItems = $items ?? \App\field_rows('who_items', \App\mh_who_items());
+  $whoItems = $items ?? \App\mh_who_page_items();
 @endphp
 <section class="pf-section{{ ! empty($alt) ? ' pf-section--alt' : '' }}" aria-labelledby="who-heading">
   <div class="container wide">
@@ -14,9 +14,28 @@
     </header>
     <div class="who-grid">
       @foreach ($whoItems as $who)
-        <article class="who-card">
-          <h3>{{ $who['title'] ?? '' }}</h3>
-          <p>{{ $who['text'] ?? '' }}</p>
+        @php
+          $whoTitle = (string) ($who['title'] ?? '');
+          $whoText = (string) ($who['text'] ?? '');
+          $whoHref = (string) ($who['href'] ?? '');
+          $whoCta = (string) ($who['cta'] ?? '');
+          $whoIcon = (string) ($who['icon'] ?? 'code');
+        @endphp
+        <article class="who-card{{ $whoHref !== '' ? ' who-card--link' : '' }}">
+          @if ($whoHref !== '')
+            <a class="who-card__hit" href="{{ esc_url($whoHref) }}">
+              <span class="visually-hidden">{{ $whoCta !== '' ? $whoCta : $whoTitle }}</span>
+            </a>
+          @endif
+          <div class="who-card__top">
+            <span class="who-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($whoIcon, 22) !!}</span>
+            <span class="who-card__num" aria-hidden="true"></span>
+          </div>
+          <h3>{{ $whoTitle }}</h3>
+          <p>{{ $whoText }}</p>
+          @if ($whoHref !== '' && $whoCta !== '')
+            <p class="who-card__cta" aria-hidden="true">{{ $whoCta }}</p>
+          @endif
         </article>
       @endforeach
     </div>

@@ -567,7 +567,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .card-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.who-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.who-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .svc-list { grid-template-columns: repeat(2, minmax(0, 1fr)); counter-reset: svc; list-style: none; margin: 0; padding: 0; }
@@ -577,7 +577,6 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .post-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 @media (max-width: 1100px) {
-  .who-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .post-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
@@ -592,9 +591,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   .value-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
-  .post-list { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
+  .post-list,
   .who-grid { grid-template-columns: 1fr; }
 }
 
@@ -795,8 +792,54 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   color: var(--color-blue);
 }
 
-.who-card { padding-top: 1.7rem; padding-right: 3.4rem; }
-.who-card:nth-child(4n+1),
+.who-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 0;
+  padding: 1.45rem 1.5rem 1.4rem;
+}
+.who-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.who-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border: 2px solid var(--color-ink);
+  background: var(--color-blue-soft);
+  color: var(--color-ink);
+}
+.who-card__num {
+  font: 800 1.15rem/1 var(--font-mono);
+  letter-spacing: -.04em;
+  color: var(--color-blue);
+}
+.who-card__num::before {
+  content: counter(who, decimal-leading-zero);
+}
+.who-card h3 { margin-bottom: .55rem; }
+.who-card > p:not(.who-card__cta) { flex: 1 1 auto; }
+.who-card__cta::after {
+  content: " →";
+}
+.who-card__hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.who-card:focus-within {
+  outline: 3px solid var(--color-blue);
+  outline-offset: 3px;
+}
+.who-card:nth-child(1),
+.who-card:nth-child(4),
 .svc-item:nth-child(4n+1),
 .work-grid > .work-card:first-child,
 .process-list li:first-child {
@@ -805,15 +848,29 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-color: var(--color-navy);
   box-shadow: 7px 7px 0 var(--color-blue);
 }
-.who-card:nth-child(4n+1) h3,
+.who-card:nth-child(1) h3,
+.who-card:nth-child(4) h3,
 .svc-item:nth-child(4n+1) h3,
 .work-grid > .work-card:first-child h2,
 .work-grid > .work-card:first-child h3,
 .process-list li:first-child h3 { color: #fff; }
-.who-card:nth-child(4n+1) p,
+.who-card:nth-child(1) p,
+.who-card:nth-child(4) p,
 .svc-item:nth-child(4n+1) p,
 .work-grid > .work-card:first-child .pf-meta,
 .process-list li:first-child p { color: #cbd5e1; }
+.who-card:nth-child(1) .who-card__icon,
+.who-card:nth-child(4) .who-card__icon {
+  background: #1e3a8a;
+  border-color: #93c5fd;
+  color: #dbeafe;
+}
+.who-card:nth-child(1) .who-card__num,
+.who-card:nth-child(4) .who-card__num,
+.who-card:nth-child(1) .who-card__cta,
+.who-card:nth-child(4) .who-card__cta {
+  color: #93c5fd;
+}
 .work-grid > .work-card:first-child .pill { background: #1e3a8a; color: #dbeafe; }
 
 .value-grid li,
@@ -1216,7 +1273,8 @@ html.mh-dark .stack-grid li:nth-child(3n+2) {
   color: #f8fafc;
   border-color: #f8fafc;
 }
-html.mh-dark .who-card:nth-child(4n+1),
+html.mh-dark .who-card:nth-child(1),
+html.mh-dark .who-card:nth-child(4),
 html.mh-dark .svc-item:nth-child(4n+1),
 html.mh-dark .work-grid > .work-card:first-child,
 html.mh-dark .process-list li:first-child {
