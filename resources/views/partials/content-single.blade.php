@@ -15,6 +15,7 @@
 <article class="post-single h-entry" id="post-{{ $postId }}">
 
   <header class="post-hero">
+    @include('partials.hero-graphic', ['still' => true])
     <div class="container wide post-hero-inner">
       @if ($postCats)
         <a class="post-hero-tag" href="{{ esc_url(get_category_link($postCats[0]->term_id)) }}">

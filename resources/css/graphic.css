@@ -370,6 +370,9 @@ body::after {
   will-change: transform;
   mix-blend-mode: screen;
 }
+.hero-graphic--still .hero-blob {
+  will-change: auto;
+}
 .hero-blob--1 {
   width: min(70vw, 34rem);
   height: min(70vw, 34rem);
@@ -434,10 +437,10 @@ html.mh-dark .contact-stage .contact-aside { background: #020617; }
   html.mh-motion .page-mast-watermark {
     animation: mh-drift 22s ease-in-out infinite;
   }
-  .hero-blob--1 { animation: mh-wander-a 24s ease-in-out infinite; }
-  .hero-blob--2 { animation: mh-wander-b 31s ease-in-out infinite; }
-  .hero-blob--3 { animation: mh-wander-c 27s ease-in-out infinite; }
-  .hero-blob--4 { animation: mh-wander-d 35s ease-in-out infinite; }
+  .hero-graphic:not(.hero-graphic--still) .hero-blob--1 { animation: mh-wander-a 24s ease-in-out infinite; }
+  .hero-graphic:not(.hero-graphic--still) .hero-blob--2 { animation: mh-wander-b 31s ease-in-out infinite; }
+  .hero-graphic:not(.hero-graphic--still) .hero-blob--3 { animation: mh-wander-c 27s ease-in-out infinite; }
+  .hero-graphic:not(.hero-graphic--still) .hero-blob--4 { animation: mh-wander-d 35s ease-in-out infinite; }
 }
 
 @keyframes mh-rise {

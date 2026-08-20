@@ -7,9 +7,9 @@
   $cats = get_categories(['hide_empty' => true]);
   $current = is_category() ? get_queried_object_id() : 0;
 @endphp
-  <header class="page-header container wide">
+  @component('partials.page-hero')
     <h1 class="display-title is-hero">{!! get_the_archive_title() !!}</h1>
-  </header>
+  @endcomponent
   <div class="container wide page-block">
     @if ($cats)
       <nav class="filter-row" aria-label="{{ __('Filter by topic', 'sage') }}">

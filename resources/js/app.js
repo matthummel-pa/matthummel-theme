@@ -139,7 +139,7 @@ function initHeroBlobs() {
   }
 
   const names = ['mh-wander-a', 'mh-wander-b', 'mh-wander-c', 'mh-wander-d'];
-  document.querySelectorAll('.hero-blob').forEach((blob, i) => {
+  document.querySelectorAll('.hero-graphic:not(.hero-graphic--still) .hero-blob').forEach((blob, i) => {
     const name = names[(Math.floor(Math.random() * names.length) + i) % names.length];
     const duration = 20 + Math.random() * 18;
     const delay = -(Math.random() * duration);

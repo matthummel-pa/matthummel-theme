@@ -4,11 +4,11 @@
 @extends('layouts.app')
 
 @section('content')
-  <header class="page-header container wide">
+  @component('partials.page-hero')
     <p class="eyebrow">{{ \App\field('svc_kicker', __('Services', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('svc_h1', __('If you want a hand.', 'sage')) }}</h1>
     <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.', 'sage')) }}</p>
-  </header>
+  @endcomponent
 
   @include('partials.audience', ['alt' => true])
 

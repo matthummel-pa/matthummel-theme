@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <section class="error-404 page-header container wide">
+  @component('partials.page-hero', ['tag' => 'section', 'extra' => 'error-404'])
     <p class="eyebrow">{{ __('404', 'sage') }}</p>
     <h1 class="display-title is-hero">{{ __('That page is not here.', 'sage') }}</h1>
     <p class="lead">{{ __('It may have moved. Search, go home, or pick a door.', 'sage') }}</p>
@@ -13,5 +13,5 @@
       <li><a href="{{ get_permalink(get_option('page_for_posts')) ?: home_url('/blog/') }}">{{ __('Writing', 'sage') }}</a></li>
       <li><a href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a></li>
     </ul>
-  </section>
+  @endcomponent
 @endsection

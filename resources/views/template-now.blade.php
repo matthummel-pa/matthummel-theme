@@ -4,11 +4,11 @@
 @extends('layouts.app')
 
 @section('content')
-  <header class="page-header container wide">
+  @component('partials.page-hero')
     <p class="eyebrow">{{ \App\field('now_kicker', __('Now', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('now_h1', __('What I’m doing now.', 'sage')) }}</h1>
     <p class="lead">{{ \App\field('now_lede', __('A short list of where my time is going, updated August 2026.', 'sage')) }}</p>
-  </header>
+  @endcomponent
   <section class="pf-section">
     <div class="container measure">
       <ol class="now-list">

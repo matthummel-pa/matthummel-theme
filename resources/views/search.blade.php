@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="page-header container wide">
+  @component('partials.page-hero', ['tag' => 'div'])
     <p class="eyebrow">{{ __('Search', 'sage') }}</p>
     <h1 class="display-title is-hero">{{ __('Search results', 'sage') }}</h1>
     <p class="lead">{{ sprintf(__('Showing results for “%s”', 'sage'), get_search_query()) }}</p>
-  </div>
+  @endcomponent
 
   <div class="container wide page-block">
     @if (! have_posts())

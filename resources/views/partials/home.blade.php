@@ -28,12 +28,7 @@
 @endphp
 
 <section class="hero" aria-labelledby="hero-heading">
-  <div class="hero-graphic" aria-hidden="true">
-    <span class="hero-blob hero-blob--1"></span>
-    <span class="hero-blob hero-blob--2"></span>
-    <span class="hero-blob hero-blob--3"></span>
-    <span class="hero-blob hero-blob--4"></span>
-  </div>
+  @include('partials.hero-graphic')
   <div class="container wide hero-inner">
     <div class="hero-copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, Pennsylvania', 'sage')) }}</p>

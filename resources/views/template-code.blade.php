@@ -10,11 +10,11 @@
   $live  = \App\mh_github_live_repos(8);
 @endphp
 
-<header class="page-header container wide">
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('code_h1', __('Code you can copy.', 'sage')) }}</h1>
   <p class="lead">{!! \App\field_html('code_lede', __('Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Agencies and shops can treat this as a sample of how I write. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')) !!}</p>
-</header>
+@endcomponent
 
 <section class="pf-section pf-section--alt">
   <div class="container wide">

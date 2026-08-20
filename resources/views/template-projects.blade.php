@@ -14,7 +14,7 @@
   $ghUser = \App\Github::fetchUser(\App\mh_github_login());
 @endphp
 
-<header class="page-header container wide">
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.', 'sage')) }}
@@ -23,7 +23,7 @@
       ({{ (int) $ghUser['public_repos'] }} public repos).
     @endif
   </p>
-</header>
+@endcomponent
 
 <div class="container wide page-block">
   <nav class="filter-row" aria-label="{{ __('Filter by type', 'matthummel') }}">
