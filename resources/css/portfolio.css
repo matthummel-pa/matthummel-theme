@@ -227,8 +227,9 @@ a:hover { color: var(--color-blue-ink); }
   margin-top: 0.15rem;
 }
 .profile-photo--hero {
-  width: 10.625rem;
-  height: 10.625rem;
+  width: 6rem;
+  height: 6rem;
+}
   box-shadow: 0 0 0 4px rgba(255,255,255,.18), 0 0 0 8px rgba(37, 99, 235, .45);
 }
 .profile-photo--post {
@@ -242,8 +243,8 @@ a:hover { color: var(--color-blue-ink); }
 @media (max-width: 720px) {
   .hero-intro { align-items: center; }
   .profile-photo--hero {
-    width: 6.875rem;
-    height: 6.875rem;
+    width: 300px;
+    height: 300px;
   }
 }
 .brand-name { font-weight: 800; letter-spacing: -0.03em; font-size: 1rem; }
@@ -384,6 +385,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   justify-self: end;
   grid-column: 2;
   grid-row: 1;
+  width: 300px;
+  height: 300px;
 }
 @media (max-width: 720px) {
   .hero { padding: 2.75rem 0 2.5rem; }

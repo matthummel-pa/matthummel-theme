@@ -8,7 +8,7 @@ All notable changes to this theme are recorded here.
 
 - Pages are custom-field layouts only: Gutenberg editor and patterns off for `page`; leftover block HTML cleared on theme-templated pages (privacy policy left alone)
 - Unique Blade layouts for About, Services, Work, Code, Now, Contact, Writing, 404, and Search — no `the_content()` on pages
-- Hero copy stays on the left; profile photo sits on the right at every width, 25% larger; header logo is text only
+- Hero copy stays on the left; profile photo is 300px on the right; header logo is text only
 - Hero blue gradient blobs drift slowly around the banner (off when `prefers-reduced-motion`)
 - Primary + footer menus; home “four doors” for developers, learners, shops, and agencies
 - Contact form asks who you are; 44px tap targets; new-window text on external links
