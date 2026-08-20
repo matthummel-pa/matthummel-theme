@@ -6,7 +6,6 @@
   $featured = ! empty($featured);
 @endphp
 <article @php(post_class(['post-card', $featured ? 'post-card--featured' : '']))>
-  <a class="post-card-hit" href="{{ get_permalink() }}"><span class="visually-hidden">{{ get_the_title() }}</span></a>
   @if ($thumb !== '')
     <span class="post-shot" aria-hidden="true">
       <img src="{{ esc_url($thumb) }}" alt="" width="960" height="540" loading="{{ $featured ? 'eager' : 'lazy' }}" decoding="async">
@@ -36,16 +35,12 @@
       </p>
     @endif
 
-    <h2 class="post-card-title">
-      <a href="{{ get_permalink() }}" tabindex="-1">{!! $title !!}</a>
-    </h2>
+    <h2 class="post-card-title">{!! $title !!}</h2>
 
     <div class="post-card-excerpt">
       @php(the_excerpt())
     </div>
 
-    <span class="post-card-more">
-      {{ __('Read more', 'sage') }} <span aria-hidden="true">&rarr;</span>
-    </span>
+    @include('partials.read-more')
   </div>
 </article>

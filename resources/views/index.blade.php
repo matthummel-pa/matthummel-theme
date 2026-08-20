@@ -43,7 +43,7 @@
       <h2 class="display-title is-section write-devto-h">{{ \App\field('write_devto_h2', __('Also on DEV.to', 'sage'), $writeId) }}</h2>
       <div class="dev-cards">
         @foreach ($devto as $d)
-          <a class="dev-card" href="{{ esc_url($d['url']) }}" rel="noopener" target="_blank">
+          <article class="dev-card">
             <p class="eyebrow">DEV.to</p>
             <h3>{{ $d['title'] }}</h3>
             @if (! empty($d['ex']))
@@ -52,8 +52,13 @@
             @if (! empty($d['date']) && strtotime($d['date']))
               <p class="post-meta"><time datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">{{ wp_date(get_option('date_format'), strtotime($d['date'])) }}</time></p>
             @endif
-            <span class="post-card-more">{{ __('Read on DEV.to', 'sage') }} <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">&rarr;</span></span>
-          </a>
+            @include('partials.read-more', [
+              'url' => $d['url'],
+              'name' => $d['title'],
+              'label' => __('Read on DEV.to', 'sage'),
+              'external' => true,
+            ])
+          </article>
         @endforeach
       </div>
     @endif

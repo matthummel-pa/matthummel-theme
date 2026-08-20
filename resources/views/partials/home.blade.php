@@ -153,7 +153,6 @@
     <div class="card-grid card-grid--3">
       @forelse ($posts as $post)
         <article class="post-card">
-          <a class="post-card-hit" href="{{ $post['url'] }}"><span class="visually-hidden">{{ $post['title'] }}</span></a>
           @if (! empty($post['thumb']))
             <span class="post-shot" aria-hidden="true">
               <img src="{{ esc_url($post['thumb']) }}" alt="" width="960" height="540" loading="lazy" decoding="async">
@@ -165,8 +164,9 @@
           @endif
           <div class="post-body">
             <p class="post-meta">{{ $post['date'] }}@if ($post['cat']) · {{ $post['cat'] }}@endif @if (! empty($post['minutes'])) · {{ sprintf(_n('%d min read', '%d min read', $post['minutes'], 'sage'), $post['minutes']) }}@endif</p>
-            <h3 class="post-card-title"><a href="{{ $post['url'] }}" tabindex="-1">{{ $post['title'] }}</a></h3>
+            <h3 class="post-card-title">{{ $post['title'] }}</h3>
             <p>{{ $post['ex'] }}</p>
+            @include('partials.read-more', ['url' => $post['url'], 'name' => $post['title']])
           </div>
         </article>
       @empty

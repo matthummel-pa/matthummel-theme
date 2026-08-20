@@ -10,6 +10,7 @@ All notable changes to this theme are recorded here.
 - RSS subscribe strip (copy feed URL) on Writing and topic archives
 - DEV.to items render as cards; post cards mark snippets with a Code badge
 - Search results reuse the same writing tools and card layout
+- Post “Read more” is a single unique link (`Read more: [title]`), stretched across the card; excerpts no longer add a generic Continued link
 
 ## 3.0.13 — 2026-08-20
 

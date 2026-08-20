@@ -14,7 +14,7 @@ What the 3.x Sage theme does, and where it lives.
 | Work | Ridges & Valleys concepts + screenshots + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()`, `resources/images/work/` |
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured + live GitHub cards: View code, Live demo, stack icons | `template-code.blade.php`, `App\Github` |
-| Writing | Featured latest post, search/RSS/copy, Grid/List, topic counts, DEV.to cards, RSS subscribe strip | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `resources/js/writing-tools.js` |
+| Writing | Featured latest post, search/RSS/copy, Grid/List, topic counts, DEV.to cards, RSS subscribe strip; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
 | Dark mode | `html.mh-dark`, icon toggle, `prefers-color-scheme` until saved | `layouts/app.blade.php`, `resources/js/app.js`, `html.mh-dark` in `portfolio.css` |
