@@ -65,15 +65,37 @@ function labelFor(id) {
 }
 
 function highlightCode(code, pre) {
+  const text = code.textContent || '';
   const declared = declaredLanguage(code, pre);
-  if (declared && hljs.getLanguage(declared)) {
-    const result = hljs.highlight(code.textContent || '', { language: declared, ignoreIllegals: true });
-    code.innerHTML = result.value;
-    code.classList.add('hljs', `language-${declared}`);
-    return declared === 'xml' ? 'html' : declared;
+  let lang = declared;
+
+  if (!lang || !hljs.getLanguage(lang)) {
+    if (/^\s*</.test(text) && !/<\?(?:php|=)/i.test(text)) {
+      lang = 'xml';
+    } else {
+      lang = hljs.highlightAuto(text, [
+        'xml',
+        'css',
+        'scss',
+        'javascript',
+        'typescript',
+        'php',
+        'php-template',
+        'bash',
+        'json',
+        'markdown',
+        'sql',
+        'yaml',
+        'twig',
+        'nginx',
+      ]).language || 'plaintext';
+    }
   }
-  const result = hljs.highlightAuto(code.textContent || '');
-  const lang = result.language || 'plaintext';
+
+  if (lang === 'html') {
+    lang = 'xml';
+  }
+  const result = hljs.highlight(text, { language: lang, ignoreIllegals: true });
   code.innerHTML = result.value;
   code.classList.add('hljs', `language-${lang}`);
   return lang === 'xml' ? 'html' : lang;
