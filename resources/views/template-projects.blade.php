@@ -35,17 +35,41 @@
 
   <div class="work-grid">
     @foreach ($shown as $p)
+      @php
+        $shot = \App\mh_studio_project_image_url($p);
+        $concept = (string) ($p['concept'] ?? '');
+      @endphp
       <article class="work-card" id="{{ $p['slug'] }}">
-        <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
-        <h2>{{ $p['title'] }}</h2>
-        <p>{{ $p['blurb'] }}</p>
-        @if (! empty($p['tech']))
-          <p class="pill-row">
-            @foreach ($p['tech'] as $t)
-              <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
-            @endforeach
-          </p>
+        @if ($shot !== '')
+          @if ($concept !== '')
+            <a class="work-shot" href="{{ esc_url($concept) }}" rel="noopener" target="_blank">
+              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s from Ridges & Valleys', 'sage'), $p['title'])) }}" width="960" height="480" loading="lazy" decoding="async">
+              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+            </a>
+          @else
+            <div class="work-shot">
+              <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of %s', 'sage'), $p['title'])) }}" width="960" height="480" loading="lazy" decoding="async">
+            </div>
+          @endif
         @endif
+        <div class="work-body">
+          <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
+          <h2>
+            @if ($concept !== '')
+              <a href="{{ esc_url($concept) }}" rel="noopener" target="_blank">{{ $p['title'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+            @else
+              {{ $p['title'] }}
+            @endif
+          </h2>
+          <p>{{ $p['blurb'] }}</p>
+          @if (! empty($p['tech']))
+            <p class="pill-row">
+              @foreach ($p['tech'] as $t)
+                <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+              @endforeach
+            </p>
+          @endif
+        </div>
       </article>
     @endforeach
   </div>

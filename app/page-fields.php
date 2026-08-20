@@ -176,6 +176,8 @@ function page_field_map(): array
             'place' => $p['place'],
             'blurb' => $p['blurb'],
             'tech' => implode(', ', $p['tech']),
+            'concept' => $p['concept'] ?? '',
+            'image' => $p['image'] ?? '',
         ];
     }
 
@@ -344,6 +346,8 @@ function page_field_map(): array
                     ['place', __('Place', 'sage'), 'text'],
                     ['blurb', __('Blurb', 'sage'), 'textarea'],
                     ['tech', __('Tech (comma separated)', 'sage'), 'text'],
+                    ['concept', __('Concept page URL', 'sage'), 'url'],
+                    ['image', __('Screenshot file or URL', 'sage'), 'text'],
                 ]],
             ],
         ],
@@ -405,6 +409,11 @@ function mh_code_page_snips(?int $post_id = null): array
 
 function mh_work_page_items(?int $post_id = null): array
 {
+    $defaults = [];
+    foreach (mh_studio_projects() as $p) {
+        $defaults[$p['slug']] = $p;
+    }
+
     $rows = field_rows('work_items', [], $post_id);
     if ($rows === []) {
         return mh_studio_projects();
@@ -415,13 +424,17 @@ function mh_work_page_items(?int $post_id = null): array
         if (is_string($tech)) {
             $tech = array_values(array_filter(array_map('trim', explode(',', $tech))));
         }
+        $slug = sanitize_title((string) ($r['slug'] ?? $r['title'] ?? ''));
+        $base = $defaults[$slug] ?? [];
         $out[] = [
-            'slug' => sanitize_title((string) ($r['slug'] ?? $r['title'] ?? '')),
-            'title' => (string) ($r['title'] ?? ''),
-            'cat' => (string) ($r['cat'] ?? ''),
-            'place' => (string) ($r['place'] ?? ''),
-            'blurb' => (string) ($r['blurb'] ?? ''),
-            'tech' => $tech,
+            'slug' => $slug,
+            'title' => (string) (($r['title'] ?? '') !== '' ? $r['title'] : ($base['title'] ?? '')),
+            'cat' => (string) (($r['cat'] ?? '') !== '' ? $r['cat'] : ($base['cat'] ?? '')),
+            'place' => (string) (($r['place'] ?? '') !== '' ? $r['place'] : ($base['place'] ?? '')),
+            'blurb' => (string) (($r['blurb'] ?? '') !== '' ? $r['blurb'] : ($base['blurb'] ?? '')),
+            'tech' => $tech !== [] ? $tech : ($base['tech'] ?? []),
+            'concept' => (string) (($r['concept'] ?? '') !== '' ? $r['concept'] : ($base['concept'] ?? '')),
+            'image' => (string) (($r['image'] ?? '') !== '' ? $r['image'] : ($base['image'] ?? '')),
         ];
     }
 

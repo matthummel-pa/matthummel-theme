@@ -19,6 +19,7 @@ All notable changes to this theme are recorded here.
 - WCAG 2.2 / Section 508: button and text contrast, 44px targets, mobile menu focus trap, social icons with names
 - Single posts: wider left column, right sidebar (summary, TOC, search, popular, topics, RSS), auto heading ids
 - Skill chips and social links use icons; navbar is roomier
+- Work cards use screenshots from the Ridges & Valleys concept pages (image links to the concept)
 
 ## 3.0.10 — 2026-08-19
 

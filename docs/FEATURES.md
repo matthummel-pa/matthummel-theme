@@ -10,7 +10,7 @@ What the 3.x Sage theme does, and where it lives.
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; audience cards | `resources/views/partials/home.blade.php`, `App\Github` |
 | About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
-| Work | Ridges & Valleys concepts + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()` |
+| Work | Ridges & Valleys concepts + screenshots + category filter; editable repeater | `template-projects.blade.php`, `mh_work_page_items()`, `resources/images/work/` |
 | Services | Numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Featured repos, live GitHub, snippets | `template-code.blade.php`, `App\Github` |
 | Writing | Blog index; categories unchanged | `index.blade.php`, `archive.blade.php` |
