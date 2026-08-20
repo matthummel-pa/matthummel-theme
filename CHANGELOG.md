@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.18 — 2026-08-20
+
+### Fixed
+
+- Live CSS 404s from SiteGround HTML cache: keep previous Vite `app-*.css` / `app-*.js` hashes on deploy, and send `no-cache` on HTML so the proxy is not stuck on old filenames
+
 ## 3.0.17 — 2026-08-20
 
 ### Changed

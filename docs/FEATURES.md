@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 | Feature | Notes | Code |
 | --- | --- | --- |
-| Theme updater | Appearance → Update Theme installs the GitHub `theme-latest` zip over HTTPS (FTP optional) | `app/theme-updater.php` |
+| Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
 | Page / post heroes | Same navy gradient + blobs as Home, still (no wander animation) | `partials/page-hero.blade.php`, `partials/hero-graphic.blade.php` |

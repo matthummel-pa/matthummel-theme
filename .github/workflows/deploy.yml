@@ -38,6 +38,26 @@ jobs:
       - name: Build Vite assets
         run: npm run build
 
+      - name: Locate live WordPress theme folder on FTP
+        id: ftpdir
+        continue-on-error: true
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
+        run: python3 .github/scripts/siteground-ftp-locate.py
+
+      - name: Keep previous Vite hashes (SiteGround HTML cache)
+        continue-on-error: true
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir }}
+          LIVE_ORIGIN: https://matthummel.com
+        run: python3 .github/scripts/preserve-vite-assets.py
+
       - name: Pack WordPress theme zip
         run: bash .github/scripts/pack-theme.sh "$GITHUB_WORKSPACE/matthummel.zip"
 
@@ -61,16 +81,6 @@ jobs:
           name: matthummel-theme
           path: matthummel.zip
           if-no-files-found: error
-
-      - name: Locate live WordPress theme folder on FTP
-        id: ftpdir
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
-        run: python3 .github/scripts/siteground-ftp-locate.py
 
       - name: Upload theme over FTP (optional)
         continue-on-error: true
