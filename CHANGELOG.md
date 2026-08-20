@@ -11,6 +11,7 @@ All notable changes to this theme are recorded here.
 - Mobile sheet: kicker, current-item bar, hover/focus slide, compact socials with separators
 - Single-post featured image sits in the article column above the copy, lined up with the sidebar
 - Home hero on small screens keeps the same left/right gutter as the header and sections (no clipped inset)
+- Header is in document flow on small screens (not sticky) so it scrolls away with the page
 
 ## 3.0.12 — 2026-08-20
 

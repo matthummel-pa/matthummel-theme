@@ -215,6 +215,13 @@ a:hover { color: var(--color-blue-ink); }
 @media screen and (max-width: 782px) {
   .admin-bar .site-header { top: 46px; }
 }
+@media (max-width: 900px) {
+  .site-header,
+  .admin-bar .site-header {
+    position: static;
+    top: auto;
+  }
+}
 .site-header-inner {
   max-width: var(--page-max);
   margin: 0 auto;
