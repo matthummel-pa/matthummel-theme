@@ -35,17 +35,15 @@
     </div>
   </header>
 
-  @if (has_post_thumbnail())
-    <div class="post-featured-img">
-      <div class="container wide">
-        {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el']) !!}
-      </div>
-    </div>
-  @endif
-
   <div class="container wide post-shell">
     <div class="post-layout">
       <div class="post-main">
+        @if (has_post_thumbnail())
+          <figure class="post-featured">
+            {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el']) !!}
+          </figure>
+        @endif
+
         @if ($toc)
           <nav class="mh-toc mh-toc--inline" aria-labelledby="toc-inline-h">
             <p id="toc-inline-h" class="mh-toc-title">{{ __('On this page', 'sage') }}</p>

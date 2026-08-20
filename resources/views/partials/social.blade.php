@@ -2,9 +2,10 @@
   $links = $links ?? \App\mh_social_links();
   $labeled = ! empty($labeled);
   $cards = ! empty($cards);
+  $compact = ! empty($compact);
 @endphp
 @if ($links)
-  <ul class="soc-list{{ $labeled ? ' soc-list--labeled' : '' }}{{ $cards ? ' soc-list--cards' : '' }}">
+  <ul class="soc-list{{ $labeled ? ' soc-list--labeled' : '' }}{{ $cards ? ' soc-list--cards' : '' }}{{ $compact ? ' soc-list--compact' : '' }}">
     @foreach ($links as $s)
       <li>
         <a class="soc-link" href="{{ esc_url($s['url']) }}"@if (($s['key'] ?? '') !== 'rss') rel="me noopener" target="_blank"@else rel="me"@endif>

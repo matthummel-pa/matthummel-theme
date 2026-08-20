@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.13 — 2026-08-20
+
+### Changed
+
+- Small screens pin Dark and the menu button to the right of the header
+- Theme toggle is a moon/sun icon (still 44px, with a name for screen readers)
+- Mobile sheet: kicker, current-item bar, hover/focus slide, compact socials with separators
+- Single-post featured image sits in the article column above the copy, lined up with the sidebar
+
 ## 3.0.12 — 2026-08-20
 
 ### Changed
