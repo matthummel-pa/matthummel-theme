@@ -7,6 +7,8 @@ alwaysApply: true
 
 This repo is a Sage 11 WordPress theme (Blade, PHP 8.3, Tailwind v4, Vite), not a Next.js or Supabase app. Do not add App Router, RSC, Genql, next-safe-action, or Shadcn unless Matt asks for a separate project.
 
+Also follow `.cursor/rules/sage-bespoke-2026.mdc` (bespoke architecture, security, Customizer/ACF-when-asked, SiteGround SSH). If a new idea fights what already ships, keep the shipping pattern unless Matt asks to migrate.
+
 Matt is a marketer who prefers working directly in code. Keep diffs small, copy in wp-admin fields, and avoid inventing admin UIs.
 
 ## Key principles

@@ -6,3 +6,6 @@
 npm-debug.log
 __pycache__/
 *.pyc
+
+# Security: Never commit deploy keys to GitHub
+.deploy-keys/
