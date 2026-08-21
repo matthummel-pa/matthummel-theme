@@ -52,4 +52,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions: Composer + `npm run build`, then FTP to SiteGround `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.

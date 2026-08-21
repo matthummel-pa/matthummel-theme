@@ -137,7 +137,7 @@ Do not rewrite all `html.mh-dark` CSS to `[data-theme="dark"]` unless Matt asks 
 
 ## 4. Automated SiteGround Git-to-SSH deployment
 
-Deployments to SiteGround should use a restricted SSH deploy key in GitHub Actions **when Matt chooses SSH over the existing zip/FTP workflow**. Theme destination is `wp-content/themes/matthummel/`, not `sage-bespoke`.
+Deployments to SiteGround use `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`). The theme **is** the repo root (not `web/app/themes/sage`). CI uses **npm** and Node **22**. Production still publishes GitHub Release `theme-latest` (wp-admin Update Theme) and optional FTP. SSH rsync is optional when `SERVER_SSH_PRIVATE_KEY` (or `SITEGROUND_SSH_PRIVATE_KEY`) and destination secrets are set. Never `--delete` over rsync (cached HTML needs old Vite hashes). Never hardcode credentials.
 
 Reference layout (do not drop this in as a second competing production workflow without Matt’s go-ahead):
 

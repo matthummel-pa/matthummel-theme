@@ -1,8 +1,9 @@
-name: Deploy theme
+name: Deploy Roots Production Ecosystem
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
@@ -13,30 +14,35 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  deploy:
+    name: Build Assets & Push Code
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           coverage: none
           tools: composer
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: package.json
 
-      - name: PHP dependencies (production)
+      - name: Install Composer Dependencies (Production Mode)
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-      - name: Node dependencies
-        run: npm ci
-
-      - name: Build Vite assets
-        run: npm run build
+      - name: Install Theme Dependencies & Compile Production Assets
+        run: |
+          npm ci
+          npm run build
 
       - name: Locate live WordPress theme folder on FTP
         id: ftpdir
@@ -101,3 +107,37 @@ jobs:
             **/.env*
             **/docs/**
             **/matthummel.zip
+
+      - name: Set up SSH Key for Remote Server Access
+        continue-on-error: true
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY || secrets.SITEGROUND_SSH_PRIVATE_KEY || secrets.STR_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SERVER_SSH_KNOWN_HOSTS || secrets.SITEGROUND_SSH_KNOWN_HOSTS }}
+          if_key_exists: replace
+
+      - name: Deploy Compiled Framework via RSYNC
+        continue-on-error: true
+        env:
+          SSH_PORT: ${{ secrets.SITEGROUND_PORT || secrets.SERVER_SSH_PORT }}
+          RSYNC_USER: ${{ secrets.SERVER_USER || secrets.SITEGROUND_USER }}
+          RSYNC_HOST: ${{ secrets.SERVER_IP || secrets.SITEGROUND_HOST }}
+          RSYNC_PATH: ${{ secrets.SERVER_DESTINATION_PATH }}
+        run: |
+          if [ -z "${RSYNC_USER}" ] || [ -z "${RSYNC_HOST}" ] || [ -z "${RSYNC_PATH}" ]; then
+            echo "SSH rsync skipped: set SERVER_USER, SERVER_IP, and SERVER_DESTINATION_PATH (SiteGround: theme path wp-content/themes/matthummel/)."
+            exit 0
+          fi
+          # Do not use --delete: SiteGround HTML cache still references old Vite hashes.
+          rsync -azP \
+            -e "ssh -p ${SSH_PORT:-22} -o StrictHostKeyChecking=yes" \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.cursor/' \
+            --exclude 'node_modules/' \
+            --exclude 'docs/' \
+            --exclude '.env' \
+            --exclude '.env.*' \
+            --exclude '.deploy-keys/' \
+            --exclude 'matthummel.zip' \
+            ./ "${RSYNC_USER}@${RSYNC_HOST}:${RSYNC_PATH}"
