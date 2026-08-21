@@ -9,6 +9,7 @@ This repo is a Sage 11.2.1 WordPress theme. Follow official docs, not classic PH
 
 Agency operating system: `.cursor/rules/agency-core.mdc`.
 Growth, CRO, and visual guardrails: `.cursor/rules/growth-design-powerhouse.mdc`.
+Portfolio and local SEO: `.cursor/rules/portfolio-seo-playbook.mdc`.
 Editorial voice and editing passes: `.cursor/rules/master-content-writer.mdc`.
 Bespoke architecture, security, and deploy patterns: `.cursor/rules/sage-bespoke-2026.mdc`.
 

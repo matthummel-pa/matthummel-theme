@@ -1,8 +1,14 @@
-# Cursor (local rules/MCP; already-tracked files stay in git until removed)
-.cursor/
+# Cursor local MCP and caches; keep committed rule files
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
 
-# GitHub Actions and repo automation (already-tracked files stay in git until removed)
-.github/
+# GitHub Actions stay in git (un-ignore workflows and scripts)
+.github/*
+!.github/workflows/
+!.github/workflows/**
+!.github/scripts/
+!.github/scripts/**
 
 # Sage / Node / Composer
 /node_modules
