@@ -7,6 +7,9 @@ A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Git
 `app/page-fields.php`, `resources/css/portfolio.css`, and the `template-*.blade.php` views.
 Page copy is edited in wp-admin (**Page content (theme)**), not hardcoded in Blade.
 
+Cursor rules: `.cursor/rules/sage-roots.mdc` (Sage templates/Vite) and
+`.cursor/rules/portfolio-wordpress.mdc` (SiteGround, page fields, zip deploy).
+
 Sage docs (also listed in `.cursor/docs.json`):
 
 - https://roots.io/sage/docs/

@@ -1,0 +1,31 @@
+---
+description: Matt Hummel portfolio conventions — SiteGround WordPress/Sage, page fields, zip deploy. Not Next.js, Netlify, or page builders.
+alwaysApply: true
+---
+
+# Portfolio (matthummel.com)
+
+This repo is a **Sage 11 WordPress theme** for a personal site on **SiteGround**. It is not a Next.js, Netlify, Vercel, Supabase, or Shadcn app. Ignore generic React/App Router/Netlify skill templates.
+
+Sage templates and Vite live in `sage-roots.mdc`. Cloud VM commands live in `AGENTS.md`.
+
+## Copy and pages
+
+- Visitor-facing sentences belong in wp-admin **Pages → [page] → Page content (theme)**, not hardcoded in Blade.
+- Add new keys in `app/page-fields.php`, then read them with `\App\field()`, `\App\field_html()`, `\App\field_lines()`, or `\App\field_rows()`.
+- Pages use named `template-*.blade.php` layouts. Gutenberg is off for pages. Do not call `the_content()` on theme-templated pages.
+- Do not add Kadence, theme-options admin, a project CPT, or extra `app/*.php` modules unless Matt asks. Keep helpers in `app/portfolio.php`, `app/contact.php`, `app/Github.php`, `app/page-fields.php`.
+
+## Hosting and deploy
+
+- Live folder: `wp-content/themes/matthummel`. Match that name in Vite `base` and local WordPress (symlink, not `matthummel-theme`).
+- Merge to `main` builds a zip and publishes GitHub Release `theme-latest`. Install from Appearance → **Update Theme** (HTTPS zip). FTP in `.github/workflows/deploy.yml` is optional/best-effort.
+- WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
+- After Blade edits locally: `cd ~/wp-site && wp acorn view:clear`.
+
+## Code style
+
+- PHP 8.3, Pint (`vendor/bin/pint`). Blade in `resources/views/`. Tailwind v4 + `resources/css/portfolio.css`.
+- Production needs `npm run build` (`public/build/` is gitignored). The site fatals without a Vite manifest.
+- Prefer existing CSS tokens and WCAG-safe dark mode (`html.mh-dark`) over new palettes or Netlify Image CDN.
+- Do not seed-delete posts or categories. Page seed is one-shot (`mh_portfolio_seeded_v2`).
