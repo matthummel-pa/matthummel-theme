@@ -10,7 +10,7 @@
   @component('partials.page-hero')
     <p class="eyebrow">{{ \App\field('write_kicker', __('Writing', 'sage'), $writeId) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('write_h1', __('Writing, with snippets when they help.', 'sage'), $writeId) }}</h1>
-    <p class="lead">{{ \App\field('write_lede', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build. I also write on DEV.to.', 'sage'), $writeId) }}</p>
+    <p class="lead">{{ \App\field('write_lede', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build.', 'sage'), $writeId) }}</p>
   @endcomponent
 
   <div class="container wide page-block write-hub">

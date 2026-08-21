@@ -16,7 +16,7 @@ What the 3.x Sage theme does, and where it lives.
 | Code | Featured + live GitHub cards: View code, Live demo, stack icons | `template-code.blade.php`, `App\Github` |
 | Writing | Featured latest post, search/RSS/copy, Grid/List, topic counts, DEV.to cards, RSS subscribe strip; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
-| Pages | Named templates + **Page content (theme)** fields; Gutenberg off | `app/bespoke.php`, `app/page-fields.php` |
+| Search titles / meta | Document title and meta description from the theme (Gettysburg format); optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
 | Dark mode | `html.mh-dark`, icon toggle, `prefers-color-scheme` until saved | `layouts/app.blade.php`, `resources/js/app.js`, `html.mh-dark` in `portfolio.css` |
 | Mobile menu | Slide-over `#mh-popout` with hover motion and compact socials | `sections/header.blade.php` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
@@ -37,6 +37,13 @@ What the 3.x Sage theme does, and where it lives.
 - Gutenberg pattern library on pages (posts still use the block editor)
 - Fake testimonials or “3x revenue” style landing modules
 - Custom post type for projects (Work is a page + PHP list)
+
+## Editor’s notes (3.0.20 SEO playbook)
+
+- Cut the home hero to three sentences and put Gettysburg in the lede (kicker already had it).
+- Services / Work / Contact ledes: city twice across the page, still first person.
+- Dropped “client” on agency cards and overflow FAQ; kept the agency relationship meaning.
+- Did not copy the live About title’s “15+ years” claim into the theme.
 
 ## Editor’s notes (3.0.19 copy)
 

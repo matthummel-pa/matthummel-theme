@@ -7,7 +7,7 @@
   @component('partials.page-hero')
     <p class="eyebrow">{{ \App\field('svc_kicker', __('Services', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('svc_h1', __('If you want a hand.', 'sage')) }}</h1>
-    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work, but it is not my main focus.', 'sage')) }}</p>
+    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.', 'sage')) }}</p>
   @endcomponent
 
   @include('partials.audience', ['alt' => true])
@@ -54,7 +54,7 @@
       <h2 class="display-title is-section">{{ \App\field('svc_faq_h2', __('Quick answers', 'sage')) }}</h2>
       <div class="faq-list">
         @foreach (\App\field_rows('svc_faq', [
-          ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the client. I stay the developer.', 'sage')],
+          ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
           ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
           ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Local Gettysburg marketing lives at Ridges & Valleys. This site is for building and sharing.', 'sage')],
         ]) as $faq)
@@ -64,7 +64,7 @@
           </details>
         @endforeach
       </div>
-      <p>{!! \App\field_html('svc_fair', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')) !!}</p>
+      <p>{!! \App\field_html('svc_fair', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')) !!}</p>
     </div>
   </section>
 

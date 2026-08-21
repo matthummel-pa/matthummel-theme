@@ -30,7 +30,7 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a shop needs a local site.', 'sage')) }}
+  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.', 'sage')) }}
     @if (! empty($ghUser['public_repos']))
       Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}" rel="noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
       ({{ (int) $ghUser['public_repos'] }} public repos).

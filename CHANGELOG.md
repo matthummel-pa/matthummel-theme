@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.20 — 2026-08-21
+
+### Changed
+
+- Local SEO playbook on live landings: document titles (`… in Gettysburg | Matt Hummel`), meta descriptions, 3-sentence ledes, Gettysburg twice in Home/Services/Work/Contact body copy
+- Agency cards and overflow FAQ: shop / relationship, not “client”
+- Optional **Search preview** fields on pages; one-time swap of known old ledes (`mh_seo_playbook_v1`)
+
 ## 3.0.19 — 2026-08-21
 
 ### Changed

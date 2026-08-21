@@ -7,11 +7,11 @@
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $ghBlog = \App\mh_github_blog_url($gh);
-  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language, and pages that are easy to use.', 'sage');
+  $aboutLede = __('I’m Matt. I live in Gettysburg, Pennsylvania, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.', 'sage');
   if (! empty($gh['location'])) {
       $aboutLede = sprintf(
           /* translators: %s: GitHub location */
-          __('I’m Matt. I live in %s. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language, and pages that are easy to use.', 'sage'),
+          __('I’m Matt. I live in %s, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.', 'sage'),
           $gh['location']
       );
   }
