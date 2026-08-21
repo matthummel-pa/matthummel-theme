@@ -182,6 +182,97 @@ function mh_reset_power_platform_focus_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_reset_power_platform_focus_copy', 46);
 
+/** Apply SEO playbook copy swaps without wiping custom fields. */
+function mh_apply_seo_playbook_copy(): void
+{
+    if (get_option('mh_seo_playbook_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_home_lede' => [
+            'I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.' => 'I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.',
+        ],
+        'mh_f_svc_lede' => [
+            'Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work, but it is not my main focus.' => 'Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.',
+            'Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.' => 'Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.',
+        ],
+        'mh_f_work_lede' => [
+            'Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a shop needs a local site.' => 'Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.',
+            'Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.' => 'Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.',
+        ],
+        'mh_f_cnt_lede' => [
+            'Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site, a plugin, or another web app. I usually reply in one or two business days.' => 'Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site in Gettysburg. I usually reply in one or two business days.',
+        ],
+        'mh_f_about_lede' => [
+            'I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language, and pages that are easy to use.' => 'I’m Matt. I live in Gettysburg, Pennsylvania, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.',
+            'I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language. Pages that are easy to use.' => 'I’m Matt. I live in Gettysburg, Pennsylvania, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.',
+        ],
+        'mh_f_svc_fair' => [
+            'I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.' => 'I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.',
+            'I don’t run ads or social accounts for clients. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.' => 'I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $who = get_post_meta($id, 'mh_f_who_items', true);
+        if (is_array($who)) {
+            $changed = false;
+            foreach ($who as $i => $row) {
+                $text = (string) ($row['text'] ?? '');
+                if (str_contains($text, 'a client needs')) {
+                    $who[$i]['text'] = 'When a shop needs a WordPress site, a plugin, or another web app, and you want a developer who writes things down.';
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_who_items', $who);
+            }
+        }
+
+        $faq = get_post_meta($id, 'mh_f_svc_faq', true);
+        if (is_array($faq)) {
+            $changed = false;
+            foreach ($faq as $i => $row) {
+                $text = (string) ($row['text'] ?? '');
+                if (str_contains($text, 'You keep the client.')) {
+                    $whoNew = str_replace('You keep the client.', 'You keep the relationship.', $text);
+                    $faq[$i]['text'] = $whoNew;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_svc_faq', $faq);
+            }
+        }
+    }
+
+    update_option('mh_seo_playbook_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_seo_playbook_copy', 47);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {
@@ -223,7 +314,7 @@ function mh_who_items(): array
         ],
         [
             'title' => __('Agencies', 'sage'),
-            'text' => __('When a client needs a WordPress site, a plugin, or another web app, and you want a developer who writes things down.', 'sage'),
+            'text' => __('When a shop needs a WordPress site, a plugin, or another web app, and you want a developer who writes things down.', 'sage'),
             'icon' => 'users',
             'href' => home_url('/contact/'),
             'cta' => __('Say hello', 'sage'),

@@ -34,7 +34,7 @@
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, Pennsylvania', 'sage')) }}</p>
       <h1 id="hero-heading" class="display-title is-hero">{{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}</h1>
       <p class="hero-roles">{{ \App\field('home_role', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')) }}</p>
-      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')) }}</p>
+      <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.', 'sage')) }}</p>
       <p class="btn-row">
         <a class="btn btn-on-dark" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/contact/')) }}">{{ \App\field('home_cta_primary', __('Say hello', 'sage')) }}</a>
         <a class="btn btn-ghost" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">{{ \App\field('home_cta_secondary', __('See example sites', 'sage')) }}</a>

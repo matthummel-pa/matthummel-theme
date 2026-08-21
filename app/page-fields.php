@@ -79,6 +79,16 @@ function page_template_key(int $post_id): string
     return (string) get_post_meta($post_id, '_wp_page_template', true);
 }
 
+function mh_seo_field_group(): array
+{
+    return [
+        __('Search preview', 'sage') => [
+            ['seo_title', __('Document title (under 60 characters)', 'sage'), 'text', ''],
+            ['seo_desc', __('Meta description (under 155 characters)', 'sage'), 'textarea', ''],
+        ],
+    ];
+}
+
 function mh_home_fields(): array
 {
     return [
@@ -86,7 +96,7 @@ function mh_home_fields(): array
             ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('Gettysburg, PA', 'sage')],
             ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
             ['home_role', __('Role line', 'sage'), 'text', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.', 'sage')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Say hello', 'sage')],
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/contact/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('See example sites', 'sage')],
@@ -146,7 +156,8 @@ function mh_home_fields(): array
 
 function page_field_map(): array
 {
-    $home = mh_home_fields();
+    $home = array_merge(mh_home_fields(), mh_seo_field_group());
+    $seo = mh_seo_field_group();
 
     $svcItems = [
         ['title' => __('WordPress sites', 'sage'), 'text' => __('New sites, old sites that need care, and themes you can edit. Plain words. Pages that work.', 'sage')],
@@ -193,14 +204,14 @@ function page_field_map(): array
         ];
     }
 
-    return [
+    $map = [
         'front-page.blade.php' => $home,
         'template-home.blade.php' => $home,
         'template-about.blade.php' => [
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('Glad you’re here.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language, and pages that are easy to use.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -253,7 +264,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['svc_kicker', __('Kicker', 'sage'), 'text', __('Services', 'sage')],
                 ['svc_h1', __('Heading', 'sage'), 'text', __('If you want a hand.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work, but it is not my main focus.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -281,7 +292,7 @@ function page_field_map(): array
             __('Quick answers', 'sage') => [
                 ['svc_faq_h2', __('Heading', 'sage'), 'text', __('Quick answers', 'sage')],
                 ['svc_faq', __('Questions', 'sage'), 'repeater', [
-                    ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the client. I stay the developer.', 'sage')],
+                    ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
                     ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
                     ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Local Gettysburg marketing lives at Ridges & Valleys. This site is for building and sharing.', 'sage')],
                 ], [
@@ -289,14 +300,14 @@ function page_field_map(): array
                     ['text', __('Answer', 'sage'), 'textarea'],
                 ]],
                 ['svc_fair_h2', __('CTA kicker', 'sage'), 'text', __('A fair picture', 'sage')],
-                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')],
+                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')],
             ],
         ],
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
                 ['cnt_h1', __('Heading', 'sage'), 'text', __('Say hello.', 'sage')],
-                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site, a plugin, or another web app. I usually reply in one or two business days.', 'sage')],
+                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Questions about a post, a snippet, or GitHub are welcome. So is a note about a WordPress site in Gettysburg. I usually reply in one or two business days.', 'sage')],
             ],
             __('Form', 'sage') => [
                 ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
@@ -335,7 +346,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
                 ['code_h1', __('Heading', 'sage'), 'text', __('Code you can copy.', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Repos and short snippets. If you’re new to WordPress or Sage, start with the snippets, then open a repo and read the README. Agencies and shops can treat this as a sample of how I write. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Repos and short snippets. If you’re new to WordPress or Sage, start with a snippet, then open a repo README. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')],
             ],
             __('Featured repos', 'sage') => [
                 ['code_feat_h2', __('Heading', 'sage'), 'text', __('Featured repos', 'sage')],
@@ -353,7 +364,7 @@ function page_field_map(): array
             ],
             __('Snippets', 'sage') => [
                 ['code_snip_h2', __('Heading', 'sage'), 'text', __('Snippets', 'sage')],
-                ['code_snip_intro', __('Intro', 'sage'), 'textarea', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Change the names so they match your project. Sharing is the point.', 'sage')],
+                ['code_snip_intro', __('Intro', 'sage'), 'textarea', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Sharing is the point.', 'sage')],
                 ['code_snips', __('Snippets', 'sage'), 'repeater', $codeSnips, [
                     ['title', __('Title', 'sage'), 'text'],
                     ['note', __('Note', 'sage'), 'textarea'],
@@ -365,7 +376,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a shop needs a local site.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View concept label', 'sage'), 'text', __('View concept', 'sage')],
@@ -390,7 +401,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Writing', 'sage')],
                 ['write_h1', __('Heading', 'sage'), 'text', __('Writing, with snippets when they help.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build. I also write on DEV.to.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build.', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],
                 ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search posts…', 'sage')],
                 ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Subscribe in a reader', 'sage')],
@@ -401,6 +412,12 @@ function page_field_map(): array
             ],
         ],
     ];
+
+    foreach ($map as $tpl => $groups) {
+        $map[$tpl] = array_merge($groups, $seo);
+    }
+
+    return $map;
 }
 
 function mh_code_page_repos(?int $post_id = null): array

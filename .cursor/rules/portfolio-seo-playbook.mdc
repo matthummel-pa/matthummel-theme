@@ -1,0 +1,91 @@
+---
+description: Portfolio and local SEO playbook for Matt Hummel’s Sage theme — dual audience, Gettysburg keywords, on-page limits.
+alwaysApply: true
+---
+
+# Portfolio and local SEO playbook
+
+This rulebook balances friendly shop-owner copy with technical precision. Use it to audit and write content that can rank locally, show real work, and stay readable for both shops and developers.
+
+## This repository (do not ignore)
+
+This is the **matthummel** Sage 11 theme, not a generic agency case-study site. Map the playbook onto files that already ship. If it conflicts with `agency-core.mdc`, **shipping patterns win** until Matt asks to migrate.
+
+- **Voice:** first-person **I / my**. Glossary: **shops**, **agencies**, **developers**, **learners**. Do not switch to “we/our” or “clients” (`master-content-writer.mdc`).
+- **Copy location:** visitor sentences live in **Page content (theme)** (`app/page-fields.php`, `\App\field()`), posts, and comments — not hardcoded Blade except UI chrome.
+- **City:** primary local market is **Gettysburg** (Adams County, Pennsylvania). Use it naturally. Do not spray city names into every heading.
+- **Work:** `/projects/` is studio **example sites**, not a case-study CPT. Do not invent fake results, testimonials, revenue lifts, or client names (`docs/FEATURES.md`).
+- **Proof that ships:** GitHub repos, writing, live concept URLs, profile photo. Not AggregateRating JSON-LD unless Matt asks.
+- **Titles/meta:** WordPress document title and Yoast (or theme `document` helpers). Do not hardcode a second `<title>` stack in Blade. Format *when writing a title* as below.
+- **Snippets:** blog posts and the Code page use existing highlight.js / `.snippet` windows. Do not add Markdown fences in Blade. Language class belongs on `<code>` in post HTML.
+- **ACF:** do not treat “custom advanced custom fields theme development” as a reason to install ACF. Theme fields are `mh_f_*` in `app/page-fields.php`.
+- **CTA:** one primary **Say hello** → `/contact/`. Local SEO copy must not add a second conversion funnel.
+- **Layout:** do not force a 30/40/30 case-study template onto every Work card. Use that hierarchy when writing a **post** about a build, or if Matt asks for a long project page.
+
+---
+
+## Dual-audience targeting
+
+Structure project write-ups and blog posts so two readers can both get value:
+
+- **Shop / agency (non-tech):** clear outcome, plain words, what they can edit or hand over. No fake metrics.
+- **Developer / peer:** stack, repo, snippets, how it ships (Sage, Tailwind, Vite, GitHub).
+
+The home and About **audience doors** already name these people. Do not add a fifth persona.
+
+---
+
+## Local SEO keyword blueprint
+
+Use these frameworks. Replace the city with **Gettysburg** unless Matt names another market. Prefer phrases that match work he actually does.
+
+| Service pillar | Shop intent | Technical intent |
+| --- | --- | --- |
+| WordPress | `wordpress web design in Gettysburg` | Sage 11 custom theme, page fields, Vite — not ACF unless he asks |
+| Web apps | `hire a developer for a WordPress site` | custom frontend (Sage, Tailwind, Blade), plugins, other web apps |
+| Power Platform | `automate workflows with Power Platform` | custom connectors / APIs when it fits; it is **not** the main offer |
+
+Do not stuff all three pillars into every H1. One primary phrase per page. Secondary phrases belong in body copy, once or twice.
+
+---
+
+## Content layout (translation layer)
+
+When writing a **post or long project narrative**, use this order. Skip layers that would require fake screenshots or invented results.
+
+### 1. Business hook (top)
+
+- Warm, specific, jargon-light. First person.
+- Tangible truth only: what the site is for, who can edit it, that it ships. No “increased sales” unless Matt supplies a real number.
+- Analogies are fine if they stay accurate (a database as a filing cabinet).
+
+### 2. Showcase and proof (middle)
+
+- Real URLs, screenshots already in the theme, GitHub, writing.
+- Explain *why* a layout or stack was chosen for that shop or project.
+- Work cards stay concept + place + stack (`template-projects.blade.php`). Do not turn them into testimonial blocks.
+
+### 3. Code vault (bottom)
+
+- Snippets, repos, or workflow detail for developers.
+- Lead with a plain transition, first person, not “Hey fellow devs!” theater. Example: `The implementation is below if you want to copy it.`
+- Use the existing Code page / post `pre` styles. Fence language in post HTML (`language-php`, `language-js`), not a new snippet library.
+
+---
+
+## Strict on-page SEO limits
+
+- **Title tags:** under **60 characters**. When setting a document title: `[Service or topic] in Gettysburg | Matt Hummel`. Short page H1s (`Work`, `About`) stay as they are; do not rename every H1 into a keyword string.
+- **Meta descriptions:** under **155 characters**. End with a direct CTA that matches the site (`Say hello`, `See example sites`). First person. Not “See how we automated this workflow.”
+- **Local density:** on pages meant to rank locally (Home, Services, Work, Contact), use **Gettysburg** at least **twice** in the main body if the copy still sounds like Matt. Do not tack it onto every sentence.
+- **Readability:** paragraphs **3 sentences max** on landing fields (stricter than the general 3–4 in `master-content-writer.mdc`). This file wins on local landing length; the content-writer file still wins on grammar, glossary, and I/my.
+- **Code blocks:** in posts, set a language on the block so highlight.js can run. In Blade, keep current `<pre class="snippet"><code>`.
+
+---
+
+## Execution
+
+1. Decide whether the change is a **field default**, a **post**, or a **template**. Prefer fields and posts for keyword copy.
+2. Apply dual audience without splitting the page into two unrelated sites.
+3. Check titles/meta length, Gettysburg count, paragraph caps, and “no fake proof” before presenting the edit.
+4. When editing Matt’s writing, add **Editor’s Notes** (`master-content-writer.mdc`).

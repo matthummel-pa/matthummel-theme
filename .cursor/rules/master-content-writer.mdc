@@ -16,7 +16,7 @@ Matt writes as **one person** (first-person singular **I / my / me**), not a bra
 - **UI labels (shipped):** sentence case — `Say hello`, `Writing`, `View code`, `Live demo`. Do not Title-Case buttons or nav to match a generic agency style guide.
 - **Headings:** page H1s are short titles (`About`, `Work`, `Now`). Section H2s may be Title Case when they are labels. H3 and body stay sentence case. Match the surrounding page.
 - **Bold:** use sparingly in post HTML / `field_html`. Do not wrap every keyword in `<strong>` on marketing pages.
-- **Growth rules:** `growth-design-powerhouse.mdc` still applies (one primary CTA, benefit-led). This file wins on **voice, grammar, and scanability**.
+- **Growth rules:** `growth-design-powerhouse.mdc` still applies (one primary CTA, benefit-led). Local SEO layout and title/meta caps: `portfolio-seo-playbook.mdc` (3-sentence landings, Gettysburg). This file wins on **voice, grammar, and scanability**.
 
 ---
 
