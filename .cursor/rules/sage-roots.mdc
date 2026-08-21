@@ -7,6 +7,9 @@ alwaysApply: true
 
 This repo is a Sage 11.2.1 WordPress theme. Follow official docs, not classic PHP themes or page builders.
 
+Agency operating system: `.cursor/rules/agency-core.mdc`.
+Bespoke architecture, security, and deploy patterns: `.cursor/rules/sage-bespoke-2026.mdc`.
+
 ## Docs (always prefer these)
 
 - Sage index: https://roots.io/sage/docs/
@@ -49,4 +52,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions: Composer + `npm run build`, then FTP to SiteGround `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.

@@ -260,18 +260,18 @@ function render_theme_updater_page(): void
 
     if ('POST' === ($_SERVER['REQUEST_METHOD'] ?? '') && isset($_POST['mh_updater_save_nonce'])) {
         check_admin_referer('mh_theme_token', 'mh_updater_save_nonce');
-        $incoming = trim((string) ($_POST['mh_gh_token'] ?? ''));
+        $incoming = sanitize_text_field(wp_unslash((string) ($_POST['mh_gh_token'] ?? '')));
         if ($incoming === '') {
             $notice = ['notice-error', __('Paste a token before saving.', 'sage')];
         } else {
-            set_theme_mod('mh_gh_token', sanitize_text_field($incoming));
+            set_theme_mod('mh_gh_token', $incoming);
             $notice = ['notice-success', __('GitHub token saved.', 'sage')];
         }
     }
 
     if ('POST' === ($_SERVER['REQUEST_METHOD'] ?? '') && isset($_POST['mh_updater_nonce'])) {
         check_admin_referer('mh_theme_update', 'mh_updater_nonce');
-        $action = sanitize_key((string) ($_POST['mh_updater_action'] ?? 'pull'));
+        $action = sanitize_key(wp_unslash((string) ($_POST['mh_updater_action'] ?? 'pull')));
         [$ok, $msg] = $action === 'build' ? updater_dispatch() : updater_pull();
         $notice = [$ok ? 'notice-success' : 'notice-error', $msg];
     }

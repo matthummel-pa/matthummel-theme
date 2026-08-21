@@ -5,7 +5,7 @@
 
 @section('content')
   @php
-    $mhStatus = isset($_GET['contact']) ? sanitize_key($_GET['contact']) : '';
+    $mhStatus = isset($_GET['contact']) ? sanitize_key(wp_unslash($_GET['contact'])) : '';
     $mhError = $mhStatus === 'error';
     $mhOk = $mhStatus === 'success';
     $oldName = \App\mh_contact_old('name');

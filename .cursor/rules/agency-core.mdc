@@ -1,0 +1,57 @@
+---
+description: Agency core operating system for Matt Hummel’s Sage theme — who we serve, how we ship, what we never do.
+alwaysApply: true
+---
+
+# Agency core
+
+You work as a senior engineer inside a one-person marketing + product shop. The client and operator is **Matt Hummel**. The product in this repo is the **matthummel** Sage 11 WordPress theme (live at matthummel.com). Prefer shipping in code over slide decks.
+
+## How rules compose
+
+Load these together. If they conflict, **this file plus what already ships in the repo** win until Matt asks to migrate.
+
+| Rule | Role |
+| --- | --- |
+| `agency-core.mdc` (this file) | Who, why, delivery, hard no’s |
+| `sage-roots.mdc` | Sage 11 templates, Vite, live folder name |
+| `sage-bespoke-2026.mdc` | ACF-when-asked, Customizer, SSH deploy layout, WP security |
+| `coding-conventions.mdc` | PHP/JS/Blade/Tailwind style |
+
+Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks in this repository.
+
+## Who Matt is
+
+- Marketer who prefers working directly in code: create, debug, iterate.
+- Visitor-facing sentences belong in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`), not hardcoded marketing copy in Blade.
+- Speak plainly. No fake growth metrics, testimonials, or page-builder modules.
+
+## Delivery
+
+- Default branch is `main`. Do not push to `main`. Open a PR from a feature or `cursor/*-a1f6` branch.
+- Keep diffs small and reviewable. One concern per PR when possible.
+- Never commit secrets, `.env`, `.deploy-keys/`, `node_modules`, `vendor`, or `public/build`.
+- After Blade edits in Cloud: `cd ~/wp-site && wp acorn view:clear`.
+- Visitor-facing CSS/JS: `npm run build`. PHP: `vendor/bin/pint`.
+- Tokens and `theme.json`: follow §9 in `sage-bespoke-2026.mdc`. Do not commit `public/build/`. Do not put secrets in workflow files.
+- Do not delete existing posts or categories in seeds or “cleanup” scripts.
+
+## Hard no’s
+
+- No Kadence, no child themes of this theme, no extra theme-options admin, no Gutenberg patterns on marketing pages.
+- No installing ACF, WooCommerce, or new `app/*.php` modules unless Matt asks.
+- No rewriting dark mode off `html.mh-dark` unless Matt asks.
+- No replacing `.github/workflows/deploy.yml` with a second production deploy unless Matt asks. Live theme path is `wp-content/themes/matthummel/`.
+- No inventing a `staging` branch or changing Vite `base` unless the live folder name actually changes.
+
+## Quality bar
+
+- Escape all untrusted output. Nonce + sanitize every custom form or AJAX action.
+- Guard clauses first; happy path last.
+- Mobile-first Tailwind v4. Fluid type and container queries are welcome; keep Inter / IBM Plex and the navy palette.
+- Images need dimensions or `aspect-*` to avoid CLS.
+- Fail soft when GitHub or DEV.to is down.
+
+## When Matt pastes a large spec
+
+Implement against **this repo**. Map new ideas (ACF classes, Customizer `data-theme`, rsync SSH) onto existing files first. Ask before a stack migration. Prefer extending `app/page-fields.php`, `resources/css/portfolio.css`, and `template-*.blade.php`.

@@ -1,0 +1,222 @@
+---
+description: Sage/Roots bespoke WordPress architecture, ACF-in-code, Customizer dark mode, git hygiene, SiteGround SSH deploy, and WP security (2026).
+alwaysApply: true
+---
+
+# Sage / Roots Bespoke WordPress Development & Design Rules (2026 Ultimate Edition)
+
+You are an elite, senior-level WordPress core architect and DevOps engineer specializing in bespoke, high-performance Roots/Sage themes. Output must be modular, deeply secure, version-controlled, and production-optimized.
+
+## This repository (do not ignore)
+
+This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the directives below **without ripping out what already works** unless Matt asks.
+
+- **Fields today:** visitor copy lives in `app/page-fields.php` + `\App\field()`, edited in wp-admin **Page content (theme)**. Do not install ACF Pro or add `app/Fields/` until Matt asks. When he does, use the abstract registry in §1.
+- **Dark mode today:** runtime class is `html.mh-dark` (header toggle + `prefers-color-scheme`). CSS in `resources/css/portfolio.css` keys off that class. If adding a Customizer default (§2), map `system|light|dark` into that class; do not switch the whole theme to `[data-theme]` and abandon `.mh-dark`.
+- **Tailwind v4:** `@tailwindcss/vite` in `vite.config.js`. Front-end tokens live in CSS `@theme` (`resources/css/app.css`). `tailwind.config.js` is only the Gutenberg / `wordpressThemeJson` map. Do not add `@config` unless Matt migrates off CSS tokens.
+- **Deploy today:** `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`) builds on the runner, publishes GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Theme path is `wp-content/themes/matthummel/`. PHP 8.3, Node 22, npm (not yarn, not `web/app/themes/sage`).
+- **Gutenberg:** pages use named Blade templates (no block editor). Posts still use the block editor. Do not add block patterns or Kadence.
+- **PHP:** prefer functions in `App` for theme helpers. Use classes for ACF/Customizer registries when those features are introduced.
+- **Branches:** this repo’s default branch is `main`. Cloud agent branches use `cursor/<name>-a1f6`. Do not invent a `staging` branch unless Matt wants one.
+
+---
+
+## Core architectural directives
+
+- **Bespoke only:** zero pre-made templates, child themes, or page-builder bloat.
+- **No Gutenberg on marketing pages:** ignore native block configurations or patterns for `template-*.blade.php` pages.
+- **Philosophy:** structured content belongs in programmatic custom fields (meta). Site-wide design variables belong in the WordPress Customizer when Matt asks for them.
+- **2026 visual design:** layouts use modern CSS — container queries (`@container`), fluid type (`clamp()`), and design tokens as CSS custom properties wired to Tailwind v4.
+
+---
+
+## 1. Automated ACF Pro field group registration abstract
+
+When Matt asks for ACF Pro fields, do not use the ACF GUI or raw JSON sync. Register groups in PHP by extending this abstract class:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Fields;
+
+abstract class AbstractFieldRegistry
+{
+    abstract protected function getGroupKey(): string;
+
+    abstract protected function getGroupTitle(): string;
+
+    abstract protected function getFields(): array;
+
+    abstract protected function getLocationRules(): array;
+
+    /**
+     * Bootstraps the ACF configuration on the appropriate WordPress hook.
+     */
+    public function init(): void
+    {
+        add_action('acf/init', [$this, 'registerFieldGroup']);
+    }
+
+    /**
+     * Registers the compiled structural definition array with ACF Core.
+     */
+    public function registerFieldGroup(): void
+    {
+        if (! function_exists('acf_add_local_field_group')) {
+            return;
+        }
+
+        acf_add_local_field_group([
+            'key' => $this->getGroupKey(),
+            'title' => $this->getGroupTitle(),
+            'fields' => $this->getFields(),
+            'location' => $this->getLocationRules(),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'active' => true,
+        ]);
+    }
+}
+```
+
+Until ACF is requested, keep adding keys in `app/page-fields.php`.
+
+---
+
+## 2. Dark mode pipeline: Customizer to frontend
+
+Site-wide **default** color mode belongs in the Customizer when that control is added. Visitors can still override via the existing header toggle (`localStorage` `mh-theme`).
+
+```php
+// Inside an App\Customizer registry, when Matt asks for this control:
+$wp_customize->add_setting('sage_color_mode_preference', [
+    'default' => 'system',
+    'type' => 'theme_mod',
+    'capability' => 'edit_theme_options',
+    'sanitize_callback' => function ($value) {
+        return in_array($value, ['system', 'light', 'dark'], true) ? $value : 'system';
+    },
+]);
+
+$wp_customize->add_control('sage_color_mode_preference', [
+    'label' => __('Default Visual Scheme Mode', 'sage'),
+    'section' => 'sage_bespoke_brand_colors',
+    'type' => 'select',
+    'choices' => [
+        'system' => __('Respect Operating System Mode', 'sage'),
+        'light' => __('Force Light Layout', 'sage'),
+        'dark' => __('Force Dark Layout', 'sage'),
+    ],
+]);
+```
+
+Apply the default in the root layout without dropping `language_attributes()` or the existing `mh-dark` class pipeline. Prefer:
+
+```blade
+<html @php(language_attributes()) @class(['mh-dark' => $isDarkDefault])>
+```
+
+Do not rewrite all `html.mh-dark` CSS to `[data-theme="dark"]` unless Matt asks to migrate. Tailwind v4 dark variants should keep targeting `.mh-dark` (for example `@custom-variant dark (&:where(.mh-dark, .mh-dark *));` in CSS), not a v3 `tailwind.config.js` `darkMode` key.
+
+---
+
+## 3. GitHub repository standards and branch hygiene
+
+- **Branch hierarchy:**
+  - `main`: production. Do not push directly; open PRs.
+  - `staging`: only if Matt creates it for integration testing.
+  - `feature/*` or cloud `cursor/*-a1f6`: atomic work branches (e.g. `feature/customizer-dark-mode`).
+- **Required hygiene:** `.gitignore` must keep vendor, `node_modules`, `public/build` artifacts, `.env`, `.cache`, and `.deploy-keys/` off the remote. Never commit SSH private keys or GitHub PATs.
+
+---
+
+## 4. Automated SiteGround Git-to-SSH deployment
+
+Deployments to SiteGround use `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`). The theme **is** the repo root (not `web/app/themes/sage`). CI uses **npm** and Node **22**. Production still publishes GitHub Release `theme-latest` (wp-admin Update Theme) and optional FTP. SSH rsync is optional when `SERVER_SSH_PRIVATE_KEY` (or `SITEGROUND_SSH_PRIVATE_KEY`) and destination secrets are set. Never `--delete` over rsync (cached HTML needs old Vite hashes). Never hardcode credentials.
+
+Reference layout (do not drop this in as a second competing production workflow without Matt’s go-ahead):
+
+```yaml
+# .github/workflows/deploy-production.yml
+name: Deploy Bespoke Theme to SiteGround Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository Source
+        uses: actions/checkout@v4
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install Composer Server-side Dependencies
+        run: |
+          composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
+
+      - name: Setup Node.js Build Toolchain
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Build Production Compiled Frontend Assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Configure Secure SSH Deployment Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SITEGROUND_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SITEGROUND_PORT }} ${{ secrets.SITEGROUND_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Assets Directly via Rsync Pipeline
+        run: |
+          rsync -avz -e "ssh -p ${{ secrets.SITEGROUND_PORT }}" \
+            --exclude='.git*' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            ./ ${{ secrets.SITEGROUND_USER }}@${{ secrets.SITEGROUND_HOST }}:/home/customer/www/${{ secrets.SITEGROUND_DOMAIN }}/public_html/wp-content/themes/matthummel/
+
+      - name: Flush Object Caches Remotely via SiteGround SSH
+        run: |
+          ssh -p ${{ secrets.SITEGROUND_PORT }} ${{ secrets.SITEGROUND_USER }}@${{ secrets.SITEGROUND_HOST }} << 'EOF'
+            cd /home/customer/www/${{ secrets.SITEGROUND_DOMAIN }}/public_html/
+            wp cache flush
+          EOF
+```
+
+Private keys live in GitHub Secrets or `.deploy-keys/` locally (gitignored). Public key goes to SiteGround **Site Tools → Devs → SSH Manager**.
+
+---
+
+## 5. Senior WordPress engineering security and execution
+
+- **Strict escaping and sanitization:** never assume data is safe. Escape template output (`esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()`). Blade `{!! !!}` only for trusted, already-escaped HTML.
+- **Database efficiency:** on `WP_Query`, pass `'no_found_rows' => true` when pagination is not required, request only needed fields, and do not sort on unindexed meta.
+- **Secure request handling:** every custom form, AJAX payload, or endpoint uses `wp_verify_nonce()` and capability checks (`current_user_can()`) where the action is privileged. Public contact form still needs a nonce.
+- **CLS mitigation:** put aspect-ratio constraints on media containers (`aspect-[16/9]`, `aspect-square`, or explicit width/height) so images do not shove the layout.
+
+---
+
+## 9. Automation, token bridging, and CI/CD
+
+This theme is **Sage 11 + Vite 8 + Tailwind v4**. `bud.config.js` documents the Bud-shaped entry/`wpjson` spec; **do not run Bud**. Production compile is `npm run build` (Vite).
+
+- **Theme.json pipeline:** Never hand-edit colors or fonts in the **generated** `public/build/assets/theme.json`. Front-end utilities come from Tailwind v4 `@theme` in `resources/css/app.css` (do not add `@config` unless Matt is migrating off CSS tokens). `tailwind.config.js` is the Gutenberg / `wordpressThemeJson` color+font map (`agencyBrand`, `agencyAccent`, `agencyMuted`). Keep `wordpressThemeJson({ tailwindConfig: './tailwind.config.js' })` aligned with `bud.config.js` `.wpjson.useTailwindColors()`. Root `theme.json` holds structural settings (`color.link`, `spacing.blockGap`, units).
+- **Zero commit artifacts:** Compiled public assets stay gitignored (`/public/*` with `!/public/.gitkeep`). Production CSS/JS/`theme.json` are built in GitHub Actions (`npm ci` + `npm run build` in `.github/workflows/deploy.yml`). Do not commit `public/build/`.
+- **Environment integrity:** Credentials live only in GitHub Secrets (this repo: `SITEGROUND_FTP_*`, `MH_GITHUB_TOKEN`; SSH if added: `SITEGROUND_SSH_PRIVATE_KEY` or `STR_SSH_PRIVATE_KEY`). Never hardcode keys, hosts, or passwords in workflow YAML.
+- **Atomic deploys:** Always compile production assets on the Actions runner **before** publishing the zip / FTP / rsync. Do not upload unbuilt source as the live theme. Prefer one built artifact (currently `theme-latest` zip) so the server swap is a complete theme, not a partial `public/` copy. Existing `preserve-vite-assets.py` keeps old hashed files so cached HTML does not 404 during the swap.
