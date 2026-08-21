@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.19 — 2026-08-21
+
+### Added
+
+- Cursor rule `.cursor/rules/portfolio-wordpress.mdc`: SiteGround WordPress/Sage conventions, page fields, zip deploy (not Next.js or Netlify)
+
 ## 3.0.18 — 2026-08-20
 
 ### Fixed

@@ -49,4 +49,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions: Composer + `npm run build`, then FTP to SiteGround `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.
+Push/merge to `main` runs GitHub Actions: Composer + `npm run build`, then a GitHub Release zip (`theme-latest`). Install from Appearance → **Update Theme**. FTP to SiteGround `wp-content/themes/matthummel` is optional. See `.github/workflows/deploy.yml` and `portfolio-wordpress.mdc`.
