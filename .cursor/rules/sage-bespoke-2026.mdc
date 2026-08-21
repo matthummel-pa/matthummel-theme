@@ -13,8 +13,8 @@ This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the dire
 
 - **Fields today:** visitor copy lives in `app/page-fields.php` + `\App\field()`, edited in wp-admin **Page content (theme)**. Do not install ACF Pro or add `app/Fields/` until Matt asks. When he does, use the abstract registry in §1.
 - **Dark mode today:** runtime class is `html.mh-dark` (header toggle + `prefers-color-scheme`). CSS in `resources/css/portfolio.css` keys off that class. If adding a Customizer default (§2), map `system|light|dark` into that class; do not switch the whole theme to `[data-theme]` and abandon `.mh-dark`.
-- **Tailwind v4:** `@tailwindcss/vite` in `vite.config.js`. There is no `tailwind.config.js`. Put tokens in CSS (`@theme`, custom properties), not a v3 JS config.
-- **Deploy today:** `.github/workflows/deploy.yml` builds a zip / GitHub Release `theme-latest` (FTP is optional). Do not replace it with rsync unless Matt asks. If you add SSH deploy, use §4 with theme path `wp-content/themes/matthummel/`, PHP 8.3, Node 22.
+- **Tailwind v4:** `@tailwindcss/vite` in `vite.config.js`. Front-end tokens live in CSS `@theme` (`resources/css/app.css`). `tailwind.config.js` is only the Gutenberg / `wordpressThemeJson` map. Do not add `@config` unless Matt migrates off CSS tokens.
+- **Deploy today:** `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`) builds on the runner, publishes GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Theme path is `wp-content/themes/matthummel/`. PHP 8.3, Node 22, npm (not yarn, not `web/app/themes/sage`).
 - **Gutenberg:** pages use named Blade templates (no block editor). Posts still use the block editor. Do not add block patterns or Kadence.
 - **PHP:** prefer functions in `App` for theme helpers. Use classes for ACF/Customizer registries when those features are introduced.
 - **Branches:** this repo’s default branch is `main`. Cloud agent branches use `cursor/<name>-a1f6`. Do not invent a `staging` branch unless Matt wants one.

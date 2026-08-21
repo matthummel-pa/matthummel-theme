@@ -161,7 +161,7 @@ add_action('init', function () {
         exit;
     };
 
-    $nonce = isset($_POST['mh_contact_nonce']) ? $_POST['mh_contact_nonce'] : '';
+    $nonce = isset($_POST['mh_contact_nonce']) ? sanitize_text_field(wp_unslash($_POST['mh_contact_nonce'])) : '';
     if (! wp_verify_nonce($nonce, 'mh_contact')) {
         $redirect('error');
     }
@@ -172,11 +172,11 @@ add_action('init', function () {
         $redirect('success');
     }
 
-    $name = sanitize_text_field($_POST['mh_name'] ?? '');
-    $email = sanitize_email($_POST['mh_email'] ?? '');
-    $subject = sanitize_text_field($_POST['mh_subject'] ?? '');
-    $message = sanitize_textarea_field($_POST['mh_message'] ?? '');
-    $whoKey = sanitize_key($_POST['mh_who'] ?? '');
+    $name = sanitize_text_field(wp_unslash($_POST['mh_name'] ?? ''));
+    $email = sanitize_email(wp_unslash($_POST['mh_email'] ?? ''));
+    $subject = sanitize_text_field(wp_unslash($_POST['mh_subject'] ?? ''));
+    $message = sanitize_textarea_field(wp_unslash($_POST['mh_message'] ?? ''));
+    $whoKey = sanitize_key(wp_unslash($_POST['mh_who'] ?? ''));
     $whoLabels = [
         'developer' => __('A developer', 'sage'),
         'learning' => __('Learning the web', 'sage'),
@@ -188,7 +188,7 @@ add_action('init', function () {
 
     $draft = [
         'name' => $name,
-        'email' => (string) ($_POST['mh_email'] ?? ''),
+        'email' => sanitize_email(wp_unslash($_POST['mh_email'] ?? '')),
         'who' => $whoKey,
         'subject' => $subject,
         'message' => $message,
