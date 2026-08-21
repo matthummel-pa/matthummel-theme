@@ -209,3 +209,14 @@ Private keys live in GitHub Secrets or `.deploy-keys/` locally (gitignored). Pub
 - **Database efficiency:** on `WP_Query`, pass `'no_found_rows' => true` when pagination is not required, request only needed fields, and do not sort on unindexed meta.
 - **Secure request handling:** every custom form, AJAX payload, or endpoint uses `wp_verify_nonce()` and capability checks (`current_user_can()`) where the action is privileged. Public contact form still needs a nonce.
 - **CLS mitigation:** put aspect-ratio constraints on media containers (`aspect-[16/9]`, `aspect-square`, or explicit width/height) so images do not shove the layout.
+
+---
+
+## 9. Automation, token bridging, and CI/CD
+
+This theme is **Sage 11 + Vite 8 + Tailwind v4**, not Bud. Do not add `bud.config.js` or a v3 `tailwind.config.js`.
+
+- **Theme.json pipeline:** Never hand-edit colors or fonts in the **generated** `public/build/assets/theme.json`. Change tokens in Tailwind v4 CSS (`resources/css/`, `@theme` / custom properties). `wordpressThemeJson()` in `vite.config.js` (`@roots/vite-plugin`) syncs Tailwind into the built `theme.json` on `npm run build`. The root `theme.json` is only a structural source; keep palette/type work in CSS unless Matt asks to edit that source file.
+- **Zero commit artifacts:** Compiled public assets stay gitignored (`/public/*` with `!/public/.gitkeep`). Production CSS/JS/`theme.json` are built in GitHub Actions (`npm ci` + `npm run build` in `.github/workflows/deploy.yml`). Do not commit `public/build/`.
+- **Environment integrity:** Credentials live only in GitHub Secrets (this repo: `SITEGROUND_FTP_*`, `MH_GITHUB_TOKEN`; SSH if added: `SITEGROUND_SSH_PRIVATE_KEY` or `STR_SSH_PRIVATE_KEY`). Never hardcode keys, hosts, or passwords in workflow YAML.
+- **Atomic deploys:** Always compile production assets on the Actions runner **before** publishing the zip / FTP / rsync. Do not upload unbuilt source as the live theme. Prefer one built artifact (currently `theme-latest` zip) so the server swap is a complete theme, not a partial `public/` copy. Existing `preserve-vite-assets.py` keeps old hashed files so cached HTML does not 404 during the swap.

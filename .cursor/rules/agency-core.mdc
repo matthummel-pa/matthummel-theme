@@ -33,6 +33,7 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 - Never commit secrets, `.env`, `.deploy-keys/`, `node_modules`, `vendor`, or `public/build`.
 - After Blade edits in Cloud: `cd ~/wp-site && wp acorn view:clear`.
 - Visitor-facing CSS/JS: `npm run build`. PHP: `vendor/bin/pint`.
+- Tokens and `theme.json`: follow §9 in `sage-bespoke-2026.mdc`. Do not commit `public/build/`. Do not put secrets in workflow files.
 - Do not delete existing posts or categories in seeds or “cleanup” scripts.
 
 ## Hard no’s
