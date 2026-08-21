@@ -148,7 +148,8 @@ function mh_contact_else_links(): array
 
 /** Handle the contact form submission (template-contact.blade.php). */
 add_action('init', function () {
-    if (! isset($_POST['action']) || $_POST['action'] !== 'mh_contact') {
+    $postedAction = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : '';
+    if ($postedAction !== 'mh_contact') {
         return;
     }
 
@@ -161,8 +162,8 @@ add_action('init', function () {
         exit;
     };
 
-    $nonce = isset($_POST['mh_contact_nonce']) ? sanitize_text_field(wp_unslash($_POST['mh_contact_nonce'])) : '';
-    if (! wp_verify_nonce($nonce, 'mh_contact')) {
+    $nonce = isset($_POST['mh_contact_nonce']) ? wp_unslash($_POST['mh_contact_nonce']) : '';
+    if (! is_string($nonce) || ! wp_verify_nonce($nonce, 'mh_contact')) {
         $redirect('error');
     }
 
@@ -188,7 +189,7 @@ add_action('init', function () {
 
     $draft = [
         'name' => $name,
-        'email' => sanitize_email(wp_unslash($_POST['mh_email'] ?? '')),
+        'email' => $email,
         'who' => $whoKey,
         'subject' => $subject,
         'message' => $message,

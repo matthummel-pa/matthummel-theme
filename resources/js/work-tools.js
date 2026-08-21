@@ -1,15 +1,19 @@
 import { copyText } from './writing-tools.js';
 
 function flashLabel(button, next) {
-  const label = button.childNodes[0]?.textContent?.trim() || button.textContent.trim();
-  const hidden = button.querySelector('.visually-hidden');
-  button.childNodes[0].textContent = `${next} `;
+  const node = button.childNodes[0]
+  if (!node) {
+    return
+  }
+  const label = node.textContent?.trim() || button.textContent.trim()
+  const hidden = button.querySelector('.visually-hidden')
+  node.textContent = `${next} `
   window.setTimeout(() => {
-    button.childNodes[0].textContent = `${label} `;
+    node.textContent = `${label} `
     if (hidden) {
-      button.appendChild(hidden);
+      button.appendChild(hidden)
     }
-  }, 1600);
+  }, 1600)
 }
 
 function setWorkView(grid, view) {
@@ -94,6 +98,9 @@ export function initWorkTools() {
       }
       const ok = await copyText(url);
       const label = button.childNodes[0];
+      if (!label) {
+        return;
+      }
       const was = label.textContent;
       label.textContent = ok ? 'Copied ' : 'Copy failed ';
       window.setTimeout(() => {
