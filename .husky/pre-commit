@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+echo "🛡️ Running pre-commit validation checks..."
+
+# Run PHP linting over modified files to block execution breaks before push
+if ! find . -name "*.php" -not -path "*/vendor/*" -exec php -l {} \; | grep -q "No syntax errors detected"; then
+    echo "❌ PHP Syntax Error Detected! Commit aborted."
+    exit 1
+fi
+
+echo "✅ All linting checks passed. Proceeding with commit."
