@@ -1,11 +1,79 @@
+# Cursor (local rules/MCP; already-tracked files stay in git until removed)
+.cursor/
+
+# GitHub Actions and repo automation (already-tracked files stay in git until removed)
+.github/
+
+# Sage / Node / Composer
 /node_modules
 /vendor
 /public/*
 !/public/.gitkeep
+/public/hot
 .env
-npm-debug.log
+.env.*
+!.env.example
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Security: never commit deploy keys
+.deploy-keys/
+
+# Python helpers (FTP locate, Vite hash preserve)
 __pycache__/
 *.pyc
+*.pyo
 
-# Security: Never commit deploy keys to GitHub
-.deploy-keys/
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# WordPress core (if a full install is dropped into this folder)
+/wp-admin/
+/wp-includes/
+/wp-content/index.php
+/wp-content/languages/
+/wp-content/plugins/index.php
+/wp-content/themes/index.php
+/license.txt
+/readme.html
+/wp-*.php
+/xmlrpc.php
+
+# WordPress configuration (never commit secrets)
+wp-config.php
+wp-config-*.php
+!wp-config-sample.php
+
+# Example default themes and Hello Dolly
+/wp-content/themes/twenty*/
+/wp-content/plugins/hello.php
+
+# Uploads, cache, upgrades, backups
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/upgrades/
+/wp-content/cache/
+/wp-content/backup-db/
+/wp-content/backups/
+/wp-content/blogs.dir/
+/wp-content/advanced-cache.php
+/wp-content/wp-cache-config.php
+/wp-content/object-cache.php
+/wp-content/debug.log
+
+# Logs, sitemaps, local Apache (theme Blade .htaccess is committed)
+*.log
+sitemap.xml
+sitemap.xml.gz
+error_log
+debug.log
