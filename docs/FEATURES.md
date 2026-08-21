@@ -8,7 +8,7 @@ What the 3.x Sage theme does, and where it lives.
 | --- | --- | --- |
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Bold blue/gray landing; full-stack role (WordPress, plugins, other web apps); GitHub stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
+| Home | Bold blue/gray landing; one primary Say hello CTA; GitHub in quick links; stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
 | Page / post heroes | Same navy gradient + blobs as Home, still (no wander animation) | `partials/page-hero.blade.php`, `partials/hero-graphic.blade.php` |
 | About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
@@ -37,6 +37,14 @@ What the 3.x Sage theme does, and where it lives.
 - Gutenberg pattern library on pages (posts still use the block editor)
 - Fake testimonials or “3x revenue” style landing modules
 - Custom post type for projects (Work is a page + PHP list)
+
+## Editor’s notes (3.0.19 copy)
+
+- Split services lede so the Power Platform aside is one sentence, not two.
+- Swapped “clients” for “shops” on services fit copy and the Work band (glossary).
+- Subject–verb on the contact hint: “sentences are.”
+- Combined the two fragment closers on About into one sentence.
+- Hero CTAs: filled button is the contact action; GitHub is a text link, not a third button.
 
 ## Stack
 

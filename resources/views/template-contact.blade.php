@@ -74,7 +74,7 @@
           <div class="field">
             <label for="cf-message">{{ __('Message', 'sage') }} <span class="field-req" aria-hidden="true">*</span><span class="visually-hidden"> {{ __('required', 'sage') }}</span></label>
             <textarea id="cf-message" name="mh_message" rows="8" required aria-required="true" aria-describedby="cf-message-hint{{ in_array('message', $invalid, true) ? ' contact-status' : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
-            <p class="field-hint" id="cf-message-hint">{{ \App\field('cnt_message_hint', __('A few sentences is enough. Paste a URL if you have one. No need for a long brief.', 'sage')) }}</p>
+            <p class="field-hint" id="cf-message-hint">{{ \App\field('cnt_message_hint', __('A few sentences are enough. Paste a URL if you have one. No need for a long brief.', 'sage')) }}</p>
           </div>
 
           <div class="contact-form__actions">
