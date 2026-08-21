@@ -1,0 +1,77 @@
+---
+description: Coding conventions for the Matt Hummel Sage theme (PHP, Blade, JS, Tailwind). Apply on every change.
+alwaysApply: true
+---
+
+# Coding conventions
+
+This repo is a Sage 11 WordPress theme (Blade, PHP 8.3, Tailwind v4, Vite), not a Next.js or Supabase app. Do not add App Router, RSC, Genql, next-safe-action, or Shadcn unless Matt asks for a separate project.
+
+Matt is a marketer who prefers working directly in code. Keep diffs small, copy in wp-admin fields, and avoid inventing admin UIs.
+
+## Key principles
+
+- Write concise, accurate code. Prefer functional, declarative style. Avoid classes unless WordPress or Acorn requires one.
+- Prefer iteration and small helpers over duplication.
+- Use descriptive names with auxiliary verbs: `isLoading`, `hasError`, `doesValidate`, `shouldRedirect`.
+- Directories and view/partial filenames: lowercase with dashes (`partials/work-card.blade.php`).
+- PHP: named functions in the `App` namespace. JS: named exports for modules (`export function initWorkTools`).
+- Receive an object, return an object (RORO) for helpers with several parameters.
+
+## PHP and JavaScript
+
+- Use `function` for pure helpers. Omit semicolons in JS.
+- Prefer PHP 8 typed functions and `interface` only when a real contract is needed; do not add TypeScript to this theme.
+- File order: public API / exported functions, helpers, static content, types (JSDoc).
+- Single-line conditionals omit braces: `if ($hasError) return $errors;`
+- Match existing Pint style in `app/`. Run `vendor/bin/pint` after PHP edits.
+
+## Error handling and validation
+
+- Guard clauses first; happy path last. Avoid nested `else`.
+- Return user-facing errors as values (arrays, redirects with transients) for expected contact/form failures. Do not throw for normal validation misses.
+- Log unexpected failures; show a short, human message (no stack traces on the public site).
+- Sanitize and unslash all request input (`sanitize_text_field`, `sanitize_email`, nonces) before use.
+- Never commit secrets, `.env`, or `.deploy-keys/`. Tokens live in wp-admin or environment variables (`MH_GITHUB_TOKEN`).
+
+## Blade, templates, and WordPress
+
+- Follow the WordPress template hierarchy. Chrome lives in `resources/views/sections/`; reusable chunks in `partials/`; named pages in `template-*.blade.php`.
+- Visitor-facing sentences belong in **Page content (theme)** via `app/page-fields.php` and `\App\field()`, not hardcoded in Blade.
+- Do not add Kadence, page builders, a theme-options screen, or extra `app/*.php` modules unless Matt asks. Portfolio logic stays in `app/portfolio.php`, `app/contact.php`, `app/Github.php`, `app/page-fields.php`.
+- After Blade edits in Cloud, run `cd ~/wp-site && wp acorn view:clear`.
+- Prefer server-rendered HTML. Keep `resources/js/` small and for Web APIs (dark mode, copy, search filters). Do not fetch page content in JS when PHP/Blade can render it.
+
+## Front-end (Tailwind, a11y)
+
+- Style with Tailwind v4 utilities in Blade. Shared theme look lives in `resources/css/portfolio.css`; do not introduce a CSS-in-JS layer.
+- Mobile-first responsive classes. Preserve existing Inter / IBM Plex and navy/blue/gray palette.
+- Dark mode is `html.mh-dark` plus the header toggle; respect `prefers-color-scheme` until the visitor saves a choice.
+- Images: explicit width/height or aspect ratio, lazy-load below the fold, WebP when adding new assets.
+- Keyboard access, visible focus, and ARIA only when native HTML is not enough (`aria-label`, `aria-pressed` on icon-only buttons). Meet WCAG contrast on new UI.
+- Static copy and option lists sit in PHP field defaults or a content array at the bottom of the file, not inline in the middle of markup loops.
+
+## JS modules
+
+- `function`, not `const fn = () =>`, for named module functions.
+- Minimize new global state. Prefer `querySelector` + listeners inside `init*` functions imported from `resources/js/app.js`.
+- Handle missing DOM early: `if (!root) return;`
+- Do not add React, Radix, or Shadcn to this theme.
+
+## Data and APIs
+
+- WordPress APIs, transients, and WP-CLI — not Supabase or GraphQL. GitHub data goes through `App\Github` with transients.
+- Fetch only the fields you use. Fail soft when GitHub or DEV.to is down (cached or empty UI, not a white screen).
+- Contact mail: `wp_mail` in `app/contact.php`. Cloud has no mail server; still keep the redirect and validation.
+
+## Testing
+
+- PHP: `vendor/bin/pint --test`. JS/CSS: `npm run build` after asset changes.
+- Exercise the local site at `http://localhost:8080` (admin `admin` / `password`) when the change is visitor-facing.
+- Do not delete existing posts or categories in seeds or tests.
+
+## Comments and docs
+
+- Comment non-obvious logic only. Use PHPDoc / JSDoc on public functions.
+- Update `docs/FEATURES.md` and `CHANGELOG.md` when adding a user-visible feature.
+- Sage docs first: https://roots.io/sage/docs/ and `docs/sage/`.
