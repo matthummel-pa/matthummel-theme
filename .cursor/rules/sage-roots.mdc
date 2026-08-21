@@ -7,6 +7,7 @@ alwaysApply: true
 
 This repo is a Sage 11.2.1 WordPress theme. Follow official docs, not classic PHP themes or page builders.
 
+Agency operating system: `.cursor/rules/agency-core.mdc`.
 Bespoke architecture, security, and deploy patterns: `.cursor/rules/sage-bespoke-2026.mdc`.
 
 ## Docs (always prefer these)
