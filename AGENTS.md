@@ -58,7 +58,15 @@ Gotchas:
   `cd ~/wp-site && wp acorn view:clear`.
 - `wp_mail` does not deliver here (no mail server). The contact form still redirects.
 - If `~/wp-site` is missing, recreate WordPress with SQLite, symlink as `matthummel`,
-  activate the theme, then `wp rewrite structure '/%postname%/'`.
+  activate the theme, then `wp rewrite structure '/%postname%/'`. There is no MySQL,
+  so the SQLite drop-in must be placed **before** any WP bootstrap: `wp core download`,
+  `wp config create --skip-check`, then manually unzip the `sqlite-database-integration`
+  plugin into `wp-content/plugins/` and copy its `db.copy` to `wp-content/db.php`
+  (replacing the `{SQLITE_IMPLEMENTATION_FOLDER_PATH}` / `{SQLITE_PLUGIN}` placeholders).
+  Do **not** `wp plugin install` first — WP-CLI needs the mysqli extension to bootstrap
+  and errors out until `db.php` is in place. Only then run `wp core install`.
+  The repo checkout may live at `/agent/repos/matthummel-theme` (not `/workspace`);
+  symlink from wherever the repo actually is.
 - Portfolio pages seed once via `mh_seed_portfolio_pages()` (`mh_portfolio_seeded_v2`).
   Existing posts and categories are never deleted.
 - Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
