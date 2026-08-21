@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.19 — 2026-08-21
+
+### Changed
+
+- Home hero: one filled CTA (Say hello → `/contact/`), ghost See example sites → `/projects/`; GitHub sits in the quick links
+- Page-content defaults: shops (not clients) in services/work copy, shorter ledes, “sentences are” on the contact hint
+- Nav `aria-label`s: Primary navigation / Mobile navigation
+
 ## 3.0.18 — 2026-08-20
 
 ### Fixed

@@ -7,7 +7,7 @@
   @component('partials.page-hero')
     <p class="eyebrow">{{ \App\field('svc_kicker', __('Services', 'sage')) }}</p>
     <h1 class="display-title is-hero">{{ \App\field('svc_h1', __('If you want a hand.', 'sage')) }}</h1>
-    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.', 'sage')) }}</p>
+    <p class="lead">{{ \App\field('svc_lede', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work, but it is not my main focus.', 'sage')) }}</p>
   @endcomponent
 
   @include('partials.audience', ['alt' => true])
@@ -64,7 +64,7 @@
           </details>
         @endforeach
       </div>
-      <p>{!! \App\field_html('svc_fair', __('I don’t run ads or social accounts for clients. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')) !!}</p>
+      <p>{!! \App\field_html('svc_fair', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')) !!}</p>
     </div>
   </section>
 

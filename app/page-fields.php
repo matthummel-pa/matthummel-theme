@@ -21,6 +21,19 @@ function field(string $key, string $default = '', ?int $post_id = null): string
     return ($val === '' || $val === null) ? $default : (string) $val;
 }
 
+function field_href(string $key, string $default = '', ?int $post_id = null): string
+{
+    $value = trim(field($key, $default, $post_id));
+    if ($value === '') {
+        $value = $default;
+    }
+    if (preg_match('#^(https?:)?//#i', $value) === 1) {
+        return $value;
+    }
+
+    return home_url($value);
+}
+
 function field_html(string $key, string $default = '', ?int $post_id = null): string
 {
     return wp_kses_post(field($key, $default, $post_id));
@@ -74,8 +87,10 @@ function mh_home_fields(): array
             ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
             ['home_role', __('Role line', 'sage'), 'text', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')],
             ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')],
-            ['home_cta_primary', __('Primary button', 'sage'), 'text', __('See example sites', 'sage')],
-            ['home_cta_secondary', __('Secondary button', 'sage'), 'text', __('Let’s work together', 'sage')],
+            ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Say hello', 'sage')],
+            ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/contact/'],
+            ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('See example sites', 'sage')],
+            ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/projects/'],
             ['home_link_writing', __('Writing link label', 'sage'), 'text', __('Writing', 'sage')],
             ['home_link_code', __('Code link label', 'sage'), 'text', __('Code and snippets', 'sage')],
             ['home_link_about', __('About link label', 'sage'), 'text', __('About', 'sage')],
@@ -185,7 +200,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('Glad you’re here.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language. Pages that are easy to use.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania. I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site, a plugin, or another web app. Plain language, and pages that are easy to use.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -238,7 +253,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['svc_kicker', __('Kicker', 'sage'), 'text', __('Services', 'sage')],
                 ['svc_h1', __('Heading', 'sage'), 'text', __('If you want a hand.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work. It is not my main focus.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app, you can write. I take a few extra projects at a time. I still do some Power Platform work, but it is not my main focus.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -274,7 +289,7 @@ function page_field_map(): array
                     ['text', __('Answer', 'sage'), 'textarea'],
                 ]],
                 ['svc_fair_h2', __('CTA kicker', 'sage'), 'text', __('A fair picture', 'sage')],
-                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('I don’t run ads or social accounts for clients. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')],
+                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. Here, sharing comes first. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')],
             ],
         ],
         'template-contact.blade.php' => [
@@ -287,7 +302,7 @@ function page_field_map(): array
                 ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
                 ['cnt_form_intro', __('Intro', 'sage'), 'textarea', __('Name, email, and a few sentences are enough. I read every note. This form is the reliable inbox.', 'sage')],
                 ['cnt_who_label', __('Audience label', 'sage'), 'text', __('Who you are', 'sage')],
-                ['cnt_message_hint', __('Message hint', 'sage'), 'text', __('A few sentences is enough. Paste a URL if you have one. No need for a long brief.', 'sage')],
+                ['cnt_message_hint', __('Message hint', 'sage'), 'text', __('A few sentences are enough. Paste a URL if you have one. No need for a long brief.', 'sage')],
                 ['cnt_reply_note', __('Note under submit', 'sage'), 'text', __('I usually reply in one or two business days (Eastern Time).', 'sage')],
                 ['cnt_success', __('Success message', 'sage'), 'text', __('Thanks. I got it and will write back soon.', 'sage')],
                 ['cnt_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
@@ -350,13 +365,13 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a shop needs a local site.', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View concept label', 'sage'), 'text', __('View concept', 'sage')],
                 ['work_cta_use', __('Use concept label', 'sage'), 'text', __('Use this concept', 'sage')],
                 ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
-                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio concepts, not client case studies. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
+                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio concepts, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
             ],
             __('Example sites', 'sage') => [
                 ['work_items', __('Sites', 'sage'), 'repeater', $workItems, [

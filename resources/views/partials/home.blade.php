@@ -36,9 +36,8 @@
       <p class="hero-roles">{{ \App\field('home_role', __('Full-stack developer. WordPress, plugins, and other web apps.', 'sage')) }}</p>
       <p class="lead lead--on-dark">{{ \App\field('home_lede', __('I build WordPress sites, plugins, and other web apps. Shops get a site they can edit. Developers can copy the code. I still do some Power Platform work when it helps.', 'sage')) }}</p>
       <p class="btn-row">
-        <a class="btn btn-on-dark" href="{{ home_url('/projects/') }}">{{ \App\field('home_cta_primary', __('See example sites', 'sage')) }}</a>
-        <a class="btn btn-ghost" href="{{ home_url('/contact/') }}">{{ \App\field('home_cta_secondary', ! empty($gh['hireable']) ? __('Let’s work together', 'sage') : __('Say hello', 'sage')) }}</a>
-        <a class="btn btn-ghost" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+        <a class="btn btn-on-dark" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/contact/')) }}">{{ \App\field('home_cta_primary', __('Say hello', 'sage')) }}</a>
+        <a class="btn btn-ghost" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">{{ \App\field('home_cta_secondary', __('See example sites', 'sage')) }}</a>
       </p>
       @if (! empty($gh['public_repos']) || ! empty($gh['followers']))
         <dl class="stat-row stat-row--on-dark">
@@ -65,6 +64,7 @@
       <p class="hero-quick">
         <a href="{{ $writing }}">{{ \App\field('home_link_writing', __('Writing', 'sage')) }}</a>
         <a href="{{ home_url('/code/') }}">{{ \App\field('home_link_code', __('Code and snippets', 'sage')) }}</a>
+        <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
         <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Ridges &amp; Valleys<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
         <a href="{{ home_url('/about/') }}">{{ \App\field('home_link_about', __('About', 'sage')) }}</a>
       </p>

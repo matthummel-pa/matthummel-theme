@@ -30,7 +30,7 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a client needs a local site.', 'sage')) }}
+  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg and Adams County: tours, inns, shops, and restaurants. Business owners can picture a real WordPress shape. Developers can see how the pieces fit. Agencies can use them as a reference when a shop needs a local site.', 'sage')) }}
     @if (! empty($ghUser['public_repos']))
       Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}" rel="noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
       ({{ (int) $ghUser['public_repos'] }} public repos).
@@ -97,7 +97,7 @@
   <section class="write-subscribe" aria-labelledby="work-cta-h">
     <div>
       <h2 id="work-cta-h" class="display-title is-section">{{ \App\field('work_band_h2', __('Want a site in this shape?', 'sage')) }}</h2>
-      <p class="sec-intro">{{ \App\field('work_band_lede', __('These are studio concepts, not client case studies. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')) }}</p>
+      <p class="sec-intro">{{ \App\field('work_band_lede', __('These are studio concepts, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')) }}</p>
     </div>
     <p class="btn-row">
       <a class="btn" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>

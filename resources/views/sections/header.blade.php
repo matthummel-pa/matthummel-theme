@@ -5,7 +5,7 @@
     </a>
 
     @if (has_nav_menu('primary_navigation'))
-      <nav class="header-nav" aria-label="{{ __('Primary', 'sage') }}">
+      <nav class="header-nav" aria-label="{{ __('Primary navigation', 'sage') }}">
         {!! wp_nav_menu([
           'theme_location' => 'primary_navigation',
           'menu_class'     => 'header-nav-list',
@@ -39,7 +39,7 @@
   </div>
 
   @if (has_nav_menu('primary_navigation'))
-    <nav class="mh-popout-nav" aria-label="{{ __('Mobile', 'sage') }}">
+    <nav class="mh-popout-nav" aria-label="{{ __('Mobile navigation', 'sage') }}">
       {!! wp_nav_menu([
         'theme_location' => 'primary_navigation',
         'menu_class'     => 'mh-popout-menu',
