@@ -13,12 +13,14 @@
     "translate:update": "for file in ./resources/lang/*.po; do wp i18n update-po ./resources/lang/sage.pot $file; done",
     "translate:compile": "npm run translate:mo && npm run translate:js",
     "translate:js": "wp i18n make-json ./resources/lang --pretty-print",
-    "translate:mo": "wp i18n make-mo ./resources/lang ./resources/lang"
+    "translate:mo": "wp i18n make-mo ./resources/lang ./resources/lang",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@roots/vite-plugin": "^2.0.0",
     "@tailwindcss/vite": "^4.0.0",
     "highlight.js": "^11.12.0",
+    "husky": "^9.1.7",
     "laravel-vite-plugin": "^3.0.0",
     "tailwindcss": "^4.0.0",
     "vite": "^8.0.0"
