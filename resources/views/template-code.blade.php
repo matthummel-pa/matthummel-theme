@@ -23,7 +23,7 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('code_kicker', __('Engineering', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('code_h1', __('What I do', 'sage')) }}</h1>
-  <p class="lead">{!! \App\field_html('code_lede', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')) !!}</p>
+  <p class="lead">{!! \App\field_html('code_lede', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania, for shops and agencies anywhere. Most of that work is Sage, Blade, PHP, and front-end architecture they can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')) !!}</p>
 @endcomponent
 
 <section class="pf-section">
@@ -148,7 +148,7 @@
 <section class="pf-section" id="resume">
   <div class="container wide">
     <h2 class="display-title is-section">{{ \App\field('code_cv_h2', __('Resume', 'sage')) }}</h2>
-    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.', 'sage')) }}</p>
+    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.', 'sage')) }}</p>
     @php
       $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
     @endphp

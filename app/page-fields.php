@@ -346,7 +346,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['code_kicker', __('Kicker', 'sage'), 'text', __('Engineering', 'sage')],
                 ['code_h1', __('Heading', 'sage'), 'text', __('What I do', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania, for shops and agencies anywhere. Most of that work is Sage, Blade, PHP, and front-end architecture they can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')],
             ],
             __('Practice', 'sage') => [
                 ['code_do_h2', __('Heading', 'sage'), 'text', __('Practice', 'sage')],
@@ -371,7 +371,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
-                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.', 'sage')],
+                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.', 'sage')],
                 ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],

@@ -467,6 +467,86 @@ function mh_apply_code_resume_available(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_available', 50);
 
+/** Code page: Gettysburg is home; work is not location-limited. */
+function mh_apply_code_anywhere(): void
+{
+    if (get_option('mh_code_anywhere_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_lede' => [
+            'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania, for shops and agencies anywhere. Most of that work is Sage, Blade, PHP, and front-end architecture they can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+        ],
+        'mh_f_code_cv_intro' => [
+            'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.' => 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.',
+        ],
+    ];
+    $oldPractice = 'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.';
+    $newPractice = 'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.';
+    $oldBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.";
+    $newBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for shops, inns, and tours. I am based in Gettysburg; location is not a limit.\nI am still open to agencies, other studios, overflow work, and full-time positions, remote or on-site.";
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $practice = get_post_meta($id, 'mh_f_code_do_items', true);
+        if (is_array($practice)) {
+            $changed = false;
+            foreach ($practice as $i => $line) {
+                if ((string) $line === $oldPractice) {
+                    $practice[$i] = $newPractice;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_do_items', $practice);
+            }
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Ridges & Valleys' && $bullets === $oldBullets) {
+                $jobs[$i]['bullets'] = $newBullets;
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_anywhere_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_anywhere', 51);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

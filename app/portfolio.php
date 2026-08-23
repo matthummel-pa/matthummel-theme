@@ -353,7 +353,7 @@ function mh_code_practice_defaults(): array
         'WordPress engineering with Sage 11, Blade, Acorn, Bedrock, Tailwind, Vite, and Gutenberg.',
         'Front-end architecture: semantic HTML, CSS, TypeScript, and accessible UI that shops can still edit.',
         'Plugin and theme work with a public GitHub trail so other developers can read the same code.',
-        'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.',
+        'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.',
         'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
     ];
 }
@@ -376,7 +376,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Current',
             'type' => 'Independent studio',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.",
+            'bullets' => "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for shops, inns, and tours. I am based in Gettysburg; location is not a limit.\nI am still open to agencies, other studios, overflow work, and full-time positions, remote or on-site.",
         ],
         [
             'role' => 'Senior Power Platform Consultant',
