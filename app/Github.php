@@ -100,7 +100,7 @@ class Github
     {
         $count = max(1, min(30, $count));
         $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
-        $key = 'mh_ghr3_'.md5($user.$sort.$count);
+        $key = 'mh_ghr4_'.md5($user.$sort.$count);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -126,6 +126,8 @@ class Github
                     'url' => $j['html_url'] ?? '',
                     'homepage' => $j['homepage'] ?? '',
                     'topics' => is_array($topics) ? $topics : [],
+                    'pushed' => (string) ($j['pushed_at'] ?? ''),
+                    'updated' => (string) ($j['updated_at'] ?? ''),
                 ];
                 if (count($out) >= $count) {
                     break;
@@ -163,7 +165,7 @@ class Github
     /** One-repo extras when the list payload is thin (featured cards). */
     public static function fetchRepoMeta(string $owner, string $repo): array
     {
-        $key = 'mh_ghmeta_'.md5($owner.'/'.$repo);
+        $key = 'mh_ghmeta2_'.md5($owner.'/'.$repo);
         if (($d = get_transient($key)) !== false) {
             return is_array($d) ? $d : [];
         }
@@ -175,10 +177,12 @@ class Github
             $d = [
                 'desc' => (string) ($j['description'] ?? ''),
                 'stars' => (int) ($j['stargazers_count'] ?? 0),
+                'forks' => (int) ($j['forks_count'] ?? 0),
                 'lang' => (string) ($j['language'] ?? ''),
                 'url' => (string) ($j['html_url'] ?? ''),
                 'homepage' => (string) ($j['homepage'] ?? ''),
                 'topics' => is_array($topics) ? $topics : [],
+                'pushed' => (string) ($j['pushed_at'] ?? ''),
             ];
         }
         set_transient($key, $d, self::ttl());
@@ -276,6 +280,255 @@ class Github
         $intro = preg_replace('~<a[^>]*href="#[^"]*"[^>]*>.*?</a>~is', '', $intro);
 
         return (string) $intro;
+    }
+
+    /** Recent public activity (Push, PRs, issues, releases). Cached. */
+    public static function fetchEvents(string $user, int $count = 12): array
+    {
+        $count = max(1, min(30, $count));
+        $key = 'mh_ghev1_'.md5($user.$count);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $out = [];
+        $r = wp_remote_get("https://api.github.com/users/{$user}/events/public?per_page=30", self::args());
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                $item = self::formatEvent(is_array($j) ? $j : []);
+                if ($item === null) {
+                    continue;
+                }
+                $out[] = $item;
+                if (count($out) >= $count) {
+                    break;
+                }
+            }
+        }
+        set_transient($key, $out, min(HOUR_IN_SECONDS, self::ttl()));
+
+        return $out;
+    }
+
+    /** Contribution calendar: GraphQL when a token exists, else the public SVG page. */
+    public static function fetchContributionCalendar(string $user): array
+    {
+        $key = 'mh_ghcal2_'.md5($user);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : ['total' => 0, 'weeks' => []];
+        }
+
+        $empty = ['total' => 0, 'weeks' => []];
+        $data = github_token() !== '' ? self::calendarFromGraphql($user) : null;
+        if ($data === null) {
+            $data = self::calendarFromHtml($user);
+        }
+        if ($data === null) {
+            $data = $empty;
+        }
+        set_transient($key, $data, min(6 * HOUR_IN_SECONDS, self::ttl()));
+
+        return $data;
+    }
+
+    /** @return array{type: string, repo: string, url: string, text: string, when: string}|null */
+    protected static function formatEvent(array $j): ?array
+    {
+        $type = (string) ($j['type'] ?? '');
+        $repo = (string) ($j['repo']['name'] ?? '');
+        $url = $repo !== '' ? 'https://github.com/'.$repo : '';
+        $payload = is_array($j['payload'] ?? null) ? $j['payload'] : [];
+        $when = (string) ($j['created_at'] ?? '');
+
+        $pushCount = max(1, (int) ($payload['size'] ?? count((array) ($payload['commits'] ?? []))));
+        $text = match ($type) {
+            'PushEvent' => sprintf(
+                'Pushed %s to %s',
+                sprintf(_n('%s commit', '%s commits', $pushCount, 'sage'), (string) $pushCount),
+                $repo
+            ),
+            'PullRequestEvent' => sprintf(
+                '%s pull request %s in %s',
+                ucfirst((string) ($payload['action'] ?? 'updated')),
+                ! empty($payload['pull_request']['number']) ? '#'.(int) $payload['pull_request']['number'] : '',
+                $repo
+            ),
+            'IssuesEvent' => sprintf(
+                '%s issue %s in %s',
+                ucfirst((string) ($payload['action'] ?? 'updated')),
+                ! empty($payload['issue']['number']) ? '#'.(int) $payload['issue']['number'] : '',
+                $repo
+            ),
+            'IssueCommentEvent' => sprintf('Commented on an issue in %s', $repo),
+            'PullRequestReviewEvent' => sprintf('Reviewed a pull request in %s', $repo),
+            'CreateEvent' => trim(sprintf(
+                'Created %s %s in %s',
+                (string) ($payload['ref_type'] ?? 'repository'),
+                (string) ($payload['ref'] ?? ''),
+                $repo
+            )),
+            'ReleaseEvent' => sprintf(
+                'Published %s on %s',
+                (string) ($payload['release']['tag_name'] ?? 'a release'),
+                $repo
+            ),
+            'ForkEvent' => sprintf('Forked %s', $repo),
+            'WatchEvent' => sprintf('Starred %s', $repo),
+            'PublicEvent' => sprintf('Made %s public', $repo),
+            default => null,
+        };
+
+        if ($text === null || $repo === '') {
+            return null;
+        }
+
+        if ($type === 'PullRequestEvent' && ! empty($payload['pull_request']['html_url'])) {
+            $url = (string) $payload['pull_request']['html_url'];
+        } elseif ($type === 'IssuesEvent' && ! empty($payload['issue']['html_url'])) {
+            $url = (string) $payload['issue']['html_url'];
+        } elseif ($type === 'ReleaseEvent' && ! empty($payload['release']['html_url'])) {
+            $url = (string) $payload['release']['html_url'];
+        } elseif ($type === 'PushEvent' && ! empty($payload['ref'])) {
+            $ref = preg_replace('#^refs/heads/#', '', (string) $payload['ref']);
+            $url = 'https://github.com/'.$repo.'/commits/'.$ref;
+        }
+
+        return [
+            'type' => $type,
+            'repo' => $repo,
+            'url' => $url,
+            'text' => trim((string) preg_replace('/\s+/', ' ', $text)),
+            'when' => $when,
+        ];
+    }
+
+    /** @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null */
+    protected static function calendarFromGraphql(string $user): ?array
+    {
+        $query = <<<'GQL'
+query ($login: String!) {
+  user(login: $login) {
+    contributionsCollection {
+      contributionCalendar {
+        totalContributions
+        weeks {
+          contributionDays {
+            date
+            contributionCount
+          }
+        }
+      }
+    }
+  }
+}
+GQL;
+        $res = wp_remote_post('https://api.github.com/graphql', [
+            'timeout' => 15,
+            'headers' => array_merge(github_headers(), ['Content-Type' => 'application/json']),
+            'body' => wp_json_encode(['query' => $query, 'variables' => ['login' => $user]]),
+        ]);
+        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+            return null;
+        }
+        $json = json_decode((string) wp_remote_retrieve_body($res), true);
+        $cal = $json['data']['user']['contributionsCollection']['contributionCalendar'] ?? null;
+        if (! is_array($cal)) {
+            return null;
+        }
+        $weeks = [];
+        foreach ((array) ($cal['weeks'] ?? []) as $week) {
+            $days = [];
+            foreach ((array) ($week['contributionDays'] ?? []) as $day) {
+                $count = (int) ($day['contributionCount'] ?? 0);
+                $days[] = [
+                    'date' => (string) ($day['date'] ?? ''),
+                    'count' => $count,
+                    'level' => self::contributionLevel($count),
+                ];
+            }
+            if ($days !== []) {
+                $weeks[] = $days;
+            }
+        }
+
+        return [
+            'total' => (int) ($cal['totalContributions'] ?? 0),
+            'weeks' => $weeks,
+        ];
+    }
+
+    /** @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null */
+    protected static function calendarFromHtml(string $user): ?array
+    {
+        $res = wp_remote_get('https://github.com/users/'.rawurlencode($user).'/contributions', [
+            'timeout' => 15,
+            'headers' => [
+                'User-Agent' => 'matthummel-theme/3 (+'.(function_exists('home_url') ? home_url('/') : 'https://matthummel.com').')',
+                'Accept' => 'text/html',
+            ],
+        ]);
+        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+            return null;
+        }
+        $html = (string) wp_remote_retrieve_body($res);
+        if (! preg_match_all('/data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="(\d+)"|data-level="(\d+)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"/', $html, $matches, PREG_SET_ORDER)) {
+            return null;
+        }
+
+        $days = [];
+        foreach ($matches as $m) {
+            $date = $m[1] !== '' ? $m[1] : ($m[4] ?? '');
+            $level = $m[1] !== '' ? (int) $m[2] : (int) ($m[3] ?? 0);
+            if ($date === '' || isset($days[$date])) {
+                continue;
+            }
+            $days[$date] = [
+                'date' => $date,
+                'count' => $level,
+                'level' => max(0, min(4, $level)),
+            ];
+        }
+        if ($days === []) {
+            return null;
+        }
+        ksort($days);
+        $list = array_values($days);
+        $weeks = [];
+        $week = [];
+        $first = new \DateTimeImmutable($list[0]['date']);
+        $pad = (int) $first->format('w');
+        for ($i = 0; $i < $pad; $i++) {
+            $week[] = ['date' => '', 'count' => 0, 'level' => 0];
+        }
+        foreach ($list as $day) {
+            $week[] = $day;
+            if (count($week) === 7) {
+                $weeks[] = $week;
+                $week = [];
+            }
+        }
+        if ($week !== []) {
+            while (count($week) < 7) {
+                $week[] = ['date' => '', 'count' => 0, 'level' => 0];
+            }
+            $weeks[] = $week;
+        }
+
+        return [
+            'total' => array_sum(array_column($list, 'count')),
+            'weeks' => $weeks,
+        ];
+    }
+
+    protected static function contributionLevel(int $count): int
+    {
+        return match (true) {
+            $count <= 0 => 0,
+            $count <= 2 => 1,
+            $count <= 5 => 2,
+            $count <= 9 => 3,
+            default => 4,
+        };
     }
 
     /** Render selected parts (desc, stats, intro) as HTML. */

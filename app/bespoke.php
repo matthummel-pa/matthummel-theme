@@ -273,6 +273,583 @@ function mh_apply_seo_playbook_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_seo_playbook_copy', 47);
 
+/** One-time Code page copy: showcase + resume, only exact old defaults. */
+function mh_apply_code_showcase_copy(): void
+{
+    if (get_option('mh_code_showcase_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_kicker' => [
+            'Code' => 'Engineering',
+            'Public work' => 'Engineering',
+        ],
+        'mh_f_code_h1' => [
+            'Code' => 'What I do',
+            'Code you can copy.' => 'What I do',
+        ],
+        'mh_f_code_lede' => [
+            'Repos and short snippets. If you’re new to WordPress or Sage, start with a snippet, then open a repo README. Questions are welcome on the <a href="/contact/">contact</a> page.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+            'I keep some of my code on GitHub so other people can read it. Fork a repo, copy a snippet, or write if a line is unclear.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+        ],
+        'mh_f_code_feat_h2' => [
+            'Featured repos' => 'Featured repositories',
+        ],
+        'mh_f_code_feat_intro' => [
+            'Open these on GitHub. Fork them if they help.' => 'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.',
+        ],
+        'mh_f_code_live_h2' => [
+            'Live from GitHub' => 'Recently updated',
+        ],
+        'mh_f_code_live_all' => [
+            'All public repos' => 'All public repositories',
+        ],
+        'mh_f_code_snip_h2' => [
+            'Snippets' => 'Reusable snippets',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $repos = get_post_meta($id, 'mh_f_code_repos', true);
+        if (is_array($repos)) {
+            $map = [
+                'A private family app. Sign-in, invites, and posts. You can read the code.' => 'Private family app: authentication, invites, and posts. React on the front end, Supabase for data and sign-in.',
+                'A free WordPress tool that lists your headings so people can jump around a long page.' => 'WordPress plugin that builds a table of contents from heading blocks. PHP, Gutenberg, and a small public API.',
+                'The Gettysburg studio site. Clear pages for local shops, inns, and tours.' => 'Sage 11 theme for the Gettysburg studio site. Blade templates, local SEO, and pages shops can edit.',
+            ];
+            $changed = false;
+            foreach ($repos as $i => $row) {
+                $desc = (string) ($row['desc'] ?? '');
+                if (isset($map[$desc])) {
+                    $repos[$i]['desc'] = $map[$desc];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_repos', $repos);
+            }
+        }
+    }
+
+    update_option('mh_code_showcase_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_showcase_copy', 48);
+
+/** Ridges & Valleys is current; Saliense is previous. Only known old resume rows. */
+function mh_apply_code_resume_studio(): void
+{
+    if (get_option('mh_code_resume_studio_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.';
+    $newIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (is_array($jobs) && $jobs !== []) {
+            $first = $jobs[0] ?? [];
+            $isOldCurrent = ((string) ($first['org'] ?? '') === 'Saliense Consulting'
+                && strcasecmp((string) ($first['period'] ?? ''), 'Current') === 0);
+            if ($isOldCurrent) {
+                update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+            }
+        }
+
+        $practice = get_post_meta($id, 'mh_f_code_do_items', true);
+        if (is_array($practice)) {
+            $map = [
+                'Local Gettysburg and Adams County sites for shops, inns, and tours (often through Ridges & Valleys).' => 'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.',
+                'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as a secondary, full-time consulting practice.' => 'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
+            ];
+            $changed = false;
+            foreach ($practice as $i => $line) {
+                $line = (string) $line;
+                if (isset($map[$line])) {
+                    $practice[$i] = $map[$line];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_do_items', $practice);
+            }
+        }
+    }
+
+    update_option('mh_code_resume_studio_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_studio', 49);
+
+/** Studio is new; still open to agencies and full-time work. */
+function mh_apply_code_resume_available(): void
+{
+    if (get_option('mh_code_resume_available_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.';
+    $newIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.';
+    $oldBullets = "Just started a Gettysburg studio for shops, inns, and tours.\nWordPress sites local businesses can edit, with concept work on the studio site.\nPublic theme and plugin work stays on GitHub so other developers can read it.";
+    $newBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.";
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Ridges & Valleys' && $bullets === $oldBullets) {
+                $jobs[$i]['bullets'] = $newBullets;
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_available_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_available', 50);
+
+/** Code page: Gettysburg is home; work is not location-limited. */
+function mh_apply_code_anywhere(): void
+{
+    if (get_option('mh_code_anywhere_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_lede' => [
+            'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania, for shops and agencies anywhere. Most of that work is Sage, Blade, PHP, and front-end architecture they can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+        ],
+        'mh_f_code_cv_intro' => [
+            'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.' => 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.',
+        ],
+    ];
+    $oldPractice = 'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.';
+    $newPractice = 'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.';
+    $oldBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.";
+    $newBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for shops, inns, and tours. I am based in Gettysburg; location is not a limit.\nI am still open to agencies, other studios, overflow work, and full-time positions, remote or on-site.";
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $practice = get_post_meta($id, 'mh_f_code_do_items', true);
+        if (is_array($practice)) {
+            $changed = false;
+            foreach ($practice as $i => $line) {
+                if ((string) $line === $oldPractice) {
+                    $practice[$i] = $newPractice;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_do_items', $practice);
+            }
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Ridges & Valleys' && $bullets === $oldBullets) {
+                $jobs[$i]['bullets'] = $newBullets;
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_anywhere_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_anywhere', 51);
+
+/** Saliense was a gov contract; Germanna CC full-time ended 2020. */
+function mh_apply_code_resume_employers(): void
+{
+    if (get_option('mh_code_resume_employers_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.';
+    $newIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Saliense was a government contract. Full-time web work at Germanna Community College ended in 2020.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs) || $jobs === []) {
+            continue;
+        }
+        $needs = false;
+        foreach ($jobs as $row) {
+            $org = (string) ($row['org'] ?? '');
+            $type = (string) ($row['type'] ?? '');
+            if ($org === 'Higher education / independent') {
+                $needs = true;
+            }
+            if ($org === 'Saliense Consulting' && $type === 'Full-time') {
+                $needs = true;
+            }
+        }
+        if ($needs) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+        }
+    }
+
+    update_option('mh_code_resume_employers_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_employers', 52);
+
+/** Replace thin/wrong resume rows with the LinkedIn work history. */
+function mh_apply_code_resume_linkedin(): void
+{
+    if (get_option('mh_code_resume_linkedin_v1')) {
+        return;
+    }
+
+    $newIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        $hasAng = false;
+        $hasPublicProducts = false;
+        if (is_array($jobs)) {
+            foreach ($jobs as $row) {
+                $blob = strtolower(wp_json_encode($row) ?: '');
+                if (str_contains($blob, 'all native group')) {
+                    $hasAng = true;
+                }
+                if (str_contains($blob, 'public products')) {
+                    $hasPublicProducts = true;
+                }
+            }
+        }
+        if (is_array($jobs) && $jobs !== [] && (! $hasAng || $hasPublicProducts)) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+        }
+
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro !== '' && $intro !== $newIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+    }
+
+    update_option('mh_code_resume_linkedin_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_linkedin', 53);
+
+/** Sharper Germanna bullets; department names in title case. */
+function mh_apply_code_resume_germanna_copy(): void
+{
+    if (get_option('mh_code_resume_germanna_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Developed a responsive WordPress website, enhancing user experience.\nWorked with teams on content management.\nOptimized code for web accessibility (Section 508, WCAG 2.0).\nMigrated site to WordPress, simplifying content editing.\nUsed Google Analytics and Google Tag Manager for tracking and marketing.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Germanna Community College' && $bullets === $oldBullets) {
+                foreach ($jobsDefault as $def) {
+                    if (($def['org'] ?? '') === 'Germanna Community College') {
+                        $jobs[$i] = $def;
+                        break;
+                    }
+                }
+                $changed = true;
+            }
+            if (($row['type'] ?? '') === 'Independent studio') {
+                $jobs[$i]['type'] = 'Independent Studio';
+                $changed = true;
+            }
+            if (($row['type'] ?? '') === 'Government contract') {
+                $jobs[$i]['type'] = 'Government Contract';
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_germanna_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_germanna_copy', 54);
+
+/** Sharper Knowledge Capital Associates / USMC bullets. */
+function mh_apply_code_resume_kca_copy(): void
+{
+    if (get_option('mh_code_resume_kca_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Supported SharePoint tasks, including site creation and permissions management.\nCollaborated with the SharePoint team on SharePoint Online migrations.\nDeveloped applications and workflows using PowerApps and Power Automate.\nConverted InfoPath forms to PowerApps and Designer Workflows to Power Automate.\nManaged SharePoint site views and collections as per specifications.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if (str_contains($org, 'Knowledge Capital Associates') && $bullets === $oldBullets) {
+                foreach ($jobsDefault as $def) {
+                    if (str_contains((string) ($def['org'] ?? ''), 'Knowledge Capital Associates')) {
+                        $jobs[$i] = $def;
+                        break;
+                    }
+                }
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_kca_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_kca_copy', 55);
+
+/** All Native Group was a government contract; rewrite shared PowerApps bullets. */
+function mh_apply_code_resume_ang_copy(): void
+{
+    if (get_option('mh_code_resume_ang_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Built custom PowerApps solutions for forms and workflows.\nCreated Power Automate flows to streamline processes.\nProvided technical support for SharePoint and PowerApps.\nManaged permissions and site collections.\nConverted requirements into scalable solutions.\nEnhanced system performance using user feedback.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            foreach ($jobsDefault as $def) {
+                $defOrg = (string) ($def['org'] ?? '');
+                if ($org === $defOrg && $bullets === $oldBullets) {
+                    $jobs[$i] = $def;
+                    $changed = true;
+                    break;
+                }
+            }
+            if (str_contains($org, 'All Native Group') && ($row['type'] ?? '') === 'Full-time') {
+                $jobs[$i]['type'] = 'Government Contract';
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_ang_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_ang_copy', 56);
+
+/** Second pass on Saliense / All Native Group PowerApps bullets. */
+function mh_apply_code_resume_pp_copy(): void
+{
+    if (get_option('mh_code_resume_pp_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = [
+        "Built custom PowerApps solutions for forms and workflows.\nCreated Power Automate flows to streamline processes.\nProvided technical support for SharePoint and PowerApps.\nManaged permissions and site collections.\nConverted requirements into scalable solutions.\nEnhanced system performance using user feedback.",
+        "Built PowerApps forms and workflows.\nCreated Power Automate flows that cut manual process work.\nSupported SharePoint and PowerApps for daily use.\nManaged site-collection permissions.\nTurned requirements into solutions that could scale.\nUsed user feedback to improve system performance.",
+    ];
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if (! in_array($bullets, $oldBullets, true)) {
+                continue;
+            }
+            foreach ($jobsDefault as $def) {
+                if ($org === (string) ($def['org'] ?? '')) {
+                    $jobs[$i] = $def;
+                    $changed = true;
+                    break;
+                }
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_pp_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_pp_copy', 57);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

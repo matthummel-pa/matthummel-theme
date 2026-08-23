@@ -68,21 +68,21 @@ function mh_featured_repos(): array
     return [
         [
             'name' => 'keepary',
-            'desc' => 'A private family app. Sign-in, invites, and posts. You can read the code.',
+            'desc' => 'Private family app: authentication, invites, and posts. React on the front end, Supabase for data and sign-in.',
             'url' => 'https://github.com/matthummel-pa/keepary',
-            'tags' => ['React', 'Supabase', 'Full-stack'],
+            'tags' => ['React', 'Supabase', 'TypeScript'],
         ],
         [
             'name' => 'tocflow',
-            'desc' => 'A free WordPress tool that lists your headings so people can jump around a long page.',
+            'desc' => 'WordPress plugin that builds a table of contents from heading blocks. PHP, Gutenberg, and a small public API.',
             'url' => 'https://github.com/matthummel-pa/tocflow',
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
             'name' => 'ridgesandvalleys',
-            'desc' => 'The Gettysburg studio site. Clear pages for local shops, inns, and tours.',
+            'desc' => 'Sage 11 theme for the Gettysburg studio site. Blade templates, local SEO, and pages shops can edit.',
             'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
-            'tags' => ['WordPress', 'Sage', 'Local SEO'],
+            'tags' => ['WordPress', 'Sage', 'Tailwind'],
         ],
     ];
 }
@@ -115,7 +115,8 @@ function mh_title_label(string $text): string
     $acronyms = [
         'wp' => 'WP', 'php' => 'PHP', 'css' => 'CSS', 'html' => 'HTML', 'js' => 'JS',
         'seo' => 'SEO', 'api' => 'API', 'ui' => 'UI', 'ux' => 'UX', 'toc' => 'TOC',
-        'scss' => 'SCSS', 'ts' => 'TS',
+        'scss' => 'SCSS', 'ts' => 'TS', 'nextjs' => 'Next.js', 'nodejs' => 'Node.js',
+        'vscode' => 'VS Code', 'mdn' => 'MDN',
     ];
     $out = [];
     foreach (explode(' ', $text) as $part) {
@@ -199,8 +200,59 @@ function mh_repo_card(array $repo): array
         'demo' => $homepage,
         'stack' => array_values(array_slice($stack, 0, 6)),
         'stars' => (int) ($repo['stars'] ?? $meta['stars'] ?? 0),
+        'forks' => (int) ($repo['forks'] ?? $meta['forks'] ?? 0),
+        'pushed' => (string) ($repo['pushed'] ?? $meta['pushed'] ?? ''),
         'lang' => (string) ($repo['lang'] ?? $meta['lang'] ?? ''),
     ];
+}
+
+/** Relative time for GitHub timestamps (UTC). */
+function mh_github_ago(string $iso): string
+{
+    $iso = trim($iso);
+    if ($iso === '') {
+        return '';
+    }
+    $ts = strtotime($iso);
+    if ($ts === false) {
+        return '';
+    }
+    $diff = max(0, time() - $ts);
+    if ($diff < MINUTE_IN_SECONDS) {
+        return __('just now', 'sage');
+    }
+    if ($diff < HOUR_IN_SECONDS) {
+        $n = (int) floor($diff / MINUTE_IN_SECONDS);
+
+        return sprintf(_n('%s minute ago', '%s minutes ago', $n, 'sage'), (string) $n);
+    }
+    if ($diff < DAY_IN_SECONDS) {
+        $n = (int) floor($diff / HOUR_IN_SECONDS);
+
+        return sprintf(_n('%s hour ago', '%s hours ago', $n, 'sage'), (string) $n);
+    }
+    if ($diff < 30 * DAY_IN_SECONDS) {
+        $n = (int) floor($diff / DAY_IN_SECONDS);
+
+        return sprintf(_n('%s day ago', '%s days ago', $n, 'sage'), (string) $n);
+    }
+
+    return date_i18n(get_option('date_format') ?: 'M j, Y', $ts);
+}
+
+function mh_github_profile(): array
+{
+    return Github::fetchUser(mh_github_login());
+}
+
+function mh_github_events(int $limit = 10): array
+{
+    return Github::fetchEvents(mh_github_login(), $limit);
+}
+
+function mh_github_calendar(): array
+{
+    return Github::fetchContributionCalendar(mh_github_login());
 }
 
 function mh_github_live_repos(int $limit = 8): array
@@ -292,6 +344,93 @@ function mh_work_contact_url(array $project): string
         'project' => $slug,
         'who' => 'business',
     ], home_url('/contact/'));
+}
+
+function mh_code_practice_defaults(): array
+{
+    return [
+        'Full-stack web applications in PHP, WordPress, and React, including REST integrations and auth.',
+        'WordPress engineering with Sage 11, Blade, Acorn, Bedrock, Tailwind, Vite, and Gutenberg.',
+        'Front-end architecture: semantic HTML, CSS, TypeScript, and accessible UI that shops can still edit.',
+        'Plugin and theme work with a public GitHub trail so other developers can read the same code.',
+        'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.',
+        'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
+    ];
+}
+
+function mh_code_skill_defaults(): array
+{
+    return [
+        'HTML', 'CSS', 'JavaScript', 'TypeScript', 'PHP', 'WordPress', 'Sage',
+        'React', 'Next.js', 'Node.js', 'Tailwind', 'Sass', 'Vite', 'Laravel',
+        'Git', 'GitHub', 'VS Code', 'Power Apps',
+    ];
+}
+
+function mh_code_resume_defaults(): array
+{
+    return [
+        [
+            'role' => 'Founder',
+            'org' => 'Ridges & Valleys',
+            'period' => 'Current',
+            'type' => 'Independent Studio',
+            'url' => 'https://ridgesandvalleys.com',
+            'bullets' => "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for shops, inns, and tours. I am based in Gettysburg; location is not a limit.\nI am still open to agencies, other studios, overflow work, and full-time positions, remote or on-site.",
+        ],
+        [
+            'role' => 'Senior Consultant',
+            'org' => 'Saliense',
+            'period' => 'Mar 2025 – Previous',
+            'type' => 'Government Contract',
+            'url' => '',
+            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
+        ],
+        [
+            'role' => 'Applications and SharePoint Administrator',
+            'org' => 'All Native Group, The Federal Services Division of Ho-Chunk Inc.',
+            'period' => 'Dec 2023 – Feb 2025',
+            'type' => 'Government Contract',
+            'url' => '',
+            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
+        ],
+        [
+            'role' => 'SharePoint Web Developer',
+            'org' => 'Knowledge Capital Associates — Contractor USMC',
+            'period' => 'Sep 2021 – Jun 2022',
+            'type' => 'Government Contract',
+            'url' => '',
+            'bullets' => "Created SharePoint sites and managed permissions.\nHelped the SharePoint team migrate sites to SharePoint Online.\nBuilt applications and workflows in PowerApps and Power Automate.\nReplaced InfoPath forms with PowerApps and Designer workflows with Power Automate.\nConfigured site collections and views to match the requirements.",
+        ],
+        [
+            'role' => 'Web Developer',
+            'org' => 'Germanna Community College',
+            'period' => 'Jul 2011 – Oct 2020',
+            'type' => 'Full-time · Public Information and Marketing',
+            'url' => 'https://germanna.edu/',
+            'bullets' => "Built a responsive WordPress site for Public Information and Marketing.\nWorked with Public Information and Marketing on day-to-day content management.\nBrought pages up to Section 508 and WCAG 2.0.\nMoved the college site to WordPress so staff could edit pages without a developer.\nImplemented Google Analytics and Google Tag Manager for tracking and marketing.",
+        ],
+    ];
+}
+
+function mh_code_resource_defaults(): array
+{
+    return [
+        ['label' => 'WordPress Developer Handbook', 'url' => 'https://developer.wordpress.org/', 'note' => 'Themes, plugins, REST API, and block editor.'],
+        ['label' => 'WordPress REST API', 'url' => 'https://developer.wordpress.org/rest-api/', 'note' => 'Application endpoints and authentication.'],
+        ['label' => 'Sage', 'url' => 'https://roots.io/sage/docs/', 'note' => 'Blade, Vite, and the Roots theme stack I ship.'],
+        ['label' => 'Acorn', 'url' => 'https://roots.io/acorn/docs/', 'note' => 'Laravel components inside WordPress.'],
+        ['label' => 'Bedrock', 'url' => 'https://roots.io/bedrock/docs/', 'note' => 'Composer-based WordPress structure.'],
+        ['label' => 'Tailwind CSS', 'url' => 'https://tailwindcss.com/docs', 'note' => 'Utility CSS used on this theme.'],
+        ['label' => 'Vite', 'url' => 'https://vite.dev/guide/', 'note' => 'Asset pipeline for Sage 11.'],
+        ['label' => 'PHP', 'url' => 'https://www.php.net/docs.php', 'note' => 'Language reference for theme and plugin work.'],
+        ['label' => 'MDN Web Docs', 'url' => 'https://developer.mozilla.org/en-US/docs/Web', 'note' => 'HTML, CSS, and JavaScript.'],
+        ['label' => 'React', 'url' => 'https://react.dev/', 'note' => 'UI library for Keepary and other apps.'],
+        ['label' => 'TypeScript', 'url' => 'https://www.typescriptlang.org/docs/', 'note' => 'Typed JavaScript for larger front ends.'],
+        ['label' => 'GitHub Docs', 'url' => 'https://docs.github.com/en', 'note' => 'REST, GraphQL, and Actions.'],
+        ['label' => 'Laravel', 'url' => 'https://laravel.com/docs', 'note' => 'Reference when Acorn overlaps Laravel APIs.'],
+        ['label' => 'Microsoft Learn — Power Platform', 'url' => 'https://learn.microsoft.com/power-platform/', 'note' => 'Power Apps, Automate, and Dataverse.'],
+    ];
 }
 
 function mh_code_snippets(): array

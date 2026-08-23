@@ -2,6 +2,21 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.21 — 2026-08-23
+
+### Changed
+
+- Code page is a professional “What I do” GitHub showcase: profile stats, contribution grid, featured and recent repos, activity feed
+- Resume (Saliense + independent web work) sits under GitHub; skill chips use brand-colored icons
+- Documentation links for WordPress, Sage, Tailwind, Vite, PHP, MDN, React, and Power Platform
+- One-time swap of known informal Code defaults (`mh_code_showcase_v1`)
+- Resume block: timeline, current-role card, period/type tags, LinkedIn link
+- Resume roles: Ridges & Valleys (current studio), Saliense as previous, independent web work unchanged
+- Ridges & Valleys entry: studio just started; still open to agencies and full-time roles
+- Code page: Gettysburg is home; shops and agencies in any location are in scope
+- Resume employers from LinkedIn: Saliense, All Native Group, Knowledge Capital Associates (USMC), Germanna (Public Information and Marketing, Jul 2011–Oct 2020)
+- Code page no longer shows the snippets section (Home still uses the helpers)
+
 ## 3.0.20 — 2026-08-21
 
 ### Changed
