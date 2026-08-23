@@ -400,7 +400,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Sep 2021 – Jun 2022',
             'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Supported SharePoint tasks, including site creation and permissions management.\nCollaborated with the SharePoint team on SharePoint Online migrations.\nDeveloped applications and workflows using PowerApps and Power Automate.\nConverted InfoPath forms to PowerApps and Designer Workflows to Power Automate.\nManaged SharePoint site views and collections as per specifications.",
+            'bullets' => "Created SharePoint sites and managed permissions.\nHelped the SharePoint team migrate sites to SharePoint Online.\nBuilt applications and workflows in PowerApps and Power Automate.\nReplaced InfoPath forms with PowerApps and Designer workflows with Power Automate.\nConfigured site collections and views to match the requirements.",
         ],
         [
             'role' => 'Web Developer',

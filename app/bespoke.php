@@ -699,6 +699,54 @@ function mh_apply_code_resume_germanna_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_germanna_copy', 54);
 
+/** Sharper Knowledge Capital Associates / USMC bullets. */
+function mh_apply_code_resume_kca_copy(): void
+{
+    if (get_option('mh_code_resume_kca_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Supported SharePoint tasks, including site creation and permissions management.\nCollaborated with the SharePoint team on SharePoint Online migrations.\nDeveloped applications and workflows using PowerApps and Power Automate.\nConverted InfoPath forms to PowerApps and Designer Workflows to Power Automate.\nManaged SharePoint site views and collections as per specifications.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if (str_contains($org, 'Knowledge Capital Associates') && $bullets === $oldBullets) {
+                foreach ($jobsDefault as $def) {
+                    if (str_contains((string) ($def['org'] ?? ''), 'Knowledge Capital Associates')) {
+                        $jobs[$i] = $def;
+                        break;
+                    }
+                }
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_kca_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_kca_copy', 55);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {
