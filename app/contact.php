@@ -124,7 +124,7 @@ function mh_contact_else_links(): array
     $notes = [
         'github' => __('Repos, READMEs, and issues.', 'sage'),
         'linkedin' => __('Work history and a quieter inbox.', 'sage'),
-        'devto' => __('Writing, cross-posted.', 'sage'),
+        'devto' => __('Journal posts, cross-posted.', 'sage'),
         'bluesky' => __('Occasional notes.', 'sage'),
         'reddit' => __('Same handle, when I am there.', 'sage'),
         'rss' => __('New posts, no algorithm.', 'sage'),

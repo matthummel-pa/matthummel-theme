@@ -15,7 +15,7 @@
         @foreach (\App\field_lines('now_items', [
           __('Full-stack work: WordPress, plugins, and other web apps.', 'sage'),
           __('Raising kids in Gettysburg. Nights and weekends are scarce, so I keep extra projects small.', 'sage'),
-          __('This site is a notebook: writing, snippets, and example shops.', 'sage'),
+          __('This site is a notebook: a journal, snippets, and example shops.', 'sage'),
           __('Sharing notes on this blog, DEV.to, Bluesky, and Reddit.', 'sage'),
           __('Helping with a few extra builds when I have room — sites, plugins, and sometimes Power Platform.', 'sage'),
         ]) as $item)

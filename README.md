@@ -8,7 +8,7 @@ A stock [Roots Sage](https://roots.io/sage/) 11.2.1 install plus a thin portfoli
 
 | Piece | Role |
 | --- | --- |
-| Blade page templates | Home, About, Work, Services, Code, Writing, Contact, Now |
+| Blade page templates | Home, About, Work, Services, Code, Journal, Contact, Now |
 | `app/portfolio.php` | Social links, Ridges & Valleys work list, GitHub highlights, DEV.to feed, one-time page seed |
 | `app/contact.php` | Plugin-free contact form |
 | `app/Github.php` | Cached GitHub API helper |

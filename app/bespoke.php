@@ -880,7 +880,7 @@ function mh_who_items(): array
             'text' => __('Short notes. Tiny examples. Pages that work on a phone.', 'sage'),
             'icon' => 'book-open',
             'href' => $writing,
-            'cta' => __('Read the writing', 'sage'),
+            'cta' => __('Read the journal', 'sage'),
         ],
         [
             'title' => __('Shops and teams', 'sage'),
@@ -982,3 +982,140 @@ function mh_sync_nav_menus(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_sync_nav_menus', 50);
+
+/** Rename Writing → Journal and swap known old field defaults once. */
+function mh_apply_journal_rename(): void
+{
+    if (get_option('mh_journal_rename_v1')) {
+        return;
+    }
+
+    $blogId = (int) get_option('page_for_posts');
+    if ($blogId) {
+        $page = get_post($blogId);
+        if ($page instanceof \WP_Post && $page->post_title === 'Writing') {
+            wp_update_post(['ID' => $blogId, 'post_title' => 'Journal']);
+        }
+    }
+
+    $swaps = [
+        'mh_f_write_kicker' => ['Writing' => 'Journal'],
+        'mh_f_write_h1' => [
+            'Writing, with snippets when they help.' => 'Journal',
+            'Writing' => 'Journal',
+        ],
+        'mh_f_write_lede' => [
+            'Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build.' => 'I write about WordPress, plugins, and other web apps I build. Posts walk through the problem and, when it helps, the code. Developers can copy the examples; shops and agencies can see how I explain a build.',
+        ],
+        'mh_f_write_search_ph' => ['Search posts…' => 'Search posts'],
+        'mh_f_write_subscribe_h2' => ['Subscribe in a reader' => 'Follow with RSS'],
+        'mh_f_write_subscribe_lede' => [
+            'No newsletter form. Copy the RSS URL into Feedly, NetNewsWire, or the reader you already use.' => 'There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.',
+        ],
+        'mh_f_write_follow' => ['Follow along:' => 'More of my notes'],
+        'mh_f_write_bio' => [
+            'I write notes from Gettysburg, Pennsylvania, and share WordPress, plugin, and other web-app snippets you can paste in. Developers, shops, and agencies are welcome here.' => 'I write from Gettysburg, Pennsylvania. Posts cover WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.',
+        ],
+        'mh_f_home_link_writing' => ['Writing' => 'Journal'],
+        'mh_f_home_write_kicker' => ['Notes from the bench' => 'Journal'],
+        'mh_f_home_write_h2' => ['Writing' => 'Journal'],
+        'mh_f_home_write_intro' => [
+            'Notes on WordPress, plugins, and other web apps. Many posts include snippets you can paste into a theme or a plugin.' => 'Short posts on WordPress, plugins, and other web apps. Many include snippets you can paste into a theme or a plugin.',
+        ],
+        'mh_f_seo_title' => [
+            'Writing | Matt Hummel' => 'Journal | Matt Hummel',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $places = get_post_meta($id, 'mh_f_about_places', true);
+        if (is_array($places)) {
+            $changed = false;
+            foreach ($places as $i => $row) {
+                $text = (string) ($row['text'] ?? '');
+                if ($text === 'This site. Writing, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.') {
+                    $places[$i]['text'] = 'This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.';
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_about_places', $places);
+            }
+        }
+
+        $now = get_post_meta($id, 'mh_f_now_items', true);
+        if (is_array($now)) {
+            $changed = false;
+            foreach ($now as $i => $line) {
+                if ($line === 'This Sage 11 site is a notebook: writing, snippets, and example shops.') {
+                    $now[$i] = 'This Sage 11 site is a notebook: a journal, snippets, and example shops.';
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_now_items', $now);
+            }
+        }
+
+        $who = get_post_meta($id, 'mh_f_who_items', true);
+        if (is_array($who)) {
+            $changed = false;
+            foreach ($who as $i => $row) {
+                if (($row['cta'] ?? '') === 'Read the writing') {
+                    $who[$i]['cta'] = 'Read the journal';
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_who_items', $who);
+            }
+        }
+    }
+
+    $menus = wp_get_nav_menus();
+    foreach ($menus as $menu) {
+        $items = wp_get_nav_menu_items((int) $menu->term_id);
+        if (! is_array($items)) {
+            continue;
+        }
+        foreach ($items as $item) {
+            if ($item->title === 'Writing') {
+                wp_update_nav_menu_item((int) $menu->term_id, (int) $item->ID, [
+                    'menu-item-title' => 'Journal',
+                    'menu-item-object' => $item->object,
+                    'menu-item-object-id' => $item->object_id,
+                    'menu-item-type' => $item->type,
+                    'menu-item-status' => 'publish',
+                    'menu-item-parent-id' => $item->menu_item_parent,
+                    'menu-item-position' => $item->menu_order,
+                    'menu-item-url' => $item->url,
+                ]);
+            }
+        }
+    }
+
+    update_option('mh_journal_rename_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_journal_rename', 51);

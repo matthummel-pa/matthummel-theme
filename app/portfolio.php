@@ -583,6 +583,49 @@ function mh_published_post_count(): int
     return isset($counts->publish) ? (int) $counts->publish : 0;
 }
 
+function mh_journal_is_oldest(): bool
+{
+    return strtolower((string) get_query_var('order')) === 'asc';
+}
+
+function mh_journal_sort_url(string $which): string
+{
+    $url = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+    if ($which === 'oldest') {
+        return add_query_arg('order', 'asc', $url);
+    }
+
+    return remove_query_arg('order', $url);
+}
+
+/** @return list<array{year: int, count: int, url: string}> */
+function mh_journal_years(): array
+{
+    global $wpdb;
+    $rows = $wpdb->get_results(
+        "SELECT YEAR(post_date) AS y, COUNT(ID) AS n
+         FROM {$wpdb->posts}
+         WHERE post_type = 'post' AND post_status = 'publish'
+         GROUP BY y
+         ORDER BY y DESC"
+    );
+    $out = [];
+    foreach ($rows ?: [] as $row) {
+        $year = (int) $row->y;
+        if ($year < 1970) {
+            continue;
+        }
+        $out[] = [
+            'year' => $year,
+            'count' => (int) $row->n,
+            'url' => get_year_link($year),
+        ];
+    }
+
+    return $out;
+}
+
+/** @return list<array{title: string, url: string, date: string, comments: int}> */
 function mh_popular_posts(int $limit = 5, int $exclude = 0): array
 {
     $q = new \WP_Query([
@@ -598,15 +641,34 @@ function mh_popular_posts(int $limit = 5, int $exclude = 0): array
     ]);
     $out = [];
     foreach ($q->posts as $p) {
+        $comments = (int) $p->comment_count;
+        if ($comments < 1) {
+            continue;
+        }
         $out[] = [
             'title' => get_the_title($p),
             'url' => get_permalink($p),
             'date' => get_the_date('', $p),
+            'comments' => $comments,
         ];
     }
 
     return $out;
 }
+
+add_action('pre_get_posts', function (\WP_Query $query): void {
+    if (is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+    if (! ($query->is_home() || $query->is_category() || $query->is_tag() || $query->is_date() || $query->is_search())) {
+        return;
+    }
+    if (strtolower((string) $query->get('order')) !== 'asc') {
+        return;
+    }
+    $query->set('orderby', 'date');
+    $query->set('order', 'ASC');
+});
 
 function mh_post_summary(\WP_Post $post): string
 {
@@ -709,7 +771,7 @@ function mh_seed_portfolio_pages(): void
     $blog = get_page_by_path('blog');
     if (! $blog) {
         $blogId = wp_insert_post([
-            'post_title' => 'Writing',
+            'post_title' => 'Journal',
             'post_name' => 'blog',
             'post_status' => 'publish',
             'post_type' => 'page',
@@ -720,7 +782,9 @@ function mh_seed_portfolio_pages(): void
         }
     } else {
         $ids['blog'] = $blog->ID;
-        wp_update_post(['ID' => $blog->ID, 'post_title' => 'Writing']);
+        if ($blog->post_title === 'Writing') {
+            wp_update_post(['ID' => $blog->ID, 'post_title' => 'Journal']);
+        }
     }
 
     if (! empty($ids['home']) && ! empty($ids['blog'])) {
