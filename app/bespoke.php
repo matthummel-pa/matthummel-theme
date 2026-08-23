@@ -596,6 +596,53 @@ function mh_apply_code_resume_employers(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_employers', 52);
 
+/** Replace thin/wrong resume rows with the LinkedIn work history. */
+function mh_apply_code_resume_linkedin(): void
+{
+    if (get_option('mh_code_resume_linkedin_v1')) {
+        return;
+    }
+
+    $newIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        $hasAng = false;
+        $hasPublicProducts = false;
+        if (is_array($jobs)) {
+            foreach ($jobs as $row) {
+                $blob = strtolower(wp_json_encode($row) ?: '');
+                if (str_contains($blob, 'all native group')) {
+                    $hasAng = true;
+                }
+                if (str_contains($blob, 'public products')) {
+                    $hasPublicProducts = true;
+                }
+            }
+        }
+        if (is_array($jobs) && $jobs !== [] && (! $hasAng || $hasPublicProducts)) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+        }
+
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro !== '' && $intro !== $newIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+    }
+
+    update_option('mh_code_resume_linkedin_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_linkedin', 53);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

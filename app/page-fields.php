@@ -371,7 +371,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
-                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Saliense was a government contract. Full-time web work at Germanna Community College ended in 2020.', 'sage')],
+                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.', 'sage')],
                 ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],

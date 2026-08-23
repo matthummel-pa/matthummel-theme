@@ -148,7 +148,7 @@
 <section class="pf-section" id="resume">
   <div class="container wide">
     <h2 class="display-title is-section">{{ \App\field('code_cv_h2', __('Resume', 'sage')) }}</h2>
-    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Saliense was a government contract. Full-time web work at Germanna Community College ended in 2020.', 'sage')) }}</p>
+    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.', 'sage')) }}</p>
     @php
       $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
     @endphp
