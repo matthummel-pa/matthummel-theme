@@ -15,6 +15,7 @@ All notable changes to this theme are recorded here.
 - Ridges & Valleys entry: studio just started; still open to agencies and full-time roles
 - Code page: Gettysburg is home; shops and agencies in any location are in scope
 - Resume employers from LinkedIn: Saliense, All Native Group, Knowledge Capital Associates (USMC), Germanna (Public Information and Marketing, Jul 2011–Oct 2020)
+- Code page no longer shows the snippets section (Home still uses the helpers)
 
 ## 3.0.20 — 2026-08-21
 

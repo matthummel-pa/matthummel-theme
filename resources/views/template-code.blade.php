@@ -14,7 +14,6 @@
   $jobs = \App\mh_code_page_resume();
   $skills = \App\mh_code_page_skills();
   $docs = \App\mh_code_page_resources();
-  $snips = \App\mh_code_page_snips();
   $login = \App\mh_github_login();
   $weeks = $calendar['weeks'] ?? [];
   $total = (int) ($calendar['total'] ?? 0);
@@ -230,22 +229,6 @@
         </li>
       @endforeach
     </ul>
-  </div>
-</section>
-
-<section class="pf-section pf-section--alt">
-  <div class="container wide">
-    <h2 class="display-title is-section">{{ \App\field('code_snip_h2', __('Reusable snippets', 'sage')) }}</h2>
-    <p class="lead">{{ \App\field('code_snip_intro', __('Short examples I reuse in posts and themes. Copy them, then rename things to match your project.', 'sage')) }}</p>
-    <div class="snippet-grid">
-    @foreach ($snips as $s)
-      <article class="snippet-card">
-        <h3>{{ $s['title'] }}</h3>
-        <p class="note">{{ $s['note'] }}</p>
-        <pre class="snippet"><code>{{ $s['code'] }}</code></pre>
-      </article>
-    @endforeach
-    </div>
   </div>
 </section>
 @endsection

@@ -181,15 +181,6 @@ function page_field_map(): array
         ];
     }
 
-    $codeSnips = [];
-    foreach (mh_code_snippets() as $s) {
-        $codeSnips[] = [
-            'title' => $s['title'],
-            'note' => $s['note'],
-            'code' => $s['code'],
-        ];
-    }
-
     $workItems = [];
     foreach (mh_studio_projects() as $p) {
         $workItems[] = [
@@ -395,15 +386,6 @@ function page_field_map(): array
                     ['note', __('Note', 'sage'), 'text'],
                 ]],
             ],
-            __('Snippets', 'sage') => [
-                ['code_snip_h2', __('Heading', 'sage'), 'text', __('Reusable snippets', 'sage')],
-                ['code_snip_intro', __('Intro', 'sage'), 'textarea', __('Short examples I reuse in posts and themes. Copy them, then rename things to match your project.', 'sage')],
-                ['code_snips', __('Snippets', 'sage'), 'repeater', $codeSnips, [
-                    ['title', __('Title', 'sage'), 'text'],
-                    ['note', __('Note', 'sage'), 'textarea'],
-                    ['code', __('Code', 'sage'), 'textarea'],
-                ]],
-            ],
         ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
@@ -607,7 +589,7 @@ function field_group_hint(string $label): string
         __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
         __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
         __('Example sites', 'sage') => __('Each row is one concept site. Empty the list to restore the built-in set.', 'sage'),
-        __('Snippets', 'sage') => __('Copy-paste examples shown on the Code page and a few on Home. Empty the list to restore the built-in set.', 'sage'),
+        __('Snippets', 'sage') => __('Copy-paste examples shown on Home. Empty the list to restore the built-in set.', 'sage'),
         __('Featured repos', 'sage') => __('Hand-picked GitHub projects. Empty the list to restore the built-in set.', 'sage'),
     ];
 
