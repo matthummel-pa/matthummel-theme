@@ -358,6 +358,65 @@ function mh_apply_code_showcase_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_showcase_copy', 48);
 
+/** Ridges & Valleys is current; Saliense is previous. Only known old resume rows. */
+function mh_apply_code_resume_studio(): void
+{
+    if (get_option('mh_code_resume_studio_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.';
+    $newIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (is_array($jobs) && $jobs !== []) {
+            $first = $jobs[0] ?? [];
+            $isOldCurrent = ((string) ($first['org'] ?? '') === 'Saliense Consulting'
+                && strcasecmp((string) ($first['period'] ?? ''), 'Current') === 0);
+            if ($isOldCurrent) {
+                update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+            }
+        }
+
+        $practice = get_post_meta($id, 'mh_f_code_do_items', true);
+        if (is_array($practice)) {
+            $map = [
+                'Local Gettysburg and Adams County sites for shops, inns, and tours (often through Ridges & Valleys).' => 'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.',
+                'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as a secondary, full-time consulting practice.' => 'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
+            ];
+            $changed = false;
+            foreach ($practice as $i => $line) {
+                $line = (string) $line;
+                if (isset($map[$line])) {
+                    $practice[$i] = $map[$line];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_do_items', $practice);
+            }
+        }
+    }
+
+    update_option('mh_code_resume_studio_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_studio', 49);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

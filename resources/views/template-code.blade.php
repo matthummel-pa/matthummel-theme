@@ -148,7 +148,7 @@
 <section class="pf-section" id="resume">
   <div class="container wide">
     <h2 class="display-title is-section">{{ \App\field('code_cv_h2', __('Resume', 'sage')) }}</h2>
-    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.', 'sage')) }}</p>
+    <p class="sec-intro">{{ \App\field('code_cv_intro', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.', 'sage')) }}</p>
     @php
       $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
     @endphp
@@ -171,7 +171,14 @@
                 @endif
                 <h3>{{ $job['role'] }}</h3>
                 @if ($job['org'] !== '')
-                  <p class="resume-org">{!! \App\mh_svg_icon('briefcase', 16) !!} <span>{{ $job['org'] }}</span></p>
+                  <p class="resume-org">
+                    {!! \App\mh_svg_icon('briefcase', 16) !!}
+                    @if (! empty($job['url']))
+                      <a href="{{ esc_url($job['url']) }}" rel="noopener" target="_blank">{{ $job['org'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+                    @else
+                      <span>{{ $job['org'] }}</span>
+                    @endif
+                  </p>
                 @endif
               </div>
               <p class="resume-tags">

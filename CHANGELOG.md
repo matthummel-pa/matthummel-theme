@@ -11,6 +11,7 @@ All notable changes to this theme are recorded here.
 - Documentation links for WordPress, Sage, Tailwind, Vite, PHP, MDN, React, and Power Platform
 - One-time swap of known informal Code defaults (`mh_code_showcase_v1`)
 - Resume block: timeline, current-role card, period/type tags, LinkedIn link
+- Resume roles: Ridges & Valleys (current studio), Saliense as previous, independent web work unchanged
 
 ## 3.0.20 — 2026-08-21
 

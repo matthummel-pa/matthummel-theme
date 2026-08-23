@@ -371,12 +371,13 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
-                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.', 'sage')],
+                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.', 'sage')],
                 ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],
                     ['period', __('Dates', 'sage'), 'text'],
                     ['type', __('Type', 'sage'), 'text'],
+                    ['url', __('Organization URL', 'sage'), 'url'],
                     ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
                 ]],
             ],
@@ -505,6 +506,7 @@ function mh_code_page_resume(?int $post_id = null): array
             'org' => (string) ($r['org'] ?? ''),
             'period' => (string) ($r['period'] ?? ''),
             'type' => (string) ($r['type'] ?? ''),
+            'url' => (string) ($r['url'] ?? ''),
             'bullets' => $bullets,
         ];
     }

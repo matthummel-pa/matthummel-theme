@@ -353,8 +353,8 @@ function mh_code_practice_defaults(): array
         'WordPress engineering with Sage 11, Blade, Acorn, Bedrock, Tailwind, Vite, and Gutenberg.',
         'Front-end architecture: semantic HTML, CSS, TypeScript, and accessible UI that shops can still edit.',
         'Plugin and theme work with a public GitHub trail so other developers can read the same code.',
-        'Local Gettysburg and Adams County sites for shops, inns, and tours (often through Ridges & Valleys).',
-        'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as a secondary, full-time consulting practice.',
+        'Local Gettysburg and Adams County sites for shops, inns, and tours through Ridges & Valleys, the studio I just started.',
+        'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
     ];
 }
 
@@ -371,18 +371,28 @@ function mh_code_resume_defaults(): array
 {
     return [
         [
+            'role' => 'Founder',
+            'org' => 'Ridges & Valleys',
+            'period' => 'Current',
+            'type' => 'Independent studio',
+            'url' => 'https://ridgesandvalleys.com',
+            'bullets' => "Just started a Gettysburg studio for shops, inns, and tours.\nWordPress sites local businesses can edit, with concept work on the studio site.\nPublic theme and plugin work stays on GitHub so other developers can read it.",
+        ],
+        [
             'role' => 'Senior Power Platform Consultant',
             'org' => 'Saliense Consulting',
-            'period' => 'Current',
+            'period' => 'Previous',
             'type' => 'Full-time',
-            'bullets' => "Design and ship Power Apps, Power Automate, and Dataverse solutions for enterprise teams.\nConnect Microsoft 365 workloads to the data and approvals those teams already use.\nKeep WordPress and public web work as a parallel practice, not the day-job title.",
+            'url' => '',
+            'bullets' => "Designed and shipped Power Apps, Power Automate, and Dataverse solutions for enterprise teams.\nConnected Microsoft 365 workloads to the data and approvals those teams already used.\nKept WordPress and public web work as a parallel practice, not the day-job title.",
         ],
         [
             'role' => 'Web Developer & Digital Consultant',
             'org' => 'Higher education / independent',
             'period' => '2010s–present',
             'type' => 'Contract and independent',
-            'bullets' => "More than ten years building and maintaining HTML, CSS, JavaScript, and WordPress sites.\nHigher-education, government, and agency work: themes, plugins, and integrations shops can keep.\nPublic products and studio sites on GitHub, including Keepary, TOC Flow, and Ridges & Valleys.",
+            'url' => '',
+            'bullets' => "More than ten years building and maintaining HTML, CSS, JavaScript, and WordPress sites.\nHigher-education, government, and agency work: themes, plugins, and integrations shops can keep.\nPublic products on GitHub, including Keepary, TOC Flow, and the Ridges & Valleys theme.",
         ],
     ];
 }
