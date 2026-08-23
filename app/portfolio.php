@@ -384,7 +384,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Mar 2025 – Previous',
             'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Built PowerApps forms and workflows.\nCreated Power Automate flows that cut manual process work.\nSupported SharePoint and PowerApps for daily use.\nManaged site-collection permissions.\nTurned requirements into solutions that could scale.\nUsed user feedback to improve system performance.",
+            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
         ],
         [
             'role' => 'Applications and SharePoint Administrator',
@@ -392,7 +392,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Dec 2023 – Feb 2025',
             'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Built PowerApps forms and workflows.\nCreated Power Automate flows that cut manual process work.\nSupported SharePoint and PowerApps for daily use.\nManaged site-collection permissions.\nTurned requirements into solutions that could scale.\nUsed user feedback to improve system performance.",
+            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
         ],
         [
             'role' => 'SharePoint Web Developer',
