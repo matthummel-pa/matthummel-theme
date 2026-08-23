@@ -22,6 +22,61 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      - name: Check SiteGround connection secrets
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          FTP_DIR: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
+          SSH_KEY: ${{ secrets.SERVER_SSH_PRIVATE_KEY || secrets.SITEGROUND_SSH_PRIVATE_KEY || secrets.STR_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SERVER_SSH_KNOWN_HOSTS || secrets.SITEGROUND_SSH_KNOWN_HOSTS }}
+          SSH_PORT: ${{ secrets.SITEGROUND_PORT || secrets.SERVER_SSH_PORT }}
+          SSH_USER: ${{ secrets.SERVER_USER || secrets.SITEGROUND_USER }}
+          SSH_HOST: ${{ secrets.SERVER_IP || secrets.SITEGROUND_HOST }}
+          SSH_PATH: ${{ secrets.SERVER_DESTINATION_PATH }}
+        run: |
+          echo "──────────────── SiteGround secrets check ────────────────"
+          ok=true
+
+          check() {
+            local label="$1" val="$2" required="$3"
+            if [ -n "$val" ]; then
+              echo "  ✅  $label — set"
+            elif [ "$required" = "required" ]; then
+              echo "  ❌  $label — MISSING (required for FTP deploy)"
+              ok=false
+            else
+              echo "  ⚠️   $label — not set (optional)"
+            fi
+          }
+
+          echo ""
+          echo "FTP credentials (needed for 'Upload theme over FTP' step):"
+          check "SITEGROUND_FTP_HOST"     "$FTP_HOST" required
+          check "SITEGROUND_FTP_USER"     "$FTP_USER" required
+          check "SITEGROUND_FTP_PASSWORD" "$FTP_PASS" required
+          check "SITEGROUND_FTP_REMOTE_DIR (hint)" "$FTP_DIR" optional
+
+          echo ""
+          echo "SSH / rsync credentials (optional — enables rsync step):"
+          check "SSH private key (SERVER_SSH_PRIVATE_KEY / SITEGROUND_SSH_PRIVATE_KEY / STR_SSH_PRIVATE_KEY)" "$SSH_KEY" optional
+          check "SSH known_hosts (SERVER_SSH_KNOWN_HOSTS / SITEGROUND_SSH_KNOWN_HOSTS)" "$SSH_KNOWN_HOSTS" optional
+          check "SSH port   (SITEGROUND_PORT / SERVER_SSH_PORT)" "$SSH_PORT" optional
+          check "SSH user   (SERVER_USER / SITEGROUND_USER)"     "$SSH_USER" optional
+          check "SSH host   (SERVER_IP / SITEGROUND_HOST)"       "$SSH_HOST" optional
+          check "Rsync path (SERVER_DESTINATION_PATH)"           "$SSH_PATH" optional
+
+          echo ""
+          echo "──────────────────────────────────────────────────────────"
+
+          if [ "$ok" = "false" ]; then
+            echo "⛔  One or more required FTP secrets are missing."
+            echo "    Add them at: Settings → Secrets → Actions in your GitHub repo."
+            echo "    The FTP deploy step will be skipped but the release zip will still publish."
+          else
+            echo "✅  All required secrets present. FTP deploy is enabled."
+          fi
+
       - name: Setup PHP Environment
         uses: shivammathur/setup-php@v2
         with:
