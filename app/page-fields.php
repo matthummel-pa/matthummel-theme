@@ -344,27 +344,59 @@ function page_field_map(): array
         ],
         'template-code.blade.php' => [
             __('Intro', 'sage') => [
-                ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
-                ['code_h1', __('Heading', 'sage'), 'text', __('Code you can copy.', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Repos and short snippets. If you’re new to WordPress or Sage, start with a snippet, then open a repo README. Questions are welcome on the <a href="/contact/">contact</a> page.', 'sage')],
+                ['code_kicker', __('Kicker', 'sage'), 'text', __('Engineering', 'sage')],
+                ['code_h1', __('Heading', 'sage'), 'text', __('What I do', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')],
             ],
-            __('Featured repos', 'sage') => [
-                ['code_feat_h2', __('Heading', 'sage'), 'text', __('Featured repos', 'sage')],
-                ['code_feat_intro', __('Intro', 'sage'), 'text', __('Open these on GitHub. Fork them if they help.', 'sage')],
-                ['code_repos', __('Repos', 'sage'), 'repeater', $codeRepos, [
+            __('Practice', 'sage') => [
+                ['code_do_h2', __('Heading', 'sage'), 'text', __('Practice', 'sage')],
+                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('WordPress is the public focus. I also write React apps and do some Microsoft Power Platform work when a team already lives in that stack.', 'sage')],
+                ['code_do_items', __('What I do (one per line)', 'sage'), 'lines', mh_code_practice_defaults()],
+            ],
+            __('GitHub', 'sage') => [
+                ['code_gh_h2', __('Profile heading', 'sage'), 'text', __('GitHub', 'sage')],
+                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Contribution activity', 'sage')],
+                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Public contributions over the last year. Darker cells are busier days.', 'sage')],
+                ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Recent activity', 'sage')],
+                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured repositories', 'sage')],
+                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.', 'sage')],
+                ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
                     ['url', __('URL', 'sage'), 'url'],
                     ['tags', __('Tags (comma separated)', 'sage'), 'text'],
                 ]],
+                ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently updated', 'sage')],
+                ['code_live_all', __('All repos label', 'sage'), 'text', __('All public repositories', 'sage')],
             ],
-            __('Live GitHub', 'sage') => [
-                ['code_live_h2', __('Heading', 'sage'), 'text', __('Live from GitHub', 'sage')],
-                ['code_live_all', __('All repos label', 'sage'), 'text', __('All public repos', 'sage')],
+            __('Resume', 'sage') => [
+                ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
+                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.', 'sage')],
+                ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
+                    ['role', __('Role', 'sage'), 'text'],
+                    ['org', __('Organization', 'sage'), 'text'],
+                    ['period', __('Dates', 'sage'), 'text'],
+                    ['type', __('Type', 'sage'), 'text'],
+                    ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
+                ]],
+            ],
+            __('Skills', 'sage') => [
+                ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills', 'sage')],
+                ['code_sk_intro', __('Intro', 'sage'), 'text', __('Tools I use on shipped work. Icons match the brands other developers already recognize.', 'sage')],
+                ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
+            ],
+            __('Documentation', 'sage') => [
+                ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I use', 'sage')],
+                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Reference docs I keep open while I work. Official handbooks first, then the Roots and front-end stack this theme is built on.', 'sage')],
+                ['code_docs', __('Links', 'sage'), 'repeater', mh_code_resource_defaults(), [
+                    ['label', __('Label', 'sage'), 'text'],
+                    ['url', __('URL', 'sage'), 'url'],
+                    ['note', __('Note', 'sage'), 'text'],
+                ]],
             ],
             __('Snippets', 'sage') => [
-                ['code_snip_h2', __('Heading', 'sage'), 'text', __('Snippets', 'sage')],
-                ['code_snip_intro', __('Intro', 'sage'), 'textarea', __('Tiny examples, the same style I drop into blog posts. Copy them into a post, a theme, or a gist. Sharing is the point.', 'sage')],
+                ['code_snip_h2', __('Heading', 'sage'), 'text', __('Reusable snippets', 'sage')],
+                ['code_snip_intro', __('Intro', 'sage'), 'textarea', __('Short examples I reuse in posts and themes. Copy them, then rename things to match your project.', 'sage')],
                 ['code_snips', __('Snippets', 'sage'), 'repeater', $codeSnips, [
                     ['title', __('Title', 'sage'), 'text'],
                     ['note', __('Note', 'sage'), 'textarea'],
@@ -438,6 +470,66 @@ function mh_code_page_repos(?int $post_id = null): array
             'url' => (string) ($r['url'] ?? ''),
             'tags' => $tags,
         ]);
+    }
+
+    return $out;
+}
+
+function mh_code_page_practice(?int $post_id = null): array
+{
+    return field_lines('code_do_items', mh_code_practice_defaults(), $post_id);
+}
+
+function mh_code_page_skills(?int $post_id = null): array
+{
+    return field_lines('code_skills', mh_code_skill_defaults(), $post_id);
+}
+
+function mh_code_page_resume(?int $post_id = null): array
+{
+    $rows = field_rows('code_cv_jobs', [], $post_id);
+    if ($rows === []) {
+        $rows = mh_code_resume_defaults();
+    }
+    $out = [];
+    foreach ($rows as $r) {
+        $bullets = $r['bullets'] ?? [];
+        if (is_string($bullets)) {
+            $bullets = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $bullets) ?: [])));
+        }
+        if (! is_array($bullets)) {
+            $bullets = [];
+        }
+        $out[] = [
+            'role' => (string) ($r['role'] ?? ''),
+            'org' => (string) ($r['org'] ?? ''),
+            'period' => (string) ($r['period'] ?? ''),
+            'type' => (string) ($r['type'] ?? ''),
+            'bullets' => $bullets,
+        ];
+    }
+
+    return $out;
+}
+
+function mh_code_page_resources(?int $post_id = null): array
+{
+    $rows = field_rows('code_docs', [], $post_id);
+    if ($rows === []) {
+        $rows = mh_code_resource_defaults();
+    }
+    $out = [];
+    foreach ($rows as $r) {
+        $url = trim((string) ($r['url'] ?? ''));
+        $label = trim((string) ($r['label'] ?? ''));
+        if ($url === '' || $label === '') {
+            continue;
+        }
+        $out[] = [
+            'label' => $label,
+            'url' => $url,
+            'note' => (string) ($r['note'] ?? ''),
+        ];
     }
 
     return $out;

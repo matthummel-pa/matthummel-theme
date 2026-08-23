@@ -273,6 +273,91 @@ function mh_apply_seo_playbook_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_seo_playbook_copy', 47);
 
+/** One-time Code page copy: showcase + resume, only exact old defaults. */
+function mh_apply_code_showcase_copy(): void
+{
+    if (get_option('mh_code_showcase_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_kicker' => [
+            'Code' => 'Engineering',
+            'Public work' => 'Engineering',
+        ],
+        'mh_f_code_h1' => [
+            'Code' => 'What I do',
+            'Code you can copy.' => 'What I do',
+        ],
+        'mh_f_code_lede' => [
+            'Repos and short snippets. If you’re new to WordPress or Sage, start with a snippet, then open a repo README. Questions are welcome on the <a href="/contact/">contact</a> page.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+            'I keep some of my code on GitHub so other people can read it. Fork a repo, copy a snippet, or write if a line is unclear.' => 'I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania. Most of that work is Sage, Blade, PHP, and front-end architecture shops can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.',
+        ],
+        'mh_f_code_feat_h2' => [
+            'Featured repos' => 'Featured repositories',
+        ],
+        'mh_f_code_feat_intro' => [
+            'Open these on GitHub. Fork them if they help.' => 'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.',
+        ],
+        'mh_f_code_live_h2' => [
+            'Live from GitHub' => 'Recently updated',
+        ],
+        'mh_f_code_live_all' => [
+            'All public repos' => 'All public repositories',
+        ],
+        'mh_f_code_snip_h2' => [
+            'Snippets' => 'Reusable snippets',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+
+        $repos = get_post_meta($id, 'mh_f_code_repos', true);
+        if (is_array($repos)) {
+            $map = [
+                'A private family app. Sign-in, invites, and posts. You can read the code.' => 'Private family app: authentication, invites, and posts. React on the front end, Supabase for data and sign-in.',
+                'A free WordPress tool that lists your headings so people can jump around a long page.' => 'WordPress plugin that builds a table of contents from heading blocks. PHP, Gutenberg, and a small public API.',
+                'The Gettysburg studio site. Clear pages for local shops, inns, and tours.' => 'Sage 11 theme for the Gettysburg studio site. Blade templates, local SEO, and pages shops can edit.',
+            ];
+            $changed = false;
+            foreach ($repos as $i => $row) {
+                $desc = (string) ($row['desc'] ?? '');
+                if (isset($map[$desc])) {
+                    $repos[$i]['desc'] = $map[$desc];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_code_repos', $repos);
+            }
+        }
+    }
+
+    update_option('mh_code_showcase_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_showcase_copy', 48);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

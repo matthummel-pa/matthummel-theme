@@ -6,7 +6,7 @@
 
 namespace App;
 
-function mh_svg_icon(string $name, int $size = 20): string
+function mh_svg_icon(string $name, int $size = 20, string $fill = 'currentColor'): string
 {
     $name = strtolower(trim($name));
     $name = str_replace([' / ', '/', '&'], [' ', ' ', 'and'], $name);
@@ -28,15 +28,22 @@ function mh_svg_icon(string $name, int $size = 20): string
         'block-editor' => 'wordpress',
         'reactjs' => 'react',
         'netlify' => 'globe',
-        'vite' => 'code',
+        'vitejs' => 'vite',
         'composer' => 'php',
         'roots' => 'sage',
         'powershell' => 'code',
         'blade' => 'sage',
-        'scss' => 'css',
-        'sass' => 'css',
-        'typescript' => 'javascript',
-        'ts' => 'javascript',
+        'scss' => 'sass',
+        'ts' => 'typescript',
+        'node' => 'nodejs',
+        'node.js' => 'nodejs',
+        'next' => 'nextjs',
+        'next.js' => 'nextjs',
+        'vs code' => 'vscode',
+        'visual studio code' => 'vscode',
+        'power platform' => 'power-apps',
+        'power apps' => 'power-apps',
+        'microsoft 365' => 'office',
         'vue' => 'javascript',
         'dockerfile' => 'code',
         'shell' => 'code',
@@ -65,6 +72,15 @@ function mh_svg_icon(string $name, int $size = 20): string
         'wordpress' => '<path d="M12 2a10 10 0 1 0 .01 20.01A10 10 0 0 0 12 2Zm-1.4 17.4A8.2 8.2 0 0 1 4.5 9.6l4.6 12.6c.5.1 1 .2 1.5.2Zm7.7-1.3c-.4.7-.8 1.3-1.2 1.3-.4 0-.5-.5-.9-1.7l-2.5-8.4-2.2 6.6-.1.1-3.1-9.2c.5-.1 1.1-.3 1.8-.3.8 0 1.5.2 1.6.7 0 .1.2.6.2.6l1.7 5.2 1.6-5.1s.2-.7.3-.9c.2-.4.8-.4 1.2-.4.5 0 1.2.1 1.2.1l-3.6 10.8 2.1.1c.6 0 .7.4.5.8Zm.5-11.5A8.2 8.2 0 0 1 12 20.2v.1l3.1-9c.3-.8.5-1.4.5-1.9 0-.3 0-.5-.1-.8 1.3.6 2.2 1.8 2.3 3.2Z"/>',
         'php' => '<path d="M12 7.5c4.6 0 8.3 2 8.3 4.5s-3.7 4.5-8.3 4.5S3.7 14.5 3.7 12 7.4 7.5 12 7.5Zm-3.3 2.2h-1.7l-1.1 5.6h1.3l.2-1.2h1.2c1.2 0 2-.6 2.2-1.8.3-1.3-.4-2.6-2.1-2.6Zm4.8 0h-1.6l-1.1 5.6h1.3l.3-1.4h.8c.4 0 .6.1.5.5l-.2.9h1.4l.2-1c.2-1.1-.4-1.6-1.2-1.7.7-.3 1.1-1 1.3-1.9.3-1.2-.3-2-1.9-2Zm2.7 0h-1.6l-1.1 5.6H15l.8-4.2h.9c.8 0 1.2.3 1.1.9l-.6 3.3h1.4l.7-3.6c.2-1.3-.6-2-2.1-2Zm-7.5 1.1c.6 0 .9.4.8 1s-.6.9-1.2.9h-.6l.3-1.9h.7Z"/>',
         'javascript' => '<path d="M4 4h16v16H4V4Zm9.2 12.4c.4.7.9 1.2 2 1.2 1 0 1.6-.5 1.6-1.2 0-.8-.6-1.1-1.7-1.6l-.6-.2c-1.7-.7-2.8-1.6-2.8-3.5 0-1.7 1.3-3.1 3.4-3.1 1.5 0 2.5.5 3.3 1.8l-1.8 1.2c-.4-.7-.8-1-1.5-1-.7 0-1.1.4-1.1 1 0 .7.4 1 1.4 1.4l.6.3c2 .8 3.1 1.8 3.1 3.8 0 2.1-1.7 3.3-3.9 3.3-2.2 0-3.6-1-4.3-2.4l1.9-1.1Zm-5.4.3c.3.5.6.9 1.3.9.7 0 1.1-.3 1.1-1.4V9.4h2.2v6.9c0 2.3-1.3 3.3-3.3 3.3-1.8 0-2.8-.9-3.3-2l1.9-.9Z"/>',
+        'typescript' => '<path d="M3 3h18v18H3V3Zm8.6 9.2H10v1.2h1.6V19h1.7v-5.6H15V12H11.6ZM16.2 12c-1.5 0-2.5.8-2.5 2.1h1.6c0-.5.4-.8.9-.8.5 0 .8.2.8.6 0 .4-.3.6-1.1.9l-.6.2c-1.2.4-1.8 1.1-1.8 2.2 0 1.3.9 2.2 2.4 2.2 1.4 0 2.4-.8 2.6-2.1h-1.6c-.1.5-.5.8-1 .8-.5 0-.8-.3-.8-.7 0-.4.3-.6 1-.9l.6-.2c1.3-.4 2-1.1 2-2.3 0-1.4-1-2.2-2.5-2.2Z"/>',
+        'nodejs' => '<path d="M12 2.1 3.9 6.8v10.4L12 21.9l8.1-4.7V6.8L12 2.1Zm0 2.3 6.1 3.5v7.2L12 18.6 5.9 15.1V7.9L12 4.4Zm-.8 3.5v8.2l-2.4-1.4V9.3L11.2 7.9Zm1.6 0L15.2 9.3v5.4l-2.4 1.4V7.9Z"/>',
+        'vite' => '<path d="M16.7 2.2 4.8 13.4h5.4L7.3 21.8 19.2 10.6h-5.4L16.7 2.2Z"/>',
+        'tailwind' => '<path d="M12 6c-2.8 0-4.6 1.4-5.2 4.2 1-1.4 2.2-1.9 3.5-1.5.8.2 1.3.9 1.9 1.6C13.1 11.8 14.3 13.2 17 13.2c2.8 0 4.6-1.4 5.2-4.2-1 1.4-2.2 1.9-3.5 1.5-.8-.2-1.3-.9-1.9-1.6C15.9 7.4 14.7 6 12 6ZM7 13.2c-2.8 0-4.6 1.4-5.2 4.2 1-1.4 2.2-1.9 3.5-1.5.8.2 1.3.9 1.9 1.6 1 1.5 2.1 2.9 4.8 2.9 2.8 0 4.6-1.4 5.2-4.2-1 1.4-2.2 1.9-3.5 1.5-.8-.2-1.3-.9-1.9-1.6-1-1.5-2.1-2.9-4.8-2.9Z"/>',
+        'laravel' => '<path d="m3.2 8.4 4.5-2.6 4.5 2.6v5.2l-4.5 2.6-4.5-2.6V8.4Zm4.5 7.8 4.5 2.6 4.5-2.6v-5.2l-4.5 2.6-4.5-2.6v5.2Zm4.5-10.4 4.5-2.6 4.5 2.6v5.2l-4.5 2.6-4.5-2.6V5.8Z"/>',
+        'sass' => '<path d="M12 3c4.5 0 8 2.5 8 6.3 0 4.3-3.5 7-8.4 8.7-1.4.5-3.2 1.6-3.2 2.7 0 .8.7 1.3 1.8 1.2 2.3-.2 3.8-1.6 4.6-2.9l1.6 1c-1.1 1.8-3.4 3.5-6.5 3.7-2.8.2-4.7-1.2-4.7-3.4 0-2.4 2.1-4 4.4-4.8C13.4 14.5 17 13 17 9.4c0-2.2-2-3.7-5-3.7-2.8 0-5.4 1.3-6.4 3.4L4 8C5.4 5 8.6 3 12 3Z"/>',
+        'nextjs' => '<path d="M12 2a10 10 0 1 0 .01 20.01A10 10 0 0 0 12 2Zm4.2 14.6-.9-1.4c-1.1 1-2.2 1.5-3.7 1.5-2.9 0-4.9-2-4.9-5.2 0-3.2 2.1-5.3 5.1-5.3 2.8 0 4.6 1.8 4.6 4.7v.8H9.3c.2 1.5 1.2 2.4 2.6 2.4 1 0 1.8-.4 2.5-1.1l1.8 1.1v2.5Zm-5.1-6.4h3.2c-.2-1.2-1-1.9-1.6-1.9s-1.4.7-1.6 1.9Z"/>',
+        'vscode' => '<path d="m17.8 16.5-9.5 5.7c-.7.4-1.5.3-2.1-.1L3 19.7l10.6-8.3L3 4.3l3.2-2.4c.6-.4 1.4-.5 2.1-.1l9.5 5.7V16.5Zm.4-9.2V4.6c0-.8.9-1.3 1.6-.8l1.7 1.1c.5.3.5 1 0 1.3l-3.3 2.1V7.3Z"/>',
+        'office' => '<path d="M4 6.2 10.2 4v16L4 17.8V6.2Zm7 1.2 9-2.2v13.8l-9 2.2V7.4Zm1.6 2.3v8.6l5.8-1.2V8.9l-5.8.8Z"/>',
         'react' => '<path d="M12 10.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Zm-6.7.2c.4-1.2 2.8-2 6.7-2s6.3.8 6.7 2c.3 1.1-1.2 2.5-3.8 3.4 2.6.9 4.1 2.3 3.8 3.4-.4 1.2-2.8 2-6.7 2s-6.3-.8-6.7-2c-.3-1.1 1.2-2.5 3.8-3.4-2.6-.9-4.1-2.3-3.8-3.4Zm1.3 0c-.1.4.7 1.3 2.8 2-2.1.7-2.9 1.6-2.8 2 .2.6 1.8 1.3 5.4 1.3s5.2-.7 5.4-1.3c.1-.4-.7-1.3-2.8-2 2.1-.7 2.9-1.6 2.8-2-.2-.6-1.8-1.3-5.4-1.3s-5.2.7-5.4 1.3ZM12 5.3c1.3 0 2.5 4.1 2.5 6.7S13.3 18.7 12 18.7 9.5 14.6 9.5 12 10.7 5.3 12 5.3Zm0 1.4c-.4 0-1.2 2.3-1.2 5.3s.8 5.3 1.2 5.3 1.2-2.3 1.2-5.3-.8-5.3-1.2-5.3Z"/>',
         'html' => '<path d="m4.4 3 1.4 16.1L12 21l6.2-1.9L19.6 3H4.4Zm11.4 5.1H8.4l.2 1.9h6.9l-.6 6.4L12 17.8l-2.9-1.4-.2-2.2h1.9l.1 1.1L12 15.8l1.2-.4.2-2.1H8.1L7.5 6.7h9.1l-.8 1.4Z"/>',
         'css' => '<path d="m4.4 3 1.4 16.1L12 21l6.2-1.9L19.6 3H4.4Zm11.2 5.4.2-2.2H8.2v2.2h7.4Zm-.3 3.2H8.3v2.2h4.8l-.3 3.4L12 16.4l-2.8-.8v-1.8H7.1l.2 3.3L12 18.6l4.6-1.4.7-7.6Z"/>',
@@ -89,6 +105,52 @@ function mh_svg_icon(string $name, int $size = 20): string
     ];
 
     $d = $paths[$key] ?? $paths['code'];
+    $fill = preg_match('/^(currentColor|#[0-9a-fA-F]{3,8})$/', $fill) ? $fill : 'currentColor';
 
-    return '<svg class="mh-ico" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'.$d.'</svg>';
+    return '<svg class="mh-ico" data-icon="'.esc_attr($key).'" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="'.$fill.'" aria-hidden="true" focusable="false">'.$d.'</svg>';
+}
+
+/** Brand hex for a skill chip (Simple Icons / common docs colors). */
+function mh_skill_color(string $name): string
+{
+    $colors = [
+        'html' => '#E34F26',
+        'css' => '#1572B6',
+        'javascript' => '#F7DF1E',
+        'typescript' => '#3178C6',
+        'php' => '#777BB4',
+        'wordpress' => '#21759B',
+        'react' => '#61DAFB',
+        'nextjs' => '#111827',
+        'nodejs' => '#339933',
+        'tailwind' => '#06B6D4',
+        'sass' => '#CC6699',
+        'vite' => '#646CFF',
+        'laravel' => '#FF2D20',
+        'git' => '#F05032',
+        'github' => '#181717',
+        'vscode' => '#007ACC',
+        'sage' => '#0B3B2E',
+        'plugins' => '#3858E9',
+        'power-apps' => '#742774',
+        'power-automate' => '#0066FF',
+        'office' => '#D83B01',
+        'database' => '#3ECF8E',
+        'code' => '#2563EB',
+    ];
+    $svg = mh_svg_icon($name, 16);
+    if (preg_match('/data-icon="([^"]+)"/', $svg, $m)) {
+        return $colors[$m[1]] ?? '#2563EB';
+    }
+
+    return '#2563EB';
+}
+
+function mh_skill_chip(string $name, int $size = 18): string
+{
+    $label = mh_title_label($name);
+    $color = mh_skill_color($name);
+    $icon = mh_svg_icon($name, $size, $color);
+
+    return '<span class="skill-chip" data-skill="'.esc_attr(strtolower($label)).'">'.$icon.' <span>'.esc_html($label).'</span></span>';
 }

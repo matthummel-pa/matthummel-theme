@@ -78,8 +78,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'I’m Matt in Gettysburg. I write about the web and build WordPress sites shops can keep running. Say hello.',
         ],
         'template-code.blade.php' => [
-            'title' => 'WordPress code and snippets | '.$brand,
-            'desc' => 'Public WordPress and Sage repos plus short snippets you can copy. Fork them, or say hello if a line is unclear.',
+            'title' => 'WordPress developer GitHub and resume in Gettysburg | '.$brand,
+            'desc' => 'What I do as a WordPress and full-stack developer in Gettysburg: GitHub stats, featured repos, resume, and the docs I use.',
         ],
         'template-now.blade.php' => [
             'title' => 'Now | '.$brand,

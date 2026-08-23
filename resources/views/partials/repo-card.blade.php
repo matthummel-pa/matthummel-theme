@@ -25,8 +25,21 @@
       @endforeach
     </p>
   @endif
-  @if (! empty($r['stars']))
-    <p class="pf-meta">{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</p>
+  @if (! empty($r['stars']) || ! empty($r['forks']) || ! empty($r['pushed']) || ! empty($r['lang']))
+    <p class="pf-meta repo-stats">
+      @if (! empty($r['lang']))
+        <span>{{ $r['lang'] }}</span>
+      @endif
+      @if (! empty($r['stars']))
+        <span>{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
+      @endif
+      @if (! empty($r['forks']))
+        <span>{{ sprintf(_n('%s fork', '%s forks', (int) $r['forks'], 'sage'), number_format_i18n((int) $r['forks'])) }}</span>
+      @endif
+      @if (! empty($r['pushed']))
+        <span>{{ sprintf(__('Updated %s', 'sage'), \App\mh_github_ago((string) $r['pushed'])) }}</span>
+      @endif
+    </p>
   @endif
   <p class="repo-card-links">
     @if ($url !== '')

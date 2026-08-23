@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.21 — 2026-08-23
+
+### Changed
+
+- Code page is a professional “What I do” GitHub showcase: profile stats, contribution grid, featured and recent repos, activity feed
+- Resume (Saliense + independent web work) sits under GitHub; skill chips use brand-colored icons
+- Documentation links for WordPress, Sage, Tailwind, Vite, PHP, MDN, React, and Power Platform
+- One-time swap of known informal Code defaults (`mh_code_showcase_v1`)
+
 ## 3.0.20 — 2026-08-21
 
 ### Changed
