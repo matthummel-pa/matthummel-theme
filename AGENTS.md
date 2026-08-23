@@ -15,6 +15,8 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Feature log: `docs/FEATURES.md`
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
+- Local ↔ live **database** content sync (separate from the code deploy
+  below): `.cursor/skills/wp-db-migrate/SKILL.md`
 
 Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
 On the live site, Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).

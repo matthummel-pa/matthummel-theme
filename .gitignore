@@ -1,7 +1,9 @@
-# Cursor local MCP and caches; keep committed rule files
+# Cursor local MCP and caches; keep committed rule files and skills
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
+!.cursor/skills/
+!.cursor/skills/**
 
 # GitHub Actions stay in git (un-ignore workflows and scripts)
 .github/*
@@ -24,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Security: never commit deploy keys
+# Security: never commit deploy keys or DB migration dumps/backups
 .deploy-keys/
 
 # Python helpers (FTP locate, Vite hash preserve)
