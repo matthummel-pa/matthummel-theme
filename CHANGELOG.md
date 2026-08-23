@@ -10,6 +10,7 @@ All notable changes to this theme are recorded here.
 - Resume (Saliense + independent web work) sits under GitHub; skill chips use brand-colored icons
 - Documentation links for WordPress, Sage, Tailwind, Vite, PHP, MDN, React, and Power Platform
 - One-time swap of known informal Code defaults (`mh_code_showcase_v1`)
+- Resume block: timeline, current-role card, period/type tags, LinkedIn link
 
 ## 3.0.20 — 2026-08-21
 

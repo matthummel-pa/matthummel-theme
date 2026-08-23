@@ -149,31 +149,51 @@
   <div class="container wide">
     <h2 class="display-title is-section">{{ \App\field('code_cv_h2', __('Resume', 'sage')) }}</h2>
     <p class="sec-intro">{{ \App\field('code_cv_intro', __('Gettysburg, PA. Senior Power Platform consulting is the current full-time role. Independent WordPress and web work is the longer practice and the public offer on this site.', 'sage')) }}</p>
-    <div class="resume-list">
+    @php
+      $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
+    @endphp
+    @if ($linkedin !== '')
+      <p class="resume-links">
+        <a href="{{ esc_url($linkedin) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('linkedin', 16) !!} {{ __('LinkedIn profile', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+      </p>
+    @endif
+    <ol class="resume-timeline">
       @foreach ($jobs as $job)
-        <article class="resume-card">
-          <header>
-            <h3>{{ $job['role'] }}</h3>
-            <p class="resume-meta">
-              <span>{{ $job['org'] }}</span>
-              @if ($job['period'] !== '')
-                <span>{{ $job['period'] }}</span>
-              @endif
-              @if ($job['type'] !== '')
-                <span>{{ $job['type'] }}</span>
-              @endif
-            </p>
-          </header>
-          @if ($job['bullets'])
-            <ul>
-              @foreach ($job['bullets'] as $b)
-                <li>{{ $b }}</li>
-              @endforeach
-            </ul>
-          @endif
-        </article>
+        @php
+          $current = strcasecmp((string) $job['period'], 'Current') === 0;
+        @endphp
+        <li>
+          <article class="resume-card{{ $current ? ' is-current' : '' }}">
+            <header class="resume-head">
+              <div class="resume-who">
+                @if ($current)
+                  <p class="resume-now">{{ __('Current role', 'sage') }}</p>
+                @endif
+                <h3>{{ $job['role'] }}</h3>
+                @if ($job['org'] !== '')
+                  <p class="resume-org">{!! \App\mh_svg_icon('briefcase', 16) !!} <span>{{ $job['org'] }}</span></p>
+                @endif
+              </div>
+              <p class="resume-tags">
+                @if ($job['period'] !== '')
+                  <span class="resume-tag{{ $current ? ' is-now' : '' }}">{{ $job['period'] }}</span>
+                @endif
+                @if ($job['type'] !== '')
+                  <span class="resume-tag">{{ $job['type'] }}</span>
+                @endif
+              </p>
+            </header>
+            @if ($job['bullets'])
+              <ul class="resume-points">
+                @foreach ($job['bullets'] as $b)
+                  <li>{{ $b }}</li>
+                @endforeach
+              </ul>
+            @endif
+          </article>
+        </li>
       @endforeach
-    </div>
+    </ol>
   </div>
 </section>
 

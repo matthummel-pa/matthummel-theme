@@ -1946,14 +1946,128 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   flex-wrap: wrap;
   gap: .35rem .85rem;
 }
-.resume-list { display: grid; gap: 1.25rem; margin-top: 1.75rem; }
-.resume-card ul { margin: .85rem 0 0; padding-left: 1.15rem; }
-.resume-meta {
+.resume-links {
+  margin: 1rem 0 0;
+  font: 700 .95rem/1.2 var(--font-display);
+}
+.resume-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.resume-timeline {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0 0 0 1.55rem;
+  border-left: 3px solid var(--color-line);
+  display: grid;
+  gap: 1.35rem;
+}
+.resume-timeline > li {
+  position: relative;
+}
+.resume-timeline > li::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.55rem - 6px);
+  top: 1.55rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-blue);
+  box-shadow: 0 0 0 3px var(--color-khaki);
+}
+.resume-timeline > li:first-child::before {
+  background: var(--color-blue);
+  border-color: var(--color-navy);
+}
+.resume-card {
+  background: var(--color-card);
+  border: 2px solid var(--color-ink);
+  padding: 1.45rem 1.4rem 1.5rem;
+  box-shadow: 6px 6px 0 var(--color-line);
+}
+.resume-card.is-current {
+  box-shadow: 7px 7px 0 var(--color-blue);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-blue-soft) 55%, #fff) 0%, #fff 5.5rem);
+}
+.resume-head {
   display: flex;
   flex-wrap: wrap;
-  gap: .35rem 1rem;
-  color: var(--color-muted);
-  margin: .35rem 0 0;
+  justify-content: space-between;
+  gap: .75rem 1.25rem;
+  align-items: flex-start;
+}
+.resume-now {
+  margin: 0 0 .35rem;
+  font: 800 .72rem/1.2 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-blue-ink);
+}
+.resume-who h3 {
+  margin: 0;
+  font: 800 1.28rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+}
+.resume-org {
+  margin: .45rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-weight: 700;
+  color: var(--color-slate);
+}
+.resume-org .mh-ico { flex-shrink: 0; color: var(--color-blue); }
+.resume-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .4rem;
+  margin: 0;
+}
+.resume-tag {
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid var(--color-ink);
+  border-radius: 999px;
+  padding: .28rem .7rem;
+  font: 800 .72rem/1.2 var(--font-display);
+  letter-spacing: .02em;
+  background: #fff;
+}
+.resume-tag.is-now {
+  background: var(--color-navy);
+  color: #fff;
+  border-color: var(--color-navy);
+}
+.resume-points {
+  list-style: none;
+  margin: 1.05rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: .65rem;
+}
+.resume-points li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--color-body);
+  line-height: 1.6;
+  max-width: 52rem;
+}
+.resume-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: .45rem;
+  height: .45rem;
+  background: var(--color-blue);
+}
+
+@media (max-width: 700px) {
+  .resume-tags { justify-content: flex-start; }
 }
 .skill-row {
   list-style: none;
@@ -2596,3 +2710,33 @@ html.mh-dark .skill-chip[data-skill="github"] .mh-ico {
 }
 html.mh-dark .gh-day[data-level="0"] { background: #1e293b; }
 html.mh-dark .practice-list li::before { background: #93c5fd; }
+html.mh-dark .resume-timeline { border-left-color: #475569; }
+html.mh-dark .resume-timeline > li::before {
+  background: #111827;
+  box-shadow: 0 0 0 3px #0b1220;
+}
+html.mh-dark .resume-timeline > li:first-child::before {
+  background: #93c5fd;
+  border-color: #bfdbfe;
+}
+html.mh-dark .resume-card {
+  box-shadow: 6px 6px 0 #1e3a8a;
+}
+html.mh-dark .resume-card.is-current {
+  background: linear-gradient(180deg, #1e3a8a 0%, #111827 6rem);
+  box-shadow: 7px 7px 0 #93c5fd;
+}
+html.mh-dark .resume-now { color: #93c5fd; }
+html.mh-dark .resume-org { color: #cbd5e1; }
+html.mh-dark .resume-org .mh-ico { color: #93c5fd; }
+html.mh-dark .resume-tag {
+  background: #0b1220;
+  color: #f8fafc;
+  border-color: #93c5fd;
+}
+html.mh-dark .resume-tag.is-now {
+  background: #93c5fd;
+  color: #0b1220;
+  border-color: #93c5fd;
+}
+html.mh-dark .resume-points li::before { background: #93c5fd; }
