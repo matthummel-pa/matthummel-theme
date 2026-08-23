@@ -547,6 +547,55 @@ function mh_apply_code_anywhere(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_anywhere', 51);
 
+/** Saliense was a gov contract; Germanna CC full-time ended 2020. */
+function mh_apply_code_resume_employers(): void
+{
+    if (get_option('mh_code_resume_employers_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. I am still open to overflow work and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.';
+    $newIntro = 'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Saliense was a government contract. Full-time web work at Germanna Community College ended in 2020.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs) || $jobs === []) {
+            continue;
+        }
+        $needs = false;
+        foreach ($jobs as $row) {
+            $org = (string) ($row['org'] ?? '');
+            $type = (string) ($row['type'] ?? '');
+            if ($org === 'Higher education / independent') {
+                $needs = true;
+            }
+            if ($org === 'Saliense Consulting' && $type === 'Full-time') {
+                $needs = true;
+            }
+        }
+        if ($needs) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', mh_code_resume_defaults());
+        }
+    }
+
+    update_option('mh_code_resume_employers_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_employers', 52);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {
