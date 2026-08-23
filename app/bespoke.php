@@ -643,6 +643,62 @@ function mh_apply_code_resume_linkedin(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_linkedin', 53);
 
+/** Sharper Germanna bullets; department names in title case. */
+function mh_apply_code_resume_germanna_copy(): void
+{
+    if (get_option('mh_code_resume_germanna_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Developed a responsive WordPress website, enhancing user experience.\nWorked with teams on content management.\nOptimized code for web accessibility (Section 508, WCAG 2.0).\nMigrated site to WordPress, simplifying content editing.\nUsed Google Analytics and Google Tag Manager for tracking and marketing.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Germanna Community College' && $bullets === $oldBullets) {
+                foreach ($jobsDefault as $def) {
+                    if (($def['org'] ?? '') === 'Germanna Community College') {
+                        $jobs[$i] = $def;
+                        break;
+                    }
+                }
+                $changed = true;
+            }
+            if (($row['type'] ?? '') === 'Independent studio') {
+                $jobs[$i]['type'] = 'Independent Studio';
+                $changed = true;
+            }
+            if (($row['type'] ?? '') === 'Government contract') {
+                $jobs[$i]['type'] = 'Government Contract';
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_germanna_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_germanna_copy', 54);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {
