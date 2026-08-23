@@ -41,7 +41,8 @@ must use that same directory name (symlink `/workspace` to
 
 ### Running the site
 
-WordPress lives **outside the repo** at `~/wp-site` (SQLite, no MySQL). Symlink:
+WordPress lives **outside the repo** at `~/wp-site`, on **real MySQL** (matches SiteGround's
+engine — no SQLite drop-in). Symlink and start:
 
 ```bash
 ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel
@@ -57,16 +58,20 @@ Gotchas:
 - After editing Blade templates, clear compiled views:
   `cd ~/wp-site && wp acorn view:clear`.
 - `wp_mail` does not deliver here (no mail server). The contact form still redirects.
-- If `~/wp-site` is missing, recreate WordPress with SQLite, symlink as `matthummel`,
-  activate the theme, then `wp rewrite structure '/%postname%/'`. There is no MySQL,
-  so the SQLite drop-in must be placed **before** any WP bootstrap: `wp core download`,
-  `wp config create --skip-check`, then manually unzip the `sqlite-database-integration`
-  plugin into `wp-content/plugins/` and copy its `db.copy` to `wp-content/db.php`
-  (replacing the `{SQLITE_IMPLEMENTATION_FOLDER_PATH}` / `{SQLITE_PLUGIN}` placeholders).
-  Do **not** `wp plugin install` first — WP-CLI needs the mysqli extension to bootstrap
-  and errors out until `db.php` is in place. Only then run `wp core install`.
-  The repo checkout may live at `/agent/repos/matthummel-theme` (not `/workspace`);
-  symlink from wherever the repo actually is.
+- If `~/wp-site` is missing (fresh VM, no snapshot), rebuild it on **MySQL**, not SQLite:
+  1. `sudo apt-get install -y mysql-server && sudo service mysql start`
+  2. `sudo mysql -e "CREATE DATABASE wp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER 'wp'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'wp_local_dev'; GRANT ALL PRIVILEGES ON wp.* TO 'wp'@'127.0.0.1'; FLUSH PRIVILEGES;"`
+  3. `wp core download --path=~/wp-site`
+  4. `wp config create --path=~/wp-site --dbname=wp --dbuser=wp --dbpass=wp_local_dev --dbhost=127.0.0.1 --dbcharset=utf8mb4 --skip-check`
+  5. Symlink the theme (above), then `wp core install --path=~/wp-site --url=http://localhost:8080 --title="Matt Hummel" --admin_user=admin --admin_password=password --admin_email=admin@matthummel.com --skip-email`
+  6. `wp theme activate matthummel --path=~/wp-site` (fires the seed below), then
+     `wp rewrite structure '/%postname%/' --path=~/wp-site`
+  - No `systemd` in this container: use `sudo service mysql start`/`status`, not `systemctl`.
+  - The repo checkout may live at `/agent/repos/matthummel-theme` (not `/workspace`);
+    symlink from wherever the repo actually is.
+  - SQLite (`sqlite-database-integration` + `wp-content/db.php`) was the old fallback when
+    no MySQL was installed. It is gone from this environment now; do not reintroduce it —
+    it silently overrides `wp-config.php` DB settings and hides the real MySQL config.
 - Portfolio pages seed once via `mh_seed_portfolio_pages()` (`mh_portfolio_seeded_v2`).
   Existing posts and categories are never deleted.
 - Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
