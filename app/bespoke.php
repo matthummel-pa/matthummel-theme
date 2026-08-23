@@ -747,6 +747,57 @@ function mh_apply_code_resume_kca_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_kca_copy', 55);
 
+/** All Native Group was a government contract; rewrite shared PowerApps bullets. */
+function mh_apply_code_resume_ang_copy(): void
+{
+    if (get_option('mh_code_resume_ang_copy_v1')) {
+        return;
+    }
+
+    $oldBullets = "Built custom PowerApps solutions for forms and workflows.\nCreated Power Automate flows to streamline processes.\nProvided technical support for SharePoint and PowerApps.\nManaged permissions and site collections.\nConverted requirements into scalable solutions.\nEnhanced system performance using user feedback.";
+    $jobsDefault = mh_code_resume_defaults();
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            foreach ($jobsDefault as $def) {
+                $defOrg = (string) ($def['org'] ?? '');
+                if ($org === $defOrg && $bullets === $oldBullets) {
+                    $jobs[$i] = $def;
+                    $changed = true;
+                    break;
+                }
+            }
+            if (str_contains($org, 'All Native Group') && ($row['type'] ?? '') === 'Full-time') {
+                $jobs[$i]['type'] = 'Government Contract';
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_ang_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_ang_copy', 56);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

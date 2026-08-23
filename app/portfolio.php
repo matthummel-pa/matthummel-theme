@@ -384,15 +384,15 @@ function mh_code_resume_defaults(): array
             'period' => 'Mar 2025 – Previous',
             'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Built custom PowerApps solutions for forms and workflows.\nCreated Power Automate flows to streamline processes.\nProvided technical support for SharePoint and PowerApps.\nManaged permissions and site collections.\nConverted requirements into scalable solutions.\nEnhanced system performance using user feedback.",
+            'bullets' => "Built PowerApps forms and workflows.\nCreated Power Automate flows that cut manual process work.\nSupported SharePoint and PowerApps for daily use.\nManaged site-collection permissions.\nTurned requirements into solutions that could scale.\nUsed user feedback to improve system performance.",
         ],
         [
             'role' => 'Applications and SharePoint Administrator',
             'org' => 'All Native Group, The Federal Services Division of Ho-Chunk Inc.',
             'period' => 'Dec 2023 – Feb 2025',
-            'type' => 'Full-time',
+            'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Built custom PowerApps solutions for forms and workflows.\nCreated Power Automate flows to streamline processes.\nProvided technical support for SharePoint and PowerApps.\nManaged permissions and site collections.\nConverted requirements into scalable solutions.\nEnhanced system performance using user feedback.",
+            'bullets' => "Built PowerApps forms and workflows.\nCreated Power Automate flows that cut manual process work.\nSupported SharePoint and PowerApps for daily use.\nManaged site-collection permissions.\nTurned requirements into solutions that could scale.\nUsed user feedback to improve system performance.",
         ],
         [
             'role' => 'SharePoint Web Developer',
