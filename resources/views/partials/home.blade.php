@@ -62,7 +62,7 @@
         </dl>
       @endif
       <p class="hero-quick">
-        <a href="{{ $writing }}">{{ \App\field('home_link_writing', __('Writing', 'sage')) }}</a>
+        <a href="{{ $writing }}">{{ \App\field('home_link_writing', __('Journal', 'sage')) }}</a>
         <a href="{{ home_url('/code/') }}">{{ \App\field('home_link_code', __('Code and snippets', 'sage')) }}</a>
         <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ __('GitHub', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
         <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Ridges &amp; Valleys<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
@@ -144,9 +144,9 @@
   <div class="container wide">
     <header class="sec-head">
       <div>
-        <p class="eyebrow">{{ \App\field('home_write_kicker', __('Notes from the bench', 'sage')) }}</p>
-        <h2 id="write-heading" class="display-title is-section">{{ \App\field('home_write_h2', __('Writing', 'sage')) }}</h2>
-        <p class="sec-intro">{{ \App\field('home_write_intro', __('Notes on WordPress, plugins, and other web apps. Many posts include snippets you can paste into a theme or a plugin.', 'sage')) }}</p>
+        <p class="eyebrow">{{ \App\field('home_write_kicker', __('Journal', 'sage')) }}</p>
+        <h2 id="write-heading" class="display-title is-section">{{ \App\field('home_write_h2', __('Journal', 'sage')) }}</h2>
+        <p class="sec-intro">{{ \App\field('home_write_intro', __('Short posts on WordPress, plugins, and other web apps. Many include snippets you can paste into a theme or a plugin.', 'sage')) }}</p>
       </div>
       <a class="text-link" href="{{ $writing }}">{{ \App\field('home_write_all', __('All posts', 'sage')) }}</a>
     </header>

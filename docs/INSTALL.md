@@ -53,7 +53,7 @@ Optional after deploy: `wp acorn optimize`.
 
 ## 4. Pages and menu
 
-On first activation, `mh_seed_portfolio_pages()` creates Home, About, Work (`/projects/`), Services, Code, Contact, Now, and Writing (`/blog/` as the posts page), plus a Primary menu. It does **not** delete posts or categories.
+On first activation, `mh_seed_portfolio_pages()` creates Home, About, Work (`/projects/`), Services, Code, Contact, Now, and Journal (`/blog/` as the posts page), plus a Primary menu. It does **not** delete posts or categories.
 
 If pages already exist from an earlier seed (`mh_portfolio_seeded_v2`), they are left as-is.
 

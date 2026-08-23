@@ -69,7 +69,7 @@
       <h2 class="display-title is-section">{{ \App\field('about_places_h2', __('Two places I publish', 'sage')) }}</h2>
       <div class="pf-grid">
         @foreach (\App\field_rows('about_places', [
-          ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. Writing, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage'), 'url' => ''],
+          ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage'), 'url' => ''],
           ['title' => __('Ridges & Valleys', 'sage'), 'text' => __('A Gettysburg studio for Adams County shops, inns, and tours. You own the domain and the hosting.', 'sage'), 'url' => $ghBlog],
         ]) as $place)
           <article class="pf-card">

@@ -83,11 +83,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'Now | '.$brand,
-            'desc' => 'A short list of where my time is going: WordPress, plugins, writing, and a few extra Gettysburg builds.',
+            'desc' => 'A short list of where my time is going: WordPress, plugins, journal posts, and a few extra Gettysburg builds.',
         ],
         'index.blade.php' => [
-            'title' => 'Writing | '.$brand,
-            'desc' => 'Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops can see how I explain a build.',
+            'title' => 'Journal | '.$brand,
+            'desc' => 'Notes on WordPress, plugins, and other web apps from Gettysburg. Developers can copy the examples. Shops and agencies can see how I explain a build.',
         ],
     ];
 

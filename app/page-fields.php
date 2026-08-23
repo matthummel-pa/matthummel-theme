@@ -101,7 +101,7 @@ function mh_home_fields(): array
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/contact/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('See example sites', 'sage')],
             ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/projects/'],
-            ['home_link_writing', __('Writing link label', 'sage'), 'text', __('Writing', 'sage')],
+            ['home_link_writing', __('Journal link label', 'sage'), 'text', __('Journal', 'sage')],
             ['home_link_code', __('Code link label', 'sage'), 'text', __('Code and snippets', 'sage')],
             ['home_link_about', __('About link label', 'sage'), 'text', __('About', 'sage')],
             ['home_link_hello', __('Contact link label', 'sage'), 'text', __('Say hello', 'sage')],
@@ -117,10 +117,10 @@ function mh_home_fields(): array
             ['home_now_link', __('Now page link', 'sage'), 'text', __('What I’m doing now', 'sage')],
             ['home_link_services', __('Services link', 'sage'), 'text', __('How I can help', 'sage')],
         ],
-        __('Writing section', 'sage') => [
-            ['home_write_kicker', __('Kicker', 'sage'), 'text', __('Notes from the bench', 'sage')],
-            ['home_write_h2', __('Heading', 'sage'), 'text', __('Writing', 'sage')],
-            ['home_write_intro', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Many posts include snippets you can paste into a theme or a plugin.', 'sage')],
+        __('Journal section', 'sage') => [
+            ['home_write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
+            ['home_write_h2', __('Heading', 'sage'), 'text', __('Journal', 'sage')],
+            ['home_write_intro', __('Intro', 'sage'), 'textarea', __('Short posts on WordPress, plugins, and other web apps. Many include snippets you can paste into a theme or a plugin.', 'sage')],
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts will show up here. Categories stay as they are.', 'sage')],
             ['home_write_all', __('All posts label', 'sage'), 'text', __('All posts', 'sage')],
         ],
@@ -167,7 +167,7 @@ function page_field_map(): array
     ];
 
     $placeItems = [
-        ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. Writing, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage')],
+        ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage')],
         ['title' => __('Ridges & Valleys', 'sage'), 'text' => __('A Gettysburg studio for Adams County shops, inns, and tours. You own the domain and the hosting.', 'sage'), 'url' => 'https://ridgesandvalleys.com'],
     ];
 
@@ -244,7 +244,7 @@ function page_field_map(): array
                 ['now_items', __('Items', 'sage'), 'lines', [
                     __('Full-stack work: WordPress, plugins, and other web apps.', 'sage'),
                     __('Raising kids in Gettysburg. Nights and weekends are scarce, so I keep extra projects small.', 'sage'),
-                    __('This Sage 11 site is a notebook: writing, snippets, and example shops.', 'sage'),
+                    __('This Sage 11 site is a notebook: a journal, snippets, and example shops.', 'sage'),
                     __('Sharing notes on this blog, DEV.to, Bluesky, and Reddit.', 'sage'),
                     __('Helping with a few extra builds when I have room — sites, plugins, and sometimes Power Platform.', 'sage'),
                 ]],
@@ -414,16 +414,21 @@ function page_field_map(): array
         ],
         'index.blade.php' => [
             __('Intro', 'sage') => [
-                ['write_kicker', __('Kicker', 'sage'), 'text', __('Writing', 'sage')],
-                ['write_h1', __('Heading', 'sage'), 'text', __('Writing, with snippets when they help.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Notes on WordPress, plugins, and other web apps. Developers can copy the examples. Shops and agencies can see how I explain a build.', 'sage')],
+                ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
+                ['write_h1', __('Heading', 'sage'), 'text', __('Journal', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('I write about WordPress, plugins, and other web apps I build. Posts walk through the problem and, when it helps, the code. Developers can copy the examples; shops and agencies can see how I explain a build.', 'sage')],
+                ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
+                ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Recent posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],
-                ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search posts…', 'sage')],
-                ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Subscribe in a reader', 'sage')],
-                ['write_subscribe_lede', __('Subscribe intro', 'sage'), 'textarea', __('No newsletter form. Copy the RSS URL into Feedly, NetNewsWire, or the reader you already use.', 'sage')],
-                ['write_follow', __('Follow line', 'sage'), 'text', __('Follow along:', 'sage')],
+                ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search posts', 'sage')],
+                ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Follow with RSS', 'sage')],
+                ['write_subscribe_lede', __('Subscribe intro', 'sage'), 'textarea', __('There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.', 'sage')],
+                ['write_follow', __('Follow line', 'sage'), 'text', __('More of my notes', 'sage')],
+                ['write_aside_years', __('Years heading', 'sage'), 'text', __('Years', 'sage')],
+                ['write_aside_discussed', __('Discussed heading', 'sage'), 'text', __('Most discussed', 'sage')],
+                ['write_aside_tags', __('Tags heading', 'sage'), 'text', __('Tags', 'sage')],
                 ['write_share_note', __('Note under each post', 'sage'), 'html', __('Extra copy-paste examples live on the <a href="/code/">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage')],
-                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write notes from Gettysburg, Pennsylvania, and share WordPress, plugin, and other web-app snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
+                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write from Gettysburg, Pennsylvania. Posts cover WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
             ],
         ],
     ];
@@ -656,7 +661,7 @@ function render_page_fields_box(\WP_Post $post): void
     $map = page_field_map();
 
     if (empty($map[$key])) {
-        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Work, Services, Code, Contact, Now, or Writing to edit theme fields here.', 'sage').'</p>';
+        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Work, Services, Code, Contact, Now, or Journal to edit theme fields here.', 'sage').'</p>';
 
         return;
     }

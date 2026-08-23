@@ -75,7 +75,7 @@
           <div class="post-author-bio-body">
             <p class="post-author-bio-name">{{ get_the_author() }}</p>
             <p class="post-author-bio-desc">
-              {{ get_the_author_meta('description') ?: \App\field('write_bio', __('I write notes from Gettysburg, Pennsylvania, and share WordPress, plugin, and other web-app snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage'), \App\mh_writing_id()) }}
+              {{ get_the_author_meta('description') ?: \App\field('write_bio', __('I write from Gettysburg, Pennsylvania. Posts cover WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage'), \App\mh_writing_id()) }}
             </p>
           </div>
         </div>

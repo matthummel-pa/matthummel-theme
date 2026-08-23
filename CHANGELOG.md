@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.0.22 — 2026-08-23
+
+### Changed
+
+- Writing is now **Journal** in the nav, page title, Home, and SEO (URL stays `/blog/`)
+- Journal hero uses a short title and a plain, professional lede
+- Journal landing: hero search, newest/oldest sort, year and tag browse, most-discussed list, numbered pagination, two-column tools rail
+- One-time rename of known Writing defaults (`mh_journal_rename_v1`)
+
 ## 3.0.21 — 2026-08-23
 
 ### Changed
