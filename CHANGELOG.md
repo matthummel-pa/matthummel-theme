@@ -12,6 +12,7 @@ All notable changes to this theme are recorded here.
 - One-time swap of known informal Code defaults (`mh_code_showcase_v1`)
 - Resume block: timeline, current-role card, period/type tags, LinkedIn link
 - Resume roles: Ridges & Valleys (current studio), Saliense as previous, independent web work unchanged
+- Ridges & Valleys entry: studio just started; still open to agencies and full-time roles
 
 ## 3.0.20 — 2026-08-21
 

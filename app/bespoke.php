@@ -417,6 +417,56 @@ function mh_apply_code_resume_studio(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_studio', 49);
 
+/** Studio is new; still open to agencies and full-time work. */
+function mh_apply_code_resume_available(): void
+{
+    if (get_option('mh_code_resume_available_v1')) {
+        return;
+    }
+
+    $oldIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.';
+    $newIntro = 'Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.';
+    $oldBullets = "Just started a Gettysburg studio for shops, inns, and tours.\nWordPress sites local businesses can edit, with concept work on the studio site.\nPublic theme and plugin work stays on GitHub so other developers can read it.";
+    $newBullets = "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.";
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $intro = get_post_meta($id, 'mh_f_code_cv_intro', true);
+        if (is_string($intro) && $intro === $oldIntro) {
+            update_post_meta($id, 'mh_f_code_cv_intro', $newIntro);
+        }
+
+        $jobs = get_post_meta($id, 'mh_f_code_cv_jobs', true);
+        if (! is_array($jobs)) {
+            continue;
+        }
+        $changed = false;
+        foreach ($jobs as $i => $row) {
+            $org = (string) ($row['org'] ?? '');
+            $raw = $row['bullets'] ?? '';
+            $bullets = is_array($raw) ? implode("\n", array_map('strval', $raw)) : (string) $raw;
+            if ($org === 'Ridges & Valleys' && $bullets === $oldBullets) {
+                $jobs[$i]['bullets'] = $newBullets;
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            update_post_meta($id, 'mh_f_code_cv_jobs', $jobs);
+        }
+    }
+
+    update_option('mh_code_resume_available_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_available', 50);
+
 /** Repeater fields for audience cards (Home, About, Services). */
 function mh_who_item_fields(): array
 {

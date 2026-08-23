@@ -376,7 +376,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Current',
             'type' => 'Independent studio',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "Just started a Gettysburg studio for shops, inns, and tours.\nWordPress sites local businesses can edit, with concept work on the studio site.\nPublic theme and plugin work stays on GitHub so other developers can read it.",
+            'bullets' => "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for Gettysburg shops, inns, and tours, with concept pages on the studio site.\nI am still open to agencies, other studios, overflow work, and full-time positions.",
         ],
         [
             'role' => 'Senior Power Platform Consultant',

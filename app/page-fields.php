@@ -371,7 +371,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
-                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. WordPress and public web work is the offer on this site. Power Platform consulting at Saliense is previous, not current.', 'sage')],
+                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Gettysburg, PA. I just started Ridges & Valleys, a studio for local shops, inns, and tours. I am still open to agencies, overflow work, and full-time roles. WordPress is the public offer; Power Platform at Saliense is previous.', 'sage')],
                 ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],
