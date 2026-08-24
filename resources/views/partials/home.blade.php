@@ -314,40 +314,119 @@
 {{-- ═══════════════════════════════════════════════════
      02 — ABOUT
      ═══════════════════════════════════════════════════ --}}
-<section class="h-about" aria-labelledby="h-about-heading">
-  <div class="container wide h-about__inner">
+<section class="h-about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
+  <meta itemprop="name" content="Matt Hummel">
+  <meta itemprop="jobTitle" content="WordPress Developer">
+  <meta itemprop="address" content="Gettysburg, Pennsylvania">
+  <div class="container wide">
 
-    <div class="h-about__aside">
-      @include('partials.profile-photo', [
-        'size'       => 220,
-        'class'      => 'profile-photo h-about__img',
-        'eager'      => false,
-        'decorative' => true,
-      ])
-      <div class="h-about__meta">
-        <span class="h-meta-item">{!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA</span>
-        <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Full-stack developer</span>
-        <span class="h-meta-item">{!! \App\mh_svg_icon('github', 14) !!} @matthummel-pa</span>
+    {{-- Two-column: bio left, sidebar right --}}
+    <div class="h-about-v2">
+
+      {{-- Left: photo + bio --}}
+      <div class="h-about-v2__main">
+        <div class="h-about-v2__photo-row">
+          @include('partials.profile-photo', [
+            'size'       => 220,
+            'class'      => 'profile-photo h-about__img',
+            'eager'      => false,
+            'decorative' => false,
+          ])
+          <div class="h-about__meta">
+            <span class="h-meta-item">{!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA</span>
+            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} WordPress developer</span>
+            <span class="h-meta-item" itemprop="url">
+              {!! \App\mh_svg_icon('github', 14) !!}
+              <a href="https://github.com/matthummel-pa" rel="me noopener" target="_blank">@matthummel-pa</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="h-about-v2__copy">
+          <p class="h-section-label">About me</p>
+          <h2 id="h-about-heading" class="h-about__heading">
+            {{ \App\field('home_about_h2', __('WordPress developer. Studio founder. Open for work.', 'sage')) }}
+          </h2>
+          <p class="h-about__text" itemprop="description">
+            {{ \App\field('home_about_text', __('I\'ve been building for the web since the higher-ed marketing days. WordPress stuck because it gives shops real ownership — they can update their own pages without calling me. These days I\'m focused on building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns. But I\'m also actively open for work.', 'sage')) }}
+          </p>
+          <p class="h-about__text">
+            {{ \App\field('home_about_p2', __('Whether you\'re a recruiter, a design agency that needs a WordPress developer, a fellow dev who wants to collaborate, or a shop that just needs a solid site — I\'m glad you\'re here. Most of my public code is on GitHub and free to use. If you just need to borrow a snippet, no permission required.', 'sage')) }}
+          </p>
+          <div class="h-about__links">
+            <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
+            <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
+            <a class="h-text-arrow" href="{{ esc_url('https://ridgesandvalleys.com') }}" rel="noopener" target="_blank">Ridges &amp; Valleys ↗</a>
+          </div>
+        </div>
+      </div>
+
+      {{-- Right: availability + audience cards --}}
+      <div class="h-about-v2__sidebar">
+
+        {{-- Availability card --}}
+        <div class="h-avail-card h-about-avail">
+          <p class="h-avail-card__label">
+            <span class="h-badge__dot" aria-hidden="true"></span>
+            Current status
+          </p>
+          <p class="h-about-avail__status">{{ \App\field('home_avail_status', __('Open for work', 'sage')) }}</p>
+          <ul class="h-about-avail__types">
+            <li>
+              <span class="h-about-avail__check" aria-hidden="true">✓</span>
+              Full-time roles
+            </li>
+            <li>
+              <span class="h-about-avail__check" aria-hidden="true">✓</span>
+              Part-time &amp; contract
+            </li>
+            <li>
+              <span class="h-about-avail__check" aria-hidden="true">✓</span>
+              Freelance &amp; project work
+            </li>
+            <li>
+              <span class="h-about-avail__check" aria-hidden="true">✓</span>
+              Agency overflow &amp; subs
+            </li>
+          </ul>
+          <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
+            {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+          </a>
+        </div>
+
+        {{-- Who's welcome --}}
+        <div class="h-about-who">
+          <p class="h-about-who__label">You're welcome here if you're a…</p>
+          <ul class="h-about-who__list">
+            <li>
+              <span class="h-about-who__icon">{!! \App\mh_svg_icon('briefcase', 16) !!}</span>
+              <span>
+                <strong>Recruiter or hiring manager</strong> — happy to chat about full-time, part-time, or contract roles. WordPress, PHP, and web app work is the sweet spot.
+              </span>
+            </li>
+            <li>
+              <span class="h-about-who__icon">{!! \App\mh_svg_icon('users', 16) !!}</span>
+              <span>
+                <strong>Agency or studio</strong> — I've worked as a silent sub on client projects before. You keep the relationship; I stay in the background.
+              </span>
+            </li>
+            <li>
+              <span class="h-about-who__icon">{!! \App\mh_svg_icon('code', 16) !!}</span>
+              <span>
+                <strong>Fellow developer</strong> — browse the code, ask questions, copy whatever helps. No credit required, though it's always appreciated.
+              </span>
+            </li>
+            <li>
+              <span class="h-about-who__icon">{!! \App\mh_svg_icon('globe', 16) !!}</span>
+              <span>
+                <strong>Shop or small business</strong> — especially Gettysburg-area businesses. I build sites you can actually run yourself.
+              </span>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </div>
-
-    <div class="h-about__body">
-      <p class="h-section-label">About me</p>
-      <h2 id="h-about-heading" class="h-about__heading">
-        {{ \App\field('home_about_h2', __('Developer first. Gettysburg always.', 'sage')) }}
-      </h2>
-      <p class="h-about__text">
-        {{ \App\field('home_about_text', __('I\'ve been building for the web since higher-ed marketing days. WordPress stuck because it gives shops real ownership — they can edit their own pages without calling me. I still do Power Platform work when a team lives in Microsoft 365, but WordPress is what I enjoy most.', 'sage')) }}
-      </p>
-      <p class="h-about__text">
-        {{ \App\field('home_about_p2', __('Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you don\'t need to ask permission to use it.', 'sage')) }}
-      </p>
-      <div class="h-about__links">
-        <a class="h-text-arrow" href="{{ home_url('/about/') }}">More about me →</a>
-        <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
-      </div>
-    </div>
-
   </div>
 </section>
 

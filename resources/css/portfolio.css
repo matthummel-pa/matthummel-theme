@@ -3508,6 +3508,131 @@ html.mh-dark .h-principle__practice-label { color: #60a5fa; }
 html.mh-dark .h-principles__cta { color: #475569; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   HOME — redesigned about section v2
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Two-column layout: bio left, sidebar right */
+.h-about-v2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) { .h-about-v2 { grid-template-columns: 1fr; } }
+
+/* Left: photo row + copy */
+.h-about-v2__photo-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 500px) {
+  .h-about-v2__photo-row { flex-direction: column; }
+  .h-about-v2__photo-row .h-about__img { width: 80px !important; height: 80px !important; border-radius: 50% !important; }
+}
+.h-about-v2__copy { }
+
+/* Right sidebar */
+.h-about-v2__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Availability card (about version) */
+.h-about-avail {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--white);
+}
+.h-about-avail__status {
+  font: 700 1.15rem/1.3 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0 0 .85rem;
+}
+.h-about-avail__types {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: .45rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: .85rem;
+}
+.h-about-avail__types li {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font: 500 .88rem/1.3 var(--font-display);
+  color: var(--color-text-secondary);
+}
+.h-about-avail__check {
+  color: #22c55e;
+  font-weight: 800;
+  font-size: .8rem;
+  flex-shrink: 0;
+}
+
+/* "Who's welcome" list */
+.h-about-who {
+  background: var(--gray-50);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1.25rem 1.2rem 1.35rem;
+}
+.h-about-who__label {
+  font: 600 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 1rem;
+}
+.h-about-who__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+.h-about-who__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.h-about-who__list li:last-child { border-bottom: 0; }
+.h-about-who__list strong { color: var(--color-text); font-weight: 700; display: block; margin-bottom: .1rem; }
+.h-about-who__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 7px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-top: .05rem;
+}
+
+/* ── Dark mode ── */
+html.mh-dark .h-about-avail { background: #1e293b; border-color: #334155; }
+html.mh-dark .h-about-avail__status { color: #f1f5f9; }
+html.mh-dark .h-about-avail__types { border-top-color: #334155; }
+html.mh-dark .h-about-avail__types li { color: #94a3b8; }
+html.mh-dark .h-about-who { background: #0a1122; border-color: #1e293b; }
+html.mh-dark .h-about-who__list li { border-color: #1e293b; color: #94a3b8; }
+html.mh-dark .h-about-who__list strong { color: #f1f5f9; }
+html.mh-dark .h-about-who__icon { background: #1e3a5f; border-color: #1e3a8a; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
    HOME v6 — enhanced process, good-fit, FAQ + availability card
    ═══════════════════════════════════════════════════════════════════════════ */
 
