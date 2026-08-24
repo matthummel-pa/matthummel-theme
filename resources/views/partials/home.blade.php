@@ -18,19 +18,62 @@
     ['HTML & CSS',    'html'],
     ['Git',           'git'],
     ['GitHub',        'github'],
+    ['Cursor AI',     'cursor-ai'],
+    ['Claude',        'claude'],
+    ['ChatGPT',       'chatgpt'],
+    ['Notion',        'notion'],
+    ['Google Drive',  'google-drive'],
+    ['HubSpot',       'hubspot'],
+    ['Rank Math SEO', 'rank-math'],
     ['Power Apps',    'power-apps'],
     ['Power Automate','power-automate'],
     ['MySQL',         'database'],
-    ['Node.js',       'nodejs'],
     ['VS Code',       'vscode'],
+    ['Node.js',       'nodejs'],
   ];
 
   $skillGroups = [
-    'WordPress'  => [['WordPress','wordpress','#2271b1'],['PHP','php','#7a86b8'],['Sage / Blade','sage','#e3342f'],['Plugins','plugins','#2271b1']],
-    'JavaScript' => [['JavaScript','javascript','#f7df1e'],['TypeScript','typescript','#3178c6'],['React','react','#61dafb'],['Node.js','nodejs','#339933']],
-    'Frontend'   => [['Tailwind CSS','tailwind','#38bdf8'],['Vite','vite','#646cff'],['HTML & CSS','html','#e34c26'],['Sass','sass','#cc6699']],
-    'Tools'      => [['Git','git','#f05032'],['GitHub','github','#111827'],['VS Code','vscode','#007acc'],['MySQL','database','#3ecf8e']],
-    'Platform'   => [['Power Apps','power-apps','#742774'],['Power Automate','power-automate','#0066ff']],
+    'WordPress'  => [
+      ['WordPress',   'wordpress',  '#2271b1'],
+      ['PHP',         'php',        '#7a86b8'],
+      ['Sage / Blade','sage',       '#e3342f'],
+      ['Plugins',     'plugins',    '#2271b1'],
+    ],
+    'JavaScript' => [
+      ['JavaScript',  'javascript', '#f7df1e'],
+      ['TypeScript',  'typescript', '#3178c6'],
+      ['React',       'react',      '#61dafb'],
+      ['Node.js',     'nodejs',     '#339933'],
+    ],
+    'Frontend'   => [
+      ['Tailwind CSS','tailwind',   '#38bdf8'],
+      ['Vite',        'vite',       '#646cff'],
+      ['HTML & CSS',  'html',       '#e34c26'],
+      ['Sass',        'sass',       '#cc6699'],
+    ],
+    'Dev Tools'  => [
+      ['Git',         'git',        '#f05032'],
+      ['GitHub',      'github',     '#111827'],
+      ['VS Code',     'vscode',     '#007acc'],
+      ['MySQL',       'database',   '#3ecf8e'],
+    ],
+    'AI & Tooling' => [
+      ['Cursor AI',   'cursor-ai',  '#111827'],
+      ['Claude',      'claude',     '#d97706'],
+      ['ChatGPT',     'chatgpt',    '#10a37f'],
+    ],
+    'Workflow'   => [
+      ['Notion',      'notion',     '#000000'],
+      ['Google Drive','google-drive','#4285f4'],
+    ],
+    'Marketing'  => [
+      ['HubSpot',     'hubspot',    '#ff7a59'],
+      ['Rank Math SEO','rank-math', '#f50c24'],
+    ],
+    'Platform'   => [
+      ['Power Apps',  'power-apps', '#742774'],
+      ['Power Automate','power-automate','#0066ff'],
+    ],
   ];
 
   $values = [
