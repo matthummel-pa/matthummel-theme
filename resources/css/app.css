@@ -2,6 +2,9 @@
 @import "./portfolio.css";
 @import "./code-blocks.css";
 
+/* Light mode only — no dark mode toggle */
+:root { color-scheme: light; }
+
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
