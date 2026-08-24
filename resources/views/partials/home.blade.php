@@ -101,7 +101,7 @@
       'num'    => '03',
       'title'  => 'Build.',
       'body'   => 'I use modern tools — including AI assistants — to move faster on the parts that are repeatable. Every line ships only after I\'ve read and tested it myself. You get staged previews on real pages, not mockups.',
-      'timing' => 'Days to weeks',
+      'timing' => '1–2 weeks',
       'gets'   => ['Faster turnaround than traditional builds', 'Every line reviewed by me before it ships', 'Staged previews you can click through and give feedback on'],
     ],
     [
