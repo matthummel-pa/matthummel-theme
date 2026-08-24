@@ -194,11 +194,21 @@
           </div>
         </div>
 
-        {{-- Post-end CTA --}}
+        {{-- Post-end CTA — category-aware --}}
+        @php
+          $ctaCat   = $postCats ? strtolower($postCats[0]->name) : '';
+          $isPower  = str_contains($ctaCat, 'power');
+          $ctaHead  = $isPower
+            ? 'Building something with Power Platform?'
+            : 'Working on a web project?';
+          $ctaBody  = $isPower
+            ? 'Questions about Power Apps, Power Automate, or Power Platform are welcome — whether it\'s a quick formula question or a full connector build. I\'m also open for new WordPress and web app work.'
+            : 'A question about this post is just as welcome as a project inquiry. I build WordPress sites, plugins, and web apps for shops and agencies — currently open for new work in Gettysburg and beyond.';
+        @endphp
         <div class="post-cta">
           <div class="post-cta__copy">
-            <h2 class="post-cta__heading">Working on a WordPress project?</h2>
-            <p class="post-cta__body">A question about this post or a snippet is just as welcome as a project inquiry. I build WordPress sites, plugins, and web apps — and I'm currently open for new work.</p>
+            <h2 class="post-cta__heading">{{ $ctaHead }}</h2>
+            <p class="post-cta__body">{{ $ctaBody }}</p>
           </div>
           <div class="post-cta__actions">
             <a class="btn" href="{{ home_url('/contact/') }}">
