@@ -120,11 +120,22 @@ function mh_home_fields(): array
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts coming soon.', 'sage')],
         ],
         __('Example sites section', 'sage') => [
-            ['home_work_h2', __('Heading', 'sage'), 'text', __('Selected work', 'sage')],
+            ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for local Gettysburg businesses in Adams County, PA.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
             ['home_about_text', __('Bio text', 'sage'), 'textarea', __("I've been building for the web since the higher-ed marketing days. WordPress stuck because it lets shops own their content and developers read real code. I still do some Power Platform work when a team lives in Microsoft 365, but WordPress is what I reach for.", 'sage')],
+        ],
+        __('Process section', 'sage') => [
+            ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
+            ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('No retainers. No ongoing contracts unless you want one. A question about a post is just as welcome as a <a href="/contact/">build request</a>.', 'sage')],
+        ],
+        __('About strip extra', 'sage') => [
+            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __("Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you don't need to ask permission to use it.", 'sage')],
+        ],
+        __('Availability', 'sage') => [
+            ['home_avail_status', __('Status line', 'sage'), 'text', __('Open to new projects', 'sage')],
         ],
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Working on something?', 'sage')],

@@ -450,47 +450,156 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     06 — SELECTED WORK (bento)
+     06 — SELECTED WORK
      ═══════════════════════════════════════════════════ --}}
 @if (! empty($work))
+@php
+  $totalProjects = count(\App\mh_studio_projects());
+  $featuredWork  = $work[0] ?? null;
+  $remainingWork = array_slice($work, 1, 3);
+@endphp
 <section class="h-section h-section--tinted" aria-labelledby="h-work-heading">
   <div class="container wide">
-    <div class="h-section__head">
+
+    {{-- Section header: SEO-rich heading + count + link --}}
+    <div class="h-work-header">
       <div>
         <p class="h-section-label">Projects</p>
-        <h2 id="h-work-heading" class="h-section__title">{{ \App\field('home_work_h2', __('Selected work', 'sage')) }}</h2>
+        <h2 id="h-work-heading" class="h-section__title">
+          {{ \App\field('home_work_h2', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')) }}
+        </h2>
+        <p class="h-work-intro">
+          {{ \App\field('home_work_intro', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for local Gettysburg businesses in Adams County, PA.', 'sage')) }}
+        </p>
       </div>
-      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">All projects →</a>
+      <div class="h-work-header__meta">
+        <span class="h-work-count">{{ $totalProjects }} concepts</span>
+        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all →</a>
+      </div>
     </div>
 
-    <div class="h-bento">
-      @foreach ($work as $i => $p)
-        <article class="h-bento__card{{ $i === 0 ? ' h-bento__card--featured' : '' }}">
-          <a class="h-bento__link" href="{{ home_url('/projects/') }}#{{ $p['slug'] }}" aria-label="{{ esc_attr($p['title']) }}"></a>
-          @if (! empty($p['image']))
-            <div class="h-bento__visual">
-              <img src="{{ esc_url($p['image']) }}" alt="{{ esc_attr($p['title']) }}" width="{{ $i === 0 ? 900 : 540 }}" height="{{ $i === 0 ? 520 : 300 }}" loading="{{ $i === 0 ? 'eager' : 'lazy' }}" decoding="async">
-            </div>
-          @else
-            <div class="h-bento__visual h-bento__visual--text">
-              <span>{{ $p['title'] }}</span>
-            </div>
+    {{-- Featured project — full-width image card with overlay --}}
+    @if ($featuredWork)
+    @php $fp = $featuredWork; @endphp
+    <article class="h-work-featured" aria-label="{{ esc_attr($fp['title'] ?? '') }}">
+      @if (! empty($fp['image']))
+        <div class="h-work-featured__img">
+          <img
+            src="{{ esc_url($fp['image']) }}"
+            alt="{{ esc_attr($fp['title']) }} — {{ esc_attr($fp['cat']) }} website concept for {{ esc_attr($fp['place']) }}"
+            width="1200"
+            height="630"
+            loading="eager"
+            decoding="async"
+          >
+        </div>
+      @else
+        <div class="h-work-featured__img h-work-featured__img--text">
+          <span>{{ $fp['title'] }}</span>
+        </div>
+      @endif
+
+      <div class="h-work-featured__overlay">
+        <div class="h-work-featured__meta">
+          <span class="h-work-cat-badge">{{ $fp['cat'] }}</span>
+          <span class="h-work-place">{!! \App\mh_svg_icon('map', 13) !!} {{ $fp['place'] }}</span>
+        </div>
+        <h3 class="h-work-featured__title">
+          <a href="{{ home_url('/projects/') }}#{{ $fp['slug'] }}">{{ $fp['title'] }}</a>
+        </h3>
+        <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
+        <div class="h-work-featured__actions">
+          @if (! empty($fp['concept']))
+            <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['concept']) }}" rel="noopener" target="_blank">
+              View concept <span aria-hidden="true">↗</span>
+            </a>
           @endif
-          <div class="h-bento__body">
-            <p class="h-label">{{ $p['cat'] }} · {{ $p['place'] }}</p>
-            <h3><a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a></h3>
-            <p class="h-bento__blurb">{{ $p['blurb'] }}</p>
+          <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}#{{ $fp['slug'] }}">
+            See all {{ strtolower($fp['cat']) }} concepts →
+          </a>
+        </div>
+        @if (! empty($fp['tech']))
+          <div class="h-work-featured__pills">
+            @foreach (array_slice($fp['tech'], 0, 5) as $t)
+              <span class="h-work-pill">{!! \App\mh_svg_icon($t, 13) !!} {{ $t }}</span>
+            @endforeach
+          </div>
+        @endif
+      </div>
+    </article>
+    @endif
+
+    {{-- Remaining 3 cards — clean uniform grid --}}
+    @if (! empty($remainingWork))
+    <div class="h-work-grid">
+      @foreach ($remainingWork as $p)
+        <article class="h-work-card-v2">
+
+          {{-- Image --}}
+          @php
+            $cardHref   = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
+            $cardExtras = ! empty($p['concept']) ? ' rel="noopener" target="_blank"' : '';
+          @endphp
+          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}"{!! $cardExtras !!} aria-label="View {{ esc_attr($p['title']) }} concept">
+            @if (! empty($p['image']))
+              <div class="h-work-card-v2__img">
+                <img
+                  src="{{ esc_url($p['image']) }}"
+                  alt="{{ esc_attr($p['title']) }} — {{ esc_attr($p['cat']) }} website concept, {{ esc_attr($p['place']) }}"
+                  width="640"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                >
+              </div>
+            @else
+              <div class="h-work-card-v2__img h-work-card-v2__img--text">
+                {{ $p['title'] }}
+              </div>
+            @endif
+          </a>
+
+          {{-- Content --}}
+          <div class="h-work-card-v2__body">
+            <div class="h-work-card-v2__top">
+              <span class="h-work-cat-badge h-work-cat-badge--sm">{{ $p['cat'] }}</span>
+              <span class="h-work-place h-work-place--sm">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</span>
+            </div>
+            <h3 class="h-work-card-v2__title">
+              <a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a>
+            </h3>
+            <p class="h-work-card-v2__blurb">{{ $p['blurb'] }}</p>
             @if (! empty($p['tech']))
-              <div class="pill-row h-bento__pills">
-                @foreach (array_slice($p['tech'], 0, 4) as $t)
+              <div class="pill-row h-work-card-v2__pills">
+                @foreach (array_slice($p['tech'], 0, 3) as $t)
                   <span class="pill">{!! \App\mh_svg_icon($t, 12) !!} {{ $t }}</span>
                 @endforeach
               </div>
             @endif
+            <div class="h-work-card-v2__links">
+              @if (! empty($p['concept']))
+                <a class="h-work-cta-link" href="{{ esc_url($p['concept']) }}" rel="noopener" target="_blank">
+                  View {{ $p['title'] }} →
+                </a>
+              @else
+                <a class="h-work-cta-link" href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">
+                  See details →
+                </a>
+              @endif
+            </div>
           </div>
+
         </article>
       @endforeach
     </div>
+    @endif
+
+    {{-- Bottom CTA bar --}}
+    <div class="h-work-cta-bar">
+      <p>Concepts for Gettysburg tours, inns, shops, restaurants, and real estate agencies.</p>
+      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concepts</a>
+    </div>
+
   </div>
 </section>
 @endif
