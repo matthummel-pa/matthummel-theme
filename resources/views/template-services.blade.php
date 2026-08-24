@@ -222,7 +222,7 @@
 
     <div class="svc-audience-grid">
       @foreach ($audiences as $aud)
-        <div class="svc-audience-card svc-audience-card--{{ $aud['accent'] }}">
+        <div class="svc-audience-card">
           <div class="svc-audience-card__icon">{!! \App\mh_svg_icon($aud['icon'], 22) !!}</div>
           <h3 class="svc-audience-card__title">{{ $aud['title'] }}</h3>
           <p class="svc-audience-card__body">{{ $aud['body'] }}</p>
