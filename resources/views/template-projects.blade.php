@@ -20,6 +20,7 @@
   $pageUrl = get_permalink();
   $shown = $cat === '' ? $all : array_values(array_filter($all, fn ($p) => ($p['cat'] ?? '') === $cat));
   $ghUser = \App\Github::fetchUser(\App\mh_github_login());
+  $ghBlog = \App\mh_github_blog_url($ghUser);
   $total = count($all);
   $shownCount = count($shown);
   $countLabel = $cat === ''
@@ -27,18 +28,52 @@
     : sprintf(_n('%d site', '%d sites', $shownCount, 'sage'), $shownCount);
 @endphp
 
+{{-- HERO --}}
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
-  <h1 class="display-title is-hero">{{ \App\field('work_h1', __('Example sites.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('work_lede', __('Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.', 'sage')) }}
-    @if (! empty($ghUser['public_repos']))
-      Open-source code is on <a href="{{ esc_url($ghUser['url'] ?: 'https://github.com/'.\App\mh_github_login()) }}" rel="noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
-      ({{ (int) $ghUser['public_repos'] }} public repos).
-    @endif
+  <h1 class="display-title is-hero">
+    {{ \App\field('work_h1', __('WordPress websites for Gettysburg businesses.', 'sage')) }}
+  </h1>
+  <p class="lead">
+    {{ \App\field('work_lede', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for a specific type of shop, tour, inn, or restaurant in Adams County, PA. Every concept is built on a real stack you can take and run.', 'sage')) }}
+  </p>
+  <p class="about-hero-links" style="margin-top:1rem">
+    <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
+      {!! \App\mh_svg_icon('globe', 15) !!} Ridges &amp; Valleys ↗
+    </a>
+    <a href="{{ home_url('/services/') }}">{!! \App\mh_svg_icon('briefcase', 15) !!} How I can help</a>
+    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start with your concept</a>
   </p>
 @endcomponent
 
+{{-- ABOUT THESE CONCEPTS --}}
+<div class="work-context">
+  <div class="container wide work-context__inner">
+    <div class="work-context__stat">
+      <strong>{{ $total }}</strong>
+      <span>concept sites</span>
+    </div>
+    <div class="work-context__stat">
+      <strong>5</strong>
+      <span>business types</span>
+    </div>
+    <div class="work-context__stat">
+      <strong>Gettysburg</strong>
+      <span>Adams County, PA</span>
+    </div>
+    <div class="work-context__stat">
+      <strong>WordPress</strong>
+      <span>every concept</span>
+    </div>
+    <p class="work-context__note">
+      These are studio concepts, not case studies. Each one is a working demonstration of what a WordPress site can look like for a specific local business type. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
+    </p>
+  </div>
+</div>
+
+{{-- FILTER + GRID --}}
 <div class="container wide page-block write-hub" data-work-hub>
+
   <div class="write-tools">
     <div class="search-wrap search-wrap--inline">
       <form role="search" class="search-form" action="{{ esc_url($pageUrl) }}" data-work-filter-form>
@@ -57,28 +92,26 @@
     <div class="write-tool-actions">
       <p class="write-count" data-work-count aria-live="polite">{{ $countLabel }}</p>
       <div class="write-view" role="group" aria-label="{{ __('Layout', 'sage') }}">
-        <button type="button" class="write-view-btn is-active" data-work-view="grid" aria-pressed="true">{{ __('Grid', 'sage') }}</button>
-        <button type="button" class="write-view-btn" data-work-view="list" aria-pressed="false">{{ __('List', 'sage') }}</button>
+        <button type="button" class="write-view-btn is-active" data-work-view="grid" aria-pressed="true">Grid</button>
+        <button type="button" class="write-view-btn" data-work-view="list" aria-pressed="false">List</button>
       </div>
-      <p class="write-kbd"><kbd>/</kbd> {{ __('to search', 'sage') }}</p>
+      <p class="write-kbd"><kbd>/</kbd> to search</p>
     </div>
   </div>
 
-  <nav class="filter-row" aria-label="{{ __('Filter by type', 'sage') }}">
+  <nav class="filter-row" aria-label="Filter by type">
     <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" @if ($cat === '') aria-current="page" @endif>
-      {{ __('All', 'sage') }}
-      <span class="filter-count">{{ $total }}</span>
+      All <span class="filter-count">{{ $total }}</span>
     </a>
     @foreach ($cats as $c)
       <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', $c, $pageUrl)) }}" @if ($cat === $c) aria-current="page" @endif>
-        {{ $c }}
-        <span class="filter-count">{{ (int) $counts[$c] }}</span>
+        {{ $c }} <span class="filter-count">{{ (int) $counts[$c] }}</span>
       </a>
     @endforeach
   </nav>
 
   @if ($shown === [])
-    <p>{{ __('No sites in this type yet.', 'sage') }}</p>
+    <p>No sites in this type yet.</p>
   @else
     @if ($cat === '')
       @include('partials.work-card', ['p' => $shown[0], 'pageUrl' => $pageUrl, 'featured' => true])
@@ -91,20 +124,24 @@
         @include('partials.work-card', ['p' => $p, 'pageUrl' => $pageUrl])
       @endforeach
     </div>
-    <p class="archive-desc" data-work-empty hidden>{{ __('No sites match that search.', 'sage') }}</p>
+    <p class="archive-desc" data-work-empty hidden>No sites match that search.</p>
   @endif
 
-  <section class="write-subscribe" aria-labelledby="work-cta-h">
-    <div>
-      <h2 id="work-cta-h" class="display-title is-section">{{ \App\field('work_band_h2', __('Want a site in this shape?', 'sage')) }}</h2>
-      <p class="sec-intro">{{ \App\field('work_band_lede', __('These are studio concepts, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')) }}</p>
+  {{-- Bottom CTA --}}
+  <div class="work-cta-strip">
+    <div class="work-cta-strip__copy">
+      <h2>{{ \App\field('work_band_h2', __('Want to start from one of these?', 'sage')) }}</h2>
+      <p>{{ \App\field('work_band_lede', __('These concepts are available as a starting point for a real build. Tell me which one fits your business and what you\'d change.', 'sage')) }}</p>
     </div>
-    <p class="btn-row">
-      <a class="btn" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>
-      <a class="btn btn-outline btn-on-dark" href="{{ home_url('/services/') }}">{{ __('How I can help', 'sage') }}</a>
-    </p>
-  </section>
+    <div class="work-cta-strip__actions">
+      <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 16) !!} Say hello</a>
+      <a class="about-text-link" href="{{ home_url('/services/') }}">How I can help →</a>
+    </div>
+  </div>
 
-  <p class="write-follow">{!! \App\field_html('work_foot', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')) !!}</p>
+  <div class="work-footer-links">
+    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com ↗</a>.', 'sage')) !!}
+  </div>
+
 </div>
 @endsection
