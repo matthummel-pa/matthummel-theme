@@ -247,9 +247,9 @@ function page_field_map(): array
         ],
         'template-services.blade.php' => [
             __('Intro', 'sage') => [
-                ['svc_kicker', __('Kicker', 'sage'), 'text', __('Services', 'sage')],
-                ['svc_h1', __('Heading', 'sage'), 'text', __('If you want a hand.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.', 'sage')],
+                ['svc_kicker', __('Kicker', 'sage'), 'text', __('WordPress developer · Gettysburg, PA', 'sage')],
+                ['svc_h1', __('Heading', 'sage'), 'text', __('Custom WordPress sites and plugins for shops, agencies, and developers.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and web apps in Gettysburg and remotely. Fixed price, clear scope, no lock-in. You own everything — domain, hosting, code — at handoff.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
