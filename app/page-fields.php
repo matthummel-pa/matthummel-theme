@@ -548,6 +548,7 @@ function mh_work_page_items(?int $post_id = null): array
     if ($rows === []) {
         return array_map(function (array $p): array {
             $p['image'] = mh_studio_project_image_url($p);
+
             return $p;
         }, mh_studio_projects());
     }
