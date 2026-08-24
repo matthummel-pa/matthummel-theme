@@ -53,6 +53,21 @@ What the 3.x Sage theme does, and where it lives.
 - Combined the two fragment closers on About into one sentence.
 - Hero CTAs: filled button is the contact action; GitHub is a text link, not a third button.
 
+## Dev tools
+
+| Command | What it does | Code |
+| --- | --- | --- |
+| `wp mh theme-update` | Download and install the `theme-latest` GitHub Release zip over HTTPS | `app/theme-updater.php` |
+| `wp mh theme-build` | Trigger a new CI build (dispatch `deploy.yml`) | `app/theme-updater.php` |
+| `wp mh db-pull` | Export prod DB via SSH → import locally → search-replace URLs | `app/db-migrate.php` |
+| `wp mh db-push` | Export local DB → upload to prod via SSH → import + search-replace (requires `--yes`) | `app/db-migrate.php` |
+| `bash .github/scripts/db-pull.sh` | Shell-only db-pull (no WP bootstrap required) | `.github/scripts/db-pull.sh` |
+
+SSH credentials for `db-pull` / `db-push` resolve in this order:
+1. `--ssh-*` WP-CLI flags
+2. `MH_SSH_HOST`, `MH_SSH_PORT`, `MH_SSH_USER`, `MH_SSH_WP_PATH` constants in wp-config.php
+3. `SITEGROUND_HOST` / `SERVER_IP`, `SITEGROUND_PORT` / `SERVER_SSH_PORT`, `SITEGROUND_USER` / `SERVER_USER`, `SERVER_DESTINATION_PATH` env vars (mirrors deploy.yml secrets)
+
 ## Stack
 
 Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Inter + IBM Plex Sans
