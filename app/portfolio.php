@@ -723,12 +723,16 @@ function mh_latest_posts(int $limit = 3): array
     $out = [];
     foreach ($q->posts as $p) {
         $cats = get_the_category($p->ID);
+        $cat = ($cats && ! is_wp_error($cats)) ? $cats[0] : null;
         $out[] = [
             'title' => get_the_title($p),
             'url' => get_permalink($p),
-            'date' => get_the_date('', $p),
+            'date' => get_the_date('M j, Y', $p),
+            'date_iso' => get_the_date('c', $p),
             'ex' => wp_trim_words(get_the_excerpt($p), 28),
-            'cat' => ($cats && ! is_wp_error($cats)) ? $cats[0]->name : '',
+            'cat' => $cat ? $cat->name : '',
+            'cat_url' => $cat ? (string) get_category_link($cat->term_id) : '',
+            'cat_slug' => $cat ? $cat->slug : '',
             'minutes' => mh_reading_minutes($p),
             'thumb' => mh_post_card_image((int) $p->ID),
         ];

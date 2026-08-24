@@ -3092,6 +3092,294 @@ html.mh-dark .h-work-card-v2__title { color: #f1f5f9; }
 html.mh-dark .h-work-cta-bar { background: #1e293b; border-color: #334155; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   HOME — redesigned journal section
+   ═══════════════════════════════════════════════════════════════════════════ */
+.h-journal {
+  padding: var(--section-gap) 0;
+  background: var(--white);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Section header */
+.h-journal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem 2.5rem;
+  margin-bottom: 2.25rem;
+  flex-wrap: wrap;
+}
+.h-journal__head-copy { flex: 1 1 20rem; min-width: 0; }
+.h-journal__intro {
+  font-size: .97rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: .5rem 0 0;
+  max-width: 50rem;
+}
+.h-journal__head-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+@media (max-width: 640px) { .h-journal__head-links { align-items: flex-start; } }
+.h-journal__rss {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font: 600 .8rem/1 var(--font-display);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: .3rem .7rem;
+  transition: color .14s, border-color .14s;
+}
+.h-journal__rss:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.h-journal__rss .mh-ico { color: #f26522; flex-shrink: 0; }
+
+/* 2-column editorial grid */
+.h-journal__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) { .h-journal__grid { grid-template-columns: 1fr; } }
+
+/* ── Featured post (left) ── */
+.h-journal__featured {
+  background: var(--white);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s, box-shadow .15s;
+}
+.h-journal__featured:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 6px 24px rgba(0,0,0,.08);
+}
+
+/* Badge */
+.h-journal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font: 600 .72rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  padding: .7rem 1.1rem .5rem;
+}
+.h-journal__badge .mh-ico { color: var(--color-accent); flex-shrink: 0; }
+
+/* Thumbnail */
+.h-journal__featured-img-link { display: block; overflow: hidden; }
+.h-journal__featured-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--gray-800);
+}
+.h-journal__featured-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+  transition: transform .45s ease;
+}
+.h-journal__featured:hover .h-journal__featured-img img { transform: scale(1.04); }
+.h-journal__featured-img--text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1f2937 0%, #374151 100%);
+  color: #9ca3af;
+  font: 700 1.3rem/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+/* Content body */
+.h-journal__featured-body {
+  padding: 1.35rem 1.5rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.h-journal__featured-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem .75rem;
+  margin-bottom: .85rem;
+}
+.h-journal__featured-title {
+  font: 700 clamp(1.25rem, 2.2vw, 1.55rem)/1.25 var(--font-display);
+  letter-spacing: -0.04em;
+  margin: 0 0 .65rem;
+  color: var(--color-text);
+}
+.h-journal__featured-title a { color: inherit; text-decoration: none; }
+.h-journal__featured-title a:hover { color: var(--color-accent); }
+.h-journal__featured-ex {
+  font-size: .97rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0 0 1.15rem;
+  flex: 1;
+}
+.h-journal__read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font: 600 .9rem/1 var(--font-display);
+  color: var(--color-accent);
+  text-decoration: none;
+  margin-top: auto;
+}
+.h-journal__read-link:hover { text-decoration: underline; }
+
+/* ── Category pill & meta shared ── */
+.h-journal__cat {
+  display: inline-flex;
+  align-items: center;
+  font: 600 .7rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 999px;
+  padding: .22rem .6rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.h-journal__cat:hover { background: var(--blue-100); }
+.h-journal__cat--sm { font-size: .65rem; }
+.h-journal__date {
+  font: 500 .8rem/1 var(--font-display);
+  color: var(--color-text-muted);
+}
+.h-journal__min {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font: 500 .78rem/1 var(--font-display);
+  color: var(--color-text-muted);
+}
+.h-journal__min .mh-ico { flex-shrink: 0; }
+
+/* ── Post stack (right) ── */
+.h-journal__stack {
+  background: var(--gray-50);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+}
+.h-journal__stack-label {
+  font: 600 .72rem/1 var(--font-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 1.1rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Individual stack post */
+.h-journal__post {
+  display: grid;
+  grid-template-columns: 72px minmax(0,1fr);
+  gap: .85rem;
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+  align-items: start;
+}
+.h-journal__post:last-of-type { border-bottom: 0; }
+.h-journal__post:hover .h-journal__post-title { color: var(--color-accent); }
+
+.h-journal__post-thumb {
+  display: block;
+  width: 72px;
+  height: 54px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--gray-200);
+  flex-shrink: 0;
+}
+.h-journal__post-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+.h-journal__post-thumb--text {
+  width: 72px;
+  height: 54px;
+  border-radius: 7px;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--gray-400);
+}
+.h-journal__post-body { min-width: 0; }
+.h-journal__post-title {
+  font: 600 .95rem/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+  margin: .3rem 0 .35rem;
+  color: var(--color-text);
+  transition: color .12s;
+}
+.h-journal__post-title a { color: inherit; text-decoration: none; }
+.h-journal__post-meta {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  font: 500 .75rem/1 var(--font-display);
+  color: var(--color-text-muted);
+}
+
+/* Stack footer */
+.h-journal__stack-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-top: 1.1rem;
+  padding-top: .85rem;
+  border-top: 1px solid var(--color-border);
+}
+.h-journal__rss--sm { font-size: .75rem; padding: .25rem .6rem; }
+
+.h-journal__empty { color: var(--color-text-muted); }
+
+/* ── Dark mode ── */
+html.mh-dark .h-journal { background: #0f172a; border-color: #1e293b; }
+html.mh-dark .h-journal__intro { color: #94a3b8; }
+html.mh-dark .h-journal__rss { border-color: #334155; color: #64748b; }
+html.mh-dark .h-journal__rss:hover { color: #60a5fa; border-color: #60a5fa; }
+html.mh-dark .h-journal__featured { background: #1e293b; border-color: #334155; }
+html.mh-dark .h-journal__featured:hover { box-shadow: 0 6px 24px rgba(0,0,0,.35); }
+html.mh-dark .h-journal__featured-title { color: #f1f5f9; }
+html.mh-dark .h-journal__cat { background: #1e3a5f; border-color: #1e3a8a; }
+html.mh-dark .h-journal__stack { background: #0a1122; border-color: #1e293b; }
+html.mh-dark .h-journal__stack-label { color: #475569; border-color: #1e293b; }
+html.mh-dark .h-journal__post { border-color: #1e293b; }
+html.mh-dark .h-journal__post-title { color: #f1f5f9; }
+html.mh-dark .h-journal__post-thumb--text { background: #1e293b; color: #475569; }
+html.mh-dark .h-journal__stack-footer { border-color: #1e293b; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
    HOME v6 — enhanced process, good-fit, FAQ + availability card
    ═══════════════════════════════════════════════════════════════════════════ */
 

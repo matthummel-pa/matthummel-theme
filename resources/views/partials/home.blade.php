@@ -1,5 +1,5 @@
 @php
-  $posts   = \App\mh_latest_posts(4);
+  $posts   = \App\mh_latest_posts(5);
   $work    = array_slice(\App\mh_work_page_items(), 0, 4);
   $gh      = \App\Github::fetchUser(\App\mh_github_login());
   $ossData = \App\mh_home_oss_live_data(3);
@@ -792,74 +792,165 @@
 {{-- ═══════════════════════════════════════════════════
      08 — FROM THE JOURNAL
      ═══════════════════════════════════════════════════ --}}
-<section class="h-section h-section--tinted" aria-labelledby="h-writing-heading">
+@php
+  $journalFeatured = $posts[0] ?? null;
+  $journalStack    = array_slice($posts, 1, 4);
+  $rssUrl = home_url('/feed/');
+@endphp
+<section class="h-journal" aria-labelledby="h-writing-heading">
   <div class="container wide">
-    <div class="h-section__head">
-      <div>
+
+    {{-- Header ─ SEO-rich heading + intro + links --}}
+    <div class="h-journal__head">
+      <div class="h-journal__head-copy">
         <p class="h-section-label">Journal</p>
-        <h2 id="h-writing-heading" class="h-section__title">{{ \App\field('home_write_h2', __('From the journal', 'sage')) }}</h2>
+        <h2 id="h-writing-heading" class="h-section__title">
+          {{ \App\field('home_write_h2', __('WordPress tips, code snippets, and project notes.', 'sage')) }}
+        </h2>
+        <p class="h-journal__intro">
+          {{ \App\field('home_write_intro', __('Short posts on WordPress development, Sage, PHP, and the tools I use. Most include code you can paste into a theme or plugin.', 'sage')) }}
+        </p>
       </div>
-      <a class="h-text-arrow" href="{{ $writing }}">All posts →</a>
+      <div class="h-journal__head-links">
+        <a class="h-text-arrow" href="{{ $writing }}">All posts →</a>
+        <a class="h-journal__rss" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+          {!! \App\mh_svg_icon('rss', 14) !!} RSS feed
+        </a>
+      </div>
     </div>
 
     @if (! empty($posts))
-      @php($featured = $posts[0])
-      <article class="h-post-featured">
-        @if (! empty($featured['thumb']))
-          <div class="h-post-featured__visual">
-            <img src="{{ esc_url($featured['thumb']) }}" alt="{{ esc_attr($featured['title']) }}" width="960" height="540" loading="lazy" decoding="async">
-          </div>
-        @else
-          <div class="h-post-featured__visual h-post-featured__visual--text">
-            <span>{{ wp_trim_words($featured['title'], 6, '') }}</span>
-          </div>
-        @endif
-        <div class="h-post-featured__body">
-          <div class="h-post-featured__meta">
-            @if ($featured['cat'])<span class="h-post-cat">{{ $featured['cat'] }}</span>@endif
-            <span class="h-post-date">{{ $featured['date'] }}</span>
-            @if (! empty($featured['minutes']))<span class="h-post-min">{{ $featured['minutes'] }} min read</span>@endif
-          </div>
-          <h3 class="h-post-featured__title">
-            <a href="{{ esc_url($featured['url']) }}">{{ $featured['title'] }}</a>
-          </h3>
-          <p class="h-post-featured__ex">{{ $featured['ex'] }}</p>
-          <a class="h-post-featured__link" href="{{ esc_url($featured['url']) }}">
-            Read post <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </article>
 
-      @if (count($posts) > 1)
-        <div class="h-post-cards">
-          @foreach (array_slice($posts, 1) as $post)
-            <article class="h-post-card">
+      <div class="h-journal__grid">
+
+        {{-- Featured post ─ left column ─ big card --}}
+        @if ($journalFeatured)
+        @php $fp = $journalFeatured; @endphp
+        <article class="h-journal__featured" itemscope itemtype="https://schema.org/BlogPosting">
+          <meta itemprop="author" content="Matt Hummel">
+
+          {{-- Latest badge --}}
+          <div class="h-journal__badge">
+            {!! \App\mh_svg_icon('pen', 13) !!} Latest post
+          </div>
+
+          {{-- Thumbnail --}}
+          @if (! empty($fp['thumb']))
+            <a class="h-journal__featured-img-link" href="{{ esc_url($fp['url']) }}" tabindex="-1" aria-hidden="true">
+              <div class="h-journal__featured-img">
+                <img
+                  src="{{ esc_url($fp['thumb']) }}"
+                  alt="{{ esc_attr($fp['title']) }}{{ $fp['cat'] ? ' — ' . esc_attr($fp['cat']) . ' post' : '' }}"
+                  width="960" height="540"
+                  loading="lazy"
+                  decoding="async"
+                  itemprop="image"
+                >
+              </div>
+            </a>
+          @else
+            <a class="h-journal__featured-img-link" href="{{ esc_url($fp['url']) }}" tabindex="-1" aria-hidden="true">
+              <div class="h-journal__featured-img h-journal__featured-img--text">
+                <span>{{ wp_trim_words($fp['title'], 6, '') }}</span>
+              </div>
+            </a>
+          @endif
+
+          {{-- Content --}}
+          <div class="h-journal__featured-body">
+            <div class="h-journal__featured-meta">
+              @if ($fp['cat'])
+                <a class="h-journal__cat" href="{{ esc_url($fp['cat_url'] ?? $writing) }}" itemprop="articleSection">
+                  {{ $fp['cat'] }}
+                </a>
+              @endif
+              <time class="h-journal__date" datetime="{{ esc_attr($fp['date_iso'] ?? '') }}" itemprop="datePublished">
+                {{ $fp['date'] }}
+              </time>
+              @if (! empty($fp['minutes']))
+                <span class="h-journal__min">
+                  {!! \App\mh_svg_icon('book-open', 13) !!}
+                  {{ $fp['minutes'] }} min read
+                </span>
+              @endif
+            </div>
+
+            <h3 class="h-journal__featured-title" itemprop="headline">
+              <a href="{{ esc_url($fp['url']) }}">{{ $fp['title'] }}</a>
+            </h3>
+
+            <p class="h-journal__featured-ex" itemprop="description">{{ $fp['ex'] }}</p>
+
+            <a class="h-journal__read-link" href="{{ esc_url($fp['url']) }}">
+              Read "{{ $fp['title'] }}" <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+        @endif
+
+        {{-- Post stack ─ right column ─ digest list --}}
+        @if (! empty($journalStack))
+        <div class="h-journal__stack">
+          <p class="h-journal__stack-label">More recent posts</p>
+
+          @foreach ($journalStack as $post)
+            <article class="h-journal__post" itemscope itemtype="https://schema.org/BlogPosting">
+              <meta itemprop="author" content="Matt Hummel">
+
+              {{-- Small thumb --}}
               @if (! empty($post['thumb']))
-                <div class="h-post-card__visual">
-                  <img src="{{ esc_url($post['thumb']) }}" alt="{{ esc_attr($post['title']) }}" width="640" height="360" loading="lazy" decoding="async">
-                </div>
+                <a class="h-journal__post-thumb" href="{{ esc_url($post['url']) }}" tabindex="-1" aria-hidden="true">
+                  <img
+                    src="{{ esc_url($post['thumb']) }}"
+                    alt="{{ esc_attr($post['title']) }}"
+                    width="120" height="80"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                </a>
               @else
-                <div class="h-post-card__visual h-post-card__visual--text">
-                  <span>{{ wp_trim_words($post['title'], 4, '') }}</span>
+                <div class="h-journal__post-thumb h-journal__post-thumb--text" aria-hidden="true">
+                  {!! \App\mh_svg_icon('pen', 18) !!}
                 </div>
               @endif
-              <div class="h-post-card__body">
-                <div class="h-post-card__meta">
-                  @if ($post['cat'])<span class="h-post-cat">{{ $post['cat'] }}</span>@endif
-                  <span class="h-post-date">{{ $post['date'] }}</span>
-                </div>
-                <h3 class="h-post-card__title">
+
+              {{-- Post info --}}
+              <div class="h-journal__post-body">
+                @if ($post['cat'])
+                  <a class="h-journal__cat h-journal__cat--sm" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">
+                    {{ $post['cat'] }}
+                  </a>
+                @endif
+                <h3 class="h-journal__post-title" itemprop="headline">
                   <a href="{{ esc_url($post['url']) }}">{{ $post['title'] }}</a>
                 </h3>
-                <p class="h-post-card__ex">{{ $post['ex'] }}</p>
+                <div class="h-journal__post-meta">
+                  <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" itemprop="datePublished">{{ $post['date'] }}</time>
+                  @if (! empty($post['minutes']))
+                    <span>· {{ $post['minutes'] }} min</span>
+                  @endif
+                </div>
               </div>
+
             </article>
           @endforeach
+
+          {{-- Stack footer --}}
+          <div class="h-journal__stack-footer">
+            <a class="h-text-arrow" href="{{ $writing }}">Browse all posts →</a>
+            <a class="h-journal__rss h-journal__rss--sm" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+              {!! \App\mh_svg_icon('rss', 13) !!} RSS
+            </a>
+          </div>
         </div>
-      @endif
+        @endif
+
+      </div>
+
     @else
-      <p>{{ \App\field('home_write_empty', __('New posts coming soon.', 'sage')) }}</p>
+      <p class="h-journal__empty">{{ \App\field('home_write_empty', __('New posts coming soon.', 'sage')) }}</p>
     @endif
+
   </div>
 </section>
 
