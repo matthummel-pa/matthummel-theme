@@ -1,5 +1,5 @@
 {{-- Reading progress bar --}}
-<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="{{ __('Reading progress', 'sage') }}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
 @php
   $postId    = get_the_ID();
@@ -13,11 +13,13 @@
   $readMins  = max(1, (int) round($words / 200));
   $postUrl   = get_permalink($postId);
   $postTitle = get_the_title();
+  $postDate  = get_the_date('M j, Y');
+  $postIso   = get_post_time('c', true);
+  $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $shareX    = 'https://twitter.com/intent/tweet?text='.rawurlencode($postTitle).'&url='.rawurlencode($postUrl);
   $shareIn   = 'https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode($postUrl);
-  $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 
-  // Related posts: same category, exclude current
+  // Related posts — same category, exclude current
   $relatedPosts = [];
   if ($postCats) {
     $relQ = new WP_Query([
@@ -38,80 +40,102 @@
         'cat'   => $rc ? $rc[0]->name : '',
         'thumb' => \App\mh_post_card_image((int) $rp->ID),
         'mins'  => \App\mh_reading_minutes($rp),
+        'ex'    => wp_trim_words(get_the_excerpt($rp), 14),
       ];
     }
     wp_reset_postdata();
   }
 @endphp
 
-<article class="post-single h-entry" id="post-{{ $postId }}" itemscope itemtype="https://schema.org/BlogPosting">
+<article class="post-single h-entry" id="post-{{ $postId }}"
+  itemscope itemtype="https://schema.org/BlogPosting">
   <meta itemprop="author" content="Matt Hummel">
   <meta itemprop="publisher" content="matthummel.com">
-  @if (!empty($postUrl))<link itemprop="url" href="{{ esc_url($postUrl) }}">@endif
+  <link itemprop="url" href="{{ esc_url($postUrl) }}">
+  <meta itemprop="datePublished" content="{{ esc_attr($postIso) }}">
+  @if ($postCats)<meta itemprop="articleSection" content="{{ esc_attr($postCats[0]->name) }}">@endif
 
-  {{-- Post hero --}}
-  <header class="post-hero">
-    <div class="container wide post-hero-inner">
-      @if ($postCats)
-        <a class="post-hero-tag" href="{{ esc_url(get_category_link($postCats[0]->term_id)) }}" itemprop="articleSection">
-          {{ $postCats[0]->name }}
-        </a>
-      @endif
+  {{-- ── POST HERO ────────────────────────────────────────── --}}
+  <header class="post-hero" aria-labelledby="post-title-{{ $postId }}">
+    <div class="container post-hero-inner">
 
-      <h1 class="post-hero-title p-name" itemprop="headline">{!! get_the_title() !!}</h1>
+      {{-- Breadcrumb / category --}}
+      <nav class="post-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ $writing }}">Journal</a>
+        @if ($postCats)
+          <span aria-hidden="true">›</span>
+          <a href="{{ esc_url(get_category_link($postCats[0]->term_id)) }}" itemprop="articleSection">
+            {{ $postCats[0]->name }}
+          </a>
+        @endif
+      </nav>
 
+      {{-- Title --}}
+      <h1 id="post-title-{{ $postId }}" class="post-hero-title p-name" itemprop="headline">
+        {!! get_the_title() !!}
+      </h1>
+
+      {{-- Meta row --}}
       <div class="post-hero-meta">
-        @include('partials.profile-photo', ['size' => 36, 'class' => 'profile-photo profile-photo--post', 'decorative' => true])
-        <span class="post-hero-author" itemprop="author">{{ get_the_author() }}</span>
-        <span class="post-hero-sep" aria-hidden="true">·</span>
-        <time class="dt-published" datetime="{{ get_post_time('c', true) }}" itemprop="datePublished">{{ get_the_date('M j, Y') }}</time>
-        <span class="post-hero-sep" aria-hidden="true">·</span>
-        <span class="post-hero-read">{!! \App\mh_svg_icon('book-open', 14) !!} {{ $readMins }} min read</span>
-        @if (comments_open() || get_comments_number())
-          <span class="post-hero-sep" aria-hidden="true">·</span>
-          <a class="post-hero-comments" href="#comments">
-            {{ sprintf(_n('%s comment', '%s comments', get_comments_number(), 'sage'), number_format_i18n((int) get_comments_number())) }}
+        <span class="post-hero-meta__author">
+          @include('partials.profile-photo', ['size' => 32, 'class' => 'profile-photo profile-photo--post', 'decorative' => true])
+          <span itemprop="author">{{ get_the_author() }}</span>
+        </span>
+        <span class="post-hero-meta__sep" aria-hidden="true">·</span>
+        <time class="dt-published post-hero-meta__date" datetime="{{ $postIso }}">{{ $postDate }}</time>
+        <span class="post-hero-meta__sep" aria-hidden="true">·</span>
+        <span class="post-hero-meta__read">
+          {!! \App\mh_svg_icon('book-open', 14) !!}
+          {{ $readMins }} min read
+        </span>
+        @if (get_comments_number() > 0)
+          <span class="post-hero-meta__sep" aria-hidden="true">·</span>
+          <a class="post-hero-meta__comments" href="#comments">
+            {{ number_format_i18n((int) get_comments_number()) }} {{ _n('comment', 'comments', get_comments_number(), 'sage') }}
           </a>
         @endif
       </div>
 
-      {{-- Share bar in hero --}}
-      <div class="post-share-bar post-share-bar--hero">
-        <span class="post-share-bar__label">Share</span>
-        <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank" aria-label="Share on X (Twitter)">
-          {!! \App\mh_svg_icon('twitter', 16) !!}
-          <span>X</span>
+      {{-- Hero share --}}
+      <div class="post-hero-share">
+        <span class="post-hero-share__label">Share</span>
+        <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank" aria-label="Share on X">
+          {!! \App\mh_svg_icon('twitter', 15) !!} X
         </a>
         <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
-          {!! \App\mh_svg_icon('linkedin', 16) !!}
-          <span>LinkedIn</span>
+          {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
         </a>
         <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
-          {!! \App\mh_svg_icon('rss', 16) !!}
-          <span>Copy link</span>
+          {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  {{-- Main content --}}
+  {{-- ── CONTENT LAYOUT ──────────────────────────────────── --}}
   <div class="container wide post-shell">
     <div class="post-layout">
+
+      {{-- Main column --}}
       <div class="post-main">
 
+        {{-- Featured image --}}
         @if (has_post_thumbnail())
           <figure class="post-featured" itemprop="image">
-            {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el']) !!}
+            {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el', 'loading' => 'eager']) !!}
           </figure>
         @endif
 
-        {{-- Inline TOC (mobile) --}}
+        {{-- Mobile TOC --}}
         @if ($toc)
-          <details class="mh-toc mh-toc--inline">
+          <details class="mh-toc mh-toc--inline" open>
             <summary class="mh-toc-title">On this page</summary>
             <ol>
               @foreach ($toc as $item)
-                <li class="side-toc-h{{ $item['level'] }}"><a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a></li>
+                <li class="side-toc-h{{ $item['level'] }}">
+                  <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
+                </li>
               @endforeach
             </ol>
           </details>
@@ -124,7 +148,7 @@
 
         {{-- Tags --}}
         @if ($postTags)
-          <div class="post-tags">
+          <div class="post-tags" aria-label="Tags">
             @foreach ($postTags as $tag)
               <a class="post-tag" href="{{ esc_url(get_tag_link($tag->term_id)) }}">#{{ $tag->name }}</a>
             @endforeach
@@ -132,40 +156,55 @@
         @endif
 
         {{-- Bottom share --}}
-        <div class="post-share-bar post-share-bar--bottom">
-          <p class="post-share-bar__prompt">Found this useful? Share it.</p>
-          <div class="post-share-bar__btns">
+        <div class="post-share-bottom">
+          <p class="post-share-bottom__prompt">Found this useful?</p>
+          <div class="post-share-bottom__btns">
             <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank">
-              {!! \App\mh_svg_icon('twitter', 16) !!} Share on X
+              {!! \App\mh_svg_icon('twitter', 15) !!} Share on X
             </a>
             <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank">
-              {!! \App\mh_svg_icon('linkedin', 16) !!} Share on LinkedIn
+              {!! \App\mh_svg_icon('linkedin', 15) !!} Share on LinkedIn
             </a>
             <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}">
-              {!! \App\mh_svg_icon('rss', 16) !!} Copy link
+              {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
             </button>
           </div>
         </div>
 
-        {{-- Share note --}}
-        <p class="post-share-note">
+        {{-- Snippet / extra code note --}}
+        <p class="post-extra-note">
           {!! \App\field_html('write_share_note', __('More examples on the <a href="/code/">Code</a> page. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
         </p>
 
         {{-- Author bio --}}
         <div class="post-author-bio">
-          @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo profile-photo--bio post-author-bio-avatar'])
-          <div class="post-author-bio-body">
-            <p class="post-author-bio-name">{{ get_the_author() }}</p>
-            <p class="post-author-bio-role">WordPress developer · Gettysburg, PA</p>
-            <p class="post-author-bio-desc">
-              {{ get_the_author_meta('description') ?: \App\field('write_bio', __('I write from Gettysburg, Pennsylvania. Posts cover WordPress, PHP, and the tools I use on real projects — often with code you can paste in.', 'sage'), \App\mh_writing_id()) }}
+          @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])
+          <div class="post-author-bio__body">
+            <p class="post-author-bio__name">{{ get_the_author() }}</p>
+            <p class="post-author-bio__role">WordPress developer · Gettysburg, PA</p>
+            <p class="post-author-bio__desc">
+              {{ get_the_author_meta('description') ?: 'I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in. Based in Gettysburg, PA.' }}
             </p>
-            <div class="post-author-bio-links">
+            <div class="post-author-bio__links">
               <a href="{{ home_url('/about/') }}">About me</a>
               <a href="{{ home_url('/services/') }}">Work with me</a>
               <a href="{{ home_url('/contact/') }}">Say hello</a>
+              <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">RSS feed</a>
             </div>
+          </div>
+        </div>
+
+        {{-- Post-end CTA --}}
+        <div class="post-cta">
+          <div class="post-cta__copy">
+            <h2 class="post-cta__heading">Working on a WordPress project?</h2>
+            <p class="post-cta__body">A question about this post or a snippet is just as welcome as a project inquiry. I build WordPress sites, plugins, and web apps — and I'm currently open for new work.</p>
+          </div>
+          <div class="post-cta__actions">
+            <a class="btn" href="{{ home_url('/contact/') }}">
+              {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+            </a>
+            <a class="about-text-link" href="{{ home_url('/services/') }}">See services →</a>
           </div>
         </div>
 
@@ -175,19 +214,19 @@
           $nextPost = get_next_post();
         @endphp
         @if ($prevPost || $nextPost)
-          <nav class="post-prev-next" aria-label="Post navigation">
+          <nav class="post-nav" aria-label="Post navigation">
             @if ($prevPost)
-              <a class="post-prev-next-link" href="{{ get_permalink($prevPost) }}">
-                <span class="post-prev-next-dir">← Previous</span>
-                <span class="post-prev-next-title">{{ get_the_title($prevPost) }}</span>
+              <a class="post-nav__link post-nav__link--prev" href="{{ get_permalink($prevPost) }}">
+                <span class="post-nav__dir">← Previous post</span>
+                <span class="post-nav__title">{{ get_the_title($prevPost) }}</span>
               </a>
             @else
               <span></span>
             @endif
             @if ($nextPost)
-              <a class="post-prev-next-link post-prev-next-link--next" href="{{ get_permalink($nextPost) }}">
-                <span class="post-prev-next-dir">Next →</span>
-                <span class="post-prev-next-title">{{ get_the_title($nextPost) }}</span>
+              <a class="post-nav__link post-nav__link--next" href="{{ get_permalink($nextPost) }}">
+                <span class="post-nav__dir">Next post →</span>
+                <span class="post-nav__title">{{ get_the_title($nextPost) }}</span>
               </a>
             @endif
           </nav>
@@ -196,7 +235,10 @@
         {{-- Related posts --}}
         @if (! empty($relatedPosts))
           <section class="post-related" aria-labelledby="related-heading">
-            <h2 id="related-heading" class="post-related__heading">More from the journal</h2>
+            <h2 id="related-heading" class="post-related__heading">
+              More from the journal
+              @if ($postCats)<span class="post-related__cat">in {{ $postCats[0]->name }}</span>@endif
+            </h2>
             <div class="post-related__grid">
               @foreach ($relatedPosts as $rp)
                 <article class="post-related-card">
@@ -210,19 +252,22 @@
                     <h3 class="post-related-card__title">
                       <a href="{{ esc_url($rp['url']) }}">{{ $rp['title'] }}</a>
                     </h3>
+                    @if ($rp['ex'])<p class="post-related-card__ex">{{ $rp['ex'] }}</p>@endif
                     <p class="post-related-card__meta">{{ $rp['date'] }}@if($rp['mins']) · {{ $rp['mins'] }} min @endif</p>
                   </div>
                 </article>
               @endforeach
             </div>
-            <a class="about-text-link" href="{{ $writing }}" style="display:inline-block;margin-top:1.25rem">All posts →</a>
+            <a class="h-text-arrow" href="{{ $writing }}" style="display:inline-flex;margin-top:1.5rem">All posts →</a>
           </section>
         @endif
 
         @php comments_template(); @endphp
       </div>
 
+      {{-- Sidebar --}}
       @include('partials.post-sidebar', ['postId' => $postId, 'summary' => $summary, 'toc' => $toc])
+
     </div>
   </div>
 </article>
