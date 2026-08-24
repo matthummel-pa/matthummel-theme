@@ -17,11 +17,6 @@
     @endif
 
     <div class="header-actions">
-      <button class="mh-theme-toggle" type="button" aria-pressed="false" aria-label="{{ __('Switch to dark mode', 'sage') }}">
-        <span class="mh-icon-dark">{!! \App\mh_svg_icon('moon', 20) !!}</span>
-        <span class="mh-icon-light">{!! \App\mh_svg_icon('sun', 20) !!}</span>
-      </button>
-
       <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'matthummel') }}</a>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mh-popout" aria-label="{{ __('Open menu', 'matthummel') }}">

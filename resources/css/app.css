@@ -1,37 +1,40 @@
 @import "tailwindcss";
 @import "./portfolio.css";
-@import "./graphic.css";
 @import "./code-blocks.css";
+
+/* Light mode only — no dark mode toggle */
+:root { color-scheme: light; }
 
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
 
 @theme {
-    --font-sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-display: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-body: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-heading: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    --radius-btn: 999px;
-    --radius-card: 1.5rem;
-    --page-max: 80rem;
-    --page-gutter: 1.75rem;
-    --space-section: clamp(4.75rem, 8.5vw, 7.5rem);
-    --space-grid: 2.15rem;
+  --font-sans: Inter, "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: Inter, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  --font-heading: Inter, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-khaki: #e8eef6;
-  --color-cream: #f4f7fb;
+  --radius-btn: 6px;
+  --radius-card: 10px;
+  --page-max: 1200px;
+  --page-gutter: 1.5rem;
+  --space-section: clamp(5rem, 9vw, 8rem);
+  --space-grid: 1.25rem;
+
+  --color-khaki: #f9fafb;
+  --color-cream: #f3f4f6;
   --color-blue: #2563eb;
   --color-blue-ink: #1d4ed8;
-  --color-blue-soft: #dbeafe;
-  --color-navy: #0b1220;
-  --color-slate: #334155;
-  --color-ink: #0b1220;
-  --color-paper: #eef2f7;
-  --color-body: #334155;
-  --color-muted: #475569;
-  --color-line: #c5d0de;
+  --color-blue-soft: #eff6ff;
+  --color-navy: #111827;
+  --color-slate: #4b5563;
+  --color-ink: #111827;
+  --color-paper: #ffffff;
+  --color-body: #374151;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
   --color-focus: #2563eb;
   --color-card: #ffffff;
 }

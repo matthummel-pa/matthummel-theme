@@ -2,66 +2,101 @@
 
 @section('content')
 @php
-  $devto = \App\mh_devto_posts(6);
-  $writeId = \App\mh_writing_id();
+  $devto    = \App\mh_devto_posts(6);
+  $writeId  = \App\mh_writing_id();
   $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
   $showFeatured = is_home() && ! is_paged() && have_posts() && ! \App\mh_journal_is_oldest();
-  $featuredId = 0;
+  $featuredId   = 0;
+  $rssUrl       = home_url('/feed/');
 @endphp
-  @component('partials.page-hero')
-    <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
-    <h1 class="display-title is-hero">{{ \App\field('write_h1', __('Journal', 'sage'), $writeId) }}</h1>
-    <p class="lead">{{ \App\field('write_lede', __('I write about WordPress, plugins, and other web apps I build. Posts walk through the problem and, when it helps, the code. Developers can copy the examples; shops and agencies can see how I explain a build.', 'sage'), $writeId) }}</p>
+
+{{-- HERO --}}
+@component('partials.page-hero')
+  <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
+  <h1 class="display-title is-hero">
+    {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
+  </h1>
+  <p class="lead">
+    {{ \App\field('write_lede', __('Short posts on WordPress, PHP, Sage, and the other tools I use day to day. Most include code you can copy. Written in Gettysburg, PA.', 'sage'), $writeId) }}
+  </p>
+  <div class="journal-hero-actions">
     <div class="search-wrap write-hero-search">
       @include('forms.search', ['placeholder' => \App\field('write_search_ph', __('Search posts', 'sage'), $writeId)])
     </div>
-    <p class="write-hero-jump">
-      <a href="#journal-posts">{{ \App\field('write_browse', __('Browse posts', 'sage'), $writeId) }}</a>
-    </p>
-  @endcomponent
+    <div class="journal-hero-links">
+      <a class="journal-hero-link" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+        {!! \App\mh_svg_icon('rss', 14) !!} RSS feed
+      </a>
+      <a class="journal-hero-link" href="#journal-posts">
+        {!! \App\mh_svg_icon('book-open', 14) !!} Browse posts ↓
+      </a>
+    </div>
+  </div>
+@endcomponent
 
-  <div class="container wide page-block write-hub write-hub--home">
-    @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl, 'hideSearch' => true])
-    @include('partials.write-topics', compact('writeId', 'writeUrl'))
+{{-- POSTS --}}
+<div class="container wide page-block write-hub write-hub--home">
+  @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl, 'hideSearch' => true])
+  @include('partials.write-topics', compact('writeId', 'writeUrl'))
 
-    @if (! have_posts())
-      <p>{{ __('No posts yet.', 'sage') }}</p>
-    @else
-      @if ($showFeatured)
-        @php(the_post())
-        @php($featuredId = (int) get_the_ID())
-        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
-      @endif
-
-      <div class="write-layout">
-        <div class="write-main" id="journal-posts">
-          @if ($showFeatured && have_posts())
-            <h2 class="write-list-h">{{ \App\field('write_recent_h2', __('Recent posts', 'sage'), $writeId) }}</h2>
-          @endif
-          <div class="post-stack" data-post-list>
-            <div class="post-list">
-              @while(have_posts())
-                @php(the_post())
-                @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-              @endwhile
-            </div>
-          </div>
-          <div class="posts-nav">
-            {!! get_the_posts_pagination([
-              'mid_size' => 1,
-              'prev_text' => __('Previous', 'sage'),
-              'next_text' => __('Next', 'sage'),
-            ]) !!}
-          </div>
-        </div>
-        @include('partials.write-aside', ['writeId' => $writeId, 'exclude' => $featuredId])
-      </div>
+  @if (! have_posts())
+    <p>No posts yet.</p>
+  @else
+    @if ($showFeatured)
+      @php(the_post())
+      @php($featuredId = (int) get_the_ID())
+      @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
     @endif
 
-    @include('partials.write-subscribe', compact('writeId'))
+    <div class="write-layout">
+      <div class="write-main" id="journal-posts">
+        @if ($showFeatured && have_posts())
+          <h2 class="write-list-h">{{ \App\field('write_recent_h2', __('Recent posts', 'sage'), $writeId) }}</h2>
+        @endif
+        <div class="post-stack" data-post-list>
+          <div class="post-list">
+            @while(have_posts())
+              @php(the_post())
+              @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
+            @endwhile
+          </div>
+        </div>
+        <div class="posts-nav">
+          {!! get_the_posts_pagination([
+            'mid_size' => 1,
+            'prev_text' => __('← Older', 'sage'),
+            'next_text' => __('Newer →', 'sage'),
+          ]) !!}
+        </div>
+      </div>
+      @include('partials.write-aside', ['writeId' => $writeId, 'exclude' => $featuredId])
+    </div>
+  @endif
 
-    @if ($devto)
-      <h2 class="display-title is-section write-devto-h">{{ \App\field('write_devto_h2', __('Also on DEV.to', 'sage'), $writeId) }}</h2>
+  {{-- Subscribe / RSS --}}
+  <div class="journal-subscribe">
+    <div class="journal-subscribe__copy">
+      <h2>{{ \App\field('write_subscribe_h2', __('Follow along.', 'sage'), $writeId) }}</h2>
+      <p>{{ \App\field('write_subscribe_lede', __('There\'s no email list. The RSS feed is the most reliable way to read new posts as they come out — paste the URL into any reader.', 'sage'), $writeId) }}</p>
+    </div>
+    <div class="journal-subscribe__rss">
+      <a class="journal-rss-btn" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+        {!! \App\mh_svg_icon('rss', 18) !!}
+        <span>
+          <strong>RSS feed</strong>
+          <small>{{ esc_url($rssUrl) }}</small>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  {{-- DEV.to mirror --}}
+  @if ($devto)
+    <div class="journal-devto">
+      <h2 class="display-title is-section journal-devto__heading">
+        {{ \App\field('write_devto_h2', __('Also on DEV.to', 'sage'), $writeId) }}
+      </h2>
+      <p class="journal-devto__note">Some posts are cross-posted to DEV.to for the broader developer community.</p>
       <div class="dev-cards">
         @foreach ($devto as $d)
           <article class="dev-card">
@@ -71,20 +106,28 @@
               <p>{{ $d['ex'] }}</p>
             @endif
             @if (! empty($d['date']) && strtotime($d['date']))
-              <p class="post-meta"><time datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">{{ wp_date(get_option('date_format'), strtotime($d['date'])) }}</time></p>
+              <p class="post-meta">
+                <time datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">
+                  {{ wp_date(get_option('date_format'), strtotime($d['date'])) }}
+                </time>
+              </p>
             @endif
             @include('partials.read-more', [
-              'url' => $d['url'],
-              'name' => $d['title'],
-              'label' => __('Read on DEV.to', 'sage'),
+              'url'      => $d['url'],
+              'name'     => $d['title'],
+              'label'    => __('Read on DEV.to', 'sage'),
               'external' => true,
             ])
           </article>
         @endforeach
       </div>
-    @endif
+    </div>
+  @endif
 
-    <p class="write-follow">{{ \App\field('write_follow', __('More of my notes', 'sage'), $writeId) }}</p>
+  {{-- Elsewhere --}}
+  <div class="journal-elsewhere">
+    <p class="write-follow">{{ \App\field('write_follow', __('Find me elsewhere', 'sage'), $writeId) }}</p>
     @include('partials.social', ['labeled' => true])
   </div>
+</div>
 @endsection
