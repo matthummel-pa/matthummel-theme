@@ -2363,24 +2363,84 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
    Research: Linear, Vercel, Raycast, leerob.io, paco.me for 2026 patterns
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Typography scale bump ── */
+/* ── Typography scale — fluid across all breakpoints ── */
+
+/* Desktop (>900px): full scale */
 .h-hero__name {
-  font: 800 clamp(4.5rem, 12vw, 8.5rem)/1 var(--font-display) !important;
-  letter-spacing: -0.06em !important;
+  font: 800 clamp(2.75rem, 6vw, 7rem)/1 var(--font-display) !important;
+  letter-spacing: -0.055em !important;
 }
 .h-section__title {
-  font: 800 clamp(2.25rem, 5vw, 3.5rem)/1.05 var(--font-display) !important;
-  letter-spacing: -0.05em !important;
+  font: 800 clamp(1.75rem, 3.5vw, 3rem)/1.05 var(--font-display) !important;
+  letter-spacing: -0.045em !important;
 }
 .h-about__heading {
-  font: 800 clamp(2rem, 4.5vw, 3.25rem)/1.05 var(--font-display);
-  letter-spacing: -0.05em;
+  font: 800 clamp(1.65rem, 3.2vw, 2.85rem)/1.05 var(--font-display);
+  letter-spacing: -0.045em;
   margin: 0 0 .9rem;
   color: var(--color-text);
 }
 .h-cta__heading {
-  font: 800 clamp(2.25rem, 5.5vw, 4rem)/1.02 var(--font-display) !important;
-  letter-spacing: -0.055em !important;
+  font: 800 clamp(1.75rem, 3.8vw, 3.5rem)/1.02 var(--font-display) !important;
+  letter-spacing: -0.05em !important;
+}
+
+/* Tablet (≤860px) */
+@media (max-width: 860px) {
+  .h-hero__name {
+    font-size: clamp(2.5rem, 8vw, 4.5rem) !important;
+  }
+  .h-section__title {
+    font-size: clamp(1.6rem, 4.5vw, 2.5rem) !important;
+  }
+  .h-cta__heading {
+    font-size: clamp(1.6rem, 4.5vw, 2.5rem) !important;
+  }
+  .h-about__heading {
+    font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+  }
+  .display-title.is-hero {
+    font-size: clamp(2rem, 6vw, 3.25rem);
+  }
+}
+
+/* Mobile (≤560px) */
+@media (max-width: 560px) {
+  body { font-size: 1.05rem; }
+  .h-hero__name {
+    font-size: clamp(2.25rem, 10vw, 3.25rem) !important;
+    letter-spacing: -0.04em !important;
+  }
+  .h-section__title {
+    font-size: clamp(1.5rem, 6.5vw, 2rem) !important;
+  }
+  .h-cta__heading {
+    font-size: clamp(1.5rem, 6.5vw, 2rem) !important;
+  }
+  .h-about__heading {
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
+  }
+  .h-hero__role {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+  }
+  .h-hero__lede {
+    font-size: 1rem;
+  }
+  .display-title.is-hero {
+    font-size: clamp(1.85rem, 8vw, 2.5rem);
+  }
+  .display-title.is-section {
+    font-size: clamp(1.35rem, 5.5vw, 1.75rem);
+  }
+  .h-process__num,
+  .h-principle__num,
+  .about-stat__value { font-size: 1.65rem !important; }
+  .svc-process__num,
+  .svc-v2-card__num { font-size: 1.5rem !important; }
+  .resume-who h3 { font-size: 1.05rem; }
+  .post-hero-title { font-size: clamp(1.75rem, 7vw, 2.5rem); }
+  .h-journal__featured-title { font-size: clamp(1.2rem, 5vw, 1.5rem); }
+  .h-work-featured__title { font-size: clamp(1.35rem, 5.5vw, 1.85rem); }
 }
 
 /* ── Section number ── */
