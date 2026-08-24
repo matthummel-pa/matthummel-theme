@@ -330,6 +330,7 @@ function mh_home_oss_live_data(int $repo_count = 3): array
 
         $repos[] = [
             'name' => $name,
+            'display_name' => mh_title_label($name),
             'desc' => $desc,
             'url' => $url,
             'tags' => $r['tags'] ?? [],

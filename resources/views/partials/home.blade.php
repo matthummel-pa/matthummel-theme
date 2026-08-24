@@ -413,7 +413,7 @@
               <span class="h-oss-card__icon" aria-hidden="true">{!! \App\mh_svg_icon('github', 18) !!}</span>
               <h3 class="h-oss-card__name">
                 <a href="{{ esc_url($r['url']) }}" rel="noopener" target="_blank">
-                  {{ $r['name'] }}<span class="visually-hidden"> (opens in a new window)</span>
+                  {{ $r['display_name'] ?? \App\mh_title_label($r['name']) }}<span class="visually-hidden"> (opens in a new window)</span>
                 </a>
               </h3>
               @if (! empty($r['badge']))
