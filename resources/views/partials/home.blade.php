@@ -35,14 +35,84 @@
 
   $values = [
     ['Shops should own their content — not rent it.', 'Hosting, domain, and database belong to the client. Always.'],
+    ['Fast delivery doesn\'t mean skipping the review.', 'I use AI tools to speed up the repetitive parts. Every line still gets read, tested, and understood before it ships. Quicker turnaround, same quality bar.'],
     ['Code is documentation. Write it clearly.', 'If a developer can\'t read it in six months, it was written for the machine, not the team.'],
-    ['The best feature is one fewer dependency.', 'Small, focused code outlasts frameworks. WordPress plugins should do one thing well.'],
   ];
 
   $processSteps = [
-    ['01', 'Write.', 'Tell me who the site is for and what\'s broken or missing. A paragraph is enough. No spec required.'],
-    ['02', 'Scope.', 'I send a short list of work, a rough timeline, and what I won\'t do. No retainers. No surprises.'],
-    ['03', 'Ship.', 'You get pages you can edit, plain-language notes, and the code repo if the work is public.'],
+    [
+      'num'    => '01',
+      'title'  => 'Write.',
+      'body'   => 'Tell me who the site is for, what\'s broken, and what a win looks like. A paragraph is plenty — no spec doc required.',
+      'timing' => '1–2 days',
+      'gets'   => ['Quick reply with questions', 'Honest answer if I\'m the wrong fit', 'No sales pitch'],
+    ],
+    [
+      'num'    => '02',
+      'title'  => 'Scope.',
+      'body'   => 'I send a plain list of work, a rough timeline, a fixed price, and an explicit list of what\'s out of scope. You approve or push back.',
+      'timing' => '2–4 days',
+      'gets'   => ['Fixed price, not hourly', 'Clear out-of-scope list', 'No retainers or surprise invoices'],
+    ],
+    [
+      'num'    => '03',
+      'title'  => 'Build.',
+      'body'   => 'I use modern tools — including AI assistants — to move faster on the parts that are repeatable. Every line ships only after I\'ve read and tested it myself. You get staged previews on real pages, not mockups.',
+      'timing' => 'Days to weeks',
+      'gets'   => ['Faster turnaround than traditional builds', 'Every line reviewed by me before it ships', 'Staged previews you can click through and give feedback on'],
+    ],
+    [
+      'num'    => '04',
+      'title'  => 'Yours.',
+      'body'   => 'You own everything: the domain, the hosting, the database, the code. I write you a plain-language handoff guide and stay reachable for questions.',
+      'timing' => 'Forever',
+      'gets'   => ['Full ownership transfer', 'Plain-language admin guide', 'No lock-in, no monthly fee'],
+    ],
+  ];
+
+  $goodFit = [
+    'yes' => [
+      'You need a WordPress site you can actually update yourself',
+      'You want a quick turnaround without cutting corners on quality',
+      'You want clean code a future developer can read',
+      'You have a clear idea of what you need — or want help figuring it out',
+      'You prefer a fixed price over hourly billing',
+      'You\'re a shop, agency, or developer who needs a reliable sub',
+    ],
+    'no'  => [
+      'You need a designer — I\'m a developer (I can refer you to one)',
+      'You need a site in under a week',
+      'You want ongoing social media or ad management',
+      'You need an enterprise e-commerce platform from scratch',
+      'You\'re looking for the lowest possible price, not the best outcome',
+    ],
+  ];
+
+  $faqItems = [
+    [
+      'q' => 'What does "you own it" actually mean?',
+      'a' => 'The domain is in your name. The hosting account is yours. The database, the files, the code — all yours. I have no access after handoff unless you invite me. You can take everything to another developer tomorrow and they\'ll have what they need.',
+    ],
+    [
+      'q' => 'Do you do design, or just development?',
+      'a' => 'Development. I can work from your design, a reference site, or a well-described direction. For original design work, I\'ll refer you to someone who does it properly rather than half-guess at it.',
+    ],
+    [
+      'q' => 'How long does a WordPress site usually take?',
+      'a' => 'A simple site with a few pages and a contact form: two to three weeks. Something with custom fields, filtering, or a booking system: four to eight weeks. I\'ll give you a realistic estimate during scoping, not an optimistic one.',
+    ],
+    [
+      'q' => 'Can I edit the site myself after you hand it off?',
+      'a' => 'Yes — that\'s the whole point. Pages use standard WordPress fields so editing feels like filling in a form, not touching code. I\'ll document anything unusual in plain English before I hand off.',
+    ],
+    [
+      'q' => 'Do you work with agencies on client projects?',
+      'a' => 'Yes. I\'ve worked as a sub on agency projects. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you\'re working on.',
+    ],
+    [
+      'q' => 'What about Power Platform — do you still take that work?',
+      'a' => 'Sometimes, when a team already lives in Microsoft 365 and it\'s the right tool. It\'s not my main focus and I\'ll say so if WordPress or another stack is a better fit. I won\'t talk you into it.',
+    ],
   ];
 @endphp
 
@@ -237,23 +307,81 @@
       <div>
         <p class="h-section-label">Process</p>
         <h2 id="h-process-heading" class="h-section__title">{{ \App\field('home_process_h2', __('How a project goes.', 'sage')) }}</h2>
+        <p class="h-process__subhead">Four steps. Fixed price. You own everything at the end.</p>
       </div>
       <a class="h-text-arrow" href="{{ home_url('/services/') }}">Full services →</a>
     </div>
 
     <div class="h-process__grid">
-      @foreach ($processSteps as [$num, $title, $body])
+      @foreach ($processSteps as $step)
         <div class="h-process__step">
-          <span class="h-process__num" aria-hidden="true">{{ $num }}</span>
-          <h3 class="h-process__title">{{ $title }}</h3>
-          <p class="h-process__body">{{ $body }}</p>
+          <div class="h-process__step-head">
+            <span class="h-process__num" aria-hidden="true">{{ $step['num'] }}</span>
+            <span class="h-process__timing">
+              {!! \App\mh_svg_icon('calendar', 13) !!}
+              {{ $step['timing'] }}
+            </span>
+          </div>
+          <h3 class="h-process__title">{{ $step['title'] }}</h3>
+          <p class="h-process__body">{{ $step['body'] }}</p>
+          <ul class="h-process__gets">
+            @foreach ($step['gets'] as $item)
+              <li>{{ $item }}</li>
+            @endforeach
+          </ul>
         </div>
       @endforeach
     </div>
 
-    <div class="h-process__note">
-      <p>{!! \App\field_html('home_process_note', __('No retainers. No ongoing contracts unless you want one. A question about a post is just as welcome as a <a href="/contact/">build request</a>.', 'sage')) !!}</p>
+    {{-- What I need callout --}}
+    <div class="h-need-callout">
+      <div class="h-need-callout__icon" aria-hidden="true">{!! \App\mh_svg_icon('user', 22) !!}</div>
+      <div>
+        <p class="h-need-callout__label">What I need from you</p>
+        <p class="h-need-callout__body">A rough idea of who the site is for, what it needs to do, and what success looks like. No spec or wireframe required — a few sentences work. Modern tooling means I can turn a clear brief into a working preview faster than a traditional build. The clearer the brief, the faster everything moves.</p>
+      </div>
+      <a class="btn" href="{{ home_url('/contact/') }}" style="flex-shrink:0">
+        {!! \App\mh_svg_icon('mail', 16) !!} Write a note
+      </a>
     </div>
+  </div>
+</section>
+
+{{-- ═══════════════════════════════════════════════════
+     04b — GOOD FIT / NOT A FIT
+     ═══════════════════════════════════════════════════ --}}
+<section class="h-fit" aria-labelledby="h-fit-heading">
+  <div class="container wide">
+    <div class="h-fit__head">
+      <p class="h-section-label">Honest expectations</p>
+      <h2 id="h-fit-heading" class="h-section__title">Is this a good fit?</h2>
+      <p class="h-fit__intro">Most conversations start with the wrong question ("how much does a website cost?"). These answers might save us both time.</p>
+    </div>
+    <div class="h-fit__grid">
+      <div class="h-fit__col h-fit__col--yes">
+        <p class="h-fit__col-label">
+          <span class="h-fit__icon h-fit__icon--yes" aria-hidden="true">✓</span>
+          Good fit
+        </p>
+        <ul class="h-fit__list">
+          @foreach ($goodFit['yes'] as $item)
+            <li>{{ $item }}</li>
+          @endforeach
+        </ul>
+      </div>
+      <div class="h-fit__col h-fit__col--no">
+        <p class="h-fit__col-label">
+          <span class="h-fit__icon h-fit__icon--no" aria-hidden="true">✕</span>
+          Not a fit
+        </p>
+        <ul class="h-fit__list">
+          @foreach ($goodFit['no'] as $item)
+            <li>{{ $item }}</li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+    <p class="h-fit__footer">Still not sure? <a href="{{ home_url('/contact/') }}">Write a note</a> — the worst I can say is I'm not the right person, and I'll try to point you toward someone who is.</p>
   </div>
 </section>
 
@@ -580,7 +708,46 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     09 — CTA
+     09 — FAQ
+     ═══════════════════════════════════════════════════ --}}
+<section class="h-faq" aria-labelledby="h-faq-heading">
+  <div class="container wide h-faq__inner">
+
+    <div class="h-faq__sidebar">
+      <p class="h-section-label">Questions</p>
+      <h2 id="h-faq-heading" class="h-section__title">Frequently asked.</h2>
+      <p class="h-faq__blurb">Real questions from real conversations. If yours isn't here, <a href="{{ home_url('/contact/') }}">just ask</a>.</p>
+      <div class="h-avail-card">
+        <p class="h-avail-card__label">
+          <span class="h-badge__dot" aria-hidden="true"></span>
+          Current availability
+        </p>
+        <p class="h-avail-card__status">{{ \App\field('home_avail_status', __('Open to new projects', 'sage')) }}</p>
+        <ul class="h-avail-card__details">
+          <li>{!! \App\mh_svg_icon('map', 13) !!} Gettysburg, PA (EST)</li>
+          <li>{!! \App\mh_svg_icon('calendar', 13) !!} Replies within 24 hours</li>
+          <li>{!! \App\mh_svg_icon('code', 13) !!} Fixed-price projects</li>
+        </ul>
+        <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
+          {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+        </a>
+      </div>
+    </div>
+
+    <div class="h-faq__list">
+      @foreach ($faqItems as $i => $faq)
+        <details class="h-faq__item" @if($i === 0) open @endif>
+          <summary class="h-faq__q">{{ $faq['q'] }}</summary>
+          <p class="h-faq__a">{{ $faq['a'] }}</p>
+        </details>
+      @endforeach
+    </div>
+
+  </div>
+</section>
+
+{{-- ═══════════════════════════════════════════════════
+     10 — CTA
      ═══════════════════════════════════════════════════ --}}
 <section class="h-cta" aria-labelledby="h-cta-heading">
   <div class="container wide h-cta__inner">
