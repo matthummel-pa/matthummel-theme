@@ -8,19 +8,22 @@ What the 3.x Sage theme does, and where it lives.
 | --- | --- | --- |
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Bold blue/gray landing; one primary Say hello CTA; GitHub in quick links; stats and repos; 2×2 audience doors | `resources/views/partials/home.blade.php`, `App\Github`, `partials/audience.blade.php` |
-| Page / post heroes | Same navy gradient + blobs as Home, still (no wander animation) | `partials/page-hero.blade.php`, `partials/hero-graphic.blade.php` |
-| About / Now | Split story, audience grid, numbered now list | `template-about.blade.php`, `template-now.blade.php` |
+| Home | Minimalist landing; section anchors + jump-nav pills; live GitHub API panel; skills ticker; 2×2 audience cards; one primary Say hello CTA | `resources/views/partials/home.blade.php`, `App\Github` |
+| About | Stats bar, story, open-for-work signals, audience cards, approach grid, journal preview, CTA band | `template-about.blade.php` |
+| Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
-| Services | Numbered offers, process, FAQ | `template-services.blade.php` |
+| Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | GitHub profile, contribution grid, featured/recent repos, activity, resume, skill chips, docs | `template-code.blade.php`, `App\Github` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
+| Single post | Reading progress bar, hero share, inline TOC (when headings exist), desktop sidebar (TOC + summary + popular + topics + hire CTA), tags, author bio, post-end CTA, prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Search titles / meta | Document title and meta description from the theme (Gettysburg format); optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
-| Dark mode | `html.mh-dark`, icon toggle, `prefers-color-scheme` until saved | `layouts/app.blade.php`, `resources/js/app.js`, `html.mh-dark` in `portfolio.css` |
+| Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
 | Mobile menu | Slide-over `#mh-popout` with hover motion and compact socials | `sections/header.blade.php` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
+| Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
+| SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 
 ## Content helpers
 
@@ -62,6 +65,9 @@ What the 3.x Sage theme does, and where it lives.
 | `wp mh db-pull` | Export prod DB via SSH → import locally → search-replace URLs | `app/db-migrate.php` |
 | `wp mh db-push` | Export local DB → upload to prod via SSH → import + search-replace (requires `--yes`) | `app/db-migrate.php` |
 | `bash .github/scripts/db-pull.sh` | Shell-only db-pull (no WP bootstrap required) | `.github/scripts/db-pull.sh` |
+| `vendor/bin/pint --test` | Check PHP code style (Laravel Pint) | `pint.json` |
+| `npm run build` | Build Vite assets into `public/build/` (gitignored) | `vite.config.js` |
+| `wp acorn view:clear` | Clear compiled Blade views (run after any template edit) | — |
 
 SSH credentials for `db-pull` / `db-push` resolve in this order:
 1. `--ssh-*` WP-CLI flags

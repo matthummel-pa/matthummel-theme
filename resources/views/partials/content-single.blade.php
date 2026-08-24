@@ -159,13 +159,13 @@
         <div class="post-share-bottom">
           <p class="post-share-bottom__prompt">Found this useful?</p>
           <div class="post-share-bottom__btns">
-            <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank">
+            <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank" aria-label="Share on X">
               {!! \App\mh_svg_icon('twitter', 15) !!} Share on X
             </a>
-            <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank">
+            <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
               {!! \App\mh_svg_icon('linkedin', 15) !!} Share on LinkedIn
             </a>
-            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}">
+            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
               {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
             </button>
           </div>
