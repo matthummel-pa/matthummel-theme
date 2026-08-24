@@ -348,7 +348,7 @@
             {{ \App\field('home_about_h2', __('WordPress developer. Studio founder. Open for work.', 'sage')) }}
           </h2>
           <p class="h-about__text" itemprop="description">
-            {{ \App\field('home_about_text', __('I\'ve been building for the web since the higher-ed marketing days. WordPress stuck because it gives shops real ownership — they can update their own pages without calling me. These days I\'m focused on building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns. But I\'m also actively open for work.', 'sage')) }}
+            {{ \App\field('home_about_text', __('I\'ve been building websites since the higher-ed marketing days. WordPress is the tool I kept coming back to — it gives shops real ownership, and they can update their own pages without calling me. Right now I\'m building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns, and I\'m open for new work at the same time.', 'sage')) }}
           </p>
           <p class="h-about__text">
             {{ \App\field('home_about_p2', __('Whether you\'re a recruiter, a design agency that needs a WordPress developer, a fellow dev who wants to collaborate, or a shop that just needs a solid site — I\'m glad you\'re here. Most of my public code is on GitHub and free to use. If you just need to borrow a snippet, no permission required.', 'sage')) }}

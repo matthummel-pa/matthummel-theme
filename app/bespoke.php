@@ -1279,3 +1279,33 @@ function mh_apply_home_v2_copy(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_home_v2_copy', 53);
+
+/** Reword about bio paragraph — cleaner, no 'WordPress stuck', no adversarial 'But'. */
+function mh_apply_about_bio_v1(): void
+{
+    if (get_option('mh_about_bio_v1')) {
+        return;
+    }
+
+    $old = "I've been building for the web since the higher-ed marketing days. WordPress stuck because it gives shops real ownership — they can update their own pages without calling me. These days I'm focused on building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns. But I'm also actively open for work.";
+    $new = "I've been building websites since the higher-ed marketing days. WordPress is the tool I kept coming back to — it gives shops real ownership, and they can update their own pages without calling me. Right now I'm building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns, and I'm open for new work at the same time.";
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $val = get_post_meta($id, 'mh_f_home_about_text', true);
+        if (is_string($val) && $val === $old) {
+            update_post_meta($id, 'mh_f_home_about_text', $new);
+        }
+    }
+
+    update_option('mh_about_bio_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_bio_v1', 54);
