@@ -294,16 +294,6 @@
 
     </div>
 
-    <div class="h-hero__photo-wrap" aria-hidden="true">
-      @include('partials.profile-photo', [
-        'size'       => 400,
-        'class'      => 'profile-photo h-hero__photo',
-        'eager'      => true,
-        'decorative' => true,
-      ])
-      <div class="h-hero__photo-ring"></div>
-    </div>
-
   </div>
 </section>
 

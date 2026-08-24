@@ -546,7 +546,10 @@ function mh_work_page_items(?int $post_id = null): array
 
     $rows = field_rows('work_items', [], $post_id);
     if ($rows === []) {
-        return mh_studio_projects();
+        return array_map(function (array $p): array {
+            $p['image'] = mh_studio_project_image_url($p);
+            return $p;
+        }, mh_studio_projects());
     }
     $out = [];
     foreach ($rows as $r) {
@@ -556,7 +559,7 @@ function mh_work_page_items(?int $post_id = null): array
         }
         $slug = sanitize_title((string) ($r['slug'] ?? $r['title'] ?? ''));
         $base = $defaults[$slug] ?? [];
-        $out[] = [
+        $item = [
             'slug' => $slug,
             'title' => (string) (($r['title'] ?? '') !== '' ? $r['title'] : ($base['title'] ?? '')),
             'cat' => (string) (($r['cat'] ?? '') !== '' ? $r['cat'] : ($base['cat'] ?? '')),
@@ -566,6 +569,8 @@ function mh_work_page_items(?int $post_id = null): array
             'concept' => (string) (($r['concept'] ?? '') !== '' ? $r['concept'] : ($base['concept'] ?? '')),
             'image' => (string) (($r['image'] ?? '') !== '' ? $r['image'] : ($base['image'] ?? '')),
         ];
+        $item['image'] = mh_studio_project_image_url($item);
+        $out[] = $item;
     }
 
     return $out;

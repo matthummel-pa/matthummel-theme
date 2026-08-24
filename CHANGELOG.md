@@ -2,6 +2,46 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.2 — 2026-08-24
+
+### Changed
+
+- Single post redesigned for SEO, readability, and modern UX: cleaner article layout, better heading hierarchy, reading time and topic pills in the meta bar
+- Post sidebar: streamlined sections, improved spacing, sticky scroll on desktop
+- `content-single.blade.php` and `post-sidebar.blade.php` rebuilt with consistent CSS tokens and Tailwind utilities
+
+## 3.1.1 — 2026-08-24
+
+### Changed
+
+- **Complete visual redesign**: minimalist design system across all pages — clean typography, consistent spacing, ink-border cards, flat layouts without layered gradients
+- Home: section anchors (`#about`, `#skills`, `#process`, `#work`, `#fit`, `#principles`), jump-nav pills below hero, back-to-top link
+- Home: live GitHub API panel in OSS section; Netlify, Supabase, and AI/workflow/marketing tools added to skills ticker
+- About: stats bar, story block, audience cards, open-for-work signals, approach grid, journal preview, CTA band
+- Services: principles section with 6 cards + icons, AI-assisted builds with human review noted in copy
+- Work: SEO and UX improvements, consistent card layout
+- Journal: SEO-optimised redesign with cleaner landing structure
+- Code: GitHub profile showcase redesign, mobile padding fixed
+- Contact / Now: UX/SEO overhaul — shorter copy, cleaner form, footer and header improvements
+- `resources/css/portfolio.css`: full rewrite (~6,000 lines revised), all component styles use consistent CSS custom properties
+
+## 3.1.0 — 2026-08-24
+
+### Changed
+
+- **Light mode only**: removed dark mode toggle button from header, removed `localStorage` dark-mode detection script, stripped all `html.mh-dark {}` overrides from `portfolio.css` (~16 KB removed)
+- `app.css`: added `color-scheme: light` declaration
+- `resources/js/app.js`: removed `preferredTheme()`, `applyTheme()`, `syncThemeToggle()`, `initDarkMode()`, and blob animation — JS bundle shrinks ~2 KB
+
+## 3.0.23 — 2026-08-24
+
+### Added
+
+- WP-CLI `wp mh db-pull` — export prod DB via SSH, import locally, search-replace URLs
+- WP-CLI `wp mh db-push` — export local DB, upload to prod via SSH, import + search-replace (requires `--yes`)
+- `.github/scripts/db-pull.sh` — shell-only DB pull when no WP bootstrap is available
+- CI: SiteGround connection secrets validation step in `deploy.yml` — reports which FTP / SSH secrets are set or missing before the upload begins
+
 ## 3.0.22 — 2026-08-23
 
 ### Changed
