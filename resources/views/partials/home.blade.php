@@ -281,6 +281,17 @@
         <a href="{{ home_url('/now/') }}">{!! \App\mh_svg_icon('calendar', 14) !!} Now</a>
       </nav>
 
+      {{-- On this page --}}
+      <nav class="h-page-nav" aria-label="On this page">
+        <span class="h-page-nav__label">On this page</span>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#process">Process</a>
+        <a href="#work">Work</a>
+        <a href="#journal">Journal</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
     </div>
 
     <div class="h-hero__photo-wrap" aria-hidden="true">
@@ -314,7 +325,7 @@
 {{-- ═══════════════════════════════════════════════════
      02 — ABOUT
      ═══════════════════════════════════════════════════ --}}
-<section class="h-about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
+<section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
   <meta itemprop="jobTitle" content="WordPress Developer">
   <meta itemprop="address" content="Gettysburg, Pennsylvania">
@@ -433,7 +444,7 @@
 {{-- ═══════════════════════════════════════════════════
      03 — SKILLS (grouped icon grid)
      ═══════════════════════════════════════════════════ --}}
-<section class="h-skills" aria-labelledby="h-skills-heading">
+<section class="h-skills" id="skills" aria-labelledby="h-skills-heading">
   <div class="container wide">
     <div class="h-skills__head">
       <div>
@@ -466,7 +477,7 @@
 {{-- ═══════════════════════════════════════════════════
      04 — HOW A PROJECT GOES
      ═══════════════════════════════════════════════════ --}}
-<section class="h-process" aria-labelledby="h-process-heading">
+<section class="h-process" id="process" aria-labelledby="h-process-heading">
   <div class="container wide">
     <div class="h-process__head">
       <div>
@@ -515,7 +526,7 @@
 {{-- ═══════════════════════════════════════════════════
      04b — GOOD FIT / NOT A FIT
      ═══════════════════════════════════════════════════ --}}
-<section class="h-fit" aria-labelledby="h-fit-heading">
+<section class="h-fit" id="fit" aria-labelledby="h-fit-heading">
   <div class="container wide">
     <div class="h-fit__head">
       <p class="h-section-label">Honest expectations</p>
@@ -553,7 +564,7 @@
 {{-- ═══════════════════════════════════════════════════
      05 — VALUES / PRINCIPLES
      ═══════════════════════════════════════════════════ --}}
-<section class="h-principles" aria-labelledby="h-principles-heading">
+<section class="h-principles" id="principles" aria-labelledby="h-principles-heading">
   <div class="container wide">
 
     <div class="h-principles__head">
@@ -605,7 +616,7 @@
   $featuredWork  = $work[0] ?? null;
   $remainingWork = array_slice($work, 1, 3);
 @endphp
-<section class="h-section h-section--tinted" aria-labelledby="h-work-heading">
+<section class="h-section h-section--tinted" id="work" aria-labelledby="h-work-heading">
   <div class="container wide">
 
     {{-- Section header: SEO-rich heading + count + link --}}
@@ -754,7 +765,7 @@
 {{-- ═══════════════════════════════════════════════════
      07 — OPEN SOURCE  (live GitHub API data)
      ═══════════════════════════════════════════════════ --}}
-<section class="h-section" aria-labelledby="h-oss-heading">
+<section class="h-section" id="code" aria-labelledby="h-oss-heading">
   <div class="container wide">
     <div class="h-section__head">
       <div>
@@ -944,7 +955,7 @@
   $journalStack    = array_slice($posts, 1, 4);
   $rssUrl = home_url('/feed/');
 @endphp
-<section class="h-journal" aria-labelledby="h-writing-heading">
+<section class="h-journal" id="journal" aria-labelledby="h-writing-heading">
   <div class="container wide">
 
     {{-- Header ─ SEO-rich heading + intro + links --}}
@@ -1104,7 +1115,7 @@
 {{-- ═══════════════════════════════════════════════════
      09 — FAQ
      ═══════════════════════════════════════════════════ --}}
-<section class="h-faq" aria-labelledby="h-faq-heading">
+<section class="h-faq" id="faq" aria-labelledby="h-faq-heading">
   <div class="container wide h-faq__inner">
 
     <div class="h-faq__sidebar">
@@ -1143,6 +1154,11 @@
 {{-- ═══════════════════════════════════════════════════
      10 — CTA
      ═══════════════════════════════════════════════════ --}}
+{{-- Back to top --}}
+<div class="h-back-top-row">
+  <a class="h-back-top" href="#h-hero-name">↑ Back to top</a>
+</div>
+
 <section class="h-cta" aria-labelledby="h-cta-heading">
   <div class="container wide h-cta__inner">
     <div>

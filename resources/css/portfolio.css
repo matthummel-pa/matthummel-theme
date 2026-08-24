@@ -1136,6 +1136,60 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   .write-hub { padding-inline: 1.1rem; }
 }
 
+/* ─── HOME: "On this page" jump nav + back to top ────────────────────────── */
+.h-page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem .65rem;
+  margin-top: 1rem;
+  padding-top: .85rem;
+  border-top: 1px solid var(--color-border);
+  font: 500 .8rem/1 var(--font-display);
+}
+.h-page-nav__label {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  font-size: .72rem;
+  margin-right: .25rem;
+}
+.h-page-nav a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: .25rem .55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: .78rem;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.h-page-nav a:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--blue-50);
+}
+
+.h-back-top-row {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 0 .5rem;
+  border-top: 1px solid var(--color-border);
+}
+.h-back-top {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font: 600 .82rem/1 var(--font-display);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: .45rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  transition: color .14s, border-color .14s;
+}
+.h-back-top:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
 /* ─── CODE PAGE ───────────────────────────────────────────────────────────── */
 .code-section-head {
   display: flex;
