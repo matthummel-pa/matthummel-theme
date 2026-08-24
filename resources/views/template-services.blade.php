@@ -159,6 +159,18 @@
       'a' => 'That\'s the goal. I build wp-admin edit fields for every content area that needs to change — text, images, lists, staff bios. Before launch I document anything that isn\'t obvious in plain language.',
     ],
     [
+      'q' => 'What does a finished WordPress site from you look like?',
+      'a' => 'The example sites on the Work page are the clearest answer — they\'re working concept sites built for Gettysburg businesses. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
+    ],
+    [
+      'q' => 'Do you work with businesses outside Gettysburg?',
+      'a' => 'Yes. Most of my work is remote. I\'m based in Gettysburg but I\'ve worked with agencies and businesses across the US. The process works entirely over email, video calls, and shared previews.',
+    ],
+    [
+      'q' => 'What\'s included in the project handoff?',
+      'a' => 'You get the domain (if I registered it for you), the hosting account transferred to your name, a full database export, the code repository, and a plain-language admin guide covering every editable area of the site. I also stay reachable for questions after launch.',
+    ],
+    [
       'q' => 'Do you do design, or just development?',
       'a' => 'Development. I can work from your design, a reference site, or a clear written brief. For original visual design I\'ll refer you to someone who does it well rather than guess.',
     ],
@@ -286,8 +298,8 @@
     {{-- Mid-page CTA --}}
     <div class="svc-mid-cta">
       <p class="svc-mid-cta__copy">Have a project in mind? I usually reply within a day.</p>
-      <a class="btn" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 15) !!} Say hello
+      <a class="h-text-arrow" href="{{ home_url('/contact/') }}">
+        Get in touch <span aria-hidden="true">→</span>
       </a>
     </div>
   </div>
@@ -365,23 +377,51 @@
 @endif
 
 {{-- ── FAQ ─────────────────────────────────────────── --}}
-<section class="pf-section" aria-labelledby="svc-faq-heading">
+<section class="pf-section pf-section--alt" aria-labelledby="svc-faq-heading" id="faq">
   <div class="container wide svc-faq-layout">
-    <div>
+
+    {{-- Left: heading + context + sticky contact prompt --}}
+    <div class="svc-faq-aside">
       <p class="eyebrow">Questions</p>
       <h2 id="svc-faq-heading" class="display-title is-section">
         {{ \App\field('svc_faq_h2', __('Frequently asked.', 'sage')) }}
       </h2>
-      <p class="sec-intro">Real questions from real conversations. If yours isn't here, <a href="{{ home_url('/contact/') }}">just ask</a>.</p>
+      <p class="svc-faq-aside__intro">Common questions about WordPress development, project scope, ownership, and working together — in Gettysburg and remotely.</p>
+      <ul class="svc-faq-aside__topics">
+        <li>Gettysburg &amp; remote work</li>
+        <li>Agency sub-contracting</li>
+        <li>Project timelines</li>
+        <li>Full ownership at handoff</li>
+        <li>Editing after launch</li>
+      </ul>
+      <div class="svc-faq-aside__cta">
+        <p>Question not here?</p>
+        <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
+          {!! \App\mh_svg_icon('mail', 14) !!} Ask me directly
+        </a>
+      </div>
     </div>
-    <div class="faq-list">
-      @foreach ($faqs as $i => $faq)
-        <details {{ $i === 0 ? 'open' : '' }}>
-          <summary>{{ $faq['q'] }}</summary>
-          <p>{{ $faq['a'] }}</p>
-        </details>
-      @endforeach
+
+    {{-- Right: accordion list --}}
+    <div>
+      <div class="faq-list">
+        @foreach ($faqs as $i => $faq)
+          <details {{ $i === 0 ? 'open' : '' }}>
+            <summary>{{ $faq['q'] }}</summary>
+            <p>{{ $faq['a'] }}</p>
+          </details>
+        @endforeach
+      </div>
+
+      {{-- End-of-list prompt --}}
+      <div class="faq-end-cta">
+        <p class="faq-end-cta__copy">Still have a question? I usually reply within a day.</p>
+        <a href="{{ home_url('/contact/') }}" class="h-text-arrow">
+          Write a note <span aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
+
   </div>
 </section>
 
