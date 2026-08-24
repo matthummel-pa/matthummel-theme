@@ -2097,34 +2097,42 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
   gap: 1.25rem;
-  margin: 2rem 0 1.5rem;
+  margin: 2rem 0 1.75rem;
 }
 @media (max-width: 760px) { .svc-audience-grid { grid-template-columns: 1fr; } }
 .svc-audience-card {
-  padding: 1.6rem 1.5rem 1.4rem;
+  padding: 1.6rem 1.5rem 1.5rem;
   border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-border);
   border-radius: 12px;
   background: var(--white);
+  display: flex;
+  flex-direction: column;
   transition: border-color .14s, box-shadow .14s;
 }
-.svc-audience-card:hover { border-color: var(--gray-300); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+.svc-audience-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+.svc-audience-card--blue  { border-top-color: var(--color-accent); }
+.svc-audience-card--blue  .svc-audience-card__icon { background: var(--blue-50); border-color: var(--blue-100); color: var(--color-accent); }
+.svc-audience-card--navy  { border-top-color: var(--color-text); }
+.svc-audience-card--navy  .svc-audience-card__icon { background: var(--gray-100); border-color: var(--gray-200); color: var(--color-text); }
+.svc-audience-card--green { border-top-color: #16a34a; }
+.svc-audience-card--green .svc-audience-card__icon { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
 .svc-audience-card__icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
-  background: var(--blue-50);
-  border: 1px solid var(--blue-100);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: var(--color-accent);
+  flex-shrink: 0;
 }
 .svc-audience-card__title {
-  font: 700 1rem/1.25 var(--font-display);
+  font: 700 1.05rem/1.25 var(--font-display);
   letter-spacing: -0.03em;
   color: var(--color-text);
-  margin: 0 0 .6rem;
+  margin: 0 0 .55rem;
 }
 .svc-audience-card__body {
   font-size: .9rem;
@@ -2132,16 +2140,105 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   color: var(--color-text-secondary);
   margin: 0 0 1rem;
 }
+.svc-audience-card__fits-label {
+  font: 600 .72rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 .5rem;
+}
+.svc-audience-card__fits {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  flex: 1;
+}
+.svc-audience-card__fits li {
+  font-size: .85rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  padding: .3rem 0 .3rem 1.3rem;
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+}
+.svc-audience-card__fits li:last-child { border-bottom: 0; }
+.svc-audience-card__fits li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: .3rem;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+.svc-audience-card--navy  .svc-audience-card__fits li::before { color: var(--color-text); }
+.svc-audience-card--green .svc-audience-card__fits li::before { color: #16a34a; }
 .svc-audience-card__link {
   font: 600 .82rem/1 var(--font-display);
   color: var(--color-accent);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: .2rem;
+  gap: .25rem;
+  margin-top: auto;
   transition: gap .12s;
 }
-.svc-audience-card__link:hover { gap: .4rem; }
+.svc-audience-card--navy  .svc-audience-card__link { color: var(--color-text); }
+.svc-audience-card--green .svc-audience-card__link { color: #16a34a; }
+.svc-audience-card__link:hover { gap: .45rem; }
+
+/* ── Not a good fit callout ── */
+.svc-not-fit {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: .75rem 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--gray-50);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--gray-300);
+  border-radius: 10px;
+  margin-top: .25rem;
+}
+@media (max-width: 680px) {
+  .svc-not-fit { grid-template-columns: 1fr; gap: .6rem; }
+}
+.svc-not-fit__heading {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font: 600 .85rem/1.2 var(--font-display);
+  color: var(--color-text-secondary);
+  margin: 0;
+  padding-top: .1rem;
+  white-space: nowrap;
+}
+.svc-not-fit__heading .mh-ico { color: var(--gray-400); flex-shrink: 0; }
+.svc-not-fit__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem .6rem;
+}
+.svc-not-fit__list li {
+  font-size: .82rem;
+  color: var(--color-text-muted);
+  background: var(--white);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: .25rem .7rem;
+}
+.svc-not-fit__close {
+  font-size: .82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  white-space: nowrap;
+  align-self: center;
+}
+@media (max-width: 680px) { .svc-not-fit__close { white-space: normal; } }
+.svc-not-fit__close a { color: var(--color-accent); font-weight: 600; }
 
 /* ── Tech chips on service cards ── */
 .svc-v2-card__tech {

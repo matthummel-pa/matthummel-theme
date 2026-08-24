@@ -80,26 +80,54 @@
 
   $audiences = [
     [
-      'icon'  => 'store',
-      'title' => 'Shops and local businesses',
-      'body'  => 'You need a site you own outright and can update without calling a developer. Based in Gettysburg or anywhere — I build WordPress sites that stay working.',
-      'cta'   => 'See example sites',
-      'href'  => '/projects/',
+      'icon'   => 'home',
+      'title'  => 'Shops and local businesses',
+      'body'   => 'You need a site that you own outright and can update yourself — no developer required for everyday changes. Based in Gettysburg or anywhere else.',
+      'fits'   => [
+        'You want real ownership of your domain, hosting, and code',
+        'You need to edit pages, menus, and images without technical help',
+        'You\'re a tour, inn, shop, restaurant, or service business',
+        'Budget is real and you want a fixed price before anything starts',
+      ],
+      'cta'    => 'See example sites',
+      'href'   => '/projects/',
+      'accent' => 'blue',
     ],
     [
-      'icon'  => 'users',
-      'title' => 'Agencies with overflow work',
-      'body'  => 'You have a client project that needs a WordPress developer. You keep the relationship; I stay in the background. Fixed scope, NDA available.',
-      'cta'   => 'Start a conversation',
-      'href'  => '/contact/',
+      'icon'   => 'users',
+      'title'  => 'Agencies with overflow',
+      'body'   => 'You have a client project and need a WordPress developer who stays in the background. You keep the relationship, the billing, and the credit.',
+      'fits'   => [
+        'You need a developer who won\'t contact your client directly',
+        'Scope and rate are agreed upfront — no surprises mid-project',
+        'You want clean, handoff-ready code your team can maintain',
+        'NDA is available if your client requires it',
+      ],
+      'cta'    => 'Start a conversation',
+      'href'   => '/contact/',
+      'accent' => 'navy',
     ],
     [
-      'icon'  => 'code',
-      'title' => 'Developers and teams',
-      'body'  => 'You need a focused plugin, a REST API, or another pair of hands on a specific WordPress or web app problem. Code is clean, documented, and yours.',
-      'cta'   => 'See the code',
-      'href'  => '/code/',
+      'icon'   => 'code',
+      'title'  => 'Developers and teams',
+      'body'   => 'You need a focused plugin, a REST integration, or a second pair of hands on a specific WordPress problem. Code comes documented and clean.',
+      'fits'   => [
+        'You need a plugin that does one thing and does it well',
+        'You want PHPDoc on public functions and readable commit history',
+        'You\'re building a React front-end or REST API integration',
+        'Power Apps or Power Automate work in a Microsoft 365 environment',
+      ],
+      'cta'    => 'See the code',
+      'href'   => '/code/',
+      'accent' => 'green',
     ],
+  ];
+
+  $notFits = [
+    'Ongoing social media management or paid ad campaigns',
+    'Enterprise e-commerce built from scratch with no existing design',
+    'Projects with no clear decision-maker or point of contact',
+    'Scope that needs to stay intentionally vague — I work from written scope',
   ];
 
   $commitments = [
@@ -186,26 +214,45 @@
 </div>
 
 {{-- ── WHO THIS IS FOR ─────────────────────────────── --}}
-<section class="pf-section" aria-labelledby="svc-who-heading">
+<section class="pf-section" aria-labelledby="svc-who-heading" id="fit">
   <div class="container wide">
     <p class="eyebrow">Who I work with</p>
     <h2 id="svc-who-heading" class="display-title is-section">Is this the right fit?</h2>
-    <p class="sec-intro">Three kinds of people reach out most.</p>
+    <p class="sec-intro" style="max-width:52ch">I work with shops, agencies, and developers — in Gettysburg and remotely. Pick the one that sounds most like you.</p>
+
     <div class="svc-audience-grid">
       @foreach ($audiences as $aud)
-        <div class="svc-audience-card">
-          <div class="svc-audience-card__icon">{!! \App\mh_svg_icon($aud['icon'], 24) !!}</div>
+        <div class="svc-audience-card svc-audience-card--{{ $aud['accent'] }}">
+          <div class="svc-audience-card__icon">{!! \App\mh_svg_icon($aud['icon'], 22) !!}</div>
           <h3 class="svc-audience-card__title">{{ $aud['title'] }}</h3>
           <p class="svc-audience-card__body">{{ $aud['body'] }}</p>
+          <p class="svc-audience-card__fits-label">Good fit if:</p>
+          <ul class="svc-audience-card__fits">
+            @foreach ($aud['fits'] as $fit)
+              <li>{{ $fit }}</li>
+            @endforeach
+          </ul>
           <a class="svc-audience-card__link" href="{{ home_url($aud['href']) }}">
             {{ $aud['cta'] }} →
           </a>
         </div>
       @endforeach
     </div>
-    <p class="svc-note">
-      Not sure you fit neatly into one? <a href="{{ home_url('/contact/') }}">Write a short note</a> — the worst outcome is an honest "not right now."
-    </p>
+
+    {{-- Not a good fit callout --}}
+    <div class="svc-not-fit">
+      <p class="svc-not-fit__heading">
+        {!! \App\mh_svg_icon('x-circle', 16) !!}
+        Not a good fit
+      </p>
+      <ul class="svc-not-fit__list">
+        @foreach ($notFits as $nf)
+          <li>{{ $nf }}</li>
+        @endforeach
+      </ul>
+      <p class="svc-not-fit__close">If none of the above apply and you're unsure, <a href="{{ home_url('/contact/') }}">write anyway</a> — I'll be straight with you.</p>
+    </div>
+
   </div>
 </section>
 
