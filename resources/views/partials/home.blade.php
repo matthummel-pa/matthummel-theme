@@ -30,6 +30,8 @@
     ['MySQL',         'database'],
     ['VS Code',       'vscode'],
     ['Node.js',       'nodejs'],
+    ['Netlify',       'netlify'],
+    ['Supabase',      'supabase'],
   ];
 
   $skillGroups = [
@@ -56,6 +58,8 @@
       ['GitHub',      'github',     '#111827'],
       ['VS Code',     'vscode',     '#007acc'],
       ['MySQL',       'database',   '#3ecf8e'],
+      ['Netlify',     'netlify',    '#00c7b7'],
+      ['Supabase',    'supabase',   '#3ecf8e'],
     ],
     'AI & Tooling' => [
       ['Cursor AI',   'cursor-ai',  '#111827'],
