@@ -347,8 +347,30 @@ function initComments() {
   });
 }
 
+function initShareButtons() {
+  document.querySelectorAll('.post-copy-link').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const url = btn.getAttribute('data-copy') || window.location.href;
+      const span = btn.querySelector('span');
+      const orig = span ? span.textContent : 'Copy link';
+      try {
+        await navigator.clipboard.writeText(url);
+        if (span) span.textContent = 'Copied!';
+        btn.classList.add('is-copied');
+      } catch {
+        if (span) span.textContent = 'Copy failed';
+      }
+      setTimeout(() => {
+        if (span) span.textContent = orig;
+        btn.classList.remove('is-copied');
+      }, 2000);
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initPopoutMenu();
+  initShareButtons();
   initReadingProgress();
   initTocSpy();
   initContactStatus();
