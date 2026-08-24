@@ -122,6 +122,10 @@ function mh_home_fields(): array
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('Selected work', 'sage')],
         ],
+        __('About strip', 'sage') => [
+            ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
+            ['home_about_text', __('Bio text', 'sage'), 'textarea', __("I've been building for the web since the higher-ed marketing days. WordPress stuck because it lets shops own their content and developers read real code. I still do some Power Platform work when a team lives in Microsoft 365, but WordPress is what I reach for.", 'sage')],
+        ],
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Working on something?', 'sage')],
             ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __("I build WordPress sites and plugins from Gettysburg, PA. I've done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.", 'sage')],
