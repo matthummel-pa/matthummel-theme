@@ -32,7 +32,7 @@
 </header>
 
 <div class="mh-popout-overlay" tabindex="-1"></div>
-<aside id="mh-popout" class="mh-popout" aria-label="{{ __('Menu', 'matthummel') }}">
+<aside id="mh-popout" class="mh-popout" aria-label="{{ __('Menu', 'matthummel') }}" aria-hidden="true" inert>
   <div class="mh-popout-head">
     <p class="mh-popout-kicker">Menu</p>
     <button class="mh-popout-close" type="button" aria-label="{{ __('Close menu', 'matthummel') }}">&times;</button>

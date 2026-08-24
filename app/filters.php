@@ -69,6 +69,10 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => 'Example sites in Gettysburg | '.$brand,
             'desc' => 'Studio WordPress concepts for Gettysburg tours, inns, and shops. See example sites or say hello.',
         ],
+        'template-accessibility.blade.php' => [
+            'title' => 'Accessibility statement | '.$brand,
+            'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report accessibility issues.',
+        ],
         'template-contact.blade.php' => [
             'title' => 'Hire a developer in Gettysburg | '.$brand,
             'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',
