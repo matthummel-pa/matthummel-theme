@@ -4,30 +4,37 @@
 @extends('layouts.app')
 
 @php
+  $gh       = \App\Github::fetchUser(\App\mh_github_login());
+  $ghUrl    = 'https://github.com/'.esc_attr(\App\mh_github_login());
+  $featured = array_slice(\App\mh_work_page_items(), 0, 3);
+
   $services = [
     [
       'icon'  => 'wordpress',
       'num'   => '01',
       'title' => 'WordPress sites',
       'short' => 'New builds, redesigns, and landing pages.',
-      'body'  => 'A custom Sage / Blade theme built to your specs, with wp-admin edit fields for every content area that matters — no developer needed for day-to-day updates. Mobile-first, fast, accessible, and 100% yours.',
+      'body'  => 'A custom Sage / Blade theme with wp-admin edit fields for every content area that matters — no developer needed for day-to-day updates. Mobile-first, fast, accessible, and 100% yours.',
       'gets'  => ['Custom Sage / Blade theme', 'Admin fields you edit yourself', 'Mobile-first, accessible markup', 'Plain-language handoff guide'],
+      'tech'  => ['WordPress', 'Sage', 'PHP', 'Tailwind'],
     ],
     [
       'icon'  => 'plugins',
       'num'   => '02',
       'title' => 'WordPress plugins',
-      'body'  => 'Small, focused plugins that do one job well. Built with PHP, documented so any developer can read them later, and sized to solve the actual problem — not a general-purpose toolkit you\'ll spend months maintaining.',
       'short' => 'Custom functionality with no bloat.',
+      'body'  => 'Small, focused plugins that do one job well. Built with PHP, documented so any developer can pick them up, and sized to solve the actual problem — not a general-purpose toolkit.',
       'gets'  => ['Single-purpose, readable code', 'PHPDoc on all public functions', 'Clean uninstall — no leftover data', 'Standard WordPress hooks throughout'],
+      'tech'  => ['PHP', 'WordPress', 'REST API'],
     ],
     [
       'icon'  => 'code',
       'num'   => '03',
       'title' => 'Other web apps',
       'short' => 'When WordPress isn\'t the right fit.',
-      'body'  => 'React front-ends, REST APIs, and data-driven apps. I also take Power Platform work — Power Apps and Power Automate — when a team already lives in Microsoft 365 and it\'s the right tool for the problem.',
+      'body'  => 'React front-ends, REST APIs, and data-driven apps. I also take Power Platform work — Power Apps and Power Automate — when a team already lives in Microsoft 365 and it\'s the right tool.',
       'gets'  => ['React or vanilla JS front-ends', 'REST APIs and data integrations', 'Power Apps / Power Automate', 'GitHub repo with full commit history'],
+      'tech'  => ['React', 'JavaScript', 'Power Apps', 'REST'],
     ],
     [
       'icon'  => 'users',
@@ -36,6 +43,7 @@
       'short' => 'Sub-contracting on your projects.',
       'body'  => 'You keep the client relationship and the billing. I build the WordPress site, plugin, or app. Scope and price agreed between us before anything starts. I can sign an NDA.',
       'gets'  => ['You keep the client relationship', 'Fixed scope and price upfront', 'Clean handoff to your team', 'NDA available if needed'],
+      'tech'  => ['WordPress', 'PHP', 'Sage', 'React'],
     ],
   ];
 
@@ -44,7 +52,7 @@
       'num'    => '01',
       'title'  => 'Write.',
       'timing' => '1–2 days',
-      'body'   => 'Tell me who the site is for, what needs fixing, and what a good outcome looks like. A few sentences are enough. No spec, no wireframe, no slides required.',
+      'body'   => 'Tell me who the site is for, what needs fixing, and what a good outcome looks like. A few sentences are enough. No spec, no wireframe required.',
       'gets'   => 'A quick reply with clarifying questions — or an honest note if I\'m not the right fit.',
     ],
     [
@@ -68,6 +76,37 @@
       'body'   => 'You get everything: the domain, the hosting account, the database, and the code. I write a plain-language admin guide and stay reachable for questions.',
       'gets'   => 'Full ownership transfer. No ongoing fees. No lock-in.',
     ],
+  ];
+
+  $audiences = [
+    [
+      'icon'  => 'store',
+      'title' => 'Shops and local businesses',
+      'body'  => 'You need a site you own outright and can update without calling a developer. Based in Gettysburg or anywhere — I build WordPress sites that stay working.',
+      'cta'   => 'See example sites',
+      'href'  => '/projects/',
+    ],
+    [
+      'icon'  => 'users',
+      'title' => 'Agencies with overflow work',
+      'body'  => 'You have a client project that needs a WordPress developer. You keep the relationship; I stay in the background. Fixed scope, NDA available.',
+      'cta'   => 'Start a conversation',
+      'href'  => '/contact/',
+    ],
+    [
+      'icon'  => 'code',
+      'title' => 'Developers and teams',
+      'body'  => 'You need a focused plugin, a REST API, or another pair of hands on a specific WordPress or web app problem. Code is clean, documented, and yours.',
+      'cta'   => 'See the code',
+      'href'  => '/code/',
+    ],
+  ];
+
+  $commitments = [
+    ['icon' => 'check', 'label' => 'Fixed price — no surprises'],
+    ['icon' => 'check', 'label' => 'You own everything at handoff'],
+    ['icon' => 'check', 'label' => 'No retainers or lock-in'],
+    ['icon' => 'check', 'label' => 'Gettysburg & remote'],
   ];
 
   $faqs = [
@@ -108,18 +147,14 @@
 
 @section('content')
 
-{{-- FAQ schema — helps Google show FAQ rich results --}}
+{{-- FAQ JSON-LD --}}
 @php
-  $faqSchema = array_map(fn($f) => [
-    '@type' => 'Question',
-    'name'  => $f['q'],
-    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['a']],
-  ], $faqs);
-  $faqJsonLd = json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqSchema], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  $faqSchema  = array_map(fn($f) => ['@type' => 'Question', 'name' => $f['q'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['a']]], $faqs);
+  $faqJsonLd  = json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqSchema], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 @endphp
 <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 
-{{-- HERO --}}
+{{-- ── HERO ─────────────────────────────────────────── --}}
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('svc_kicker', __('WordPress developer · Gettysburg, PA', 'sage')) }}</p>
   <h1 class="display-title is-hero">
@@ -128,15 +163,54 @@
   <p class="lead">
     {{ \App\field('svc_lede', __('I build WordPress sites, plugins, and web apps in Gettysburg and remotely. Fixed price, clear scope, no lock-in. You own everything — domain, hosting, code — at handoff.', 'sage')) }}
   </p>
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
-    <a href="{{ home_url('/projects/') }}">{!! \App\mh_svg_icon('globe', 15) !!} Example sites</a>
-    <a href="{{ home_url('/about/') }}">{!! \App\mh_svg_icon('user', 15) !!} About me</a>
-  </p>
+  <div class="svc-hero-actions">
+    <a class="btn" href="{{ home_url('/contact/') }}">
+      {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+    </a>
+    <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+      See example sites <span aria-hidden="true">→</span>
+    </a>
+  </div>
 @endcomponent
 
-{{-- SERVICES --}}
-<section class="pf-section" aria-labelledby="svc-ways-heading">
+{{-- ── COMMITMENT STRIP ────────────────────────────── --}}
+<div class="svc-strip" aria-label="Key commitments">
+  <div class="container wide svc-strip__inner">
+    @foreach ($commitments as $c)
+      <div class="svc-strip__item">
+        {!! \App\mh_svg_icon($c['icon'], 15) !!}
+        <span>{{ $c['label'] }}</span>
+      </div>
+    @endforeach
+  </div>
+</div>
+
+{{-- ── WHO THIS IS FOR ─────────────────────────────── --}}
+<section class="pf-section" aria-labelledby="svc-who-heading">
+  <div class="container wide">
+    <p class="eyebrow">Who I work with</p>
+    <h2 id="svc-who-heading" class="display-title is-section">Is this the right fit?</h2>
+    <p class="sec-intro">Three kinds of people reach out most.</p>
+    <div class="svc-audience-grid">
+      @foreach ($audiences as $aud)
+        <div class="svc-audience-card">
+          <div class="svc-audience-card__icon">{!! \App\mh_svg_icon($aud['icon'], 24) !!}</div>
+          <h3 class="svc-audience-card__title">{{ $aud['title'] }}</h3>
+          <p class="svc-audience-card__body">{{ $aud['body'] }}</p>
+          <a class="svc-audience-card__link" href="{{ home_url($aud['href']) }}">
+            {{ $aud['cta'] }} →
+          </a>
+        </div>
+      @endforeach
+    </div>
+    <p class="svc-note">
+      Not sure you fit neatly into one? <a href="{{ home_url('/contact/') }}">Write a short note</a> — the worst outcome is an honest "not right now."
+    </p>
+  </div>
+</section>
+
+{{-- ── SERVICES ─────────────────────────────────────── --}}
+<section class="pf-section pf-section--alt" aria-labelledby="svc-ways-heading">
   <div class="container wide">
     <p class="eyebrow">What I build</p>
     <h2 id="svc-ways-heading" class="display-title is-section">
@@ -157,17 +231,27 @@
               <li>{{ $item }}</li>
             @endforeach
           </ul>
+          <div class="svc-v2-card__tech" aria-label="Technologies">
+            @foreach ($svc['tech'] as $t)
+              <span class="svc-tech-chip">{{ $t }}</span>
+            @endforeach
+          </div>
         </article>
       @endforeach
     </div>
-    <p class="svc-note">
-      Not sure which fits your project? <a href="{{ home_url('/contact/') }}">Write a short note</a> describing the problem — I'll help you figure out the right shape.
-    </p>
+
+    {{-- Mid-page CTA --}}
+    <div class="svc-mid-cta">
+      <p class="svc-mid-cta__copy">Have a project in mind? I usually reply within a day.</p>
+      <a class="btn" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 15) !!} Say hello
+      </a>
+    </div>
   </div>
 </section>
 
-{{-- PROCESS --}}
-<section class="pf-section pf-section--alt" aria-labelledby="svc-process-heading">
+{{-- ── PROCESS ─────────────────────────────────────── --}}
+<section class="pf-section" aria-labelledby="svc-process-heading">
   <div class="container wide">
     <p class="eyebrow">How it works</p>
     <h2 id="svc-process-heading" class="display-title is-section">
@@ -195,7 +279,49 @@
   </div>
 </section>
 
-{{-- FAQ --}}
+{{-- ── WORK TEASER ─────────────────────────────────── --}}
+@if (! empty($featured))
+<section class="pf-section pf-section--alt" aria-labelledby="svc-work-heading">
+  <div class="container wide">
+    <p class="eyebrow">Example work</p>
+    <h2 id="svc-work-heading" class="display-title is-section">A few recent concepts.</h2>
+    <p class="sec-intro" style="margin-bottom:2rem">These are concept sites from <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys</a> — working demonstrations of what a WordPress site can look like for local Gettysburg businesses.</p>
+    <div class="svc-work-grid">
+      @foreach ($featured as $p)
+        @php
+          $href = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
+          $ext  = ! empty($p['concept']);
+        @endphp
+        <a class="svc-work-card" href="{{ $href }}" {{ $ext ? 'rel="noopener" target="_blank"' : '' }}>
+          @if (! empty($p['image']))
+            <div class="svc-work-card__img">
+              <img src="{{ esc_url($p['image']) }}"
+                   alt="{{ esc_attr($p['title']) }} — WordPress site concept"
+                   width="480" height="270" loading="lazy" decoding="async">
+            </div>
+          @else
+            <div class="svc-work-card__img svc-work-card__img--placeholder">
+              {!! \App\mh_svg_icon('wordpress', 28) !!}
+            </div>
+          @endif
+          <div class="svc-work-card__body">
+            <span class="svc-work-card__cat">{{ $p['cat'] }}</span>
+            <h3 class="svc-work-card__title">{{ $p['title'] }}</h3>
+            <p class="svc-work-card__place">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</p>
+          </div>
+        </a>
+      @endforeach
+    </div>
+    <p style="margin-top:1.75rem;text-align:center">
+      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+        Browse all {{ count(\App\mh_work_page_items()) }} concepts →
+      </a>
+    </p>
+  </div>
+</section>
+@endif
+
+{{-- ── FAQ ─────────────────────────────────────────── --}}
 <section class="pf-section" aria-labelledby="svc-faq-heading">
   <div class="container wide svc-faq-layout">
     <div>
@@ -216,7 +342,7 @@
   </div>
 </section>
 
-{{-- CTA --}}
+{{-- ── CTA ──────────────────────────────────────────── --}}
 <section class="cta-band" aria-labelledby="svc-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
