@@ -507,15 +507,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   align-items: center;
 }
 .h-hero__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) auto;
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: center;
+  display: block;
+  max-width: 72ch;
 }
 @media (max-width: 780px) {
   .h-hero { min-height: 0; padding: 3.5rem 0 3rem; }
-  .h-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
-  .h-hero__inner .h-hero__photo { grid-row: 2; }
 }
 
 .h-hero__photo {
@@ -542,8 +538,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .h-badge--open { color: #166534; border-color: #bbf7d0; background: #f0fdf4; }
 
 .h-hero__name {
-  font: 800 clamp(3rem, 8.5vw, 6rem)/1 var(--font-display);
-  letter-spacing: -0.055em;
+  font: 800 clamp(2rem, 5vw, 3.75rem)/1.05 var(--font-display);
+  letter-spacing: -0.05em;
   color: var(--color-text);
   margin: 0 0 1rem;
   text-wrap: balance;
@@ -555,10 +551,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   margin: 0 0 1.1rem;
 }
 .h-hero__lede {
-  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
   line-height: 1.78;
   color: var(--color-text-secondary);
-  max-width: 48rem;
+  max-width: 64ch;
   margin: 0 0 1.85rem;
   text-wrap: pretty;
 }
@@ -2367,8 +2363,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 /* Desktop (>900px): full scale */
 .h-hero__name {
-  font: 800 clamp(2.75rem, 6vw, 7rem)/1 var(--font-display) !important;
-  letter-spacing: -0.055em !important;
+  font: 800 clamp(2rem, 5vw, 3.75rem)/1.05 var(--font-display) !important;
+  letter-spacing: -0.05em !important;
 }
 .h-section__title {
   font: 800 clamp(1.75rem, 3.5vw, 3rem)/1.05 var(--font-display) !important;
@@ -2388,7 +2384,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 /* Tablet (≤860px) */
 @media (max-width: 860px) {
   .h-hero__name {
-    font-size: clamp(2.5rem, 8vw, 4.5rem) !important;
+    font-size: clamp(1.85rem, 6vw, 3rem) !important;
   }
   .h-section__title {
     font-size: clamp(1.6rem, 4.5vw, 2.5rem) !important;
@@ -2408,7 +2404,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 @media (max-width: 560px) {
   body { font-size: 1.05rem; }
   .h-hero__name {
-    font-size: clamp(2.25rem, 10vw, 3.25rem) !important;
+    font-size: clamp(1.65rem, 8vw, 2.5rem) !important;
     letter-spacing: -0.04em !important;
   }
   .h-section__title {
