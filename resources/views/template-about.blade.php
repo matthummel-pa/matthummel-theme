@@ -31,7 +31,7 @@
 
   $workTypes = [
     ['Full-time roles', 'WordPress, PHP, and web development. Open to on-site, hybrid, or remote.'],
-    ['Contract and freelance', 'Project-based work with a clear scope and a fixed price.'],
+    ['Contract and freelance', 'Project-based work with a clear, written scope.'],
     ['Agency sub-contracting', 'You keep the client relationship. I build the thing.'],
     ['Part-time arrangements', 'A few hours a week or a focused sprint. Flexible.'],
   ];

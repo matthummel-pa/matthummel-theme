@@ -129,7 +129,7 @@ function mh_home_fields(): array
         ],
         __('Process section', 'sage') => [
             ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
-            ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('No retainers. No ongoing contracts unless you want one. A question about a post is just as welcome as a <a href="/contact/">build request</a>.', 'sage')],
+            ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('No ongoing contracts unless you want one. A question about a post is just as welcome as a <a href="/contact/">build request</a>.', 'sage')],
         ],
         __('About strip extra', 'sage') => [
             ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __("Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you don't need to ask permission to use it.", 'sage')],
@@ -247,9 +247,9 @@ function page_field_map(): array
         ],
         'template-services.blade.php' => [
             __('Intro', 'sage') => [
-                ['svc_kicker', __('Kicker', 'sage'), 'text', __('Services', 'sage')],
-                ['svc_h1', __('Heading', 'sage'), 'text', __('If you want a hand.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Most of this site is free to read and copy. If you need a WordPress site, a plugin, or another web app in Gettysburg, you can write. I take a few extra projects; Power Platform is not my main focus.', 'sage')],
+                ['svc_kicker', __('Kicker', 'sage'), 'text', __('WordPress developer · Gettysburg, PA', 'sage')],
+                ['svc_h1', __('Heading', 'sage'), 'text', __('Custom WordPress sites and plugins for shops, agencies, and developers.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites, plugins, and web apps in Gettysburg and remotely. Clear scope, no lock-in. You own everything — domain, hosting, code — at handoff.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -267,7 +267,7 @@ function page_field_map(): array
                 ['svc_process_h2', __('Heading', 'sage'), 'text', __('How a project usually goes', 'sage')],
                 ['svc_process', __('Steps', 'sage'), 'repeater', [
                     ['title' => __('Write', 'sage'), 'text' => __('Tell me who it is for and what is broken or missing. A paragraph is enough.', 'sage')],
-                    ['title' => __('Scope', 'sage'), 'text' => __('I send a short list of work, a timeline, and what I will not do (ads, social, ongoing retainers).', 'sage')],
+                    ['title' => __('Scope', 'sage'), 'text' => __('I send a short list of work, a timeline, and what I will not do (ads, social, ongoing support contracts).', 'sage')],
                     ['title' => __('Ship', 'sage'), 'text' => __('You get pages you can edit, notes in plain words, and the repo if the work is public.', 'sage')],
                 ], [
                     ['title', __('Title', 'sage'), 'text'],
