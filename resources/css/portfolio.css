@@ -2871,3 +2871,289 @@ html.mh-dark .resume-tag.is-now {
   border-color: #93c5fd;
 }
 html.mh-dark .resume-points li::before { background: #93c5fd; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOME REDESIGN — minimalist portfolio style
+   Scoped to .page-template-template-home so no other page is affected.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Body base ── */
+.page-template-template-home {
+  font-size: 1.25rem;
+}
+
+/* ── Hero: clean white, no gradient ── */
+.hero--clean {
+  background: #fff;
+  color: var(--color-ink);
+  min-height: calc(100svh - 5.25rem);
+}
+.hero--clean .display-title { color: var(--color-ink); }
+.hero--clean .display-title.is-hero::after { background: var(--color-blue); }
+
+/* Profile photo: clean ring on white */
+.profile-photo--portfolio {
+  width: 260px;
+  height: 260px;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--color-line);
+}
+@media (max-width: 800px) {
+  .profile-photo--portfolio {
+    width: min(180px, 58vw);
+    height: min(180px, 58vw);
+  }
+}
+
+/* Hero text: dark on white */
+.hero-loc {
+  font: 700 .9rem/1.4 var(--font-display);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 .85rem;
+}
+.hero-role-clean {
+  font: 700 1.3rem/1.45 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--color-muted);
+  margin: 0 0 1.15rem;
+  max-width: 44rem;
+}
+.hero-lede-clean {
+  font-size: clamp(1.2rem, 2vw, 1.42rem);
+  line-height: 1.75;
+  color: var(--color-body);
+  max-width: 42rem;
+  margin: 0 0 1.85rem;
+  font-weight: 400;
+  text-wrap: pretty;
+}
+
+/* Hero buttons: standard on white */
+.hero--clean .btn { /* primary = blue on white, already correct */ }
+
+/* Stat row: light on white */
+.stat-row--clean {
+  border-top-color: var(--color-line);
+  max-width: 32rem;
+  margin: 1.35rem 0 0;
+  padding-top: 1.15rem;
+}
+.stat-row--clean dt { color: var(--color-ink); font-size: 1.25rem; }
+.stat-row--clean dd { color: var(--color-muted); }
+.stat-row--clean dt a { color: inherit; text-decoration: none; }
+.stat-row--clean dt a:hover { color: var(--color-blue); }
+
+/* Hero quick nav */
+.hero-quick-clean {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.1rem;
+  margin: 1.45rem 0 0;
+  font: 700 .95rem/1.4 var(--font-body);
+}
+.hero-quick-clean a {
+  color: var(--color-muted);
+  text-decoration: none;
+  border-bottom: 1.5px solid transparent;
+  padding-bottom: 1px;
+  transition: color .15s ease, border-color .15s ease;
+}
+.hero-quick-clean a:hover {
+  color: var(--color-blue);
+  border-bottom-color: var(--color-blue);
+}
+
+/* Hero inner: two-column on desktop */
+.hero-inner--portfolio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3rem;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .hero-inner--portfolio {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .hero-inner--portfolio .profile-photo--portfolio {
+    grid-row: 2;
+    justify-self: start;
+  }
+}
+.hero-btns { margin-bottom: 0; }
+
+/* ── Stack: clean pills ── */
+.home-stack-section { background: #f8f9fc; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+.stack-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+}
+.stack-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: #fff;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-line);
+  border-radius: 999px;
+  padding: .55rem 1rem;
+  font: 600 .88rem/1.15 var(--font-display);
+  letter-spacing: -.01em;
+  transition: border-color .14s, color .14s;
+}
+.stack-chips li:hover { border-color: var(--color-blue); color: var(--color-blue); }
+.stack-chips .mh-ico { flex-shrink: 0; }
+
+/* ── Section backgrounds: home alternating ── */
+.home-alt-section {
+  background: #f8f9fc;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* ── Work / project cards: flat + clean ── */
+.home-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 680px) { .home-card-grid { grid-template-columns: 1fr; } }
+
+.home-project-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  padding: 1.65rem 1.6rem 1.75rem;
+  box-shadow: 0 1px 4px rgba(11, 18, 32, .05);
+  transition: box-shadow .18s ease, transform .18s ease;
+  min-height: 100%;
+}
+.home-project-card:hover {
+  box-shadow: 0 6px 20px rgba(11, 18, 32, .1);
+  transform: translateY(-2px);
+}
+.home-project-card h3 {
+  margin: 0 0 .7rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  color: var(--color-ink);
+}
+.home-project-card h3 a { color: inherit; text-decoration: none; }
+.home-project-card h3 a:hover { color: var(--color-blue); }
+.home-project-card p { margin: 0 0 .85em; font-size: 1.05rem; }
+.home-project-card p:last-child { margin-bottom: 0; }
+
+/* ── "Right now" section ── */
+.home-now-section { background: #fff; }
+.home-now-inner {
+  display: grid;
+  grid-template-columns: minmax(0, .75fr) 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (max-width: 760px) { .home-now-inner { grid-template-columns: 1fr; } }
+.home-now-copy { padding: 2.5rem 2.75rem; background: #f0f4ff; border-left: 4px solid var(--color-blue); border-radius: 0 14px 14px 0; }
+@media (max-width: 760px) { .home-now-copy { border-radius: 14px; border-left-width: 4px; padding: 1.75rem 1.5rem; } }
+.home-now-copy .btn-outline {
+  background: transparent;
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+.home-now-copy .btn-outline:hover { background: var(--color-ink); color: #fff; }
+
+/* ── Who cards: light blue tint instead of navy ── */
+.page-template-template-home .who-card {
+  box-shadow: none;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  transition: box-shadow .15s ease;
+}
+.page-template-template-home .who-card:hover { box-shadow: 0 4px 16px rgba(11, 18, 32, .08); }
+.page-template-template-home .who-card:nth-child(1),
+.page-template-template-home .who-card:nth-child(4) {
+  background: #eff4ff;
+  color: var(--color-body);
+  border-color: #c7d3fe;
+  box-shadow: none;
+}
+.page-template-template-home .who-card:nth-child(1) h3,
+.page-template-template-home .who-card:nth-child(4) h3 { color: var(--color-ink); }
+.page-template-template-home .who-card:nth-child(1) p,
+.page-template-template-home .who-card:nth-child(4) p { color: var(--color-body); }
+.page-template-template-home .who-card:nth-child(1) .who-card__icon,
+.page-template-template-home .who-card:nth-child(4) .who-card__icon {
+  background: var(--color-blue-soft);
+  border-color: var(--color-blue);
+  color: var(--color-blue-ink);
+}
+.page-template-template-home .who-card:nth-child(1) .who-card__num,
+.page-template-template-home .who-card:nth-child(4) .who-card__num,
+.page-template-template-home .who-card:nth-child(1) .who-card__cta,
+.page-template-template-home .who-card:nth-child(4) .who-card__cta { color: var(--color-blue-ink); }
+
+/* Eyebrows on home: gray uppercase */
+.page-template-template-home .eyebrow {
+  color: var(--color-muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+/* Repo cards: flatter ── */
+.page-template-template-home .repo-card,
+.page-template-template-home .lift-card {
+  box-shadow: none;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.page-template-template-home .repo-card:hover,
+.page-template-template-home .lift-card:hover {
+  box-shadow: 0 4px 16px rgba(11, 18, 32, .08);
+  transform: translateY(-2px);
+}
+
+/* ── Dark mode overrides ── */
+html.mh-dark .hero--clean {
+  background: #0b1220;
+  color: var(--color-body);
+}
+html.mh-dark .hero--clean .display-title { color: #f8fafc; }
+html.mh-dark .hero--clean .display-title.is-hero::after { background: #60a5fa; }
+html.mh-dark .hero-loc { color: #64748b; }
+html.mh-dark .hero-role-clean { color: #94a3b8; }
+html.mh-dark .hero-lede-clean { color: #cbd5e1; }
+html.mh-dark .hero-quick-clean a { color: #64748b; }
+html.mh-dark .hero-quick-clean a:hover { color: #93c5fd; border-bottom-color: #93c5fd; }
+html.mh-dark .stat-row--clean { border-top-color: #1e293b; }
+html.mh-dark .stat-row--clean dt { color: #f8fafc; }
+html.mh-dark .stat-row--clean dd { color: #64748b; }
+html.mh-dark .home-stack-section { background: #0f172a; border-color: #1e293b; }
+html.mh-dark .stack-chips li { background: #111827; color: #e2e8f0; border-color: #334155; }
+html.mh-dark .stack-chips li:hover { border-color: #93c5fd; color: #93c5fd; }
+html.mh-dark .home-alt-section { background: #0f172a; border-color: #1e293b; }
+html.mh-dark .home-project-card { background: #111827; border-color: #1e293b; box-shadow: none; }
+html.mh-dark .home-project-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.35); transform: translateY(-2px); }
+html.mh-dark .home-project-card h3 { color: #f8fafc; }
+html.mh-dark .home-now-section { background: #0b1220; }
+html.mh-dark .home-now-copy { background: #111827; border-left-color: #93c5fd; }
+html.mh-dark .home-now-copy .btn-outline { color: #f8fafc; border-color: #64748b; }
+html.mh-dark .home-now-copy .btn-outline:hover { background: #f8fafc; color: #0b1220; }
+html.mh-dark .page-template-template-home .who-card { border-color: #1e293b; }
+html.mh-dark .page-template-template-home .who-card:nth-child(1),
+html.mh-dark .page-template-template-home .who-card:nth-child(4) {
+  background: #0f172a;
+  border-color: #1e3a8a;
+}
+html.mh-dark .page-template-template-home .who-card:nth-child(1) h3,
+html.mh-dark .page-template-template-home .who-card:nth-child(4) h3 { color: #f8fafc; }
+html.mh-dark .page-template-template-home .who-card:nth-child(1) p,
+html.mh-dark .page-template-template-home .who-card:nth-child(4) p { color: #94a3b8; }
+html.mh-dark .page-template-template-home .repo-card,
+html.mh-dark .page-template-template-home .lift-card { border-color: #1e293b; }
+html.mh-dark .page-template-template-home .eyebrow { color: #64748b; }

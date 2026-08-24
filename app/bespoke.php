@@ -1119,3 +1119,106 @@ function mh_apply_journal_rename(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_journal_rename', 51);
+
+/** Home redesign copy — update fields stored in the DB to match the new defaults. */
+function mh_apply_home_redesign_copy(): void
+{
+    if (get_option('mh_home_redesign_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_home_role' => [
+            'Full-stack developer. WordPress, plugins, and other web apps.' => 'WordPress developer. I mostly build websites.',
+        ],
+        'mh_f_home_lede' => [
+            'I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.' => 'I build WordPress sites, plugins, and other web apps. Mostly WordPress — it\'s what I enjoy. Shops get something they can edit. Developers get code they can read.',
+            'I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.' => 'I build WordPress sites, plugins, and other web apps. Mostly WordPress — it\'s what I enjoy. Shops get something they can edit. Developers get code they can read.',
+        ],
+        'mh_f_home_link_code' => [
+            'Code and snippets' => 'Code',
+        ],
+        'mh_f_home_stack_kicker' => [
+            'Tools I ship with' => 'The stack',
+        ],
+        'mh_f_home_stack_h2' => [
+            'Stack' => 'What I work with',
+        ],
+        'mh_f_home_now_h2' => [
+            'WordPress, plugins, and other web apps.' => 'WordPress, mostly.',
+        ],
+        'mh_f_home_write_h2' => [
+            'Journal' => 'Recent posts',
+        ],
+        'mh_f_home_write_intro' => [
+            'Short posts on WordPress, plugins, and other web apps. Many include snippets you can paste into a theme or a plugin.' => 'Short posts on WordPress, plugins, and other web apps. Lots of snippets.',
+        ],
+        'mh_f_home_code_kicker' => [
+            'Public on GitHub' => 'GitHub',
+        ],
+        'mh_f_home_code_h2' => [
+            'Code to borrow' => 'Code to copy',
+        ],
+        'mh_f_home_code_intro' => [
+            'Public repos on GitHub, plus short snippets. Fork them, copy them, or ask if a line is unclear.' => 'Public repos and short snippets. Fork them or just read.',
+            'Public repos plus short snippets. Fork them, copy them, or ask if a line is unclear.' => 'Public repos and short snippets. Fork them or just read.',
+        ],
+        'mh_f_home_work_kicker' => [
+            'Studio concepts' => 'Example sites',
+        ],
+        'mh_f_home_work_h2' => [
+            'Example sites' => 'Work from the studio',
+        ],
+        'mh_f_home_work_intro' => [
+            'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops. Useful if you run a local business and want to see what a clear WordPress site can look like.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
+            'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
+        ],
+        'mh_f_home_help_h2' => [
+            'If you need a hand' => 'Let\'s talk.',
+        ],
+        'mh_f_home_help_p1' => [
+            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
+            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
+        ],
+        'mh_f_home_help_p2' => [
+            'Read <a href="/services/">how I can help</a>, or <a href="/contact/">send a note</a>. A question about a post or a snippet is just as welcome as a build request.' => 'Read <a href="/services/">how I can help</a>, or just send a note. A question about a post is just as welcome as a project inquiry.',
+        ],
+        'mh_f_home_who_kicker' => [
+            'Who this is for' => 'Who it\'s for',
+        ],
+        'mh_f_who_h2' => [
+            'Four doors in' => 'Pick a starting point',
+            'Same site. Different starting points.' => 'Same site. Useful from different angles.',
+        ],
+        'mh_f_who_intro' => [
+            'Same site. Different starting points.' => 'Same site. Useful from different angles.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_home_redesign_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_home_redesign_copy', 52);
