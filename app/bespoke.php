@@ -1222,3 +1222,60 @@ function mh_apply_home_redesign_copy(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_home_redesign_copy', 52);
+
+/** Home v2 — fresh layout: update headings and CTA stored in DB. */
+function mh_apply_home_v2_copy(): void
+{
+    if (get_option('mh_home_v2_copy')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_home_write_h2' => [
+            'Recent posts' => 'From the journal',
+            'Journal' => 'From the journal',
+        ],
+        'mh_f_home_work_h2' => [
+            'Work from the studio' => 'Selected work',
+            'Example sites' => 'Selected work',
+        ],
+        'mh_f_home_help_h2' => [
+            "Let\xe2\x80\x99s talk." => 'Working on something?',
+            "Let's talk." => 'Working on something?',
+            'If you need a hand' => 'Working on something?',
+        ],
+        'mh_f_home_help_p2' => [
+            'Read <a href="/services/">how I can help</a>, or just send a note. A question about a post is just as welcome as a project inquiry.' => 'Say hello. A question about a post is just as welcome as a project inquiry.',
+        ],
+        'mh_f_home_lede' => [
+            "I build WordPress sites, plugins, and other web apps. Mostly WordPress \xe2\x80\x94 it's what I enjoy. Shops get something they can edit. Developers get code they can read." => "I build WordPress sites and plugins from Gettysburg, PA. Shops get something they actually own \xe2\x80\x94 not a subscription they rent. I've done Power Platform work too, but WordPress is what I reach for.",
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_home_v2_copy', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_home_v2_copy', 53);

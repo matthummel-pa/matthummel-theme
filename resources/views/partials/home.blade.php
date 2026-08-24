@@ -1,228 +1,199 @@
 @php
-  $posts  = \App\mh_latest_posts(3);
-  $gh     = \App\Github::fetchUser(\App\mh_github_login());
-  $repos  = \App\mh_home_github_repos(4);
-  $work   = array_slice(\App\mh_work_page_items(), 0, 4);
+  $posts   = \App\mh_latest_posts(3);
+  $work    = array_slice(\App\mh_work_page_items(), 0, 4);
+  $gh      = \App\Github::fetchUser(\App\mh_github_login());
+  $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
-  $ghUrl  = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
-  $ghBlog = \App\mh_github_blog_url($gh);
-  $stack  = \App\field_lines('home_stack', [
-    __('WordPress', 'sage'),
-    __('PHP', 'sage'),
-    __('Sage / Blade', 'sage'),
-    __('JavaScript', 'sage'),
-    __('HTML & CSS', 'sage'),
-    __('Plugins', 'sage'),
-    __('Git', 'sage'),
-    __('Power Apps', 'sage'),
-    __('Power Automate', 'sage'),
-    __('React', 'sage'),
-  ]);
 @endphp
 
-{{-- ── HERO ── clean white, no gradient --}}
-<section class="hero hero--clean" aria-labelledby="hero-heading">
-  <div class="container wide hero-inner hero-inner--portfolio">
+{{-- ═══════════════════════════════════════════════════════════════════
+     HERO — white, full height, bold name
+     ═══════════════════════════════════════════════════════════════════ --}}
+<section class="h-hero" aria-labelledby="h-hero-name">
+  <div class="container wide h-hero__inner">
 
-    <div class="hero-copy">
-      <p class="hero-loc">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, PA', 'sage')) }}</p>
+    <div class="h-hero__copy">
 
-      <h1 id="hero-heading" class="display-title is-hero">
-        {{-- strip trailing period so the underline accent sits cleanly --}}
+      <div class="h-hero__badges">
+        <span class="h-badge">{{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, PA', 'sage')) }}</span>
+        @if (! empty($gh['hireable']))
+          <span class="h-badge h-badge--open">{{ __('Available', 'sage') }}</span>
+        @endif
+      </div>
+
+      <h1 id="h-hero-name" class="h-hero__name">
         {{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}
       </h1>
 
-      <p class="hero-role-clean">{{ \App\field('home_role', __('WordPress developer. I mostly build websites.', 'sage')) }}</p>
+      <p class="h-hero__role">
+        {{ \App\field('home_role', __('WordPress developer. I mostly build websites.', 'sage')) }}
+      </p>
 
-      <p class="hero-lede-clean">{{ \App\field('home_lede', __('I build WordPress sites, plugins, and other web apps. Mostly WordPress — it\'s what I enjoy. Shops get something they can edit. Developers get code they can read.', 'sage')) }}</p>
+      <p class="h-hero__lede">
+        {{ \App\field('home_lede', __('I build WordPress sites and plugins from Gettysburg, PA. Shops get something they actually own — not a subscription they rent. I\'ve done Power Platform work too, but WordPress is what I reach for.', 'sage')) }}
+      </p>
 
-      <p class="btn-row hero-btns">
+      <div class="h-hero__actions">
         <a class="btn" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/contact/')) }}">
           {{ \App\field('home_cta_primary', __('Say hello', 'sage')) }}
         </a>
-        <a class="btn btn-outline" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
-          {{ \App\field('home_cta_secondary', __('See example sites', 'sage')) }}
+        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
+          {{ \App\field('home_cta_secondary', __('See my work', 'sage')) }}
+          <span aria-hidden="true">→</span>
         </a>
-      </p>
+      </div>
 
       @if (! empty($gh['public_repos']) || ! empty($gh['followers']))
-        <dl class="stat-row stat-row--clean">
+        <dl class="h-stats">
           @if (! empty($gh['public_repos']))
             <div>
-              <dt><a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['public_repos']) }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></dt>
+              <dt><a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['public_repos']) }}<span class="visually-hidden"> (opens in a new window)</span></a></dt>
               <dd>{{ __('public repos', 'sage') }}</dd>
             </div>
           @endif
           @if (! empty($gh['followers']))
             <div>
-              <dt><a href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['followers']) }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a></dt>
-              <dd>{{ __('GitHub followers', 'sage') }}</dd>
-            </div>
-          @endif
-          @if (! empty($gh['hireable']))
-            <div>
-              <dt>{{ __('Open', 'sage') }}</dt>
-              <dd>{{ __('for hire', 'sage') }}</dd>
+              <dt><a href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['followers']) }}<span class="visually-hidden"> (opens in a new window)</span></a></dt>
+              <dd>{{ __('followers', 'sage') }}</dd>
             </div>
           @endif
         </dl>
       @endif
 
-      <nav class="hero-quick-clean" aria-label="{{ __('Quick links', 'sage') }}">
-        <a href="{{ $writing }}">{{ \App\field('home_link_writing', __('Journal', 'sage')) }}</a>
-        <a href="{{ home_url('/code/') }}">{{ \App\field('home_link_code', __('Code', 'sage')) }}</a>
-        <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">GitHub<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
-        <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Ridges &amp; Valleys<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
-        <a href="{{ home_url('/about/') }}">{{ \App\field('home_link_about', __('About', 'sage')) }}</a>
+      <nav class="h-quick" aria-label="{{ __('Quick links', 'sage') }}">
+        <a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a>
+        <a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a>
+        <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">GitHub<span class="visually-hidden"> (opens in a new window)</span></a>
+        <a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a>
       </nav>
+
     </div>
 
     @include('partials.profile-photo', [
-      'size'  => 280,
-      'class' => 'profile-photo profile-photo--hero profile-photo--portfolio',
+      'size'  => 340,
+      'class' => 'profile-photo h-hero__photo',
       'eager' => true,
     ])
 
   </div>
 </section>
 
-{{-- ── STACK ── clean minimal tool chips --}}
-<section class="pf-section home-stack-section" aria-labelledby="stack-heading">
+{{-- ═══════════════════════════════════════════════════════════════════
+     WHAT I BUILD — 3-column capability strip
+     ═══════════════════════════════════════════════════════════════════ --}}
+<section class="h-services" aria-labelledby="h-services-heading">
   <div class="container wide">
-    <header class="sec-head">
-      <div>
-        <p class="eyebrow">{{ \App\field('home_stack_kicker', __('The stack', 'sage')) }}</p>
-        <h2 id="stack-heading" class="display-title is-section">{{ \App\field('home_stack_h2', __('What I work with', 'sage')) }}</h2>
-      </div>
-    </header>
-    <ul class="stack-chips" role="list">
-      @foreach ($stack as $tool)
-        <li>
-          {!! \App\mh_svg_icon($tool) !!}
-          <span>{{ $tool }}</span>
-        </li>
-      @endforeach
-    </ul>
+    <h2 id="h-services-heading" class="h-section-label">{{ \App\field('home_build_h2', __('What I build', 'sage')) }}</h2>
+    <div class="h-services__grid">
+
+      <article class="h-service">
+        <span class="h-service__icon" aria-hidden="true">{!! \App\mh_svg_icon('globe', 26) !!}</span>
+        <h3>{{ \App\field('home_build_1_title', __('WordPress sites', 'sage')) }}</h3>
+        <p>{{ \App\field('home_build_1_text', __('Clean, fast, and editable. Shops get something they own — not a subscription they rent.', 'sage')) }}</p>
+        <a class="h-service__link" href="{{ home_url('/services/') }}">{{ __('How it works', 'sage') }} →</a>
+      </article>
+
+      <article class="h-service">
+        <span class="h-service__icon" aria-hidden="true">{!! \App\mh_svg_icon('code', 26) !!}</span>
+        <h3>{{ \App\field('home_build_2_title', __('Plugins & tools', 'sage')) }}</h3>
+        <p>{{ \App\field('home_build_2_text', __('Custom PHP when WordPress needs a new part. Small, focused, and readable.', 'sage')) }}</p>
+        <a class="h-service__link" href="{{ home_url('/code/') }}">{{ __('See the code', 'sage') }} →</a>
+      </article>
+
+      <article class="h-service">
+        <span class="h-service__icon" aria-hidden="true">{!! \App\mh_svg_icon('box', 26) !!}</span>
+        <h3>{{ \App\field('home_build_3_title', __('Other web apps', 'sage')) }}</h3>
+        <p>{{ \App\field('home_build_3_text', __('React, APIs, and anything that doesn\'t fit in a theme. Power Platform when a team lives in Microsoft 365.', 'sage')) }}</p>
+        <a class="h-service__link" href="{{ home_url('/services/') }}">{{ __('See services', 'sage') }} →</a>
+      </article>
+
+    </div>
   </div>
 </section>
 
-{{-- ── WORK ── example sites --}}
-<section class="pf-section home-alt-section" aria-labelledby="work-heading">
+{{-- ═══════════════════════════════════════════════════════════════════
+     SELECTED WORK — 2×2 image-forward grid
+     ═══════════════════════════════════════════════════════════════════ --}}
+@if (! empty($work))
+<section class="h-section" aria-labelledby="h-work-heading">
   <div class="container wide">
-    <header class="sec-head">
-      <div>
-        <p class="eyebrow">{{ \App\field('home_work_kicker', __('Example sites', 'sage')) }}</p>
-        <h2 id="work-heading" class="display-title is-section">{{ \App\field('home_work_h2', __('Work from the studio', 'sage')) }}</h2>
-        <p class="sec-intro">{!! \App\field_html('home_work_intro', __('Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.', 'sage')) !!}</p>
-      </div>
-      <a class="text-link" href="{{ home_url('/projects/') }}">{{ \App\field('home_work_more', __('All example sites', 'sage')) }}</a>
-    </header>
-    <div class="card-grid home-card-grid">
+    <div class="h-section__head">
+      <h2 id="h-work-heading" class="h-section__title">{{ \App\field('home_work_h2', __('Selected work', 'sage')) }}</h2>
+      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">{{ __('All projects', 'sage') }} →</a>
+    </div>
+    <div class="h-work-grid">
       @foreach ($work as $p)
-        <article class="home-project-card">
-          <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
-          <h3><a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a></h3>
-          <p>{{ $p['blurb'] }}</p>
-          @if (! empty($p['tech']))
-            <p class="pill-row">
-              @foreach ($p['tech'] as $t)
-                <span class="pill">{!! \App\mh_svg_icon($t, 13) !!} {{ $t }}</span>
-              @endforeach
-            </p>
+        <article class="h-work-card">
+          <a class="h-work-card__link" href="{{ home_url('/projects/') }}#{{ $p['slug'] }}" tabindex="-1" aria-hidden="true"></a>
+          @if (! empty($p['image']))
+            <div class="h-work-card__visual">
+              <img src="{{ esc_url($p['image']) }}" alt="{{ esc_attr($p['title']) }}" width="640" height="360" loading="lazy" decoding="async">
+            </div>
+          @else
+            <div class="h-work-card__visual h-work-card__visual--text">
+              <span aria-hidden="true">{{ wp_trim_words($p['title'], 3, '') }}</span>
+            </div>
           @endif
+          <div class="h-work-card__body">
+            <p class="h-label">{{ $p['cat'] }} · {{ $p['place'] }}</p>
+            <h3><a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a></h3>
+            <p class="h-work-card__blurb">{{ $p['blurb'] }}</p>
+            @if (! empty($p['tech']))
+              <p class="pill-row">
+                @foreach (array_slice($p['tech'], 0, 3) as $t)
+                  <span class="pill">{!! \App\mh_svg_icon($t, 13) !!} {{ $t }}</span>
+                @endforeach
+              </p>
+            @endif
+          </div>
         </article>
       @endforeach
     </div>
   </div>
 </section>
+@endif
 
-{{-- ── RIGHT NOW ── casual about section --}}
-<section class="pf-section home-now-section" aria-labelledby="now-heading">
+{{-- ═══════════════════════════════════════════════════════════════════
+     FROM THE JOURNAL — clean post list
+     ═══════════════════════════════════════════════════════════════════ --}}
+<section class="h-section h-section--tinted" aria-labelledby="h-writing-heading">
   <div class="container wide">
-    <div class="home-now-inner">
-      <div class="home-now-copy">
-        <p class="eyebrow">{{ \App\field('home_now_kicker', __('Right now', 'sage')) }}</p>
-        <h2 id="now-heading" class="display-title is-section">{{ \App\field('home_now_h2', __('WordPress, mostly.', 'sage')) }}</h2>
-        <p class="lead">{{ \App\field('home_help_p1', __('I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.', 'sage')) }}</p>
-        <p class="btn-row">
-          <a class="btn" href="{{ home_url('/now/') }}">{{ \App\field('home_now_link', __('What I\'m doing now', 'sage')) }}</a>
-          <a class="btn btn-outline" href="{{ home_url('/services/') }}">{{ \App\field('home_link_services', __('How I can help', 'sage')) }}</a>
-        </p>
-      </div>
+    <div class="h-section__head">
+      <h2 id="h-writing-heading" class="h-section__title">{{ \App\field('home_write_h2', __('From the journal', 'sage')) }}</h2>
+      <a class="h-text-arrow" href="{{ $writing }}">{{ __('All posts', 'sage') }} →</a>
     </div>
-  </div>
-</section>
-
-{{-- ── WHO ── audience cards --}}
-@include('partials.audience', [
-  'kicker'  => \App\field('home_who_kicker', __('Who it\'s for', 'sage')),
-  'heading' => \App\field('who_h2', __('Pick a starting point', 'sage')),
-  'intro'   => \App\field('who_intro', __('Same site. Useful from different angles.', 'sage')),
-])
-
-{{-- ── JOURNAL ── recent posts --}}
-<section class="pf-section home-alt-section" aria-labelledby="write-heading">
-  <div class="container wide">
-    <header class="sec-head">
-      <div>
-        <p class="eyebrow">{{ \App\field('home_write_kicker', __('Journal', 'sage')) }}</p>
-        <h2 id="write-heading" class="display-title is-section">{{ \App\field('home_write_h2', __('Recent posts', 'sage')) }}</h2>
-        <p class="sec-intro">{{ \App\field('home_write_intro', __('Short posts on WordPress, plugins, and other web apps. Lots of snippets.', 'sage')) }}</p>
-      </div>
-      <a class="text-link" href="{{ $writing }}">{{ \App\field('home_write_all', __('All posts', 'sage')) }}</a>
-    </header>
-    <div class="card-grid card-grid--3">
+    <div class="h-post-list">
       @forelse ($posts as $post)
-        <article class="post-card">
-          @if (! empty($post['thumb']))
-            <span class="post-shot" aria-hidden="true">
-              <img src="{{ esc_url($post['thumb']) }}" alt="" width="960" height="540" loading="lazy" decoding="async">
-            </span>
-          @else
-            <span class="post-shot" aria-hidden="true">
-              <span class="post-shot-fallback">{{ wp_trim_words($post['title'], 4, '') }}</span>
-            </span>
-          @endif
-          <div class="post-body">
-            <p class="post-meta">{{ $post['date'] }}@if ($post['cat']) · {{ $post['cat'] }}@endif @if (! empty($post['minutes'])) · {{ sprintf(_n('%d min', '%d min', $post['minutes'], 'sage'), $post['minutes']) }}@endif</p>
-            <h3 class="post-card-title">{{ $post['title'] }}</h3>
-            <p>{{ $post['ex'] }}</p>
-            @include('partials.read-more', ['url' => $post['url'], 'name' => $post['title']])
+        <article class="h-post-row">
+          <div class="h-post-row__meta">
+            <time class="h-post-date">{{ $post['date'] }}</time>
+            @if ($post['cat'])
+              <span class="h-post-cat">{{ $post['cat'] }}</span>
+            @endif
+            @if (! empty($post['minutes']))
+              <span class="h-post-min">{{ sprintf(_n('%d min', '%d min', $post['minutes'], 'sage'), $post['minutes']) }}</span>
+            @endif
+          </div>
+          <div class="h-post-row__body">
+            <h3 class="h-post-row__title"><a href="{{ esc_url($post['url']) }}">{{ $post['title'] }}</a></h3>
+            <p class="h-post-row__ex">{{ $post['ex'] }}</p>
           </div>
         </article>
       @empty
-        <p>{{ \App\field('home_write_empty', __('New posts will show up here.', 'sage')) }}</p>
+        <p>{{ \App\field('home_write_empty', __('New posts coming soon.', 'sage')) }}</p>
       @endforelse
     </div>
   </div>
 </section>
 
-{{-- ── CODE ── repos --}}
-<section class="pf-section" aria-labelledby="code-heading">
-  <div class="container wide">
-    <header class="sec-head">
-      <div>
-        <p class="eyebrow">{{ \App\field('home_code_kicker', __('GitHub', 'sage')) }}</p>
-        <h2 id="code-heading" class="display-title is-section">{{ \App\field('home_code_h2', __('Code to copy', 'sage')) }}</h2>
-        <p class="sec-intro">{{ \App\field('home_code_intro', __('Public repos and short snippets. Fork them or just read.', 'sage')) }}</p>
-      </div>
-      <a class="text-link" href="{{ home_url('/code/') }}">{{ \App\field('home_code_more', __('More repos and snippets', 'sage')) }}</a>
-    </header>
-    <div class="card-grid">
-      @foreach ($repos as $r)
-        @include('partials.repo-card', ['r' => $r])
-      @endforeach
-    </div>
-  </div>
-</section>
-
-{{-- ── CTA BAND ── --}}
-<section class="cta-band" aria-labelledby="help-heading">
-  <div class="container wide cta-band-inner">
+{{-- ═══════════════════════════════════════════════════════════════════
+     CTA — dark, simple
+     ═══════════════════════════════════════════════════════════════════ --}}
+<section class="h-cta" aria-labelledby="h-cta-heading">
+  <div class="container wide h-cta__inner">
     <div>
-      <p class="eyebrow eyebrow--on-dark">{{ \App\field('home_help_kicker', __('A question is enough', 'sage')) }}</p>
-      <h2 id="help-heading" class="display-title is-section">{{ \App\field('home_help_h2', __('Let\'s talk.', 'sage')) }}</h2>
-      <p>{!! \App\field_html('home_help_p2', __('Read <a href="/services/">how I can help</a>, or just send a note. A question about a post is just as welcome as a project inquiry.', 'sage')) !!}</p>
+      <h2 id="h-cta-heading" class="h-cta__heading">{{ \App\field('home_help_h2', __('Working on something?', 'sage')) }}</h2>
+      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('Say hello. A question about a post is just as welcome as a project inquiry.', 'sage')) !!}</p>
     </div>
     <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">{{ \App\field('home_link_hello', __('Say hello', 'sage')) }}</a>
   </div>

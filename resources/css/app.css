@@ -20,18 +20,18 @@
     --space-section: clamp(4.75rem, 8.5vw, 7.5rem);
     --space-grid: 2.15rem;
 
-  --color-khaki: #e8eef6;
-  --color-cream: #f4f7fb;
+  --color-khaki: #f0f4f8;
+  --color-cream: #f8fafc;
   --color-blue: #2563eb;
   --color-blue-ink: #1d4ed8;
   --color-blue-soft: #dbeafe;
-  --color-navy: #0b1220;
-  --color-slate: #334155;
-  --color-ink: #0b1220;
-  --color-paper: #eef2f7;
-  --color-body: #334155;
-  --color-muted: #475569;
-  --color-line: #c5d0de;
+  --color-navy: #0d1528;
+  --color-slate: #374151;
+  --color-ink: #0d1528;
+  --color-paper: #ffffff;
+  --color-body: #374151;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
   --color-focus: #2563eb;
   --color-card: #ffffff;
 }
