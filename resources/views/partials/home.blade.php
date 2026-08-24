@@ -81,9 +81,48 @@
   ];
 
   $values = [
-    ['Shops should own their content — not rent it.', 'Hosting, domain, and database belong to the client. Always.'],
-    ['Fast delivery doesn\'t mean skipping the review.', 'I use AI tools to speed up the repetitive parts. Every line still gets read, tested, and understood before it ships. Quicker turnaround, same quality bar.'],
-    ['Code is documentation. Write it clearly.', 'If a developer can\'t read it in six months, it was written for the machine, not the team.'],
+    [
+      'num'      => '01',
+      'icon'     => 'briefcase',
+      'headline' => 'Shops own their site. Full stop.',
+      'body'     => 'Hosting, domain, database, and code all belong to the client before I close a project. I keep no access after handoff. You can take everything to another developer tomorrow and they\'ll have what they need.',
+      'practice' => 'Every client gets their own hosting account, cPanel login, and GitHub repo access — not a reseller seat under my account.',
+    ],
+    [
+      'num'      => '02',
+      'icon'     => 'users',
+      'headline' => 'The admin side matters as much as the front end.',
+      'body'     => 'A site that\'s hard to update doesn\'t get updated. I build edit flows so the owner can change a page in under two minutes without asking me. That\'s the whole point of WordPress.',
+      'practice' => 'Before launch I walk through every editable field, write a plain-language handoff guide, and record a short Loom if the edit flow is non-obvious.',
+    ],
+    [
+      'num'      => '03',
+      'icon'     => 'code',
+      'headline' => 'Fast delivery doesn\'t skip the review.',
+      'body'     => 'I use AI tools — Cursor, Claude, ChatGPT — to move faster on the repetitive parts: boilerplate, scaffolding, first drafts of functions. Every line ships only after I\'ve read, tested, and understood it myself.',
+      'practice' => 'Typical WordPress site: 1–2 weeks. Same care as a 6-week build — just less time wasted on the parts that don\'t need human creativity.',
+    ],
+    [
+      'num'      => '04',
+      'icon'     => 'plugins',
+      'headline' => 'One plugin, one job.',
+      'body'     => 'Plugins that try to do everything become plugins nobody can debug. I write focused, single-purpose code. If a feature can be a 40-line plugin instead of a 400-line one, it should be.',
+      'practice' => 'Most WordPress sites only need 6–8 plugins. I audit and remove anything that adds weight without adding clear value.',
+    ],
+    [
+      'num'      => '05',
+      'icon'     => 'book-open',
+      'headline' => 'Code is documentation. Write it like someone has to read it.',
+      'body'     => 'If a developer can\'t understand a function in 30 seconds without running it, it\'s too clever. Variable names, function names, and structure should explain intent — comments should explain the why, not the what.',
+      'practice' => 'I use PHPDoc on all public functions, keep files short, and prefer explicit names over clever abbreviations.',
+    ],
+    [
+      'num'      => '06',
+      'icon'     => 'pen',
+      'headline' => 'Plain language in the browser and in the handoff.',
+      'body'     => 'Error messages, admin labels, and handoff notes should read like they were written for a person, not a developer. If I have to explain what a field does, I named it wrong.',
+      'practice' => 'Field labels, button text, and help text are client-visible copy. I treat them with the same care as the public-facing site.',
+    ],
   ];
 
   $processSteps = [
@@ -433,19 +472,48 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     05 — VALUES
+     05 — VALUES / PRINCIPLES
      ═══════════════════════════════════════════════════ --}}
-<section class="h-values" aria-label="{{ __('Principles', 'sage') }}">
+<section class="h-principles" aria-labelledby="h-principles-heading">
   <div class="container wide">
-    <p class="h-section-label" style="margin-bottom:2rem">How I think about the work</p>
-    <div class="h-values__grid">
-      @foreach ($values as [$headline, $detail])
-        <div class="h-value">
-          <p class="h-value__headline">{{ $headline }}</p>
-          <p class="h-value__detail">{{ $detail }}</p>
-        </div>
+
+    <div class="h-principles__head">
+      <div>
+        <p class="h-section-label">How I work</p>
+        <h2 id="h-principles-heading" class="h-section__title">
+          How I think about building WordPress sites.
+        </h2>
+        <p class="h-principles__intro">
+          Six things that shape every project — from the first conversation to the handoff. Worth reading before you write.
+        </p>
+      </div>
+    </div>
+
+    <div class="h-principles__grid">
+      @foreach ($values as $v)
+        <article class="h-principle">
+          <div class="h-principle__top">
+            <span class="h-principle__num" aria-hidden="true">{{ $v['num'] }}</span>
+            <span class="h-principle__icon" aria-hidden="true">
+              {!! \App\mh_svg_icon($v['icon'], 22) !!}
+            </span>
+          </div>
+          <h3 class="h-principle__headline">{{ $v['headline'] }}</h3>
+          <p class="h-principle__body">{{ $v['body'] }}</p>
+          @if (! empty($v['practice']))
+            <div class="h-principle__practice">
+              <span class="h-principle__practice-label">In practice</span>
+              <p class="h-principle__practice-text">{{ $v['practice'] }}</p>
+            </div>
+          @endif
+        </article>
       @endforeach
     </div>
+
+    <div class="h-principles__cta">
+      <p>These aren't aspirational. They're how I actually work. If they sound right, <a href="{{ home_url('/contact/') }}">say hello</a>.</p>
+    </div>
+
   </div>
 </section>
 
