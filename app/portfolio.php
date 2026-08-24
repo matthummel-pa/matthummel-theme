@@ -260,6 +260,198 @@ function mh_github_live_repos(int $limit = 8): array
     return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));
 }
 
+/**
+ * Enriched OSS data for the home page "Code you can use" section.
+ *
+ * Combines featured repo list with live GitHub API data:
+ *   - Repo meta (stars, forks, language, last push)
+ *   - Language breakdown as percentages (from the languages endpoint)
+ *   - Activity score (0–100) and badge label
+ *   - Recent public events (push, release, PR)
+ *
+ * All API calls are individually transient-cached. The composite result
+ * is cached for one hour so the home page stays fast on repeated loads.
+ */
+function mh_home_oss_live_data(int $repo_count = 3): array
+{
+    $login = mh_github_login();
+    $cache_key = 'mh_oss_live_v2_'.md5($login.(string) $repo_count);
+
+    if (($cached = get_transient($cache_key)) !== false && is_array($cached)) {
+        return $cached;
+    }
+
+    $profile = Github::fetchUser($login);
+    $events = Github::fetchEvents($login, 6);
+    $base = array_slice(mh_featured_repos(), 0, $repo_count);
+    $repos = [];
+
+    foreach ($base as $r) {
+        $name = (string) ($r['name'] ?? '');
+        if ($name === '') {
+            continue;
+        }
+
+        /* Live metadata */
+        $meta = Github::fetchRepoMeta($login, $name);
+        $langs = Github::fetchLanguages($login, $name);  // ['PHP', 'JavaScript', ...]
+
+        /* Re-fetch raw language bytes for percentage bars */
+        $lang_bytes = mh_github_lang_bytes($login, $name);
+        $lang_bars = mh_github_lang_percentages($lang_bytes, 4);
+
+        /* Merge description: live API wins if the hardcoded one is the default */
+        $desc = trim((string) ($r['desc'] ?? ''));
+        if ($desc === '' || $desc === ($meta['desc'] ?? '')) {
+            $desc = trim((string) ($meta['desc'] ?? $desc));
+        }
+
+        /* Build URL */
+        $url = (string) ($r['url'] ?? '');
+        if ($url === '') {
+            $url = 'https://github.com/'.$login.'/'.$name;
+        }
+
+        /* Stars, forks, language */
+        $stars = (int) ($meta['stars'] ?? 0);
+        $forks = (int) ($meta['forks'] ?? 0);
+        $lang = (string) ($meta['lang'] ?? ($langs[0] ?? ''));
+        $pushed = (string) ($meta['pushed'] ?? '');
+
+        /* Activity badge */
+        [$badge, $badge_class, $health] = mh_repo_activity_badge($pushed, $stars, $forks, $desc);
+
+        /* Relative time */
+        $pushed_ago = '';
+        if ($pushed !== '') {
+            $t = strtotime($pushed);
+            $pushed_ago = $t ? human_time_diff($t).' ago' : '';
+        }
+
+        $repos[] = [
+            'name' => $name,
+            'desc' => $desc,
+            'url' => $url,
+            'tags' => $r['tags'] ?? [],
+            'stars' => $stars,
+            'forks' => $forks,
+            'lang' => $lang,
+            'langs' => $langs,
+            'lang_bars' => $lang_bars,
+            'pushed' => $pushed,
+            'pushed_ago' => $pushed_ago,
+            'badge' => $badge,
+            'badge_class' => $badge_class,
+            'health' => $health,
+        ];
+    }
+
+    $result = compact('profile', 'events', 'repos');
+    set_transient($cache_key, $result, HOUR_IN_SECONDS);
+
+    return $result;
+}
+
+/**
+ * Fetch raw language byte counts for a repo.
+ * Returns ['PHP' => 12345, 'JavaScript' => 6789, ...] or [].
+ */
+function mh_github_lang_bytes(string $owner, string $repo): array
+{
+    $key = 'mh_langbytes_'.md5($owner.'/'.$repo);
+    if (($d = get_transient($key)) !== false) {
+        return is_array($d) ? $d : [];
+    }
+    $out = [];
+    $r = wp_remote_get(
+        'https://api.github.com/repos/'.rawurlencode($owner).'/'.rawurlencode($repo).'/languages',
+        ['timeout' => 10, 'headers' => github_headers()]
+    );
+    if (! is_wp_error($r) && (int) wp_remote_retrieve_response_code($r) === 200) {
+        $j = json_decode((string) wp_remote_retrieve_body($r), true);
+        if (is_array($j)) {
+            arsort($j);
+            $out = array_slice($j, 0, 6, true);
+        }
+    }
+    set_transient($key, $out, 6 * HOUR_IN_SECONDS);
+
+    return $out;
+}
+
+/**
+ * Convert raw language bytes into percentage bars for display.
+ * Returns [['lang' => 'PHP', 'pct' => 72.5, 'icon' => 'php'], ...].
+ */
+function mh_github_lang_percentages(array $bytes, int $limit = 4): array
+{
+    $total = array_sum($bytes);
+    if ($total <= 0) {
+        return [];
+    }
+    $out = [];
+    foreach (array_slice($bytes, 0, $limit, true) as $lang => $count) {
+        $out[] = [
+            'lang' => $lang,
+            'pct' => round(($count / $total) * 100, 1),
+        ];
+    }
+
+    return $out;
+}
+
+/**
+ * Compute an activity badge, CSS class, and 0–100 health score for a repo.
+ *
+ * @return array{string, string, int} [$badge_label, $css_class, $score]
+ */
+function mh_repo_activity_badge(string $pushed, int $stars, int $forks, string $desc): array
+{
+    $score = 30; // base
+
+    /* Recency (0–50 points) */
+    $days_since = PHP_INT_MAX;
+    if ($pushed !== '') {
+        $t = strtotime($pushed);
+        if ($t) {
+            $days_since = max(0, (int) floor((time() - $t) / 86400));
+        }
+    }
+    if ($days_since <= 7) {
+        $score += 50;
+        $badge = 'Active';
+        $class = 'badge--active';
+    } elseif ($days_since <= 30) {
+        $score += 35;
+        $badge = 'Recent';
+        $class = 'badge--recent';
+    } elseif ($days_since <= 90) {
+        $score += 20;
+        $badge = 'Maintained';
+        $class = 'badge--maintained';
+    } elseif ($days_since <= 365) {
+        $score += 8;
+        $badge = 'Stable';
+        $class = 'badge--stable';
+    } else {
+        $badge = 'Archived';
+        $class = 'badge--archived';
+    }
+
+    /* Popularity (+5 per star, max 15) */
+    $score += min(15, $stars * 5);
+
+    /* Engagement (+3 per fork, max 9) */
+    $score += min(9, $forks * 3);
+
+    /* Quality signals */
+    if ($desc !== '') {
+        $score += 5;
+    }
+
+    return [$badge, $class, min(100, $score)];
+}
+
 /** Ridges & Valleys concept work for the Projects page. */
 function mh_studio_projects(): array
 {
