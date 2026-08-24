@@ -136,9 +136,9 @@
     [
       'num'    => '02',
       'title'  => 'Scope.',
-      'body'   => 'I send a plain list of work, a rough timeline, a fixed price, and an explicit list of what\'s out of scope. You approve or push back.',
+      'body'   => 'I send a plain list of work, a rough timeline, and an explicit list of what\'s out of scope. You approve or push back.',
       'timing' => '2–4 days',
-      'gets'   => ['Fixed price, not hourly', 'Clear out-of-scope list', 'No retainers or surprise invoices'],
+      'gets'   => ['Written scope document', 'Clear out-of-scope list', 'No lock-in or ongoing contracts'],
     ],
     [
       'num'    => '03',
@@ -162,7 +162,7 @@
       'You want a quick turnaround without cutting corners on quality',
       'You want clean code a future developer can read',
       'You have a clear idea of what you need — or want help figuring it out',
-      'You prefer a fixed price over hourly billing',
+      'You want a written scope agreed before anything starts',
       'You\'re a shop, agency, or developer who needs a reliable sub',
     ],
     'no'  => [
@@ -170,7 +170,7 @@
       'You need a site in under a week',
       'You want ongoing social media or ad management',
       'You need an enterprise e-commerce platform from scratch',
-      'You\'re looking for the lowest possible price, not the best outcome',
+      'You need someone to manage scope as it grows without any agreed boundaries',
     ],
   ];
 
@@ -473,7 +473,7 @@
       <div>
         <p class="h-section-label">Process</p>
         <h2 id="h-process-heading" class="h-section__title">{{ \App\field('home_process_h2', __('How a project goes.', 'sage')) }}</h2>
-        <p class="h-process__subhead">Four steps. Fixed price. You own everything at the end.</p>
+        <p class="h-process__subhead">Four steps. Written scope. You own everything at the end.</p>
       </div>
       <a class="h-text-arrow" href="{{ home_url('/services/') }}">Full services →</a>
     </div>
@@ -1121,7 +1121,7 @@
         <ul class="h-avail-card__details">
           <li>{!! \App\mh_svg_icon('map', 13) !!} Gettysburg, PA (EST)</li>
           <li>{!! \App\mh_svg_icon('calendar', 13) !!} Replies within 24 hours</li>
-          <li>{!! \App\mh_svg_icon('code', 13) !!} Fixed-price projects</li>
+          <li>{!! \App\mh_svg_icon('code', 13) !!} Project-based work</li>
         </ul>
         <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
           {!! \App\mh_svg_icon('mail', 16) !!} Say hello

@@ -63,7 +63,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-services.blade.php' => [
             'title' => 'WordPress Developer for Hire in Gettysburg | '.$brand,
-            'desc' => 'Custom WordPress sites, plugins, and web apps. Fixed price, clear scope, full ownership at handoff. Based in Gettysburg, PA — open for new work.',
+            'desc' => 'Custom WordPress sites, plugins, and web apps. Clear scope, full ownership at handoff, no lock-in. Based in Gettysburg, PA — open for new work.',
         ],
         'template-projects.blade.php' => [
             'title' => 'Example sites in Gettysburg | '.$brand,

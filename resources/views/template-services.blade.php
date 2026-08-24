@@ -41,8 +41,8 @@
       'num'   => '04',
       'title' => 'Agency and overflow work',
       'short' => 'Sub-contracting on your projects.',
-      'body'  => 'You keep the client relationship and the billing. I build the WordPress site, plugin, or app. Scope and price agreed between us before anything starts. I can sign an NDA.',
-      'gets'  => ['You keep the client relationship', 'Fixed scope and price upfront', 'Clean handoff to your team', 'NDA available if needed'],
+      'body'  => 'You keep the client relationship and the billing. I build the WordPress site, plugin, or app. Scope is agreed between us before anything starts. I can sign an NDA.',
+      'gets'  => ['You keep the client relationship', 'Written scope agreed upfront', 'Clean handoff to your team', 'NDA available if needed'],
       'tech'  => ['WordPress', 'PHP', 'Sage', 'React'],
     ],
   ];
@@ -59,8 +59,8 @@
       'num'    => '02',
       'title'  => 'Scope.',
       'timing' => '2–4 days',
-      'body'   => 'I send a plain list of work, a rough timeline, a fixed price, and an explicit list of what\'s out of scope. You approve, push back, or ask questions.',
-      'gets'   => 'A written scope document. No retainers, no hourly billing, no surprise invoices.',
+      'body'   => 'I send a plain list of work, a rough timeline, and an explicit list of what\'s out of scope. You approve, push back, or ask questions.',
+      'gets'   => 'A written scope document. No ongoing contracts unless you want one.',
     ],
     [
       'num'    => '03',
@@ -87,7 +87,7 @@
         'You want real ownership of your domain, hosting, and code',
         'You need to edit pages, menus, and images without technical help',
         'You\'re a tour, inn, shop, restaurant, or service business',
-        'Budget is real and you want a fixed price before anything starts',
+        'You want a written scope agreed before anything starts',
       ],
       'cta'    => 'See example sites',
       'href'   => '/projects/',
@@ -131,9 +131,9 @@
   ];
 
   $commitments = [
-    ['icon' => 'check', 'label' => 'Fixed price — no surprises'],
+    ['icon' => 'check', 'label' => 'Written scope before work starts'],
     ['icon' => 'check', 'label' => 'You own everything at handoff'],
-    ['icon' => 'check', 'label' => 'No retainers or lock-in'],
+    ['icon' => 'check', 'label' => 'No lock-in or ongoing contracts'],
     ['icon' => 'check', 'label' => 'Gettysburg & remote'],
   ];
 
@@ -145,10 +145,6 @@
     [
       'q' => 'Do you work with agencies on client projects?',
       'a' => 'Yes. I\'ve sub-contracted on agency projects before — you keep the client relationship and the billing, I build the WordPress site or plugin. Scope and rate are agreed before anything starts. I can sign an NDA if needed.',
-    ],
-    [
-      'q' => 'How do you price projects?',
-      'a' => 'Fixed price, not hourly. After the scope conversation I send a written number. That number doesn\'t change unless the scope does, and if the scope changes we talk before I build more. No surprise invoices.',
     ],
     [
       'q' => 'How long does a WordPress site take to build?',
@@ -189,7 +185,7 @@
     {{ \App\field('svc_h1', __('Custom WordPress sites and plugins for shops, agencies, and developers.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('svc_lede', __('I build WordPress sites, plugins, and web apps in Gettysburg and remotely. Fixed price, clear scope, no lock-in. You own everything — domain, hosting, code — at handoff.', 'sage')) }}
+    {{ \App\field('svc_lede', __('I build WordPress sites, plugins, and web apps in Gettysburg and remotely. Clear scope, no lock-in. You own everything — domain, hosting, code — at handoff.', 'sage')) }}
   </p>
   <div class="svc-hero-actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
@@ -304,7 +300,7 @@
     <h2 id="svc-process-heading" class="display-title is-section">
       {{ \App\field('svc_process_h2', __('How a project goes.', 'sage')) }}
     </h2>
-    <p class="sec-intro" style="margin-bottom:2.25rem">Four steps. Fixed price. You own everything at the end.</p>
+    <p class="sec-intro" style="margin-bottom:2.25rem">Four steps. Written scope. You own everything at the end.</p>
     <div class="svc-process">
       @foreach ($processSteps as $step)
         <div class="svc-process__step">
