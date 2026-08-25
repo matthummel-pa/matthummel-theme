@@ -22,6 +22,7 @@ export async function copyText(text) {
     field.select();
     let ok = false;
     try {
+      // execCommand is deprecated but used as a clipboard fallback for older browsers.
       ok = document.execCommand('copy');
     } catch {
       ok = false;

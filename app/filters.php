@@ -146,17 +146,12 @@ function mh_seo_document_title(): string
 
 function mh_seo_len(string $s): int
 {
-    return function_exists('mb_strlen') ? mb_strlen($s) : strlen($s);
+    return mb_strlen($s);
 }
 
 function mh_seo_clip(string $s, int $max): string
 {
-    $cut = max(1, $max - 1);
-    if (function_exists('mb_substr')) {
-        return mb_substr($s, 0, $cut).'…';
-    }
-
-    return substr($s, 0, $cut).'…';
+    return mb_substr($s, 0, max(1, $max - 1)).'…';
 }
 
 function mh_seo_meta_description(): string

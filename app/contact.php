@@ -175,10 +175,10 @@ add_action('init', function () {
         $redirect('error');
     }
 
-    // Honeypot: bots fill this; pretend success and bail.
+    // Honeypot: bots fill this; pretend success so bots stop retrying.
     if (! empty($_POST['mh_hp'])) {
         delete_transient(mh_contact_draft_key());
-        $redirect('success');
+        $redirect('ok');
     }
 
     $name = sanitize_text_field(wp_unslash($_POST['mh_name'] ?? ''));
@@ -231,5 +231,5 @@ add_action('init', function () {
     wp_mail($to, '[matthummel.com] '.$mailSubject, $body, $headers);
     delete_transient(mh_contact_draft_key());
 
-    $redirect('success');
+    $redirect('ok');
 });

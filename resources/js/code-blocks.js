@@ -32,10 +32,12 @@ hljs.registerLanguage('xml', xml);
 hljs.registerLanguage('html', xml);
 hljs.registerLanguage('yaml', yaml);
 
+// Note: 'html' is normalised to 'xml' before labelFor() is called, so
+// 'xml' carries the display label. The 'html' entry is intentionally
+// absent to avoid dead code (see highlightCode()).
 const LANG_LABELS = {
   bash: 'Bash',
   css: 'CSS',
-  html: 'HTML',
   javascript: 'JavaScript',
   json: 'JSON',
   markdown: 'Markdown',

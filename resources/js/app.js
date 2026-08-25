@@ -139,6 +139,8 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
+// Client-side Markdown preview. Must stay in sync with any server-side
+// comment rendering logic if added to app/comments.php in future.
 function renderCommentMarkdown(raw) {
   let text = asciiComment(String(raw || '').replace(/\r\n?/g, '\n'));
   const slots = [];
@@ -263,7 +265,7 @@ function initComments() {
       } catch {
         button.textContent = 'Copy failed';
       }
-      window.setTimeout(() => {
+      setTimeout(() => {
         button.textContent = 'Copy link';
       }, 1600);
     });
@@ -289,7 +291,7 @@ function initComments() {
   };
   textarea.addEventListener('input', sync);
   textarea.addEventListener('paste', () => {
-    window.setTimeout(sync, 0);
+    setTimeout(sync, 0);
   });
   sync();
 

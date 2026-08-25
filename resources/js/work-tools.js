@@ -1,19 +1,20 @@
 import { copyText } from './writing-tools.js';
 
 function flashLabel(button, next) {
-  const node = button.childNodes[0]
+  const node = button.childNodes[0];
   if (!node) {
-    return
+    return;
   }
-  const label = node.textContent?.trim() || button.textContent.trim()
-  const hidden = button.querySelector('.visually-hidden')
-  node.textContent = `${next} `
-  window.setTimeout(() => {
-    node.textContent = `${label} `
+  const label = node.textContent?.trim() || button.textContent.trim();
+  const hidden = button.querySelector('.visually-hidden');
+  node.textContent = `${next} `;
+  setTimeout(() => {
+    node.textContent = `${label} `;
+    // Re-append to preserve screen reader announcement order after text swap.
     if (hidden) {
-      button.appendChild(hidden)
+      button.appendChild(hidden);
     }
-  }, 1600)
+  }, 1600);
 }
 
 function setWorkView(grid, view) {
@@ -103,7 +104,7 @@ export function initWorkTools() {
       }
       const was = label.textContent;
       label.textContent = ok ? 'Copied ' : 'Copy failed ';
-      window.setTimeout(() => {
+      setTimeout(() => {
         label.textContent = was;
       }, 1600);
     });

@@ -281,7 +281,7 @@ add_filter('comment_text', function (string $text): string {
 
 add_action('comment_post', function ($id, $approved): void {
     $id = (int) $id;
-    if (! empty($_POST['mh_notify_replies'])) {
+    if (! empty(wp_unslash($_POST['mh_notify_replies']))) {
         add_comment_meta($id, 'mh_notify_replies', '1', true);
     }
     if ((string) $approved === '1') {
