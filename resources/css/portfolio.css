@@ -1965,6 +1965,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 /* ─── HIRE PAGE ───────────────────────────────────────────────────────────── */
 .hire-avail { display: inline-flex; align-items: center; gap: .5rem; font: 600 .8rem/1 var(--font-display); letter-spacing: .04em; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 999px; padding: .3rem .8rem; margin-top: 1rem; }
+.hire-good-for { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .5rem; margin-top: .85rem; }
+.hire-good-for__label { font: 600 .75rem/1 var(--font-display); color: var(--color-text-muted); letter-spacing: .04em; text-transform: uppercase; }
+.hire-good-for__pill { display: inline-flex; align-items: center; gap: .3rem; font: 500 .8rem/1 var(--font-display); color: var(--color-text-secondary); background: var(--gray-50); border: 1px solid var(--color-border); border-radius: 999px; padding: .25rem .7rem; }
 .hire-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.25rem; margin-top: 1.75rem; }
 @media (max-width: 760px) { .hire-cards { grid-template-columns: 1fr; } }
 .hire-card { padding: 1.6rem 1.5rem; border: 1px solid var(--color-border); border-radius: 14px; background: var(--white); transition: border-color .14s, box-shadow .14s; }

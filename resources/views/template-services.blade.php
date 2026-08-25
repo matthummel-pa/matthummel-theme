@@ -197,7 +197,7 @@
     {{ \App\field('svc_h1', __('WordPress development for shops, agencies, and developers.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('svc_lede', __('I take on site builds, plugins, and overflow work. Clear scope before anything starts. You own the domain, hosting, and code at handoff — no lock-in, no ongoing contracts unless you want one.', 'sage')) }}
+    {{ \App\field('svc_lede', __('Technical execution for your next WordPress project. I work with local businesses, agencies that need a sub-contractor, and developers who need a focused plugin or integration. Clear scope before anything starts. You own everything at handoff.', 'sage')) }}
   </p>
   <div class="svc-hero-actions">
     <a class="btn" href="{{ home_url('/contact/') }}">

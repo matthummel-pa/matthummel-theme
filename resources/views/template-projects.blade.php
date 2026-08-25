@@ -66,7 +66,7 @@
       <span>every concept</span>
     </div>
     <p class="work-context__note">
-      These are studio concepts, not case studies. Each one is a working demonstration of what a WordPress site can look like for a specific local business type. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
+      These are studio concepts built by Ridges &amp; Valleys — real WordPress sites, running on the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the client asks to be featured. These concepts are here so you can see the quality of work without waiting for that. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
     </p>
   </div>
 </div>
