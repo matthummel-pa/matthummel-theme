@@ -30,10 +30,10 @@
   <p class="lead">
     {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')) !!}
   </p>
-  @if (! empty($profile['hireable']))
+  @if (\App\mh_is_hireable($profile))
     <p class="hire-avail" style="margin-top:.85rem">
-      <span class="h-badge__dot" aria-hidden="true"></span>
-      Open for new work — full-time, contract, agency overflow
+      @include('partials.avail-mark', ['gh' => $profile])
+      {{ \App\mh_availability_label($profile, __('Open for new work', 'sage')) }} — full-time, contract, agency overflow
     </p>
   @endif
   <p class="about-hero-links" style="margin-top:1rem">

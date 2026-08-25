@@ -14,6 +14,7 @@
   $oldSubject = \App\mh_contact_prefill('subject');
   $oldMessage = \App\mh_contact_prefill('message');
   $invalid    = \App\mh_contact_old_errors();
+  $gh         = \App\Github::fetchUser(\App\mh_github_login());
 @endphp
 
 {{-- HERO --}}
@@ -26,10 +27,12 @@
     {{ \App\field('cnt_lede', __('Questions about a post, a code snippet, or GitHub are welcome. So is a note about a WordPress site — for a Gettysburg business or anywhere else. I read everything and reply within one or two business days.', 'sage')) }}
   </p>
   <div class="contact-hero-signals">
-    <span class="contact-signal">
-      <span class="h-badge__dot" aria-hidden="true"></span>
-      Open for new work
-    </span>
+    @if (\App\mh_is_hireable($gh))
+      <span class="contact-signal">
+        @include('partials.avail-mark', ['gh' => $gh])
+        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
+      </span>
+    @endif
     <span class="contact-signal">
       {!! \App\mh_svg_icon('calendar', 14) !!}
       Replies within 1–2 business days
@@ -132,13 +135,15 @@
               <p>Usually one or two business days. I read every note.</p>
             </div>
           </li>
+          @if (\App\mh_is_hireable($gh))
           <li>
-            <span class="contact-info-icon">{!! \App\mh_svg_icon('briefcase', 16) !!}</span>
+            <span class="contact-info-icon">@include('partials.avail-mark', ['gh' => $gh])</span>
             <div>
-              <strong>Open for work</strong>
+              <strong>{{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}</strong>
               <p>Full-time, part-time, freelance, or agency overflow.</p>
             </div>
           </li>
+          @endif
           <li>
             <span class="contact-info-icon">{!! \App\mh_svg_icon('map', 16) !!}</span>
             <div>

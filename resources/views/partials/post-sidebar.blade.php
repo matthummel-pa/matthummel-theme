@@ -32,12 +32,13 @@
   @endif
 
   {{-- About the author --}}
+  @php $gh = \App\Github::fetchUser(\App\mh_github_login()); @endphp
   <div class="side-card side-author">
     @include('partials.profile-photo', ['size' => 52, 'class' => 'profile-photo side-author__photo', 'decorative' => true])
     <div class="side-author__body">
       <p class="side-author__name">Matt Hummel</p>
       <p class="side-author__role">WordPress developer · Gettysburg, PA</p>
-      <p class="side-author__bio">Building WordPress sites and plugins. Open for new work.</p>
+      <p class="side-author__bio">Building WordPress sites and plugins.@if (\App\mh_is_hireable($gh)) {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.@endif</p>
       <div class="side-author__links">
         <a href="{{ home_url('/about/') }}">About</a>
         <a href="{{ home_url('/contact/') }}">Say hello</a>
@@ -84,13 +85,18 @@
     </section>
   @endif
 
-  {{-- Hire me CTA --}}
+  {{-- Hire me CTA (GitHub hireable) --}}
+  @if (\App\mh_is_hireable($gh))
   <div class="side-card side-hire">
-    <h2 class="side-card-title">Open for work</h2>
+    <h2 class="side-card-title">
+      @include('partials.avail-mark', ['gh' => $gh])
+      {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}
+    </h2>
     <p class="side-hire__body">WordPress sites, plugins, and web apps. Full-time, contract, or freelance.</p>
     <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center">
       {!! \App\mh_svg_icon('mail', 15) !!} Say hello
     </a>
   </div>
+  @endif
 
 </aside>

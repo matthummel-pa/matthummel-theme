@@ -2,6 +2,13 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.5 — 2026-08-25
+
+### Changed
+
+- Availability badges (header, home, about, now, contact, hire, code, uses, post sidebar, footer) follow GitHub `hireable` and the profile status emoji/message (☕ Available)
+- Profile photo prefers the GitHub avatar when Customizer has no upload (bundled JPG is the next fallback)
+
 ## 3.1.4 — 2026-08-25
 
 ### Added

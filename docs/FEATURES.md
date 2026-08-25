@@ -7,7 +7,7 @@ What the 3.x Sage theme does, and where it lives.
 | Feature | Notes | Code |
 | --- | --- | --- |
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
-| Profile photo | Header (small), Home/About (larger), posts; Customizer override | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
+| Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Minimalist landing; section anchors + jump-nav pills; live GitHub API panel; skills ticker; 2×2 audience cards; one primary Say hello CTA | `resources/views/partials/home.blade.php`, `App\Github` |
 | About | Stats bar, story, open-for-work signals, audience cards, approach grid, journal preview, CTA band | `template-about.blade.php` |
 | Now | Dated list of current focus items | `template-now.blade.php` |
@@ -34,7 +34,7 @@ What the 3.x Sage theme does, and where it lives.
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours |
-| GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN` |
+| GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
 
 ## Intentionally not included
 

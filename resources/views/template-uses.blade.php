@@ -114,10 +114,16 @@
 </div>
 
 {{-- CTA --}}
+@php $gh = \App\Github::fetchUser(\App\mh_github_login()); @endphp
 <section class="cta-band" aria-labelledby="uses-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
-      <p class="eyebrow eyebrow--on-dark">Open for work</p>
+      @if (\App\mh_is_hireable($gh))
+        <p class="eyebrow eyebrow--on-dark">
+          @include('partials.avail-mark', ['gh' => $gh])
+          {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}
+        </p>
+      @endif
       <h2 id="uses-cta-heading" class="display-title is-section">Want to build something?</h2>
       <p>I use this stack on real projects for shops, agencies, and developers. If you have something in mind, <a href="{{ home_url('/contact/') }}" style="color:#93c5fd">say hello</a>.</p>
     </div>
