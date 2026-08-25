@@ -499,17 +499,11 @@
       @endforeach
     </div>
 
-    {{-- What I need callout --}}
-    <div class="h-need-callout">
-      <div class="h-need-callout__icon" aria-hidden="true">{!! \App\mh_svg_icon('user', 22) !!}</div>
-      <div>
-        <p class="h-need-callout__label">What I need from you</p>
-        <p class="h-need-callout__body">A rough idea of who the site is for, what it needs to do, and what success looks like. No spec or wireframe required — a few sentences work. Modern tooling means I can turn a clear brief into a working preview faster than a traditional build. The clearer the brief, the faster everything moves.</p>
-      </div>
-      <a class="btn" href="{{ home_url('/contact/') }}" style="flex-shrink:0">
-        {!! \App\mh_svg_icon('mail', 16) !!} Write a note
-      </a>
-    </div>
+    @include('partials.discovery-cta', [
+      'title' => __('Start a project brief.', 'sage'),
+      'body'  => __('A rough idea of who the site is for, what it needs to do, and what success looks like — in four short steps. I use it to prepare for our first meeting. No wireframe required.', 'sage'),
+      'cta'   => __('Start a brief', 'sage'),
+    ])
   </div>
 </section>
 

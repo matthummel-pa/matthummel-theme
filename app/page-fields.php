@@ -372,6 +372,18 @@ function page_field_map(): array
                 ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.', 'sage')],
             ],
         ],
+        'template-start.blade.php' => [
+            __('Intro', 'sage') => [
+                ['start_kicker', __('Kicker', 'sage'), 'text', __('Project brief', 'sage')],
+                ['start_h1', __('Heading', 'sage'), 'text', __('Prepare for our first meeting.', 'sage')],
+                ['start_lede', __('Intro', 'sage'), 'textarea', __('Four short steps. The answers agencies and shops usually cover in discovery. I read every brief before we talk so the first call is useful, not a blank page.', 'sage')],
+            ],
+            __('Form', 'sage') => [
+                ['start_submit', __('Submit button', 'sage'), 'text', __('Send brief', 'sage')],
+                ['start_reply_note', __('Note under submit', 'sage'), 'text', __('I usually reply within one or two business days (Eastern Time).', 'sage')],
+                ['start_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
+            ],
+        ],
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],

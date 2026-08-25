@@ -5,6 +5,7 @@
 
 @php
   $featured = array_slice(\App\mh_work_page_items(), 0, 3);
+  $fromStart = isset($_GET['from']) && sanitize_key(wp_unslash($_GET['from'])) === 'start';
 @endphp
 
 @section('content')
@@ -18,8 +19,14 @@
         {!! \App\mh_svg_icon('check', 26) !!}
       </div>
       <div>
-        <h1 class="ty-confirm__heading">Message received.</h1>
-        <p class="ty-confirm__lede">Your note is in my inbox. I usually reply within a business day — occasionally two if I'm heads-down on a build.</p>
+        <h1 class="ty-confirm__heading">{{ $fromStart ? 'Brief received.' : 'Message received.' }}</h1>
+        <p class="ty-confirm__lede">
+          @if ($fromStart)
+            Your project brief is in my inbox. I’ll read it before we talk so the first meeting starts with context, not a blank page. I usually reply within a business day.
+          @else
+            Your note is in my inbox. I usually reply within a business day — occasionally two if I'm heads-down on a build.
+          @endif
+        </p>
       </div>
     </div>
 

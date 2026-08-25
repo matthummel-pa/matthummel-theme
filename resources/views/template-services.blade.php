@@ -331,6 +331,12 @@
         </div>
       @endforeach
     </div>
+
+    @include('partials.discovery-cta', [
+      'title' => __('Start a project brief.', 'sage'),
+      'body'  => __('Same discovery questions agencies use before kickoff — stepped so it stays short. I read every brief before our first meeting.', 'sage'),
+      'cta'   => __('Start a brief', 'sage'),
+    ])
   </div>
 </section>
 

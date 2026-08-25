@@ -25,7 +25,7 @@
       <h2 id="priv-overview-heading">The short version</h2>
       <ul class="legal-bullets">
         <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, <strong>Bing / Microsoft Analytics</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
-        <li>The contact form collects your name and email so I can reply. That is all it is used for.</li>
+        <li>The contact form and project brief collect your name, email, and the details you send so I can reply and prepare for a first meeting. That is all they are used for.</li>
         <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
         <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
         <li>You can opt out of analytics tracking at any time — see the <a href="#priv-optout-heading">opt-out options</a> below.</li>
@@ -59,13 +59,13 @@
       {{-- Contact form --}}
       <div class="priv-collect-card">
         <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('mail', 20) !!}</div>
-        <h3 class="priv-collect-card__title">Contact form</h3>
-        <p class="priv-collect-card__intro">When you submit the contact form, I collect:</p>
+        <h3 class="priv-collect-card__title">Contact &amp; project brief</h3>
+        <p class="priv-collect-card__intro">When you submit the contact form or <a href="{{ home_url('/start/') }}">project brief</a>, I collect:</p>
         <ul class="priv-collect-card__list">
           <li><strong>Name</strong> — to address you correctly</li>
           <li><strong>Email address</strong> — to reply</li>
-          <li><strong>Message</strong> — the inquiry itself</li>
-          <li><strong>Subject / who you are</strong> — optional</li>
+          <li><strong>Message / brief fields</strong> — what you need, goals, optional company and timeline</li>
+          <li><strong>Subject / who you are</strong> — optional on the short form</li>
         </ul>
         <div class="priv-collect-card__trust">
           {!! \App\mh_svg_icon('shield', 14) !!}
