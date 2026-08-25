@@ -71,9 +71,11 @@ What the 3.x Sage theme does, and where it lives.
 | `wp acorn view:clear` | Clear compiled Blade views (run after any template edit) | — |
 
 SSH credentials for `db-pull` / `db-push` resolve in this order:
-1. `--ssh-*` WP-CLI flags
-2. `MH_SSH_HOST`, `MH_SSH_PORT`, `MH_SSH_USER`, `MH_SSH_WP_PATH` constants in wp-config.php
-3. `SITEGROUND_HOST` / `SERVER_IP`, `SITEGROUND_PORT` / `SERVER_SSH_PORT`, `SITEGROUND_USER` / `SERVER_USER`, `SERVER_DESTINATION_PATH` env vars (mirrors deploy.yml secrets)
+1. `--ssh-*` WP-CLI flags (`--ssh-host`, `--ssh-user`, `--ssh-path`, `--ssh-identity`, …)
+2. `MH_SSH_HOST`, `MH_SSH_PORT`, `MH_SSH_USER`, `MH_SSH_WP_PATH`, `MH_SSH_IDENTITY_FILE`, `MH_SSH_KEY_PASSPHRASE` constants in wp-config.php
+3. Env vars: `SITEGROUND_HOST` / `SERVER_IP`, `SITEGROUND_PORT` / `SERVER_SSH_PORT`, `SITEGROUND_USER` / `SERVER_USER`, `SERVER_DESTINATION_PATH` / `LIVE_WP_PATH`, `SERVER_SSH_IDENTITY_FILE`, `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`
+
+Passphrase-protected keys need `SERVER_SSH_PRIVATE_KEY_PASSPHRASE` (or an unencrypted deploy key). Cloud Agents often write the key to `~/.ssh/id_ed25519_sg` — that path is auto-detected.
 
 ## Stack
 
