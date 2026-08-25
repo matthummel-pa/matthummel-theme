@@ -54,7 +54,10 @@
         <p>{{ \App\field('now_studio_p1', __('I recently started Ridges & Valleys, a WordPress studio for shops, tours, and inns in Gettysburg and Adams County, PA. I\'m building concept sites that show what a real WordPress site can look like for a specific type of local business — not wireframes or screenshots, but live, working demonstrations.', 'sage')) }}</p>
         <p>{{ \App\field('now_studio_p2', __('The studio is early. The portfolio is growing. If you run a Gettysburg-area business and want to see what an editable WordPress site looks like for your category, that\'s exactly what I\'m building.', 'sage')) }}</p>
         <a class="h-text-arrow" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-          Visit ridgesandvalleys.com →
+          Browse studio demos →
+        </a>
+        <a class="h-text-arrow" href="{{ home_url('/start/') }}">
+          Start a brief for your shop →
         </a>
       </article>
 
@@ -186,7 +189,8 @@
         <p class="now-sidebar-card__label">Studio</p>
         <p class="now-sidebar-card__value">Ridges &amp; Valleys</p>
         <p class="now-sidebar-card__sub">WordPress studio for Gettysburg businesses</p>
-        <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">ridgesandvalleys.com →</a>
+        <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Studio demos →</a>
+        <a class="now-sidebar-card__link" href="{{ home_url('/start/') }}">Start a brief →</a>
       </div>
 
       @if (! empty($gh['public_repos']))

@@ -56,7 +56,8 @@
         {!! \App\mh_svg_icon('github', 15) !!} GitHub
       </a>
       <a href="{{ $writing }}">{!! \App\mh_svg_icon('pen', 15) !!} Journal</a>
-      <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('globe', 15) !!} Ridges &amp; Valleys</a>
+      <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('globe', 15) !!} Studio demos</a>
+      <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
     </p>
   </div>
   @include('partials.profile-photo', [
@@ -170,9 +171,12 @@
       <div class="about-aside-card about-aside-card--studio">
         <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 16) !!} Current studio</p>
         <h3 class="about-aside-card__title">Ridges &amp; Valleys</h3>
-        <p class="about-aside-card__bio">A WordPress studio for Gettysburg shops, tours, and inns in Adams County, PA. Concept sites and real builds for local businesses.</p>
+        <p class="about-aside-card__bio">A WordPress studio for Gettysburg shops, tours, and inns in Adams County, PA. Concept demos live there as proof. Hire and contact stay on this site.</p>
         <a class="about-aside-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-          Visit ridgesandvalleys.com →
+          Browse studio demos →
+        </a>
+        <a class="about-aside-card__link" href="{{ home_url('/start/') }}">
+          Start a brief here →
         </a>
       </div>
     </aside>

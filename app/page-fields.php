@@ -205,7 +205,7 @@ function mh_home_fields(): array
         ],
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for local Gettysburg businesses in Adams County, PA.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Example concepts from my Gettysburg studio, Ridges & Valleys — live demos shops can click. If one fits your business, say hello here and we start from that shape.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
@@ -482,12 +482,12 @@ function page_field_map(): array
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
                 ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio concepts for Gettysburg tours, inns, shops, and restaurants. Shops can picture a WordPress site they can run. Developers can see how the pieces fit in Gettysburg and Adams County.', 'sage')],
-                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
+                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live studio demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a> (proof only — start here with <a href="/start/">a brief</a> or <a href="/contact/">Say hello</a>).', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View concept label', 'sage'), 'text', __('View concept', 'sage')],
                 ['work_cta_use', __('Use concept label', 'sage'), 'text', __('Use this concept', 'sage')],
                 ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
-                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio concepts, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
+                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio concepts, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, start a brief or write and say which concept you want to begin from.', 'sage')],
             ],
             __('Example sites', 'sage') => [
                 ['work_items', __('Sites', 'sage'), 'repeater', $workItems, [

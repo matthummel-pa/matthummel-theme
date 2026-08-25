@@ -2,6 +2,13 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.6 — 2026-08-25
+
+### Changed
+
+- matthummel.com is the hire hub: Home/Work/Services interest CTAs go to `/start/` or `/contact/` (Use this concept), with studio demos as secondary proof links
+- About/Now copy frames Ridges & Valleys as concept demos, not a second funnel
+
 ## 3.1.5 — 2026-08-25
 
 ### Changed

@@ -346,14 +346,10 @@
   <div class="container wide">
     <p class="eyebrow">Example work</p>
     <h2 id="svc-work-heading" class="display-title is-section">A few recent concepts.</h2>
-    <p class="sec-intro" style="margin-bottom:2rem">These are concept sites from <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys</a> — working demonstrations of what a WordPress site can look like for local Gettysburg businesses.</p>
+    <p class="sec-intro" style="margin-bottom:2rem">Example concepts from my Gettysburg studio — live demos you can click. If one fits your shop, start a brief here; I use it to prepare for our first meeting.</p>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
-        @php
-          $href = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
-          $ext  = ! empty($p['concept']);
-        @endphp
-        <a class="svc-work-card" href="{{ $href }}" {{ $ext ? 'rel="noopener" target="_blank"' : '' }}>
+        <a class="svc-work-card" href="{{ home_url('/projects/#'.$p['slug']) }}">
           @if (! empty($p['image']))
             <div class="svc-work-card__img">
               <img src="{{ esc_url($p['image']) }}"
@@ -373,7 +369,8 @@
         </a>
       @endforeach
     </div>
-    <p style="margin-top:1.75rem;text-align:center">
+    <p style="margin-top:1.75rem;text-align:center;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:center">
+      <a class="btn" href="{{ home_url('/start/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start a brief</a>
       <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
         Browse all {{ count(\App\mh_work_page_items()) }} concepts →
       </a>

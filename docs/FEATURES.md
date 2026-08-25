@@ -11,7 +11,7 @@ What the 3.x Sage theme does, and where it lives.
 | Home | Minimalist landing; section anchors + jump-nav pills; live GitHub API panel; skills ticker; 2×2 audience cards; one primary Say hello CTA | `resources/views/partials/home.blade.php`, `App\Github` |
 | About | Stats bar, story, open-for-work signals, audience cards, approach grid, journal preview, CTA band | `template-about.blade.php` |
 | Now | Dated list of current focus items | `template-now.blade.php` |
-| Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill; hub CTAs to `/start/` | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | GitHub profile, contribution grid, featured/recent repos, activity, resume, skill chips, docs | `template-code.blade.php`, `App\Github` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |

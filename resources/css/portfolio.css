@@ -4712,13 +4712,20 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   flex: 1;
 }
 .h-work-card-v2__pills { margin-bottom: .75rem !important; }
-.h-work-card-v2__links { margin-top: auto; }
+.h-work-card-v2__links {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem 1rem;
+  align-items: center;
+}
 .h-work-cta-link {
   font: 600 .85rem/1 var(--font-display);
   color: var(--color-accent);
   text-decoration: none;
 }
 .h-work-cta-link:hover { text-decoration: underline; }
+.h-work-cta-link--primary { color: var(--color-navy, #0f172a); }
 
 /* ── Bottom CTA bar ── */
 .h-work-cta-bar {
@@ -4736,6 +4743,13 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font-size: .92rem;
   color: var(--color-text-secondary);
   margin: 0;
+  flex: 1 1 16rem;
+}
+.h-work-cta-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
 }
 .h-work-cta-bar .btn { font-size: .88rem; padding: .55rem 1.1rem; min-height: 40px; }
 

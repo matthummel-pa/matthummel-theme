@@ -357,7 +357,8 @@
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
             <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
-            <a class="h-text-arrow" href="{{ esc_url('https://ridgesandvalleys.com') }}" rel="noopener" target="_blank">Ridges &amp; Valleys ↗</a>
+            <a class="h-text-arrow" href="{{ home_url('/contact/') }}">Say hello →</a>
+            <a class="h-text-arrow" href="{{ esc_url('https://ridgesandvalleys.com') }}" rel="noopener" target="_blank">Studio concepts ↗</a>
           </div>
         </div>
       </div>
@@ -613,7 +614,7 @@
           {{ \App\field('home_work_h2', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for local Gettysburg businesses in Adams County, PA.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Example concepts from my Gettysburg studio, Ridges & Valleys — live demos shops can click. If one fits your business, say hello here and we start from that shape.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">
@@ -653,13 +654,17 @@
         </h3>
         <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
         <div class="h-work-featured__actions">
+          <a class="btn btn-on-dark h-work-btn" href="{{ esc_url(\App\mh_work_contact_url($fp)) }}">
+            {!! \App\mh_svg_icon('mail', 15) !!}
+            {{ \App\field('work_cta_use', __('Use this concept', 'sage')) }}
+          </a>
           @if (! empty($fp['concept']))
-            <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['concept']) }}" rel="noopener" target="_blank">
-              View concept <span aria-hidden="true">↗</span>
+            <a class="h-work-ghost-link" href="{{ esc_url($fp['concept']) }}" rel="noopener" target="_blank">
+              {{ \App\field('work_cta_view', __('View concept', 'sage')) }} <span aria-hidden="true">↗</span>
             </a>
           @endif
           <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}#{{ $fp['slug'] }}">
-            See all {{ strtolower($fp['cat']) }} concepts →
+            All concepts →
           </a>
         </div>
         @if (! empty($fp['tech']))
@@ -679,12 +684,11 @@
       @foreach ($remainingWork as $p)
         <article class="h-work-card-v2">
 
-          {{-- Image --}}
+          {{-- Image → project anchor on this site (concept demo is a secondary link) --}}
           @php
-            $cardHref   = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
-            $cardExtras = ! empty($p['concept']) ? ' rel="noopener" target="_blank"' : '';
+            $cardHref = home_url('/projects/#'.$p['slug']);
           @endphp
-          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}"{!! $cardExtras !!} aria-label="View {{ esc_attr($p['title']) }} concept">
+          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}" aria-label="{{ esc_attr(sprintf(__('See %s on Work', 'sage'), $p['title'])) }}">
             @if (! empty($p['image']))
               <div class="h-work-card-v2__img">
                 <img
@@ -721,9 +725,12 @@
               </div>
             @endif
             <div class="h-work-card-v2__links">
+              <a class="h-work-cta-link h-work-cta-link--primary" href="{{ esc_url(\App\mh_work_contact_url($p)) }}">
+                {{ \App\field('work_cta_use', __('Use this concept', 'sage')) }} →
+              </a>
               @if (! empty($p['concept']))
                 <a class="h-work-cta-link" href="{{ esc_url($p['concept']) }}" rel="noopener" target="_blank">
-                  View {{ $p['title'] }} →
+                  {{ \App\field('work_cta_view', __('View concept', 'sage')) }} ↗
                 </a>
               @else
                 <a class="h-work-cta-link" href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">
@@ -738,10 +745,13 @@
     </div>
     @endif
 
-    {{-- Bottom CTA bar --}}
+    {{-- Bottom CTA bar: hub contact first, concepts second --}}
     <div class="h-work-cta-bar">
-      <p>Concepts for Gettysburg tours, inns, shops, restaurants, and real estate agencies.</p>
-      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concepts</a>
+      <p>{{ __('Like a concept for your shop? Start here — demos stay on the studio site as proof.', 'sage') }}</p>
+      <div class="h-work-cta-bar__actions">
+        <a class="btn" href="{{ home_url('/start/') }}">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Start a brief', 'sage') }}</a>
+        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concepts →</a>
+      </div>
     </div>
 
   </div>

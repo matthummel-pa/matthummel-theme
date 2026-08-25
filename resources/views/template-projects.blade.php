@@ -134,13 +134,14 @@
       <p>{{ \App\field('work_band_lede', __('These concepts are available as a starting point for a real build. Tell me which one fits your business and what you\'d change.', 'sage')) }}</p>
     </div>
     <div class="work-cta-strip__actions">
-      <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 16) !!} Say hello</a>
+      <a class="btn" href="{{ home_url('/start/') }}">{!! \App\mh_svg_icon('mail', 16) !!} Start a brief</a>
+      <a class="btn btn-outline" href="{{ home_url('/contact/') }}">Say hello</a>
       <a class="about-text-link" href="{{ home_url('/services/') }}">How I can help →</a>
     </div>
   </div>
 
   <div class="work-footer-links">
-    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com ↗</a>.', 'sage')) !!}
+    {!! \App\field_html('work_foot', __('Repos and snippets: <a href="/code/">Code</a>. Live studio demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a> (proof only — start here with <a href="/start/">a brief</a> or <a href="/contact/">Say hello</a>).', 'sage')) !!}
   </div>
 
 </div>
