@@ -66,6 +66,13 @@
 
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}. Gettysburg, PA.</p>
+    <nav class="footer-legal-links" aria-label="Legal">
+      <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ home_url('/terms-of-use/') }}">Terms</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
+    </nav>
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage</a>, WordPress, and PHP.</p>
   </div>
 </footer>
