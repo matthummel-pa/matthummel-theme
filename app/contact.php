@@ -282,3 +282,236 @@ add_action('init', function () {
 
     $redirect('ok');
 });
+
+/**
+ * Transient key for the project discovery brief (/start/).
+ *
+ * @since 3.1.3
+ */
+function mh_discovery_draft_key(): string
+{
+    $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+    return 'mh_df_'.md5($ip.'|'.$ua);
+}
+
+/**
+ * Retrieve a single field value from the visitor's last discovery draft.
+ *
+ * @since 3.1.3
+ */
+function mh_discovery_old(string $key, string $default = ''): string
+{
+    $draft = get_transient(mh_discovery_draft_key());
+    if (! is_array($draft) || $key === 'errors') {
+        return $default;
+    }
+
+    return (string) ($draft[$key] ?? $default);
+}
+
+/**
+ * Validation error keys from the visitor's last discovery draft.
+ *
+ * @since 3.1.3
+ *
+ * @return list<string>
+ */
+function mh_discovery_old_errors(): array
+{
+    $draft = get_transient(mh_discovery_draft_key());
+    if (! is_array($draft) || ! isset($draft['errors']) || ! is_array($draft['errors'])) {
+        return [];
+    }
+
+    return array_values(array_filter(array_map('strval', $draft['errors'])));
+}
+
+/**
+ * Label maps for discovery select fields.
+ *
+ * @since 3.1.3
+ *
+ * @return array{project_type: array<string, string>, role: array<string, string>, timeline: array<string, string>}
+ */
+function mh_discovery_labels(): array
+{
+    return [
+        'project_type' => [
+            'new-site' => __('New WordPress site', 'sage'),
+            'rebuild' => __('Rebuild or redesign', 'sage'),
+            'plugin' => __('Plugin or custom feature', 'sage'),
+            'overflow' => __('Agency overflow / white-label', 'sage'),
+            'other' => __('Something else', 'sage'),
+        ],
+        'role' => [
+            'agency-pm' => __('Agency project manager', 'sage'),
+            'agency-owner' => __('Agency owner', 'sage'),
+            'designer' => __('Designer', 'sage'),
+            'developer' => __('Developer', 'sage'),
+            'shop-owner' => __('Shop or business owner', 'sage'),
+            'other' => __('Something else', 'sage'),
+        ],
+        'timeline' => [
+            'asap' => __('ASAP', 'sage'),
+            '2-4w' => __('2–4 weeks', 'sage'),
+            '1-2m' => __('1–2 months', 'sage'),
+            'flexible' => __('Flexible', 'sage'),
+            'unsure' => __('Not sure yet', 'sage'),
+        ],
+    ];
+}
+
+/** Handle the project discovery brief (template-start.blade.php). */
+add_action('init', function () {
+    $postedAction = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : '';
+    if ($postedAction !== 'mh_discovery') {
+        return;
+    }
+
+    $start = get_page_by_path('start');
+    $back = $start instanceof \WP_Post ? get_permalink($start) : home_url('/start/');
+    $back = remove_query_arg('start', $back);
+
+    $thankyouPage = get_page_by_path('thank-you');
+    $thankyouUrl = $thankyouPage instanceof \WP_Post ? get_permalink($thankyouPage) : home_url('/thank-you/');
+
+    $redirect = function (string $status) use ($back, $thankyouUrl): void {
+        if ($status === 'ok') {
+            wp_safe_redirect(add_query_arg('from', 'start', $thankyouUrl));
+        } else {
+            wp_safe_redirect(add_query_arg('start', $status, $back).'#start-status');
+        }
+        exit;
+    };
+
+    $nonce = isset($_POST['mh_discovery_nonce']) ? wp_unslash($_POST['mh_discovery_nonce']) : '';
+    if (! is_string($nonce) || ! wp_verify_nonce($nonce, 'mh_discovery')) {
+        $redirect('error');
+    }
+
+    if (! empty($_POST['mh_hp'])) {
+        delete_transient(mh_discovery_draft_key());
+        $redirect('ok');
+    }
+
+    $labels = mh_discovery_labels();
+
+    $name = sanitize_text_field(wp_unslash($_POST['mh_name'] ?? ''));
+    $email = sanitize_email(wp_unslash($_POST['mh_email'] ?? ''));
+    $company = sanitize_text_field(wp_unslash($_POST['mh_company'] ?? ''));
+    $roleKey = sanitize_key(wp_unslash($_POST['mh_role'] ?? ''));
+    $typeKey = sanitize_key(wp_unslash($_POST['mh_project_type'] ?? ''));
+    $client = sanitize_text_field(wp_unslash($_POST['mh_client'] ?? ''));
+    $urlRaw = esc_url_raw(wp_unslash($_POST['mh_url'] ?? ''));
+    $need = sanitize_textarea_field(wp_unslash($_POST['mh_need'] ?? ''));
+    $success = sanitize_textarea_field(wp_unslash($_POST['mh_success'] ?? ''));
+    $audience = sanitize_text_field(wp_unslash($_POST['mh_audience'] ?? ''));
+    $timelineKey = sanitize_key(wp_unslash($_POST['mh_timeline'] ?? ''));
+    $editors = sanitize_text_field(wp_unslash($_POST['mh_editors'] ?? ''));
+    $stack = sanitize_textarea_field(wp_unslash($_POST['mh_stack'] ?? ''));
+    $notes = sanitize_textarea_field(wp_unslash($_POST['mh_notes'] ?? ''));
+
+    if ($roleKey !== '' && ! isset($labels['role'][$roleKey])) {
+        $roleKey = '';
+    }
+    if ($typeKey !== '' && ! isset($labels['project_type'][$typeKey])) {
+        $typeKey = '';
+    }
+    if ($timelineKey !== '' && ! isset($labels['timeline'][$timelineKey])) {
+        $timelineKey = '';
+    }
+
+    $draft = [
+        'name' => $name,
+        'email' => $email,
+        'company' => $company,
+        'role' => $roleKey,
+        'project_type' => $typeKey,
+        'client' => $client,
+        'url' => $urlRaw,
+        'need' => $need,
+        'success' => $success,
+        'audience' => $audience,
+        'timeline' => $timelineKey,
+        'editors' => $editors,
+        'stack' => $stack,
+        'notes' => $notes,
+        'errors' => [],
+    ];
+
+    if ($name === '') {
+        $draft['errors'][] = 'name';
+    }
+    if (! is_email($email)) {
+        $draft['errors'][] = 'email';
+    }
+    if ($typeKey === '') {
+        $draft['errors'][] = 'project_type';
+    }
+    if ($need === '') {
+        $draft['errors'][] = 'need';
+    }
+    if ($success === '') {
+        $draft['errors'][] = 'success';
+    }
+
+    if ($draft['errors'] !== []) {
+        set_transient(mh_discovery_draft_key(), $draft, 10 * MINUTE_IN_SECONDS);
+        $redirect('error');
+    }
+
+    $lines = [
+        'Name: '.$name,
+        'Email: '.$email,
+    ];
+    if ($company !== '') {
+        $lines[] = 'Company: '.$company;
+    }
+    if ($roleKey !== '') {
+        $lines[] = 'Role: '.$labels['role'][$roleKey];
+    }
+    $lines[] = '';
+    $lines[] = 'Project type: '.$labels['project_type'][$typeKey];
+    if ($client !== '') {
+        $lines[] = 'End client: '.$client;
+    }
+    if ($urlRaw !== '') {
+        $lines[] = 'Current URL: '.$urlRaw;
+    }
+    $lines[] = '';
+    $lines[] = "What needs building:\n{$need}";
+    $lines[] = '';
+    $lines[] = "Win looks like:\n{$success}";
+    if ($audience !== '') {
+        $lines[] = '';
+        $lines[] = 'Audience: '.$audience;
+    }
+    if ($timelineKey !== '') {
+        $lines[] = 'Timeline: '.$labels['timeline'][$timelineKey];
+    }
+    if ($editors !== '') {
+        $lines[] = 'Editors after handoff: '.$editors;
+    }
+    if ($stack !== '') {
+        $lines[] = '';
+        $lines[] = "Hosting / stack / must-haves:\n{$stack}";
+    }
+    if ($notes !== '') {
+        $lines[] = '';
+        $lines[] = "Other notes:\n{$notes}";
+    }
+
+    $to = get_option('admin_email');
+    $mailSubject = sprintf(
+        __('Project brief — %s', 'sage'),
+        $company !== '' ? $company : $name
+    );
+    $headers = ['Reply-To: '.$name.' <'.$email.'>'];
+
+    wp_mail($to, '[matthummel.com] '.$mailSubject, implode("\n", $lines), $headers);
+    delete_transient(mh_discovery_draft_key());
+
+    $redirect('ok');
+});

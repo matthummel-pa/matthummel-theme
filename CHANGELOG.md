@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.4 — 2026-08-25
+
+### Added
+
+- `/start/` project discovery brief — four-step form for agencies and shops (you → project → goals → send)
+- Shared Quick start CTA on Home and Services process sections linking to the brief
+- Thank-you page copy when arriving from a brief (`?from=start`)
+
+### Changed
+
+- Privacy policy: contact card covers the project brief fields
+
 ## 3.1.3 — 2026-08-25
 
 ### Changed

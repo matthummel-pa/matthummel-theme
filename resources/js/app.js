@@ -6,6 +6,7 @@ import.meta.glob([
 import { initCodeBlocks } from './code-blocks.js';
 import { initWritingTools } from './writing-tools.js';
 import { initWorkTools } from './work-tools.js';
+import { initDiscoveryForm } from './discovery-form.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -392,4 +393,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initCodeBlocks();
   initWritingTools();
   initWorkTools();
+  initDiscoveryForm();
 });

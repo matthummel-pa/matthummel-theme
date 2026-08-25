@@ -1120,6 +1120,40 @@ add_action('init', function () {
     }
 }, 30);
 
+/**
+ * Ensure the project brief page exists (idempotent).
+ *
+ * @since 3.1.4
+ */
+function mh_ensure_start_page(): void
+{
+    if (wp_installing()) {
+        return;
+    }
+
+    $existing = get_page_by_path('start');
+    if ($existing instanceof \WP_Post) {
+        update_post_meta($existing->ID, '_wp_page_template', 'template-start.blade.php');
+
+        return;
+    }
+
+    $id = wp_insert_post([
+        'post_title' => 'Start',
+        'post_name' => 'start',
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_content' => '',
+    ], true);
+
+    if (is_wp_error($id) || ! $id) {
+        return;
+    }
+
+    update_post_meta((int) $id, '_wp_page_template', 'template-start.blade.php');
+}
+add_action('init', __NAMESPACE__.'\\mh_ensure_start_page', 35);
+
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
 add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
