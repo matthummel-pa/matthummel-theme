@@ -21,6 +21,7 @@ function initPopoutMenu() {
     document.body.classList.toggle('mh-popout-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    menu.toggleAttribute('inert', !open);
     overlay?.setAttribute('aria-hidden', open ? 'false' : 'true');
     if (open) {
       close?.focus();
@@ -30,6 +31,7 @@ function initPopoutMenu() {
   };
 
   menu.setAttribute('aria-hidden', 'true');
+  menu.setAttribute('inert', '');
   overlay?.setAttribute('aria-hidden', 'true');
 
   menu.addEventListener('keydown', (event) => {
