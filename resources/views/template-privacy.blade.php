@@ -24,11 +24,12 @@
       <p class="eyebrow">Overview</p>
       <h2 id="priv-overview-heading">The short version</h2>
       <ul class="legal-bullets">
-        <li>This site does not run advertising, analytics, or tracking pixels.</li>
-        <li>No third-party cookies are set by this site.</li>
+        <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
         <li>The contact form collects your name and email so I can reply. That is all it is used for.</li>
-        <li>No data is sold or shared with anyone.</li>
-        <li>You can request deletion of anything I have about you by <a href="{{ $contactUrl }}">writing to me</a>.</li>
+        <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
+        <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
+        <li>You can opt out of analytics tracking at any time — see the <a href="#priv-optout-heading">opt-out options</a> below.</li>
+        <li>You can request deletion of any personal data by <a href="{{ $contactUrl }}">writing to me</a>.</li>
       </ul>
       <p class="legal-meta">Last updated: <time datetime="{{ $updated }}">{{ date('F j, Y', strtotime($updated)) }}</time></p>
     </div>
@@ -52,7 +53,7 @@
   <div class="container wide">
     <p class="eyebrow">Data collected</p>
     <h2 id="priv-data-heading">What I collect</h2>
-    <p class="sec-intro" style="max-width:52ch;margin-bottom:2rem">Three categories of data may be collected when you use this site.</p>
+    <p class="sec-intro" style="max-width:52ch;margin-bottom:2rem">Four categories of data may be collected when you use this site.</p>
     <div class="legal-data-grid">
 
       <div class="legal-data-card">
@@ -79,6 +80,18 @@
       </div>
 
       <div class="legal-data-card">
+        <h3 class="legal-data-card__title">Analytics and advertising</h3>
+        <p class="legal-data-card__intro">This site uses the following third-party tools to understand site traffic and measure advertising performance:</p>
+        <ul class="legal-data-card__list">
+          <li><strong>Google Analytics 4</strong> — page views, session duration, referrer, device type</li>
+          <li><strong>Google Tag Manager</strong> — manages the above tracking scripts</li>
+          <li><strong>Meta (Facebook) Pixel</strong> — ad reach and conversion measurement (planned)</li>
+          <li><strong>HubSpot</strong> — visitor tracking, contact form capture, and CRM activity</li>
+        </ul>
+        <p class="legal-data-card__note">These tools set cookies and may send your IP address and browsing behaviour to Google and Meta. See <a href="#priv-optout-heading">opt-out options</a> below.</p>
+      </div>
+
+      <div class="legal-data-card">
         <h3 class="legal-data-card__title">Server logs</h3>
         <p class="legal-data-card__intro">The hosting server automatically logs standard request data:</p>
         <ul class="legal-data-card__list">
@@ -101,11 +114,10 @@
       <p class="eyebrow">Not collected</p>
       <h2 id="priv-no-collect-heading">What I do not collect</h2>
       <ul class="legal-bullets">
-        <li>No analytics (no Google Analytics, no Plausible, no Fathom, no tracking pixels)</li>
-        <li>No advertising cookies or retargeting data</li>
-        <li>No payment data (this site has no e-commerce)</li>
-        <li>No account or login data (there is no user registration on this site)</li>
-        <li>No social media tracking scripts from third parties</li>
+        <li>No payment data — this site has no e-commerce or checkout</li>
+        <li>No account or login data — there is no user registration on this site</li>
+        <li>No sensitive personal data (health, financial, biometric, or similar)</li>
+        <li>Analytics data is not used to build individual profiles or target you personally on this site</li>
       </ul>
     </div>
   </div>
@@ -117,14 +129,15 @@
     <div class="legal-prose">
       <p class="eyebrow">Cookies</p>
       <h2 id="priv-cookies-heading">Cookies</h2>
-      <p>This site sets a small number of functional cookies. No advertising or tracking cookies are used.</p>
+      <p>This site sets functional cookies and third-party analytics cookies. The table below lists all cookies in use.</p>
     </div>
     <div class="legal-table-wrap">
       <table class="legal-table">
-        <caption class="visually-hidden">Cookies set by this site</caption>
+        <caption class="visually-hidden">Cookies set by this site and third parties</caption>
         <thead>
           <tr>
             <th scope="col">Cookie</th>
+            <th scope="col">Set by</th>
             <th scope="col">Purpose</th>
             <th scope="col">Duration</th>
           </tr>
@@ -132,24 +145,69 @@
         <tbody>
           <tr>
             <td><code>comment_author_*</code></td>
-            <td>Remembers your name and email if you leave a comment, so you do not have to re-enter them</td>
+            <td>This site</td>
+            <td>Remembers your name and email after leaving a comment</td>
             <td>1 year</td>
           </tr>
           <tr>
             <td><code>wordpress_test_cookie</code></td>
-            <td>Checks that your browser accepts cookies (set by WordPress on login only)</td>
+            <td>This site</td>
+            <td>Checks that your browser accepts cookies (admin login only)</td>
             <td>Session</td>
           </tr>
           <tr>
             <td><code>mh-theme</code></td>
-            <td>Remembers your light/dark mode preference if you toggle it</td>
-            <td>Local storage (not a cookie)</td>
+            <td>This site</td>
+            <td>Stores your light/dark mode preference</td>
+            <td>localStorage — no expiry</td>
+          </tr>
+          <tr>
+            <td><code>_ga</code>, <code>_ga_*</code></td>
+            <td>Google Analytics</td>
+            <td>Distinguishes unique visitors; tracks sessions, pages, and referrers</td>
+            <td>2 years</td>
+          </tr>
+          <tr>
+            <td><code>_gid</code></td>
+            <td>Google Analytics</td>
+            <td>Stores and updates a unique value for each page visited</td>
+            <td>24 hours</td>
+          </tr>
+          <tr>
+            <td><code>_fbp</code></td>
+            <td>Meta (Facebook) Pixel</td>
+            <td>Identifies browsers for ad delivery and measurement (planned)</td>
+            <td>3 months</td>
+          </tr>
+          <tr>
+            <td><code>hubspotutk</code></td>
+            <td>HubSpot</td>
+            <td>Tracks a visitor's identity across sessions and associates form submissions with browsing history</td>
+            <td>13 months</td>
+          </tr>
+          <tr>
+            <td><code>__hstc</code></td>
+            <td>HubSpot</td>
+            <td>Main cookie for tracking visitors — stores session count, timestamps, and original referrer</td>
+            <td>13 months</td>
+          </tr>
+          <tr>
+            <td><code>__hssc</code></td>
+            <td>HubSpot</td>
+            <td>Keeps track of sessions for analytics purposes</td>
+            <td>30 minutes</td>
+          </tr>
+          <tr>
+            <td><code>__hssrc</code></td>
+            <td>HubSpot</td>
+            <td>Determines whether the browser has been restarted between sessions</td>
+            <td>Session</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="legal-prose" style="margin-top:1.25rem">
-      <p>You can block or delete cookies through your browser settings. Blocking functional cookies may affect comment submission.</p>
+      <p>You can block or delete cookies through your browser settings. Blocking third-party cookies disables analytics tracking. Blocking functional cookies may affect comment submission.</p>
     </div>
   </div>
 </section>
@@ -162,10 +220,63 @@
       <h2 id="priv-sharing-heading">Who sees your data</h2>
       <p>Your data is not sold, rented, or shared with third parties for marketing purposes. It may reach the following parties in the course of normal operation:</p>
       <ul class="legal-bullets">
-        <li><strong>SiteGround</strong> — the web hosting provider that stores the site database and files. <a href="https://www.siteground.com/gdpr" rel="noopener" target="_blank">SiteGround's privacy policy</a>.</li>
-        <li><strong>GitHub</strong> — this site reads public profile and repository data from the GitHub API to display on the Code page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
-        <li><strong>Law enforcement</strong> — if required by a valid legal process, data may be disclosed as required by law.</li>
+        <li><strong>Google</strong> — Google Analytics 4 and Google Tag Manager receive anonymised usage data (page views, session data, device type, approximate location). Subject to <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Google's privacy policy</a>. IP anonymisation is enabled.</li>
+        <li><strong>Meta (Facebook)</strong> — the Meta Pixel (planned) sends event data to Meta for ad measurement and reach reporting. Subject to <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta's privacy policy</a>.</li>
+        <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
+        <li><strong>SiteGround</strong> — the web hosting provider stores the site database and files. <a href="https://www.siteground.com/gdpr" rel="noopener" target="_blank">SiteGround's privacy policy</a>.</li>
+        <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the Code page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
+        <li><strong>Law enforcement</strong> — data may be disclosed if required by a valid legal process.</li>
       </ul>
+    </div>
+  </div>
+</section>
+
+{{-- ── OPT-OUT ──────────────────────────────────────────── --}}
+<section class="pf-section" aria-labelledby="priv-optout-heading">
+  <div class="container wide">
+    <div class="legal-prose">
+      <p class="eyebrow">Opt out</p>
+      <h2 id="priv-optout-heading">How to opt out of analytics</h2>
+      <p>You have several options for limiting or disabling analytics tracking on this site:</p>
+    </div>
+    <div class="legal-data-grid" style="margin-top:1.25rem">
+
+      <div class="legal-data-card">
+        <h3 class="legal-data-card__title">Google Analytics opt-out</h3>
+        <ul class="legal-data-card__list">
+          <li>Install the <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">Google Analytics Opt-out Browser Add-on</a></li>
+          <li>Enable "Do Not Track" in your browser settings (honoured on a best-effort basis)</li>
+          <li>Block <code>*.google-analytics.com</code> via an ad blocker or browser extension</li>
+        </ul>
+      </div>
+
+      <div class="legal-data-card">
+        <h3 class="legal-data-card__title">Meta Pixel opt-out</h3>
+        <ul class="legal-data-card__list">
+          <li>Use the <a href="https://www.facebook.com/help/568137493302217" rel="noopener" target="_blank">Facebook Ad Preferences</a> to limit off-Facebook tracking</li>
+          <li>Install the <a href="https://www.facebook.com/help/247395082112892" rel="noopener" target="_blank">Facebook Container</a> browser extension</li>
+          <li>Block <code>*.facebook.com</code> via an ad blocker</li>
+        </ul>
+      </div>
+
+      <div class="legal-data-card">
+        <h3 class="legal-data-card__title">HubSpot opt-out</h3>
+        <ul class="legal-data-card__list">
+          <li>Block <code>*.hs-scripts.com</code>, <code>*.hubspot.com</code>, and <code>*.hsforms.com</code> via an ad blocker</li>
+          <li>Delete HubSpot cookies (<code>hubspotutk</code>, <code>__hstc</code>, <code>__hssc</code>, <code>__hssrc</code>) from your browser</li>
+          <li>Submit a data deletion request via <a href="{{ $contactUrl }}">the contact form</a> — I will forward it to HubSpot within 5 business days</li>
+        </ul>
+      </div>
+
+      <div class="legal-data-card">
+        <h3 class="legal-data-card__title">Browser-level controls</h3>
+        <ul class="legal-data-card__list">
+          <li>Block third-party cookies in your browser settings</li>
+          <li>Use a privacy-focused browser (Firefox, Brave, Safari) with enhanced tracking protection enabled</li>
+          <li>Install an ad/tracker blocker such as uBlock Origin</li>
+        </ul>
+      </div>
+
     </div>
   </div>
 </section>
