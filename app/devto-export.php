@@ -212,7 +212,7 @@ function mh_devto_absolutize_urls(string $md): string
 }
 
 /**
- * Rule-based rewrite so journal copy reads well on DEV.to.
+ * Soften shop-owner phrasing and internal CTAs for the DEV.to audience.
  */
 function mh_devto_rule_rewrite(string $md, \WP_Post $post): string
 {
@@ -222,9 +222,10 @@ function mh_devto_rule_rewrite(string $md, \WP_Post $post): string
     $md = preg_replace('/\n+---\n+\*?Originally posted on \[DEV\.to\].*$/is', '', $md) ?? $md;
     $md = preg_replace('/\n+\*?Originally posted on \[DEV\.to\].*$/im', '', $md) ?? $md;
 
+    $home = untrailingslashit(home_url('/'));
     $replacements = [
-        'on this site' => 'on [matthummel.com]('.untrailingslashit(home_url('/')).')',
-        'on my site' => 'on [matthummel.com]('.untrailingslashit(home_url('/')).')',
+        'on this site' => 'on [matthummel.com]('.$home.')',
+        'on my site' => 'on [matthummel.com]('.$home.')',
         'this journal' => 'my blog',
         'the journal' => 'my blog',
         'Say hello' => 'reach out',
@@ -236,6 +237,14 @@ function mh_devto_rule_rewrite(string $md, \WP_Post $post): string
     $md = preg_replace(
         '/\n+Extra copy-paste examples live on .+?\n/is',
         "\n",
+        $md
+    ) ?? $md;
+
+    // Prefer readable contact CTA text for absolute contact links.
+    $contact = untrailingslashit(home_url('/contact/'));
+    $md = preg_replace(
+        '/\[([^\]]*)\]\('.preg_quote($contact, '/').'\/?\)/',
+        '[reach out]('.$contact.'/)',
         $md
     ) ?? $md;
 
@@ -554,6 +563,7 @@ function mh_devto_export_metabox(\WP_Post $post): void
 
     echo '<p style="display:flex;flex-direction:column;gap:6px">';
     echo '<button type="button" class="button" id="mh-devto-preview">'.esc_html__('Preview Markdown', 'sage').'</button>';
+    echo '<button type="button" class="button" id="mh-devto-copy" disabled>'.esc_html__('Copy Markdown', 'sage').'</button>';
     echo '<button type="button" class="button" id="mh-devto-draft" '.disabled(! $hasToken, true, false).'>'.esc_html__('Create DEV.to draft', 'sage').'</button>';
     echo '<button type="button" class="button button-primary" id="mh-devto-publish" '.disabled(! $hasToken, true, false).'>'.esc_html__('Publish to DEV.to', 'sage').'</button>';
     echo '</p>';
@@ -620,13 +630,29 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
     const data = await call('mh_devto_preview')
     if (!data) return
     mdBox.value = data.markdown || ''
+    const copyBtn = document.getElementById('mh-devto-copy')
+    if (copyBtn) copyBtn.disabled = !mdBox.value
     setStatus(data.message || 'Markdown ready')
+  })
+
+  document.getElementById('mh-devto-copy')?.addEventListener('click', async function () {
+    if (!mdBox.value) return
+    try {
+      await navigator.clipboard.writeText(mdBox.value)
+      setStatus('Markdown copied')
+    } catch (err) {
+      mdBox.select()
+      document.execCommand('copy')
+      setStatus('Markdown copied')
+    }
   })
 
   document.getElementById('mh-devto-draft')?.addEventListener('click', async function () {
     const data = await call('mh_devto_draft')
     if (!data) return
     mdBox.value = data.markdown || ''
+    const copyBtn = document.getElementById('mh-devto-copy')
+    if (copyBtn) copyBtn.disabled = !mdBox.value
     setStatus(data.message + (data.url ? ' — ' + data.url : ''))
   })
 
@@ -635,6 +661,8 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
     const data = await call('mh_devto_publish')
     if (!data) return
     mdBox.value = data.markdown || ''
+    const copyBtn = document.getElementById('mh-devto-copy')
+    if (copyBtn) copyBtn.disabled = !mdBox.value
     setStatus(data.message + (data.url ? ' — ' + data.url : ''))
   })
 })()
