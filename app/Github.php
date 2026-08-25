@@ -95,12 +95,15 @@ class Github
     /**
      * Fetch and cache a GitHub user or organisation profile.
      *
+     * Includes REST `hireable` plus GraphQL profile status (emoji + message)
+     * when the public status is set on GitHub.
+     *
      * @param  string  $user  GitHub login (username or organisation slug).
      * @return array<string, mixed> Profile data, or empty array on failure.
      */
     public static function fetchUser(string $user): array
     {
-        $key = 'mh_ghu2_'.md5($user);
+        $key = 'mh_ghu3_'.md5($user);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -108,6 +111,7 @@ class Github
         $r = wp_remote_get("https://api.github.com/users/{$user}", self::args());
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             $j = json_decode(wp_remote_retrieve_body($r), true);
+            $status = self::fetchUserStatus($user);
             $d = [
                 'login' => $j['login'] ?? $user,
                 'name' => $j['name'] ?? ($j['login'] ?? $user),
@@ -121,11 +125,116 @@ class Github
                 'following' => (int) ($j['following'] ?? 0),
                 'public_repos' => (int) ($j['public_repos'] ?? 0),
                 'created' => isset($j['created_at']) ? (string) substr((string) $j['created_at'], 0, 4) : '',
+                'status_emoji' => $status['emoji'],
+                'status_message' => $status['message'],
+                'status_busy' => $status['busy'],
             ];
         }
         set_transient($key, $d, self::ttl());
 
         return $d;
+    }
+
+    /**
+     * Fetch the public GitHub profile status (emoji + short message) via GraphQL.
+     *
+     * Fails soft when GraphQL is unavailable or the user has no status set.
+     *
+     * @param  string  $user  GitHub login.
+     * @return array{emoji: string, message: string, busy: bool}
+     */
+    public static function fetchUserStatus(string $user): array
+    {
+        $empty = ['emoji' => '', 'message' => '', 'busy' => false];
+        $user = sanitize_user($user, true);
+        if ($user === '') {
+            return $empty;
+        }
+
+        $key = 'mh_ghus1_'.md5($user);
+        if (($cached = get_transient($key)) !== false && is_array($cached)) {
+            return array_merge($empty, $cached);
+        }
+
+        $query = <<<'GQL'
+query ($login: String!) {
+  user(login: $login) {
+    status {
+      message
+      emoji
+      emojiHTML
+      indicatesLimitedAvailability
+    }
+  }
+}
+GQL;
+
+        $headers = github_headers();
+        $headers['Content-Type'] = 'application/json';
+        $headers['Accept'] = 'application/json';
+
+        $res = wp_remote_post('https://api.github.com/graphql', [
+            'timeout' => 12,
+            'headers' => $headers,
+            'body' => wp_json_encode([
+                'query' => $query,
+                'variables' => ['login' => $user],
+            ]),
+        ]);
+
+        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+            set_transient($key, $empty, self::ttl());
+
+            return $empty;
+        }
+
+        $payload = json_decode((string) wp_remote_retrieve_body($res), true);
+        $status = is_array($payload) ? ($payload['data']['user']['status'] ?? null) : null;
+        if (! is_array($status)) {
+            set_transient($key, $empty, self::ttl());
+
+            return $empty;
+        }
+
+        $emoji = trim(wp_strip_all_tags((string) ($status['emojiHTML'] ?? '')));
+        if ($emoji === '') {
+            $emoji = self::statusEmojiFromShortcode((string) ($status['emoji'] ?? ''));
+        }
+
+        $out = [
+            'emoji' => $emoji,
+            'message' => trim((string) ($status['message'] ?? '')),
+            'busy' => ! empty($status['indicatesLimitedAvailability']),
+        ];
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
+     * Map a few common GitHub status shortcodes to Unicode when emojiHTML is missing.
+     */
+    protected static function statusEmojiFromShortcode(string $shortcode): string
+    {
+        $shortcode = trim($shortcode);
+        if ($shortcode === '') {
+            return '';
+        }
+
+        $map = [
+            ':coffee:' => '☕',
+            ':wave:' => '👋',
+            ':sparkles:' => '✨',
+            ':rocket:' => '🚀',
+            ':zap:' => '⚡',
+            ':palm_tree:' => '🌴',
+            ':house:' => '🏠',
+            ':computer:' => '💻',
+            ':briefcase:' => '💼',
+            ':dart:' => '🎯',
+        ];
+
+        return $map[$shortcode] ?? '';
     }
 
     /**

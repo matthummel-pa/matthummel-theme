@@ -215,10 +215,10 @@
           {!! \App\mh_svg_icon('map', 13) !!}
           {{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, PA', 'sage')) }}
         </span>
-        @if (! empty($gh['hireable']))
+        @if (\App\mh_is_hireable($gh))
           <span class="h-badge h-badge--open">
-            <span class="h-badge__dot" aria-hidden="true"></span>
-            Available for work
+            @include('partials.avail-mark', ['gh' => $gh])
+            {{ \App\mh_availability_label($gh, __('Available for work', 'sage')) }}
           </span>
         @endif
         <span class="h-badge">
@@ -365,35 +365,37 @@
       {{-- Right: availability + audience cards --}}
       <div class="h-about-v2__sidebar">
 
-        {{-- Availability card --}}
-        <div class="h-avail-card h-about-avail">
-          <p class="h-avail-card__label">
-            <span class="h-badge__dot" aria-hidden="true"></span>
-            Current status
-          </p>
-          <p class="h-about-avail__status">{{ \App\field('home_avail_status', __('Open for work', 'sage')) }}</p>
-          <ul class="h-about-avail__types">
-            <li>
-              <span class="h-about-avail__check" aria-hidden="true">✓</span>
-              Full-time roles
-            </li>
-            <li>
-              <span class="h-about-avail__check" aria-hidden="true">✓</span>
-              Part-time &amp; contract
-            </li>
-            <li>
-              <span class="h-about-avail__check" aria-hidden="true">✓</span>
-              Freelance &amp; project work
-            </li>
-            <li>
-              <span class="h-about-avail__check" aria-hidden="true">✓</span>
-              Agency overflow &amp; subs
-            </li>
-          </ul>
-          <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
-            {!! \App\mh_svg_icon('mail', 16) !!} Say hello
-          </a>
-        </div>
+        {{-- Availability card (GitHub hireable) --}}
+        @if (\App\mh_is_hireable($gh))
+          <div class="h-avail-card h-about-avail">
+            <p class="h-avail-card__label">
+              @include('partials.avail-mark', ['gh' => $gh])
+              Current status
+            </p>
+            <p class="h-about-avail__status">{{ \App\mh_availability_label($gh, \App\field('home_avail_status', __('Open for work', 'sage'))) }}</p>
+            <ul class="h-about-avail__types">
+              <li>
+                <span class="h-about-avail__check" aria-hidden="true">✓</span>
+                Full-time roles
+              </li>
+              <li>
+                <span class="h-about-avail__check" aria-hidden="true">✓</span>
+                Part-time &amp; contract
+              </li>
+              <li>
+                <span class="h-about-avail__check" aria-hidden="true">✓</span>
+                Freelance &amp; project work
+              </li>
+              <li>
+                <span class="h-about-avail__check" aria-hidden="true">✓</span>
+                Agency overflow &amp; subs
+              </li>
+            </ul>
+            <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
+              {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+            </a>
+          </div>
+        @endif
 
         {{-- Who's welcome --}}
         <div class="h-about-who">

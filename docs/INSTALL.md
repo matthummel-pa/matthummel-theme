@@ -57,7 +57,7 @@ On first activation, `mh_seed_portfolio_pages()` creates Home, About, Work (`/pr
 
 If pages already exist from an earlier seed (`mh_portfolio_seeded_v2`), they are left as-is.
 
-To use a different headshot: Appearance → Customize → Profile photo. Leave it empty to keep `resources/images/matt-hummel.jpg`.
+To use a different headshot: Appearance → Customize → Profile photo. Leave it empty to use your GitHub profile photo (then the bundled `resources/images/matt-hummel.jpg` if GitHub is unreachable).
 
 ## 5. Edit page copy
 

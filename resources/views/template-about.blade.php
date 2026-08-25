@@ -155,10 +155,10 @@
             </li>
           @endif
         </ul>
-        @if (! empty($gh['hireable']))
+        @if (\App\mh_is_hireable($gh))
           <p class="about-aside-avail">
-            <span class="h-badge__dot" aria-hidden="true"></span>
-            Available for hire
+            @include('partials.avail-mark', ['gh' => $gh])
+            {{ \App\mh_availability_label($gh, __('Available for hire', 'sage')) }}
           </p>
         @endif
         <a class="about-aside-card__link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
@@ -208,8 +208,9 @@
 </section>
 
 {{-- ══════════════════════════════════════════════════════════
-     OPEN FOR WORK
+     OPEN FOR WORK (shown when GitHub hireable is on)
      ══════════════════════════════════════════════════════════ --}}
+@if (\App\mh_is_hireable($gh))
 <section class="pf-section" aria-labelledby="about-work-heading">
   <div class="container wide about-openwork">
 
@@ -239,6 +240,7 @@
 
   </div>
 </section>
+@endif
 
 {{-- ══════════════════════════════════════════════════════════
      HOW I WORK

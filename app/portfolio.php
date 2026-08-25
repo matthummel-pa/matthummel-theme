@@ -24,6 +24,46 @@ function mh_github_blog_url(?array $gh = null): string
     return preg_match('#^https?://#i', $blog) ? $blog : 'https://'.$blog;
 }
 
+/**
+ * Whether the GitHub profile is marked Available for hire (`hireable`).
+ */
+function mh_is_hireable(?array $gh = null): bool
+{
+    $gh ??= Github::fetchUser(mh_github_login());
+
+    return ! empty($gh['hireable']);
+}
+
+/**
+ * Unicode emoji from the GitHub profile status (e.g. ☕), or empty string.
+ */
+function mh_availability_emoji(?array $gh = null): string
+{
+    $gh ??= Github::fetchUser(mh_github_login());
+
+    return trim((string) ($gh['status_emoji'] ?? ''));
+}
+
+/**
+ * Short availability label when hireable: GitHub status message, else fallback.
+ *
+ * @return string Empty when not hireable.
+ */
+function mh_availability_label(?array $gh = null, ?string $fallback = null): string
+{
+    $gh ??= Github::fetchUser(mh_github_login());
+    if (empty($gh['hireable'])) {
+        return '';
+    }
+
+    $message = trim((string) ($gh['status_message'] ?? ''));
+    if ($message !== '') {
+        return $message;
+    }
+
+    return $fallback ?? __('Open for work', 'sage');
+}
+
 function mh_portfolio_social_defaults(): array
 {
     return [
@@ -1046,7 +1086,7 @@ function mh_seed_portfolio_pages(): void
 }
 
 /**
- * Profile photo: Customizer upload, then bundled headshot, then GitHub, then Gravatar.
+ * Profile photo: Customizer upload, then GitHub avatar, then bundled headshot, then Gravatar.
  */
 function mh_profile_photo_url(int $size = 160): string
 {
@@ -1058,16 +1098,16 @@ function mh_profile_photo_url(int $size = 160): string
         }
     }
 
-    $rel = 'resources/images/matt-hummel.jpg';
-    if (is_readable(get_theme_file_path($rel))) {
-        return get_theme_file_uri($rel);
-    }
-
     $user = Github::fetchUser(mh_github_login());
     if (! empty($user['avatar'])) {
         $sep = str_contains((string) $user['avatar'], '?') ? '&' : '?';
 
         return $user['avatar'].$sep.'s='.$size;
+    }
+
+    $rel = 'resources/images/matt-hummel.jpg';
+    if (is_readable(get_theme_file_path($rel))) {
+        return get_theme_file_uri($rel);
     }
 
     $email = (string) get_option('admin_email');
@@ -1086,7 +1126,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_control(new \WP_Customize_Media_Control($wp, 'mh_profile_photo', [
         'label' => __('Photo', 'sage'),
-        'description' => __('Used next to your name in the header, and larger on Home and About. A square crop works best. Leave empty to keep the photo bundled with the theme.', 'sage'),
+        'description' => __('Used next to your name on Home, About, and posts. A square crop works best. Leave empty to use your GitHub profile photo.', 'sage'),
         'section' => 'mh_identity',
         'mime_type' => 'image',
     ]));

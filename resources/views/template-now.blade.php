@@ -19,10 +19,12 @@
   <h1 class="display-title is-hero">What I'm doing right now.</h1>
   <p class="lead">A snapshot of where my time and attention are going — updated {{ $updated }}. Inspired by <a href="https://nownownow.com" rel="noopener" target="_blank">nownownow.com</a>.</p>
   <div class="now-hero-meta">
-    <span class="now-hero-status">
-      <span class="h-badge__dot" aria-hidden="true"></span>
-      Open for new work
-    </span>
+    @if (\App\mh_is_hireable($gh))
+      <span class="now-hero-status">
+        @include('partials.avail-mark', ['gh' => $gh])
+        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
+      </span>
+    @endif
     <span class="now-hero-location">
       {!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA · Eastern Time
     </span>
@@ -56,13 +58,14 @@
         </a>
       </article>
 
-      {{-- Open for work --}}
+      {{-- Open for work (GitHub hireable) --}}
+      @if (\App\mh_is_hireable($gh))
       <article class="now-block">
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('users', 18) !!}</div>
           <div>
             <p class="now-block__eyebrow">Availability</p>
-            <h2 class="now-block__title">Open for new work</h2>
+            <h2 class="now-block__title">{{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}</h2>
           </div>
         </div>
         <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for new work — full-time roles, contract arrangements, freelance projects, and agency overflow. WordPress and PHP is the core. I also do React, web apps, and Power Platform when it\'s the right fit.', 'sage')) }}</p>
@@ -72,6 +75,7 @@
           <a class="h-text-arrow" href="{{ home_url('/hire/') }}">See hire details →</a>
         </div>
       </article>
+      @endif
 
       {{-- Writing --}}
       <article class="now-block">
@@ -141,12 +145,13 @@
     {{-- ── SIDEBAR ─────────────────────────────────────── --}}
     <aside class="now-sidebar" aria-label="Status and details">
 
+      @if (\App\mh_is_hireable($gh))
       <div class="now-sidebar-card now-sidebar-card--status">
         <div class="now-sidebar-status-dot">
-          <span class="h-badge__dot" aria-hidden="true"></span>
-          <span class="now-sidebar-card__label">Available</span>
+          @include('partials.avail-mark', ['gh' => $gh])
+          <span class="now-sidebar-card__label">Status</span>
         </div>
-        <p class="now-sidebar-card__value">Open for work</p>
+        <p class="now-sidebar-card__value">{{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}</p>
         <ul class="now-sidebar-card__list">
           <li>{!! \App\mh_svg_icon('check', 12) !!} Full-time roles</li>
           <li>{!! \App\mh_svg_icon('check', 12) !!} Contract / freelance</li>
@@ -157,6 +162,7 @@
           {!! \App\mh_svg_icon('mail', 14) !!} Say hello
         </a>
       </div>
+      @endif
 
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Last updated</p>

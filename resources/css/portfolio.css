@@ -450,18 +450,31 @@ body.mh-popout-open { overflow: hidden; }
 }
 .header-avail:hover { background: #dcfce7; }
 .header-avail:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
-.header-avail__dot {
+.header-avail__dot,
+.h-badge__dot {
   width: 8px; height: 8px;
   border-radius: 50%;
   background: #16a34a;
   flex-shrink: 0;
   animation: pulse-dot 2.5s ease-in-out infinite;
 }
+.mh-avail__emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+.header-avail .mh-avail__emoji { font-size: .95rem; }
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
   50% { opacity: .45; }
 }
-@media (prefers-reduced-motion: reduce) { .header-avail__dot { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .header-avail__dot,
+  .h-badge__dot { animation: none; }
+}
 .header-avail__label { display: none; }
 @media (min-width: 1080px) { .header-avail__label { display: inline; } }
 
@@ -6203,8 +6216,18 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .side-subscribe__btn:hover { background: var(--blue-100); }
 .side-subscribe__btn .mh-ico { flex-shrink: 0; }
 
-.side-hire .side-card-title { color: #166534; }
+.side-hire .side-card-title {
+  color: #166534;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
 .side-hire__body { font-size: .85rem; line-height: 1.65; color: var(--color-text-secondary); margin: 0 0 .85rem; }
+.eyebrow .mh-avail__emoji { margin-right: .35rem; }
+.contact-info-icon .mh-avail__emoji,
+.contact-info-icon .h-badge__dot {
+  display: inline-flex;
+}
 
 /* ─── DISCOVERY CTA (home + services) ─────────────────────────────────────── */
 .disc-cta {

@@ -38,11 +38,21 @@
     {{-- Header action buttons --}}
     <div class="header-actions">
 
-      {{-- Availability signal --}}
-      <a class="header-avail" href="{{ home_url('/now/') }}" aria-label="{{ __('Open for new work — see what I\'m doing now', 'sage') }}">
-        <span class="header-avail__dot" aria-hidden="true"></span>
-        <span class="header-avail__label">Open for work</span>
-      </a>
+      {{-- Availability signal (GitHub hireable + status emoji) --}}
+      @php
+        $ghAvail = \App\Github::fetchUser(\App\mh_github_login());
+        $availLabel = \App\mh_availability_label($ghAvail, __('Open for work', 'sage'));
+      @endphp
+      @if ($availLabel !== '')
+        <a
+          class="header-avail"
+          href="{{ home_url('/now/') }}"
+          aria-label="{{ sprintf(__('%s — see what I\'m doing now', 'sage'), $availLabel) }}"
+        >
+          @include('partials.avail-mark', ['gh' => $ghAvail])
+          <span class="header-avail__label">{{ $availLabel }}</span>
+        </a>
+      @endif
 
       {{-- Desktop CTA --}}
       <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">Say hello</a>

@@ -28,12 +28,18 @@
 {{-- ── HERO ────────────────────────────────────────────── --}}
 @component('partials.page-hero')
   <p class="eyebrow">Hire me</p>
-  <h1 class="display-title is-hero">Open for new work.</h1>
+  <h1 class="display-title is-hero">
+    @if (\App\mh_is_hireable($gh))
+      {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.
+    @else
+      {{ __('Hire a WordPress developer.', 'sage') }}
+    @endif
+  </h1>
   <p class="lead">I'm available for WordPress projects right now — site builds, plugins, agency overflow, and Power Platform work. A short note is enough to start.</p>
-  @if (! empty($gh['hireable']))
+  @if (\App\mh_is_hireable($gh))
     <p class="hire-avail">
-      <span class="h-badge__dot" aria-hidden="true"></span>
-      Currently available — reply within a day
+      @include('partials.avail-mark', ['gh' => $gh])
+      {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — reply within a day
     </p>
   @endif
   <div class="hire-good-for">
