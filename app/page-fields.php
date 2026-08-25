@@ -413,9 +413,9 @@ function page_field_map(): array
         ],
         'template-code.blade.php' => [
             __('Intro', 'sage') => [
-                ['code_kicker', __('Kicker', 'sage'), 'text', __('Engineering', 'sage')],
-                ['code_h1', __('Heading', 'sage'), 'text', __('What I do', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')],
+                ['code_kicker', __('Kicker', 'sage'), 'text', __('Code & resume', 'sage')],
+                ['code_h1', __('Heading', 'sage'), 'text', __('PHP, WordPress, and open-source code.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skills below.', 'sage')],
             ],
             __('Practice', 'sage') => [
                 ['code_do_h2', __('Heading', 'sage'), 'text', __('Practice', 'sage')],

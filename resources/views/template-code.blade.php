@@ -30,18 +30,24 @@
   <p class="lead">
     {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')) !!}
   </p>
+  @if (! empty($profile['hireable']))
+    <p class="hire-avail" style="margin-top:.85rem">
+      <span class="h-badge__dot" aria-hidden="true"></span>
+      Open for new work — full-time, contract, agency overflow
+    </p>
+  @endif
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-      {!! \App\mh_svg_icon('github', 15) !!} GitHub
+      {!! \App\mh_svg_icon('github', 15) !!} GitHub<span class="visually-hidden"> (opens in a new window)</span>
     </a>
     <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} Resume</a>
     <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} Skills</a>
     @if ($linkedin)
       <a href="{{ esc_url($linkedin) }}" rel="noopener" target="_blank">
-        {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
+        {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn<span class="visually-hidden"> (opens in a new window)</span>
       </a>
     @endif
-    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
+    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Hire me</a>
   </p>
 @endcomponent
 
