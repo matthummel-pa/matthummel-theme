@@ -13,6 +13,7 @@ All notable changes to this theme are recorded here.
 ### Changed
 
 - Privacy policy: contact card covers the project brief fields
+- `wp mh db-pull` / `db-push`: auto-detect Cloud Agent identity (`~/.ssh/id_ed25519_sg`), `--ssh-identity`, `LIVE_WP_PATH` path fallback, and passphrase unlock via `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`
 
 ## 3.1.3 — 2026-08-25
 
