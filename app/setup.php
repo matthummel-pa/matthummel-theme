@@ -34,11 +34,13 @@ add_action('admin_head', function () {
     }
 
     if (! Vite::isRunningHot()) {
-        $dependencies = json_decode(Vite::content('editor.deps.json'));
+        $dependencies = json_decode(Vite::content('editor.deps.json'), true);
 
-        foreach ($dependencies as $dependency) {
-            if (! wp_script_is($dependency)) {
-                wp_enqueue_script($dependency);
+        if (is_array($dependencies)) {
+            foreach ($dependencies as $dependency) {
+                if (! wp_script_is($dependency)) {
+                    wp_enqueue_script($dependency);
+                }
             }
         }
     }

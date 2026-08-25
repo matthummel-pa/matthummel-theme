@@ -134,7 +134,7 @@ function mh_db_ssh_base(string $user, string $host, string $port): string
             );
         }
 
-        $stamp = date('Ymd-His');
+        $stamp = gmdate('Ymd-His');
         $remoteFile = "/tmp/mh-db-pull-{$stamp}.sql";
         $localFile = sys_get_temp_dir()."/mh-db-pull-{$stamp}.sql";
 
@@ -176,7 +176,7 @@ function mh_db_ssh_base(string $user, string $host, string $port): string
         // 4. Import locally.
         \WP_CLI::log('Importing into local database…');
         \WP_CLI::runcommand('db import '.escapeshellarg($localFile), ['launch' => true]);
-        @unlink($localFile);
+        wp_delete_file($localFile);
 
         // 5. Search-replace URLs if they differ.
         if (rtrim($remoteUrl, '/') !== rtrim($localUrl, '/')) {
@@ -311,7 +311,7 @@ HELP,
             \WP_CLI::error('Remote WP root not set. Pass --ssh-path or set MH_SSH_WP_PATH / SERVER_DESTINATION_PATH.');
         }
 
-        $stamp = date('Ymd-His');
+        $stamp = gmdate('Ymd-His');
         $localFile = sys_get_temp_dir()."/mh-db-push-{$stamp}.sql";
         $remoteFile = "/tmp/mh-db-push-{$stamp}.sql";
 
@@ -336,7 +336,7 @@ HELP,
             escapeshellarg($remoteFile)
         );
         [$code] = mh_db_exec($scpCmd);
-        @unlink($localFile);
+        wp_delete_file($localFile);
         if ($code !== 0) {
             \WP_CLI::error("scp upload failed (exit {$code}).");
         }

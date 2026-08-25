@@ -87,6 +87,6 @@ class Comments extends Composer
      */
     public function closed(): bool
     {
-        return ! comments_open() && get_comments_number() != '0' && post_type_supports(get_post_type(), 'comments');
+        return ! comments_open() && (int) get_comments_number() !== 0 && post_type_supports(get_post_type(), 'comments');
     }
 }

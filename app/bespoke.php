@@ -73,6 +73,7 @@ function mh_clear_page_block_content(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -128,6 +129,7 @@ function mh_reset_power_platform_focus_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -218,6 +220,7 @@ function mh_apply_seo_playbook_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -314,6 +317,7 @@ function mh_apply_code_showcase_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -372,6 +376,7 @@ function mh_apply_code_resume_studio(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -433,6 +438,7 @@ function mh_apply_code_resume_available(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -491,6 +497,7 @@ function mh_apply_code_anywhere(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -561,6 +568,7 @@ function mh_apply_code_resume_employers(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -609,6 +617,7 @@ function mh_apply_code_resume_linkedin(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -657,6 +666,7 @@ function mh_apply_code_resume_germanna_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -713,6 +723,7 @@ function mh_apply_code_resume_kca_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -761,6 +772,7 @@ function mh_apply_code_resume_ang_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -815,6 +827,7 @@ function mh_apply_code_resume_pp_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -1031,6 +1044,7 @@ function mh_apply_journal_rename(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -1133,7 +1147,6 @@ function mh_apply_home_redesign_copy(): void
         ],
         'mh_f_home_lede' => [
             'I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.' => 'I build WordPress sites, plugins, and other web apps. Mostly WordPress — it\'s what I enjoy. Shops get something they can edit. Developers get code they can read.',
-            'I build WordPress sites, plugins, and other web apps in Gettysburg. Shops get a site they can edit. Developers can copy the code.' => 'I build WordPress sites, plugins, and other web apps. Mostly WordPress — it\'s what I enjoy. Shops get something they can edit. Developers get code they can read.',
         ],
         'mh_f_home_link_code' => [
             'Code and snippets' => 'Code',
@@ -1199,6 +1212,7 @@ function mh_apply_home_redesign_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -1256,6 +1270,7 @@ function mh_apply_home_v2_copy(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 
@@ -1294,6 +1309,7 @@ function mh_apply_about_bio_v1(): void
         'post_type' => 'page',
         'post_status' => 'any',
         'numberposts' => -1,
+        'no_found_rows' => true,
         'fields' => 'ids',
     ]);
 

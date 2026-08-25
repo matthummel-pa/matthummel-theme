@@ -56,7 +56,6 @@ function mh_svg_icon(string $name, int $size = 20, string $fill = 'currentColor'
         'gdrive' => 'google-drive',
         'rank math' => 'rank-math',
         'rank math seo' => 'rank-math',
-        'seo' => 'rank-math',
         'microsoft 365' => 'office',
         'vue' => 'javascript',
         'dockerfile' => 'code',

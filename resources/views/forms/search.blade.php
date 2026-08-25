@@ -8,7 +8,7 @@
       type="search"
       class="js-mh-search"
       placeholder="{{ esc_attr($placeholder ?? _x('Search …', 'placeholder', 'sage')) }}"
-      value="{!! get_search_query() !!}"
+      value="{{ esc_attr(get_search_query()) }}"
       name="s"
       autocomplete="off"
     >

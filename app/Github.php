@@ -226,7 +226,7 @@ class Github
         }
 
         $data = [];
-        $jargs = ['timeout' => 12, 'headers' => github_headers()];
+        $jargs = self::args();
 
         $r = wp_remote_get("https://api.github.com/repos/{$owner}/{$repo}", $jargs);
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
@@ -253,8 +253,7 @@ class Github
             $data['intro'] = self::readmeIntro(wp_remote_retrieve_body($rm));
         }
 
-        $ttl = max(1, (int) (function_exists('get_theme_mod') ? get_theme_mod('mh_proj_cache_hours', 6) : 6));
-        set_transient($key, $data, $ttl * HOUR_IN_SECONDS);
+        set_transient($key, $data, self::ttl());
 
         return $data;
     }

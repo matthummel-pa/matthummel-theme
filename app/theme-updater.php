@@ -166,27 +166,29 @@ function updater_pull(): array
             ]),
         ]);
         if (is_wp_error($res)) {
-            @unlink($tmp);
+            wp_delete_file($tmp);
 
             return [false, $res->get_error_message()];
         }
         $code = (int) wp_remote_retrieve_response_code($res);
         if ($code !== 200) {
-            @unlink($tmp);
+            wp_delete_file($tmp);
 
             return [false, sprintf(__('GitHub returned %d while downloading the zip. Contents: Read on the token?', 'sage'), $code)];
         }
-        file_put_contents($tmp, (string) wp_remote_retrieve_body($res));
+        if (file_put_contents($tmp, (string) wp_remote_retrieve_body($res)) === false) {
+            return [false, __('Could not write the downloaded zip to disk.', 'sage')];
+        }
     }
 
     if (! is_readable($tmp) || (int) filesize($tmp) < 1000) {
-        @unlink($tmp);
+        wp_delete_file($tmp);
 
         return [false, __('The downloaded zip was empty.', 'sage')];
     }
 
     if (! WP_Filesystem()) {
-        @unlink($tmp);
+        wp_delete_file($tmp);
 
         return [false, __('WordPress could not write to the themes folder.', 'sage')];
     }
@@ -197,7 +199,7 @@ function updater_pull(): array
         'overwrite_package' => true,
         'clear_destination' => true,
     ]);
-    @unlink($tmp);
+    wp_delete_file($tmp);
 
     if (is_wp_error($result)) {
         return [false, $result->get_error_message()];
@@ -258,22 +260,22 @@ function render_theme_updater_page(): void
 
     $notice = null;
 
-    if ('POST' === ($_SERVER['REQUEST_METHOD'] ?? '') && isset($_POST['mh_updater_save_nonce'])) {
-        check_admin_referer('mh_theme_token', 'mh_updater_save_nonce');
-        $incoming = sanitize_text_field(wp_unslash((string) ($_POST['mh_gh_token'] ?? '')));
-        if ($incoming === '') {
-            $notice = ['notice-error', __('Paste a token before saving.', 'sage')];
-        } else {
-            set_theme_mod('mh_gh_token', $incoming);
-            $notice = ['notice-success', __('GitHub token saved.', 'sage')];
+    if ('POST' === ($_SERVER['REQUEST_METHOD'] ?? '')) {
+        if (isset($_POST['mh_updater_save_nonce'])) {
+            check_admin_referer('mh_theme_token', 'mh_updater_save_nonce');
+            $incoming = sanitize_text_field(wp_unslash((string) ($_POST['mh_gh_token'] ?? '')));
+            if ($incoming === '') {
+                $notice = ['notice-error', __('Paste a token before saving.', 'sage')];
+            } else {
+                set_theme_mod('mh_gh_token', $incoming);
+                $notice = ['notice-success', __('GitHub token saved.', 'sage')];
+            }
+        } elseif (isset($_POST['mh_updater_nonce'])) {
+            check_admin_referer('mh_theme_update', 'mh_updater_nonce');
+            $action = sanitize_key(wp_unslash((string) ($_POST['mh_updater_action'] ?? 'pull')));
+            [$ok, $msg] = $action === 'build' ? updater_dispatch() : updater_pull();
+            $notice = [$ok ? 'notice-success' : 'notice-error', $msg];
         }
-    }
-
-    if ('POST' === ($_SERVER['REQUEST_METHOD'] ?? '') && isset($_POST['mh_updater_nonce'])) {
-        check_admin_referer('mh_theme_update', 'mh_updater_nonce');
-        $action = sanitize_key(wp_unslash((string) ($_POST['mh_updater_action'] ?? 'pull')));
-        [$ok, $msg] = $action === 'build' ? updater_dispatch() : updater_pull();
-        $notice = [$ok ? 'notice-success' : 'notice-error', $msg];
     }
 
     $r = updater_repo();
