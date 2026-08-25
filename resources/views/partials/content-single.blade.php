@@ -72,7 +72,7 @@
 
       {{-- Title --}}
       <h1 id="post-title-{{ $postId }}" class="post-hero-title p-name" itemprop="headline">
-        {!! get_the_title() !!}
+        {{ get_the_title() }}
       </h1>
 
       {{-- Meta row --}}
