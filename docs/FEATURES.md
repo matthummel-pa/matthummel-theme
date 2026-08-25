@@ -19,7 +19,8 @@ What the 3.x Sage theme does, and where it lives.
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
 | Search titles / meta | Document title and meta description from the theme (Gettysburg format); optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
-| Mobile menu | Slide-over `#mh-popout` with hover motion and compact socials | `sections/header.blade.php` |
+| Site header | Sticky on all viewports; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
+| Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |

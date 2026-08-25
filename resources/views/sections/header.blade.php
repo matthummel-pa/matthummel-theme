@@ -1,17 +1,30 @@
 @php
-  $currentPageTitle = is_front_page() ? '' : get_the_title();
+  $currentPageTitle = '';
+  if (is_singular()) {
+    $currentPageTitle = get_the_title();
+  } elseif (is_home()) {
+    $blog = (int) get_option('page_for_posts');
+    $currentPageTitle = $blog ? get_the_title($blog) : __('Journal', 'sage');
+  } elseif (is_search()) {
+    $currentPageTitle = __('Search', 'sage');
+  } elseif (is_404()) {
+    $currentPageTitle = __('Not found', 'sage');
+  } elseif (is_archive()) {
+    $currentPageTitle = get_the_archive_title();
+    $currentPageTitle = wp_strip_all_tags($currentPageTitle);
+  }
 @endphp
-<header class="site-header" id="site-header" role="banner">
+<header class="site-header" id="site-header">
   <div class="site-header-inner">
 
     {{-- Brand / home link --}}
-    <a class="brand" href="{{ home_url('/') }}" rel="home" aria-label="{{ __('Matt Hummel — home', 'sage') }}">
-      <span class="brand-name" aria-hidden="true">Matt Hummel</span>
+    <a class="brand" href="{{ home_url('/') }}" rel="home">
+      <span class="brand-name">Matt Hummel</span>
     </a>
 
     {{-- Primary navigation (desktop) --}}
     @if (has_nav_menu('primary_navigation'))
-      <nav class="header-nav" aria-label="{{ __('Primary navigation', 'sage') }}">
+      <nav class="header-nav" aria-label="{{ __('Primary', 'sage') }}">
         {!! wp_nav_menu([
           'theme_location' => 'primary_navigation',
           'menu_class'     => 'header-nav-list',
@@ -40,13 +53,16 @@
         type="button"
         aria-expanded="false"
         aria-controls="mh-popout"
-        aria-label="{{ __('Open navigation menu', 'sage') }}"
+        aria-label="{{ __('Open menu', 'sage') }}"
+        data-label-open="{{ esc_attr__('Open menu', 'sage') }}"
+        data-label-close="{{ esc_attr__('Close menu', 'sage') }}"
       >
         <span class="menu-toggle__icon" aria-hidden="true">
           <span class="menu-toggle__bar"></span>
           <span class="menu-toggle__bar"></span>
           <span class="menu-toggle__bar"></span>
         </span>
+        <span class="menu-toggle__text">{{ __('Menu', 'sage') }}</span>
       </button>
 
     </div>
@@ -62,35 +78,43 @@
   class="mh-popout"
   role="dialog"
   aria-modal="true"
-  aria-label="{{ __('Navigation menu', 'sage') }}"
+  aria-labelledby="mh-popout-title"
   aria-hidden="true"
   inert
 >
   <div class="mh-popout-head">
     <div class="mh-popout-head__left">
-      <p class="mh-popout-kicker">{{ __('Navigation', 'sage') }}</p>
+      <p class="mh-popout-kicker" id="mh-popout-title">{{ __('Menu', 'sage') }}</p>
       @if ($currentPageTitle !== '')
-        <p class="mh-popout-current" aria-label="{{ __('Currently viewing:', 'sage') }} {{ $currentPageTitle }}">
-          {{ $currentPageTitle }}
+        <p class="mh-popout-current">
+          <span class="sr-only">{{ __('Currently viewing:', 'sage') }} </span>{{ $currentPageTitle }}
         </p>
       @endif
     </div>
     <button
       class="mh-popout-close"
       type="button"
-      aria-label="{{ __('Close navigation menu', 'sage') }}"
+      aria-label="{{ __('Close menu', 'sage') }}"
     >
       <span aria-hidden="true">✕</span>
     </button>
   </div>
 
   @if (has_nav_menu('primary_navigation'))
-    <nav class="mh-popout-nav" aria-label="{{ __('Mobile navigation', 'sage') }}">
+    <nav class="mh-popout-nav" aria-label="{{ __('Site pages', 'sage') }}">
       {!! wp_nav_menu([
         'theme_location' => 'primary_navigation',
         'menu_class'     => 'mh-popout-menu',
         'echo'           => false,
         'container'      => false,
+        'depth'          => 1,
+        'items_wrap'     => sprintf(
+          '<ul class="%%2$s"><li class="menu-item%s"><a href="%s"%s>%s</a></li>%%3$s</ul>',
+          is_front_page() ? ' current-menu-item' : '',
+          esc_url(home_url('/')),
+          is_front_page() ? ' aria-current="page"' : '',
+          esc_html__('Home', 'sage')
+        ),
       ]) !!}
     </nav>
   @endif

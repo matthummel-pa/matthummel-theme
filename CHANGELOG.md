@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.3 — 2026-08-25
+
+### Changed
+
+- Navbar second pass: sticky header on mobile (was static under 900px), scroll lock when the menu is open
+- Mobile menu: Home link, visible “Menu” label, dialog labelled by title, Escape only closes when open (no stray focus steal)
+- Availability control meets 44×44 touch target; toggle aria-label switches Open/Close
+- Current page title in the popout works on archives, search, and the posts index
+
 ## 3.1.2 — 2026-08-24
 
 ### Changed
