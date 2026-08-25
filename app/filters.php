@@ -30,6 +30,11 @@ add_filter('aioseo_description', __NAMESPACE__.'\\mh_filter_meta_description', 9
 
 add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
 
+/**
+ * Whether a known SEO plugin is active and will print its own meta description.
+ *
+ * @since 3.1.0
+ */
 function mh_seo_plugin_prints_description(): bool
 {
     return defined('WPSEO_VERSION')
@@ -38,7 +43,14 @@ function mh_seo_plugin_prints_description(): bool
         || defined('SEOPRESS_VERSION');
 }
 
-/** @return array{title: string, desc: string} */
+/**
+ * Fallback title and meta description for known landing-page templates.
+ *
+ * @since 3.1.0
+ *
+ * @param  int|null  $post_id  Post ID to detect the active template; null uses the current query.
+ * @return array{title: string, desc: string}
+ */
 function mh_seo_landing_defaults(?int $post_id = null): array
 {
     $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
@@ -122,6 +134,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     return $map[$key] ?? ['title' => '', 'desc' => ''];
 }
 
+/**
+ * Post ID for the current request, including the static front page.
+ *
+ * @since 3.1.0
+ */
 function mh_seo_current_post_id(): int
 {
     if (is_front_page()) {
@@ -144,16 +161,38 @@ function mh_seo_document_title(): string
     return mh_seo_len($title) > 60 ? mh_seo_clip($title, 60) : $title;
 }
 
+/**
+ * Multi-byte character length of a string.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $s  Input string.
+ */
 function mh_seo_len(string $s): int
 {
     return mb_strlen($s);
 }
 
+/**
+ * Clip a string to at most $max characters, appending an ellipsis.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $s  Input string.
+ * @param  int  $max  Maximum character length including the trailing ellipsis.
+ */
 function mh_seo_clip(string $s, int $max): string
 {
     return mb_substr($s, 0, max(1, $max - 1)).'…';
 }
 
+/**
+ * Resolved meta description for the current page, clipped to 155 characters.
+ *
+ * @since 3.1.0
+ *
+ * @return string Empty string when no description is available.
+ */
 function mh_seo_meta_description(): string
 {
     $post_id = mh_seo_current_post_id();
@@ -173,6 +212,16 @@ function mh_seo_meta_description(): string
     return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
 }
 
+/**
+ * Replace the document title with the theme's custom SEO title when one is available.
+ *
+ * Hooked to document_title, wpseo_title, rank_math/frontend/title, and aioseo_title.
+ *
+ * @since 3.1.0
+ *
+ * @param  mixed  $title  Original title string passed by the filter.
+ * @return mixed Custom title string, or the original value when no override exists.
+ */
 function mh_filter_document_title($title)
 {
     if (is_admin() || ! is_string($title)) {
@@ -183,6 +232,16 @@ function mh_filter_document_title($title)
     return $custom !== '' ? $custom : $title;
 }
 
+/**
+ * Replace the SEO plugin meta description with the theme's custom value when available.
+ *
+ * Hooked to wpseo_metadesc, rank_math/frontend/description, and aioseo_description.
+ *
+ * @since 3.1.0
+ *
+ * @param  mixed  $desc  Original description string passed by the filter.
+ * @return mixed Custom description string, or the original value when no override exists.
+ */
 function mh_filter_meta_description($desc)
 {
     if (is_admin() || ! is_string($desc)) {
@@ -193,6 +252,13 @@ function mh_filter_meta_description($desc)
     return $custom !== '' ? $custom : $desc;
 }
 
+/**
+ * Output the <meta name="description"> tag when no SEO plugin is active.
+ *
+ * Hooked to wp_head at priority 1. Skips output when a plugin already handles the tag.
+ *
+ * @since 3.1.0
+ */
 function mh_print_meta_description(): void
 {
     if (is_admin() || mh_seo_plugin_prints_description()) {

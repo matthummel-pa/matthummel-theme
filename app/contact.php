@@ -9,6 +9,11 @@ namespace App;
 /** Clean archive titles ("Category: Foo" -> "Foo"). */
 add_filter('get_the_archive_title_prefix', '__return_empty_string');
 
+/**
+ * Transient key scoped to the current visitor's IP and user-agent.
+ *
+ * @since 3.1.0
+ */
 function mh_contact_draft_key(): string
 {
     $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
@@ -17,6 +22,14 @@ function mh_contact_draft_key(): string
     return 'mh_cf_'.md5($ip.'|'.$ua);
 }
 
+/**
+ * Retrieve a single field value from the visitor's last submission draft.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key stored in the draft transient.
+ * @param  string  $default  Value returned when the draft is missing or empty.
+ */
 function mh_contact_old(string $key, string $default = ''): string
 {
     $draft = get_transient(mh_contact_draft_key());
@@ -27,6 +40,13 @@ function mh_contact_old(string $key, string $default = ''): string
     return (string) ($draft[$key] ?? $default);
 }
 
+/**
+ * Retrieve validation error keys from the visitor's last submission draft.
+ *
+ * @since 3.1.0
+ *
+ * @return list<string>
+ */
 function mh_contact_old_errors(): array
 {
     $draft = get_transient(mh_contact_draft_key());
@@ -37,6 +57,14 @@ function mh_contact_old_errors(): array
     return array_values(array_filter(array_map('strval', $draft['errors'])));
 }
 
+/**
+ * Resolve a pre-filled form field value: draft → query-string → project look-up → default.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (name, email, who, subject, message).
+ * @param  string  $default  Fallback when no other source provides a value.
+ */
 function mh_contact_prefill(string $key, string $default = ''): string
 {
     $fromDraft = mh_contact_old($key);
@@ -83,6 +111,13 @@ function mh_contact_prefill(string $key, string $default = ''): string
     };
 }
 
+/**
+ * "What to send" tip cards shown on the contact page sidebar.
+ *
+ * @since 3.1.0
+ *
+ * @return list<array{title: string, text: string}>
+ */
 function mh_contact_tips(): array
 {
     return [
@@ -101,6 +136,13 @@ function mh_contact_tips(): array
     ];
 }
 
+/**
+ * "What happens next" expectation cards shown on the contact page sidebar.
+ *
+ * @since 3.1.0
+ *
+ * @return list<array{title: string, text: string}>
+ */
 function mh_contact_expect(): array
 {
     return [
@@ -119,6 +161,13 @@ function mh_contact_expect(): array
     ];
 }
 
+/**
+ * Social and external links for the "Find me elsewhere" section, with contextual notes added.
+ *
+ * @since 3.1.0
+ *
+ * @return list<array{key: string, label: string, url: string, note: string}>
+ */
 function mh_contact_else_links(): array
 {
     $notes = [

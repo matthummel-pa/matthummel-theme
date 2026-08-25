@@ -8,7 +8,13 @@ namespace App;
  * latest release, and a cleaned README intro — cached for 6 hours.
  */
 
-/** Optional GitHub token: wp-config constant, then Customizer / updater setting. */
+/**
+ * Resolve the GitHub API token: wp-config constant → Customizer/updater theme mod → filter.
+ *
+ * @since 3.1.0
+ *
+ * @return string Token string, or empty string when none is configured.
+ */
 function github_token(): string
 {
     if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && MH_GITHUB_TOKEN !== '') {
@@ -19,7 +25,15 @@ function github_token(): string
     return (string) apply_filters('mh/github_token', $mod);
 }
 
-/** Request headers for the GitHub API. */
+/**
+ * Build the default request headers for GitHub API calls.
+ *
+ * Includes Accept, API version, User-Agent, and Bearer token when available.
+ *
+ * @since 3.1.0
+ *
+ * @return array<string, string>
+ */
 function github_headers(): array
 {
     $headers = [
@@ -35,7 +49,14 @@ function github_headers(): array
     return $headers;
 }
 
-/** GET a GitHub API URL; returns decoded data or null. */
+/**
+ * Perform a GET request to a GitHub API URL and return the decoded JSON payload.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $url  Full GitHub API URL.
+ * @return array<string, mixed>|null Decoded response data, or null on error or non-200 status.
+ */
 function github_get(string $url): ?array
 {
     $res = wp_remote_get($url, ['timeout' => 12, 'headers' => github_headers()]);
@@ -49,7 +70,12 @@ function github_get(string $url): ?array
 
 class Github
 {
-    /** Shared request args (UA, Accept, optional auth token). */
+    /**
+     * Build wp_remote_get/post args with shared headers and timeout.
+     *
+     * @param  string  $accept  Value for the Accept header.
+     * @return array<string, mixed>
+     */
     protected static function args(string $accept = 'application/vnd.github+json'): array
     {
         $h = github_headers();
@@ -58,13 +84,22 @@ class Github
         return ['timeout' => 12, 'headers' => $h];
     }
 
-    /** Cache TTL in seconds (from the Projects setting). */
+    /**
+     * Transient cache TTL in seconds, derived from the mh_proj_cache_hours theme mod.
+     *
+     * @return int
+     */
     protected static function ttl(): int
     {
         return max(1, (int) (function_exists('get_theme_mod') ? get_theme_mod('mh_proj_cache_hours', 6) : 6)) * HOUR_IN_SECONDS;
     }
 
-    /** Fetch + cache a user/org profile. */
+    /**
+     * Fetch and cache a GitHub user or organisation profile.
+     *
+     * @param  string  $user  GitHub login (username or organisation slug).
+     * @return array<string, mixed> Profile data, or empty array on failure.
+     */
     public static function fetchUser(string $user): array
     {
         $key = 'mh_ghu2_'.md5($user);
