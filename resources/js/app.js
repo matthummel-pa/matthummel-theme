@@ -17,17 +17,29 @@ function initPopoutMenu() {
     return;
   }
 
+  const labelOpen = toggle.dataset.labelOpen || 'Open menu';
+  const labelClose = toggle.dataset.labelClose || 'Close menu';
+
+  const isOpen = () => document.body.classList.contains('mh-popout-open');
+
   const setOpen = (open) => {
+    if (open === isOpen()) {
+      return;
+    }
+
     document.body.classList.toggle('mh-popout-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? labelClose : labelOpen);
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     menu.toggleAttribute('inert', !open);
     overlay?.setAttribute('aria-hidden', open ? 'false' : 'true');
+
     if (open) {
       close?.focus();
-    } else {
-      toggle.focus();
+      return;
     }
+
+    toggle.focus();
   };
 
   menu.setAttribute('aria-hidden', 'true');
@@ -35,7 +47,7 @@ function initPopoutMenu() {
   overlay?.setAttribute('aria-hidden', 'true');
 
   menu.addEventListener('keydown', (event) => {
-    if (event.key !== 'Tab' || !document.body.classList.contains('mh-popout-open')) {
+    if (event.key !== 'Tab' || !isOpen()) {
       return;
     }
     const focusable = [...menu.querySelectorAll('a, button')].filter((el) => !el.hasAttribute('disabled'));
@@ -53,13 +65,11 @@ function initPopoutMenu() {
     }
   });
 
-  toggle.addEventListener('click', () => {
-    setOpen(!document.body.classList.contains('mh-popout-open'));
-  });
+  toggle.addEventListener('click', () => setOpen(!isOpen()));
   close?.addEventListener('click', () => setOpen(false));
   overlay?.addEventListener('click', () => setOpen(false));
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && isOpen()) {
       setOpen(false);
     }
   });
