@@ -1104,8 +1104,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-radius: 999px;
   padding: .22rem .65rem;
   font: 600 .7rem/1.2 var(--font-display);
-  letter-spacing: .04em;
-  text-transform: uppercase;
+  letter-spacing: .02em;
 }
 .pill-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .75rem; }
 

@@ -113,10 +113,21 @@ function mh_title_label(string $text): string
         return '';
     }
     $acronyms = [
+        // Abbreviations always uppercase
         'wp' => 'WP', 'php' => 'PHP', 'css' => 'CSS', 'html' => 'HTML', 'js' => 'JS',
         'seo' => 'SEO', 'api' => 'API', 'ui' => 'UI', 'ux' => 'UX', 'toc' => 'TOC',
-        'scss' => 'SCSS', 'ts' => 'TS', 'nextjs' => 'Next.js', 'nodejs' => 'Node.js',
-        'vscode' => 'VS Code', 'mdn' => 'MDN',
+        'scss' => 'SCSS', 'ts' => 'TS', 'mdn' => 'MDN', 'ai' => 'AI',
+        // Mixed-case technology names that ucfirst() would get wrong
+        'javascript' => 'JavaScript', 'typescript' => 'TypeScript',
+        'wordpress' => 'WordPress', 'github' => 'GitHub', 'gitlab' => 'GitLab',
+        'graphql' => 'GraphQL', 'postgresql' => 'PostgreSQL', 'sqlite' => 'SQLite',
+        'mysql' => 'MySQL', 'mongodb' => 'MongoDB', 'devops' => 'DevOps',
+        'tailwindcss' => 'Tailwind CSS', 'tailwind' => 'Tailwind',
+        // Compounds that lose their second capital
+        'nextjs' => 'Next.js', 'nodejs' => 'Node.js', 'vscode' => 'VS Code',
+        'powerapps' => 'Power Apps', 'powerautomate' => 'Power Automate',
+        'sharepoint' => 'SharePoint', 'microsoft' => 'Microsoft',
+        'youtube' => 'YouTube', 'devto' => 'DEV.to',
     ];
     $out = [];
     foreach (explode(' ', $text) as $part) {
@@ -542,12 +553,12 @@ function mh_work_contact_url(array $project): string
 function mh_code_practice_defaults(): array
 {
     return [
-        'Full-stack web applications in PHP, WordPress, and React, including REST integrations and auth.',
-        'WordPress engineering with Sage 11, Blade, Acorn, Bedrock, Tailwind, Vite, and Gutenberg.',
-        'Front-end architecture: semantic HTML, CSS, TypeScript, and accessible UI that shops can still edit.',
-        'Plugin and theme work with a public GitHub trail so other developers can read the same code.',
-        'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.',
-        'Microsoft Power Platform (Power Apps, Power Automate, Dataverse) as previous consulting work, not the public offer.',
+        'Custom WordPress themes with Sage 11 — Blade templates, Tailwind v4, Vite, PHP 8.3, deployed with GitHub Actions.',
+        'Plugin development: single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
+        'Front-end architecture: semantic HTML, accessible CSS, TypeScript, and edit fields so clients never need a developer for day-to-day changes.',
+        'REST API integrations and data pipelines connecting WordPress to external services.',
+        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and clients anywhere.',
+        'Microsoft Power Platform (Power Apps, Power Automate, SharePoint) — consulting work from a government contract background, not the primary offer.',
     ];
 }
 
@@ -567,33 +578,33 @@ function mh_code_resume_defaults(): array
             'role' => 'Founder',
             'org' => 'Ridges & Valleys',
             'period' => 'Current',
-            'type' => 'Independent Studio',
+            'type' => 'Independent Studio · Gettysburg, PA',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "I just started this studio. It is new, not a full book of work yet.\nWordPress sites for shops, inns, and tours. I am based in Gettysburg; location is not a limit.\nI am still open to agencies, other studios, overflow work, and full-time positions, remote or on-site.",
+            'bullets' => "WordPress studio focused on shops, inns, tours, and restaurants in Gettysburg and Adams County, PA.\nBuilding concept sites that show what a real WordPress build looks like for each local business type — not mockups, working sites on a production stack.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',
             'org' => 'Saliense',
-            'period' => 'Mar 2025 – Previous',
-            'type' => 'Government Contract',
+            'period' => 'Mar 2025 – Jul 2026',
+            'type' => 'Government Contract · Remote',
             'url' => '',
-            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
+            'bullets' => "Scoped and delivered Power Platform solutions for federal agency clients — from requirements intake to production deployment.\nBuilt canvas PowerApps replacing legacy paper and email processes for government operations teams.\nDesigned Power Automate approval flows that reduced manual hand-off time on multi-step government workflows.\nServed as technical point of contact between agency stakeholders and the development team.",
         ],
         [
             'role' => 'Applications and SharePoint Administrator',
-            'org' => 'All Native Group, The Federal Services Division of Ho-Chunk Inc.',
+            'org' => 'All Native Group · Federal Services Division',
             'period' => 'Dec 2023 – Feb 2025',
-            'type' => 'Government Contract',
+            'type' => 'Government Contract · Remote',
             'url' => '',
-            'bullets' => "Built PowerApps forms and workflows for government teams.\nCreated Power Automate flows that cut manual, repeatable process work.\nSupported SharePoint and PowerApps users day to day.\nManaged permissions across site collections.\nTurned written requirements into solutions that could scale.\nUsed user feedback to improve how the systems ran.",
+            'bullets' => "Administered SharePoint Online environments across multiple government site collections — permissions, views, content types, and governance.\nMigrated legacy InfoPath forms and Designer workflows to PowerApps and Power Automate.\nProvided Tier 1 and Tier 2 support to SharePoint and PowerApps users across federal teams.\nDocumented system configurations and standard operating procedures for handoff.",
         ],
         [
             'role' => 'SharePoint Web Developer',
-            'org' => 'Knowledge Capital Associates — Contractor USMC',
+            'org' => 'Knowledge Capital Associates — USMC Contractor',
             'period' => 'Sep 2021 – Jun 2022',
             'type' => 'Government Contract',
             'url' => '',
-            'bullets' => "Created SharePoint sites and managed permissions.\nHelped the SharePoint team migrate sites to SharePoint Online.\nBuilt applications and workflows in PowerApps and Power Automate.\nReplaced InfoPath forms with PowerApps and Designer workflows with Power Automate.\nConfigured site collections and views to match the requirements.",
+            'bullets' => "Built and maintained SharePoint sites for Marine Corps operational teams.\nLed migration of SharePoint 2013 on-premises sites to SharePoint Online.\nReplaced InfoPath forms with PowerApps and legacy Designer workflows with Power Automate.\nConfigured site collection architecture, navigation, and permissions to agency standards.",
         ],
         [
             'role' => 'Web Developer',
@@ -601,7 +612,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Jul 2011 – Oct 2020',
             'type' => 'Full-time · Public Information and Marketing',
             'url' => 'https://germanna.edu/',
-            'bullets' => "Built a responsive WordPress site for Public Information and Marketing.\nWorked with Public Information and Marketing on day-to-day content management.\nBrought pages up to Section 508 and WCAG 2.0.\nMoved the college site to WordPress so staff could edit pages without a developer.\nImplemented Google Analytics and Google Tag Manager for tracking and marketing.",
+            'bullets' => "Led a full rebuild of the college's public-facing WordPress site — designed, developed, and handed off to non-technical staff who edited it daily.\nBrought all public-facing pages into WCAG 2.0 / Section 508 compliance during a major site audit.\nImplemented Google Analytics and Google Tag Manager to support institutional marketing reporting.\nManaged day-to-day content for Public Information and Marketing — news, events, department pages.",
         ],
     ];
 }

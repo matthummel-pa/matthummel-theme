@@ -118,8 +118,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
         ],
         'template-code.blade.php' => [
-            'title' => 'Code and GitHub | '.$brand,
-            'desc' => 'Public repos, featured projects, contribution history, and resume. Most of my WordPress and PHP work is open — fork it, read it, paste it.',
+            'title' => 'WordPress developer portfolio — code, GitHub, and resume | '.$brand,
+            'desc' => 'PHP, WordPress, and open-source code. Public GitHub repos, contribution history, full work resume, and skills. Based in Gettysburg, PA.',
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,

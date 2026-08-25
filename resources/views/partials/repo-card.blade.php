@@ -28,7 +28,7 @@
   @if (! empty($r['stars']) || ! empty($r['forks']) || ! empty($r['pushed']) || ! empty($r['lang']))
     <p class="pf-meta repo-stats">
       @if (! empty($r['lang']))
-        <span>{{ $r['lang'] }}</span>
+        <span>{{ \App\mh_title_label($r['lang']) }}</span>
       @endif
       @if (! empty($r['stars']))
         <span>{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
