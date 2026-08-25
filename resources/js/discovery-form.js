@@ -67,6 +67,14 @@ export function initDiscoveryForm() {
     })
     if (backBtn) backBtn.hidden = current === 1
     if (nextBtn) nextBtn.hidden = current === total
+
+    const actions = form.querySelector('[data-discovery-step="4"] .contact-form__actions')
+    if (current === total && backBtn && actions && backBtn.parentElement !== actions) {
+      actions.prepend(backBtn)
+    } else if (current !== total && backBtn && nav && backBtn.parentElement !== nav) {
+      nav.prepend(backBtn)
+    }
+
     if (current === total) {
       fillReview()
       if (review) review.hidden = false
