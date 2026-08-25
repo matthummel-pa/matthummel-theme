@@ -33,7 +33,7 @@ What the 3.x Sage theme does, and where it lives.
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
-| DEV.to | RSS cached 3 hours |
+| DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import of new articles (`wp mh devto-import`) |
 | GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
 
 ## Intentionally not included

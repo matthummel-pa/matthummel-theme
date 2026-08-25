@@ -1430,6 +1430,79 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .write-discussed-meta { margin: .1rem 0 0; font-size: .78rem; color: var(--color-text-muted); }
 .write-tag-cloud { display: flex; flex-wrap: wrap; gap: .35rem; }
 
+.write-aside-devto__thanks {
+  margin: 0 0 .85rem;
+  font-size: .88rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.write-devto-followers {
+  list-style: none;
+  margin: 0 0 .85rem;
+  padding: 0;
+  display: grid;
+  gap: .35rem;
+  max-height: 18rem;
+  overflow: auto;
+}
+.write-devto-follower {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  text-decoration: none;
+  color: inherit;
+  padding: .3rem .35rem;
+  margin: 0 -.35rem;
+  border-radius: 8px;
+  transition: background .12s;
+}
+.write-devto-follower:hover { background: var(--gray-50); }
+.write-devto-follower__img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  border: 1px solid var(--color-border);
+}
+.write-devto-follower__img--empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 .75rem/1 var(--font-display);
+  color: var(--color-text-muted);
+}
+.write-devto-follower__meta {
+  display: grid;
+  gap: .1rem;
+  min-width: 0;
+}
+.write-devto-follower__name {
+  font: 600 .88rem/1.2 var(--font-display);
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.write-devto-follower__user {
+  font-size: .75rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.write-aside-devto__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font: 600 .82rem/1 var(--font-display);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.write-aside-devto__link:hover { text-decoration: underline; text-underline-offset: .15em; }
+.write-aside-devto__link .mh-ico { flex-shrink: 0; }
+
 .write-subscribe {
   margin: 2.5rem 0 0;
   padding: 1.5rem 1.75rem;

@@ -301,6 +301,37 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
         'section' => 'mh_github',
         'type' => 'password',
     ]);
+
+    $wp->add_section('mh_devto', [
+        'title' => __('DEV.to', 'sage'),
+        'priority' => 34,
+    ]);
+    $wp->add_setting('mh_devto_token', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_devto_token', [
+        'label' => __('API key', 'sage'),
+        'description' => __('From DEV.to → Settings → Extensions. Used to list your followers on the Journal sidebar. Or set MH_DEVTO_TOKEN in wp-config.', 'sage'),
+        'section' => 'mh_devto',
+        'type' => 'password',
+    ]);
+    $wp->add_setting('mh_devto_auto_import', [
+        'default' => true,
+        'sanitize_callback' => static function ($value): bool {
+            return (bool) $value;
+        },
+    ]);
+    $wp->add_control('mh_devto_auto_import', [
+        'label' => __('Auto-import new posts', 'sage'),
+        'description' => __('Hourly check for new DEV.to articles. Imports them into the Journal under the DEV.to category, styled like regular posts. Run `wp mh devto-import` anytime for a full pull.', 'sage'),
+        'section' => 'mh_devto',
+        'type' => 'checkbox',
+    ]);
+});
+
+add_action('customize_save_after', function (): void {
+    delete_transient('mh_devto_followers_v1');
 });
 
 /**
