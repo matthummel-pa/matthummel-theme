@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.7 — 2026-08-25
+
+### Fixed
+
+- Single post pages (including DEV.to imports): more left/right padding on mobile so content clears the screen edge; code blocks scroll instead of overflowing
+
 ## 3.1.6 — 2026-08-25
 
 ### Added

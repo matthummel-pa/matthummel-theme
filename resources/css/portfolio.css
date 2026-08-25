@@ -6020,6 +6020,15 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 @media (max-width: 960px) { .post-layout { grid-template-columns: 1fr; } }
 
+/* Mobile: keep hero + body off the screen edge (Journal + DEV.to imports) */
+@media (max-width: 640px) {
+  .post-hero .container,
+  .container.post-shell {
+    padding-inline: max(1.75rem, env(safe-area-inset-left, 0px))
+      max(1.75rem, env(safe-area-inset-right, 0px));
+  }
+}
+
 /* ── Post prose ── */
 .post-prose {
   font-size: 1.125rem;
@@ -6061,6 +6070,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   padding: .15em .4em;
   border-radius: 4px;
   border: 1px solid var(--color-border);
+}
+.post-prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .post-prose pre code { background: none; color: inherit; padding: 0; border: 0; }
 .post-prose img {
