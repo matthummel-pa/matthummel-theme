@@ -24,7 +24,7 @@
       <p class="eyebrow">Overview</p>
       <h2 id="priv-overview-heading">The short version</h2>
       <ul class="legal-bullets">
-        <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
+        <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, <strong>Bing / Microsoft Analytics</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
         <li>The contact form collects your name and email so I can reply. That is all it is used for.</li>
         <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
         <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
@@ -87,6 +87,7 @@
           <li><strong>Google Tag Manager</strong> — manages the above tracking scripts</li>
           <li><strong>Meta (Facebook) Pixel</strong> — ad reach and conversion measurement (planned)</li>
           <li><strong>HubSpot</strong> — visitor tracking, contact form capture, and CRM activity</li>
+          <li><strong>Bing / Microsoft</strong> — Bing Webmaster Tools and Microsoft UET (Universal Event Tracking) for search analytics and ad conversion measurement</li>
         </ul>
         <p class="legal-data-card__note">These tools set cookies and may send your IP address and browsing behaviour to Google and Meta. See <a href="#priv-optout-heading">opt-out options</a> below.</p>
       </div>
@@ -203,6 +204,18 @@
             <td>Determines whether the browser has been restarted between sessions</td>
             <td>Session</td>
           </tr>
+          <tr>
+            <td><code>_uetsid</code>, <code>_uetvid</code></td>
+            <td>Microsoft UET</td>
+            <td>Tracks sessions and unique visitors for Bing Ads conversion measurement</td>
+            <td>1 day / 16 days</td>
+          </tr>
+          <tr>
+            <td><code>MUID</code></td>
+            <td>Microsoft</td>
+            <td>Identifies unique web browsers visiting Microsoft sites and services</td>
+            <td>13 months</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -223,6 +236,7 @@
         <li><strong>Google</strong> — Google Analytics 4 and Google Tag Manager receive anonymised usage data (page views, session data, device type, approximate location). Subject to <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Google's privacy policy</a>. IP anonymisation is enabled.</li>
         <li><strong>Meta (Facebook)</strong> — the Meta Pixel (planned) sends event data to Meta for ad measurement and reach reporting. Subject to <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta's privacy policy</a>.</li>
         <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
+        <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
         <li><strong>SiteGround</strong> — the web hosting provider stores the site database and files. <a href="https://www.siteground.com/gdpr" rel="noopener" target="_blank">SiteGround's privacy policy</a>.</li>
         <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the Code page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
         <li><strong>Law enforcement</strong> — data may be disclosed if required by a valid legal process.</li>
@@ -256,6 +270,15 @@
           <li>Use the <a href="https://www.facebook.com/help/568137493302217" rel="noopener" target="_blank">Facebook Ad Preferences</a> to limit off-Facebook tracking</li>
           <li>Install the <a href="https://www.facebook.com/help/247395082112892" rel="noopener" target="_blank">Facebook Container</a> browser extension</li>
           <li>Block <code>*.facebook.com</code> via an ad blocker</li>
+        </ul>
+      </div>
+
+      <div class="legal-data-card">
+        <h3 class="legal-data-card__title">Microsoft / Bing opt-out</h3>
+        <ul class="legal-data-card__list">
+          <li>Use <a href="https://choice.microsoft.com" rel="noopener" target="_blank">Microsoft's privacy choice tool</a> to opt out of personalised advertising</li>
+          <li>Block <code>*.bat.bing.com</code> and <code>*.clarity.ms</code> via an ad blocker</li>
+          <li>Delete Microsoft cookies (<code>_uetsid</code>, <code>_uetvid</code>, <code>MUID</code>) from your browser</li>
         </ul>
       </div>
 
