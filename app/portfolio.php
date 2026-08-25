@@ -1112,3 +1112,165 @@ add_action('init', function () {
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
 add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
+
+/* ============================================================
+   PAGESPEED INSIGHTS API
+   Free — no key required for occasional use.
+   Quota: 25,000 req/day with an API key (set PSI_API_KEY in wp-config).
+   Results are cached 12 hours per URL per strategy.
+   ============================================================ */
+
+/**
+ * Fetch Google PageSpeed Insights scores for a URL.
+ *
+ * Returns an array with keys performance, accessibility, seo, best_practices (0-100)
+ * or an empty array on failure. Results cached for 12 hours.
+ *
+ * @param  string  $url  Full URL to test.
+ * @param  string  $strategy  'mobile' or 'desktop'.
+ * @return array{performance:int,accessibility:int,seo:int,best_practices:int}|array{}
+ */
+function mh_pagespeed_scores(string $url, string $strategy = 'mobile'): array
+{
+    if ($url === '') {
+        return [];
+    }
+
+    $key = 'mh_psi_'.md5($url.'|'.$strategy);
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $apiKey = defined('PSI_API_KEY') ? (string) constant('PSI_API_KEY') : '';
+    $endpoint = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
+        .'?url='.rawurlencode($url)
+        .'&strategy='.rawurlencode($strategy)
+        .'&category=performance'
+        .'&category=accessibility'
+        .'&category=seo'
+        .'&category=best-practices'
+        .($apiKey !== '' ? '&key='.rawurlencode($apiKey) : '');
+
+    $res = wp_remote_get($endpoint, [
+        'timeout' => 30,
+        'sslverify' => true,
+    ]);
+
+    if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+        return [];
+    }
+
+    $body = json_decode((string) wp_remote_retrieve_body($res), true);
+    if (! is_array($body) || empty($body['lighthouseResult']['categories'])) {
+        return [];
+    }
+
+    $cats = $body['lighthouseResult']['categories'];
+    $scores = [
+        'performance' => (int) round(($cats['performance']['score'] ?? 0) * 100),
+        'accessibility' => (int) round(($cats['accessibility']['score'] ?? 0) * 100),
+        'seo' => (int) round(($cats['seo']['score'] ?? 0) * 100),
+        'best_practices' => (int) round(($cats['best-practices']['score'] ?? 0) * 100),
+    ];
+
+    set_transient($key, $scores, 12 * HOUR_IN_SECONDS);
+
+    return $scores;
+}
+
+/**
+ * Return a WCAG-friendly colour category for a Lighthouse score.
+ *
+ * @param  int  $score  0–100.
+ * @return string 'good' (90-100), 'needs-improvement' (50-89), or 'poor' (0-49).
+ */
+function mh_psi_tier(int $score): string
+{
+    if ($score >= 90) {
+        return 'good';
+    }
+
+    return $score >= 50 ? 'needs-improvement' : 'poor';
+}
+
+/* ============================================================
+   WORDPRESS.ORG PLUGINS API
+   Free — no key required.
+   Returns plugins published on wordpress.org by a given author.
+   Results cached 12 hours.
+   ============================================================ */
+
+/**
+ * Fetch plugins published on wordpress.org by the given author slug.
+ *
+ * Returns an empty array if the author has no public plugins or the API fails.
+ * Results cached for 12 hours.
+ *
+ * @param  string  $author  WordPress.org username (slug).
+ * @return list<array{name:string,slug:string,version:string,short_description:string,active_installs:int,downloaded:int,rating:int,num_ratings:int,homepage:string,plugin_uri:string}>
+ */
+function mh_wp_org_plugins(string $author = ''): array
+{
+    if ($author === '') {
+        $author = (string) apply_filters('mh/wp_org_author', 'matthummel-pa');
+    }
+
+    $key = 'mh_wporg_plugins_'.sanitize_key($author);
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $res = wp_remote_get('https://api.wordpress.org/plugins/info/1.2/', [
+        'timeout' => 15,
+        'body' => [
+            'action' => 'query_plugins',
+            'request[author]' => $author,
+            'request[per_page]' => 20,
+            'request[fields][active_installs]' => 1,
+            'request[fields][downloaded]' => 1,
+            'request[fields][rating]' => 1,
+            'request[fields][num_ratings]' => 1,
+            'request[fields][short_description]' => 1,
+            'request[fields][homepage]' => 1,
+        ],
+    ]);
+
+    if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+        set_transient($key, [], 1 * HOUR_IN_SECONDS);
+
+        return [];
+    }
+
+    $body = json_decode((string) wp_remote_retrieve_body($res), true);
+    $raw = $body['plugins'] ?? [];
+    if (! is_array($raw) || $raw === []) {
+        set_transient($key, [], 6 * HOUR_IN_SECONDS);
+
+        return [];
+    }
+
+    $plugins = [];
+    foreach ($raw as $p) {
+        if (! is_array($p)) {
+            continue;
+        }
+        $plugins[] = [
+            'name' => (string) ($p['name'] ?? ''),
+            'slug' => (string) ($p['slug'] ?? ''),
+            'version' => (string) ($p['version'] ?? ''),
+            'short_description' => (string) ($p['short_description'] ?? ''),
+            'active_installs' => (int) ($p['active_installs'] ?? 0),
+            'downloaded' => (int) ($p['downloaded'] ?? 0),
+            'rating' => (int) ($p['rating'] ?? 0),
+            'num_ratings' => (int) ($p['num_ratings'] ?? 0),
+            'homepage' => (string) ($p['homepage'] ?? ''),
+            'plugin_uri' => 'https://wordpress.org/plugins/'.sanitize_title((string) ($p['slug'] ?? '')),
+        ];
+    }
+
+    set_transient($key, $plugins, 12 * HOUR_IN_SECONDS);
+
+    return $plugins;
+}
