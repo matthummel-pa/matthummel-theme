@@ -157,8 +157,16 @@ add_action('init', function () {
     $back = $contact instanceof \WP_Post ? get_permalink($contact) : home_url('/contact/');
     $back = remove_query_arg('contact', $back);
 
-    $redirect = function ($status) use ($back) {
-        wp_safe_redirect(add_query_arg('contact', $status, $back).'#contact-status');
+    // On success, redirect to /thank-you/ for analytics conversion tracking.
+    $thankyouPage = get_page_by_path('thank-you');
+    $thankyouUrl = $thankyouPage instanceof \WP_Post ? get_permalink($thankyouPage) : home_url('/thank-you/');
+
+    $redirect = function ($status) use ($back, $thankyouUrl) {
+        if ($status === 'ok') {
+            wp_safe_redirect($thankyouUrl);
+        } else {
+            wp_safe_redirect(add_query_arg('contact', $status, $back).'#contact-status');
+        }
         exit;
     };
 

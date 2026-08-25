@@ -69,6 +69,22 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => 'Example sites in Gettysburg | '.$brand,
             'desc' => 'Studio WordPress concepts for Gettysburg tours, inns, and shops. See example sites or say hello.',
         ],
+        'template-thankyou.blade.php' => [
+            'title' => 'Message received | '.$brand,
+            'desc' => 'Your message is in my inbox. I reply within a day.',
+        ],
+        'template-uses.blade.php' => [
+            'title' => 'Uses — tools and stack | '.$brand,
+            'desc' => 'The tools, frameworks, and services I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, HubSpot, and more.',
+        ],
+        'template-hire.blade.php' => [
+            'title' => 'Hire a WordPress developer in Gettysburg | '.$brand,
+            'desc' => 'Open for WordPress site builds, plugins, agency overflow, and Power Platform work. Based in Gettysburg, PA. Clear scope, full ownership at handoff.',
+        ],
+        'template-changelog.blade.php' => [
+            'title' => 'Changelog | '.$brand,
+            'desc' => 'A public record of notable updates to matthummel.com — new pages, design changes, accessibility fixes, and stack notes.',
+        ],
         'template-accessibility.blade.php' => [
             'title' => 'Accessibility statement | '.$brand,
             'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report accessibility issues.',
