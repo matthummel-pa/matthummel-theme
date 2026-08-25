@@ -312,7 +312,17 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_control('mh_devto_token', [
         'label' => __('API key', 'sage'),
-        'description' => __('From DEV.to → Settings → Extensions. Used to list your followers on the Journal sidebar. Or set MH_DEVTO_TOKEN in wp-config.', 'sage'),
+        'description' => __('From DEV.to → Settings → Extensions. Used for follower list, auto-import, and publishing journal posts to DEV.to. Or set MH_DEVTO_TOKEN in wp-config.', 'sage'),
+        'section' => 'mh_devto',
+        'type' => 'password',
+    ]);
+    $wp->add_setting('mh_openai_token', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_openai_token', [
+        'label' => __('OpenAI key (optional)', 'sage'),
+        'description' => __('Used when exporting a journal post to rewrite copy for DEV.to. Or set MH_OPENAI_API_KEY / OPENAI_API_KEY. Without it, a rule-based rewrite still runs.', 'sage'),
         'section' => 'mh_devto',
         'type' => 'password',
     ]);
