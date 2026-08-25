@@ -100,10 +100,11 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | `SSH connection refused` | Wrong host / port, or SiteGround firewall | Verify `MH_SSH_HOST`, `MH_SSH_PORT` in `wp-config.php`; SiteGround SSH port is usually non-22 |
-| `Permission denied (publickey)` | SSH key not added to SiteGround | Site Tools → Devs → SSH Manager → add your public key |
+| `Permission denied (publickey)` | SSH key not authorized, wrong key, or **passphrase-protected key without passphrase** | Site Tools → Devs → SSH Manager → add public key. For Cloud Agents: use an unencrypted deploy key as `SERVER_SSH_PRIVATE_KEY`, or set `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`. Pass `--ssh-identity=/path/to/key` if the key is not a default `~/.ssh/id_*` name. |
 | `command not found: wp` on remote | WP-CLI not on `$PATH` on SiteGround | Use the full path `~/bin/wp` or set `MH_SSH_WP_PATH` |
 | `db-push` refused without `--yes` | Safety guard | Run `wp mh db-push --yes` to confirm overwriting production |
-| Search-replace misses URLs | Non-standard domain or http/https mismatch | Pass `--from=https://old.domain --to=https://new.domain` flags |
+| Search-replace misses URLs | Non-standard domain or http/https mismatch | Pass `--remote-url` / `--local-url` explicitly |
+| `incorrect passphrase` / ssh-add fails | Wrong or missing passphrase secret | Update `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`, or replace the key with an unencrypted one |
 
 ---
 
