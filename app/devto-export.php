@@ -386,6 +386,8 @@ function mh_devto_prepare_export(int $postId, bool $useAi = true): array
     }
 
     $md = (string) apply_filters('mh/devto_export_markdown', $md, $post);
+    $md = preg_replace("/\n{3,}/", "\n\n", $md) ?? $md;
+    $md = trim($md)."\n";
 
     $excerpt = has_excerpt($post) ? get_the_excerpt($post) : wp_trim_words(wp_strip_all_tags($md), 28);
     $cover = get_the_post_thumbnail_url($post, 'full') ?: '';
