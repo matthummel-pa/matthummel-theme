@@ -69,7 +69,7 @@ function mh_portfolio_social_defaults(): array
     return [
         'github' => 'https://github.com/matthummel-pa',
         'linkedin' => 'https://www.linkedin.com/in/matt-hummel-pa',
-        'devto' => 'https://dev.to/matthummel',
+        'devto' => 'https://dev.to/matthummeldev',
         'bluesky' => 'https://bsky.app/profile/matthummel.bsky.social',
         'reddit' => 'https://www.reddit.com/user/matt-hummel',
         'rss' => home_url('/feed/'),
@@ -727,14 +727,14 @@ function mh_code_snippets(): array
 
 function mh_devto_posts(int $limit = 5): array
 {
-    $key = 'mh_devto_feed_v1';
+    $key = 'mh_devto_feed_v2';
     $cached = get_transient($key);
     if (is_array($cached)) {
         return array_slice($cached, 0, $limit);
     }
 
     $posts = [];
-    $res = wp_remote_get('https://dev.to/feed/matthummel', [
+    $res = wp_remote_get('https://dev.to/feed/matthummeldev', [
         'timeout' => 8,
         'headers' => ['User-Agent' => 'matthummel.com'],
     ]);
@@ -1077,7 +1077,9 @@ function mh_seed_portfolio_pages(): void
 
     foreach (mh_portfolio_social_defaults() as $key => $url) {
         $current = get_theme_mod("mh_social_{$key}", '');
-        if ($current === '' || $current === 'https://www.linkedin.com/in/matthummel') {
+        if ($current === ''
+            || $current === 'https://www.linkedin.com/in/matthummel'
+            || $current === 'https://dev.to/matthummel') {
             set_theme_mod("mh_social_{$key}", $url);
         }
     }

@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.6 — 2026-08-25
+
+### Changed
+
+- DEV.to profile and RSS feed use `matthummeldev` (`https://dev.to/matthummeldev`)
+
 ## 3.1.5 — 2026-08-25
 
 ### Changed
