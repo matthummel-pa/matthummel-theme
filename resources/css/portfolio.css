@@ -3068,7 +3068,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .footer-nav a:hover { color: var(--color-accent); }
 .site-footer .soc-link { color: var(--color-text-secondary); border-color: var(--color-border); }
 .site-footer .soc-link:hover { background: var(--color-text); color: #fff; border-color: var(--color-text); }
-.footer-copy { font-size: .82rem; color: var(--color-text-muted); margin: 0 auto; }
+.footer-copy { font-size: .82rem; color: var(--color-text-muted); margin: 0; }
 
 /* ─── 404 ─────────────────────────────────────────────────────────────────── */
 .error-404 { padding: var(--section-gap) 0 4rem; }
