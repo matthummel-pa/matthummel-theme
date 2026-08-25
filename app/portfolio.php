@@ -312,6 +312,93 @@ function mh_github_live_repos(int $limit = 8): array
 }
 
 /**
+ * Icon name for a GitHub public event type (feeds into mh_svg_icon).
+ */
+function mh_github_event_icon(string $type): string
+{
+    return match ($type) {
+        'PushEvent' => 'git',
+        'ReleaseEvent', 'PublicEvent' => 'globe',
+        'PullRequestEvent', 'PullRequestReviewEvent' => 'code',
+        'CreateEvent' => 'code',
+        'IssuesEvent' => 'search',
+        'IssueCommentEvent' => 'pen',
+        'ForkEvent' => 'git',
+        'WatchEvent' => 'github',
+        default => 'code',
+    };
+}
+
+/**
+ * Brand-ish hex for a programming language (GitHub-style dots).
+ */
+function mh_github_lang_color(string $lang): string
+{
+    $map = [
+        'PHP' => '#7a86b8',
+        'JavaScript' => '#f7df1e',
+        'TypeScript' => '#3178c6',
+        'CSS' => '#563d7c',
+        'HTML' => '#e34c26',
+        'Blade' => '#e3342f',
+        'Shell' => '#89e051',
+        'Python' => '#3572a5',
+        'Ruby' => '#701516',
+        'SCSS' => '#c6538c',
+        'Sass' => '#c6538c',
+        'Vue' => '#41b883',
+        'Go' => '#00add8',
+        'Rust' => '#dea584',
+        'Java' => '#b07219',
+        'C#' => '#178600',
+        'C++' => '#f34b7d',
+        'Dockerfile' => '#384d54',
+    ];
+
+    return $map[$lang] ?? '#6b7280';
+}
+
+/**
+ * Month labels for a contribution calendar grid (week columns).
+ *
+ * @param  array<int, array<int, array{date?: string}>>  $weeks
+ * @return list<array{label: string, week: int}>
+ */
+function mh_github_calendar_months(array $weeks): array
+{
+    $labels = [];
+    $last = '';
+
+    foreach ($weeks as $wi => $week) {
+        $date = '';
+        foreach ($week as $day) {
+            if (! empty($day['date'])) {
+                $date = (string) $day['date'];
+                break;
+            }
+        }
+        if ($date === '') {
+            continue;
+        }
+        $ts = strtotime($date);
+        if ($ts === false) {
+            continue;
+        }
+        $key = date('Y-m', $ts);
+        if ($key === $last) {
+            continue;
+        }
+        $last = $key;
+        $labels[] = [
+            'label' => date_i18n('M', $ts),
+            'week' => (int) $wi,
+        ];
+    }
+
+    return $labels;
+}
+
+/**
  * Enriched OSS data for the home page "Code you can use" section.
  *
  * Combines featured repo list with live GitHub API data:

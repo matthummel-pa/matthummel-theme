@@ -6,15 +6,25 @@
   if ($stack === [] && ! empty($r['tags'])) {
       $stack = $r['tags'];
   }
+  $lang = (string) ($r['lang'] ?? '');
+  $langColor = $lang !== '' ? \App\mh_github_lang_color($lang) : '';
+  $index = isset($index) ? (int) $index : 0;
+  $featured = ! empty($featured);
 @endphp
-<article class="pf-card repo-card">
-  <h3>
-    @if ($url !== '')
-      <a href="{{ esc_url($url) }}" rel="noopener" target="_blank">{{ $title }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
-    @else
-      {{ $title }}
-    @endif
-  </h3>
+<article class="pf-card repo-card{{ $featured ? ' repo-card--featured' : '' }}">
+  @if ($index > 0)
+    <span class="repo-card__index" aria-hidden="true">{{ sprintf('%02d', $index) }}</span>
+  @endif
+  <div class="repo-card__head">
+    <span class="repo-card__mark" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
+    <h3>
+      @if ($url !== '')
+        <a href="{{ esc_url($url) }}" rel="noopener" target="_blank">{{ $title }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+      @else
+        {{ $title }}
+      @endif
+    </h3>
+  </div>
   @if (! empty($r['desc']))
     <p>{{ $r['desc'] }}</p>
   @endif
@@ -25,10 +35,13 @@
       @endforeach
     </p>
   @endif
-  @if (! empty($r['stars']) || ! empty($r['forks']) || ! empty($r['pushed']) || ! empty($r['lang']))
+  @if (! empty($r['stars']) || ! empty($r['forks']) || ! empty($r['pushed']) || $lang !== '')
     <p class="pf-meta repo-stats">
-      @if (! empty($r['lang']))
-        <span>{{ \App\mh_title_label($r['lang']) }}</span>
+      @if ($lang !== '')
+        <span class="repo-lang">
+          <span class="repo-lang__dot" style="--lang-color: {{ esc_attr($langColor) }}" aria-hidden="true"></span>
+          {{ \App\mh_title_label($lang) }}
+        </span>
       @endif
       @if (! empty($r['stars']))
         <span>{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
