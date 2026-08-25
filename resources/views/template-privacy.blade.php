@@ -54,54 +54,75 @@
     <p class="eyebrow">Data collected</p>
     <h2 id="priv-data-heading">What I collect</h2>
     <p class="sec-intro" style="max-width:52ch;margin-bottom:2rem">Four categories of data may be collected when you use this site.</p>
-    <div class="legal-data-grid">
+    <div class="priv-collect-grid">
 
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Contact form</h3>
-        <p class="legal-data-card__intro">When you submit the contact form, I collect:</p>
-        <ul class="legal-data-card__list">
-          <li><strong>Name</strong> — so I know how to address you</li>
-          <li><strong>Email address</strong> — so I can reply</li>
-          <li><strong>Message content</strong> — the inquiry itself</li>
-          <li><strong>Subject / who you are</strong> — optional fields</li>
+      {{-- Contact form --}}
+      <div class="priv-collect-card">
+        <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('mail', 20) !!}</div>
+        <h3 class="priv-collect-card__title">Contact form</h3>
+        <p class="priv-collect-card__intro">When you submit the contact form, I collect:</p>
+        <ul class="priv-collect-card__list">
+          <li><strong>Name</strong> — to address you correctly</li>
+          <li><strong>Email address</strong> — to reply</li>
+          <li><strong>Message</strong> — the inquiry itself</li>
+          <li><strong>Subject / who you are</strong> — optional</li>
         </ul>
-        <p class="legal-data-card__note">This data is used only to respond to your message. It is not added to any mailing list or shared with anyone.</p>
+        <div class="priv-collect-card__trust">
+          {!! \App\mh_svg_icon('shield', 14) !!}
+          Used only to reply. Never added to a mailing list.
+        </div>
       </div>
 
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Comments</h3>
-        <p class="legal-data-card__intro">If you leave a comment on a blog post, I collect:</p>
-        <ul class="legal-data-card__list">
+      {{-- Comments --}}
+      <div class="priv-collect-card">
+        <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('comment', 20) !!}</div>
+        <h3 class="priv-collect-card__title">Blog comments</h3>
+        <p class="priv-collect-card__intro">If you leave a comment on a post, I collect:</p>
+        <ul class="priv-collect-card__list">
           <li><strong>Name</strong> — displayed with the comment</li>
-          <li><strong>Email address</strong> — used only to send reply notifications if you opt in</li>
+          <li><strong>Email address</strong> — for reply notifications only</li>
           <li><strong>Comment text</strong> — displayed publicly</li>
         </ul>
-        <p class="legal-data-card__note">Comment email addresses are never displayed publicly. You can request removal of a comment at any time.</p>
+        <div class="priv-collect-card__trust">
+          {!! \App\mh_svg_icon('shield', 14) !!}
+          Email never displayed publicly. Removable on request.
+        </div>
       </div>
 
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Analytics and advertising</h3>
-        <p class="legal-data-card__intro">This site uses the following third-party tools to understand site traffic and measure advertising performance:</p>
-        <ul class="legal-data-card__list">
-          <li><strong>Google Analytics 4</strong> — page views, session duration, referrer, device type</li>
-          <li><strong>Google Tag Manager</strong> — manages the above tracking scripts</li>
-          <li><strong>Meta (Facebook) Pixel</strong> — ad reach and conversion measurement (planned)</li>
-          <li><strong>HubSpot</strong> — visitor tracking, contact form capture, and CRM activity</li>
-          <li><strong>Bing / Microsoft</strong> — Bing Webmaster Tools and Microsoft UET (Universal Event Tracking) for search analytics and ad conversion measurement</li>
-        </ul>
-        <p class="legal-data-card__note">These tools set cookies and may send your IP address and browsing behaviour to Google and Meta. See <a href="#priv-optout-heading">opt-out options</a> below.</p>
+      {{-- Analytics --}}
+      <div class="priv-collect-card">
+        <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('chart-bar', 20) !!}</div>
+        <h3 class="priv-collect-card__title">Analytics &amp; advertising</h3>
+        <p class="priv-collect-card__intro">Third-party tools used to understand traffic and ad performance:</p>
+        <div class="priv-collect-card__trackers">
+          <span class="priv-tracker-pill">Google Analytics 4</span>
+          <span class="priv-tracker-pill">Google Tag Manager</span>
+          <span class="priv-tracker-pill">Meta Pixel</span>
+          <span class="priv-tracker-pill">HubSpot</span>
+          <span class="priv-tracker-pill">Bing / Microsoft UET</span>
+        </div>
+        <p class="priv-collect-card__tracker-note">These tools collect pages visited, session duration, device type, approximate location, and IP address. See <a href="#priv-optout-heading">opt-out options</a>.</p>
+        <div class="priv-collect-card__trust">
+          {!! \App\mh_svg_icon('shield', 14) !!}
+          Aggregated data only — never used to identify you personally on this site.
+        </div>
       </div>
 
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Server logs</h3>
-        <p class="legal-data-card__intro">The hosting server automatically logs standard request data:</p>
-        <ul class="legal-data-card__list">
+      {{-- Server logs --}}
+      <div class="priv-collect-card">
+        <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('server', 20) !!}</div>
+        <h3 class="priv-collect-card__title">Server logs</h3>
+        <p class="priv-collect-card__intro">The hosting server automatically records:</p>
+        <ul class="priv-collect-card__list">
           <li>IP address</li>
           <li>Browser type and version</li>
           <li>Page requested and date/time</li>
           <li>HTTP referrer</li>
         </ul>
-        <p class="legal-data-card__note">These logs are retained by SiteGround (the hosting provider) for security and performance purposes. I do not review them routinely and do not use them to track individuals.</p>
+        <div class="priv-collect-card__trust">
+          {!! \App\mh_svg_icon('shield', 14) !!}
+          Retained by SiteGround for security only. Not used to track individuals.
+        </div>
       </div>
 
     </div>

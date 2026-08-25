@@ -1524,7 +1524,107 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .legal-bullets li:first-child { border-top: 1px solid var(--color-border); }
 .legal-bullets li::before { content: '–'; position: absolute; left: 0; color: var(--color-text-muted); }
 
-/* Data / IP card grid */
+/* "What I collect" 2×2 card grid */
+.priv-collect-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 680px) { .priv-collect-grid { grid-template-columns: 1fr; } }
+.priv-collect-card {
+  padding: 1.6rem 1.5rem 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  transition: border-color .14s, box-shadow .14s;
+}
+.priv-collect-card:hover { border-color: var(--gray-300); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+.priv-collect-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+.priv-collect-card__title {
+  font: 700 1.05rem/1.25 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0;
+}
+.priv-collect-card__intro {
+  font-size: .875rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.priv-collect-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-border);
+  padding-top: .6rem;
+}
+.priv-collect-card__list li {
+  font-size: .85rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  padding: .28rem 0 .28rem 1.1rem;
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+}
+.priv-collect-card__list li:last-child { border-bottom: 0; }
+.priv-collect-card__list li::before { content: '·'; position: absolute; left: 0; font-weight: 700; color: var(--color-accent); }
+/* Tracker pills for analytics card */
+.priv-collect-card__trackers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: .6rem 0 .25rem;
+  border-top: 1px solid var(--color-border);
+}
+.priv-tracker-pill {
+  font: 600 .72rem/1 var(--font-display);
+  color: var(--color-accent);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 999px;
+  padding: .28rem .7rem;
+  white-space: nowrap;
+}
+.priv-collect-card__tracker-note {
+  font-size: .82rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+.priv-collect-card__tracker-note a { color: var(--color-accent); font-weight: 600; }
+/* Trust promise bar at card bottom */
+.priv-collect-card__trust {
+  display: flex;
+  align-items: flex-start;
+  gap: .4rem;
+  margin-top: auto;
+  padding: .65rem .85rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: .8rem;
+  line-height: 1.55;
+  color: #166534;
+}
+.priv-collect-card__trust .mh-ico { color: #16a34a; flex-shrink: 0; margin-top: .05rem; }
+
+/* Data / IP card grid — used on terms page */
 .legal-data-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
