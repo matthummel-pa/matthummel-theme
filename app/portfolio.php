@@ -69,7 +69,7 @@ function mh_portfolio_social_defaults(): array
     return [
         'github' => 'https://github.com/matthummel-pa',
         'linkedin' => 'https://www.linkedin.com/in/matt-hummel-pa',
-        'devto' => 'https://dev.to/matthummel',
+        'devto' => 'https://dev.to/matthummeldev',
         'bluesky' => 'https://bsky.app/profile/matthummel.bsky.social',
         'reddit' => 'https://www.reddit.com/user/matt-hummel',
         'rss' => home_url('/feed/'),
@@ -725,16 +725,49 @@ function mh_code_snippets(): array
     ];
 }
 
+/**
+ * DEV.to username used for profile links and the public RSS feed.
+ */
+function mh_devto_username(): string
+{
+    return (string) apply_filters('mh/devto_username', 'matthummeldev');
+}
+
+/**
+ * Public DEV.to profile URL.
+ */
+function mh_devto_profile_url(): string
+{
+    return 'https://dev.to/'.rawurlencode(mh_devto_username());
+}
+
+/**
+ * Resolve the DEV.to API key: wp-config → Customizer → filter.
+ *
+ * Needed for private endpoints such as followers. Generate a key at
+ * https://dev.to/settings/extensions
+ */
+function mh_devto_token(): string
+{
+    if (defined('MH_DEVTO_TOKEN') && is_string(MH_DEVTO_TOKEN) && MH_DEVTO_TOKEN !== '') {
+        return trim(MH_DEVTO_TOKEN);
+    }
+    $mod = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_devto_token', '')) : '';
+
+    return (string) apply_filters('mh/devto_token', $mod);
+}
+
 function mh_devto_posts(int $limit = 5): array
 {
-    $key = 'mh_devto_feed_v1';
+    $key = 'mh_devto_feed_v2';
     $cached = get_transient($key);
     if (is_array($cached)) {
         return array_slice($cached, 0, $limit);
     }
 
     $posts = [];
-    $res = wp_remote_get('https://dev.to/feed/matthummel', [
+    $feed = 'https://dev.to/feed/'.rawurlencode(mh_devto_username());
+    $res = wp_remote_get($feed, [
         'timeout' => 8,
         'headers' => ['User-Agent' => 'matthummel.com'],
     ]);
@@ -761,6 +794,149 @@ function mh_devto_posts(int $limit = 5): array
     set_transient($key, $posts, 3 * HOUR_IN_SECONDS);
 
     return array_slice($posts, 0, $limit);
+}
+
+/**
+ * Normalize a follower row for the journal sidebar.
+ *
+ * @param  array<string, mixed>  $row
+ * @return array{username: string, name: string, image: string, url: string}|null
+ */
+function mh_devto_follower_row(array $row): ?array
+{
+    $raw = strtolower(trim((string) ($row['username'] ?? $row['user_username'] ?? '')));
+    $username = preg_replace('/[^a-z0-9_]/', '', $raw) ?? '';
+    if ($username === '') {
+        return null;
+    }
+    $name = trim((string) ($row['name'] ?? $row['user_name'] ?? $username));
+    if ($name === '') {
+        $name = $username;
+    }
+    $image = esc_url_raw((string) ($row['profile_image'] ?? $row['image'] ?? ''));
+    $url = esc_url_raw((string) ($row['url'] ?? ''));
+    if ($url === '') {
+        $url = 'https://dev.to/'.rawurlencode($username);
+    }
+
+    return [
+        'username' => $username,
+        'name' => $name,
+        'image' => $image,
+        'url' => $url,
+    ];
+}
+
+/**
+ * Curated DEV.to followers from Journal page fields (fallback when API is empty).
+ *
+ * @return list<array{username: string, name: string, image: string, url: string}>
+ */
+function mh_devto_followers_curated(int $limit = 24, ?int $writeId = null): array
+{
+    $writeId = $writeId ?? mh_writing_id();
+    $rows = field_rows('write_devto_followers', [], $writeId ?: null);
+    $out = [];
+    foreach ($rows as $row) {
+        if (! is_array($row)) {
+            continue;
+        }
+        $norm = mh_devto_follower_row($row);
+        if ($norm === null) {
+            continue;
+        }
+        $out[] = $norm;
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * DEV.to followers for the journal sidebar: API (when keyed) then curated fields.
+ *
+ * @return list<array{username: string, name: string, image: string, url: string}>
+ */
+function mh_devto_followers(int $limit = 24): array
+{
+    $limit = max(1, min(80, $limit));
+    $filtered = apply_filters('mh/devto_followers', null, $limit);
+    if (is_array($filtered)) {
+        $out = [];
+        foreach ($filtered as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $norm = mh_devto_follower_row($row);
+            if ($norm !== null) {
+                $out[] = $norm;
+            }
+            if (count($out) >= $limit) {
+                break;
+            }
+        }
+
+        return $out;
+    }
+
+    $key = 'mh_devto_followers_v1';
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        $api = $cached;
+    } else {
+        $api = [];
+        $token = mh_devto_token();
+        if ($token !== '') {
+            $page = 1;
+            while (count($api) < 80 && $page <= 3) {
+                $res = wp_remote_get(add_query_arg([
+                    'per_page' => 80,
+                    'page' => $page,
+                    'sort' => '-created_at',
+                ], 'https://dev.to/api/followers/users'), [
+                    'timeout' => 8,
+                    'headers' => [
+                        'User-Agent' => 'matthummel.com',
+                        'api-key' => $token,
+                        'Accept' => 'application/vnd.forem.api-v1+json',
+                    ],
+                ]);
+                if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+                    break;
+                }
+                $body = json_decode((string) wp_remote_retrieve_body($res), true);
+                if (! is_array($body) || $body === []) {
+                    break;
+                }
+                foreach ($body as $row) {
+                    if (! is_array($row)) {
+                        continue;
+                    }
+                    $norm = mh_devto_follower_row([
+                        'username' => $row['username'] ?? '',
+                        'name' => $row['name'] ?? '',
+                        'profile_image' => $row['profile_image'] ?? '',
+                    ]);
+                    if ($norm !== null) {
+                        $api[] = $norm;
+                    }
+                }
+                if (count($body) < 80) {
+                    break;
+                }
+                $page++;
+            }
+        }
+        set_transient($key, $api, 6 * HOUR_IN_SECONDS);
+    }
+
+    if ($api !== []) {
+        return array_slice($api, 0, $limit);
+    }
+
+    return mh_devto_followers_curated($limit);
 }
 
 function mh_latest_posts(int $limit = 3): array
@@ -1077,7 +1253,9 @@ function mh_seed_portfolio_pages(): void
 
     foreach (mh_portfolio_social_defaults() as $key => $url) {
         $current = get_theme_mod("mh_social_{$key}", '');
-        if ($current === '' || $current === 'https://www.linkedin.com/in/matthummel') {
+        if ($current === ''
+            || $current === 'https://www.linkedin.com/in/matthummel'
+            || $current === 'https://dev.to/matthummel') {
             set_theme_mod("mh_social_{$key}", $url);
         }
     }
@@ -1193,6 +1371,508 @@ function mh_ensure_start_page(): void
     update_post_meta((int) $id, '_wp_page_template', 'template-start.blade.php');
 }
 add_action('init', __NAMESPACE__.'\\mh_ensure_start_page', 35);
+
+/**
+ * Ensure the DEV.to journal category exists.
+ */
+function mh_devto_category_id(): int
+{
+    $existing = get_term_by('slug', 'dev-to', 'category');
+    if ($existing instanceof \WP_Term) {
+        return (int) $existing->term_id;
+    }
+
+    $created = wp_insert_term('DEV.to', 'category', [
+        'slug' => 'dev-to',
+        'description' => __('Posts cross-posted from DEV.to.', 'sage'),
+    ]);
+    if (is_wp_error($created)) {
+        $term = get_term_by('name', 'DEV.to', 'category');
+
+        return $term instanceof \WP_Term ? (int) $term->term_id : 0;
+    }
+
+    return (int) ($created['term_id'] ?? 0);
+}
+
+/**
+ * Strip the DEV.to hash suffix from an article slug for WordPress.
+ */
+function mh_devto_post_slug(string $slug): string
+{
+    $slug = sanitize_title($slug);
+    $trimmed = preg_replace('/-[a-z0-9]{3,6}$/', '', $slug);
+
+    return is_string($trimmed) && $trimmed !== '' ? $trimmed : $slug;
+}
+
+/**
+ * Escape inline markdown (links, bold, code) into safe HTML.
+ */
+function mh_devto_inline_html(string $text): string
+{
+    $out = '';
+    $offset = 0;
+    $pattern = '/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|`([^`]+)`|\*\*(.+?)\*\*|\*(.+?)\*/';
+    if (! preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
+        return esc_html($text);
+    }
+    foreach ($matches as $m) {
+        $start = (int) $m[0][1];
+        $out .= esc_html(substr($text, $offset, $start - $offset));
+        if (! empty($m[1][0]) && ! empty($m[2][0])) {
+            $out .= '<a href="'.esc_url($m[2][0]).'">'.esc_html($m[1][0]).'</a>';
+        } elseif (! empty($m[3][0])) {
+            $out .= '<code>'.esc_html($m[3][0]).'</code>';
+        } elseif (! empty($m[4][0])) {
+            $out .= '<strong>'.esc_html($m[4][0]).'</strong>';
+        } elseif (! empty($m[5][0])) {
+            $out .= '<em>'.esc_html($m[5][0]).'</em>';
+        } else {
+            $out .= esc_html($m[0][0]);
+        }
+        $offset = $start + strlen($m[0][0]);
+    }
+    $out .= esc_html(substr($text, $offset));
+
+    return $out;
+}
+
+/**
+ * Convert DEV.to markdown into Gutenberg block markup.
+ */
+function mh_devto_markdown_to_blocks(string $md): string
+{
+    $md = str_replace(["\r\n", "\r"], "\n", $md);
+    $lines = explode("\n", $md);
+    $blocks = [];
+    $i = 0;
+    $n = count($lines);
+
+    while ($i < $n) {
+        $line = $lines[$i];
+        $trim = trim($line);
+
+        if ($trim === '') {
+            $i++;
+
+            continue;
+        }
+
+        if ($trim === '---' || $trim === '***' || $trim === '___') {
+            $blocks[] = "<!-- wp:separator -->\n<hr class=\"wp-block-separator has-alpha-channel-opacity\"/>\n<!-- /wp:separator -->";
+            $i++;
+
+            continue;
+        }
+
+        if (preg_match('/^```(\w*)\s*$/', $trim, $fence)) {
+            $lang = $fence[1] !== '' ? $fence[1] : '';
+            $code = [];
+            $i++;
+            while ($i < $n && ! preg_match('/^```\s*$/', trim($lines[$i]))) {
+                $code[] = $lines[$i];
+                $i++;
+            }
+            $i++;
+            $body = esc_html(implode("\n", $code));
+            $class = $lang !== '' ? ' language-'.sanitize_html_class($lang) : '';
+            $blocks[] = "<!-- wp:code -->\n<pre class=\"wp-block-code\"><code class=\"{$class}\">{$body}</code></pre>\n<!-- /wp:code -->";
+
+            continue;
+        }
+
+        if (preg_match('/^(#{2,4})\s+(.+)$/', $trim, $hm)) {
+            $level = strlen($hm[1]);
+            $heading = mh_devto_inline_html($hm[2]);
+            if ($level === 2) {
+                $blocks[] = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">{$heading}</h2>\n<!-- /wp:heading -->";
+            } else {
+                $blocks[] = "<!-- wp:heading {\"level\":{$level}} -->\n<h{$level} class=\"wp-block-heading\">{$heading}</h{$level}>\n<!-- /wp:heading -->";
+            }
+            $i++;
+
+            continue;
+        }
+
+        if (preg_match('/^!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/', $trim, $im)) {
+            $src = esc_url($im[1]);
+            $blocks[] = "<!-- wp:image -->\n<figure class=\"wp-block-image\"><img src=\"{$src}\" alt=\"\"/></figure>\n<!-- /wp:image -->";
+            $i++;
+
+            continue;
+        }
+
+        if (preg_match('/^[-*]\s+(.+)$/', $trim) || preg_match('/^\d+\.\s+(.+)$/', $trim)) {
+            $ordered = (bool) preg_match('/^\d+\.\s+/', $trim);
+            $items = [];
+            while ($i < $n) {
+                $t = trim($lines[$i]);
+                if ($ordered && preg_match('/^\d+\.\s+(.+)$/', $t, $lm)) {
+                    $items[] = '<li>'.mh_devto_inline_html($lm[1]).'</li>';
+                    $i++;
+                } elseif (! $ordered && preg_match('/^[-*]\s+(.+)$/', $t, $lm)) {
+                    $items[] = '<li>'.mh_devto_inline_html($lm[1]).'</li>';
+                    $i++;
+                } else {
+                    break;
+                }
+            }
+            if ($ordered) {
+                $blocks[] = "<!-- wp:list {\"ordered\":true} -->\n<ol class=\"wp-block-list\">".implode('', $items)."</ol>\n<!-- /wp:list -->";
+            } else {
+                $blocks[] = "<!-- wp:list -->\n<ul class=\"wp-block-list\">".implode('', $items)."</ul>\n<!-- /wp:list -->";
+            }
+
+            continue;
+        }
+
+        $para = [];
+        while ($i < $n) {
+            $t = trim($lines[$i]);
+            if ($t === '' || $t === '---' || preg_match('/^#{2,4}\s+/', $t) || preg_match('/^```/', $t) || preg_match('/^[-*]\s+/', $t) || preg_match('/^\d+\.\s+/', $t) || preg_match('/^!\[[^\]]*\]\(/', $t)) {
+                break;
+            }
+            $para[] = $t;
+            $i++;
+        }
+        if ($para !== []) {
+            $blocks[] = "<!-- wp:paragraph -->\n<p>".mh_devto_inline_html(implode(' ', $para))."</p>\n<!-- /wp:paragraph -->";
+        }
+    }
+
+    return implode("\n\n", $blocks);
+}
+
+/**
+ * Find a journal post previously imported from a DEV.to article id.
+ */
+function mh_devto_find_imported_post(int $articleId): int
+{
+    $q = new \WP_Query([
+        'post_type' => 'post',
+        'post_status' => ['publish', 'draft', 'pending', 'private'],
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'meta_key' => '_mh_devto_id',
+        'meta_value' => (string) $articleId,
+    ]);
+
+    return ! empty($q->posts[0]) ? (int) $q->posts[0] : 0;
+}
+
+/**
+ * Fetch published articles for the configured DEV.to username.
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_devto_fetch_article_list(int $perPage = 30): array
+{
+    $res = wp_remote_get(add_query_arg([
+        'username' => mh_devto_username(),
+        'per_page' => max(1, min(100, $perPage)),
+    ], 'https://dev.to/api/articles'), [
+        'timeout' => 12,
+        'headers' => ['User-Agent' => 'matthummel.com'],
+    ]);
+    if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+        return [];
+    }
+    $body = json_decode((string) wp_remote_retrieve_body($res), true);
+
+    return is_array($body) ? $body : [];
+}
+
+/**
+ * Fetch one DEV.to article (includes body_markdown).
+ *
+ * @return array<string, mixed>|null
+ */
+function mh_devto_fetch_article(int $id): ?array
+{
+    $res = wp_remote_get('https://dev.to/api/articles/'.$id, [
+        'timeout' => 12,
+        'headers' => ['User-Agent' => 'matthummel.com'],
+    ]);
+    if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+        return null;
+    }
+    $body = json_decode((string) wp_remote_retrieve_body($res), true);
+
+    return is_array($body) ? $body : null;
+}
+
+/**
+ * Sideload a remote cover image and attach it as the featured image.
+ */
+function mh_devto_sideload_cover(int $postId, string $url): void
+{
+    if ($url === '' || $postId <= 0) {
+        return;
+    }
+    if (! function_exists('media_sideload_image')) {
+        require_once ABSPATH.'wp-admin/includes/file.php';
+        require_once ABSPATH.'wp-admin/includes/media.php';
+        require_once ABSPATH.'wp-admin/includes/image.php';
+    }
+    $id = media_sideload_image($url, $postId, null, 'id');
+    if (! is_wp_error($id) && $id) {
+        set_post_thumbnail($postId, (int) $id);
+    }
+}
+
+/**
+ * Import or update one DEV.to article as a regular journal post.
+ *
+ * @param  array<string, mixed>  $article  Full article payload from DEV.to.
+ * @return array{ok: bool, post_id: int, action: string, message: string}
+ */
+function mh_devto_import_article(array $article, bool $force = false): array
+{
+    $articleId = (int) ($article['id'] ?? 0);
+    $title = trim((string) ($article['title'] ?? ''));
+    if ($articleId <= 0 || $title === '') {
+        return ['ok' => false, 'post_id' => 0, 'action' => 'skip', 'message' => 'Missing article id or title'];
+    }
+
+    $catId = mh_devto_category_id();
+    if ($catId <= 0) {
+        return ['ok' => false, 'post_id' => 0, 'action' => 'skip', 'message' => 'Could not create DEV.to category'];
+    }
+
+    $existingId = mh_devto_find_imported_post($articleId);
+    if ($existingId > 0 && ! $force) {
+        wp_set_post_categories($existingId, [$catId], true);
+
+        return ['ok' => true, 'post_id' => $existingId, 'action' => 'exists', 'message' => 'Already imported'];
+    }
+
+    $md = (string) ($article['body_markdown'] ?? '');
+    if ($md === '' && ! empty($article['id'])) {
+        $full = mh_devto_fetch_article($articleId);
+        if ($full) {
+            $article = $full;
+            $md = (string) ($full['body_markdown'] ?? '');
+        }
+    }
+
+    $devtoUrl = (string) ($article['url'] ?? '');
+    $content = mh_devto_markdown_to_blocks($md);
+    if ($devtoUrl !== '') {
+        $content .= "\n\n<!-- wp:paragraph -->\n<p><em>Originally posted on <a href=\"".esc_url($devtoUrl)."\">DEV.to</a>.</em></p>\n<!-- /wp:paragraph -->";
+    }
+
+    $slug = mh_devto_post_slug((string) ($article['slug'] ?? ''));
+    $excerpt = trim((string) ($article['description'] ?? ''));
+    $published = (string) ($article['published_at'] ?? $article['created_at'] ?? current_time('mysql'));
+    $date = gmdate('Y-m-d H:i:s', strtotime($published) ?: time());
+
+    $payload = [
+        'post_title' => $title,
+        'post_name' => $slug !== '' ? $slug : sanitize_title($title),
+        'post_status' => 'publish',
+        'post_type' => 'post',
+        'post_content' => $content,
+        'post_excerpt' => $excerpt,
+        'post_date' => get_date_from_gmt($date),
+        'post_date_gmt' => $date,
+        'post_category' => [$catId],
+    ];
+
+    if ($existingId > 0) {
+        $payload['ID'] = $existingId;
+        $postId = wp_update_post($payload, true);
+        $action = 'updated';
+    } else {
+        $postId = wp_insert_post($payload, true);
+        $action = 'created';
+    }
+
+    if (is_wp_error($postId) || ! $postId) {
+        return [
+            'ok' => false,
+            'post_id' => 0,
+            'action' => 'error',
+            'message' => is_wp_error($postId) ? $postId->get_error_message() : 'Insert failed',
+        ];
+    }
+
+    $postId = (int) $postId;
+    update_post_meta($postId, '_mh_devto_id', (string) $articleId);
+    if ($devtoUrl !== '') {
+        update_post_meta($postId, '_mh_devto_url', esc_url_raw($devtoUrl));
+    }
+
+    $cover = (string) ($article['cover_image'] ?? $article['social_image'] ?? '');
+    if ($cover !== '' && ! has_post_thumbnail($postId)) {
+        mh_devto_sideload_cover($postId, $cover);
+    }
+
+    return ['ok' => true, 'post_id' => $postId, 'action' => $action, 'message' => $title];
+}
+
+/**
+ * Import all public DEV.to articles into the journal.
+ *
+ * @return list<array{ok: bool, post_id: int, action: string, message: string}>
+ */
+function mh_devto_import_all(bool $force = false): array
+{
+    $list = mh_devto_fetch_article_list(30);
+    $results = [];
+    foreach ($list as $summary) {
+        if (! is_array($summary) || empty($summary['id'])) {
+            continue;
+        }
+        $full = mh_devto_fetch_article((int) $summary['id']);
+        if (! $full) {
+            $results[] = [
+                'ok' => false,
+                'post_id' => 0,
+                'action' => 'error',
+                'message' => 'Could not fetch article '.(int) $summary['id'],
+            ];
+
+            continue;
+        }
+        $results[] = mh_devto_import_article($full, $force);
+    }
+
+    return $results;
+}
+
+/**
+ * Whether automatic DEV.to → journal import is enabled.
+ */
+function mh_devto_auto_import_enabled(): bool
+{
+    if (! function_exists('get_theme_mod')) {
+        return true;
+    }
+
+    return (bool) apply_filters(
+        'mh/devto_auto_import',
+        (bool) get_theme_mod('mh_devto_auto_import', true)
+    );
+}
+
+/**
+ * Cron callback: pull new DEV.to articles into the journal.
+ *
+ * Skips posts that already have `_mh_devto_id` meta unless forced elsewhere.
+ */
+function mh_devto_cron_sync(): void
+{
+    if (! mh_devto_auto_import_enabled()) {
+        return;
+    }
+
+    $results = mh_devto_import_all(false);
+    $created = 0;
+    $errors = 0;
+    foreach ($results as $row) {
+        if (! empty($row['ok']) && ($row['action'] ?? '') === 'created') {
+            $created++;
+        }
+        if (empty($row['ok'])) {
+            $errors++;
+        }
+    }
+
+    update_option('mh_devto_last_sync', [
+        'at' => time(),
+        'created' => $created,
+        'errors' => $errors,
+        'checked' => count($results),
+    ], false);
+}
+
+/**
+ * Schedule (or clear) the hourly DEV.to sync event.
+ */
+function mh_devto_schedule_cron(): void
+{
+    $hook = 'mh_devto_sync';
+    $scheduled = wp_next_scheduled($hook);
+
+    if (! mh_devto_auto_import_enabled()) {
+        if ($scheduled) {
+            wp_unschedule_event($scheduled, $hook);
+        }
+
+        return;
+    }
+
+    if (! $scheduled) {
+        wp_schedule_event(time() + 5 * MINUTE_IN_SECONDS, 'hourly', $hook);
+    }
+}
+
+add_action('mh_devto_sync', __NAMESPACE__.'\\mh_devto_cron_sync');
+add_action('init', __NAMESPACE__.'\\mh_devto_schedule_cron', 40);
+add_action('after_switch_theme', __NAMESPACE__.'\\mh_devto_schedule_cron');
+add_action('customize_save_after', __NAMESPACE__.'\\mh_devto_schedule_cron');
+
+if (defined('WP_CLI') && WP_CLI) {
+    \WP_CLI::add_command('mh devto-import', function ($args, $assoc): void {
+        $force = isset($assoc['force']);
+        \WP_CLI::log('Ensuring DEV.to category…');
+        $catId = mh_devto_category_id();
+        if ($catId <= 0) {
+            \WP_CLI::error('Could not create the DEV.to category.');
+        }
+        \WP_CLI::log("Category id {$catId}. Fetching articles…");
+        $results = mh_devto_import_all($force);
+        $created = 0;
+        $updated = 0;
+        $exists = 0;
+        $errors = 0;
+        foreach ($results as $row) {
+            $label = strtoupper($row['action']);
+            if ($row['ok']) {
+                \WP_CLI::log("[{$label}] #{$row['post_id']} {$row['message']}");
+                if ($row['action'] === 'created') {
+                    $created++;
+                } elseif ($row['action'] === 'updated') {
+                    $updated++;
+                } else {
+                    $exists++;
+                }
+            } else {
+                \WP_CLI::warning("[{$label}] {$row['message']}");
+                $errors++;
+            }
+        }
+        \WP_CLI::success("Import done. created={$created} updated={$updated} exists={$exists} errors={$errors}");
+    }, [
+        'shortdesc' => 'Import DEV.to articles into the journal as regular posts.',
+        'synopsis' => [
+            [
+                'type' => 'flag',
+                'name' => 'force',
+                'optional' => true,
+                'description' => 'Update content for posts that were already imported.',
+            ],
+        ],
+    ]);
+
+    \WP_CLI::add_command('mh devto-sync', function (): void {
+        if (! mh_devto_auto_import_enabled()) {
+            \WP_CLI::warning('Auto-import is disabled (Customizer → DEV.to). Running once anyway…');
+        }
+        mh_devto_cron_sync();
+        $last = get_option('mh_devto_last_sync', []);
+        \WP_CLI::success(sprintf(
+            'Sync finished. checked=%d created=%d errors=%d',
+            (int) ($last['checked'] ?? 0),
+            (int) ($last['created'] ?? 0),
+            (int) ($last['errors'] ?? 0)
+        ));
+    }, [
+        'shortdesc' => 'Run the scheduled DEV.to → journal sync once.',
+    ]);
+}
 
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
 add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));

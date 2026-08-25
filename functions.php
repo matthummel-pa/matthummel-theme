@@ -52,7 +52,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'icons', 'page-fields', 'theme-updater', 'db-migrate', 'bespoke', 'comments'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'icons', 'page-fields', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

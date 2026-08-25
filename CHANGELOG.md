@@ -2,6 +2,19 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.6 — 2026-08-25
+
+### Added
+
+- Journal sidebar: thank-you card for DEV.to followers, with avatars from the DEV.to API (Customizer / `MH_DEVTO_TOKEN`) or an optional curated list in Page content
+- `DEV.to` journal category plus `wp mh devto-import` / `wp mh devto-sync` to pull articles in as regular posts
+- Hourly auto-import of new DEV.to posts (Customizer → DEV.to → Auto-import new posts)
+- Export a journal post to DEV.to: editor sidebar converts Gutenberg → Markdown, rewrites for DEV.to (rule-based + optional OpenAI), then creates a draft or publishes (`wp mh devto-export`)
+
+### Changed
+
+- DEV.to profile and RSS feed use `matthummeldev` (`https://dev.to/matthummeldev`)
+
 ## 3.1.5 — 2026-08-25
 
 ### Changed
