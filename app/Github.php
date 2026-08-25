@@ -130,7 +130,14 @@ class Github
         return $d;
     }
 
-    /** Fetch + cache a user's repos (sorted, forks excluded). */
+    /**
+     * Fetch and cache a user's own public repositories, excluding forks.
+     *
+     * @param  string  $user   GitHub login.
+     * @param  int     $count  Maximum number of repositories to return (1–30).
+     * @param  string  $sort   Sort field: updated|pushed|full_name|created.
+     * @return list<array<string, mixed>>
+     */
     public static function fetchRepos(string $user, int $count = 6, string $sort = 'updated'): array
     {
         $count = max(1, min(30, $count));
@@ -174,7 +181,13 @@ class Github
         return $out;
     }
 
-    /** Language names for a repo, largest first. Cached. */
+    /**
+     * Fetch and cache the programming-language breakdown for a repository, largest first.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo   Repository name.
+     * @return list<string> Language names sorted by byte count descending.
+     */
     public static function fetchLanguages(string $owner, string $repo): array
     {
         $owner = rawurlencode($owner);
@@ -197,7 +210,13 @@ class Github
         return $out;
     }
 
-    /** One-repo extras when the list payload is thin (featured cards). */
+    /**
+     * Fetch and cache extended single-repository metadata for featured project cards.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo   Repository name.
+     * @return array<string, mixed> Repository metadata, or empty array on failure.
+     */
     public static function fetchRepoMeta(string $owner, string $repo): array
     {
         $key = 'mh_ghmeta2_'.md5($owner.'/'.$repo);
@@ -225,7 +244,14 @@ class Github
         return $d;
     }
 
-    /** Fetch + cache recent releases for a repo. */
+    /**
+     * Fetch and cache recent GitHub releases for a repository.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo   Repository name.
+     * @param  int     $count  Maximum number of releases to return (1–20).
+     * @return list<array<string, mixed>>
+     */
     public static function fetchReleases(string $owner, string $repo, int $count = 5): array
     {
         $count = max(1, min(20, $count));
@@ -251,7 +277,13 @@ class Github
         return $out;
     }
 
-    /** Fetch + cache repo data. */
+    /**
+     * Fetch and cache combined repository data: stats, latest release, and README intro.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo   Repository name.
+     * @return array<string, mixed> Combined data, or empty array on API failure.
+     */
     public static function fetch(string $owner, string $repo): array
     {
         $key = 'mh_gh_'.md5($owner.'/'.$repo);
