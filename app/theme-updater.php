@@ -16,7 +16,15 @@
 
 namespace App;
 
-/** Repo + workflow the updater uses. All filterable. */
+/**
+ * Repository and workflow configuration used by the theme updater.
+ *
+ * All values are filterable via mh/updater_* hooks.
+ *
+ * @since 3.1.0
+ *
+ * @return array{owner: string, repo: string, workflow: string, ref: string, tag: string}
+ */
 function updater_repo(): array
 {
     return [
@@ -28,7 +36,15 @@ function updater_repo(): array
     ];
 }
 
-/** POST JSON to the GitHub API with the theme's GitHub auth headers. */
+/**
+ * POST a JSON payload to a GitHub API endpoint and return the HTTP status code and decoded body.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $url  Full GitHub API endpoint URL.
+ * @param  array<string, mixed>  $body  Data to JSON-encode as the request body.
+ * @return array{0: int, 1: array<string, mixed>} Tuple of [HTTP status code, decoded response array].
+ */
 function updater_api_post(string $url, array $body): array
 {
     $res = wp_remote_post($url, [
@@ -45,7 +61,14 @@ function updater_api_post(string $url, array $body): array
     return [$code, is_array($data) ? $data : []];
 }
 
-/** The most recent run of the deploy workflow, or null. */
+/**
+ * Fetch metadata for the most recent run of the deploy workflow.
+ *
+ * @since 3.1.0
+ *
+ * @return array{status: string, conclusion: string, html_url: string, created_at: string, event: string, number: int}|null
+ *                                                                                                                          Null when no runs exist or the API request fails.
+ */
 function updater_latest_run(): ?array
 {
     $r = updater_repo();
@@ -67,7 +90,13 @@ function updater_latest_run(): ?array
     ];
 }
 
-/** GitHub Release that holds the built theme zip, or null. */
+/**
+ * Fetch the GitHub Release tagged theme-latest that holds the built theme zip.
+ *
+ * @since 3.1.0
+ *
+ * @return array<string, mixed>|null Release data, or null when the release does not exist or the request fails.
+ */
 function updater_latest_release(): ?array
 {
     $r = updater_repo();
@@ -77,6 +106,14 @@ function updater_latest_release(): ?array
     return github_get($url);
 }
 
+/**
+ * Find the first zip asset attached to a GitHub release.
+ *
+ * @since 3.1.0
+ *
+ * @param  array<string, mixed>  $release  Release payload from the GitHub API.
+ * @return array<string, mixed>|null The asset array, or null when no zip is found.
+ */
 function updater_release_zip_asset(array $release): ?array
 {
     foreach ($release['assets'] ?? [] as $asset) {
@@ -92,7 +129,13 @@ function updater_release_zip_asset(array $release): ?array
     return null;
 }
 
-/** Trigger CI to rebuild the zip (and optionally FTP). */
+/**
+ * Trigger a GitHub Actions workflow dispatch to rebuild the theme zip.
+ *
+ * @since 3.1.0
+ *
+ * @return array{0: bool, 1: string} Tuple of [success flag, human-readable message].
+ */
 function updater_dispatch(): array
 {
     $r = updater_repo();
@@ -119,7 +162,15 @@ function updater_dispatch(): array
     return [false, sprintf(__('GitHub returned %1$d: %2$s', 'sage'), $code, $msg)];
 }
 
-/** Download theme-latest.zip from GitHub and install it over this theme (HTTPS, no FTP). */
+/**
+ * Download theme-latest.zip from GitHub and install it over the active theme via WP_Upgrader.
+ *
+ * Uses HTTPS only; no FTP required. Does not modify the database, posts, or uploads.
+ *
+ * @since 3.1.0
+ *
+ * @return array{0: bool, 1: string} Tuple of [success flag, human-readable message].
+ */
 function updater_pull(): array
 {
     $token = github_token();
@@ -252,6 +303,13 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
 });
 
+/**
+ * Render the Appearance → Update Theme admin page.
+ *
+ * Handles token-save and update/build form submissions, then outputs the page HTML.
+ *
+ * @since 3.1.0
+ */
 function render_theme_updater_page(): void
 {
     if (! current_user_can('update_themes') && ! current_user_can('edit_theme_options')) {

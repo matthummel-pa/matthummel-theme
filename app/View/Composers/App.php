@@ -16,7 +16,7 @@ class App extends Composer
     ];
 
     /**
-     * Retrieve the site name.
+     * Retrieve the site name for use in Blade views.
      */
     public function siteName(): string
     {

@@ -18,7 +18,9 @@ class Post extends Composer
     ];
 
     /**
-     * Retrieve the post title.
+     * Retrieve the contextual page title for the current view.
+     *
+     * Handles home, archive, search, and 404 contexts for the page-header partial.
      */
     public function title(): string
     {
@@ -54,7 +56,9 @@ class Post extends Composer
     }
 
     /**
-     * Retrieve the pagination links.
+     * Retrieve paginated page links for multi-page posts.
+     *
+     * @return string HTML link list wrapped in <p> tags, or empty string for single-page posts.
      */
     public function pagination(): string
     {

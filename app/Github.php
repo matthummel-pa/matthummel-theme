@@ -86,8 +86,6 @@ class Github
 
     /**
      * Transient cache TTL in seconds, derived from the mh_proj_cache_hours theme mod.
-     *
-     * @return int
      */
     protected static function ttl(): int
     {
@@ -133,9 +131,9 @@ class Github
     /**
      * Fetch and cache a user's own public repositories, excluding forks.
      *
-     * @param  string  $user   GitHub login.
-     * @param  int     $count  Maximum number of repositories to return (1–30).
-     * @param  string  $sort   Sort field: updated|pushed|full_name|created.
+     * @param  string  $user  GitHub login.
+     * @param  int  $count  Maximum number of repositories to return (1–30).
+     * @param  string  $sort  Sort field: updated|pushed|full_name|created.
      * @return list<array<string, mixed>>
      */
     public static function fetchRepos(string $user, int $count = 6, string $sort = 'updated'): array
@@ -185,7 +183,7 @@ class Github
      * Fetch and cache the programming-language breakdown for a repository, largest first.
      *
      * @param  string  $owner  Repository owner login.
-     * @param  string  $repo   Repository name.
+     * @param  string  $repo  Repository name.
      * @return list<string> Language names sorted by byte count descending.
      */
     public static function fetchLanguages(string $owner, string $repo): array
@@ -214,7 +212,7 @@ class Github
      * Fetch and cache extended single-repository metadata for featured project cards.
      *
      * @param  string  $owner  Repository owner login.
-     * @param  string  $repo   Repository name.
+     * @param  string  $repo  Repository name.
      * @return array<string, mixed> Repository metadata, or empty array on failure.
      */
     public static function fetchRepoMeta(string $owner, string $repo): array
@@ -248,8 +246,8 @@ class Github
      * Fetch and cache recent GitHub releases for a repository.
      *
      * @param  string  $owner  Repository owner login.
-     * @param  string  $repo   Repository name.
-     * @param  int     $count  Maximum number of releases to return (1–20).
+     * @param  string  $repo  Repository name.
+     * @param  int  $count  Maximum number of releases to return (1–20).
      * @return list<array<string, mixed>>
      */
     public static function fetchReleases(string $owner, string $repo, int $count = 5): array
@@ -281,7 +279,7 @@ class Github
      * Fetch and cache combined repository data: stats, latest release, and README intro.
      *
      * @param  string  $owner  Repository owner login.
-     * @param  string  $repo   Repository name.
+     * @param  string  $repo  Repository name.
      * @return array<string, mixed> Combined data, or empty array on API failure.
      */
     public static function fetch(string $owner, string $repo): array
@@ -325,7 +323,12 @@ class Github
         return $data;
     }
 
-    /** Extract a clean README intro: up to the 2nd <h2>, headings demoted, badges/anchors stripped. */
+    /**
+     * Extract a clean README intro: content up to the second h2, with headings demoted and badges stripped.
+     *
+     * @param  string  $body  Raw GitHub-rendered README HTML.
+     * @return string Sanitised HTML snippet suitable for wp_kses output.
+     */
     protected static function readmeIntro(string $body): string
     {
         $p1 = stripos($body, '<h2');
@@ -348,7 +351,13 @@ class Github
         return (string) $intro;
     }
 
-    /** Recent public activity (Push, PRs, issues, releases). Cached. */
+    /**
+     * Fetch and cache recent public GitHub events for a user.
+     *
+     * @param  string  $user  GitHub login.
+     * @param  int  $count  Maximum number of formatted events to return (1–30).
+     * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
+     */
     public static function fetchEvents(string $user, int $count = 12): array
     {
         $count = max(1, min(30, $count));
@@ -376,7 +385,12 @@ class Github
         return $out;
     }
 
-    /** Contribution calendar: GraphQL when a token exists, else the public SVG page. */
+    /**
+     * Fetch and cache the contribution calendar for a user (GraphQL when token is set, HTML fallback).
+     *
+     * @param  string  $user  GitHub login.
+     * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}
+     */
     public static function fetchContributionCalendar(string $user): array
     {
         $key = 'mh_ghcal2_'.md5($user);
@@ -397,7 +411,13 @@ class Github
         return $data;
     }
 
-    /** @return array{type: string, repo: string, url: string, text: string, when: string}|null */
+    /**
+     * Format a single raw GitHub event payload into a display-ready array.
+     *
+     * @param  array<string, mixed>  $j  Raw event object decoded from the GitHub API.
+     * @return array{type: string, repo: string, url: string, text: string, when: string}|null
+     *                                                                                         Null when the event type is unsupported or the repo is missing.
+     */
     protected static function formatEvent(array $j): ?array
     {
         $type = (string) ($j['type'] ?? '');
@@ -468,7 +488,13 @@ class Github
         ];
     }
 
-    /** @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null */
+    /**
+     * Fetch the contribution calendar via the GitHub GraphQL API (requires a token).
+     *
+     * @param  string  $user  GitHub login.
+     * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null
+     *                                                                                                            Null on API error or when the response is malformed.
+     */
     protected static function calendarFromGraphql(string $user): ?array
     {
         $query = <<<'GQL'
@@ -523,7 +549,13 @@ GQL;
         ];
     }
 
-    /** @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null */
+    /**
+     * Fetch the contribution calendar by scraping the public GitHub contributions HTML page.
+     *
+     * @param  string  $user  GitHub login.
+     * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>}|null
+     *                                                                                                            Null when the page is unavailable or no day data is found.
+     */
     protected static function calendarFromHtml(string $user): ?array
     {
         $res = wp_remote_get('https://github.com/users/'.rawurlencode($user).'/contributions', [
@@ -586,6 +618,12 @@ GQL;
         ];
     }
 
+    /**
+     * Map a raw contribution count to a heat-map level (0–4).
+     *
+     * @param  int  $count  Number of contributions on a given day.
+     * @return int Level from 0 (none) to 4 (highest activity).
+     */
     protected static function contributionLevel(int $count): int
     {
         return match (true) {
@@ -597,7 +635,14 @@ GQL;
         };
     }
 
-    /** Render selected parts (desc, stats, intro) as HTML. */
+    /**
+     * Render selected repository sections (desc, stats, intro) as an HTML string.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo  Repository name.
+     * @param  list<string>  $show  Sections to include: desc, stats, intro.
+     * @return string Escaped HTML, or empty string when no data is available.
+     */
     public static function render(string $owner, string $repo, array $show = ['stats', 'intro']): string
     {
         $d = self::fetch($owner, $repo);

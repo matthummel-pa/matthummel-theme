@@ -6,6 +6,19 @@
 
 namespace App;
 
+/**
+ * Return an inline SVG icon element for a given icon name.
+ *
+ * Aliases are resolved before the path look-up. Falls back to the 'code' icon
+ * when the name is not found. The element is aria-hidden and not focusable.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $name  Icon name (e.g. 'github', 'wordpress', 'php').
+ * @param  int  $size  Width and height in pixels (default 20).
+ * @param  string  $fill  CSS fill value; must be currentColor or a hex colour.
+ * @return string SVG element string, safe to output without escaping.
+ */
 function mh_svg_icon(string $name, int $size = 20, string $fill = 'currentColor'): string
 {
     $name = strtolower(trim($name));
@@ -146,7 +159,16 @@ function mh_svg_icon(string $name, int $size = 20, string $fill = 'currentColor'
     return '<svg class="mh-ico" data-icon="'.esc_attr($key).'" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="'.$fill.'" aria-hidden="true" focusable="false">'.$d.'</svg>';
 }
 
-/** Brand hex for a skill chip (Simple Icons / common docs colors). */
+/**
+ * Brand hex colour for a skill chip, resolved via the icon alias map.
+ *
+ * Falls back to #2563EB (blue) when the icon key has no brand colour entry.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $name  Skill or icon name (same aliases as mh_svg_icon()).
+ * @return string Hex colour string, e.g. '#F7DF1E'.
+ */
 function mh_skill_color(string $name): string
 {
     $colors = [
@@ -182,6 +204,15 @@ function mh_skill_color(string $name): string
     return '#2563EB';
 }
 
+/**
+ * Render a skill chip: coloured icon + human-readable label, safe to echo.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $name  Skill name (resolved via mh_svg_icon() alias map).
+ * @param  int  $size  Icon size in pixels (default 18).
+ * @return string HTML <span> element with icon and label, escaped for output.
+ */
 function mh_skill_chip(string $name, int $size = 18): string
 {
     $label = mh_title_label($name);

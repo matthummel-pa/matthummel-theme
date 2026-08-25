@@ -23,9 +23,12 @@ if (! defined('WP_CLI') || ! WP_CLI) {
 /**
  * Resolve one SSH credential: CLI flag → wp-config constant → env var(s).
  *
+ * @since 3.1.0
+ *
  * @param  string  $flag  Already-parsed CLI assoc arg value (may be empty).
  * @param  string  $const  wp-config.php constant name, e.g. 'MH_SSH_HOST'.
- * @param  string[]  $envKeys  Env var names tried left-to-right.
+ * @param  string  ...$envKeys  Environment variable names tried left-to-right.
+ * @return string Resolved credential, or empty string when none is found.
  */
 function mh_db_cred(string $flag, string $const, string ...$envKeys): string
 {
@@ -46,7 +49,13 @@ function mh_db_cred(string $flag, string $const, string ...$envKeys): string
 }
 
 /**
- * Run a shell command, stream stderr to WP-CLI debug, return [exit_code, stdout].
+ * Run a shell command via proc_open, stream stderr to WP-CLI debug, and return exit code + output.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $cmd  Shell command to execute.
+ * @param  bool  $quiet  When true, suppress stderr forwarding to WP-CLI debug.
+ * @return array{0: int, 1: string, 2: string} Tuple of [exit code, stdout, stderr].
  */
 function mh_db_exec(string $cmd, bool $quiet = false): array
 {
@@ -73,7 +82,14 @@ function mh_db_exec(string $cmd, bool $quiet = false): array
 }
 
 /**
- * Build the ssh base command with port and StrictHostKeyChecking.
+ * Build the ssh base command string with port and StrictHostKeyChecking=accept-new.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $user  SSH username.
+ * @param  string  $host  SSH hostname or IP address.
+ * @param  string  $port  SSH port; defaults to 22 when empty.
+ * @return string Escaped ssh command prefix, e.g. "ssh -p '22' -o StrictHostKeyChecking=accept-new 'user'@'host'".
  */
 function mh_db_ssh_base(string $user, string $host, string $port): string
 {

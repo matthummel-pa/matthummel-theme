@@ -863,7 +863,13 @@ function mh_apply_code_resume_pp_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_pp_copy', 57);
 
-/** Repeater fields for audience cards (Home, About, Services). */
+/**
+ * Sub-field definitions for the "Who this site is for" repeater (Home, About, Services).
+ *
+ * @since 3.1.0
+ *
+ * @return list<array{0: string, 1: string, 2: string}>
+ */
 function mh_who_item_fields(): array
 {
     return [
@@ -875,7 +881,13 @@ function mh_who_item_fields(): array
     ];
 }
 
-/** Who this site is for — reused on Home, About, Services. */
+/**
+ * Default "Who this site is for" audience cards, reused on Home, About, and Services pages.
+ *
+ * @since 3.1.0
+ *
+ * @return list<array{title: string, text: string, icon: string, href: string, cta: string}>
+ */
 function mh_who_items(): array
 {
     $writing = get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/');

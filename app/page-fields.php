@@ -10,6 +10,17 @@
 
 namespace App;
 
+/**
+ * Retrieve a single theme page field value from post meta.
+ *
+ * Reads `mh_f_{key}` post meta and returns the default when the meta is absent or empty.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  string  $default  Value returned when the field is empty or the post cannot be resolved.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ */
 function field(string $key, string $default = '', ?int $post_id = null): string
 {
     $post_id = $post_id ?: (int) get_the_ID();
@@ -21,6 +32,17 @@ function field(string $key, string $default = '', ?int $post_id = null): string
     return ($val === '' || $val === null) ? $default : (string) $val;
 }
 
+/**
+ * Retrieve a theme page field as a fully qualified URL.
+ *
+ * Relative paths are resolved with home_url(). Absolute URLs (http/https/protocol-relative) are returned as-is.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  string  $default  Fallback URL or path.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ */
 function field_href(string $key, string $default = '', ?int $post_id = null): string
 {
     $value = trim(field($key, $default, $post_id));
@@ -34,11 +56,34 @@ function field_href(string $key, string $default = '', ?int $post_id = null): st
     return home_url($value);
 }
 
+/**
+ * Retrieve a theme page field as post-kses-filtered HTML.
+ *
+ * Safe to echo directly; untrusted tags are stripped by wp_kses_post().
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  string  $default  Fallback HTML string.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ */
 function field_html(string $key, string $default = '', ?int $post_id = null): string
 {
     return wp_kses_post(field($key, $default, $post_id));
 }
 
+/**
+ * Retrieve a theme page field as a list of non-empty trimmed lines.
+ *
+ * Accepts both newline-delimited strings and serialised arrays from post meta.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  string[]  $default  Fallback list returned when the field is absent or blank.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ * @return list<string>
+ */
 function field_lines(string $key, array $default = [], ?int $post_id = null): array
 {
     $post_id = $post_id ?: (int) get_the_ID();
@@ -58,6 +103,18 @@ function field_lines(string $key, array $default = [], ?int $post_id = null): ar
     return $default;
 }
 
+/**
+ * Retrieve a theme page field as an array of repeater rows.
+ *
+ * Returns the default when the meta value is absent or not a non-empty array.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  array[]  $default  Fallback row list.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ * @return array[]
+ */
 function field_rows(string $key, array $default = [], ?int $post_id = null): array
 {
     $post_id = $post_id ?: (int) get_the_ID();
@@ -67,6 +124,17 @@ function field_rows(string $key, array $default = [], ?int $post_id = null): arr
     return is_array($rows) && $rows !== [] ? $rows : $default;
 }
 
+/**
+ * Resolve the Blade template filename key for a given page ID.
+ *
+ * Returns 'front-page.blade.php' for the static front page,
+ * 'index.blade.php' for the posts page, and the stored _wp_page_template otherwise.
+ *
+ * @since 3.1.0
+ *
+ * @param  int  $post_id  Page post ID.
+ * @return string Template filename, e.g. 'template-about.blade.php'.
+ */
 function page_template_key(int $post_id): string
 {
     if ($post_id && (int) get_option('page_on_front') === $post_id) {
@@ -79,6 +147,15 @@ function page_template_key(int $post_id): string
     return (string) get_post_meta($post_id, '_wp_page_template', true);
 }
 
+/**
+ * Field group definition for the "Search preview" meta box section.
+ *
+ * Returns an associative array of group label → field definitions, compatible with page_field_map().
+ *
+ * @since 3.1.0
+ *
+ * @return array<string, list<array{0: string, 1: string, 2: string, 3: string}>>
+ */
 function mh_seo_field_group(): array
 {
     return [
@@ -89,6 +166,13 @@ function mh_seo_field_group(): array
     ];
 }
 
+/**
+ * Field group definitions for the Home/front-page template.
+ *
+ * @since 3.1.0
+ *
+ * @return array<string, list<array>>
+ */
 function mh_home_fields(): array
 {
     return [
@@ -537,6 +621,17 @@ function mh_code_page_snips(?int $post_id = null): array
     return $out;
 }
 
+/**
+ * Resolve the ordered list of studio project items for the Work/Projects page.
+ *
+ * Merges admin-saved repeater rows with built-in defaults, resolving image URLs.
+ * Returns the built-in project list when no rows have been saved.
+ *
+ * @since 3.1.0
+ *
+ * @param  int|null  $post_id  Projects page post ID; falls back to get_the_ID() when null.
+ * @return list<array<string, mixed>>
+ */
 function mh_work_page_items(?int $post_id = null): array
 {
     $defaults = [];
@@ -577,11 +672,21 @@ function mh_work_page_items(?int $post_id = null): array
     return $out;
 }
 
+/**
+ * Post ID of the static front page, or 0 when not set.
+ *
+ * @since 3.1.0
+ */
 function mh_front_id(): int
 {
     return (int) get_option('page_on_front');
 }
 
+/**
+ * Post ID of the designated blog/posts page, or 0 when not set.
+ *
+ * @since 3.1.0
+ */
 function mh_writing_id(): int
 {
     return (int) get_option('page_for_posts');
