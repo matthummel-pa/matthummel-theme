@@ -73,6 +73,14 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => 'Accessibility statement | '.$brand,
             'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report accessibility issues.',
         ],
+        'template-privacy.blade.php' => [
+            'title' => 'Privacy policy | '.$brand,
+            'desc' => 'What data matthummel.com collects, how it is used, and your rights. No analytics, no ads, no data selling. Contact form and comment data only.',
+        ],
+        'template-terms.blade.php' => [
+            'title' => 'Terms of use | '.$brand,
+            'desc' => 'Terms covering code reuse (MIT licence), written content copyright, concept site disclaimers, and acceptable use of matthummel.com.',
+        ],
         'template-contact.blade.php' => [
             'title' => 'Hire a developer in Gettysburg | '.$brand,
             'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',

@@ -51,6 +51,8 @@
         <li><a href="{{ home_url('/now/') }}">Now</a></li>
         <li><a href="{{ home_url('/contact/') }}">Contact</a></li>
         <li><a href="{{ home_url('/accessibility/') }}">Accessibility</a></li>
+        <li><a href="{{ home_url('/privacy-policy/') }}">Privacy</a></li>
+        <li><a href="{{ home_url('/terms-of-use/') }}">Terms</a></li>
       </ul>
     </nav>
 
