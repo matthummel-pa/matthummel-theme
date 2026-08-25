@@ -36,9 +36,11 @@
       <p class="footer-nav-label">Work</p>
       <ul class="footer-nav">
         <li><a href="{{ home_url('/services/') }}">Services</a></li>
+        <li><a href="{{ home_url('/hire/') }}">Hire me</a></li>
         <li><a href="{{ home_url('/projects/') }}">Example sites</a></li>
+        <li><a href="{{ home_url('/uses/') }}">Uses</a></li>
         <li><a href="{{ home_url('/code/') }}">Code &amp; GitHub</a></li>
-        <li><a href="{{ home_url('/contact/') }}">Hire me</a></li>
+        <li><a href="{{ home_url('/changelog/') }}">Changelog</a></li>
       </ul>
     </nav>
 

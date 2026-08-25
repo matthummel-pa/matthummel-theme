@@ -46,10 +46,10 @@
   <div>
     <p class="eyebrow">About</p>
     <h1 class="display-title is-hero">
-      {{ \App\field('about_h1', __('WordPress developer. Gettysburg, PA.', 'sage')) }}
+      {{ \App\field('about_h1', __('A little background.', 'sage')) }}
     </h1>
     <p class="lead">
-      {{ \App\field('about_lede', __('I build WordPress sites and plugins for shops, agencies, and developers. Most of my work is Sage, PHP, and front-end architecture that clients can keep editing. I write about the process on this journal and keep the code public on GitHub.', 'sage')) }}
+      {{ \App\field('about_lede', __('I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.', 'sage')) }}
     </p>
     <p class="about-hero-links">
       <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">

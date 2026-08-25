@@ -8,137 +8,211 @@
   $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $ghBlog  = \App\mh_github_blog_url($gh);
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
+  $updated = 'August 2026';
 @endphp
 
 @section('content')
 
-{{-- HERO --}}
+{{-- ── HERO ─────────────────────────────────────────────── --}}
 @component('partials.page-hero')
-  <p class="eyebrow">{{ \App\field('now_kicker', __('Now', 'sage')) }}</p>
-  <h1 class="display-title is-hero">
-    {{ \App\field('now_h1', __('What I\'m doing right now.', 'sage')) }}
-  </h1>
-  <p class="lead">
-    {{ \App\field('now_lede', __('A snapshot of where my time and attention are going. Inspired by nownownow.com — a simple page that answers "what are you up to?" Updated August 2026.', 'sage')) }}
-  </p>
+  <p class="eyebrow">Now</p>
+  <h1 class="display-title is-hero">What I'm doing right now.</h1>
+  <p class="lead">A snapshot of where my time and attention are going — updated {{ $updated }}. Inspired by <a href="https://nownownow.com" rel="noopener" target="_blank">nownownow.com</a>.</p>
+  <div class="now-hero-meta">
+    <span class="now-hero-status">
+      <span class="h-badge__dot" aria-hidden="true"></span>
+      Open for new work
+    </span>
+    <span class="now-hero-location">
+      {!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA · Eastern Time
+    </span>
+  </div>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ home_url('/about/') }}">{!! \App\mh_svg_icon('user', 14) !!} Full background</a>
-    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 14) !!} Say hello</a>
-    <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('globe', 14) !!} Studio</a>
+    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('briefcase', 14) !!} Hire me</a>
+    <a href="{{ home_url('/uses/') }}">{!! \App\mh_svg_icon('code', 14) !!} Stack I use</a>
   </p>
 @endcomponent
 
-{{-- CURRENT FOCUS --}}
-<section class="pf-section" aria-labelledby="now-work-heading">
+{{-- ── MAIN CONTENT + SIDEBAR ─────────────────────────── --}}
+<section class="pf-section" aria-label="Current focus">
   <div class="container wide now-layout">
 
     <div class="now-main">
 
-      <div class="now-block">
+      {{-- Building Ridges & Valleys --}}
+      <article class="now-block">
         <div class="now-block__head">
-          <span class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 20) !!}</span>
-          <h2 id="now-work-heading" class="now-block__title">Building Ridges &amp; Valleys</h2>
+          <div class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">Studio work</p>
+            <h2 class="now-block__title">Building Ridges &amp; Valleys</h2>
+          </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I recently started Ridges & Valleys, a WordPress studio focused on shops, tours, and inns in Gettysburg and Adams County, PA. I\'m building out concept sites for local business types — not a case-study deck, but real working demonstrations of what a WordPress site can look like for a specific kind of business.', 'sage')) }}</p>
-        <p>{{ \App\field('now_studio_p2', __('It\'s early. The studio is new, the portfolio is growing, and I\'m still figuring out the right shape for local studio work. If you run a Gettysburg-area business and want to see what a clear, editable WordPress site looks like for your type of shop, that\'s exactly what I\'m building for.', 'sage')) }}</p>
-        <a class="about-text-link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">Visit ridgesandvalleys.com →</a>
-      </div>
+        <p>{{ \App\field('now_studio_p1', __('I recently started Ridges & Valleys, a WordPress studio for shops, tours, and inns in Gettysburg and Adams County, PA. I\'m building concept sites that show what a real WordPress site can look like for a specific type of local business — not wireframes or screenshots, but live, working demonstrations.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p2', __('The studio is early. The portfolio is growing. If you run a Gettysburg-area business and want to see what an editable WordPress site looks like for your category, that\'s exactly what I\'m building.', 'sage')) }}</p>
+        <a class="h-text-arrow" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
+          Visit ridgesandvalleys.com →
+        </a>
+      </article>
 
-      <div class="now-block">
+      {{-- Open for work --}}
+      <article class="now-block">
         <div class="now-block__head">
-          <span class="now-block__icon">{!! \App\mh_svg_icon('code', 20) !!}</span>
-          <h2 class="now-block__title">Open for work</h2>
+          <div class="now-block__icon">{!! \App\mh_svg_icon('users', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">Availability</p>
+            <h2 class="now-block__title">Open for new work</h2>
+          </div>
         </div>
-        <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for new work. Full-time roles, contract arrangements, freelance projects, and agency overflow are all on the table. WordPress and PHP is the core, but I also do React, web apps, and Power Platform when it fits.', 'sage')) }}</p>
-        <p>{{ \App\field('now_work_p2', __('If you\'re a recruiter, a hiring manager, or an agency that needs a WordPress developer — I\'m glad to hear from you. The fastest way to start is a short note.', 'sage')) }}</p>
-        <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 16) !!} Say hello</a>
-      </div>
+        <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for new work — full-time roles, contract arrangements, freelance projects, and agency overflow. WordPress and PHP is the core. I also do React, web apps, and Power Platform when it\'s the right fit.', 'sage')) }}</p>
+        <p>{{ \App\field('now_work_p2', __('If you\'re a recruiter, a hiring manager, or an agency that needs a WordPress developer on a project, I\'m glad to hear from you. A short note is enough to start.', 'sage')) }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.65rem;align-items:center">
+          <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
+          <a class="h-text-arrow" href="{{ home_url('/hire/') }}">See hire details →</a>
+        </div>
+      </article>
 
-      <div class="now-block">
+      {{-- Writing --}}
+      <article class="now-block">
         <div class="now-block__head">
-          <span class="now-block__icon">{!! \App\mh_svg_icon('pen', 20) !!}</span>
-          <h2 class="now-block__title">Writing and sharing</h2>
+          <div class="now-block__icon">{!! \App\mh_svg_icon('pen', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">Writing</p>
+            <h2 class="now-block__title">Notes from real builds</h2>
+          </div>
         </div>
-        <p>{{ \App\field('now_write_p1', __('I write short posts on WordPress, PHP, and the tools I use. Most include code you can paste into a theme or plugin. Posts go on this journal first, then sometimes cross-posted to DEV.to.', 'sage')) }}</p>
-        <a class="about-text-link" href="{{ $writing }}">Read the journal →</a>
-      </div>
+        <p>{{ \App\field('now_write_p1', __('I write short posts on WordPress, PHP, and the tools I actually use on projects. Most posts include code you can paste into a theme or plugin. I write for developers who want something working, not a tutorial that ends at "and so on."', 'sage')) }}</p>
+        <p>{{ \App\field('now_write_p2', __('Posts go on the journal first. Some get cross-posted to DEV.to. Nothing is paywalled.', 'sage')) }}</p>
+        <a class="h-text-arrow" href="{{ $writing }}">Read the journal →</a>
+      </article>
 
-      <div class="now-block">
+      {{-- AI and tooling --}}
+      <article class="now-block">
         <div class="now-block__head">
-          <span class="now-block__icon">{!! \App\mh_svg_icon('map', 20) !!}</span>
-          <h2 class="now-block__title">Life in Gettysburg</h2>
+          <div class="now-block__icon">{!! \App\mh_svg_icon('cursor-ai', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">How I work</p>
+            <h2 class="now-block__title">Building with AI, reviewing every line</h2>
+          </div>
         </div>
-        <p>{{ \App\field('now_life_p1', __('I live in Gettysburg, Pennsylvania with my family. Nights and weekends are for kids, not keyboards, so I keep extra projects small and well-scoped. I work EST hours.', 'sage')) }}</p>
-      </div>
+        <p>{{ \App\field('now_ai_p1', __('I use Cursor AI, Claude, and ChatGPT as part of my development workflow. AI makes the first pass faster — I review everything before it ships. The final code is something I can explain and maintain.', 'sage')) }}</p>
+        <p>{{ \App\field('now_ai_p2', __('I\'m honest about this because I think it matters: if you hire me, you\'re getting real engineering judgment, not just generated output. This site was planned and built with Cursor AI.', 'sage')) }}</p>
+        <a class="h-text-arrow" href="{{ home_url('/uses/') }}">See the full stack →</a>
+      </article>
 
-      <div class="now-block now-block--current-list">
+      {{-- Life --}}
+      <article class="now-block">
         <div class="now-block__head">
-          <span class="now-block__icon">{!! \App\mh_svg_icon('book-open', 20) !!}</span>
-          <h2 class="now-block__title">Right now — the short list</h2>
+          <div class="now-block__icon">{!! \App\mh_svg_icon('map', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">Life</p>
+            <h2 class="now-block__title">Gettysburg, Pennsylvania</h2>
+          </div>
         </div>
-        <ol class="now-list">
+        <p>{{ \App\field('now_life_p1', __('I live in Gettysburg, Pennsylvania with my family. Nights and weekends belong to people, not projects. I keep work well-scoped, which is why I only take on a handful of extra projects at a time. I work Eastern Time hours.', 'sage')) }}</p>
+      </article>
+
+      {{-- The short list --}}
+      <article class="now-block now-block--list">
+        <div class="now-block__head">
+          <div class="now-block__icon">{!! \App\mh_svg_icon('check', 18) !!}</div>
+          <div>
+            <p class="now-block__eyebrow">The short version</p>
+            <h2 class="now-block__title">Right now, in one list</h2>
+          </div>
+        </div>
+        <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Building WordPress concept sites for Gettysburg businesses at Ridges & Valleys.', 'sage'),
-            __('Actively looking for full-time, contract, and freelance WordPress work.', 'sage'),
-            __('Writing short posts on WordPress development — with code snippets.', 'sage'),
-            __('Keeping extra projects small — family time is non-negotiable.', 'sage'),
-            __('Using Cursor AI, Claude, and ChatGPT to build faster, reviewing every line before it ships.', 'sage'),
+            __('Building WordPress concept sites for Gettysburg businesses at Ridges & Valleys', 'sage'),
+            __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
+            __('Writing short posts on WordPress development — code you can paste in', 'sage'),
+            __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
+            __('Keeping extra projects small — family time is non-negotiable in Gettysburg', 'sage'),
+            __('Working Eastern Time, available for remote and local clients', 'sage'),
           ]) as $item)
-            <li>{{ $item }}</li>
+            <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $item }}</span></li>
           @endforeach
-        </ol>
-      </div>
+        </ul>
+      </article>
 
     </div>
 
-    {{-- Sidebar --}}
-    <aside class="now-sidebar">
-      <div class="now-sidebar-card">
-        <p class="now-sidebar-card__label">Last updated</p>
-        <p class="now-sidebar-card__value">August 2026</p>
-      </div>
-      <div class="now-sidebar-card now-sidebar-card--avail">
-        <p class="now-sidebar-card__label">
+    {{-- ── SIDEBAR ─────────────────────────────────────── --}}
+    <aside class="now-sidebar" aria-label="Status and details">
+
+      <div class="now-sidebar-card now-sidebar-card--status">
+        <div class="now-sidebar-status-dot">
           <span class="h-badge__dot" aria-hidden="true"></span>
-          Status
-        </p>
+          <span class="now-sidebar-card__label">Available</span>
+        </div>
         <p class="now-sidebar-card__value">Open for work</p>
         <ul class="now-sidebar-card__list">
-          <li>✓ Full-time roles</li>
-          <li>✓ Contract / freelance</li>
-          <li>✓ Agency overflow</li>
-          <li>✓ Remote anywhere</li>
+          <li>{!! \App\mh_svg_icon('check', 12) !!} Full-time roles</li>
+          <li>{!! \App\mh_svg_icon('check', 12) !!} Contract / freelance</li>
+          <li>{!! \App\mh_svg_icon('check', 12) !!} Agency overflow</li>
+          <li>{!! \App\mh_svg_icon('check', 12) !!} Remote anywhere</li>
         </ul>
-        <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.5rem">
-          {!! \App\mh_svg_icon('mail', 15) !!} Start a conversation
+        <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.75rem">
+          {!! \App\mh_svg_icon('mail', 14) !!} Say hello
         </a>
       </div>
+
+      <div class="now-sidebar-card">
+        <p class="now-sidebar-card__label">Last updated</p>
+        <p class="now-sidebar-card__value">{{ $updated }}</p>
+      </div>
+
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Location</p>
         <p class="now-sidebar-card__value">Gettysburg, PA</p>
-        <p class="now-sidebar-card__sub">Eastern Time (EST)</p>
+        <p class="now-sidebar-card__sub">Eastern Time (ET) · Remote friendly</p>
       </div>
+
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Primary stack</p>
         <p class="now-sidebar-card__value">WordPress + PHP</p>
         <p class="now-sidebar-card__sub">Also React, Power Platform</p>
+        <a class="now-sidebar-card__link" href="{{ home_url('/uses/') }}">Full stack →</a>
       </div>
+
+      <div class="now-sidebar-card">
+        <p class="now-sidebar-card__label">Studio</p>
+        <p class="now-sidebar-card__value">Ridges &amp; Valleys</p>
+        <p class="now-sidebar-card__sub">WordPress studio for Gettysburg businesses</p>
+        <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">ridgesandvalleys.com →</a>
+      </div>
+
+      @if (! empty($gh['public_repos']))
+      <div class="now-sidebar-card">
+        <p class="now-sidebar-card__label">GitHub</p>
+        <p class="now-sidebar-card__value">{{ $gh['public_repos'] }} public repos</p>
+        @if (! empty($gh['followers']))
+          <p class="now-sidebar-card__sub">{{ $gh['followers'] }} followers</p>
+        @endif
+        <a class="now-sidebar-card__link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">View profile →</a>
+      </div>
+      @endif
+
     </aside>
 
   </div>
 </section>
 
-{{-- CTA --}}
+{{-- ── CTA ─────────────────────────────────────────────── --}}
 <section class="cta-band" aria-labelledby="now-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
-      <p class="eyebrow eyebrow--on-dark">Get in touch</p>
+      <p class="eyebrow eyebrow--on-dark">Let's work together</p>
       <h2 id="now-cta-heading" class="display-title is-section">Something I can help with?</h2>
-      <p>A short note is enough to start. I usually reply within a day or two.</p>
+      <p>A short note is enough to start. I usually reply within a day.</p>
     </div>
-    <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-      {!! \App\mh_svg_icon('mail', 16) !!} Say hello
-    </a>
+    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+      </a>
+      <a class="about-text-link" href="{{ home_url('/hire/') }}" style="color:#9ca3af">Hire details →</a>
+    </div>
   </div>
 </section>
 

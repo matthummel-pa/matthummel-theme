@@ -195,8 +195,8 @@ function page_field_map(): array
         'template-about.blade.php' => [
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About', 'sage')],
-                ['about_h1', __('Heading', 'sage'), 'text', __('Glad you’re here.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I’m Matt. I live in Gettysburg, Pennsylvania, and I write about the web, share code, and sometimes help a shop, a team, or an agency with a WordPress site. Plain language, and pages that are easy to use.', 'sage')],
+                ['about_h1', __('Heading', 'sage'), 'text', __('A little background.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -331,7 +331,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['code_kicker', __('Kicker', 'sage'), 'text', __('Engineering', 'sage')],
                 ['code_h1', __('Heading', 'sage'), 'text', __('What I do', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('I build and maintain WordPress sites, plugins, and other web applications from Gettysburg, Pennsylvania, for shops and agencies anywhere. Most of that work is Sage, Blade, PHP, and front-end architecture they can keep editing. I also keep a public GitHub profile so other developers can read the same code I ship.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')],
             ],
             __('Practice', 'sage') => [
                 ['code_do_h2', __('Heading', 'sage'), 'text', __('Practice', 'sage')],
@@ -410,7 +410,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
                 ['write_h1', __('Heading', 'sage'), 'text', __('Journal', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('I write about WordPress, plugins, and other web apps I build. Posts walk through the problem and, when it helps, the code. Developers can copy the examples; shops and agencies can see how I explain a build.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Short posts on WordPress, PHP, Sage, and the tools I actually use on projects. Most include code you can copy and drop in. No padding, no filler.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
                 ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Recent posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],

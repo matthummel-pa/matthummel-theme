@@ -69,6 +69,22 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => 'Example sites in Gettysburg | '.$brand,
             'desc' => 'Studio WordPress concepts for Gettysburg tours, inns, and shops. See example sites or say hello.',
         ],
+        'template-thankyou.blade.php' => [
+            'title' => 'Message received | '.$brand,
+            'desc' => 'Your message is in my inbox. I reply within a day.',
+        ],
+        'template-uses.blade.php' => [
+            'title' => 'Uses — tools and stack | '.$brand,
+            'desc' => 'The tools, frameworks, and services I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, HubSpot, and more.',
+        ],
+        'template-hire.blade.php' => [
+            'title' => 'Hire a WordPress developer in Gettysburg | '.$brand,
+            'desc' => 'Open for WordPress site builds, plugins, agency overflow, and Power Platform work. Based in Gettysburg, PA. Clear scope, full ownership at handoff.',
+        ],
+        'template-changelog.blade.php' => [
+            'title' => 'Changelog | '.$brand,
+            'desc' => 'A public record of notable updates to matthummel.com — new pages, design changes, accessibility fixes, and stack notes.',
+        ],
         'template-accessibility.blade.php' => [
             'title' => 'Accessibility statement | '.$brand,
             'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report accessibility issues.',
@@ -86,20 +102,20 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',
         ],
         'template-about.blade.php' => [
-            'title' => 'WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'I’m Matt in Gettysburg. I write about the web and build WordPress sites shops can keep running. Say hello.',
+            'title' => 'About Matt Hummel — WordPress developer in Gettysburg | '.$brand,
+            'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
         ],
         'template-code.blade.php' => [
-            'title' => 'WordPress developer GitHub and resume | '.$brand,
-            'desc' => 'What I do as a WordPress and full-stack developer: GitHub stats, featured repos, resume, and the docs I use. Based in Gettysburg; I work with any location.',
+            'title' => 'Code and GitHub | '.$brand,
+            'desc' => 'Public repos, featured projects, contribution history, and resume. Most of my WordPress and PHP work is open — fork it, read it, paste it.',
         ],
         'template-now.blade.php' => [
-            'title' => 'Now | '.$brand,
-            'desc' => 'A short list of where my time is going: WordPress, plugins, journal posts, and a few extra Gettysburg builds.',
+            'title' => 'What I\'m doing now | '.$brand,
+            'desc' => 'Building Ridges & Valleys studio, writing WordPress posts with copy-paste code, and open for new work. Updated August 2026.',
         ],
         'index.blade.php' => [
-            'title' => 'Journal | '.$brand,
-            'desc' => 'Notes on WordPress, plugins, and other web apps from Gettysburg. Developers can copy the examples. Shops and agencies can see how I explain a build.',
+            'title' => 'Journal — WordPress development notes | '.$brand,
+            'desc' => 'Short posts on WordPress, PHP, Sage, and the tools I use on real projects. Most posts include code you can copy and drop in.',
         ],
     ];
 
