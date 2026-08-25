@@ -2687,14 +2687,14 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font: 700 clamp(1.15rem, 2vw, 1.35rem)/1.2 var(--font-display);
   letter-spacing: -0.03em;
 }
-.code-gh-repos--featured {
+.pf-grid.code-gh-repos--featured {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 @media (max-width: 900px) {
-  .code-gh-repos--featured { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pf-grid.code-gh-repos--featured { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .code-gh-repos--featured { grid-template-columns: 1fr; }
+  .pf-grid.code-gh-repos--featured { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
