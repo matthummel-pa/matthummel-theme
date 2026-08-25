@@ -17,7 +17,7 @@
     {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('write_lede', __('Short posts on WordPress, PHP, Sage, and the other tools I use day to day. Most include code you can copy. Written in Gettysburg, PA.', 'sage'), $writeId) }}
+    {{ \App\field('write_lede', __('Short posts on WordPress, PHP, Sage, and the tools I actually use on projects. Most include code you can copy and drop in. No padding, no filler.', 'sage'), $writeId) }}
   </p>
   <div class="journal-hero-actions">
     <div class="search-wrap write-hero-search">

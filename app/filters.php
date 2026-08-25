@@ -102,20 +102,20 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',
         ],
         'template-about.blade.php' => [
-            'title' => 'WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'I’m Matt in Gettysburg. I write about the web and build WordPress sites shops can keep running. Say hello.',
+            'title' => 'About Matt Hummel — WordPress developer in Gettysburg | '.$brand,
+            'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
         ],
         'template-code.blade.php' => [
-            'title' => 'WordPress developer GitHub and resume | '.$brand,
-            'desc' => 'What I do as a WordPress and full-stack developer: GitHub stats, featured repos, resume, and the docs I use. Based in Gettysburg; I work with any location.',
+            'title' => 'Code and GitHub | '.$brand,
+            'desc' => 'Public repos, featured projects, contribution history, and resume. Most of my WordPress and PHP work is open — fork it, read it, paste it.',
         ],
         'template-now.blade.php' => [
-            'title' => 'Now | '.$brand,
-            'desc' => 'A short list of where my time is going: WordPress, plugins, journal posts, and a few extra Gettysburg builds.',
+            'title' => 'What I\'m doing now | '.$brand,
+            'desc' => 'Building Ridges & Valleys studio, writing WordPress posts with copy-paste code, and open for new work. Updated August 2026.',
         ],
         'index.blade.php' => [
-            'title' => 'Journal | '.$brand,
-            'desc' => 'Notes on WordPress, plugins, and other web apps from Gettysburg. Developers can copy the examples. Shops and agencies can see how I explain a build.',
+            'title' => 'Journal — WordPress development notes | '.$brand,
+            'desc' => 'Short posts on WordPress, PHP, Sage, and the tools I use on real projects. Most posts include code you can copy and drop in.',
         ],
     ];
 

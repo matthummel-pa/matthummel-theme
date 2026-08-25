@@ -55,8 +55,8 @@
 {{-- HERO --}}
 @component('partials.page-hero')
   <p class="eyebrow">Hire me</p>
-  <h1 class="display-title is-hero">Let's work together.</h1>
-  <p class="lead">I'm a WordPress developer based in Gettysburg, PA — open for new work with shops, agencies, and developers, locally and remote.</p>
+  <h1 class="display-title is-hero">Open for new work.</h1>
+  <p class="lead">I'm available for WordPress projects right now — site builds, plugins, and overflow development. A short note about what you need is enough to get started.</p>
   @if (! empty($gh['hireable']))
     <p class="hire-avail">
       <span class="h-badge__dot" aria-hidden="true"></span>

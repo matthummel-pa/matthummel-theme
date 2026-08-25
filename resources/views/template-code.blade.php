@@ -28,7 +28,7 @@
     {{ \App\field('code_h1', __('PHP, WordPress, and open-source code.', 'sage')) }}
   </h1>
   <p class="lead">
-    {!! \App\field_html('code_lede', __('I build and maintain WordPress sites and plugins from Gettysburg, PA. Most of my public work is on GitHub — repos you can fork, snippets you can paste, and code written so any developer can read it without asking me first.', 'sage')) !!}
+    {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')) !!}
   </p>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
