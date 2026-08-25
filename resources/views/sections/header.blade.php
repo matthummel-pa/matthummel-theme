@@ -87,7 +87,7 @@
       <p class="mh-popout-kicker" id="mh-popout-title">{{ __('Menu', 'sage') }}</p>
       @if ($currentPageTitle !== '')
         <p class="mh-popout-current">
-          <span class="sr-only">{{ __('Currently viewing:', 'sage') }} </span>{{ $currentPageTitle }}
+          <span class="visually-hidden">{{ __('Currently viewing:', 'sage') }} </span>{{ $currentPageTitle }}
         </p>
       @endif
     </div>
