@@ -70,6 +70,6 @@
       <span aria-hidden="true">·</span>
       <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
     </nav>
-    <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage</a>, WordPress, and PHP.</p>
+    <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage</a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI</a>.</p>
   </div>
 </footer>
