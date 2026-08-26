@@ -234,4 +234,12 @@
     </p>
   </div>
 </section>
+
+@include('partials.cta-band', [
+  'kicker' => __('Prefer a short note?', 'sage'),
+  'title' => __('Skip the brief.', 'sage'),
+  'text' => __('The contact form is fine if you only need a quick question answered. Same inbox either way.', 'sage'),
+  'label' => __('Contact form', 'sage'),
+  'secondary' => __('Hire me', 'sage'),
+])
 @endsection

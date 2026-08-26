@@ -87,7 +87,7 @@
 @endcomponent
 
 <div class="uses-body pf-section">
-  <div class="container wide">
+  <div class="container wide uses-body__grid">
     @foreach ($sections as $s)
       <section class="uses-section" id="uses-{{ \Str::slug($s['title']) }}" aria-labelledby="uses-{{ \Str::slug($s['title']) }}-heading">
         <div class="uses-section__head">

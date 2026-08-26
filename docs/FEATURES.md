@@ -9,7 +9,8 @@ What the 3.x Sage theme does, and where it lives.
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Minimalist landing; section anchors + jump-nav pills; live GitHub API panel; skills ticker; 2×2 audience cards; one primary Say hello CTA | `resources/views/partials/home.blade.php`, `App\Github` |
-| Shared CTA | Sitewide closing band above the footer: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal (reduced-motion safe) | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
+| Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
+| Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
