@@ -2859,11 +2859,36 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-bottom: 1px solid var(--color-border);
   transform: rotate(45deg);
 }
+/* Newest weeks sit on the left — keep tips readable inside the panel. */
+.code-gh-cal .gh-day:nth-child(-n+28) .gh-day__tip {
+  left: 0;
+  transform: translateX(0) translateY(.35rem) scale(.96);
+}
+.code-gh-cal .gh-day:nth-child(-n+28) .gh-day__tip::after {
+  left: .65rem;
+  margin-left: 0;
+}
+.code-gh-cal .gh-day:nth-last-child(-n+21) .gh-day__tip {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(.35rem) scale(.96);
+}
+.code-gh-cal .gh-day:nth-last-child(-n+21) .gh-day__tip::after {
+  left: auto;
+  right: .65rem;
+  margin-left: 0;
+}
 .code-gh-cal .gh-day:hover .gh-day__tip,
 .code-gh-cal .gh-day:focus-visible .gh-day__tip {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0) scale(1);
+}
+.code-gh-cal .gh-day:nth-child(-n+28):hover .gh-day__tip,
+.code-gh-cal .gh-day:nth-child(-n+28):focus-visible .gh-day__tip,
+.code-gh-cal .gh-day:nth-last-child(-n+21):hover .gh-day__tip,
+.code-gh-cal .gh-day:nth-last-child(-n+21):focus-visible .gh-day__tip {
+  transform: translateX(0) translateY(0) scale(1);
 }
 .code-gh-cal .gh-cal-legend .gh-day {
   width: 14px;
