@@ -39,6 +39,7 @@
     </p>
   @endif
   <p class="about-hero-links" style="margin-top:1rem">
+    <a href="#github">{!! \App\mh_svg_icon('git', 15) !!} {{ __('Open source', 'sage') }}</a>
     <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
       {!! \App\mh_svg_icon('github', 15) !!} GitHub<span class="visually-hidden"> (opens in a new window)</span>
     </a>

@@ -7,6 +7,7 @@ All notable changes to this theme are recorded here.
 ### Changed
 
 - Code page contribution heat map: last 30 days only, newest week first, circular day cells; activity feed filtered to the last 30 days
+- Code page hero links include Open source → `#github`
 
 ## 3.1.8 — 2026-08-25
 
