@@ -652,7 +652,7 @@ function mh_github_calendar_months(array $weeks): array
         }
         $last = $key;
         $labels[] = [
-            'label' => date_i18n('M', $ts),
+            'label' => date_i18n('F', $ts),
             'week' => (int) $wi,
         ];
     }

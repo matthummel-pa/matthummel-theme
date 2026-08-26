@@ -2851,15 +2851,18 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   grid-template-columns: repeat(var(--gh-weeks), var(--gh-day-size));
   justify-content: space-between;
   gap: 0;
-  margin: 0 0 .4rem;
-  font-size: clamp(.58rem, 1.8cqi, .72rem);
+  margin: 0 0 .45rem;
+  font-size: clamp(.65rem, 2cqi, .8rem);
+  font-weight: 600;
+  letter-spacing: .01em;
   color: var(--color-text-muted);
   width: 100%;
 }
 .code-gh-cal__months span {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
   transform: translateX(calc(var(--gh-day-size) * -0.15));
 }
 .code-gh-cal .gh-cal-scroll {
