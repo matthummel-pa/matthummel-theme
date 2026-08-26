@@ -67,15 +67,15 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     $map = [
         'front-page.blade.php' => [
             'title' => 'WordPress web design in Gettysburg | '.$brand,
-            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can copy the code. See example sites or say hello.',
+            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can follow the code. See example sites or say hello.',
         ],
         'template-home.blade.php' => [
             'title' => 'WordPress web design in Gettysburg | '.$brand,
-            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can copy the code. See example sites or say hello.',
+            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can follow the code. See example sites or say hello.',
         ],
         'template-services.blade.php' => [
             'title' => 'WordPress Developer for Hire in Gettysburg | '.$brand,
-            'desc' => 'Custom WordPress sites, plugins, and web apps. Clear scope, full ownership at handoff, no lock-in. Based in Gettysburg, PA — open for new work.',
+            'desc' => 'Custom WordPress sites and plugins with clear scope and full ownership at handoff. Based in Gettysburg — open for new work. Say hello.',
         ],
         'template-start.blade.php' => [
             'title' => 'Project brief for WordPress work | '.$brand,
@@ -91,11 +91,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-uses.blade.php' => [
             'title' => 'Uses — tools and stack | '.$brand,
-            'desc' => 'The tools, frameworks, and services I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, HubSpot, and more.',
+            'desc' => 'The tools I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, and more. Say hello if you want to build together.',
         ],
         'template-hire.blade.php' => [
             'title' => 'Hire a WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'Resume, LinkedIn, and clear scope for WordPress builds and agency overflow. Based in Gettysburg, PA. Say hello.',
+            'desc' => 'Resume, LinkedIn, and clear scope for WordPress builds and agency overflow. Based in Gettysburg. Say hello.',
         ],
         'template-changelog.blade.php' => [
             'title' => 'Changelog | '.$brand,
@@ -103,11 +103,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-accessibility.blade.php' => [
             'title' => 'Accessibility statement | '.$brand,
-            'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report accessibility issues.',
+            'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report issues.',
         ],
         'template-privacy.blade.php' => [
             'title' => 'Privacy policy | '.$brand,
-            'desc' => 'What data matthummel.com collects, how it is used, and your rights. No analytics, no ads, no data selling. Contact form and comment data only.',
+            'desc' => 'What data matthummel.com collects, how it is used, and your rights. No analytics, no ads, no data selling.',
         ],
         'template-terms.blade.php' => [
             'title' => 'Terms of use | '.$brand,
@@ -115,11 +115,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-contact.blade.php' => [
             'title' => 'Hire a developer in Gettysburg | '.$brand,
-            'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',
+            'desc' => 'Write about a WordPress site, plugin, or role. I work from Gettysburg and usually reply within a day. Say hello.',
         ],
         'template-about.blade.php' => [
-            'title' => 'About Matt Hummel — WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
+            'title' => 'About Matt Hummel — WordPress in Gettysburg | '.$brand,
+            'desc' => 'WordPress developer in Gettysburg. Sites shops can edit, code other developers can follow. Open for full-time, contract, and agency work. Say hello.',
         ],
         'template-code.blade.php' => [
             'title' => 'Open-source WordPress code | '.$brand,
@@ -127,11 +127,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Building Ridges & Valleys studio, writing WordPress posts with copy-paste code, and open for new work. Updated August 2026.',
+            'desc' => 'Building Ridges & Valleys, writing WordPress notes with copy-paste code, and open for new work from Gettysburg.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — WordPress development notes | '.$brand,
-            'desc' => 'Short posts on WordPress, PHP, Sage, and the tools I use on real projects. Most posts include code you can copy and drop in.',
+            'desc' => 'Short posts on WordPress, PHP, Sage, and tools from real projects. Most posts include code you can copy. Say hello anytime.',
         ],
     ];
 

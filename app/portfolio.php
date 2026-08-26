@@ -2465,3 +2465,97 @@ if (defined('WP_CLI') && WP_CLI) {
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
 add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
+
+/**
+ * Default service cards for the About page.
+ *
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_about_services_defaults(): array
+{
+    return [
+        [
+            'icon' => 'wordpress',
+            'title' => __('WordPress sites', 'sage'),
+            'body' => __('New sites, sites that need a cleanup, and themes shops can edit themselves. Practical WordPress — not a pile of plugins they will never use.', 'sage'),
+        ],
+        [
+            'icon' => 'plugins',
+            'title' => __('Plugins and tools', 'sage'),
+            'body' => __('Custom pieces when WordPress needs something it does not ship with. Small, documented, and written so the next developer is not stuck guessing.', 'sage'),
+        ],
+        [
+            'icon' => 'code',
+            'title' => __('Other web apps', 'sage'),
+            'body' => __('React front ends, APIs, and work that does not belong in a theme. Power Platform when a team already lives in Microsoft 365 and it is the right fit.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default open-for-work arrangement cards.
+ *
+ * @return list<array{title: string, detail: string}>
+ */
+function mh_about_work_types_defaults(): array
+{
+    return [
+        [
+            'title' => __('Full-time roles', 'sage'),
+            'detail' => __('WordPress, PHP, and web development. Open to on-site, hybrid, or remote from Gettysburg.', 'sage'),
+        ],
+        [
+            'title' => __('Contract and freelance', 'sage'),
+            'detail' => __('Project-based work with a clear, written scope for shops and agencies.', 'sage'),
+        ],
+        [
+            'title' => __('Agency sub-contracting', 'sage'),
+            'detail' => __('You keep the shop relationship. I build the WordPress site or plugin.', 'sage'),
+        ],
+        [
+            'title' => __('Part-time arrangements', 'sage'),
+            'detail' => __('A few hours a week or a focused sprint. Flexible.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default approach / how-I-work cards for About.
+ *
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_about_approach_defaults(): array
+{
+    return [
+        [
+            'icon' => 'briefcase',
+            'title' => __('Shops own everything', 'sage'),
+            'body' => __('Hosting, domain, database, and code belong to the shop before we close out. No lingering access unless you invite me back.', 'sage'),
+        ],
+        [
+            'icon' => 'users',
+            'title' => __('The admin experience is part of the build', 'sage'),
+            'body' => __('A site that is hard to update does not get updated. I aim for edit flows an owner can finish in a couple of minutes without pinging me.', 'sage'),
+        ],
+        [
+            'icon' => 'code',
+            'title' => __('Plain, readable code', 'sage'),
+            'body' => __('If a developer cannot understand a function in half a minute, it is too clever. I write for the next person who has to read it.', 'sage'),
+        ],
+        [
+            'icon' => 'cursor-ai',
+            'title' => __('AI assists. I review everything.', 'sage'),
+            'body' => __('I use Cursor, Claude, and ChatGPT to move faster on the boring parts. Every line still gets read and tested by me before it ships.', 'sage'),
+        ],
+        [
+            'icon' => 'book-open',
+            'title' => __('Accessibility and plain language by default', 'sage'),
+            'body' => __('Keyboard-friendly, screen-reader-aware pages, written so a busy shop owner can follow along. Not a checkbox — just how the work should go.', 'sage'),
+        ],
+        [
+            'icon' => 'plugins',
+            'title' => __('Small, focused plugins', 'sage'),
+            'body' => __('One plugin should do one thing well. I cut weight that does not earn its keep. Most sites need a handful of plugins, not a drawer full.', 'sage'),
+        ],
+    ];
+}

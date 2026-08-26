@@ -2,6 +2,23 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.12 — 2026-08-26
+
+### Changed
+
+- Portfolio presence: redesigned sitewide CTA band (mesh, grid, glow) with clearer hierarchy and secondary actions; footer and page-header atmosphere; light scroll reveals (respects reduced motion); friendlier SEO meta and footer blurb
+- Portfolio presence v2: higher-contrast CTA copy, trust note on closing CTAs, unified home/site CTA system, card washes + title accents, reading comfort, stronger focus/skip-link a11y — standout without sacrificing readability
+
+## 3.1.11 — 2026-08-26
+
+### Changed
+
+- About page redesign: field-driven service / approach / availability cards, mesh section shells, stronger Gettysburg SEO title/meta, mobile-friendly stats and cards
+- About hero rewrite: benefit-led blurb (WordPress / Sage / PHP / Gettysburg), fact chips, dual CTAs, section jump chips, squared photo with caption
+- About above the fold: name kicker, shorter lede, larger photo, proof strip in-hero, jump links below; chip/social clutter removed from first viewport
+- About hero lede: casual, friendly voice (what I build + who it helps) without Sage/PHP jargon
+- About jump bar: shell-aligned “On this page” nav; friendlier How I got here + section intros; softer service card copy
+
 ## 3.1.10 — 2026-08-26
 
 ### Changed

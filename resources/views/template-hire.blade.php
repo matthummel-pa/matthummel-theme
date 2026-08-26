@@ -300,23 +300,22 @@
 </section>
 
 {{-- ── FINAL CTA ───────────────────────────────────────── --}}
-<section class="cta-band" id="contact-cta" aria-labelledby="hire-cta-heading">
+<section class="cta-band" id="contact-cta" aria-labelledby="hire-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div>
-      <p class="eyebrow eyebrow--on-dark">Let's go</p>
-      <h2 id="hire-cta-heading" class="display-title is-section">Ready to start?</h2>
-      <p>Write a short note about what you're building. I'll reply within a day. LinkedIn works too if you prefer.</p>
+    <div class="cta-band__copy">
+      <p class="eyebrow eyebrow--on-dark">{{ __('Let’s go', 'sage') }}</p>
+      <h2 id="hire-cta-heading" class="display-title is-section">{{ __('Ready to start?', 'sage') }}</h2>
+      <p>{{ __('Write a short note about what you’re building. I’ll reply within a day. LinkedIn works too if you prefer.', 'sage') }}</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+    <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="about-text-link" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank" style="color:#9ca3af">
-        {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn →
+      <a class="btn btn-ghost" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
+        {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
+        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
-      <a class="about-text-link" href="{{ esc_url($shareUrl) }}" rel="noopener" target="_blank" style="color:#9ca3af">
-        Share hire page on LinkedIn →
-      </a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

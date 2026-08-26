@@ -511,16 +511,16 @@
 </section>
 
 {{-- CTA --}}
-<section class="cta-band code-cta" aria-labelledby="code-cta-heading">
+<section class="cta-band code-cta" aria-labelledby="code-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div class="code-cta__copy">
+    <div class="cta-band__copy code-cta__copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Work together', 'sage')) }}</p>
       <h2 id="code-cta-heading" class="display-title is-section">
         {{ \App\field('code_cta_h2', __('Need WordPress help in Gettysburg?', 'sage')) }}
       </h2>
       <p>{{ \App\field('code_cta_lede', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')) }}</p>
     </div>
-    <div class="code-cta__actions">
+    <div class="cta-band__actions code-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!}
         {{ \App\field('code_cta_btn', __('Hire me', 'sage')) }}
@@ -530,6 +530,7 @@
         {{ '@'.$login }} →
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

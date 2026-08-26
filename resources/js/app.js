@@ -383,6 +383,45 @@ function initShareButtons() {
   });
 }
 
+function initPresenceReveal() {
+  // Mark shared section shells without editing every template.
+  document.querySelectorAll('.pf-section > .container > .about-shell, .pf-section > .container > .code-repos-shell, .work-card, .who-card, .cta-band, .h-cta, .lift-card').forEach((el) => {
+    if (! el.hasAttribute('data-reveal')) {
+      el.setAttribute('data-reveal', '');
+    }
+  });
+
+  const nodes = document.querySelectorAll('[data-reveal]');
+  if (!nodes.length) {
+    return;
+  }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    nodes.forEach((el) => el.classList.add('is-in'));
+    return;
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    nodes.forEach((el) => el.classList.add('is-in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) {
+        return;
+      }
+      entry.target.classList.add('is-in');
+      io.unobserve(entry.target);
+    });
+  }, {
+    rootMargin: '0px 0px -8% 0px',
+    threshold: 0.12,
+  });
+
+  nodes.forEach((el) => io.observe(el));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initPopoutMenu();
   initShareButtons();
@@ -394,4 +433,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initWritingTools();
   initWorkTools();
   initDiscoveryForm();
+  initPresenceReveal();
 });

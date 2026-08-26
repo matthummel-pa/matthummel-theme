@@ -206,18 +206,19 @@
 </section>
 
 {{-- ── CTA ─────────────────────────────────────────────── --}}
-<section class="cta-band" aria-labelledby="now-cta-heading">
+<section class="cta-band" aria-labelledby="now-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div>
-      <p class="eyebrow eyebrow--on-dark">Let's work together</p>
-      <h2 id="now-cta-heading" class="display-title is-section">Something I can help with?</h2>
-      <p>A short note is enough to start. I usually reply within a day.</p>
+    <div class="cta-band__copy">
+      <p class="eyebrow eyebrow--on-dark">{{ __('Let’s work together', 'sage') }}</p>
+      <h2 id="now-cta-heading" class="display-title is-section">{{ __('Something I can help with?', 'sage') }}</h2>
+      <p>{{ __('A short note is enough to start. I usually reply within a day.', 'sage') }}</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+    <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="about-text-link" href="{{ home_url('/hire/') }}" style="color:#9ca3af">Hire details →</a>
+      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

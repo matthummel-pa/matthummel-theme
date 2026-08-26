@@ -432,22 +432,23 @@
 </section>
 
 {{-- ── CTA ──────────────────────────────────────────── --}}
-<section class="cta-band" aria-labelledby="svc-cta-heading">
+<section class="cta-band" aria-labelledby="svc-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div>
-      <p class="eyebrow eyebrow--on-dark">Let's work together</p>
+    <div class="cta-band__copy">
+      <p class="eyebrow eyebrow--on-dark">{{ __('Let’s work together', 'sage') }}</p>
       <h2 id="svc-cta-heading" class="display-title is-section">
         {{ \App\field('svc_fair_h2', __('Ready to talk?', 'sage')) }}
       </h2>
-      <p>Tell me what you're building or fixing. A paragraph is enough to get started. I reply within a day.</p>
+      <p>{{ __('Tell me what you’re building or fixing. A paragraph is enough to get started. I reply within a day.', 'sage') }}</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+    <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="about-text-link" href="{{ home_url('/projects/') }}" style="color:#9ca3af">
-        See example sites →
+      <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">
+        {{ __('See example sites', 'sage') }}
       </a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

@@ -1684,3 +1684,243 @@ function mh_apply_about_bio_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_about_bio_v1', 54);
+
+/** One-time About page copy boost (SEO + field defaults). */
+function mh_apply_about_section_boost_v1(): void
+{
+    if (get_option('mh_about_section_boost_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_about_h1' => [
+            'A little background.' => 'WordPress developer in Gettysburg.',
+        ],
+        'mh_f_about_lede' => [
+            'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.' => 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+            'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.' => 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+        ],
+        'mh_f_about_story_h2' => [
+            'How I got here' => 'How I got here.',
+        ],
+        'mh_f_about_values_h2' => [
+            'How I like to work' => 'How I work.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_about_section_boost_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_section_boost_v1', 63);
+
+/** One-time About hero blurb rewrite (after section boost may already have run). */
+function mh_apply_about_hero_rewrite_v1(): void
+{
+    if (get_option('mh_about_hero_rewrite_v1')) {
+        return;
+    }
+
+    $to = 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.';
+
+    $from = [
+        'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.',
+        'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $val = get_post_meta($id, 'mh_f_about_lede', true);
+        if (! is_string($val) || $val === '') {
+            continue;
+        }
+        if (in_array($val, $from, true)) {
+            update_post_meta($id, 'mh_f_about_lede', $to);
+        }
+    }
+
+    update_option('mh_about_hero_rewrite_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_hero_rewrite_v1', 64);
+
+/** One-time About above-the-fold hero tighten (kicker + shorter lede). */
+function mh_apply_about_atf_v1(): void
+{
+    if (get_option('mh_about_atf_v1')) {
+        return;
+    }
+
+    $ledeTo = 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.';
+    $ledeFrom = [
+        'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.',
+        'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+        'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+
+        $kicker = get_post_meta($id, 'mh_f_about_kicker', true);
+        if ($kicker === 'About') {
+            update_post_meta($id, 'mh_f_about_kicker', 'Matt Hummel');
+        }
+
+        $lede = get_post_meta($id, 'mh_f_about_lede', true);
+        if (is_string($lede) && in_array($lede, $ledeFrom, true)) {
+            update_post_meta($id, 'mh_f_about_lede', $ledeTo);
+        }
+    }
+
+    update_option('mh_about_atf_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_atf_v1', 65);
+
+/** One-time About hero lede: casual, friendly voice. */
+function mh_apply_about_lede_friendly_v1(): void
+{
+    if (get_option('mh_about_lede_friendly_v1')) {
+        return;
+    }
+
+    $to = 'I build WordPress sites and plugins from Gettysburg. Shops can edit their own site, and other developers can pick up the code without a headache.';
+
+    $from = [
+        'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.',
+        'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+        'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+        'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $lede = get_post_meta($id, 'mh_f_about_lede', true);
+        if (is_string($lede) && in_array($lede, $from, true)) {
+            update_post_meta($id, 'mh_f_about_lede', $to);
+        }
+    }
+
+    update_option('mh_about_lede_friendly_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_lede_friendly_v1', 66);
+
+/** One-time About page friendly / informational copy boost. */
+function mh_apply_about_friendly_copy_v1(): void
+{
+    if (get_option('mh_about_friendly_copy_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_about_p1' => [
+            'I started in web doing marketing for higher education. Building landing pages, updating content, and figuring out why something that looked right was not getting clicks. That work taught me more about what people need than any framework ever did.' => 'I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.',
+        ],
+        'mh_f_about_p2' => [
+            'WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.' => 'WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.',
+        ],
+        'mh_f_about_p3' => [
+            'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It is a growing body of work for Adams County. Alongside that, I am open for new work — full-time, contract, or project-based.' => 'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.',
+        ],
+        'mh_f_about_p4' => [
+            'Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you do not need to ask permission to use it.' => 'Most of my public code lives on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.',
+        ],
+        'mh_f_about_services_intro' => [
+            'Most projects are WordPress sites and plugins from Gettysburg — with React and Power Platform when they fit. Here is the breakdown.' => 'Most days I’m building WordPress sites and plugins from Gettysburg. React and Power Platform show up when they actually help. Here’s the breakdown.',
+        ],
+        'mh_f_about_services_note' => [
+            'Questions about a specific project type? <a href="/contact/">Write a note</a>.' => 'Curious about a specific project type? <a href="/contact/">Write a note</a>.',
+        ],
+        'mh_f_about_work_p1' => [
+            'I am looking for new work alongside the studio. That includes full-time roles, contract arrangements, and freelance projects. Based in Gettysburg, PA — open to remote.' => 'I’m looking for new work alongside the studio — full-time roles, contract gigs, and freelance projects. Based in Gettysburg, PA, and happy to work remote.',
+        ],
+        'mh_f_about_work_p2' => [
+            'If you are a recruiter, an agency, or a shop that needs a WordPress developer, I am glad to hear from you. Start with a short note about what you are working on.' => 'If you’re a recruiter, an agency with overflow, or a shop that needs a WordPress developer, I’d love a short note about what you’re working on.',
+        ],
+        'mh_f_about_values_intro' => [
+            'A short list of how WordPress projects leave my desk in Gettysburg — ownership, editability, and code another developer can read.' => 'A few habits that stick on WordPress projects from Gettysburg — you own the site, you can edit it, and another developer can follow the code.',
+        ],
+        'mh_f_about_elsewhere_intro' => [
+            'I post most of my WordPress code and writing here and on GitHub. The RSS feed is the most reliable way to follow along from Gettysburg.' => 'Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along from Gettysburg.',
+        ],
+        'mh_f_about_cta_lede' => [
+            'A question about a post, a project, or a role — all welcome. I usually reply within a day.' => 'Got a question about a post, a project, or a role? Send it over. I usually reply within a day.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_about_friendly_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_friendly_copy_v1', 67);

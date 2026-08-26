@@ -1145,21 +1145,20 @@
   <a class="h-back-top" href="#h-hero-name">↑ Back to top</a>
 </div>
 
-<section class="h-cta" aria-labelledby="h-cta-heading">
-  <div class="container wide h-cta__inner">
-    <div>
-      <p class="h-section-label" style="color:#60a5fa;margin-bottom:.75rem">Get in touch</p>
-      <h2 id="h-cta-heading" class="h-cta__heading">{{ \App\field('home_help_h2', __('Working on something?', 'sage')) }}</h2>
-      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('A question about a post is just as welcome as a project. I usually reply within a day.', 'sage')) !!}</p>
+<section class="cta-band h-cta" aria-labelledby="h-cta-heading" data-reveal>
+  <div class="container wide cta-band-inner h-cta__inner">
+    <div class="cta-band__copy">
+      <p class="eyebrow eyebrow--on-dark">{{ __('Get in touch', 'sage') }}</p>
+      <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Working on something?', 'sage')) }}</h2>
+      <p class="h-cta__body">{{ \App\field('home_help_p2', __('A question about a post is just as welcome as a project. I usually reply within a day.', 'sage')) }}</p>
     </div>
-    <div class="h-cta__actions">
+    <div class="cta-band__actions h-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 17) !!}
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
-      <a class="h-cta__sub" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-        {!! \App\mh_svg_icon('github', 16) !!} GitHub →
-      </a>
+      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>
