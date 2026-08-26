@@ -1865,7 +1865,7 @@ function mh_apply_about_friendly_copy_v1(): void
             'I started in web doing marketing for higher education. Building landing pages, updating content, and figuring out why something that looked right was not getting clicks. That work taught me more about what people need than any framework ever did.' => 'I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.',
         ],
         'mh_f_about_p2' => [
-            'WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.' => 'WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.',
+            'WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.' => 'WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.',
         ],
         'mh_f_about_p3' => [
             'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It is a growing body of work for Adams County. Alongside that, I am open for new work — full-time, contract, or project-based.' => 'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.',
@@ -1924,3 +1924,63 @@ function mh_apply_about_friendly_copy_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_about_friendly_copy_v1', 67);
+
+/** One-time: plain “How I got here” story — drop odd wording like “flashiest”. */
+function mh_apply_about_story_plain_v1(): void
+{
+    if (get_option('mh_about_story_plain_v1')) {
+        return;
+    }
+
+    $p1 = 'I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.';
+    $p2 = 'WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.';
+    $p3 = 'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. Alongside that studio work, I’m open for full-time, contract, or project-based roles.';
+    $p4 = 'Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.';
+
+    $swaps = [
+        'mh_f_about_p1' => [
+            'I started in web doing marketing for higher education. Building landing pages, updating content, and figuring out why something that looked right was not getting clicks. That work taught me more about what people need than any framework ever did.' => $p1,
+            'I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.' => $p1,
+        ],
+        'mh_f_about_p2' => [
+            'WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.' => $p2,
+            'WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.' => $p2,
+        ],
+        'mh_f_about_p3' => [
+            'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It is a growing body of work for Adams County. Alongside that, I am open for new work — full-time, contract, or project-based.' => $p3,
+            'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.' => $p3,
+        ],
+        'mh_f_about_p4' => [
+            'Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you do not need to ask permission to use it.' => $p4,
+            'Most of my public code lives on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.' => $p4,
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_about_story_plain_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_story_plain_v1', 68);
