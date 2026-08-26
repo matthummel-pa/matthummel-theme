@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.10 — 2026-08-26
+
+### Changed
+
+- Code page contribution heat map: last 60 days, larger day cells, entrance/glow animation, hover/focus tips with public activity for that day
+
 ## 3.1.9 — 2026-08-26
 
 ### Changed

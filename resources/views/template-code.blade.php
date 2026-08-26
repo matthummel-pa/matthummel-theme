@@ -7,8 +7,9 @@
 @php
   $profile  = \App\mh_github_profile();
   $calendarYear = \App\mh_github_calendar();
-  $calendar = \App\mh_github_calendar_recent(30);
-  $events   = \App\mh_github_events_recent(8, 30);
+  $calendar = \App\mh_github_calendar_recent(60);
+  $events   = \App\mh_github_events_recent(10, 60);
+  $eventsByDay = \App\mh_github_events_by_day(60);
   $repos    = \App\mh_code_page_repos();
   $live     = \App\mh_github_live_repos(6);
   $practice = \App\mh_code_page_practice();
@@ -74,6 +75,8 @@
 @php
   $calMonths = \App\mh_github_calendar_months($weeks);
   $weekCount = max(1, count($weeks));
+  $calWindow = (int) ($calendar['days'] ?? 60);
+  $dayIndex = 0;
 @endphp
 <section class="pf-section pf-section--alt code-gh" id="github" aria-labelledby="code-gh-heading">
   <div class="container wide">
@@ -181,16 +184,17 @@
         <div class="code-gh-panel__head">
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('git', 18) !!}</span>
           <div>
-            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('Last 30 days of commits', 'sage')) }}</h3>
+            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('Last 60 days of commits', 'sage')) }}</h3>
             <p class="code-gh-panel__intro">
-              {{ \App\field('code_cal_intro', __('Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.', 'sage')) }}
+              {{ \App\field('code_cal_intro', __('Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')) }}
               @if ($total > 0)
-                <strong>{{ sprintf(__('%s contributions in the last 30 days.', 'sage'), number_format_i18n($total)) }}</strong>
+                <strong>{{ sprintf(__('%s contributions in the last %s days.', 'sage'), number_format_i18n($total), number_format_i18n($calWindow)) }}</strong>
               @endif
             </p>
           </div>
         </div>
-        <div class="gh-cal-scroll" tabindex="0" role="img" aria-label="{{ sprintf(__('GitHub contribution calendar for @%s', 'sage'), $login) }}">
+        <div class="gh-cal-scroll" tabindex="0" aria-label="{{ sprintf(__('GitHub contribution calendar for @%s — hover or focus a day for details', 'sage'), $login) }}">
+          <div class="gh-cal-scroll__inner">
           @if ($calMonths)
             <div class="code-gh-cal__months" aria-hidden="true" style="--gh-weeks: {{ $weekCount }}">
               @foreach ($calMonths as $m)
@@ -205,11 +209,26 @@
                   $level = (int) ($day['level'] ?? 0);
                   $date  = (string) ($day['date'] ?? '');
                   $count = (int) ($day['count'] ?? 0);
-                  $title = $date !== '' ? sprintf('%s on %s', sprintf(_n('%s contribution', '%s contributions', $count, 'sage'), (string) $count), $date) : '';
+                  $dayEvents = $date !== '' ? ($eventsByDay[$date] ?? []) : [];
+                  $tip = $date !== '' ? \App\mh_github_day_tip($date, $count, $dayEvents) : '';
+                  $i = $dayIndex++;
                 @endphp
-                <span class="gh-day" data-level="{{ $level }}" title="{{ $title }}"></span>
+                @if ($date !== '')
+                  <button
+                    type="button"
+                    class="gh-day"
+                    data-level="{{ $level }}"
+                    style="--i: {{ $i }}"
+                    aria-label="{{ esc_attr($tip) }}"
+                  >
+                    <span class="gh-day__tip" role="tooltip">{{ $tip }}</span>
+                  </button>
+                @else
+                  <span class="gh-day gh-day--pad" data-level="0" style="--i: {{ $i }}" aria-hidden="true"></span>
+                @endif
               @endforeach
             @endforeach
+          </div>
           </div>
         </div>
         <p class="gh-cal-legend" aria-hidden="true">
@@ -230,7 +249,7 @@
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
           <div>
             <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('What shipped lately', 'sage')) }}</h3>
-            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 30 days — newest first.', 'sage')) }}</p>
+            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 60 days — newest first.', 'sage')) }}</p>
           </div>
         </div>
         <ol class="code-gh-feed">

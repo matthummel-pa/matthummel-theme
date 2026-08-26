@@ -311,7 +311,7 @@ function mh_github_calendar(): array
  *
  * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
  */
-function mh_github_calendar_recent(int $days = 30): array
+function mh_github_calendar_recent(int $days = 60): array
 {
     $days = max(1, min(366, $days));
     $cal = mh_github_calendar();
@@ -370,13 +370,13 @@ function mh_github_calendar_recent(int $days = 30): array
  *
  * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
  */
-function mh_github_events_recent(int $limit = 10, int $days = 30): array
+function mh_github_events_recent(int $limit = 10, int $days = 60): array
 {
     $days = max(1, min(90, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $out = [];
 
-    foreach (mh_github_events(max($limit * 2, 20)) as $ev) {
+    foreach (mh_github_events(max($limit * 3, 40)) as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -392,6 +392,80 @@ function mh_github_events_recent(int $limit = 10, int $days = 30): array
     }
 
     return $out;
+}
+
+/**
+ * Public events keyed by UTC calendar day (Y-m-d) for contribution tooltips.
+ *
+ * @return array<string, list<array{type: string, repo: string, url: string, text: string, when: string}>>
+ */
+function mh_github_events_by_day(int $days = 60): array
+{
+    $days = max(1, min(90, $days));
+    $cutoff = time() - $days * DAY_IN_SECONDS;
+    $byDay = [];
+
+    foreach (mh_github_events(100) as $ev) {
+        if (! is_array($ev)) {
+            continue;
+        }
+        $when = (string) ($ev['when'] ?? '');
+        $ts = $when !== '' ? strtotime($when) : false;
+        if ($ts === false || $ts < $cutoff) {
+            continue;
+        }
+        $key = gmdate('Y-m-d', $ts);
+        $byDay[$key][] = $ev;
+    }
+
+    return $byDay;
+}
+
+/**
+ * Hover / focus tip for one contribution day (count + recent public actions).
+ *
+ * @param  list<array{text?: string}>  $dayEvents
+ */
+function mh_github_day_tip(string $date, int $count, array $dayEvents = []): string
+{
+    if ($date === '') {
+        return '';
+    }
+
+    $ts = strtotime($date.' UTC');
+    $label = $ts !== false ? date_i18n('M j, Y', $ts) : $date;
+    $lines = [
+        sprintf(
+            /* translators: 1: contribution count, 2: formatted date */
+            _n('%1$s contribution on %2$s', '%1$s contributions on %2$s', $count, 'sage'),
+            number_format_i18n($count),
+            $label
+        ),
+    ];
+
+    $seen = [];
+    foreach ($dayEvents as $ev) {
+        $text = trim((string) ($ev['text'] ?? ''));
+        if ($text === '' || isset($seen[$text])) {
+            continue;
+        }
+        $seen[$text] = true;
+        $lines[] = $text;
+        if (count($lines) >= 5) {
+            break;
+        }
+    }
+
+    $extra = count($dayEvents) - (count($lines) - 1);
+    if ($extra > 0) {
+        $lines[] = sprintf(
+            /* translators: %s: number of additional events */
+            __('+%s more on this day', 'sage'),
+            number_format_i18n($extra)
+        );
+    }
+
+    return implode("\n", $lines);
 }
 
 function mh_github_live_repos(int $limit = 8): array

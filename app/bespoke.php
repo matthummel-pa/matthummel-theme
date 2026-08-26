@@ -977,6 +977,59 @@ function mh_apply_code_gh_cal_30d(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_30d', 59);
 
+/** Code page: contribution calendar is last 60 days (from the prior 30-day defaults). */
+function mh_apply_code_gh_cal_60d(): void
+{
+    if (get_option('mh_code_gh_cal_60d_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_cal_h2' => [
+            'Last 30 days of commits' => 'Last 60 days of commits',
+            'A year of public commits' => 'Last 60 days of commits',
+            'Contribution activity' => 'Last 60 days of commits',
+        ],
+        'mh_f_code_cal_intro' => [
+            'Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Public contributions over the last year. Darker cells are busier days.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+        ],
+        'mh_f_code_act_intro' => [
+            'Pushes, releases, and pull requests from the last 30 days — newest first.' => 'Pushes, releases, and pull requests from the last 60 days — newest first.',
+            'Pushes, releases, and pull requests from the public timeline.' => 'Pushes, releases, and pull requests from the last 60 days — newest first.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_gh_cal_60d_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_60d', 60);
+
 /** Copy Code page resume meta onto the Hire page once (for editable hire_cv_* fields). */
 function mh_migrate_resume_to_hire(): void
 {
