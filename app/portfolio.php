@@ -306,6 +306,94 @@ function mh_github_calendar(): array
     return Github::fetchContributionCalendar(mh_github_login());
 }
 
+/**
+ * Contribution calendar clipped to the last N days (newest week columns first).
+ *
+ * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
+ */
+function mh_github_calendar_recent(int $days = 30): array
+{
+    $days = max(1, min(366, $days));
+    $cal = mh_github_calendar();
+    $cutoff = gmdate('Y-m-d', time() - ($days - 1) * DAY_IN_SECONDS);
+
+    $weeks = [];
+    $total = 0;
+
+    foreach ((array) ($cal['weeks'] ?? []) as $week) {
+        if (! is_array($week)) {
+            continue;
+        }
+
+        $col = [];
+        $hasInRange = false;
+
+        foreach ($week as $day) {
+            if (! is_array($day)) {
+                continue;
+            }
+
+            $date = (string) ($day['date'] ?? '');
+            if ($date === '' || $date < $cutoff) {
+                $col[] = ['date' => '', 'count' => 0, 'level' => 0];
+
+                continue;
+            }
+
+            $hasInRange = true;
+            $count = (int) ($day['count'] ?? 0);
+            $total += $count;
+            $col[] = [
+                'date' => $date,
+                'count' => $count,
+                'level' => (int) ($day['level'] ?? 0),
+            ];
+        }
+
+        if ($hasInRange && $col !== []) {
+            $weeks[] = $col;
+        }
+    }
+
+    // Newest week first (left); day-of-week order within each column stays top → bottom.
+    $weeks = array_reverse($weeks);
+
+    return [
+        'total' => $total,
+        'weeks' => array_values($weeks),
+        'days' => $days,
+    ];
+}
+
+/**
+ * Public GitHub events, newest first, limited to the last N days.
+ *
+ * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
+ */
+function mh_github_events_recent(int $limit = 10, int $days = 30): array
+{
+    $days = max(1, min(90, $days));
+    $cutoff = time() - $days * DAY_IN_SECONDS;
+    $out = [];
+
+    foreach (mh_github_events(max($limit * 2, 20)) as $ev) {
+        if (! is_array($ev)) {
+            continue;
+        }
+        $when = (string) ($ev['when'] ?? '');
+        $ts = $when !== '' ? strtotime($when) : false;
+        if ($ts === false || $ts < $cutoff) {
+            continue;
+        }
+        $out[] = $ev;
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+
+    return $out;
+}
+
 function mh_github_live_repos(int $limit = 8): array
 {
     return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));

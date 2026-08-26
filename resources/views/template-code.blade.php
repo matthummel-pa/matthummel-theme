@@ -6,8 +6,9 @@
 @section('content')
 @php
   $profile  = \App\mh_github_profile();
-  $calendar = \App\mh_github_calendar();
-  $events   = \App\mh_github_events(8);
+  $calendarYear = \App\mh_github_calendar();
+  $calendar = \App\mh_github_calendar_recent(30);
+  $events   = \App\mh_github_events_recent(8, 30);
   $repos    = \App\mh_code_page_repos();
   $live     = \App\mh_github_live_repos(6);
   $practice = \App\mh_code_page_practice();
@@ -18,6 +19,7 @@
   $ghUrl    = $profile['url'] ?: 'https://github.com/'.$login;
   $weeks    = $calendar['weeks'] ?? [];
   $total    = (int) ($calendar['total'] ?? 0);
+  $yearTotal = (int) ($calendarYear['total'] ?? 0);
   $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
 @endphp
 
@@ -166,11 +168,11 @@
             </dt>
             <dd>{{ __('Followers', 'sage') }}</dd>
           </div>
-          @if ($total > 0)
+          @if ($yearTotal > 0)
             <div class="code-gh-stat">
               <dt>
                 <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('git', 16) !!}</span>
-                {{ number_format_i18n($total) }}
+                {{ number_format_i18n($yearTotal) }}
               </dt>
               <dd>{{ __('Contributions (yr)', 'sage') }}</dd>
             </div>
@@ -188,11 +190,11 @@
         <div class="code-gh-panel__head">
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('git', 18) !!}</span>
           <div>
-            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('A year of public commits', 'sage')) }}</h3>
+            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('Last 30 days of commits', 'sage')) }}</h3>
             <p class="code-gh-panel__intro">
-              {{ \App\field('code_cal_intro', __('Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.', 'sage')) }}
+              {{ \App\field('code_cal_intro', __('Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.', 'sage')) }}
               @if ($total > 0)
-                <strong>{{ sprintf(__('%s contributions in the last year.', 'sage'), number_format_i18n($total)) }}</strong>
+                <strong>{{ sprintf(__('%s contributions in the last 30 days.', 'sage'), number_format_i18n($total)) }}</strong>
               @endif
             </p>
           </div>
@@ -237,7 +239,7 @@
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
           <div>
             <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('What shipped lately', 'sage')) }}</h3>
-            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the public timeline.', 'sage')) }}</p>
+            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 30 days — newest first.', 'sage')) }}</p>
           </div>
         </div>
         <ol class="code-gh-feed">
