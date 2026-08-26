@@ -115,23 +115,23 @@
 
 {{-- CTA --}}
 @php $gh = \App\Github::fetchUser(\App\mh_github_login()); @endphp
-<section class="cta-band" aria-labelledby="uses-cta-heading">
+<section class="cta-band" aria-labelledby="uses-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div>
+    <div class="cta-band__copy">
       @if (\App\mh_is_hireable($gh))
         <p class="eyebrow eyebrow--on-dark">
           @include('partials.avail-mark', ['gh' => $gh])
           {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}
         </p>
       @endif
-      <h2 id="uses-cta-heading" class="display-title is-section">Want to build something?</h2>
-      <p>I use this stack on real projects for shops, agencies, and developers. If you have something in mind, <a href="{{ home_url('/contact/') }}" style="color:#93c5fd">say hello</a>.</p>
+      <h2 id="uses-cta-heading" class="display-title is-section">{{ __('Want to build something?', 'sage') }}</h2>
+      <p>{{ __('I use this stack on real projects for shops, agencies, and developers. If you have something in mind, say hello.', 'sage') }}</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+    <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Hire me
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
       </a>
-      <a class="about-text-link" href="{{ home_url('/code/') }}" style="color:#9ca3af">See my code →</a>
+      <a class="btn btn-ghost" href="{{ home_url('/code/') }}">{{ __('See my code', 'sage') }}</a>
     </div>
   </div>
 </section>

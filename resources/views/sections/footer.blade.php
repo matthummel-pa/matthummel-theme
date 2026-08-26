@@ -12,7 +12,7 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">WordPress developer. Based in Gettysburg, PA.@if (\App\mh_is_hireable($gh)) Open for new work.@endif</p>
+      <p class="footer-blurb">{{ __('I build WordPress sites and plugins from Gettysburg. Shops can edit their own site — and the code stays readable.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work.', 'sage') }}@endif</p>
       @if (\App\mh_is_hireable($gh))
         <p class="footer-avail">
           @include('partials.avail-mark', ['gh' => $gh])

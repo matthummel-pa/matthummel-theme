@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.12 — 2026-08-26
+
+### Changed
+
+- Portfolio presence: redesigned sitewide CTA band (mesh, grid, glow) with clearer hierarchy and secondary actions; footer and page-header atmosphere; light scroll reveals (respects reduced motion); friendlier SEO meta and footer blurb
+
 ## 3.1.11 — 2026-08-26
 
 ### Changed

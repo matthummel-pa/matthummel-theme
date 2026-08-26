@@ -361,19 +361,22 @@
 </section>
 
 {{-- CTA --}}
-<section class="cta-band about-cta" aria-labelledby="about-cta-heading">
+<section class="cta-band about-cta" aria-labelledby="about-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
-    <div class="about-cta__copy">
+    <div class="cta-band__copy about-cta__copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('about_cta_kicker', __('Get in touch', 'sage')) }}</p>
       <h2 id="about-cta-heading" class="display-title is-section">
         {{ \App\field('about_cta_h2', __('Need a WordPress developer in Gettysburg?', 'sage')) }}
       </h2>
       <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')) }}</p>
     </div>
-    <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-      {!! \App\mh_svg_icon('mail', 16) !!}
-      {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
-    </a>
+    <div class="cta-band__actions">
+      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
+      </a>
+      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
+    </div>
   </div>
 </section>
 
