@@ -885,16 +885,22 @@ function mh_apply_code_gh_oss_copy(): void
             'Recent activity' => 'What shipped lately',
         ],
         'mh_f_code_feat_h2' => [
-            'Featured repositories' => 'Repos worth opening first',
+            'Featured repositories' => 'Featured WordPress and app repos',
+            'Repos worth opening first' => 'Featured WordPress and app repos',
         ],
         'mh_f_code_feat_intro' => [
-            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.' => 'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.',
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
         ],
         'mh_f_code_live_h2' => [
             'Recently updated' => 'Recently pushed',
         ],
+        'mh_f_code_live_intro' => [
+            'Latest public updates across my GitHub account — useful if you want to see what I am actively touching.' => 'Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.',
+        ],
         'mh_f_code_live_all' => [
-            'All public repos' => 'All public repositories',
+            'All public repos' => 'Browse all public repos',
+            'All public repositories' => 'Browse all public repos',
         ],
     ];
 
@@ -976,6 +982,195 @@ function mh_apply_code_gh_cal_30d(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_30d', 59);
+
+/** Code page: contribution calendar is last 60 days (from the prior 30-day defaults). */
+function mh_apply_code_gh_cal_60d(): void
+{
+    if (get_option('mh_code_gh_cal_60d_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_cal_h2' => [
+            'Last 30 days of commits' => 'Last 60 days of commits',
+            'A year of public commits' => 'Last 60 days of commits',
+            'Contribution activity' => 'Last 60 days of commits',
+        ],
+        'mh_f_code_cal_intro' => [
+            'Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Public contributions over the last year. Darker cells are busier days.' => 'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+        ],
+        'mh_f_code_act_intro' => [
+            'Pushes, releases, and pull requests from the last 30 days — newest first.' => 'Pushes, releases, and pull requests from the last 60 days — newest first.',
+            'Pushes, releases, and pull requests from the public timeline.' => 'Pushes, releases, and pull requests from the last 60 days — newest first.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_gh_cal_60d_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_60d', 60);
+
+/** Code page: contribution calendar is last 90 days (from the prior 60-day defaults). */
+function mh_apply_code_gh_cal_90d(): void
+{
+    if (get_option('mh_code_gh_cal_90d_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_cal_h2' => [
+            'Last 60 days of commits' => 'Last 90 days of commits',
+            'Last 30 days of commits' => 'Last 90 days of commits',
+            'A year of public commits' => 'Last 90 days of commits',
+            'Contribution activity' => 'Last 90 days of commits',
+        ],
+        'mh_f_code_cal_intro' => [
+            'Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.' => 'Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+            'Public contributions over the last year. Darker cells are busier days.' => 'Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.',
+        ],
+        'mh_f_code_act_intro' => [
+            'Pushes, releases, and pull requests from the last 60 days — newest first.' => 'Pushes, releases, and pull requests from the last 90 days — newest first.',
+            'Pushes, releases, and pull requests from the last 30 days — newest first.' => 'Pushes, releases, and pull requests from the last 90 days — newest first.',
+            'Pushes, releases, and pull requests from the public timeline.' => 'Pushes, releases, and pull requests from the last 90 days — newest first.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_gh_cal_90d_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_90d', 61);
+
+/** Code page: section copy / SEO-friendly defaults for the open-source redesign. */
+function mh_apply_code_section_boost_v1(): void
+{
+    if (get_option('mh_code_section_boost_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_lede' => [
+            'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.' => 'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+            'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skills below.' => 'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+        ],
+        'mh_f_code_do_intro' => [
+            'WordPress is the main focus. Most projects are Sage, PHP, and front-end work that clients can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.' => 'WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.',
+            'WordPress is the public focus. I also write React apps and do some Microsoft Power Platform work when a team already lives in that stack.' => 'WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.',
+            'WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.' => 'WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.',
+        ],
+        'mh_f_code_gh_intro' => [
+            'Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.' => 'Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.',
+        ],
+        'mh_f_code_act_h2' => [
+            'What shipped lately' => 'Public activity',
+        ],
+        'mh_f_code_act_intro' => [
+            'Pushes, releases, and pull requests from the last 90 days — newest first.' => 'Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.',
+        ],
+        'mh_f_code_feat_h2' => [
+            'Repos worth opening first' => 'Featured WordPress and app repos',
+        ],
+        'mh_f_code_sk_h2' => [
+            'Skills' => 'Skills and tools.',
+        ],
+        'mh_f_code_feat_intro' => [
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
+        ],
+        'mh_f_code_live_intro' => [
+            'Latest public updates across my GitHub account — useful if you want to see what I am actively touching.' => 'Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.',
+        ],
+        'mh_f_code_live_all' => [
+            'All public repositories' => 'Browse all public repos',
+        ],
+        'mh_f_code_sk_intro' => [
+            'Tools I use on shipped work. Icons match the brands other developers already recognize.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
+            'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
+            'Tools I reach for on shipped work. Not an exhaustive list — just the things I actually use.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
+        ],
+        'mh_f_code_doc_h2' => [
+            'Documentation I use' => 'Documentation I keep open.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_section_boost_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_section_boost_v1', 62);
 
 /** Copy Code page resume meta onto the Hire page once (for editable hire_cv_* fields). */
 function mh_migrate_resume_to_hire(): void

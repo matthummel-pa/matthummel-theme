@@ -250,6 +250,7 @@ function mh_repo_card(array $repo): array
         'url' => $url,
         'demo' => $homepage,
         'stack' => array_values(array_slice($stack, 0, 6)),
+        'tags' => array_values($tags),
         'stars' => (int) ($repo['stars'] ?? $meta['stars'] ?? 0),
         'forks' => (int) ($repo['forks'] ?? $meta['forks'] ?? 0),
         'pushed' => (string) ($repo['pushed'] ?? $meta['pushed'] ?? ''),
@@ -311,7 +312,7 @@ function mh_github_calendar(): array
  *
  * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
  */
-function mh_github_calendar_recent(int $days = 30): array
+function mh_github_calendar_recent(int $days = 90): array
 {
     $days = max(1, min(366, $days));
     $cal = mh_github_calendar();
@@ -370,13 +371,13 @@ function mh_github_calendar_recent(int $days = 30): array
  *
  * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
  */
-function mh_github_events_recent(int $limit = 10, int $days = 30): array
+function mh_github_events_recent(int $limit = 10, int $days = 90): array
 {
-    $days = max(1, min(90, $days));
+    $days = max(1, min(120, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $out = [];
 
-    foreach (mh_github_events(max($limit * 2, 20)) as $ev) {
+    foreach (mh_github_events(max($limit * 3, 40)) as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -394,9 +395,182 @@ function mh_github_events_recent(int $limit = 10, int $days = 30): array
     return $out;
 }
 
+/**
+ * Public events keyed by site-local calendar day (Y-m-d) for contribution tooltips.
+ *
+ * @return array<string, list<array{type: string, repo: string, url: string, text: string, when: string}>>
+ */
+function mh_github_events_by_day(int $days = 90): array
+{
+    $days = max(1, min(120, $days));
+    $cutoff = time() - $days * DAY_IN_SECONDS;
+    $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
+    $byDay = [];
+
+    foreach (mh_github_events(100) as $ev) {
+        if (! is_array($ev)) {
+            continue;
+        }
+        $when = (string) ($ev['when'] ?? '');
+        if ($when === '') {
+            continue;
+        }
+        try {
+            $dt = new \DateTimeImmutable($when);
+        } catch (\Exception) {
+            continue;
+        }
+        if ($dt->getTimestamp() < $cutoff) {
+            continue;
+        }
+        $key = $dt->setTimezone($tz)->format('Y-m-d');
+        $byDay[$key][] = $ev;
+    }
+
+    return $byDay;
+}
+
+/**
+ * Hover / focus tip for one contribution day (count + recent public actions).
+ *
+ * @param  list<array{text?: string}>  $dayEvents
+ */
+function mh_github_day_tip(string $date, int $count, array $dayEvents = []): string
+{
+    if ($date === '') {
+        return '';
+    }
+
+    $ts = strtotime($date.' UTC');
+    $label = $ts !== false ? date_i18n('M j, Y', $ts) : $date;
+    $lines = [
+        sprintf(
+            /* translators: 1: contribution count, 2: formatted date */
+            _n('%1$s contribution on %2$s', '%1$s contributions on %2$s', $count, 'sage'),
+            number_format_i18n($count),
+            $label
+        ),
+    ];
+
+    $seen = [];
+    foreach ($dayEvents as $ev) {
+        $text = trim((string) ($ev['text'] ?? ''));
+        if ($text === '' || isset($seen[$text])) {
+            continue;
+        }
+        $seen[$text] = true;
+        $lines[] = $text;
+        if (count($lines) >= 5) {
+            break;
+        }
+    }
+
+    $extra = count($dayEvents) - (count($lines) - 1);
+    if ($extra > 0) {
+        $lines[] = sprintf(
+            /* translators: %s: number of additional events */
+            __('+%s more on this day', 'sage'),
+            number_format_i18n($extra)
+        );
+    }
+
+    return implode("\n", $lines);
+}
+
 function mh_github_live_repos(int $limit = 8): array
 {
     return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));
+}
+
+/**
+ * Recently pushed repos for the Code page, skipping featured picks.
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
+{
+    $featuredNames = array_map(
+        static fn (array $r): string => strtolower((string) ($r['name'] ?? '')),
+        mh_code_page_repos($post_id)
+    );
+    $live = [];
+
+    foreach (mh_github_live_repos(max($limit * 2, 12)) as $repo) {
+        $name = strtolower((string) ($repo['name'] ?? ''));
+        if ($name === '' || in_array($name, $featuredNames, true)) {
+            continue;
+        }
+        $live[] = $repo;
+        if (count($live) >= $limit) {
+            break;
+        }
+    }
+
+    return $live;
+}
+
+/**
+ * Short category label for a repo card (scan aid, not page copy).
+ */
+function mh_code_repo_category(array $repo): string
+{
+    $stack = array_map(static fn ($item): string => strtolower(trim((string) $item)), $repo['stack'] ?? []);
+    $tags = array_map(static fn ($item): string => strtolower(trim((string) $item)), $repo['tags'] ?? []);
+    $name = strtolower((string) ($repo['name'] ?? ''));
+    $desc = strtolower((string) ($repo['desc'] ?? ''));
+    $haystack = array_merge($stack, $tags);
+
+    if (
+        in_array('sage', $haystack, true)
+        || str_contains($name, 'sage')
+        || str_contains($desc, 'sage theme')
+        || str_contains($desc, 'sage 11')
+    ) {
+        return __('Sage theme', 'sage');
+    }
+    if (
+        in_array('wordpress', $haystack, true)
+        || in_array('gutenberg', $haystack, true)
+        || str_contains($desc, 'wordpress plugin')
+        || str_contains($desc, 'gutenberg')
+    ) {
+        return __('WordPress plugin', 'sage');
+    }
+    if (
+        in_array('react', $haystack, true)
+        || in_array('supabase', $haystack, true)
+        || in_array('next.js', $haystack, true)
+        || in_array('nextjs', $haystack, true)
+        || str_contains($desc, 'react')
+    ) {
+        return __('Web app', 'sage');
+    }
+    if (in_array('php', $haystack, true)) {
+        return __('PHP project', 'sage');
+    }
+
+    return __('Open source', 'sage');
+}
+
+/**
+ * Display slug for a repo link (owner/name).
+ */
+function mh_code_repo_slug(array $repo): string
+{
+    $url = (string) ($repo['url'] ?? '');
+    if ($url !== '') {
+        $path = trim((string) (wp_parse_url($url, PHP_URL_PATH) ?: ''), '/');
+        if ($path !== '') {
+            return $path;
+        }
+    }
+
+    $name = (string) ($repo['name'] ?? '');
+    if ($name === '') {
+        return '';
+    }
+
+    return mh_github_login().'/'.$name;
 }
 
 /**
@@ -478,7 +652,7 @@ function mh_github_calendar_months(array $weeks): array
         }
         $last = $key;
         $labels[] = [
-            'label' => date_i18n('M', $ts),
+            'label' => date_i18n('F', $ts),
             'week' => (int) $wi,
         ];
     }
@@ -769,12 +943,95 @@ function mh_code_practice_defaults(): array
 {
     return [
         'Custom WordPress themes with Sage 11 — Blade templates, Tailwind v4, Vite, PHP 8.3, deployed with GitHub Actions.',
-        'Plugin development: single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
-        'Front-end architecture: semantic HTML, accessible CSS, TypeScript, and edit fields so clients never need a developer for day-to-day changes.',
-        'REST API integrations and data pipelines connecting WordPress to external services.',
-        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and clients anywhere.',
-        'Microsoft Power Platform (Power Apps, Power Automate, SharePoint) — consulting work from a government contract background, not the primary offer.',
+        'Plugin development — single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
+        'Front-end architecture — semantic HTML, accessible CSS, TypeScript, and edit fields shops can use without calling a developer.',
+        'REST API integrations — data pipelines connecting WordPress to external services and third-party APIs.',
+        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and developers anywhere.',
+        'Microsoft Power Platform — Power Apps, Power Automate, and SharePoint consulting from a government contract background, not the primary offer.',
     ];
+}
+
+/**
+ * Shelf label for a practice line on the Code page.
+ */
+function mh_code_practice_group(string $text): string
+{
+    $low = strtolower(trim($text));
+
+    if (
+        str_contains($low, 'power platform')
+        || str_contains($low, 'power apps')
+        || str_contains($low, 'sharepoint')
+    ) {
+        return __('Microsoft', 'sage');
+    }
+    if (
+        str_contains($low, 'ridges')
+        || str_contains($low, 'valleys')
+        || str_contains($low, 'gettysburg studio')
+    ) {
+        return __('Studio', 'sage');
+    }
+    if (
+        str_contains($low, 'front-end')
+        || str_contains($low, 'frontend')
+        || str_contains($low, 'semantic html')
+    ) {
+        return __('Front-end', 'sage');
+    }
+    if (
+        str_contains($low, 'rest api')
+        || str_contains($low, 'integrations')
+        || str_contains($low, 'data pipeline')
+    ) {
+        return __('Integrations', 'sage');
+    }
+
+    return __('WordPress', 'sage');
+}
+
+/**
+ * Icon name for a practice group shelf.
+ */
+function mh_code_practice_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'front-end', 'frontend' => 'code',
+        'integrations' => 'globe',
+        'studio' => 'briefcase',
+        'microsoft' => 'briefcase',
+        default => 'code',
+    };
+}
+
+/**
+ * Split a practice line into a scan title and supporting detail.
+ *
+ * @return array{title: string, body: string}
+ */
+function mh_code_practice_parse(string $text): array
+{
+    $text = trim($text);
+    if ($text === '') {
+        return ['title' => '', 'body' => ''];
+    }
+
+    if (preg_match('/^(.+?)\s*[—–-]\s*(.+)$/u', $text, $matches)) {
+        return [
+            'title' => trim($matches[1]),
+            'body' => trim($matches[2]),
+        ];
+    }
+
+    if (preg_match('/^([^:]+):\s*(.+)$/', $text, $matches)) {
+        return [
+            'title' => trim($matches[1]),
+            'body' => trim($matches[2]),
+        ];
+    }
+
+    return ['title' => $text, 'body' => ''];
 }
 
 function mh_code_skill_defaults(): array
@@ -784,6 +1041,68 @@ function mh_code_skill_defaults(): array
         'React', 'Next.js', 'Node.js', 'Tailwind', 'Sass', 'Vite', 'Laravel',
         'Git', 'GitHub', 'VS Code', 'Power Apps',
     ];
+}
+
+/**
+ * Shelf label for a skill on the Code page (preserves list order within each group).
+ */
+function mh_code_skill_group(string $name): string
+{
+    $key = strtolower(trim($name));
+
+    return match ($key) {
+        'wordpress', 'sage', 'php' => 'WordPress',
+        'html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'tailwind', 'sass', 'vite' => 'Front-end',
+        'git', 'github', 'vs code', 'vscode', 'node.js', 'nodejs', 'laravel' => 'Ship',
+        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint' => 'Microsoft',
+        default => __('More', 'sage'),
+    };
+}
+
+/**
+ * Icon name for a skill group shelf.
+ */
+function mh_code_skill_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'front-end', 'frontend' => 'code',
+        'ship' => 'github',
+        'microsoft' => 'briefcase',
+        default => 'globe',
+    };
+}
+
+/**
+ * Short UI hint for a skill tile (scan aid, not page copy).
+ */
+function mh_code_skill_hint(string $name): string
+{
+    $key = strtolower(trim($name));
+
+    return match ($key) {
+        'html' => __('Semantic markup', 'sage'),
+        'css' => __('Layout and tokens', 'sage'),
+        'javascript' => __('UI behavior', 'sage'),
+        'typescript' => __('Typed front ends', 'sage'),
+        'php' => __('Themes and plugins', 'sage'),
+        'wordpress' => __('CMS builds', 'sage'),
+        'sage' => __('Blade + Vite themes', 'sage'),
+        'react' => __('Component UIs', 'sage'),
+        'next.js', 'nextjs' => __('React apps', 'sage'),
+        'node.js', 'nodejs' => __('Tooling and APIs', 'sage'),
+        'tailwind' => __('Utility CSS', 'sage'),
+        'sass' => __('Stylesheets', 'sage'),
+        'vite' => __('Asset pipeline', 'sage'),
+        'laravel' => __('PHP framework', 'sage'),
+        'git' => __('Version control', 'sage'),
+        'github' => __('Repos and Actions', 'sage'),
+        'vs code', 'vscode' => __('Daily editor', 'sage'),
+        'power apps', 'power-apps' => __('Canvas apps', 'sage'),
+        'power automate', 'power-automate' => __('Workflow automation', 'sage'),
+        'sharepoint' => __('Intranet sites', 'sage'),
+        default => __('In active repos', 'sage'),
+    };
 }
 
 function mh_code_resume_defaults(): array
@@ -835,21 +1154,47 @@ function mh_code_resume_defaults(): array
 function mh_code_resource_defaults(): array
 {
     return [
-        ['label' => 'WordPress Developer Handbook', 'url' => 'https://developer.wordpress.org/', 'note' => 'Themes, plugins, REST API, and block editor.'],
-        ['label' => 'WordPress REST API', 'url' => 'https://developer.wordpress.org/rest-api/', 'note' => 'Application endpoints and authentication.'],
-        ['label' => 'Sage', 'url' => 'https://roots.io/sage/docs/', 'note' => 'Blade, Vite, and the Roots theme stack I ship.'],
-        ['label' => 'Acorn', 'url' => 'https://roots.io/acorn/docs/', 'note' => 'Laravel components inside WordPress.'],
-        ['label' => 'Bedrock', 'url' => 'https://roots.io/bedrock/docs/', 'note' => 'Composer-based WordPress structure.'],
-        ['label' => 'Tailwind CSS', 'url' => 'https://tailwindcss.com/docs', 'note' => 'Utility CSS used on this theme.'],
-        ['label' => 'Vite', 'url' => 'https://vite.dev/guide/', 'note' => 'Asset pipeline for Sage 11.'],
-        ['label' => 'PHP', 'url' => 'https://www.php.net/docs.php', 'note' => 'Language reference for theme and plugin work.'],
-        ['label' => 'MDN Web Docs', 'url' => 'https://developer.mozilla.org/en-US/docs/Web', 'note' => 'HTML, CSS, and JavaScript.'],
-        ['label' => 'React', 'url' => 'https://react.dev/', 'note' => 'UI library for Keepary and other apps.'],
-        ['label' => 'TypeScript', 'url' => 'https://www.typescriptlang.org/docs/', 'note' => 'Typed JavaScript for larger front ends.'],
-        ['label' => 'GitHub Docs', 'url' => 'https://docs.github.com/en', 'note' => 'REST, GraphQL, and Actions.'],
-        ['label' => 'Laravel', 'url' => 'https://laravel.com/docs', 'note' => 'Reference when Acorn overlaps Laravel APIs.'],
-        ['label' => 'Microsoft Learn — Power Platform', 'url' => 'https://learn.microsoft.com/power-platform/', 'note' => 'Power Apps, Automate, and Dataverse.'],
+        ['label' => 'WordPress Developer Handbook', 'url' => 'https://developer.wordpress.org/', 'note' => 'Themes, plugins, REST API, and block editor.', 'group' => 'WordPress'],
+        ['label' => 'WordPress REST API', 'url' => 'https://developer.wordpress.org/rest-api/', 'note' => 'Application endpoints and authentication.', 'group' => 'WordPress'],
+        ['label' => 'Sage', 'url' => 'https://roots.io/sage/docs/', 'note' => 'Blade, Vite, and the Roots theme stack I ship.', 'group' => 'Roots'],
+        ['label' => 'Acorn', 'url' => 'https://roots.io/acorn/docs/', 'note' => 'Laravel components inside WordPress.', 'group' => 'Roots'],
+        ['label' => 'Bedrock', 'url' => 'https://roots.io/bedrock/docs/', 'note' => 'Composer-based WordPress structure.', 'group' => 'Roots'],
+        ['label' => 'Tailwind CSS', 'url' => 'https://tailwindcss.com/docs', 'note' => 'Utility CSS used on this theme.', 'group' => 'Front-end'],
+        ['label' => 'Vite', 'url' => 'https://vite.dev/guide/', 'note' => 'Asset pipeline for Sage 11.', 'group' => 'Front-end'],
+        ['label' => 'MDN Web Docs', 'url' => 'https://developer.mozilla.org/en-US/docs/Web', 'note' => 'HTML, CSS, and JavaScript.', 'group' => 'Front-end'],
+        ['label' => 'React', 'url' => 'https://react.dev/', 'note' => 'UI library for Keepary and other apps.', 'group' => 'Front-end'],
+        ['label' => 'TypeScript', 'url' => 'https://www.typescriptlang.org/docs/', 'note' => 'Typed JavaScript for larger front ends.', 'group' => 'Front-end'],
+        ['label' => 'PHP', 'url' => 'https://www.php.net/docs.php', 'note' => 'Language reference for theme and plugin work.', 'group' => 'Language'],
+        ['label' => 'Laravel', 'url' => 'https://laravel.com/docs', 'note' => 'Reference when Acorn overlaps Laravel APIs.', 'group' => 'Language'],
+        ['label' => 'GitHub Docs', 'url' => 'https://docs.github.com/en', 'note' => 'REST, GraphQL, and Actions.', 'group' => 'Ship'],
+        ['label' => 'Microsoft Learn — Power Platform', 'url' => 'https://learn.microsoft.com/power-platform/', 'note' => 'Power Apps, Automate, and Dataverse.', 'group' => 'Ship'],
     ];
+}
+
+/**
+ * Icon name for a documentation group label.
+ */
+function mh_code_doc_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'roots' => 'git',
+        'front-end', 'frontend' => 'code',
+        'language' => 'php',
+        'ship' => 'github',
+        default => 'globe',
+    };
+}
+
+/**
+ * Host label for a documentation URL (display only).
+ */
+function mh_code_doc_host(string $url): string
+{
+    $host = (string) (wp_parse_url($url, PHP_URL_HOST) ?: '');
+    $host = preg_replace('#^www\.#i', '', $host) ?: '';
+
+    return $host;
 }
 
 function mh_code_snippets(): array

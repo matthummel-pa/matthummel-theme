@@ -469,14 +469,15 @@ GQL;
      */
     public static function fetchEvents(string $user, int $count = 12): array
     {
-        $count = max(1, min(30, $count));
-        $key = 'mh_ghev1_'.md5($user.$count);
+        $count = max(1, min(100, $count));
+        $key = 'mh_ghev2_'.md5($user.$count);
         if (($d = get_transient($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
         $out = [];
-        $r = wp_remote_get("https://api.github.com/users/{$user}/events/public?per_page=30", self::args());
+        $pageSize = min(100, max($count, 30));
+        $r = wp_remote_get("https://api.github.com/users/{$user}/events/public?per_page={$pageSize}", self::args());
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
                 $item = self::formatEvent(is_array($j) ? $j : []);

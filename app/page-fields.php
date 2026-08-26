@@ -425,24 +425,24 @@ function page_field_map(): array
         ],
         'template-code.blade.php' => [
             __('Intro', 'sage') => [
-                ['code_kicker', __('Kicker', 'sage'), 'text', __('Code & resume', 'sage')],
+                ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
                 ['code_h1', __('Heading', 'sage'), 'text', __('PHP, WordPress, and open-source code.', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skills below.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')],
             ],
             __('Practice', 'sage') => [
-                ['code_do_h2', __('Heading', 'sage'), 'text', __('Practice', 'sage')],
-                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('WordPress is the public focus. I also write React apps and do some Microsoft Power Platform work when a team already lives in that stack.', 'sage')],
+                ['code_do_h2', __('Heading', 'sage'), 'text', __('What I work on.', 'sage')],
+                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.', 'sage')],
                 ['code_do_items', __('What I do (one per line)', 'sage'), 'lines', mh_code_practice_defaults()],
             ],
             __('GitHub', 'sage') => [
                 ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source WordPress code on GitHub.', 'sage')],
-                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.', 'sage')],
-                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 30 days of commits', 'sage')],
-                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.', 'sage')],
-                ['code_act_h2', __('Activity heading', 'sage'), 'text', __('What shipped lately', 'sage')],
-                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 30 days — newest first.', 'sage')],
-                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Repos worth opening first', 'sage')],
-                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')],
+                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')],
+                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 90 days of commits', 'sage')],
+                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
+                ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
+                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
+                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured WordPress and app repos', 'sage')],
+                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
@@ -450,22 +450,29 @@ function page_field_map(): array
                     ['tags', __('Tags (comma separated)', 'sage'), 'text'],
                 ]],
                 ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
-                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')],
-                ['code_live_all', __('All repos label', 'sage'), 'text', __('All public repositories', 'sage')],
+                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.', 'sage')],
+                ['code_live_all', __('All repos label', 'sage'), 'text', __('Browse all public repos', 'sage')],
             ],
             __('Skills', 'sage') => [
-                ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills', 'sage')],
-                ['code_sk_intro', __('Intro', 'sage'), 'text', __('Tools I use on shipped work. Icons match the brands other developers already recognize.', 'sage')],
+                ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills and tools.', 'sage')],
+                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')],
                 ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
             ],
             __('Documentation', 'sage') => [
-                ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I use', 'sage')],
-                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Reference docs I keep open while I work. Official handbooks first, then the Roots and front-end stack this theme is built on.', 'sage')],
+                ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I keep open.', 'sage')],
+                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then Roots and the front-end stack behind this site. Jump a shelf, open a card — every link is the official docs.', 'sage')],
                 ['code_docs', __('Links', 'sage'), 'repeater', mh_code_resource_defaults(), [
                     ['label', __('Label', 'sage'), 'text'],
                     ['url', __('URL', 'sage'), 'url'],
                     ['note', __('Note', 'sage'), 'text'],
+                    ['group', __('Group', 'sage'), 'text'],
                 ]],
+            ],
+            __('Call to action', 'sage') => [
+                ['code_cta_kicker', __('Kicker', 'sage'), 'text', __('Work together', 'sage')],
+                ['code_cta_h2', __('Heading', 'sage'), 'text', __('Need WordPress help in Gettysburg?', 'sage')],
+                ['code_cta_lede', __('Intro', 'sage'), 'textarea', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')],
+                ['code_cta_btn', __('Button label', 'sage'), 'text', __('Hire me', 'sage')],
             ],
         ],
         'template-hire.blade.php' => [
@@ -584,9 +591,89 @@ function mh_code_page_practice(?int $post_id = null): array
     return field_lines('code_do_items', mh_code_practice_defaults(), $post_id);
 }
 
+/**
+ * Practice lines grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{title: string, body: string, text: string, group: string}>}>
+ */
+function mh_code_page_practice_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_practice($post_id) as $line) {
+        $line = trim((string) $line);
+        if ($line === '') {
+            continue;
+        }
+        $key = mh_code_practice_group($line);
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $parsed = mh_code_practice_parse($line);
+        $grouped[$key][] = [
+            'title' => $parsed['title'],
+            'body' => $parsed['body'],
+            'text' => $line,
+            'group' => $key,
+        ];
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_practice_group_icon($key),
+            'items' => $grouped[$key],
+        ];
+    }
+
+    return $out;
+}
+
 function mh_code_page_skills(?int $post_id = null): array
 {
     return field_lines('code_skills', mh_code_skill_defaults(), $post_id);
+}
+
+/**
+ * Skills grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{name: string, hint: string, group: string}>}>
+ */
+function mh_code_page_skills_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_skills($post_id) as $skill) {
+        $skill = trim((string) $skill);
+        if ($skill === '') {
+            continue;
+        }
+        $key = mh_code_skill_group($skill);
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $grouped[$key][] = [
+            'name' => $skill,
+            'hint' => mh_code_skill_hint($skill),
+            'group' => $key,
+        ];
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_skill_group_icon($key),
+            'items' => $grouped[$key],
+        ];
+    }
+
+    return $out;
 }
 
 function mh_code_page_resume(?int $post_id = null): array
@@ -668,6 +755,11 @@ function mh_code_page_resources(?int $post_id = null): array
     if ($rows === []) {
         $rows = mh_code_resource_defaults();
     }
+    $defaultsByUrl = [];
+    foreach (mh_code_resource_defaults() as $def) {
+        $defaultsByUrl[(string) ($def['url'] ?? '')] = $def;
+    }
+
     $out = [];
     foreach ($rows as $r) {
         $url = trim((string) ($r['url'] ?? ''));
@@ -675,10 +767,49 @@ function mh_code_page_resources(?int $post_id = null): array
         if ($url === '' || $label === '') {
             continue;
         }
+        $fallback = $defaultsByUrl[$url] ?? [];
+        $group = trim((string) ($r['group'] ?? $fallback['group'] ?? ''));
+        if ($group === '') {
+            $group = __('Reference', 'sage');
+        }
         $out[] = [
             'label' => $label,
             'url' => $url,
             'note' => (string) ($r['note'] ?? ''),
+            'group' => $group,
+            'host' => mh_code_doc_host($url),
+            'icon' => mh_code_doc_group_icon($group),
+        ];
+    }
+
+    return $out;
+}
+
+/**
+ * Documentation links grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{label: string, url: string, note: string, group: string, host: string, icon: string}>}>
+ */
+function mh_code_page_resources_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_resources($post_id) as $doc) {
+        $key = (string) ($doc['group'] ?? __('Reference', 'sage'));
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $grouped[$key][] = $doc;
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_doc_group_icon($key),
+            'items' => $grouped[$key],
         ];
     }
 

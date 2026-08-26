@@ -122,8 +122,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
         ],
         'template-code.blade.php' => [
-            'title' => 'Open-source WordPress code on GitHub | '.$brand,
-            'desc' => 'Public GitHub repos and contribution history from Gettysburg, PA. Fork Sage themes, plugins, and web apps — or say hello.',
+            'title' => 'Open-source WordPress code | '.$brand,
+            'desc' => 'Public Sage themes, plugins, and GitHub activity from Gettysburg. Browse skills, fork repos, or say hello.',
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
