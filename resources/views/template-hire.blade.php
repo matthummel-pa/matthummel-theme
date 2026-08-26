@@ -51,10 +51,10 @@
     @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
       {{ \App\field('hire_h1', \App\mh_availability_label($gh, __('Open for new work', 'sage')).'.') }}
     @else
-      {{ \App\field('hire_h1', __('Hire a WordPress developer in Gettysburg.', 'sage')) }}
+      {{ \App\field('hire_h1', __('Hire a full-stack developer with deep WordPress experience.', 'sage')) }}
     @endif
   </h1>
-  <p class="lead">{{ \App\field('hire_lede', __('Available for WordPress site builds, plugins, agency overflow, and full-time or contract roles. Based in Gettysburg — I work with shops and agencies anywhere.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('hire_lede', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Based in Gettysburg and working remotely anywhere.', 'sage')) }}</p>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])

@@ -30,11 +30,11 @@
     [
       'icon'  => 'code',
       'num'   => '03',
-      'title' => 'Other web apps',
-      'short' => 'When WordPress isn\'t the right fit.',
-      'body'  => 'React front-ends, REST APIs, and data-driven apps. I also take Power Platform work — Power Apps and Power Automate — when a team already lives in Microsoft 365 and it\'s the right tool.',
-      'gets'  => ['React or vanilla JS front-ends', 'REST APIs and data integrations', 'Power Apps / Power Automate', 'GitHub repo with full commit history'],
-      'tech'  => ['React', 'JavaScript', 'Power Apps', 'REST'],
+      'title' => 'Full-stack web applications',
+      'short' => 'When the project needs more than a website.',
+      'body'  => 'Custom applications with React interfaces, PHP or Node services, authentication, databases, and third-party APIs — built as one maintainable system.',
+      'gets'  => ['React or vanilla JS front ends', 'PHP or Node back ends', 'REST APIs and data integrations', 'GitHub repo with full commit history'],
+      'tech'  => ['React', 'TypeScript', 'PHP', 'REST APIs'],
     ],
     [
       'icon'  => 'users',
@@ -115,7 +115,7 @@
         'You need a plugin that does one thing and does it well',
         'You want PHPDoc on public functions and readable commit history',
         'You\'re building a React front-end or REST API integration',
-        'Power Apps or Power Automate work in a Microsoft 365 environment',
+        'A full-stack feature, API integration, or architecture review',
       ],
       'cta'    => 'See the code',
       'href'   => '/code/',
@@ -192,12 +192,12 @@
 
 {{-- ── HERO ─────────────────────────────────────────── --}}
 @component('partials.page-hero')
-  <p class="eyebrow">{{ \App\field('svc_kicker', __('WordPress developer · Gettysburg, PA', 'sage')) }}</p>
+  <p class="eyebrow">{{ \App\field('svc_kicker', __('Full-stack developer · WordPress specialist', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('svc_h1', __('WordPress development for shops, agencies, and developers.', 'sage')) }}
+    {{ \App\field('svc_h1', __('Full-stack web development for businesses, agencies, and developers.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('svc_lede', __('Technical execution for your next WordPress project. I work with local businesses, agencies that need a sub-contractor, and developers who need a focused plugin or integration. Clear scope before anything starts. You own everything at handoff.', 'sage')) }}
+    {{ \App\field('svc_lede', __('Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.', 'sage')) }}
   </p>
   <div class="svc-hero-actions">
     <a class="btn" href="{{ home_url('/contact/') }}">

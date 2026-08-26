@@ -181,7 +181,7 @@
           @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])
           <div class="post-author-bio__body">
             <p class="post-author-bio__name">{{ get_the_author() }}</p>
-            <p class="post-author-bio__role">WordPress developer · Gettysburg, PA</p>
+            <p class="post-author-bio__role">Full-stack developer · WordPress specialist · Gettysburg, PA</p>
             <p class="post-author-bio__desc">
               {{ get_the_author_meta('description') ?: 'I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in. Based in Gettysburg, PA.' }}
             </p>

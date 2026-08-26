@@ -25,8 +25,6 @@
     ['Google Drive',  'google-drive'],
     ['HubSpot',       'hubspot'],
     ['Rank Math SEO', 'rank-math'],
-    ['Power Apps',    'power-apps'],
-    ['Power Automate','power-automate'],
     ['MySQL',         'database'],
     ['VS Code',       'vscode'],
     ['Node.js',       'nodejs'],
@@ -73,10 +71,6 @@
     'Marketing'  => [
       ['HubSpot',     'hubspot',    '#ff7a59'],
       ['Rank Math SEO','rank-math', '#f50c24'],
-    ],
-    'Platform'   => [
-      ['Power Apps',  'power-apps', '#742774'],
-      ['Power Automate','power-automate','#0066ff'],
     ],
   ];
 
@@ -158,7 +152,7 @@
 
   $goodFit = [
     'yes' => [
-      'You need a WordPress site you can actually update yourself',
+      'You need a WordPress platform or full-stack web application you can own',
       'You want a quick turnaround without cutting corners on quality',
       'You want clean code a future developer can read',
       'You have a clear idea of what you need — or want help figuring it out',
@@ -196,8 +190,8 @@
       'a' => 'Yes. I\'ve worked as a sub on agency projects. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you\'re working on.',
     ],
     [
-      'q' => 'What about Power Platform — do you still take that work?',
-      'a' => 'Sometimes, when a team already lives in Microsoft 365 and it\'s the right tool. It\'s not my main focus and I\'ll say so if WordPress or another stack is a better fit. I won\'t talk you into it.',
+      'q' => 'Do you build full-stack applications outside WordPress?',
+      'a' => 'Yes. I build React and TypeScript interfaces, PHP or Node services, API integrations, authentication, and data-backed applications. WordPress is my specialty, not my only stack.',
     ],
   ];
 @endphp
@@ -223,7 +217,7 @@
         @endif
         <span class="h-badge">
           {!! \App\mh_svg_icon('code', 13) !!}
-          WordPress developer
+          Full-stack developer · WordPress specialist
         </span>
       </div>
 
@@ -232,20 +226,20 @@
       </h1>
 
       <p class="h-hero__role">
-        {{ \App\field('home_role', __('I build WordPress sites and plugins.', 'sage')) }}
+        {{ \App\field('home_role', __('Full-stack web development, with WordPress at the center.', 'sage')) }}
       </p>
 
       <p class="h-hero__lede">
-        {{ \App\field('home_lede', __('Based in Gettysburg, PA. Shops get something they actually own — not a subscription they rent. Developers get code they can read.', 'sage')) }}
+        {{ \App\field('home_lede', __('I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.', 'sage')) }}
       </p>
 
       <div class="h-hero__actions">
         <a class="btn h-hero__cta" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/contact/')) }}">
           {!! \App\mh_svg_icon('mail', 17) !!}
-          {{ \App\field('home_cta_primary', __('Say hello', 'sage')) }}
+          {{ \App\field('home_cta_primary', __('Start a conversation', 'sage')) }}
         </a>
         <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
-          {{ \App\field('home_cta_secondary', __('See my work', 'sage')) }}
+          {{ \App\field('home_cta_secondary', __('Explore projects', 'sage')) }}
           <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -268,8 +262,8 @@
           <dd>Pennsylvania</dd>
         </div>
         <div>
-          <dt>WordPress</dt>
-          <dd>primary stack</dd>
+          <dt>Full stack</dt>
+          <dd>WordPress specialist</dd>
         </div>
       </dl>
 
@@ -317,7 +311,7 @@
      ═══════════════════════════════════════════════════ --}}
 <section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
-  <meta itemprop="jobTitle" content="WordPress Developer">
+  <meta itemprop="jobTitle" content="Full-Stack Developer and WordPress Specialist">
   <meta itemprop="address" content="Gettysburg, Pennsylvania">
   <div class="container wide">
 
@@ -335,7 +329,7 @@
           ])
           <div class="h-about__meta">
             <span class="h-meta-item">{!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA</span>
-            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} WordPress developer</span>
+            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Full-stack developer · WordPress specialist</span>
             <span class="h-meta-item" itemprop="url">
               {!! \App\mh_svg_icon('github', 14) !!}
               <a href="https://github.com/matthummel-pa" rel="me noopener" target="_blank">@matthummel-pa</a>
@@ -346,13 +340,13 @@
         <div class="h-about-v2__copy">
           <p class="h-section-label">About me</p>
           <h2 id="h-about-heading" class="h-about__heading">
-            {{ \App\field('home_about_h2', __('WordPress developer. Studio founder. Open for work.', 'sage')) }}
+            {{ \App\field('home_about_h2', __('Full-stack developer. WordPress specialist. Open to collaboration.', 'sage')) }}
           </h2>
           <p class="h-about__text" itemprop="description">
-            {{ \App\field('home_about_text', __('I\'ve been building websites since the higher-ed marketing days. WordPress is the tool I kept coming back to — it gives shops real ownership, and they can update their own pages without calling me. Right now I\'m building Ridges & Valleys, a local studio for Gettysburg shops, tours, and inns, and I\'m open for new work at the same time.', 'sage')) }}
+            {{ \App\field('home_about_text', __('I\'ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.', 'sage')) }}
           </p>
           <p class="h-about__text">
-            {{ \App\field('home_about_p2', __('Whether you\'re a recruiter, a design agency that needs a WordPress developer, a fellow dev who wants to collaborate, or a shop that just needs a solid site — I\'m glad you\'re here. Most of my public code is on GitHub and free to use. If you just need to borrow a snippet, no permission required.', 'sage')) }}
+            {{ \App\field('home_about_p2', __('I work with businesses that need dependable web software, agencies that need an experienced development partner, and developers who want to compare notes or reuse open-source code. Most of my public work is on GitHub, and you are welcome to fork it.', 'sage')) }}
           </p>
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
@@ -949,10 +943,10 @@
       <div class="h-journal__head-copy">
         <p class="h-section-label">Journal</p>
         <h2 id="h-writing-heading" class="h-section__title">
-          {{ \App\field('home_write_h2', __('WordPress tips, code snippets, and project notes.', 'sage')) }}
+          {{ \App\field('home_write_h2', __('Full-stack notes, WordPress code, and project lessons.', 'sage')) }}
         </h2>
         <p class="h-journal__intro">
-          {{ \App\field('home_write_intro', __('Short posts on WordPress development, Sage, PHP, and the tools I use. Most include code you can paste into a theme or plugin.', 'sage')) }}
+          {{ \App\field('home_write_intro', __('Practical notes from WordPress, PHP, JavaScript, React, APIs, and real project work. Most posts include code you can adapt or use.', 'sage')) }}
         </p>
       </div>
       <div class="h-journal__head-links">

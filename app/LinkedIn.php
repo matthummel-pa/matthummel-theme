@@ -137,7 +137,7 @@ class LinkedIn
 
         $headline = trim((string) get_theme_mod('mh_li_headline', ''));
         if ($headline === '') {
-            $headline = __('WordPress developer — Sage, PHP, and sites shops can keep editing.', 'sage');
+            $headline = __('Full-stack developer and WordPress specialist — PHP, JavaScript, React, APIs, and maintainable web platforms.', 'sage');
         }
 
         return [
@@ -229,7 +229,7 @@ class LinkedIn
         if ($headline === '') {
             $headline = ! empty($gh['bio'])
                 ? (string) $gh['bio']
-                : __('WordPress developer — Sage, PHP, and sites shops can keep editing.', 'sage');
+                : __('Full-stack developer and WordPress specialist — PHP, JavaScript, React, APIs, and maintainable web platforms.', 'sage');
         }
 
         return [

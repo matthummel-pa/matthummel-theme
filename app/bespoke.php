@@ -1984,3 +1984,110 @@ function mh_apply_about_story_plain_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_about_story_plain_v1', 68);
+
+/**
+ * One-time positioning refresh: full-stack first, WordPress specialty second.
+ *
+ * Page copy is stored in post meta, so changing Blade fallbacks alone does not
+ * update the live site. This migration intentionally replaces the key landing
+ * page fields requested in the August 2026 site-wide content refresh.
+ */
+function mh_apply_fullstack_wordpress_positioning_v1(): void
+{
+    if (get_option('mh_fullstack_wordpress_positioning_v1')) {
+        return;
+    }
+
+    $content = [
+        'front-page.blade.php' => [
+            'home_role' => 'Full-stack web development, with WordPress at the center.',
+            'home_lede' => 'I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.',
+            'home_cta_primary' => 'Start a conversation',
+            'home_cta_secondary' => 'Explore projects',
+            'home_about_h2' => 'Full-stack developer. WordPress specialist. Open to collaboration.',
+            'home_about_text' => 'I’ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.',
+            'home_about_p2' => 'I work with businesses that need dependable web software, agencies that need an experienced development partner, and developers who want to compare notes or reuse open-source code. Most of my public work is on GitHub, and you are welcome to fork it.',
+            'home_write_h2' => 'Full-stack notes, WordPress code, and project lessons.',
+            'home_write_intro' => 'Practical notes from WordPress, PHP, JavaScript, React, APIs, and real project work. Most posts include code you can adapt or use.',
+            'seo_title' => 'Full-Stack & WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.',
+        ],
+        'template-services.blade.php' => [
+            'svc_kicker' => 'Full-stack developer · WordPress specialist',
+            'svc_h1' => 'Full-stack web development for businesses, agencies, and developers.',
+            'svc_lede' => 'Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.',
+            'seo_title' => 'Full-Stack & WordPress Development Services | Matt Hummel',
+            'seo_desc' => 'Custom WordPress platforms, plugins, integrations, and full-stack web applications for businesses, agencies, and development teams.',
+        ],
+        'template-about.blade.php' => [
+            'about_h1' => 'Full-stack developer. WordPress specialist.',
+            'about_lede' => 'I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.',
+            'about_services_intro' => 'I work across the stack: accessible interfaces, WordPress and PHP back ends, React applications, APIs, databases, and deployment. WordPress is the specialty, not the limit.',
+            'about_work_p2' => 'If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.',
+            'about_cta_h2' => 'Need a full-stack or WordPress development partner?',
+            'seo_title' => 'About Matt Hummel — Full-Stack & WordPress Developer',
+            'seo_desc' => 'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.',
+        ],
+        'template-code.blade.php' => [
+            'code_h1' => 'Full-stack and WordPress code you can use.',
+            'code_do_intro' => 'I ship across the stack: custom WordPress themes and plugins, PHP, TypeScript, React, APIs, and data-backed applications. The public repos show how I structure code, document decisions, and prepare work for handoff.',
+            'code_gh_h2' => 'Open-source full-stack and WordPress code on GitHub.',
+            'code_cta_h2' => 'Want to build, collaborate, or compare notes?',
+            'seo_title' => 'Open-Source Full-Stack & WordPress Code | Matt Hummel',
+            'seo_desc' => 'Public React apps, Sage themes, WordPress plugins, PHP, TypeScript, and GitHub activity. Browse projects, fork repos, or collaborate.',
+        ],
+        'template-now.blade.php' => [
+            'now_work_p1' => 'Alongside the studio I’m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.',
+            'now_work_p2' => 'If you’re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.',
+        ],
+        'template-hire.blade.php' => [
+            'hire_h1' => 'Hire a full-stack developer with deep WordPress experience.',
+            'hire_lede' => 'Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Based in Gettysburg and working remotely anywhere.',
+            'seo_title' => 'Hire a Full-Stack & WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Available for full-stack web applications, WordPress development, plugins, integrations, agency overflow, and full-time or contract roles.',
+        ],
+        'template-contact.blade.php' => [
+            'cnt_lede' => 'Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I read everything and reply within one or two business days.',
+            'seo_title' => 'Contact a Full-Stack & WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.',
+        ],
+        'index.blade.php' => [
+            'write_h1' => 'Full-stack and WordPress development notes.',
+            'write_lede' => 'Practical notes on WordPress, PHP, JavaScript, React, APIs, and the tools I use on real projects. Most include code you can adapt or use.',
+            'seo_title' => 'Journal — Full-Stack & WordPress Development | Matt Hummel',
+            'seo_desc' => 'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $template = page_template_key($id);
+        if (! isset($content[$template])) {
+            continue;
+        }
+
+        foreach ($content[$template] as $key => $value) {
+            update_post_meta($id, 'mh_f_'.$key, $value);
+        }
+
+        if ($template === 'template-about.blade.php') {
+            update_post_meta($id, 'mh_f_about_services', mh_about_services_defaults());
+        }
+        if ($template === 'template-code.blade.php') {
+            update_post_meta($id, 'mh_f_code_do_items', mh_code_practice_defaults());
+        }
+    }
+
+    update_option('blogdescription', 'Full-stack developer and WordPress specialist. Web platforms, applications, plugins, and integrations.');
+    update_option('mh_fullstack_wordpress_positioning_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_fullstack_wordpress_positioning_v1', 69);

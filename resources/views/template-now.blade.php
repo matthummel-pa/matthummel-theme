@@ -68,8 +68,8 @@
             <h2 class="now-block__title">{{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for new work — full-time roles, contract arrangements, freelance projects, and agency overflow. WordPress and PHP is the core. I also do React, web apps, and Power Platform when it\'s the right fit.', 'sage')) }}</p>
-        <p>{{ \App\field('now_work_p2', __('If you\'re a recruiter, a hiring manager, or an agency that needs a WordPress developer on a project, I\'m glad to hear from you. A short note is enough to start.', 'sage')) }}</p>
+        <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')) }}</p>
+        <p>{{ \App\field('now_work_p2', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')) }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:.65rem;align-items:center">
           <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
           <a class="h-text-arrow" href="{{ home_url('/hire/') }}">See hire details →</a>
@@ -178,7 +178,7 @@
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Primary stack</p>
         <p class="now-sidebar-card__value">WordPress + PHP</p>
-        <p class="now-sidebar-card__sub">Also React, Power Platform</p>
+        <p class="now-sidebar-card__sub">PHP, JavaScript, React, APIs</p>
         <a class="now-sidebar-card__link" href="{{ home_url('/uses/') }}">Full stack →</a>
       </div>
 

@@ -66,16 +66,16 @@ function mh_seo_landing_defaults(?int $post_id = null): array
 
     $map = [
         'front-page.blade.php' => [
-            'title' => 'WordPress web design in Gettysburg | '.$brand,
-            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can follow the code. See example sites or say hello.',
+            'title' => 'Full-Stack & WordPress Developer | '.$brand,
+            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.',
         ],
         'template-home.blade.php' => [
-            'title' => 'WordPress web design in Gettysburg | '.$brand,
-            'desc' => 'I build WordPress sites in Gettysburg that shops can edit. Developers can follow the code. See example sites or say hello.',
+            'title' => 'Full-Stack & WordPress Developer | '.$brand,
+            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.',
         ],
         'template-services.blade.php' => [
-            'title' => 'WordPress Developer for Hire in Gettysburg | '.$brand,
-            'desc' => 'Custom WordPress sites and plugins with clear scope and full ownership at handoff. Based in Gettysburg — open for new work. Say hello.',
+            'title' => 'Full-Stack & WordPress Development Services | '.$brand,
+            'desc' => 'Custom WordPress platforms, plugins, integrations, and full-stack web applications for businesses, agencies, and development teams.',
         ],
         'template-start.blade.php' => [
             'title' => 'Project brief for WordPress work | '.$brand,
@@ -94,8 +94,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'The tools I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, and more. Say hello if you want to build together.',
         ],
         'template-hire.blade.php' => [
-            'title' => 'Hire a WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'Resume, LinkedIn, and clear scope for WordPress builds and agency overflow. Based in Gettysburg. Say hello.',
+            'title' => 'Hire a Full-Stack & WordPress Developer | '.$brand,
+            'desc' => 'Available for full-stack web applications, WordPress development, plugins, integrations, agency overflow, and full-time or contract roles.',
         ],
         'template-changelog.blade.php' => [
             'title' => 'Changelog | '.$brand,
@@ -114,24 +114,24 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'Terms covering code reuse (MIT licence), written content copyright, concept site disclaimers, and acceptable use of matthummel.com.',
         ],
         'template-contact.blade.php' => [
-            'title' => 'Hire a developer in Gettysburg | '.$brand,
-            'desc' => 'Write about a WordPress site, plugin, or role. I work from Gettysburg and usually reply within a day. Say hello.',
+            'title' => 'Contact a Full-Stack & WordPress Developer | '.$brand,
+            'desc' => 'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.',
         ],
         'template-about.blade.php' => [
-            'title' => 'About Matt Hummel — WordPress in Gettysburg | '.$brand,
-            'desc' => 'WordPress developer in Gettysburg. Sites shops can edit, code other developers can follow. Open for full-time, contract, and agency work. Say hello.',
+            'title' => 'About Matt Hummel — Full-Stack & WordPress Developer',
+            'desc' => 'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.',
         ],
         'template-code.blade.php' => [
-            'title' => 'Open-source WordPress code | '.$brand,
-            'desc' => 'Public Sage themes, plugins, and GitHub activity from Gettysburg. Browse skills, fork repos, or say hello.',
+            'title' => 'Open-Source Full-Stack & WordPress Code | '.$brand,
+            'desc' => 'Public React apps, Sage themes, WordPress plugins, PHP, TypeScript, and GitHub activity. Browse projects, fork repos, or collaborate.',
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
             'desc' => 'Building Ridges & Valleys, writing WordPress notes with copy-paste code, and open for new work from Gettysburg.',
         ],
         'index.blade.php' => [
-            'title' => 'Journal — WordPress development notes | '.$brand,
-            'desc' => 'Short posts on WordPress, PHP, Sage, and tools from real projects. Most posts include code you can copy. Say hello anytime.',
+            'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
+            'desc' => 'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.',
         ],
     ];
 

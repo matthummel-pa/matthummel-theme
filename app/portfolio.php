@@ -944,10 +944,10 @@ function mh_code_practice_defaults(): array
     return [
         'Custom WordPress themes with Sage 11 — Blade templates, Tailwind v4, Vite, PHP 8.3, deployed with GitHub Actions.',
         'Plugin development — single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
-        'Front-end architecture — semantic HTML, accessible CSS, TypeScript, and edit fields shops can use without calling a developer.',
-        'REST API integrations — data pipelines connecting WordPress to external services and third-party APIs.',
+        'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
+        'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
+        'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
         'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and developers anywhere.',
-        'Microsoft Power Platform — Power Apps, Power Automate, and SharePoint consulting from a government contract background, not the primary offer.',
     ];
 }
 
@@ -987,6 +987,15 @@ function mh_code_practice_group(string $text): string
         return __('Integrations', 'sage');
     }
 
+    if (
+        str_contains($low, 'full-stack')
+        || str_contains($low, 'react')
+        || str_contains($low, 'node')
+        || str_contains($low, 'authentication')
+    ) {
+        return __('Full stack', 'sage');
+    }
+
     return __('WordPress', 'sage');
 }
 
@@ -1001,6 +1010,7 @@ function mh_code_practice_group_icon(string $group): string
         'integrations' => 'globe',
         'studio' => 'briefcase',
         'microsoft' => 'briefcase',
+        'full stack' => 'code',
         default => 'code',
     };
 }
@@ -2463,7 +2473,7 @@ if (defined('WP_CLI') && WP_CLI) {
 }
 
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
-add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
+add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
 
 /**
@@ -2486,8 +2496,8 @@ function mh_about_services_defaults(): array
         ],
         [
             'icon' => 'code',
-            'title' => __('Other web apps', 'sage'),
-            'body' => __('React front ends, APIs, and work that does not belong in a theme. Power Platform when a team already lives in Microsoft 365 and it is the right fit.', 'sage'),
+            'title' => __('Full-stack web applications', 'sage'),
+            'body' => __('React interfaces, PHP or Node services, authentication, databases, APIs, and deployment workflows built as one maintainable system.', 'sage'),
         ],
     ];
 }
@@ -2502,7 +2512,7 @@ function mh_about_work_types_defaults(): array
     return [
         [
             'title' => __('Full-time roles', 'sage'),
-            'detail' => __('WordPress, PHP, and web development. Open to on-site, hybrid, or remote from Gettysburg.', 'sage'),
+            'detail' => __('Full-stack web development with deep WordPress and PHP experience. Open to on-site, hybrid, or remote from Gettysburg.', 'sage'),
         ],
         [
             'title' => __('Contract and freelance', 'sage'),
@@ -2510,7 +2520,7 @@ function mh_about_work_types_defaults(): array
         ],
         [
             'title' => __('Agency sub-contracting', 'sage'),
-            'detail' => __('You keep the shop relationship. I build the WordPress site or plugin.', 'sage'),
+            'detail' => __('You keep the client relationship. I build the WordPress platform, integration, or web application.', 'sage'),
         ],
         [
             'title' => __('Part-time arrangements', 'sage'),

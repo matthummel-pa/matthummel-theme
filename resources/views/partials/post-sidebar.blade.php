@@ -37,7 +37,7 @@
     @include('partials.profile-photo', ['size' => 52, 'class' => 'profile-photo side-author__photo', 'decorative' => true])
     <div class="side-author__body">
       <p class="side-author__name">Matt Hummel</p>
-      <p class="side-author__role">WordPress developer · Gettysburg, PA</p>
+      <p class="side-author__role">Full-stack developer · WordPress specialist · Gettysburg, PA</p>
       <p class="side-author__bio">Building WordPress sites and plugins.@if (\App\mh_is_hireable($gh)) {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.@endif</p>
       <div class="side-author__links">
         <a href="{{ home_url('/about/') }}">About</a>

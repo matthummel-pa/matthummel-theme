@@ -25,10 +25,10 @@
     <div class="about-hero__copy">
       <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
       <h1 class="display-title is-hero">
-        {{ \App\field('about_h1', __('WordPress developer in Gettysburg.', 'sage')) }}
+        {{ \App\field('about_h1', __('Full-stack developer. WordPress specialist.', 'sage')) }}
       </h1>
       <p class="lead about-hero__lede">
-        {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg. Shops can edit their own site, and other developers can pick up the code without a headache.', 'sage')) }}
+        {{ \App\field('about_lede', __('I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.', 'sage')) }}
       </p>
       @if ($isHireable)
         <p class="hire-avail about-hero__avail">
@@ -75,8 +75,8 @@
         </div>
       @endif
       <div class="about-stat">
-        <dt class="about-stat__value">{{ __('WordPress', 'sage') }}</dt>
-        <dd class="about-stat__label">{{ __('primary stack', 'sage') }}</dd>
+        <dt class="about-stat__value">{{ __('Full stack', 'sage') }}</dt>
+        <dd class="about-stat__label">{{ __('WordPress specialist', 'sage') }}</dd>
       </div>
       <div class="about-stat">
         <dt class="about-stat__value">{{ __('EST', 'sage') }}</dt>
@@ -204,7 +204,7 @@
             {{ \App\field('about_services_h2', __('What I build.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_services_intro', __('Most days I’m building WordPress sites and plugins from Gettysburg. React and Power Platform show up when they actually help. Here’s the breakdown.', 'sage')) }}
+            {{ \App\field('about_services_intro', __('I work across the stack: accessible interfaces, WordPress and PHP back ends, React applications, APIs, databases, and deployment. WordPress is the specialty, not the limit.', 'sage')) }}
           </p>
         </header>
         <div class="about-services">
@@ -238,7 +238,7 @@
             {{ \App\field('about_work_h2', __('Open for work.', 'sage')) }}
           </h2>
           <p>{{ \App\field('about_work_p1', __('I’m looking for new work alongside the studio — full-time roles, contract gigs, and freelance projects. Based in Gettysburg, PA, and happy to work remote.', 'sage')) }}</p>
-          <p>{{ \App\field('about_work_p2', __('If you’re a recruiter, an agency with overflow, or a shop that needs a WordPress developer, I’d love a short note about what you’re working on.', 'sage')) }}</p>
+          <p>{{ \App\field('about_work_p2', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')) }}</p>
           <a class="btn" href="{{ home_url('/contact/') }}">
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('about_work_cta', __('Start a conversation', 'sage')) }}
@@ -366,7 +366,7 @@
     <div class="cta-band__copy about-cta__copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('about_cta_kicker', __('Get in touch', 'sage')) }}</p>
       <h2 id="about-cta-heading" class="display-title is-section">
-        {{ \App\field('about_cta_h2', __('Need a WordPress developer in Gettysburg?', 'sage')) }}
+        {{ \App\field('about_cta_h2', __('Need a full-stack or WordPress development partner?', 'sage')) }}
       </h2>
       <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')) }}</p>
     </div>

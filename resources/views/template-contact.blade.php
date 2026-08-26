@@ -24,7 +24,7 @@
     {{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('cnt_lede', __('Questions about a post, a code snippet, or GitHub are welcome. So is a note about a WordPress site — for a Gettysburg business or anywhere else. I read everything and reply within one or two business days.', 'sage')) }}
+    {{ \App\field('cnt_lede', __('Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I read everything and reply within one or two business days.', 'sage')) }}
   </p>
   <div class="contact-hero-signals">
     @if (\App\mh_is_hireable($gh))
@@ -102,7 +102,7 @@
 
         <div class="field">
           <label for="cf-subject">Subject <span class="field-opt">(optional)</span></label>
-          <input id="cf-subject" type="text" name="mh_subject" autocomplete="off" placeholder="e.g. WordPress site for a local shop" value="{{ $oldSubject }}">
+          <input id="cf-subject" type="text" name="mh_subject" autocomplete="off" placeholder="e.g. WordPress platform or web application" value="{{ $oldSubject }}">
         </div>
 
         <div class="field">
@@ -155,7 +155,7 @@
             <span class="contact-info-icon">{!! \App\mh_svg_icon('code', 16) !!}</span>
             <div>
               <strong>Best fit</strong>
-              <p>WordPress sites, plugins, PHP, and web apps.</p>
+              <p>Full-stack web apps, WordPress platforms, plugins, integrations, and agency partnerships.</p>
             </div>
           </li>
         </ul>

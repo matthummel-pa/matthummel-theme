@@ -14,10 +14,10 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
+    {{ \App\field('write_h1', __('Full-stack and WordPress development notes.', 'sage'), $writeId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('write_lede', __('Short posts on WordPress, PHP, Sage, and the tools I actually use on projects. Most include code you can copy and drop in. No padding, no filler.', 'sage'), $writeId) }}
+    {{ \App\field('write_lede', __('Practical notes on WordPress, PHP, JavaScript, React, APIs, and the tools I use on real projects. Most include code you can adapt or use.', 'sage'), $writeId) }}
   </p>
   <div class="journal-hero-actions">
     <div class="search-wrap write-hero-search">

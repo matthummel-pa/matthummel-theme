@@ -10,7 +10,7 @@
 @endphp
 <section class="pf-section" id="resume" aria-labelledby="{{ $headingId }}" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
-  <meta itemprop="jobTitle" content="WordPress Developer">
+  <meta itemprop="jobTitle" content="Full-Stack Developer and WordPress Specialist">
   <div class="container wide">
     <div class="code-section-head">
       <div>

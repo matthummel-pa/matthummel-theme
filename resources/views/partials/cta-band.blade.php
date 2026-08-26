@@ -1,5 +1,5 @@
 @php
-  $ctaTitle = $title ?? __('Need a WordPress developer in Gettysburg?', 'sage');
+  $ctaTitle = $title ?? __('Need a full-stack or WordPress development partner?', 'sage');
   $ctaText = $text ?? __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage');
   $ctaLabel = $label ?? __('Say hello', 'sage');
   $ctaHref = $href ?? home_url('/contact/');

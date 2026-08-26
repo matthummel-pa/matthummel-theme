@@ -26,7 +26,7 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('code_h1', __('PHP, WordPress, and open-source code.', 'sage')) }}
+    {{ \App\field('code_h1', __('Full-stack and WordPress code you can use.', 'sage')) }}
   </h1>
   <p class="lead">
     {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')) !!}
@@ -57,7 +57,7 @@
             {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('code_do_intro', __('WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.', 'sage')) }}
+            {{ \App\field('code_do_intro', __('I ship across the stack: custom WordPress themes and plugins, PHP, TypeScript, React, APIs, and data-backed applications. The public repos show how I structure code, document decisions, and prepare work for handoff.', 'sage')) }}
           </p>
           @if (count($practiceGroups) > 1)
             <nav class="code-practice-jump" aria-label="{{ __('Practice groups', 'sage') }}">
@@ -130,7 +130,7 @@
       <div>
         <p class="eyebrow">{{ __('Open source', 'sage') }}</p>
         <h2 id="code-gh-heading" class="display-title is-section">
-          {{ \App\field('code_gh_h2', __('Open-source WordPress code on GitHub.', 'sage')) }}
+          {{ \App\field('code_gh_h2', __('Open-source full-stack and WordPress code on GitHub.', 'sage')) }}
         </h2>
         <p class="sec-intro">
           {{ \App\field('code_gh_intro', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')) }}
@@ -516,7 +516,7 @@
     <div class="cta-band__copy code-cta__copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Work together', 'sage')) }}</p>
       <h2 id="code-cta-heading" class="display-title is-section">
-        {{ \App\field('code_cta_h2', __('Need WordPress help in Gettysburg?', 'sage')) }}
+        {{ \App\field('code_cta_h2', __('Want to build, collaborate, or compare notes?', 'sage')) }}
       </h2>
       <p>{{ \App\field('code_cta_lede', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')) }}</p>
     </div>
