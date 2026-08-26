@@ -197,7 +197,7 @@ function mh_home_fields(): array
             ['home_build_2_title', __('Service 2 title', 'sage'), 'text', __('Plugins & tools', 'sage')],
             ['home_build_2_text', __('Service 2 description', 'sage'), 'textarea', __('Custom PHP when WordPress needs a new part. Small, focused, and readable.', 'sage')],
             ['home_build_3_title', __('Service 3 title', 'sage'), 'text', __('Full-stack web apps', 'sage')],
-            ['home_build_3_text', __('Service 3 description', 'sage'), 'textarea', __("React interfaces, PHP or Node services, authentication, databases, and APIs built as one maintainable system.", 'sage')],
+            ['home_build_3_text', __('Service 3 description', 'sage'), 'textarea', __('React interfaces, PHP or Node services, authentication, databases, and APIs built as one maintainable system.', 'sage')],
         ],
         __('Journal section', 'sage') => [
             ['home_write_h2', __('Heading', 'sage'), 'text', __('From the journal', 'sage')],
@@ -209,7 +209,7 @@ function mh_home_fields(): array
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
-            ['home_about_text', __('Bio text', 'sage'), 'textarea', __("I've spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.", 'sage')],
+            ['home_about_text', __('Bio text', 'sage'), 'textarea', __('I\'ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.', 'sage')],
         ],
         __('Process section', 'sage') => [
             ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
