@@ -18,6 +18,7 @@
   $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $shareX    = 'https://twitter.com/intent/tweet?text='.rawurlencode($postTitle).'&url='.rawurlencode($postUrl);
   $shareIn   = 'https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode($postUrl);
+  $hasAffiliateLinks = Appmh_post_has_affiliate_links($postId);
 
   // Related posts — same category, exclude current
   $relatedPosts = [];
@@ -142,6 +143,13 @@
         @endif
 
         {{-- Article body --}}
+        @if ($hasAffiliateLinks)
+          <aside class="post-extra-note affiliate-disclosure" aria-label="Affiliate disclosure">
+            <strong>Affiliate disclosure:</strong>
+            I may earn a commission if you purchase through links in this post, at no additional cost to you. I only recommend tools I believe fit the use case described.
+            <a href="{{ home_url('/affiliate-disclosure/') }}">How affiliate links work on this site.</a>
+          </aside>
+        @endif
         <div class="entry-content e-content post-prose" id="post-prose" itemprop="articleBody">
           {!! $bodyHtml !!}
         </div>
