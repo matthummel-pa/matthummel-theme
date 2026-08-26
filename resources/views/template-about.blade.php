@@ -19,98 +19,85 @@
 
 @section('content')
 
-{{-- HERO --}}
-@component('partials.page-hero', ['extra' => 'about-hero', 'innerClass' => 'hero-intro about-hero__inner'])
-  <div class="about-hero__copy">
-    <p class="eyebrow">{{ \App\field('about_kicker', __('About', 'sage')) }}</p>
-    <h1 class="display-title is-hero">
-      {{ \App\field('about_h1', __('WordPress developer in Gettysburg.', 'sage')) }}
-    </h1>
-    <p class="lead about-hero__lede">
-      {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.', 'sage')) }}
-    </p>
-    <ul class="about-hero__chips" aria-label="{{ __('Quick facts', 'sage') }}">
-      <li>{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('WordPress · Sage · PHP', 'sage') }}</li>
-      <li>{!! \App\mh_svg_icon('globe', 13) !!} {{ __('Gettysburg, PA', 'sage') }}</li>
-      <li>{!! \App\mh_svg_icon('github', 13) !!} {{ __('Open source on GitHub', 'sage') }}</li>
-    </ul>
-    @if ($isHireable)
-      <p class="hire-avail about-hero__avail">
-        @include('partials.avail-mark', ['gh' => $gh])
-        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }} — full-time, contract, agency overflow
+{{-- HERO (above the fold: name, headline, short lede, CTAs, photo, proof) --}}
+@component('partials.page-hero', ['extra' => 'about-hero', 'innerClass' => 'about-hero__stage'])
+  <div class="about-hero__main hero-intro about-hero__inner">
+    <div class="about-hero__copy">
+      <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
+      <h1 class="display-title is-hero">
+        {{ \App\field('about_h1', __('WordPress developer in Gettysburg.', 'sage')) }}
+      </h1>
+      <p class="lead about-hero__lede">
+        {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.', 'sage')) }}
       </p>
-    @endif
-    <div class="about-hero__actions">
-      <a class="btn" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!}
-        {{ __('Say hello', 'sage') }}
-      </a>
-      <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
-        {{ __('Hire me', 'sage') }}
-      </a>
-    </div>
-    <nav class="about-hero-jump" aria-label="{{ __('On this page', 'sage') }}">
-      <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
-      <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
-      <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
-      @if (! empty($latestPosts))
-        <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
+      @if ($isHireable)
+        <p class="hire-avail about-hero__avail">
+          @include('partials.avail-mark', ['gh' => $gh])
+          {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
+        </p>
       @endif
-    </nav>
-    <p class="about-hero-links about-hero-links--social">
-      <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-        {!! \App\mh_svg_icon('github', 15) !!} GitHub
-        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-      </a>
-      <a href="{{ $writing }}">{!! \App\mh_svg_icon('pen', 15) !!} {{ __('Journal', 'sage') }}</a>
-      <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-        {!! \App\mh_svg_icon('globe', 15) !!} Ridges &amp; Valleys
-        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-      </a>
-    </p>
+      <div class="about-hero__actions">
+        <a class="btn" href="{{ home_url('/contact/') }}">
+          {!! \App\mh_svg_icon('mail', 16) !!}
+          {{ __('Say hello', 'sage') }}
+        </a>
+        <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
+          {{ __('Hire me', 'sage') }}
+        </a>
+        <a class="about-hero__ghost" href="#story">{{ __('Read my story', 'sage') }}</a>
+      </div>
+    </div>
+    <div class="about-hero__photo">
+      @include('partials.profile-photo', [
+        'size'  => 360,
+        'class' => 'profile-photo profile-photo--hero about-hero__img',
+        'eager' => true,
+      ])
+      <p class="about-hero__photo-cap">{{ __('Gettysburg, Pennsylvania', 'sage') }}</p>
+    </div>
   </div>
-  <div class="about-hero__photo">
-    @include('partials.profile-photo', [
-      'size'  => 300,
-      'class' => 'profile-photo profile-photo--hero about-hero__img',
-      'eager' => true,
-    ])
-    <p class="about-hero__photo-cap">{{ __('Matt Hummel · Gettysburg', 'sage') }}</p>
+
+  <div class="about-hero__proof" role="region" aria-label="{{ __('Quick facts', 'sage') }}">
+    <dl class="about-stats__grid about-hero__proof-grid">
+      <div class="about-stat">
+        <dt class="about-stat__value">{{ $yearsBuilding }}+</dt>
+        <dd class="about-stat__label">{{ __('years on the web', 'sage') }}</dd>
+      </div>
+      @if (! empty($gh['public_repos']))
+        <div class="about-stat">
+          <dt class="about-stat__value">
+            <a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">
+              {{ number_format_i18n($gh['public_repos']) }}
+              <span class="visually-hidden"> {{ __('public repositories (opens in a new window)', 'sage') }}</span>
+            </a>
+          </dt>
+          <dd class="about-stat__label">{{ __('public repos', 'sage') }}</dd>
+        </div>
+      @endif
+      <div class="about-stat">
+        <dt class="about-stat__value">{{ __('WordPress', 'sage') }}</dt>
+        <dd class="about-stat__label">{{ __('primary stack', 'sage') }}</dd>
+      </div>
+      <div class="about-stat">
+        <dt class="about-stat__value">{{ __('EST', 'sage') }}</dt>
+        <dd class="about-stat__label">{{ __('Gettysburg, PA', 'sage') }}</dd>
+      </div>
+    </dl>
   </div>
 @endcomponent
 
-{{-- STATS --}}
-<div class="about-stats" role="region" aria-label="{{ __('Quick facts', 'sage') }}">
-  <div class="container wide">
-    <div class="about-stats-shell">
-      <dl class="about-stats__grid">
-        <div class="about-stat">
-          <dt class="about-stat__value">{{ $yearsBuilding }}+</dt>
-          <dd class="about-stat__label">{{ __('years building for the web', 'sage') }}</dd>
-        </div>
-        @if (! empty($gh['public_repos']))
-          <div class="about-stat">
-            <dt class="about-stat__value">
-              <a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">
-                {{ number_format_i18n($gh['public_repos']) }}
-                <span class="visually-hidden"> {{ __('public repositories (opens in a new window)', 'sage') }}</span>
-              </a>
-            </dt>
-            <dd class="about-stat__label">{{ __('public repositories', 'sage') }}</dd>
-          </div>
-        @endif
-        <div class="about-stat">
-          <dt class="about-stat__value">{{ __('WordPress', 'sage') }}</dt>
-          <dd class="about-stat__label">{{ __('primary stack', 'sage') }}</dd>
-        </div>
-        <div class="about-stat">
-          <dt class="about-stat__value">{{ __('EST', 'sage') }}</dt>
-          <dd class="about-stat__label">{{ __('Gettysburg, PA', 'sage') }}</dd>
-        </div>
-      </dl>
-    </div>
-  </div>
-</div>
+<nav class="about-jump container wide" aria-label="{{ __('On this page', 'sage') }}">
+  <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
+  <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
+  <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
+  @if (! empty($latestPosts))
+    <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
+  @endif
+  <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+    {!! \App\mh_svg_icon('github', 13) !!} GitHub
+    <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+  </a>
+</nav>
 
 {{-- STORY --}}
 <section class="pf-section about-story-sec" id="story" aria-labelledby="about-story-heading">

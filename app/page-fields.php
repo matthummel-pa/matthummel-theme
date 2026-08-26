@@ -278,9 +278,9 @@ function page_field_map(): array
         'template-home.blade.php' => $home,
         'template-about.blade.php' => [
             __('Intro', 'sage') => [
-                ['about_kicker', __('Kicker', 'sage'), 'text', __('About', 'sage')],
+                ['about_kicker', __('Kicker', 'sage'), 'text', __('Matt Hummel', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('WordPress developer in Gettysburg.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],

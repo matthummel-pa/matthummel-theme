@@ -1774,3 +1774,44 @@ function mh_apply_about_hero_rewrite_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_about_hero_rewrite_v1', 64);
+
+/** One-time About above-the-fold hero tighten (kicker + shorter lede). */
+function mh_apply_about_atf_v1(): void
+{
+    if (get_option('mh_about_atf_v1')) {
+        return;
+    }
+
+    $ledeTo = 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.';
+    $ledeFrom = [
+        'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.',
+        'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+        'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+
+        $kicker = get_post_meta($id, 'mh_f_about_kicker', true);
+        if ($kicker === 'About') {
+            update_post_meta($id, 'mh_f_about_kicker', 'Matt Hummel');
+        }
+
+        $lede = get_post_meta($id, 'mh_f_about_lede', true);
+        if (is_string($lede) && in_array($lede, $ledeFrom, true)) {
+            update_post_meta($id, 'mh_f_about_lede', $ledeTo);
+        }
+    }
+
+    update_option('mh_about_atf_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_atf_v1', 65);
