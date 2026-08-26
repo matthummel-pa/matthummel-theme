@@ -180,7 +180,7 @@
     @if ($weeks || $events)
     <div class="code-gh-split">
       @if ($weeks)
-      <div class="code-gh-panel code-gh-cal" id="gh-contributions">
+      <div class="code-gh-panel code-gh-cal" id="gh-contributions" style="--gh-weeks: {{ $weekCount }}">
         <div class="code-gh-panel__head">
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('git', 18) !!}</span>
           <div>
@@ -194,9 +194,8 @@
           </div>
         </div>
         <div class="gh-cal-scroll" tabindex="0" aria-label="{{ sprintf(__('GitHub contribution calendar for @%s — hover or focus a day for details', 'sage'), $login) }}">
-          <div class="gh-cal-scroll__inner">
           @if ($calMonths)
-            <div class="code-gh-cal__months" aria-hidden="true" style="--gh-weeks: {{ $weekCount }}">
+            <div class="code-gh-cal__months" aria-hidden="true">
               @foreach ($calMonths as $m)
                 <span style="grid-column: {{ $m['week'] + 1 }}">{{ $m['label'] }}</span>
               @endforeach
@@ -228,7 +227,6 @@
                 @endif
               @endforeach
             @endforeach
-          </div>
           </div>
         </div>
         <p class="gh-cal-legend" aria-hidden="true">

@@ -2687,12 +2687,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 .code-gh-split {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 1.15rem;
   margin-bottom: 2rem;
-}
-@media (max-width: 960px) {
-  .code-gh-split { grid-template-columns: 1fr; }
 }
 .code-gh-panel {
   background: var(--white);
@@ -2700,6 +2697,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-radius: 14px;
   padding: 1.25rem 1.3rem 1.35rem;
   min-width: 0;
+  width: 100%;
 }
 .code-gh-panel__head {
   display: flex;
@@ -2735,43 +2733,49 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   color: var(--color-text);
   font-weight: 600;
 }
+.code-gh-cal {
+  --gh-weeks: 9;
+  --gh-gap: clamp(0.2rem, 0.65vw, 0.55rem);
+}
 .code-gh-cal__months {
   display: grid;
-  grid-template-columns: repeat(var(--gh-weeks, 53), 18px);
-  gap: 5px;
-  margin: 0 0 .4rem;
-  font-size: .72rem;
+  grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
+  gap: var(--gh-gap);
+  margin: 0 0 .45rem;
+  font-size: clamp(.65rem, 1.4vw, .78rem);
   color: var(--color-text-muted);
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
 }
 .code-gh-cal__months span {
   white-space: nowrap;
-  transform: translateX(1px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .code-gh-cal .gh-cal-scroll {
+  width: 100%;
+  box-sizing: border-box;
   border-radius: 12px;
   border: 1px solid var(--color-border-light);
   background: linear-gradient(180deg, var(--gray-50), var(--white));
-  padding: .35rem .35rem .75rem;
+  padding: 3.5rem clamp(.65rem, 1.5vw, 1.1rem) .85rem;
   overflow: visible;
 }
-.code-gh-cal .gh-cal-scroll__inner {
-  overflow-x: auto;
-  overflow-y: visible;
-  padding: 4.25rem .85rem .45rem;
-  -webkit-overflow-scrolling: touch;
-}
 .code-gh-cal .gh-cal {
-  grid-template-rows: repeat(7, 18px);
-  gap: 5px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
+  grid-template-rows: repeat(7, auto);
+  gap: var(--gh-gap);
+  width: 100%;
   overflow: visible;
 }
 .code-gh-cal .gh-day {
   position: relative;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
   overflow: visible;
   border-radius: 50%;
   border: 0;
@@ -2813,7 +2817,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal .gh-day:hover,
 .code-gh-cal .gh-day:focus-visible {
-  transform: scale(1.45);
+  transform: scale(1.28);
   z-index: 4;
   outline: none;
   filter: brightness(1.05);
@@ -2827,9 +2831,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   bottom: calc(100% + 12px);
   z-index: 6;
   box-sizing: border-box;
-  width: 15.5rem;
-  min-width: 15.5rem;
-  max-width: min(15.5rem, calc(100vw - 2rem));
+  width: min(16rem, calc(100vw - 2.5rem));
+  min-width: min(14rem, calc(100vw - 2.5rem));
+  max-width: min(16rem, calc(100vw - 2.5rem));
   padding: .6rem .75rem;
   border-radius: 8px;
   border: 1px solid var(--color-border);
@@ -2896,9 +2900,14 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .code-gh-cal .gh-day:nth-last-child(-n+21):focus-visible .gh-day__tip {
   transform: translateX(0) translateY(0) scale(1);
 }
+.code-gh-cal .gh-cal-legend {
+  margin-top: .75rem;
+}
 .code-gh-cal .gh-cal-legend .gh-day {
+  display: inline-block;
   width: 14px;
   height: 14px;
+  aspect-ratio: auto;
   animation: none;
   cursor: default;
 }
@@ -2923,8 +2932,12 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   padding: 0;
   display: grid;
   gap: 0;
-  max-height: 22rem;
-  overflow-y: auto;
+}
+.code-gh-activity .code-gh-feed {
+  max-height: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 0 1.5rem;
 }
 .code-gh-feed__item {
   display: grid;
