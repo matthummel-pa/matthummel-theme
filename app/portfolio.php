@@ -917,21 +917,47 @@ function mh_code_resume_defaults(): array
 function mh_code_resource_defaults(): array
 {
     return [
-        ['label' => 'WordPress Developer Handbook', 'url' => 'https://developer.wordpress.org/', 'note' => 'Themes, plugins, REST API, and block editor.'],
-        ['label' => 'WordPress REST API', 'url' => 'https://developer.wordpress.org/rest-api/', 'note' => 'Application endpoints and authentication.'],
-        ['label' => 'Sage', 'url' => 'https://roots.io/sage/docs/', 'note' => 'Blade, Vite, and the Roots theme stack I ship.'],
-        ['label' => 'Acorn', 'url' => 'https://roots.io/acorn/docs/', 'note' => 'Laravel components inside WordPress.'],
-        ['label' => 'Bedrock', 'url' => 'https://roots.io/bedrock/docs/', 'note' => 'Composer-based WordPress structure.'],
-        ['label' => 'Tailwind CSS', 'url' => 'https://tailwindcss.com/docs', 'note' => 'Utility CSS used on this theme.'],
-        ['label' => 'Vite', 'url' => 'https://vite.dev/guide/', 'note' => 'Asset pipeline for Sage 11.'],
-        ['label' => 'PHP', 'url' => 'https://www.php.net/docs.php', 'note' => 'Language reference for theme and plugin work.'],
-        ['label' => 'MDN Web Docs', 'url' => 'https://developer.mozilla.org/en-US/docs/Web', 'note' => 'HTML, CSS, and JavaScript.'],
-        ['label' => 'React', 'url' => 'https://react.dev/', 'note' => 'UI library for Keepary and other apps.'],
-        ['label' => 'TypeScript', 'url' => 'https://www.typescriptlang.org/docs/', 'note' => 'Typed JavaScript for larger front ends.'],
-        ['label' => 'GitHub Docs', 'url' => 'https://docs.github.com/en', 'note' => 'REST, GraphQL, and Actions.'],
-        ['label' => 'Laravel', 'url' => 'https://laravel.com/docs', 'note' => 'Reference when Acorn overlaps Laravel APIs.'],
-        ['label' => 'Microsoft Learn — Power Platform', 'url' => 'https://learn.microsoft.com/power-platform/', 'note' => 'Power Apps, Automate, and Dataverse.'],
+        ['label' => 'WordPress Developer Handbook', 'url' => 'https://developer.wordpress.org/', 'note' => 'Themes, plugins, REST API, and block editor.', 'group' => 'WordPress'],
+        ['label' => 'WordPress REST API', 'url' => 'https://developer.wordpress.org/rest-api/', 'note' => 'Application endpoints and authentication.', 'group' => 'WordPress'],
+        ['label' => 'Sage', 'url' => 'https://roots.io/sage/docs/', 'note' => 'Blade, Vite, and the Roots theme stack I ship.', 'group' => 'Roots'],
+        ['label' => 'Acorn', 'url' => 'https://roots.io/acorn/docs/', 'note' => 'Laravel components inside WordPress.', 'group' => 'Roots'],
+        ['label' => 'Bedrock', 'url' => 'https://roots.io/bedrock/docs/', 'note' => 'Composer-based WordPress structure.', 'group' => 'Roots'],
+        ['label' => 'Tailwind CSS', 'url' => 'https://tailwindcss.com/docs', 'note' => 'Utility CSS used on this theme.', 'group' => 'Front-end'],
+        ['label' => 'Vite', 'url' => 'https://vite.dev/guide/', 'note' => 'Asset pipeline for Sage 11.', 'group' => 'Front-end'],
+        ['label' => 'MDN Web Docs', 'url' => 'https://developer.mozilla.org/en-US/docs/Web', 'note' => 'HTML, CSS, and JavaScript.', 'group' => 'Front-end'],
+        ['label' => 'React', 'url' => 'https://react.dev/', 'note' => 'UI library for Keepary and other apps.', 'group' => 'Front-end'],
+        ['label' => 'TypeScript', 'url' => 'https://www.typescriptlang.org/docs/', 'note' => 'Typed JavaScript for larger front ends.', 'group' => 'Front-end'],
+        ['label' => 'PHP', 'url' => 'https://www.php.net/docs.php', 'note' => 'Language reference for theme and plugin work.', 'group' => 'Language'],
+        ['label' => 'Laravel', 'url' => 'https://laravel.com/docs', 'note' => 'Reference when Acorn overlaps Laravel APIs.', 'group' => 'Language'],
+        ['label' => 'GitHub Docs', 'url' => 'https://docs.github.com/en', 'note' => 'REST, GraphQL, and Actions.', 'group' => 'Ship'],
+        ['label' => 'Microsoft Learn — Power Platform', 'url' => 'https://learn.microsoft.com/power-platform/', 'note' => 'Power Apps, Automate, and Dataverse.', 'group' => 'Ship'],
     ];
+}
+
+/**
+ * Icon name for a documentation group label.
+ */
+function mh_code_doc_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'roots' => 'git',
+        'front-end', 'frontend' => 'code',
+        'language' => 'php',
+        'ship' => 'github',
+        default => 'globe',
+    };
+}
+
+/**
+ * Host label for a documentation URL (display only).
+ */
+function mh_code_doc_host(string $url): string
+{
+    $host = (string) (wp_parse_url($url, PHP_URL_HOST) ?: '');
+    $host = preg_replace('#^www\.#i', '', $host) ?: '';
+
+    return $host;
 }
 
 function mh_code_snippets(): array

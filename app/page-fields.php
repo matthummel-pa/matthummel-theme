@@ -460,11 +460,12 @@ function page_field_map(): array
             ],
             __('Documentation', 'sage') => [
                 ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I keep open.', 'sage')],
-                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then the Roots and front-end stack this site is built on. All links open official docs.', 'sage')],
+                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then the Roots and front-end stack this site is built on. Grouped so you can jump to the right shelf. All links open official docs.', 'sage')],
                 ['code_docs', __('Links', 'sage'), 'repeater', mh_code_resource_defaults(), [
                     ['label', __('Label', 'sage'), 'text'],
                     ['url', __('URL', 'sage'), 'url'],
                     ['note', __('Note', 'sage'), 'text'],
+                    ['group', __('Group', 'sage'), 'text'],
                 ]],
             ],
             __('Call to action', 'sage') => [
@@ -674,6 +675,11 @@ function mh_code_page_resources(?int $post_id = null): array
     if ($rows === []) {
         $rows = mh_code_resource_defaults();
     }
+    $defaultsByUrl = [];
+    foreach (mh_code_resource_defaults() as $def) {
+        $defaultsByUrl[(string) ($def['url'] ?? '')] = $def;
+    }
+
     $out = [];
     foreach ($rows as $r) {
         $url = trim((string) ($r['url'] ?? ''));
@@ -681,10 +687,49 @@ function mh_code_page_resources(?int $post_id = null): array
         if ($url === '' || $label === '') {
             continue;
         }
+        $fallback = $defaultsByUrl[$url] ?? [];
+        $group = trim((string) ($r['group'] ?? $fallback['group'] ?? ''));
+        if ($group === '') {
+            $group = __('Reference', 'sage');
+        }
         $out[] = [
             'label' => $label,
             'url' => $url,
             'note' => (string) ($r['note'] ?? ''),
+            'group' => $group,
+            'host' => mh_code_doc_host($url),
+            'icon' => mh_code_doc_group_icon($group),
+        ];
+    }
+
+    return $out;
+}
+
+/**
+ * Documentation links grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{label: string, url: string, note: string, group: string, host: string, icon: string}>}>
+ */
+function mh_code_page_resources_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_resources($post_id) as $doc) {
+        $key = (string) ($doc['group'] ?? __('Reference', 'sage'));
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $grouped[$key][] = $doc;
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_doc_group_icon($key),
+            'items' => $grouped[$key],
         ];
     }
 

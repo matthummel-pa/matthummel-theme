@@ -14,7 +14,7 @@
   $live     = \App\mh_github_live_repos(6);
   $practice = \App\mh_code_page_practice();
   $skills   = \App\mh_code_page_skills();
-  $docs     = \App\mh_code_page_resources();
+  $docGroups = \App\mh_code_page_resources_grouped();
   $login    = \App\mh_github_login();
   $ghUrl    = $profile['url'] ?: 'https://github.com/'.$login;
   $weeks    = $calendar['weeks'] ?? [];
@@ -351,33 +351,63 @@
 {{-- DOCUMENTATION --}}
 <section class="pf-section code-docs-sec" id="docs" aria-labelledby="code-docs-heading">
   <div class="container wide">
-    <div class="code-section-head">
-      <div>
-        <p class="eyebrow">{{ __('Reference', 'sage') }}</p>
-        <h2 id="code-docs-heading" class="display-title is-section">
-          {{ \App\field('code_doc_h2', __('Documentation I keep open.', 'sage')) }}
-        </h2>
-        <p class="sec-intro">
-          {{ \App\field('code_doc_intro', __('Official handbooks first, then the Roots and front-end stack this site is built on. All links open official docs.', 'sage')) }}
-        </p>
+    <div class="code-docs-shell">
+      <div class="code-docs-shell__mesh" aria-hidden="true"></div>
+      <div class="code-docs-shell__inner">
+        <div class="code-section-head code-docs-shell__head">
+          <div>
+            <p class="eyebrow">{{ __('Reference', 'sage') }}</p>
+            <h2 id="code-docs-heading" class="display-title is-section">
+              {{ \App\field('code_doc_h2', __('Documentation I keep open.', 'sage')) }}
+            </h2>
+            <p class="sec-intro">
+              {{ \App\field('code_doc_intro', __('Official handbooks first, then the Roots and front-end stack this site is built on. Grouped so you can jump to the right shelf. All links open official docs.', 'sage')) }}
+            </p>
+          </div>
+          @if (count($docGroups) > 1)
+            <nav class="code-docs-jump" aria-label="{{ __('Documentation groups', 'sage') }}">
+              @foreach ($docGroups as $group)
+                <a href="#doc-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</a>
+              @endforeach
+            </nav>
+          @endif
+        </div>
+
+        <div class="code-docs-groups">
+          @foreach ($docGroups as $group)
+            <section class="code-docs-group" id="doc-{{ sanitize_title($group['label']) }}" aria-labelledby="doc-heading-{{ sanitize_title($group['label']) }}">
+              <div class="code-docs-group__head">
+                <span class="code-docs-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
+                <h3 id="doc-heading-{{ sanitize_title($group['label']) }}" class="code-docs-group__title">{{ $group['label'] }}</h3>
+                <span class="code-docs-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
+              </div>
+              <ul class="code-docs">
+                @foreach ($group['items'] as $doc)
+                  <li class="code-docs__card" data-group="{{ esc_attr($doc['group']) }}">
+                    <a class="code-docs__hit" href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">
+                      <span class="code-docs__mark" aria-hidden="true">{!! \App\mh_svg_icon($doc['icon'], 18) !!}</span>
+                      <span class="code-docs__copy">
+                        <span class="code-docs__title">
+                          {{ $doc['label'] }}
+                          <span class="code-docs__ext" aria-hidden="true">↗</span>
+                        </span>
+                        @if (($doc['note'] ?? '') !== '')
+                          <span class="code-docs__note">{{ $doc['note'] }}</span>
+                        @endif
+                        @if (($doc['host'] ?? '') !== '')
+                          <span class="code-docs__host">{{ $doc['host'] }}</span>
+                        @endif
+                      </span>
+                      <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            </section>
+          @endforeach
+        </div>
       </div>
     </div>
-    <ul class="code-docs">
-      @foreach ($docs as $doc)
-        <li class="code-docs__card">
-          <span class="code-docs__mark" aria-hidden="true">{!! \App\mh_svg_icon('globe', 16) !!}</span>
-          <div class="code-docs__copy">
-            <a href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">
-              {{ $doc['label'] }}
-              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-            </a>
-            @if (($doc['note'] ?? '') !== '')
-              <p>{{ $doc['note'] }}</p>
-            @endif
-          </div>
-        </li>
-      @endforeach
-    </ul>
   </div>
 </section>
 
