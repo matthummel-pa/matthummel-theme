@@ -6,7 +6,8 @@ All notable changes to this theme are recorded here.
 
 ### Changed
 
-- About page redesign: field-driven service / approach / availability cards, mesh section shells, hero jump links, stronger Gettysburg SEO title/meta, mobile-friendly stats and cards
+- About page redesign: field-driven service / approach / availability cards, mesh section shells, stronger Gettysburg SEO title/meta, mobile-friendly stats and cards
+- About hero rewrite: benefit-led blurb (WordPress / Sage / PHP / Gettysburg), fact chips, dual CTAs, section jump chips, squared photo with caption
 
 ## 3.1.10 — 2026-08-26
 

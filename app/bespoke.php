@@ -1697,7 +1697,8 @@ function mh_apply_about_section_boost_v1(): void
             'A little background.' => 'WordPress developer in Gettysburg.',
         ],
         'mh_f_about_lede' => [
-            'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.' => 'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+            'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.' => 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
+            'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.' => 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.',
         ],
         'mh_f_about_story_h2' => [
             'How I got here' => 'How I got here.',
@@ -1735,3 +1736,41 @@ function mh_apply_about_section_boost_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_about_section_boost_v1', 63);
+
+/** One-time About hero blurb rewrite (after section boost may already have run). */
+function mh_apply_about_hero_rewrite_v1(): void
+{
+    if (get_option('mh_about_hero_rewrite_v1')) {
+        return;
+    }
+
+    $to = 'I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.';
+
+    $from = [
+        'I work in PHP and Blade, write front-end in Tailwind, and deploy with GitHub Actions. I lean toward clean, maintainable code over clever code — because the person after me needs to read it too. Based in Gettysburg, PA.',
+        'I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $val = get_post_meta($id, 'mh_f_about_lede', true);
+        if (! is_string($val) || $val === '') {
+            continue;
+        }
+        if (in_array($val, $from, true)) {
+            update_post_meta($id, 'mh_f_about_lede', $to);
+        }
+    }
+
+    update_option('mh_about_hero_rewrite_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_about_hero_rewrite_v1', 64);

@@ -20,27 +20,43 @@
 @section('content')
 
 {{-- HERO --}}
-@component('partials.page-hero', ['innerClass' => 'hero-intro'])
-  <div>
+@component('partials.page-hero', ['extra' => 'about-hero', 'innerClass' => 'hero-intro about-hero__inner'])
+  <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('About', 'sage')) }}</p>
     <h1 class="display-title is-hero">
       {{ \App\field('about_h1', __('WordPress developer in Gettysburg.', 'sage')) }}
     </h1>
-    <p class="lead">
-      {{ \App\field('about_lede', __('I write PHP and Blade, ship front ends in Tailwind, and deploy with GitHub Actions. Clean, maintainable code over clever code — the next developer needs to read it too. Based in Gettysburg, Pennsylvania.', 'sage')) }}
+    <p class="lead about-hero__lede">
+      {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read. Deployments run through GitHub Actions. Need full-time, contract, or agency overflow help? Say hello.', 'sage')) }}
     </p>
+    <ul class="about-hero__chips" aria-label="{{ __('Quick facts', 'sage') }}">
+      <li>{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('WordPress · Sage · PHP', 'sage') }}</li>
+      <li>{!! \App\mh_svg_icon('globe', 13) !!} {{ __('Gettysburg, PA', 'sage') }}</li>
+      <li>{!! \App\mh_svg_icon('github', 13) !!} {{ __('Open source on GitHub', 'sage') }}</li>
+    </ul>
     @if ($isHireable)
-      <p class="hire-avail" style="margin-top:.85rem">
+      <p class="hire-avail about-hero__avail">
         @include('partials.avail-mark', ['gh' => $gh])
         {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }} — full-time, contract, agency overflow
       </p>
     @endif
-    <p class="about-hero-links">
-      <a href="#story">{!! \App\mh_svg_icon('book-open', 15) !!} {{ __('Story', 'sage') }}</a>
-      <a href="#build">{!! \App\mh_svg_icon('wordpress', 15) !!} {{ __('What I build', 'sage') }}</a>
-      <a href="#approach">{!! \App\mh_svg_icon('code', 15) !!} {{ __('How I work', 'sage') }}</a>
-      <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Say hello', 'sage') }}</a>
-    </p>
+    <div class="about-hero__actions">
+      <a class="btn" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        {{ __('Say hello', 'sage') }}
+      </a>
+      <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
+        {{ __('Hire me', 'sage') }}
+      </a>
+    </div>
+    <nav class="about-hero-jump" aria-label="{{ __('On this page', 'sage') }}">
+      <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
+      <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
+      <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
+      @if (! empty($latestPosts))
+        <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
+      @endif
+    </nav>
     <p class="about-hero-links about-hero-links--social">
       <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
         {!! \App\mh_svg_icon('github', 15) !!} GitHub
@@ -53,11 +69,14 @@
       </a>
     </p>
   </div>
-  @include('partials.profile-photo', [
-    'size'  => 280,
-    'class' => 'profile-photo profile-photo--hero',
-    'eager' => true,
-  ])
+  <div class="about-hero__photo">
+    @include('partials.profile-photo', [
+      'size'  => 300,
+      'class' => 'profile-photo profile-photo--hero about-hero__img',
+      'eager' => true,
+    ])
+    <p class="about-hero__photo-cap">{{ __('Matt Hummel · Gettysburg', 'sage') }}</p>
+  </div>
 @endcomponent
 
 {{-- STATS --}}
