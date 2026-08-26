@@ -203,29 +203,31 @@
           @endif
           <div class="gh-cal">
             @foreach ($weeks as $week)
-              @foreach ($week as $day)
-                @php
-                  $level = (int) ($day['level'] ?? 0);
-                  $date  = (string) ($day['date'] ?? '');
-                  $count = (int) ($day['count'] ?? 0);
-                  $dayEvents = $date !== '' ? ($eventsByDay[$date] ?? []) : [];
-                  $tip = $date !== '' ? \App\mh_github_day_tip($date, $count, $dayEvents) : '';
-                  $i = $dayIndex++;
-                @endphp
-                @if ($date !== '')
-                  <button
-                    type="button"
-                    class="gh-day"
-                    data-level="{{ $level }}"
-                    style="--i: {{ $i }}"
-                    aria-label="{{ esc_attr($tip) }}"
-                  >
-                    <span class="gh-day__tip" role="tooltip">{{ $tip }}</span>
-                  </button>
-                @else
-                  <span class="gh-day gh-day--pad" data-level="0" style="--i: {{ $i }}" aria-hidden="true"></span>
-                @endif
-              @endforeach
+              <div class="gh-week">
+                @foreach ($week as $day)
+                  @php
+                    $level = (int) ($day['level'] ?? 0);
+                    $date  = (string) ($day['date'] ?? '');
+                    $count = (int) ($day['count'] ?? 0);
+                    $dayEvents = $date !== '' ? ($eventsByDay[$date] ?? []) : [];
+                    $tip = $date !== '' ? \App\mh_github_day_tip($date, $count, $dayEvents) : '';
+                    $i = $dayIndex++;
+                  @endphp
+                  @if ($date !== '')
+                    <button
+                      type="button"
+                      class="gh-day"
+                      data-level="{{ $level }}"
+                      style="--i: {{ $i }}"
+                      aria-label="{{ esc_attr($tip) }}"
+                    >
+                      <span class="gh-day__tip" role="tooltip">{{ $tip }}</span>
+                    </button>
+                  @else
+                    <span class="gh-day gh-day--pad" data-level="0" style="--i: {{ $i }}" aria-hidden="true"></span>
+                  @endif
+                @endforeach
+              </div>
             @endforeach
           </div>
         </div>
