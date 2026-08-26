@@ -460,7 +460,7 @@ function page_field_map(): array
             ],
             __('Documentation', 'sage') => [
                 ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I keep open.', 'sage')],
-                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then the Roots and front-end stack this site is built on. Grouped so you can jump to the right shelf. All links open official docs.', 'sage')],
+                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then Roots and the front-end stack behind this site. Jump a shelf, open a card — every link is the official docs.', 'sage')],
                 ['code_docs', __('Links', 'sage'), 'repeater', mh_code_resource_defaults(), [
                     ['label', __('Label', 'sage'), 'text'],
                     ['url', __('URL', 'sage'), 'url'],
