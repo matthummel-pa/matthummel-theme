@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.15 — 2026-08-26
+
+### Added
+
+- Bluesky sharing: Customizer app password, post editor sidebar (preview / post now / paste ChatGPT summary), auto-share on journal publish with optional OpenAI summary, `wp mh bluesky-share`
+
 ## 3.1.14 — 2026-08-26
 
 ### Changed
