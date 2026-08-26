@@ -395,7 +395,7 @@ function mh_github_events_recent(int $limit = 10, int $days = 60): array
 }
 
 /**
- * Public events keyed by UTC calendar day (Y-m-d) for contribution tooltips.
+ * Public events keyed by site-local calendar day (Y-m-d) for contribution tooltips.
  *
  * @return array<string, list<array{type: string, repo: string, url: string, text: string, when: string}>>
  */
@@ -403,6 +403,7 @@ function mh_github_events_by_day(int $days = 60): array
 {
     $days = max(1, min(90, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
+    $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
     $byDay = [];
 
     foreach (mh_github_events(100) as $ev) {
@@ -410,11 +411,18 @@ function mh_github_events_by_day(int $days = 60): array
             continue;
         }
         $when = (string) ($ev['when'] ?? '');
-        $ts = $when !== '' ? strtotime($when) : false;
-        if ($ts === false || $ts < $cutoff) {
+        if ($when === '') {
             continue;
         }
-        $key = gmdate('Y-m-d', $ts);
+        try {
+            $dt = new \DateTimeImmutable($when);
+        } catch (\Exception) {
+            continue;
+        }
+        if ($dt->getTimestamp() < $cutoff) {
+            continue;
+        }
+        $key = $dt->setTimezone($tz)->format('Y-m-d');
         $byDay[$key][] = $ev;
     }
 
