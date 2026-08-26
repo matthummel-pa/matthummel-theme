@@ -306,6 +306,94 @@ function mh_github_calendar(): array
     return Github::fetchContributionCalendar(mh_github_login());
 }
 
+/**
+ * Contribution calendar clipped to the last N days (newest week columns first).
+ *
+ * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
+ */
+function mh_github_calendar_recent(int $days = 30): array
+{
+    $days = max(1, min(366, $days));
+    $cal = mh_github_calendar();
+    $cutoff = gmdate('Y-m-d', time() - ($days - 1) * DAY_IN_SECONDS);
+
+    $weeks = [];
+    $total = 0;
+
+    foreach ((array) ($cal['weeks'] ?? []) as $week) {
+        if (! is_array($week)) {
+            continue;
+        }
+
+        $col = [];
+        $hasInRange = false;
+
+        foreach ($week as $day) {
+            if (! is_array($day)) {
+                continue;
+            }
+
+            $date = (string) ($day['date'] ?? '');
+            if ($date === '' || $date < $cutoff) {
+                $col[] = ['date' => '', 'count' => 0, 'level' => 0];
+
+                continue;
+            }
+
+            $hasInRange = true;
+            $count = (int) ($day['count'] ?? 0);
+            $total += $count;
+            $col[] = [
+                'date' => $date,
+                'count' => $count,
+                'level' => (int) ($day['level'] ?? 0),
+            ];
+        }
+
+        if ($hasInRange && $col !== []) {
+            $weeks[] = $col;
+        }
+    }
+
+    // Newest week first (left); day-of-week order within each column stays top → bottom.
+    $weeks = array_reverse($weeks);
+
+    return [
+        'total' => $total,
+        'weeks' => array_values($weeks),
+        'days' => $days,
+    ];
+}
+
+/**
+ * Public GitHub events, newest first, limited to the last N days.
+ *
+ * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
+ */
+function mh_github_events_recent(int $limit = 10, int $days = 30): array
+{
+    $days = max(1, min(90, $days));
+    $cutoff = time() - $days * DAY_IN_SECONDS;
+    $out = [];
+
+    foreach (mh_github_events(max($limit * 2, 20)) as $ev) {
+        if (! is_array($ev)) {
+            continue;
+        }
+        $when = (string) ($ev['when'] ?? '');
+        $ts = $when !== '' ? strtotime($when) : false;
+        if ($ts === false || $ts < $cutoff) {
+            continue;
+        }
+        $out[] = $ev;
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+
+    return $out;
+}
+
 function mh_github_live_repos(int $limit = 8): array
 {
     return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));
@@ -1458,6 +1546,74 @@ function mh_ensure_start_page(): void
     update_post_meta((int) $id, '_wp_page_template', 'template-start.blade.php');
 }
 add_action('init', __NAMESPACE__.'\\mh_ensure_start_page', 35);
+
+/**
+ * Ensure a published page exists with a Blade template (idempotent).
+ */
+function mh_ensure_theme_page(string $slug, string $title, string $template): int
+{
+    if (wp_installing()) {
+        return 0;
+    }
+
+    $existing = get_page_by_path($slug);
+    if ($existing instanceof \WP_Post) {
+        update_post_meta($existing->ID, '_wp_page_template', $template);
+        if ($existing->post_status !== 'publish') {
+            wp_update_post([
+                'ID' => $existing->ID,
+                'post_status' => 'publish',
+            ]);
+        }
+
+        return (int) $existing->ID;
+    }
+
+    $id = wp_insert_post([
+        'post_title' => $title,
+        'post_name' => $slug,
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_content' => '',
+    ], true);
+
+    if (is_wp_error($id) || ! $id) {
+        return 0;
+    }
+
+    update_post_meta((int) $id, '_wp_page_template', $template);
+
+    return (int) $id;
+}
+
+/**
+ * Ensure Hire me page exists (idempotent).
+ */
+function mh_ensure_hire_page(): void
+{
+    mh_ensure_theme_page('hire', 'Hire me', 'template-hire.blade.php');
+}
+add_action('init', __NAMESPACE__.'\\mh_ensure_hire_page', 35);
+
+/**
+ * Ensure Changelog and other utility pages exist (idempotent).
+ */
+function mh_ensure_utility_pages(): void
+{
+    $pages = [
+        'changelog' => ['Changelog', 'template-changelog.blade.php'],
+        'privacy' => ['Privacy', 'template-privacy.blade.php'],
+        'terms' => ['Terms', 'template-terms.blade.php'],
+        'accessibility' => ['Accessibility', 'template-accessibility.blade.php'],
+        'uses' => ['Uses', 'template-uses.blade.php'],
+        'thank-you' => ['Thank you', 'template-thankyou.blade.php'],
+    ];
+
+    foreach ($pages as $slug => [$title, $template]) {
+        mh_ensure_theme_page($slug, $title, $template);
+    }
+}
+add_action('init', __NAMESPACE__.'\\mh_ensure_utility_pages', 35);
 
 /**
  * Ensure the DEV.to journal category exists.

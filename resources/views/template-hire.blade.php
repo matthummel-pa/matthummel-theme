@@ -5,6 +5,19 @@
 
 @php
   $gh = \App\Github::fetchUser(\App\mh_github_login());
+  $li = \App\LinkedIn::fetchProfile();
+  $liUrl = (string) ($li['url'] ?? \App\LinkedIn::profileUrl());
+  $shareUrl = \App\LinkedIn::shareUrl(home_url('/hire/'));
+  $jobs = \App\mh_code_page_resume();
+  $skills = \App\mh_code_page_skills(\App\mh_page_id_by_template('template-code.blade.php') ?: null);
+  $roleCount = count($jobs);
+  $currentRole = '';
+  foreach ($jobs as $job) {
+      if (strcasecmp((string) ($job['period'] ?? ''), 'Current') === 0) {
+          $currentRole = trim(($job['role'] ?? '').(($job['org'] ?? '') !== '' ? ' · '.$job['org'] : ''));
+          break;
+      }
+  }
 
   $goodFor = [
     ['Shops and local businesses', 'home'],
@@ -21,22 +34,28 @@
     ['Admin guide', 'Plain-language walkthrough of every editable area.'],
     ['Post-launch support', 'Reachable for questions. No contract required.'],
   ];
+
+  $fit = [
+    ['Clear scope', 'Written list of work, timeline, and what is out of scope before build starts.'],
+    ['Editable handoff', 'WordPress admin the shop can keep using — not a locked page builder.'],
+    ['Public proof', 'Repos and commits on GitHub; roles on LinkedIn match the resume below.'],
+  ];
 @endphp
 
 @section('content')
 
 {{-- ── HERO ────────────────────────────────────────────── --}}
 @component('partials.page-hero')
-  <p class="eyebrow">Hire me</p>
+  <p class="eyebrow">{{ \App\field('hire_kicker', __('Hire me', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    @if (\App\mh_is_hireable($gh))
-      {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.
+    @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
+      {{ \App\field('hire_h1', \App\mh_availability_label($gh, __('Open for new work', 'sage')).'.') }}
     @else
-      {{ __('Hire a WordPress developer.', 'sage') }}
+      {{ \App\field('hire_h1', __('Hire a WordPress developer in Gettysburg.', 'sage')) }}
     @endif
   </h1>
-  <p class="lead">I'm available for WordPress projects right now — site builds, plugins, agency overflow, and Power Platform work. A short note is enough to start.</p>
-  @if (\App\mh_is_hireable($gh))
+  <p class="lead">{{ \App\field('hire_lede', __('Available for WordPress site builds, plugins, agency overflow, and full-time or contract roles. Based in Gettysburg — I work with shops and agencies anywhere.', 'sage')) }}</p>
+  @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])
       {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — reply within a day
@@ -50,15 +69,155 @@
       </span>
     @endforeach
   </div>
+  <p class="about-hero-links" style="margin-top:1rem">
+    <a href="#linkedin">{!! \App\mh_svg_icon('linkedin', 15) !!} {{ __('LinkedIn', 'sage') }}</a>
+    <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Resume', 'sage') }}</a>
+    <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} {{ __('Skills', 'sage') }}</a>
+    <a href="#process">{!! \App\mh_svg_icon('calendar', 15) !!} {{ __('Process', 'sage') }}</a>
+    <a href="#contact-cta">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Say hello', 'sage') }}</a>
+  </p>
   <div class="svc-hero-actions" style="margin-top:1.25rem">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+    </a>
+    <a class="btn btn-outline" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
+      {!! \App\mh_svg_icon('linkedin', 16) !!} LinkedIn
+      <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
     </a>
     <a class="h-text-arrow" href="{{ home_url('/services/') }}">
       Full services detail <span aria-hidden="true">→</span>
     </a>
   </div>
 @endcomponent
+
+{{-- ── LINKEDIN PROFILE ────────────────────────────────── --}}
+<section class="pf-section pf-section--alt" id="linkedin" aria-labelledby="hire-li-heading">
+  <div class="container wide">
+    <div class="code-gh__head">
+      <div>
+        <p class="eyebrow">{{ __('Professional network', 'sage') }}</p>
+        <h2 id="hire-li-heading" class="display-title is-section">
+          {{ \App\field('hire_li_h2', __('LinkedIn profile.', 'sage')) }}
+        </h2>
+        <p class="sec-intro">
+          {{ \App\field('hire_li_intro', __('Roles below match my LinkedIn. Connect there for a quieter inbox, or write here if you already know what you need.', 'sage')) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="hire-li-panel">
+      <div class="hire-li-panel__mesh" aria-hidden="true"></div>
+      <div class="hire-li-panel__main">
+        <div class="hire-li-panel__who">
+          @if (! empty($li['picture']))
+            <img class="hire-li-panel__avatar" src="{{ esc_url($li['picture']) }}" width="88" height="88" alt="{{ esc_attr(($li['name'] ?? 'Matt Hummel').' profile photo') }}" loading="lazy" decoding="async">
+          @endif
+          <div class="hire-li-panel__copy">
+            <p class="hire-li-panel__name">
+              {!! \App\mh_svg_icon('linkedin', 18) !!}
+              {{ $li['name'] ?? 'Matt Hummel' }}
+            </p>
+            @if (! empty($li['headline']))
+              <p class="hire-li-panel__headline">{{ $li['headline'] }}</p>
+            @endif
+            <p class="hire-li-panel__meta">
+              @if (! empty($li['location']))
+                <span>{!! \App\mh_svg_icon('map', 13) !!} {{ $li['location'] }}</span>
+              @endif
+              @if (! empty($li['open_to_work']))
+                <span class="hire-li-open">
+                  <span class="h-badge__dot" aria-hidden="true"></span>
+                  {{ __('Open to work', 'sage') }}
+                </span>
+              @endif
+              @if (($li['source'] ?? '') === 'api')
+                <span class="hire-li-live" aria-label="{{ __('Live data from LinkedIn API', 'sage') }}">
+                  <span class="h-badge__dot" aria-hidden="true"></span>
+                  {{ __('Live from API', 'sage') }}
+                </span>
+              @endif
+            </p>
+            @if (! empty($li['about']))
+              <p class="hire-li-panel__about">{{ $li['about'] }}</p>
+            @endif
+            <p class="hire-li-panel__actions">
+              <a class="btn" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
+                {!! \App\mh_svg_icon('linkedin', 15) !!} {{ __('View on LinkedIn', 'sage') }}
+                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+              <a class="btn btn-outline" href="{{ esc_url($shareUrl) }}" rel="noopener" target="_blank">
+                {!! \App\mh_svg_icon('globe', 15) !!} {{ __('Share this page', 'sage') }}
+                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+              <a class="about-text-link" href="{{ home_url('/contact/') }}">
+                {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Prefer email →', 'sage') }}
+              </a>
+            </p>
+          </div>
+        </div>
+        <dl class="hire-li-stats">
+          @if ($currentRole !== '')
+            <div class="hire-li-stat">
+              <dt>{{ __('Current', 'sage') }}</dt>
+              <dd>{{ $currentRole }}</dd>
+            </div>
+          @endif
+          <div class="hire-li-stat">
+            <dt>{{ number_format_i18n($roleCount) }}</dt>
+            <dd>{{ __('Roles on resume', 'sage') }}</dd>
+          </div>
+          @if (! empty($gh['public_repos']))
+            <div class="hire-li-stat">
+              <dt>{{ number_format_i18n((int) $gh['public_repos']) }}</dt>
+              <dd>{{ __('Public GitHub repos', 'sage') }}</dd>
+            </div>
+          @endif
+        </dl>
+      </div>
+    </div>
+
+    <div class="hire-fit" aria-label="{{ __('Why hire', 'sage') }}">
+      @foreach ($fit as [$title, $text])
+        <article class="hire-fit__card">
+          <h3>{{ $title }}</h3>
+          <p>{{ $text }}</p>
+        </article>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- ── RESUME ──────────────────────────────────────────── --}}
+@include('partials.resume-timeline', [
+  'jobs' => $jobs,
+  'linkedin' => $liUrl,
+  'headingId' => 'hire-resume-heading',
+  'h2' => \App\field('hire_cv_h2', __('Resume.', 'sage')),
+  'intro' => \App\field('hire_cv_intro', __('Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')),
+  'eyebrow' => __('Experience', 'sage'),
+  'extraLinks' => [
+    ['href' => home_url('/about/'), 'label' => __('Full background →', 'sage')],
+    ['href' => home_url('/code/'), 'label' => __('Public code →', 'sage')],
+  ],
+])
+
+{{-- ── SKILLS ──────────────────────────────────────────── --}}
+<section class="pf-section pf-section--alt" id="skills" aria-labelledby="hire-skills-heading">
+  <div class="container wide">
+    <p class="eyebrow">{{ __('Stack', 'sage') }}</p>
+    <h2 id="hire-skills-heading" class="display-title is-section">
+      {{ \App\field('hire_sk_h2', __('Skills I bring.', 'sage')) }}
+    </h2>
+    <p class="sec-intro">
+      {{ \App\field('hire_sk_intro', __('Stack I use on shipped WordPress and web work — same tools you will see on GitHub.', 'sage')) }}
+    </p>
+    <ul class="skill-row" style="margin-top:1.5rem">
+      @foreach ($skills as $skill)
+        <li>{!! \App\mh_skill_chip($skill) !!}</li>
+      @endforeach
+    </ul>
+  </div>
+</section>
 
 {{-- ── WHAT I NEED FROM YOU ──────────────────────────── --}}
 <section class="pf-section" aria-labelledby="hire-need-heading">
@@ -82,14 +241,17 @@
         <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.85rem">
           {!! \App\mh_svg_icon('mail', 15) !!} Say hello
         </a>
-        <p class="hire-need-cta__note">Want the full breakdown first? <a href="{{ home_url('/services/') }}">Read services →</a></p>
+        <p class="hire-need-cta__note">
+          Or <a href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">message on LinkedIn</a>
+          · <a href="{{ home_url('/services/') }}">Read services →</a>
+        </p>
       </div>
     </div>
   </div>
 </section>
 
 {{-- ── FOUR STEPS ─────────────────────────────────────── --}}
-<section class="pf-section pf-section--alt" aria-labelledby="hire-process-heading">
+<section class="pf-section pf-section--alt" id="process" aria-labelledby="hire-process-heading">
   <div class="container wide">
     <p class="eyebrow">The process</p>
     <h2 id="hire-process-heading" class="display-title is-section">From hello to handoff.</h2>
@@ -114,7 +276,7 @@
 </section>
 
 {{-- ── WHAT YOU LEAVE WITH ────────────────────────────── --}}
-<section class="pf-section" aria-labelledby="hire-get-heading">
+<section class="pf-section" id="handoff" aria-labelledby="hire-get-heading">
   <div class="container wide">
     <div class="hire-get-layout">
       <div>
@@ -138,18 +300,23 @@
 </section>
 
 {{-- ── FINAL CTA ───────────────────────────────────────── --}}
-<section class="cta-band" aria-labelledby="hire-cta-heading">
+<section class="cta-band" id="contact-cta" aria-labelledby="hire-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
       <p class="eyebrow eyebrow--on-dark">Let's go</p>
       <h2 id="hire-cta-heading" class="display-title is-section">Ready to start?</h2>
-      <p>Write a short note about what you're building. I'll reply within a day.</p>
+      <p>Write a short note about what you're building. I'll reply within a day. LinkedIn works too if you prefer.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} Say hello
       </a>
-      <a class="about-text-link" href="{{ home_url('/services/') }}" style="color:#9ca3af">Full services page →</a>
+      <a class="about-text-link" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank" style="color:#9ca3af">
+        {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn →
+      </a>
+      <a class="about-text-link" href="{{ esc_url($shareUrl) }}" rel="noopener" target="_blank" style="color:#9ca3af">
+        Share hire page on LinkedIn →
+      </a>
     </div>
   </div>
 </section>

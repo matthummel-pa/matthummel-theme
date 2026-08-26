@@ -437,10 +437,10 @@ function page_field_map(): array
             __('GitHub', 'sage') => [
                 ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source WordPress code on GitHub.', 'sage')],
                 ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.', 'sage')],
-                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('A year of public commits', 'sage')],
-                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.', 'sage')],
+                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 30 days of commits', 'sage')],
+                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 30 days, newest week first. Darker blue means a busier day on public repos.', 'sage')],
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('What shipped lately', 'sage')],
-                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the public timeline.', 'sage')],
+                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 30 days — newest first.', 'sage')],
                 ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Repos worth opening first', 'sage')],
                 ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
@@ -452,18 +452,6 @@ function page_field_map(): array
                 ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
                 ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')],
                 ['code_live_all', __('All repos label', 'sage'), 'text', __('All public repositories', 'sage')],
-            ],
-            __('Resume', 'sage') => [
-                ['code_cv_h2', __('Heading', 'sage'), 'text', __('Resume', 'sage')],
-                ['code_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.', 'sage')],
-                ['code_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
-                    ['role', __('Role', 'sage'), 'text'],
-                    ['org', __('Organization', 'sage'), 'text'],
-                    ['period', __('Dates', 'sage'), 'text'],
-                    ['type', __('Type', 'sage'), 'text'],
-                    ['url', __('Organization URL', 'sage'), 'url'],
-                    ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
-                ]],
             ],
             __('Skills', 'sage') => [
                 ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills', 'sage')],
@@ -478,6 +466,33 @@ function page_field_map(): array
                     ['url', __('URL', 'sage'), 'url'],
                     ['note', __('Note', 'sage'), 'text'],
                 ]],
+            ],
+        ],
+        'template-hire.blade.php' => [
+            __('Intro', 'sage') => [
+                ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
+                ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer in Gettysburg.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Available for WordPress site builds, plugins, agency overflow, and full-time or contract roles. Based in Gettysburg — I work with shops and agencies anywhere.', 'sage')],
+            ],
+            __('LinkedIn', 'sage') => [
+                ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
+                ['hire_li_intro', __('Intro', 'sage'), 'textarea', __('Roles below match my LinkedIn. Connect there for a quieter inbox, or write here if you already know what you need.', 'sage')],
+            ],
+            __('Resume', 'sage') => [
+                ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
+                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')],
+                ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
+                    ['role', __('Role', 'sage'), 'text'],
+                    ['org', __('Organization', 'sage'), 'text'],
+                    ['period', __('Dates', 'sage'), 'text'],
+                    ['type', __('Type', 'sage'), 'text'],
+                    ['url', __('Organization URL', 'sage'), 'url'],
+                    ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
+                ]],
+            ],
+            __('Skills', 'sage') => [
+                ['hire_sk_h2', __('Heading', 'sage'), 'text', __('Skills I bring.', 'sage')],
+                ['hire_sk_intro', __('Intro', 'sage'), 'text', __('Stack I use on shipped WordPress and web work — same tools you will see on GitHub.', 'sage')],
             ],
         ],
         'template-projects.blade.php' => [
@@ -576,10 +591,37 @@ function mh_code_page_skills(?int $post_id = null): array
 
 function mh_code_page_resume(?int $post_id = null): array
 {
-    $rows = field_rows('code_cv_jobs', [], $post_id);
+    if ($post_id === null) {
+        $hireId = mh_page_id_by_template('template-hire.blade.php');
+        if ($hireId > 0) {
+            $hireRows = field_rows('hire_cv_jobs', [], $hireId);
+            if ($hireRows !== []) {
+                return mh_normalize_resume_rows($hireRows);
+            }
+        }
+        $codeId = mh_page_id_by_template('template-code.blade.php');
+        if ($codeId > 0) {
+            $post_id = $codeId;
+        }
+    }
+
+    $rows = field_rows('hire_cv_jobs', [], $post_id);
+    if ($rows === []) {
+        $rows = field_rows('code_cv_jobs', [], $post_id);
+    }
     if ($rows === []) {
         $rows = mh_code_resume_defaults();
     }
+
+    return mh_normalize_resume_rows($rows);
+}
+
+/**
+ * @param  list<array<string, mixed>>  $rows
+ * @return list<array{role: string, org: string, period: string, type: string, url: string, bullets: list<string>}>
+ */
+function mh_normalize_resume_rows(array $rows): array
+{
     $out = [];
     foreach ($rows as $r) {
         $bullets = $r['bullets'] ?? [];
@@ -600,6 +642,24 @@ function mh_code_page_resume(?int $post_id = null): array
     }
 
     return $out;
+}
+
+/**
+ * First published page using a named Blade template.
+ */
+function mh_page_id_by_template(string $template): int
+{
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'numberposts' => 1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_key' => '_wp_page_template',
+        'meta_value' => $template,
+    ]);
+
+    return isset($pages[0]) ? (int) $pages[0] : 0;
 }
 
 function mh_code_page_resources(?int $post_id = null): array
