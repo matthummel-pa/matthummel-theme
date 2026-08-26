@@ -2741,8 +2741,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal {
   --gh-weeks: 13;
-  --gh-gap: clamp(0.1rem, 0.55cqi, 0.28rem);
-  --gh-day-size: clamp(0.45rem, 1.85cqi, 0.65rem);
+  --gh-gap: clamp(0.14rem, 0.65cqi, 0.32rem);
+  --gh-day-size: clamp(0.7rem, 3.1cqi, 1.05rem);
   width: 100%;
   min-width: 0;
   container-type: inline-size;
@@ -2933,8 +2933,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal .gh-cal-legend .gh-day {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   margin-inline: 0;
   aspect-ratio: auto;
   animation: none;
