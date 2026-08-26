@@ -12,7 +12,6 @@
   $repos    = \App\mh_code_page_repos();
   $live     = \App\mh_github_live_repos(6);
   $practice = \App\mh_code_page_practice();
-  $jobs     = \App\mh_code_page_resume();
   $skills   = \App\mh_code_page_skills();
   $docs     = \App\mh_code_page_resources();
   $login    = \App\mh_github_login();
@@ -20,7 +19,6 @@
   $weeks    = $calendar['weeks'] ?? [];
   $total    = (int) ($calendar['total'] ?? 0);
   $yearTotal = (int) ($calendarYear['total'] ?? 0);
-  $linkedin = \App\mh_portfolio_social_defaults()['linkedin'] ?? '';
 @endphp
 
 {{-- HERO --}}
@@ -40,10 +38,9 @@
   @endif
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="#github">{!! \App\mh_svg_icon('git', 15) !!} {{ __('Open source', 'sage') }}</a>
-    <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Resume', 'sage') }}</a>
     <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} {{ __('Skills', 'sage') }}</a>
     <a href="#docs">{!! \App\mh_svg_icon('globe', 15) !!} {{ __('Docs', 'sage') }}</a>
-    <a href="#hire">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Hire me', 'sage') }}</a>
+    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Hire me', 'sage') }}</a>
   </p>
 @endcomponent
 
@@ -293,76 +290,6 @@
   </div>
 </section>
 
-{{-- RESUME --}}
-<section class="pf-section" id="resume" aria-labelledby="code-resume-heading" itemscope itemtype="https://schema.org/Person">
-  <meta itemprop="name" content="Matt Hummel">
-  <meta itemprop="jobTitle" content="WordPress Developer">
-  <div class="container wide">
-    <div class="code-section-head">
-      <div>
-        <p class="eyebrow">Experience</p>
-        <h2 id="code-resume-heading" class="display-title is-section">
-          {{ \App\field('code_cv_h2', __('Resume.', 'sage')) }}
-        </h2>
-        <p class="sec-intro">
-          {{ \App\field('code_cv_intro', __('Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')) }}
-        </p>
-      </div>
-      <div class="code-resume-links">
-        @if ($linkedin)
-          <a class="btn" href="{{ esc_url($linkedin) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('linkedin', 16) !!} LinkedIn
-          </a>
-        @endif
-        <a class="about-text-link" href="{{ home_url('/about/') }}">Full background →</a>
-      </div>
-    </div>
-
-    <ol class="resume-timeline">
-      @foreach ($jobs as $job)
-        @php $current = strcasecmp((string) $job['period'], 'Current') === 0; @endphp
-        <li>
-          <article class="resume-card{{ $current ? ' is-current' : '' }}" itemscope itemtype="https://schema.org/OrganizationRole">
-            <header class="resume-head">
-              <div class="resume-who">
-                @if ($current)
-                  <p class="resume-now">Current</p>
-                @endif
-                <h3 itemprop="roleName">{{ $job['role'] }}</h3>
-                @if ($job['org'] !== '')
-                  <p class="resume-org">
-                    {!! \App\mh_svg_icon('briefcase', 15) !!}
-                    @if (! empty($job['url']))
-                      <a href="{{ esc_url($job['url']) }}" rel="noopener" target="_blank" itemprop="worksFor">{{ $job['org'] }}<span class="visually-hidden"> (opens in a new window)</span></a>
-                    @else
-                      <span itemprop="worksFor">{{ $job['org'] }}</span>
-                    @endif
-                  </p>
-                @endif
-              </div>
-              <p class="resume-tags">
-                @if ($job['period'] !== '')
-                  <span class="resume-tag{{ $current ? ' is-now' : '' }}">{{ $job['period'] }}</span>
-                @endif
-                @if ($job['type'] !== '')
-                  <span class="resume-tag">{{ $job['type'] }}</span>
-                @endif
-              </p>
-            </header>
-            @if ($job['bullets'])
-              <ul class="resume-points">
-                @foreach ($job['bullets'] as $b)
-                  <li>{{ $b }}</li>
-                @endforeach
-              </ul>
-            @endif
-          </article>
-        </li>
-      @endforeach
-    </ol>
-  </div>
-</section>
-
 {{-- SKILLS --}}
 <section class="pf-section pf-section--alt" id="skills" aria-labelledby="code-skills-heading">
   <div class="container wide">
@@ -407,7 +334,7 @@
 </section>
 
 {{-- CTA --}}
-<section class="cta-band" id="hire" aria-labelledby="code-cta-heading">
+<section class="cta-band" aria-labelledby="code-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
       <p class="eyebrow eyebrow--on-dark">Work together</p>
@@ -415,8 +342,8 @@
       <p>Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
-      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+      <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!} Hire me
       </a>
       <a class="about-text-link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank" style="color:#9ca3af">
         {!! \App\mh_svg_icon('github', 14) !!} @matthummel-pa →

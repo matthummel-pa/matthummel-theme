@@ -977,6 +977,44 @@ function mh_apply_code_gh_cal_30d(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_30d', 59);
 
+/** Copy Code page resume meta onto the Hire page once (for editable hire_cv_* fields). */
+function mh_migrate_resume_to_hire(): void
+{
+    if (get_option('mh_resume_to_hire_v1')) {
+        return;
+    }
+
+    $hireId = mh_page_id_by_template('template-hire.blade.php');
+    $codeId = mh_page_id_by_template('template-code.blade.php');
+    if ($hireId < 1) {
+        update_option('mh_resume_to_hire_v1', true);
+
+        return;
+    }
+
+    $map = [
+        'mh_f_code_cv_h2' => 'mh_f_hire_cv_h2',
+        'mh_f_code_cv_intro' => 'mh_f_hire_cv_intro',
+        'mh_f_code_cv_jobs' => 'mh_f_hire_cv_jobs',
+    ];
+
+    foreach ($map as $from => $to) {
+        $existing = get_post_meta($hireId, $to, true);
+        if ($existing !== '' && $existing !== null && $existing !== []) {
+            continue;
+        }
+        $val = $codeId > 0 ? get_post_meta($codeId, $from, true) : '';
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        update_post_meta($hireId, $to, $val);
+    }
+
+    update_option('mh_resume_to_hire_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_migrate_resume_to_hire', 60);
+
 /**
  * Sub-field definitions for the "Who this site is for" repeater (Home, About, Services).
  *

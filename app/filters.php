@@ -95,7 +95,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-hire.blade.php' => [
             'title' => 'Hire a WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'Open for WordPress site builds, plugins, agency overflow, and Power Platform work. Based in Gettysburg, PA. Clear scope, full ownership at handoff.',
+            'desc' => 'Resume, LinkedIn, and clear scope for WordPress builds and agency overflow. Based in Gettysburg, PA. Say hello.',
         ],
         'template-changelog.blade.php' => [
             'title' => 'Changelog | '.$brand,
@@ -123,7 +123,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-code.blade.php' => [
             'title' => 'Open-source WordPress code on GitHub | '.$brand,
-            'desc' => 'Public GitHub repos, contribution history, and a resume from Gettysburg, PA. Fork Sage themes, plugins, and web apps — or say hello.',
+            'desc' => 'Public GitHub repos and contribution history from Gettysburg, PA. Fork Sage themes, plugins, and web apps — or say hello.',
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,

@@ -13,7 +13,8 @@ What the 3.x Sage theme does, and where it lives.
 | Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
-| Code | Open-source GitHub showcase (profile panel, 30-day contribution circles newest-first, typed activity feed, featured/recent repos), resume, skill chips, docs | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
+| Code | Open-source GitHub showcase (profile panel, 30-day contribution circles newest-first, typed activity feed, featured/recent repos), skill chips, docs | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
+| Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
 | Single post | Reading progress bar, hero share, inline TOC (when headings exist), desktop sidebar (TOC + summary + popular + topics + hire CTA), tags, author bio, post-end CTA, prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` | `template-contact.blade.php`, `app/contact.php` |
@@ -35,6 +36,7 @@ What the 3.x Sage theme does, and where it lives.
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |
 | GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
+| LinkedIn | Hire page profile card; optional `mh_li_token` / `MH_LINKEDIN_TOKEN` for OpenID `/v2/userinfo`; soft OG scrape + field/GitHub fallbacks; share URL helper |
 
 ## Intentionally not included
 
