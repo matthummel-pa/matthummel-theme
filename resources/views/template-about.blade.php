@@ -28,7 +28,7 @@
         {{ \App\field('about_h1', __('WordPress developer in Gettysburg.', 'sage')) }}
       </h1>
       <p class="lead about-hero__lede">
-        {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.', 'sage')) }}
+        {{ \App\field('about_lede', __('I build WordPress sites and plugins from Gettysburg. Shops can edit their own site, and other developers can pick up the code without a headache.', 'sage')) }}
       </p>
       @if ($isHireable)
         <p class="hire-avail about-hero__avail">

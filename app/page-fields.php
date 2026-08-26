@@ -280,7 +280,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('Matt Hummel', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('WordPress developer in Gettysburg.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites and plugins from Gettysburg — Sage themes shops can edit, PHP other developers can read.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress sites and plugins from Gettysburg. Shops can edit their own site, and other developers can pick up the code without a headache.', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
