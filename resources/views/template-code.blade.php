@@ -40,17 +40,10 @@
   @endif
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="#github">{!! \App\mh_svg_icon('git', 15) !!} {{ __('Open source', 'sage') }}</a>
-    <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-      {!! \App\mh_svg_icon('github', 15) !!} GitHub<span class="visually-hidden"> (opens in a new window)</span>
-    </a>
-    <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} Resume</a>
-    <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} Skills</a>
-    @if ($linkedin)
-      <a href="{{ esc_url($linkedin) }}" rel="noopener" target="_blank">
-        {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn<span class="visually-hidden"> (opens in a new window)</span>
-      </a>
-    @endif
-    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Hire me</a>
+    <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Resume', 'sage') }}</a>
+    <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} {{ __('Skills', 'sage') }}</a>
+    <a href="#docs">{!! \App\mh_svg_icon('globe', 15) !!} {{ __('Docs', 'sage') }}</a>
+    <a href="#hire">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Hire me', 'sage') }}</a>
   </p>
 @endcomponent
 
@@ -414,7 +407,7 @@
 </section>
 
 {{-- CTA --}}
-<section class="cta-band" aria-labelledby="code-cta-heading">
+<section class="cta-band" id="hire" aria-labelledby="code-cta-heading">
   <div class="container wide cta-band-inner">
     <div>
       <p class="eyebrow eyebrow--on-dark">Work together</p>
