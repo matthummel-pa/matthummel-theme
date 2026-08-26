@@ -431,7 +431,7 @@ function page_field_map(): array
             ],
             __('Practice', 'sage') => [
                 ['code_do_h2', __('Heading', 'sage'), 'text', __('What I work on.', 'sage')],
-                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.', 'sage')],
+                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.', 'sage')],
                 ['code_do_items', __('What I do (one per line)', 'sage'), 'lines', mh_code_practice_defaults()],
             ],
             __('GitHub', 'sage') => [
@@ -589,6 +589,47 @@ function mh_code_page_repos(?int $post_id = null): array
 function mh_code_page_practice(?int $post_id = null): array
 {
     return field_lines('code_do_items', mh_code_practice_defaults(), $post_id);
+}
+
+/**
+ * Practice lines grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{title: string, body: string, text: string, group: string}>}>
+ */
+function mh_code_page_practice_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_practice($post_id) as $line) {
+        $line = trim((string) $line);
+        if ($line === '') {
+            continue;
+        }
+        $key = mh_code_practice_group($line);
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $parsed = mh_code_practice_parse($line);
+        $grouped[$key][] = [
+            'title' => $parsed['title'],
+            'body' => $parsed['body'],
+            'text' => $line,
+            'group' => $key,
+        ];
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_practice_group_icon($key),
+            'items' => $grouped[$key],
+        ];
+    }
+
+    return $out;
 }
 
 function mh_code_page_skills(?int $post_id = null): array

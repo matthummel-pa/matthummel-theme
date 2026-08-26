@@ -943,12 +943,95 @@ function mh_code_practice_defaults(): array
 {
     return [
         'Custom WordPress themes with Sage 11 — Blade templates, Tailwind v4, Vite, PHP 8.3, deployed with GitHub Actions.',
-        'Plugin development: single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
-        'Front-end architecture: semantic HTML, accessible CSS, TypeScript, and edit fields so clients never need a developer for day-to-day changes.',
-        'REST API integrations and data pipelines connecting WordPress to external services.',
-        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and clients anywhere.',
-        'Microsoft Power Platform (Power Apps, Power Automate, SharePoint) — consulting work from a government contract background, not the primary offer.',
+        'Plugin development — single-purpose PHP plugins with PHPDoc, standard WP hooks, and clean uninstall.',
+        'Front-end architecture — semantic HTML, accessible CSS, TypeScript, and edit fields shops can use without calling a developer.',
+        'REST API integrations — data pipelines connecting WordPress to external services and third-party APIs.',
+        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and developers anywhere.',
+        'Microsoft Power Platform — Power Apps, Power Automate, and SharePoint consulting from a government contract background, not the primary offer.',
     ];
+}
+
+/**
+ * Shelf label for a practice line on the Code page.
+ */
+function mh_code_practice_group(string $text): string
+{
+    $low = strtolower(trim($text));
+
+    if (
+        str_contains($low, 'power platform')
+        || str_contains($low, 'power apps')
+        || str_contains($low, 'sharepoint')
+    ) {
+        return __('Microsoft', 'sage');
+    }
+    if (
+        str_contains($low, 'ridges')
+        || str_contains($low, 'valleys')
+        || str_contains($low, 'gettysburg studio')
+    ) {
+        return __('Studio', 'sage');
+    }
+    if (
+        str_contains($low, 'front-end')
+        || str_contains($low, 'frontend')
+        || str_contains($low, 'semantic html')
+    ) {
+        return __('Front-end', 'sage');
+    }
+    if (
+        str_contains($low, 'rest api')
+        || str_contains($low, 'integrations')
+        || str_contains($low, 'data pipeline')
+    ) {
+        return __('Integrations', 'sage');
+    }
+
+    return __('WordPress', 'sage');
+}
+
+/**
+ * Icon name for a practice group shelf.
+ */
+function mh_code_practice_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'front-end', 'frontend' => 'code',
+        'integrations' => 'globe',
+        'studio' => 'briefcase',
+        'microsoft' => 'briefcase',
+        default => 'code',
+    };
+}
+
+/**
+ * Split a practice line into a scan title and supporting detail.
+ *
+ * @return array{title: string, body: string}
+ */
+function mh_code_practice_parse(string $text): array
+{
+    $text = trim($text);
+    if ($text === '') {
+        return ['title' => '', 'body' => ''];
+    }
+
+    if (preg_match('/^(.+?)\s*[—–-]\s*(.+)$/u', $text, $matches)) {
+        return [
+            'title' => trim($matches[1]),
+            'body' => trim($matches[2]),
+        ];
+    }
+
+    if (preg_match('/^([^:]+):\s*(.+)$/', $text, $matches)) {
+        return [
+            'title' => trim($matches[1]),
+            'body' => trim($matches[2]),
+        ];
+    }
+
+    return ['title' => $text, 'body' => ''];
 }
 
 function mh_code_skill_defaults(): array

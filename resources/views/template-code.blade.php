@@ -12,7 +12,7 @@
   $eventsByDay = \App\mh_github_events_by_day(90);
   $repos    = \App\mh_code_page_repos();
   $live     = \App\mh_code_page_live_repos(6);
-  $practice = \App\mh_code_page_practice();
+  $practiceGroups = \App\mh_code_page_practice_grouped();
   $skillGroups = \App\mh_code_page_skills_grouped();
   $docGroups = \App\mh_code_page_resources_grouped();
   $login    = \App\mh_github_login();
@@ -46,31 +46,74 @@
 @endcomponent
 
 {{-- PRACTICE --}}
-<section class="pf-section code-practice-sec" aria-labelledby="code-practice-heading">
+<section class="pf-section code-practice-sec" id="practice" aria-labelledby="code-practice-heading">
   <div class="container wide">
-    <div class="code-section-head">
-      <div>
-        <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
-        <h2 id="code-practice-heading" class="display-title is-section">
-          {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
-        </h2>
-        <p class="sec-intro">
-          {{ \App\field('code_do_intro', __('WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.', 'sage')) }}
-        </p>
-      </div>
-      <div class="code-section-links">
-        <a class="about-text-link" href="{{ home_url('/services/') }}">{{ __('Services page', 'sage') }} →</a>
-        <a class="about-text-link" href="{{ home_url('/projects/') }}">{{ __('Example sites', 'sage') }} →</a>
+    <div class="code-practice-shell">
+      <div class="code-practice-shell__mesh" aria-hidden="true"></div>
+      <div class="code-practice-shell__inner">
+        <header class="code-practice-shell__head">
+          <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
+          <h2 id="code-practice-heading" class="display-title is-section">
+            {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
+          </h2>
+          <p class="sec-intro">
+            {{ \App\field('code_do_intro', __('WordPress development from Gettysburg is the main focus — Sage themes, plugins, and front-end work shops can edit after handoff. I also ship React apps and do Power Platform consulting when a team lives in Microsoft 365.', 'sage')) }}
+          </p>
+          @if (count($practiceGroups) > 1)
+            <nav class="code-practice-jump" aria-label="{{ __('Practice groups', 'sage') }}">
+              @foreach ($practiceGroups as $group)
+                <a href="#practice-{{ sanitize_title($group['label']) }}">
+                  <span class="code-practice-jump__ico" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 13) !!}</span>
+                  {{ $group['label'] }}
+                  <span class="code-practice-jump__n">{{ number_format_i18n(count($group['items'])) }}</span>
+                </a>
+              @endforeach
+            </nav>
+          @endif
+          <div class="code-practice-shell__links">
+            <a class="code-practice-shell__link" href="{{ home_url('/services/') }}">
+              {!! \App\mh_svg_icon('briefcase', 13) !!}
+              {{ __('Services page', 'sage') }}
+            </a>
+            <a class="code-practice-shell__link" href="{{ home_url('/projects/') }}">
+              {!! \App\mh_svg_icon('globe', 13) !!}
+              {{ __('Example sites', 'sage') }}
+            </a>
+          </div>
+        </header>
+
+        <div class="code-practice-groups">
+          @foreach ($practiceGroups as $group)
+            <section
+              class="code-practice-group"
+              id="practice-{{ sanitize_title($group['label']) }}"
+              aria-labelledby="practice-head-{{ sanitize_title($group['label']) }}"
+              data-group="{{ esc_attr($group['label']) }}"
+            >
+              <div class="code-practice-group__head">
+                <span class="code-practice-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
+                <h3 class="code-practice-group__title" id="practice-head-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</h3>
+                <span class="code-practice-group__rule" aria-hidden="true"></span>
+                <span class="code-practice-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
+              </div>
+              <ol class="code-practice-grid">
+                @foreach ($group['items'] as $i => $item)
+                  <li class="code-practice-card" data-group="{{ esc_attr($group['label']) }}">
+                    <span class="code-practice-card__n" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+                    <div class="code-practice-card__copy">
+                      <h4 class="code-practice-card__title">{{ $item['title'] }}</h4>
+                      @if ($item['body'] !== '')
+                        <p class="code-practice-card__body">{{ $item['body'] }}</p>
+                      @endif
+                    </div>
+                  </li>
+                @endforeach
+              </ol>
+            </section>
+          @endforeach
+        </div>
       </div>
     </div>
-    <ul class="code-practice">
-      @foreach ($practice as $i => $item)
-        <li class="code-practice__item">
-          <span class="code-practice__n" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
-          <p class="code-practice__text">{{ $item }}</p>
-        </li>
-      @endforeach
-    </ul>
   </div>
 </section>
 
