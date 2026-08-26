@@ -284,27 +284,27 @@ function page_field_map(): array
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
-                ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started in web doing marketing for higher education. Building landing pages, updating content, and figuring out why something that looked right was not getting clicks. That work taught me more about what people need than any framework ever did.', 'sage')],
-                ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It is a growing body of work for Adams County. Alongside that, I am open for new work — full-time, contract, or project-based.', 'sage')],
-                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you do not need to ask permission to use it.', 'sage')],
+                ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.', 'sage')],
+                ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.', 'sage')],
+                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.', 'sage')],
+                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most of my public code lives on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
             ],
             __('What I build', 'sage') => [
                 ['about_services_h2', __('Heading', 'sage'), 'text', __('What I build.', 'sage')],
-                ['about_services_intro', __('Intro', 'sage'), 'textarea', __('Most projects are WordPress sites and plugins from Gettysburg — with React and Power Platform when they fit. Here is the breakdown.', 'sage')],
+                ['about_services_intro', __('Intro', 'sage'), 'textarea', __('Most days I’m building WordPress sites and plugins from Gettysburg. React and Power Platform show up when they actually help. Here’s the breakdown.', 'sage')],
                 ['about_services', __('Service cards', 'sage'), 'repeater', mh_about_services_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
                     ['body', __('Body', 'sage'), 'textarea'],
                 ]],
-                ['about_services_note', __('Footer note (basic HTML ok)', 'sage'), 'html', __('Questions about a specific project type? <a href="/contact/">Write a note</a>.', 'sage')],
+                ['about_services_note', __('Footer note (basic HTML ok)', 'sage'), 'html', __('Curious about a specific project type? <a href="/contact/">Write a note</a>.', 'sage')],
             ],
             __('Open for work', 'sage') => [
                 ['about_work_h2', __('Heading', 'sage'), 'text', __('Open for work.', 'sage')],
-                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I am looking for new work alongside the studio. That includes full-time roles, contract arrangements, and freelance projects. Based in Gettysburg, PA — open to remote.', 'sage')],
-                ['about_work_p2', __('Paragraph 2', 'sage'), 'textarea', __('If you are a recruiter, an agency, or a shop that needs a WordPress developer, I am glad to hear from you. Start with a short note about what you are working on.', 'sage')],
+                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I’m looking for new work alongside the studio — full-time roles, contract gigs, and freelance projects. Based in Gettysburg, PA, and happy to work remote.', 'sage')],
+                ['about_work_p2', __('Paragraph 2', 'sage'), 'textarea', __('If you’re a recruiter, an agency with overflow, or a shop that needs a WordPress developer, I’d love a short note about what you’re working on.', 'sage')],
                 ['about_work_cta', __('Button label', 'sage'), 'text', __('Start a conversation', 'sage')],
                 ['about_work_types', __('Arrangements', 'sage'), 'repeater', mh_about_work_types_defaults(), [
                     ['title', __('Title', 'sage'), 'text'],
@@ -313,7 +313,7 @@ function page_field_map(): array
             ],
             __('How I work', 'sage') => [
                 ['about_values_h2', __('Heading', 'sage'), 'text', __('How I work.', 'sage')],
-                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('A short list of how WordPress projects leave my desk in Gettysburg — ownership, editability, and code another developer can read.', 'sage')],
+                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('A few habits that stick on WordPress projects from Gettysburg — you own the site, you can edit it, and another developer can follow the code.', 'sage')],
                 ['about_approach', __('Principles', 'sage'), 'repeater', mh_about_approach_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
@@ -326,12 +326,12 @@ function page_field_map(): array
             ],
             __('Elsewhere', 'sage') => [
                 ['about_elsewhere_h2', __('Heading', 'sage'), 'text', __('Where to find me.', 'sage')],
-                ['about_elsewhere_intro', __('Intro', 'sage'), 'textarea', __('I post most of my WordPress code and writing here and on GitHub. The RSS feed is the most reliable way to follow along from Gettysburg.', 'sage')],
+                ['about_elsewhere_intro', __('Intro', 'sage'), 'textarea', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along from Gettysburg.', 'sage')],
             ],
             __('Call to action', 'sage') => [
                 ['about_cta_kicker', __('Kicker', 'sage'), 'text', __('Get in touch', 'sage')],
                 ['about_cta_h2', __('Heading', 'sage'), 'text', __('Need a WordPress developer in Gettysburg?', 'sage')],
-                ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('A question about a post, a project, or a role — all welcome. I usually reply within a day.', 'sage')],
+                ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')],
                 ['about_cta_btn', __('Button label', 'sage'), 'text', __('Write a note', 'sage')],
             ],
         ],

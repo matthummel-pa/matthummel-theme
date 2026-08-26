@@ -2477,17 +2477,17 @@ function mh_about_services_defaults(): array
         [
             'icon' => 'wordpress',
             'title' => __('WordPress sites', 'sage'),
-            'body' => __('New sites from scratch, existing sites that need work, and themes built so shops can edit their own pages. Mostly Sage and Blade, plain PHP, and front-end work that holds up.', 'sage'),
+            'body' => __('New sites, sites that need a cleanup, and themes shops can edit themselves. Practical WordPress — not a pile of plugins they will never use.', 'sage'),
         ],
         [
             'icon' => 'plugins',
             'title' => __('Plugins and tools', 'sage'),
-            'body' => __('Custom PHP when WordPress needs a part it does not have. Single-purpose, well-documented, and written so any developer can read it later.', 'sage'),
+            'body' => __('Custom pieces when WordPress needs something it does not ship with. Small, documented, and written so the next developer is not stuck guessing.', 'sage'),
         ],
         [
             'icon' => 'code',
             'title' => __('Other web apps', 'sage'),
-            'body' => __('React front ends, APIs, and anything that does not belong in a theme. Power Platform when a team already lives in Microsoft 365 and it is the right fit.', 'sage'),
+            'body' => __('React front ends, APIs, and work that does not belong in a theme. Power Platform when a team already lives in Microsoft 365 and it is the right fit.', 'sage'),
         ],
     ];
 }
@@ -2530,32 +2530,32 @@ function mh_about_approach_defaults(): array
         [
             'icon' => 'briefcase',
             'title' => __('Shops own everything', 'sage'),
-            'body' => __('Hosting, domain, database, and code belong to the shop before the project closes. No access after handoff unless you invite me back.', 'sage'),
+            'body' => __('Hosting, domain, database, and code belong to the shop before we close out. No lingering access unless you invite me back.', 'sage'),
         ],
         [
             'icon' => 'users',
             'title' => __('The admin experience is part of the build', 'sage'),
-            'body' => __('A site that is hard to update does not get updated. I write edit flows so the owner can change a page in under two minutes without asking me.', 'sage'),
+            'body' => __('A site that is hard to update does not get updated. I aim for edit flows an owner can finish in a couple of minutes without pinging me.', 'sage'),
         ],
         [
             'icon' => 'code',
             'title' => __('Plain, readable code', 'sage'),
-            'body' => __('If a developer cannot understand a function in 30 seconds, it is too clever. I write for the next person who has to read it.', 'sage'),
+            'body' => __('If a developer cannot understand a function in half a minute, it is too clever. I write for the next person who has to read it.', 'sage'),
         ],
         [
             'icon' => 'cursor-ai',
             'title' => __('AI assists. I review everything.', 'sage'),
-            'body' => __('I use Cursor, Claude, and ChatGPT to move faster on repetitive work. Every line ships only after I have read and tested it myself.', 'sage'),
+            'body' => __('I use Cursor, Claude, and ChatGPT to move faster on the boring parts. Every line still gets read and tested by me before it ships.', 'sage'),
         ],
         [
             'icon' => 'book-open',
             'title' => __('Accessibility and plain language by default', 'sage'),
-            'body' => __('Keyboard-accessible, screen-reader-friendly pages, written at a grade 7–8 reading level. Not a checkbox — just how the work should be done.', 'sage'),
+            'body' => __('Keyboard-friendly, screen-reader-aware pages, written so a busy shop owner can follow along. Not a checkbox — just how the work should go.', 'sage'),
         ],
         [
             'icon' => 'plugins',
             'title' => __('Small, focused plugins', 'sage'),
-            'body' => __('One plugin should do one thing well. I audit and remove anything that adds weight without adding clear value. Most sites need 6–8 plugins, not 30.', 'sage'),
+            'body' => __('One plugin should do one thing well. I cut weight that does not earn its keep. Most sites need a handful of plugins, not a drawer full.', 'sage'),
         ],
     ];
 }

@@ -86,17 +86,24 @@
   </div>
 @endcomponent
 
-<nav class="about-jump container wide" aria-label="{{ __('On this page', 'sage') }}">
-  <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
-  <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
-  <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
-  @if (! empty($latestPosts))
-    <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
-  @endif
-  <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-    {!! \App\mh_svg_icon('github', 13) !!} GitHub
-    <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-  </a>
+<nav class="about-jump-band" aria-label="{{ __('On this page', 'sage') }}">
+  <div class="container wide">
+    <div class="about-jump">
+      <p class="about-jump__label">{{ __('On this page', 'sage') }}</p>
+      <div class="about-jump__track">
+        <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
+        <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
+        @if ($isHireable)
+          <a href="#availability">{!! \App\mh_svg_icon('briefcase', 13) !!} {{ __('Open for work', 'sage') }}</a>
+        @endif
+        <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
+        @if (! empty($latestPosts))
+          <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
+        @endif
+        <a href="#elsewhere">{!! \App\mh_svg_icon('globe', 13) !!} {{ __('Elsewhere', 'sage') }}</a>
+      </div>
+    </div>
+  </div>
 </nav>
 
 {{-- STORY --}}
@@ -106,14 +113,14 @@
       <div class="about-shell__mesh" aria-hidden="true"></div>
       <div class="about-shell__inner about-story">
         <div class="about-story__copy">
-          <p class="eyebrow">{{ __('Background', 'sage') }}</p>
+          <p class="eyebrow">{{ __('Story', 'sage') }}</p>
           <h2 id="about-story-heading" class="display-title is-section">
             {{ \App\field('about_story_h2', __('How I got here.', 'sage')) }}
           </h2>
-          <p>{{ \App\field('about_p1', __('I started in web doing marketing for higher education. Building landing pages, updating content, and figuring out why something that looked right was not getting clicks. That work taught me more about what people need than any framework ever did.', 'sage')) }}</p>
-          <p>{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Not because it is the most exciting option, but because it is the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That matters to me.', 'sage')) }}</p>
-          <p>{{ \App\field('about_p3', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It is a growing body of work for Adams County. Alongside that, I am open for new work — full-time, contract, or project-based.', 'sage')) }}</p>
-          <p>{{ \App\field('about_p4', __('Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you do not need to ask permission to use it.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p3', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code lives on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
               {!! \App\mh_svg_icon('mail', 16) !!}
@@ -173,7 +180,7 @@
           <div class="about-aside-card about-aside-card--studio">
             <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Current studio', 'sage') }}</p>
             <h3 class="about-aside-card__title">Ridges &amp; Valleys</h3>
-            <p class="about-aside-card__bio">{{ __('A WordPress studio for Gettysburg shops, tours, and inns in Adams County, PA. Concept sites and real builds for local businesses.', 'sage') }}</p>
+            <p class="about-aside-card__bio">{{ __('WordPress work for Gettysburg shops, tours, and inns in Adams County. Concept sites and real builds for local businesses.', 'sage') }}</p>
             <a class="about-aside-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
               {{ __('Visit ridgesandvalleys.com', 'sage') }} →
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
@@ -197,7 +204,7 @@
             {{ \App\field('about_services_h2', __('What I build.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_services_intro', __('Most projects are WordPress sites and plugins from Gettysburg — with React and Power Platform when they fit. Here is the breakdown.', 'sage')) }}
+            {{ \App\field('about_services_intro', __('Most days I’m building WordPress sites and plugins from Gettysburg. React and Power Platform show up when they actually help. Here’s the breakdown.', 'sage')) }}
           </p>
         </header>
         <div class="about-services">
@@ -211,7 +218,7 @@
           @endforeach
         </div>
         <p class="about-services-note">
-          {!! \App\field_html('about_services_note', __('Questions about a specific project type? <a href="/contact/">Write a note</a>.', 'sage')) !!}
+          {!! \App\field_html('about_services_note', __('Curious about a specific project type? <a href="/contact/">Write a note</a>.', 'sage')) !!}
         </p>
       </div>
     </div>
@@ -230,8 +237,8 @@
           <h2 id="about-work-heading" class="display-title is-section">
             {{ \App\field('about_work_h2', __('Open for work.', 'sage')) }}
           </h2>
-          <p>{{ \App\field('about_work_p1', __('I am looking for new work alongside the studio. That includes full-time roles, contract arrangements, and freelance projects. Based in Gettysburg, PA — open to remote.', 'sage')) }}</p>
-          <p>{{ \App\field('about_work_p2', __('If you are a recruiter, an agency, or a shop that needs a WordPress developer, I am glad to hear from you. Start with a short note about what you are working on.', 'sage')) }}</p>
+          <p>{{ \App\field('about_work_p1', __('I’m looking for new work alongside the studio — full-time roles, contract gigs, and freelance projects. Based in Gettysburg, PA, and happy to work remote.', 'sage')) }}</p>
+          <p>{{ \App\field('about_work_p2', __('If you’re a recruiter, an agency with overflow, or a shop that needs a WordPress developer, I’d love a short note about what you’re working on.', 'sage')) }}</p>
           <a class="btn" href="{{ home_url('/contact/') }}">
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('about_work_cta', __('Start a conversation', 'sage')) }}
@@ -266,7 +273,7 @@
             {{ \App\field('about_values_h2', __('How I work.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_values_intro', __('A short list of how WordPress projects leave my desk in Gettysburg — ownership, editability, and code another developer can read.', 'sage')) }}
+            {{ \App\field('about_values_intro', __('A few habits that stick on WordPress projects from Gettysburg — you own the site, you can edit it, and another developer can follow the code.', 'sage')) }}
           </p>
         </header>
         <div class="about-approach">
@@ -342,7 +349,7 @@
             {{ \App\field('about_elsewhere_h2', __('Where to find me.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_elsewhere_intro', __('I post most of my WordPress code and writing here and on GitHub. The RSS feed is the most reliable way to follow along from Gettysburg.', 'sage')) }}
+            {{ \App\field('about_elsewhere_intro', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along from Gettysburg.', 'sage')) }}
           </p>
         </div>
         <div class="about-elsewhere__links">
@@ -361,7 +368,7 @@
       <h2 id="about-cta-heading" class="display-title is-section">
         {{ \App\field('about_cta_h2', __('Need a WordPress developer in Gettysburg?', 'sage')) }}
       </h2>
-      <p>{{ \App\field('about_cta_lede', __('A question about a post, a project, or a role — all welcome. I usually reply within a day.', 'sage')) }}</p>
+      <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')) }}</p>
     </div>
     <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!}
