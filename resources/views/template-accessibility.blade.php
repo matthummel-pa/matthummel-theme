@@ -244,4 +244,13 @@
   </div>
 </section>
 
+@include('partials.cta-band', [
+  'kicker' => __('Accessibility', 'sage'),
+  'title' => __('Need help using this site?', 'sage'),
+  'text' => __('If something blocks you, write and tell me what you ran into. I take accessibility reports seriously.', 'sage'),
+  'label' => __('Write a note', 'sage'),
+  'secondary' => '',
+  'note' => __('Gettysburg · usually within a day', 'sage'),
+])
+
 @endsection

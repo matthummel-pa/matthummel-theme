@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.13 — 2026-08-26
+
+### Changed
+
+- Sitewide typography refresh: optical tracking, fluid display/lead scale, roomier sections, softer radii — still Inter / IBM Plex
+- Closing CTA band added to Work, Journal, Start, Thank you, Changelog, and Accessibility
+- Content presence: Work proof strip, Uses/Now card shells, shared `.content-shell`, softer legal/hire card hovers
+- Content chrome: legal prose shells, post CTA atmosphere, long-form type tokens aligned with marketing pages
+
 ## 3.1.12 — 2026-08-26
 
 ### Changed

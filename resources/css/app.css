@@ -16,12 +16,12 @@
   --font-heading: Inter, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-btn: 6px;
-  --radius-card: 10px;
+  --radius-btn: 8px;
+  --radius-card: 12px;
   --page-max: 1200px;
   --page-gutter: 1.5rem;
-  --space-section: clamp(5rem, 9vw, 8rem);
-  --space-grid: 1.25rem;
+  --space-section: clamp(5.5rem, 10vw, 9rem);
+  --space-grid: 1.35rem;
 
   --color-khaki: #f9fafb;
   --color-cream: #f3f4f6;
