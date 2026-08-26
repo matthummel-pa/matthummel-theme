@@ -144,4 +144,13 @@
   </div>
 
 </div>
+
+@include('partials.cta-band', [
+  'kicker' => __('Work with me', 'sage'),
+  'title' => __('Like one of these concepts?', 'sage'),
+  'text' => __('Tell me which site fits your shop and what you’d change. I usually reply within a day.', 'sage'),
+  'label' => __('Say hello', 'sage'),
+  'secondary' => __('See services', 'sage'),
+  'secondaryHref' => home_url('/services/'),
+])
 @endsection

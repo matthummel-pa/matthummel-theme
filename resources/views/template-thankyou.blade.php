@@ -156,4 +156,13 @@
   <a href="{{ home_url('/') }}">← Back to home</a>
 </div>
 
+@include('partials.cta-band', [
+  'kicker' => __('Still here?', 'sage'),
+  'title' => __('Want to keep exploring?', 'sage'),
+  'text' => __('Browse example sites, read the journal, or write if you already know what you need.', 'sage'),
+  'label' => __('Say hello', 'sage'),
+  'secondary' => __('Example sites', 'sage'),
+  'secondaryHref' => home_url('/projects/'),
+])
+
 @endsection

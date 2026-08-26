@@ -151,4 +151,11 @@
   </div>
 </section>
 
+@include('partials.cta-band', [
+  'kicker' => __('Ship with me', 'sage'),
+  'title' => __('Want the next update on your site?', 'sage'),
+  'text' => __('I build and maintain WordPress themes like this one. Say hello if you want something similar for a shop or agency.', 'sage'),
+  'label' => __('Say hello', 'sage'),
+])
+
 @endsection
