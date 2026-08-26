@@ -117,10 +117,10 @@
           <h2 id="about-story-heading" class="display-title is-section">
             {{ \App\field('about_story_h2', __('How I got here.', 'sage')) }}
           </h2>
-          <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing. Landing pages, content updates, and a lot of figuring out why something that looked right still wasn’t getting clicks. That taught me more about what people need than any framework ever did.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Not the flashiest option — just the most practical one for most shops. An owner can update hours, add a product, or fix a typo without waiting on a developer. That still matters to me.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p3', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. It’s a growing body of work for Adams County. Alongside that, I’m open for new work — full-time, contract, or project-based.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code lives on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p3', __('I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. Alongside that studio work, I’m open for full-time, contract, or project-based roles.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
               {!! \App\mh_svg_icon('mail', 16) !!}

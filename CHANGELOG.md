@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.13 — 2026-08-26
+
+### Changed
+
+- About “How I got here”: plainer story copy — dropped odd wording like “flashiest”; one-time meta swap for saved field values
+
 ## 3.1.12 — 2026-08-26
 
 ### Changed
