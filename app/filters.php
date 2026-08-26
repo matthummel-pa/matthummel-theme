@@ -118,8 +118,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'Write about a WordPress site, plugin, or snippet. I work in Gettysburg and usually reply in a couple of days. Say hello.',
         ],
         'template-about.blade.php' => [
-            'title' => 'About Matt Hummel — WordPress developer in Gettysburg | '.$brand,
-            'desc' => 'I write PHP and Blade, deploy with GitHub Actions, and lean toward code the next developer can read. Based in Gettysburg, PA. Open for new work.',
+            'title' => 'About Matt Hummel — WordPress in Gettysburg | '.$brand,
+            'desc' => 'WordPress developer in Gettysburg, PA. Sage themes, plugins, and readable PHP. Open for full-time, contract, and agency work. Say hello.',
         ],
         'template-code.blade.php' => [
             'title' => 'Open-source WordPress code | '.$brand,

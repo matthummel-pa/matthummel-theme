@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.11 — 2026-08-26
+
+### Changed
+
+- About page redesign: field-driven service / approach / availability cards, mesh section shells, hero jump links, stronger Gettysburg SEO title/meta, mobile-friendly stats and cards
+
 ## 3.1.10 — 2026-08-26
 
 ### Changed

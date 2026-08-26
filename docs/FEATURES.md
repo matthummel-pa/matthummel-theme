@@ -9,7 +9,7 @@ What the 3.x Sage theme does, and where it lives.
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Minimalist landing; section anchors + jump-nav pills; live GitHub API panel; skills ticker; 2×2 audience cards; one primary Say hello CTA | `resources/views/partials/home.blade.php`, `App\Github` |
-| About | Stats bar, story, open-for-work signals, audience cards, approach grid, journal preview, CTA band | `template-about.blade.php` |
+| About | Stats band, story + GitHub/studio cards, field-driven services & approach, open-for-work arrangements, journal preview, elsewhere, CTA | `template-about.blade.php` |
 | Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |

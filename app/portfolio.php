@@ -2465,3 +2465,97 @@ if (defined('WP_CLI') && WP_CLI) {
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
 add_filter('matthummel/cta_text', fn () => __('I take a few WordPress, plugin, and other web-app jobs. Some Power Platform too. Write a short note and I will reply in one or two business days.', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
+
+/**
+ * Default service cards for the About page.
+ *
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_about_services_defaults(): array
+{
+    return [
+        [
+            'icon' => 'wordpress',
+            'title' => __('WordPress sites', 'sage'),
+            'body' => __('New sites from scratch, existing sites that need work, and themes built so shops can edit their own pages. Mostly Sage and Blade, plain PHP, and front-end work that holds up.', 'sage'),
+        ],
+        [
+            'icon' => 'plugins',
+            'title' => __('Plugins and tools', 'sage'),
+            'body' => __('Custom PHP when WordPress needs a part it does not have. Single-purpose, well-documented, and written so any developer can read it later.', 'sage'),
+        ],
+        [
+            'icon' => 'code',
+            'title' => __('Other web apps', 'sage'),
+            'body' => __('React front ends, APIs, and anything that does not belong in a theme. Power Platform when a team already lives in Microsoft 365 and it is the right fit.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default open-for-work arrangement cards.
+ *
+ * @return list<array{title: string, detail: string}>
+ */
+function mh_about_work_types_defaults(): array
+{
+    return [
+        [
+            'title' => __('Full-time roles', 'sage'),
+            'detail' => __('WordPress, PHP, and web development. Open to on-site, hybrid, or remote from Gettysburg.', 'sage'),
+        ],
+        [
+            'title' => __('Contract and freelance', 'sage'),
+            'detail' => __('Project-based work with a clear, written scope for shops and agencies.', 'sage'),
+        ],
+        [
+            'title' => __('Agency sub-contracting', 'sage'),
+            'detail' => __('You keep the shop relationship. I build the WordPress site or plugin.', 'sage'),
+        ],
+        [
+            'title' => __('Part-time arrangements', 'sage'),
+            'detail' => __('A few hours a week or a focused sprint. Flexible.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default approach / how-I-work cards for About.
+ *
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_about_approach_defaults(): array
+{
+    return [
+        [
+            'icon' => 'briefcase',
+            'title' => __('Shops own everything', 'sage'),
+            'body' => __('Hosting, domain, database, and code belong to the shop before the project closes. No access after handoff unless you invite me back.', 'sage'),
+        ],
+        [
+            'icon' => 'users',
+            'title' => __('The admin experience is part of the build', 'sage'),
+            'body' => __('A site that is hard to update does not get updated. I write edit flows so the owner can change a page in under two minutes without asking me.', 'sage'),
+        ],
+        [
+            'icon' => 'code',
+            'title' => __('Plain, readable code', 'sage'),
+            'body' => __('If a developer cannot understand a function in 30 seconds, it is too clever. I write for the next person who has to read it.', 'sage'),
+        ],
+        [
+            'icon' => 'cursor-ai',
+            'title' => __('AI assists. I review everything.', 'sage'),
+            'body' => __('I use Cursor, Claude, and ChatGPT to move faster on repetitive work. Every line ships only after I have read and tested it myself.', 'sage'),
+        ],
+        [
+            'icon' => 'book-open',
+            'title' => __('Accessibility and plain language by default', 'sage'),
+            'body' => __('Keyboard-accessible, screen-reader-friendly pages, written at a grade 7–8 reading level. Not a checkbox — just how the work should be done.', 'sage'),
+        ],
+        [
+            'icon' => 'plugins',
+            'title' => __('Small, focused plugins', 'sage'),
+            'body' => __('One plugin should do one thing well. I audit and remove anything that adds weight without adding clear value. Most sites need 6–8 plugins, not 30.', 'sage'),
+        ],
+    ];
+}
