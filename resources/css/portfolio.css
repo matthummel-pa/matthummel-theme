@@ -2690,6 +2690,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   grid-template-columns: 1fr;
   gap: 1.15rem;
   margin-bottom: 2rem;
+  width: 100%;
 }
 .code-gh-panel {
   background: var(--white);
@@ -2698,6 +2699,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   padding: 1.25rem 1.3rem 1.35rem;
   min-width: 0;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.code-gh-panel.code-gh-cal {
+  grid-column: 1 / -1;
 }
 .code-gh-panel__head {
   display: flex;
@@ -2734,15 +2740,20 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font-weight: 600;
 }
 .code-gh-cal {
-  --gh-weeks: 9;
-  --gh-gap: clamp(0.2rem, 0.7vw, 0.55rem);
+  --gh-weeks: 13;
+  --gh-gap: clamp(0.12rem, 0.7cqi, 0.35rem);
+  --gh-day-size: clamp(0.5rem, 2.4cqi, 0.75rem);
+  width: 100%;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: gh-cal;
 }
 .code-gh-cal__months {
   display: grid;
   grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
   gap: var(--gh-gap);
   margin: 0 0 .45rem;
-  font-size: clamp(.65rem, 1.4vw, .78rem);
+  font-size: clamp(.62rem, 2.2cqi, .78rem);
   color: var(--color-text-muted);
   width: 100%;
 }
@@ -2753,38 +2764,48 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal .gh-cal-scroll {
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   border-radius: 12px;
   border: 1px solid var(--color-border-light);
   background: linear-gradient(180deg, var(--gray-50), var(--white));
-  padding: 3.5rem clamp(.55rem, 1.25vw, 1rem) .85rem;
+  padding: clamp(2.75rem, 8cqi, 3.75rem) clamp(.45rem, 2.5cqi, 1rem) .85rem;
   overflow: visible;
 }
+/* Override legacy .gh-cal max-content / fixed-row rules so weeks fill the panel. */
 .code-gh-cal .gh-cal {
   display: grid;
+  grid-auto-flow: row;
+  grid-auto-columns: unset;
   grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
+  grid-template-rows: none;
   gap: var(--gh-gap);
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow: visible;
 }
 .code-gh-cal .gh-week {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: repeat(7, auto);
   gap: var(--gh-gap);
   min-width: 0;
+  width: 100%;
 }
 .code-gh-cal .gh-day {
   position: relative;
   display: block;
-  width: 100%;
+  box-sizing: border-box;
+  width: var(--gh-day-size);
   max-width: 100%;
-  height: auto;
-  aspect-ratio: 1;
+  height: var(--gh-day-size);
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
   overflow: visible;
   border-radius: 50%;
   border: 0;
   padding: 0;
-  margin: 0;
   appearance: none;
   -webkit-appearance: none;
   background: var(--gray-100);
@@ -2909,8 +2930,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal .gh-cal-legend .gh-day {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
+  margin-inline: 0;
   aspect-ratio: auto;
   animation: none;
   cursor: default;

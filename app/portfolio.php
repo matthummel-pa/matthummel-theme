@@ -311,7 +311,7 @@ function mh_github_calendar(): array
  *
  * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
  */
-function mh_github_calendar_recent(int $days = 60): array
+function mh_github_calendar_recent(int $days = 90): array
 {
     $days = max(1, min(366, $days));
     $cal = mh_github_calendar();
@@ -370,9 +370,9 @@ function mh_github_calendar_recent(int $days = 60): array
  *
  * @return list<array{type: string, repo: string, url: string, text: string, when: string}>
  */
-function mh_github_events_recent(int $limit = 10, int $days = 60): array
+function mh_github_events_recent(int $limit = 10, int $days = 90): array
 {
-    $days = max(1, min(90, $days));
+    $days = max(1, min(120, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $out = [];
 
@@ -399,9 +399,9 @@ function mh_github_events_recent(int $limit = 10, int $days = 60): array
  *
  * @return array<string, list<array{type: string, repo: string, url: string, text: string, when: string}>>
  */
-function mh_github_events_by_day(int $days = 60): array
+function mh_github_events_by_day(int $days = 90): array
 {
-    $days = max(1, min(90, $days));
+    $days = max(1, min(120, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
     $byDay = [];

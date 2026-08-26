@@ -437,10 +437,10 @@ function page_field_map(): array
             __('GitHub', 'sage') => [
                 ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source WordPress code on GitHub.', 'sage')],
                 ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.', 'sage')],
-                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 60 days of commits', 'sage')],
-                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 60 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
+                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 90 days of commits', 'sage')],
+                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('What shipped lately', 'sage')],
-                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 60 days — newest first.', 'sage')],
+                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first.', 'sage')],
                 ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Repos worth opening first', 'sage')],
                 ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
