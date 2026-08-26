@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.8 — 2026-08-25
+
+### Changed
+
+- Code page open-source GitHub section: SEO-focused headings/meta, section jump links, profile showcase with mesh graphic and live API badge, contribution calendar with month labels, typed activity feed beside the heat map, numbered featured repo cards with language color dots
+
 ## 3.1.7 — 2026-08-25
 
 ### Fixed

@@ -863,6 +863,70 @@ function mh_apply_code_resume_pp_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_resume_pp_copy', 57);
 
+/** Code page: richer open-source GitHub section copy (exact old defaults only). */
+function mh_apply_code_gh_oss_copy(): void
+{
+    if (get_option('mh_code_gh_oss_copy_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_gh_h2' => [
+            'GitHub.' => 'Open-source WordPress code on GitHub.',
+            'GitHub' => 'Open-source WordPress code on GitHub.',
+        ],
+        'mh_f_code_cal_h2' => [
+            'Contribution activity' => 'A year of public commits',
+        ],
+        'mh_f_code_cal_intro' => [
+            'Public contributions over the last year. Darker cells are busier days.' => 'Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.',
+        ],
+        'mh_f_code_act_h2' => [
+            'Recent activity' => 'What shipped lately',
+        ],
+        'mh_f_code_feat_h2' => [
+            'Featured repositories' => 'Repos worth opening first',
+        ],
+        'mh_f_code_feat_intro' => [
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.' => 'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.',
+        ],
+        'mh_f_code_live_h2' => [
+            'Recently updated' => 'Recently pushed',
+        ],
+        'mh_f_code_live_all' => [
+            'All public repos' => 'All public repositories',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_gh_oss_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_oss_copy', 58);
+
 /**
  * Sub-field definitions for the "Who this site is for" repeater (Home, About, Services).
  *

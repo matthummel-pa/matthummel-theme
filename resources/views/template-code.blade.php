@@ -77,128 +77,221 @@
   </div>
 </section>
 
-{{-- GITHUB --}}
-<section class="pf-section pf-section--alt" id="github" aria-labelledby="code-gh-heading">
+{{-- GITHUB / OPEN SOURCE --}}
+@php
+  $calMonths = \App\mh_github_calendar_months($weeks);
+  $weekCount = max(1, count($weeks));
+@endphp
+<section class="pf-section pf-section--alt code-gh" id="github" aria-labelledby="code-gh-heading">
   <div class="container wide">
-    <p class="eyebrow">Open source</p>
-    <h2 id="code-gh-heading" class="display-title is-section">
-      {{ \App\field('code_gh_h2', __('GitHub.', 'sage')) }}
-    </h2>
-
-    {{-- Profile --}}
-    @if (! empty($profile['login']))
-    <div class="gh-profile">
-      @if (! empty($profile['avatar']))
-        <img class="gh-avatar" src="{{ esc_url($profile['avatar']) }}" width="88" height="88" alt="Matt Hummel GitHub avatar" loading="lazy" decoding="async">
-      @endif
-      <div class="gh-profile-copy">
-        <p class="gh-name">{{ $profile['name'] ?: $profile['login'] }}</p>
-        <p class="gh-login">
-          <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{{ '@'.$login }}<span class="visually-hidden"> (opens in a new window)</span></a>
-          @if (! empty($profile['location']))
-            <span class="gh-loc">· {{ $profile['location'] }}</span>
-          @endif
-          @if (! empty($profile['created']))
-            <span class="gh-loc">· Since {{ $profile['created'] }}</span>
-          @endif
+    <div class="code-gh__head">
+      <div>
+        <p class="eyebrow">{{ __('Open source', 'sage') }}</p>
+        <h2 id="code-gh-heading" class="display-title is-section">
+          {{ \App\field('code_gh_h2', __('Open-source WordPress code on GitHub.', 'sage')) }}
+        </h2>
+        <p class="sec-intro">
+          {{ \App\field('code_gh_intro', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.', 'sage')) }}
         </p>
-        @if (! empty($profile['bio']))
-          <p class="gh-bio">{{ $profile['bio'] }}</p>
-        @endif
       </div>
-      <dl class="stat-row gh-stats">
-        <div>
-          <dt>{{ number_format_i18n((int) ($profile['public_repos'] ?? 0)) }}</dt>
-          <dd>Public repos</dd>
-        </div>
-        <div>
-          <dt>{{ number_format_i18n((int) ($profile['followers'] ?? 0)) }}</dt>
-          <dd>Followers</dd>
-        </div>
-        @if ($total > 0)
-          <div>
-            <dt>{{ number_format_i18n($total) }}</dt>
-            <dd>Contributions (yr)</dd>
-          </div>
+      <nav class="code-gh__jump" aria-label="{{ __('Jump to GitHub sections', 'sage') }}">
+        @if (! empty($profile['login']))
+          <a href="#gh-profile">{{ __('Profile', 'sage') }}</a>
         @endif
-      </dl>
+        @if ($weeks)
+          <a href="#gh-contributions">{{ __('Contributions', 'sage') }}</a>
+        @endif
+        <a href="#gh-featured">{{ __('Featured', 'sage') }}</a>
+        @if ($events)
+          <a href="#gh-activity">{{ __('Activity', 'sage') }}</a>
+        @endif
+        @if ($live)
+          <a href="#gh-updated">{{ __('Updated', 'sage') }}</a>
+        @endif
+      </nav>
+    </div>
+
+    {{-- Profile showcase --}}
+    @if (! empty($profile['login']))
+    <div class="code-gh-profile" id="gh-profile">
+      <div class="code-gh-profile__mesh" aria-hidden="true"></div>
+      <div class="code-gh-profile__main">
+        <div class="code-gh-profile__who">
+          @if (! empty($profile['avatar']))
+            <img class="code-gh-profile__avatar" src="{{ esc_url($profile['avatar']) }}" width="96" height="96" alt="{{ esc_attr(($profile['name'] ?: $profile['login']).' GitHub avatar') }}" loading="lazy" decoding="async">
+          @else
+            <span class="code-gh-profile__avatar code-gh-profile__avatar--fallback" aria-hidden="true">{!! \App\mh_svg_icon('github', 36) !!}</span>
+          @endif
+          <div class="code-gh-profile__copy">
+            <p class="code-gh-profile__name">{{ $profile['name'] ?: $profile['login'] }}</p>
+            <p class="code-gh-profile__meta">
+              <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+                {!! \App\mh_svg_icon('github', 14) !!}
+                {{ '@'.$login }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+              @if (! empty($profile['location']))
+                <span>{!! \App\mh_svg_icon('map', 13) !!} {{ $profile['location'] }}</span>
+              @endif
+              @if (! empty($profile['created']))
+                <span>{{ sprintf(__('On GitHub since %s', 'sage'), $profile['created']) }}</span>
+              @endif
+            </p>
+            @if (! empty($profile['bio']))
+              <p class="code-gh-profile__bio">{{ $profile['bio'] }}</p>
+            @endif
+            <p class="code-gh-profile__actions">
+              <a class="btn" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+                {!! \App\mh_svg_icon('github', 15) !!} {{ __('View on GitHub', 'sage') }}
+                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+              <span class="code-gh-live" aria-label="{{ __('Live data from GitHub API', 'sage') }}">
+                <span class="h-badge__dot" aria-hidden="true"></span>
+                {{ __('Live from API', 'sage') }}
+              </span>
+            </p>
+          </div>
+        </div>
+        <dl class="code-gh-stats">
+          <div class="code-gh-stat">
+            <dt>
+              <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('code', 16) !!}</span>
+              {{ number_format_i18n((int) ($profile['public_repos'] ?? 0)) }}
+            </dt>
+            <dd>{{ __('Public repos', 'sage') }}</dd>
+          </div>
+          <div class="code-gh-stat">
+            <dt>
+              <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
+              {{ number_format_i18n((int) ($profile['followers'] ?? 0)) }}
+            </dt>
+            <dd>{{ __('Followers', 'sage') }}</dd>
+          </div>
+          @if ($total > 0)
+            <div class="code-gh-stat">
+              <dt>
+                <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('git', 16) !!}</span>
+                {{ number_format_i18n($total) }}
+              </dt>
+              <dd>{{ __('Contributions (yr)', 'sage') }}</dd>
+            </div>
+          @endif
+        </dl>
+      </div>
     </div>
     @endif
 
-    {{-- Contribution calendar --}}
-    @if ($weeks)
-    <div class="gh-cal-wrap">
-      <h3 class="gh-subhead">{{ \App\field('code_cal_h2', __('Contribution activity', 'sage')) }}</h3>
-      <p class="code-cal-intro">
-        {{ \App\field('code_cal_intro', __('Public contributions over the last year. Darker cells are busier days.', 'sage')) }}
-        @if ($total > 0)
-          {{ number_format_i18n($total) }} contributions in the last year.
-        @endif
-      </p>
-      <div class="gh-cal-scroll" tabindex="0" role="img" aria-label="GitHub contribution calendar for @{{ $login }}">
-        <div class="gh-cal">
-          @foreach ($weeks as $week)
-            @foreach ($week as $day)
-              @php
-                $level = (int) ($day['level'] ?? 0);
-                $date  = (string) ($day['date'] ?? '');
-                $count = (int) ($day['count'] ?? 0);
-                $title = $date !== '' ? sprintf('%s on %s', sprintf(_n('%s contribution', '%s contributions', $count, 'sage'), (string) $count), $date) : '';
-              @endphp
-              <span class="gh-day" data-level="{{ $level }}" title="{{ $title }}"></span>
-            @endforeach
-          @endforeach
+    {{-- Contributions + activity --}}
+    @if ($weeks || $events)
+    <div class="code-gh-split">
+      @if ($weeks)
+      <div class="code-gh-panel code-gh-cal" id="gh-contributions">
+        <div class="code-gh-panel__head">
+          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('git', 18) !!}</span>
+          <div>
+            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('A year of public commits', 'sage')) }}</h3>
+            <p class="code-gh-panel__intro">
+              {{ \App\field('code_cal_intro', __('Contribution heat map for the last twelve months. Darker blue means a busier day on public repos.', 'sage')) }}
+              @if ($total > 0)
+                <strong>{{ sprintf(__('%s contributions in the last year.', 'sage'), number_format_i18n($total)) }}</strong>
+              @endif
+            </p>
+          </div>
         </div>
+        <div class="gh-cal-scroll" tabindex="0" role="img" aria-label="{{ sprintf(__('GitHub contribution calendar for @%s', 'sage'), $login) }}">
+          @if ($calMonths)
+            <div class="code-gh-cal__months" aria-hidden="true" style="--gh-weeks: {{ $weekCount }}">
+              @foreach ($calMonths as $m)
+                <span style="grid-column: {{ $m['week'] + 1 }}">{{ $m['label'] }}</span>
+              @endforeach
+            </div>
+          @endif
+          <div class="gh-cal">
+            @foreach ($weeks as $week)
+              @foreach ($week as $day)
+                @php
+                  $level = (int) ($day['level'] ?? 0);
+                  $date  = (string) ($day['date'] ?? '');
+                  $count = (int) ($day['count'] ?? 0);
+                  $title = $date !== '' ? sprintf('%s on %s', sprintf(_n('%s contribution', '%s contributions', $count, 'sage'), (string) $count), $date) : '';
+                @endphp
+                <span class="gh-day" data-level="{{ $level }}" title="{{ $title }}"></span>
+              @endforeach
+            @endforeach
+          </div>
+        </div>
+        <p class="gh-cal-legend" aria-hidden="true">
+          {{ __('Less', 'sage') }}
+          <span class="gh-day" data-level="0"></span>
+          <span class="gh-day" data-level="1"></span>
+          <span class="gh-day" data-level="2"></span>
+          <span class="gh-day" data-level="3"></span>
+          <span class="gh-day" data-level="4"></span>
+          {{ __('More', 'sage') }}
+        </p>
       </div>
-      <p class="gh-cal-legend" aria-hidden="true">
-        Less
-        <span class="gh-day" data-level="0"></span>
-        <span class="gh-day" data-level="1"></span>
-        <span class="gh-day" data-level="2"></span>
-        <span class="gh-day" data-level="3"></span>
-        <span class="gh-day" data-level="4"></span>
-        More
-      </p>
+      @endif
+
+      @if ($events)
+      <div class="code-gh-panel code-gh-activity" id="gh-activity">
+        <div class="code-gh-panel__head">
+          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
+          <div>
+            <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('What shipped lately', 'sage')) }}</h3>
+            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the public timeline.', 'sage')) }}</p>
+          </div>
+        </div>
+        <ol class="code-gh-feed">
+          @foreach ($events as $ev)
+            @php $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? '')); @endphp
+            <li class="code-gh-feed__item" data-type="{{ esc_attr((string) ($ev['type'] ?? '')) }}">
+              <span class="code-gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon($evIcon, 14) !!}</span>
+              <span class="code-gh-feed__text">
+                <a href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">{{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
+              </span>
+              @if (! empty($ev['when']))
+                <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
+              @endif
+            </li>
+          @endforeach
+        </ol>
+      </div>
+      @endif
     </div>
     @endif
 
     {{-- Featured repos --}}
-    <h3 class="gh-subhead">{{ \App\field('code_feat_h2', __('Featured repositories', 'sage')) }}</h3>
-    <p class="code-subintro">{{ \App\field('code_feat_intro', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.', 'sage')) }}</p>
-    <div class="pf-grid">
-      @foreach ($repos as $r)
-        @include('partials.repo-card', ['r' => $r])
-      @endforeach
+    <div class="code-gh-block" id="gh-featured">
+      <div class="code-gh-block__head">
+        <div>
+          <h3 class="code-gh-block__title">{{ \App\field('code_feat_h2', __('Repos worth opening first', 'sage')) }}</h3>
+          <p class="code-subintro">{{ \App\field('code_feat_intro', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')) }}</p>
+        </div>
+      </div>
+      <div class="pf-grid code-gh-repos code-gh-repos--featured">
+        @foreach ($repos as $i => $r)
+          @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'featured' => true])
+        @endforeach
+      </div>
     </div>
-
-    {{-- Recent activity --}}
-    @if ($events)
-    <h3 class="gh-subhead">{{ \App\field('code_act_h2', __('Recent activity', 'sage')) }}</h3>
-    <ol class="gh-feed">
-      @foreach ($events as $ev)
-        <li>
-          <span class="gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon('code', 14) !!}</span>
-          <a href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">{{ $ev['text'] }}<span class="visually-hidden"> (opens in a new window)</span></a>
-          @if (! empty($ev['when']))
-            <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
-          @endif
-        </li>
-      @endforeach
-    </ol>
-    @endif
 
     {{-- Recently updated --}}
     @if ($live)
-    <div class="code-live-head">
-      <h3 class="gh-subhead">{{ \App\field('code_live_h2', __('Recently updated', 'sage')) }}</h3>
-      <a class="about-text-link" href="https://github.com/{{ $login }}?tab=repositories" rel="noopener" target="_blank">
-        {{ \App\field('code_live_all', __('All public repos', 'sage')) }} →
-      </a>
-    </div>
-    <div class="pf-grid">
-      @foreach ($live as $r)
-        @include('partials.repo-card', ['r' => $r])
-      @endforeach
+    <div class="code-gh-block" id="gh-updated">
+      <div class="code-gh-block__head code-live-head">
+        <div>
+          <h3 class="code-gh-block__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
+          <p class="code-subintro">{{ \App\field('code_live_intro', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')) }}</p>
+        </div>
+        <a class="about-text-link" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
+          {{ \App\field('code_live_all', __('All public repositories', 'sage')) }} →
+          <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+        </a>
+      </div>
+      <div class="pf-grid code-gh-repos">
+        @foreach ($live as $r)
+          @include('partials.repo-card', ['r' => $r])
+        @endforeach
+      </div>
     </div>
     @endif
   </div>
