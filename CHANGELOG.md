@@ -6,7 +6,8 @@ All notable changes to this theme are recorded here.
 
 ### Changed
 
-- Code page contribution heat map: last 90 days, full-width grid with smaller day circles, entrance/glow animation, hover/focus tips with public activity for that day
+- Code page contribution heat map: last 90 days, full-width grid with clearer day circles, entrance/glow animation, hover/focus tips with public activity for that day
+- Code page open-source section redesign: practice cards, richer activity feed, featured/live repo panels, skills mesh panel, documentation cards, field-driven CTA; tighter title/meta
 
 ## 3.1.9 — 2026-08-26
 

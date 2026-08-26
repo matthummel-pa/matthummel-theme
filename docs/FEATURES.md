@@ -13,7 +13,7 @@ What the 3.x Sage theme does, and where it lives.
 | Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
-| Code | Open-source GitHub showcase (profile panel, 90-day contribution circles newest-first with hover tips, typed activity feed, featured/recent repos), skill chips, docs | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
+| Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
 | Single post | Reading progress bar, hero share, inline TOC (when headings exist), desktop sidebar (TOC + summary + popular + topics + hire CTA), tags, author bio, post-end CTA, prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php` |

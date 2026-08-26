@@ -29,7 +29,7 @@
     {{ \App\field('code_h1', __('PHP, WordPress, and open-source code.', 'sage')) }}
   </h1>
   <p class="lead">
-    {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.', 'sage')) !!}
+    {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')) !!}
   </p>
   @if (\App\mh_is_hireable($profile))
     <p class="hire-avail" style="margin-top:.85rem">
@@ -46,26 +46,29 @@
 @endcomponent
 
 {{-- PRACTICE --}}
-<section class="pf-section" aria-labelledby="code-practice-heading">
+<section class="pf-section code-practice-sec" aria-labelledby="code-practice-heading">
   <div class="container wide">
     <div class="code-section-head">
       <div>
-        <p class="eyebrow">Day to day</p>
+        <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
         <h2 id="code-practice-heading" class="display-title is-section">
           {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
         </h2>
         <p class="sec-intro">
-          {{ \App\field('code_do_intro', __('WordPress is the main focus. Most projects are Sage, PHP, and front-end work that clients can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.', 'sage')) }}
+          {{ \App\field('code_do_intro', __('WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.', 'sage')) }}
         </p>
       </div>
       <div class="code-section-links">
-        <a class="about-text-link" href="{{ home_url('/services/') }}">Services page →</a>
-        <a class="about-text-link" href="{{ home_url('/projects/') }}">Example sites →</a>
+        <a class="about-text-link" href="{{ home_url('/services/') }}">{{ __('Services page', 'sage') }} →</a>
+        <a class="about-text-link" href="{{ home_url('/projects/') }}">{{ __('Example sites', 'sage') }} →</a>
       </div>
     </div>
-    <ul class="practice-list">
-      @foreach ($practice as $item)
-        <li>{{ $item }}</li>
+    <ul class="code-practice">
+      @foreach ($practice as $i => $item)
+        <li class="code-practice__item">
+          <span class="code-practice__n" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+          <p class="code-practice__text">{{ $item }}</p>
+        </li>
       @endforeach
     </ul>
   </div>
@@ -87,7 +90,7 @@
           {{ \App\field('code_gh_h2', __('Open-source WordPress code on GitHub.', 'sage')) }}
         </h2>
         <p class="sec-intro">
-          {{ \App\field('code_gh_intro', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.', 'sage')) }}
+          {{ \App\field('code_gh_intro', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')) }}
         </p>
       </div>
       <nav class="code-gh__jump" aria-label="{{ __('Jump to GitHub sections', 'sage') }}">
@@ -248,18 +251,28 @@
         <div class="code-gh-panel__head">
           <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
           <div>
-            <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('What shipped lately', 'sage')) }}</h3>
-            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 90 days — newest first.', 'sage')) }}</p>
+            <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('Public activity', 'sage')) }}</h3>
+            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')) }}</p>
           </div>
         </div>
         <ol class="code-gh-feed">
           @foreach ($events as $ev)
-            @php $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? '')); @endphp
-            <li class="code-gh-feed__item" data-type="{{ esc_attr((string) ($ev['type'] ?? '')) }}">
+            @php
+              $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? ''));
+              $evType = (string) ($ev['type'] ?? '');
+              $evRepo = (string) ($ev['repo'] ?? '');
+            @endphp
+            <li class="code-gh-feed__item" data-type="{{ esc_attr($evType) }}">
               <span class="code-gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon($evIcon, 14) !!}</span>
-              <span class="code-gh-feed__text">
-                <a href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">{{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
-              </span>
+              <div class="code-gh-feed__body">
+                <a class="code-gh-feed__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
+                  {{ $ev['text'] }}
+                  <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+                </a>
+                @if ($evRepo !== '')
+                  <span class="code-gh-feed__repo">{!! \App\mh_svg_icon('github', 12) !!} {{ $evRepo }}</span>
+                @endif
+              </div>
               @if (! empty($ev['when']))
                 <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
               @endif
@@ -272,9 +285,10 @@
     @endif
 
     {{-- Featured repos --}}
-    <div class="code-gh-block" id="gh-featured">
+    <div class="code-gh-block code-gh-block--featured" id="gh-featured">
       <div class="code-gh-block__head">
-        <div>
+        <div class="code-gh-block__copy">
+          <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
           <h3 class="code-gh-block__title">{{ \App\field('code_feat_h2', __('Repos worth opening first', 'sage')) }}</h3>
           <p class="code-subintro">{{ \App\field('code_feat_intro', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')) }}</p>
         </div>
@@ -288,14 +302,16 @@
 
     {{-- Recently updated --}}
     @if ($live)
-    <div class="code-gh-block" id="gh-updated">
+    <div class="code-gh-block code-gh-block--live" id="gh-updated">
       <div class="code-gh-block__head code-live-head">
-        <div>
+        <div class="code-gh-block__copy">
+          <p class="eyebrow">{{ __('Pulse', 'sage') }}</p>
           <h3 class="code-gh-block__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
           <p class="code-subintro">{{ \App\field('code_live_intro', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')) }}</p>
         </div>
-        <a class="about-text-link" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
-          {{ \App\field('code_live_all', __('All public repositories', 'sage')) }} →
+        <a class="btn btn-outline code-gh-block__cta" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
+          {!! \App\mh_svg_icon('github', 14) !!}
+          {{ \App\field('code_live_all', __('All public repositories', 'sage')) }}
           <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
         </a>
       </div>
@@ -310,42 +326,55 @@
 </section>
 
 {{-- SKILLS --}}
-<section class="pf-section pf-section--alt" id="skills" aria-labelledby="code-skills-heading">
+<section class="pf-section code-skills-sec" id="skills" aria-labelledby="code-skills-heading">
   <div class="container wide">
-    <p class="eyebrow">Tools</p>
-    <h2 id="code-skills-heading" class="display-title is-section">
-      {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
-    </h2>
-    <p class="sec-intro">
-      {{ \App\field('code_sk_intro', __('Tools I reach for on shipped work. Not an exhaustive list — just the things I actually use.', 'sage')) }}
-    </p>
-    <ul class="skill-row" style="margin-top:1.5rem">
-      @foreach ($skills as $skill)
-        <li>{!! \App\mh_skill_chip($skill) !!}</li>
-      @endforeach
-    </ul>
+    <div class="code-skills">
+      <div class="code-skills__mesh" aria-hidden="true"></div>
+      <div class="code-skills__inner">
+        <p class="eyebrow">{{ __('Tools', 'sage') }}</p>
+        <h2 id="code-skills-heading" class="display-title is-section">
+          {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
+        </h2>
+        <p class="sec-intro">
+          {{ \App\field('code_sk_intro', __('Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.', 'sage')) }}
+        </p>
+        <ul class="skill-row code-skills__row">
+          @foreach ($skills as $skill)
+            <li>{!! \App\mh_skill_chip($skill) !!}</li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
 {{-- DOCUMENTATION --}}
-<section class="pf-section" id="docs" aria-labelledby="code-docs-heading">
+<section class="pf-section code-docs-sec" id="docs" aria-labelledby="code-docs-heading">
   <div class="container wide">
-    <p class="eyebrow">Reference</p>
-    <h2 id="code-docs-heading" class="display-title is-section">
-      {{ \App\field('code_doc_h2', __('Documentation I keep open.', 'sage')) }}
-    </h2>
-    <p class="sec-intro">
-      {{ \App\field('code_doc_intro', __('Official handbooks first, then the Roots and front-end stack this site is built on. All links open official docs.', 'sage')) }}
-    </p>
-    <ul class="doc-grid" style="margin-top:1.5rem">
+    <div class="code-section-head">
+      <div>
+        <p class="eyebrow">{{ __('Reference', 'sage') }}</p>
+        <h2 id="code-docs-heading" class="display-title is-section">
+          {{ \App\field('code_doc_h2', __('Documentation I keep open.', 'sage')) }}
+        </h2>
+        <p class="sec-intro">
+          {{ \App\field('code_doc_intro', __('Official handbooks first, then the Roots and front-end stack this site is built on. All links open official docs.', 'sage')) }}
+        </p>
+      </div>
+    </div>
+    <ul class="code-docs">
       @foreach ($docs as $doc)
-        <li>
-          <a href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">
-            {{ $doc['label'] }}<span class="visually-hidden"> (opens in a new window)</span>
-          </a>
-          @if ($doc['note'] !== '')
-            <p>{{ $doc['note'] }}</p>
-          @endif
+        <li class="code-docs__card">
+          <span class="code-docs__mark" aria-hidden="true">{!! \App\mh_svg_icon('globe', 16) !!}</span>
+          <div class="code-docs__copy">
+            <a href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">
+              {{ $doc['label'] }}
+              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+            </a>
+            @if (($doc['note'] ?? '') !== '')
+              <p>{{ $doc['note'] }}</p>
+            @endif
+          </div>
         </li>
       @endforeach
     </ul>
@@ -353,19 +382,24 @@
 </section>
 
 {{-- CTA --}}
-<section class="cta-band" aria-labelledby="code-cta-heading">
+<section class="cta-band code-cta" aria-labelledby="code-cta-heading">
   <div class="container wide cta-band-inner">
-    <div>
-      <p class="eyebrow eyebrow--on-dark">Work together</p>
-      <h2 id="code-cta-heading" class="display-title is-section">See something useful?</h2>
-      <p>Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.</p>
+    <div class="code-cta__copy">
+      <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Work together', 'sage')) }}</p>
+      <h2 id="code-cta-heading" class="display-title is-section">
+        {{ \App\field('code_cta_h2', __('Need WordPress help in Gettysburg?', 'sage')) }}
+      </h2>
+      <p>{{ \App\field('code_cta_lede', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')) }}</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem;align-items:flex-end;flex-shrink:0">
+    <div class="code-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} Hire me
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        {{ \App\field('code_cta_btn', __('Hire me', 'sage')) }}
       </a>
-      <a class="about-text-link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank" style="color:#9ca3af">
-        {!! \App\mh_svg_icon('github', 14) !!} @matthummel-pa →
+      <a class="code-cta__gh" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+        {!! \App\mh_svg_icon('github', 14) !!}
+        {{ '@'.$login }} →
+        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
     </div>
   </div>

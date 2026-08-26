@@ -1086,6 +1086,72 @@ function mh_apply_code_gh_cal_90d(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_gh_cal_90d', 61);
 
+/** Code page: section copy / SEO-friendly defaults for the open-source redesign. */
+function mh_apply_code_section_boost_v1(): void
+{
+    if (get_option('mh_code_section_boost_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'mh_f_code_lede' => [
+            'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skill chips below.' => 'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+            'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first. Resume and skills below.' => 'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+        ],
+        'mh_f_code_do_intro' => [
+            'WordPress is the main focus. Most projects are Sage, PHP, and front-end work that clients can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.' => 'WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.',
+            'WordPress is the public focus. I also write React apps and do some Microsoft Power Platform work when a team already lives in that stack.' => 'WordPress is the main focus from my Gettysburg studio. Most projects are Sage, PHP, and front-end work shops can keep editing after I hand off. I also write React apps and do Power Platform work when a team lives in Microsoft 365.',
+        ],
+        'mh_f_code_gh_intro' => [
+            'Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and other web apps shops and developers can fork. Live stats pull from the GitHub API.' => 'Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.',
+        ],
+        'mh_f_code_act_h2' => [
+            'What shipped lately' => 'Public activity',
+        ],
+        'mh_f_code_act_intro' => [
+            'Pushes, releases, and pull requests from the last 90 days — newest first.' => 'Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.',
+        ],
+        'mh_f_code_sk_h2' => [
+            'Skills' => 'Skills and tools.',
+        ],
+        'mh_f_code_sk_intro' => [
+            'Tools I use on shipped work. Icons match the brands other developers already recognize.' => 'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.',
+            'Tools I reach for on shipped work. Not an exhaustive list — just the things I actually use.' => 'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.',
+        ],
+        'mh_f_code_doc_h2' => [
+            'Documentation I use' => 'Documentation I keep open.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            foreach ($pairs as $from => $to) {
+                if ($val === $from) {
+                    update_post_meta($id, $key, $to);
+                    break;
+                }
+            }
+        }
+    }
+
+    update_option('mh_code_section_boost_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_section_boost_v1', 62);
+
 /** Copy Code page resume meta onto the Hire page once (for editable hire_cv_* fields). */
 function mh_migrate_resume_to_hire(): void
 {
