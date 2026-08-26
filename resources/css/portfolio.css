@@ -2759,18 +2759,20 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .code-gh-cal .gh-cal-scroll__inner {
   overflow-x: auto;
   overflow-y: visible;
-  padding: 3.75rem .65rem .35rem;
+  padding: 4.25rem .85rem .45rem;
   -webkit-overflow-scrolling: touch;
 }
 .code-gh-cal .gh-cal {
   grid-template-rows: repeat(7, 18px);
   gap: 5px;
+  overflow: visible;
 }
 .code-gh-cal .gh-day {
   position: relative;
   display: inline-block;
   width: 18px;
   height: 18px;
+  overflow: visible;
   border-radius: 50%;
   border: 0;
   padding: 0;
@@ -2824,17 +2826,21 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   left: 50%;
   bottom: calc(100% + 12px);
   z-index: 6;
-  width: max-content;
-  max-width: min(17rem, 70vw);
-  padding: .55rem .7rem;
+  box-sizing: border-box;
+  width: 15.5rem;
+  min-width: 15.5rem;
+  max-width: min(15.5rem, calc(100vw - 2rem));
+  padding: .6rem .75rem;
   border-radius: 8px;
   border: 1px solid var(--color-border);
   background: var(--color-navy, #0f172a);
   color: #f8fafc;
-  font: 500 .72rem/1.45 var(--font-body, inherit);
+  font: 500 .75rem/1.45 var(--font-body, inherit);
   letter-spacing: 0;
   text-align: left;
-  white-space: pre-line;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   box-shadow: 0 10px 28px color-mix(in srgb, #0f172a 28%, transparent);
   opacity: 0;
   visibility: hidden;
