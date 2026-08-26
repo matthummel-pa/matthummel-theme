@@ -123,7 +123,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-code.blade.php' => [
             'title' => 'Open-source WordPress code | '.$brand,
-            'desc' => 'Public Sage themes, plugins, and GitHub activity from Gettysburg. Fork the code, skim the skills, or say hello.',
+            'desc' => 'Public Sage themes, plugins, and GitHub activity from Gettysburg. Browse skills, fork repos, or say hello.',
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,

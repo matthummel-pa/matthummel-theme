@@ -885,16 +885,22 @@ function mh_apply_code_gh_oss_copy(): void
             'Recent activity' => 'What shipped lately',
         ],
         'mh_f_code_feat_h2' => [
-            'Featured repositories' => 'Repos worth opening first',
+            'Featured repositories' => 'Featured WordPress and app repos',
+            'Repos worth opening first' => 'Featured WordPress and app repos',
         ],
         'mh_f_code_feat_intro' => [
-            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.' => 'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.',
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and a Sage theme.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
         ],
         'mh_f_code_live_h2' => [
             'Recently updated' => 'Recently pushed',
         ],
+        'mh_f_code_live_intro' => [
+            'Latest public updates across my GitHub account — useful if you want to see what I am actively touching.' => 'Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.',
+        ],
         'mh_f_code_live_all' => [
-            'All public repos' => 'All public repositories',
+            'All public repos' => 'Browse all public repos',
+            'All public repositories' => 'Browse all public repos',
         ],
     ];
 
@@ -1111,12 +1117,25 @@ function mh_apply_code_section_boost_v1(): void
         'mh_f_code_act_intro' => [
             'Pushes, releases, and pull requests from the last 90 days — newest first.' => 'Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.',
         ],
+        'mh_f_code_feat_h2' => [
+            'Repos worth opening first' => 'Featured WordPress and app repos',
+        ],
         'mh_f_code_sk_h2' => [
             'Skills' => 'Skills and tools.',
         ],
+        'mh_f_code_feat_intro' => [
+            'Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.',
+        ],
+        'mh_f_code_live_intro' => [
+            'Latest public updates across my GitHub account — useful if you want to see what I am actively touching.' => 'Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.',
+        ],
+        'mh_f_code_live_all' => [
+            'All public repositories' => 'Browse all public repos',
+        ],
         'mh_f_code_sk_intro' => [
-            'Tools I use on shipped work. Icons match the brands other developers already recognize.' => 'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.',
-            'Tools I reach for on shipped work. Not an exhaustive list — just the things I actually use.' => 'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.',
+            'Tools I use on shipped work. Icons match the brands other developers already recognize.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
+            'Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
+            'Tools I reach for on shipped work. Not an exhaustive list — just the things I actually use.' => 'WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.',
         ],
         'mh_f_code_doc_h2' => [
             'Documentation I use' => 'Documentation I keep open.',

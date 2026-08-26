@@ -250,6 +250,7 @@ function mh_repo_card(array $repo): array
         'url' => $url,
         'demo' => $homepage,
         'stack' => array_values(array_slice($stack, 0, 6)),
+        'tags' => array_values($tags),
         'stars' => (int) ($repo['stars'] ?? $meta['stars'] ?? 0),
         'forks' => (int) ($repo['forks'] ?? $meta['forks'] ?? 0),
         'pushed' => (string) ($repo['pushed'] ?? $meta['pushed'] ?? ''),
@@ -479,6 +480,97 @@ function mh_github_day_tip(string $date, int $count, array $dayEvents = []): str
 function mh_github_live_repos(int $limit = 8): array
 {
     return array_map(__NAMESPACE__.'\\mh_repo_card', Github::fetchRepos(mh_github_login(), $limit, 'updated'));
+}
+
+/**
+ * Recently pushed repos for the Code page, skipping featured picks.
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
+{
+    $featuredNames = array_map(
+        static fn (array $r): string => strtolower((string) ($r['name'] ?? '')),
+        mh_code_page_repos($post_id)
+    );
+    $live = [];
+
+    foreach (mh_github_live_repos(max($limit * 2, 12)) as $repo) {
+        $name = strtolower((string) ($repo['name'] ?? ''));
+        if ($name === '' || in_array($name, $featuredNames, true)) {
+            continue;
+        }
+        $live[] = $repo;
+        if (count($live) >= $limit) {
+            break;
+        }
+    }
+
+    return $live;
+}
+
+/**
+ * Short category label for a repo card (scan aid, not page copy).
+ */
+function mh_code_repo_category(array $repo): string
+{
+    $stack = array_map(static fn ($item): string => strtolower(trim((string) $item)), $repo['stack'] ?? []);
+    $tags = array_map(static fn ($item): string => strtolower(trim((string) $item)), $repo['tags'] ?? []);
+    $name = strtolower((string) ($repo['name'] ?? ''));
+    $desc = strtolower((string) ($repo['desc'] ?? ''));
+    $haystack = array_merge($stack, $tags);
+
+    if (
+        in_array('sage', $haystack, true)
+        || str_contains($name, 'sage')
+        || str_contains($desc, 'sage theme')
+        || str_contains($desc, 'sage 11')
+    ) {
+        return __('Sage theme', 'sage');
+    }
+    if (
+        in_array('wordpress', $haystack, true)
+        || in_array('gutenberg', $haystack, true)
+        || str_contains($desc, 'wordpress plugin')
+        || str_contains($desc, 'gutenberg')
+    ) {
+        return __('WordPress plugin', 'sage');
+    }
+    if (
+        in_array('react', $haystack, true)
+        || in_array('supabase', $haystack, true)
+        || in_array('next.js', $haystack, true)
+        || in_array('nextjs', $haystack, true)
+        || str_contains($desc, 'react')
+    ) {
+        return __('Web app', 'sage');
+    }
+    if (in_array('php', $haystack, true)) {
+        return __('PHP project', 'sage');
+    }
+
+    return __('Open source', 'sage');
+}
+
+/**
+ * Display slug for a repo link (owner/name).
+ */
+function mh_code_repo_slug(array $repo): string
+{
+    $url = (string) ($repo['url'] ?? '');
+    if ($url !== '') {
+        $path = trim((string) (wp_parse_url($url, PHP_URL_PATH) ?: ''), '/');
+        if ($path !== '') {
+            return $path;
+        }
+    }
+
+    $name = (string) ($repo['name'] ?? '');
+    if ($name === '') {
+        return '';
+    }
+
+    return mh_github_login().'/'.$name;
 }
 
 /**
@@ -866,6 +958,68 @@ function mh_code_skill_defaults(): array
         'React', 'Next.js', 'Node.js', 'Tailwind', 'Sass', 'Vite', 'Laravel',
         'Git', 'GitHub', 'VS Code', 'Power Apps',
     ];
+}
+
+/**
+ * Shelf label for a skill on the Code page (preserves list order within each group).
+ */
+function mh_code_skill_group(string $name): string
+{
+    $key = strtolower(trim($name));
+
+    return match ($key) {
+        'wordpress', 'sage', 'php' => 'WordPress',
+        'html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'tailwind', 'sass', 'vite' => 'Front-end',
+        'git', 'github', 'vs code', 'vscode', 'node.js', 'nodejs', 'laravel' => 'Ship',
+        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint' => 'Microsoft',
+        default => __('More', 'sage'),
+    };
+}
+
+/**
+ * Icon name for a skill group shelf.
+ */
+function mh_code_skill_group_icon(string $group): string
+{
+    return match (strtolower(trim($group))) {
+        'wordpress' => 'wordpress',
+        'front-end', 'frontend' => 'code',
+        'ship' => 'github',
+        'microsoft' => 'briefcase',
+        default => 'globe',
+    };
+}
+
+/**
+ * Short UI hint for a skill tile (scan aid, not page copy).
+ */
+function mh_code_skill_hint(string $name): string
+{
+    $key = strtolower(trim($name));
+
+    return match ($key) {
+        'html' => __('Semantic markup', 'sage'),
+        'css' => __('Layout and tokens', 'sage'),
+        'javascript' => __('UI behavior', 'sage'),
+        'typescript' => __('Typed front ends', 'sage'),
+        'php' => __('Themes and plugins', 'sage'),
+        'wordpress' => __('CMS builds', 'sage'),
+        'sage' => __('Blade + Vite themes', 'sage'),
+        'react' => __('Component UIs', 'sage'),
+        'next.js', 'nextjs' => __('React apps', 'sage'),
+        'node.js', 'nodejs' => __('Tooling and APIs', 'sage'),
+        'tailwind' => __('Utility CSS', 'sage'),
+        'sass' => __('Stylesheets', 'sage'),
+        'vite' => __('Asset pipeline', 'sage'),
+        'laravel' => __('PHP framework', 'sage'),
+        'git' => __('Version control', 'sage'),
+        'github' => __('Repos and Actions', 'sage'),
+        'vs code', 'vscode' => __('Daily editor', 'sage'),
+        'power apps', 'power-apps' => __('Canvas apps', 'sage'),
+        'power automate', 'power-automate' => __('Workflow automation', 'sage'),
+        'sharepoint' => __('Intranet sites', 'sage'),
+        default => __('In active repos', 'sage'),
+    };
 }
 
 function mh_code_resume_defaults(): array

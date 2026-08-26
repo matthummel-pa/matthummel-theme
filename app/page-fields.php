@@ -441,8 +441,8 @@ function page_field_map(): array
                 ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
                 ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
-                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Repos worth opening first', 'sage')],
-                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')],
+                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured WordPress and app repos', 'sage')],
+                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
@@ -450,12 +450,12 @@ function page_field_map(): array
                     ['tags', __('Tags (comma separated)', 'sage'), 'text'],
                 ]],
                 ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
-                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')],
-                ['code_live_all', __('All repos label', 'sage'), 'text', __('All public repositories', 'sage')],
+                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.', 'sage')],
+                ['code_live_all', __('All repos label', 'sage'), 'text', __('Browse all public repos', 'sage')],
             ],
             __('Skills', 'sage') => [
                 ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills and tools.', 'sage')],
-                ['code_sk_intro', __('Intro', 'sage'), 'text', __('Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.', 'sage')],
+                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')],
                 ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
             ],
             __('Documentation', 'sage') => [
@@ -594,6 +594,45 @@ function mh_code_page_practice(?int $post_id = null): array
 function mh_code_page_skills(?int $post_id = null): array
 {
     return field_lines('code_skills', mh_code_skill_defaults(), $post_id);
+}
+
+/**
+ * Skills grouped for the Code page (preserves first-seen group order).
+ *
+ * @return list<array{label: string, icon: string, items: list<array{name: string, hint: string, group: string}>}>
+ */
+function mh_code_page_skills_grouped(?int $post_id = null): array
+{
+    $grouped = [];
+    $order = [];
+
+    foreach (mh_code_page_skills($post_id) as $skill) {
+        $skill = trim((string) $skill);
+        if ($skill === '') {
+            continue;
+        }
+        $key = mh_code_skill_group($skill);
+        if (! isset($grouped[$key])) {
+            $grouped[$key] = [];
+            $order[] = $key;
+        }
+        $grouped[$key][] = [
+            'name' => $skill,
+            'hint' => mh_code_skill_hint($skill),
+            'group' => $key,
+        ];
+    }
+
+    $out = [];
+    foreach ($order as $key) {
+        $out[] = [
+            'label' => $key,
+            'icon' => mh_code_skill_group_icon($key),
+            'items' => $grouped[$key],
+        ];
+    }
+
+    return $out;
 }
 
 function mh_code_page_resume(?int $post_id = null): array

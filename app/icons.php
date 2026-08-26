@@ -221,3 +221,29 @@ function mh_skill_chip(string $name, int $size = 18): string
 
     return '<span class="skill-chip" data-skill="'.esc_attr(strtolower($label)).'">'.$icon.' <span>'.esc_html($label).'</span></span>';
 }
+
+/**
+ * Render a richer skill tile for the Code page shelves.
+ *
+ * @since 3.1.0
+ *
+ * @param  string  $name  Skill name (resolved via mh_svg_icon() alias map).
+ * @param  string  $hint  Short scan line under the label.
+ * @param  int  $size  Icon size in pixels (default 22).
+ * @return string HTML safe to echo inside a list item.
+ */
+function mh_skill_tile(string $name, string $hint = '', int $size = 22): string
+{
+    $label = mh_title_label($name);
+    $color = mh_skill_color($name);
+    $icon = mh_svg_icon($name, $size, $color);
+    $hint = $hint !== '' ? $hint : mh_code_skill_hint($name);
+
+    return '<div class="code-skills__tile" data-skill="'.esc_attr(strtolower($label)).'">'
+        .'<span class="code-skills__mark" aria-hidden="true">'.$icon.'</span>'
+        .'<span class="code-skills__copy">'
+        .'<span class="code-skills__title">'.esc_html($label).'</span>'
+        .'<span class="code-skills__hint">'.esc_html($hint).'</span>'
+        .'</span>'
+        .'</div>';
+}

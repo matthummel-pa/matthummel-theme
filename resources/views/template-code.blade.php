@@ -11,9 +11,9 @@
   $events   = \App\mh_github_events_recent(10, 90);
   $eventsByDay = \App\mh_github_events_by_day(90);
   $repos    = \App\mh_code_page_repos();
-  $live     = \App\mh_github_live_repos(6);
+  $live     = \App\mh_code_page_live_repos(6);
   $practice = \App\mh_code_page_practice();
-  $skills   = \App\mh_code_page_skills();
+  $skillGroups = \App\mh_code_page_skills_grouped();
   $docGroups = \App\mh_code_page_resources_grouped();
   $login    = \App\mh_github_login();
   $ghUrl    = $profile['url'] ?: 'https://github.com/'.$login;
@@ -285,40 +285,60 @@
     @endif
 
     {{-- Featured repos --}}
-    <div class="code-gh-block code-gh-block--featured" id="gh-featured">
-      <div class="code-gh-block__head">
-        <div class="code-gh-block__copy">
+    <div class="code-repos-shell code-repos-shell--featured" id="gh-featured">
+      <div class="code-repos-shell__mesh" aria-hidden="true"></div>
+      <div class="code-repos-shell__inner">
+        <header class="code-repos-shell__head">
           <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
-          <h3 class="code-gh-block__title">{{ \App\field('code_feat_h2', __('Repos worth opening first', 'sage')) }}</h3>
-          <p class="code-subintro">{{ \App\field('code_feat_intro', __('Three codebases I point people to first: a full-stack app, a WordPress plugin, and the Sage theme behind this site.', 'sage')) }}</p>
-        </div>
-      </div>
-      <div class="pf-grid code-gh-repos code-gh-repos--featured">
-        @foreach ($repos as $i => $r)
-          @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'featured' => true])
-        @endforeach
+          <h3 class="code-repos-shell__title">{{ \App\field('code_feat_h2', __('Featured WordPress and app repos', 'sage')) }}</h3>
+          <p class="sec-intro">
+            {{ \App\field('code_feat_intro', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.', 'sage')) }}
+          </p>
+          <p class="code-repos-shell__meta">
+            {{ sprintf(_n('%s repo', '%s repos', count($repos), 'sage'), number_format_i18n(count($repos))) }}
+            · {{ __('WordPress, plugins, and apps', 'sage') }}
+          </p>
+        </header>
+        <ol class="code-repos-grid code-repos-grid--featured">
+          @foreach ($repos as $i => $r)
+            <li class="code-repos-grid__item">
+              @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
+            </li>
+          @endforeach
+        </ol>
       </div>
     </div>
 
     {{-- Recently updated --}}
     @if ($live)
-    <div class="code-gh-block code-gh-block--live" id="gh-updated">
-      <div class="code-gh-block__head code-live-head">
-        <div class="code-gh-block__copy">
-          <p class="eyebrow">{{ __('Pulse', 'sage') }}</p>
-          <h3 class="code-gh-block__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
-          <p class="code-subintro">{{ \App\field('code_live_intro', __('Latest public updates across my GitHub account — useful if you want to see what I am actively touching.', 'sage')) }}</p>
-        </div>
-        <a class="btn btn-outline code-gh-block__cta" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
-          {!! \App\mh_svg_icon('github', 14) !!}
-          {{ \App\field('code_live_all', __('All public repositories', 'sage')) }}
-          <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-        </a>
-      </div>
-      <div class="pf-grid code-gh-repos">
-        @foreach ($live as $r)
-          @include('partials.repo-card', ['r' => $r])
-        @endforeach
+    <div class="code-repos-shell code-repos-shell--live" id="gh-updated">
+      <div class="code-repos-shell__mesh" aria-hidden="true"></div>
+      <div class="code-repos-shell__inner">
+        <header class="code-repos-shell__head code-repos-shell__head--split">
+          <div class="code-repos-shell__copy">
+            <p class="eyebrow">{{ __('Pulse', 'sage') }}</p>
+            <h3 class="code-repos-shell__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
+            <p class="sec-intro">
+              {{ \App\field('code_live_intro', __('Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.', 'sage')) }}
+            </p>
+            <p class="code-repos-shell__meta">
+              {{ sprintf(_n('%s update', '%s updates', count($live), 'sage'), number_format_i18n(count($live))) }}
+              · {{ __('Sorted by latest push', 'sage') }}
+            </p>
+          </div>
+          <a class="btn btn-outline code-repos-shell__cta" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('github', 14) !!}
+            {{ \App\field('code_live_all', __('Browse all public repos', 'sage')) }}
+            <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+          </a>
+        </header>
+        <ul class="code-repos-grid code-repos-grid--live">
+          @foreach ($live as $r)
+            <li class="code-repos-grid__item">
+              @include('partials.repo-card', ['r' => $r, 'variant' => 'live'])
+            </li>
+          @endforeach
+        </ul>
       </div>
     </div>
     @endif
@@ -328,21 +348,54 @@
 {{-- SKILLS --}}
 <section class="pf-section code-skills-sec" id="skills" aria-labelledby="code-skills-heading">
   <div class="container wide">
-    <div class="code-skills">
-      <div class="code-skills__mesh" aria-hidden="true"></div>
-      <div class="code-skills__inner">
-        <p class="eyebrow">{{ __('Tools', 'sage') }}</p>
-        <h2 id="code-skills-heading" class="display-title is-section">
-          {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
-        </h2>
-        <p class="sec-intro">
-          {{ \App\field('code_sk_intro', __('Tools I reach for on shipped WordPress and web work. Not an exhaustive list — just what shows up in real repos.', 'sage')) }}
-        </p>
-        <ul class="skill-row code-skills__row">
-          @foreach ($skills as $skill)
-            <li>{!! \App\mh_skill_chip($skill) !!}</li>
+    <div class="code-skills-shell">
+      <div class="code-skills-shell__mesh" aria-hidden="true"></div>
+      <div class="code-skills-shell__inner">
+        <header class="code-skills-shell__head">
+          <p class="eyebrow">{{ __('Tools', 'sage') }}</p>
+          <h2 id="code-skills-heading" class="display-title is-section">
+            {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
+          </h2>
+          <p class="sec-intro">
+            {{ \App\field('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')) }}
+          </p>
+          @if (count($skillGroups) > 1)
+            <nav class="code-skills-jump" aria-label="{{ __('Skill groups', 'sage') }}">
+              @foreach ($skillGroups as $group)
+                <a href="#skill-{{ sanitize_title($group['label']) }}">
+                  <span class="code-skills-jump__ico" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 13) !!}</span>
+                  {{ $group['label'] }}
+                  <span class="code-skills-jump__n">{{ number_format_i18n(count($group['items'])) }}</span>
+                </a>
+              @endforeach
+            </nav>
+          @endif
+        </header>
+
+        <div class="code-skills-groups">
+          @foreach ($skillGroups as $group)
+            <section
+              class="code-skills-group"
+              id="skill-{{ sanitize_title($group['label']) }}"
+              aria-labelledby="skill-head-{{ sanitize_title($group['label']) }}"
+              data-group="{{ esc_attr($group['label']) }}"
+            >
+              <div class="code-skills-group__head">
+                <span class="code-skills-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
+                <h3 class="code-skills-group__title" id="skill-head-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</h3>
+                <span class="code-skills-group__rule" aria-hidden="true"></span>
+                <span class="code-skills-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
+              </div>
+              <ul class="code-skills-grid">
+                @foreach ($group['items'] as $skill)
+                  <li class="code-skills__card" data-group="{{ esc_attr($group['label']) }}">
+                    {!! \App\mh_skill_tile($skill['name'], $skill['hint']) !!}
+                  </li>
+                @endforeach
+              </ul>
+            </section>
           @endforeach
-        </ul>
+        </div>
       </div>
     </div>
   </div>
