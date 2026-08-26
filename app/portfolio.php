@@ -1548,6 +1548,38 @@ function mh_ensure_start_page(): void
 add_action('init', __NAMESPACE__.'\\mh_ensure_start_page', 35);
 
 /**
+ * Ensure the Hire me page exists (idempotent).
+ */
+function mh_ensure_hire_page(): void
+{
+    if (wp_installing()) {
+        return;
+    }
+
+    $existing = get_page_by_path('hire');
+    if ($existing instanceof \WP_Post) {
+        update_post_meta($existing->ID, '_wp_page_template', 'template-hire.blade.php');
+
+        return;
+    }
+
+    $id = wp_insert_post([
+        'post_title' => 'Hire me',
+        'post_name' => 'hire',
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_content' => '',
+    ], true);
+
+    if (is_wp_error($id) || ! $id) {
+        return;
+    }
+
+    update_post_meta((int) $id, '_wp_page_template', 'template-hire.blade.php');
+}
+add_action('init', __NAMESPACE__.'\\mh_ensure_hire_page', 35);
+
+/**
  * Ensure the DEV.to journal category exists.
  */
 function mh_devto_category_id(): int
