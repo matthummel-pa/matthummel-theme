@@ -2741,8 +2741,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal {
   --gh-weeks: 13;
-  --gh-gap: clamp(0.12rem, 0.7cqi, 0.35rem);
-  --gh-day-size: clamp(0.5rem, 2.4cqi, 0.75rem);
+  --gh-gap: clamp(0.1rem, 0.55cqi, 0.28rem);
+  --gh-day-size: clamp(0.45rem, 1.85cqi, 0.65rem);
   width: 100%;
   min-width: 0;
   container-type: inline-size;
@@ -2750,10 +2750,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal__months {
   display: grid;
-  grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
-  gap: var(--gh-gap);
-  margin: 0 0 .45rem;
-  font-size: clamp(.62rem, 2.2cqi, .78rem);
+  grid-template-columns: repeat(var(--gh-weeks), var(--gh-day-size));
+  justify-content: space-between;
+  gap: 0;
+  margin: 0 0 .4rem;
+  font-size: clamp(.58rem, 1.8cqi, .72rem);
   color: var(--color-text-muted);
   width: 100%;
 }
@@ -2761,6 +2762,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transform: translateX(calc(var(--gh-day-size) * -0.15));
 }
 .code-gh-cal .gh-cal-scroll {
   width: 100%;
@@ -2769,7 +2771,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-radius: 12px;
   border: 1px solid var(--color-border-light);
   background: linear-gradient(180deg, var(--gray-50), var(--white));
-  padding: clamp(2.75rem, 8cqi, 3.75rem) clamp(.45rem, 2.5cqi, 1rem) .85rem;
+  padding: clamp(2.5rem, 7cqi, 3.4rem) clamp(.5rem, 2cqi, .9rem) .75rem;
   overflow: visible;
 }
 /* Override legacy .gh-cal max-content / fixed-row rules so weeks fill the panel. */
@@ -2777,9 +2779,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   display: grid;
   grid-auto-flow: row;
   grid-auto-columns: unset;
-  grid-template-columns: repeat(var(--gh-weeks), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--gh-weeks), var(--gh-day-size));
   grid-template-rows: none;
-  gap: var(--gh-gap);
+  justify-content: space-between;
+  gap: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -2787,21 +2790,21 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 .code-gh-cal .gh-week {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: repeat(7, auto);
+  grid-template-columns: var(--gh-day-size);
+  grid-template-rows: repeat(7, var(--gh-day-size));
   gap: var(--gh-gap);
   min-width: 0;
-  width: 100%;
+  width: var(--gh-day-size);
 }
 .code-gh-cal .gh-day {
   position: relative;
   display: block;
   box-sizing: border-box;
   width: var(--gh-day-size);
-  max-width: 100%;
   height: var(--gh-day-size);
+  max-width: 100%;
   aspect-ratio: 1 / 1;
-  margin-inline: auto;
+  margin: 0;
   overflow: visible;
   border-radius: 50%;
   border: 0;
