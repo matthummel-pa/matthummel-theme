@@ -315,6 +315,7 @@
         {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

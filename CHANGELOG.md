@@ -7,6 +7,7 @@ All notable changes to this theme are recorded here.
 ### Changed
 
 - Portfolio presence: redesigned sitewide CTA band (mesh, grid, glow) with clearer hierarchy and secondary actions; footer and page-header atmosphere; light scroll reveals (respects reduced motion); friendlier SEO meta and footer blurb
+- Portfolio presence v2: higher-contrast CTA copy, trust note on closing CTAs, unified home/site CTA system, card washes + title accents, reading comfort, stronger focus/skip-link a11y — standout without sacrificing readability
 
 ## 3.1.11 — 2026-08-26
 

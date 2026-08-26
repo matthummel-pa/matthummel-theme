@@ -448,6 +448,7 @@
       <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">
         {{ __('See example sites', 'sage') }}
       </a>
+      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

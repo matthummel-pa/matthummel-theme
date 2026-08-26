@@ -385,7 +385,7 @@ function initShareButtons() {
 
 function initPresenceReveal() {
   // Mark shared section shells without editing every template.
-  document.querySelectorAll('.pf-section > .container > .about-shell, .pf-section > .container > .code-repos-shell, .work-card, .cta-band, .h-cta').forEach((el) => {
+  document.querySelectorAll('.pf-section > .container > .about-shell, .pf-section > .container > .code-repos-shell, .work-card, .who-card, .cta-band, .h-cta, .lift-card').forEach((el) => {
     if (! el.hasAttribute('data-reveal')) {
       el.setAttribute('data-reveal', '');
     }

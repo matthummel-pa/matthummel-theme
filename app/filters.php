@@ -119,7 +119,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-about.blade.php' => [
             'title' => 'About Matt Hummel — WordPress in Gettysburg | '.$brand,
-            'desc' => 'WordPress developer in Gettysburg. Sites shops can edit, code other developers can follow. Open for full-time, contract, and agency work.',
+            'desc' => 'WordPress developer in Gettysburg. Sites shops can edit, code other developers can follow. Open for full-time, contract, and agency work. Say hello.',
         ],
         'template-code.blade.php' => [
             'title' => 'Open-source WordPress code | '.$brand,
@@ -127,11 +127,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Building Ridges & Valleys, writing WordPress notes with copy-paste code, and open for new work. Updated August 2026.',
+            'desc' => 'Building Ridges & Valleys, writing WordPress notes with copy-paste code, and open for new work from Gettysburg.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — WordPress development notes | '.$brand,
-            'desc' => 'Short posts on WordPress, PHP, Sage, and the tools I use on real projects. Most posts include code you can copy.',
+            'desc' => 'Short posts on WordPress, PHP, Sage, and tools from real projects. Most posts include code you can copy. Say hello anytime.',
         ],
     ];
 
