@@ -9,6 +9,7 @@ All notable changes to this theme are recorded here.
 - Code page contribution heat map: last 30 days only, newest week first, circular day cells; activity feed filtered to the last 30 days
 - Code page hero links are page sections only (Open source, Skills, Docs) plus Hire me → `/hire/`
 - Resume moved from Code to Hire; Hire page adds LinkedIn profile panel (OpenID userinfo when token set, soft OG/fallback), share-on-LinkedIn, open-to-work badge, skills, and clearer fit/process CTAs
+- Seed utility pages on init: Changelog, Privacy, Terms, Accessibility, Uses, Thank you (plus Hire me)
 
 ### Added
 
