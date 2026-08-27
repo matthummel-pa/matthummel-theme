@@ -219,29 +219,42 @@
           </div>
         </div>
 
-        {{-- Post-end CTA — category-aware --}}
+        {{-- Post-end CTA — category-aware (WordPress / full-stack default; Power Platform when relevant) --}}
         @php
-          $ctaCat   = $postCats ? strtolower($postCats[0]->name) : '';
-          $isPower  = str_contains($ctaCat, 'power');
+          $catBlob  = strtolower(implode(' ', array_map(
+            static fn ($c) => trim(($c->name ?? '').' '.($c->slug ?? '')),
+            is_array($postCats) ? $postCats : []
+          )));
+          $titleLow = strtolower(get_the_title());
+          $isPower  = str_contains($catBlob, 'power')
+            || str_contains($titleLow, 'power apps')
+            || str_contains($titleLow, 'power automate')
+            || str_contains($titleLow, 'power platform');
           $ctaHead  = $isPower
-            ? 'Building something with Power Platform?'
-            : 'Working on a web project?';
+            ? __('Building something with Power Platform?', 'sage')
+            : __('Building WordPress or full-stack work?', 'sage');
           $ctaBody  = $isPower
-            ? 'Questions about Power Apps, Power Automate, or Power Platform are welcome — whether it\'s a quick formula question or a full connector build. I\'m also open for new WordPress and web app work.'
-            : 'A question about this post is just as welcome as a project inquiry. I build WordPress sites, plugins, and web apps for shops and agencies — currently open for new work in Gettysburg and beyond.';
+            ? __('Questions about Power Apps, Power Automate, or connectors are welcome — a quick formula note or a full build. I also take WordPress and full-stack web work from Gettysburg, remote anywhere.', 'sage')
+            : __('A question about this post is just as welcome as a project note. I build WordPress platforms and full-stack web apps for shops and agencies from Gettysburg — remote anywhere.', 'sage');
+          $ctaId = 'post-cta-heading';
         @endphp
-        <div class="post-cta">
+        <aside class="post-cta" aria-labelledby="{{ $ctaId }}">
           <div class="post-cta__copy">
-            <h2 class="post-cta__heading">{{ $ctaHead }}</h2>
+            <p class="post-cta__eyebrow">{{ __('Work together', 'sage') }}</p>
+            <h2 id="{{ $ctaId }}" class="post-cta__heading">{{ $ctaHead }}</h2>
             <p class="post-cta__body">{{ $ctaBody }}</p>
           </div>
           <div class="post-cta__actions">
-            <a class="btn" href="{{ home_url('/contact/') }}">
-              {!! \App\mh_svg_icon('mail', 16) !!} Say hello
+            <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+              {!! \App\mh_svg_icon('mail', 16) !!}
+              {{ __('Say hello', 'sage') }}
             </a>
-            <a class="about-text-link" href="{{ home_url('/services/') }}">See services →</a>
+            <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">
+              {{ __('Hire me', 'sage') }}
+            </a>
+            <p class="post-cta__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
           </div>
-        </div>
+        </aside>
 
         {{-- Prev / Next --}}
         @php

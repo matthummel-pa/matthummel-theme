@@ -38,7 +38,7 @@
     <div class="side-author__body">
       <p class="side-author__name">Matt Hummel</p>
       <p class="side-author__role">Full-stack developer · WordPress specialist · Gettysburg, PA</p>
-      <p class="side-author__bio">Building WordPress sites and plugins.@if (\App\mh_is_hireable($gh)) {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.@endif</p>
+      <p class="side-author__bio">Building WordPress platforms and full-stack web apps.@if (\App\mh_is_hireable($gh)) {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.@endif</p>
       <div class="side-author__links">
         <a href="{{ home_url('/about/') }}">About</a>
         <a href="{{ home_url('/contact/') }}">Say hello</a>

@@ -33,7 +33,7 @@
       'date'    => '2026-08-24',
       'changes' => [
         ['changed', 'Single post redesign — SEO, readability, modern UX across content-single.blade.php and post-sidebar.blade.php'],
-        ['changed', 'Category-aware post-end CTA: WordPress posts get "Working on a web project?", Power Platform posts get "Building something with Power Platform?"'],
+        ['changed', 'Category-aware post-end CTA: WordPress / default posts get "Building WordPress or full-stack work?", Power Platform posts get "Building something with Power Platform?"'],
       ],
     ],
     [
