@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.21 — 2026-08-27
+
+### Added
+
+- Post editor **Generate featured image**: DALL·E 3 image from title/excerpt (optional prompt override), sideloads to Media, sets as featured image; uses the same OpenAI key as Customize → DEV.to
+
 ## 3.1.20 — 2026-08-27
 
 ### Changed

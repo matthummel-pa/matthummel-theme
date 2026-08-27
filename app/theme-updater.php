@@ -322,7 +322,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_control('mh_openai_token', [
         'label' => __('OpenAI key (optional)', 'sage'),
-        'description' => __('Used when exporting to DEV.to or drafting social summaries (Bluesky, Facebook, Reddit, LinkedIn). Or set MH_OPENAI_API_KEY / OPENAI_API_KEY. Without it, rule-based copy still runs.', 'sage'),
+        'description' => __('Used when exporting to DEV.to, drafting social summaries (Bluesky, Facebook, Reddit, LinkedIn), and Generate featured image on posts. Or set MH_OPENAI_API_KEY / OPENAI_API_KEY. Without it, rule-based copy still runs; featured image generation stays disabled.', 'sage'),
         'section' => 'mh_devto',
         'type' => 'password',
     ]);
