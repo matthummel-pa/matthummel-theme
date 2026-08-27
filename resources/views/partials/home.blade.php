@@ -468,34 +468,36 @@
      ═══════════════════════════════════════════════════ --}}
 <section class="h-process" id="process" aria-labelledby="h-process-heading">
   <div class="container wide">
-    <div class="h-process__head">
-      <div>
-        <p class="h-section-label">Process</p>
-        <h2 id="h-process-heading" class="h-section__title">{{ \App\field('home_process_h2', __('How a project goes.', 'sage')) }}</h2>
-        <p class="h-process__subhead">Four steps. Written scope. You own everything at the end.</p>
-      </div>
-      <a class="h-text-arrow" href="{{ home_url('/services/') }}">Full services →</a>
-    </div>
-
-    <div class="h-process__grid">
-      @foreach ($processSteps as $step)
-        <div class="h-process__step">
-          <div class="h-process__step-head">
-            <span class="h-process__num" aria-hidden="true">{{ $step['num'] }}</span>
-            <span class="h-process__timing">
-              {!! \App\mh_svg_icon('calendar', 13) !!}
-              {{ $step['timing'] }}
-            </span>
-          </div>
-          <h3 class="h-process__title">{{ $step['title'] }}</h3>
-          <p class="h-process__body">{{ $step['body'] }}</p>
-          <ul class="h-process__gets">
-            @foreach ($step['gets'] as $item)
-              <li>{{ $item }}</li>
-            @endforeach
-          </ul>
+    <div class="h-section-shell">
+      <div class="h-process__head">
+        <div>
+          <p class="h-section-label">Process</p>
+          <h2 id="h-process-heading" class="h-section__title">{{ \App\field('home_process_h2', __('How a project goes.', 'sage')) }}</h2>
+          <p class="h-process__subhead">Four steps. Written scope. You own everything at the end.</p>
         </div>
-      @endforeach
+        <a class="h-text-arrow" href="{{ home_url('/services/') }}">Full services →</a>
+      </div>
+
+      <div class="h-process__grid">
+        @foreach ($processSteps as $step)
+          <div class="h-process__step">
+            <div class="h-process__step-head">
+              <span class="h-process__num" aria-hidden="true">{{ $step['num'] }}</span>
+              <span class="h-process__timing">
+                {!! \App\mh_svg_icon('calendar', 13) !!}
+                {{ $step['timing'] }}
+              </span>
+            </div>
+            <h3 class="h-process__title">{{ $step['title'] }}</h3>
+            <p class="h-process__body">{{ $step['body'] }}</p>
+            <ul class="h-process__gets">
+              @foreach ($step['gets'] as $item)
+                <li>{{ $item }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endforeach
+      </div>
     </div>
 
     @include('partials.discovery-cta', [
@@ -511,36 +513,47 @@
      ═══════════════════════════════════════════════════ --}}
 <section class="h-fit" id="fit" aria-labelledby="h-fit-heading">
   <div class="container wide">
-    <div class="h-fit__head">
-      <p class="h-section-label">Honest expectations</p>
-      <h2 id="h-fit-heading" class="h-section__title">Is this a good fit?</h2>
-      <p class="h-fit__intro">Most conversations start with the wrong question ("how much does a website cost?"). These answers might save us both time.</p>
-    </div>
-    <div class="h-fit__grid">
-      <div class="h-fit__col h-fit__col--yes">
-        <p class="h-fit__col-label">
-          <span class="h-fit__icon h-fit__icon--yes" aria-hidden="true">✓</span>
-          Good fit
-        </p>
-        <ul class="h-fit__list">
-          @foreach ($goodFit['yes'] as $item)
-            <li>{{ $item }}</li>
-          @endforeach
-        </ul>
+    <div class="h-section-shell">
+      <div class="h-fit__head">
+        <p class="h-section-label">Honest expectations</p>
+        <h2 id="h-fit-heading" class="h-section__title">Is this a good fit?</h2>
+        <p class="h-fit__intro">Most conversations start with the wrong question ("how much does a website cost?"). These answers might save us both time.</p>
       </div>
-      <div class="h-fit__col h-fit__col--no">
-        <p class="h-fit__col-label">
-          <span class="h-fit__icon h-fit__icon--no" aria-hidden="true">✕</span>
-          Not a fit
-        </p>
-        <ul class="h-fit__list">
-          @foreach ($goodFit['no'] as $item)
-            <li>{{ $item }}</li>
-          @endforeach
-        </ul>
+      <div class="h-fit__grid">
+        <div class="h-fit__col h-fit__col--yes">
+          <p class="h-fit__col-label">
+            <span class="h-fit__icon h-fit__icon--yes" aria-hidden="true">✓</span>
+            Good fit
+          </p>
+          <ul class="h-fit__list">
+            @foreach ($goodFit['yes'] as $item)
+              <li>{{ $item }}</li>
+            @endforeach
+          </ul>
+        </div>
+        <div class="h-fit__col h-fit__col--no">
+          <p class="h-fit__col-label">
+            <span class="h-fit__icon h-fit__icon--no" aria-hidden="true">✕</span>
+            Not a fit
+          </p>
+          <ul class="h-fit__list">
+            @foreach ($goodFit['no'] as $item)
+              <li>{{ $item }}</li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+      <div class="h-fit__cta">
+        <div class="h-fit__cta-copy">
+          <p class="h-fit__cta-lead">Still not sure?</p>
+          <p class="h-fit__cta-note">Write a short note — the worst I can say is I’m not the right person, and I’ll try to point you toward someone who is.</p>
+        </div>
+        <a class="btn h-fit__cta-btn" href="{{ home_url('/contact/') }}">
+          {!! \App\mh_svg_icon('mail', 16) !!}
+          Write a note
+        </a>
       </div>
     </div>
-    <p class="h-fit__footer">Still not sure? <a href="{{ home_url('/contact/') }}">Write a note</a> — the worst I can say is I'm not the right person, and I'll try to point you toward someone who is.</p>
   </div>
 </section>
 
@@ -550,7 +563,7 @@
 <section class="h-principles" id="principles" aria-labelledby="h-principles-heading">
   <div class="container wide">
 
-    <div class="h-principles__shell">
+    <div class="h-section-shell h-principles__shell">
       <div class="h-principles__head">
         <div>
           <p class="h-section-label">How I work</p>
