@@ -2,6 +2,13 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.20 — 2026-08-27
+
+### Changed
+
+- Journal post-end CTA: WordPress/full-stack heading and copy (Gettysburg SEO), Power Platform detection via title as well as category, shell-style dark panel with accessible **Say hello** / **Hire me** buttons
+- Post sidebar author bio: WordPress platforms and full-stack web apps
+
 ## 3.1.19 — 2026-08-27
 
 ### Changed
