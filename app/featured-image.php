@@ -291,9 +291,11 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
         preview.innerHTML = '<img src="' + url + '" alt="" style="max-width:100%;height:auto;border-radius:6px;border:1px solid #d0d5dd">'
       }
       setStatus(data.data.message || 'Featured image updated.')
-      // Refresh WP featured image panel if present
-      if (window.wp && wp.media && wp.media.featuredImage) {
-        try { wp.media.featuredImage.set(data.data.attachment_id) } catch (e) {}
+      const attId = data.data && data.data.attachment_id
+      if (attId && window.wp && wp.data && wp.data.dispatch) {
+        try { wp.data.dispatch('core/editor').editPost({ featured_media: attId }) } catch (e) {}
+      } else if (attId && window.wp && wp.media && wp.media.featuredImage) {
+        try { wp.media.featuredImage.set(attId) } catch (e) {}
       }
     } catch (err) {
       setStatus('Network error', true)
