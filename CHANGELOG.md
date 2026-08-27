@@ -6,7 +6,8 @@ All notable changes to this theme are recorded here.
 
 ### Added
 
-- MU plugin: `mu-plugins/rank-math-rest-meta.php` registers Rank Math focus keyword, title, and description for the REST API (`edit_posts`); copy into `wp-content/mu-plugins/` (excluded from theme zip)
+- MU plugin: `mu-plugins/rank-math-rest-meta.php` registers Rank Math focus keyword, title, and description for the REST API (`edit_posts`)
+- Theme loads the bundled Rank Math REST meta file when it is not installed site-wide under `wp-content/mu-plugins/`
 
 ## 3.1.15 — 2026-08-27
 

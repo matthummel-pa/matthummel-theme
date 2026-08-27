@@ -25,6 +25,26 @@ require_once __DIR__.'/app/LinkedIn.php';
 
 /*
 |--------------------------------------------------------------------------
+| Companion MU plugins (theme-bundled fallback)
+|--------------------------------------------------------------------------
+|
+| Prefer a real must-use install at wp-content/mu-plugins/. If that file is
+| missing, load the copy shipped inside this theme so deploys still expose
+| Rank Math meta to the REST API.
+|
+*/
+
+$mhRankMathRestMeta = WPMU_PLUGIN_DIR.'/rank-math-rest-meta.php';
+if (! is_readable($mhRankMathRestMeta)) {
+    $mhRankMathRestMeta = __DIR__.'/mu-plugins/rank-math-rest-meta.php';
+    if (is_readable($mhRankMathRestMeta)) {
+        require_once $mhRankMathRestMeta;
+    }
+}
+unset($mhRankMathRestMeta);
+
+/*
+|--------------------------------------------------------------------------
 | Register The Bootloader
 |--------------------------------------------------------------------------
 |

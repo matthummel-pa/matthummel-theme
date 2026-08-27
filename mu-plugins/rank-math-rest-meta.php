@@ -11,6 +11,12 @@
 
 declare(strict_types=1);
 
+if (defined('MH_RANK_MATH_REST_META_LOADED')) {
+    return;
+}
+
+define('MH_RANK_MATH_REST_META_LOADED', true);
+
 add_action('init', static function (): void {
     $keys = [
         'rank_math_focus_keyword',

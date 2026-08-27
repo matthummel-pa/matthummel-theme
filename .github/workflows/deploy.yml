@@ -191,7 +191,6 @@ jobs:
             --exclude '.cursor/' \
             --exclude 'node_modules/' \
             --exclude 'docs/' \
-            --exclude 'mu-plugins/' \
             --exclude '.env' \
             --exclude '.env.*' \
             --exclude '.deploy-keys/' \
