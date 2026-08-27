@@ -73,7 +73,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'icons', 'page-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'icons', 'page-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

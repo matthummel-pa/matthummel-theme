@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.18 — 2026-08-27
+
+### Added
+
+- Journal post pages: share buttons for Bluesky, LinkedIn, Facebook, and Reddit (plus copy link)
+- Post editor **Social share & drafts**: generators for Bluesky, Facebook, Reddit, LinkedIn, and a DEV.to ranking checklist; Open share buttons; auto-share to Bluesky / publish to DEV.to when credentials are set
+- Bluesky Customizer settings (handle, app password, auto-share on publish) and `wp mh bluesky-share`
+
+### Fixed
+
+- “What changed” toggle also wraps the common Gutenberg pattern: a **What changed:** paragraph followed by a list (not only blockquotes)
+
 ## 3.1.17 — 2026-08-27
 
 ### Added
