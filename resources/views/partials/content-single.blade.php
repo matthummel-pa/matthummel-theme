@@ -16,8 +16,11 @@
   $postDate  = get_the_date('M j, Y');
   $postIso   = get_post_time('c', true);
   $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
-  $shareX    = 'https://twitter.com/intent/tweet?text='.rawurlencode($postTitle).'&url='.rawurlencode($postUrl);
-  $shareIn   = 'https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode($postUrl);
+  $shareUrls = \App\mh_post_share_urls($postId);
+  $shareBsky = $shareUrls['bluesky'];
+  $shareIn   = $shareUrls['linkedin'];
+  $shareFb   = $shareUrls['facebook'];
+  $shareReddit = $shareUrls['reddit'];
   $hasAffiliateLinks = \App\mh_post_has_affiliate_links($postId);
 
   // Related posts — same category, exclude current
@@ -101,11 +104,17 @@
       {{-- Hero share --}}
       <div class="post-hero-share">
         <span class="post-hero-share__label">Share</span>
-        <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank" aria-label="Share on X">
-          {!! \App\mh_svg_icon('twitter', 15) !!} X
+        <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="Share on Bluesky">
+          {!! \App\mh_svg_icon('bluesky', 15) !!} Bluesky
         </a>
         <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
           {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
+        </a>
+        <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="Share on Facebook">
+          {!! \App\mh_svg_icon('facebook', 15) !!} Facebook
+        </a>
+        <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="Share on Reddit">
+          {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
         </a>
         <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
           {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
@@ -169,11 +178,17 @@
         <div class="post-share-bottom">
           <p class="post-share-bottom__prompt">Found this useful?</p>
           <div class="post-share-bottom__btns">
-            <a class="post-share-btn" href="{{ esc_url($shareX) }}" rel="noopener" target="_blank" aria-label="Share on X">
-              {!! \App\mh_svg_icon('twitter', 15) !!} Share on X
+            <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="Share on Bluesky">
+              {!! \App\mh_svg_icon('bluesky', 15) !!} Bluesky
             </a>
             <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
-              {!! \App\mh_svg_icon('linkedin', 15) !!} Share on LinkedIn
+              {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
+            </a>
+            <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="Share on Facebook">
+              {!! \App\mh_svg_icon('facebook', 15) !!} Facebook
+            </a>
+            <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="Share on Reddit">
+              {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
             </a>
             <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
               {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>

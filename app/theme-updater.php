@@ -322,7 +322,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_control('mh_openai_token', [
         'label' => __('OpenAI key (optional)', 'sage'),
-        'description' => __('Used when exporting a journal post to rewrite copy for DEV.to. Or set MH_OPENAI_API_KEY / OPENAI_API_KEY. Without it, a rule-based rewrite still runs.', 'sage'),
+        'description' => __('Used when exporting to DEV.to or drafting social summaries (Bluesky, Facebook, Reddit, LinkedIn). Or set MH_OPENAI_API_KEY / OPENAI_API_KEY. Without it, rule-based copy still runs.', 'sage'),
         'section' => 'mh_devto',
         'type' => 'password',
     ]);
@@ -338,10 +338,58 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
         'section' => 'mh_devto',
         'type' => 'checkbox',
     ]);
+
+    $wp->add_section('mh_bluesky', [
+        'title' => __('Bluesky', 'sage'),
+        'priority' => 35,
+    ]);
+    $wp->add_setting('mh_bluesky_handle', [
+        'default' => 'matthummel.bsky.social',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_bluesky_handle', [
+        'label' => __('Handle', 'sage'),
+        'description' => __('Your Bluesky handle, e.g. matthummel.bsky.social', 'sage'),
+        'section' => 'mh_bluesky',
+        'type' => 'text',
+    ]);
+    $wp->add_setting('mh_bluesky_app_password', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_bluesky_app_password', [
+        'label' => __('App password', 'sage'),
+        'description' => __('From Bluesky → Settings → App passwords. Or set MH_BLUESKY_APP_PASSWORD in wp-config. Never use your account password.', 'sage'),
+        'section' => 'mh_bluesky',
+        'type' => 'password',
+    ]);
+    $wp->add_setting('mh_bluesky_auto_share', [
+        'default' => true,
+        'sanitize_callback' => static function ($value): bool {
+            return (bool) $value;
+        },
+    ]);
+    $wp->add_control('mh_bluesky_auto_share', [
+        'label' => __('Auto-share new journal posts', 'sage'),
+        'description' => __('When you publish a post, share a summary + link on Bluesky (~20s after publish). Skips DEV.to imports. Paste a custom summary in Social share & drafts on the post editor, or use the OpenAI key from DEV.to settings.', 'sage'),
+        'section' => 'mh_bluesky',
+        'type' => 'checkbox',
+    ]);
+    $wp->add_setting('mh_bluesky_pds', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp->add_control('mh_bluesky_pds', [
+        'label' => __('PDS URL (optional)', 'sage'),
+        'description' => __('Leave blank to auto-resolve. Only set if you host on a custom PDS.', 'sage'),
+        'section' => 'mh_bluesky',
+        'type' => 'url',
+    ]);
 });
 
 add_action('customize_save_after', function (): void {
     delete_transient('mh_devto_followers_v1');
+    delete_transient('mh_bluesky_session_v1');
 });
 
 /**

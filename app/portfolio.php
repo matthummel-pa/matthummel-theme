@@ -1640,11 +1640,31 @@ function mh_post_summary(\WP_Post $post): string
 }
 
 /**
- * Turn “What changed” blockquotes into a closed-by-default details separator.
+ * Markup for the closed-by-default What changed separator.
+ */
+function mh_what_changed_details(string $body): string
+{
+    $body = trim($body);
+    if ($body === '') {
+        return '';
+    }
+
+    return '<details class="post-what-changed">'
+        .'<summary class="post-what-changed__summary">'
+        .'<span class="post-what-changed__label">'.esc_html__('What changed', 'sage').'</span>'
+        .'<span class="post-what-changed__hint">'.esc_html__('Revision notes', 'sage').'</span>'
+        .'</summary>'
+        .'<div class="post-what-changed__body">'.$body.'</div>'
+        .'</details>';
+}
+
+/**
+ * Turn “What changed” notes into a closed-by-default details separator.
  *
- * Authors can either:
- * - add CSS class `what-changed` on a blockquote, or
- * - start the blockquote with the words “What changed”.
+ * Authors can:
+ * - add CSS class `what-changed` on a blockquote,
+ * - start a blockquote with “What changed”, or
+ * - use a paragraph “What changed:” followed by a list (common Gutenberg pattern).
  *
  * Already-wrapped `<details class="post-what-changed">` markup is left alone.
  */
@@ -1654,6 +1674,16 @@ function mh_enhance_what_changed(string $html): string
         return $html;
     }
 
+    // Paragraph label + following list (live journal posts often use this).
+    $html = (string) preg_replace_callback(
+        '/<p(\s[^>]*)?>\s*(?:<strong>)?\s*what\s+changed\s*:?\s*(?:<\/strong>)?\s*<\/p>\s*(<(?:ul|ol)\b[^>]*>.*?<\/(?:ul|ol)>)/is',
+        static function (array $m): string {
+            return mh_what_changed_details($m[2]);
+        },
+        $html
+    );
+
+    // Blockquotes with class or leading “What changed”.
     return (string) preg_replace_callback(
         '/<blockquote(\s[^>]*)?>(.*?)<\/blockquote>/is',
         static function (array $m): string {
@@ -1670,7 +1700,6 @@ function mh_enhance_what_changed(string $html): string
             }
 
             $body = $inner;
-            // Drop a leading paragraph that is only the label (keep real revision notes).
             $body = (string) preg_replace(
                 '/^\s*<(p|h[2-4]|strong)(\s[^>]*)?>\s*(?:<strong>)?\s*what\s+changed\s*(?:<\/strong>)?\s*:?\s*<\/\1>\s*/is',
                 '',
@@ -1690,13 +1719,7 @@ function mh_enhance_what_changed(string $html): string
                 $body = $inner;
             }
 
-            return '<details class="post-what-changed">'
-                .'<summary class="post-what-changed__summary">'
-                .'<span class="post-what-changed__label">'.esc_html__('What changed', 'sage').'</span>'
-                .'<span class="post-what-changed__hint">'.esc_html__('Revision notes', 'sage').'</span>'
-                .'</summary>'
-                .'<div class="post-what-changed__body">'.$body.'</div>'
-                .'</details>';
+            return mh_what_changed_details($body);
         },
         $html
     );
