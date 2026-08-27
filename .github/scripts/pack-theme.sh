@@ -17,6 +17,7 @@ tar -C "$root" \
   --exclude='.cursor' \
   --exclude='node_modules' \
   --exclude='docs' \
+  --exclude='mu-plugins' \
   --exclude='.env' \
   --exclude='.env.*' \
   --exclude='matthummel.zip' \

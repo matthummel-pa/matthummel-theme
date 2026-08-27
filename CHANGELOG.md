@@ -2,12 +2,19 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.16 — 2026-08-27
+
+### Added
+
+- MU plugin: `mu-plugins/rank-math-rest-meta.php` registers Rank Math focus keyword, title, and description for the REST API (`edit_posts`); copy into `wp-content/mu-plugins/` (excluded from theme zip)
+
 ## 3.1.15 — 2026-08-27
 
 ### Added
 
 - Skills: n8n icon (brand mark + pink chip color) on Code defaults and Home Workflow shelf
 - Skills: Gemini icon (Google Gemini mark + purple chip color) on Home AI & Tooling shelf and skills marquee
+
 
 ### Fixed
 
