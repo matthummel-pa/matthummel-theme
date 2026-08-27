@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.19 — 2026-08-27
+
+### Changed
+
+- Home principles section: white shell container, fuller section atmosphere, and heading updated for WordPress + full-stack positioning
+- Principles footer CTA: replaced low-visibility text link with a solid accessible **Say hello** button (44px target, focus ring, mobile full-width)
+- Home process + fit sections: shared white shell containers, softer section atmosphere, and Fit footer upgraded to an accessible **Write a note** button
+
+### Fixed
+
+- In-page jumps to `#principles`, `#fit`, and other home anchors clear the sticky header (`scroll-margin-top`)
+
 ## 3.1.18 — 2026-08-27
 
 ### Added
