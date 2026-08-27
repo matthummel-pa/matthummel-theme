@@ -1001,7 +1001,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .profile-photo--post { width: 2.25rem; height: 2.25rem; }
 .profile-photo--bio { width: 4rem; height: 4rem; }
 
-/* Post hero */
+/* Post hero — base; single-post redesign further down owns title/meta measure */
 .post-hero { padding: var(--section-gap) 0 clamp(3rem, 5vw, 4rem); }
 .post-hero-inner { position: relative; z-index: 1; }
 .post-hero-title {
@@ -1011,7 +1011,6 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1.05;
-  max-width: 22ch;
   text-wrap: balance;
 }
 .post-hero-tag { color: var(--color-accent); text-decoration: none; font: 600 .75rem var(--font-display); text-transform: uppercase; letter-spacing: .1em; }
@@ -8545,6 +8544,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   letter-spacing: -0.05em;
   color: var(--color-text);
   margin: 0 0 1.1rem;
+  max-width: none;
   text-wrap: balance;
   text-align: left;
 }
