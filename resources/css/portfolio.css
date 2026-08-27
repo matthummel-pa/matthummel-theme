@@ -3915,6 +3915,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .code-skills__card[data-group="Front-end"] .code-skills__mark { color: #0284c7; background: color-mix(in srgb, #0ea5e9 12%, white); border-color: color-mix(in srgb, #0ea5e9 20%, white); }
 .code-skills__card[data-group="Ship"] .code-skills__mark { color: #24292f; background: color-mix(in srgb, #24292f 6%, white); border-color: color-mix(in srgb, #24292f 14%, white); }
 .code-skills__card[data-group="Microsoft"] .code-skills__mark { color: #742774; background: color-mix(in srgb, #742774 8%, white); border-color: color-mix(in srgb, #742774 16%, white); }
+.code-skills__card[data-group="Workflow"] .code-skills__mark { color: #EA4B71; background: color-mix(in srgb, #EA4B71 10%, white); border-color: color-mix(in srgb, #EA4B71 18%, white); }
 .code-skills__card:hover .code-skills__mark,
 .code-skills__card:focus-within .code-skills__mark {
   transform: scale(1.05);
