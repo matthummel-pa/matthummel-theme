@@ -58,7 +58,8 @@
 
   {{-- ── POST HERO ────────────────────────────────────────── --}}
   <header class="post-hero" aria-labelledby="post-title-{{ $postId }}">
-    <div class="container post-hero-inner">
+    <div class="container wide post-hero-inner">
+      <div class="post-hero-main">
 
       {{-- Breadcrumb / category --}}
       <nav class="post-breadcrumb" aria-label="Breadcrumb">
@@ -111,6 +112,7 @@
         </button>
       </div>
 
+      </div>
     </div>
   </header>
 
