@@ -2091,3 +2091,46 @@ function mh_apply_fullstack_wordpress_positioning_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_fullstack_wordpress_positioning_v1', 69);
+
+/** Append n8n to Code page skills once (icon + Workflow shelf). */
+function mh_apply_code_skills_n8n_v1(): void
+{
+    if (get_option('mh_code_skills_n8n_v1')) {
+        return;
+    }
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'template-code.blade.php',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $raw = get_post_meta($id, 'mh_f_code_skills', true);
+        if (! is_string($raw) || trim($raw) === '') {
+            continue;
+        }
+        $lines = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $raw) ?: []), static fn ($s) => $s !== ''));
+        $has = false;
+        foreach ($lines as $line) {
+            if (strtolower($line) === 'n8n' || strtolower($line) === 'n8n.io') {
+                $has = true;
+                break;
+            }
+        }
+        if ($has) {
+            continue;
+        }
+        $lines[] = 'n8n';
+        update_post_meta($id, 'mh_f_code_skills', implode("\n", $lines));
+    }
+
+    update_option('mh_code_skills_n8n_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_code_skills_n8n_v1', 70);

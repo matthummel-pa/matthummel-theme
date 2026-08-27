@@ -67,6 +67,7 @@
     'Workflow'   => [
       ['Notion',      'notion',     '#000000'],
       ['Google Drive','google-drive','#4285f4'],
+      ['n8n',         'n8n',        '#EA4B71'],
     ],
     'Marketing'  => [
       ['HubSpot',     'hubspot',    '#ff7a59'],
