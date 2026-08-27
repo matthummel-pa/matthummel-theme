@@ -8648,23 +8648,23 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 /* What changed — collapsible revision separator (closed by default) */
 .post-what-changed {
   display: block;
-  margin: 0 0 1.75rem;
+  margin: 1.75rem 0 2rem;
+  border: 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  border-left: 3px solid var(--color-accent);
-  background: var(--gray-50);
-  border-radius: 0 8px 8px 0;
+  background: transparent;
+  border-radius: 0;
   max-width: 65ch;
 }
-.post-prose .post-what-changed { margin: 0 0 1.75rem; }
+.post-prose .post-what-changed { margin: 1.75rem 0 2rem; }
 .post-what-changed__summary {
   list-style: none;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: .65rem;
-  padding: .85rem 1.1rem;
-  min-height: 48px;
+  gap: .75rem;
+  padding: 1rem 0;
+  min-height: 52px;
   font: 600 .78rem/1.2 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -8679,45 +8679,39 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .post-what-changed__label {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  color: var(--color-accent);
+  color: var(--color-text-secondary);
   flex: 0 1 auto;
-}
-.post-what-changed__label::before {
-  content: "";
-  width: .5rem;
-  height: .5rem;
-  border-radius: 1px;
-  background: var(--color-accent);
-  flex-shrink: 0;
 }
 .post-what-changed__hint {
   margin-right: auto;
-  font: 500 .72rem/1.2 var(--font-body);
-  letter-spacing: .02em;
+  font: 500 .8rem/1.3 var(--font-body);
+  letter-spacing: .01em;
   text-transform: none;
   color: var(--color-text-muted);
 }
 .post-what-changed__summary::after {
-  content: "+";
+  content: "";
   flex-shrink: 0;
-  margin-left: .25rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: #fff;
-  color: var(--color-text-secondary);
-  font: 700 1rem/1 var(--font-display);
+  width: .55rem;
+  height: .55rem;
+  margin-left: .15rem;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  translate: 0 -2px;
+  transition: transform .15s ease;
 }
-.post-what-changed[open] > .post-what-changed__summary::after { content: "\2212"; }
+.post-what-changed[open] > .post-what-changed__summary::after {
+  transform: rotate(225deg);
+  translate: 0 2px;
+}
 .post-what-changed[open] > .post-what-changed__summary {
   border-bottom: 1px solid var(--color-border);
+  padding-bottom: .85rem;
+  margin-bottom: 0;
 }
 .post-what-changed__body {
-  padding: 1rem 1.1rem 1.15rem;
+  padding: 1rem 0 1.25rem;
   color: var(--color-text-secondary);
   font: 500 .98rem/1.65 var(--font-body);
 }
@@ -8727,7 +8721,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .post-what-changed__body li { margin: 0 0 .35em; }
 .post-what-changed__summary:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 @media (max-width: 560px) {
   .post-what-changed__hint { display: none; }
