@@ -168,6 +168,8 @@ function mh_title_label(string $text): string
         'powerapps' => 'Power Apps', 'powerautomate' => 'Power Automate',
         'sharepoint' => 'SharePoint', 'microsoft' => 'Microsoft',
         'youtube' => 'YouTube', 'devto' => 'DEV.to',
+        'n8n' => 'n8n',
+        'gemini' => 'Gemini',
     ];
     $out = [];
     foreach (explode(' ', $text) as $part) {
@@ -1049,7 +1051,7 @@ function mh_code_skill_defaults(): array
     return [
         'HTML', 'CSS', 'JavaScript', 'TypeScript', 'PHP', 'WordPress', 'Sage',
         'React', 'Next.js', 'Node.js', 'Tailwind', 'Sass', 'Vite', 'Laravel',
-        'Git', 'GitHub', 'VS Code', 'Power Apps',
+        'Git', 'GitHub', 'VS Code', 'Power Apps', 'n8n',
     ];
 }
 
@@ -1065,6 +1067,7 @@ function mh_code_skill_group(string $name): string
         'html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'tailwind', 'sass', 'vite' => 'Front-end',
         'git', 'github', 'vs code', 'vscode', 'node.js', 'nodejs', 'laravel' => 'Ship',
         'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint' => 'Microsoft',
+        'n8n', 'n8n.io' => 'Workflow',
         default => __('More', 'sage'),
     };
 }
@@ -1079,6 +1082,7 @@ function mh_code_skill_group_icon(string $group): string
         'front-end', 'frontend' => 'code',
         'ship' => 'github',
         'microsoft' => 'briefcase',
+        'workflow' => 'n8n',
         default => 'globe',
     };
 }
@@ -1111,6 +1115,7 @@ function mh_code_skill_hint(string $name): string
         'power apps', 'power-apps' => __('Canvas apps', 'sage'),
         'power automate', 'power-automate' => __('Workflow automation', 'sage'),
         'sharepoint' => __('Intranet sites', 'sage'),
+        'n8n', 'n8n.io' => __('Workflow automation', 'sage'),
         default => __('In active repos', 'sage'),
     };
 }

@@ -4,6 +4,11 @@ All notable changes to this theme are recorded here.
 
 ## 3.1.15 — 2026-08-27
 
+### Added
+
+- Skills: n8n icon (brand mark + pink chip color) on Code defaults and Home Workflow shelf
+- Skills: Gemini icon (Google Gemini mark + purple chip color) on Home AI & Tooling shelf and skills marquee
+
 ### Fixed
 
 - Single journal posts: fatal error from mistyped `\App\mh_post_has_affiliate_links()` namespace in `content-single.blade.php`
