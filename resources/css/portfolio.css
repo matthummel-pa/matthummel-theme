@@ -8620,6 +8620,86 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   margin-right: 0;
 }
 .post-prose blockquote p { margin: 0; }
+
+/* What changed — collapsible revision separator (closed by default) */
+.post-what-changed {
+  margin: 0 0 1.75rem;
+  border-block: 1px solid var(--color-border);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 42%),
+    var(--gray-50);
+  border-radius: 0;
+}
+.post-prose .post-what-changed { margin: 0 0 1.75rem; }
+.post-what-changed__summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .95rem 1.15rem;
+  min-height: 48px;
+  font: 600 .78rem/1.2 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  user-select: none;
+}
+.post-what-changed__summary::-webkit-details-marker,
+.post-what-changed__summary::marker {
+  display: none;
+  content: none;
+}
+.post-what-changed__label {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  color: var(--color-accent);
+}
+.post-what-changed__label::before {
+  content: "";
+  width: .55rem;
+  height: .55rem;
+  border-radius: 1px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+.post-what-changed__hint {
+  font: 500 .72rem/1 var(--font-body);
+  letter-spacing: .02em;
+  text-transform: none;
+  color: var(--color-text-muted);
+}
+.post-what-changed__summary::after {
+  content: "+";
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--color-text-secondary);
+  font: 700 1rem/1 var(--font-display);
+}
+.post-what-changed[open] > .post-what-changed__summary::after { content: "−"; }
+.post-what-changed[open] > .post-what-changed__summary {
+  border-bottom: 1px solid var(--color-border);
+}
+.post-what-changed__body {
+  padding: 1rem 1.15rem 1.2rem;
+  color: var(--color-text-secondary);
+  font: 500 .98rem/1.65 var(--font-body);
+}
+.post-what-changed__body :where(p, ul, ol):last-child { margin-bottom: 0; }
+.post-what-changed__body :where(ul, ol) { padding-left: 1.2rem; }
+.post-what-changed__body li { margin: 0 0 .35em; }
+.post-what-changed__summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
 .post-prose code {
   font-family: var(--font-mono);
   font-size: .88em;
