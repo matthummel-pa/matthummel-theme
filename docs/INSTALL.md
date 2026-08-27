@@ -73,10 +73,25 @@ Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
 Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`).
 
+## Must-use plugins (optional)
+
+Companion MU plugins live in the repo under `mu-plugins/` (not inside the theme zip).
+
+**Rank Math REST Meta** — exposes `rank_math_focus_keyword`, `rank_math_title`, and `rank_math_description` on posts in the REST API for users who can `edit_posts`:
+
+```bash
+# Local Cloud
+cp /workspace/mu-plugins/rank-math-rest-meta.php ~/wp-site/wp-content/mu-plugins/
+
+# Live (SiteGround File Manager or SSH)
+# Copy to: public_html/wp-content/mu-plugins/rank-math-rest-meta.php
+```
+
 ## Local Cursor Cloud
 
 ```bash
 ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel
+cp /workspace/mu-plugins/rank-math-rest-meta.php ~/wp-site/wp-content/mu-plugins/
 cd ~/wp-site && wp theme activate matthummel
 cd ~/wp-site && wp acorn view:clear
 cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
