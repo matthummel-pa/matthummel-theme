@@ -18,7 +18,7 @@
   $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $shareX    = 'https://twitter.com/intent/tweet?text='.rawurlencode($postTitle).'&url='.rawurlencode($postUrl);
   $shareIn   = 'https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode($postUrl);
-  $hasAffiliateLinks = Appmh_post_has_affiliate_links($postId);
+  $hasAffiliateLinks = \App\mh_post_has_affiliate_links($postId);
 
   // Related posts — same category, exclude current
   $relatedPosts = [];
