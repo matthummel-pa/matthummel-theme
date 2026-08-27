@@ -75,9 +75,11 @@ Appearance → **Update Theme** → Update theme from GitHub. Token setup is one
 
 ## Must-use plugins (optional)
 
-Companion MU plugins live in the repo under `mu-plugins/` (not inside the theme zip).
+Companion MU plugins live in the repo under `mu-plugins/`. The theme zip includes them; `functions.php` loads the Rank Math REST meta file when it is **not** already installed at `wp-content/mu-plugins/`.
 
-**Rank Math REST Meta** — exposes `rank_math_focus_keyword`, `rank_math_title`, and `rank_math_description` on posts in the REST API for users who can `edit_posts`:
+**Rank Math REST Meta** — exposes `rank_math_focus_keyword`, `rank_math_title`, and `rank_math_description` on posts in the REST API for users who can `edit_posts`.
+
+Optional real must-use install (runs earlier than the theme; same file):
 
 ```bash
 # Local Cloud
