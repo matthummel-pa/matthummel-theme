@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.15 — 2026-08-27
+
+### Fixed
+
+- Single journal posts: fatal error from mistyped `\App\mh_post_has_affiliate_links()` namespace in `content-single.blade.php`
+
 ## 3.1.14 — 2026-08-26
 
 ### Changed
