@@ -819,6 +819,22 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 /* Generic home section */
 .h-section { padding: clamp(4rem, 7vw, 6.5rem) 0; }
+/* Sticky header clearance for in-page jumps (On this page / hash links) */
+#about,
+#skills,
+#process,
+#principles,
+#work,
+#journal,
+#faq,
+#oss,
+.h-about,
+.h-skills,
+.h-process,
+.h-fit,
+.h-journal {
+  scroll-margin-top: 5.5rem;
+}
 .h-section--tinted {
   background: var(--gray-50);
   border-top: 1px solid var(--color-border);
@@ -7617,6 +7633,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
    ═══════════════════════════════════════════════════════════════════════════ */
 .h-principles {
   padding: var(--section-gap) 0;
+  scroll-margin-top: 5.5rem; /* clear sticky .site-header on #principles jumps */
   background:
     radial-gradient(ellipse 70% 55% at 0% 0%, color-mix(in srgb, var(--blue-100) 55%, transparent), transparent 60%),
     radial-gradient(ellipse 55% 50% at 100% 100%, color-mix(in srgb, var(--blue-50) 80%, transparent), transparent 55%),
@@ -7625,6 +7642,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border-bottom: 1px solid var(--color-border);
 }
 .h-principles__shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   background: var(--white);
   border: 1px solid var(--color-border);
   border-radius: 20px;
@@ -7732,11 +7752,14 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 
 /* Accessible footer CTA — solid button, 44px target, clear contrast */
 .h-principles__cta {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem 1.75rem;
   flex-wrap: wrap;
+  margin-top: .15rem;
   padding: 1.25rem 1.35rem;
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--blue-50) 88%, #fff) 0%, var(--white) 100%);
