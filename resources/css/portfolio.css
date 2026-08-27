@@ -7617,12 +7617,22 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
    ═══════════════════════════════════════════════════════════════════════════ */
 .h-principles {
   padding: var(--section-gap) 0;
-  background: var(--gray-50);
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 0%, color-mix(in srgb, var(--blue-100) 55%, transparent), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 100% 100%, color-mix(in srgb, var(--blue-50) 80%, transparent), transparent 55%),
+    var(--gray-50);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 }
+.h-principles__shell {
+  background: var(--white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--gray-900) 4%, transparent);
+}
 .h-principles__head {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 .h-principles__intro {
   font-size: .97rem;
@@ -7641,7 +7651,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   border: 1px solid var(--color-border);
   border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.35rem;
 }
 @media (max-width: 960px) { .h-principles__grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 580px) { .h-principles__grid { grid-template-columns: 1fr; } }
@@ -7720,15 +7730,47 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font-style: italic;
 }
 
-/* Footer note */
+/* Accessible footer CTA — solid button, 44px target, clear contrast */
 .h-principles__cta {
-  font-size: .95rem;
-  color: var(--color-text-muted);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 1.75rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 1.35rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--blue-50) 88%, #fff) 0%, var(--white) 100%);
+  border: 1px solid color-mix(in srgb, var(--blue-100) 80%, var(--color-border));
+  border-radius: 14px;
 }
-.h-principles__cta a { color: var(--color-accent); font-weight: 600; }
-
-/* ── Dark mode ── */
+.h-principles__cta-copy {
+  min-width: 0;
+  flex: 1 1 16rem;
+}
+.h-principles__cta-lead {
+  margin: 0;
+  font: 700 1rem/1.35 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.h-principles__cta-note {
+  margin: .35rem 0 0;
+  font-size: .92rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.h-principles__cta-btn {
+  flex-shrink: 0;
+  min-height: 44px;
+  min-width: 9.5rem;
+}
+@media (max-width: 640px) {
+  .h-principles__cta { padding: 1.15rem 1.1rem; }
+  .h-principles__cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    HOME — redesigned about section v2
