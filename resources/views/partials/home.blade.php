@@ -21,6 +21,7 @@
     ['Cursor AI',     'cursor-ai'],
     ['Claude',        'claude'],
     ['ChatGPT',       'chatgpt'],
+    ['Gemini',        'gemini'],
     ['Notion',        'notion'],
     ['Google Drive',  'google-drive'],
     ['HubSpot',       'hubspot'],
@@ -63,6 +64,7 @@
       ['Cursor AI',   'cursor-ai',  '#111827'],
       ['Claude',      'claude',     '#d97706'],
       ['ChatGPT',     'chatgpt',    '#10a37f'],
+      ['Gemini',      'gemini',     '#8E75B2'],
     ],
     'Workflow'   => [
       ['Notion',      'notion',     '#000000'],

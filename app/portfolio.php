@@ -169,6 +169,7 @@ function mh_title_label(string $text): string
         'sharepoint' => 'SharePoint', 'microsoft' => 'Microsoft',
         'youtube' => 'YouTube', 'devto' => 'DEV.to',
         'n8n' => 'n8n',
+        'gemini' => 'Gemini',
     ];
     $out = [];
     foreach (explode(' ', $text) as $part) {

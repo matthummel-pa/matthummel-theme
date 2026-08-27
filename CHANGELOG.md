@@ -7,6 +7,7 @@ All notable changes to this theme are recorded here.
 ### Added
 
 - Skills: n8n icon (brand mark + pink chip color) on Code defaults and Home Workflow shelf
+- Skills: Gemini icon (Google Gemini mark + purple chip color) on Home AI & Tooling shelf and skills marquee
 
 ### Fixed
 
