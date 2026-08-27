@@ -2,6 +2,16 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.17 — 2026-08-27
+
+### Added
+
+- Journal prose: “What changed” blockquotes become a closed-by-default toggle separator (class `what-changed`, or blockquote text starting with “What changed”)
+
+### Changed
+
+- Single post hero: title, meta, and share align to the same left column as the article body (shared wide grid as `.post-shell`)
+
 ## 3.1.16 — 2026-08-27
 
 ### Added

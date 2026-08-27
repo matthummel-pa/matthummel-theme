@@ -1640,12 +1640,76 @@ function mh_post_summary(\WP_Post $post): string
 }
 
 /**
+ * Turn “What changed” blockquotes into a closed-by-default details separator.
+ *
+ * Authors can either:
+ * - add CSS class `what-changed` on a blockquote, or
+ * - start the blockquote with the words “What changed”.
+ *
+ * Already-wrapped `<details class="post-what-changed">` markup is left alone.
+ */
+function mh_enhance_what_changed(string $html): string
+{
+    if ($html === '' || ! str_contains(strtolower($html), 'what changed')) {
+        return $html;
+    }
+
+    return (string) preg_replace_callback(
+        '/<blockquote(\s[^>]*)?>(.*?)<\/blockquote>/is',
+        static function (array $m): string {
+            $attrs = $m[1] ?? '';
+            $inner = $m[2] ?? '';
+            $plain = trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags(preg_replace('/<[^>]+>/', ' ', $inner) ?? $inner)) ?? '');
+            $hasClass = (bool) preg_match('/\bclass=(["\'])([^"\']*)\1/i', $attrs, $cm)
+                && preg_match('/(?:^|\s)what-changed(?:\s|$)/i', $cm[2] ?? '');
+            $startsWithLabel = (bool) preg_match('/^what\s+changed\b/i', $plain)
+                || (bool) preg_match('/<(?:p|h[2-4]|strong)(\s[^>]*)?>\s*(?:<strong>)?\s*what\s+changed\b/i', $inner);
+
+            if (! $hasClass && ! $startsWithLabel) {
+                return $m[0];
+            }
+
+            $body = $inner;
+            // Drop a leading paragraph that is only the label (keep real revision notes).
+            $body = (string) preg_replace(
+                '/^\s*<(p|h[2-4]|strong)(\s[^>]*)?>\s*(?:<strong>)?\s*what\s+changed\s*(?:<\/strong>)?\s*:?\s*<\/\1>\s*/is',
+                '',
+                $body,
+                1
+            );
+            if ($body === $inner) {
+                $body = (string) preg_replace(
+                    '/^\s*(?:<strong>)?\s*what\s+changed\s*(?:<\/strong>)?\s*:?\s*/is',
+                    '',
+                    $body,
+                    1
+                );
+            }
+            $body = trim($body);
+            if ($body === '') {
+                $body = $inner;
+            }
+
+            return '<details class="post-what-changed">'
+                .'<summary class="post-what-changed__summary">'
+                .'<span class="post-what-changed__label">'.esc_html__('What changed', 'sage').'</span>'
+                .'<span class="post-what-changed__hint">'.esc_html__('Revision notes', 'sage').'</span>'
+                .'</summary>'
+                .'<div class="post-what-changed__body">'.$body.'</div>'
+                .'</details>';
+        },
+        $html
+    );
+}
+
+/**
  * Add heading ids and return [html, toc[]].
  *
  * @return array{0: string, 1: array<int, array{level: int, id: string, text: string}>}
  */
 function mh_content_with_toc(string $html): array
 {
+    $html = mh_enhance_what_changed($html);
     $toc = [];
     $used = [];
     $html = (string) preg_replace_callback(

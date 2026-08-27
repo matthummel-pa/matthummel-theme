@@ -1001,7 +1001,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .profile-photo--post { width: 2.25rem; height: 2.25rem; }
 .profile-photo--bio { width: 4rem; height: 4rem; }
 
-/* Post hero */
+/* Post hero — base; single-post redesign further down owns title/meta measure */
 .post-hero { padding: var(--section-gap) 0 clamp(3rem, 5vw, 4rem); }
 .post-hero-inner { position: relative; z-index: 1; }
 .post-hero-title {
@@ -1011,7 +1011,6 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1.05;
-  max-width: 22ch;
   text-wrap: balance;
 }
 .post-hero-tag { color: var(--color-accent); text-decoration: none; font: 600 .75rem var(--font-display); text-transform: uppercase; letter-spacing: .1em; }
@@ -4436,7 +4435,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 @media (max-width: 640px) { .doc-grid { grid-template-columns: 1fr; } }
 
 /* ─── SINGLE POST ─────────────────────────────────────────────────────────── */
-.post-shell { padding: var(--section-gap) 0; }
+.post-shell { padding-block: var(--section-gap); }
 .post-layout { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(16rem,18rem); gap: 2.5rem 3rem; align-items: start; }
 @media (max-width: 960px) { .post-layout { grid-template-columns: 1fr; } }
 .post-main { min-width: 0; }
@@ -8509,8 +8508,25 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(2rem, 3.5vw, 3rem);
   border-bottom: 1px solid var(--color-border);
 }
-/* Narrower container for better prose readability */
-.post-hero .container { max-width: 760px; }
+/* Match the body shell width + column so title/meta share the left edge with .post-main */
+.post-hero .container.wide,
+.post-hero-inner {
+  max-width: var(--page-max);
+}
+.post-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 16rem);
+  gap: 2.5rem 3rem;
+  align-items: start;
+}
+.post-hero-main {
+  min-width: 0;
+  max-width: 65ch; /* same readable measure as .post-prose */
+}
+@media (max-width: 960px) {
+  .post-hero-inner { grid-template-columns: 1fr; }
+  .post-hero-main { max-width: none; }
+}
 
 .post-breadcrumb {
   display: flex;
@@ -8528,7 +8544,9 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   letter-spacing: -0.05em;
   color: var(--color-text);
   margin: 0 0 1.1rem;
+  max-width: none;
   text-wrap: balance;
+  text-align: left;
 }
 @media (max-width: 560px) { .post-hero-title { font-size: clamp(1.65rem, 7vw, 2.25rem); } }
 
@@ -8540,6 +8558,8 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   font: 500 .85rem/1.3 var(--font-display);
   color: var(--color-text-muted);
   margin: 0 0 1.25rem;
+  text-align: left;
+  justify-content: flex-start;
 }
 .post-hero-meta__author { display: flex; align-items: center; gap: .5rem; font-weight: 600; color: var(--color-text-secondary); }
 .post-hero-meta__author .profile-photo { width: 28px !important; height: 28px !important; flex-shrink: 0; }
@@ -8567,7 +8587,11 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 
 /* ── Post layout ── */
-.post-shell { padding: clamp(2.5rem, 5vw, 4rem) 0 var(--section-gap); }
+.post-shell {
+  /* padding-block only — keep .container padding-inline so the left edge
+     matches the hero column and site chrome */
+  padding-block: clamp(2.5rem, 5vw, 4rem) var(--section-gap);
+}
 .post-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 16rem);
@@ -8620,6 +8644,89 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   margin-right: 0;
 }
 .post-prose blockquote p { margin: 0; }
+
+/* What changed — collapsible revision separator (closed by default) */
+.post-what-changed {
+  display: block;
+  margin: 1.75rem 0 2rem;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  border-radius: 0;
+  max-width: 65ch;
+}
+.post-prose .post-what-changed { margin: 1.75rem 0 2rem; }
+.post-what-changed__summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1rem 0;
+  min-height: 52px;
+  font: 600 .78rem/1.2 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  user-select: none;
+}
+.post-what-changed__summary::-webkit-details-marker,
+.post-what-changed__summary::marker {
+  display: none;
+  content: none;
+}
+.post-what-changed__label {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+  flex: 0 1 auto;
+}
+.post-what-changed__hint {
+  margin-right: auto;
+  font: 500 .8rem/1.3 var(--font-body);
+  letter-spacing: .01em;
+  text-transform: none;
+  color: var(--color-text-muted);
+}
+.post-what-changed__summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: .55rem;
+  height: .55rem;
+  margin-left: .15rem;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  translate: 0 -2px;
+  transition: transform .15s ease;
+}
+.post-what-changed[open] > .post-what-changed__summary::after {
+  transform: rotate(225deg);
+  translate: 0 2px;
+}
+.post-what-changed[open] > .post-what-changed__summary {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: .85rem;
+  margin-bottom: 0;
+}
+.post-what-changed__body {
+  padding: 1rem 0 1.25rem;
+  color: var(--color-text-secondary);
+  font: 500 .98rem/1.65 var(--font-body);
+}
+.post-what-changed__body :where(p, ul, ol) { margin: 0 0 .75em; }
+.post-what-changed__body :where(p, ul, ol):last-child { margin-bottom: 0; }
+.post-what-changed__body :where(ul, ol) { padding-left: 1.2rem; }
+.post-what-changed__body li { margin: 0 0 .35em; }
+.post-what-changed__summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+@media (max-width: 560px) {
+  .post-what-changed__hint { display: none; }
+}
 .post-prose code {
   font-family: var(--font-mono);
   font-size: .88em;
