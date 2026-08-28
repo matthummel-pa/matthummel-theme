@@ -952,6 +952,10 @@ function mh_code_page_snips(?int $post_id = null): array
  */
 function mh_work_page_items(?int $post_id = null): array
 {
+    if (mh_project_cpt_has_posts()) {
+        return mh_projects_live_for_work();
+    }
+
     $defaults = [];
     foreach (mh_studio_projects() as $p) {
         $defaults[$p['slug']] = $p;

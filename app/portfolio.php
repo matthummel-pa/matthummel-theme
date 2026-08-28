@@ -901,11 +901,498 @@ function mh_studio_project_image_url(array $project): string
 
 function mh_studio_project_categories(): array
 {
+    if (mh_project_cpt_has_posts()) {
+        $live = mh_query_project_cards(['live_only' => true]);
+        if ($live !== []) {
+            $cats = array_unique(array_map(fn ($p) => (string) ($p['cat'] ?? ''), $live));
+            $cats = array_values(array_filter($cats, fn ($c) => $c !== ''));
+            sort($cats);
+
+            return $cats;
+        }
+    }
+
     $cats = array_unique(array_map(fn ($p) => $p['cat'], mh_studio_projects()));
     sort($cats);
 
     return $cats;
 }
+
+/** Custom post type slug for Work / example sites. */
+function mh_project_post_type(): string
+{
+    return 'project';
+}
+
+function mh_project_live_meta_key(): string
+{
+    return '_mh_project_live';
+}
+
+/** Whether a project is shown on the public Work page and home grid. */
+function mh_project_is_live(int $post_id): bool
+{
+    return get_post_meta($post_id, mh_project_live_meta_key(), true) === '1';
+}
+
+/** True when at least one project post exists (any status). */
+function mh_project_cpt_has_posts(): bool
+{
+    static $has = null;
+    if ($has !== null) {
+        return $has;
+    }
+    $q = new \WP_Query([
+        'post_type' => mh_project_post_type(),
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => false,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+    ]);
+    $has = $q->found_posts > 0;
+    wp_reset_postdata();
+
+    return $has;
+}
+
+/**
+ * Map a project post to the Work card array shape.
+ *
+ * @return array<string, mixed>
+ */
+function mh_project_post_to_card(\WP_Post $post): array
+{
+    $post_id = (int) $post->ID;
+    $techRaw = (string) get_post_meta($post_id, '_mh_project_tech', true);
+    $tech = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
+    $image = (string) get_post_meta($post_id, '_mh_project_image', true);
+    if ($image === '' && has_post_thumbnail($post_id)) {
+        $image = (string) wp_get_attachment_url((int) get_post_thumbnail_id($post_id));
+    }
+
+    $item = [
+        'slug' => $post->post_name,
+        'title' => get_the_title($post),
+        'cat' => (string) get_post_meta($post_id, '_mh_project_cat', true),
+        'place' => (string) get_post_meta($post_id, '_mh_project_place', true),
+        'blurb' => (string) get_post_meta($post_id, '_mh_project_blurb', true),
+        'tech' => $tech,
+        'concept' => (string) get_post_meta($post_id, '_mh_project_concept', true),
+        'image' => $image,
+        'post_id' => $post_id,
+    ];
+    $item['image'] = mh_studio_project_image_url($item);
+
+    return $item;
+}
+
+/**
+ * Query project posts for admin or front-end lists.
+ *
+ * @param  array{live_only?: bool, limit?: int}  $args
+ * @return list<array<string, mixed>>
+ */
+function mh_query_project_cards(array $args = []): array
+{
+    $liveOnly = ! empty($args['live_only']);
+    $limit = isset($args['limit']) ? max(0, (int) $args['limit']) : -1;
+
+    $queryArgs = [
+        'post_type' => mh_project_post_type(),
+        'post_status' => 'publish',
+        'posts_per_page' => $limit,
+        'orderby' => ['menu_order' => 'ASC', 'title' => 'ASC'],
+        'order' => 'ASC',
+        'no_found_rows' => true,
+    ];
+
+    if ($liveOnly) {
+        $queryArgs['meta_query'] = [[
+            'key' => mh_project_live_meta_key(),
+            'value' => '1',
+            'compare' => '=',
+        ]];
+    }
+
+    $posts = get_posts($queryArgs);
+    $out = [];
+    foreach ($posts as $post) {
+        if (! $post instanceof \WP_Post) {
+            continue;
+        }
+        $out[] = mh_project_post_to_card($post);
+    }
+
+    return $out;
+}
+
+/** Live projects for the Work page when the CPT is in use. */
+function mh_projects_live_for_work(): array
+{
+    if (! mh_project_cpt_has_posts()) {
+        return [];
+    }
+
+    return mh_query_project_cards(['live_only' => true]);
+}
+
+/** Find a project card by slug (live-only or any published project). */
+function mh_project_card_by_slug(string $slug, bool $liveOnly = false): ?array
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return null;
+    }
+
+    $posts = get_posts([
+        'post_type' => mh_project_post_type(),
+        'name' => $slug,
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'no_found_rows' => true,
+    ]);
+    if ($posts === []) {
+        return null;
+    }
+
+    $post = $posts[0];
+    if (! $post instanceof \WP_Post) {
+        return null;
+    }
+    if ($liveOnly && ! mh_project_is_live((int) $post->ID)) {
+        return null;
+    }
+
+    return mh_project_post_to_card($post);
+}
+
+/** Create or update one studio concept as a project post. Returns post ID or 0. */
+function mh_upsert_project_from_studio(array $project, int $menu_order = 0): int
+{
+    $slug = sanitize_title((string) ($project['slug'] ?? ''));
+    if ($slug === '') {
+        return 0;
+    }
+
+    $existing = get_posts([
+        'post_type' => mh_project_post_type(),
+        'name' => $slug,
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    $postarr = [
+        'post_type' => mh_project_post_type(),
+        'post_status' => 'publish',
+        'post_title' => (string) ($project['title'] ?? $slug),
+        'post_name' => $slug,
+        'menu_order' => $menu_order,
+    ];
+
+    if ($existing !== []) {
+        $postarr['ID'] = (int) $existing[0];
+        $post_id = wp_update_post($postarr, true);
+    } else {
+        $post_id = wp_insert_post($postarr, true);
+    }
+
+    if (is_wp_error($post_id) || ! $post_id) {
+        return 0;
+    }
+
+    $post_id = (int) $post_id;
+    $tech = $project['tech'] ?? [];
+    if (! is_array($tech)) {
+        $tech = [];
+    }
+
+    update_post_meta($post_id, '_mh_project_cat', (string) ($project['cat'] ?? ''));
+    update_post_meta($post_id, '_mh_project_place', (string) ($project['place'] ?? ''));
+    update_post_meta($post_id, '_mh_project_blurb', (string) ($project['blurb'] ?? ''));
+    update_post_meta($post_id, '_mh_project_tech', implode(', ', $tech));
+    update_post_meta($post_id, '_mh_project_concept', (string) ($project['concept'] ?? ''));
+    update_post_meta($post_id, '_mh_project_image', (string) ($project['image'] ?? ''));
+    update_post_meta($post_id, '_mh_project_source', 'ridges-and-valleys');
+
+    if (! mh_project_is_live($post_id) && get_post_meta($post_id, mh_project_live_meta_key(), true) === '') {
+        update_post_meta($post_id, mh_project_live_meta_key(), '0');
+    }
+
+    return $post_id;
+}
+
+/** One-time import of Ridges & Valleys studio concepts into the project CPT. */
+function mh_import_studio_projects_to_cpt(): void
+{
+    if (get_option('mh_projects_cpt_seeded_v1')) {
+        return;
+    }
+
+    $order = 0;
+    foreach (mh_studio_projects() as $project) {
+        mh_upsert_project_from_studio($project, $order);
+        $order++;
+    }
+
+    update_option('mh_projects_cpt_seeded_v1', true);
+}
+
+function mh_register_project_post_type(): void
+{
+    register_post_type(mh_project_post_type(), [
+        'labels' => [
+            'name' => __('Projects', 'sage'),
+            'singular_name' => __('Project', 'sage'),
+            'add_new' => __('Add project', 'sage'),
+            'add_new_item' => __('Add project', 'sage'),
+            'edit_item' => __('Edit project', 'sage'),
+            'new_item' => __('New project', 'sage'),
+            'view_item' => __('View project', 'sage'),
+            'search_items' => __('Search projects', 'sage'),
+            'not_found' => __('No projects found.', 'sage'),
+            'not_found_in_trash' => __('No projects found in Trash.', 'sage'),
+            'all_items' => __('Projects', 'sage'),
+            'menu_name' => __('Projects', 'sage'),
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_icon' => 'dashicons-portfolio',
+        'menu_position' => 26,
+        'capability_type' => 'post',
+        'map_meta_cap' => true,
+        'hierarchical' => false,
+        'supports' => ['title', 'page-attributes'],
+        'has_archive' => false,
+        'rewrite' => false,
+        'query_var' => false,
+        'show_in_rest' => false,
+    ]);
+}
+
+function mh_project_admin_meta_box(\WP_Post $post): void
+{
+    wp_nonce_field('mh_project_meta', 'mh_project_meta_nonce');
+
+    $cat = (string) get_post_meta($post->ID, '_mh_project_cat', true);
+    $place = (string) get_post_meta($post->ID, '_mh_project_place', true);
+    $blurb = (string) get_post_meta($post->ID, '_mh_project_blurb', true);
+    $tech = (string) get_post_meta($post->ID, '_mh_project_tech', true);
+    $concept = (string) get_post_meta($post->ID, '_mh_project_concept', true);
+    $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
+    $live = mh_project_is_live((int) $post->ID);
+
+    echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
+    echo '<strong>'.esc_html__('Show on Work page (live on site)', 'sage').'</strong></label></p>';
+    echo '<p class="description">'.esc_html__('Checked projects appear on /projects/ and the home example grid.', 'sage').'</p>';
+
+    echo '<table class="form-table" role="presentation"><tbody>';
+    mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
+    mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('Gettysburg, PA', 'sage'));
+    mh_project_admin_field_row(__('Blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
+    mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
+    mh_project_admin_field_row(__('Concept URL', 'sage'), 'mh_project_concept', $concept, 'https://', 'url');
+    mh_project_admin_field_row(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('hallowed-ground.jpg or https://…', 'sage'));
+    echo '</tbody></table>';
+}
+
+function mh_project_admin_field_row(string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void
+{
+    echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
+    if ($type === 'textarea') {
+        printf(
+            '<textarea class="large-text" rows="3" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
+            esc_attr($name),
+            esc_attr($placeholder),
+            esc_textarea($value)
+        );
+    } else {
+        printf(
+            '<input class="large-text" type="%1$s" id="%2$s" name="%2$s" value="%3$s" placeholder="%4$s">',
+            esc_attr($type === 'url' ? 'url' : 'text'),
+            esc_attr($name),
+            esc_attr($value),
+            esc_attr($placeholder)
+        );
+    }
+    echo '</td></tr>';
+}
+
+function mh_save_project_meta(int $post_id): void
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    if (! isset($_POST['mh_project_meta_nonce']) || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['mh_project_meta_nonce'])), 'mh_project_meta')) {
+        return;
+    }
+    if (! current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    update_post_meta($post_id, mh_project_live_meta_key(), isset($_POST['mh_project_live']) ? '1' : '0');
+    update_post_meta($post_id, '_mh_project_cat', sanitize_text_field(wp_unslash($_POST['mh_project_cat'] ?? '')));
+    update_post_meta($post_id, '_mh_project_place', sanitize_text_field(wp_unslash($_POST['mh_project_place'] ?? '')));
+    update_post_meta($post_id, '_mh_project_blurb', sanitize_textarea_field(wp_unslash($_POST['mh_project_blurb'] ?? '')));
+    update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
+    update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+}
+
+function mh_set_project_live(int $post_id, bool $live): void
+{
+    if ($post_id <= 0 || get_post_type($post_id) !== mh_project_post_type()) {
+        return;
+    }
+    update_post_meta($post_id, mh_project_live_meta_key(), $live ? '1' : '0');
+}
+
+add_action('init', __NAMESPACE__.'\\mh_register_project_post_type', 20);
+add_action('init', function (): void {
+    if (! get_option('mh_projects_cpt_seeded_v1') && ! wp_installing()) {
+        mh_import_studio_projects_to_cpt();
+    }
+}, 31);
+
+add_action('add_meta_boxes', function (): void {
+    add_meta_box(
+        'mh_project_details',
+        __('Project details', 'sage'),
+        __NAMESPACE__.'\\mh_project_admin_meta_box',
+        mh_project_post_type(),
+        'normal',
+        'high'
+    );
+});
+
+add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
+    if (wp_is_post_revision($post_id)) {
+        return;
+    }
+    mh_save_project_meta($post_id);
+});
+
+add_filter('manage_'.mh_project_post_type().'_posts_columns', function (array $columns): array {
+    $out = [];
+    foreach ($columns as $key => $label) {
+        $out[$key] = $label;
+        if ($key === 'title') {
+            $out['mh_project_cat'] = __('Category', 'sage');
+            $out['mh_project_place'] = __('Place', 'sage');
+            $out['mh_project_live'] = __('On site', 'sage');
+        }
+    }
+
+    return $out;
+});
+
+add_action('manage_'.mh_project_post_type().'_posts_custom_column', function (string $column, int $post_id): void {
+    if ($column === 'mh_project_cat') {
+        echo esc_html((string) get_post_meta($post_id, '_mh_project_cat', true));
+
+        return;
+    }
+    if ($column === 'mh_project_place') {
+        echo esc_html((string) get_post_meta($post_id, '_mh_project_place', true));
+
+        return;
+    }
+    if ($column === 'mh_project_live') {
+        if (mh_project_is_live($post_id)) {
+            echo '<span style="color:#15803d;font-weight:600">'.esc_html__('Live', 'sage').'</span>';
+        } else {
+            echo '<span style="color:#64748b">'.esc_html__('Hidden', 'sage').'</span>';
+        }
+    }
+}, 10, 2);
+
+add_filter('post_row_actions', function (array $actions, \WP_Post $post): array {
+    if ($post->post_type !== mh_project_post_type()) {
+        return $actions;
+    }
+
+    $live = mh_project_is_live((int) $post->ID);
+    $url = wp_nonce_url(
+        admin_url('admin.php?action=mh_toggle_project_live&post='.(int) $post->ID),
+        'mh_toggle_project_live_'.(int) $post->ID
+    );
+    $actions['mh_project_live'] = $live
+        ? '<a href="'.esc_url($url).'">'.esc_html__('Hide from site', 'sage').'</a>'
+        : '<a href="'.esc_url($url).'">'.esc_html__('Show on site', 'sage').'</a>';
+
+    return $actions;
+}, 10, 2);
+
+add_action('admin_action_mh_toggle_project_live', function (): void {
+    $post_id = (int) ($_GET['post'] ?? 0);
+    if ($post_id <= 0) {
+        wp_die(esc_html__('Invalid project.', 'sage'));
+    }
+    check_admin_referer('mh_toggle_project_live_'.$post_id);
+    if (! current_user_can('edit_post', $post_id)) {
+        wp_die(esc_html__('You cannot edit this project.', 'sage'));
+    }
+
+    mh_set_project_live($post_id, ! mh_project_is_live($post_id));
+
+    $redirect = wp_get_referer();
+    if (! is_string($redirect) || $redirect === '') {
+        $redirect = admin_url('edit.php?post_type='.mh_project_post_type());
+    }
+    wp_safe_redirect($redirect);
+    exit;
+});
+
+add_filter('bulk_actions-edit-'.mh_project_post_type(), function (array $actions): array {
+    $actions['mh_project_show'] = __('Show on site', 'sage');
+    $actions['mh_project_hide'] = __('Hide from site', 'sage');
+
+    return $actions;
+});
+
+add_filter('handle_bulk_actions-edit-'.mh_project_post_type(), function (string $redirect, string $action, array $post_ids): string {
+    if ($action !== 'mh_project_show' && $action !== 'mh_project_hide') {
+        return $redirect;
+    }
+
+    $live = $action === 'mh_project_show';
+    $count = 0;
+    foreach ($post_ids as $post_id) {
+        $post_id = (int) $post_id;
+        if ($post_id <= 0 || ! current_user_can('edit_post', $post_id)) {
+            continue;
+        }
+        mh_set_project_live($post_id, $live);
+        $count++;
+    }
+
+    return add_query_arg('mh_project_bulk', $count, $redirect);
+}, 10, 3);
+
+add_action('admin_notices', function (): void {
+    if (! isset($_GET['mh_project_bulk'])) {
+        return;
+    }
+    $screen = get_current_screen();
+    if (! $screen || $screen->post_type !== mh_project_post_type()) {
+        return;
+    }
+    $count = (int) $_GET['mh_project_bulk'];
+    if ($count <= 0) {
+        return;
+    }
+    printf(
+        '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+        esc_html(sprintf(
+            _n('Updated %d project.', 'Updated %d projects.', $count, 'sage'),
+            $count
+        ))
+    );
+});
 
 function mh_work_item_by_slug(string $slug): ?array
 {
@@ -913,6 +1400,14 @@ function mh_work_item_by_slug(string $slug): ?array
     if ($slug === '') {
         return null;
     }
+
+    if (mh_project_cpt_has_posts()) {
+        $fromCpt = mh_project_card_by_slug($slug);
+        if ($fromCpt !== null) {
+            return $fromCpt;
+        }
+    }
+
     $page = get_page_by_path('projects');
     $id = $page instanceof \WP_Post ? (int) $page->ID : null;
     foreach (mh_work_page_items($id) as $item) {

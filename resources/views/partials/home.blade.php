@@ -617,7 +617,7 @@
      ═══════════════════════════════════════════════════ --}}
 @if (! empty($work))
 @php
-  $totalProjects = count(\App\mh_studio_projects());
+  $totalProjects = count(\App\mh_work_page_items());
   $featuredWork  = $work[0] ?? null;
   $remainingWork = array_slice($work, 1, 3);
 @endphp
