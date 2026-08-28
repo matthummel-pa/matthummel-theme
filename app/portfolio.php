@@ -949,7 +949,7 @@ function mh_code_practice_defaults(): array
         'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
         'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
         'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
-        'Ridges & Valleys — a WordPress studio for Gettysburg shops, tours, inns, and restaurants. Open to agencies and developers anywhere.',
+        'Ridges & Valleys — Gettysburg concept sites and live WordPress demos for shops, tours, and inns.',
     ];
 }
 
@@ -1127,9 +1127,9 @@ function mh_code_resume_defaults(): array
             'role' => 'Founder',
             'org' => 'Ridges & Valleys',
             'period' => 'Current',
-            'type' => 'Independent Studio · Gettysburg, PA',
+            'type' => 'Concept work · Gettysburg, PA',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "WordPress studio focused on shops, inns, tours, and restaurants in Gettysburg and Adams County, PA.\nBuilding concept sites that show what a real WordPress build looks like for each local business type — not mockups, working sites on a production stack.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing Gettysburg concept sites — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',

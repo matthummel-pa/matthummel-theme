@@ -2134,3 +2134,100 @@ function mh_apply_code_skills_n8n_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_code_skills_n8n_v1', 70);
+
+/** Reframe Ridges & Valleys as concept demos, not an active studio. */
+function mh_apply_ridges_concept_framing_v1(): void
+{
+    if (get_option('mh_ridges_concept_framing_v1')) {
+        return;
+    }
+
+    $core = 'Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.';
+
+    $content = [
+        'front-page.blade.php' => [
+            'home_work_intro' => $core,
+        ],
+        'template-home.blade.php' => [
+            'home_work_intro' => $core,
+        ],
+        'template-about.blade.php' => [
+            'about_p3' => $core,
+            'about_work_p1' => 'I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.',
+        ],
+        'template-now.blade.php' => [
+            'now_studio_p1' => $core,
+            'now_studio_p2' => 'Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.',
+            'now_work_p1' => 'I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.',
+        ],
+        'template-projects.blade.php' => [
+            'work_lede' => $core,
+            'work_foot' => 'Repos and snippets: <a href="/code/">Code</a>. Concept demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.',
+            'work_band_lede' => 'These are concept demos, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.',
+        ],
+        'template-contact.blade.php' => [
+            'cnt_aside' => 'Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is where I publish Gettysburg concept demos.',
+        ],
+        'template-code.blade.php' => [
+            'code_gh_intro' => 'Public repos from Gettysburg — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.',
+            'code_feat_intro' => 'Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg concept demos. Each one is meant to be forked.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $template = page_template_key($id);
+        if (! isset($content[$template])) {
+            continue;
+        }
+
+        foreach ($content[$template] as $key => $value) {
+            update_post_meta($id, 'mh_f_'.$key, $value);
+        }
+
+        if ($template === 'template-code.blade.php') {
+            $lines = field_lines('code_do_items', mh_code_practice_defaults(), $id);
+            $updated = false;
+            foreach ($lines as $i => $line) {
+                if (! is_string($line)) {
+                    continue;
+                }
+                if (str_contains(strtolower($line), 'ridges') && str_contains(strtolower($line), 'valleys')) {
+                    $lines[$i] = 'Ridges & Valleys — Gettysburg concept sites and live WordPress demos for shops, tours, and inns.';
+                    $updated = true;
+                }
+            }
+            if ($updated) {
+                update_post_meta($id, 'mh_f_code_do_items', implode("\n", $lines));
+            }
+        }
+
+        if ($template === 'template-hire.blade.php') {
+            $jobs = field_rows('hire_cv_jobs', mh_code_resume_defaults(), $id);
+            $changed = false;
+            foreach ($jobs as $i => $job) {
+                if (($job['org'] ?? '') !== 'Ridges & Valleys') {
+                    continue;
+                }
+                $jobs[$i]['type'] = 'Concept work · Gettysburg, PA';
+                $jobs[$i]['bullets'] = "Publishing Gettysburg concept sites — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.";
+                $changed = true;
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_hire_cv_jobs', $jobs);
+            }
+        }
+    }
+
+    update_option('mh_ridges_concept_framing_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_ridges_concept_framing_v1', 71);

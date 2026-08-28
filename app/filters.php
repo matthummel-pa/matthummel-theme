@@ -127,7 +127,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Building Ridges & Valleys, writing WordPress notes with copy-paste code, and open for new work from Gettysburg.',
+            'desc' => 'Publishing Gettysburg concept demos at Ridges & Valleys, writing WordPress notes, and open for new work.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,

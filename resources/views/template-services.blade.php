@@ -140,7 +140,7 @@
   $faqs = [
     [
       'q' => 'Do you take WordPress projects for Gettysburg businesses?',
-      'a' => 'Yes — Gettysburg shops, inns, tours, and restaurants are exactly who Ridges & Valleys was built for. I also take remote work for agencies and businesses anywhere in the US.',
+      'a' => 'Yes — Gettysburg shops, inns, tours, and restaurants are who the Ridges & Valleys demos are built for. Hire me for real builds on matthummel.com. I also take remote work for agencies and businesses anywhere in the US.',
     ],
     [
       'q' => 'Do you work with agencies on client projects?',
@@ -346,7 +346,7 @@
   <div class="container wide">
     <p class="eyebrow">Example work</p>
     <h2 id="svc-work-heading" class="display-title is-section">A few recent concepts.</h2>
-    <p class="sec-intro" style="margin-bottom:2rem">These are concept sites from <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys</a> — working demonstrations of what a WordPress site can look like for local Gettysburg businesses.</p>
+    <p class="sec-intro" style="margin-bottom:2rem">These are concept demos from <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys</a> — live WordPress sites that show what a finished build can look like for local Gettysburg businesses.</p>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php
