@@ -46,6 +46,7 @@
     @if ($showFeatured)
       @php($featuredPost = get_post($featuredId))
       @if ($featuredPost instanceof \WP_Post)
+        @php($GLOBALS['post'] = $featuredPost)
         @php(setup_postdata($featuredPost))
         @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
         @php(wp_reset_postdata())
