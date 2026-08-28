@@ -1005,8 +1005,8 @@ function mh_query_project_cards(array $args = []): array
         'post_type' => mh_project_post_type(),
         'post_status' => 'publish',
         'posts_per_page' => $limit,
-        'orderby' => ['menu_order' => 'ASC', 'title' => 'ASC'],
-        'order' => 'ASC',
+        'orderby' => ['date' => 'DESC', 'title' => 'ASC'],
+        'order' => 'DESC',
         'no_found_rows' => true,
     ];
 
@@ -1192,6 +1192,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     $tech = (string) get_post_meta($post->ID, '_mh_project_tech', true);
     $concept = (string) get_post_meta($post->ID, '_mh_project_concept', true);
     $demo = (string) get_post_meta($post->ID, '_mh_project_demo', true);
+    $eyebrow = (string) get_post_meta($post->ID, '_mh_project_eyebrow', true);
     $summary = (string) get_post_meta($post->ID, '_mh_project_summary', true);
     $challenge = (string) get_post_meta($post->ID, '_mh_project_challenge', true);
     $approach = (string) get_post_meta($post->ID, '_mh_project_approach', true);
@@ -1199,36 +1200,72 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     $deliverables = (string) get_post_meta($post->ID, '_mh_project_deliverables', true);
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
     $live = mh_project_is_live((int) $post->ID);
+    $metrics = [];
+    for ($i = 1; $i <= 3; $i++) {
+        $metrics[$i] = [
+            'value' => (string) get_post_meta($post->ID, "_mh_project_m{$i}_value", true),
+            'label' => (string) get_post_meta($post->ID, "_mh_project_m{$i}_label", true),
+        ];
+    }
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
-    echo '<strong>'.esc_html__('Show on Work page (live on site)', 'sage').'</strong></label></p>';
-    echo '<p class="description">'.esc_html__('Checked projects appear on /projects/, the home example grid, and their /concept/ page.', 'sage').'</p>';
+    echo '<strong>'.esc_html__('Show on site', 'sage').'</strong></label></p>';
+    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /concept/ page.', 'sage').'</p>';
 
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
     mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
     mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('Gettysburg, PA', 'sage'));
-    mh_project_admin_field_row(__('Blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
-    mh_project_admin_field_row(__('Summary', 'sage'), 'mh_project_summary', $summary, '', 'textarea');
-    mh_project_admin_field_row(__('Challenge', 'sage'), 'mh_project_challenge', $challenge, '', 'textarea');
-    mh_project_admin_field_row(__('Approach', 'sage'), 'mh_project_approach', $approach, '', 'textarea');
-    mh_project_admin_field_row(__('Result', 'sage'), 'mh_project_result', $result, '', 'textarea');
-    mh_project_admin_field_row(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
+    mh_project_admin_field_row(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
     mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
+    mh_project_admin_field_row(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('hallowed-ground.jpg or https://…', 'sage'));
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept page', 'sage').'</h3>';
+    echo '<p class="description">'.esc_html__('These fields power /concept/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Concept · Boutique inn', 'sage'));
+    mh_project_admin_field_row(__('Summary', 'sage'), 'mh_project_summary', $summary, '', 'textarea');
+    mh_project_admin_field_row(__('The problem', 'sage'), 'mh_project_challenge', $challenge, '', 'textarea');
+    mh_project_admin_field_row(__('How I shaped it', 'sage'), 'mh_project_approach', $approach, '', 'textarea');
+    mh_project_admin_field_row(__('What you get', 'sage'), 'mh_project_result', $result, '', 'textarea');
+    mh_project_admin_field_row(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
     mh_project_admin_field_row(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, 'https://', 'url');
     mh_project_admin_field_row(__('Legacy R&V case URL', 'sage'), 'mh_project_concept', $concept, 'https://', 'url');
-    mh_project_admin_field_row(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('hallowed-ground.jpg or https://…', 'sage'));
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept metrics (up to 3)', 'sage').'</h3>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    for ($i = 1; $i <= 3; $i++) {
+        echo '<tr><th scope="row">'.esc_html(sprintf(__('Metric %d', 'sage'), $i)).'</th><td>';
+        printf(
+            '<input class="regular-text" type="text" name="mh_project_m%d_value" value="%s" placeholder="%s" style="max-width:8rem;margin-right:.5rem">',
+            $i,
+            esc_attr($metrics[$i]['value']),
+            esc_attr__('Value', 'sage')
+        );
+        printf(
+            '<input class="regular-text" type="text" name="mh_project_m%d_label" value="%s" placeholder="%s">',
+            $i,
+            esc_attr($metrics[$i]['label']),
+            esc_attr__('Label', 'sage')
+        );
+        echo '</td></tr>';
+    }
     echo '</tbody></table>';
 }
 
 function mh_project_admin_field_row(string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void
 {
+    $rows = in_array($name, ['mh_project_challenge', 'mh_project_approach', 'mh_project_result', 'mh_project_deliverables'], true) ? 5 : 3;
     echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
     if ($type === 'textarea') {
         printf(
-            '<textarea class="large-text" rows="3" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
+            '<textarea class="large-text" rows="%4$d" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
             esc_attr($name),
             esc_attr($placeholder),
-            esc_textarea($value)
+            esc_textarea($value),
+            $rows
         );
     } else {
         printf(
@@ -1258,6 +1295,7 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_cat', sanitize_text_field(wp_unslash($_POST['mh_project_cat'] ?? '')));
     update_post_meta($post_id, '_mh_project_place', sanitize_text_field(wp_unslash($_POST['mh_project_place'] ?? '')));
     update_post_meta($post_id, '_mh_project_blurb', sanitize_textarea_field(wp_unslash($_POST['mh_project_blurb'] ?? '')));
+    update_post_meta($post_id, '_mh_project_eyebrow', sanitize_text_field(wp_unslash($_POST['mh_project_eyebrow'] ?? '')));
     update_post_meta($post_id, '_mh_project_summary', sanitize_textarea_field(wp_unslash($_POST['mh_project_summary'] ?? '')));
     update_post_meta($post_id, '_mh_project_challenge', sanitize_textarea_field(wp_unslash($_POST['mh_project_challenge'] ?? '')));
     update_post_meta($post_id, '_mh_project_approach', sanitize_textarea_field(wp_unslash($_POST['mh_project_approach'] ?? '')));
@@ -1267,6 +1305,11 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
     update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+
+    for ($i = 1; $i <= 3; $i++) {
+        update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
+        update_post_meta($post_id, "_mh_project_m{$i}_label", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_label"] ?? '')));
+    }
 }
 
 function mh_set_project_live(int $post_id, bool $live): void
@@ -1275,6 +1318,30 @@ function mh_set_project_live(int $post_id, bool $live): void
         return;
     }
     update_post_meta($post_id, mh_project_live_meta_key(), $live ? '1' : '0');
+}
+
+/** Distinct meta values for admin filters (category / place). */
+function mh_project_meta_choices(string $meta_key): array
+{
+    global $wpdb;
+    $rows = $wpdb->get_col($wpdb->prepare(
+        "SELECT DISTINCT pm.meta_value
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = %s
+           AND p.post_type = %s
+           AND p.post_status != 'trash'
+           AND pm.meta_value <> ''
+         ORDER BY pm.meta_value ASC",
+        $meta_key,
+        mh_project_post_type()
+    ));
+
+    if (! is_array($rows)) {
+        return [];
+    }
+
+    return array_values(array_filter(array_map('strval', $rows)));
 }
 
 add_action('init', __NAMESPACE__.'\\mh_register_project_post_type', 20);
@@ -1287,7 +1354,7 @@ add_action('init', function (): void {
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'mh_project_details',
-        __('Project details', 'sage'),
+        __('Project & concept fields', 'sage'),
         __NAMESPACE__.'\\mh_project_admin_meta_box',
         mh_project_post_type(),
         'normal',
@@ -1305,36 +1372,207 @@ add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
 add_filter('manage_'.mh_project_post_type().'_posts_columns', function (array $columns): array {
     $out = [];
     foreach ($columns as $key => $label) {
+        if ($key === 'date') {
+            continue;
+        }
         $out[$key] = $label;
         if ($key === 'title') {
+            $out['mh_project_live'] = __('On site', 'sage');
             $out['mh_project_cat'] = __('Category', 'sage');
             $out['mh_project_place'] = __('Place', 'sage');
-            $out['mh_project_live'] = __('On site', 'sage');
         }
     }
+    $out['date'] = __('Date', 'sage');
 
     return $out;
 });
 
+add_filter('manage_edit-'.mh_project_post_type().'_sortable_columns', function (array $columns): array {
+    $columns['mh_project_cat'] = 'mh_project_cat';
+    $columns['mh_project_place'] = 'mh_project_place';
+    $columns['mh_project_live'] = 'mh_project_live';
+    $columns['date'] = ['date', true];
+
+    return $columns;
+});
+
 add_action('manage_'.mh_project_post_type().'_posts_custom_column', function (string $column, int $post_id): void {
     if ($column === 'mh_project_cat') {
-        echo esc_html((string) get_post_meta($post_id, '_mh_project_cat', true));
+        $cat = (string) get_post_meta($post_id, '_mh_project_cat', true);
+        if ($cat === '') {
+            echo '—';
+
+            return;
+        }
+        $url = add_query_arg([
+            'post_type' => mh_project_post_type(),
+            'mh_cat' => $cat,
+        ], admin_url('edit.php'));
+        printf('<a href="%s">%s</a>', esc_url($url), esc_html($cat));
 
         return;
     }
     if ($column === 'mh_project_place') {
-        echo esc_html((string) get_post_meta($post_id, '_mh_project_place', true));
+        $place = (string) get_post_meta($post_id, '_mh_project_place', true);
+        if ($place === '') {
+            echo '—';
+
+            return;
+        }
+        $url = add_query_arg([
+            'post_type' => mh_project_post_type(),
+            'mh_place' => $place,
+        ], admin_url('edit.php'));
+        printf('<a href="%s">%s</a>', esc_url($url), esc_html($place));
 
         return;
     }
     if ($column === 'mh_project_live') {
-        if (mh_project_is_live($post_id)) {
-            echo '<span style="color:#15803d;font-weight:600">'.esc_html__('Live', 'sage').'</span>';
-        } else {
-            echo '<span style="color:#64748b">'.esc_html__('Hidden', 'sage').'</span>';
-        }
+        $live = mh_project_is_live($post_id);
+        $url = wp_nonce_url(
+            admin_url('admin.php?action=mh_toggle_project_live&post='.$post_id),
+            'mh_toggle_project_live_'.$post_id
+        );
+        $label = $live ? __('On', 'sage') : __('Off', 'sage');
+        $class = $live ? 'mh-project-toggle is-on' : 'mh-project-toggle is-off';
+        printf(
+            '<a class="%1$s" href="%2$s" title="%3$s"><span class="mh-project-toggle__track" aria-hidden="true"></span><span class="mh-project-toggle__label">%4$s</span></a>',
+            esc_attr($class),
+            esc_url($url),
+            esc_attr($live ? __('Hide from site', 'sage') : __('Show on site', 'sage')),
+            esc_html($label)
+        );
     }
 }, 10, 2);
+
+add_action('restrict_manage_posts', function (string $post_type): void {
+    if ($post_type !== mh_project_post_type()) {
+        return;
+    }
+
+    $currentCat = isset($_GET['mh_cat']) ? sanitize_text_field(wp_unslash($_GET['mh_cat'])) : '';
+    $currentPlace = isset($_GET['mh_place']) ? sanitize_text_field(wp_unslash($_GET['mh_place'])) : '';
+    $currentLive = isset($_GET['mh_live']) ? sanitize_text_field(wp_unslash($_GET['mh_live'])) : '';
+
+    echo '<label class="screen-reader-text" for="mh_filter_cat">'.esc_html__('Filter by category', 'sage').'</label>';
+    echo '<select name="mh_cat" id="mh_filter_cat">';
+    echo '<option value="">'.esc_html__('All categories', 'sage').'</option>';
+    foreach (mh_project_meta_choices('_mh_project_cat') as $cat) {
+        printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($cat), selected($currentCat, $cat, false), esc_html($cat));
+    }
+    echo '</select>';
+
+    echo '<label class="screen-reader-text" for="mh_filter_place">'.esc_html__('Filter by place', 'sage').'</label>';
+    echo '<select name="mh_place" id="mh_filter_place">';
+    echo '<option value="">'.esc_html__('All places', 'sage').'</option>';
+    foreach (mh_project_meta_choices('_mh_project_place') as $place) {
+        printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($place), selected($currentPlace, $place, false), esc_html($place));
+    }
+    echo '</select>';
+
+    echo '<label class="screen-reader-text" for="mh_filter_live">'.esc_html__('Filter by on-site status', 'sage').'</label>';
+    echo '<select name="mh_live" id="mh_filter_live">';
+    echo '<option value="">'.esc_html__('On site: all', 'sage').'</option>';
+    printf('<option value="1"%s>%s</option>', selected($currentLive, '1', false), esc_html__('On site only', 'sage'));
+    printf('<option value="0"%s>%s</option>', selected($currentLive, '0', false), esc_html__('Hidden only', 'sage'));
+    echo '</select>';
+});
+
+add_action('pre_get_posts', function (\WP_Query $query): void {
+    if (! is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+    if ($query->get('post_type') !== mh_project_post_type()) {
+        return;
+    }
+
+    $cat = isset($_GET['mh_cat']) ? sanitize_text_field(wp_unslash($_GET['mh_cat'])) : '';
+    $place = isset($_GET['mh_place']) ? sanitize_text_field(wp_unslash($_GET['mh_place'])) : '';
+    $live = isset($_GET['mh_live']) ? sanitize_text_field(wp_unslash($_GET['mh_live'])) : '';
+
+    $metaQuery = [];
+    if ($cat !== '') {
+        $metaQuery[] = [
+            'key' => '_mh_project_cat',
+            'value' => $cat,
+            'compare' => '=',
+        ];
+    }
+    if ($place !== '') {
+        $metaQuery[] = [
+            'key' => '_mh_project_place',
+            'value' => $place,
+            'compare' => '=',
+        ];
+    }
+    if ($live === '1' || $live === '0') {
+        $metaQuery[] = [
+            'key' => mh_project_live_meta_key(),
+            'value' => $live,
+            'compare' => '=',
+        ];
+    }
+    if ($metaQuery !== []) {
+        if (count($metaQuery) > 1) {
+            $metaQuery['relation'] = 'AND';
+        }
+        $query->set('meta_query', $metaQuery);
+    }
+
+    $orderby = (string) $query->get('orderby');
+    if ($orderby === '' || $orderby === 'menu_order title' || $orderby === 'menu_order') {
+        $query->set('orderby', 'date');
+        $query->set('order', 'DESC');
+
+        return;
+    }
+
+    $order = strtoupper((string) $query->get('order')) === 'ASC' ? 'ASC' : 'DESC';
+    if ($orderby === 'mh_project_cat') {
+        $query->set('meta_key', '_mh_project_cat');
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    } elseif ($orderby === 'mh_project_place') {
+        $query->set('meta_key', '_mh_project_place');
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    } elseif ($orderby === 'mh_project_live') {
+        $query->set('meta_key', mh_project_live_meta_key());
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    }
+});
+
+add_action('admin_head', function (): void {
+    $screen = get_current_screen();
+    if (! $screen || $screen->post_type !== mh_project_post_type()) {
+        return;
+    }
+    echo '<style>
+      .column-mh_project_live { width: 6.5rem; }
+      .column-mh_project_cat { width: 8rem; }
+      .column-mh_project_place { width: 12rem; }
+      .mh-project-toggle {
+        display: inline-flex; align-items: center; gap: .4rem;
+        text-decoration: none; font-weight: 600; font-size: 12px;
+      }
+      .mh-project-toggle__track {
+        width: 2.1rem; height: 1.15rem; border-radius: 999px;
+        background: #cbd5e1; position: relative; display: inline-block;
+        transition: background .15s;
+      }
+      .mh-project-toggle__track::after {
+        content: ""; position: absolute; top: 2px; left: 2px;
+        width: .85rem; height: .85rem; border-radius: 50%;
+        background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        transition: transform .15s;
+      }
+      .mh-project-toggle.is-on .mh-project-toggle__track { background: #16a34a; }
+      .mh-project-toggle.is-on .mh-project-toggle__track::after { transform: translateX(.95rem); }
+      .mh-project-toggle.is-on .mh-project-toggle__label { color: #15803d; }
+      .mh-project-toggle.is-off .mh-project-toggle__label { color: #64748b; }
+    </style>';
+});
 
 add_filter('post_row_actions', function (array $actions, \WP_Post $post): array {
     if ($post->post_type !== mh_project_post_type()) {
@@ -1349,6 +1587,11 @@ add_filter('post_row_actions', function (array $actions, \WP_Post $post): array 
     $actions['mh_project_live'] = $live
         ? '<a href="'.esc_url($url).'">'.esc_html__('Hide from site', 'sage').'</a>'
         : '<a href="'.esc_url($url).'">'.esc_html__('Show on site', 'sage').'</a>';
+
+    $permalink = get_permalink($post);
+    if (is_string($permalink) && $permalink !== '' && mh_project_is_live((int) $post->ID)) {
+        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View concept', 'sage').'</a>';
+    }
 
     return $actions;
 }, 10, 2);
@@ -1376,11 +1619,32 @@ add_action('admin_action_mh_toggle_project_live', function (): void {
 add_filter('bulk_actions-edit-'.mh_project_post_type(), function (array $actions): array {
     $actions['mh_project_show'] = __('Show on site', 'sage');
     $actions['mh_project_hide'] = __('Hide from site', 'sage');
+    $actions['mh_project_import_concept'] = __('Import concept fields (fill empty)', 'sage');
 
     return $actions;
 });
 
 add_filter('handle_bulk_actions-edit-'.mh_project_post_type(), function (string $redirect, string $action, array $post_ids): string {
+    if ($action === 'mh_project_import_concept') {
+        $seeds = mh_concept_pages_seed_data();
+        $count = 0;
+        foreach ($post_ids as $post_id) {
+            $post_id = (int) $post_id;
+            if ($post_id <= 0 || ! current_user_can('edit_post', $post_id)) {
+                continue;
+            }
+            $slug = (string) get_post_field('post_name', $post_id);
+            $seed = is_array($seeds[$slug] ?? null) ? $seeds[$slug] : [];
+            if ($seed === []) {
+                continue;
+            }
+            mh_seed_project_concept_narrative($post_id, $seed, false);
+            $count++;
+        }
+
+        return add_query_arg('mh_project_imported', $count, $redirect);
+    }
+
     if ($action !== 'mh_project_show' && $action !== 'mh_project_hide') {
         return $redirect;
     }
@@ -1400,24 +1664,36 @@ add_filter('handle_bulk_actions-edit-'.mh_project_post_type(), function (string 
 }, 10, 3);
 
 add_action('admin_notices', function (): void {
-    if (! isset($_GET['mh_project_bulk'])) {
-        return;
-    }
     $screen = get_current_screen();
     if (! $screen || $screen->post_type !== mh_project_post_type()) {
         return;
     }
-    $count = (int) $_GET['mh_project_bulk'];
-    if ($count <= 0) {
-        return;
+
+    if (isset($_GET['mh_project_bulk'])) {
+        $count = (int) $_GET['mh_project_bulk'];
+        if ($count > 0) {
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                esc_html(sprintf(
+                    _n('Updated %d project.', 'Updated %d projects.', $count, 'sage'),
+                    $count
+                ))
+            );
+        }
     }
-    printf(
-        '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-        esc_html(sprintf(
-            _n('Updated %d project.', 'Updated %d projects.', $count, 'sage'),
-            $count
-        ))
-    );
+
+    if (isset($_GET['mh_project_imported'])) {
+        $count = (int) $_GET['mh_project_imported'];
+        if ($count > 0) {
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                esc_html(sprintf(
+                    _n('Imported concept fields for %d project (empty fields only).', 'Imported concept fields for %d projects (empty fields only).', $count, 'sage'),
+                    $count
+                ))
+            );
+        }
+    }
 });
 
 function mh_work_item_by_slug(string $slug): ?array

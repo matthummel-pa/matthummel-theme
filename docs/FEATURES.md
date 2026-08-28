@@ -34,7 +34,7 @@ What the 3.x Sage theme does, and where it lives.
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Ridges & Valleys concepts imported once (`mh_projects_cpt_seeded_v1`); narrative seed for on-site pages (`mh_concept_pages_seeded_v1`); toggle **Show on site** from **Projects** in wp-admin; public singles at `/concept/{slug}/` |
+| Projects CPT | Ridges & Valleys concepts imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); editable concept fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; public singles at `/concept/{slug}/` |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |
