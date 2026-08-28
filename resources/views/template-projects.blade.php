@@ -101,7 +101,7 @@
         <span>every concept</span>
       </div>
       <p class="work-context__note">
-        These are live WordPress demos published at Ridges &amp; Valleys — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
+        These are WordPress concept examples on this site — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
       </p>
     </div>
   </div>
@@ -154,15 +154,13 @@
         </div>
       </div>
     @else
-      @if ($cat === '')
-        @include('partials.work-card', ['p' => $shown[0], 'pageUrl' => $pageUrl, 'featured' => true])
-      @endif
       <div class="work-grid" data-work-grid>
         @foreach ($shown as $i => $p)
-          @if ($cat === '' && $i === 0)
-            @continue
-          @endif
-          @include('partials.work-card', ['p' => $p, 'pageUrl' => $pageUrl])
+          @include('partials.work-card', [
+            'p' => $p,
+            'pageUrl' => $pageUrl,
+            'featured' => $cat === '' && $i === 0 && $shownCount >= 3,
+          ])
         @endforeach
       </div>
       <p class="archive-desc" data-work-empty hidden>No sites match that search.</p>
@@ -181,7 +179,7 @@
     </div>
 
     <div class="work-footer-links">
-      {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Concept demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com ↗</a>.', 'sage')) !!}
+      {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live clickable demos open from each concept page when available.', 'sage')) !!}
     </div>
 
   </div>

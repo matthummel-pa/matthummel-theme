@@ -968,6 +968,8 @@ function mh_work_page_items(?int $post_id = null): array
     if ($rows === []) {
         return array_map(function (array $p): array {
             $p['image'] = mh_studio_project_image_url($p);
+            $p['url'] = mh_concept_page_url((string) ($p['slug'] ?? ''));
+            $p['demo'] = (string) ($p['demo'] ?? '');
 
             return $p;
         }, mh_studio_projects());
@@ -988,9 +990,11 @@ function mh_work_page_items(?int $post_id = null): array
             'blurb' => (string) (($r['blurb'] ?? '') !== '' ? $r['blurb'] : ($base['blurb'] ?? '')),
             'tech' => $tech !== [] ? $tech : ($base['tech'] ?? []),
             'concept' => (string) (($r['concept'] ?? '') !== '' ? $r['concept'] : ($base['concept'] ?? '')),
+            'demo' => (string) (($r['demo'] ?? '') !== '' ? $r['demo'] : ($base['demo'] ?? '')),
             'image' => (string) (($r['image'] ?? '') !== '' ? $r['image'] : ($base['image'] ?? '')),
         ];
         $item['image'] = mh_studio_project_image_url($item);
+        $item['url'] = mh_concept_page_url($slug);
         $out[] = $item;
     }
 

@@ -668,16 +668,14 @@
           <span class="h-work-place">{!! \App\mh_svg_icon('map', 13) !!} {{ $fp['place'] }}</span>
         </div>
         <h3 class="h-work-featured__title">
-          <a href="{{ home_url('/projects/') }}#{{ $fp['slug'] }}">{{ $fp['title'] }}</a>
+          <a href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">{{ $fp['title'] }}</a>
         </h3>
         <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
         <div class="h-work-featured__actions">
-          @if (! empty($fp['concept']))
-            <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['concept']) }}" rel="noopener" target="_blank">
-              View concept <span aria-hidden="true">↗</span>
-            </a>
-          @endif
-          <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}#{{ $fp['slug'] }}">
+          <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">
+            View concept
+          </a>
+          <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}?cat={{ rawurlencode((string) ($fp['cat'] ?? '')) }}">
             See all {{ strtolower($fp['cat']) }} concepts →
           </a>
         </div>
@@ -700,10 +698,9 @@
 
           {{-- Image --}}
           @php
-            $cardHref   = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
-            $cardExtras = ! empty($p['concept']) ? ' rel="noopener" target="_blank"' : '';
+            $cardHref = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
           @endphp
-          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}"{!! $cardExtras !!} aria-label="View {{ esc_attr($p['title']) }} concept">
+          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}" aria-label="View {{ esc_attr($p['title']) }} concept">
             @if (! empty($p['image']))
               <div class="h-work-card-v2__img">
                 <img
@@ -729,7 +726,7 @@
               <span class="h-work-place h-work-place--sm">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</span>
             </div>
             <h3 class="h-work-card-v2__title">
-              <a href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">{{ $p['title'] }}</a>
+              <a href="{{ $cardHref }}">{{ $p['title'] }}</a>
             </h3>
             <p class="h-work-card-v2__blurb">{{ $p['blurb'] }}</p>
             @if (! empty($p['tech']))
@@ -740,15 +737,9 @@
               </div>
             @endif
             <div class="h-work-card-v2__links">
-              @if (! empty($p['concept']))
-                <a class="h-work-cta-link" href="{{ esc_url($p['concept']) }}" rel="noopener" target="_blank">
-                  View {{ $p['title'] }} →
-                </a>
-              @else
-                <a class="h-work-cta-link" href="{{ home_url('/projects/') }}#{{ $p['slug'] }}">
-                  See details →
-                </a>
-              @endif
+              <a class="h-work-cta-link" href="{{ $cardHref }}">
+                View concept →
+              </a>
             </div>
           </div>
 
