@@ -9,7 +9,7 @@
 
   {{-- AI-generated summary --}}
   @if ($summary !== '')
-    <details class="side-card side-card--fold" open>
+    <details class="side-card side-card--fold">
       <summary class="side-card-title">TL;DR</summary>
       <p class="side-summary">{{ $summary }}</p>
     </details>
@@ -17,7 +17,7 @@
 
   {{-- Table of contents (desktop) --}}
   @if ($toc)
-    <details class="side-card side-card--toc side-card--fold" open>
+    <details class="side-card side-card--toc side-card--fold">
       <summary class="side-card-title">On this page</summary>
       <nav aria-label="Table of contents">
         <ol class="side-toc">
@@ -32,17 +32,34 @@
   @endif
 
   {{-- About the author --}}
-  @php $gh = \App\Github::fetchUser(\App\mh_github_login()); @endphp
+  @php
+    $gh = \App\Github::fetchUser(\App\mh_github_login());
+    $hireable = \App\mh_is_hireable($gh);
+  @endphp
   <div class="side-card side-author">
-    @include('partials.profile-photo', ['size' => 52, 'class' => 'profile-photo side-author__photo', 'decorative' => true])
-    <div class="side-author__body">
-      <p class="side-author__name">Matt Hummel</p>
-      <p class="side-author__role">Full-stack developer · WordPress specialist · Gettysburg, PA</p>
-      <p class="side-author__bio">Building WordPress platforms and full-stack web apps.@if (\App\mh_is_hireable($gh)) {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}.@endif</p>
-      <div class="side-author__links">
-        <a href="{{ home_url('/about/') }}">About</a>
-        <a href="{{ home_url('/contact/') }}">Say hello</a>
+    <p class="side-author__eyebrow">{{ __('About the author', 'sage') }}</p>
+    <div class="side-author__head">
+      @include('partials.profile-photo', ['size' => 56, 'class' => 'profile-photo side-author__photo', 'decorative' => true])
+      <div class="side-author__intro">
+        <p class="side-author__name">Matt Hummel</p>
+        <p class="side-author__role">{{ __('Full-stack developer · WordPress specialist · Gettysburg, PA', 'sage') }}</p>
+        @if ($hireable)
+          <p class="side-author__avail">
+            @include('partials.avail-mark', ['gh' => $gh])
+            {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
+          </p>
+        @endif
       </div>
+    </div>
+    <p class="side-author__bio">
+      {{ __('I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in.', 'sage') }}
+    </p>
+    <div class="side-author__actions">
+      <a class="side-author__btn side-author__btn--primary" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 14) !!}
+        {{ __('Say hello', 'sage') }}
+      </a>
+      <a class="side-author__btn" href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a>
     </div>
   </div>
 
