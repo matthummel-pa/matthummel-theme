@@ -1171,7 +1171,7 @@ function mh_register_project_post_type(): void
         'capability_type' => 'post',
         'map_meta_cap' => true,
         'hierarchical' => false,
-        'supports' => ['title', 'page-attributes'],
+        'supports' => ['title', 'thumbnail', 'page-attributes'],
         'has_archive' => false,
         'rewrite' => [
             'slug' => mh_concept_rewrite_slug(),
