@@ -2,6 +2,17 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.23 — 2026-08-28
+
+### Added
+
+- On-site **concept pages** for Projects at `/concept/{slug}/` (matthummel theme), with narrative seed from studio concepts
+- Work / home / services cards link to on-site concept pages; optional **Live demo** opens the clickable demo URL when set
+
+### Changed
+
+- Projects CPT is publicly queryable with rewrite base `concept`; non-live projects stay 404 for visitors
+
 ## 3.1.22 — 2026-08-28
 
 ### Added

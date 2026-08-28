@@ -346,14 +346,13 @@
   <div class="container wide">
     <p class="eyebrow">Example work</p>
     <h2 id="svc-work-heading" class="display-title is-section">A few recent concepts.</h2>
-    <p class="sec-intro" style="margin-bottom:2rem">These are concept demos from <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">Ridges &amp; Valleys</a> — live WordPress sites that show what a finished build can look like for local Gettysburg businesses.</p>
+    <p class="sec-intro" style="margin-bottom:2rem">These are Gettysburg concept sites on matthummel.com — example WordPress builds that show what a finished shop, tour, or inn site can look like.</p>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php
-          $href = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
-          $ext  = ! empty($p['concept']);
+          $href = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
         @endphp
-        <a class="svc-work-card" href="{{ $href }}" {{ $ext ? 'rel="noopener" target="_blank"' : '' }}>
+        <a class="svc-work-card" href="{{ $href }}">
           @if (! empty($p['image']))
             <div class="svc-work-card__img">
               <img src="{{ esc_url($p['image']) }}"

@@ -154,6 +154,20 @@ function mh_seo_current_post_id(): int
 
 function mh_seo_document_title(): string
 {
+    if (is_singular(mh_project_post_type())) {
+        $title = trim(get_the_title());
+        $place = trim((string) get_post_meta((int) get_queried_object_id(), '_mh_project_place', true));
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        if ($title === '') {
+            return '';
+        }
+        $built = $place !== ''
+            ? $title.' — '.$place.' | '.$brand
+            : $title.' concept | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+
     $post_id = mh_seo_current_post_id();
     $defaults = mh_seo_landing_defaults($post_id);
     $custom = $post_id ? trim(field('seo_title', '', $post_id)) : '';
@@ -199,6 +213,22 @@ function mh_seo_clip(string $s, int $max): string
  */
 function mh_seo_meta_description(): string
 {
+    if (is_singular(mh_project_post_type())) {
+        $post_id = (int) get_queried_object_id();
+        $summary = trim((string) get_post_meta($post_id, '_mh_project_summary', true));
+        if ($summary === '') {
+            $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
+        }
+        if ($summary === '') {
+            $summary = 'Gettysburg WordPress concept site. See the example or say hello to adapt it for your shop.';
+        }
+        if ($summary !== '' && ! str_ends_with($summary, '.')) {
+            $summary .= '.';
+        }
+
+        return mh_seo_len($summary) > 155 ? mh_seo_clip($summary, 155) : $summary;
+    }
+
     $post_id = mh_seo_current_post_id();
     $defaults = mh_seo_landing_defaults($post_id);
     $custom = $post_id ? trim(field('seo_desc', '', $post_id)) : '';

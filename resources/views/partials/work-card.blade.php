@@ -1,8 +1,9 @@
 @php
   $shot = \App\mh_studio_project_image_url($p);
-  $concept = (string) ($p['concept'] ?? '');
   $slug = (string) ($p['slug'] ?? '');
   $title = (string) ($p['title'] ?? '');
+  $conceptUrl = (string) ($p['url'] ?? \App\mh_concept_page_url($slug, isset($p['post_id']) ? (int) $p['post_id'] : null));
+  $demo = (string) ($p['demo'] ?? '');
   $shareUrl = \App\mh_work_permalink($slug, $pageUrl ?? null);
   $useUrl = \App\mh_work_contact_url($p);
   $featured = ! empty($featured);
@@ -21,16 +22,16 @@
   data-search="{{ esc_attr($haystack) }}"
 >
   @if ($shot !== '')
-    <div class="work-shot">
-      <img src="{{ esc_url($shot) }}" alt="{{ esc_attr(sprintf(__('Screenshot of the %s concept', 'sage'), $title)) }}" width="960" height="540" loading="{{ $featured ? 'eager' : 'lazy' }}" decoding="async">
-    </div>
+    <a class="work-shot" href="{{ esc_url($conceptUrl) }}" aria-hidden="true" tabindex="-1">
+      <img src="{{ esc_url($shot) }}" alt="" width="960" height="540" loading="{{ $featured ? 'eager' : 'lazy' }}" decoding="async">
+    </a>
   @endif
   <div class="work-body">
     @if ($featured)
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
     <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
-    <h2>{{ $title }}</h2>
+    <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
     <p>{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))
       <p class="pill-row">
@@ -40,9 +41,12 @@
       </p>
     @endif
     <div class="work-actions">
-      @if ($concept !== '')
-        <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($concept) }}" rel="noopener" target="_blank">
-          {{ \App\field('work_cta_view', __('View concept', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s (opens in a new window)', 'sage'), $title) }}</span>
+      <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($conceptUrl) }}">
+        {{ \App\field('work_cta_view', __('View concept', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+      </a>
+      @if ($demo !== '')
+        <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
         </a>
       @endif
       <a class="btn" href="{{ esc_url($useUrl) }}">
