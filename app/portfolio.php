@@ -1542,6 +1542,55 @@ function mh_published_post_count(): int
     return isset($counts->publish) ? (int) $counts->publish : 0;
 }
 
+function mh_is_devto_post(int $postId): bool
+{
+    if ($postId < 1) {
+        return false;
+    }
+
+    if ((string) get_post_meta($postId, '_mh_devto_id', true) !== '') {
+        return true;
+    }
+
+    $catId = mh_devto_category_id();
+
+    return ($catId > 0 && has_category($catId, $postId)) || has_category('dev-to', $postId);
+}
+
+function mh_journal_featured_post_id(): int
+{
+    $exclude = [];
+    $catId = mh_devto_category_id();
+    if ($catId > 0) {
+        $exclude[] = $catId;
+    }
+
+    $q = new \WP_Query([
+        'post_type' => 'post',
+        'posts_per_page' => 1,
+        'ignore_sticky_posts' => true,
+        'no_found_rows' => true,
+        'category__not_in' => $exclude,
+        'meta_query' => [
+            'relation' => 'OR',
+            [
+                'key' => '_mh_devto_id',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key' => '_mh_devto_id',
+                'value' => '',
+                'compare' => '=',
+            ],
+        ],
+    ]);
+
+    $id = isset($q->posts[0]) ? (int) $q->posts[0]->ID : 0;
+    wp_reset_postdata();
+
+    return $id;
+}
+
 function mh_journal_is_oldest(): bool
 {
     return strtolower((string) get_query_var('order')) === 'asc';

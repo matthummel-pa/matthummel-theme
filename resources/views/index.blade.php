@@ -6,7 +6,8 @@
   $writeId  = \App\mh_writing_id();
   $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
   $showFeatured = is_home() && ! is_paged() && have_posts() && ! \App\mh_journal_is_oldest();
-  $featuredId   = 0;
+  $featuredId   = $showFeatured ? \App\mh_journal_featured_post_id() : 0;
+  $showFeatured = $showFeatured && $featuredId > 0;
   $rssUrl       = home_url('/feed/');
 @endphp
 
@@ -43,9 +44,13 @@
     <p>No posts yet.</p>
   @else
     @if ($showFeatured)
-      @php(the_post())
-      @php($featuredId = (int) get_the_ID())
-      @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
+      @php($featuredPost = get_post($featuredId))
+      @if ($featuredPost instanceof \WP_Post)
+        @php($GLOBALS['post'] = $featuredPost)
+        @php(setup_postdata($featuredPost))
+        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
+        @php(wp_reset_postdata())
+      @endif
     @endif
 
     <div class="write-layout">
@@ -57,6 +62,9 @@
           <div class="post-list">
             @while(have_posts())
               @php(the_post())
+              @if ((int) get_the_ID() === $featuredId)
+                @continue
+              @endif
               @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
             @endwhile
           </div>
