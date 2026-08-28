@@ -2,6 +2,16 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.25 — 2026-08-28
+
+### Added
+
+- Projects admin: **Generate featured image** (same DALL·E flow as journal posts) — sets the featured image and fills the Work card screenshot URL from concept title/category/place/blurb
+
+### Changed
+
+- Projects CPT supports featured images (`thumbnail`)
+
 ## 3.1.24 — 2026-08-28
 
 ### Added

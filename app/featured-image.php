@@ -1,10 +1,25 @@
 <?php
 
 /**
- * Generate / replace a journal post featured image via OpenAI Images.
+ * Generate / replace a featured image via OpenAI Images (journal posts + Projects CPT).
  */
 
 namespace App;
+
+/**
+ * Post types that get the Generate featured image meta box.
+ *
+ * @return list<string>
+ */
+function mh_featured_image_post_types(): array
+{
+    $types = ['post'];
+    if (function_exists(__NAMESPACE__.'\\mh_project_post_type')) {
+        $types[] = mh_project_post_type();
+    }
+
+    return array_values(array_unique(array_map('strval', (array) apply_filters('mh/featured_image_post_types', $types))));
+}
 
 /**
  * Default image model (filterable).
@@ -25,6 +40,28 @@ function mh_featured_image_prompt(\WP_Post $post, string $custom = ''): string
     }
 
     $title = html_entity_decode(get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $isProject = function_exists(__NAMESPACE__.'\\mh_project_post_type')
+        && $post->post_type === mh_project_post_type();
+
+    if ($isProject) {
+        $cat = (string) get_post_meta($post->ID, '_mh_project_cat', true);
+        $place = (string) get_post_meta($post->ID, '_mh_project_place', true);
+        $blurb = (string) get_post_meta($post->ID, '_mh_project_blurb', true);
+        if ($blurb === '') {
+            $blurb = (string) get_post_meta($post->ID, '_mh_project_summary', true);
+        }
+        $hint = wp_trim_words(wp_strip_all_tags($blurb), 28);
+        $catLabel = $cat !== '' ? $cat : 'local business';
+        $placeLabel = $place !== '' ? $place : 'Gettysburg, PA';
+
+        $base = "Website concept screenshot mood board for \"{$title}\" ({$catLabel} in {$placeLabel}). "
+            ."Concept hint: {$hint}. "
+            .'Clean documentary storefront or product still, navy and blue-gray palette, '
+            .'natural light, no text, no logos, no watermarks, no people faces, no purple neon glow.';
+
+        return (string) apply_filters('mh/featured_image_prompt', $base, $post);
+    }
+
     $excerpt = function_exists(__NAMESPACE__.'\\mh_social_post_excerpt')
         ? mh_social_post_excerpt($post, 24)
         : wp_trim_words(wp_strip_all_tags((string) $post->post_content), 24);
@@ -160,14 +197,14 @@ function mh_featured_image_attach(int $postId, string $source, bool $isLocal = f
 }
 
 /**
- * Generate a new featured image for a post.
+ * Generate a new featured image for a supported post type.
  *
  * @return array{ok: bool, attachment_id?: int, url?: string, prompt?: string, message: string}
  */
 function mh_featured_image_generate(int $postId, string $customPrompt = ''): array
 {
     $post = get_post($postId);
-    if (! $post instanceof \WP_Post || $post->post_type !== 'post') {
+    if (! $post instanceof \WP_Post || ! in_array($post->post_type, mh_featured_image_post_types(), true)) {
         return ['ok' => false, 'message' => __('Post not found.', 'sage')];
     }
 
@@ -187,20 +224,28 @@ function mh_featured_image_generate(int $postId, string $customPrompt = ''): arr
         return $attach;
     }
 
+    $isProject = function_exists(__NAMESPACE__.'\\mh_project_post_type')
+        && $post->post_type === mh_project_post_type();
+    if ($isProject && ! empty($attach['url'])) {
+        update_post_meta($postId, '_mh_project_image', esc_url_raw((string) $attach['url']));
+    }
+
     $attach['prompt'] = $prompt;
 
     return $attach;
 }
 
 add_action('add_meta_boxes', function (): void {
-    add_meta_box(
-        'mh_featured_image_ai',
-        __('Generate featured image', 'sage'),
-        __NAMESPACE__.'\\mh_featured_image_metabox',
-        'post',
-        'side',
-        'high'
-    );
+    foreach (mh_featured_image_post_types() as $postType) {
+        add_meta_box(
+            'mh_featured_image_ai',
+            __('Generate featured image', 'sage'),
+            __NAMESPACE__.'\\mh_featured_image_metabox',
+            $postType,
+            'side',
+            'high'
+        );
+    }
 });
 
 function mh_featured_image_metabox(\WP_Post $post): void
@@ -210,9 +255,15 @@ function mh_featured_image_metabox(\WP_Post $post): void
     $hasAi = function_exists(__NAMESPACE__.'\\mh_devto_ai_token') && mh_devto_ai_token() !== '';
     $thumbId = (int) get_post_thumbnail_id($post);
     $thumbUrl = $thumbId > 0 ? (string) wp_get_attachment_image_url($thumbId, 'medium') : '';
+    $isProject = function_exists(__NAMESPACE__.'\\mh_project_post_type')
+        && $post->post_type === mh_project_post_type();
 
     echo '<div class="mh-featured-ai" id="mh-featured-ai" data-post-id="'.esc_attr((string) $post->ID).'">';
-    echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the title (and optional prompt), uploads it to Media, and sets it as the featured image on this post.', 'sage').'</p>';
+    if ($isProject) {
+        echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the project title and concept fields, uploads it to Media, sets the featured image, and fills the Work card screenshot URL.', 'sage').'</p>';
+    } else {
+        echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the title (and optional prompt), uploads it to Media, and sets it as the featured image on this post.', 'sage').'</p>';
+    }
 
     if ($thumbUrl !== '') {
         echo '<p class="mh-featured-ai__preview"><img src="'.esc_url($thumbUrl).'" alt="" style="max-width:100%;height:auto;border-radius:6px;border:1px solid #d0d5dd"></p>';
@@ -222,7 +273,9 @@ function mh_featured_image_metabox(\WP_Post $post): void
 
     echo '<p><label for="mh-featured-ai-prompt"><strong>'.esc_html__('Prompt override (optional)', 'sage').'</strong></label></p>';
     echo '<textarea id="mh-featured-ai-prompt" class="widefat" rows="4" placeholder="';
-    echo esc_attr__('Leave blank to build from title + excerpt.', 'sage');
+    echo esc_attr($isProject
+        ? __('Leave blank to build from title, category, place, and blurb.', 'sage')
+        : __('Leave blank to build from title + excerpt.', 'sage'));
     echo '"></textarea>';
 
     echo '<p style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px">';
@@ -248,7 +301,7 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
         return;
     }
     $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-    if (! $screen || $screen->post_type !== 'post') {
+    if (! $screen || ! in_array($screen->post_type, mh_featured_image_post_types(), true)) {
         return;
     }
 
@@ -297,6 +350,10 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
       } else if (attId && window.wp && wp.media && wp.media.featuredImage) {
         try { wp.media.featuredImage.set(attId) } catch (e) {}
       }
+      const imageField = document.getElementById('mh_project_image')
+      if (imageField && url) {
+        imageField.value = url
+      }
     } catch (err) {
       setStatus('Network error', true)
     }
@@ -313,6 +370,11 @@ add_action('wp_ajax_mh_featured_image_generate', function (): void {
     }
     if ($postId <= 0 || ! current_user_can('edit_post', $postId)) {
         wp_send_json_error(['message' => __('You cannot edit this post.', 'sage')], 403);
+    }
+
+    $post = get_post($postId);
+    if (! $post instanceof \WP_Post || ! in_array($post->post_type, mh_featured_image_post_types(), true)) {
+        wp_send_json_error(['message' => __('Unsupported post type.', 'sage')], 400);
     }
 
     $prompt = isset($_POST['prompt']) ? sanitize_textarea_field(wp_unslash((string) $_POST['prompt'])) : '';

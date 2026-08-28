@@ -34,11 +34,11 @@ What the 3.x Sage theme does, and where it lives.
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Ridges & Valleys concepts imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); editable concept fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; public singles at `/concept/{slug}/` |
+| Projects CPT | Ridges & Valleys concepts imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); editable concept fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; public singles at `/concept/{slug}/`; **Generate featured image** on the edit screen |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |
-| Featured image AI | Post editor **Generate featured image** (DALL·E 3 → Media Library → set thumbnail); same OpenAI key as DEV.to | `app/featured-image.php` |
+| Featured image AI | Post + **Projects** editor **Generate featured image** (DALL·E 3 → Media Library → set thumbnail; Projects also fill Work card screenshot URL); same OpenAI key as DEV.to | `app/featured-image.php` |
 | Bluesky | Auto-share journal posts on publish (AI or pasted summary + link); `wp mh bluesky-share` | `app/bluesky-share.php` |
 | GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
 | LinkedIn | Hire page profile card; optional `mh_li_token` / `MH_LINKEDIN_TOKEN` for OpenID `/v2/userinfo`; soft OG scrape + field/GitHub fallbacks; share URL helper |
