@@ -35,7 +35,7 @@
     {{ \App\field('work_h1', __('WordPress websites for Gettysburg businesses.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('Studio concepts from Ridges & Valleys — working demonstrations of what a WordPress site can look like for a specific type of shop, tour, inn, or restaurant in Adams County, PA. Every concept is built on a real stack you can take and run.', 'sage')) }}
+    {{ \App\field('work_lede', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
   </p>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
@@ -66,7 +66,7 @@
       <span>every concept</span>
     </div>
     <p class="work-context__note">
-      These are studio concepts built by Ridges &amp; Valleys — real WordPress sites, running on the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the client asks to be featured. These concepts are here so you can see the quality of work without waiting for that. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
+      These are live WordPress demos published at Ridges &amp; Valleys — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
     </p>
   </div>
 </div>
@@ -140,7 +140,7 @@
   </div>
 
   <div class="work-footer-links">
-    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Studio site: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com ↗</a>.', 'sage')) !!}
+    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Concept demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com ↗</a>.', 'sage')) !!}
   </div>
 
 </div>

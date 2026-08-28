@@ -2,6 +2,17 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.22 — 2026-08-28
+
+### Added
+
+- **Projects** custom post type: Ridges & Valleys studio concepts import once on theme load (`mh_projects_cpt_seeded_v1`)
+- wp-admin **Projects** screen: **Show on site** / **Hide from site** row actions, bulk actions, and edit-screen checkbox; only live projects appear on `/projects/` and the home example grid
+
+### Changed
+
+- Ridges & Valleys copy reframed as Gettysburg concept demos (studio brand grows with real projects)
+
 ## 3.1.21 — 2026-08-27
 
 ### Added

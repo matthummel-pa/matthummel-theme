@@ -12,7 +12,7 @@ What the 3.x Sage theme does, and where it lives.
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
-| Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Work | Featured concept, search, type counts, Grid/List, share/copy deep links, Use this concept → contact prefill; **Projects CPT** with per-project “Show on site” from wp-admin | `template-projects.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `mh_project_*()` in `app/portfolio.php` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
@@ -34,6 +34,7 @@ What the 3.x Sage theme does, and where it lives.
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
+| Projects CPT | Ridges & Valleys concepts imported once (`mh_projects_cpt_seeded_v1`); toggle **Show on site** from **Projects** in wp-admin (list row action, bulk action, or edit screen) |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |
@@ -47,9 +48,8 @@ What the 3.x Sage theme does, and where it lives.
 - Page builders, Kadence, theme-options admin
 - Gutenberg pattern library on pages (posts still use the block editor)
 - Fake testimonials or “3x revenue” style landing modules
-- Custom post type for projects (Work is a page + PHP list)
 
-## Editor’s notes (3.0.20 SEO playbook)
+## Editor’s notes (3.1.x Projects CPT)
 
 - Cut the home hero to three sentences and put Gettysburg in the lede (kicker already had it).
 - Services / Work / Contact ledes: city twice across the page, still first person.

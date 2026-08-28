@@ -47,12 +47,12 @@
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 18) !!}</div>
           <div>
-            <p class="now-block__eyebrow">Studio work</p>
-            <h2 class="now-block__title">Building Ridges &amp; Valleys</h2>
+            <p class="now-block__eyebrow">Concept work</p>
+            <h2 class="now-block__title">Ridges &amp; Valleys</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I recently started Ridges & Valleys, a WordPress studio for shops, tours, and inns in Gettysburg and Adams County, PA. I\'m building concept sites that show what a real WordPress site can look like for a specific type of local business — not wireframes or screenshots, but live, working demonstrations.', 'sage')) }}</p>
-        <p>{{ \App\field('now_studio_p2', __('The studio is early. The portfolio is growing. If you run a Gettysburg-area business and want to see what an editable WordPress site looks like for your category, that\'s exactly what I\'m building.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p1', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p2', __('Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
         <a class="h-text-arrow" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
           Visit ridgesandvalleys.com →
         </a>
@@ -68,7 +68,7 @@
             <h2 class="now-block__title">{{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_work_p1', __('Alongside the studio I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')) }}</p>
+        <p>{{ \App\field('now_work_p1', __('I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')) }}</p>
         <p>{{ \App\field('now_work_p2', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')) }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:.65rem;align-items:center">
           <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Say hello</a>
@@ -128,7 +128,7 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Building WordPress concept sites for Gettysburg businesses at Ridges & Valleys', 'sage'),
+            __('Publishing Gettysburg concept sites at Ridges & Valleys — live WordPress demos for shops, tours, and inns', 'sage'),
             __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
@@ -183,9 +183,9 @@
       </div>
 
       <div class="now-sidebar-card">
-        <p class="now-sidebar-card__label">Studio</p>
+        <p class="now-sidebar-card__label">Concept work</p>
         <p class="now-sidebar-card__value">Ridges &amp; Valleys</p>
-        <p class="now-sidebar-card__sub">WordPress studio for Gettysburg businesses</p>
+        <p class="now-sidebar-card__sub">Gettysburg concept demos</p>
         <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">ridgesandvalleys.com →</a>
       </div>
 

@@ -177,7 +177,7 @@ function mh_contact_else_links(): array
         'bluesky' => __('Occasional notes.', 'sage'),
         'reddit' => __('Same handle, when I am there.', 'sage'),
         'rss' => __('New posts, no algorithm.', 'sage'),
-        'globe' => __('Gettysburg studio site.', 'sage'),
+        'globe' => __('Gettysburg concept demos.', 'sage'),
     ];
 
     $links = mh_social_links();
