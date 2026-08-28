@@ -540,6 +540,9 @@ function page_field_map(): array
                 ['work_cta_use', __('Use concept label', 'sage'), 'text', __('Use this concept', 'sage')],
                 ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
                 ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are concept demos, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
+                ['work_empty_h2', __('Empty state heading', 'sage'), 'text', __('Example sites are on the way.', 'sage')],
+                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which Gettysburg concept demos to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')],
+                ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Example sites', 'sage') => [
                 ['work_items', __('Sites', 'sage'), 'repeater', $workItems, [
