@@ -1790,7 +1790,7 @@ function mh_content_with_toc(string $html): array
             $level = (int) $m[1];
             $attrs = $m[2] ?? '';
             $inner = $m[3];
-            $text = trim(wp_strip_all_tags($inner));
+            $text = trim(html_entity_decode(wp_strip_all_tags($inner), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
             if ($text === '') {
                 return $m[0];
             }
