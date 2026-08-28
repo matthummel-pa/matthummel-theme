@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.24 — 2026-08-28
+
+### Added
+
+- Projects admin: full **concept page custom fields** (eyebrow, summary, problem/approach/result, deliverables, metrics, live demo) — edit anytime after import
+- Projects list: **On site** toggle column, sortable **Category** / **Place** / **Date**, filter dropdowns to group by category, place, or on-site status
+- Bulk action **Import concept fields (fill empty)** from bundled JSON; one-time fill for empty fields (`mh_concept_fields_admin_v1`)
+
+### Changed
+
+- Projects list and Work grid default to **newest first**
+
 ## 3.1.23 — 2026-08-28
 
 ### Added

@@ -228,8 +228,22 @@ function mh_seed_concept_pages_v1(): void
     }
 
     mh_import_studio_projects_to_cpt();
+    mh_import_concept_fields_from_seed(false);
 
+    update_option('mh_concept_pages_seeded_v1', true);
+    update_option('mh_concept_rewrite_flushed_v1', false);
+}
+
+/**
+ * Import concept-page custom fields from bundled JSON onto matching project posts.
+ *
+ * @return int Number of projects touched.
+ */
+function mh_import_concept_fields_from_seed(bool $force = false): int
+{
     $seeds = mh_concept_pages_seed_data();
+    $count = 0;
+
     foreach ($seeds as $slug => $seed) {
         if (! is_array($seed)) {
             continue;
@@ -245,11 +259,22 @@ function mh_seed_concept_pages_v1(): void
         if ($posts === []) {
             continue;
         }
-        mh_seed_project_concept_narrative((int) $posts[0], $seed, false);
+        mh_seed_project_concept_narrative((int) $posts[0], $seed, $force);
+        $count++;
     }
 
-    update_option('mh_concept_pages_seeded_v1', true);
-    update_option('mh_concept_rewrite_flushed_v1', false);
+    return $count;
+}
+
+/** Fill any still-empty concept fields (eyebrow, metrics, narrative) from JSON. */
+function mh_seed_concept_fields_admin_v1(): void
+{
+    if (get_option('mh_concept_fields_admin_v1') || wp_installing()) {
+        return;
+    }
+
+    mh_import_concept_fields_from_seed(false);
+    update_option('mh_concept_fields_admin_v1', true);
 }
 
 /** Flush rewrite rules once after making Projects publicly queryable. */
@@ -289,5 +314,6 @@ function mh_gate_concept_page_access(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
+add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
