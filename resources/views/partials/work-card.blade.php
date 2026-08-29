@@ -1,5 +1,10 @@
 @php
-  $shot = \App\mh_studio_project_image_url($p);
+  $shot = ! empty($p['image'])
+    ? (string) $p['image']
+    : \App\mh_studio_project_image_url($p);
+  if ($shot === '' && ! empty($p['post_id'])) {
+    $shot = \App\mh_project_card_image_url((int) $p['post_id']);
+  }
   $slug = (string) ($p['slug'] ?? '');
   $title = (string) ($p['title'] ?? '');
   $conceptUrl = (string) ($p['url'] ?? \App\mh_concept_page_url($slug, isset($p['post_id']) ? (int) $p['post_id'] : null));
