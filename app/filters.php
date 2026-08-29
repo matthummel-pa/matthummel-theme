@@ -155,8 +155,17 @@ function mh_seo_current_post_id(): int
 function mh_seo_document_title(): string
 {
     if (is_singular(mh_project_post_type())) {
+        $post_id = (int) get_queried_object_id();
+        $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
+        if ($pluginTitle === false) {
+            return '';
+        }
+        if ($pluginTitle !== '') {
+            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+        }
+
         $title = trim(get_the_title());
-        $place = trim((string) get_post_meta((int) get_queried_object_id(), '_mh_project_place', true));
+        $place = trim((string) get_post_meta($post_id, '_mh_project_place', true));
         $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
         if ($title === '') {
             return '';
@@ -205,6 +214,32 @@ function mh_seo_clip(string $s, int $max): string
 }
 
 /**
+ * Rank Math / Yoast title or description for a post.
+ *
+ * Returns a plain stored value, false when the stored value still has
+ * plugin variables (let the plugin's already-processed string through),
+ * or an empty string when nothing is set.
+ *
+ * @param  array<int, string>  $keys  Post meta keys to check in order.
+ */
+function mh_seo_plugin_meta(int $post_id, array $keys): string|false
+{
+    foreach ($keys as $key) {
+        $value = trim((string) get_post_meta($post_id, $key, true));
+        if ($value === '') {
+            continue;
+        }
+        if (str_contains($value, '%')) {
+            return false;
+        }
+
+        return $value;
+    }
+
+    return '';
+}
+
+/**
  * Resolved meta description for the current page, clipped to 155 characters.
  *
  * @since 3.1.0
@@ -215,6 +250,14 @@ function mh_seo_meta_description(): string
 {
     if (is_singular(mh_project_post_type())) {
         $post_id = (int) get_queried_object_id();
+        $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);
+        if ($pluginDesc === false) {
+            return '';
+        }
+        if ($pluginDesc !== '') {
+            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+        }
+
         $summary = trim((string) get_post_meta($post_id, '_mh_project_summary', true));
         if ($summary === '') {
             $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));

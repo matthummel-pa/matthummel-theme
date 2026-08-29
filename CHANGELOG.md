@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.26 — 2026-08-29
+
+### Changed
+
+- Concept pages use Rank Math (or Yoast) title and meta description when those fields are set, instead of always overriding them with the constructed `Title — Place | Brand` string
+
 ## 3.1.25 — 2026-08-28
 
 ### Added
