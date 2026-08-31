@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.27 — 2026-08-31
+
+### Changed
+
+- Contact (`/contact/`) and project brief (`/start/`) submissions POST JSON to the n8n CRM webhook (`https://matthummel.app.n8n.cloud/webhook/crm-contact`). `wp_mail` remains a fallback if the webhook fails.
+
 ## 3.1.26 — 2026-08-29
 
 ### Changed

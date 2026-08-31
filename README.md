@@ -7,7 +7,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 | | |
 | --- | --- |
 | **Live site** | [matthummel.com](https://matthummel.com) |
-| **Version** | `3.1.26` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
+| **Version** | `3.1.27` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |
@@ -19,6 +19,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
 
 ```text
+● 2026-08-31  3.1.27   Contact and /start/ forms POST to the n8n CRM webhook
 ● 2026-08-29  3.1.26   Concept pages honor Rank Math / Yoast title and meta description
 ● 2026-08-28  3.1.25   Projects admin: Generate featured image (DALL·E → Media → Work card)
 ● 2026-08-28  3.1.24   Concept custom fields + On site toggles, filters, newest-first Work grid

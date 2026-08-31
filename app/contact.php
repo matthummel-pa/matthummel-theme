@@ -72,7 +72,7 @@ function mh_contact_prefill(string $key, string $default = ''): string
         return $fromDraft;
     }
 
-    $allowedWho = ['developer', 'learning', 'business', 'agency', 'other'];
+    $allowedWho = ['developer', 'recruiter', 'learning', 'business', 'agency', 'other'];
     if ($key === 'who') {
         $who = isset($_GET['who']) ? sanitize_key(wp_unslash($_GET['who'])) : '';
         if (in_array($who, $allowedWho, true)) {
@@ -195,6 +195,98 @@ function mh_contact_else_links(): array
     return $links;
 }
 
+/**
+ * n8n CRM webhook that receives validated contact and discovery submissions.
+ *
+ * Override with MH_CRM_WEBHOOK_URL or the mh_crm_webhook_url filter.
+ *
+ * @since 3.1.27
+ */
+function mh_crm_webhook_url(): string
+{
+    if (defined('MH_CRM_WEBHOOK_URL') && is_string(MH_CRM_WEBHOOK_URL) && MH_CRM_WEBHOOK_URL !== '') {
+        return MH_CRM_WEBHOOK_URL;
+    }
+
+    return (string) apply_filters(
+        'mh_crm_webhook_url',
+        'https://matthummel.app.n8n.cloud/webhook/crm-contact'
+    );
+}
+
+/**
+ * POST a validated form payload to the CRM webhook.
+ *
+ * @since 3.1.27
+ *
+ * @param  array<string, mixed>  $payload
+ */
+function mh_crm_send(array $payload): bool
+{
+    $url = mh_crm_webhook_url();
+    if ($url === '') {
+        return false;
+    }
+
+    $body = array_merge([
+        'site' => home_url('/'),
+        'source' => 'matthummel.com',
+        'submitted_at' => gmdate('c'),
+    ], $payload);
+
+    $json = wp_json_encode($body);
+    if (! is_string($json) || $json === '') {
+        return false;
+    }
+
+    $res = wp_remote_post($url, [
+        'timeout' => 15,
+        'redirection' => 3,
+        'headers' => [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json; charset=utf-8',
+        ],
+        'body' => $json,
+    ]);
+
+    if (is_wp_error($res)) {
+        error_log('mh_crm_send: '.$res->get_error_message());
+
+        return false;
+    }
+
+    $code = (int) wp_remote_retrieve_response_code($res);
+    if ($code < 200 || $code >= 300) {
+        error_log('mh_crm_send: HTTP '.$code);
+
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Deliver a form payload to n8n, then fall back to wp_mail if the webhook fails.
+ *
+ * @since 3.1.27
+ *
+ * @param  array<string, mixed>  $payload
+ */
+function mh_crm_deliver(array $payload, string $mailSubject, string $mailBody, string $replyName, string $replyEmail): bool
+{
+    if (mh_crm_send($payload)) {
+        return true;
+    }
+
+    $to = get_option('admin_email');
+    $headers = [];
+    if (is_email($replyEmail)) {
+        $headers[] = 'Reply-To: '.$replyName.' <'.$replyEmail.'>';
+    }
+
+    return (bool) wp_mail($to, '[matthummel.com] '.$mailSubject, $mailBody, $headers);
+}
+
 /** Handle the contact form submission (template-contact.blade.php). */
 add_action('init', function () {
     $postedAction = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : '';
@@ -237,9 +329,10 @@ add_action('init', function () {
     $whoKey = sanitize_key(wp_unslash($_POST['mh_who'] ?? ''));
     $whoLabels = [
         'developer' => __('A developer', 'sage'),
-        'learning' => __('Learning the web', 'sage'),
-        'business' => __('A shop or team', 'sage'),
-        'agency' => __('A marketing agency', 'sage'),
+        'recruiter' => __('A recruiter or hiring manager', 'sage'),
+        'learning' => __('Someone learning web development', 'sage'),
+        'business' => __('A shop or small business', 'sage'),
+        'agency' => __('A marketing or design agency', 'sage'),
         'other' => __('Something else', 'sage'),
     ];
     $who = $whoLabels[$whoKey] ?? '';
@@ -268,16 +361,29 @@ add_action('init', function () {
         $redirect('error');
     }
 
-    $to = get_option('admin_email');
     $mailSubject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
     $body = "Name: {$name}\nEmail: {$email}";
     if ($who !== '') {
         $body .= "\nWho: {$who}";
     }
     $body .= "\n\n{$message}";
-    $headers = ['Reply-To: '.$name.' <'.$email.'>'];
 
-    wp_mail($to, '[matthummel.com] '.$mailSubject, $body, $headers);
+    mh_crm_deliver(
+        [
+            'form' => 'contact',
+            'name' => $name,
+            'email' => $email,
+            'who' => $who,
+            'who_key' => $whoKey,
+            'subject' => $subject,
+            'message' => $message,
+            'page' => $back,
+        ],
+        $mailSubject,
+        $body,
+        $name,
+        $email
+    );
     delete_transient(mh_contact_draft_key());
 
     $redirect('ok');
@@ -503,14 +609,40 @@ add_action('init', function () {
         $lines[] = "Other notes:\n{$notes}";
     }
 
-    $to = get_option('admin_email');
     $mailSubject = sprintf(
         __('Project brief — %s', 'sage'),
         $company !== '' ? $company : $name
     );
-    $headers = ['Reply-To: '.$name.' <'.$email.'>'];
 
-    wp_mail($to, '[matthummel.com] '.$mailSubject, implode("\n", $lines), $headers);
+    mh_crm_deliver(
+        [
+            'form' => 'discovery',
+            'name' => $name,
+            'email' => $email,
+            'company' => $company,
+            'role' => $roleKey !== '' ? $labels['role'][$roleKey] : '',
+            'role_key' => $roleKey,
+            'project_type' => $labels['project_type'][$typeKey],
+            'project_type_key' => $typeKey,
+            'client' => $client,
+            'url' => $urlRaw,
+            'need' => $need,
+            'success' => $success,
+            'audience' => $audience,
+            'timeline' => $timelineKey !== '' ? $labels['timeline'][$timelineKey] : '',
+            'timeline_key' => $timelineKey,
+            'editors' => $editors,
+            'stack' => $stack,
+            'notes' => $notes,
+            'message' => $need,
+            'subject' => $mailSubject,
+            'page' => $back,
+        ],
+        $mailSubject,
+        implode("\n", $lines),
+        $name,
+        $email
+    );
     delete_transient(mh_discovery_draft_key());
 
     $redirect('ok');

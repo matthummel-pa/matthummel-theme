@@ -422,7 +422,7 @@ All `$_POST` / `$_GET` access is wrapped in `wp_unslash()` + `sanitize_*()` befo
 
 ### Key points
 
-- Contact form: nonce (`mh_contact_nonce`), honeypot (`mh_hp`), `sanitize_text_field()` / `sanitize_email()` / `sanitize_textarea_field()` on all inputs, `wp_mail()` for sending
+- Contact + discovery forms: nonce (`mh_contact_nonce` / `mh_discovery_nonce`), honeypot (`mh_hp`), `sanitize_text_field()` / `sanitize_email()` / `sanitize_textarea_field()` on all inputs, POST JSON to the n8n CRM webhook (`mh_crm_send()`), `wp_mail()` fallback if the webhook fails
 - Theme updater: `update_themes` capability check before any action; POST blocks use `if/elseif` to prevent double-execution
 - Template output: all dynamic values use `{{ }}` (Blade auto-escapes) or explicit `esc_html()` / `esc_attr()` / `esc_url()`; `{!! !!}` only for trusted, already-escaped HTML (WP core functions, `json_encode()` with `JSON_HEX_TAG`)
 - Search input: `esc_attr(get_search_query())` in the form value attribute
