@@ -1,0 +1,36 @@
+name: Assemble concept sidebar files
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/sidebar-parts/**'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/product-landing-pages-f168
+      - name: Assemble and commit
+        run: |
+          python3 << 'PY'
+          import base64, pathlib
+          root = pathlib.Path('.github/sidebar-parts')
+          def load(prefix, n):
+              return base64.b64decode(''.join((root/f'{prefix}.{i}').read_text() for i in range(n)))
+          blade = load('blade', 4)
+          php = load('sidebar', 5)
+          pathlib.Path('resources/views/partials/content-single-project.blade.php').write_bytes(blade)
+          pathlib.Path('app/concept-sidebar.php').write_bytes(php)
+          assert b'concept-aside-card--facts' in blade
+          assert b'mh_project_sidebar_sync_from_github' in php
+          print('blade', len(blade), 'php', len(php))
+          PY
+          git config user.name "matt-hummel"
+          git config user.email "matt@matthummel.com"
+          git add resources/views/partials/content-single-project.blade.php app/concept-sidebar.php
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "Complete concept sidebar Blade and PHP module"
+          git push origin HEAD:cursor/product-landing-pages-f168
