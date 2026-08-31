@@ -118,7 +118,7 @@ def main() -> int:
         else:
             log("services.php missing/empty")
 
-        for rel in ("debug.log", "uploads/debug.log"):
+        for rel in ("mh-last-fatal.txt", "debug.log", "uploads/debug.log", "themes/matthummel/error_log"):
             path = join_ftp(wp_content, rel)
             raw = download(ftp, path, limit=40_000)
             if not raw:
@@ -126,16 +126,21 @@ def main() -> int:
                 continue
             text = raw.decode("utf-8", "replace")
             log(f"=== {path} (tail) ===")
-            # Prefer fatal lines
             lines = text.splitlines()
-            fatals = [ln for ln in lines if "Fatal" in ln or "Heroicons" in ln or "Uncaught" in ln]
+            fatals = [ln for ln in lines if "Fatal" in ln or "Heroicons" in ln or "Uncaught" in ln or "type=" in ln]
             if fatals:
                 log("fatal lines:")
-                for ln in fatals[-15:]:
+                for ln in fatals[-20:]:
                     log(ln)
-            log("last 30 lines:")
-            for ln in lines[-30:]:
+            log("last 40 lines:")
+            for ln in lines[-40:]:
                 log(ln)
+
+        # Confirm key theme files exist after FTP
+        for rel in ("vendor/autoload.php", "app/shop.php", "public/build/manifest.json"):
+            path = join_ftp(theme, rel)
+            raw = download(ftp, path, limit=200)
+            log(f"{rel}: {'ok '+str(len(raw))+'b' if raw else 'MISSING'}")
     finally:
         try:
             ftp.quit()
