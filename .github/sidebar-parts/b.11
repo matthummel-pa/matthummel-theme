@@ -1,0 +1,19 @@
+}</p>
+              </div>
+            </article>
+          @endforeach
+        </div>
+      </section>
+    @endif
+  </div>
+
+  @include('partials.cta-band', [
+    'kicker' => $ctaKicker,
+    'title' => $ctaTitle,
+    'text' => $ctaText,
+    'label' => $ctaLabel,
+    'href' => $ctaHref,
+    'secondary' => $isProduct ? __('Hire me instead', 'sage') : __('See services', 'sage'),
+    'secondaryHref' => $isProduct ? $useUrl : home_url('/services/'),
+  ])
+</article>
