@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.28 — 2026-08-31
+
+### Fixed
+
+- Project / concept screenshots: **Featured image** now wins over the seeded Screenshot file meta, so setting or regenerating a featured image updates Work cards, home, and `/concept/` pages
+
 ## 3.1.27 — 2026-08-31
 
 ### Changed
