@@ -1,0 +1,50 @@
+>
+    @endif
+
+    @if ($sidebar['screenshots'] !== [])
+      <div class="concept-gallery" aria-label="{{ __('More screenshots', 'sage') }}">
+        @foreach ($sidebar['screenshots'] as $shotRow)
+          <figure>
+            <img
+              src="{{ esc_url($shotRow[0]) }}"
+              alt="{{ esc_attr($shotRow[1] !== '' ? $shotRow[1] : sprintf(__('%s screenshot', 'sage'), $title)) }}"
+              width="800"
+              height="450"
+              loading="lazy"
+              decoding="async"
+            >
+            @if ($shotRow[1] !== '')
+              <figcaption>{{ $shotRow[1] }}</figcaption>
+            @endif
+          </figure>
+        @endforeach
+      </div>
+    @endif
+
+    @if ($story['metrics'] !== [])
+      <div class="concept-metrics" role="list">
+        @foreach ($story['metrics'] as $metric)
+          <div class="concept-metric" role="listitem">
+            <strong>{{ $metric[0] }}</strong>
+            <span>{{ $metric[1] }}</span>
+          </div>
+        @endforeach
+      </div>
+    @endif
+
+    <div class="concept-grid">
+      <div class="concept-main">
+        @if ($story['benefits'] !== [])
+          <section class="concept-section" aria-labelledby="concept-benefits">
+            <h2 id="concept-benefits">{{ __('Why teams pick it', 'sage') }}</h2>
+            <ul class="concept-list concept-list--benefits">
+              @foreach ($story['benefits'] as $item)
+                <li>{{ $item }}</li>
+              @endforeach
+            </ul>
+          </section>
+        @endif
+
+        @if ($story['challenge'] !== '')
+          <section class="concept-section" aria-labelledby="concept-challenge">
+            <h2 id="concept-chal
