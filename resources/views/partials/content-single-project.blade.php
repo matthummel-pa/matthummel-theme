@@ -1,4 +1,91 @@
-<�s�D` $detailRows[] = [__('Version', 'sage'), $sidebar['version'], $sidebar['release_url']];
+{{-- Single Project → concept page or product landing (/concept/{slug}/) --}}
+@php
+  $postId = (int) get_the_ID();
+  $card = \App\mh_project_post_to_card(get_post($postId));
+  $story = \App\mh_project_concept_narrative($postId);
+  $title = (string) ($card['title'] ?? get_the_title());
+  $shot = (string) ($card['image'] ?? '');
+  $cat = (string) ($card['cat'] ?? '');
+  $place = (string) ($card['place'] ?? '');
+  $tech = $card['tech'] ?? [];
+  $demo = (string) ($story['demo'] !== '' ? $story['demo'] : ($card['demo'] ?? ''));
+  $useUrl = \App\mh_work_contact_url($card);
+  $projectsUrl = home_url('/projects/');
+  $shopUrl = function_exists('wc_get_page_permalink') ? (string) wc_get_page_permalink('shop') : home_url('/shop/');
+  $related = \App\mh_related_concept_cards($card, 3);
+  $summary = (string) ($story['summary'] !== '' ? $story['summary'] : ($card['blurb'] ?? ''));
+  $isProduct = ! empty($story['is_product']);
+  $productType = (string) ($story['product_type'] ?? 'concept');
+  $product = is_array($story['product'] ?? null) ? $story['product'] : null;
+  $isTheme = $productType === 'theme';
+  $isPlugin = $productType === 'plugin';
+
+  if ($isTheme) {
+    $defaultEyebrow = __('WordPress theme', 'sage');
+    $primaryLabel = ! empty($product['is_free']) ? __('Get the theme', 'sage') : __('Buy the theme', 'sage');
+    $hireLabel = __('Customize this theme', 'sage');
+    $shotCaption = __('Live theme demo — brand it under Customize → Identity.', 'sage');
+    $asideCtaTitle = __('Get Acreline for your office', 'sage');
+    if ($title !== '') {
+      $asideCtaTitle = sprintf(__('Get %s for your office', 'sage'), $title);
+    }
+    $asideNote = __('Instant download after checkout. Need it customized for your brokerage? Hire me to ship the full build.', 'sage');
+    $includedHeading = __('What’s in the theme', 'sage');
+    $problemHeading = __('Built for this niche', 'sage');
+    $approachHeading = __('How the theme works', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More themes & concepts', 'sage');
+    $crumbBrowse = __('All work', 'sage');
+    $ctaKicker = __('Theme shop', 'sage');
+    $ctaTitle = sprintf(__('Ready for %s?', 'sage'), $title);
+    $ctaText = __('Buy the theme for a self-serve install, or hire me to customize it for your land office.', 'sage');
+    $ctaLabel = $primaryLabel;
+    $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
+  } elseif ($isPlugin) {
+    $defaultEyebrow = __('WordPress plugin', 'sage');
+    $primaryLabel = ! empty($product['is_free']) ? __('Download the plugin', 'sage') : __('Buy the plugin', 'sage');
+    $hireLabel = __('Need custom plugin work?', 'sage');
+    $shotCaption = __('Plugin product page — install, activate, done.', 'sage');
+    $asideCtaTitle = sprintf(__('Get %s', 'sage'), $title);
+    $asideNote = __('Digital download after checkout. Want a custom feature or support retainer? Say hello.', 'sage');
+    $includedHeading = __('What’s included', 'sage');
+    $problemHeading = __('The problem it solves', 'sage');
+    $approachHeading = __('How it works', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More products', 'sage');
+    $crumbBrowse = __('All work', 'sage');
+    $ctaKicker = __('Plugin shop', 'sage');
+    $ctaTitle = sprintf(__('Get %s', 'sage'), $title);
+    $ctaText = __('Download the plugin, or hire me to extend it for your stack.', 'sage');
+    $ctaLabel = $primaryLabel;
+    $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
+  } else {
+    $defaultEyebrow = __('Concept site', 'sage');
+    $primaryLabel = __('Use this concept', 'sage');
+    $hireLabel = __('Say hello', 'sage');
+    $shotCaption = __('Example layout — starting point for a real Gettysburg shop build.', 'sage');
+    $asideCtaTitle = __('Want this for your shop?', 'sage');
+    $asideNote = __('This is a concept example on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
+    $includedHeading = __('Included in this concept', 'sage');
+    $problemHeading = __('The problem', 'sage');
+    $approachHeading = __('How I shaped it', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More concepts', 'sage');
+    $crumbBrowse = __('All concepts', 'sage');
+    $ctaKicker = __('Work with me', 'sage');
+    $ctaTitle = sprintf(__('Like %s?', 'sage'), $title);
+    $ctaText = __('Say which concept fits your shop and what you’d change. I usually reply within a day.', 'sage');
+    $ctaLabel = __('Say hello', 'sage');
+    $ctaHref = $useUrl;
+  }
+
+  $eyebrow = (string) ($story['eyebrow'] !== '' ? $story['eyebrow'] : $defaultEyebrow);
+  $buyUrl = is_array($product) ? (string) ($product['add_to_cart_url'] ?? '') : '';
+  $pageClass = $isProduct ? 'concept-page concept-page--product concept-page--'.$productType : 'concept-page';
+  $sidebar = \App\mh_project_sidebar($postId);
+  $detailRows = [];
+  if ($sidebar['version'] !== '') {
+    $detailRows[] = [__('Version', 'sage'), $sidebar['version'], $sidebar['release_url']];
   }
   if ($sidebar['compatible'] !== '') {
     $detailRows[] = [__('Compatible with', 'sage'), $sidebar['compatible'], ''];
@@ -119,7 +206,7 @@
     @endif
 
     <div class="concept-grid">
-        <div class="concept-main">
+      <div class="concept-main">
         @if ($story['benefits'] !== [])
           <section class="concept-section" aria-labelledby="concept-benefits">
             <h2 id="concept-benefits">{{ __('Why teams pick it', 'sage') }}</h2>
@@ -133,7 +220,55 @@
 
         @if ($story['challenge'] !== '')
           <section class="concept-section" aria-labelledby="concept-challenge">
-            <h2 id="concept-icker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>
+            <h2 id="concept-challenge">{{ $problemHeading }}</h2>
+            <p>{{ $story['challenge'] }}</p>
+          </section>
+        @endif
+
+        @if ($story['approach'] !== '')
+          <section class="concept-section" aria-labelledby="concept-approach">
+            <h2 id="concept-approach">{{ $approachHeading }}</h2>
+            <p>{{ $story['approach'] }}</p>
+          </section>
+        @endif
+
+        @if ($story['result'] !== '')
+          <section class="concept-section" aria-labelledby="concept-result">
+            <h2 id="concept-result">{{ $resultHeading }}</h2>
+            <p>{{ $story['result'] }}</p>
+          </section>
+        @endif
+
+        @if ($story['deliverables'] !== [])
+          <section class="concept-section" aria-labelledby="concept-deliverables">
+            <h2 id="concept-deliverables">{{ $includedHeading }}</h2>
+            <ul class="concept-list">
+              @foreach ($story['deliverables'] as $item)
+                <li>{{ $item }}</li>
+              @endforeach
+            </ul>
+          </section>
+        @endif
+
+        @if ($story['faq'] !== [])
+          <section class="concept-section concept-faq" aria-labelledby="concept-faq">
+            <h2 id="concept-faq">{{ __('FAQ', 'sage') }}</h2>
+            <div class="concept-faq__list">
+              @foreach ($story['faq'] as $pair)
+                <details class="concept-faq__item">
+                  <summary>{{ $pair[0] }}</summary>
+                  <p>{{ $pair[1] }}</p>
+                </details>
+              @endforeach
+            </div>
+          </section>
+        @endif
+      </div>
+
+      <aside class="concept-aside" aria-label="{{ $isProduct ? __('Buy details', 'sage') : __('Concept details', 'sage') }}">
+        @if ($isProduct && is_array($product))
+          <div class="concept-aside-card concept-aside-card--buy">
+            <p class="concept-buy-kicker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>
             <p class="concept-buy-price">{!! $product['price_html'] !!}</p>
             <p class="concept-buy-note">
               @if (! empty($product['is_free']))
