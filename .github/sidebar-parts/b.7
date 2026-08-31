@@ -1,0 +1,30 @@
+oncept details', 'sage') }}">
+        @if ($isProduct && is_array($product))
+          <div class="concept-aside-card concept-aside-card--buy">
+            <p class="concept-buy-kicker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>
+            <p class="concept-buy-price">{!! $product['price_html'] !!}</p>
+            <p class="concept-buy-note">
+              @if (! empty($product['is_free']))
+                {{ __('Free digital download — checkout captures your email for updates.', 'sage') }}
+              @else
+                {{ __('One-time purchase · Instant download · Updates via your account', 'sage') }}
+              @endif
+            </p>
+            @if ($buyUrl !== '')
+              <a class="btn" href="{{ esc_url($buyUrl) }}">{{ $primaryLabel }}</a>
+            @endif
+            @if ($demo !== '')
+              <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+            @endif
+            <a class="btn btn-outline" href="{{ esc_url($useUrl) }}">{{ $hireLabel }}</a>
+          </div>
+        @endif
+
+        @if ($detailRows !== [] || $sidebar['files_included'] !== [] || $sidebar['docs'] !== [] || $sidebar['github'] !== '')
+          <div class="concept-aside-card concept-aside-card--facts">
+            <h2 class="concept-aside-title">{{ $isTheme ? __('Theme details', 'sage') : ($isPlugin ? __('Plugin details', 'sage') : __('Concept details', 'sage')) }}</h2>
+            @if ($detailRows !== [])
+              <dl class="concept-fact-list">
+                @foreach ($detailRows as $row)
+                  <div class="concept-fact">
+    
