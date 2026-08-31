@@ -172,6 +172,7 @@ jobs:
           FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
           FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
+          LIVE_URL: https://matthummel.com/
         run: python3 .github/scripts/siteground-ftp-clear-acorn-cache.py
 
       - name: Install fatal probe MU-plugin and hit live site

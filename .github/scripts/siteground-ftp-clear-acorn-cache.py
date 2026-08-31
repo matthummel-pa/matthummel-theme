@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""Delete stale Acorn package manifests over SiteGround FTP.
+"""Replace stale Acorn package manifests over SiteGround FTP.
 
-Theme zip / FTP deploys overwrite wp-content/themes/matthummel/ but leave
-wp-content/cache/acorn alone. A packages.php that still lists a removed
-Composer provider (e.g. Blade Heroicons) fatals every front-end request.
+Theme zip / FTP deploys leave wp-content/cache/acorn alone. A packages.php that
+still lists a removed Composer provider fatals every request. Deleting the
+manifests is not enough when PHP cannot recreate them (permissions / open_basedir).
 
-Usage (CI): set FTP_HOST, FTP_USER, FTP_PASS, and DEPLOY_DIR (theme path).
-Deletes:
-  <wp-content>/cache/acorn/framework/cache/packages.php
-  <wp-content>/cache/acorn/framework/cache/services.php
+This script uploads known-good packages.php + services.php from
+.github/fixtures/acorn-cache/ (no Blade Heroicons).
 """
 
 from __future__ import annotations
 
 import ftplib
+import io
 import os
 import socket
 import sys
+from pathlib import Path
 
 
 def log(msg: str) -> None:
@@ -65,7 +65,6 @@ def join_ftp(*parts: str) -> str:
 
 
 def wp_content_from_theme_dir(theme_dir: str) -> str:
-    """themes/matthummel → wp-content (absolute FTP path)."""
     path = theme_dir.rstrip("/")
     needle = "wp-content/themes/"
     idx = path.find(needle)
@@ -76,41 +75,69 @@ def wp_content_from_theme_dir(theme_dir: str) -> str:
     raise RuntimeError(f"Could not derive wp-content from theme dir: {theme_dir}")
 
 
-def try_delete(ftp: ftplib.FTP, path: str) -> bool:
+def try_delete(ftp: ftplib.FTP, path: str) -> None:
     try:
         ftp.delete(path)
         log(f"Deleted {path}")
-        return True
     except ftplib.error_perm as exc:
         msg = str(exc)
         if "550" in msg or "not found" in msg.lower() or "no such" in msg.lower():
-            log(f"Skip (missing): {path}")
-            return False
-        log(f"Could not delete {path}: {exc}")
-        return False
+            log(f"Skip delete (missing): {path}")
+        else:
+            log(f"Could not delete {path}: {exc}")
+
+
+def upload(ftp: ftplib.FTP, remote: str, data: bytes) -> None:
+    ftp.storbinary(f"STOR {remote}", io.BytesIO(data))
+    log(f"Uploaded {remote} ({len(data)} bytes)")
 
 
 def main() -> int:
     deploy_dir = (os.environ.get("DEPLOY_DIR") or os.environ.get("FTP_HINT") or "").strip()
     if not deploy_dir:
-        log("DEPLOY_DIR / FTP_HINT empty — nothing to clear")
+        log("DEPLOY_DIR / FTP_HINT empty — nothing to seed")
         return 0
+
+    fixtures = Path(os.environ.get("ACORN_FIXTURE_DIR") or ".github/fixtures/acorn-cache")
+    packages = fixtures / "packages.php"
+    services = fixtures / "services.php"
+    if not packages.is_file() or not services.is_file():
+        log(f"Missing fixtures in {fixtures}")
+        return 1
 
     ftp = connect()
     try:
         wp_content = wp_content_from_theme_dir(deploy_dir)
         cache_dir = join_ftp(wp_content, "cache/acorn/framework/cache")
         log(f"Acorn cache dir: {cache_dir}")
-        deleted = 0
+
         for name in ("packages.php", "services.php"):
-            if try_delete(ftp, join_ftp(cache_dir, name)):
-                deleted += 1
-        log(f"Cleared {deleted} Acorn manifest file(s)")
+            try_delete(ftp, join_ftp(cache_dir, name))
+
+        upload(ftp, join_ftp(cache_dir, "packages.php"), packages.read_bytes())
+        upload(ftp, join_ftp(cache_dir, "services.php"), services.read_bytes())
+        log("Seeded known-good Acorn manifests")
     finally:
         try:
             ftp.quit()
         except Exception:  # noqa: BLE001
             ftp.close()
+
+    # Verify the front end after seeding
+    import time
+    import urllib.request
+
+    url = os.environ.get("LIVE_URL", "https://matthummel.com/")
+    for i in range(1, 4):
+        try:
+            req = urllib.request.Request(url + f"?mh_seed={i}", headers={"User-Agent": "mh-acorn-seed/1.0"})
+            with urllib.request.urlopen(req, timeout=45) as resp:
+                log(f"hit {url} attempt {i}: HTTP {resp.status}")
+                if resp.status == 200:
+                    break
+        except Exception as exc:  # noqa: BLE001
+            log(f"hit {url} attempt {i}: {type(exc).__name__}: {exc}")
+        time.sleep(2)
 
     return 0
 

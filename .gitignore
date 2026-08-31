@@ -9,6 +9,8 @@
 !.github/workflows/**
 !.github/scripts/
 !.github/scripts/**
+!.github/fixtures/
+!.github/fixtures/**
 
 # Sage / Node / Composer
 /node_modules

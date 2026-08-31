@@ -118,7 +118,13 @@ def main() -> int:
         else:
             log("services.php missing/empty")
 
-        for rel in ("mh-last-fatal.txt", "debug.log", "uploads/debug.log", "themes/matthummel/error_log"):
+        for rel in (
+            "mh-last-fatal.txt",
+            "debug.log",
+            "uploads/debug.log",
+            "themes/matthummel/mh-last-fatal.txt",
+            "themes/matthummel/error_log",
+        ):
             path = join_ftp(wp_content, rel)
             raw = download(ftp, path, limit=40_000)
             if not raw:
