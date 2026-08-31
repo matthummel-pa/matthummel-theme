@@ -266,6 +266,16 @@ function updater_pull(): array
         wp_clean_themes_cache();
     }
 
+    // Acorn package manifests live outside the theme; drop them so a removed
+    // Composer provider cannot white-screen the front end after install.
+    foreach (['packages.php', 'services.php'] as $mhAcornManifest) {
+        $mhAcornPath = WP_CONTENT_DIR.'/cache/acorn/framework/cache/'.$mhAcornManifest;
+        if (is_file($mhAcornPath)) {
+            wp_delete_file($mhAcornPath);
+        }
+    }
+    unset($mhAcornManifest, $mhAcornPath);
+
     $sha = substr((string) ($release['target_commitish'] ?? ''), 0, 7);
     $when = (string) ($release['published_at'] ?? '');
 

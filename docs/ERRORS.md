@@ -51,6 +51,7 @@ tail -f ~/public_html/wp-content/debug.log
 | `Class "App\..." not found` | Composer autoload out of date | `composer dump-autoload` |
 | `View [partials.xxx] not found` | Partial missing or typo in file name | Check `resources/views/partials/` — file names must use dashes, not underscores |
 | `502 Bad Gateway` on first page load after deploy | Acorn config cache stale | `wp acorn config:clear && wp acorn view:clear` |
+| Critical error / white screen on every URL (incl. `wp-login.php`) | Stale `wp-content/cache/acorn/framework/cache/packages.php` still lists a removed provider (e.g. `BladeUI\Heroicons\…`) | Delete `packages.php` and `services.php` in that folder (Site Tools → File Manager), or redeploy — `functions.php` self-heals missing providers, and deploy FTP clears those two files |
 
 ---
 
