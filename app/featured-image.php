@@ -54,8 +54,8 @@ function mh_featured_image_prompt(\WP_Post $post, string $custom = ''): string
         $catLabel = $cat !== '' ? $cat : 'local business';
         $placeLabel = $place !== '' ? $place : 'Gettysburg, PA';
 
-        $base = "Website concept screenshot mood board for \"{$title}\" ({$catLabel} in {$placeLabel}). "
-            ."Concept hint: {$hint}. "
+        $base = "Website project screenshot mood board for \"{$title}\" ({$catLabel} in {$placeLabel}). "
+            ."Project hint: {$hint}. "
             .'Clean documentary storefront or product still, navy and blue-gray palette, '
             .'natural light, no text, no logos, no watermarks, no people faces, no purple neon glow.';
 
@@ -260,7 +260,7 @@ function mh_featured_image_metabox(\WP_Post $post): void
 
     echo '<div class="mh-featured-ai" id="mh-featured-ai" data-post-id="'.esc_attr((string) $post->ID).'">';
     if ($isProject) {
-        echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the project title and concept fields, uploads it to Media, sets the featured image, and fills the Work card screenshot URL.', 'sage').'</p>';
+        echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the project title and project fields, uploads it to Media, sets the featured image, and fills the Work card screenshot URL.', 'sage').'</p>';
     } else {
         echo '<p class="description">'.esc_html__('Creates a new DALL·E image from the title (and optional prompt), uploads it to Media, and sets it as the featured image on this post.', 'sage').'</p>';
     }

@@ -100,12 +100,12 @@ function mh_contact_prefill(string $key, string $default = ''): string
 
     return match ($key) {
         'who' => 'business',
-        'subject' => sprintf(__('Use the %s concept', 'sage'), $title),
+        'subject' => sprintf(__('Use the %s project', 'sage'), $title),
         'message' => implode("\n", array_values(array_filter([
-            sprintf(__('I would like to use the “%s” concept for my site.', 'sage'), $title),
+            sprintf(__('I would like to use the “%s” project for my site.', 'sage'), $title),
             '',
             sprintf(__('Project on this site: %s', 'sage'), $share),
-            $concept !== '' ? sprintf(__('Concept page: %s', 'sage'), $concept) : '',
+            $concept !== '' ? sprintf(__('Ridges & Valleys page: %s', 'sage'), $concept) : '',
         ]))),
         default => $default,
     };
@@ -177,7 +177,7 @@ function mh_contact_else_links(): array
         'bluesky' => __('Occasional notes.', 'sage'),
         'reddit' => __('Same handle, when I am there.', 'sage'),
         'rss' => __('New posts, no algorithm.', 'sage'),
-        'globe' => __('Gettysburg concept demos.', 'sage'),
+        'globe' => __('Gettysburg WordPress demos.', 'sage'),
     ];
 
     $links = mh_social_links();

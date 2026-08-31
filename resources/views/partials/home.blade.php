@@ -632,11 +632,11 @@
           {{ \App\field('home_work_h2', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">
-        <span class="h-work-count">{{ $totalProjects }} concepts</span>
+        <span class="h-work-count">{{ $totalProjects }} projects</span>
         <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all →</a>
       </div>
     </div>
@@ -649,7 +649,7 @@
         <div class="h-work-featured__img">
           <img
             src="{{ esc_url($fp['image']) }}"
-            alt="{{ esc_attr($fp['title']) }} — {{ esc_attr($fp['cat']) }} website concept for {{ esc_attr($fp['place']) }}"
+            alt="{{ esc_attr($fp['title']) }} — {{ esc_attr($fp['cat']) }} website project for {{ esc_attr($fp['place']) }}"
             width="1200"
             height="630"
             loading="eager"
@@ -673,10 +673,10 @@
         <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
         <div class="h-work-featured__actions">
           <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">
-            View concept
+            View project
           </a>
           <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}?cat={{ rawurlencode((string) ($fp['cat'] ?? '')) }}">
-            See all {{ strtolower($fp['cat']) }} concepts →
+            See all {{ strtolower($fp['cat']) }} projects →
           </a>
         </div>
         @if (! empty($fp['tech']))
@@ -700,12 +700,12 @@
           @php
             $cardHref = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
           @endphp
-          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}" aria-label="View {{ esc_attr($p['title']) }} concept">
+          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}" aria-label="View {{ esc_attr($p['title']) }} project">
             @if (! empty($p['image']))
               <div class="h-work-card-v2__img">
                 <img
                   src="{{ esc_url($p['image']) }}"
-                  alt="{{ esc_attr($p['title']) }} — {{ esc_attr($p['cat']) }} website concept, {{ esc_attr($p['place']) }}"
+                  alt="{{ esc_attr($p['title']) }} — {{ esc_attr($p['cat']) }} website project, {{ esc_attr($p['place']) }}"
                   width="640"
                   height="360"
                   loading="lazy"
@@ -738,7 +738,7 @@
             @endif
             <div class="h-work-card-v2__links">
               <a class="h-work-cta-link" href="{{ $cardHref }}">
-                View concept →
+                View project →
               </a>
             </div>
           </div>
@@ -750,8 +750,8 @@
 
     {{-- Bottom CTA bar --}}
     <div class="h-work-cta-bar">
-      <p>Concepts for Gettysburg tours, inns, shops, restaurants, and real estate agencies.</p>
-      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concepts</a>
+      <p>Projects for Gettysburg tours, inns, shops, restaurants, and real estate agencies.</p>
+      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} projects</a>
     </div>
 
   </div>

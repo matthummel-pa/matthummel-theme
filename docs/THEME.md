@@ -31,7 +31,7 @@ A personal portfolio and professional service site for Matt Hummel — WordPress
 
 | Audience | What they come for |
 |---|---|
-| **Shops and local businesses** | See concept sites, understand what WordPress can look like for their business type, start a project |
+| **Shops and local businesses** | See example projects, understand what WordPress can look like for their business type, start a project |
 | **Agencies and developers** | Evaluate technical skills, review open-source code, discuss overflow work |
 | **Recruiters and hiring managers** | Review experience, stack, and availability for full-time or contract roles |
 
@@ -113,7 +113,7 @@ All tokens are CSS custom properties defined in `resources/css/app.css` using `@
 | `/about/` | `template-about.blade.php` | Background, story, availability |
 | `/services/` | `template-services.blade.php` | Service offerings, process, FAQ |
 | `/hire/` | `template-hire.blade.php` | Focused hire-me conversion page |
-| `/projects/` | `template-projects.blade.php` | Studio concept site portfolio |
+| `/projects/` | `template-projects.blade.php` | Studio project portfolio |
 | `/code/` | `template-code.blade.php` | GitHub showcase, resume, skills |
 | `/blog/` | `index.blade.php` | Journal / blog listing |
 | `/contact/` | `template-contact.blade.php` | Contact form |
@@ -195,7 +195,7 @@ matthummel/
 │   │   └── code-blocks.css  # VS Code Dark+ syntax highlighting
 │   ├── images/
 │   │   ├── matt-hummel.jpg  # Profile photo
-│   │   └── work/            # Concept site screenshots (16 images)
+│   │   └── work/            # Project screenshots (16 images)
 │   ├── js/
 │   │   ├── app.js           # Menu, progress bar, TOC spy, comments, share buttons
 │   │   ├── code-blocks.js   # highlight.js, copy button, VS Code window chrome
@@ -212,7 +212,7 @@ matthummel/
 │       │   ├── content.blade.php       # Blog post card (listing)
 │       │   ├── content-single.blade.php # Single post layout (hero, body, sidebar, CTA)
 │       │   ├── post-sidebar.blade.php   # Post sidebar (TOC, author, popular, hire CTA)
-│       │   ├── work-card.blade.php      # Project concept card
+│       │   ├── work-card.blade.php      # Project card
 │       │   ├── profile-photo.blade.php  # Profile photo helper
 │       │   └── …                        # Other partials
 │       ├── template-*.blade.php     # Named page templates (15 total)
@@ -374,7 +374,7 @@ WP-CLI: `wp mh theme-update`
 | Home | WordPress web design in Gettysburg | WordPress developer for hire |
 | Services | WordPress developer for hire in Gettysburg | custom WordPress sites |
 | Hire | Hire a WordPress developer in Gettysburg | agency overflow WordPress |
-| Work | WordPress sites for Gettysburg businesses | concept site examples |
+| Work | WordPress sites for Gettysburg businesses | project examples |
 | About | WordPress developer Gettysburg PA | — |
 | Code | WordPress developer GitHub | open source PHP |
 | Journal | WordPress development notes | PHP tutorials |

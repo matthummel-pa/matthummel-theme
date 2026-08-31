@@ -958,10 +958,10 @@ function mh_project_cpt_has_posts(): bool
 }
 
 /**
- * Resolve the public Work / concept screenshot URL for a project.
+ * Resolve the public Work / project screenshot URL for a project.
  *
  * Featured image wins when set (so Media Library / Generate featured image
- * updates show on /projects/ and /concept/). Falls back to `_mh_project_image`
+ * updates show on /projects/ and /projects/{slug}/). Falls back to `_mh_project_image`
  * (bundled JPEG filename or absolute URL).
  */
 function mh_project_card_image_url(int $post_id): string
@@ -1174,7 +1174,7 @@ function mh_register_project_post_type(): void
             'add_new_item' => __('Add project', 'sage'),
             'edit_item' => __('Edit project', 'sage'),
             'new_item' => __('New project', 'sage'),
-            'view_item' => __('View concept', 'sage'),
+            'view_item' => __('View project', 'sage'),
             'search_items' => __('Search projects', 'sage'),
             'not_found' => __('No projects found.', 'sage'),
             'not_found_in_trash' => __('No projects found in Trash.', 'sage'),
@@ -1219,6 +1219,9 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     $approach = (string) get_post_meta($post->ID, '_mh_project_approach', true);
     $result = (string) get_post_meta($post->ID, '_mh_project_result', true);
     $deliverables = (string) get_post_meta($post->ID, '_mh_project_deliverables', true);
+    $audience = (string) get_post_meta($post->ID, '_mh_project_audience', true);
+    $architecture = (string) get_post_meta($post->ID, '_mh_project_architecture', true);
+    $handoff = (string) get_post_meta($post->ID, '_mh_project_handoff', true);
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
     $live = mh_project_is_live((int) $post->ID);
     $metrics = [];
@@ -1231,7 +1234,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
     echo '<strong>'.esc_html__('Show on site', 'sage').'</strong></label></p>';
-    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /concept/ page.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /projects/{slug}/ page.', 'sage').'</p>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
@@ -1243,24 +1246,27 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and concept page.', 'sage')
+        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and project page.', 'sage')
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept page', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('These fields power /concept/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project page', 'sage').'</h3>';
+    echo '<p class="description">'.esc_html__('These fields power /projects/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
     echo '<table class="form-table" role="presentation"><tbody>';
-    mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Concept · Boutique inn', 'sage'));
+    mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Project · Boutique inn', 'sage'));
     mh_project_admin_field_row(__('Summary', 'sage'), 'mh_project_summary', $summary, '', 'textarea');
     mh_project_admin_field_row(__('The problem', 'sage'), 'mh_project_challenge', $challenge, '', 'textarea');
     mh_project_admin_field_row(__('How I shaped it', 'sage'), 'mh_project_approach', $approach, '', 'textarea');
     mh_project_admin_field_row(__('What you get', 'sage'), 'mh_project_result', $result, '', 'textarea');
     mh_project_admin_field_row(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
+    mh_project_admin_field_row(__('Who it’s for', 'sage'), 'mh_project_audience', $audience, '', 'textarea');
+    mh_project_admin_field_row(__('How it’s built', 'sage'), 'mh_project_architecture', $architecture, '', 'textarea');
+    mh_project_admin_field_row(__('What ships', 'sage'), 'mh_project_handoff', $handoff, '', 'textarea');
     mh_project_admin_field_row(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, 'https://', 'url');
     mh_project_admin_field_row(__('Legacy R&V case URL', 'sage'), 'mh_project_concept', $concept, 'https://', 'url');
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept metrics (up to 3)', 'sage').'</h3>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project metrics (up to 3)', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
     for ($i = 1; $i <= 3; $i++) {
         echo '<tr><th scope="row">'.esc_html(sprintf(__('Metric %d', 'sage'), $i)).'</th><td>';
@@ -1283,7 +1289,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
 function mh_project_admin_field_row(string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void
 {
-    $rows = in_array($name, ['mh_project_challenge', 'mh_project_approach', 'mh_project_result', 'mh_project_deliverables'], true) ? 5 : 3;
+    $rows = in_array($name, ['mh_project_challenge', 'mh_project_approach', 'mh_project_result', 'mh_project_deliverables', 'mh_project_audience', 'mh_project_architecture', 'mh_project_handoff'], true) ? 5 : 3;
     echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
     if ($type === 'textarea') {
         printf(
@@ -1327,6 +1333,9 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_approach', sanitize_textarea_field(wp_unslash($_POST['mh_project_approach'] ?? '')));
     update_post_meta($post_id, '_mh_project_result', sanitize_textarea_field(wp_unslash($_POST['mh_project_result'] ?? '')));
     update_post_meta($post_id, '_mh_project_deliverables', sanitize_textarea_field(wp_unslash($_POST['mh_project_deliverables'] ?? '')));
+    update_post_meta($post_id, '_mh_project_audience', sanitize_textarea_field(wp_unslash($_POST['mh_project_audience'] ?? '')));
+    update_post_meta($post_id, '_mh_project_architecture', sanitize_textarea_field(wp_unslash($_POST['mh_project_architecture'] ?? '')));
+    update_post_meta($post_id, '_mh_project_handoff', sanitize_textarea_field(wp_unslash($_POST['mh_project_handoff'] ?? '')));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
@@ -1380,7 +1389,7 @@ add_action('init', function (): void {
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'mh_project_details',
-        __('Project & concept fields', 'sage'),
+        __('Project fields', 'sage'),
         __NAMESPACE__.'\\mh_project_admin_meta_box',
         mh_project_post_type(),
         'normal',
@@ -1616,7 +1625,7 @@ add_filter('post_row_actions', function (array $actions, \WP_Post $post): array 
 
     $permalink = get_permalink($post);
     if (is_string($permalink) && $permalink !== '' && mh_project_is_live((int) $post->ID)) {
-        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View concept', 'sage').'</a>';
+        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View project', 'sage').'</a>';
     }
 
     return $actions;
@@ -1645,7 +1654,7 @@ add_action('admin_action_mh_toggle_project_live', function (): void {
 add_filter('bulk_actions-edit-'.mh_project_post_type(), function (array $actions): array {
     $actions['mh_project_show'] = __('Show on site', 'sage');
     $actions['mh_project_hide'] = __('Hide from site', 'sage');
-    $actions['mh_project_import_concept'] = __('Import concept fields (fill empty)', 'sage');
+    $actions['mh_project_import_concept'] = __('Import project fields (fill empty)', 'sage');
 
     return $actions;
 });
@@ -1714,7 +1723,7 @@ add_action('admin_notices', function (): void {
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 esc_html(sprintf(
-                    _n('Imported concept fields for %d project (empty fields only).', 'Imported concept fields for %d projects (empty fields only).', $count, 'sage'),
+                    _n('Imported project fields for %d project (empty fields only).', 'Imported project fields for %d projects (empty fields only).', $count, 'sage'),
                     $count
                 ))
             );
@@ -1782,7 +1791,7 @@ function mh_code_practice_defaults(): array
         'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
         'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
         'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
-        'Ridges & Valleys — Gettysburg concept sites and live WordPress demos for shops, tours, and inns.',
+        'Ridges & Valleys — Gettysburg projects and live WordPress demos for shops, tours, and inns.',
     ];
 }
 
@@ -1960,9 +1969,9 @@ function mh_code_resume_defaults(): array
             'role' => 'Founder',
             'org' => 'Ridges & Valleys',
             'period' => 'Current',
-            'type' => 'Concept work · Gettysburg, PA',
+            'type' => 'Studio work · Gettysburg, PA',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "Publishing Gettysburg concept sites — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing Gettysburg projects — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',

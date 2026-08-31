@@ -47,11 +47,11 @@
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 18) !!}</div>
           <div>
-            <p class="now-block__eyebrow">Concept work</p>
+            <p class="now-block__eyebrow">Studio work</p>
             <h2 class="now-block__title">Ridges &amp; Valleys</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p1', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}</p>
         <p>{{ \App\field('now_studio_p2', __('Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
         <a class="h-text-arrow" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
           Visit ridgesandvalleys.com →
@@ -128,7 +128,7 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Publishing Gettysburg concept sites at Ridges & Valleys — live WordPress demos for shops, tours, and inns', 'sage'),
+            __('Publishing Gettysburg projects at Ridges & Valleys — live WordPress demos for shops, tours, and inns', 'sage'),
             __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
@@ -183,9 +183,9 @@
       </div>
 
       <div class="now-sidebar-card">
-        <p class="now-sidebar-card__label">Concept work</p>
+        <p class="now-sidebar-card__label">Studio work</p>
         <p class="now-sidebar-card__value">Ridges &amp; Valleys</p>
-        <p class="now-sidebar-card__sub">Gettysburg concept demos</p>
+        <p class="now-sidebar-card__sub">Gettysburg WordPress demos</p>
         <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">ridgesandvalleys.com →</a>
       </div>
 
