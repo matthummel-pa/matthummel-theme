@@ -2,7 +2,7 @@
 
 All notable changes to this theme are recorded here.
 
-## 3.1.31 — 2026-08-31
+## 3.1.32 — 2026-08-31
 
 ### Added
 
@@ -13,6 +13,18 @@ All notable changes to this theme are recorded here.
 
 - Public business name is **Matt Hummel** (this site). Visitor copy, resume, Now, About, and Work no longer point shops to Ridges & Valleys as a second studio brand
 - Featured GitHub repo on Code/Home is `matthummel-theme` (this theme), not the old studio repo slug
+
+## 3.1.31 — 2026-08-31
+
+### Added
+
+- Marketplace hygiene for Appearance → Themes and Theme Check file lists: `screenshot.png` (1200×900), `readme.txt`, `CREDITS.md`, `Tested up to` / tags in `style.css`
+- `docs/MARKETPLACE.md` — why this theme is not a WordPress.org or ThemeForest upload; submit Acreline instead
+- `automatic-feed-links` theme support (classic theme requirement)
+
+### Changed
+
+- `LICENSE.md` copyright includes Matt Hummel (Sage MIT notice kept)
 
 ## 3.1.30 — 2026-08-31
 

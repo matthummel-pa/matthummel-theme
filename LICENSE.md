@@ -1,3 +1,7 @@
+Copyright (c) 2026 Matt Hummel
+
+This theme is based on Sage by Roots Software LLC (MIT).
+
 Copyright (c) Roots Software LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

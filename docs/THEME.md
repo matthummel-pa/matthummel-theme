@@ -455,6 +455,7 @@ The `/thank-you/` page (post-form redirect) is the primary conversion goal acros
 | [../CHANGELOG.md](../CHANGELOG.md) | Version history from 3.0.0 |
 | [ERRORS.md](ERRORS.md) | Error reference and debug cheatsheet |
 | [FEATURES.md](FEATURES.md) | Feature log and dev tools reference |
+| [MARKETPLACE.md](MARKETPLACE.md) | ThemeForest / WordPress.org: submit Acreline, not this theme |
 | [INSTALL.md](INSTALL.md) | WordPress install after deploy |
 | [sage/deployment.md](sage/deployment.md) | SiteGround deploy and token setup |
 | [../AGENTS.md](../AGENTS.md) | Cursor Cloud environment and commands |

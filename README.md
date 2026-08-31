@@ -7,7 +7,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 | | |
 | --- | --- |
 | **Live site** | [matthummel.com](https://matthummel.com) |
-| **Version** | `3.1.31` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
+| **Version** | `3.1.32` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |
@@ -19,7 +19,8 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
 
 ```text
-● 2026-08-31  3.1.31   Buy theme + Get help on Work; public brand is Matt Hummel
+● 2026-08-31  3.1.32   Buy theme + Get help on Work; public brand is Matt Hummel
+● 2026-08-31  3.1.31   Marketplace files + audit: screenshot, readme.txt, CREDITS; submit Acreline
 ● 2026-08-31  3.1.30   Project singles at /projects/{slug}/; hero screenshot; buyer docs
 ● 2026-08-31  3.1.29   WooCommerce Blade shop/product templates and classic Cart/Checkout pages
 ● 2026-08-31  3.1.27   Contact and /start/ forms POST to the n8n CRM webhook
@@ -183,6 +184,7 @@ Architecture, page map, SEO, a11y, and security notes: [`docs/THEME.md`](docs/TH
 
 | Doc | Contents |
 | --- | --- |
+| [docs/MARKETPLACE.md](docs/MARKETPLACE.md) | ThemeForest / WordPress.org: do not upload this theme; submit Acreline |
 | [docs/THEME.md](docs/THEME.md) | Full theme documentation (architecture, SEO, a11y, security) |
 | [docs/FEATURES.md](docs/FEATURES.md) | Feature log and WP-CLI reference |
 | [docs/INSTALL.md](docs/INSTALL.md) | Activate after deploy |
