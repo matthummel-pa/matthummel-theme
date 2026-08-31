@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.31 — 2026-08-31
+
+### Added
+
+- Marketplace hygiene for Appearance → Themes and Theme Check file lists: `screenshot.png` (1200×900), `readme.txt`, `CREDITS.md`, `Tested up to` / tags in `style.css`
+- `docs/MARKETPLACE.md` — why this theme is not a WordPress.org or ThemeForest upload; submit Acreline instead
+- `automatic-feed-links` theme support (classic theme requirement)
+
+### Changed
+
+- `LICENSE.md` copyright includes Matt Hummel (Sage MIT notice kept)
+
 ## 3.1.30 — 2026-08-31
 
 ### Changed
