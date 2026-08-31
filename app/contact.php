@@ -97,15 +97,21 @@ function mh_contact_prefill(string $key, string $default = ''): string
     $title = (string) ($item['title'] ?? $slug);
     $share = mh_work_permalink($slug);
     $concept = (string) ($item['concept'] ?? '');
+    $intent = isset($_GET['intent']) ? sanitize_key(wp_unslash($_GET['intent'])) : '';
+    $isHelp = $intent === 'help';
 
     return match ($key) {
         'who' => 'business',
-        'subject' => sprintf(__('Use the %s project', 'sage'), $title),
+        'subject' => $isHelp
+            ? sprintf(__('Help with the %s theme', 'sage'), $title)
+            : sprintf(__('Help with the %s theme', 'sage'), $title),
         'message' => implode("\n", array_values(array_filter([
-            sprintf(__('I would like to use the “%s” project for my site.', 'sage'), $title),
+            $isHelp
+                ? sprintf(__('I have a question about the “%s” theme.', 'sage'), $title)
+                : sprintf(__('I would like help with the “%s” theme.', 'sage'), $title),
             '',
             sprintf(__('Project on this site: %s', 'sage'), $share),
-            $concept !== '' ? sprintf(__('Ridges & Valleys page: %s', 'sage'), $concept) : '',
+            $concept !== '' ? sprintf(__('Example URL: %s', 'sage'), $concept) : '',
         ]))),
         default => $default,
     };
@@ -152,7 +158,7 @@ function mh_contact_expect(): array
         ],
         [
             'title' => __('No ads or social retainers', 'sage'),
-            'text' => __('I do not run ads or social accounts. Local Gettysburg marketing lives at Ridges & Valleys.', 'sage'),
+            'text' => __('I do not run ads or social accounts. Gettysburg example sites live on this site.', 'sage'),
         ],
         [
             'title' => __('Public code stays free', 'sage'),
@@ -181,11 +187,6 @@ function mh_contact_else_links(): array
     ];
 
     $links = mh_social_links();
-    $links[] = [
-        'key' => 'globe',
-        'label' => 'Ridges & Valleys',
-        'url' => 'https://ridgesandvalleys.com',
-    ];
 
     foreach ($links as &$link) {
         $link['note'] = $notes[$link['key'] ?? ''] ?? '';

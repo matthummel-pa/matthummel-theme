@@ -89,6 +89,7 @@ function mh_svg_icon(string $name, int $size = 20, string $fill = 'currentColor'
         'local seo' => 'search',
         'ridges & valleys' => 'globe',
         'ridges and valleys' => 'globe',
+        'matt hummel' => 'user',
     ];
     $key = $aliases[$name] ?? $name;
     $key = str_replace(' ', '-', $key);

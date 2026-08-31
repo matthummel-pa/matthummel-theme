@@ -12,16 +12,21 @@ function mh_github_login(): string
     return 'matthummel-pa';
 }
 
-/** Website listed on the GitHub profile (Ridges & Valleys), with a https fallback. */
+/** Website listed on the GitHub profile, with this site as the fallback. */
 function mh_github_blog_url(?array $gh = null): string
 {
     $gh = $gh ?? Github::fetchUser(mh_github_login());
     $blog = trim((string) ($gh['blog'] ?? ''));
     if ($blog === '') {
-        return 'https://ridgesandvalleys.com';
+        return home_url('/');
     }
 
-    return preg_match('#^https?://#i', $blog) ? $blog : 'https://'.$blog;
+    $url = preg_match('#^https?://#i', $blog) ? $blog : 'https://'.$blog;
+    if (str_contains(strtolower($url), 'ridgesandvalleys')) {
+        return home_url('/');
+    }
+
+    return $url;
 }
 
 /**
@@ -119,9 +124,9 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
-            'name' => 'ridgesandvalleys',
-            'desc' => 'Sage 11 theme for the Gettysburg studio site. Blade templates, local SEO, and pages shops can edit.',
-            'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
+            'name' => 'matthummel-theme',
+            'desc' => 'Sage 11 WordPress theme for matthummel.com. Blade templates, Tailwind, and pages shops can edit.',
+            'url' => 'https://github.com/matthummel-pa/matthummel-theme',
             'tags' => ['WordPress', 'Sage', 'Tailwind'],
         ],
     ];
@@ -170,6 +175,8 @@ function mh_title_label(string $text): string
         'youtube' => 'YouTube', 'devto' => 'DEV.to',
         'n8n' => 'n8n',
         'gemini' => 'Gemini',
+        'matthummel' => 'Matt Hummel',
+        'ridgesandvalleys' => 'Sage 11 theme',
     ];
     $out = [];
     foreach (explode(' ', $text) as $part) {
@@ -855,7 +862,7 @@ function mh_repo_activity_badge(string $pushed, int $stars, int $forks, string $
     return [$badge, $class, min(100, $score)];
 }
 
-/** Ridges & Valleys concept work for the Projects page. */
+/** Studio example work for the Projects page. */
 function mh_studio_projects(): array
 {
     $rv = 'https://ridgesandvalleys.com/work/';
@@ -996,7 +1003,10 @@ function mh_project_post_to_card(\WP_Post $post): array
     $techRaw = (string) get_post_meta($post_id, '_mh_project_tech', true);
     $tech = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
 
-    return [
+    $buyUrl = function_exists(__NAMESPACE__.'\\mh_project_buy_url') ? mh_project_buy_url($post_id) : '';
+    $priceLabel = function_exists(__NAMESPACE__.'\\mh_project_price_label') ? mh_project_price_label($post_id) : '';
+    $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('Buy theme', 'sage');
+    $card = [
         'slug' => $post->post_name,
         'title' => wp_specialchars_decode((string) $post->post_title, ENT_QUOTES),
         'cat' => (string) get_post_meta($post_id, '_mh_project_cat', true),
@@ -1008,7 +1018,16 @@ function mh_project_post_to_card(\WP_Post $post): array
         'url' => mh_concept_page_url($post->post_name, $post_id),
         'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
+        'product_id' => function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0,
+        'buy_url' => $buyUrl,
+        'buy_label' => $buyLabel,
+        'price_label' => $priceLabel,
     ];
+    $card['help_url'] = function_exists(__NAMESPACE__.'\\mh_work_help_url')
+        ? mh_work_help_url($card)
+        : mh_work_contact_url($card);
+
+    return $card;
 }
 
 /**
@@ -1148,7 +1167,7 @@ function mh_upsert_project_from_studio(array $project, int $menu_order = 0): int
     return $post_id;
 }
 
-/** One-time import of Ridges & Valleys studio concepts into the project CPT. */
+/** One-time import of studio example projects into the project CPT. */
 function mh_import_studio_projects_to_cpt(): void
 {
     if (get_option('mh_projects_cpt_seeded_v1')) {
@@ -1223,9 +1242,11 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     $faq = (string) get_post_meta($post->ID, '_mh_project_faq', true);
     $productType = (string) get_post_meta($post->ID, '_mh_project_product_type', true);
     if ($productType === '') {
-        $productType = 'concept';
+        $productType = 'theme';
     }
     $productId = (string) get_post_meta($post->ID, '_mh_project_product_id', true);
+    $price = (string) get_post_meta($post->ID, '_mh_project_price', true);
+    $forSale = get_post_meta($post->ID, '_mh_project_for_sale', true) !== '0';
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
     $live = mh_project_is_live((int) $post->ID);
     $metrics = [];
@@ -1254,15 +1275,17 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Sell this as a product', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Link a WooCommerce product to turn /projects/{slug}/ into an ad landing with Buy / Free download CTAs. Works for themes and plugins.', 'sage').'</p>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('WooCommerce', 'sage').'</h3>';
+    echo '<p class="description">'.esc_html__('Live projects become WooCommerce products when the plugin is active. Buy theme adds to cart; Get help opens the contact form.', 'sage').'</p>';
+    echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
+    echo esc_html__('For sale (Buy theme)', 'sage').'</label></p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Landing type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
     foreach ([
-        'concept' => __('Concept (hire CTA only)', 'sage'),
         'theme' => __('Theme product', 'sage'),
         'plugin' => __('Plugin product', 'sage'),
+        'concept' => __('Concept (hire copy)', 'sage'),
     ] as $value => $label) {
         printf(
             '<option value="%1$s"%2$s>%3$s</option>',
@@ -1272,7 +1295,13 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         );
     }
     echo '</select></td></tr>';
-    mh_project_admin_field_row(__('WooCommerce product ID', 'sage'), 'mh_project_product_id', $productId, __('e.g. 4819', 'sage'));
+    mh_project_admin_field_row(
+        __('Theme price (USD)', 'sage'),
+        'mh_project_price',
+        $price,
+        function_exists(__NAMESPACE__.'\\mh_default_theme_price') ? mh_default_theme_price() : '149'
+    );
+    mh_project_admin_field_row(__('WooCommerce product ID', 'sage'), 'mh_project_product_id', $productId, __('Auto-filled. Override only to point at a different product.', 'sage'));
     mh_project_admin_field_row(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
     mh_project_admin_field_row(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
     echo '</tbody></table>';
@@ -1366,11 +1395,17 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_deliverables', sanitize_textarea_field(wp_unslash($_POST['mh_project_deliverables'] ?? '')));
     update_post_meta($post_id, '_mh_project_benefits', sanitize_textarea_field(wp_unslash($_POST['mh_project_benefits'] ?? '')));
     update_post_meta($post_id, '_mh_project_faq', sanitize_textarea_field(wp_unslash($_POST['mh_project_faq'] ?? '')));
-    $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'concept'));
+    $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'theme'));
     if (! in_array($productType, ['concept', 'theme', 'plugin'], true)) {
-        $productType = 'concept';
+        $productType = 'theme';
     }
     update_post_meta($post_id, '_mh_project_product_type', $productType);
+    update_post_meta($post_id, '_mh_project_for_sale', isset($_POST['mh_project_for_sale']) ? '1' : '0');
+    $price = sanitize_text_field(wp_unslash($_POST['mh_project_price'] ?? ''));
+    if ($price !== '' && ! is_numeric($price)) {
+        $price = '';
+    }
+    update_post_meta($post_id, '_mh_project_price', $price);
     update_post_meta($post_id, '_mh_project_product_id', (string) max(0, (int) ($_POST['mh_project_product_id'] ?? 0)));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
@@ -1389,6 +1424,9 @@ function mh_set_project_live(int $post_id, bool $live): void
         return;
     }
     update_post_meta($post_id, mh_project_live_meta_key(), $live ? '1' : '0');
+    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+        mh_sync_project_product($post_id);
+    }
 }
 
 /** Distinct meta values for admin filters (category / place). */
@@ -1827,7 +1865,7 @@ function mh_code_practice_defaults(): array
         'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
         'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
         'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
-        'Ridges & Valleys — Gettysburg projects and live WordPress demos for shops, tours, and inns.',
+        'Gettysburg projects — live WordPress demos for shops, tours, and inns.',
     ];
 }
 
@@ -1846,9 +1884,8 @@ function mh_code_practice_group(string $text): string
         return __('Microsoft', 'sage');
     }
     if (
-        str_contains($low, 'ridges')
-        || str_contains($low, 'valleys')
-        || str_contains($low, 'gettysburg studio')
+        str_contains($low, 'gettysburg studio')
+        || str_contains($low, 'gettysburg project')
     ) {
         return __('Studio', 'sage');
     }
@@ -2003,11 +2040,11 @@ function mh_code_resume_defaults(): array
     return [
         [
             'role' => 'Founder',
-            'org' => 'Ridges & Valleys',
+            'org' => 'Matt Hummel',
             'period' => 'Current',
             'type' => 'Studio work · Gettysburg, PA',
-            'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "Publishing Gettysburg projects — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'url' => 'https://matthummel.com',
+            'bullets' => "Publishing Gettysburg projects — live WordPress demos for shops, tours, and inns.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',

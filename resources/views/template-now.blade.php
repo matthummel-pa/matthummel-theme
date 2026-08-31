@@ -6,7 +6,6 @@
 @php
   $gh      = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
-  $ghBlog  = \App\mh_github_blog_url($gh);
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $updated = 'August 2026';
 @endphp
@@ -42,19 +41,19 @@
 
     <div class="now-main">
 
-      {{-- Building Ridges & Valleys --}}
+      {{-- Studio work --}}
       <article class="now-block">
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 18) !!}</div>
           <div>
             <p class="now-block__eyebrow">Studio work</p>
-            <h2 class="now-block__title">Ridges &amp; Valleys</h2>
+            <h2 class="now-block__title">Matt Hummel</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}</p>
-        <p>{{ \App\field('now_studio_p2', __('Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
-        <a class="h-text-arrow" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-          Visit ridgesandvalleys.com →
+        <p>{{ \App\field('now_studio_p1', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p2', __('Browse the Work page. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
+        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+          {{ __('See example sites', 'sage') }} →
         </a>
       </article>
 
@@ -128,7 +127,7 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Publishing Gettysburg projects at Ridges & Valleys — live WordPress demos for shops, tours, and inns', 'sage'),
+            __('Publishing Gettysburg WordPress projects — live demos for shops, tours, and inns', 'sage'),
             __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
@@ -184,9 +183,9 @@
 
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Studio work</p>
-        <p class="now-sidebar-card__value">Ridges &amp; Valleys</p>
+        <p class="now-sidebar-card__value">Matt Hummel</p>
         <p class="now-sidebar-card__sub">Gettysburg WordPress demos</p>
-        <a class="now-sidebar-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">ridgesandvalleys.com →</a>
+        <a class="now-sidebar-card__link" href="{{ home_url('/projects/') }}">{{ __('See example sites', 'sage') }} →</a>
       </div>
 
       @if (! empty($gh['public_repos']))

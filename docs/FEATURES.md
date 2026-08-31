@@ -12,7 +12,7 @@ What the 3.x Sage theme does, and where it lives.
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
-| Work | Featured project, search, type counts, Grid/List, share/copy links to on-site `/projects/{slug}/` pages, Use this project → contact prefill; **Projects CPT** with per-project “Show on site” from wp-admin | `template-projects.blade.php`, `single-project.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `mh_project_*()` / `app/concept-pages.php` |
+| Work | Featured project, search, type counts, Grid/List, share/copy links to on-site `/projects/{slug}/` pages; **Buy theme** (WooCommerce add-to-cart when a product exists) + **Get help** (contact prefill); **Projects CPT** with per-project “Show on site” from wp-admin | `template-projects.blade.php`, `single-project.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `mh_project_*()` / `app/concept-pages.php`, `app/shop.php` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
@@ -28,14 +28,14 @@ What the 3.x Sage theme does, and where it lives.
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates; Cart / Checkout / My account pages with classic shortcodes; seed when the plugin is active (`mh_woocommerce_pages_seeded_v1`) | `app/woocommerce.php`, `resources/views/woocommerce/`, `template-woocommerce.blade.php`, `generoi/sage-woocommerce` |
+| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates; Cart / Checkout / My account pages with classic shortcodes; seed when the plugin is active (`mh_woocommerce_pages_seeded_v1`); live projects auto-create virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when the plugin is ready | `app/woocommerce.php`, `app/shop.php`, `resources/views/woocommerce/`, `template-woocommerce.blade.php`, `generoi/sage-woocommerce` |
 
 ## Content helpers
 
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Ridges & Valleys projects imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); editable project fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; public singles at `/projects/{slug}/` (legacy `/concept/` 301s); **Generate featured image** on the edit screen (featured image wins over Screenshot file meta for Work/project cards); project pages include architecture, handoff, spec, and buyer FAQ |
+| Projects CPT | Studio projects imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); editable project fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; public singles at `/projects/{slug}/` (legacy `/concept/` 301s); **Generate featured image** on the edit screen (featured image wins over Screenshot file meta for Work/project cards); project pages include architecture, handoff, spec, and buyer FAQ; themes for sale sync to WooCommerce products |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |

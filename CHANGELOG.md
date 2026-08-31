@@ -2,6 +2,18 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.31 — 2026-08-31
+
+### Added
+
+- Live projects sync to WooCommerce products (virtual, sold individually, default **$149**). Work cards and project pages get **Buy theme** (add to cart) and **Get help** (contact form with project prefill)
+- Header cart icon when WooCommerce is active; empty cart and checkout return links go to `/projects/`
+
+### Changed
+
+- Public business name is **Matt Hummel** (this site). Visitor copy, resume, Now, About, and Work no longer point shops to Ridges & Valleys as a second studio brand
+- Featured GitHub repo on Code/Home is `matthummel-theme` (this theme), not the old studio repo slug
+
 ## 3.1.30 — 2026-08-31
 
 ### Changed

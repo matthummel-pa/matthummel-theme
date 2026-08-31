@@ -354,7 +354,7 @@
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
             <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
-            <a class="h-text-arrow" href="{{ esc_url('https://ridgesandvalleys.com') }}" rel="noopener" target="_blank">Ridges &amp; Valleys ↗</a>
+            <a class="h-text-arrow" href="{{ home_url('/projects/') }}">{{ __('See example sites', 'sage') }} →</a>
           </div>
         </div>
       </div>
@@ -632,7 +632,7 @@
           {{ \App\field('home_work_h2', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">

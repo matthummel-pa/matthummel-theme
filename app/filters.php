@@ -131,7 +131,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Publishing Gettysburg projects at Ridges & Valleys, writing WordPress notes, and open for new work.',
+            'desc' => 'Publishing Gettysburg WordPress projects, writing notes, and open for new work.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
