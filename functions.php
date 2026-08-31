@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\ThemeServiceProvider;
+use Genero\Sage\WooCommerce\WooCommerceServiceProvider;
 use Roots\Acorn\Application;
 
 /*
@@ -58,6 +59,7 @@ unset($mhRankMathRestMeta);
 Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
+        WooCommerceServiceProvider::class,
     ])
     ->boot();
 
@@ -73,7 +75,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'concept-pages', 'icons', 'page-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share', 'featured-image'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'concept-pages', 'woocommerce', 'icons', 'page-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share', 'featured-image'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

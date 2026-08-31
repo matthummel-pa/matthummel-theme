@@ -113,6 +113,10 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => 'Terms of use | '.$brand,
             'desc' => 'Terms covering code reuse (MIT licence), written content copyright, example-site disclaimers, and acceptable use of matthummel.com.',
         ],
+        'template-woocommerce.blade.php' => [
+            'title' => '',
+            'desc' => 'Shop cart, checkout, and account pages for matthummel.com.',
+        ],
         'template-contact.blade.php' => [
             'title' => 'Contact a Full-Stack & WordPress Developer | '.$brand,
             'desc' => 'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.',

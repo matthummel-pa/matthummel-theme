@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ade904375f8332363f00129356cbfc10",
+    "content-hash": "32672be685b78eb437c1113a9b974dab",
     "packages": [
         {
             "name": "brick/math",
@@ -502,6 +502,56 @@
                 }
             ],
             "time": "2025-12-03T09:33:47+00:00"
+        },
+        {
+            "name": "generoi/sage-woocommerce",
+            "version": "v1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/generoi/sage-woocommerce.git",
+                "reference": "726131140e1b155b26ecd20456773f531dcc9261"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/generoi/sage-woocommerce/zipball/726131140e1b155b26ecd20456773f531dcc9261",
+                "reference": "726131140e1b155b26ecd20456773f531dcc9261",
+                "shasum": ""
+            },
+            "require": {
+                "roots/acorn": "*"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "acorn": {
+                    "providers": [
+                        "Genero\\Sage\\WooCommerce\\WooCommerceServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Genero\\Sage\\WooCommerce\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oskar Schöldström",
+                    "email": "public@oxy.fi"
+                }
+            ],
+            "homepage": "https://github.com/generoi/sage-woocommerce",
+            "support": {
+                "issues": "https://github.com/generoi/sage-woocommerce/issues",
+                "source": "https://github.com/generoi/sage-woocommerce/tree/v1.1.4"
+            },
+            "time": "2026-07-30T12:47:48+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -6624,7 +6674,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2"
+        "php": ">=8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
