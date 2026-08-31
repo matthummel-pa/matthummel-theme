@@ -131,12 +131,12 @@ function mh_project_concept_narrative(int $post_id): array
     }
 
     return [
-        'eyebrow' => trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true)),
-        'summary' => $summary,
-        'challenge' => trim((string) get_post_meta($post_id, '_mh_project_challenge', true)),
-        'approach' => trim((string) get_post_meta($post_id, '_mh_project_approach', true)),
-        'result' => trim((string) get_post_meta($post_id, '_mh_project_result', true)),
-        'deliverables' => $deliverables,
+        'eyebrow' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true))),
+        'summary' => mh_project_public_prose($summary),
+        'challenge' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_challenge', true))),
+        'approach' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_approach', true))),
+        'result' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_result', true))),
+        'deliverables' => array_map(__NAMESPACE__.'\\mh_project_public_prose', $deliverables),
         'metrics' => $metrics,
         'demo' => mh_project_demo_url($post_id),
     ];
@@ -147,15 +147,26 @@ function mh_project_concept_narrative(int $post_id): array
  */
 function mh_project_display_eyebrow(string $eyebrow): string
 {
-    $eyebrow = trim($eyebrow);
-    if ($eyebrow === '') {
-        return __('Project', 'sage');
+    $eyebrow = mh_project_public_prose(trim($eyebrow));
+
+    return $eyebrow !== '' ? $eyebrow : __('Project', 'sage');
+}
+
+/**
+ * Swap leftover “concept” wording in stored project prose.
+ */
+function mh_project_public_prose(string $text): string
+{
+    if ($text === '') {
+        return '';
     }
 
-    $replaced = preg_replace('/\bConcepts\b/i', 'Projects', $eyebrow);
-    $replaced = preg_replace('/\bConcept\b/i', 'Project', is_string($replaced) ? $replaced : $eyebrow);
+    $replaced = preg_replace('/\bConcepts\b/', 'Projects', $text);
+    $replaced = preg_replace('/\bconcepts\b/', 'projects', is_string($replaced) ? $replaced : $text);
+    $replaced = preg_replace('/\bConcept\b/', 'Project', is_string($replaced) ? $replaced : $text);
+    $replaced = preg_replace('/\bconcept\b/', 'project', is_string($replaced) ? $replaced : $text);
 
-    return is_string($replaced) && $replaced !== '' ? $replaced : $eyebrow;
+    return is_string($replaced) ? $replaced : $text;
 }
 
 /**
@@ -186,9 +197,9 @@ function mh_project_buyer_docs(int $post_id, array $card): array
     $tech = array_values(array_filter(array_map('strval', $tech)));
     $defaults = mh_project_buyer_defaults($slug, $cat, $title);
 
-    $audience = $post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_audience', true)) : '';
-    $architecture = $post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_architecture', true)) : '';
-    $handoff = $post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_handoff', true)) : '';
+    $audience = mh_project_public_prose($post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_audience', true)) : '');
+    $architecture = mh_project_public_prose($post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_architecture', true)) : '');
+    $handoff = mh_project_public_prose($post_id > 0 ? trim((string) get_post_meta($post_id, '_mh_project_handoff', true)) : '');
 
     $demo = mh_project_demo_url($post_id);
     if ($demo === '') {

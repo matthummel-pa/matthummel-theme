@@ -21,7 +21,7 @@
   @component('partials.page-hero', ['extra' => 'page-header--project', 'innerClass' => 'page-header-inner--split'])
     <div class="concept-hero-copy">
       <p class="eyebrow">
-        <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
+        <a class="concept-crumb" href="{!! esc_url($projectsUrl) !!}">{{ __('Work', 'sage') }}</a>
         <span aria-hidden="true"> / </span>
         {{ $eyebrow }}
       </p>
@@ -39,17 +39,17 @@
         @endif
       </p>
       <div class="concept-hero-actions">
-        <a class="btn" href="{{ esc_url($useUrl) }}">
+        <a class="btn" href="{!! esc_url($useUrl) !!}">
           {!! \App\mh_svg_icon('mail', 16) !!}
           {{ __('Use this project', 'sage') }}
         </a>
         @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+          <a class="btn btn-outline" href="{!! esc_url($demo) !!}" rel="noopener" target="_blank">
             {!! \App\mh_svg_icon('globe', 15) !!}
             {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
           </a>
         @endif
-        <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">{{ __('All projects', 'sage') }} →</a>
+        <a class="h-text-arrow" href="{!! esc_url($projectsUrl) !!}">{{ __('All projects', 'sage') }} →</a>
       </div>
     </div>
     @if ($shot !== '')
@@ -58,7 +58,7 @@
           <span></span><span></span><span></span>
         </div>
         <img
-          src="{{ esc_url($shot) }}"
+          src="{!! esc_url($shot) !!}"
           alt="{{ esc_attr(sprintf(__('Screenshot of the %s project', 'sage'), $title)) }}"
           width="1200"
           height="675"
@@ -174,7 +174,7 @@
                   <dt>{{ $spec[0] }}</dt>
                   <dd>
                     @if ($spec[0] === __('Live demo', 'sage'))
-                      <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ __('Open demo', 'sage') }} ↗</a>
+                      <a href="{!! esc_url($spec[1]) !!}" rel="noopener" target="_blank">{{ __('Open demo', 'sage') }} ↗</a>
                     @else
                       {{ $spec[1] }}
                     @endif
@@ -199,9 +199,9 @@
         <div class="concept-aside-card concept-aside-card--cta">
           <h2 class="concept-aside-title">{{ __('Want this for your shop?', 'sage') }}</h2>
           <p>{{ __('Tell me which parts fit and what you’d change. I usually reply within a day.', 'sage') }}</p>
-          <a class="btn" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}</a>
+          <a class="btn" href="{!! esc_url($useUrl) !!}">{!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}</a>
           @if ($demo !== '')
-            <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+            <a class="btn btn-outline" href="{!! esc_url($demo) !!}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
           @endif
         </div>
 
@@ -215,19 +215,19 @@
       <section class="concept-related" aria-labelledby="concept-related-heading">
         <div class="concept-related__head">
           <h2 id="concept-related-heading">{{ __('More projects', 'sage') }}</h2>
-          <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">{{ __('Browse all', 'sage') }} →</a>
+          <a class="h-text-arrow" href="{!! esc_url($projectsUrl) !!}">{{ __('Browse all', 'sage') }} →</a>
         </div>
         <div class="concept-related__grid">
           @foreach ($related as $p)
             <article class="concept-related-card">
               @if (! empty($p['image']))
-                <a class="concept-related-card__img" href="{{ esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? ''))) }}" aria-hidden="true" tabindex="-1">
+                <a class="concept-related-card__img" href="{!! esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? ''))) !!}" aria-hidden="true" tabindex="-1">
                   <img src="{{ esc_url($p['image']) }}" alt="" width="640" height="360" loading="lazy" decoding="async">
                 </a>
               @endif
               <div class="concept-related-card__body">
                 <p class="pf-meta">{{ $p['cat'] ?? '' }} · {{ $p['place'] ?? '' }}</p>
-                <h3><a href="{{ esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? ''))) }}">{{ $p['title'] ?? '' }}</a></h3>
+                <h3><a href="{!! esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? ''))) !!}">{{ $p['title'] ?? '' }}</a></h3>
                 <p>{{ $p['blurb'] ?? '' }}</p>
               </div>
             </article>

@@ -998,7 +998,7 @@ function mh_project_post_to_card(\WP_Post $post): array
 
     return [
         'slug' => $post->post_name,
-        'title' => get_the_title($post),
+        'title' => wp_specialchars_decode((string) $post->post_title, ENT_QUOTES),
         'cat' => (string) get_post_meta($post_id, '_mh_project_cat', true),
         'place' => (string) get_post_meta($post_id, '_mh_project_place', true),
         'blurb' => (string) get_post_meta($post_id, '_mh_project_blurb', true),
