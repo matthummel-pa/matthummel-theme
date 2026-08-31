@@ -20,7 +20,7 @@ What the 3.x Sage theme does, and where it lives.
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
 | Single post | Reading progress bar, hero/bottom share (Bluesky, LinkedIn, Facebook, Reddit, copy link), “What changed” collapsible separator (closed by default), inline TOC, desktop sidebar, tags, author bio, post-end CTA (WordPress/full-stack or Power Platform), prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php`, `app/social-share.php`, `mh_enhance_what_changed()` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback) | `template-contact.blade.php`, `app/contact.php` |
-| Search titles / meta | Document title and meta description from the theme (Gettysburg format); Rank Math / Yoast values win on project pages when set; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
+| Search titles / meta | Document title and meta description from the theme (skill-first WordPress / full-stack wording, no city stuffing); Rank Math / Yoast values win on project pages when set; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
 | Site header | Sticky on all viewports; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
 | Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
@@ -51,10 +51,15 @@ What the 3.x Sage theme does, and where it lives.
 - Gutenberg pattern library on pages (posts still use the block editor)
 - Fake testimonials or “3x revenue” style landing modules
 
+## Editor’s notes (3.1.36 SEO)
+
+- Marketing and SEO copy is skill-first (WordPress, plugins, web apps). City names are not required on landings.
+- Demo Work card places may still name a town; titles/meta/kickers should not stuff location.
+- One-time meta reset: `mh_seo_global_copy_v1` clears saved `mh_f_*` fields that still contain Gettysburg / Adams County.
+
 ## Editor’s notes (3.1.x Projects CPT)
 
-- Cut the home hero to three sentences and put Gettysburg in the lede (kicker already had it).
-- Services / Work / Contact ledes: city twice across the page, still first person.
+- Home hero stays short; kicker leads with craft, not a city.
 - Dropped “client” on agency cards and overflow FAQ; kept the agency relationship meaning.
 - Did not copy the live About title’s “15+ years” claim into the theme.
 

@@ -42,7 +42,7 @@
     <div class="legal-prose">
       <p class="eyebrow">About this site</p>
       <h2 id="priv-who-heading">Who I am</h2>
-      <p>This website — <strong>matthummel.com</strong> — is a personal portfolio and blog run by <strong>Matt Hummel</strong>, an independent WordPress developer based in Gettysburg, Pennsylvania. It is not operated by a company.</p>
+      <p>This website — <strong>matthummel.com</strong> — is a personal portfolio and blog run by <strong>Matt Hummel</strong>, an independent WordPress developer. It is not operated by a company.</p>
       <p>For questions about this policy or any data I hold, <a href="{{ $contactUrl }}">contact me directly</a>.</p>
     </div>
   </div>

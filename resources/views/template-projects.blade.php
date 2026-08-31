@@ -31,10 +31,10 @@
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('work_h1', __('WordPress websites for Gettysburg businesses.', 'sage')) }}
+    {{ \App\field('work_h1', __('Example WordPress sites.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
+    {{ \App\field('work_lede', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
   </p>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ home_url('/code/') }}">
@@ -54,7 +54,7 @@
         {{ \App\field('work_empty_h2', __('Example sites are on the way.', 'sage')) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I\'m choosing which Gettysburg projects to publish here first. Write and tell me what kind of shop you run.', 'sage')) }}
+        {{ \App\field('work_empty_text', __('I\'m choosing which example sites to publish here first. Write and tell me what kind of shop you run.', 'sage')) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
@@ -91,8 +91,8 @@
         <span>business types</span>
       </div>
       <div class="work-context__stat">
-        <strong>Gettysburg</strong>
-        <span>Adams County, PA</span>
+        <strong>WordPress</strong>
+        <span>Sage · Tailwind · Vite</span>
       </div>
       <div class="work-context__stat">
         <strong>WordPress</strong>

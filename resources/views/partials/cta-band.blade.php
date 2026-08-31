@@ -6,7 +6,7 @@
   $ctaKicker = $kicker ?? __('Get in touch', 'sage');
   $ctaSecondary = $secondary ?? __('Hire me', 'sage');
   $ctaSecondaryHref = $secondaryHref ?? home_url('/hire/');
-  $ctaNote = $note ?? __('Gettysburg · remote · usually within a day', 'sage');
+  $ctaNote = $note ?? __('Remote · usually within a day', 'sage');
 @endphp
 <section class="cta-band" aria-labelledby="cta-heading" data-reveal>
   <div class="container wide cta-band-inner">

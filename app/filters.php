@@ -67,11 +67,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     $map = [
         'front-page.blade.php' => [
             'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.',
+            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Say hello to start.',
         ],
         'template-home.blade.php' => [
             'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.',
+            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Say hello to start.',
         ],
         'template-services.blade.php' => [
             'title' => 'Full-Stack & WordPress Development Services | '.$brand,
@@ -79,11 +79,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-start.blade.php' => [
             'title' => 'Project brief for WordPress work | '.$brand,
-            'desc' => 'A short discovery form for agencies and shops. Four steps so I can prepare for our first meeting in Gettysburg or remote.',
+            'desc' => 'A short discovery form for agencies and shops. Four steps so I can prepare for our first meeting.',
         ],
         'template-projects.blade.php' => [
-            'title' => 'Example sites in Gettysburg | '.$brand,
-            'desc' => 'Studio WordPress projects for Gettysburg tours, inns, and shops. See example sites or say hello.',
+            'title' => 'Example WordPress Sites | '.$brand,
+            'desc' => 'Studio WordPress projects for tours, inns, and shops. See example sites or say hello.',
         ],
         'template-thankyou.blade.php' => [
             'title' => 'Message received | '.$brand,
@@ -123,7 +123,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-about.blade.php' => [
             'title' => 'About Matt Hummel — Full-Stack & WordPress Developer',
-            'desc' => 'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.',
+            'desc' => 'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software. Say hello.',
         ],
         'template-code.blade.php' => [
             'title' => 'Open-Source Full-Stack & WordPress Code | '.$brand,
@@ -131,7 +131,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Publishing Gettysburg WordPress projects, writing notes, and open for new work.',
+            'desc' => 'Publishing example WordPress projects, writing notes, and open for new work.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
@@ -267,7 +267,7 @@ function mh_seo_meta_description(): string
             $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
         }
         if ($summary === '') {
-            $summary = 'Gettysburg WordPress project. See the example or say hello to adapt it for your shop.';
+            $summary = 'WordPress project example. See the demo or say hello to adapt it for your shop.';
         }
         if ($summary !== '' && ! str_ends_with($summary, '.')) {
             $summary .= '.';

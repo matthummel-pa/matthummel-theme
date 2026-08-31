@@ -178,7 +178,7 @@ function mh_contact_expect(): array
         ],
         [
             'title' => __('No ads or social retainers', 'sage'),
-            'text' => __('I do not run ads or social accounts. Gettysburg example sites live on this site.', 'sage'),
+            'text' => __('I do not run ads or social accounts. Example sites live on this site.', 'sage'),
         ],
         [
             'title' => __('Public code stays free', 'sage'),
@@ -203,7 +203,7 @@ function mh_contact_else_links(): array
         'bluesky' => __('Occasional notes.', 'sage'),
         'reddit' => __('Same handle, when I am there.', 'sage'),
         'rss' => __('New posts, no algorithm.', 'sage'),
-        'globe' => __('Gettysburg WordPress demos.', 'sage'),
+        'globe' => __('Example WordPress demos.', 'sage'),
     ];
 
     $links = mh_social_links();

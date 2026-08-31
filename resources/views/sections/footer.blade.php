@@ -12,7 +12,7 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ __('Full-stack developer and WordPress specialist in Gettysburg. I build web software businesses can own and development teams can maintain.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
+      <p class="footer-blurb">{{ __('Full-stack developer and WordPress specialist. I build web software businesses can own and development teams can maintain.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
       @if (\App\mh_is_hireable($gh))
         <p class="footer-avail">
           @include('partials.avail-mark', ['gh' => $gh])
@@ -63,7 +63,7 @@
   </div>
 
   <div class="footer-bottom container wide">
-    <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}. Gettysburg, PA.</p>
+    <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
     <nav class="footer-legal-links" aria-label="Legal">
       <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
       <span aria-hidden="true">·</span>

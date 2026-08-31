@@ -276,6 +276,74 @@ function mh_apply_seo_playbook_copy(): void
 
 add_action('init', __NAMESPACE__.'\\mh_apply_seo_playbook_copy', 47);
 
+/**
+ * Drop saved page / SEO fields that still stuff Gettysburg or Adams County
+ * into marketing copy so skill-first theme defaults show.
+ *
+ * Demo project place labels on Work cards are left alone (factual example towns).
+ */
+function mh_reset_location_seo_copy(): void
+{
+    if (get_option('mh_seo_global_copy_v1')) {
+        return;
+    }
+
+    $needles = [
+        'gettysburg',
+        'adams county',
+    ];
+
+    // Structured Work cards keep place strings; everything else with city stuffing clears.
+    $skipKeys = [
+        'mh_f_work_items',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $all = get_post_meta($id);
+        if (! is_array($all)) {
+            continue;
+        }
+        foreach ($all as $key => $values) {
+            if (! is_string($key) || ! str_starts_with($key, 'mh_f_')) {
+                continue;
+            }
+            if (in_array($key, $skipKeys, true)) {
+                continue;
+            }
+            $raw = $values[0] ?? '';
+            $val = maybe_unserialize($raw);
+            $blob = strtolower(is_array($val) ? (string) wp_json_encode($val) : (string) $val);
+            foreach ($needles as $needle) {
+                if (str_contains($blob, $needle)) {
+                    delete_post_meta($id, $key);
+                    break;
+                }
+            }
+        }
+    }
+
+    $tagline = strtolower((string) get_option('blogdescription', ''));
+    foreach ($needles as $needle) {
+        if (str_contains($tagline, $needle)) {
+            update_option('blogdescription', 'Full-stack developer. WordPress, plugins, and other web apps.');
+            break;
+        }
+    }
+
+    update_option('mh_seo_global_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_reset_location_seo_copy', 48);
+
 /** One-time Code page copy: showcase + resume, only exact old defaults. */
 function mh_apply_code_showcase_copy(): void
 {

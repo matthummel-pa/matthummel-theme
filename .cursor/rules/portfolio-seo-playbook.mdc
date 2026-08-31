@@ -1,11 +1,11 @@
 ---
-description: Portfolio and local SEO playbook for Matt Hummel’s Sage theme — dual audience, Gettysburg keywords, on-page limits.
+description: Portfolio SEO playbook for Matt Hummel’s Sage theme — dual audience, skill-first keywords, on-page limits.
 alwaysApply: true
 ---
 
-# Portfolio and local SEO playbook
+# Portfolio SEO playbook
 
-This rulebook balances friendly shop-owner copy with technical precision. Use it to audit and write content that can rank locally, show real work, and stay readable for both shops and developers.
+This rulebook balances friendly shop-owner copy with technical precision. Use it to audit and write content that can rank for WordPress and web craft, show real work, and stay readable for both shops and developers.
 
 ## This repository (do not ignore)
 
@@ -13,7 +13,7 @@ This is the **matthummel** Sage 11 theme, not a generic agency case-study site. 
 
 - **Voice:** first-person **I / my**. Glossary: **shops**, **agencies**, **developers**, **learners**. Do not switch to “we/our” or “clients” (`master-content-writer.mdc`).
 - **Copy location:** visitor sentences live in **Page content (theme)** (`app/page-fields.php`, `\App\field()`), posts, and comments — not hardcoded Blade except UI chrome.
-- **City:** primary local market is **Gettysburg** (Adams County, Pennsylvania). Use it naturally. Do not spray city names into every heading.
+- **Location:** marketing and SEO copy is **skill-first** (WordPress, plugins, web apps) — do **not** stuff city names into titles, meta, kickers, or every landing paragraph. Demo project **place** labels on Work cards may stay factual. Legal/privacy jurisdiction lines may name Pennsylvania when needed. Only reintroduce local SEO if Matt asks.
 - **Work:** `/projects/` is studio **example sites**, not a case-study CPT. Do not invent fake results, testimonials, revenue lifts, or client names (`docs/FEATURES.md`).
 - **Proof that ships:** GitHub repos, writing, live concept URLs, profile photo. Not AggregateRating JSON-LD unless Matt asks.
 - **Titles/meta:** WordPress document title and Yoast (or theme `document` helpers). Do not hardcode a second `<title>` stack in Blade. Format *when writing a title* as below.
@@ -35,14 +35,14 @@ The home and About **audience doors** already name these people. Do not add a fi
 
 ---
 
-## Local SEO keyword blueprint
+## SEO keyword blueprint
 
-Use these frameworks. Replace the city with **Gettysburg** unless Matt names another market. Prefer phrases that match work he actually does.
+Prefer phrases that match work he actually does. Lead with craft, not city.
 
 | Service pillar | Shop intent | Technical intent |
 | --- | --- | --- |
-| WordPress | `wordpress web design in Gettysburg` | Sage 11 custom theme, page fields, Vite — not ACF unless he asks |
-| Web apps | `hire a developer for a WordPress site` | custom frontend (Sage, Tailwind, Blade), plugins, other web apps |
+| WordPress | `hire a WordPress developer` / custom theme | Sage 11 custom theme, page fields, Vite — not ACF unless he asks |
+| Web apps | `WordPress site for my shop` | custom frontend (Sage, Tailwind, Blade), plugins, other web apps |
 | Power Platform | `automate workflows with Power Platform` | custom connectors / APIs when it fits; it is **not** the main offer |
 
 Do not stuff all three pillars into every H1. One primary phrase per page. Secondary phrases belong in body copy, once or twice.
@@ -75,10 +75,10 @@ When writing a **post or long project narrative**, use this order. Skip layers t
 
 ## Strict on-page SEO limits
 
-- **Title tags:** under **60 characters**. When setting a document title: `[Service or topic] in Gettysburg | Matt Hummel`. Short page H1s (`Work`, `About`) stay as they are; do not rename every H1 into a keyword string.
+- **Title tags:** under **60 characters**. When setting a document title: `[Service or topic] | Matt Hummel` (skill-first; no city stuffing). Short page H1s (`Work`, `About`) stay as they are; do not rename every H1 into a keyword string.
 - **Meta descriptions:** under **155 characters**. End with a direct CTA that matches the site (`Say hello`, `See example sites`). First person. Not “See how we automated this workflow.”
-- **Local density:** on pages meant to rank locally (Home, Services, Work, Contact), use **Gettysburg** at least **twice** in the main body if the copy still sounds like Matt. Do not tack it onto every sentence.
-- **Readability:** paragraphs **3 sentences max** on landing fields (stricter than the general 3–4 in `master-content-writer.mdc`). This file wins on local landing length; the content-writer file still wins on grammar, glossary, and I/my.
+- **Location density:** do **not** require a city name on marketing pages. Demo places on Work cards are fine. One personal bio mention is optional, not a ranking tactic.
+- **Readability:** paragraphs **3 sentences max** on landing fields (stricter than the general 3–4 in `master-content-writer.mdc`). This file wins on landing length; the content-writer file still wins on grammar, glossary, and I/my.
 - **Code blocks:** in posts, set a language on the block so highlight.js can run. In Blade, keep current `<pre class="snippet"><code>`.
 
 ---
@@ -87,5 +87,5 @@ When writing a **post or long project narrative**, use this order. Skip layers t
 
 1. Decide whether the change is a **field default**, a **post**, or a **template**. Prefer fields and posts for keyword copy.
 2. Apply dual audience without splitting the page into two unrelated sites.
-3. Check titles/meta length, Gettysburg count, paragraph caps, and “no fake proof” before presenting the edit.
+3. Check titles/meta length, paragraph caps, skill-first wording, and “no fake proof” before presenting the edit.
 4. When editing Matt’s writing, add **Editor’s Notes** (`master-content-writer.mdc`).

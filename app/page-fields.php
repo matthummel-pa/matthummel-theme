@@ -177,7 +177,7 @@ function mh_home_fields(): array
 {
     return [
         __('Hero', 'sage') => [
-            ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('Gettysburg, PA', 'sage')],
+            ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
             ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
             ['home_role', __('Role line', 'sage'), 'text', __('Full-stack web development, with WordPress at the center.', 'sage')],
             ['home_lede', __('Intro', 'sage'), 'textarea', __('I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.', 'sage')],
@@ -193,7 +193,7 @@ function mh_home_fields(): array
         __('What I build', 'sage') => [
             ['home_build_h2', __('Section label', 'sage'), 'text', __('What I build', 'sage')],
             ['home_build_1_title', __('Service 1 title', 'sage'), 'text', __('WordPress sites', 'sage')],
-            ['home_build_1_text', __('Service 1 description', 'sage'), 'textarea', __('Clean, fast, and editable. Shops get something they own â not a subscription they rent.', 'sage')],
+            ['home_build_1_text', __('Service 1 description', 'sage'), 'textarea', __('Clean, fast, and editable. Shops get something they own — not a subscription they rent.', 'sage')],
             ['home_build_2_title', __('Service 2 title', 'sage'), 'text', __('Plugins & tools', 'sage')],
             ['home_build_2_text', __('Service 2 description', 'sage'), 'textarea', __('Custom PHP when WordPress needs a new part. Small, focused, and readable.', 'sage')],
             ['home_build_3_title', __('Service 3 title', 'sage'), 'text', __('Full-stack web apps', 'sage')],
@@ -204,11 +204,11 @@ function mh_home_fields(): array
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts coming soon.', 'sage')],
         ],
         __('Example sites section', 'sage') => [
-            ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
+            ['home_work_h2', __('Heading', 'sage'), 'text', __('Example WordPress sites for shops, tours, and inns.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
         ],
         __('About strip', 'sage') => [
-            ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
+            ['home_about_h2', __('Heading', 'sage'), 'text', __('Fifteen years on the web.', 'sage')],
             ['home_about_text', __('Bio text', 'sage'), 'textarea', __('I\'ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.', 'sage')],
         ],
         __('Process section', 'sage') => [
@@ -223,11 +223,11 @@ function mh_home_fields(): array
         ],
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Working on something?', 'sage')],
-            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __("I build WordPress sites and plugins from Gettysburg, PA. I've done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.", 'sage')],
+            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __("I build WordPress sites and plugins shops can edit. I've done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.", 'sage')],
             ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Say hello. A question about a post is just as welcome as a project inquiry.', 'sage')],
         ],
         __('Footer (site-wide)', 'sage') => [
-            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Notes, code, and Gettysburg work. Developers, shops, and agencies are welcome.', 'sage')],
+            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Notes, code, and example sites. Developers, shops, and agencies are welcome.', 'sage')],
         ],
     ];
 }
@@ -246,7 +246,7 @@ function page_field_map(): array
 
     $placeItems = [
         ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage')],
-        ['title' => __('Gettysburg work', 'sage'), 'text' => __('Live WordPress demos for shops, tours, and inns in Adams County. Hire me here for a real build.', 'sage'), 'url' => '/projects/'],
+        ['title' => __('Example sites', 'sage'), 'text' => __('Live WordPress demos for shops, tours, and inns. Hire me here for a real build.', 'sage'), 'url' => '/projects/'],
     ];
 
     $codeRepos = [];
@@ -286,7 +286,7 @@ function page_field_map(): array
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
                 ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')],
                 ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
+                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
                 ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
@@ -303,7 +303,7 @@ function page_field_map(): array
             ],
             __('Open for work', 'sage') => [
                 ['about_work_h2', __('Heading', 'sage'), 'text', __('Open for work.', 'sage')],
-                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.', 'sage')],
+                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Happy to work remote or on-site.', 'sage')],
                 ['about_work_p2', __('Paragraph 2', 'sage'), 'textarea', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')],
                 ['about_work_cta', __('Button label', 'sage'), 'text', __('Start a conversation', 'sage')],
                 ['about_work_types', __('Arrangements', 'sage'), 'repeater', mh_about_work_types_defaults(), [
@@ -313,7 +313,7 @@ function page_field_map(): array
             ],
             __('How I work', 'sage') => [
                 ['about_values_h2', __('Heading', 'sage'), 'text', __('How I work.', 'sage')],
-                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('A few habits that stick on WordPress projects from Gettysburg — you own the site, you can edit it, and another developer can follow the code.', 'sage')],
+                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('A few habits that stick on WordPress projects — you own the site, you can edit it, and another developer can follow the code.', 'sage')],
                 ['about_approach', __('Principles', 'sage'), 'repeater', mh_about_approach_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
@@ -326,7 +326,7 @@ function page_field_map(): array
             ],
             __('Elsewhere', 'sage') => [
                 ['about_elsewhere_h2', __('Heading', 'sage'), 'text', __('Where to find me.', 'sage')],
-                ['about_elsewhere_intro', __('Intro', 'sage'), 'textarea', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along from Gettysburg.', 'sage')],
+                ['about_elsewhere_intro', __('Intro', 'sage'), 'textarea', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along.', 'sage')],
             ],
             __('Call to action', 'sage') => [
                 ['about_cta_kicker', __('Kicker', 'sage'), 'text', __('Get in touch', 'sage')],
@@ -344,7 +344,7 @@ function page_field_map(): array
             __('List', 'sage') => [
                 ['now_items', __('Items', 'sage'), 'lines', [
                     __('Full-stack work: WordPress, plugins, and other web apps.', 'sage'),
-                    __('Raising kids in Gettysburg. Nights and weekends are scarce, so I keep extra projects small.', 'sage'),
+                    __('Raising kids. Nights and weekends are scarce, so I keep extra projects small.', 'sage'),
                     __('This Sage 11 site is a notebook: a journal, snippets, and example shops.', 'sage'),
                     __('Sharing notes on this blog, DEV.to, Bluesky, and Reddit.', 'sage'),
                     __('Helping with a few extra builds when I have room — WordPress platforms, plugins, integrations, and full-stack applications.', 'sage'),
@@ -352,7 +352,7 @@ function page_field_map(): array
                 ['now_link', __('Link label', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Studio', 'sage') => [
-                ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
+                ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
                 ['now_studio_p2', __('Paragraph 2', 'sage'), 'textarea', __('Browse the Work page. When you\'re ready for a real build, say hello here.', 'sage')],
             ],
         ],
@@ -390,7 +390,7 @@ function page_field_map(): array
                 ['svc_faq', __('Questions', 'sage'), 'repeater', [
                     ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
                     ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
-                    ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. This site is for WordPress builds and sharing, including Gettysburg example sites.', 'sage')],
+                    ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. This site is for WordPress builds and sharing, including example sites you can open.', 'sage')],
                 ], [
                     ['title', __('Question', 'sage'), 'text'],
                     ['text', __('Answer', 'sage'), 'textarea'],
@@ -429,7 +429,7 @@ function page_field_map(): array
             ],
             __('Elsewhere', 'sage') => [
                 ['cnt_else_h2', __('Heading', 'sage'), 'text', __('Find me elsewhere', 'sage')],
-                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. This site is where I publish Gettysburg WordPress demos.', 'sage')],
+                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. This site is where I publish example WordPress demos.', 'sage')],
             ],
             __('What to send', 'sage') => [
                 ['cnt_tips_kicker', __('Kicker', 'sage'), 'text', __('A useful note', 'sage')],
@@ -463,13 +463,13 @@ function page_field_map(): array
             ],
             __('GitHub', 'sage') => [
                 ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source full-stack and WordPress code on GitHub.', 'sage')],
-                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public repos from Gettysburg — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')],
+                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')],
                 ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 90 days of commits', 'sage')],
                 ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
                 ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
                 ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured WordPress and app repos', 'sage')],
-                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg projects. Each one is meant to be forked.', 'sage')],
+                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind this site. Each one is meant to be forked.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
@@ -477,12 +477,12 @@ function page_field_map(): array
                     ['tags', __('Tags (comma separated)', 'sage'), 'text'],
                 ]],
                 ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
-                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.', 'sage')],
+                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')],
                 ['code_live_all', __('All repos label', 'sage'), 'text', __('Browse all public repos', 'sage')],
             ],
             __('Skills', 'sage') => [
                 ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills and tools.', 'sage')],
-                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')],
+                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')],
                 ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
             ],
             __('Documentation', 'sage') => [
@@ -506,7 +506,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
                 ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a full-stack developer with deep WordPress experience.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Based in Gettysburg and working remotely anywhere.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Remote or on-site.', 'sage')],
             ],
             __('LinkedIn', 'sage') => [
                 ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
@@ -514,7 +514,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
-                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')],
+                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')],
                 ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],
@@ -532,8 +532,8 @@ function page_field_map(): array
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
-                ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
+                ['work_h1', __('Heading', 'sage'), 'text', __('Example WordPress sites.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View project label', 'sage'), 'text', __('View project', 'sage')],
@@ -543,7 +543,7 @@ function page_field_map(): array
                 ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
                 ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These projects are starting points for a real build. If one fits a tour, inn, shop, or restaurant you run, write and say which project you want to start from.', 'sage')],
                 ['work_empty_h2', __('Empty state heading', 'sage'), 'text', __('Example sites are on the way.', 'sage')],
-                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which Gettysburg projects to publish here first. Write and tell me what kind of shop you run.', 'sage')],
+                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which example sites to publish here first. Write and tell me what kind of shop you run.', 'sage')],
                 ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Example sites', 'sage') => [
@@ -583,7 +583,7 @@ function page_field_map(): array
                     ['image', __('Avatar URL', 'sage'), 'url'],
                 ]],
                 ['write_share_note', __('Note under each post', 'sage'), 'html', __('Extra copy-paste examples live on the <a href="/code/">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage')],
-                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write from Gettysburg, Pennsylvania. Posts cover WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
+                ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write about WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
             ],
         ],
     ];

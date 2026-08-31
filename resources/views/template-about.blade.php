@@ -52,7 +52,7 @@
         'class' => 'profile-photo profile-photo--hero about-hero__img',
         'eager' => true,
       ])
-      <p class="about-hero__photo-cap">{{ __('Gettysburg, Pennsylvania', 'sage') }}</p>
+      <p class="about-hero__photo-cap">{{ __('Full-stack · WordPress', 'sage') }}</p>
     </div>
   </div>
 
@@ -79,7 +79,7 @@
       </div>
       <div class="about-stat">
         <dt class="about-stat__value">{{ __('EST', 'sage') }}</dt>
-        <dd class="about-stat__label">{{ __('Gettysburg, PA', 'sage') }}</dd>
+        <dd class="about-stat__label">{{ __('Remote / on-site', 'sage') }}</dd>
       </div>
     </dl>
   </div>
@@ -118,7 +118,7 @@
           </h2>
           <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p3', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p3', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
@@ -177,9 +177,9 @@
           </div>
 
           <div class="about-aside-card about-aside-card--studio">
-            <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Gettysburg studio work', 'sage') }}</p>
+            <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Example sites', 'sage') }}</p>
             <h3 class="about-aside-card__title">Matt Hummel</h3>
-            <p class="about-aside-card__bio">{{ __('Live WordPress demos for Gettysburg shops, tours, and inns. Hire me here for a real build.', 'sage') }}</p>
+            <p class="about-aside-card__bio">{{ __('Live WordPress demos for shops, tours, and inns. Hire me here for a real build.', 'sage') }}</p>
             <a class="about-aside-card__link" href="{{ home_url('/projects/') }}">
               {{ __('See example sites', 'sage') }} →
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
@@ -236,7 +236,7 @@
           <h2 id="about-work-heading" class="display-title is-section">
             {{ \App\field('about_work_h2', __('Open for work.', 'sage')) }}
           </h2>
-          <p>{{ \App\field('about_work_p1', __('I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.', 'sage')) }}</p>
+          <p>{{ \App\field('about_work_p1', __('I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Happy to work remote or on-site.', 'sage')) }}</p>
           <p>{{ \App\field('about_work_p2', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')) }}</p>
           <a class="btn" href="{{ home_url('/contact/') }}">
             {!! \App\mh_svg_icon('mail', 16) !!}
@@ -272,7 +272,7 @@
             {{ \App\field('about_values_h2', __('How I work.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_values_intro', __('A few habits that stick on WordPress projects from Gettysburg — you own the site, you can edit it, and another developer can follow the code.', 'sage')) }}
+            {{ \App\field('about_values_intro', __('A few habits that stick on WordPress projects — you own the site, you can edit it, and another developer can follow the code.', 'sage')) }}
           </p>
         </header>
         <div class="about-approach">
@@ -348,7 +348,7 @@
             {{ \App\field('about_elsewhere_h2', __('Where to find me.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_elsewhere_intro', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along from Gettysburg.', 'sage')) }}
+            {{ \App\field('about_elsewhere_intro', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along.', 'sage')) }}
           </p>
         </div>
         <div class="about-elsewhere__links">
@@ -375,7 +375,7 @@
         {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>
