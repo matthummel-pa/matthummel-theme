@@ -1,1 +1,1 @@
-PLACEHOLDER_READ_FROM_/tmp/portfolio_content.txt
+file:///tmp/portfolio_content.txt
