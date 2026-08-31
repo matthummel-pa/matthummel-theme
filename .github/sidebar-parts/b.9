@@ -1,0 +1,41 @@
+{{ __('View on GitHub', 'sage') }}</a>
+              </p>
+            @endif
+          </div>
+        @endif
+
+        @if (! empty($tech) || $sidebar['languages'] !== [] || $sidebar['topics'] !== [])
+          <div class="concept-aside-card">
+            <h2 class="concept-aside-title">{{ __('Stack', 'sage') }}</h2>
+            @if (! empty($tech))
+              <p class="pill-row">
+                @foreach ($tech as $t)
+                  <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+                @endforeach
+              </p>
+            @elseif ($sidebar['languages'] !== [])
+              <p class="pill-row">
+                @foreach ($sidebar['languages'] as $t)
+                  <span class="pill">{{ $t }}</span>
+                @endforeach
+              </p>
+            @endif
+            @if ($sidebar['topics'] !== [])
+              <p class="concept-topic-row">
+                @foreach ($sidebar['topics'] as $topic)
+                  <span class="concept-topic">{{ $topic }}</span>
+                @endforeach
+              </p>
+            @endif
+          </div>
+        @endif
+
+        @if ($sidebar['brand_tagline'] !== '' || $sidebar['brand_palette'] !== [])
+          <div class="concept-aside-card concept-aside-card--brand">
+            <h2 class="concept-aside-title">{{ __('Brand', 'sage') }}</h2>
+            @if ($sidebar['brand_tagline'] !== '')
+              <p class="concept-brand-tagline">{{ $sidebar['brand_tagline'] }}</p>
+            @endif
+            @if ($sidebar['brand_palette'] !== [])
+              <ul class="concept-brand-palette" aria-label="{{ __('Color palette', 'sage') }}">
+                @foreach ($side
