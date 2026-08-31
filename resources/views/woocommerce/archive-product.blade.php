@@ -17,11 +17,15 @@
       <h1 class="display-title is-hero woocommerce-products-header__title">{!! woocommerce_page_title(false) !!}</h1>
     @endif
     <div class="lead woocommerce-archive-desc">
-      @php(do_action('woocommerce_archive_description'))
+      @php
+        do_action('woocommerce_archive_description');
+      @endphp
     </div>
   @endcomponent
 
-  @php(do_action('woocommerce_before_main_content'))
+  @php
+    do_action('woocommerce_before_main_content');
+  @endphp
 
   @if (woocommerce_product_loop())
     @php
@@ -44,7 +48,9 @@
       do_action('woocommerce_after_shop_loop');
     @endphp
   @else
-    @php(do_action('woocommerce_no_products_found'))
+    @php
+      do_action('woocommerce_no_products_found');
+    @endphp
   @endif
 
   @php
