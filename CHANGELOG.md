@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.29 — 2026-08-31
+
+### Added
+
+- WooCommerce: Sage Blade wrappers for Shop (`archive-product`) and single product, plus a **WooCommerce** page template for Cart, Checkout, and My account (classic shortcodes — not WooCommerce 9 block pages)
+- WooCommerce: idempotent seed creates/assigns Shop, Cart, Checkout, and My account when the plugin is active; Coming soon is turned off so guests see theme templates
+- WooCommerce: `generoi/sage-woocommerce` so WooCommerce templates can render as Blade inside the Sage layout
+
 ## 3.1.28 — 2026-08-31
 
 ### Fixed

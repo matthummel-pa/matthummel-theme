@@ -47,6 +47,10 @@
         <li><a href="{{ $writing }}">Journal</a></li>
         <li><a href="{{ home_url('/now/') }}">Now</a></li>
         <li><a href="{{ home_url('/contact/') }}">Contact</a></li>
+        @if (\App\mh_woocommerce_is_active())
+          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Shop', 'sage') }}</a></li>
+          <li><a href="{{ esc_url(wc_get_page_permalink('cart')) }}">{{ __('Cart', 'sage') }}</a></li>
+        @endif
       </ul>
     </nav>
 
