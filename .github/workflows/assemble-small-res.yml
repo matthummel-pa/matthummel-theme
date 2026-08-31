@@ -1,0 +1,38 @@
+name: Assemble small resolved conflict files
+on:
+  push:
+    paths: ['.github/small-res-parts/**', '.github/workflows/assemble-small-res.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/product-landing-pages-f168
+      - run: |
+          python3 << 'PY'
+          import base64, pathlib, zlib
+          root = pathlib.Path('.github/small-res-parts')
+          def loadz(prefix, n):
+              raw = ''.join((root / f'{prefix}.{i}').read_text() for i in range(n))
+              return zlib.decompress(base64.b64decode(raw))
+          concept = loadz('zconcept', 5)
+          blade = loadz('zblade', 3)
+          assert b"return 'projects'" in concept
+          assert b'mh_project_product_type' in concept
+          assert b'app/shop.php' in concept
+          assert b'app/concept-sidebar.php' in concept
+          assert b'concept-aside-card--facts' in blade
+          pathlib.Path('app/concept-pages.php').write_bytes(concept)
+          pathlib.Path('resources/views/partials/content-single-project.blade.php').write_bytes(blade)
+          print('concept', len(concept), 'blade', len(blade))
+          PY
+          rm -rf .github/small-res-parts .github/workflows/assemble-small-res.yml
+          git config user.name matt-hummel
+          git config user.email matt@matthummel.com
+          git add -A
+          git commit -m "Resolve merge conflicts with /projects routes and product sidebars" || true
+          git push origin HEAD:cursor/product-landing-pages-f168
