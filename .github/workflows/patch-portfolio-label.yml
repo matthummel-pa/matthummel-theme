@@ -1,0 +1,40 @@
+name: Patch portfolio case URL label
+on:
+  push:
+    paths:
+      - '.github/sidebar-parts/PATCH_PORTFOLIO'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/product-landing-pages-f168
+      - name: Patch label
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path('app/portfolio.php')
+          t = p.read_text(encoding='utf-8')
+          old = "mh_project_admin_field_row(__('Legacy R&V case URL', 'sage'), 'mh_project_concept', \$concept, 'https://rootsandvibes.com/…', 'url');"
+          # Use simpler replaces
+          if 'Legacy R&V case URL' not in t:
+              print('already patched or missing'); raise SystemExit(0)
+          t2 = t.replace("__('Legacy R&V case URL', 'sage')", "__('GitHub / case URL', 'sage')", 1)
+          # placeholder near concept field — match local
+          t2 = t2.replace("'https://rootsandvibes.com/…'", "'https://github.com/… or legacy case URL'", 1)
+          if t2 == t:
+              raise SystemExit('no change applied')
+          p.write_text(t2, encoding='utf-8')
+          assert 'GitHub / case URL' in t2
+          assert 'Legacy R&V case URL' not in t2
+          print('patched ok', len(t2))
+          PY
+          git config user.name "matt-hummel"
+          git config user.email "matt@matthummel.com"
+          git add app/portfolio.php
+          git commit -m "Relabel project case URL field to GitHub / case URL"
+          git push origin HEAD:cursor/product-landing-pages-f168
