@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./portfolio.css";
+@import "./product-landing.css";
 @import "./code-blocks.css";
 
 /* Light mode only — no dark mode toggle */

@@ -1,0 +1,214 @@
+/* Product landing (theme / plugin) */
+.concept-page--product .concept-hero-actions .btn { min-height: 2.75rem; }
+.concept-price-inline :where(.amount) {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.concept-aside-card--buy {
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--color-accent) 10%, transparent) 0%, transparent 55%),
+    var(--white);
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+}
+.concept-buy-kicker {
+  margin: 0 0 .35rem;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.concept-buy-price {
+  margin: 0 0 .55rem;
+  font: 750 clamp(1.6rem, 3vw, 2rem)/1.1 var(--font-display);
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+}
+.concept-buy-price :where(.amount) { font: inherit; }
+.concept-buy-note {
+  margin: 0 0 .85rem;
+  font-size: .9rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+.concept-aside-card--buy .btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: .4rem;
+}
+.concept-list--benefits li::before {
+  border-radius: 2px;
+  width: .5rem;
+  height: .5rem;
+}
+.concept-faq__list { display: grid; gap: .65rem; }
+.concept-faq__item {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--white);
+  padding: .85rem 1rem;
+}
+.concept-faq__item summary {
+  cursor: pointer;
+  font-weight: 650;
+  color: var(--color-text);
+  list-style: none;
+}
+.concept-faq__item summary::-webkit-details-marker { display: none; }
+.concept-faq__item summary::after {
+  content: "+";
+  float: right;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+.concept-faq__item[open] summary::after { content: "–"; }
+.concept-faq__item p {
+  margin: .65rem 0 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: .98rem;
+}
+
+/* ThemeForest-style sidebar facts */
+.concept-aside-card--facts .concept-fact-list {
+  margin: 0;
+  display: grid;
+  gap: .55rem;
+}
+.concept-fact {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: .35rem .75rem;
+  align-items: baseline;
+  font-size: .92rem;
+}
+.concept-fact dt {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+.concept-fact dd {
+  margin: 0;
+  color: var(--color-text);
+  font-weight: 550;
+}
+.concept-fact dd a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: .12em;
+}
+.concept-aside-subtitle {
+  margin: 1rem 0 .4rem;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.concept-fact-files,
+.concept-fact-docs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .35rem;
+  font-size: .92rem;
+}
+.concept-fact-files li {
+  padding-left: .85rem;
+  position: relative;
+}
+.concept-fact-files li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: .35rem;
+  height: .35rem;
+  border-radius: 1px;
+  background: var(--color-accent);
+}
+.concept-fact-docs a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+.concept-fact-docs a:hover {
+  color: var(--color-accent);
+}
+.concept-fact-github,
+.concept-fact-support {
+  margin: .85rem 0 0;
+  font-size: .92rem;
+}
+.concept-fact-github a {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+.concept-topic-row {
+  margin: .65rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+.concept-topic {
+  font-size: .75rem;
+  padding: .2rem .5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+}
+.concept-brand-tagline {
+  margin: 0 0 .75rem;
+  font: 550 1.05rem/1.35 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.concept-brand-palette {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .45rem;
+}
+.concept-brand-palette li {
+  display: grid;
+  grid-template-columns: 1.15rem 1fr auto;
+  gap: .55rem;
+  align-items: center;
+  font-size: .88rem;
+}
+.concept-brand-swatch {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 3px;
+  background: var(--swatch);
+  border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+}
+.concept-brand-palette code {
+  font-size: .78rem;
+  color: var(--color-text-secondary);
+}
+.concept-gallery {
+  margin: 0 0 1.75rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.concept-gallery figure {
+  margin: 0;
+}
+.concept-gallery img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+.concept-gallery figcaption {
+  margin-top: .45rem;
+  font-size: .88rem;
+  color: var(--color-text-secondary);
+}
