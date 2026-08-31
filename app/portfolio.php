@@ -12,6 +12,29 @@ function mh_github_login(): string
     return 'matthummel-pa';
 }
 
+/** Rewrite leftover studio-brand phrasing in visitor-facing strings. */
+function mh_visitor_brand_text(string $text): string
+{
+    if ($text === '') {
+        return $text;
+    }
+
+    return str_replace(
+        [
+            'Ridges & Valleys Studio',
+            'Ridges &amp; Valleys Studio',
+            'Ridges & Valleys',
+            'Ridges &amp; Valleys',
+            'R&amp;V Studio',
+            'R&V Studio',
+            'R&amp;V',
+            'R&V',
+        ],
+        'Matt Hummel',
+        $text
+    );
+}
+
 /** Website listed on the GitHub profile, with this site as the fallback. */
 function mh_github_blog_url(?array $gh = null): string
 {
@@ -140,7 +163,7 @@ function mh_home_github_repos(int $limit = 6): array
     $names = array_map(static fn ($r) => strtolower((string) ($r['name'] ?? '')), $featured);
     foreach ($live as $r) {
         $name = strtolower((string) ($r['name'] ?? ''));
-        if ($name === '' || in_array($name, $names, true)) {
+        if ($name === '' || $name === 'ridgesandvalleys' || in_array($name, $names, true)) {
             continue;
         }
         $featured[] = $r;
@@ -213,6 +236,7 @@ function mh_repo_card(array $repo): array
     if ($desc === '') {
         $desc = (string) ($meta['desc'] ?? '');
     }
+    $desc = mh_visitor_brand_text($desc);
     if ($url === '') {
         $url = (string) ($meta['url'] ?? '');
     }
@@ -506,7 +530,7 @@ function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
 
     foreach (mh_github_live_repos(max($limit * 2, 12)) as $repo) {
         $name = strtolower((string) ($repo['name'] ?? ''));
-        if ($name === '' || in_array($name, $featuredNames, true)) {
+        if ($name === '' || $name === 'ridgesandvalleys' || in_array($name, $featuredNames, true)) {
             continue;
         }
         $live[] = $repo;
@@ -714,6 +738,7 @@ function mh_home_oss_live_data(int $repo_count = 3): array
         if ($desc === '' || $desc === ($meta['desc'] ?? '')) {
             $desc = trim((string) ($meta['desc'] ?? $desc));
         }
+        $desc = mh_visitor_brand_text($desc);
 
         /* Build URL */
         $url = (string) ($r['url'] ?? '');

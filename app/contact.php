@@ -96,25 +96,45 @@ function mh_contact_prefill(string $key, string $default = ''): string
     $item = mh_work_item_by_slug($slug);
     $title = (string) ($item['title'] ?? $slug);
     $share = mh_work_permalink($slug);
-    $concept = (string) ($item['concept'] ?? '');
+    $example = mh_contact_example_url($item ?? []);
     $intent = isset($_GET['intent']) ? sanitize_key(wp_unslash($_GET['intent'])) : '';
     $isHelp = $intent === 'help';
 
     return match ($key) {
         'who' => 'business',
-        'subject' => $isHelp
-            ? sprintf(__('Help with the %s theme', 'sage'), $title)
-            : sprintf(__('Help with the %s theme', 'sage'), $title),
+        'subject' => sprintf(__('Help with the %s theme', 'sage'), $title),
         'message' => implode("\n", array_values(array_filter([
             $isHelp
                 ? sprintf(__('I have a question about the “%s” theme.', 'sage'), $title)
                 : sprintf(__('I would like help with the “%s” theme.', 'sage'), $title),
             '',
             sprintf(__('Project on this site: %s', 'sage'), $share),
-            $concept !== '' ? sprintf(__('Example URL: %s', 'sage'), $concept) : '',
+            $example !== '' ? sprintf(__('Live demo: %s', 'sage'), $example) : '',
         ]))),
         default => $default,
     };
+}
+
+/**
+ * Live demo URL for contact prefill. Skips old studio marketing URLs.
+ *
+ * @param  array<string, mixed>  $item
+ */
+function mh_contact_example_url(array $item): string
+{
+    foreach (['demo', 'concept'] as $key) {
+        $url = trim((string) ($item[$key] ?? ''));
+        if ($url === '' || ! preg_match('#^https?://#i', $url)) {
+            continue;
+        }
+        if (preg_match('#^https?://(www\.)?ridgesandvalleys\.com(/|$)#i', $url)) {
+            continue;
+        }
+
+        return $url;
+    }
+
+    return '';
 }
 
 /**
