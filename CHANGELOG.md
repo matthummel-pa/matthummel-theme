@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.35 — 2026-08-31
+
+### Fixed
+
+- Live critical error: WooCommerce product seed threw uncaught `Invalid or duplicated SKU` on `woocommerce_init` (e.g. `theme-tocflow`). Sync now adopts the existing SKU owner and never fatals the front end
+
 ## 3.1.34 — 2026-08-31
 
 ### Fixed

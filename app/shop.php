@@ -260,12 +260,30 @@ function mh_sync_project_product(int $project_id): int
         return 0;
     }
 
+    try {
+        return mh_sync_project_product_unchecked($project_id);
+    } catch (\Throwable $e) {
+        // Catalog sync must never white-screen the public site.
+        if (function_exists('error_log')) {
+            error_log('mh_sync_project_product('.$project_id.'): '.$e->getMessage());
+        }
+
+        return 0;
+    }
+}
+
+/**
+ * @internal Prefer mh_sync_project_product().
+ */
+function mh_sync_project_product_unchecked(int $project_id): int
+{
     $post = get_post($project_id);
     if (! $post instanceof \WP_Post || $post->post_type !== mh_project_post_type()) {
         return 0;
     }
 
     $slug = sanitize_title((string) $post->post_name);
+    $sku = 'theme-'.($slug !== '' ? $slug : (string) $project_id);
     $productId = mh_find_product_id_for_project($project_id, $slug);
     $isNew = $productId <= 0;
     $product = $isNew ? new \WC_Product_Simple : wc_get_product($productId);
@@ -290,9 +308,32 @@ function mh_sync_project_product(int $project_id): int
     $product->set_short_description($blurb);
     $product->set_description($summary);
 
-    $sku = 'theme-'.($slug !== '' ? $slug : (string) $project_id);
-    if ($isNew || (string) $product->get_sku() === '') {
-        $product->set_sku($sku);
+    $currentSku = (string) $product->get_sku();
+    if ($isNew || $currentSku === '') {
+        try {
+            $product->set_sku($sku);
+        } catch (\WC_Data_Exception $e) {
+            // SKU already owned by another product — adopt it instead of fatalling.
+            $existingId = function_exists('wc_get_product_id_by_sku')
+                ? (int) wc_get_product_id_by_sku($sku)
+                : 0;
+            if ($existingId > 0) {
+                $existing = wc_get_product($existingId);
+                if ($existing instanceof \WC_Product) {
+                    $product = $existing;
+                    $isNew = false;
+                    $product->set_name($post->post_title);
+                    if ($slug !== '') {
+                        $product->set_slug($slug);
+                    }
+                    $product->set_virtual(true);
+                    $product->set_sold_individually(true);
+                    $product->set_catalog_visibility('visible');
+                    $product->set_short_description($blurb);
+                    $product->set_description($summary);
+                }
+            }
+        }
     }
 
     $price = trim((string) get_post_meta($project_id, '_mh_project_price', true));
@@ -367,8 +408,17 @@ function mh_seed_project_products(): void
         return;
     }
 
-    mh_sync_all_project_products();
-    update_option('mh_woocommerce_project_products_seeded_v1', true);
+    // Always mark seeded after the first attempt so a single SKU conflict
+    // cannot take down every front-end request via woocommerce_init.
+    try {
+        mh_sync_all_project_products();
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_seed_project_products: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_woocommerce_project_products_seeded_v1', true);
+    }
 }
 
 /** Add-to-cart label that matches the linked project type. */
