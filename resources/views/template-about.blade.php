@@ -6,7 +6,6 @@
 @php
   $gh           = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl        = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
-  $ghBlog       = \App\mh_github_blog_url($gh);
   $writing      = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $latestPosts  = \App\mh_latest_posts(3);
   $yearsBuilding = (int) date('Y') - 2009;
@@ -119,7 +118,7 @@
           </h2>
           <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p3', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p3', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
@@ -179,10 +178,10 @@
 
           <div class="about-aside-card about-aside-card--studio">
             <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Gettysburg studio work', 'sage') }}</p>
-            <h3 class="about-aside-card__title">Ridges &amp; Valleys</h3>
-            <p class="about-aside-card__bio">{{ __('Live WordPress demos for Gettysburg shops, tours, and inns. I\'m building the studio brand as real projects come in.', 'sage') }}</p>
-            <a class="about-aside-card__link" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-              {{ __('Visit ridgesandvalleys.com', 'sage') }} →
+            <h3 class="about-aside-card__title">Matt Hummel</h3>
+            <p class="about-aside-card__bio">{{ __('Live WordPress demos for Gettysburg shops, tours, and inns. Hire me here for a real build.', 'sage') }}</p>
+            <a class="about-aside-card__link" href="{{ home_url('/projects/') }}">
+              {{ __('See example sites', 'sage') }} →
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
             </a>
           </div>

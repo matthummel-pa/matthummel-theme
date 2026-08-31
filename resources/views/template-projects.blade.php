@@ -19,8 +19,6 @@
   sort($cats);
   $pageUrl = get_permalink();
   $shown = $cat === '' ? $all : array_values(array_filter($all, fn ($p) => ($p['cat'] ?? '') === $cat));
-  $ghUser = \App\Github::fetchUser(\App\mh_github_login());
-  $ghBlog = \App\mh_github_blog_url($ghUser);
   $total = count($all);
   $shownCount = count($shown);
   $isEmpty = $total === 0;
@@ -36,11 +34,11 @@
     {{ \App\field('work_h1', __('WordPress websites for Gettysburg businesses.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
+    {{ \App\field('work_lede', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
   </p>
   <p class="about-hero-links" style="margin-top:1rem">
-    <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-      {!! \App\mh_svg_icon('globe', 15) !!} Ridges &amp; Valleys ↗
+    <a href="{{ home_url('/code/') }}">
+      {!! \App\mh_svg_icon('code', 15) !!} {{ __('Code and repos', 'sage') }}
     </a>
     <a href="{{ home_url('/services/') }}">{!! \App\mh_svg_icon('briefcase', 15) !!} How I can help</a>
     <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start a project</a>
@@ -56,16 +54,16 @@
         {{ \App\field('work_empty_h2', __('Example sites are on the way.', 'sage')) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I\'m choosing which Gettysburg projects to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')) }}
+        {{ \App\field('work_empty_text', __('I\'m choosing which Gettysburg projects to publish here first. Write and tell me what kind of shop you run.', 'sage')) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
           {!! \App\mh_svg_icon('mail', 16) !!}
           {{ \App\field('work_empty_cta', __('Say hello', 'sage')) }}
         </a>
-        <a class="btn btn-outline" href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
-          {!! \App\mh_svg_icon('globe', 15) !!}
-          {{ __('Browse Ridges & Valleys demos', 'sage') }} ↗
+        <a class="btn btn-outline" href="{{ home_url('/services/') }}">
+          {!! \App\mh_svg_icon('briefcase', 15) !!}
+          {{ __('How I can help', 'sage') }}
         </a>
         <a class="h-text-arrow" href="{{ home_url('/services/') }}">{{ __('How I can help', 'sage') }} →</a>
       </div>

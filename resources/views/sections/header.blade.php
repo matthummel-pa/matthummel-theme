@@ -54,6 +54,20 @@
         </a>
       @endif
 
+      @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
+        @php $cartCount = \App\mh_cart_count(); @endphp
+        <a
+          class="header-cart"
+          href="{{ esc_url(wc_get_cart_url()) }}"
+          aria-label="{{ $cartCount > 0 ? sprintf(__('Cart, %d items', 'sage'), $cartCount) : __('Cart', 'sage') }}"
+        >
+          {!! \App\mh_svg_icon('cart', 18) !!}
+          @if ($cartCount > 0)
+            <span class="header-cart__count">{{ $cartCount }}</span>
+          @endif
+        </a>
+      @endif
+
       {{-- Desktop CTA --}}
       <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">Say hello</a>
 
@@ -133,6 +147,16 @@
     <p class="mh-popout-kicker mh-popout-kicker--quiet">{{ __('Elsewhere', 'sage') }}</p>
     @include('partials.social', ['compact' => true])
   </div>
+
+  @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
+    <a class="btn btn-outline mh-popout-cart" href="{{ esc_url(wc_get_cart_url()) }}">
+      {!! \App\mh_svg_icon('cart', 15) !!}
+      {{ __('Cart', 'sage') }}
+      @if (\App\mh_cart_count() > 0)
+        ({{ \App\mh_cart_count() }})
+      @endif
+    </a>
+  @endif
 
   <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/contact/')) }}">
     {!! \App\mh_svg_icon('mail', 15) !!} Say hello

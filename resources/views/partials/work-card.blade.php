@@ -10,8 +10,12 @@
   $conceptUrl = (string) ($p['url'] ?? \App\mh_concept_page_url($slug, isset($p['post_id']) ? (int) $p['post_id'] : null));
   $demo = (string) ($p['demo'] ?? '');
   $shareUrl = \App\mh_work_permalink($slug, $pageUrl ?? null);
-  $useUrl = \App\mh_work_contact_url($p);
+  $helpUrl = (string) ($p['help_url'] ?? (function_exists('\\App\\mh_work_help_url') ? \App\mh_work_help_url($p) : \App\mh_work_contact_url($p)));
+  $buyUrl = (string) ($p['buy_url'] ?? '');
+  $buyLabel = (string) ($p['buy_label'] ?? \App\field('work_cta_buy', __('Buy theme', 'sage')));
+  $priceLabel = (string) ($p['price_label'] ?? '');
   $featured = ! empty($featured);
+  $ghost = $featured ? 'btn btn-ghost' : 'btn btn-outline';
   $haystack = strtolower(trim(implode(' ', array_filter([
     $title,
     $p['cat'] ?? '',
@@ -35,7 +39,13 @@
     @if ($featured)
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
-    <p class="pf-meta">{{ $p['cat'] }} · {{ $p['place'] }}</p>
+    <p class="pf-meta">
+      {{ $p['cat'] }} · {{ $p['place'] }}
+      @if ($priceLabel !== '')
+        <span aria-hidden="true"> · </span>
+        <span class="work-card-price">{{ $priceLabel }}</span>
+      @endif
+    </p>
     <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
     <p>{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))
@@ -46,20 +56,29 @@
       </p>
     @endif
     <div class="work-actions">
-      <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($conceptUrl) }}">
+      @if ($buyUrl !== '')
+        <a class="btn" href="{{ esc_url($buyUrl) }}">
+          {!! \App\mh_svg_icon('cart', 14) !!}
+          {{ $buyLabel }}
+          <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        </a>
+      @endif
+      <a class="{{ $buyUrl !== '' ? $ghost : 'btn' }}" href="{{ esc_url($helpUrl) }}">
+        {!! \App\mh_svg_icon('mail', 14) !!}
+        {{ \App\field('work_cta_help', __('Get help', 'sage')) }}
+        <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+      </a>
+      <a class="{{ $ghost }}" href="{{ esc_url($conceptUrl) }}">
         {{ \App\field('work_cta_view', __('View project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
       @if ($demo !== '')
-        <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+        <a class="{{ $ghost }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
           {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
         </a>
       @endif
-      <a class="btn" href="{{ esc_url($useUrl) }}">
-        {{ \App\field('work_cta_use', __('Use this project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
-      </a>
       <button
         type="button"
-        class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}"
+        class="{{ $ghost }}"
         data-share-project
         data-share-url="{{ esc_url($shareUrl) }}"
         data-share-title="{{ esc_attr($title) }}"

@@ -61,7 +61,7 @@ To use a different headshot: Appearance → Customize → Profile photo. Leave i
 
 ## 5. Edit page copy
 
-Each portfolio page has a **Page content (theme)** box (same pattern as Ridges & Valleys). Leave a field blank to keep the built-in default. Repeaters restore the built-in list if you remove every row.
+Each portfolio page has a **Page content (theme)** box. Leave a field blank to keep the built-in default. Repeaters restore the built-in list if you remove every row.
 
 Do not hardcode new sentences in Blade — add a row in `app/page-fields.php` and read it with `\App\field('key', __('Default', 'sage'))`.
 

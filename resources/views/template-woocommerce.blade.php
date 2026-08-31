@@ -26,7 +26,7 @@
     @if ($shortcode !== '')
       {!! do_shortcode($shortcode) !!}
       @if (function_exists('is_checkout') && is_checkout() && function_exists('WC') && WC()->cart && WC()->cart->is_empty())
-        <p class="woocommerce-info">{{ __('Checkout is empty until something is in the cart.', 'sage') }} <a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Return to shop', 'sage') }}</a></p>
+        <p class="woocommerce-info">{{ __('Checkout is empty until something is in the cart.', 'sage') }} <a href="{{ esc_url(\App\mh_theme_catalog_url()) }}">{{ __('Return to work', 'sage') }}</a></p>
       @endif
     @else
       <p>{{ __('WooCommerce is not active, so this page has nothing to show yet.', 'sage') }}</p>

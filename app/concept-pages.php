@@ -138,11 +138,6 @@ function mh_project_product_id(int $post_id): int
  */
 function mh_project_is_product_landing(int $post_id): bool
 {
-    $type = mh_project_product_type($post_id);
-    if (! in_array($type, ['theme', 'plugin'], true)) {
-        return false;
-    }
-
     return mh_project_product_id($post_id) > 0 && mh_shop_ready();
 }
 
@@ -241,7 +236,10 @@ function mh_project_concept_narrative(int $post_id): array
     $productType = mh_project_product_type($post_id);
     $productId = mh_project_product_id($post_id);
     $product = $productId > 0 ? mh_shop_product_payload($productId) : null;
-    $isProduct = in_array($productType, ['theme', 'plugin'], true) && is_array($product);
+    $isProduct = is_array($product);
+    if ($isProduct && $productType === 'concept') {
+        $productType = 'theme';
+    }
 
     return [
         'eyebrow' => trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true)),

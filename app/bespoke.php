@@ -2231,3 +2231,104 @@ function mh_apply_ridges_concept_framing_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_ridges_concept_framing_v1', 71);
+
+/**
+ * Drop Ridges & Valleys as a public brand. Visitor copy uses Matt Hummel / this site.
+ */
+function mh_rewrite_ridges_brand_value(mixed $value): mixed
+{
+    if (is_array($value)) {
+        foreach ($value as $key => $item) {
+            $value[$key] = mh_rewrite_ridges_brand_value($item);
+        }
+
+        return $value;
+    }
+
+    if (! is_string($value) || $value === '') {
+        return $value;
+    }
+
+    $exact = [
+        'Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.' => 'I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.',
+        'Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.' => 'I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.',
+        'Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.' => 'Browse the Work page. When you\'re ready for a real build, say hello here.',
+        'I\'m choosing which Gettysburg projects to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.' => 'I\'m choosing which Gettysburg projects to publish here first. Write and tell me what kind of shop you run.',
+        'No. Ridges & Valleys holds the Gettysburg WordPress demos. This site is for builds and sharing.' => 'No. This site is for WordPress builds and sharing, including Gettysburg example sites.',
+        'I don’t run ads or social accounts for shops. Local Gettysburg marketing lives at <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a>. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.' => 'I don’t run ads or social accounts for shops. This site is for WordPress builds and sharing. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.',
+        'Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is where I publish Gettysburg WordPress demos.' => 'Prefer GitHub or LinkedIn? Those work too. This site is where I publish Gettysburg WordPress demos.',
+        'Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is where I publish Gettysburg concept demos.' => 'Prefer GitHub or LinkedIn? Those work too. This site is where I publish Gettysburg WordPress demos.',
+        'Repos and snippets: <a href="/code/">Code</a>. Live demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.' => 'Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.',
+        'Repos and snippets: <a href="/code/">Code</a>. Concept demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.' => 'Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.',
+        'Ridges & Valleys — Gettysburg projects and live WordPress demos for shops, tours, and inns.' => 'Gettysburg projects — live WordPress demos for shops, tours, and inns.',
+        'Ridges & Valleys — Gettysburg concept sites and live WordPress demos for shops, tours, and inns.' => 'Gettysburg projects — live WordPress demos for shops, tours, and inns.',
+        'Building the Ridges & Valleys brand as real client projects come in.' => 'Building WordPress sites shops can edit.',
+        'I started Ridges & Valleys as a WordPress studio for Gettysburg shops, tours, and inns. Alongside that studio work, I’m open for full-time, contract, or project-based roles.' => 'I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.',
+        'Based in Gettysburg, PA. I just started Ridges & Valleys and I work with shops and agencies in any location. Roles below match my LinkedIn. I am still open to agencies, overflow work, and full-time positions.' => 'Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.',
+        'Ridges & Valleys is the studio I just started. I work with shops, inns, tours, and agencies in any location.' => 'Gettysburg projects — live WordPress demos for shops, tours, and inns.',
+        'Gettysburg projects — live WordPress demos for shops, tours, and inns. The studio brand grows as real work comes in.' => 'Live WordPress demos for shops, tours, and inns in Adams County. Hire me here for a real build.',
+        'https://ridgesandvalleys.com' => home_url('/'),
+    ];
+    if (isset($exact[$value])) {
+        return $exact[$value];
+    }
+
+    $home = rtrim(home_url('/'), '/');
+    $value = str_replace(
+        ['https://ridgesandvalleys.com/', 'https://ridgesandvalleys.com', 'Ridges &amp; Valleys', 'Ridges & Valleys'],
+        [$home.'/', $home, 'Matt Hummel', 'Matt Hummel'],
+        $value
+    );
+
+    return (string) (preg_replace('#(?<![a-z0-9.-])ridgesandvalleys\.com#i', 'matthummel.com', $value) ?? $value);
+}
+
+function mh_apply_matt_hummel_brand_v1(): void
+{
+    if (get_option('mh_matt_hummel_brand_v1') || wp_installing()) {
+        return;
+    }
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $all = get_post_meta($id);
+        if (! is_array($all)) {
+            continue;
+        }
+        foreach ($all as $key => $values) {
+            if (! is_string($key) || ! str_starts_with($key, 'mh_f_')) {
+                continue;
+            }
+            $raw = get_post_meta($id, $key, true);
+            $next = mh_rewrite_ridges_brand_value($raw);
+            if ($next !== $raw) {
+                update_post_meta($id, $key, $next);
+            }
+        }
+    }
+
+    $blogname = (string) get_option('blogname');
+    if ($blogname !== '' && (stripos($blogname, 'Ridges') !== false || stripos($blogname, 'Valleys') !== false)) {
+        update_option('blogname', 'Matt Hummel');
+    }
+
+    $tagline = (string) get_option('blogdescription');
+    if ($tagline !== '') {
+        $nextTagline = mh_rewrite_ridges_brand_value($tagline);
+        if (is_string($nextTagline) && $nextTagline !== $tagline) {
+            update_option('blogdescription', $nextTagline);
+        }
+    }
+
+    update_option('mh_matt_hummel_brand_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_matt_hummel_brand_v1', 72);

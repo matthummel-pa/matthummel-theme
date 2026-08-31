@@ -96,19 +96,45 @@ function mh_contact_prefill(string $key, string $default = ''): string
     $item = mh_work_item_by_slug($slug);
     $title = (string) ($item['title'] ?? $slug);
     $share = mh_work_permalink($slug);
-    $concept = (string) ($item['concept'] ?? '');
+    $example = mh_contact_example_url($item ?? []);
+    $intent = isset($_GET['intent']) ? sanitize_key(wp_unslash($_GET['intent'])) : '';
+    $isHelp = $intent === 'help';
 
     return match ($key) {
         'who' => 'business',
-        'subject' => sprintf(__('Use the %s project', 'sage'), $title),
+        'subject' => sprintf(__('Help with the %s theme', 'sage'), $title),
         'message' => implode("\n", array_values(array_filter([
-            sprintf(__('I would like to use the “%s” project for my site.', 'sage'), $title),
+            $isHelp
+                ? sprintf(__('I have a question about the “%s” theme.', 'sage'), $title)
+                : sprintf(__('I would like help with the “%s” theme.', 'sage'), $title),
             '',
             sprintf(__('Project on this site: %s', 'sage'), $share),
-            $concept !== '' ? sprintf(__('Ridges & Valleys page: %s', 'sage'), $concept) : '',
+            $example !== '' ? sprintf(__('Live demo: %s', 'sage'), $example) : '',
         ]))),
         default => $default,
     };
+}
+
+/**
+ * Live demo URL for contact prefill. Skips old studio marketing URLs.
+ *
+ * @param  array<string, mixed>  $item
+ */
+function mh_contact_example_url(array $item): string
+{
+    foreach (['demo', 'concept'] as $key) {
+        $url = trim((string) ($item[$key] ?? ''));
+        if ($url === '' || ! preg_match('#^https?://#i', $url)) {
+            continue;
+        }
+        if (preg_match('#^https?://(www\.)?ridgesandvalleys\.com(/|$)#i', $url)) {
+            continue;
+        }
+
+        return $url;
+    }
+
+    return '';
 }
 
 /**
@@ -152,7 +178,7 @@ function mh_contact_expect(): array
         ],
         [
             'title' => __('No ads or social retainers', 'sage'),
-            'text' => __('I do not run ads or social accounts. Local Gettysburg marketing lives at Ridges & Valleys.', 'sage'),
+            'text' => __('I do not run ads or social accounts. Gettysburg example sites live on this site.', 'sage'),
         ],
         [
             'title' => __('Public code stays free', 'sage'),
@@ -181,11 +207,6 @@ function mh_contact_else_links(): array
     ];
 
     $links = mh_social_links();
-    $links[] = [
-        'key' => 'globe',
-        'label' => 'Ridges & Valleys',
-        'url' => 'https://ridgesandvalleys.com',
-    ];
 
     foreach ($links as &$link) {
         $link['note'] = $notes[$link['key'] ?? ''] ?? '';

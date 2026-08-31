@@ -140,7 +140,7 @@
   $faqs = [
     [
       'q' => 'Do you take WordPress projects for Gettysburg businesses?',
-      'a' => 'Yes — Gettysburg shops, inns, tours, and restaurants are who the Ridges & Valleys demos are built for. Hire me for real builds on matthummel.com. I also take remote work for agencies and businesses anywhere in the US.',
+      'a' => 'Yes — Gettysburg shops, inns, tours, and restaurants are who these demos are built for. Hire me for real builds here. I also take remote work for agencies and businesses anywhere in the US.',
     ],
     [
       'q' => 'Do you work with agencies on client projects?',
