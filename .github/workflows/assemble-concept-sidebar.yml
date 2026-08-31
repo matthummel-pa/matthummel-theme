@@ -20,8 +20,8 @@ jobs:
           root = pathlib.Path('.github/sidebar-parts')
           def load(prefix, n):
               return base64.b64decode(''.join((root/f'{prefix}.{i}').read_text() for i in range(n)))
-          blade = load('blade', 7)
-          php = load('sidebar', 10)
+          blade = load('blade', 4)
+          php = load('sidebar', 5)
           pathlib.Path('resources/views/partials/content-single-project.blade.php').write_bytes(blade)
           pathlib.Path('app/concept-sidebar.php').write_bytes(php)
           assert b'concept-aside-card--facts' in blade
