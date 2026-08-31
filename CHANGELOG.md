@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.38 — 2026-08-31
+
+### Improved
+
+- WooCommerce shop, product, cart, checkout, and account pages: page heroes, accessible breadcrumbs, empty states, scrollable cart/order tables, clearer notices/forms, product grid cards, sticky checkout review, My Account nav pills
+- Shop/product/cart/checkout/account document titles and meta descriptions when Rank Math / Yoast are not set
+- Get help / View project links include visually-hidden product names for screen readers; header cart badge is `aria-hidden` (count stays in the link label)
+- Single-product H1 lives in the hero only (default Woo title removed); dark-mode styles for shop surfaces
+
 ## 3.1.37 — 2026-08-31
 
 ### Changed

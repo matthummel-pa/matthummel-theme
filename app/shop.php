@@ -461,19 +461,22 @@ function mh_woocommerce_get_help_button(): void
         }
     }
 
+    $productName = $product->get_name();
     echo '<p class="product-help-actions">';
     printf(
-        '<a class="btn btn-outline" href="%1$s">%2$s %3$s</a>',
+        '<a class="btn btn-outline" href="%1$s">%2$s <span class="visually-hidden">%3$s — </span>%4$s</a>',
         esc_url($help),
         mh_svg_icon('mail', 16),
+        esc_html($productName),
         esc_html__('Get help', 'sage')
     );
     if ($projectId > 0) {
         $projectUrl = get_permalink($projectId);
         if (is_string($projectUrl) && $projectUrl !== '') {
             printf(
-                ' <a class="h-text-arrow" href="%1$s">%2$s</a>',
+                ' <a class="h-text-arrow" href="%1$s"><span class="visually-hidden">%2$s — </span>%3$s</a>',
                 esc_url($projectUrl),
+                esc_html($productName),
                 esc_html__('View project', 'sage').' →'
             );
         }
@@ -498,9 +501,11 @@ function mh_woocommerce_loop_get_help(): void
         }
     }
 
+    $name = method_exists($product, 'get_name') ? (string) $product->get_name() : get_the_title();
     printf(
-        '<a class="btn btn-outline product-loop-help" href="%1$s">%2$s</a>',
+        '<a class="btn btn-outline product-loop-help" href="%1$s"><span class="visually-hidden">%2$s — </span>%3$s</a>',
         esc_url($help),
+        esc_html($name),
         esc_html__('Get help', 'sage')
     );
 }
