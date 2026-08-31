@@ -958,6 +958,34 @@ function mh_project_cpt_has_posts(): bool
 }
 
 /**
+ * Resolve the public Work / concept screenshot URL for a project.
+ *
+ * Featured image wins when set (so Media Library / Generate featured image
+ * updates show on /projects/ and /concept/). Falls back to `_mh_project_image`
+ * (bundled JPEG filename or absolute URL).
+ */
+function mh_project_card_image_url(int $post_id): string
+{
+    if ($post_id < 1) {
+        return '';
+    }
+
+    if (has_post_thumbnail($post_id)) {
+        $thumb = (string) wp_get_attachment_image_url((int) get_post_thumbnail_id($post_id), 'large');
+        if ($thumb === '') {
+            $thumb = (string) wp_get_attachment_url((int) get_post_thumbnail_id($post_id));
+        }
+        if ($thumb !== '') {
+            return $thumb;
+        }
+    }
+
+    return mh_studio_project_image_url([
+        'image' => (string) get_post_meta($post_id, '_mh_project_image', true),
+    ]);
+}
+
+/**
  * Map a project post to the Work card array shape.
  *
  * @return array<string, mixed>
@@ -967,12 +995,8 @@ function mh_project_post_to_card(\WP_Post $post): array
     $post_id = (int) $post->ID;
     $techRaw = (string) get_post_meta($post_id, '_mh_project_tech', true);
     $tech = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
-    $image = (string) get_post_meta($post_id, '_mh_project_image', true);
-    if ($image === '' && has_post_thumbnail($post_id)) {
-        $image = (string) wp_get_attachment_url((int) get_post_thumbnail_id($post_id));
-    }
 
-    $item = [
+    return [
         'slug' => $post->post_name,
         'title' => get_the_title($post),
         'cat' => (string) get_post_meta($post_id, '_mh_project_cat', true),
@@ -982,12 +1006,9 @@ function mh_project_post_to_card(\WP_Post $post): array
         'concept' => (string) get_post_meta($post_id, '_mh_project_concept', true),
         'demo' => mh_project_demo_url($post_id),
         'url' => mh_concept_page_url($post->post_name, $post_id),
-        'image' => $image,
+        'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
     ];
-    $item['image'] = mh_studio_project_image_url($item);
-
-    return $item;
 }
 
 /**
@@ -1225,7 +1246,12 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('Gettysburg, PA', 'sage'));
     mh_project_admin_field_row(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
     mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
-    mh_project_admin_field_row(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('hallowed-ground.jpg or https://…', 'sage'));
+    mh_project_admin_field_row(
+        __('Screenshot file or URL', 'sage'),
+        'mh_project_image',
+        $image,
+        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and concept page.', 'sage')
+    );
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Sell this as a product', 'sage').'</h3>';
