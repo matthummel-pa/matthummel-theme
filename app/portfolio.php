@@ -1219,13 +1219,9 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     $approach = (string) get_post_meta($post->ID, '_mh_project_approach', true);
     $result = (string) get_post_meta($post->ID, '_mh_project_result', true);
     $deliverables = (string) get_post_meta($post->ID, '_mh_project_deliverables', true);
-    $benefits = (string) get_post_meta($post->ID, '_mh_project_benefits', true);
-    $faq = (string) get_post_meta($post->ID, '_mh_project_faq', true);
-    $productType = (string) get_post_meta($post->ID, '_mh_project_product_type', true);
-    if ($productType === '') {
-        $productType = 'concept';
-    }
-    $productId = (string) get_post_meta($post->ID, '_mh_project_product_id', true);
+    $audience = (string) get_post_meta($post->ID, '_mh_project_audience', true);
+    $architecture = (string) get_post_meta($post->ID, '_mh_project_architecture', true);
+    $handoff = (string) get_post_meta($post->ID, '_mh_project_handoff', true);
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
     $live = mh_project_is_live((int) $post->ID);
     $metrics = [];
@@ -1238,7 +1234,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
     echo '<strong>'.esc_html__('Show on site', 'sage').'</strong></label></p>';
-    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /concept/ page.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /projects/{slug}/ page.', 'sage').'</p>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
@@ -1250,47 +1246,27 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and concept page.', 'sage')
+        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and project page.', 'sage')
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Sell this as a product', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Link a WooCommerce product to turn /projects/{slug}/ into an ad landing with Buy / Free download CTAs. Works for themes and plugins.', 'sage').'</p>';
-    echo '<table class="form-table" role="presentation"><tbody>';
-    echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Landing type', 'sage').'</label></th><td>';
-    echo '<select id="mh_project_product_type" name="mh_project_product_type">';
-    foreach ([
-        'concept' => __('Concept (hire CTA only)', 'sage'),
-        'theme' => __('Theme product', 'sage'),
-        'plugin' => __('Plugin product', 'sage'),
-    ] as $value => $label) {
-        printf(
-            '<option value="%1$s"%2$s>%3$s</option>',
-            esc_attr($value),
-            selected($productType, $value, false),
-            esc_html($label)
-        );
-    }
-    echo '</select></td></tr>';
-    mh_project_admin_field_row(__('WooCommerce product ID', 'sage'), 'mh_project_product_id', $productId, __('e.g. 4819', 'sage'));
-    mh_project_admin_field_row(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
-    mh_project_admin_field_row(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
-    echo '</tbody></table>';
-
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept / product page', 'sage').'</h3>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project page', 'sage').'</h3>';
     echo '<p class="description">'.esc_html__('These fields power /projects/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
     echo '<table class="form-table" role="presentation"><tbody>';
-    mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Concept · Boutique inn', 'sage'));
+    mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Project · Boutique inn', 'sage'));
     mh_project_admin_field_row(__('Summary', 'sage'), 'mh_project_summary', $summary, '', 'textarea');
     mh_project_admin_field_row(__('The problem', 'sage'), 'mh_project_challenge', $challenge, '', 'textarea');
     mh_project_admin_field_row(__('How I shaped it', 'sage'), 'mh_project_approach', $approach, '', 'textarea');
     mh_project_admin_field_row(__('What you get', 'sage'), 'mh_project_result', $result, '', 'textarea');
     mh_project_admin_field_row(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
+    mh_project_admin_field_row(__('Who it’s for', 'sage'), 'mh_project_audience', $audience, '', 'textarea');
+    mh_project_admin_field_row(__('How it’s built', 'sage'), 'mh_project_architecture', $architecture, '', 'textarea');
+    mh_project_admin_field_row(__('What ships', 'sage'), 'mh_project_handoff', $handoff, '', 'textarea');
     mh_project_admin_field_row(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, 'https://', 'url');
-    mh_project_admin_field_row(__('GitHub / case URL', 'sage'), 'mh_project_concept', $concept, 'https://github.com/… or legacy case URL', 'url');
+    mh_project_admin_field_row(__('Legacy R&V case URL', 'sage'), 'mh_project_concept', $concept, 'https://', 'url');
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept metrics (up to 3)', 'sage').'</h3>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project metrics (up to 3)', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
     for ($i = 1; $i <= 3; $i++) {
         echo '<tr><th scope="row">'.esc_html(sprintf(__('Metric %d', 'sage'), $i)).'</th><td>';
@@ -1313,14 +1289,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
 function mh_project_admin_field_row(string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void
 {
-    $rows = in_array($name, [
-        'mh_project_challenge',
-        'mh_project_approach',
-        'mh_project_result',
-        'mh_project_deliverables',
-        'mh_project_benefits',
-        'mh_project_faq',
-    ], true) ? 5 : 3;
+    $rows = in_array($name, ['mh_project_challenge', 'mh_project_approach', 'mh_project_result', 'mh_project_deliverables', 'mh_project_audience', 'mh_project_architecture', 'mh_project_handoff'], true) ? 5 : 3;
     echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
     if ($type === 'textarea') {
         printf(
@@ -1364,14 +1333,9 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_approach', sanitize_textarea_field(wp_unslash($_POST['mh_project_approach'] ?? '')));
     update_post_meta($post_id, '_mh_project_result', sanitize_textarea_field(wp_unslash($_POST['mh_project_result'] ?? '')));
     update_post_meta($post_id, '_mh_project_deliverables', sanitize_textarea_field(wp_unslash($_POST['mh_project_deliverables'] ?? '')));
-    update_post_meta($post_id, '_mh_project_benefits', sanitize_textarea_field(wp_unslash($_POST['mh_project_benefits'] ?? '')));
-    update_post_meta($post_id, '_mh_project_faq', sanitize_textarea_field(wp_unslash($_POST['mh_project_faq'] ?? '')));
-    $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'concept'));
-    if (! in_array($productType, ['concept', 'theme', 'plugin'], true)) {
-        $productType = 'concept';
-    }
-    update_post_meta($post_id, '_mh_project_product_type', $productType);
-    update_post_meta($post_id, '_mh_project_product_id', (string) max(0, (int) ($_POST['mh_project_product_id'] ?? 0)));
+    update_post_meta($post_id, '_mh_project_audience', sanitize_textarea_field(wp_unslash($_POST['mh_project_audience'] ?? '')));
+    update_post_meta($post_id, '_mh_project_architecture', sanitize_textarea_field(wp_unslash($_POST['mh_project_architecture'] ?? '')));
+    update_post_meta($post_id, '_mh_project_handoff', sanitize_textarea_field(wp_unslash($_POST['mh_project_handoff'] ?? '')));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));

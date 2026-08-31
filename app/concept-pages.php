@@ -6,14 +6,6 @@
 
 namespace App;
 
-// Product shop helpers + ThemeForest sidebar (loaded with project pages).
-if (is_readable($mhShop = get_theme_file_path('app/shop.php'))) {
-    require_once $mhShop;
-}
-if (is_readable($mhSidebar = get_theme_file_path('app/concept-sidebar.php'))) {
-    require_once $mhSidebar;
-}
-
 /**
  * Path to bundled project narrative JSON (keyed by project slug).
  */
@@ -90,97 +82,7 @@ function mh_project_demo_url(int $post_id): string
 }
 
 /**
- * Split admin list meta into clean lines (newlines preferred; pipes as fallback).
- *
- * @return list<string>
- */
-function mh_project_list_lines(string $raw): array
-{
-    $raw = trim($raw);
-    if ($raw === '') {
-        return [];
-    }
-
-    $parts = preg_split('/\r\n|\r|\n/', $raw) ?: [];
-    $parts = array_values(array_filter(array_map('trim', $parts)));
-
-    // Pipe-flattened admin/CLI values (avoid splitting FAQ "|||" rows).
-    if (count($parts) === 1 && str_contains($parts[0], '|') && ! str_contains($parts[0], '|||')) {
-        $parts = array_values(array_filter(array_map('trim', explode('|', $parts[0]))));
-    }
-
-    return $parts;
-}
-
-/**
- * Product type for a project landing: concept | theme | plugin.
- */
-function mh_project_product_type(int $post_id): string
-{
-    $type = sanitize_key((string) get_post_meta($post_id, '_mh_project_product_type', true));
-    if (! in_array($type, ['concept', 'theme', 'plugin'], true)) {
-        return 'concept';
-    }
-
-    return $type;
-}
-
-/**
- * Linked WooCommerce product ID (0 when unset).
- */
-function mh_project_product_id(int $post_id): int
-{
-    return max(0, (int) get_post_meta($post_id, '_mh_project_product_id', true));
-}
-
-/**
- * Whether this project should render as a sellable product landing.
- */
-function mh_project_is_product_landing(int $post_id): bool
-{
-    $type = mh_project_product_type($post_id);
-    if (! in_array($type, ['theme', 'plugin'], true)) {
-        return false;
-    }
-
-    return mh_project_product_id($post_id) > 0 && mh_shop_ready();
-}
-
-/**
- * FAQ pairs from `Question|||Answer` lines.
- *
- * @return list<array{0: string, 1: string}>
- */
-function mh_project_faq_pairs(int $post_id): array
-{
-    $raw = trim((string) get_post_meta($post_id, '_mh_project_faq', true));
-    if ($raw === '') {
-        return [];
-    }
-
-    $lines = preg_split('/\r\n|\r|\n/', $raw) ?: [];
-    $lines = array_values(array_filter(array_map('trim', $lines)));
-    if (count($lines) === 1 && str_contains($lines[0], ' ;; ')) {
-        $lines = array_values(array_filter(array_map('trim', explode(' ;; ', $lines[0]))));
-    }
-
-    $pairs = [];
-    foreach ($lines as $line) {
-        if (! str_contains($line, '|||')) {
-            continue;
-        }
-        [$q, $a] = array_map('trim', explode('|||', $line, 2));
-        if ($q === '' || $a === '') {
-            continue;
-        }
-        $pairs[] = [$q, $a];
-    }
-
-    return $pairs;
-}
-
-/**
- * Narrative fields for a concept / product page.
+ * Narrative fields for a project page.
  *
  * @return array{
  *   eyebrow: string,
@@ -189,13 +91,8 @@ function mh_project_faq_pairs(int $post_id): array
  *   approach: string,
  *   result: string,
  *   deliverables: list<string>,
- *   benefits: list<string>,
- *   faq: list<array{0: string, 1: string}>,
  *   metrics: list<array{0: string, 1: string}>,
- *   demo: string,
- *   product_type: string,
- *   is_product: bool,
- *   product: array<string, mixed>|null
+ *   demo: string
  * }
  */
 function mh_project_concept_narrative(int $post_id): array
@@ -207,21 +104,16 @@ function mh_project_concept_narrative(int $post_id): array
         'approach' => '',
         'result' => '',
         'deliverables' => [],
-        'benefits' => [],
-        'faq' => [],
         'metrics' => [],
         'demo' => '',
-        'product_type' => 'concept',
-        'is_product' => false,
-        'product' => null,
     ];
 
     if ($post_id <= 0) {
         return $defaults;
     }
 
-    $deliverables = mh_project_list_lines((string) get_post_meta($post_id, '_mh_project_deliverables', true));
-    $benefits = mh_project_list_lines((string) get_post_meta($post_id, '_mh_project_benefits', true));
+    $deliverablesRaw = (string) get_post_meta($post_id, '_mh_project_deliverables', true);
+    $deliverables = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $deliverablesRaw) ?: [])));
 
     $metrics = [];
     for ($i = 1; $i <= 3; $i++) {
@@ -238,25 +130,15 @@ function mh_project_concept_narrative(int $post_id): array
         $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
     }
 
-    $productType = mh_project_product_type($post_id);
-    $productId = mh_project_product_id($post_id);
-    $product = $productId > 0 ? mh_shop_product_payload($productId) : null;
-    $isProduct = in_array($productType, ['theme', 'plugin'], true) && is_array($product);
-
     return [
-        'eyebrow' => trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true)),
-        'summary' => $summary,
-        'challenge' => trim((string) get_post_meta($post_id, '_mh_project_challenge', true)),
-        'approach' => trim((string) get_post_meta($post_id, '_mh_project_approach', true)),
-        'result' => trim((string) get_post_meta($post_id, '_mh_project_result', true)),
-        'deliverables' => $deliverables,
-        'benefits' => $benefits,
-        'faq' => mh_project_faq_pairs($post_id),
+        'eyebrow' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true))),
+        'summary' => mh_project_public_prose($summary),
+        'challenge' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_challenge', true))),
+        'approach' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_approach', true))),
+        'result' => mh_project_public_prose(trim((string) get_post_meta($post_id, '_mh_project_result', true))),
+        'deliverables' => array_map(__NAMESPACE__.'\\mh_project_public_prose', $deliverables),
         'metrics' => $metrics,
         'demo' => mh_project_demo_url($post_id),
-        'product_type' => $productType,
-        'is_product' => $isProduct,
-        'product' => $product,
     ];
 }
 
