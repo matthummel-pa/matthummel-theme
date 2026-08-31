@@ -1,0 +1,31 @@
+tle);
+    $ctaText = __('Download the plugin, or hire me to extend it for your stack.', 'sage');
+    $ctaLabel = $primaryLabel;
+    $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
+  } else {
+    $defaultEyebrow = __('Concept site', 'sage');
+    $primaryLabel = __('Use this concept', 'sage');
+    $hireLabel = __('Say hello', 'sage');
+    $shotCaption = __('Example layout — starting point for a real Gettysburg shop build.', 'sage');
+    $asideCtaTitle = __('Want this for your shop?', 'sage');
+    $asideNote = __('This is a concept example on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
+    $includedHeading = __('Included in this concept', 'sage');
+    $problemHeading = __('The problem', 'sage');
+    $approachHeading = __('How I shaped it', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More concepts', 'sage');
+    $crumbBrowse = __('All concepts', 'sage');
+    $ctaKicker = __('Work with me', 'sage');
+    $ctaTitle = sprintf(__('Like %s?', 'sage'), $title);
+    $ctaText = __('Say which concept fits your shop and what you’d change. I usually reply within a day.', 'sage');
+    $ctaLabel = __('Say hello', 'sage');
+    $ctaHref = $useUrl;
+  }
+
+  $eyebrow = (string) ($story['eyebrow'] !== '' ? $story['eyebrow'] : $defaultEyebrow);
+  $buyUrl = is_array($product) ? (string) ($product['add_to_cart_url'] ?? '') : '';
+  $pageClass = $isProduct ? 'concept-page concept-page--product concept-page--'.$productType : 'concept-page';
+  $sidebar = \App\mh_project_sidebar($postId);
+  $detailRows = [];
+  if ($sidebar['version'] !== '') {
+    $deta
