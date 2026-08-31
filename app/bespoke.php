@@ -2400,3 +2400,39 @@ function mh_apply_matt_hummel_brand_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_apply_matt_hummel_brand_v1', 72);
+
+/**
+ * Refresh About "How I work" intro and approach cards to the technical handoff copy.
+ */
+function mh_apply_how_i_work_v1(): void
+{
+    if (get_option('mh_how_i_work_v1')) {
+        return;
+    }
+
+    $keys = [
+        'mh_f_about_values_intro',
+        'mh_f_about_approach',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($keys as $key) {
+            if (metadata_exists('post', $id, $key)) {
+                delete_post_meta($id, $key);
+            }
+        }
+    }
+
+    update_option('mh_how_i_work_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\mh_apply_how_i_work_v1', 73);

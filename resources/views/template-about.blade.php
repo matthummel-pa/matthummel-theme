@@ -272,7 +272,7 @@
             {{ \App\field('about_values_h2', __('How I work.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_values_intro', __('A few habits that stick on WordPress projects — you own the site, you can edit it, and another developer can follow the code.', 'sage')) }}
+            {{ \App\field('about_values_intro', __('Sage 11, Blade, Tailwind, Vite, and PHP 8.3 — shipped through GitHub. Here is how I run a WordPress build from the first note to a clean handoff.', 'sage')) }}
           </p>
         </header>
         <div class="about-approach">

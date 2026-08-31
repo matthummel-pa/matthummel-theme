@@ -2,6 +2,13 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.37 — 2026-08-31
+
+### Changed
+
+- **How I work** (Home principles + About approach): more upfront technical detail — Sage 11, Blade, Tailwind, Vite, PHP 8.3, GitHub Actions, focused plugins, readable App helpers — in a professional, welcoming tone
+- One-time reset (`mh_how_i_work_v1`) clears saved About approach fields so the new defaults show on existing installs
+
 ## 3.1.36 — 2026-08-31
 
 ### Changed

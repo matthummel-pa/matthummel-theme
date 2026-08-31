@@ -313,7 +313,7 @@ function page_field_map(): array
             ],
             __('How I work', 'sage') => [
                 ['about_values_h2', __('Heading', 'sage'), 'text', __('How I work.', 'sage')],
-                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('A few habits that stick on WordPress projects — you own the site, you can edit it, and another developer can follow the code.', 'sage')],
+                ['about_values_intro', __('Intro', 'sage'), 'textarea', __('Sage 11, Blade, Tailwind, Vite, and PHP 8.3 — shipped through GitHub. Here is how I run a WordPress build from the first note to a clean handoff.', 'sage')],
                 ['about_approach', __('Principles', 'sage'), 'repeater', mh_about_approach_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],

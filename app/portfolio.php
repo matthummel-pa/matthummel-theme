@@ -3621,33 +3621,33 @@ function mh_about_approach_defaults(): array
     return [
         [
             'icon' => 'briefcase',
-            'title' => __('Shops own everything', 'sage'),
-            'body' => __('Hosting, domain, database, and code belong to the shop before we close out. No lingering access unless you invite me back.', 'sage'),
+            'title' => __('You own the stack at handoff', 'sage'),
+            'body' => __('Hosting, DNS, the database, and the Git repo sit in accounts under your name before we close. The Sage theme, plugins, and deploy notes go with the site — so another developer can pick up without guessing.', 'sage'),
         ],
         [
             'icon' => 'users',
-            'title' => __('The admin experience is part of the build', 'sage'),
-            'body' => __('A site that is hard to update does not get updated. I aim for edit flows an owner can finish in a couple of minutes without pinging me.', 'sage'),
+            'title' => __('wp-admin is part of the architecture', 'sage'),
+            'body' => __('I build with Sage 11, Blade, Tailwind, and page fields shops edit in WordPress — not a page builder. If an owner cannot update hours or a product in a couple of minutes, the theme is not done.', 'sage'),
         ],
         [
             'icon' => 'code',
-            'title' => __('Plain, readable code', 'sage'),
-            'body' => __('If a developer cannot understand a function in half a minute, it is too clever. I write for the next person who has to read it.', 'sage'),
-        ],
-        [
-            'icon' => 'cursor-ai',
-            'title' => __('AI assists. I review everything.', 'sage'),
-            'body' => __('I use Cursor, Claude, and ChatGPT to move faster on the boring parts. Every line still gets read and tested by me before it ships.', 'sage'),
-        ],
-        [
-            'icon' => 'book-open',
-            'title' => __('Accessibility and plain language by default', 'sage'),
-            'body' => __('Keyboard-friendly, screen-reader-aware pages, written so a busy shop owner can follow along. Not a checkbox — just how the work should go.', 'sage'),
+            'title' => __('AI drafts. I ship the review', 'sage'),
+            'body' => __('Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.', 'sage'),
         ],
         [
             'icon' => 'plugins',
-            'title' => __('Small, focused plugins', 'sage'),
-            'body' => __('One plugin should do one thing well. I cut weight that does not earn its keep. Most sites need a handful of plugins, not a drawer full.', 'sage'),
+            'title' => __('Small plugins. Clear hooks', 'sage'),
+            'body' => __('Custom work lives in focused PHP plugins or theme modules with standard WordPress hooks, PHPDoc, and a clean uninstall path. Kitchen-sink plugins stay off the site.', 'sage'),
+        ],
+        [
+            'icon' => 'book-open',
+            'title' => __('Readable PHP for the next developer', 'sage'),
+            'body' => __('Blade stays thin; logic lives in App helpers with typed functions and explicit names. If another developer cannot follow a function in half a minute, I rewrite it before handoff.', 'sage'),
+        ],
+        [
+            'icon' => 'pen',
+            'title' => __('Accessible markup and plain words', 'sage'),
+            'body' => __('Semantic HTML, keyboard paths, and solid contrast. Labels, errors, and handoff notes read like they were written for a busy shop owner — welcoming to developers, clear for everyone else.', 'sage'),
         ],
     ];
 }

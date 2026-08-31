@@ -81,44 +81,44 @@
     [
       'num'      => '01',
       'icon'     => 'briefcase',
-      'headline' => 'Shops own their site. Full stop.',
-      'body'     => 'Hosting, domain, database, and code all belong to the client before I close a project. I keep no access after handoff. You can take everything to another developer tomorrow and they\'ll have what they need.',
-      'practice' => 'Every client gets their own hosting account, cPanel login, and GitHub repo access — not a reseller seat under my account.',
+      'headline' => 'You own the stack at handoff.',
+      'body'     => 'Hosting, DNS, the database, and the Git repo sit in accounts under your name before we close. The Sage theme, plugins, env notes, and deploy path go with the site — so another developer can pick up without guessing.',
+      'practice' => 'Separate host login, GitHub access, and wp-admin for the shop — never a seat under my reseller account.',
     ],
     [
       'num'      => '02',
       'icon'     => 'users',
-      'headline' => 'The admin side matters as much as the front end.',
-      'body'     => 'A site that\'s hard to update doesn\'t get updated. I build edit flows so the owner can change a page in under two minutes without asking me. That\'s the whole point of WordPress.',
-      'practice' => 'Before launch I walk through every editable field, write a plain-language handoff guide, and record a short Loom if the edit flow is non-obvious.',
+      'headline' => 'wp-admin is part of the architecture.',
+      'body'     => 'I build with Sage 11, Blade templates, Tailwind, and page fields shops edit in WordPress — not a page builder. If an owner cannot update hours or a product in a couple of minutes, the theme is not done.',
+      'practice' => 'Before launch I walk every editable field, leave a short handoff note, and record a Loom when the edit path is non-obvious.',
     ],
     [
       'num'      => '03',
       'icon'     => 'code',
-      'headline' => 'Fast delivery doesn\'t skip the review.',
-      'body'     => 'I use AI tools — Cursor, Claude, ChatGPT — to move faster on the repetitive parts: boilerplate, scaffolding, first drafts of functions. Every line ships only after I\'ve read, tested, and understood it myself.',
-      'practice' => 'Typical WordPress site: 1–2 weeks. Same care as a 6-week build — just less time wasted on the parts that don\'t need human creativity.',
+      'headline' => 'AI drafts. I ship the review.',
+      'body'     => 'Cursor, Claude, and ChatGPT help with scaffolding, boilerplate, and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.',
+      'practice' => 'A typical marketing site lands in about one to two weeks. Same review bar as a longer build — less time on work that does not need a human rewrite.',
     ],
     [
       'num'      => '04',
       'icon'     => 'plugins',
-      'headline' => 'One plugin, one job.',
-      'body'     => 'Plugins that try to do everything become plugins nobody can debug. I write focused, single-purpose code. If a feature can be a 40-line plugin instead of a 400-line one, it should be.',
-      'practice' => 'Most WordPress sites only need 6–8 plugins. I audit and remove anything that adds weight without adding clear value.',
+      'headline' => 'Small plugins. Clear hooks.',
+      'body'     => 'Custom work lives in focused PHP plugins or theme modules with standard WordPress hooks, PHPDoc, and a clean uninstall path. If a feature fits in dozens of lines, it should not arrive as a kitchen-sink plugin.',
+      'practice' => 'Most sites run a short plugin list. I audit and remove weight that does not earn its keep.',
     ],
     [
       'num'      => '05',
       'icon'     => 'book-open',
-      'headline' => 'Code is documentation. Write it like someone has to read it.',
-      'body'     => 'If a developer can\'t understand a function in 30 seconds without running it, it\'s too clever. Variable names, function names, and structure should explain intent — comments should explain the why, not the what.',
-      'practice' => 'I use PHPDoc on all public functions, keep files short, and prefer explicit names over clever abbreviations.',
+      'headline' => 'Readable PHP for the next developer.',
+      'body'     => 'Blade stays thin; logic lives in App helpers with typed functions and explicit names. If another developer cannot follow a function in half a minute, I rewrite it before handoff.',
+      'practice' => 'PHPDoc on public functions, short files, and Git commits that explain why — not clever abbreviations.',
     ],
     [
       'num'      => '06',
       'icon'     => 'pen',
-      'headline' => 'Plain language in the browser and in the handoff.',
-      'body'     => 'Error messages, admin labels, and handoff notes should read like they were written for a person, not a developer. If I have to explain what a field does, I named it wrong.',
-      'practice' => 'Field labels, button text, and help text are client-visible copy. I treat them with the same care as the public-facing site.',
+      'headline' => 'Accessible markup and plain words.',
+      'body'     => 'Semantic HTML, keyboard paths, and contrast that hold up. Labels, errors, and handoff notes read like they were written for a busy shop owner — welcoming to developers, clear for everyone else.',
+      'practice' => 'Field labels and button text get the same care as the public page. If I have to explain a field, I rename it.',
     ],
   ];
 
@@ -568,10 +568,10 @@
         <div>
           <p class="h-section-label">How I work</p>
           <h2 id="h-principles-heading" class="h-section__title">
-            How I think about building WordPress and full-stack work.
+            How I ship WordPress platforms shops can keep.
           </h2>
           <p class="h-principles__intro">
-            Six things that shape every project — from the first conversation to the handoff. Worth reading before you write.
+            Sage 11, Blade, Tailwind, Vite, and PHP 8.3 — deployed through GitHub. Here is how I run a build from the first note to a clean handoff.
           </p>
         </div>
       </div>
@@ -599,8 +599,8 @@
 
       <div class="h-principles__cta">
         <div class="h-principles__cta-copy">
-          <p class="h-principles__cta-lead">These aren’t aspirational. They’re how I actually work.</p>
-          <p class="h-principles__cta-note">If they sound right, write a short note — I usually reply within a day.</p>
+          <p class="h-principles__cta-lead">These are how I actually ship — not a manifesto.</p>
+          <p class="h-principles__cta-note">If they sound like a fit, say hello. I usually reply within a day.</p>
         </div>
         <a class="btn h-principles__cta-btn" href="{{ home_url('/contact/') }}">
           {!! \App\mh_svg_icon('mail', 16) !!}
