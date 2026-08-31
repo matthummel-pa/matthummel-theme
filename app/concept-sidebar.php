@@ -623,7 +623,24 @@ function mh_project_sidebar_admin_meta_box(\WP_Post $post): void
     mh_project_sidebar_admin_field(__('Topics (comma separated)', 'sage'), 'mh_project_topics', (string) get_post_meta($post->ID, '_mh_project_topics', true), 'wordpress, theme');
     mh_project_sidebar_admin_field(__('Languages (comma separated)', 'sage'), 'mh_project_languages', (string) get_post_meta($post->ID, '_mh_project_languages', true), 'PHP, CSS');
     mh_project_sidebar_admin_field(__('Last updated', 'sage'), 'mh_project_last_updated', (string) get_post_meta($post->ID, '_mh_project_last_updated', true), '2026-08-31');
-    mh_projrge-text" rows="%4$d" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
+    mh_project_sidebar_admin_field(__('Screenshots (url|caption per line)', 'sage'), 'mh_project_screenshots', (string) get_post_meta($post->ID, '_mh_project_screenshots', true), '', 'textarea');
+    mh_project_sidebar_admin_field(__('Brand tagline', 'sage'), 'mh_project_brand_tagline', (string) get_post_meta($post->ID, '_mh_project_brand_tagline', true), 'Farms · land · historic homes');
+    mh_project_sidebar_admin_field(__('Brand palette (Name|#hex per line)', 'sage'), 'mh_project_brand_palette', (string) get_post_meta($post->ID, '_mh_project_brand_palette', true), "Forest|#1f6b4a\nInk|#141210", 'textarea');
+    echo '</tbody></table>';
+}
+
+function mh_project_sidebar_admin_field(string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void
+{
+    $rows = in_array($name, [
+        'mh_project_files_included',
+        'mh_project_docs',
+        'mh_project_screenshots',
+        'mh_project_brand_palette',
+    ], true) ? 5 : 3;
+    echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
+    if ($type === 'textarea') {
+        printf(
+            '<textarea class="large-text" rows="%4$d" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
             esc_attr($name),
             esc_attr($placeholder),
             esc_textarea($value),
