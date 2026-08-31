@@ -958,10 +958,10 @@ function mh_project_cpt_has_posts(): bool
 }
 
 /**
- * Resolve the public Work / concept screenshot URL for a project.
+ * Resolve the public Work / project screenshot URL for a project.
  *
  * Featured image wins when set (so Media Library / Generate featured image
- * updates show on /projects/ and /concept/). Falls back to `_mh_project_image`
+ * updates show on /projects/ and /projects/{slug}/). Falls back to `_mh_project_image`
  * (bundled JPEG filename or absolute URL).
  */
 function mh_project_card_image_url(int $post_id): string
@@ -998,7 +998,7 @@ function mh_project_post_to_card(\WP_Post $post): array
 
     return [
         'slug' => $post->post_name,
-        'title' => get_the_title($post),
+        'title' => wp_specialchars_decode((string) $post->post_title, ENT_QUOTES),
         'cat' => (string) get_post_meta($post_id, '_mh_project_cat', true),
         'place' => (string) get_post_meta($post_id, '_mh_project_place', true),
         'blurb' => (string) get_post_meta($post_id, '_mh_project_blurb', true),
@@ -1174,7 +1174,7 @@ function mh_register_project_post_type(): void
             'add_new_item' => __('Add project', 'sage'),
             'edit_item' => __('Edit project', 'sage'),
             'new_item' => __('New project', 'sage'),
-            'view_item' => __('View concept', 'sage'),
+            'view_item' => __('View project', 'sage'),
             'search_items' => __('Search projects', 'sage'),
             'not_found' => __('No projects found.', 'sage'),
             'not_found_in_trash' => __('No projects found in Trash.', 'sage'),
@@ -1255,7 +1255,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Sell this as a product', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Link a WooCommerce product to turn /concept/{slug}/ into an ad landing with Buy / Free download CTAs. Works for themes and plugins.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('Link a WooCommerce product to turn /projects/{slug}/ into an ad landing with Buy / Free download CTAs. Works for themes and plugins.', 'sage').'</p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Landing type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
@@ -1278,7 +1278,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept / product page', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('These fields power /concept/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('These fields power /projects/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Concept · Boutique inn', 'sage'));
     mh_project_admin_field_row(__('Summary', 'sage'), 'mh_project_summary', $summary, '', 'textarea');
@@ -1425,7 +1425,7 @@ add_action('init', function (): void {
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'mh_project_details',
-        __('Project & concept fields', 'sage'),
+        __('Project fields', 'sage'),
         __NAMESPACE__.'\\mh_project_admin_meta_box',
         mh_project_post_type(),
         'normal',
@@ -1661,7 +1661,7 @@ add_filter('post_row_actions', function (array $actions, \WP_Post $post): array 
 
     $permalink = get_permalink($post);
     if (is_string($permalink) && $permalink !== '' && mh_project_is_live((int) $post->ID)) {
-        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View concept', 'sage').'</a>';
+        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View project', 'sage').'</a>';
     }
 
     return $actions;
@@ -1690,7 +1690,7 @@ add_action('admin_action_mh_toggle_project_live', function (): void {
 add_filter('bulk_actions-edit-'.mh_project_post_type(), function (array $actions): array {
     $actions['mh_project_show'] = __('Show on site', 'sage');
     $actions['mh_project_hide'] = __('Hide from site', 'sage');
-    $actions['mh_project_import_concept'] = __('Import concept fields (fill empty)', 'sage');
+    $actions['mh_project_import_concept'] = __('Import project fields (fill empty)', 'sage');
 
     return $actions;
 });
@@ -1759,7 +1759,7 @@ add_action('admin_notices', function (): void {
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 esc_html(sprintf(
-                    _n('Imported concept fields for %d project (empty fields only).', 'Imported concept fields for %d projects (empty fields only).', $count, 'sage'),
+                    _n('Imported project fields for %d project (empty fields only).', 'Imported project fields for %d projects (empty fields only).', $count, 'sage'),
                     $count
                 ))
             );
@@ -1827,7 +1827,7 @@ function mh_code_practice_defaults(): array
         'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
         'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
         'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
-        'Ridges & Valleys — Gettysburg concept sites and live WordPress demos for shops, tours, and inns.',
+        'Ridges & Valleys — Gettysburg projects and live WordPress demos for shops, tours, and inns.',
     ];
 }
 
@@ -2005,9 +2005,9 @@ function mh_code_resume_defaults(): array
             'role' => 'Founder',
             'org' => 'Ridges & Valleys',
             'period' => 'Current',
-            'type' => 'Concept work · Gettysburg, PA',
+            'type' => 'Studio work · Gettysburg, PA',
             'url' => 'https://ridgesandvalleys.com',
-            'bullets' => "Publishing Gettysburg concept sites — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing Gettysburg projects — live WordPress demos for shops, tours, and inns.\nBuilding the Ridges & Valleys brand as real client projects come in.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',
