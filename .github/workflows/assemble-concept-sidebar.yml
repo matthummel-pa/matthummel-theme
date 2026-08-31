@@ -1,6 +1,9 @@
 name: Assemble concept sidebar files
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/sidebar-parts/ASSEMBLE'
 permissions:
   contents: write
 jobs:
