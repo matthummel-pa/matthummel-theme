@@ -1,9 +1,6 @@
 name: Assemble concept sidebar files
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/sidebar-parts/**'
 permissions:
   contents: write
 jobs:
@@ -16,21 +13,26 @@ jobs:
       - name: Assemble and commit
         run: |
           python3 << 'PY'
-          import base64, pathlib
+          import hashlib, pathlib
           root = pathlib.Path('.github/sidebar-parts')
-          def load(prefix, n):
-              return base64.b64decode(''.join((root/f'{prefix}.{i}').read_text() for i in range(n)))
-          blade = load('blade', 4)
-          php = load('sidebar', 5)
-          pathlib.Path('resources/views/partials/content-single-project.blade.php').write_bytes(blade)
-          pathlib.Path('app/concept-sidebar.php').write_bytes(php)
+          blade = ''.join((root / f'b.{i}').read_text(encoding='utf-8') for i in range(12)).encode('utf-8')
+          php = ''.join((root / f's.{i}').read_text(encoding='utf-8') for i in range(16)).encode('utf-8')
+          assert hashlib.sha256(blade).hexdigest() == 'a6bca752f9bb5e5b3918f27603b4ad91e1c36c3415fcc69a8cafec9d9d401f7c'
+          assert hashlib.sha256(php).hexdigest() == 'f138b9747ec84553223be3900669a7610b316ecf5467fbadee733293534022e9'
           assert b'concept-aside-card--facts' in blade
           assert b'mh_project_sidebar_sync_from_github' in php
-          print('blade', len(blade), 'php', len(php))
+          pathlib.Path('resources/views/partials/content-single-project.blade.php').write_bytes(blade)
+          pathlib.Path('app/concept-sidebar.php').write_bytes(php)
+          print('ok', len(blade), len(php))
           PY
           git config user.name "matt-hummel"
           git config user.email "matt@matthummel.com"
           git add resources/views/partials/content-single-project.blade.php app/concept-sidebar.php
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
-          git commit -m "Complete concept sidebar Blade and PHP module"
+          git commit -m "$(cat <<'EOF'
+Add concept sidebar custom fields with GitHub sync
+
+ThemeForest-style sidebar meta box, Blade facts/docs/brand, and fill-from-GitHub for project landings.
+EOF
+)"
           git push origin HEAD:cursor/product-landing-pages-f168
