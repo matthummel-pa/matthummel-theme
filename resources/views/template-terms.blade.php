@@ -27,7 +27,7 @@
       <ul class="legal-bullets">
         <li>Code snippets and examples on this site are free to copy and use in your own projects.</li>
         <li>Written content (articles, posts, page copy) is © Matt Hummel — please link rather than republish in full.</li>
-        <li>Concept sites shown on the Work page are demonstrations only — they represent fictional businesses.</li>
+        <li>Example projects shown on the Work page are demonstrations only — they represent fictional businesses.</li>
         <li>This site is provided as-is with no warranty.</li>
         <li>Use of this site for scraping, spam, or abuse is not permitted.</li>
       </ul>
@@ -64,8 +64,8 @@
       </div>
 
       <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Concept sites — demonstrations</h3>
-        <p class="legal-data-card__intro">The work shown on the Work page represents concept or demonstration sites. The businesses depicted are fictional or are used for illustrative purposes only.</p>
+        <h3 class="legal-data-card__title">Example projects — demonstrations</h3>
+        <p class="legal-data-card__intro">The work shown on the Work page represents example or demonstration sites. The businesses depicted are fictional or are used for illustrative purposes only.</p>
         <ul class="legal-data-card__list">
           <li>Screenshots may be shared with a link to this site</li>
           <li>Not to be presented as real client work</li>

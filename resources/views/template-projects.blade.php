@@ -36,14 +36,14 @@
     {{ \App\field('work_h1', __('WordPress websites for Gettysburg businesses.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
+    {{ \App\field('work_lede', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')) }}
   </p>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="{{ esc_url($ghBlog) }}" rel="noopener" target="_blank">
       {!! \App\mh_svg_icon('globe', 15) !!} Ridges &amp; Valleys ↗
     </a>
     <a href="{{ home_url('/services/') }}">{!! \App\mh_svg_icon('briefcase', 15) !!} How I can help</a>
-    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start with your concept</a>
+    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start a project</a>
   </p>
 @endcomponent
 
@@ -56,7 +56,7 @@
         {{ \App\field('work_empty_h2', __('Example sites are on the way.', 'sage')) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I\'m choosing which Gettysburg concept demos to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')) }}
+        {{ \App\field('work_empty_text', __('I\'m choosing which Gettysburg projects to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
@@ -81,12 +81,12 @@
     'secondaryHref' => home_url('/services/'),
   ])
 @else
-  {{-- ABOUT THESE CONCEPTS --}}
+  {{-- ABOUT THESE PROJECTS --}}
   <div class="work-context">
     <div class="container wide work-context__inner">
       <div class="work-context__stat">
         <strong>{{ $total }}</strong>
-        <span>concept sites</span>
+        <span>projects</span>
       </div>
       <div class="work-context__stat">
         <strong>{{ max(1, count($cats)) }}</strong>
@@ -98,10 +98,10 @@
       </div>
       <div class="work-context__stat">
         <strong>WordPress</strong>
-        <span>every concept</span>
+        <span>every project</span>
       </div>
       <p class="work-context__note">
-        These are WordPress concept examples on this site — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
+        These are WordPress projects on this site — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
       </p>
     </div>
   </div>
@@ -148,9 +148,9 @@
     @if ($shown === [])
       <div class="work-empty work-empty--compact" role="status">
         <h2 class="work-empty__title">{{ __('No sites in this type yet.', 'sage') }}</h2>
-        <p class="work-empty__text">{{ __('Try another filter, or browse all concepts.', 'sage') }}</p>
+        <p class="work-empty__text">{{ __('Try another filter, or browse all projects.', 'sage') }}</p>
         <div class="work-empty__actions">
-          <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}">{{ __('Show all concepts', 'sage') }}</a>
+          <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}">{{ __('Show all projects', 'sage') }}</a>
         </div>
       </div>
     @else
@@ -170,7 +170,7 @@
     <div class="work-cta-strip">
       <div class="work-cta-strip__copy">
         <h2>{{ \App\field('work_band_h2', __('Want to start from one of these?', 'sage')) }}</h2>
-        <p>{{ \App\field('work_band_lede', __('These concepts are available as a starting point for a real build. Tell me which one fits your business and what you\'d change.', 'sage')) }}</p>
+        <p>{{ \App\field('work_band_lede', __('These projects are available as a starting point for a real build. Tell me which one fits your business and what you\'d change.', 'sage')) }}</p>
       </div>
       <div class="work-cta-strip__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 16) !!} Say hello</a>
@@ -179,14 +179,14 @@
     </div>
 
     <div class="work-footer-links">
-      {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live clickable demos open from each concept page when available.', 'sage')) !!}
+      {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live clickable demos open from each project page when available.', 'sage')) !!}
     </div>
 
   </div>
 
   @include('partials.cta-band', [
     'kicker' => __('Work with me', 'sage'),
-    'title' => __('Like one of these concepts?', 'sage'),
+    'title' => __('Like one of these projects?', 'sage'),
     'text' => __('Tell me which site fits your shop and what you’d change. I usually reply within a day.', 'sage'),
     'label' => __('Say hello', 'sage'),
     'secondary' => __('See services', 'sage'),

@@ -2,6 +2,29 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.30 — 2026-08-31
+
+### Changed
+
+- Project singles live at `/projects/{slug}/` (was `/concept/{slug}/`). Legacy `/concept/` URLs 301 to the new path
+- Visitor-facing copy says **project**, not concept (Work cards, home, services, project pages, field defaults)
+- Project hero: screenshot sits to the right of the title and summary
+- Project pages add buyer documentation: how it’s built, who it’s for, what ships, spec sidebar, and a short FAQ
+
+## 3.1.29 — 2026-08-31
+
+### Added
+
+- WooCommerce: Sage Blade wrappers for Shop (`archive-product`) and single product, plus a **WooCommerce** page template for Cart, Checkout, and My account (classic shortcodes — not WooCommerce 9 block pages)
+- WooCommerce: idempotent seed creates/assigns Shop, Cart, Checkout, and My account when the plugin is active; Coming soon is turned off so guests see theme templates
+- WooCommerce: `generoi/sage-woocommerce` so WooCommerce templates can render as Blade inside the Sage layout
+
+## 3.1.28 — 2026-08-31
+
+### Fixed
+
+- Project / concept screenshots: **Featured image** now wins over the seeded Screenshot file meta, so setting or regenerating a featured image updates Work cards, home, and `/concept/` pages
+
 ## 3.1.27 — 2026-08-31
 
 ### Changed

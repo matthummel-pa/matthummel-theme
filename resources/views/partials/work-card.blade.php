@@ -1,5 +1,10 @@
 @php
-  $shot = \App\mh_studio_project_image_url($p);
+  $shot = ! empty($p['image'])
+    ? (string) $p['image']
+    : \App\mh_studio_project_image_url($p);
+  if ($shot === '' && ! empty($p['post_id'])) {
+    $shot = \App\mh_project_card_image_url((int) $p['post_id']);
+  }
   $slug = (string) ($p['slug'] ?? '');
   $title = (string) ($p['title'] ?? '');
   $conceptUrl = (string) ($p['url'] ?? \App\mh_concept_page_url($slug, isset($p['post_id']) ? (int) $p['post_id'] : null));
@@ -42,7 +47,7 @@
     @endif
     <div class="work-actions">
       <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($conceptUrl) }}">
-        {{ \App\field('work_cta_view', __('View concept', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        {{ \App\field('work_cta_view', __('View project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
       @if ($demo !== '')
         <a class="{{ $featured ? 'btn btn-ghost' : 'btn btn-outline' }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
@@ -50,7 +55,7 @@
         </a>
       @endif
       <a class="btn" href="{{ esc_url($useUrl) }}">
-        {{ \App\field('work_cta_use', __('Use this concept', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        {{ \App\field('work_cta_use', __('Use this project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
       <button
         type="button"
@@ -58,7 +63,7 @@
         data-share-project
         data-share-url="{{ esc_url($shareUrl) }}"
         data-share-title="{{ esc_attr($title) }}"
-        data-share-text="{{ esc_attr(sprintf(__('Example site concept: %s', 'sage'), $title)) }}"
+        data-share-text="{{ esc_attr(sprintf(__('Example project: %s', 'sage'), $title)) }}"
       >
         {{ __('Share', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' %s', 'sage'), $title) }}</span>
       </button>

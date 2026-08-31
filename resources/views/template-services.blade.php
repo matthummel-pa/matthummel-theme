@@ -160,7 +160,7 @@
     ],
     [
       'q' => 'What does a finished WordPress site from you look like?',
-      'a' => 'The example sites on the Work page are the clearest answer — they\'re working concept sites built for Gettysburg businesses. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
+      'a' => 'The example sites on the Work page are the clearest answer — they\'re working projects built for Gettysburg businesses. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
     ],
     [
       'q' => 'Do you work with businesses outside Gettysburg?',
@@ -345,8 +345,8 @@
 <section class="pf-section pf-section--alt" aria-labelledby="svc-work-heading">
   <div class="container wide">
     <p class="eyebrow">Example work</p>
-    <h2 id="svc-work-heading" class="display-title is-section">A few recent concepts.</h2>
-    <p class="sec-intro" style="margin-bottom:2rem">These are Gettysburg concept sites on matthummel.com — example WordPress builds that show what a finished shop, tour, or inn site can look like.</p>
+    <h2 id="svc-work-heading" class="display-title is-section">A few recent projects.</h2>
+    <p class="sec-intro" style="margin-bottom:2rem">These are Gettysburg projects on matthummel.com — example WordPress builds that show what a finished shop, tour, or inn site can look like.</p>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php
@@ -356,7 +356,7 @@
           @if (! empty($p['image']))
             <div class="svc-work-card__img">
               <img src="{{ esc_url($p['image']) }}"
-                   alt="{{ esc_attr($p['title']) }} — WordPress site concept"
+                   alt="{{ esc_attr($p['title']) }} — WordPress project"
                    width="480" height="270" loading="lazy" decoding="async">
             </div>
           @else
@@ -374,7 +374,7 @@
     </div>
     <p style="margin-top:1.75rem;text-align:center">
       <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-        Browse all {{ count(\App\mh_work_page_items()) }} concepts →
+        Browse all {{ count(\App\mh_work_page_items()) }} projects →
       </a>
     </p>
   </div>
