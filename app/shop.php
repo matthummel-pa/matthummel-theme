@@ -521,6 +521,7 @@ add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
 }, 30);
 
 add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_catalog_url');
+add_filter('loop_shop_columns', fn (): int => 3);
 add_filter('woocommerce_product_single_add_to_cart_text', function ($text, $product = null) {
     return mh_woocommerce_buy_label($product);
 }, 10, 2);
