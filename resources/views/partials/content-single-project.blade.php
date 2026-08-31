@@ -1,4 +1,4 @@
-{{-- Single Project → concept page or product landing (/concept/{slug}/) --}}
+{{-- Single Project → project page or product landing (/projects/{slug}/) --}}
 @php
   $postId = (int) get_the_ID();
   $card = \App\mh_project_post_to_card(get_post($postId));
