@@ -156,7 +156,7 @@ function mh_project_faq_pairs(int $post_id): array
     $lines = preg_split('/\r\n|\r|\n/', $raw) ?: [];
     $lines = array_values(array_filter(array_map('trim', $lines)));
     if (count($lines) === 1 && str_contains($lines[0], ' ;; ')) {
-        $lines = array_values(array_filter(array_map('trim', explode(' ;; ', $lines[0])));
+        $lines = array_values(array_filter(array_map('trim', explode(' ;; ', $lines[0]))));
     }
 
     $pairs = [];
