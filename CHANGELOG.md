@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.34 — 2026-08-31
+
+### Fixed
+
+- Seed known-good Acorn `packages.php` / `services.php` over FTP after deploy when the live cache cannot recreate manifests (site stayed 500 after Heroicons clear)
+
 ## 3.1.33 — 2026-08-31
 
 ### Fixed
