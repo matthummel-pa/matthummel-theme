@@ -1,4 +1,4 @@
-{{-- Single Project → on-site concept page (/concept/{slug}/) --}}
+{{-- Single Project → concept page or product landing (/concept/{slug}/) --}}
 @php
   $postId = (int) get_the_ID();
   $card = \App\mh_project_post_to_card(get_post($postId));
@@ -11,12 +11,80 @@
   $demo = (string) ($story['demo'] !== '' ? $story['demo'] : ($card['demo'] ?? ''));
   $useUrl = \App\mh_work_contact_url($card);
   $projectsUrl = home_url('/projects/');
+  $shopUrl = function_exists('wc_get_page_permalink') ? (string) wc_get_page_permalink('shop') : home_url('/shop/');
   $related = \App\mh_related_concept_cards($card, 3);
   $summary = (string) ($story['summary'] !== '' ? $story['summary'] : ($card['blurb'] ?? ''));
-  $eyebrow = (string) ($story['eyebrow'] !== '' ? $story['eyebrow'] : __('Concept site', 'sage'));
+  $isProduct = ! empty($story['is_product']);
+  $productType = (string) ($story['product_type'] ?? 'concept');
+  $product = is_array($story['product'] ?? null) ? $story['product'] : null;
+  $isTheme = $productType === 'theme';
+  $isPlugin = $productType === 'plugin';
+
+  if ($isTheme) {
+    $defaultEyebrow = __('WordPress theme', 'sage');
+    $primaryLabel = ! empty($product['is_free']) ? __('Get the theme', 'sage') : __('Buy the theme', 'sage');
+    $hireLabel = __('Customize this theme', 'sage');
+    $shotCaption = __('Live theme demo — brand it under Customize → Identity.', 'sage');
+    $asideCtaTitle = __('Get Acreline for your office', 'sage');
+    if ($title !== '') {
+      $asideCtaTitle = sprintf(__('Get %s for your office', 'sage'), $title);
+    }
+    $asideNote = __('Instant download after checkout. Need it customized for your brokerage? Hire me to ship the full build.', 'sage');
+    $includedHeading = __('What’s in the theme', 'sage');
+    $problemHeading = __('Built for this niche', 'sage');
+    $approachHeading = __('How the theme works', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More themes & concepts', 'sage');
+    $crumbBrowse = __('All work', 'sage');
+    $ctaKicker = __('Theme shop', 'sage');
+    $ctaTitle = sprintf(__('Ready for %s?', 'sage'), $title);
+    $ctaText = __('Buy the theme for a self-serve install, or hire me to customize it for your land office.', 'sage');
+    $ctaLabel = $primaryLabel;
+    $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
+  } elseif ($isPlugin) {
+    $defaultEyebrow = __('WordPress plugin', 'sage');
+    $primaryLabel = ! empty($product['is_free']) ? __('Download the plugin', 'sage') : __('Buy the plugin', 'sage');
+    $hireLabel = __('Need custom plugin work?', 'sage');
+    $shotCaption = __('Plugin product page — install, activate, done.', 'sage');
+    $asideCtaTitle = sprintf(__('Get %s', 'sage'), $title);
+    $asideNote = __('Digital download after checkout. Want a custom feature or support retainer? Say hello.', 'sage');
+    $includedHeading = __('What’s included', 'sage');
+    $problemHeading = __('The problem it solves', 'sage');
+    $approachHeading = __('How it works', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More products', 'sage');
+    $crumbBrowse = __('All work', 'sage');
+    $ctaKicker = __('Plugin shop', 'sage');
+    $ctaTitle = sprintf(__('Get %s', 'sage'), $title);
+    $ctaText = __('Download the plugin, or hire me to extend it for your stack.', 'sage');
+    $ctaLabel = $primaryLabel;
+    $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
+  } else {
+    $defaultEyebrow = __('Concept site', 'sage');
+    $primaryLabel = __('Use this concept', 'sage');
+    $hireLabel = __('Say hello', 'sage');
+    $shotCaption = __('Example layout — starting point for a real Gettysburg shop build.', 'sage');
+    $asideCtaTitle = __('Want this for your shop?', 'sage');
+    $asideNote = __('This is a concept example on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
+    $includedHeading = __('Included in this concept', 'sage');
+    $problemHeading = __('The problem', 'sage');
+    $approachHeading = __('How I shaped it', 'sage');
+    $resultHeading = __('What you get', 'sage');
+    $relatedHeading = __('More concepts', 'sage');
+    $crumbBrowse = __('All concepts', 'sage');
+    $ctaKicker = __('Work with me', 'sage');
+    $ctaTitle = sprintf(__('Like %s?', 'sage'), $title);
+    $ctaText = __('Say which concept fits your shop and what you’d change. I usually reply within a day.', 'sage');
+    $ctaLabel = __('Say hello', 'sage');
+    $ctaHref = $useUrl;
+  }
+
+  $eyebrow = (string) ($story['eyebrow'] !== '' ? $story['eyebrow'] : $defaultEyebrow);
+  $buyUrl = is_array($product) ? (string) ($product['add_to_cart_url'] ?? '') : '';
+  $pageClass = $isProduct ? 'concept-page concept-page--product concept-page--'.$productType : 'concept-page';
 @endphp
 
-<article @php(post_class('concept-page'))>
+<article @php(post_class($pageClass))>
   @component('partials.page-hero')
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
@@ -35,19 +103,42 @@
       @if ($place !== '')
         <span>{!! \App\mh_svg_icon('map', 14) !!} {{ $place }}</span>
       @endif
+      @if ($isProduct && is_array($product) && ! empty($product['price_html']))
+        <span aria-hidden="true"> · </span>
+        <span class="concept-price-inline">{!! $product['price_html'] !!}</span>
+      @endif
     </p>
     <div class="concept-hero-actions">
-      <a class="btn" href="{{ esc_url($useUrl) }}">
-        {!! \App\mh_svg_icon('mail', 16) !!}
-        {{ __('Use this concept', 'sage') }}
-      </a>
-      @if ($demo !== '')
-        <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-          {!! \App\mh_svg_icon('globe', 15) !!}
-          {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
+      @if ($isProduct && $buyUrl !== '')
+        <a class="btn" href="{{ esc_url($buyUrl) }}">
+          {!! \App\mh_svg_icon('globe', 16) !!}
+          {{ $primaryLabel }}
         </a>
+        @if ($demo !== '')
+          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('globe', 15) !!}
+            {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
+          </a>
+        @endif
+        <a class="btn btn-outline" href="{{ esc_url($useUrl) }}">
+          {!! \App\mh_svg_icon('mail', 16) !!}
+          {{ $hireLabel }}
+        </a>
+      @else
+        <a class="btn" href="{{ esc_url($useUrl) }}">
+          {!! \App\mh_svg_icon('mail', 16) !!}
+          {{ $primaryLabel }}
+        </a>
+        @if ($demo !== '')
+          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('globe', 15) !!}
+            {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
+          </a>
+        @endif
       @endif
-      <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">{{ __('All concepts', 'sage') }} →</a>
+      <a class="h-text-arrow" href="{{ esc_url($isProduct && $shopUrl !== '' ? $shopUrl : $projectsUrl) }}">
+        {{ $isProduct ? __('Browse shop', 'sage') : $crumbBrowse }} →
+      </a>
     </div>
   @endcomponent
 
@@ -56,13 +147,13 @@
       <figure class="concept-shot">
         <img
           src="{{ esc_url($shot) }}"
-          alt="{{ esc_attr(sprintf(__('Screenshot of the %s concept', 'sage'), $title)) }}"
+          alt="{{ esc_attr(sprintf($isTheme ? __('Screenshot of the %s theme', 'sage') : ($isPlugin ? __('Screenshot of the %s plugin', 'sage') : __('Screenshot of the %s concept', 'sage')), $title)) }}"
           width="1200"
           height="675"
           loading="eager"
           decoding="async"
         >
-        <figcaption>{{ __('Example layout — starting point for a real Gettysburg shop build.', 'sage') }}</figcaption>
+        <figcaption>{{ $shotCaption }}</figcaption>
       </figure>
     @endif
 
@@ -79,30 +170,41 @@
 
     <div class="concept-grid">
       <div class="concept-main">
+        @if ($story['benefits'] !== [])
+          <section class="concept-section" aria-labelledby="concept-benefits">
+            <h2 id="concept-benefits">{{ __('Why teams pick it', 'sage') }}</h2>
+            <ul class="concept-list concept-list--benefits">
+              @foreach ($story['benefits'] as $item)
+                <li>{{ $item }}</li>
+              @endforeach
+            </ul>
+          </section>
+        @endif
+
         @if ($story['challenge'] !== '')
           <section class="concept-section" aria-labelledby="concept-challenge">
-            <h2 id="concept-challenge">{{ __('The problem', 'sage') }}</h2>
+            <h2 id="concept-challenge">{{ $problemHeading }}</h2>
             <p>{{ $story['challenge'] }}</p>
           </section>
         @endif
 
         @if ($story['approach'] !== '')
           <section class="concept-section" aria-labelledby="concept-approach">
-            <h2 id="concept-approach">{{ __('How I shaped it', 'sage') }}</h2>
+            <h2 id="concept-approach">{{ $approachHeading }}</h2>
             <p>{{ $story['approach'] }}</p>
           </section>
         @endif
 
         @if ($story['result'] !== '')
           <section class="concept-section" aria-labelledby="concept-result">
-            <h2 id="concept-result">{{ __('What you get', 'sage') }}</h2>
+            <h2 id="concept-result">{{ $resultHeading }}</h2>
             <p>{{ $story['result'] }}</p>
           </section>
         @endif
 
         @if ($story['deliverables'] !== [])
           <section class="concept-section" aria-labelledby="concept-deliverables">
-            <h2 id="concept-deliverables">{{ __('Included in this concept', 'sage') }}</h2>
+            <h2 id="concept-deliverables">{{ $includedHeading }}</h2>
             <ul class="concept-list">
               @foreach ($story['deliverables'] as $item)
                 <li>{{ $item }}</li>
@@ -110,9 +212,44 @@
             </ul>
           </section>
         @endif
+
+        @if ($story['faq'] !== [])
+          <section class="concept-section concept-faq" aria-labelledby="concept-faq">
+            <h2 id="concept-faq">{{ __('FAQ', 'sage') }}</h2>
+            <div class="concept-faq__list">
+              @foreach ($story['faq'] as $pair)
+                <details class="concept-faq__item">
+                  <summary>{{ $pair[0] }}</summary>
+                  <p>{{ $pair[1] }}</p>
+                </details>
+              @endforeach
+            </div>
+          </section>
+        @endif
       </div>
 
-      <aside class="concept-aside" aria-label="{{ __('Concept details', 'sage') }}">
+      <aside class="concept-aside" aria-label="{{ $isProduct ? __('Buy details', 'sage') : __('Concept details', 'sage') }}">
+        @if ($isProduct && is_array($product))
+          <div class="concept-aside-card concept-aside-card--buy">
+            <p class="concept-buy-kicker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>
+            <p class="concept-buy-price">{!! $product['price_html'] !!}</p>
+            <p class="concept-buy-note">
+              @if (! empty($product['is_free']))
+                {{ __('Free digital download — checkout captures your email for updates.', 'sage') }}
+              @else
+                {{ __('One-time purchase · Instant download · Updates via your account', 'sage') }}
+              @endif
+            </p>
+            @if ($buyUrl !== '')
+              <a class="btn" href="{{ esc_url($buyUrl) }}">{{ $primaryLabel }}</a>
+            @endif
+            @if ($demo !== '')
+              <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+            @endif
+            <a class="btn btn-outline" href="{{ esc_url($useUrl) }}">{{ $hireLabel }}</a>
+          </div>
+        @endif
+
         @if (! empty($tech))
           <div class="concept-aside-card">
             <h2 class="concept-aside-title">{{ __('Stack', 'sage') }}</h2>
@@ -124,25 +261,37 @@
           </div>
         @endif
 
-        <div class="concept-aside-card concept-aside-card--cta">
-          <h2 class="concept-aside-title">{{ __('Want this for your shop?', 'sage') }}</h2>
-          <p>{{ __('Tell me which parts fit and what you’d change. I usually reply within a day.', 'sage') }}</p>
-          <a class="btn" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}</a>
-          @if ($demo !== '')
-            <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
-          @endif
-        </div>
+        @if (! $isProduct)
+          <div class="concept-aside-card concept-aside-card--cta">
+            <h2 class="concept-aside-title">{{ $asideCtaTitle }}</h2>
+            <p>{{ __('Tell me which parts fit and what you’d change. I usually reply within a day.', 'sage') }}</p>
+            <a class="btn" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
+            @if ($demo !== '')
+              <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+            @endif
+          </div>
+        @else
+          <div class="concept-aside-card concept-aside-card--cta">
+            <h2 class="concept-aside-title">{{ __('Need it customized?', 'sage') }}</h2>
+            <p>
+              @if ($isTheme)
+                {{ __('Hire me to brand this theme for your brokerage — listings, agents, and go-live support.', 'sage') }}
+              @else
+                {{ __('Hire me to extend this plugin for your stack, or retain support.', 'sage') }}
+              @endif
+            </p>
+            <a class="btn" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
+          </div>
+        @endif
 
-        <p class="concept-aside-note">
-          {{ __('This is a concept example on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage') }}
-        </p>
+        <p class="concept-aside-note">{{ $asideNote }}</p>
       </aside>
     </div>
 
     @if ($related !== [])
       <section class="concept-related" aria-labelledby="concept-related-heading">
         <div class="concept-related__head">
-          <h2 id="concept-related-heading">{{ __('More concepts', 'sage') }}</h2>
+          <h2 id="concept-related-heading">{{ $relatedHeading }}</h2>
           <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">{{ __('Browse all', 'sage') }} →</a>
         </div>
         <div class="concept-related__grid">
@@ -166,12 +315,12 @@
   </div>
 
   @include('partials.cta-band', [
-    'kicker' => __('Work with me', 'sage'),
-    'title' => sprintf(__('Like %s?', 'sage'), $title),
-    'text' => __('Say which concept fits your shop and what you’d change. I usually reply within a day.', 'sage'),
-    'label' => __('Say hello', 'sage'),
-    'href' => $useUrl,
-    'secondary' => __('See services', 'sage'),
-    'secondaryHref' => home_url('/services/'),
+    'kicker' => $ctaKicker,
+    'title' => $ctaTitle,
+    'text' => $ctaText,
+    'label' => $ctaLabel,
+    'href' => $ctaHref,
+    'secondary' => $isProduct ? __('Hire me instead', 'sage') : __('See services', 'sage'),
+    'secondaryHref' => $isProduct ? $useUrl : home_url('/services/'),
   ])
 </article>
