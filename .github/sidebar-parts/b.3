@@ -1,0 +1,45 @@
+ilRows[] = [__('Version', 'sage'), $sidebar['version'], $sidebar['release_url']];
+  }
+  if ($sidebar['compatible'] !== '') {
+    $detailRows[] = [__('Compatible with', 'sage'), $sidebar['compatible'], ''];
+  }
+  if ($sidebar['license'] !== '') {
+    $detailRows[] = [__('License', 'sage'), $sidebar['license'], ''];
+  }
+  if ($sidebar['last_updated'] !== '') {
+    $detailRows[] = [__('Last updated', 'sage'), $sidebar['last_updated'], ''];
+  }
+  if ($sidebar['stars'] > 0) {
+    $detailRows[] = [__('GitHub stars', 'sage'), (string) $sidebar['stars'], $sidebar['github']];
+  }
+@endphp
+
+<article @php(post_class($pageClass))>
+  @component('partials.page-hero')
+    <p class="eyebrow">
+      <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
+      <span aria-hidden="true"> / </span>
+      {{ $eyebrow }}
+    </p>
+    <h1 class="display-title is-hero">{{ $title }}</h1>
+    <p class="lead">{{ $summary }}</p>
+    <p class="pf-meta" style="margin-top:.85rem">
+      @if ($cat !== '')
+        <span>{{ $cat }}</span>
+      @endif
+      @if ($cat !== '' && $place !== '')
+        <span aria-hidden="true"> · </span>
+      @endif
+      @if ($place !== '')
+        <span>{!! \App\mh_svg_icon('map', 14) !!} {{ $place }}</span>
+      @endif
+      @if ($isProduct && is_array($product) && ! empty($product['price_html']))
+        <span aria-hidden="true"> · </span>
+        <span class="concept-price-inline">{!! $product['price_html'] !!}</span>
+      @endif
+    </p>
+    <div class="concept-hero-actions">
+      @if ($isProduct && $buyUrl !== '')
+        <a class="btn" href="{{ esc_url($buyUrl) }}">
+          {!! \App\mh_svg_icon('globe', 16) !!}
+   
