@@ -6,6 +6,14 @@
 
 namespace App;
 
+// Product shop helpers + ThemeForest sidebar (kept out of functions.php collect to ease merges with main).
+if (is_readable($mhShop = get_theme_file_path('app/shop.php'))) {
+    require_once $mhShop;
+}
+if (is_readable($mhSidebar = get_theme_file_path('app/concept-sidebar.php'))) {
+    require_once $mhSidebar;
+}
+
 /**
  * Path to bundled concept narrative JSON (keyed by project slug).
  */
@@ -148,7 +156,7 @@ function mh_project_faq_pairs(int $post_id): array
     $lines = preg_split('/\r\n|\r|\n/', $raw) ?: [];
     $lines = array_values(array_filter(array_map('trim', $lines)));
     if (count($lines) === 1 && str_contains($lines[0], ' ;; ')) {
-        $lines = array_values(array_filter(array_map('trim', explode(' ;; ', $lines[0]))));
+        $lines = array_values(array_filter(array_map('trim', explode(' ;; ', $lines[0])));
     }
 
     $pairs = [];
