@@ -1,0 +1,31 @@
+name: Diagnose Live 500
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: diagnose-live
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Locate theme folder
+        id: ftpdir
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
+        run: python3 .github/scripts/siteground-ftp-locate.py
+
+      - name: Dump live debug clues over FTP
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
+        run: python3 .github/scripts/siteground-ftp-diagnose-live.py
