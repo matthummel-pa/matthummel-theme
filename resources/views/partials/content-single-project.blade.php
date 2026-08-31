@@ -65,7 +65,7 @@
     $hireLabel = __('Say hello', 'sage');
     $shotCaption = __('Example layout — starting point for a real Gettysburg shop build.', 'sage');
     $asideCtaTitle = __('Want this for your shop?', 'sage');
-    $asideNote = __('This is a concept example on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
+    $asideNote = __('This is a concept example on matthummel.com — not a Live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
     $includedHeading = __('Included in this concept', 'sage');
     $problemHeading = __('The problem', 'sage');
     $approachHeading = __('How I shaped it', 'sage');
@@ -82,6 +82,23 @@
   $eyebrow = (string) ($story['eyebrow'] !== '' ? $story['eyebrow'] : $defaultEyebrow);
   $buyUrl = is_array($product) ? (string) ($product['add_to_cart_url'] ?? '') : '';
   $pageClass = $isProduct ? 'concept-page concept-page--product concept-page--'.$productType : 'concept-page';
+  $sidebar = \App\mh_project_sidebar($postId);
+  $detailRows = [];
+  if ($sidebar['version'] !== '') {
+    $detailRows[] = [__('Version', 'sage'), $sidebar['version'], $sidebar['release_url']];
+  }
+  if ($sidebar['compatible'] !== '') {
+    $detailRows[] = [__('Compatible with', 'sage'), $sidebar['compatible'], ''];
+  }
+  if ($sidebar['license'] !== '') {
+    $detailRows[] = [__('License', 'sage'), $sidebar['license'], ''];
+  }
+  if ($sidebar['last_updated'] !== '') {
+    $detailRows[] = [__('Last updated', 'sage'), $sidebar['last_updated'], ''];
+  }
+  if ($sidebar['stars'] > 0) {
+    $detailRows[] = [__('GitHub stars', 'sage'), (string) $sidebar['stars'], $sidebar['github']];
+  }
 @endphp
 
 <article @php(post_class($pageClass))>
@@ -155,6 +172,26 @@
         >
         <figcaption>{{ $shotCaption }}</figcaption>
       </figure>
+    @endif
+
+    @if ($sidebar['screenshots'] !== [])
+      <div class="concept-gallery" aria-label="{{ __('More screenshots', 'sage') }}">
+        @foreach ($sidebar['screenshots'] as $shotRow)
+          <figure>
+            <img
+              src="{{ esc_url($shotRow[0]) }}"
+              alt="{{ esc_attr($shotRow[1] !== '' ? $shotRow[1] : sprintf(__('%s screenshot', 'sage'), $title)) }}"
+              width="800"
+              height="450"
+              loading="lazy"
+              decoding="async"
+            >
+            @if ($shotRow[1] !== '')
+              <figcaption>{{ $shotRow[1] }}</figcaption>
+            @endif
+          </figure>
+        @endforeach
+      </div>
     @endif
 
     @if ($story['metrics'] !== [])
@@ -250,14 +287,96 @@
           </div>
         @endif
 
-        @if (! empty($tech))
+        @if ($detailRows !== [] || $sidebar['files_included'] !== [] || $sidebar['docs'] !== [] || $sidebar['github'] !== '')
+          <div class="concept-aside-card concept-aside-card--facts">
+            <h2 class="concept-aside-title">{{ $isTheme ? __('Theme details', 'sage') : ($isPlugin ? __('Plugin details', 'sage') : __('Concept details', 'sage')) }}</h2>
+            @if ($detailRows !== [])
+              <dl class="concept-fact-list">
+                @foreach ($detailRows as $row)
+                  <div class="concept-fact">
+                    <dt>{{ $row[0] }}</dt>
+                    <dd>
+                      @if ($row[2] !== '')
+                        <a href="{{ esc_url($row[2]) }}" rel="noopener" target="_blank">{{ $row[1] }}</a>
+                      @else
+                        {{ $row[1] }}
+                      @endif
+                    </dd>
+                  </div>
+                @endforeach
+              </dl>
+            @endif
+            @if ($sidebar['files_included'] !== [])
+              <h3 class="concept-aside-subtitle">{{ __('Files included', 'sage') }}</h3>
+              <ul class="concept-fact-files">
+                @foreach ($sidebar['files_included'] as $file)
+                  <li>{{ $file }}</li>
+                @endforeach
+              </ul>
+            @endif
+            @if ($sidebar['docs'] !== [])
+              <h3 class="concept-aside-subtitle">{{ __('Documentation', 'sage') }}</h3>
+              <ul class="concept-fact-docs">
+                @foreach ($sidebar['docs'] as $doc)
+                  <li><a href="{{ esc_url($doc[1]) }}" rel="noopener" target="_blank">{{ $doc[0] }} <span aria-hidden="true">↗</span></a></li>
+                @endforeach
+              </ul>
+            @elseif ($sidebar['support'] !== '')
+              <p class="concept-fact-support">
+                <a href="{{ esc_url($sidebar['support']) }}" rel="noopener" target="_blank">{{ __('Support docs', 'sage') }} ↗</a>
+              </p>
+            @endif
+            @if ($sidebar['github'] !== '')
+              <p class="concept-fact-github">
+                <a href="{{ esc_url($sidebar['github']) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('github', 14) !!} {{ __('View on GitHub', 'sage') }}</a>
+              </p>
+            @endif
+          </div>
+        @endif
+
+        @if (! empty($tech) || $sidebar['languages'] !== [] || $sidebar['topics'] !== [])
           <div class="concept-aside-card">
             <h2 class="concept-aside-title">{{ __('Stack', 'sage') }}</h2>
-            <p class="pill-row">
-              @foreach ($tech as $t)
-                <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
-              @endforeach
-            </p>
+            @if (! empty($tech))
+              <p class="pill-row">
+                @foreach ($tech as $t)
+                  <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+                @endforeach
+              </p>
+            @elseif ($sidebar['languages'] !== [])
+              <p class="pill-row">
+                @foreach ($sidebar['languages'] as $t)
+                  <span class="pill">{{ $t }}</span>
+                @endforeach
+              </p>
+            @endif
+            @if ($sidebar['topics'] !== [])
+              <p class="concept-topic-row">
+                @foreach ($sidebar['topics'] as $topic)
+                  <span class="concept-topic">{{ $topic }}</span>
+                @endforeach
+              </p>
+            @endif
+          </div>
+        @endif
+
+        @if ($sidebar['brand_tagline'] !== '' || $sidebar['brand_palette'] !== [])
+          <div class="concept-aside-card concept-aside-card--brand">
+            <h2 class="concept-aside-title">{{ __('Brand', 'sage') }}</h2>
+            @if ($sidebar['brand_tagline'] !== '')
+              <p class="concept-brand-tagline">{{ $sidebar['brand_tagline'] }}</p>
+            @endif
+            @if ($sidebar['brand_palette'] !== [])
+              <ul class="concept-brand-palette" aria-label="{{ __('Color palette', 'sage') }}">
+                @foreach ($sidebar['brand_palette'] as $swatch)
+                  <li>
+                    <span class="concept-brand-swatch" style="--swatch: {{ esc_attr($swatch[1]) }}"></span>
+                    <span>{{ $swatch[0] }}</span>
+                    <code>{{ $swatch[1] }}</code>
+                  </li>
+                @endforeach
+              </ul>
+            @endif
           </div>
         @endif
 
