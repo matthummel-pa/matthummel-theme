@@ -1,0 +1,28 @@
+name: Temp sync conflict files from main
+on:
+  push:
+    paths: ['.github/workflows/sync-main-conflicts.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/product-landing-pages-f168
+          fetch-depth: 0
+      - name: Take main versions of conflicted files
+        run: |
+          git fetch origin main
+          git checkout origin/main -- \
+            app/concept-pages.php \
+            app/portfolio.php \
+            resources/views/partials/content-single-project.blade.php
+          git config user.name matt-hummel
+          git config user.email matt@matthummel.com
+          git add -A
+          git status --short
+          git commit -m "temp: match main on conflicted files to unblock branch update" || exit 0
+          git push origin HEAD:cursor/product-landing-pages-f168
