@@ -2,6 +2,12 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.33 — 2026-08-31
+
+### Fixed
+
+- Critical error / white screen when `wp-content/cache/acorn` still listed removed Composer providers (e.g. Blade Heroicons). `functions.php` drops stale `packages.php` / `services.php` before Acorn boots; deploy FTP clears those files; theme updater does the same after install
+
 ## 3.1.32 — 2026-08-31
 
 ### Added

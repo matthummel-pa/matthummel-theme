@@ -163,6 +163,17 @@ jobs:
             **/docs/**
             **/matthummel.zip
 
+      # Theme FTP does not touch wp-content/cache/acorn. Stale packages.php that
+      # still lists a removed provider white-screens the live site until cleared.
+      - name: Clear stale Acorn provider cache over FTP
+        continue-on-error: true
+        env:
+          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
+          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
+          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
+          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
+        run: python3 .github/scripts/siteground-ftp-clear-acorn-cache.py
+
       - name: Set up SSH Key for Remote Server Access
         continue-on-error: true
         uses: shimataro/ssh-key-action@v2

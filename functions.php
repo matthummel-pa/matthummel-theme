@@ -46,6 +46,72 @@ unset($mhRankMathRestMeta);
 
 /*
 |--------------------------------------------------------------------------
+| Drop stale Acorn package manifests
+|--------------------------------------------------------------------------
+|
+| wp-content/cache/acorn survives theme zip / FTP deploys. If packages.php
+| still lists a removed Composer provider (e.g. Blade Heroicons), Acorn's
+| ProviderRepository::compileManifest() fatals before SkipProviderException
+| can run — white-screen / "critical error" on every front-end request.
+|
+*/
+
+(static function (): void {
+    if (! defined('WP_CONTENT_DIR')) {
+        return;
+    }
+
+    $dir = WP_CONTENT_DIR.'/cache/acorn/framework/cache';
+    $stale = false;
+
+    foreach (['packages.php', 'services.php'] as $file) {
+        $path = $dir.'/'.$file;
+        if (! is_readable($path)) {
+            continue;
+        }
+
+        $data = include $path;
+        if (! is_array($data)) {
+            $stale = true;
+            break;
+        }
+
+        $providers = [];
+        if (isset($data['providers']) && is_array($data['providers'])) {
+            $providers = $data['providers'];
+        } else {
+            foreach ($data as $package) {
+                if (! is_array($package) || empty($package['providers']) || ! is_array($package['providers'])) {
+                    continue;
+                }
+                foreach ($package['providers'] as $provider) {
+                    $providers[] = $provider;
+                }
+            }
+        }
+
+        foreach ($providers as $provider) {
+            if (is_string($provider) && $provider !== '' && ! class_exists($provider)) {
+                $stale = true;
+                break 2;
+            }
+        }
+    }
+
+    if (! $stale) {
+        return;
+    }
+
+    foreach (['packages.php', 'services.php'] as $file) {
+        $path = $dir.'/'.$file;
+        if (is_file($path)) {
+            @unlink($path);
+        }
+    }
+})();
+
+/*
+|--------------------------------------------------------------------------
 | Register The Bootloader
 |--------------------------------------------------------------------------
 |
