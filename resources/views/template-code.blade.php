@@ -133,7 +133,7 @@
           {{ \App\field('code_gh_h2', __('Open-source full-stack and WordPress code on GitHub.', 'sage')) }}
         </h2>
         <p class="sec-intro">
-          {{ \App\field('code_gh_intro', __('Public repos from my Gettysburg studio — Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')) }}
+          {{ \App\field('code_gh_intro', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')) }}
         </p>
       </div>
       <nav class="code-gh__jump" aria-label="{{ __('Jump to GitHub sections', 'sage') }}">
@@ -335,7 +335,7 @@
           <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
           <h3 class="code-repos-shell__title">{{ \App\field('code_feat_h2', __('Featured WordPress and app repos', 'sage')) }}</h3>
           <p class="sec-intro">
-            {{ \App\field('code_feat_intro', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg studio. Each one is meant to be forked.', 'sage')) }}
+            {{ \App\field('code_feat_intro', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind this site. Each one is meant to be forked.', 'sage')) }}
           </p>
           <p class="code-repos-shell__meta">
             {{ sprintf(_n('%s repo', '%s repos', count($repos), 'sage'), number_format_i18n(count($repos))) }}
@@ -362,7 +362,7 @@
             <p class="eyebrow">{{ __('Pulse', 'sage') }}</p>
             <h3 class="code-repos-shell__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
             <p class="sec-intro">
-              {{ \App\field('code_live_intro', __('Fresh commits on public GitHub repos — a quick read on what I am shipping from Gettysburg this week.', 'sage')) }}
+              {{ \App\field('code_live_intro', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')) }}
             </p>
             <p class="code-repos-shell__meta">
               {{ sprintf(_n('%s update', '%s updates', count($live), 'sage'), number_format_i18n(count($live))) }}
@@ -400,7 +400,7 @@
             {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos from Gettysburg. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')) }}
+            {{ \App\field('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')) }}
           </p>
           @if (count($skillGroups) > 1)
             <nav class="code-skills-jump" aria-label="{{ __('Skill groups', 'sage') }}">
@@ -530,7 +530,7 @@
         {{ '@'.$login }} →
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

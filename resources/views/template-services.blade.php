@@ -82,7 +82,7 @@
     [
       'icon'   => 'home',
       'title'  => 'Shops and local businesses',
-      'body'   => 'You need a site that you own outright and can update yourself — no developer required for everyday changes. Based in Gettysburg or anywhere else.',
+      'body'   => 'You need a site that you own outright and can update yourself — no developer required for everyday changes. Remote or on-site.',
       'fits'   => [
         'You want real ownership of your domain, hosting, and code',
         'You need to edit pages, menus, and images without technical help',
@@ -134,13 +134,13 @@
     ['icon' => 'check', 'label' => 'Written scope before work starts'],
     ['icon' => 'check', 'label' => 'You own everything at handoff'],
     ['icon' => 'check', 'label' => 'No lock-in or ongoing contracts'],
-    ['icon' => 'check', 'label' => 'Gettysburg & remote'],
+    ['icon' => 'check', 'label' => 'Remote & on-site'],
   ];
 
   $faqs = [
     [
-      'q' => 'Do you take WordPress projects for Gettysburg businesses?',
-      'a' => 'Yes — Gettysburg shops, inns, tours, and restaurants are who these demos are built for. Hire me for real builds here. I also take remote work for agencies and businesses anywhere in the US.',
+      'q' => 'Do you take WordPress projects for shops and agencies?',
+      'a' => 'Yes — shops, inns, tours, and restaurants are who these demos are built for. Hire me for real builds here. I also take remote work for agencies and businesses anywhere.',
     ],
     [
       'q' => 'Do you work with agencies on client projects?',
@@ -160,11 +160,11 @@
     ],
     [
       'q' => 'What does a finished WordPress site from you look like?',
-      'a' => 'The example sites on the Work page are the clearest answer — they\'re working projects built for Gettysburg businesses. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
+      'a' => 'The example sites on the Work page are the clearest answer — working projects for shops like tours, inns, and retail. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
     ],
     [
-      'q' => 'Do you work with businesses outside Gettysburg?',
-      'a' => 'Yes. Most of my work is remote. I\'m based in Gettysburg but I\'ve worked with agencies and businesses across the US. The process works entirely over email, video calls, and shared previews.',
+      'q' => 'Do you work remotely?',
+      'a' => 'Yes. Most of my work is remote. I\'ve worked with agencies and businesses across the US. The process works over email, video calls, and shared previews.',
     ],
     [
       'q' => 'What\'s included in the project handoff?',
@@ -226,7 +226,7 @@
   <div class="container wide">
     <p class="eyebrow">Who I work with</p>
     <h2 id="svc-who-heading" class="display-title is-section">Is this the right fit?</h2>
-    <p class="sec-intro" style="max-width:52ch">I work with shops, agencies, and developers — in Gettysburg and remotely. Pick the one that sounds most like you.</p>
+    <p class="sec-intro" style="max-width:52ch">I work with shops, agencies, and developers — remote or on-site. Pick the one that sounds most like you.</p>
 
     <div class="svc-audience-grid">
       @foreach ($audiences as $aud)
@@ -346,7 +346,7 @@
   <div class="container wide">
     <p class="eyebrow">Example work</p>
     <h2 id="svc-work-heading" class="display-title is-section">A few recent projects.</h2>
-    <p class="sec-intro" style="margin-bottom:2rem">These are Gettysburg projects on matthummel.com — example WordPress builds that show what a finished shop, tour, or inn site can look like.</p>
+    <p class="sec-intro" style="margin-bottom:2rem">These are example projects on matthummel.com — WordPress builds that show what a finished shop, tour, or inn site can look like.</p>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php
@@ -391,9 +391,9 @@
       <h2 id="svc-faq-heading" class="display-title is-section">
         {{ \App\field('svc_faq_h2', __('Frequently asked.', 'sage')) }}
       </h2>
-      <p class="svc-faq-aside__intro">Common questions about WordPress development, project scope, ownership, and working together — in Gettysburg and remotely.</p>
+      <p class="svc-faq-aside__intro">Common questions about WordPress development, project scope, ownership, and working together — remote or on-site.</p>
       <ul class="svc-faq-aside__topics">
-        <li>Gettysburg &amp; remote work</li>
+        <li>Remote and on-site work</li>
         <li>Agency sub-contracting</li>
         <li>Project timelines</li>
         <li>Full ownership at handoff</li>
@@ -447,7 +447,7 @@
       <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">
         {{ __('See example sites', 'sage') }}
       </a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

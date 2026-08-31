@@ -206,9 +206,9 @@
           @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])
           <div class="post-author-bio__body">
             <p class="post-author-bio__name">{{ get_the_author() }}</p>
-            <p class="post-author-bio__role">Full-stack developer · WordPress specialist · Gettysburg, PA</p>
+            <p class="post-author-bio__role">Full-stack developer · WordPress specialist</p>
             <p class="post-author-bio__desc">
-              {{ get_the_author_meta('description') ?: 'I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in. Based in Gettysburg, PA.' }}
+              {{ get_the_author_meta('description') ?: 'I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in.' }}
             </p>
             <div class="post-author-bio__links">
               <a href="{{ home_url('/about/') }}">About me</a>
@@ -234,8 +234,8 @@
             ? __('Building something with Power Platform?', 'sage')
             : __('Building WordPress or full-stack work?', 'sage');
           $ctaBody  = $isPower
-            ? __('Questions about Power Apps, Power Automate, or connectors are welcome — a quick formula note or a full build. I also take WordPress and full-stack web work from Gettysburg, remote anywhere.', 'sage')
-            : __('A question about this post is just as welcome as a project note. I build WordPress platforms and full-stack web apps for shops and agencies from Gettysburg — remote anywhere.', 'sage');
+            ? __('Questions about Power Apps, Power Automate, or connectors are welcome — a quick formula note or a full build. I also take WordPress and full-stack web work, remote anywhere.', 'sage')
+            : __('A question about this post is just as welcome as a project note. I build WordPress platforms and full-stack web apps for shops and agencies — remote anywhere.', 'sage');
           $ctaId = 'post-cta-heading';
         @endphp
         <aside class="post-cta" aria-labelledby="{{ $ctaId }}">
@@ -252,7 +252,7 @@
             <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">
               {{ __('Hire me', 'sage') }}
             </a>
-            <p class="post-cta__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+            <p class="post-cta__note">{{ __('Remote · usually within a day', 'sage') }}</p>
           </div>
         </aside>
 

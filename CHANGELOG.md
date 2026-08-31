@@ -2,6 +2,14 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.36 — 2026-08-31
+
+### Changed
+
+- Sitewide SEO and marketing copy is skill-first (WordPress, plugins, web apps) instead of Gettysburg keyword stuffing — field defaults, document titles/meta, Blade chrome, contact notes, and CTA trust lines
+- One-time reset (`mh_seo_global_copy_v1`) clears saved page fields that still contain Gettysburg / Adams County so new defaults show on existing installs
+- Portfolio SEO playbook updated to match (no required city density on landings)
+
 ## 3.1.35 — 2026-08-31
 
 ### Fixed

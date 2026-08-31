@@ -210,7 +210,7 @@
       <div class="h-hero__badges">
         <span class="h-badge">
           {!! \App\mh_svg_icon('map', 13) !!}
-          {{ \App\field('home_kicker', $gh['location'] ?: __('Gettysburg, PA', 'sage')) }}
+          {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
         </span>
         @if (\App\mh_is_hireable($gh))
           <span class="h-badge h-badge--open">
@@ -261,8 +261,8 @@
           </div>
         @endif
         <div>
-          <dt>Gettysburg</dt>
-          <dd>Pennsylvania</dd>
+          <dt>Remote</dt>
+          <dd>On-site welcome</dd>
         </div>
         <div>
           <dt>Full stack</dt>
@@ -315,7 +315,7 @@
 <section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
   <meta itemprop="jobTitle" content="Full-Stack Developer and WordPress Specialist">
-  <meta itemprop="address" content="Gettysburg, Pennsylvania">
+  <!-- address omitted: marketing SEO is skill-first, not local -->
   <div class="container wide">
 
     {{-- Two-column: bio left, sidebar right --}}
@@ -331,7 +331,7 @@
             'decorative' => false,
           ])
           <div class="h-about__meta">
-            <span class="h-meta-item">{!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA</span>
+            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Sage · Tailwind · Vite</span>
             <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Full-stack developer · WordPress specialist</span>
             <span class="h-meta-item" itemprop="url">
               {!! \App\mh_svg_icon('github', 14) !!}
@@ -419,7 +419,7 @@
             <li>
               <span class="h-about-who__icon">{!! \App\mh_svg_icon('globe', 16) !!}</span>
               <span>
-                <strong>Shop or small business</strong> — especially Gettysburg-area businesses. I build sites you can actually run yourself.
+                <strong>Shop or small business</strong> — I build WordPress sites you can actually run yourself.
               </span>
             </li>
           </ul>
@@ -629,10 +629,10 @@
       <div>
         <p class="h-section-label">Projects</p>
         <h2 id="h-work-heading" class="h-section__title">
-          {{ \App\field('home_work_h2', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')) }}
+          {{ \App\field('home_work_h2', __('Example WordPress sites for shops, tours, and inns.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">
@@ -750,7 +750,7 @@
 
     {{-- Bottom CTA bar --}}
     <div class="h-work-cta-bar">
-      <p>Projects for Gettysburg tours, inns, shops, restaurants, and real estate agencies.</p>
+      <p>Projects for tours, inns, shops, restaurants, and real estate agencies.</p>
       <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} projects</a>
     </div>
 
@@ -1125,7 +1125,7 @@
         </p>
         <p class="h-avail-card__status">{{ \App\field('home_avail_status', __('Open to new projects', 'sage')) }}</p>
         <ul class="h-avail-card__details">
-          <li>{!! \App\mh_svg_icon('map', 13) !!} Gettysburg, PA (EST)</li>
+          <li>{!! \App\mh_svg_icon('clock', 13) !!} Eastern Time</li>
           <li>{!! \App\mh_svg_icon('calendar', 13) !!} Replies within 24 hours</li>
           <li>{!! \App\mh_svg_icon('code', 13) !!} Project-based work</li>
         </ul>
@@ -1168,7 +1168,7 @@
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

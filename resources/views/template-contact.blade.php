@@ -39,7 +39,7 @@
     </span>
     <span class="contact-signal">
       {!! \App\mh_svg_icon('map', 14) !!}
-      Gettysburg, PA (EST)
+      Eastern Time
     </span>
   </div>
 @endcomponent
@@ -148,7 +148,7 @@
             <span class="contact-info-icon">{!! \App\mh_svg_icon('map', 16) !!}</span>
             <div>
               <strong>Location</strong>
-              <p>Gettysburg, PA (EST). Available remotely anywhere.</p>
+              <p>Eastern Time. Available remotely anywhere.</p>
             </div>
           </li>
           <li>

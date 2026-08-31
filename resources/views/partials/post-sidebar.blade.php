@@ -42,7 +42,7 @@
       @include('partials.profile-photo', ['size' => 56, 'class' => 'profile-photo side-author__photo', 'decorative' => true])
       <div class="side-author__intro">
         <p class="side-author__name">Matt Hummel</p>
-        <p class="side-author__role">{{ __('Full-stack developer · WordPress specialist · Gettysburg, PA', 'sage') }}</p>
+        <p class="side-author__role">{{ __('Full-stack developer · WordPress specialist', 'sage') }}</p>
         @if ($hireable)
           <p class="side-author__avail">
             @include('partials.avail-mark', ['gh' => $gh])

@@ -25,7 +25,7 @@
       </span>
     @endif
     <span class="now-hero-location">
-      {!! \App\mh_svg_icon('map', 14) !!} Gettysburg, PA · Eastern Time
+      {!! \App\mh_svg_icon('clock', 14) !!} Eastern Time
     </span>
   </div>
   <p class="about-hero-links" style="margin-top:1rem">
@@ -50,7 +50,7 @@
             <h2 class="now-block__title">Matt Hummel</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p1', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
         <p>{{ \App\field('now_studio_p2', __('Browse the Work page. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
         <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
           {{ __('See example sites', 'sage') }} →
@@ -110,10 +110,10 @@
           <div class="now-block__icon">{!! \App\mh_svg_icon('map', 18) !!}</div>
           <div>
             <p class="now-block__eyebrow">Life</p>
-            <h2 class="now-block__title">Gettysburg, Pennsylvania</h2>
+            <h2 class="now-block__title">Family and focus</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_life_p1', __('I live in Gettysburg, Pennsylvania with my family. Nights and weekends belong to people, not projects. I keep work well-scoped, which is why I only take on a handful of extra projects at a time. I work Eastern Time hours.', 'sage')) }}</p>
+        <p>{{ \App\field('now_life_p1', __('I live with my family. Nights and weekends belong to people, not projects. I keep work well-scoped, which is why I only take on a handful of extra projects at a time. I work Eastern Time hours.', 'sage')) }}</p>
       </article>
 
       {{-- The short list --}}
@@ -127,11 +127,11 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Publishing Gettysburg WordPress projects — live demos for shops, tours, and inns', 'sage'),
+            __('Publishing example WordPress sites — live demos for shops, tours, and inns', 'sage'),
             __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
-            __('Keeping extra projects small — family time is non-negotiable in Gettysburg', 'sage'),
+            __('Keeping extra projects small — family time is non-negotiable', 'sage'),
             __('Working Eastern Time, available for remote and local clients', 'sage'),
           ]) as $item)
             <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $item }}</span></li>
@@ -170,7 +170,7 @@
 
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Location</p>
-        <p class="now-sidebar-card__value">Gettysburg, PA</p>
+        <p class="now-sidebar-card__value">Eastern Time</p>
         <p class="now-sidebar-card__sub">Eastern Time (ET) · Remote friendly</p>
       </div>
 
@@ -184,7 +184,7 @@
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Studio work</p>
         <p class="now-sidebar-card__value">Matt Hummel</p>
-        <p class="now-sidebar-card__sub">Gettysburg WordPress demos</p>
+        <p class="now-sidebar-card__sub">Example WordPress demos</p>
         <a class="now-sidebar-card__link" href="{{ home_url('/projects/') }}">{{ __('See example sites', 'sage') }} →</a>
       </div>
 
@@ -217,7 +217,7 @@
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

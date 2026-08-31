@@ -386,11 +386,11 @@ function mh_project_buyer_defaults(string $slug, string $cat, string $title): ar
     $handoff = __('You own the theme, the fields, and the repo. I document what to edit in wp-admin so another developer can extend it without reverse-engineering CSS.', 'sage');
 
     if (str_contains($key, 'real')) {
-        $audience = __('Brokerages, land offices, and independent agents who need listings that are not a generic home-search plugin. The same pattern fits farms, acreage, and historic inventory in Gettysburg — and listings anywhere you already run them.', 'sage');
+        $audience = __('Brokerages, land offices, and independent agents who need listings that are not a generic home-search plugin. The same pattern fits farms, acreage, and historic inventory anywhere you already run them.', 'sage');
         $architecture = __('Listings are a queryable collection: grid plus map, with filters as URL query args (acreage, township, lot type). Financing widgets are vanilla JavaScript, so they run without a page builder or shortcode pack. The WordPress handoff is a Sage 11 theme. Listings can be a custom post type or an imported feed — the UI does not care as long as the fields exist.', 'sage');
         $handoff = __('You own the theme, the listing fields, and the repo. Listing copy, photos, and filters edit in wp-admin. I document the listing schema so another developer can add a filter without touching the template. Rank Math or Yoast owns titles and schema.', 'sage');
     } elseif (str_contains($key, 'tour')) {
-        $audience = __('Licensed guides, tour operators, and visitor-facing shops that sell dated tickets instead of a static “call us” page. Built for Gettysburg walking, bus, and lantern tours; the booking pattern ports to other destinations.', 'sage');
+        $audience = __('Licensed guides, tour operators, and visitor-facing shops that sell dated tickets instead of a static “call us” page. Built for walking, bus, and lantern tours; the booking pattern ports to other destinations.', 'sage');
         $architecture = __('Tours are structured content (not a pile of pages): catalog, filters, and a booking path that can later sit on WooCommerce or a booking plugin. Maps, when present, are a real map library rather than a screenshot. Sage 11 is the WordPress handoff so the same Blade templates keep working after launch.', 'sage');
         $handoff = __('You get tour fields, the catalog, and the booking labels in wp-admin. Adding a tour should not require a developer. I leave notes for anything that is not obvious, plus the repo if you want another developer on the theme.', 'sage');
     } elseif (str_contains($key, 'retail') || str_contains($key, 'shop')) {

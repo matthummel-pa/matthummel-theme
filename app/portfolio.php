@@ -1289,7 +1289,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
     mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
-    mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('Gettysburg, PA', 'sage'));
+    mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('City, State', 'sage'));
     mh_project_admin_field_row(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
     mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
     mh_project_admin_field_row(
@@ -1890,7 +1890,7 @@ function mh_code_practice_defaults(): array
         'Front-end architecture — semantic HTML, accessible CSS, TypeScript, React, and interfaces that work on every device.',
         'Full-stack applications — React interfaces, PHP or Node services, authentication, databases, and deployment workflows.',
         'REST API integrations — data pipelines connecting WordPress and web apps to external services and third-party APIs.',
-        'Gettysburg projects — live WordPress demos for shops, tours, and inns.',
+        'Example sites — live WordPress demos for shops, tours, and inns.',
     ];
 }
 
@@ -1909,8 +1909,9 @@ function mh_code_practice_group(string $text): string
         return __('Microsoft', 'sage');
     }
     if (
-        str_contains($low, 'gettysburg studio')
-        || str_contains($low, 'gettysburg project')
+        str_contains($low, 'example site')
+        || str_contains($low, 'studio project')
+        || str_contains($low, 'live wordpress demo')
     ) {
         return __('Studio', 'sage');
     }
@@ -2067,9 +2068,9 @@ function mh_code_resume_defaults(): array
             'role' => 'Founder',
             'org' => 'Matt Hummel',
             'period' => 'Current',
-            'type' => 'Studio work · Gettysburg, PA',
+            'type' => 'Studio work · Remote',
             'url' => 'https://matthummel.com',
-            'bullets' => "Publishing Gettysburg projects — live WordPress demos for shops, tours, and inns.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing example WordPress sites — live demos for shops, tours, and inns.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',
@@ -3593,7 +3594,7 @@ function mh_about_work_types_defaults(): array
     return [
         [
             'title' => __('Full-time roles', 'sage'),
-            'detail' => __('Full-stack web development with deep WordPress and PHP experience. Open to on-site, hybrid, or remote from Gettysburg.', 'sage'),
+            'detail' => __('Full-stack web development with deep WordPress and PHP experience. Open to on-site, hybrid, or remote.', 'sage'),
         ],
         [
             'title' => __('Contract and freelance', 'sage'),

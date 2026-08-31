@@ -73,7 +73,7 @@
       <a class="ty-browse-card" href="{{ home_url('/projects/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('globe', 22) !!}</div>
         <h3 class="ty-browse-card__title">Example sites</h3>
-        <p class="ty-browse-card__body">WordPress projects for Gettysburg shops, inns, tours, and restaurants. A clear picture of what a finished build looks like.</p>
+        <p class="ty-browse-card__body">WordPress projects for shops, inns, tours, and restaurants. A clear picture of what a finished build looks like.</p>
         <span class="ty-browse-card__link">Browse all projects →</span>
       </a>
 
@@ -101,7 +101,7 @@
       <a class="ty-browse-card" href="{{ home_url('/about/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('user', 22) !!}</div>
         <h3 class="ty-browse-card__title">About</h3>
-        <p class="ty-browse-card__body">Background, resume, and what I'm focused on right now. Gettysburg-based, open to remote work.</p>
+        <p class="ty-browse-card__body">Background, resume, and what I'm focused on right now. Open to remote and on-site work.</p>
         <span class="ty-browse-card__link">About me →</span>
       </a>
 

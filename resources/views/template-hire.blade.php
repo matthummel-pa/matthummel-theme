@@ -54,7 +54,7 @@
       {{ \App\field('hire_h1', __('Hire a full-stack developer with deep WordPress experience.', 'sage')) }}
     @endif
   </h1>
-  <p class="lead">{{ \App\field('hire_lede', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Based in Gettysburg and working remotely anywhere.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('hire_lede', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Remote or on-site.', 'sage')) }}</p>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])
@@ -193,7 +193,7 @@
   'linkedin' => $liUrl,
   'headingId' => 'hire-resume-heading',
   'h2' => \App\field('hire_cv_h2', __('Resume.', 'sage')),
-  'intro' => \App\field('hire_cv_intro', __('Based in Gettysburg, PA — working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')),
+  'intro' => \App\field('hire_cv_intro', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')),
   'eyebrow' => __('Experience', 'sage'),
   'extraLinks' => [
     ['href' => home_url('/about/'), 'label' => __('Full background →', 'sage')],
@@ -315,7 +315,7 @@
         {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
-      <p class="cta-band__note">{{ __('Gettysburg · remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
 </section>

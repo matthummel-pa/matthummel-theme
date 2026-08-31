@@ -60,9 +60,9 @@
     $defaultEyebrow = __('Project', 'sage');
     $primaryLabel = __('Get help', 'sage');
     $hireLabel = __('Get help', 'sage');
-    $shotCaption = __('Example layout — starting point for a real Gettysburg shop build.', 'sage');
+    $shotCaption = __('Example layout — starting point for a real shop build.', 'sage');
     $asideCtaTitle = __('Want this for your shop?', 'sage');
-    $asideNote = __('This is an example project on matthummel.com — not a live client site. Hire me to adapt it for your Gettysburg business.', 'sage');
+    $asideNote = __('This is an example project on matthummel.com — not a live client site. Hire me to adapt it for your shop.', 'sage');
     $includedHeading = __('Included in this project', 'sage');
     $problemHeading = __('The problem', 'sage');
     $approachHeading = __('How I shaped it', 'sage');
