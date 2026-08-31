@@ -205,7 +205,7 @@ function mh_home_fields(): array
         ],
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress sites for Gettysburg shops, tours, and inns.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('Based in Gettysburg, PA.', 'sage')],
@@ -246,7 +246,7 @@ function page_field_map(): array
 
     $placeItems = [
         ['title' => __('matthummel.com', 'sage'), 'text' => __('This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.', 'sage')],
-        ['title' => __('Ridges & Valleys', 'sage'), 'text' => __('Gettysburg concept sites — live WordPress demos for shops, tours, and inns. The studio brand grows as real projects come in.', 'sage'), 'url' => 'https://ridgesandvalleys.com'],
+        ['title' => __('Ridges & Valleys', 'sage'), 'text' => __('Gettysburg projects — live WordPress demos for shops, tours, and inns. The studio brand grows as real work comes in.', 'sage'), 'url' => 'https://ridgesandvalleys.com'],
     ];
 
     $codeRepos = [];
@@ -286,7 +286,7 @@ function page_field_map(): array
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
                 ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')],
                 ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
+                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
                 ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
@@ -352,7 +352,7 @@ function page_field_map(): array
                 ['now_link', __('Link label', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Ridges & Valleys', 'sage') => [
-                ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
+                ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
                 ['now_studio_p2', __('Paragraph 2', 'sage'), 'textarea', __('Browse the demos at ridgesandvalleys.com. When you\'re ready for a real build, say hello here.', 'sage')],
             ],
         ],
@@ -390,7 +390,7 @@ function page_field_map(): array
                 ['svc_faq', __('Questions', 'sage'), 'repeater', [
                     ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
                     ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
-                    ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Ridges & Valleys holds the Gettysburg concept demos. This site is for builds and sharing.', 'sage')],
+                    ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No. Ridges & Valleys holds the Gettysburg WordPress demos. This site is for builds and sharing.', 'sage')],
                 ], [
                     ['title', __('Question', 'sage'), 'text'],
                     ['text', __('Answer', 'sage'), 'textarea'],
@@ -429,7 +429,7 @@ function page_field_map(): array
             ],
             __('Elsewhere', 'sage') => [
                 ['cnt_else_h2', __('Heading', 'sage'), 'text', __('Find me elsewhere', 'sage')],
-                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is where I publish Gettysburg concept demos.', 'sage')],
+                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. Ridges & Valleys is where I publish Gettysburg WordPress demos.', 'sage')],
             ],
             __('What to send', 'sage') => [
                 ['cnt_tips_kicker', __('Kicker', 'sage'), 'text', __('A useful note', 'sage')],
@@ -469,7 +469,7 @@ function page_field_map(): array
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
                 ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
                 ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured WordPress and app repos', 'sage')],
-                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg concept demos. Each one is meant to be forked.', 'sage')],
+                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind my Gettysburg projects. Each one is meant to be forked.', 'sage')],
                 ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
@@ -533,15 +533,15 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example sites.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg concept sites — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
-                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Concept demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Ridges & Valleys is where I publish Gettysburg projects — live WordPress demos for shops, tours, and inns. I\'m building the studio brand as real projects come in; hire me for builds on matthummel.com.', 'sage')],
+                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live demos: <a href="https://ridgesandvalleys.com" rel="noopener" target="_blank">ridgesandvalleys.com</a>.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
-                ['work_cta_view', __('View concept label', 'sage'), 'text', __('View concept', 'sage')],
-                ['work_cta_use', __('Use concept label', 'sage'), 'text', __('Use this concept', 'sage')],
+                ['work_cta_view', __('View project label', 'sage'), 'text', __('View project', 'sage')],
+                ['work_cta_use', __('Use project label', 'sage'), 'text', __('Use this project', 'sage')],
                 ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want a site in this shape?', 'sage')],
-                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are concept demos, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.', 'sage')],
+                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These projects are starting points for a real build. If one fits a tour, inn, shop, or restaurant you run, write and say which project you want to start from.', 'sage')],
                 ['work_empty_h2', __('Empty state heading', 'sage'), 'text', __('Example sites are on the way.', 'sage')],
-                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which Gettysburg concept demos to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')],
+                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which Gettysburg projects to publish here first. In the meantime, browse the live demos on Ridges & Valleys, or write and tell me what kind of shop you run.', 'sage')],
                 ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Example sites', 'sage') => [
@@ -552,7 +552,7 @@ function page_field_map(): array
                     ['place', __('Place', 'sage'), 'text'],
                     ['blurb', __('Blurb', 'sage'), 'textarea'],
                     ['tech', __('Tech (comma separated)', 'sage'), 'text'],
-                    ['concept', __('Concept page URL', 'sage'), 'url'],
+                    ['concept', __('Ridges & Valleys URL', 'sage'), 'url'],
                     ['image', __('Screenshot file or URL', 'sage'), 'text'],
                 ]],
             ],
@@ -1027,7 +1027,7 @@ function field_group_hint(string $label): string
         __('Hero', 'sage') => __('Top of the home page, next to the photo.', 'sage'),
         __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
         __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
-        __('Example sites', 'sage') => __('Each row is one concept site. Empty the list to restore the built-in set.', 'sage'),
+        __('Example sites', 'sage') => __('Each row is one project. Empty the list to restore the built-in set.', 'sage'),
         __('Snippets', 'sage') => __('Copy-paste examples shown on Home. Empty the list to restore the built-in set.', 'sage'),
         __('Featured repos', 'sage') => __('Hand-picked GitHub projects. Empty the list to restore the built-in set.', 'sage'),
     ];

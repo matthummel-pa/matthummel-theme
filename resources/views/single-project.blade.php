@@ -1,6 +1,6 @@
 {{--
   WordPress loads single-{post_type}.blade.php for public CPT singles.
-  Concept pages use the Projects CPT at /concept/{slug}/.
+  Project pages use the Projects CPT at /projects/{slug}/.
 --}}
 @extends('layouts.app')
 

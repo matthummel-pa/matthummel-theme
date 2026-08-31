@@ -7,7 +7,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 | | |
 | --- | --- |
 | **Live site** | [matthummel.com](https://matthummel.com) |
-| **Version** | `3.1.27` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
+| **Version** | `3.1.30` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |
@@ -19,6 +19,8 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
 
 ```text
+● 2026-08-31  3.1.30   Project singles at /projects/{slug}/; hero screenshot; buyer docs
+● 2026-08-31  3.1.29   WooCommerce Blade shop/product templates and classic Cart/Checkout pages
 ● 2026-08-31  3.1.27   Contact and /start/ forms POST to the n8n CRM webhook
 ● 2026-08-29  3.1.26   Concept pages honor Rank Math / Yoast title and meta description
 ● 2026-08-28  3.1.25   Projects admin: Generate featured image (DALL·E → Media → Work card)
@@ -46,7 +48,7 @@ Stuck on a white screen or missing CSS? Start in the [error cheatsheet](docs/ERR
 
 | Audience | What they get |
 | --- | --- |
-| Shops and local businesses | Concept sites, plain-language WordPress options, a clear way to start a project |
+| Shops and local businesses | Example projects, plain-language WordPress options, a clear way to start a project |
 | Agencies and developers | Stack, open-source code, overflow / hire paths |
 | Recruiters | Experience, GitHub, availability |
 
@@ -55,7 +57,7 @@ Stuck on a white screen or missing CSS? Start in the [error cheatsheet](docs/ERR
 ## What’s in the theme
 
 - Named Blade page templates (Home, About, Services, Hire, Work, Code, Contact, Now, Uses, …)
-- Projects CPT with on-site concept pages at `/concept/{slug}/`
+- Projects CPT with on-site project pages at `/projects/{slug}/`
 - Plugin-free contact + project brief forms (nonce, honeypot)
 - GitHub API showcase (profile, contribs, activity, repos) via transients
 - Journal with share intents, comments, and DEV.to / Bluesky helpers

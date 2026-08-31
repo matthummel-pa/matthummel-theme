@@ -73,8 +73,8 @@
       <a class="ty-browse-card" href="{{ home_url('/projects/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('globe', 22) !!}</div>
         <h3 class="ty-browse-card__title">Example sites</h3>
-        <p class="ty-browse-card__body">WordPress concept sites for Gettysburg shops, inns, tours, and restaurants. A clear picture of what a finished build looks like.</p>
-        <span class="ty-browse-card__link">Browse all concepts →</span>
+        <p class="ty-browse-card__body">WordPress projects for Gettysburg shops, inns, tours, and restaurants. A clear picture of what a finished build looks like.</p>
+        <span class="ty-browse-card__link">Browse all projects →</span>
       </a>
 
       <a class="ty-browse-card" href="{{ home_url('/services/') }}">
@@ -116,22 +116,21 @@
   </div>
 </section>
 
-{{-- ── RECENT CONCEPTS ───────────────────────────────── --}}
+{{-- ── RECENT PROJECTS ───────────────────────────────── --}}
 @if (! empty($featured))
 <section class="pf-section" aria-labelledby="ty-work-heading">
   <div class="container wide">
     <p class="eyebrow">Recent work</p>
-    <h2 id="ty-work-heading" class="display-title is-section">A few concept sites.</h2>
+    <h2 id="ty-work-heading" class="display-title is-section">A few recent projects.</h2>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php
-          $href = ! empty($p['concept']) ? esc_url($p['concept']) : home_url('/projects/#'.$p['slug']);
-          $ext  = ! empty($p['concept']);
+          $href = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
         @endphp
-        <a class="svc-work-card" href="{{ $href }}" {{ $ext ? 'rel="noopener" target="_blank"' : '' }}>
+        <a class="svc-work-card" href="{{ $href }}">
           @if (! empty($p['image']))
             <div class="svc-work-card__img">
-              <img src="{{ esc_url($p['image']) }}" alt="{{ esc_attr($p['title']) }} — WordPress concept site" width="480" height="270" loading="lazy" decoding="async">
+              <img src="{{ esc_url($p['image']) }}" alt="{{ esc_attr($p['title']) }} — WordPress project" width="480" height="270" loading="lazy" decoding="async">
             </div>
           @else
             <div class="svc-work-card__img svc-work-card__img--placeholder">{!! \App\mh_svg_icon('wordpress', 28) !!}</div>
@@ -145,7 +144,7 @@
       @endforeach
     </div>
     <p style="margin-top:1.75rem;text-align:center">
-      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all {{ count(\App\mh_work_page_items()) }} concepts →</a>
+      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all {{ count(\App\mh_work_page_items()) }} projects →</a>
     </p>
   </div>
 </section>

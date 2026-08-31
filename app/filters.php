@@ -83,7 +83,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-projects.blade.php' => [
             'title' => 'Example sites in Gettysburg | '.$brand,
-            'desc' => 'Studio WordPress concepts for Gettysburg tours, inns, and shops. See example sites or say hello.',
+            'desc' => 'Studio WordPress projects for Gettysburg tours, inns, and shops. See example sites or say hello.',
         ],
         'template-thankyou.blade.php' => [
             'title' => 'Message received | '.$brand,
@@ -111,7 +111,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-terms.blade.php' => [
             'title' => 'Terms of use | '.$brand,
-            'desc' => 'Terms covering code reuse (MIT licence), written content copyright, concept site disclaimers, and acceptable use of matthummel.com.',
+            'desc' => 'Terms covering code reuse (MIT licence), written content copyright, example-site disclaimers, and acceptable use of matthummel.com.',
         ],
         'template-woocommerce.blade.php' => [
             'title' => '',
@@ -131,7 +131,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Publishing Gettysburg concept demos at Ridges & Valleys, writing WordPress notes, and open for new work.',
+            'desc' => 'Publishing Gettysburg projects at Ridges & Valleys, writing WordPress notes, and open for new work.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
@@ -176,7 +176,7 @@ function mh_seo_document_title(): string
         }
         $built = $place !== ''
             ? $title.' — '.$place.' | '.$brand
-            : $title.' concept | '.$brand;
+            : $title.' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
     }
@@ -267,7 +267,7 @@ function mh_seo_meta_description(): string
             $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
         }
         if ($summary === '') {
-            $summary = 'Gettysburg WordPress concept site. See the example or say hello to adapt it for your shop.';
+            $summary = 'Gettysburg WordPress project. See the example or say hello to adapt it for your shop.';
         }
         if ($summary !== '' && ! str_ends_with($summary, '.')) {
             $summary .= '.';

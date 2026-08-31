@@ -2,6 +2,15 @@
 
 All notable changes to this theme are recorded here.
 
+## 3.1.30 — 2026-08-31
+
+### Changed
+
+- Project singles live at `/projects/{slug}/` (was `/concept/{slug}/`). Legacy `/concept/` URLs 301 to the new path
+- Visitor-facing copy says **project**, not concept (Work cards, home, services, project pages, field defaults)
+- Project hero: screenshot sits to the right of the title and summary
+- Project pages add buyer documentation: how it’s built, who it’s for, what ships, spec sidebar, and a short FAQ
+
 ## 3.1.29 — 2026-08-31
 
 ### Added
