@@ -1,0 +1,29 @@
+name: Assemble resolved portfolio merge
+on:
+  push:
+    paths: ['.github/port-res-parts/**', '.github/workflows/assemble-port-res.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/product-landing-pages-f168
+      - run: |
+          python3 << 'PY'
+          import base64, pathlib, zlib
+          root=pathlib.Path('.github/port-res-parts')
+          raw=zlib.decompress(base64.b64decode(''.join((root/f'zport.{i}').read_text() for i in range(7))))
+          assert b'Sell this as a product' in raw
+          pathlib.Path('app/portfolio.php').write_bytes(raw)
+          print(len(raw))
+          PY
+          rm -rf .github/port-res-parts .github/workflows/assemble-port-res.yml
+          git config user.name matt-hummel
+          git config user.email matt@matthummel.com
+          git add -A
+          git commit -m "Resolve portfolio.php merge with product admin + featured image" || true
+          git push origin HEAD:cursor/product-landing-pages-f168
