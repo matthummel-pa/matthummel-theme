@@ -1261,7 +1261,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     mh_project_admin_field_row(__('What you get', 'sage'), 'mh_project_result', $result, '', 'textarea');
     mh_project_admin_field_row(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
     mh_project_admin_field_row(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, 'https://', 'url');
-    mh_project_admin_field_row(__('GitHub / case URL', 'sage'), 'mh_project_concept', $concept, 'https://', 'url');
+    mh_project_admin_field_row(__('GitHub / case URL', 'sage'), 'mh_project_concept', $concept, 'https://github.com/… or legacy case URL', 'url');
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept metrics (up to 3)', 'sage').'</h3>';
