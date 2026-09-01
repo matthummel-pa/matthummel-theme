@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.53 — Post hero featured image + Gutenberg bodies
+
+- Journal single: featured image sits to the right of title/meta in the hero (stacks under meta on small screens). Removed the duplicate image above the article body.
+- `docs/posts/what-actually-gets-faster-with-ai.html` rewritten as real Gutenberg blocks (no Custom HTML). Tool cards use `wp:group` + modifier classes (`mh-tool-card--cu`, …).
+- Live post “What AI Speeds Up in WordPress” (ID 4879) converted the same way.
+
 ## 3.1.52 — AI comparison cards UX and SEO
 
 - Comparison cards: thin grey border, letter chips, Best for / Weak at / Human still required pills and dividers. No blue left stripe.

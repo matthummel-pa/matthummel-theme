@@ -1,203 +1,561 @@
+<!-- wp:paragraph -->
 <p>AI helps me finish the parts of a WordPress build I already know how to check. It does not replace the check.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>I use Cursor in the Sage repo, ChatGPT and Claude for a second pass, n8n for form handoff, GitHub Actions for the zip, and Vite for the compile. Scaffolding, boilerplate, and a first-pass Blade loop come back quicker than they used to. Architecture, testing, and the last yes still sit with me.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>This is a comparison, not a second workflow essay. The journal already has “AI for WordPress Development: My Cursor, ChatGPT, n8n &amp; MCP Workflow.” That post is the loop. This one is what each tool is good at, and what it costs.</p>
-<h2>AI for WordPress development: what “fast” actually means</h2>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">AI for WordPress development: what “fast” actually means</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>“Fast” is easy to sell. I mean something narrower: less time on work that does not need a human rewrite.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>I will not claim a multiplier, a shorter calendar on every job, or that a model wrote the site. Recruiters should leave thinking I am faster on repeatable work, and still accountable for what ships.</p>
-<h3>Repeatable work</h3>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Repeatable work</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>Renaming a page field, wiring a Vite entry, drafting a loop I have written before, or filling in a GitHub Actions step I already trust — those are patterns. Models are useful there because I can check the output against a pattern I already know.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>That is most of the speed. It is real. It is also easy to overstate.</p>
-<h3>Judgment</h3>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Judgment</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>Which plugin stays, whether a shop can edit a field without me, whether a contrast pair fails, whether a webhook should write anywhere — that is judgment. Models guess. I still own the call.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>If I cannot explain a line at handoff, it does not ship. Same bar as a longer build. Less time on the parts that do not need a rewrite.</p>
-<h2>Tool Comparison</h2>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Tool Comparison</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>I only list tools that already show up on this site: Cursor, ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, and Vite. This is not a ranking. Each card has a job, a cost, and a human step.</p>
-<div class="mh-ai-figure" role="region" aria-label="Comparison of tools I use to ship WordPress work">
-<ul class="mh-tool-grid">
-<li class="mh-tool-card" data-mark="Cu">
+<!-- /wp:paragraph -->
+
+<!-- wp:group {"className":"mh-ai-figure","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-ai-figure" role="region" aria-label="Comparison of tools I use to ship WordPress work"><!-- wp:group {"className":"mh-tool-grid","layout":{"type":"default"}} -->
+<div class="wp-block-group mh-tool-grid">
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--cu","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--cu">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">Cursor</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Primary editor</p>
-<dl>
-<dt>Best for</dt>
-<dd>Repo-aware changes across Blade, PHP, CSS, and JS. Inspecting a Sage 11 theme without pasting files into a chat.</dd>
-<dt>Weak at</dt>
-<dd>Invented WordPress APIs, filled context windows, and lock-in to one editor. A confident wrong answer still looks like a patch.</dd>
-<dt>Human still required</dt>
-<dd>Every diff. I read it, run it, and keep or throw it out.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="GPT">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Repo-aware changes across Blade, PHP, CSS, and JS. Inspecting a Sage 11 theme without pasting files into a chat.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Invented WordPress APIs, filled context windows, and lock-in to one editor. A confident wrong answer still looks like a patch.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Every diff. I read it, run it, and keep or throw it out.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--gpt","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--gpt">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">ChatGPT</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Editor outside the repo</p>
-<dl>
-<dt>Best for</dt>
-<dd>Organizing a post after I already have the point of view. A second pass on shop-facing sentences.</dd>
-<dt>Weak at</dt>
-<dd>No theme context unless I paste it. Outdated plugin APIs. Anything secret should not go in the box.</dd>
-<dt>Human still required</dt>
-<dd>Voice, facts, and whether a sentence is true. I do not publish a draft I have not read.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="Cl">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Organizing a post after I already have the point of view. A second pass on shop-facing sentences.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">No theme context unless I paste it. Outdated plugin APIs. Anything secret should not go in the box.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Voice, facts, and whether a sentence is true. I do not publish a draft I have not read.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--cl","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--cl">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">Claude</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Longer first pass</p>
-<dl>
-<dt>Best for</dt>
-<dd>First-pass PHP and a careful read of a larger change when I want a second model, often through Cursor.</dd>
-<dt>Weak at</dt>
-<dd>The same hallucination risk as any model. Long files still fall out of context. It will invent ACF if I am not specific.</dd>
-<dt>Human still required</dt>
-<dd>Whether the approach matches this theme. Page fields stay in <code>app/page-fields.php</code> until I say otherwise.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="Ge">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">First-pass PHP and a careful read of a larger change when I want a second model, often through Cursor.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">The same hallucination risk as any model. Long files still fall out of context. It will invent ACF if I am not specific.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Whether the approach matches this theme. Page fields stay in <code>app/page-fields.php</code> until I say otherwise.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--ge","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--ge">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">Gemini</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">On the AI shelf</p>
-<dl>
-<dt>Best for</dt>
-<dd>A second opinion when I already have Cursor, Claude, or ChatGPT in play. It is listed on this site because I use it, not because it is the daily editor.</dd>
-<dt>Weak at</dt>
-<dd>I do not live in it the way I live in Cursor. Treating it as the source of truth for a Sage repo is a mistake.</dd>
-<dt>Human still required</dt>
-<dd>Same review bar. Another model is not another developer.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="VS">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">A second opinion when I already have Cursor, Claude, or ChatGPT in play. It is listed on this site because I use it, not because it is the daily editor.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">I do not live in it the way I live in Cursor. Treating it as the source of truth for a Sage repo is a mistake.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Same review bar. Another model is not another developer.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--vs","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--vs">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">VS Code</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Quiet editor</p>
-<dl>
-<dt>Best for</dt>
-<dd>The same files without an agent. Cursor is VS Code-compatible; this is the fallback when I want less noise, or a machine that is not set up for Cursor.</dd>
-<dt>Weak at</dt>
-<dd>No repo-aware agent. Scaffolding is slower because I type it.</dd>
-<dt>Human still required</dt>
-<dd>All of it. That can be the point.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="n8">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">The same files without an agent. Cursor is VS Code-compatible; this is the fallback when I want less noise, or a machine that is not set up for Cursor.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">No repo-aware agent. Scaffolding is slower because I type it.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">All of it. That can be the point.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--n8","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--n8">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">n8n</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Workflows, not code</p>
-<dl>
-<dt>Best for</dt>
-<dd>Moving JSON between WordPress and another system. Contact and <code>/start/</code> submits go to an n8n CRM webhook, with <code>wp_mail</code> as fallback.</dd>
-<dt>Weak at</dt>
-<dd>Ops. Another login, another place to fail, some lock-in. It does not write the theme.</dd>
-<dt>Human still required</dt>
-<dd>What the payload contains, who can fire it, and what happens when the webhook is down.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="MC">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Moving JSON between WordPress and another system. Contact and <code>/start/</code> submits go to an n8n CRM webhook, with <code>wp_mail</code> as fallback.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Ops. Another login, another place to fail, some lock-in. It does not write the theme.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">What the payload contains, who can fire it, and what happens when the webhook is down.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--mc","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--mc">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">MCP</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Narrow doors for agents</p>
-<dl>
-<dt>Best for</dt>
-<dd>Giving Cursor a controlled connection to a specific tool — WordPress via WPVibe, Notion, a calendar — instead of pasting secrets into chat.</dd>
-<dt>Weak at</dt>
-<dd>The protocol is not a security review. A write-enabled server is an API credential with a chat box. Context still runs out.</dd>
-<dt>Human still required</dt>
-<dd>What to connect, how narrow the write access is, and whether the action is allowed to run.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="GH">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Giving Cursor a controlled connection to a specific tool — WordPress via WPVibe, Notion, a calendar — instead of pasting secrets into chat.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">The protocol is not a security review. A write-enabled server is an API credential with a chat box. Context still runs out.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">What to connect, how narrow the write access is, and whether the action is allowed to run.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--gh","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--gh">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">GitHub Actions</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Build and zip</p>
-<dl>
-<dt>Best for</dt>
-<dd>Repeatable production compile: Composer, npm, the theme zip, GitHub Release <code>theme-latest</code>. This is the ship path, not a chat window.</dd>
-<dt>Weak at</dt>
-<dd>Failed workflows still need a person. Secrets live in GitHub. The YAML is easy to paste in without reading.</dd>
-<dt>Human still required</dt>
-<dd>What runs on <code>main</code>, what never gets <code>--delete</code> over rsync, and whether the zip is complete.</dd>
-</dl>
-</li>
-<li class="mh-tool-card" data-mark="Vi">
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Repeatable production compile: Composer, npm, the theme zip, GitHub Release <code>theme-latest</code>. This is the ship path, not a chat window.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Failed workflows still need a person. Secrets live in GitHub. The YAML is easy to paste in without reading.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">What runs on <code>main</code>, what never gets <code>--delete</code> over rsync, and whether the zip is complete.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"mh-tool-card mh-tool-card--vi","layout":{"type":"constrained"}} -->
+<div class="wp-block-group mh-tool-card mh-tool-card--vi">
+<!-- wp:paragraph {"className":"mh-tool-card__name"} -->
 <p class="mh-tool-card__name">Vite</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__role"} -->
 <p class="mh-tool-card__role">Asset pipeline</p>
-<dl>
-<dt>Best for</dt>
-<dd>Compiling Tailwind v4, JS, and hashed files into <code>public/build/</code>. Sage 11 does not ship styled without it.</dd>
-<dt>Weak at</dt>
-<dd>It is not an AI tool. A wrong <code>base</code> path 404s every stylesheet. Models will guess the theme folder name.</dd>
-<dt>Human still required</dt>
-<dd>Config, the live folder name <code>matthummel</code>, and a build I have actually run.</dd>
-</dl>
-</li>
-</ul>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--best"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Compiling Tailwind v4, JS, and hashed files into <code>public/build/</code>. Sage 11 does not ship styled without it.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--weak"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">It is not an AI tool. A wrong <code>base</code> path 404s every stylesheet. Models will guess the theme folder name.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dt mh-tool-card__dt--human"} -->
+<p class="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-tool-card__dd"} -->
+<p class="mh-tool-card__dd">Config, the live folder name <code>matthummel</code>, and a build I have actually run.</p>
+<!-- /wp:paragraph -->
 </div>
-<h2>How I Choose</h2>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">How I Choose</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>I start from the job, not the model. If the change is in this Sage repo, I open Cursor. If I need a sentence pass without the theme files, I use ChatGPT or Claude.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>If the work is a form payload, that is n8n. If it is a production compile, that is Vite and GitHub Actions. MCP only opens when an agent needs a narrow door to a connected tool.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>I do not rank them. A shop does not need all nine. I need the right one for the step, then a human review before anything ships.</p>
-<h2>How a Change Moves</h2>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">How a Change Moves</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>From a brief to a handoff, the line is short. Models sit in the middle. They do not sit at both ends.</p>
-<ol class="mh-ship-pipe">
-<li>
+<!-- /wp:paragraph -->
+
+<!-- wp:list {"ordered":true,"className":"mh-ship-pipe"} -->
+<ol class="wp-block-list mh-ship-pipe">
+<!-- wp:list-item -->
+<li><!-- wp:paragraph {"className":"mh-ship-pipe__name"} -->
 <p class="mh-ship-pipe__name">Brief</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-ship-pipe__body"} -->
 <p class="mh-ship-pipe__body">A shop note, an agency overflow ticket, or my own <a href="/start/">project brief</a>. I write the constraint. A model did not take the job.</p>
-</li>
-<li>
+<!-- /wp:paragraph --></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><!-- wp:paragraph {"className":"mh-ship-pipe__name"} -->
 <p class="mh-ship-pipe__name">Cursor</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-ship-pipe__body"} -->
 <p class="mh-ship-pipe__body">Scaffolding in the Sage repo — Blade, PHP helpers, CSS. ChatGPT or Claude may help with copy or a second pass. MCP only if the agent needs a connected tool, and only as narrow as the task.</p>
-</li>
-<li>
+<!-- /wp:paragraph --></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><!-- wp:paragraph {"className":"mh-ship-pipe__name"} -->
 <p class="mh-ship-pipe__name">Review</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-ship-pipe__body"} -->
 <p class="mh-ship-pipe__body">I read the diff. I run it on a real page. Hallucinated APIs, extra plugins, and copy that sounds like an agency deck get cut here.</p>
-</li>
-<li>
+<!-- /wp:paragraph --></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><!-- wp:paragraph {"className":"mh-ship-pipe__name"} -->
 <p class="mh-ship-pipe__name">Vite and CI</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-ship-pipe__body"} -->
 <p class="mh-ship-pipe__body"><code>npm run build</code>, then GitHub Actions on <code>main</code>: Composer, the production zip, Release <code>theme-latest</code>. PHP 8.3 stays the runtime. WP-CLI stays how I talk to WordPress.</p>
-</li>
-<li>
+<!-- /wp:paragraph --></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><!-- wp:paragraph {"className":"mh-ship-pipe__name"} -->
 <p class="mh-ship-pipe__name">Handoff</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"mh-ship-pipe__body"} -->
 <p class="mh-ship-pipe__body">wp-admin fields the shop can edit, a short note, the Git repo in their name. If I cannot explain it, it is not handed off.</p>
-</li>
+<!-- /wp:paragraph --></li>
+<!-- /wp:list-item -->
 </ol>
+<!-- /wp:list -->
+
+<!-- wp:paragraph {"className":"mh-ship-note"} -->
 <p class="mh-ship-note"><strong>Where n8n sits.</strong> Not in that coding line. After someone submits <a href="/contact/">contact</a> or a brief, WordPress POSTs JSON to n8n. If the webhook fails, <code>wp_mail</code> is the fallback. Automation is the handoff of a form, not the author of the theme.</p>
-<h2>What I Still Do by Hand</h2>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">What I Still Do by Hand</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
 <p>The list is longer than the pipeline, on purpose.</p>
-<ul>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item -->
 <li>Architecture, and what not to build.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Permissions, nonces, and what an MCP connection may touch.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Reading the diff, not only the summary.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Testing on real pages, including a phone width.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Voice in copy shops and agencies will actually read.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Contrast, labels, and keyboard paths.</li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
 <li>Production approval.</li>
+<!-- /wp:list-item -->
 </ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
 <p>VS Code is still here for the days I want the files without an agent. That is not a failure of the tools. It is how I keep the review muscle.</p>
-<h2>FAQ</h2>
-<div class="faq-list">
-<details>
-<summary>Does AI write the PHP I ship?</summary>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">FAQ</h2>
+<!-- /wp:heading -->
+
+<!-- wp:group {"className":"faq-list","layout":{"type":"constrained"}} -->
+<div class="wp-block-group faq-list">
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Does AI write the PHP I ship?</summary><!-- wp:paragraph -->
 <p>It drafts. I ship the review. Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.</p>
-</details>
-<details>
-<summary>Why is there no winner in the comparison?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Why is there no winner in the comparison?</summary><!-- wp:paragraph -->
 <p>Because they do different jobs. Cursor is the editor. ChatGPT is useful outside the repo. n8n moves form data. GitHub Actions compiles the zip. Ranking them as if they were the same product would be a lie.</p>
-</details>
-<details>
-<summary>When do I use Cursor instead of ChatGPT?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>When do I use Cursor instead of ChatGPT?</summary><!-- wp:paragraph -->
 <p>When the work is in the theme files. Cursor sees the Sage repo. ChatGPT does not, unless I paste a slice, and I would rather not paste secrets or a whole template tree. Claude is the longer first pass, often through Cursor, when I want a second model on the same diff.</p>
-</details>
-<details>
-<summary>Is Vite an AI tool?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Is Vite an AI tool?</summary><!-- wp:paragraph -->
 <p>No. It is on this list because models keep guessing the theme folder and the <code>base</code> path. Vite compiles Tailwind and JS into <code>public/build/</code>. GitHub Actions is the same idea: the ship path, not a chat window. I keep both here so the comparison stays honest about what actually ships a WordPress theme.</p>
-</details>
-<details>
-<summary>Will this replace a developer on my build?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Will this replace a developer on my build?</summary><!-- wp:paragraph -->
 <p>No. Repeatable work got cheaper. Judgment did not. If you hire me, you are hiring the review, the handoff, and the parts I still do by hand — not a prompt log.</p>
-</details>
-<details>
-<summary>What should a shop ask before I use these tools?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>What should a shop ask before I use these tools?</summary><!-- wp:paragraph -->
 <p>Ask what I will review, what never goes into a prompt, and who owns the repo after handoff. Ask whether a webhook writes anywhere, and what happens when n8n is down. Those are the questions I already answer in the cards. You do not need a tool ranking. You need a person who will still say no.</p>
-</details>
-<details>
-<summary>What about privacy and lock-in?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>What about privacy and lock-in?</summary><!-- wp:paragraph -->
 <p>Chat windows and MCP servers see whatever I connect or paste. I keep write access narrow and secrets out of prompts. Cursor, n8n, and GitHub are each another vendor. I accept that cost because the review still happens in git I can leave.</p>
-</details>
-<details>
-<summary>How is this different from the workflow post?</summary>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+
+<!-- wp:details -->
+<details class="wp-block-details"><summary>How is this different from the workflow post?</summary><!-- wp:paragraph -->
 <p>That post is how the tools sit together on a WordPress job. This one is a comparison: best for, weak at, human still required. Read that one for the loop. Use this one when you want an honest split of speed versus judgment.</p>
-</details>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
 </div>
+<!-- /wp:group -->
+
+<!-- wp:paragraph -->
 <p>If you want this review bar on a WordPress or Sage build for a shop or an agency, <a href="/contact/">say hello</a>.</p>
+<!-- /wp:paragraph -->
