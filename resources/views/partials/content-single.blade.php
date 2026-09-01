@@ -60,7 +60,7 @@
   @if ($postCats)<meta itemprop="articleSection" content="{{ esc_attr($postCats[0]->name) }}">@endif
 
   {{-- ── POST HERO ────────────────────────────────────────── --}}
-  <header class="post-hero" aria-labelledby="post-title-{{ $postId }}">
+  <header @class(['post-hero', 'post-hero--has-media' => has_post_thumbnail()]) aria-labelledby="post-title-{{ $postId }}">
     <div class="container wide post-hero-inner">
       <div class="post-hero-main">
 
@@ -101,6 +101,18 @@
         @endif
       </div>
 
+      </div>
+
+      @if (has_post_thumbnail())
+        <figure class="post-hero-media" itemprop="image">
+          {!! get_the_post_thumbnail($postId, 'large', [
+            'class' => 'post-hero-media__img',
+            'loading' => 'eager',
+            'fetchpriority' => 'high',
+          ]) !!}
+        </figure>
+      @endif
+
       {{-- Hero share --}}
       <div class="post-hero-share">
         <span class="post-hero-share__label">Share</span>
@@ -120,8 +132,6 @@
           {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
         </button>
       </div>
-
-      </div>
     </div>
   </header>
 
@@ -131,13 +141,6 @@
 
       {{-- Main column --}}
       <div class="post-main">
-
-        {{-- Featured image --}}
-        @if (has_post_thumbnail())
-          <figure class="post-featured" itemprop="image">
-            {!! get_the_post_thumbnail($postId, 'large', ['class' => 'post-featured-img-el', 'loading' => 'eager']) !!}
-          </figure>
-        @endif
 
         {{-- Mobile TOC --}}
         @if ($toc)
