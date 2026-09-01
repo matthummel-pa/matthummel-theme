@@ -14,6 +14,7 @@
   $buyUrl = (string) ($p['buy_url'] ?? '');
   $buyLabel = (string) ($p['buy_label'] ?? \App\field('work_cta_buy', __('Buy theme', 'sage')));
   $priceLabel = (string) ($p['price_label'] ?? '');
+  $spec = \App\mh_project_is_spec($p);
   $featured = ! empty($featured);
   $ghost = $featured ? 'btn btn-ghost' : 'btn btn-outline';
   $haystack = strtolower(trim(implode(' ', array_filter([
@@ -36,6 +37,7 @@
     </a>
   @endif
   <div class="work-body">
+    @include('partials.spec-badge', ['p' => $p])
     @if ($featured)
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
@@ -56,21 +58,21 @@
       </p>
     @endif
     <div class="work-actions">
+      <a class="btn" href="{{ esc_url($conceptUrl) }}">
+        {{ $spec ? __('View concept', 'sage') : \App\field('work_cta_view', __('View project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+      </a>
+      <a class="{{ $ghost }}" href="{{ esc_url($helpUrl) }}">
+        {!! \App\mh_svg_icon('mail', 14) !!}
+        {{ \App\field('work_cta_help', __('Get help', 'sage')) }}
+        <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+      </a>
       @if ($buyUrl !== '')
-        <a class="btn" href="{{ esc_url($buyUrl) }}">
+        <a class="{{ $ghost }}" href="{{ esc_url($buyUrl) }}">
           {!! \App\mh_svg_icon('cart', 14) !!}
           {{ $buyLabel }}
           <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
         </a>
       @endif
-      <a class="{{ $buyUrl !== '' ? $ghost : 'btn' }}" href="{{ esc_url($helpUrl) }}">
-        {!! \App\mh_svg_icon('mail', 14) !!}
-        {{ \App\field('work_cta_help', __('Get help', 'sage')) }}
-        <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
-      </a>
-      <a class="{{ $ghost }}" href="{{ esc_url($conceptUrl) }}">
-        {{ \App\field('work_cta_view', __('View project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
-      </a>
       @if ($demo !== '')
         <a class="{{ $ghost }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
           {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
@@ -82,7 +84,7 @@
         data-share-project
         data-share-url="{{ esc_url($shareUrl) }}"
         data-share-title="{{ esc_attr($title) }}"
-        data-share-text="{{ esc_attr(sprintf(__('Example project: %s', 'sage'), $title)) }}"
+        data-share-text="{{ esc_attr(sprintf(__('Concept: %s', 'sage'), $title)) }}"
       >
         {{ __('Share', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' %s', 'sage'), $title) }}</span>
       </button>

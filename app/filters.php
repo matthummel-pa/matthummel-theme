@@ -82,8 +82,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('A short discovery form for shops and agencies. Four steps so I can prepare for our first meeting. Say hello when you are ready.', 'sage'),
         ],
         'template-projects.blade.php' => [
-            'title' => __('Example WordPress Sites in Gettysburg', 'sage').' | '.$brand,
-            'desc' => __('Live WordPress demos for tours, inns, and shops. Browse the gallery or hire me for a real build in Gettysburg. Say hello.', 'sage'),
+            'title' => __('Concept WordPress Sites', 'sage').' | '.$brand,
+            'desc' => __('Public Sage 11 concept sites for tours, inns, and shops — not a client gallery. Hire me for a real build. Say hello.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,

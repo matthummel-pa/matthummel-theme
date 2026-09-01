@@ -57,14 +57,14 @@
     $ctaLabel = $primaryLabel;
     $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
   } else {
-    $defaultEyebrow = __('Project', 'sage');
+    $defaultEyebrow = __('Concept', 'sage');
     $primaryLabel = __('Get help', 'sage');
     $hireLabel = __('Get help', 'sage');
-    $shotCaption = __('Example layout — starting point for a real shop build.', 'sage');
+    $shotCaption = __('Concept site — a public Sage example, not a live client site.', 'sage');
     $asideCtaTitle = __('Want this for your shop?', 'sage');
-    $asideNote = __('This is an example project on matthummel.com — not a live client site. Hire me to adapt it for your shop.', 'sage');
-    $includedHeading = __('Included in this project', 'sage');
-    $problemHeading = __('The problem', 'sage');
+    $asideNote = __('This is a concept site on matthummel.com — not a client or employer site. Hire me to adapt it for your shop.', 'sage');
+    $includedHeading = __('Included in this spec', 'sage');
+    $problemHeading = __('The problem this spec solves', 'sage');
     $approachHeading = __('How I shaped it', 'sage');
     $resultHeading = __('What you get', 'sage');
     $relatedHeading = __('More projects', 'sage');
@@ -80,6 +80,7 @@
   $buyUrl = is_array($product) ? (string) ($product['add_to_cart_url'] ?? '') : '';
   $pageClass = $isProduct ? 'concept-page concept-page--product concept-page--'.$productType : 'concept-page';
   $sidebar = \App\mh_project_sidebar($postId);
+  $case = \App\mh_project_case_study($postId, $card, $story);
   $detailRows = [];
   if ($sidebar['version'] !== '') {
     $detailRows[] = [__('Version', 'sage'), $sidebar['version'], $sidebar['release_url']];
@@ -96,9 +97,10 @@
   if ($sidebar['stars'] > 0) {
     $detailRows[] = [__('GitHub stars', 'sage'), (string) $sidebar['stars'], $sidebar['github']];
   }
+  $articleClass = implode(' ', get_post_class($pageClass));
 @endphp
 
-<article @php(post_class($pageClass))>
+<article class="{{ $articleClass }}">
   @component('partials.page-hero')
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
@@ -106,6 +108,9 @@
       {{ $eyebrow }}
     </p>
     <h1 class="display-title is-hero">{{ $title }}</h1>
+    @if (! empty($case['is_spec']))
+      <p class="concept-spec-banner" role="note">{{ $case['notice'] }}</p>
+    @endif
     <p class="lead">{{ $summary }}</p>
     <p class="pf-meta" style="margin-top:.85rem">
       @if ($cat !== '')
@@ -123,35 +128,29 @@
       @endif
     </p>
     <div class="concept-hero-actions">
-      @if ($buyUrl !== '')
-        <a class="btn" href="{{ esc_url($buyUrl) }}">
-          {!! \App\mh_svg_icon('cart', 16) !!}
-          {{ $primaryLabel }}
+      @if ($demo !== '')
+        <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+          {!! \App\mh_svg_icon('globe', 15) !!}
+          {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
         </a>
         <a class="btn btn-outline" href="{{ esc_url($useUrl) }}">
           {!! \App\mh_svg_icon('mail', 16) !!}
           {{ $hireLabel }}
         </a>
-        @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('globe', 15) !!}
-            {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
-          </a>
-        @endif
       @else
         <a class="btn" href="{{ esc_url($useUrl) }}">
           {!! \App\mh_svg_icon('mail', 16) !!}
           {{ $hireLabel }}
         </a>
-        @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('globe', 15) !!}
-            {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
-          </a>
-        @endif
       @endif
-      <a class="h-text-arrow" href="{{ esc_url($isProduct && $shopUrl !== '' ? $shopUrl : $projectsUrl) }}">
-        {{ $isProduct ? __('Browse shop', 'sage') : $crumbBrowse }} →
+      @if ($buyUrl !== '')
+        <a class="btn btn-outline" href="{{ esc_url($buyUrl) }}">
+          {!! \App\mh_svg_icon('cart', 16) !!}
+          {{ $primaryLabel }}
+        </a>
+      @endif
+      <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">
+        {{ $crumbBrowse }} →
       </a>
     </div>
   @endcomponent
@@ -192,18 +191,64 @@
     @endif
 
     @if ($story['metrics'] !== [])
-      <div class="concept-metrics" role="list">
-        @foreach ($story['metrics'] as $metric)
-          <div class="concept-metric" role="listitem">
-            <strong>{{ $metric[0] }}</strong>
-            <span>{{ $metric[1] }}</span>
-          </div>
-        @endforeach
+      <div class="concept-metrics-wrap">
+        <p class="concept-metrics-label">{{ __('In this spec', 'sage') }}</p>
+        <div class="concept-metrics" role="list">
+          @foreach ($story['metrics'] as $metric)
+            @php
+              $metricHay = strtolower(($metric[0] ?? '').' '.($metric[1] ?? ''));
+              $looksFake = str_contains($metricHay, 'lcp')
+                || str_contains($metricHay, 'ttfb')
+                || str_contains($metricHay, 'conversion')
+                || str_contains($metricHay, 'revenue');
+            @endphp
+            @if (! $looksFake)
+              <div class="concept-metric" role="listitem">
+                <strong>{{ $metric[0] }}</strong>
+                <span>{{ $metric[1] }}</span>
+              </div>
+            @endif
+          @endforeach
+        </div>
       </div>
     @endif
 
     <div class="concept-grid">
       <div class="concept-main">
+        @if (! empty($case['is_spec']))
+          <section class="concept-section concept-case" aria-labelledby="concept-case">
+            <h2 id="concept-case">{{ __('Spec case study', 'sage') }}</h2>
+            <dl class="concept-case__facts">
+              <div>
+                <dt>{{ __('Role', 'sage') }}</dt>
+                <dd>{{ $case['role'] }}</dd>
+              </div>
+              <div>
+                <dt>{{ __('Stack', 'sage') }}</dt>
+                <dd>{{ $case['stack'] }}</dd>
+              </div>
+              @if ($case['demonstrates'] !== '')
+                <div>
+                  <dt>{{ __('What it demonstrates', 'sage') }}</dt>
+                  <dd>{{ $case['demonstrates'] }}</dd>
+                </div>
+              @endif
+              @if ($case['demo'] !== '')
+                <div>
+                  <dt>{{ __('Live demo', 'sage') }}</dt>
+                  <dd><a href="{{ esc_url($case['demo']) }}" rel="noopener" target="_blank">{{ __('Open demo', 'sage') }} <span aria-hidden="true">↗</span></a></dd>
+                </div>
+              @endif
+              @if ($case['github'] !== '')
+                <div>
+                  <dt>{{ __('GitHub', 'sage') }}</dt>
+                  <dd><a href="{{ esc_url($case['github']) }}" rel="noopener" target="_blank">{{ __('View repo', 'sage') }}</a></dd>
+                </div>
+              @endif
+            </dl>
+          </section>
+        @endif
+
         @if ($story['benefits'] !== [])
           <section class="concept-section" aria-labelledby="concept-benefits">
             <h2 id="concept-benefits">{{ __('Why teams pick it', 'sage') }}</h2>
@@ -212,6 +257,13 @@
                 <li>{{ $item }}</li>
               @endforeach
             </ul>
+          </section>
+        @endif
+
+        @if (! empty($case['architecture']))
+          <section class="concept-section" aria-labelledby="concept-architecture">
+            <h2 id="concept-architecture">{{ __('Spec build', 'sage') }}</h2>
+            <p>{{ $case['architecture'] }}</p>
           </section>
         @endif
 
@@ -262,7 +314,7 @@
         @endif
       </div>
 
-      <aside class="concept-aside" aria-label="{{ $isProduct ? __('Buy details', 'sage') : __('Concept details', 'sage') }}">
+      <aside class="concept-aside" aria-label="{{ $isTheme ? __('Theme pack', 'sage') : ($isPlugin ? __('Plugin pack', 'sage') : __('Spec details', 'sage')) }}">
         @if ($isProduct && is_array($product))
           <div class="concept-aside-card concept-aside-card--buy">
             <p class="concept-buy-kicker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>
@@ -274,19 +326,19 @@
                 {{ __('One-time purchase · Instant download · Updates via your account', 'sage') }}
               @endif
             </p>
-            @if ($buyUrl !== '')
-              <a class="btn" href="{{ esc_url($buyUrl) }}">{!! \App\mh_svg_icon('cart', 16) !!} {{ $primaryLabel }}</a>
-            @endif
-            <a class="btn btn-outline" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
             @if ($demo !== '')
-              <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+              <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
+            @endif
+            <a class="btn {{ $demo !== '' ? 'btn-outline' : '' }}" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
+            @if ($buyUrl !== '')
+              <a class="btn btn-outline" href="{{ esc_url($buyUrl) }}">{!! \App\mh_svg_icon('cart', 16) !!} {{ $primaryLabel }}</a>
             @endif
           </div>
         @endif
 
         @if ($detailRows !== [] || $sidebar['files_included'] !== [] || $sidebar['docs'] !== [] || $sidebar['github'] !== '')
           <div class="concept-aside-card concept-aside-card--facts">
-            <h2 class="concept-aside-title">{{ $isTheme ? __('Theme details', 'sage') : ($isPlugin ? __('Plugin details', 'sage') : __('Concept details', 'sage')) }}</h2>
+            <h2 class="concept-aside-title">{{ $isTheme ? __('Theme details', 'sage') : ($isPlugin ? __('Plugin details', 'sage') : __('Spec details', 'sage')) }}</h2>
             @if ($detailRows !== [])
               <dl class="concept-fact-list">
                 @foreach ($detailRows as $row)

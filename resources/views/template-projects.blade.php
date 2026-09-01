@@ -32,12 +32,12 @@
 
 {{-- HERO --}}
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Work snapshot', 'sage')])
-  <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
+  <p class="eyebrow">{{ \App\field('work_kicker', __('Concept sites', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('work_h1', __('Example WordPress sites.', 'sage')) }}
+    {{ \App\field('work_h1', __('Concept WordPress sites, not a client gallery.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
+    {{ \App\field('work_lede', __('Public Sage 11 examples for tours, shops, and inns. Some cards include a theme pack you can buy; that is a storefront side path. Employer and production work stays private unless a shop asks to be featured.', 'sage')) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
@@ -51,8 +51,8 @@
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/projects',
       'icon' => 'globe',
-      'title' => __('Example sites', 'sage'),
-      'meta' => __('Live WordPress demos', 'sage'),
+      'title' => __('Concept sites', 'sage'),
+      'meta' => __('Not a client gallery', 'sage'),
       'stats' => [
         ['value' => number_format_i18n($total), 'label' => __('Published sites', 'sage')],
         ['value' => number_format_i18n(max(1, count($cats))), 'label' => __('Business types', 'sage')],
@@ -102,11 +102,11 @@
   <section class="pf-section work-guide" aria-labelledby="work-context-heading">
     <div class="container wide">
       <h2 id="work-context-heading" class="display-title is-section">
-        {{ \App\field('work_context_h2', __('What these example sites show.', 'sage')) }}
+        {{ \App\field('work_context_h2', __('These are concept sites.', 'sage')) }}
       </h2>
       <div class="work-guide__prose">
-        <p>{{ \App\field('work_context_p1', __('These are WordPress projects on this site — the same Sage, Tailwind, and Vite stack I use for client work. Each one is built for a specific type of local business so you can see layout, speed, and wp-admin editing in context.', 'sage')) }}</p>
-        {!! \App\field_html('work_context_p2', __('Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>.', 'sage')) !!}
+        <p>{{ \App\field('work_context_p1', __('Each site is a public Sage 11 example — Blade, Tailwind, Vite — built for a business type so you can see layout and wp-admin editing. They are not client sites or my employer portfolio.', 'sage')) }}</p>
+        {!! \App\field_html('work_context_p2', __('Production client and in-house work stays private unless a shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>. Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')) !!}
       </div>
     </div>
   </section>
@@ -117,7 +117,7 @@
       <h2 id="work-fit-heading" class="display-title is-section">
         {{ \App\field('work_fit_h2', __('Who these demos are for.', 'sage')) }}
       </h2>
-      <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', __('Shops, agencies, and developers browse Work for different reasons. All three are welcome.', 'sage')) }}</p>
+      <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', __('Shops, hiring managers, agencies, and developers browse Work for different reasons. All four are welcome.', 'sage')) }}</p>
       <div class="svc-audience-grid">
         @foreach ($fitCards as $card)
           <article class="svc-audience-card">
@@ -131,7 +131,7 @@
   </section>
 
   <div class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
-    <h2 id="work-gallery-heading" class="display-title is-section">{{ __('Example site gallery', 'sage') }}</h2>
+    <h2 id="work-gallery-heading" class="display-title is-section">{{ __('Spec build gallery', 'sage') }}</h2>
 
     <div class="write-tools">
       <div class="search-wrap search-wrap--inline">

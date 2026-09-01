@@ -249,7 +249,7 @@ GQL;
     {
         $count = max(1, min(30, $count));
         $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
-        $key = 'mh_ghr4_'.md5($user.$sort.$count);
+        $key = 'mh_ghr5_'.md5($user.$sort.$count);
         if (($d = get_transient($key)) !== false) {
             return $d;
         }
@@ -262,6 +262,9 @@ GQL;
                 }
                 $name = (string) ($j['name'] ?? '');
                 if ($name === '' || strcasecmp($name, $user) === 0) {
+                    continue;
+                }
+                if (mh_github_is_hidden_repo($name)) {
                     continue;
                 }
                 $topics = $j['topics'] ?? [];

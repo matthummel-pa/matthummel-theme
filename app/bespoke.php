@@ -2973,3 +2973,167 @@ add_action('init', function (): void {
 
     update_option('mh_home_hero_seo_copy_v1', true);
 }, 82);
+
+/**
+ * One-time: recruiter hireability copy (3.1.48).
+ *
+ * Exact-string replacements only so custom wp-admin copy is left alone.
+ * New glance fields (employers / Power Platform) use code defaults when empty.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_hireability_recruiter_v1')) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+
+    $pages = [];
+    if ($home instanceof \WP_Post) {
+        $pages[(int) $home->ID] = [
+            'mh_f_home_about_h2' => [
+                'from' => [
+                    'Seventeen years of in-house web work.',
+                    'Full-stack developer. WordPress specialist. Open to collaboration.',
+                ],
+                'to' => 'The work I can share.',
+            ],
+            'mh_f_home_about_text' => [
+                'from' => [
+                    'I have spent about 17 years on employer and in-house web work, starting in higher-ed marketing. Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub.',
+                    'I’ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.',
+                ],
+                'to' => 'I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.',
+            ],
+            'mh_f_home_about_p2' => [
+                'from' => [
+                    'The gallery is spec builds showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid. I have professional Power Platform experience from in-house work — there is no public demo yet.',
+                    'I work with businesses that need dependable web software, agencies that need an experienced development partner, and developers who want to compare notes or reuse open-source code. Most of my public work is on GitHub, and you are welcome to fork it.',
+                ],
+                'to' => 'The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+            ],
+            'mh_f_home_work_h2' => [
+                'from' => [
+                    'Spec WordPress sites.',
+                    'Example sites',
+                    'Example sites.',
+                ],
+                'to' => 'Concept WordPress sites.',
+            ],
+            'mh_f_home_work_intro' => [
+                'from' => [
+                    'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Employer and production work stays private unless a shop asks to be featured.',
+                ],
+                'to' => 'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.',
+            ],
+            'mh_f_home_help_p2' => [
+                'from' => [
+                    'Recruiters can <a href="/contact/">email me</a>. Shops can <a href="/projects/">browse spec builds</a>. I usually reply within a day.',
+                    'Recruiters can <a href="/contact/">email me</a>. Shops can <a href="/projects/">browse spec builds</a>. I usually reply within a day.',
+                ],
+                'to' => 'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse concept sites</a>. I usually reply within a day.',
+            ],
+        ];
+    }
+
+    $workId = mh_page_id_by_template('template-projects.blade.php');
+    if ($workId > 0) {
+        $pages[$workId] = [
+            'mh_f_work_kicker' => [
+                'from' => ['Spec builds', 'Example sites'],
+                'to' => 'Concept sites',
+            ],
+            'mh_f_work_h1' => [
+                'from' => [
+                    'Spec WordPress sites, not a client gallery.',
+                    'Example WordPress sites.',
+                    'Selected WordPress work.',
+                ],
+                'to' => 'Concept WordPress sites, not a client gallery.',
+            ],
+            'mh_f_work_lede' => [
+                'from' => [
+                    'Public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. Hire me here for a real build.',
+                    'Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.',
+                ],
+                'to' => 'Public Sage 11 examples for tours, shops, and inns. Some cards include a theme pack you can buy; that is a storefront side path. Employer and production work stays private unless a shop asks to be featured.',
+            ],
+            'mh_f_work_context_h2' => [
+                'from' => ['These are spec builds.', 'What these example sites show.'],
+                'to' => 'These are concept sites.',
+            ],
+            'mh_f_seo_title' => [
+                'from' => [
+                    'Spec WordPress Sites | Matt Hummel',
+                    'Example WordPress Sites | Matt Hummel',
+                ],
+                'to' => 'Concept WordPress Sites | Matt Hummel',
+            ],
+        ];
+    }
+
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    if ($aboutId > 0) {
+        $pages[$aboutId] = [
+            'mh_f_about_p3' => [
+                'from' => [
+                    'The Work gallery is spec builds — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.',
+                ],
+                'to' => 'The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.',
+            ],
+        ];
+    }
+
+    foreach ($pages as $id => $map) {
+        foreach ($map as $key => $swap) {
+            $cur = (string) get_post_meta($id, $key, true);
+            if ($cur === '' || in_array($cur, $swap['from'], true)) {
+                update_post_meta($id, $key, $swap['to']);
+            }
+        }
+    }
+
+    if ($workId > 0) {
+        $faq = get_post_meta($workId, 'mh_f_work_faq', true);
+        if (is_array($faq)) {
+            $faqMap = [
+                'No. These are spec builds — public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. I have done a handful of silent agency-sub jobs; this gallery is not that work.' => 'No. These are concept sites — public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. I have done a handful of silent agency-sub jobs; this gallery is not that work.',
+                'Some projects are for sale in the shop when a theme pack is ready. Each card shows Buy theme when checkout is available. Otherwise hire me to adapt the layout for your shop.' => 'Some cards include a theme pack in the shop. Buy theme is a storefront side path — the gallery is still concept work. Otherwise hire me to adapt the layout for your shop.',
+            ];
+            $changed = false;
+            foreach ($faq as $i => $row) {
+                $text = (string) ($row['text'] ?? '');
+                if (isset($faqMap[$text])) {
+                    $faq[$i]['text'] = $faqMap[$text];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($workId, 'mh_f_work_faq', $faq);
+            }
+        }
+
+        $fit = get_post_meta($workId, 'mh_f_work_fit_items', true);
+        if (is_array($fit)) {
+            $fitMap = [
+                'These are spec builds of the Sage stack, not a client grid. Seventeen years of in-house web work stays private; public GitHub is the trail I started in 2025.' => 'These are concept sites of the Sage stack, not a client grid. Employers (Saliense, All Native Group, Knowledge Capital Associates) are on Hire. Public GitHub is the trail I started in 2025.',
+            ];
+            $changed = false;
+            foreach ($fit as $i => $row) {
+                $body = (string) ($row['body'] ?? '');
+                if (isset($fitMap[$body])) {
+                    $fit[$i]['body'] = $fitMap[$body];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($workId, 'mh_f_work_fit_items', $fit);
+            }
+        }
+    }
+
+    update_option('mh_hireability_recruiter_v1', true);
+}, 83);

@@ -1,8 +1,8 @@
 @php
-  $posts   = \App\mh_latest_posts(5);
+  $posts   = \App\mh_home_journal_posts(5);
   $work    = array_slice(\App\mh_work_page_items(), 0, 4);
   $gh      = \App\Github::fetchUser(\App\mh_github_login());
-  $ossData = \App\mh_home_oss_live_data(3);
+  $ossData = \App\mh_home_oss_live_data(5);
   $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 
@@ -190,7 +190,7 @@
     ],
     [
       'q' => 'Do you work with agencies on client projects?',
-      'a' => 'Yes. I\'ve worked as a sub on agency projects. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you\'re working on.',
+      'a' => 'Yes. I have worked as a silent sub on a handful of agency jobs. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you\'re working on.',
     ],
     [
       'q' => 'Do you build full-stack applications outside WordPress?',
@@ -334,6 +334,8 @@
   </div>
 </div>
 
+@include('partials.recruiter-glance')
+
 {{-- ═══════════════════════════════════════════════════
      02 — ABOUT
      ═══════════════════════════════════════════════════ --}}
@@ -341,6 +343,7 @@
 {{-- Quiet jump links — kept below the fold so the hero stays one composition --}}
 <nav class="h-page-nav container wide" aria-label="On this page">
   <span class="h-page-nav__label">On this page</span>
+  <a href="#glance">Glance</a>
   <a href="#about">About</a>
   <a href="#skills">Skills</a>
   <a href="#process">Process</a>
@@ -380,18 +383,18 @@
         <div class="h-about-v2__copy">
           <p class="h-section-label">About me</p>
           <h2 id="h-about-heading" class="h-about__heading">
-            {{ \App\field('home_about_h2', __('Full-stack developer. WordPress specialist. Open to collaboration.', 'sage')) }}
+            {{ \App\field('home_about_h2', __('The work I can share.', 'sage')) }}
           </h2>
           <p class="h-about__text" itemprop="description">
-            {{ \App\field('home_about_text', __('I\'ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.', 'sage')) }}
+            {{ \App\field('home_about_text', __('I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.', 'sage')) }}
           </p>
           <p class="h-about__text">
-            {{ \App\field('home_about_p2', __('I work with businesses that need dependable web software, agencies that need an experienced development partner, and developers who want to compare notes or reuse open-source code. Most of my public work is on GitHub, and you are welcome to fork it.', 'sage')) }}
+            {{ \App\field('home_about_p2', __('The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.', 'sage')) }}
           </p>
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
             <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
-            <a class="h-text-arrow" href="{{ home_url('/projects/') }}">{{ __('See example sites', 'sage') }} →</a>
+            <a class="h-text-arrow" href="{{ home_url('/hire/') }}">{{ __('Employers and resume', 'sage') }} →</a>
           </div>
         </div>
       </div>
@@ -407,24 +410,6 @@
               Current status
             </p>
             <p class="h-about-avail__status">{{ \App\mh_availability_label($gh, \App\field('home_avail_status', __('Open for work', 'sage'))) }}</p>
-            <ul class="h-about-avail__types">
-              <li>
-                <span class="h-about-avail__check" aria-hidden="true">✓</span>
-                Full-time roles
-              </li>
-              <li>
-                <span class="h-about-avail__check" aria-hidden="true">✓</span>
-                Part-time &amp; contract
-              </li>
-              <li>
-                <span class="h-about-avail__check" aria-hidden="true">✓</span>
-                Freelance &amp; project work
-              </li>
-              <li>
-                <span class="h-about-avail__check" aria-hidden="true">✓</span>
-                Agency overflow &amp; subs
-              </li>
-            </ul>
             <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
               {!! \App\mh_svg_icon('mail', 16) !!} Say hello
             </a>
@@ -438,13 +423,13 @@
             <li>
               <span class="h-about-who__icon">{!! \App\mh_svg_icon('briefcase', 16) !!}</span>
               <span>
-                <strong>Recruiter or hiring manager</strong> — happy to chat about full-time, part-time, or contract roles. WordPress, PHP, and web app work is the sweet spot.
+                <strong>Recruiter or hiring manager</strong> — role, stack, and employers are in the glance. Resume is on <a href="{{ home_url('/hire/') }}">Hire</a>.
               </span>
             </li>
             <li>
               <span class="h-about-who__icon">{!! \App\mh_svg_icon('users', 16) !!}</span>
               <span>
-                <strong>Agency or studio</strong> — I've worked as a silent sub on client projects before. You keep the relationship; I stay in the background.
+                <strong>Agency or studio</strong> — I have worked as a silent sub on a handful of agency jobs. You keep the relationship; I stay in the background.
               </span>
             </li>
             <li>
@@ -666,10 +651,10 @@
       <div>
         <p class="h-section-label">Projects</p>
         <h2 id="h-work-heading" class="h-section__title">
-          {{ \App\field('home_work_h2', __('Example WordPress sites for shops, tours, and inns.', 'sage')) }}
+          {{ \App\field('home_work_h2', __('Concept WordPress sites.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">
@@ -701,6 +686,7 @@
 
       <div class="h-work-featured__overlay">
         <div class="h-work-featured__meta">
+          @include('partials.spec-badge', ['p' => $fp, 'onDark' => true])
           <span class="h-work-cat-badge">{{ $fp['cat'] }}</span>
           <span class="h-work-place">{!! \App\mh_svg_icon('map', 13) !!} {{ $fp['place'] }}</span>
         </div>
@@ -710,7 +696,7 @@
         <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
         <div class="h-work-featured__actions">
           <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">
-            View project
+            {{ __('View concept', 'sage') }}
           </a>
           <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}?cat={{ rawurlencode((string) ($fp['cat'] ?? '')) }}">
             See all {{ strtolower($fp['cat']) }} projects →
@@ -759,6 +745,7 @@
           {{-- Content --}}
           <div class="h-work-card-v2__body">
             <div class="h-work-card-v2__top">
+              @include('partials.spec-badge', ['p' => $p])
               <span class="h-work-cat-badge h-work-cat-badge--sm">{{ $p['cat'] }}</span>
               <span class="h-work-place h-work-place--sm">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</span>
             </div>
@@ -775,7 +762,7 @@
             @endif
             <div class="h-work-card-v2__links">
               <a class="h-work-cta-link" href="{{ $cardHref }}">
-                View project →
+                {{ __('View concept', 'sage') }} →
               </a>
             </div>
           </div>
@@ -787,8 +774,8 @@
 
     {{-- Bottom CTA bar --}}
     <div class="h-work-cta-bar">
-      <p>Projects for tours, inns, shops, restaurants, and real estate agencies.</p>
-      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} projects</a>
+      <p>Concept sites for tours, inns, shops, restaurants, and land offices.</p>
+      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concept sites</a>
     </div>
 
   </div>
@@ -1022,7 +1009,7 @@
 
           {{-- Latest badge --}}
           <div class="h-journal__badge">
-            {!! \App\mh_svg_icon('pen', 13) !!} Latest post
+            {!! \App\mh_svg_icon('pen', 13) !!} {{ __('Featured note', 'sage') }}
           </div>
 
           {{-- Thumbnail --}}
@@ -1085,7 +1072,7 @@
           <p class="h-journal__stack-label">More recent posts</p>
 
           @foreach ($journalStack as $post)
-            <article class="h-journal__post" itemscope itemtype="https://schema.org/BlogPosting">
+            <article class="h-journal__post{{ ! empty($post['deemphasize']) ? ' h-journal__post--quiet' : '' }}" itemscope itemtype="https://schema.org/BlogPosting">
               <meta itemprop="author" content="Matt Hummel">
 
               {{-- Small thumb --}}
@@ -1107,6 +1094,9 @@
 
               {{-- Post info --}}
               <div class="h-journal__post-body">
+                @if (! empty($post['deemphasize']))
+                  <p class="h-journal__quiet-label">{{ __('Same-day notes', 'sage') }}</p>
+                @endif
                 @if ($post['cat'])
                   <a class="h-journal__cat h-journal__cat--sm" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">
                     {{ $post['cat'] }}
@@ -1196,15 +1186,15 @@
   <div class="container wide cta-band-inner h-cta__inner">
     <div class="cta-band__copy">
       <p class="eyebrow eyebrow--on-dark">{{ __('Get in touch', 'sage') }}</p>
-      <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Working on something?', 'sage')) }}</h2>
-      <p class="h-cta__body">{{ \App\field('home_help_p2', __('A question about a post is just as welcome as a project. I usually reply within a day.', 'sage')) }}</p>
+      <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Hiring or building?', 'sage')) }}</h2>
+      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse concept sites</a>. I usually reply within a day.', 'sage')) !!}</p>
     </div>
     <div class="cta-band__actions h-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 17) !!}
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
+      <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">{{ __('Browse concept sites', 'sage') }}</a>
       <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
