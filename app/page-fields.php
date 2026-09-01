@@ -251,6 +251,7 @@ function mh_home_fields(): array
             ['glance_note', __('Public-work sentence', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub.', 'sage')],
             ['glance_employers', __('Employers line (HTML)', 'sage'), 'html', __('Employers on the record: <a href="/hire/">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage')],
             ['glance_power', __('Power Platform line (HTML)', 'sage'), 'html', __('PowerApps, Power Automate, and InfoPath for federal agencies — details on the <a href="/hire/">hire page</a>. There is no public demo.', 'sage')],
+            ['glance_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
             ['glance_nda', __('NDA note', 'sage'), 'textarea', __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')],
         ],
         __('Availability', 'sage') => [
@@ -328,7 +329,7 @@ function page_field_map(): array
             ],
             __('What I build', 'sage') => [
                 ['about_services_h2', __('Heading', 'sage'), 'text', __('What I build.', 'sage')],
-                ['about_services_intro', __('Intro', 'sage'), 'textarea', __('I work across the stack: accessible interfaces, WordPress and PHP back ends, React applications, APIs, databases, and deployment. WordPress is the specialty, not the limit.', 'sage')],
+                ['about_services_intro', __('Intro', 'sage'), 'textarea', mh_adjacent_range_copy()],
                 ['about_services', __('Service cards', 'sage'), 'repeater', mh_about_services_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
@@ -542,6 +543,7 @@ function page_field_map(): array
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
                 ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
                 ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')],
+                ['hire_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
             ],
             __('LinkedIn', 'sage') => [
                 ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],

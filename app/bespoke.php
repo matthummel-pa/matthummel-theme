@@ -3187,3 +3187,48 @@ add_action('init', function (): void {
 
     update_option('mh_hireability_visual_v1', true);
 }, 84);
+
+/**
+ * One-time: one adjacent-work sentence (3.1.50). Exact-string only.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_adjacent_work_copy_v1')) {
+        return;
+    }
+
+    $range = mh_adjacent_range_copy();
+    $swaps = [
+        'I work across the stack: accessible interfaces, WordPress and PHP back ends, React applications, APIs, databases, and deployment. WordPress is the specialty, not the limit.' => $range,
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'posts_per_page' => 50,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $keys = $id ? get_post_custom_keys($id) : [];
+        if (! is_array($keys)) {
+            continue;
+        }
+        foreach ($keys as $key) {
+            if (! str_starts_with((string) $key, 'mh_f_')) {
+                continue;
+            }
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            $next = strtr($val, $swaps);
+            if ($next !== $val) {
+                update_post_meta($id, $key, $next);
+            }
+        }
+    }
+
+    update_option('mh_adjacent_work_copy_v1', true);
+}, 85);

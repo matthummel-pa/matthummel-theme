@@ -202,6 +202,22 @@ function mh_years_in_house(): int
 }
 
 /**
+ * One sentence for adjacent (non-WordPress) work.
+ *
+ * Used on the recruiter glance, About, Hire, and the home FAQ. WordPress stays
+ * the specialty; APIs, React, Power Platform, and deploys are in range — not a
+ * second specialty list.
+ */
+function mh_adjacent_range_copy(): string
+{
+    return sprintf(
+        /* translators: %d: years of in-house web work */
+        __('WordPress is the specialty. Adjacent work — APIs, React, Power Platform, deploys — is in range because I am a self-taught problem solver with %d years in-house.', 'sage'),
+        mh_years_in_house()
+    );
+}
+
+/**
  * Recruiter "at a glance" facts for the homepage (scannable in a few seconds).
  *
  * @return array{
@@ -214,6 +230,7 @@ function mh_years_in_house(): int
  *   note: string,
  *   employers: string,
  *   power: string,
+ *   range: string,
  *   nda: string,
  *   links: list<array{label: string, href: string, icon: string, external: bool}>
  * }
@@ -262,6 +279,7 @@ function mh_recruiter_glance(): array
                 esc_url($hireUrl)
             )
         ),
+        'range' => field('glance_range', mh_adjacent_range_copy()),
         'nda' => field(
             'glance_nda',
             __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')
