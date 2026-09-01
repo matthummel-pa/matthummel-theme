@@ -15,8 +15,9 @@ What the 3.x Sage theme does, and where it lives.
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
-| Work | Featured project, search, type counts, Grid/List, share/copy links to on-site `/projects/{slug}/` pages; **Buy theme** (WooCommerce add-to-cart when a product exists) + **Get help** (contact prefill); **Projects CPT** with per-project “Show on site” from wp-admin | `template-projects.blade.php`, `single-project.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `mh_project_*()` / `app/concept-pages.php`, `app/shop.php` |
-| Resources | Free starters, themes for sale, and disclosed tool recommendations; hire CTAs | `template-resources.blade.php`, `mh_resources_catalog()`, `app/affiliate.php` |
+| Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ sections (field-driven); **Buy theme** + **Get help**; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
+| Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |

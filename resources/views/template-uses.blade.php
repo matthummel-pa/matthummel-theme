@@ -84,9 +84,9 @@
 @section('content')
 
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Stack snapshot', 'sage')])
-  <p class="eyebrow">Uses</p>
-  <h1 class="display-title is-hero">What I use.</h1>
-  <p class="lead">The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.</p>
+  <p class="eyebrow">{{ \App\field('uses_kicker', __('Uses', 'sage')) }}</p>
+  <h1 class="display-title is-hero">{{ \App\field('uses_h1', __('What I use.', 'sage')) }}</h1>
+  <p class="lead">{{ \App\field('uses_lede', __('The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/code/') }}">
       {!! \App\mh_svg_icon('github', 15) !!} See the code
@@ -138,6 +138,15 @@
   </div>
 @endif
 
+<section class="pf-section work-guide" aria-labelledby="uses-intro-heading">
+  <div class="container wide">
+    <h2 id="uses-intro-heading" class="display-title is-section">
+      {{ \App\field('uses_intro_h2', __('How to read this page.', 'sage')) }}
+    </h2>
+    <p class="lead work-guide__intro">{{ \App\field('uses_intro_p', __('I list what I actually use on shipped WordPress and web work. External links open in a new tab. Affiliate links are labeled and disclosed at the top when present.', 'sage')) }}</p>
+  </div>
+</section>
+
 <div class="uses-body pf-section">
   <div class="container wide uses-body__grid">
     @foreach ($sections as $s)
@@ -160,7 +169,7 @@
                     rel="{{ \App\mh_outbound_rel($affiliate) }}"
                     target="_blank"
                     @if ($affiliate) data-affiliate="true" class="affiliate-link" @endif
-                  >{{ $name }}</a>
+                  >{{ $name }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
                   @if ($affiliate)
                     <span class="uses-item__aff">{{ __('Affiliate', 'sage') }}</span>
                   @endif

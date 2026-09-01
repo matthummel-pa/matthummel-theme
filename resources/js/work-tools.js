@@ -85,7 +85,12 @@ export function initWorkTools() {
     }
     if (empty) {
       empty.hidden = visible !== 0;
-      empty.setAttribute('role', visible === 0 ? 'status' : '');
+      empty.setAttribute('role', visible === 0 ? 'status' : 'presentation');
+      if (visible === 0) {
+        empty.setAttribute('aria-live', 'polite');
+      } else {
+        empty.removeAttribute('aria-live');
+      }
     }
   };
 

@@ -29,7 +29,8 @@
     @endslot
   @endcomponent
 
-  <article class="container narrow legal-page legal-page--boost">
+  <article class="container narrow legal-page legal-page--boost" aria-labelledby="affiliate-page-heading">
+    <h2 id="affiliate-page-heading" class="visually-hidden">{{ __('Affiliate disclosure details', 'sage') }}</h2>
     <div class="post-prose">
       <p>Some pages on this site include affiliate links. If you follow one of those links and make a purchase, I may earn a commission at no additional cost to you.</p>
 

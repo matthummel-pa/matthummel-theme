@@ -6307,6 +6307,29 @@ html.mh-dark .h-badge--open {
   border-left: 0;
   flex: none;
 }
+
+.work-guide__prose {
+  max-width: 42rem;
+  display: grid;
+  gap: 1rem;
+}
+.work-guide__prose p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+.work-guide__intro {
+  max-width: 40rem;
+  margin-bottom: 1.75rem;
+}
+.work-guide .svc-audience-grid {
+  margin-top: .5rem;
+}
+.work-guide .svc-process {
+  margin-top: .5rem;
+}
+
 @media (max-width: 720px) {
   .work-context__stat { border-right: 0; border-bottom: 1px solid var(--color-border-light); }
   .work-context__note { border-left: 0; border-top: 1px solid var(--color-border-light); flex: 1 1 100%; }

@@ -534,6 +534,8 @@ function page_field_map(): array
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
                 ['work_h1', __('Heading', 'sage'), 'text', __('Example WordPress sites.', 'sage')],
                 ['work_lede', __('Intro', 'sage'), 'textarea', __('Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.', 'sage')],
+                ['work_hero_cta_primary', __('Primary hero button', 'sage'), 'text', __('Say hello', 'sage')],
+                ['work_hero_cta_secondary', __('Secondary hero link', 'sage'), 'text', __('How I can help', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View project label', 'sage'), 'text', __('View project', 'sage')],
@@ -546,6 +548,31 @@ function page_field_map(): array
                 ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I\'m choosing which example sites to publish here first. Write and tell me what kind of shop you run.', 'sage')],
                 ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
             ],
+            __('Context & guides', 'sage') => [
+                ['work_context_h2', __('Context heading', 'sage'), 'text', __('What these example sites show.', 'sage')],
+                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('These are WordPress projects on this site — the same Sage, Tailwind, and Vite stack I use for client work. Each one is built for a specific type of local business so you can see layout, speed, and wp-admin editing in context.', 'sage')],
+                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>.', 'sage')],
+                ['work_fit_h2', __('Who fits heading', 'sage'), 'text', __('Who these demos are for.', 'sage')],
+                ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', __('Shops, agencies, and developers browse Work for different reasons. All three are welcome.', 'sage')],
+                ['work_fit_items', __('Audience cards', 'sage'), 'repeater', mh_work_fit_defaults(), [
+                    ['icon', __('Icon key', 'sage'), 'text'],
+                    ['title', __('Title', 'sage'), 'text'],
+                    ['body', __('Body', 'sage'), 'textarea'],
+                ]],
+                ['work_how_h2', __('How to hire heading', 'sage'), 'text', __('How to start from an example site.', 'sage')],
+                ['work_how_intro', __('How to hire intro', 'sage'), 'textarea', __('You do not need to pick the perfect demo first. A short note about your shop and what you would change is enough.', 'sage')],
+                ['work_how_steps', __('Steps', 'sage'), 'repeater', mh_work_how_defaults(), [
+                    ['num', __('Step number', 'sage'), 'text'],
+                    ['title', __('Title', 'sage'), 'text'],
+                    ['body', __('Body', 'sage'), 'textarea'],
+                ]],
+                ['work_faq_h2', __('FAQ heading', 'sage'), 'text', __('Questions about Work.', 'sage')],
+                ['work_faq_intro', __('FAQ intro', 'sage'), 'textarea', __('Straight answers about concept sites, themes for sale, and hiring me for a production build.', 'sage')],
+                ['work_faq', __('FAQ items', 'sage'), 'repeater', mh_work_faq_defaults(), [
+                    ['title', __('Question', 'sage'), 'text'],
+                    ['text', __('Answer', 'sage'), 'textarea'],
+                ]],
+            ],
             __('Example sites', 'sage') => [
                 ['work_items', __('Sites', 'sage'), 'repeater', $workItems, [
                     ['slug', __('Slug', 'sage'), 'text'],
@@ -557,6 +584,24 @@ function page_field_map(): array
                     ['concept', __('Legacy example URL', 'sage'), 'url'],
                     ['image', __('Screenshot file or URL', 'sage'), 'text'],
                 ]],
+            ],
+        ],
+        'template-uses.blade.php' => [
+            __('Intro', 'sage') => [
+                ['uses_kicker', __('Kicker', 'sage'), 'text', __('Uses', 'sage')],
+                ['uses_h1', __('Heading', 'sage'), 'text', __('What I use.', 'sage')],
+                ['uses_lede', __('Intro', 'sage'), 'textarea', __('The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.', 'sage')],
+                ['uses_intro_h2', __('Below-hero heading', 'sage'), 'text', __('How to read this page.', 'sage')],
+                ['uses_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('I list what I actually use on shipped WordPress and web work. External links open in a new tab. Affiliate links are labeled and disclosed at the top when present.', 'sage')],
+            ],
+        ],
+        'template-resources.blade.php' => [
+            __('Intro', 'sage') => [
+                ['resources_kicker', __('Kicker', 'sage'), 'text', __('Resources', 'sage')],
+                ['resources_h1', __('Heading', 'sage'), 'text', __('Free starters, themes, and tools.', 'sage')],
+                ['resources_lede', __('Intro', 'sage'), 'textarea', __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage')],
+                ['resources_intro_h2', __('Below-hero heading', 'sage'), 'text', __('What you will find here.', 'sage')],
+                ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
         ],
         'index.blade.php' => [
@@ -942,6 +987,162 @@ function mh_code_page_snips(?int $post_id = null): array
     }
 
     return $out;
+}
+
+/**
+ * Default audience cards for the Work page.
+ *
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_work_fit_defaults(): array
+{
+    return [
+        [
+            'icon' => 'home',
+            'title' => __('Shops and local businesses', 'sage'),
+            'body' => __('You want to see what a finished WordPress site looks like for a tour, inn, shop, or restaurant — and whether you could edit it yourself after launch.', 'sage'),
+        ],
+        [
+            'icon' => 'users',
+            'title' => __('Agencies with overflow', 'sage'),
+            'body' => __('You need a reference for layout, stack, and handoff quality before you sub-contract a WordPress build. These demos show how I structure themes for another team to maintain.', 'sage'),
+        ],
+        [
+            'icon' => 'code',
+            'title' => __('Developers and learners', 'sage'),
+            'body' => __('You want to study Sage, Blade, Tailwind, and Vite on real pages — not a generic starter. Open the Code page for repos and snippets you can fork.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default hire-from-demo steps for the Work page.
+ *
+ * @return list<array{num: string, title: string, body: string}>
+ */
+function mh_work_how_defaults(): array
+{
+    return [
+        [
+            'num' => '01',
+            'title' => __('Browse the gallery.', 'sage'),
+            'body' => __('Filter by business type or search by place. Open a project page for stack notes, screenshots, and a live demo when one is available.', 'sage'),
+        ],
+        [
+            'num' => '02',
+            'title' => __('Tell me what fits.', 'sage'),
+            'body' => __('Send a short note: which demo is closest, what you would change, and who edits the site after launch. A few sentences are enough.', 'sage'),
+        ],
+        [
+            'num' => '03',
+            'title' => __('I scope and build.', 'sage'),
+            'body' => __('You get a written scope, staged previews on real pages, and a handoff you own — domain, hosting, code, and wp-admin fields documented in plain language.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Default FAQ items for the Work page.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_work_faq_defaults(): array
+{
+    return [
+        [
+            'title' => __('Are these real client sites?', 'sage'),
+            'text' => __('Most are concept sites I built to show a business type — tours, inns, shops, and similar. They use the same stack as client work. Private client builds stay off this gallery unless the shop asks to be featured.', 'sage'),
+        ],
+        [
+            'title' => __('Can I buy one of these themes?', 'sage'),
+            'text' => __('Some projects are for sale in the shop when a theme pack is ready. Each card shows Buy theme when checkout is available. Otherwise hire me to adapt the layout for your shop.', 'sage'),
+        ],
+        [
+            'title' => __('Do you only work in Gettysburg?', 'sage'),
+            'text' => __('I am based in Gettysburg, Pennsylvania, and many demos use local place names. I also work remotely with shops and agencies anywhere. On-site is available when it helps.', 'sage'),
+        ],
+        [
+            'title' => __('What if none of these match my business?', 'sage'),
+            'text' => __('Say hello anyway. These are starting points, not a menu. I build custom WordPress sites from a written brief when a demo does not fit.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * @return list<array{icon: string, title: string, body: string}>
+ */
+function mh_work_page_fit(?int $post_id = null): array
+{
+    $rows = field_rows('work_fit_items', [], $post_id);
+    if ($rows === []) {
+        return mh_work_fit_defaults();
+    }
+    $out = [];
+    foreach ($rows as $r) {
+        $title = trim((string) ($r['title'] ?? ''));
+        $body = trim((string) ($r['body'] ?? ''));
+        if ($title === '' && $body === '') {
+            continue;
+        }
+        $out[] = [
+            'icon' => trim((string) ($r['icon'] ?? 'code')) ?: 'code',
+            'title' => $title,
+            'body' => $body,
+        ];
+    }
+
+    return $out !== [] ? $out : mh_work_fit_defaults();
+}
+
+/**
+ * @return list<array{num: string, title: string, body: string}>
+ */
+function mh_work_page_how(?int $post_id = null): array
+{
+    $rows = field_rows('work_how_steps', [], $post_id);
+    if ($rows === []) {
+        return mh_work_how_defaults();
+    }
+    $out = [];
+    foreach ($rows as $r) {
+        $title = trim((string) ($r['title'] ?? ''));
+        $body = trim((string) ($r['body'] ?? ''));
+        if ($title === '' && $body === '') {
+            continue;
+        }
+        $out[] = [
+            'num' => trim((string) ($r['num'] ?? '')),
+            'title' => $title,
+            'body' => $body,
+        ];
+    }
+
+    return $out !== [] ? $out : mh_work_how_defaults();
+}
+
+/**
+ * @return list<array{title: string, text: string}>
+ */
+function mh_work_page_faq(?int $post_id = null): array
+{
+    $rows = field_rows('work_faq', [], $post_id);
+    if ($rows === []) {
+        return mh_work_faq_defaults();
+    }
+    $out = [];
+    foreach ($rows as $r) {
+        $title = trim((string) ($r['title'] ?? ''));
+        $text = trim((string) ($r['text'] ?? ''));
+        if ($title === '' && $text === '') {
+            continue;
+        }
+        $out[] = [
+            'title' => $title,
+            'text' => $text,
+        ];
+    }
+
+    return $out !== [] ? $out : mh_work_faq_defaults();
 }
 
 /**
