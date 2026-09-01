@@ -196,7 +196,7 @@
   'linkedin' => $liUrl,
   'headingId' => 'hire-resume-heading',
   'h2' => \App\field('hire_cv_h2', __('Resume.', 'sage')),
-  'intro' => \App\field('hire_cv_intro', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')),
+  'intro' => \App\field('hire_cv_intro', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')),
   'eyebrow' => __('Experience', 'sage'),
   'extraLinks' => [
     ['href' => home_url('/about/'), 'label' => __('Full background →', 'sage')],

@@ -322,7 +322,7 @@ function page_field_map(): array
                 ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')],
                 ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')],
                 ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')],
-                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. I have professional Power Platform experience from in-house work; there is no public demo yet.', 'sage')],
+                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage')],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
             ],
@@ -464,7 +464,7 @@ function page_field_map(): array
             ],
             __('Elsewhere', 'sage') => [
                 ['cnt_else_h2', __('Heading', 'sage'), 'text', __('Find me elsewhere', 'sage')],
-                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. This site is where I publish example WordPress demos.', 'sage')],
+                ['cnt_aside', __('Aside', 'sage'), 'textarea', __('Prefer GitHub or LinkedIn? Those work too. This site is where I publish concept WordPress sites.', 'sage')],
             ],
             __('What to send', 'sage') => [
                 ['cnt_tips_kicker', __('Kicker', 'sage'), 'text', __('A useful note', 'sage')],
@@ -549,7 +549,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
-                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.', 'sage')],
+                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')],
                 ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],

@@ -190,7 +190,15 @@
     ],
     [
       'q' => 'Do you work with agencies on client projects?',
-      'a' => 'Yes. I have worked as a silent sub on a handful of agency jobs. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you\'re working on.',
+      'a' => 'Yes. I have worked as a silent sub on a handful of agency jobs. You keep the client relationship, I stay in the background. Rate is project-based. Write and tell me what you’re working on.',
+    ],
+    [
+      'q' => 'Is GitHub the start of your career?',
+      'a' => 'No. I have about 17 years of in-house employer web work. Most of that cannot be shown. Public GitHub is the trail I started in 2025.',
+    ],
+    [
+      'q' => 'Do you have a Power Platform demo?',
+      'a' => 'PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.',
     ],
     [
       'q' => 'Do you build full-stack applications outside WordPress?',
@@ -399,22 +407,8 @@
         </div>
       </div>
 
-      {{-- Right: availability + audience cards --}}
+      {{-- Audience doors — availability lives in the glance and header --}}
       <div class="h-about-v2__sidebar">
-
-        {{-- Availability card (GitHub hireable) --}}
-        @if (\App\mh_is_hireable($gh))
-          <div class="h-avail-card h-about-avail">
-            <p class="h-avail-card__label">
-              @include('partials.avail-mark', ['gh' => $gh])
-              Current status
-            </p>
-            <p class="h-about-avail__status">{{ \App\mh_availability_label($gh, \App\field('home_avail_status', __('Open for work', 'sage'))) }}</p>
-            <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
-              {!! \App\mh_svg_icon('mail', 16) !!} Say hello
-            </a>
-          </div>
-        @endif
 
         {{-- Who's welcome --}}
         <div class="h-about-who">
@@ -565,16 +559,6 @@
           </ul>
         </div>
       </div>
-      <div class="h-fit__cta">
-        <div class="h-fit__cta-copy">
-          <p class="h-fit__cta-lead">Still not sure?</p>
-          <p class="h-fit__cta-note">Write a short note — the worst I can say is I’m not the right person, and I’ll try to point you toward someone who is.</p>
-        </div>
-        <a class="btn h-fit__cta-btn" href="{{ home_url('/contact/') }}">
-          {!! \App\mh_svg_icon('mail', 16) !!}
-          Write a note
-        </a>
-      </div>
     </div>
   </div>
 </section>
@@ -617,17 +601,6 @@
             @endif
           </article>
         @endforeach
-      </div>
-
-      <div class="h-principles__cta">
-        <div class="h-principles__cta-copy">
-          <p class="h-principles__cta-lead">These are how I actually ship — not a manifesto.</p>
-          <p class="h-principles__cta-note">If they sound like a fit, say hello. I usually reply within a day.</p>
-        </div>
-        <a class="btn h-principles__cta-btn" href="{{ home_url('/contact/') }}">
-          {!! \App\mh_svg_icon('mail', 16) !!}
-          Say hello
-        </a>
       </div>
     </div>
 
@@ -831,7 +804,7 @@
         <div class="h-gh-panel__feed">
           <p class="h-gh-panel__feed-label">Recent activity</p>
           <ul class="h-gh-feed" role="list">
-            @foreach (array_slice($ossData['events'], 0, 5) as $ev)
+            @foreach (array_slice($ossData['events'], 0, 3) as $ev)
               @php
                 $evIcon = match ($ev['type']) {
                   'PushEvent'          => 'code',
@@ -1145,21 +1118,7 @@
       <p class="h-section-label">Questions</p>
       <h2 id="h-faq-heading" class="h-section__title">Frequently asked.</h2>
       <p class="h-faq__blurb">Real questions from real conversations. If yours isn't here, <a href="{{ home_url('/contact/') }}">just ask</a>.</p>
-      <div class="h-avail-card">
-        <p class="h-avail-card__label">
-          <span class="h-badge__dot" aria-hidden="true"></span>
-          Current availability
-        </p>
-        <p class="h-avail-card__status">{{ \App\field('home_avail_status', __('Open to new projects', 'sage')) }}</p>
-        <ul class="h-avail-card__details">
-          <li>{!! \App\mh_svg_icon('clock', 13) !!} Eastern Time</li>
-          <li>{!! \App\mh_svg_icon('calendar', 13) !!} Replies within 24 hours</li>
-          <li>{!! \App\mh_svg_icon('code', 13) !!} Project-based work</li>
-        </ul>
-        <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.25rem">
-          {!! \App\mh_svg_icon('mail', 16) !!} Say hello
-        </a>
-      </div>
+      <p class="h-faq__hire-note">{{ __('Open for full-time, contract, freelance, and agency overflow. Write through the contact form.', 'sage') }}</p>
     </div>
 
     <div class="h-faq__list">

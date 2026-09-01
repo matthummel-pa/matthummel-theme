@@ -35,6 +35,13 @@ What the 3.x Sage theme does, and where it lives.
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
 
+## Editor’s notes (3.1.49 contrast and layout)
+
+- Tokens: muted/body text is gray-600/800, not gray-500. One blue accent family.
+- Glance keeps the hire story; About/Now/footer use the same Power Platform sentence and concept-gallery wording. Do not add a public demo or email.
+- Home extra CTAs (about avail card, fit/principles mini-CTAs, FAQ avail card) stay off — glance + header + closing band cover hire.
+- One-shot `mh_hireability_visual_v1` is exact-string only.
+
 ## Editor’s notes (3.1.48 recruiter hireability)
 
 - Glance sits under the ticker. Named employers and Power Platform copy come from `/hire/` — do not invent extra companies, a demo, a public email, or a resume PDF.

@@ -101,7 +101,7 @@
           <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p3', __('The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p4', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. I have professional Power Platform experience from in-house work; there is no public demo yet.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p4', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
               {!! \App\mh_svg_icon('mail', 16) !!}
@@ -159,12 +159,11 @@
           </div>
 
           <div class="about-aside-card about-aside-card--studio">
-            <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Example sites', 'sage') }}</p>
+            <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Concept sites', 'sage') }}</p>
             <h3 class="about-aside-card__title">Matt Hummel</h3>
-            <p class="about-aside-card__bio">{{ __('Spec WordPress sites for shops, tours, and inns — not a client gallery. Hire me here for a real build.', 'sage') }}</p>
+            <p class="about-aside-card__bio">{{ __('Concept WordPress sites for shops, tours, and inns — not a client gallery. Hire me here for a real build.', 'sage') }}</p>
             <a class="about-aside-card__link" href="{{ home_url('/projects/') }}">
-              {{ __('See example sites', 'sage') }} →
-              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              {{ __('See concept sites', 'sage') }} →
             </a>
           </div>
         </aside>
