@@ -184,7 +184,7 @@
             {{ \App\field('about_services_h2', __('What I build.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_services_intro', __('I work across the stack: accessible interfaces, WordPress and PHP back ends, React applications, APIs, databases, and deployment. WordPress is the specialty, not the limit.', 'sage')) }}
+            {{ \App\field('about_services_intro', \App\mh_adjacent_range_copy()) }}
           </p>
         </header>
         <div class="about-services">

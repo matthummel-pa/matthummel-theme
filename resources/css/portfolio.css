@@ -1370,6 +1370,10 @@ html.mh-dark .h-badge--open {
 .page-header-split__copy .lead {
   max-width: 36rem;
 }
+.page-header-split__copy .range-note {
+  margin: .85rem 0 0;
+  max-width: 36rem;
+}
 .page-header-split__actions {
   display: flex;
   flex-wrap: wrap;
@@ -11573,7 +11577,7 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   3.1.50 — journal AI comparison infographic (post HTML in .post-prose)
+   3.1.51 — journal AI comparison infographic (post HTML in .post-prose)
    ═══════════════════════════════════════════════════════════════════════════ */
 .post-prose .mh-ai-figure {
   margin: 0 0 1.75em;
