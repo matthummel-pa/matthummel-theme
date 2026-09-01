@@ -32,6 +32,10 @@ What the 3.x Sage theme does, and where it lives.
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
 
+## Editor’s notes (3.1.40 home hero)
+
+- First viewport: name, role, short lede, Hire me + Browse work (+ quiet GitHub). Stats live in the right-column viz panel, not under the CTAs.
+
 ## Editor’s notes (3.1.39 hireable + affiliate)
 
 - Portfolio stays primary (Work / Hire / Code / Journal). Shop is Themes only in footer. Resources holds free starters + disclosed affiliates.
