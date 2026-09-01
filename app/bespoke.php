@@ -2938,7 +2938,7 @@ add_action('init', function (): void {
                 'Matt Hummel',
                 'Web Engineering for Growing Businesses & Agency Partners',
             ],
-            'to' => 'Matt Hummel — WordPress developer',
+            'to' => mh_home_hero_default('h1'),
         ],
         'mh_f_home_role' => [
             'from' => [
@@ -2946,7 +2946,7 @@ add_action('init', function (): void {
                 'Full-stack & WordPress developer',
                 'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
             ],
-            'to' => 'Full-stack themes, plugins, and web apps for shops and agencies.',
+            'to' => mh_home_hero_default('role'),
         ],
         'mh_f_home_lede' => [
             'from' => [
@@ -2954,14 +2954,13 @@ add_action('init', function (): void {
                 'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
                 'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
             ],
-            'to' => 'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+            'to' => mh_home_hero_default('lede'),
         ],
         'mh_f_seo_title' => [
             'from' => [
                 'Full-Stack & WordPress Developer | Matt Hummel',
-                '',
             ],
-            'to' => 'WordPress Developer for Shops & Agencies | Matt Hummel',
+            'to' => mh_home_hero_default('seo_title'),
         ],
     ];
 

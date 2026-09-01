@@ -3,7 +3,9 @@
 ## 3.1.47 — Home hero SEO copy
 
 - Sharpen home H1, role line, and lede for hire intent and WordPress keywords (fields + Blade fallbacks).
-- One-shot `mh_home_hero_seo_copy_v1` updates matching saved home meta.
+- One-shot `mh_home_hero_seo_copy_v1` updates matching saved home meta without overwriting custom copy.
+- `mh_home_hero_default()` is the single source for empty-field H1, role, lede, and SEO title.
+- Slightly wider hero role/lede measure so the three-sentence intro wraps cleanly.
 
 ## 3.1.46 — Work page content, site-wide a11y, Uses/Resources fields
 

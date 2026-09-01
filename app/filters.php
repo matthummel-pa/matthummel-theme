@@ -66,11 +66,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
 
     $map = [
         'front-page.blade.php' => [
-            'title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+            'title' => mh_home_hero_default('seo_title', $brand),
             'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-home.blade.php' => [
-            'title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+            'title' => mh_home_hero_default('seo_title', $brand),
             'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-services.blade.php' => [
