@@ -3137,3 +3137,53 @@ add_action('init', function (): void {
 
     update_option('mh_hireability_recruiter_v1', true);
 }, 83);
+
+/**
+ * One-time: visual/copy pass (3.1.49). Same hire story, leftover 15 years gone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_hireability_visual_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. I have professional Power Platform experience from in-house work; there is no public demo yet.' => 'Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.',
+        'Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow work.' => 'Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.',
+        'I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.' => 'I publish concept WordPress projects here. Hire me for a production build, or buy a theme when a project is for sale.',
+        'Prefer GitHub or LinkedIn? Those work too. This site is where I publish example WordPress demos.' => 'Prefer GitHub or LinkedIn? Those work too. This site is where I publish concept WordPress sites.',
+        'Prefer GitHub or LinkedIn? Those work too. This site is where I publish Gettysburg WordPress demos.' => 'Prefer GitHub or LinkedIn? Those work too. This site is where I publish concept WordPress sites.',
+        'I’ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.' => 'I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.',
+        'Publishing example WordPress sites — live demos for shops, tours, and inns' => 'Publishing concept WordPress sites — Sage 11 examples, not a client gallery',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'posts_per_page' => 50,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $keys = $id ? get_post_custom_keys($id) : [];
+        if (! is_array($keys)) {
+            continue;
+        }
+        foreach ($keys as $key) {
+            if (! str_starts_with((string) $key, 'mh_f_')) {
+                continue;
+            }
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || $val === '') {
+                continue;
+            }
+            $next = strtr($val, $swaps);
+            if ($next !== $val) {
+                update_post_meta($id, $key, $next);
+            }
+        }
+    }
+
+    update_option('mh_hireability_visual_v1', true);
+}, 84);

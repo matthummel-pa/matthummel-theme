@@ -2240,7 +2240,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Current',
             'type' => 'Studio work · Remote',
             'url' => 'https://matthummel.com',
-            'bullets' => "Publishing example WordPress sites — live demos for shops, tours, and inns.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing concept WordPress sites — Sage 11 examples, not a client gallery.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',

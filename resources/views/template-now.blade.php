@@ -35,13 +35,13 @@
         ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
         : null,
       'stats' => [
-        ['value' => __('Studio', 'sage'), 'label' => __('Example sites', 'sage')],
+        ['value' => __('Studio', 'sage'), 'label' => __('Concept sites', 'sage')],
         ['value' => __('Journal', 'sage'), 'label' => __('Writing', 'sage')],
         ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
         ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
       ],
       'link' => [
-        'label' => __('See example sites', 'sage'),
+        'label' => __('See concept sites', 'sage'),
         'href' => home_url('/projects/'),
       ],
     ])
@@ -63,10 +63,10 @@
             <h2 class="now-block__title">Matt Hummel</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p1', __('I publish concept WordPress projects here. Hire me for a production build, or buy a theme when a project is for sale.', 'sage')) }}</p>
         <p>{{ \App\field('now_studio_p2', __('Browse the Work page. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
         <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-          {{ __('See example sites', 'sage') }} →
+          {{ __('See concept sites', 'sage') }} →
         </a>
       </article>
 
@@ -140,7 +140,7 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Publishing example WordPress sites — live demos for shops, tours, and inns', 'sage'),
+            __('Publishing concept WordPress sites — Sage 11 examples, not a client gallery', 'sage'),
             __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
@@ -197,8 +197,8 @@
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Studio work</p>
         <p class="now-sidebar-card__value">Matt Hummel</p>
-        <p class="now-sidebar-card__sub">Example WordPress demos</p>
-        <a class="now-sidebar-card__link" href="{{ home_url('/projects/') }}">{{ __('See example sites', 'sage') }} →</a>
+        <p class="now-sidebar-card__sub">Concept WordPress demos</p>
+        <a class="now-sidebar-card__link" href="{{ home_url('/projects/') }}">{{ __('See concept sites', 'sage') }} →</a>
       </div>
 
       @if (! empty($gh['public_repos']))

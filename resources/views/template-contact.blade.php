@@ -44,7 +44,7 @@
       'stats' => [
         ['value' => '1–2 days', 'label' => __('Typical reply', 'sage')],
         ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
-        ['value' => __('Email', 'sage'), 'label' => __('Primary channel', 'sage')],
+        ['value' => __('Form', 'sage'), 'label' => __('Primary channel', 'sage')],
         ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
       ],
       'link' => [

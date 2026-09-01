@@ -12,11 +12,11 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
+      <p class="footer-blurb">{{ __('Full-stack & WordPress developer. Concept sites, a handful of theme packs, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
       @if (\App\mh_is_hireable($gh))
         <p class="footer-avail">
           @include('partials.avail-mark', ['gh' => $gh])
-          {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }} — full-time, freelance, or agency overflow
+          {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }} — full-time, contract, freelance, or agency overflow
         </p>
       @endif
       <div class="footer-quick-links">

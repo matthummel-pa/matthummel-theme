@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.49 — Contrast, layout, and one hire story
+
+- Stronger text contrast (body/muted/FAQ/nav/footer) against the existing navy/blue system. Blue accent used more consistently on the glance card, CONCEPT badges, links, and focus.
+- Cheap CSS motion: glance card fade/slide on first paint, existing card/button hover. `prefers-reduced-motion` turns it off. No new libraries.
+- Homepage: tighter section padding; duplicate availability and extra Say hello blocks removed. Process, fit, and ship-principles stay; their extra CTAs do not.
+- Copy: leftover “15 years” mapped off; Power Platform is one hire-page line with no demo; concept gallery wording aligned on About, Now, footer, and resume intro.
+
 ## 3.1.48 — Recruiter hireability
 
 - Homepage recruiter glance (below the ticker): role, stack, ET / Gettysburg, 17 years in-house + public GitHub since 2025, availability.
