@@ -227,27 +227,39 @@ function mh_home_fields(): array
             ['home_write_empty', __('Empty state', 'sage'), 'text', __('New posts coming soon.', 'sage')],
         ],
         __('Example sites section', 'sage') => [
-            ['home_work_h2', __('Heading', 'sage'), 'text', __('Selected WordPress work.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Concept sites and themes from real studio work. Browse a project for the story; hire me to adapt it, or buy a theme when one is for sale.', 'sage')],
+            ['home_work_h2', __('Heading', 'sage'), 'text', __('Concept WordPress sites.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.', 'sage')],
         ],
         __('About strip', 'sage') => [
-            ['home_about_h2', __('Heading', 'sage'), 'text', __('Fifteen years on the web.', 'sage')],
-            ['home_about_text', __('Bio text', 'sage'), 'textarea', __('I\'ve spent more than 15 years building for the web, from accessible front ends to PHP applications, APIs, and deployment workflows. WordPress is my specialty because it combines a flexible development platform with an editor businesses can actually use.', 'sage')],
+            ['home_about_h2', __('Heading', 'sage'), 'text', __('The work I can share.', 'sage')],
+            ['home_about_text', __('Bio text', 'sage'), 'textarea', __('I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.', 'sage')],
         ],
         __('Process section', 'sage') => [
             ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
             ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/hire/">hire conversation</a>.', 'sage')],
         ],
         __('About strip extra', 'sage') => [
-            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __("Most of my public code is on GitHub. Snippets go on the journal. If something helped you, you don't need to ask permission to use it.", 'sage')],
+            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.', 'sage')],
+        ],
+        __('Recruiter glance', 'sage') => [
+            ['glance_role', __('Role', 'sage'), 'text', __('WordPress / full-stack PHP', 'sage')],
+            ['glance_stack', __('Stack', 'sage'), 'text', __('Sage 11, Blade, Tailwind, Vite, PHP 8.3, Gutenberg', 'sage')],
+            ['glance_tz', __('Timezone', 'sage'), 'text', __('America/New_York (ET)', 'sage')],
+            ['glance_location', __('Location', 'sage'), 'text', __('Gettysburg, PA · remote OK', 'sage')],
+            ['glance_experience', __('Experience line', 'sage'), 'text', ''],
+            ['glance_avail', __('Availability', 'sage'), 'text', __('Full-time, contract, freelance, agency overflow', 'sage')],
+            ['glance_note', __('Public-work sentence', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub.', 'sage')],
+            ['glance_employers', __('Employers line (HTML)', 'sage'), 'html', __('Employers on the record: <a href="/hire/">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage')],
+            ['glance_power', __('Power Platform line (HTML)', 'sage'), 'html', __('PowerApps, Power Automate, and InfoPath for federal agencies — details on the <a href="/hire/">hire page</a>. There is no public demo.', 'sage')],
+            ['glance_nda', __('NDA note', 'sage'), 'textarea', __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')],
         ],
         __('Availability', 'sage') => [
             ['home_avail_status', __('Status line', 'sage'), 'text', __('Open for work', 'sage')],
         ],
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Hiring or building?', 'sage')],
-            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.', 'sage')],
-            ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Say hello on <a href="/hire/">Hire</a> or <a href="/contact/">Contact</a>. Roles, freelance builds, and post questions are all welcome.', 'sage')],
+            ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('Hiring managers: write about a role. Shops: start from a spec build or a short note. One inbox for both.', 'sage')],
+            ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse concept sites</a>. I usually reply within a day.', 'sage')],
         ],
         __('Footer (site-wide)', 'sage') => [
             ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
@@ -309,8 +321,8 @@ function page_field_map(): array
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
                 ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')],
                 ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('Work shows concept sites and themes from studio projects. Hire me to adapt one, buy a theme when it is for sale, or browse free code on GitHub.', 'sage')],
-                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')],
+                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')],
+                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. I have professional Power Platform experience from in-house work; there is no public demo yet.', 'sage')],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
             ],
@@ -529,7 +541,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
                 ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time roles, contract work, agency overflow, and freelance builds. WordPress, plugins, and full-stack apps — remote or on-site near Gettysburg.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')],
             ],
             __('LinkedIn', 'sage') => [
                 ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
@@ -554,9 +566,9 @@ function page_field_map(): array
         ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
-                ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
-                ['work_h1', __('Heading', 'sage'), 'text', __('Example WordPress sites.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.', 'sage')],
+                ['work_kicker', __('Kicker', 'sage'), 'text', __('Concept sites', 'sage')],
+                ['work_h1', __('Heading', 'sage'), 'text', __('Concept WordPress sites, not a client gallery.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Public Sage 11 examples for tours, shops, and inns. Some cards include a theme pack you can buy; that is a storefront side path. Employer and production work stays private unless a shop asks to be featured.', 'sage')],
                 ['work_hero_cta_primary', __('Primary hero button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['work_hero_cta_secondary', __('Secondary hero link', 'sage'), 'text', __('How I can help', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.', 'sage')],
@@ -572,11 +584,11 @@ function page_field_map(): array
                 ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Context & guides', 'sage') => [
-                ['work_context_h2', __('Context heading', 'sage'), 'text', __('What these example sites show.', 'sage')],
-                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('These are WordPress projects on this site — the same Sage, Tailwind, and Vite stack I use for client work. Each one is built for a specific type of local business so you can see layout, speed, and wp-admin editing in context.', 'sage')],
-                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>.', 'sage')],
+                ['work_context_h2', __('Context heading', 'sage'), 'text', __('These are concept sites.', 'sage')],
+                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('Each site is a public Sage 11 example — Blade, Tailwind, Vite — built for a business type so you can see layout and wp-admin editing. They are not client sites or my employer portfolio.', 'sage')],
+                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Production client and in-house work stays private unless a shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>. Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')],
                 ['work_fit_h2', __('Who fits heading', 'sage'), 'text', __('Who these demos are for.', 'sage')],
-                ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', __('Shops, agencies, and developers browse Work for different reasons. All three are welcome.', 'sage')],
+                ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', __('Shops, hiring managers, agencies, and developers browse Work for different reasons. All four are welcome.', 'sage')],
                 ['work_fit_items', __('Audience cards', 'sage'), 'repeater', mh_work_fit_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
@@ -666,24 +678,26 @@ function page_field_map(): array
 function mh_code_page_repos(?int $post_id = null): array
 {
     $rows = field_rows('code_repos', [], $post_id);
-    if ($rows === []) {
-        return array_map(__NAMESPACE__.'\\mh_repo_card', mh_featured_repos());
-    }
+    $source = $rows === [] ? mh_featured_repos() : $rows;
     $out = [];
-    foreach ($rows as $r) {
+    foreach ($source as $r) {
+        $name = (string) ($r['name'] ?? '');
+        if ($name === '' || mh_github_is_hidden_repo($name)) {
+            continue;
+        }
         $tags = $r['tags'] ?? [];
         if (is_string($tags)) {
             $tags = array_values(array_filter(array_map('trim', explode(',', $tags))));
         }
         $out[] = mh_repo_card([
-            'name' => (string) ($r['name'] ?? ''),
+            'name' => $name,
             'desc' => (string) ($r['desc'] ?? ''),
             'url' => (string) ($r['url'] ?? ''),
             'tags' => $tags,
         ]);
     }
 
-    return $out;
+    return $out !== [] ? $out : array_map(__NAMESPACE__.'\\mh_repo_card', mh_featured_repos());
 }
 
 function mh_code_page_practice(?int $post_id = null): array
@@ -1021,6 +1035,11 @@ function mh_work_fit_defaults(): array
 {
     return [
         [
+            'icon' => 'briefcase',
+            'title' => __('Hiring managers', 'sage'),
+            'body' => __('These are concept sites of the Sage stack, not a client grid. Employers (Saliense, All Native Group, Knowledge Capital Associates) are on Hire. Public GitHub is the trail I started in 2025.', 'sage'),
+        ],
+        [
             'icon' => 'home',
             'title' => __('Shops and local businesses', 'sage'),
             'body' => __('You want to see what a finished WordPress site looks like for a tour, inn, shop, or restaurant — and whether you could edit it yourself after launch.', 'sage'),
@@ -1074,11 +1093,11 @@ function mh_work_faq_defaults(): array
     return [
         [
             'title' => __('Are these real client sites?', 'sage'),
-            'text' => __('Most are concept sites I built to show a business type — tours, inns, shops, and similar. They use the same stack as client work. Private client builds stay off this gallery unless the shop asks to be featured.', 'sage'),
+            'text' => __('No. These are concept sites — public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. I have done a handful of silent agency-sub jobs; this gallery is not that work.', 'sage'),
         ],
         [
             'title' => __('Can I buy one of these themes?', 'sage'),
-            'text' => __('Some projects are for sale in the shop when a theme pack is ready. Each card shows Buy theme when checkout is available. Otherwise hire me to adapt the layout for your shop.', 'sage'),
+            'text' => __('Some cards include a theme pack in the shop. Buy theme is a storefront side path — the gallery is still concept work. Otherwise hire me to adapt the layout for your shop.', 'sage'),
         ],
         [
             'title' => __('Do you only work in Gettysburg?', 'sage'),

@@ -8,7 +8,7 @@
   $ghUrl        = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing      = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $latestPosts  = \App\mh_latest_posts(3);
-  $yearsBuilding = (int) date('Y') - 2009;
+  $yearsBuilding = \App\mh_years_in_house();
   $services     = \App\mh_about_page_services();
   $workTypes    = \App\mh_about_page_work_types();
   $approach     = \App\mh_about_page_approach();
@@ -51,7 +51,7 @@
       'profileSize' => 280,
       'profileCaption' => __('Full-stack · WordPress', 'sage'),
       'stats' => array_values(array_filter([
-        ['value' => $yearsBuilding.'+', 'label' => __('years on the web', 'sage')],
+        ['value' => $yearsBuilding.'+', 'label' => __('years in-house web', 'sage')],
         ! empty($gh['public_repos'])
           ? ['value' => number_format_i18n((int) $gh['public_repos']), 'label' => __('public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
           : null,
@@ -100,8 +100,8 @@
           </h2>
           <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
           <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p3', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p4', __('Most of my public code is on GitHub. Shorter notes go on the journal. If something helps you, use it — you don’t need to ask.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p3', __('The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')) }}</p>
+          <p class="about-story__p">{{ \App\field('about_p4', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. I have professional Power Platform experience from in-house work; there is no public demo yet.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
               {!! \App\mh_svg_icon('mail', 16) !!}
@@ -161,7 +161,7 @@
           <div class="about-aside-card about-aside-card--studio">
             <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Example sites', 'sage') }}</p>
             <h3 class="about-aside-card__title">Matt Hummel</h3>
-            <p class="about-aside-card__bio">{{ __('Live WordPress demos for shops, tours, and inns. Hire me here for a real build.', 'sage') }}</p>
+            <p class="about-aside-card__bio">{{ __('Spec WordPress sites for shops, tours, and inns — not a client gallery. Hire me here for a real build.', 'sage') }}</p>
             <a class="about-aside-card__link" href="{{ home_url('/projects/') }}">
               {{ __('See example sites', 'sage') }} →
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>

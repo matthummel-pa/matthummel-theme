@@ -269,20 +269,82 @@ function mh_project_display_eyebrow(string $eyebrow): string
 }
 
 /**
- * Swap leftover “concept” wording in stored project prose.
+ * Keep spec/concept wording on public project pages.
+ *
+ * Recruiters need to see that the gallery is spec work, not a client grid.
  */
 function mh_project_public_prose(string $text): string
 {
+    return $text;
+}
+
+/**
+ * First sentence of a paragraph, for case-study "what it demonstrates".
+ */
+function mh_first_sentence(string $text): string
+{
+    $text = trim(wp_strip_all_tags($text));
     if ($text === '') {
         return '';
     }
+    if (preg_match('/^(.+?[.!?])(\s|$)/u', $text, $m)) {
+        return $m[1];
+    }
 
-    $replaced = preg_replace('/\bConcepts\b/', 'Projects', $text);
-    $replaced = preg_replace('/\bconcepts\b/', 'projects', is_string($replaced) ? $replaced : $text);
-    $replaced = preg_replace('/\bConcept\b/', 'Project', is_string($replaced) ? $replaced : $text);
-    $replaced = preg_replace('/\bconcept\b/', 'project', is_string($replaced) ? $replaced : $text);
+    return wp_trim_words($text, 28, '…');
+}
 
-    return is_string($replaced) ? $replaced : $text;
+/**
+ * Recruiter-facing case-study facts for a project page.
+ *
+ * @param  array<string, mixed>  $card
+ * @param  array<string, mixed>  $story
+ * @return array{
+ *   is_spec: bool,
+ *   role: string,
+ *   stack: string,
+ *   demonstrates: string,
+ *   demo: string,
+ *   github: string,
+ *   architecture: string,
+ *   handoff: string,
+ *   notice: string
+ * }
+ */
+function mh_project_case_study(int $post_id, array $card, array $story): array
+{
+    $isProduct = ! empty($story['is_product']);
+    $tech = $card['tech'] ?? [];
+    if (! is_array($tech)) {
+        $tech = [];
+    }
+    $tech = array_values(array_filter(array_map('strval', $tech)));
+    $sidebar = mh_project_sidebar($post_id);
+    $docs = mh_project_buyer_docs($post_id, $card);
+
+    $demonstrates = mh_first_sentence((string) ($story['challenge'] ?? ''));
+    if ($demonstrates === '') {
+        $demonstrates = mh_first_sentence((string) ($docs['architecture'] ?? ''));
+    }
+
+    $stack = $tech !== []
+        ? implode(' · ', $tech)
+        : __('Sage 11 · Blade · Tailwind · Vite · PHP 8.3', 'sage');
+
+    return [
+        'is_spec' => mh_project_is_spec($card),
+        'role' => $isProduct ? __('Theme author', 'sage') : __('Solo spec build', 'sage'),
+        'stack' => $stack,
+        'demonstrates' => $demonstrates,
+        'demo' => (string) ($story['demo'] ?? ''),
+        'github' => (string) ($sidebar['github'] ?? ''),
+        'architecture' => (string) ($docs['architecture'] ?? ''),
+        'handoff' => (string) ($docs['handoff'] ?? ''),
+        'notice' => __(
+            'This is a spec build — a public Sage 11 example, not a client or employer site. Production work stays private unless a shop asks to be featured.',
+            'sage'
+        ),
+    ];
 }
 
 /**

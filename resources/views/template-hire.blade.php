@@ -50,7 +50,7 @@
   <h1 class="display-title is-hero">
     {{ \App\field('hire_h1', __('Hire a WordPress developer.', 'sage')) }}
   </h1>
-  <p class="lead">{{ \App\field('hire_lede', __('Open for full-time roles, contract work, agency overflow, and freelance builds. WordPress, plugins, and full-stack apps — remote or on-site near Gettysburg.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('hire_lede', __('Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')) }}</p>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])

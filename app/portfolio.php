@@ -135,10 +135,16 @@ function mh_featured_repos(): array
 {
     return [
         [
-            'name' => 'keepary',
-            'desc' => 'Private family app: authentication, invites, and posts. React on the front end, Supabase for data and sign-in.',
-            'url' => 'https://github.com/matthummel-pa/keepary',
-            'tags' => ['React', 'Supabase', 'TypeScript'],
+            'name' => 'pressroot',
+            'desc' => 'Sage 11 WordPress theme framework: Customizer tools, GitHub project pages, and a deep options system.',
+            'url' => 'https://github.com/matthummel-pa/pressroot',
+            'tags' => ['WordPress', 'Sage', 'PHP'],
+        ],
+        [
+            'name' => 'matthummel-theme',
+            'desc' => 'Sage 11 WordPress theme for matthummel.com. Blade templates, Tailwind, and pages shops can edit.',
+            'url' => 'https://github.com/matthummel-pa/matthummel-theme',
+            'tags' => ['WordPress', 'Sage', 'Tailwind'],
         ],
         [
             'name' => 'tocflow',
@@ -147,12 +153,176 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
-            'name' => 'matthummel-theme',
-            'desc' => 'Sage 11 WordPress theme for matthummel.com. Blade templates, Tailwind, and pages shops can edit.',
-            'url' => 'https://github.com/matthummel-pa/matthummel-theme',
-            'tags' => ['WordPress', 'Sage', 'Tailwind'],
+            'name' => 'ridgesandvalleys',
+            'desc' => 'Sage 11 WordPress theme for the Ridges & Valleys studio site — Blade, Vite, and the same stack as this portfolio.',
+            'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
+            'tags' => ['WordPress', 'Sage', 'Vite'],
+        ],
+        [
+            'name' => 'keepary',
+            'desc' => 'Private family app: authentication, invites, and posts. React on the front end, Supabase for data and sign-in.',
+            'url' => 'https://github.com/matthummel-pa/keepary',
+            'tags' => ['React', 'Supabase', 'TypeScript'],
         ],
     ];
+}
+
+/**
+ * Repo names to keep off featured and recent lists (tutorial forks, placeholders).
+ *
+ * @return list<string>
+ */
+function mh_github_hidden_repo_names(): array
+{
+    return [
+        'freecodecamp',
+        'repo_owner',
+    ];
+}
+
+function mh_github_is_hidden_repo(string $name): bool
+{
+    $n = strtolower(trim($name));
+    if ($n === '') {
+        return true;
+    }
+    foreach (mh_github_hidden_repo_names() as $hidden) {
+        if ($n === $hidden || str_contains($n, $hidden)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/** Years of in-house / employer web work (higher-ed marketing start ~2009). */
+function mh_years_in_house(): int
+{
+    return max(17, (int) date('Y') - 2009);
+}
+
+/**
+ * Recruiter "at a glance" facts for the homepage (scannable in a few seconds).
+ *
+ * @return array{
+ *   role: string,
+ *   stack: string,
+ *   timezone: string,
+ *   location: string,
+ *   experience: string,
+ *   availability: string,
+ *   note: string,
+ *   employers: string,
+ *   power: string,
+ *   nda: string,
+ *   links: list<array{label: string, href: string, icon: string, external: bool}>
+ * }
+ */
+function mh_recruiter_glance(): array
+{
+    $gh = Github::fetchUser(mh_github_login());
+    $ghYear = trim((string) ($gh['created'] ?? ''));
+    if ($ghYear === '') {
+        $ghYear = '2025';
+    }
+    $hireUrl = home_url('/hire/');
+
+    return [
+        'role' => field('glance_role', __('WordPress / full-stack PHP', 'sage')),
+        'stack' => field('glance_stack', __('Sage 11, Blade, Tailwind, Vite, PHP 8.3, Gutenberg', 'sage')),
+        'timezone' => field('glance_tz', __('America/New_York (ET)', 'sage')),
+        'location' => field('glance_location', __('Gettysburg, PA · remote OK', 'sage')),
+        'experience' => field(
+            'glance_experience',
+            sprintf(
+                /* translators: 1: years of in-house work, 2: public GitHub start year */
+                __('%1$d years in-house web · public Sage/WordPress since %2$s', 'sage'),
+                mh_years_in_house(),
+                $ghYear
+            )
+        ),
+        'availability' => field('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
+        'note' => field(
+            'glance_note',
+            __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub.', 'sage')
+        ),
+        'employers' => field_html(
+            'glance_employers',
+            sprintf(
+                /* translators: %s: hire page URL */
+                __('Employers on the record: <a href="%s">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage'),
+                esc_url($hireUrl)
+            )
+        ),
+        'power' => field_html(
+            'glance_power',
+            sprintf(
+                /* translators: %s: hire page URL */
+                __('PowerApps, Power Automate, and InfoPath for federal agencies — details on the <a href="%s">hire page</a>. There is no public demo.', 'sage'),
+                esc_url($hireUrl)
+            )
+        ),
+        'nda' => field(
+            'glance_nda',
+            __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')
+        ),
+        'links' => [
+            [
+                'label' => __('Contact', 'sage'),
+                'href' => home_url('/contact/'),
+                'icon' => 'mail',
+                'external' => false,
+            ],
+            [
+                'label' => __('Hire', 'sage'),
+                'href' => $hireUrl,
+                'icon' => 'briefcase',
+                'external' => false,
+            ],
+            [
+                'label' => __('Concept sites', 'sage'),
+                'href' => home_url('/projects/'),
+                'icon' => 'globe',
+                'external' => false,
+            ],
+            [
+                'label' => __('GitHub', 'sage'),
+                'href' => 'https://github.com/'.mh_github_login(),
+                'icon' => 'github',
+                'external' => true,
+            ],
+        ],
+    ];
+}
+
+/**
+ * Whether a Work card is a spec/concept example (not a live client site).
+ *
+ * A theme pack for sale does not turn the gallery into a client case study.
+ *
+ * @param  array<string, mixed>  $project
+ */
+function mh_project_is_spec(array $project): bool
+{
+    if (! empty($project['is_client']) || ! empty($project['is_production'])) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Short label for spec/concept Work cards. Empty on sellable products.
+ *
+ * @param  array<string, mixed>  $project
+ */
+function mh_spec_badge_label(array $project = []): string
+{
+    if ($project !== [] && ! mh_project_is_spec($project)) {
+        return '';
+    }
+
+    return __('Concept', 'sage');
 }
 
 /** Featured repos plus recent public GitHub work (forks and the profile repo skipped). */
@@ -163,7 +333,7 @@ function mh_home_github_repos(int $limit = 6): array
     $names = array_map(static fn ($r) => strtolower((string) ($r['name'] ?? '')), $featured);
     foreach ($live as $r) {
         $name = strtolower((string) ($r['name'] ?? ''));
-        if ($name === '' || $name === 'ridgesandvalleys' || in_array($name, $names, true)) {
+        if ($name === '' || mh_github_is_hidden_repo($name) || in_array($name, $names, true)) {
             continue;
         }
         $featured[] = $r;
@@ -530,7 +700,7 @@ function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
 
     foreach (mh_github_live_repos(max($limit * 2, 12)) as $repo) {
         $name = strtolower((string) ($repo['name'] ?? ''));
-        if ($name === '' || $name === 'ridgesandvalleys' || in_array($name, $featuredNames, true)) {
+        if ($name === '' || mh_github_is_hidden_repo($name) || in_array($name, $featuredNames, true)) {
             continue;
         }
         $live[] = $repo;
@@ -708,7 +878,7 @@ function mh_github_calendar_months(array $weeks): array
 function mh_home_oss_live_data(int $repo_count = 3): array
 {
     $login = mh_github_login();
-    $cache_key = 'mh_oss_live_v2_'.md5($login.(string) $repo_count);
+    $cache_key = 'mh_oss_live_v3_'.md5($login.(string) $repo_count);
 
     if (($cached = get_transient($cache_key)) !== false && is_array($cached)) {
         return $cached;
@@ -2428,6 +2598,7 @@ function mh_latest_posts(int $limit = 3): array
         $cats = get_the_category($p->ID);
         $cat = ($cats && ! is_wp_error($cats)) ? $cats[0] : null;
         $out[] = [
+            'id' => (int) $p->ID,
             'title' => get_the_title($p),
             'url' => get_permalink($p),
             'date' => get_the_date('M j, Y', $p),
@@ -2438,9 +2609,122 @@ function mh_latest_posts(int $limit = 3): array
             'cat_slug' => $cat ? $cat->slug : '',
             'minutes' => mh_reading_minutes($p),
             'thumb' => mh_post_card_image((int) $p->ID),
+            'deemphasize' => false,
+            'cluster_day' => '',
         ];
     }
     wp_reset_postdata();
+
+    return $out;
+}
+
+function mh_journal_day_key(array $post): string
+{
+    $iso = (string) ($post['date_iso'] ?? '');
+
+    return $iso !== '' ? substr($iso, 0, 10) : '';
+}
+
+/**
+ * Same-day clusters (known dump days or 3+ posts) get de-emphasized on Home.
+ *
+ * @param  array<string, int>  $counts
+ */
+function mh_journal_is_cluster_day(string $day, array $counts): bool
+{
+    if ($day === '2026-06-22') {
+        return true;
+    }
+
+    return ($counts[$day] ?? 0) >= 3;
+}
+
+/**
+ * Prefer WordPress/Sage/PHP posts when picking a featured journal item.
+ *
+ * @param  array<string, mixed>  $post
+ */
+function mh_journal_technical_score(array $post): int
+{
+    $score = (int) ($post['minutes'] ?? 0);
+    $hay = strtolower((string) ($post['title'] ?? '').' '.(string) ($post['cat'] ?? '').' '.(string) ($post['ex'] ?? ''));
+    foreach (['wordpress', 'sage', 'php', 'blade', 'vite', 'gutenberg', 'plugin', 'theme'] as $needle) {
+        if (str_contains($hay, $needle)) {
+            $score += 4;
+        }
+    }
+
+    return $score;
+}
+
+/**
+ * Homepage journal cards: feature the newest distinct technical post.
+ *
+ * Same-day clusters (including the Jun 22 2026 batch) stay off the featured
+ * slot; at most one quiet item from a cluster may appear in the stack.
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_home_journal_posts(int $limit = 5): array
+{
+    $all = mh_latest_posts(max(18, $limit * 4));
+    $counts = [];
+    foreach ($all as $p) {
+        $day = mh_journal_day_key($p);
+        if ($day === '') {
+            continue;
+        }
+        $counts[$day] = ($counts[$day] ?? 0) + 1;
+    }
+
+    $featured = null;
+    $stack = [];
+    $quiet = [];
+
+    foreach ($all as $p) {
+        $day = mh_journal_day_key($p);
+        $isQuiet = mh_journal_is_cluster_day($day, $counts);
+        $p['deemphasize'] = $isQuiet;
+        $p['cluster_day'] = $isQuiet ? $day : '';
+        if ($isQuiet) {
+            $quiet[] = $p;
+
+            continue;
+        }
+        if ($featured === null) {
+            $featured = $p;
+
+            continue;
+        }
+        $stack[] = $p;
+    }
+
+    if ($featured === null && $all !== []) {
+        usort($quiet, static fn ($a, $b) => mh_journal_technical_score($b) <=> mh_journal_technical_score($a));
+        $featured = $quiet[0] ?? $all[0];
+        $featured['deemphasize'] = false;
+        $featuredUrl = (string) ($featured['url'] ?? '');
+        $quiet = array_values(array_filter(
+            $quiet,
+            static fn ($p) => (string) ($p['url'] ?? '') !== $featuredUrl
+        ));
+    }
+
+    $out = [];
+    if (is_array($featured)) {
+        $out[] = $featured;
+    }
+    foreach ($stack as $p) {
+        if (count($out) >= $limit) {
+            break;
+        }
+        $out[] = $p;
+    }
+    if (count($out) < $limit && $quiet !== []) {
+        $one = $quiet[0];
+        $one['deemphasize'] = true;
+        $out[] = $one;
+    }
 
     return $out;
 }
@@ -2500,6 +2784,16 @@ function mh_is_devto_post(int $postId): bool
 
 function mh_journal_featured_post_id(): int
 {
+    foreach (mh_home_journal_posts(5) as $p) {
+        if (! empty($p['deemphasize'])) {
+            continue;
+        }
+        $id = (int) ($p['id'] ?? 0);
+        if ($id > 0) {
+            return $id;
+        }
+    }
+
     $exclude = [];
     $catId = mh_devto_category_id();
     if ($catId > 0) {
@@ -3603,7 +3897,7 @@ function mh_about_work_types_defaults(): array
         ],
         [
             'title' => __('Agency sub-contracting', 'sage'),
-            'detail' => __('You keep the client relationship. I build the WordPress platform, integration, or web application.', 'sage'),
+            'detail' => __('A handful of silent-sub jobs. You keep the relationship. I build the WordPress platform, integration, or web application.', 'sage'),
         ],
         [
             'title' => __('Part-time arrangements', 'sage'),

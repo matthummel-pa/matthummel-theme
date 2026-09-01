@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.48 — Recruiter hireability
+
+- Homepage recruiter glance (below the ticker): role, stack, ET / Gettysburg, 17 years in-house + public GitHub since 2025, availability.
+- Glance links **Hire** for named employers already on `/hire/` (Saliense, All Native Group, Knowledge Capital Associates / USMC) and one Power Platform line (PowerApps, Power Automate, InfoPath). No invented demo, email, or resume PDF.
+- Work gallery keeps **Concept** labels. View concept is the primary card action; Buy theme is a ghost storefront path.
+- Homepage about strip no longer repeats years, availability types, or Power Platform (those live in the glance).
+- Featured GitHub list is pressroot, matthummel-theme, tocflow, ridgesandvalleys, keepary (tutorial forks filtered). Journal de-emphasizes same-day clusters.
+- One-shot `mh_hireability_recruiter_v1` updates matching saved page meta without overwriting custom copy.
+
 ## 3.1.47 — Home hero SEO copy
 
 - Sharpen home H1, role line, and lede for hire intent and WordPress keywords (fields + Blade fallbacks).
