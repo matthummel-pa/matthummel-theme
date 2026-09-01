@@ -14,10 +14,18 @@
   max-width: 720px;
 }
 
-/* Comparison figure can span the wider editor canvas */
+/* Comparison figure / pipeline can span the wider editor canvas */
+.editor-styles-wrapper .wp-block-matthummel-tool-grid,
+.editor-styles-wrapper .wp-block-matthummel-ship-pipe,
 .editor-styles-wrapper .wp-block-group.mh-ai-figure,
 .editor-styles-wrapper .wp-block-group.mh-tool-grid {
   max-width: 920px;
+}
+
+/* Keep selected custom blocks from looking like bare Group chrome */
+.editor-styles-wrapper .wp-block-matthummel-tool-card.is-selected,
+.editor-styles-wrapper .wp-block-matthummel-ship-step.is-selected {
+  outline-offset: 3px;
 }
 
 .editor-styles-wrapper .wp-block-heading {

@@ -463,3 +463,137 @@ html.mh-dark .mh-tool-card code {
   background: var(--gray-800);
   color: var(--gray-100);
 }
+
+
+/* ── Custom theme blocks (matthummel/*) ── */
+.wp-block-matthummel-tool-grid,
+.editor-styles-wrapper .wp-block-matthummel-tool-grid {
+  margin: 0 0 1.75em;
+  max-width: 100%;
+}
+
+.wp-block-matthummel-tool-grid.mh-ai-figure,
+.editor-styles-wrapper .wp-block-matthummel-tool-grid.mh-ai-figure {
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-card) + 4px);
+  background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 48%);
+}
+
+/* Front: cards are direct children of .mh-tool-grid */
+.post-prose .mh-tool-grid > .wp-block-matthummel-tool-card,
+.post-prose .mh-tool-grid > .mh-tool-card {
+  margin: 0;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Editor: InnerBlocks layout becomes the grid */
+.editor-styles-wrapper .mh-tool-grid > .block-editor-inner-blocks,
+.editor-styles-wrapper .wp-block-matthummel-tool-grid .mh-tool-grid > .block-editor-inner-blocks {
+  display: contents;
+}
+
+.editor-styles-wrapper .mh-tool-grid .block-editor-block-list__layout,
+.editor-styles-wrapper .wp-block-matthummel-tool-grid .block-editor-block-list__layout {
+  display: grid !important;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 0;
+}
+
+@media (min-width: 720px) {
+  .editor-styles-wrapper .mh-tool-grid .block-editor-block-list__layout,
+  .editor-styles-wrapper .wp-block-matthummel-tool-grid .block-editor-block-list__layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+  }
+}
+
+.editor-styles-wrapper .wp-block-matthummel-tool-card,
+.editor-styles-wrapper .block-editor-block-list__layout > .wp-block-matthummel-tool-card {
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+.wp-block-matthummel-tool-card.mh-tool-card,
+.editor-styles-wrapper .wp-block-matthummel-tool-card.mh-tool-card {
+  /* inherits .mh-tool-card grid */
+}
+
+/* Ship pipeline custom blocks */
+.wp-block-matthummel-ship-pipe.mh-ship-pipe,
+.editor-styles-wrapper .wp-block-matthummel-ship-pipe.mh-ship-pipe {
+  list-style: none;
+  counter-reset: mh-ship;
+  margin: 0 0 1.45em;
+  padding: 0;
+  display: grid;
+  gap: .75rem;
+}
+
+.editor-styles-wrapper .mh-ship-pipe > .block-editor-inner-blocks {
+  display: contents;
+}
+
+.editor-styles-wrapper .mh-ship-pipe .block-editor-block-list__layout {
+  display: grid !important;
+  gap: .75rem;
+  margin: 0;
+}
+
+.wp-block-matthummel-ship-step.mh-ship-step,
+.post-prose .mh-ship-pipe > .mh-ship-step,
+.post-prose .mh-ship-pipe > .wp-block-matthummel-ship-step,
+.editor-styles-wrapper .mh-ship-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: .8rem;
+  align-items: start;
+  margin: 0 !important;
+  padding: .95rem 1.05rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--white);
+  counter-increment: mh-ship;
+  transition: border-color .15s ease, box-shadow .2s ease;
+  box-shadow: 0 1px 0 rgba(17, 24, 39, .03);
+  max-width: none !important;
+}
+
+.wp-block-matthummel-ship-step.mh-ship-step:hover,
+.post-prose .mh-ship-pipe > .mh-ship-step:hover,
+.editor-styles-wrapper .mh-ship-step:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 3px 12px rgba(17, 24, 39, .05);
+}
+
+.wp-block-matthummel-ship-step.mh-ship-step::before,
+.post-prose .mh-ship-pipe > .mh-ship-step::before,
+.post-prose .mh-ship-pipe > .wp-block-matthummel-ship-step::before,
+.editor-styles-wrapper .mh-ship-step::before {
+  content: counter(mh-ship);
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  margin-top: .1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--gray-50);
+  color: var(--color-navy);
+  font: 700 .75rem/1 var(--font-display);
+}
+
+html.mh-dark .wp-block-matthummel-ship-step.mh-ship-step,
+html.mh-dark .post-prose .mh-ship-pipe > .mh-ship-step {
+  background: var(--gray-900);
+  border-color: var(--gray-700);
+}
+
+html.mh-dark .wp-block-matthummel-tool-grid.mh-ai-figure {
+  background: linear-gradient(180deg, var(--gray-900) 0%, #0b1220 100%);
+  border-color: var(--gray-700);
+}
