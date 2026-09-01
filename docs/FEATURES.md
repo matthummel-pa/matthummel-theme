@@ -35,6 +35,12 @@ What the 3.x Sage theme does, and where it lives.
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
 
+## Editor’s notes (3.1.52 AI comparison UX)
+
+- Cards use a 1px grey border and a letter chip (`data-mark`). Do not add a left accent stripe. Blue stays on chips, pills, and links.
+- Pipeline (`.mh-ship-pipe`) is numbered cards, not a left timeline bar.
+- After merge, Matt must paste `docs/posts/what-actually-gets-faster-with-ai.html` into the live WP post (or publish it — `https://matthummel.com/what-actually-gets-faster-with-ai/` 404s as of this change). Rank Math title: `What AI Speeds Up in WordPress | Matt Hummel`.
+
 ## Editor’s notes (3.1.51 AI comparison post)
 
 - New journal post lives in `docs/posts/`, not Blade. Local import: `.github/scripts/import-docs-posts.py`. Production still needs a wp-admin paste (this repo cannot publish matthummel.com).
