@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.40 — 2026-09-01
+
+### Improved
+
+- Home hero: two-column above-the-fold — copy left, GitHub stats as a clean illustration panel on the right
+- Shorter home lede; page jump links move below the ticker; quick-link row trimmed to Hire / Browse work / GitHub
+
 ## 3.1.39 — 2026-09-01
 
 ### Changed

@@ -202,6 +202,33 @@
 {{-- ═══════════════════════════════════════════════════
      01 — HERO
      ═══════════════════════════════════════════════════ --}}
+@php
+  $heroStats = [];
+  if (! empty($gh['public_repos'])) {
+    $heroStats[] = [
+      'value' => number_format_i18n((int) $gh['public_repos']),
+      'label' => __('Public repos', 'sage'),
+      'href' => $ghUrl.'?tab=repositories',
+    ];
+  }
+  if (! empty($gh['followers'])) {
+    $heroStats[] = [
+      'value' => number_format_i18n((int) $gh['followers']),
+      'label' => __('GitHub followers', 'sage'),
+      'href' => $ghUrl.'?tab=followers',
+    ];
+  }
+  $heroStats[] = [
+    'value' => __('Remote', 'sage'),
+    'label' => __('On-site welcome', 'sage'),
+    'href' => null,
+  ];
+  $heroStats[] = [
+    'value' => __('Full stack', 'sage'),
+    'label' => __('WordPress specialist', 'sage'),
+    'href' => null,
+  ];
+@endphp
 <section class="h-hero" aria-labelledby="h-hero-name">
   <div class="container wide h-hero__inner">
 
@@ -209,7 +236,7 @@
 
       <div class="h-hero__badges">
         <span class="h-badge">
-          {!! \App\mh_svg_icon('map', 13) !!}
+          {!! \App\mh_svg_icon('code', 13) !!}
           {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
         </span>
         @if (\App\mh_is_hireable($gh))
@@ -218,10 +245,6 @@
             {{ \App\mh_availability_label($gh, __('Available for work', 'sage')) }}
           </span>
         @endif
-        <span class="h-badge">
-          {!! \App\mh_svg_icon('code', 13) !!}
-          Full-stack developer · WordPress specialist
-        </span>
       </div>
 
       <h1 id="h-hero-name" class="h-hero__name">
@@ -229,67 +252,55 @@
       </h1>
 
       <p class="h-hero__role">
-        {{ \App\field('home_role', __('Full-stack web development, with WordPress at the center.', 'sage')) }}
+        {{ \App\field('home_role', __('Full-stack & WordPress developer — open for full-time, contract, and freelance.', 'sage')) }}
       </p>
 
       <p class="h-hero__lede">
-        {{ \App\field('home_lede', __('I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.', 'sage')) }}
+        {{ \App\field('home_lede', __('I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.', 'sage')) }}
       </p>
 
       <div class="h-hero__actions">
-        <a class="btn h-hero__cta" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/contact/')) }}">
+        <a class="btn h-hero__cta" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/hire/')) }}">
           {!! \App\mh_svg_icon('mail', 17) !!}
-          {{ \App\field('home_cta_primary', __('Start a conversation', 'sage')) }}
+          {{ \App\field('home_cta_primary', __('Hire me', 'sage')) }}
         </a>
         <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
-          {{ \App\field('home_cta_secondary', __('Explore projects', 'sage')) }}
+          {{ \App\field('home_cta_secondary', __('Browse work', 'sage')) }}
           <span aria-hidden="true">→</span>
+        </a>
+        <a class="h-text-arrow h-text-arrow--quiet" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+          {!! \App\mh_svg_icon('github', 15) !!}
+          {{ __('GitHub', 'sage') }}
         </a>
       </div>
 
-      <dl class="h-stats">
-        @if (! empty($gh['public_repos']))
-          <div>
-            <dt><a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['public_repos']) }}</a></dt>
-            <dd>public repos</dd>
-          </div>
-        @endif
-        @if (! empty($gh['followers']))
-          <div>
-            <dt><a href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="me noopener" target="_blank">{{ number_format_i18n((int) $gh['followers']) }}</a></dt>
-            <dd>GitHub followers</dd>
-          </div>
-        @endif
-        <div>
-          <dt>Remote</dt>
-          <dd>On-site welcome</dd>
-        </div>
-        <div>
-          <dt>Full stack</dt>
-          <dd>WordPress specialist</dd>
-        </div>
-      </dl>
-
-      <nav class="h-quick" aria-label="{{ __('Quick links', 'sage') }}">
-        <a href="{{ $writing }}">{!! \App\mh_svg_icon('pen', 14) !!} Journal</a>
-        <a href="{{ home_url('/code/') }}">{!! \App\mh_svg_icon('code', 14) !!} Code</a>
-        <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">{!! \App\mh_svg_icon('github', 14) !!} GitHub</a>
-        <a href="{{ home_url('/about/') }}">{!! \App\mh_svg_icon('user', 14) !!} About</a>
-        <a href="{{ home_url('/now/') }}">{!! \App\mh_svg_icon('calendar', 14) !!} Now</a>
-      </nav>
-
-      {{-- On this page --}}
-      <nav class="h-page-nav" aria-label="On this page">
-        <span class="h-page-nav__label">On this page</span>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#process">Process</a>
-        <a href="#work">Work</a>
-        <a href="#journal">Journal</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-
     </div>
+
+    <aside class="h-hero__viz" aria-label="{{ __('Highlights', 'sage') }}">
+      <div class="h-hero-viz">
+        <div class="h-hero-viz__frame" aria-hidden="true">
+          <span class="h-hero-viz__corner h-hero-viz__corner--tl"></span>
+          <span class="h-hero-viz__corner h-hero-viz__corner--tr"></span>
+          <span class="h-hero-viz__corner h-hero-viz__corner--bl"></span>
+          <span class="h-hero-viz__corner h-hero-viz__corner--br"></span>
+        </div>
+        <p class="h-hero-viz__eyebrow">{!! \App\mh_svg_icon('github', 14) !!} {{ __('Live from GitHub', 'sage') }}</p>
+        <dl class="h-hero-viz__grid">
+          @foreach ($heroStats as $stat)
+            <div class="h-hero-viz__cell">
+              <dt>
+                @if (! empty($stat['href']))
+                  <a href="{{ esc_url($stat['href']) }}" rel="me noopener" target="_blank">{{ $stat['value'] }}</a>
+                @else
+                  {{ $stat['value'] }}
+                @endif
+              </dt>
+              <dd>{{ $stat['label'] }}</dd>
+            </div>
+          @endforeach
+        </dl>
+      </div>
+    </aside>
 
   </div>
 </section>
@@ -312,6 +323,18 @@
 {{-- ═══════════════════════════════════════════════════
      02 — ABOUT
      ═══════════════════════════════════════════════════ --}}
+
+{{-- Quiet jump links — kept below the fold so the hero stays one composition --}}
+<nav class="h-page-nav container wide" aria-label="On this page">
+  <span class="h-page-nav__label">On this page</span>
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#process">Process</a>
+  <a href="#work">Work</a>
+  <a href="#journal">Journal</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
 <section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
   <meta itemprop="jobTitle" content="Full-Stack Developer and WordPress Specialist">
