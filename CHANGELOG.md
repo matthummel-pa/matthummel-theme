@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.54 — Journal grids in the block editor
+
+- Shared `resources/css/journal-blocks.css` for tool cards, ship pipe, and FAQ — used on the front and in `editor.css`.
+- Comparison figure gets a light frame; cards stretch evenly in a two-column grid; GPT chip no longer clips.
+- Editor canvas tokens + layout overrides so Group blocks match the live post.
+
 ## 3.1.53 — Post hero featured image + Gutenberg bodies
 
 - Journal single: featured image sits to the right of title/meta in the hero (stacks under meta on small screens). Removed the duplicate image above the article body.
