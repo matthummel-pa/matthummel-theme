@@ -21,7 +21,7 @@ What the 3.x Sage theme does, and where it lives.
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
-| Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js` |
+| Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` | `index.blade.php`, `archive.blade.php`, `partials/write-*.blade.php`, `partials/read-more.blade.php`, `resources/js/writing-tools.js`, `docs/posts/`, `.github/scripts/import-docs-posts.py` |
 | Single post | Reading progress bar, hero/bottom share (Bluesky, LinkedIn, Facebook, Reddit, copy link), “What changed” collapsible separator (closed by default), inline TOC, desktop sidebar, tags, author bio, post-end CTA (WordPress/full-stack or Power Platform), prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php`, `app/social-share.php`, `mh_enhance_what_changed()` |
 | Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback) | `template-contact.blade.php`, `app/contact.php` |
 | Search titles / meta | Document title and meta description from the theme (skill-first WordPress / full-stack wording, no city stuffing); Rank Math / Yoast values win on project pages when set; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc` |
@@ -34,6 +34,12 @@ What the 3.x Sage theme does, and where it lives.
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
+
+## Editor’s notes (3.1.50 AI comparison post)
+
+- New journal post lives in `docs/posts/`, not Blade. Local import: `.github/scripts/import-docs-posts.py`. Production still needs a wp-admin paste (this repo cannot publish matthummel.com).
+- Infographic is HTML+CSS in the post body. Classes: `mh-tool-grid`, `mh-tool-card`, `mh-ship-pipe`, `mh-ship-note`. FAQ reuses `.faq-list`.
+- Tools named are only ones already on Uses / Home / contact: Cursor, ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, Vite. No fake time savings.
 
 ## Editor’s notes (3.1.49 contrast and layout)
 

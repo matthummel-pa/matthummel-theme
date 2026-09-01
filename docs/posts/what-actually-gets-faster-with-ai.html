@@ -1,0 +1,187 @@
+<p>AI helps me finish the parts of a WordPress build I already know how to check. It does not replace the check.</p>
+<p>Scaffolding, boilerplate, and a first-pass Blade loop come back quicker than they used to. Architecture, testing, and the last yes still sit with me.</p>
+<p>This is a comparison, not a second workflow essay. The journal already has “AI for WordPress Development: My Cursor, ChatGPT, n8n &amp; MCP Workflow.” That post is the loop. This one is what each tool is good at, and what it costs.</p>
+<h2>What “Fast” Actually Means</h2>
+<p>“Fast” is easy to sell. I mean something narrower: less time on work that does not need a human rewrite.</p>
+<p>I will not claim a multiplier, a shorter calendar on every job, or that a model wrote the site. Recruiters should leave thinking I am faster on repeatable work, and still accountable for what ships.</p>
+<h3>Repeatable work</h3>
+<p>Renaming a page field, wiring a Vite entry, drafting a loop I have written before, or filling in a GitHub Actions step I already trust — those are patterns. Models are useful there because I can check the output against a pattern I already know.</p>
+<p>That is most of the speed. It is real. It is also easy to overstate.</p>
+<h3>Judgment</h3>
+<p>Which plugin stays, whether a shop can edit a field without me, whether a contrast pair fails, whether a webhook should write anywhere — that is judgment. Models guess. I still own the call.</p>
+<p>If I cannot explain a line at handoff, it does not ship. Same bar as a longer build. Less time on the parts that do not need a rewrite.</p>
+<h2>Tool Comparison</h2>
+<p>I only list tools that already show up on this site. This is not a ranking. Each card has a job, a cost, and a human step.</p>
+<div class="mh-ai-figure" role="region" aria-label="Comparison of tools I use to ship WordPress work">
+<ul class="mh-tool-grid">
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">Cursor</p>
+<p class="mh-tool-card__role">Primary editor</p>
+<dl>
+<dt>Best for</dt>
+<dd>Repo-aware changes across Blade, PHP, CSS, and JS. Inspecting a Sage 11 theme without pasting files into a chat.</dd>
+<dt>Weak at</dt>
+<dd>Invented WordPress APIs, filled context windows, and lock-in to one editor. A confident wrong answer still looks like a patch.</dd>
+<dt>Human still required</dt>
+<dd>Every diff. I read it, run it, and keep or throw it out.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">ChatGPT</p>
+<p class="mh-tool-card__role">Editor outside the repo</p>
+<dl>
+<dt>Best for</dt>
+<dd>Organizing a post after I already have the point of view. A second pass on shop-facing sentences.</dd>
+<dt>Weak at</dt>
+<dd>No theme context unless I paste it. Outdated plugin APIs. Anything secret should not go in the box.</dd>
+<dt>Human still required</dt>
+<dd>Voice, facts, and whether a sentence is true. I do not publish a draft I have not read.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">Claude</p>
+<p class="mh-tool-card__role">Longer first pass</p>
+<dl>
+<dt>Best for</dt>
+<dd>First-pass PHP and a careful read of a larger change when I want a second model, often through Cursor.</dd>
+<dt>Weak at</dt>
+<dd>The same hallucination risk as any model. Long files still fall out of context. It will invent ACF if I am not specific.</dd>
+<dt>Human still required</dt>
+<dd>Whether the approach matches this theme. Page fields stay in <code>app/page-fields.php</code> until I say otherwise.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">Gemini</p>
+<p class="mh-tool-card__role">On the AI shelf</p>
+<dl>
+<dt>Best for</dt>
+<dd>A second opinion when I already have Cursor, Claude, or ChatGPT in play. It is listed on this site because I use it, not because it is the daily editor.</dd>
+<dt>Weak at</dt>
+<dd>I do not live in it the way I live in Cursor. Treating it as the source of truth for a Sage repo is a mistake.</dd>
+<dt>Human still required</dt>
+<dd>Same review bar. Another model is not another developer.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">VS Code</p>
+<p class="mh-tool-card__role">Quiet editor</p>
+<dl>
+<dt>Best for</dt>
+<dd>The same files without an agent. Cursor is VS Code-compatible; this is the fallback when I want less noise, or a machine that is not set up for Cursor.</dd>
+<dt>Weak at</dt>
+<dd>No repo-aware agent. Scaffolding is slower because I type it.</dd>
+<dt>Human still required</dt>
+<dd>All of it. That can be the point.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">n8n</p>
+<p class="mh-tool-card__role">Workflows, not code</p>
+<dl>
+<dt>Best for</dt>
+<dd>Moving JSON between WordPress and another system. Contact and <code>/start/</code> submits go to an n8n CRM webhook, with <code>wp_mail</code> as fallback.</dd>
+<dt>Weak at</dt>
+<dd>Ops. Another login, another place to fail, some lock-in. It does not write the theme.</dd>
+<dt>Human still required</dt>
+<dd>What the payload contains, who can fire it, and what happens when the webhook is down.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">MCP</p>
+<p class="mh-tool-card__role">Narrow doors for agents</p>
+<dl>
+<dt>Best for</dt>
+<dd>Giving Cursor a controlled connection to a specific tool — WordPress via WPVibe, Notion, a calendar — instead of pasting secrets into chat.</dd>
+<dt>Weak at</dt>
+<dd>The protocol is not a security review. A write-enabled server is an API credential with a chat box. Context still runs out.</dd>
+<dt>Human still required</dt>
+<dd>What to connect, how narrow the write access is, and whether the action is allowed to run.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">GitHub Actions</p>
+<p class="mh-tool-card__role">Build and zip</p>
+<dl>
+<dt>Best for</dt>
+<dd>Repeatable production compile: Composer, npm, the theme zip, GitHub Release <code>theme-latest</code>. This is the ship path, not a chat window.</dd>
+<dt>Weak at</dt>
+<dd>Failed workflows still need a person. Secrets live in GitHub. The YAML is easy to paste in without reading.</dd>
+<dt>Human still required</dt>
+<dd>What runs on <code>main</code>, what never gets <code>--delete</code> over rsync, and whether the zip is complete.</dd>
+</dl>
+</li>
+<li class="mh-tool-card">
+<p class="mh-tool-card__name">Vite</p>
+<p class="mh-tool-card__role">Asset pipeline</p>
+<dl>
+<dt>Best for</dt>
+<dd>Compiling Tailwind v4, JS, and hashed files into <code>public/build/</code>. Sage 11 does not ship styled without it.</dd>
+<dt>Weak at</dt>
+<dd>It is not an AI tool. A wrong <code>base</code> path 404s every stylesheet. Models will guess the theme folder name.</dd>
+<dt>Human still required</dt>
+<dd>Config, the live folder name <code>matthummel</code>, and a build I have actually run.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<h2>How a Change Moves</h2>
+<p>From a brief to a handoff, the line is short. Models sit in the middle. They do not sit at both ends.</p>
+<ol class="mh-ship-pipe">
+<li>
+<p class="mh-ship-pipe__name">Brief</p>
+<p class="mh-ship-pipe__body">A shop note, an agency overflow ticket, or my own <a href="/start/">project brief</a>. I write the constraint. A model did not take the job.</p>
+</li>
+<li>
+<p class="mh-ship-pipe__name">Cursor</p>
+<p class="mh-ship-pipe__body">Scaffolding in the Sage repo — Blade, PHP helpers, CSS. ChatGPT or Claude may help with copy or a second pass. MCP only if the agent needs a connected tool, and only as narrow as the task.</p>
+</li>
+<li>
+<p class="mh-ship-pipe__name">Review</p>
+<p class="mh-ship-pipe__body">I read the diff. I run it on a real page. Hallucinated APIs, extra plugins, and copy that sounds like an agency deck get cut here.</p>
+</li>
+<li>
+<p class="mh-ship-pipe__name">Vite and CI</p>
+<p class="mh-ship-pipe__body"><code>npm run build</code>, then GitHub Actions on <code>main</code>: Composer, the production zip, Release <code>theme-latest</code>. PHP 8.3 stays the runtime. WP-CLI stays how I talk to WordPress.</p>
+</li>
+<li>
+<p class="mh-ship-pipe__name">Handoff</p>
+<p class="mh-ship-pipe__body">wp-admin fields the shop can edit, a short note, the Git repo in their name. If I cannot explain it, it is not handed off.</p>
+</li>
+</ol>
+<p class="mh-ship-note"><strong>Where n8n sits.</strong> Not in that coding line. After someone submits <a href="/contact/">contact</a> or a brief, WordPress POSTs JSON to n8n. If the webhook fails, <code>wp_mail</code> is the fallback. Automation is the handoff of a form, not the author of the theme.</p>
+<h2>What I Still Do by Hand</h2>
+<p>The list is longer than the pipeline, on purpose.</p>
+<ul>
+<li>Architecture, and what not to build.</li>
+<li>Permissions, nonces, and what an MCP connection may touch.</li>
+<li>Reading the diff, not only the summary.</li>
+<li>Testing on real pages, including a phone width.</li>
+<li>Voice in copy shops and agencies will actually read.</li>
+<li>Contrast, labels, and keyboard paths.</li>
+<li>Production approval.</li>
+</ul>
+<p>VS Code is still here for the days I want the files without an agent. That is not a failure of the tools. It is how I keep the review muscle.</p>
+<h2>FAQ</h2>
+<div class="faq-list">
+<details>
+<summary>Does AI write the PHP I ship?</summary>
+<p>It drafts. I ship the review. Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.</p>
+</details>
+<details>
+<summary>Why is there no winner in the comparison?</summary>
+<p>Because they do different jobs. Cursor is the editor. ChatGPT is useful outside the repo. n8n moves form data. GitHub Actions compiles the zip. Ranking them as if they were the same product would be a lie.</p>
+</details>
+<details>
+<summary>Will this replace a developer on my build?</summary>
+<p>No. Repeatable work got cheaper. Judgment did not. If you hire me, you are hiring the review, the handoff, and the parts I still do by hand — not a prompt log.</p>
+</details>
+<details>
+<summary>What about privacy and lock-in?</summary>
+<p>Chat windows and MCP servers see whatever I connect or paste. I keep write access narrow and secrets out of prompts. Cursor, n8n, and GitHub are each another vendor. I accept that cost because the review still happens in git I can leave.</p>
+</details>
+<details>
+<summary>How is this different from the workflow post?</summary>
+<p>That post is how the tools sit together on a WordPress job. This one is a comparison: best for, weak at, human still required. Read that one for the loop. Use this one when you want an honest split of speed versus judgment.</p>
+</details>
+</div>
+<p>If you want this review bar on a WordPress or Sage build for a shop or an agency, <a href="/contact/">say hello</a>.</p>

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.50 — AI tools comparison journal post
+
+- Journal source post: `docs/posts/what-actually-gets-faster-with-ai.html` (paste into wp-admin, or `python3 .github/scripts/import-docs-posts.py` locally). Date 2026-09-01, category Web Development.
+- Comparison + CSS pipeline infographic in `.post-prose` (`mh-tool-grid`, `mh-ship-pipe`). Tokens only; `prefers-reduced-motion`; stacks on small screens.
+- Not a second workflow essay. Existing “AI for WordPress Development: My Cursor, ChatGPT, n8n & MCP Workflow” stays the loop post.
+
 ## 3.1.49 — Contrast, layout, and one hire story
 
 - Stronger text contrast (body/muted/FAQ/nav/footer) against the existing navy/blue system. Blue accent used more consistently on the glance card, CONCEPT badges, links, and focus.
