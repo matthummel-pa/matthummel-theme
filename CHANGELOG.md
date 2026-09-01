@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.43 — Code practice title parsing
+
+- Preserve hyphenated titles such as `Front-end` and `Full-stack` when splitting Code practice lines.
+
 ## 3.1.42 — Bugbot copy/link repairs
 
 - Merge duplicate `home_help_p1` migration maps; apply help + short hero copy after hireable pass.
