@@ -34,7 +34,7 @@
   ];
 @endphp
 
-@component('partials.page-hero', ['extra' => 'start-hero'])
+@component('partials.page-hero', ['extra' => 'start-hero', 'split' => true, 'asideLabel' => __('Brief snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('start_kicker', __('Project brief', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('start_h1', __('Prepare for our first meeting.', 'sage')) }}
@@ -43,9 +43,27 @@
     {{ \App\field('start_lede', __('Four short steps. The answers agencies and shops usually cover in discovery. I read every brief before we talk so the first call is useful, not a blank page.', 'sage')) }}
   </p>
   <p class="start-hero-alt">
-    Prefer a quick note instead?
-    <a href="{{ home_url('/contact/') }}">Say hello on the contact form →</a>
+    {{ __('Prefer a quick note instead?', 'sage') }}
+    <a href="{{ home_url('/contact/') }}">{{ __('Say hello on the contact form', 'sage') }} <span aria-hidden="true">→</span></a>
   </p>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/start',
+      'icon' => 'briefcase',
+      'title' => __('Discovery brief', 'sage'),
+      'meta' => __('Four steps · one form', 'sage'),
+      'stats' => [
+        ['value' => '4', 'label' => __('Steps', 'sage')],
+        ['value' => __('Written', 'sage'), 'label' => __('Scope before build', 'sage')],
+        ['value' => '1–2', 'label' => __('Business days to reply', 'sage')],
+        ['value' => __('Remote', 'sage'), 'label' => __('Or on-site', 'sage')],
+      ],
+      'link' => [
+        'label' => __('Contact form instead', 'sage'),
+        'href' => home_url('/contact/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 <section class="start-main" aria-labelledby="start-form-heading">

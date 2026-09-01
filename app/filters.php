@@ -82,8 +82,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('A short discovery form for shops and agencies. Four steps so I can prepare for our first meeting. Say hello when you are ready.', 'sage'),
         ],
         'template-projects.blade.php' => [
-            'title' => __('Example WordPress Sites', 'sage').' | '.$brand,
-            'desc' => __('Live WordPress demos for tours, inns, and shops. See the stack or hire me for a real build in Gettysburg. Say hello.', 'sage'),
+            'title' => __('Example WordPress Sites in Gettysburg', 'sage').' | '.$brand,
+            'desc' => __('Live WordPress demos for tours, inns, and shops. Browse the gallery or hire me for a real build in Gettysburg. Say hello.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
@@ -91,11 +91,15 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-uses.blade.php' => [
             'title' => __('WordPress Dev Stack & Tools', 'sage').' | '.$brand,
-            'desc' => __('Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects. Some links may be affiliates — disclosed on the page.', 'sage'),
+            'desc' => __('Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects in Gettysburg and remote work. Affiliate links disclosed.', 'sage'),
         ],
         'template-resources.blade.php' => [
             'title' => __('Free WordPress Starters & Tools', 'sage').' | '.$brand,
-            'desc' => __('Open code, studio themes, and tools I recommend. Affiliate links are disclosed. Hire me for a full build.', 'sage'),
+            'desc' => __('Open code, studio themes, and tools I recommend for WordPress work. Affiliate links disclosed. Hire me for a full build.', 'sage'),
+        ],
+        'template-affiliate-disclosure.blade.php' => [
+            'title' => __('Affiliate Disclosure', 'sage').' | '.$brand,
+            'desc' => __('How compensated links work on Journal, Uses, Resources, and elsewhere. Portfolio and hire work come first. Questions welcome.', 'sage'),
         ],
         'template-hire.blade.php' => [
             'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,

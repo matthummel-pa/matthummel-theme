@@ -14,7 +14,7 @@
 <section class="ty-hero">
   <div class="container wide ty-hero-inner">
 
-    <div class="ty-confirm">
+    <div class="ty-confirm" role="status">
       <div class="ty-confirm__icon" aria-hidden="true">
         {!! \App\mh_svg_icon('check', 26) !!}
       </div>

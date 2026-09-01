@@ -2822,3 +2822,92 @@ add_action('init', function (): void {
 
     update_option('mh_site_content_seo_v2', true);
 }, 81);
+
+/**
+ * Work page body copy, Uses/Resources fields, and accessibility-related SEO (3.1.46).
+ */
+add_action('init', function (): void {
+    if (get_option('mh_site_content_a11y_v3')) {
+        return;
+    }
+
+    $content = [
+        'template-projects.blade.php' => [
+            'work_context_h2' => 'What these example sites show.',
+            'work_context_p1' => 'These are WordPress projects on this site — the same Sage, Tailwind, and Vite stack I use for client work. Each one is built for a specific type of local business so you can see layout, speed, and wp-admin editing in context.',
+            'work_context_p2' => 'Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>.',
+            'work_fit_h2' => 'Who these demos are for.',
+            'work_fit_intro' => 'Shops, agencies, and developers browse Work for different reasons. All three are welcome.',
+            'work_how_h2' => 'How to start from an example site.',
+            'work_how_intro' => 'You do not need to pick the perfect demo first. A short note about your shop and what you would change is enough.',
+            'work_faq_h2' => 'Questions about Work.',
+            'work_faq_intro' => 'Straight answers about concept sites, themes for sale, and hiring me for a production build.',
+            'seo_title' => 'Example WordPress Sites in Gettysburg | Matt Hummel',
+            'seo_desc' => 'Live WordPress demos for tours, inns, and shops. Browse the gallery or hire me for a real build in Gettysburg. Say hello.',
+        ],
+        'template-uses.blade.php' => [
+            'uses_h1' => 'What I use.',
+            'uses_lede' => 'The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.',
+            'uses_intro_h2' => 'How to read this page.',
+            'uses_intro_p' => 'I list what I actually use on shipped WordPress and web work. External links open in a new tab. Affiliate links are labeled and disclosed at the top when present.',
+            'seo_desc' => 'Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects in Gettysburg and remote work. Affiliate links disclosed.',
+        ],
+        'template-resources.blade.php' => [
+            'resources_h1' => 'Free starters, themes, and tools.',
+            'resources_lede' => 'A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.',
+            'resources_intro_h2' => 'What you will find here.',
+            'resources_intro_p' => 'Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.',
+        ],
+    ];
+
+    $oldSeoTitles = [
+        'Example WordPress Sites | Matt Hummel',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $template = page_template_key($id);
+        if ((int) get_option('page_for_posts') === $id) {
+            $template = 'index.blade.php';
+        }
+
+        if (! isset($content[$template])) {
+            continue;
+        }
+
+        foreach ($content[$template] as $field => $value) {
+            $key = 'mh_f_'.$field;
+            $cur = (string) get_post_meta($id, $key, true);
+
+            if ($field === 'seo_title') {
+                if ($cur === '' || in_array($cur, $oldSeoTitles, true)) {
+                    update_post_meta($id, $key, $value);
+                }
+
+                continue;
+            }
+
+            if ($field === 'seo_desc') {
+                if ($cur === '') {
+                    update_post_meta($id, $key, $value);
+                }
+
+                continue;
+            }
+
+            if ($cur === '') {
+                update_post_meta($id, $key, $value);
+            }
+        }
+    }
+
+    update_option('mh_site_content_a11y_v3', true);
+}, 81);

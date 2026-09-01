@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.46 — Work page content, site-wide a11y, Uses/Resources fields
+
+- Work page: field-driven context, audience cards, hire-from-demo steps, FAQ with JSON-LD; Gettysburg SEO title.
+- Uses and Resources: Page content (theme) fields for hero + intro; external links announce new window.
+- Start page: split hero with brief snapshot panel.
+- Affiliate disclosure: landmark heading for screen readers.
+- Work search: `aria-live` on empty results; filter nav and grid/list labels translated.
+- Migration `mh_site_content_a11y_v3` seeds new Work/Uses/Resources copy on live sites.
+
 ## 3.1.45 — Site-wide SEO, copy, and Woo design
 
 - Differentiated SEO titles and meta descriptions per page (Gettysburg on service landings, Say hello CTAs).

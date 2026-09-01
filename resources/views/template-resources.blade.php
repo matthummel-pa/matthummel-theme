@@ -22,9 +22,9 @@
 @section('content')
 
 @component('partials.page-hero', ['extra' => 'page-header--resources', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
-  <p class="eyebrow">{{ __('Resources', 'sage') }}</p>
-  <h1 class="display-title is-hero">{{ __('Free starters, themes, and tools.', 'sage') }}</h1>
-  <p class="lead">{{ __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage') }}</p>
+  <p class="eyebrow">{{ \App\field('resources_kicker', __('Resources', 'sage')) }}</p>
+  <h1 class="display-title is-hero">{{ \App\field('resources_h1', __('Free starters, themes, and tools.', 'sage')) }}</h1>
+  <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
     <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
@@ -63,6 +63,15 @@
   </div>
 @endif
 
+<section class="pf-section work-guide" aria-labelledby="resources-intro-heading">
+  <div class="container wide">
+    <h2 id="resources-intro-heading" class="display-title is-section">
+      {{ \App\field('resources_intro_h2', __('What you will find here.', 'sage')) }}
+    </h2>
+    <p class="lead work-guide__intro">{{ \App\field('resources_intro_p', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')) }}</p>
+  </div>
+</section>
+
 <div class="resources-body pf-section">
   <div class="container wide resources-body__grid">
     @foreach ($sections as $section)
@@ -92,7 +101,7 @@
                   rel="{{ $rel }}"
                   @if ($isAff) data-affiliate="true" class="affiliate-link" @endif
                   @if (\App\mh_is_external_url($item['url'])) target="_blank" @endif
-                >{{ $item['name'] }}</a>
+                >{{ $item['name'] }}@if (\App\mh_is_external_url($item['url']))<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>@endif</a>
               </h3>
               <p class="resources-card__blurb">{{ $item['blurb'] }}</p>
             </li>
