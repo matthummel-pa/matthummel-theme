@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.52 — AI comparison cards UX and SEO
+
+- Comparison cards: thin grey border, letter chips, Best for / Weak at / Human still required pills and dividers. No blue left stripe.
+- Pipeline steps are bordered cards with number chips, not a glance-style left bar. Hover is CSS-only and respects `prefers-reduced-motion`.
+- Journal source HTML expanded: named tools in the intro, H2 “AI for WordPress development”, How I Choose, extra FAQ. First person; no fake metrics.
+- Title/excerpt tightened for Rank Math (`What AI Speeds Up in WordPress | Matt Hummel`, excerpt under 155). Live slug still 404s until Matt pastes the post.
+
 ## 3.1.51 — AI tools comparison journal post
 
 - Journal source post: `docs/posts/what-actually-gets-faster-with-ai.html` (paste into wp-admin, or `python3 .github/scripts/import-docs-posts.py` locally). Date 2026-09-01, category Web Development.

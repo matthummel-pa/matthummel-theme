@@ -1,7 +1,7 @@
 <p>AI helps me finish the parts of a WordPress build I already know how to check. It does not replace the check.</p>
-<p>Scaffolding, boilerplate, and a first-pass Blade loop come back quicker than they used to. Architecture, testing, and the last yes still sit with me.</p>
+<p>I use Cursor in the Sage repo, ChatGPT and Claude for a second pass, n8n for form handoff, GitHub Actions for the zip, and Vite for the compile. Scaffolding, boilerplate, and a first-pass Blade loop come back quicker than they used to. Architecture, testing, and the last yes still sit with me.</p>
 <p>This is a comparison, not a second workflow essay. The journal already has “AI for WordPress Development: My Cursor, ChatGPT, n8n &amp; MCP Workflow.” That post is the loop. This one is what each tool is good at, and what it costs.</p>
-<h2>What “Fast” Actually Means</h2>
+<h2>AI for WordPress development: what “fast” actually means</h2>
 <p>“Fast” is easy to sell. I mean something narrower: less time on work that does not need a human rewrite.</p>
 <p>I will not claim a multiplier, a shorter calendar on every job, or that a model wrote the site. Recruiters should leave thinking I am faster on repeatable work, and still accountable for what ships.</p>
 <h3>Repeatable work</h3>
@@ -11,10 +11,10 @@
 <p>Which plugin stays, whether a shop can edit a field without me, whether a contrast pair fails, whether a webhook should write anywhere — that is judgment. Models guess. I still own the call.</p>
 <p>If I cannot explain a line at handoff, it does not ship. Same bar as a longer build. Less time on the parts that do not need a rewrite.</p>
 <h2>Tool Comparison</h2>
-<p>I only list tools that already show up on this site. This is not a ranking. Each card has a job, a cost, and a human step.</p>
+<p>I only list tools that already show up on this site: Cursor, ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, and Vite. This is not a ranking. Each card has a job, a cost, and a human step.</p>
 <div class="mh-ai-figure" role="region" aria-label="Comparison of tools I use to ship WordPress work">
 <ul class="mh-tool-grid">
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="Cu">
 <p class="mh-tool-card__name">Cursor</p>
 <p class="mh-tool-card__role">Primary editor</p>
 <dl>
@@ -26,7 +26,7 @@
 <dd>Every diff. I read it, run it, and keep or throw it out.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="GPT">
 <p class="mh-tool-card__name">ChatGPT</p>
 <p class="mh-tool-card__role">Editor outside the repo</p>
 <dl>
@@ -38,7 +38,7 @@
 <dd>Voice, facts, and whether a sentence is true. I do not publish a draft I have not read.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="Cl">
 <p class="mh-tool-card__name">Claude</p>
 <p class="mh-tool-card__role">Longer first pass</p>
 <dl>
@@ -50,7 +50,7 @@
 <dd>Whether the approach matches this theme. Page fields stay in <code>app/page-fields.php</code> until I say otherwise.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="Ge">
 <p class="mh-tool-card__name">Gemini</p>
 <p class="mh-tool-card__role">On the AI shelf</p>
 <dl>
@@ -62,7 +62,7 @@
 <dd>Same review bar. Another model is not another developer.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="VS">
 <p class="mh-tool-card__name">VS Code</p>
 <p class="mh-tool-card__role">Quiet editor</p>
 <dl>
@@ -74,7 +74,7 @@
 <dd>All of it. That can be the point.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="n8">
 <p class="mh-tool-card__name">n8n</p>
 <p class="mh-tool-card__role">Workflows, not code</p>
 <dl>
@@ -86,7 +86,7 @@
 <dd>What the payload contains, who can fire it, and what happens when the webhook is down.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="MC">
 <p class="mh-tool-card__name">MCP</p>
 <p class="mh-tool-card__role">Narrow doors for agents</p>
 <dl>
@@ -98,7 +98,7 @@
 <dd>What to connect, how narrow the write access is, and whether the action is allowed to run.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="GH">
 <p class="mh-tool-card__name">GitHub Actions</p>
 <p class="mh-tool-card__role">Build and zip</p>
 <dl>
@@ -110,7 +110,7 @@
 <dd>What runs on <code>main</code>, what never gets <code>--delete</code> over rsync, and whether the zip is complete.</dd>
 </dl>
 </li>
-<li class="mh-tool-card">
+<li class="mh-tool-card" data-mark="Vi">
 <p class="mh-tool-card__name">Vite</p>
 <p class="mh-tool-card__role">Asset pipeline</p>
 <dl>
@@ -124,6 +124,10 @@
 </li>
 </ul>
 </div>
+<h2>How I Choose</h2>
+<p>I start from the job, not the model. If the change is in this Sage repo, I open Cursor. If I need a sentence pass without the theme files, I use ChatGPT or Claude.</p>
+<p>If the work is a form payload, that is n8n. If it is a production compile, that is Vite and GitHub Actions. MCP only opens when an agent needs a narrow door to a connected tool.</p>
+<p>I do not rank them. A shop does not need all nine. I need the right one for the step, then a human review before anything ships.</p>
 <h2>How a Change Moves</h2>
 <p>From a brief to a handoff, the line is short. Models sit in the middle. They do not sit at both ends.</p>
 <ol class="mh-ship-pipe">
@@ -172,8 +176,20 @@
 <p>Because they do different jobs. Cursor is the editor. ChatGPT is useful outside the repo. n8n moves form data. GitHub Actions compiles the zip. Ranking them as if they were the same product would be a lie.</p>
 </details>
 <details>
+<summary>When do I use Cursor instead of ChatGPT?</summary>
+<p>When the work is in the theme files. Cursor sees the Sage repo. ChatGPT does not, unless I paste a slice, and I would rather not paste secrets or a whole template tree. Claude is the longer first pass, often through Cursor, when I want a second model on the same diff.</p>
+</details>
+<details>
+<summary>Is Vite an AI tool?</summary>
+<p>No. It is on this list because models keep guessing the theme folder and the <code>base</code> path. Vite compiles Tailwind and JS into <code>public/build/</code>. GitHub Actions is the same idea: the ship path, not a chat window. I keep both here so the comparison stays honest about what actually ships a WordPress theme.</p>
+</details>
+<details>
 <summary>Will this replace a developer on my build?</summary>
 <p>No. Repeatable work got cheaper. Judgment did not. If you hire me, you are hiring the review, the handoff, and the parts I still do by hand — not a prompt log.</p>
+</details>
+<details>
+<summary>What should a shop ask before I use these tools?</summary>
+<p>Ask what I will review, what never goes into a prompt, and who owns the repo after handoff. Ask whether a webhook writes anywhere, and what happens when n8n is down. Those are the questions I already answer in the cards. You do not need a tool ranking. You need a person who will still say no.</p>
 </details>
 <details>
 <summary>What about privacy and lock-in?</summary>
