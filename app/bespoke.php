@@ -2666,3 +2666,159 @@ add_action('init', function (): void {
     update_option('mh_home_hero_illu_v1', true);
     update_option('mh_bugbot_copy_fixes_v1', true);
 }, 80);
+
+/**
+ * One-time: differentiated SEO titles, meta descriptions, and hero copy (3.1.45).
+ */
+add_action('init', function (): void {
+    if (get_option('mh_site_content_seo_v2')) {
+        return;
+    }
+
+    $content = [
+        'front-page.blade.php' => [
+            'home_h1' => 'Matt Hummel — WordPress developer',
+            'home_role' => 'Full-stack themes, plugins, and web apps for shops and agencies.',
+            'home_lede' => 'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+            'seo_title' => 'WordPress Developer for Shops & Agencies | Matt Hummel',
+            'seo_desc' => 'I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.',
+        ],
+        'template-home.blade.php' => [
+            'home_h1' => 'Matt Hummel — WordPress developer',
+            'home_role' => 'Full-stack themes, plugins, and web apps for shops and agencies.',
+            'home_lede' => 'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+            'seo_title' => 'WordPress Developer for Shops & Agencies | Matt Hummel',
+            'seo_desc' => 'I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.',
+        ],
+        'template-services.blade.php' => [
+            'svc_kicker' => 'WordPress · plugins · web apps',
+            'svc_h1' => 'WordPress development for shops and agencies.',
+            'svc_lede' => 'Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.',
+            'seo_title' => 'WordPress Web Design in Gettysburg | Matt Hummel',
+            'seo_desc' => 'Custom WordPress sites, plugins, and web apps for Gettysburg shops and agencies. Written scope and clean handoffs. Say hello.',
+        ],
+        'template-about.blade.php' => [
+            'about_h1' => 'WordPress developer for shops and agencies.',
+            'about_lede' => 'I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.',
+            'seo_title' => 'About Matt Hummel, WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.',
+        ],
+        'template-hire.blade.php' => [
+            'hire_h1' => 'Hire a WordPress developer.',
+            'hire_lede' => 'Open for full-time roles, contract work, agency overflow, and freelance builds. WordPress, plugins, and full-stack apps — remote or on-site near Gettysburg.',
+            'seo_title' => 'Hire a WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Full-time, contract, and freelance WordPress work for shops and agencies. Remote or on-site near Gettysburg. Say hello.',
+        ],
+        'template-contact.blade.php' => [
+            'cnt_lede' => 'Ask about a WordPress site, plugin, role, or agency overflow. I read every note and reply within two business days.',
+            'seo_title' => 'Contact a WordPress Developer | Matt Hummel',
+            'seo_desc' => 'Start a conversation about a WordPress site, plugin, role, or agency overflow. I reply within two business days. Say hello.',
+        ],
+        'template-projects.blade.php' => [
+            'work_h1' => 'Example WordPress sites.',
+            'work_lede' => 'Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.',
+            'seo_title' => 'Example WordPress Sites | Matt Hummel',
+            'seo_desc' => 'Live WordPress demos for tours, inns, and shops. See the stack or hire me for a real build in Gettysburg. Say hello.',
+        ],
+        'template-code.blade.php' => [
+            'code_h1' => 'WordPress and full-stack code you can use.',
+            'seo_title' => 'Open WordPress & Full-Stack Code | Matt Hummel',
+            'seo_desc' => 'Public Sage themes, plugins, PHP, and GitHub activity you can fork or study. Hire me when you want a production build.',
+        ],
+        'template-now.blade.php' => [
+            'now_h1' => 'What I\'m doing right now.',
+            'now_lede' => 'A snapshot of where my time and attention are going — studio projects, open work, and writing.',
+            'seo_title' => 'What I\'m Building Now | Matt Hummel',
+            'seo_desc' => 'Studio projects, open work, and writing — updated periodically. Say hello about a role or build.',
+        ],
+        'index.blade.php' => [
+            'write_h1' => 'WordPress development notes.',
+            'write_lede' => 'Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.',
+            'seo_title' => 'WordPress Development Journal | Matt Hummel',
+            'seo_desc' => 'Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.',
+        ],
+    ];
+
+    $oldSeoTitles = [
+        'Full-Stack & WordPress Developer | Matt Hummel',
+        'Full-Stack & WordPress Development Services | Matt Hummel',
+        'About Matt Hummel — Full-Stack & WordPress Developer',
+        'Open-Source Full-Stack & WordPress Code | Matt Hummel',
+        'Hire a Full-Stack & WordPress Developer | Matt Hummel',
+        'Contact a Full-Stack & WordPress Developer | Matt Hummel',
+        'Journal — Full-Stack & WordPress Development | Matt Hummel',
+        'Selected WordPress Work | Matt Hummel',
+        'What I\'m doing now | Matt Hummel',
+        'Matt Hummel',
+        'Web Engineering for Growing Businesses & Agency Partners',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $template = page_template_key($id);
+        if ((int) get_option('page_for_posts') === $id) {
+            $template = 'index.blade.php';
+        }
+
+        if (! isset($content[$template])) {
+            continue;
+        }
+
+        foreach ($content[$template] as $field => $value) {
+            $key = 'mh_f_'.$field;
+            $cur = (string) get_post_meta($id, $key, true);
+            if ($field === 'seo_title') {
+                if ($cur === '' || in_array($cur, $oldSeoTitles, true)) {
+                    update_post_meta($id, $key, $value);
+                }
+
+                continue;
+            }
+            if ($field === 'seo_desc') {
+                if ($cur === '' || str_contains(strtolower($cur), 'full-stack & wordpress') || str_contains(strtolower($cur), 'no analytics, no ads')) {
+                    update_post_meta($id, $key, $value);
+                }
+
+                continue;
+            }
+
+            $oldValues = [
+                'home_h1' => ['Matt Hummel', 'Web Engineering for Growing Businesses & Agency Partners'],
+                'home_role' => ['Full-stack & WordPress developer.', 'Full-stack & WordPress developer', 'Full-stack web development, with WordPress at the center.'],
+                'home_lede' => [
+                    'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.',
+                    'I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.',
+                ],
+                'svc_h1' => ['Full-stack web development for businesses, agencies, and developers.'],
+                'svc_kicker' => ['Full-stack developer · WordPress specialist'],
+                'about_h1' => ['Full-stack developer. WordPress specialist.'],
+                'hire_h1' => ['Hire a full-stack developer with deep WordPress experience.', 'Open for new work.', 'Open for new work'],
+                'work_h1' => ['Selected WordPress work.', 'Example WordPress sites.'],
+                'code_h1' => ['Full-stack and WordPress code you can use.', 'Code & open-source work.'],
+                'write_h1' => ['Full-stack and WordPress development notes.'],
+            ];
+
+            if (isset($oldValues[$field])) {
+                if ($cur === '' || in_array($cur, $oldValues[$field], true)) {
+                    update_post_meta($id, $key, $value);
+                }
+
+                continue;
+            }
+
+            if ($cur === '') {
+                update_post_meta($id, $key, $value);
+            }
+        }
+    }
+
+    update_option('mh_site_content_seo_v2', true);
+}, 81);

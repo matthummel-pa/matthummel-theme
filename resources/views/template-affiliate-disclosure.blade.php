@@ -5,13 +5,31 @@
 @extends('layouts.app')
 
 @section('content')
-  <article class="container narrow legal-page">
-    <header class="pf-hero compact">
-      <p class="eyebrow">Transparency</p>
-      <h1>Affiliate Disclosure</h1>
-      <p class="lede">How recommendations and compensated links work on MattHummel.com — Journal, Uses, Resources, and elsewhere.</p>
-    </header>
+  @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Disclosure snapshot', 'sage')])
+    <p class="eyebrow">{{ __('Transparency', 'sage') }}</p>
+    <h1 class="display-title is-hero">{{ __('Affiliate disclosure', 'sage') }}</h1>
+    <p class="lead">{{ __('How recommendations and compensated links work on this site — Journal, Uses, Resources, and elsewhere.', 'sage') }}</p>
+    @slot('aside')
+      @include('partials.hero-panel', [
+        'chrome' => 'matthummel.com/disclosure',
+        'icon' => 'globe',
+        'title' => __('Honest labels', 'sage'),
+        'meta' => __('Portfolio first', 'sage'),
+        'stats' => [
+          ['value' => __('Uses', 'sage'), 'label' => __('Tool recommendations', 'sage')],
+          ['value' => __('Resources', 'sage'), 'label' => __('Starters & themes', 'sage')],
+          ['value' => __('Marked', 'sage'), 'label' => __('Affiliate links', 'sage')],
+          ['value' => __('Hire', 'sage'), 'label' => __('Primary offer', 'sage')],
+        ],
+        'link' => [
+          'label' => __('See resources', 'sage'),
+          'href' => home_url('/resources/'),
+        ],
+      ])
+    @endslot
+  @endcomponent
 
+  <article class="container narrow legal-page legal-page--boost">
     <div class="post-prose">
       <p>Some pages on this site include affiliate links. If you follow one of those links and make a purchase, I may earn a commission at no additional cost to you.</p>
 

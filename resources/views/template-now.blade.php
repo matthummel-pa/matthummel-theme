@@ -14,9 +14,9 @@
 
 {{-- ── HERO ─────────────────────────────────────────────── --}}
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Current snapshot', 'sage')])
-  <p class="eyebrow">Now</p>
-  <h1 class="display-title is-hero">What I'm doing right now.</h1>
-  <p class="lead">A snapshot of where my time and attention are going — updated {{ $updated }}. Inspired by <a href="https://nownownow.com" rel="noopener" target="_blank">nownownow.com</a>.</p>
+  <p class="eyebrow">{{ \App\field('now_kicker', __('Now', 'sage')) }}</p>
+  <h1 class="display-title is-hero">{{ \App\field('now_h1', __('What I\'m doing right now.', 'sage')) }}</h1>
+  <p class="lead">{{ \App\field('now_lede', __('A snapshot of where my time and attention are going — studio projects, open work, and writing.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 15) !!} Say hello

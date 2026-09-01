@@ -23,10 +23,10 @@
   <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
     <h1 class="display-title is-hero">
-      {{ \App\field('about_h1', __('Full-stack developer. WordPress specialist.', 'sage')) }}
+      {{ \App\field('about_h1', __('WordPress developer for shops and agencies.', 'sage')) }}
     </h1>
     <p class="lead about-hero__lede">
-      {{ \App\field('about_lede', __('I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.', 'sage')) }}
+        {{ \App\field('about_lede', __('I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.', 'sage')) }}
     </p>
     @if ($isHireable)
       <p class="hire-avail about-hero__avail">

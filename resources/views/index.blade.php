@@ -12,27 +12,45 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Journal snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('write_h1', __('Full-stack and WordPress development notes.', 'sage'), $writeId) }}
+    {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('write_lede', __('Practical notes on WordPress, PHP, JavaScript, React, APIs, and the tools I use on real projects. Most include code you can adapt or use.', 'sage'), $writeId) }}
+    {{ \App\field('write_lede', __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage'), $writeId) }}
   </p>
   <div class="journal-hero-actions">
     <div class="search-wrap write-hero-search">
       @include('forms.search', ['placeholder' => \App\field('write_search_ph', __('Search posts', 'sage'), $writeId)])
     </div>
-    <div class="journal-hero-links">
-      <a class="journal-hero-link" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
-        {!! \App\mh_svg_icon('rss', 14) !!} RSS feed
-      </a>
-      <a class="journal-hero-link" href="#journal-posts">
-        {!! \App\mh_svg_icon('book-open', 14) !!} Browse posts ↓
-      </a>
-    </div>
+    <a class="h-text-arrow" href="#journal-posts">
+      {{ __('Browse posts', 'sage') }} <span aria-hidden="true">↓</span>
+    </a>
   </div>
+  @slot('aside')
+    @php
+      $postCount = (int) wp_count_posts('post')->publish;
+      $catCount = count(get_categories(['hide_empty' => true]));
+    @endphp
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/blog',
+      'icon' => 'pen',
+      'title' => __('Writing', 'sage'),
+      'meta' => __('Code-friendly notes', 'sage'),
+      'stats' => [
+        ['value' => number_format_i18n($postCount), 'label' => __('Published posts', 'sage')],
+        ['value' => number_format_i18n(max(1, $catCount)), 'label' => __('Topics', 'sage')],
+        ['value' => 'RSS', 'label' => __('Calm follow', 'sage')],
+        ['value' => __('Open', 'sage'), 'label' => __('Fork the code', 'sage')],
+      ],
+      'link' => [
+        'label' => __('RSS feed', 'sage'),
+        'href' => $rssUrl,
+        'external' => true,
+      ],
+    ])
+  @endslot
 @endcomponent
 
 {{-- POSTS --}}

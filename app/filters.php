@@ -66,80 +66,80 @@ function mh_seo_landing_defaults(?int $post_id = null): array
 
     $map = [
         'front-page.blade.php' => [
-            'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack and WordPress developer open for full-time, contract, and freelance work. Portfolio, themes, and disclosed tool recommendations.',
+            'title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+            'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-home.blade.php' => [
-            'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack and WordPress developer open for full-time, contract, and freelance work. Portfolio, themes, and disclosed tool recommendations.',
+            'title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+            'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-services.blade.php' => [
-            'title' => 'Full-Stack & WordPress Development Services | '.$brand,
-            'desc' => 'Custom WordPress platforms, plugins, integrations, and full-stack web applications for businesses, agencies, and development teams.',
+            'title' => __('WordPress Web Design in Gettysburg', 'sage').' | '.$brand,
+            'desc' => __('Custom WordPress sites, plugins, and web apps for Gettysburg shops and agencies. Written scope and clean handoffs. Say hello.', 'sage'),
         ],
         'template-start.blade.php' => [
-            'title' => 'Project brief for WordPress work | '.$brand,
-            'desc' => 'A short discovery form for agencies and shops. Four steps so I can prepare for our first meeting.',
+            'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
+            'desc' => __('A short discovery form for shops and agencies. Four steps so I can prepare for our first meeting. Say hello when you are ready.', 'sage'),
         ],
         'template-projects.blade.php' => [
-            'title' => 'Selected WordPress Work | '.$brand,
-            'desc' => 'Concept WordPress projects with demos and stack notes. Hire me to adapt one, or buy a theme when it is for sale.',
+            'title' => __('Example WordPress Sites', 'sage').' | '.$brand,
+            'desc' => __('Live WordPress demos for tours, inns, and shops. See the stack or hire me for a real build in Gettysburg. Say hello.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
-            'title' => 'Message received | '.$brand,
-            'desc' => 'Your message is in my inbox. I reply within a day.',
+            'title' => __('Message Received', 'sage').' | '.$brand,
+            'desc' => __('Your note is in my inbox. I reply within one or two business days.', 'sage'),
         ],
         'template-uses.blade.php' => [
-            'title' => 'Uses — tools and stack | '.$brand,
-            'desc' => 'Tools I use on real WordPress and full-stack projects. Some links may be affiliates — disclosure on the page.',
+            'title' => __('WordPress Dev Stack & Tools', 'sage').' | '.$brand,
+            'desc' => __('Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects. Some links may be affiliates — disclosed on the page.', 'sage'),
         ],
         'template-resources.blade.php' => [
-            'title' => 'Resources — starters, themes, and tools | '.$brand,
-            'desc' => 'Free starters, themes from studio work, and tools I recommend. Affiliate links are disclosed. Hire me for a full build.',
+            'title' => __('Free WordPress Starters & Tools', 'sage').' | '.$brand,
+            'desc' => __('Open code, studio themes, and tools I recommend. Affiliate links are disclosed. Hire me for a full build.', 'sage'),
         ],
         'template-hire.blade.php' => [
-            'title' => 'Hire a Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Available for full-stack web applications, WordPress development, plugins, integrations, agency overflow, and full-time or contract roles.',
+            'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,
+            'desc' => __('Full-time, contract, and freelance WordPress work for shops and agencies. Remote or on-site near Gettysburg. Say hello.', 'sage'),
         ],
         'template-changelog.blade.php' => [
-            'title' => 'Changelog | '.$brand,
-            'desc' => 'A public record of notable updates to matthummel.com — new pages, design changes, accessibility fixes, and stack notes.',
+            'title' => __('Theme Changelog', 'sage').' | '.$brand,
+            'desc' => __('Notable updates to matthummel.com — new pages, design changes, accessibility fixes, and stack notes.', 'sage'),
         ],
         'template-accessibility.blade.php' => [
-            'title' => 'Accessibility statement | '.$brand,
-            'desc' => 'WCAG 2.1 Level AA and Section 508 conformance statement for matthummel.com. Features, known limitations, and how to report issues.',
+            'title' => __('Accessibility Statement', 'sage').' | '.$brand,
+            'desc' => __('WCAG 2.1 Level AA goals for matthummel.com. Features, known limits, and how to report issues.', 'sage'),
         ],
         'template-privacy.blade.php' => [
-            'title' => 'Privacy policy | '.$brand,
-            'desc' => 'What data matthummel.com collects, how it is used, and your rights. No analytics, no ads, no data selling.',
+            'title' => __('Privacy Policy', 'sage').' | '.$brand,
+            'desc' => __('What matthummel.com collects through forms and analytics, how it is used, and your rights. Contact me with questions.', 'sage'),
         ],
         'template-terms.blade.php' => [
-            'title' => 'Terms of use | '.$brand,
-            'desc' => 'Terms covering code reuse (MIT licence), written content copyright, example-site disclaimers, and acceptable use of matthummel.com.',
+            'title' => __('Terms of Use', 'sage').' | '.$brand,
+            'desc' => __('Code reuse, content copyright, example-site disclaimers, and acceptable use of matthummel.com.', 'sage'),
         ],
         'template-woocommerce.blade.php' => [
             'title' => '',
-            'desc' => 'Cart, checkout, and account for WordPress themes and digital products from Matt Hummel.',
+            'desc' => __('Cart, checkout, and account for digital WordPress themes from studio Work projects.', 'sage'),
         ],
         'template-contact.blade.php' => [
-            'title' => 'Contact a Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.',
+            'title' => __('Contact a WordPress Developer', 'sage').' | '.$brand,
+            'desc' => __('Start a conversation about a WordPress site, plugin, role, or agency overflow. I reply within two business days. Say hello.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => 'About Matt Hummel — Full-Stack & WordPress Developer',
-            'desc' => 'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software. Say hello.',
+            'title' => __('About Matt Hummel, WordPress Developer', 'sage').' | '.$brand,
+            'desc' => __('Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.', 'sage'),
         ],
         'template-code.blade.php' => [
-            'title' => 'Open-Source Full-Stack & WordPress Code | '.$brand,
-            'desc' => 'Public React apps, Sage themes, WordPress plugins, PHP, TypeScript, and GitHub activity. Browse projects, fork repos, or collaborate.',
+            'title' => __('Open WordPress & Full-Stack Code', 'sage').' | '.$brand,
+            'desc' => __('Public Sage themes, plugins, PHP, and GitHub activity you can fork or study. Hire me when you want a production build.', 'sage'),
         ],
         'template-now.blade.php' => [
-            'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Open for full-time and contract work, shipping WordPress projects and themes, writing notes, and recommending tools with clear disclosure.',
+            'title' => __('What I\'m Building Now', 'sage').' | '.$brand,
+            'desc' => __('Studio projects, open work, and writing — updated periodically. Say hello about a role or build.', 'sage'),
         ],
         'index.blade.php' => [
-            'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
-            'desc' => 'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.',
+            'title' => __('WordPress Development Journal', 'sage').' | '.$brand,
+            'desc' => __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage'),
         ],
     ];
 
@@ -171,7 +171,7 @@ function mh_seo_document_title(): string
             $label = __('Shop', 'sage');
         }
         $built = is_shop()
-            ? __('WordPress Themes', 'sage').' | '.$brand
+            ? __('WordPress Theme Shop', 'sage').' | '.$brand
             : $label.' | '.__('Themes', 'sage').' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
@@ -310,7 +310,7 @@ function mh_seo_plugin_meta(int $post_id, array $keys): string|false
 function mh_seo_meta_description(): string
 {
     if (function_exists('is_shop') && is_shop()) {
-        $desc = __('Themes from studio Work projects. Browse the concept page for context, buy the pack here, or say hello to hire me for a custom build.', 'sage');
+        $desc = __('Studio WordPress themes with concept pages for context. Buy the pack here or say hello for a custom Gettysburg build.', 'sage');
 
         return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
     }
