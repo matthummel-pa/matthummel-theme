@@ -11576,3 +11576,141 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
   .h-principle__practice { display: block; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.1.51 — journal AI comparison infographic (post HTML in .post-prose)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.post-prose .mh-ai-figure {
+  margin: 0 0 1.75em;
+  max-width: 100%;
+}
+.post-prose .mh-tool-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .85rem;
+}
+.post-prose .mh-tool-grid > li {
+  margin: 0;
+}
+.mh-tool-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--white);
+  padding: 1rem 1.1rem 1.05rem;
+  border-left: 3px solid var(--color-accent);
+}
+.mh-tool-card__name {
+  margin: 0;
+  font: 700 1.05rem/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+}
+.mh-tool-card__role {
+  margin: .2rem 0 .75rem;
+  font: 600 .78rem/1.3 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.mh-tool-card dl {
+  margin: 0;
+  display: grid;
+  gap: .65rem;
+}
+.mh-tool-card dt {
+  margin: 0;
+  font: 700 .78rem/1.3 var(--font-display);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+}
+.mh-tool-card dd {
+  margin: .2rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: .95em;
+  line-height: 1.6;
+}
+.mh-ship-pipe {
+  list-style: none;
+  margin: 0 0 1.45em;
+  padding: 0 0 0 1.15rem;
+  border-left: 2px solid var(--color-border);
+}
+.post-prose .mh-ship-pipe > li {
+  position: relative;
+  margin: 0 0 1.1rem;
+  padding: 0 0 .15rem .2rem;
+}
+.post-prose .mh-ship-pipe > li:last-child { margin-bottom: 0; }
+.mh-ship-pipe > li::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.15rem - 5px);
+  top: .45rem;
+  width: .7rem;
+  height: .7rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--white);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+.mh-ship-pipe__name {
+  margin: 0 0 .25rem;
+  font: 700 1rem/1.25 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+}
+.mh-ship-pipe__body {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: .98em;
+  line-height: 1.65;
+}
+.mh-ship-note {
+  margin: 0 0 1.45em;
+  padding: .9rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--blue-50);
+  color: var(--color-text-secondary);
+  font-size: .98em;
+  line-height: 1.65;
+}
+.mh-ship-note strong { color: var(--color-text); }
+
+@media (min-width: 720px) {
+  .post-prose .mh-tool-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .post-prose .mh-tool-grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mh-tool-card,
+  .mh-ship-pipe > li::before,
+  .mh-ship-note {
+    transition: none;
+  }
+}
+
+html.mh-dark .mh-tool-card,
+html.mh-dark .mh-ship-note {
+  background: var(--gray-900);
+  border-color: var(--gray-700);
+}
+html.mh-dark .mh-tool-card dt,
+html.mh-dark .mh-tool-card__name,
+html.mh-dark .mh-ship-pipe__name,
+html.mh-dark .mh-ship-note strong {
+  color: var(--gray-50);
+}
+html.mh-dark .mh-ship-pipe {
+  border-left-color: var(--gray-700);
+}
+html.mh-dark .mh-ship-pipe > li::before {
+  border-color: var(--gray-900);
+}
+

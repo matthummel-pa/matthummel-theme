@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.51 — AI tools comparison journal post
+
+- Journal source post: `docs/posts/what-actually-gets-faster-with-ai.html` (paste into wp-admin, or `python3 .github/scripts/import-docs-posts.py` locally). Date 2026-09-01, category Web Development.
+- Comparison + CSS pipeline infographic in `.post-prose` (`mh-tool-grid`, `mh-ship-pipe`). Tokens only; `prefers-reduced-motion`; stacks on small screens.
+- Not a second workflow essay. Existing “AI for WordPress Development: My Cursor, ChatGPT, n8n & MCP Workflow” stays the loop post.
+
 ## 3.1.50 — Adjacent work, one sentence
 
 - One sentence, reused: WordPress is the specialty; APIs, React, Power Platform, and deploys are in range because of 17 years in-house problem-solving — not a second specialty.

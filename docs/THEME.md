@@ -227,12 +227,14 @@ matthummel/
 │   └── scripts/
 │       ├── preserve-vite-assets.py  # Keep old Vite hashes so cached HTML never 404s
 │       ├── db-pull.sh               # Shell-only DB pull (no WP bootstrap needed)
-│       └── import-live-posts.py     # Import matthummel.com posts into local WP
+│       ├── import-live-posts.py     # Import matthummel.com posts into local WP
+│       └── import-docs-posts.py     # Import docs/posts/*.meta.json into local WP
 │
 ├── docs/
 │   ├── ERRORS.md            # Error reference and debug cheatsheet
 │   ├── FEATURES.md          # Feature log and dev tools reference
 │   ├── INSTALL.md           # WordPress install after deploy
+│   ├── posts/               # Journal HTML + meta for paste / local import
 │   └── sage/                # Sage template and deploy docs
 │
 ├── public/                  # Gitignored — built by CI
@@ -292,13 +294,14 @@ Site: `http://localhost:8080` · Admin: `http://localhost:8080/wp-admin` (user: 
 | `vendor/bin/pint` | Fix PHP code style |
 | `wp acorn view:clear` | Clear compiled Blade views (run after any template edit) |
 
-### Import live posts (optional)
+### Import journal posts (optional)
 
 ```bash
+python3 .github/scripts/import-docs-posts.py
 python3 .github/scripts/import-live-posts.py
 ```
 
-Scrapes all published posts from matthummel.com and imports them locally with categories, tags, and content.
+`import-docs-posts.py` loads `docs/posts/*.meta.json` + HTML (posts authored in this repo). `import-live-posts.py` scrapes already-published posts from matthummel.com. Neither deletes existing posts. Production publish is still wp-admin paste; Cloud cannot push to the live site.
 
 ---
 
