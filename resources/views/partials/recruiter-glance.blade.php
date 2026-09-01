@@ -30,13 +30,16 @@
         @endforeach
       </dl>
 
-      @if (($glance['employers'] ?? '') !== '' || ($glance['power'] ?? '') !== '')
+      @if (($glance['employers'] ?? '') !== '' || ($glance['power'] ?? '') !== '' || ($glance['range'] ?? '') !== '')
         <div class="h-glance__proof">
           @if (($glance['employers'] ?? '') !== '')
             <p>{!! $glance['employers'] !!}</p>
           @endif
           @if (($glance['power'] ?? '') !== '')
             <p>{!! $glance['power'] !!}</p>
+          @endif
+          @if (($glance['range'] ?? '') !== '')
+            <p>{{ $glance['range'] }}</p>
           @endif
         </div>
       @endif

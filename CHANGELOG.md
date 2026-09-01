@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.50 — Adjacent work, one sentence
+
+- One sentence, reused: WordPress is the specialty; APIs, React, Power Platform, and deploys are in range because of 17 years in-house problem-solving — not a second specialty.
+- Recruiter glance, About services intro, Hire hero, and the home FAQ (“Do you only do WordPress?”) share that wording. Empty fields keep the default; saved custom copy is left alone.
+
 ## 3.1.49 — Contrast, layout, and one hire story
 
 - Stronger text contrast (body/muted/FAQ/nav/footer) against the existing navy/blue system. Blue accent used more consistently on the glance card, CONCEPT badges, links, and focus.

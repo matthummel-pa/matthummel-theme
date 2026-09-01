@@ -201,8 +201,8 @@
       'a' => 'PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.',
     ],
     [
-      'q' => 'Do you build full-stack applications outside WordPress?',
-      'a' => 'Yes. I build React and TypeScript interfaces, PHP or Node services, API integrations, authentication, and data-backed applications. WordPress is my specialty, not my only stack.',
+      'q' => 'Do you only do WordPress?',
+      'a' => \App\mh_adjacent_range_copy(),
     ],
   ];
 @endphp
