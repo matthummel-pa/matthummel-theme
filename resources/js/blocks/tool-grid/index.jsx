@@ -1,39 +1,110 @@
-import { registerBlockType } from '@wordpress/blocks'
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor'
+import { registerBlockType, createBlock } from '@wordpress/blocks'
+import {
+  useBlockProps,
+  InnerBlocks,
+  InspectorControls,
+} from '@wordpress/block-editor'
+import { PanelBody, TextControl, Button } from '@wordpress/components'
+import { useDispatch, useSelect } from '@wordpress/data'
 import { __ } from '@wordpress/i18n'
 
 const ALLOWED = ['matthummel/tool-card']
 const TEMPLATE = [
-  ['matthummel/tool-card', { mark: 'Cu', name: 'Cursor', role: 'Primary editor' }],
-  ['matthummel/tool-card', { mark: 'GPT', name: 'ChatGPT', role: 'Editor outside the repo' }],
+  [
+    'matthummel/tool-card',
+    {
+      icon: 'cursor-ai',
+      mark: 'Cu',
+      name: 'Cursor',
+      role: 'Primary editor',
+    },
+  ],
+  [
+    'matthummel/tool-card',
+    {
+      icon: 'chatgpt',
+      mark: 'GPT',
+      name: 'ChatGPT',
+      role: 'Editor outside the repo',
+    },
+  ],
 ]
 
-function Edit() {
+function Edit({ clientId, attributes, setAttributes }) {
+  const { ariaLabel } = attributes
+  const { insertBlock } = useDispatch('core/block-editor')
+  const blockCount = useSelect(
+    (select) => select('core/block-editor').getBlockCount(clientId),
+    [clientId]
+  )
+
   const blockProps = useBlockProps({
     className: 'mh-ai-figure mh-tool-grid-wrap',
   })
 
+  function addToolCard() {
+    insertBlock(
+      createBlock('matthummel/tool-card', {
+        mark: 'Cu',
+        icon: '',
+        name: '',
+        role: '',
+      }),
+      blockCount,
+      clientId,
+      false
+    )
+  }
+
   return (
-    <div {...blockProps} role="region" aria-label={__('Tool comparison', 'sage')}>
-      <div className="mh-tool-grid">
-        <InnerBlocks
-          allowedBlocks={ALLOWED}
-          template={TEMPLATE}
-          templateLock={false}
-          orientation="horizontal"
-        />
+    <>
+      <InspectorControls>
+        <PanelBody title={__('Tool Blocks', 'sage')} initialOpen={true}>
+          <TextControl
+            label={__('Region aria-label', 'sage')}
+            value={ariaLabel}
+            onChange={(value) => setAttributes({ ariaLabel: value })}
+            help={__('Spoken by screen readers for the whole comparison grid.', 'sage')}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
+          <Button variant="primary" onClick={addToolCard} style={{ marginTop: '12px' }}>
+            {__('Add tool card', 'sage')}
+          </Button>
+        </PanelBody>
+      </InspectorControls>
+      <div {...blockProps} role="region" aria-label={ariaLabel || __('Tool comparison', 'sage')}>
+        <div className="mh-tool-grid">
+          <InnerBlocks
+            allowedBlocks={ALLOWED}
+            template={TEMPLATE}
+            templateLock={false}
+            orientation="horizontal"
+            renderAppender={() => <InnerBlocks.ButtonBlockAppender />}
+          />
+        </div>
+        <div className="mh-tool-blocks-add">
+          <Button variant="secondary" onClick={addToolCard}>
+            {__('Add tool card', 'sage')}
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
-function Save() {
+function Save({ attributes }) {
+  const { ariaLabel } = attributes
   const blockProps = useBlockProps.save({
     className: 'mh-ai-figure mh-tool-grid-wrap',
   })
 
   return (
-    <div {...blockProps} role="region" aria-label="Comparison of tools I use to ship WordPress work">
+    <div
+      {...blockProps}
+      role="region"
+      aria-label={ariaLabel || 'Comparison of tools I use to ship WordPress work'}
+    >
       <div className="mh-tool-grid">
         <InnerBlocks.Content />
       </div>
@@ -43,14 +114,20 @@ function Save() {
 
 registerBlockType('matthummel/tool-grid', {
   apiVersion: 3,
-  title: __('Tool comparison grid', 'sage'),
-  description: __('Two-column grid of AI / workflow tool cards.', 'sage'),
+  title: __('Tool Blocks', 'sage'),
+  description: __('Comparison grid of tool cards. Add as many cards as you need.', 'sage'),
   category: 'matthummel',
   icon: 'grid-view',
   supports: {
     html: false,
     align: false,
     className: true,
+  },
+  attributes: {
+    ariaLabel: {
+      type: 'string',
+      default: 'Comparison of tools I use to ship WordPress work',
+    },
   },
   edit: Edit,
   save: Save,
