@@ -8,6 +8,7 @@
 - Homepage about strip no longer repeats years, availability types, or Power Platform (those live in the glance).
 - Featured GitHub list is pressroot, matthummel-theme, tocflow, ridgesandvalleys, keepary (tutorial forks filtered). Journal de-emphasizes same-day clusters.
 - One-shot `mh_hireability_recruiter_v1` updates matching saved page meta without overwriting custom copy.
+- Project singles compile again after a Blade `@php()` / `@endphp` clash on `post_class`.
 
 ## 3.1.47 — Home hero SEO copy
 

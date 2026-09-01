@@ -97,9 +97,10 @@
   if ($sidebar['stars'] > 0) {
     $detailRows[] = [__('GitHub stars', 'sage'), (string) $sidebar['stars'], $sidebar['github']];
   }
+  $articleClass = implode(' ', get_post_class($pageClass));
 @endphp
 
-<article @php(post_class($pageClass))>
+<article class="{{ $articleClass }}">
   @component('partials.page-hero')
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
@@ -313,7 +314,7 @@
         @endif
       </div>
 
-      <aside class="concept-aside" aria-label="{{ $isProduct ? __('Buy details', 'sage') : __('Spec details', 'sage') }}">
+      <aside class="concept-aside" aria-label="{{ $isTheme ? __('Theme pack', 'sage') : ($isPlugin ? __('Plugin pack', 'sage') : __('Spec details', 'sage')) }}">
         @if ($isProduct && is_array($product))
           <div class="concept-aside-card concept-aside-card--buy">
             <p class="concept-buy-kicker">{{ $isTheme ? __('Theme license', 'sage') : __('Plugin license', 'sage') }}</p>

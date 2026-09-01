@@ -312,7 +312,7 @@ function mh_project_is_spec(array $project): bool
 }
 
 /**
- * Short label for spec/concept Work cards. Empty on sellable products.
+ * Short label for spec/concept Work cards. Theme packs for sale still read as Concept.
  *
  * @param  array<string, mixed>  $project
  */
