@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.41 — Home hero polish
+
+- Quiet the above-the-fold hero: one kicker, shorter role/lede, Hire + Browse only.
+- Move live stats into a right-column illustration (window chrome, soft orbs, status pill, 2×2 grid).
+- Availability badge lives on the illustration instead of duplicating in the copy column.
+
 ## 3.1.40 — 2026-09-01
 
 ### Improved

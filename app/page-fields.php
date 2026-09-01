@@ -179,8 +179,8 @@ function mh_home_fields(): array
         __('Hero', 'sage') => [
             ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
             ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
-            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack & WordPress developer — open for full-time, contract, and freelance.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.', 'sage')],
+            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack & WordPress developer.', 'sage')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.', 'sage')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('Browse work', 'sage')],

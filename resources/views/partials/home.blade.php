@@ -214,7 +214,7 @@
   if (! empty($gh['followers'])) {
     $heroStats[] = [
       'value' => number_format_i18n((int) $gh['followers']),
-      'label' => __('GitHub followers', 'sage'),
+      'label' => __('Followers', 'sage'),
       'href' => $ghUrl.'?tab=followers',
     ];
   }
@@ -225,38 +225,30 @@
   ];
   $heroStats[] = [
     'value' => __('Full stack', 'sage'),
-    'label' => __('WordPress specialist', 'sage'),
+    'label' => __('WordPress focus', 'sage'),
     'href' => null,
   ];
+  $ghLogin = \App\mh_github_login();
 @endphp
 <section class="h-hero" aria-labelledby="h-hero-name">
   <div class="container wide h-hero__inner">
 
     <div class="h-hero__copy">
-
-      <div class="h-hero__badges">
-        <span class="h-badge">
-          {!! \App\mh_svg_icon('code', 13) !!}
-          {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
-        </span>
-        @if (\App\mh_is_hireable($gh))
-          <span class="h-badge h-badge--open">
-            @include('partials.avail-mark', ['gh' => $gh])
-            {{ \App\mh_availability_label($gh, __('Available for work', 'sage')) }}
-          </span>
-        @endif
-      </div>
+      <p class="h-hero__kicker">
+        {!! \App\mh_svg_icon('code', 14) !!}
+        {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
+      </p>
 
       <h1 id="h-hero-name" class="h-hero__name">
         {{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}
       </h1>
 
       <p class="h-hero__role">
-        {{ \App\field('home_role', __('Full-stack & WordPress developer — open for full-time, contract, and freelance.', 'sage')) }}
+        {{ \App\field('home_role', __('Full-stack & WordPress developer.', 'sage')) }}
       </p>
 
       <p class="h-hero__lede">
-        {{ \App\field('home_lede', __('I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.', 'sage')) }}
+        {{ \App\field('home_lede', __('I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.', 'sage')) }}
       </p>
 
       <div class="h-hero__actions">
@@ -268,37 +260,59 @@
           {{ \App\field('home_cta_secondary', __('Browse work', 'sage')) }}
           <span aria-hidden="true">→</span>
         </a>
-        <a class="h-text-arrow h-text-arrow--quiet" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-          {!! \App\mh_svg_icon('github', 15) !!}
-          {{ __('GitHub', 'sage') }}
-        </a>
       </div>
-
     </div>
 
-    <aside class="h-hero__viz" aria-label="{{ __('Highlights', 'sage') }}">
-      <div class="h-hero-viz">
-        <div class="h-hero-viz__frame" aria-hidden="true">
-          <span class="h-hero-viz__corner h-hero-viz__corner--tl"></span>
-          <span class="h-hero-viz__corner h-hero-viz__corner--tr"></span>
-          <span class="h-hero-viz__corner h-hero-viz__corner--bl"></span>
-          <span class="h-hero-viz__corner h-hero-viz__corner--br"></span>
-        </div>
-        <p class="h-hero-viz__eyebrow">{!! \App\mh_svg_icon('github', 14) !!} {{ __('Live from GitHub', 'sage') }}</p>
-        <dl class="h-hero-viz__grid">
-          @foreach ($heroStats as $stat)
-            <div class="h-hero-viz__cell">
-              <dt>
-                @if (! empty($stat['href']))
-                  <a href="{{ esc_url($stat['href']) }}" rel="me noopener" target="_blank">{{ $stat['value'] }}</a>
-                @else
-                  {{ $stat['value'] }}
-                @endif
-              </dt>
-              <dd>{{ $stat['label'] }}</dd>
+    <aside class="h-hero__viz" aria-label="{{ __('Profile highlights', 'sage') }}">
+      <div class="h-hero-illu">
+        <span class="h-hero-illu__glow" aria-hidden="true"></span>
+        <span class="h-hero-illu__orb h-hero-illu__orb--a" aria-hidden="true"></span>
+        <span class="h-hero-illu__orb h-hero-illu__orb--b" aria-hidden="true"></span>
+
+        <div class="h-hero-illu__card">
+          <div class="h-hero-illu__chrome" aria-hidden="true">
+            <span class="h-hero-illu__dot"></span>
+            <span class="h-hero-illu__dot"></span>
+            <span class="h-hero-illu__dot"></span>
+            <span class="h-hero-illu__url">github.com/{{ $ghLogin }}</span>
+          </div>
+
+          <div class="h-hero-illu__head">
+            <div class="h-hero-illu__identity">
+              {!! \App\mh_svg_icon('github', 18) !!}
+              <div>
+                <p class="h-hero-illu__handle">{{ $ghLogin }}</p>
+                <p class="h-hero-illu__meta">{{ __('Live profile signals', 'sage') }}</p>
+              </div>
             </div>
-          @endforeach
-        </dl>
+            @if (\App\mh_is_hireable($gh))
+              <span class="h-hero-illu__status">
+                @include('partials.avail-mark', ['gh' => $gh])
+                {{ \App\mh_availability_label($gh, __('Open', 'sage')) }}
+              </span>
+            @endif
+          </div>
+
+          <dl class="h-hero-illu__stats">
+            @foreach ($heroStats as $stat)
+              <div class="h-hero-illu__stat">
+                <dt>
+                  @if (! empty($stat['href']))
+                    <a href="{{ esc_url($stat['href']) }}" rel="me noopener" target="_blank">{{ $stat['value'] }}</a>
+                  @else
+                    {{ $stat['value'] }}
+                  @endif
+                </dt>
+                <dd>{{ $stat['label'] }}</dd>
+              </div>
+            @endforeach
+          </dl>
+
+          <a class="h-hero-illu__link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+            {{ __('View GitHub', 'sage') }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </aside>
 

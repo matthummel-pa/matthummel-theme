@@ -2583,4 +2583,49 @@ function mh_apply_hireable_affiliate_copy_v1(): void
     update_option('mh_hireable_affiliate_copy_v1', true);
 }
 
+/**
+ * One-time: shorten home hero role/lede defaults after illustration layout.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_hero_illu_v1')) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if (! $home) {
+        update_option('mh_home_hero_illu_v1', true);
+
+        return;
+    }
+
+    $id = (int) $home->ID;
+    $roleKey = 'mh_f_home_role';
+    $ledeKey = 'mh_f_home_lede';
+    $oldRoles = [
+        'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+        'Full-stack & WordPress developer — open for full-time, contract, and freelance',
+    ];
+    $oldLedes = [
+        'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
+        'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build',
+    ];
+    $role = (string) get_post_meta($id, $roleKey, true);
+    $lede = (string) get_post_meta($id, $ledeKey, true);
+    if ($role === '' || in_array($role, $oldRoles, true)) {
+        update_post_meta($id, $roleKey, 'Full-stack & WordPress developer.');
+    }
+    if ($lede === '' || in_array($lede, $oldLedes, true)) {
+        update_post_meta(
+            $id,
+            $ledeKey,
+            'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.'
+        );
+    }
+    update_option('mh_home_hero_illu_v1', true);
+}, 32);
+
 add_action('init', __NAMESPACE__.'\\mh_apply_hireable_affiliate_copy_v1', 74);
