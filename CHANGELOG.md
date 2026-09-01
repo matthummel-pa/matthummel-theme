@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.45 — Site-wide SEO, copy, and Woo design
+
+- Differentiated SEO titles and meta descriptions per page (Gettysburg on service landings, Say hello CTAs).
+- Refreshed hero copy defaults for Home, Services, About, Hire, Work, Code, and Journal.
+- One-shot `mh_site_content_seo_v2` updates saved page meta.
+- WooCommerce shop, cart, checkout, and account heroes use split layout + trust panels; catalog/checkout shells polished.
+- Affiliate disclosure and Journal heroes match marketing split pattern.
+
 ## 3.1.44 — Marketing page hero panels
 
 - Split marketing heroes: copy left, illustration panel right (Services, Hire, Contact, Work, Code, Now, Resources, Uses, About).

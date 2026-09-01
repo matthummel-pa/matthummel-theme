@@ -6,9 +6,10 @@
 }
 .concept-aside-card--buy {
   background:
-    linear-gradient(160deg, color-mix(in srgb, var(--color-accent) 10%, transparent) 0%, transparent 55%),
+    linear-gradient(160deg, color-mix(in srgb, var(--color-accent) 12%, transparent) 0%, transparent 55%),
     var(--white);
-  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-accent) 32%, var(--color-border));
+  box-shadow: 0 16px 40px -28px color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
 .concept-buy-kicker {
   margin: 0 0 .35rem;

@@ -17,13 +17,50 @@
   $isCart = function_exists('is_cart') && is_cart();
   $isCheckout = function_exists('is_checkout') && is_checkout();
   $isAccount = function_exists('is_account_page') && is_account_page();
+  $cartCount = function_exists('WC') && WC()->cart ? (int) WC()->cart->get_cart_contents_count() : 0;
   $eyebrow = __('Shop', 'sage');
+  $panelTitle = __('Secure checkout', 'sage');
+  $panelMeta = __('Digital WordPress themes', 'sage');
+  $panelStats = [
+    ['value' => __('SSL', 'sage'), 'label' => __('Encrypted checkout', 'sage')],
+    ['value' => __('Email', 'sage'), 'label' => __('Delivery after payment', 'sage')],
+    ['value' => __('Support', 'sage'), 'label' => __('Questions welcome', 'sage')],
+    ['value' => __('Work', 'sage'), 'label' => __('Concept pages first', 'sage')],
+  ];
+  $panelLink = ['label' => __('Browse work', 'sage'), 'href' => $catalogUrl];
   if ($isCart) {
     $eyebrow = __('Cart', 'sage');
+    $panelTitle = __('Your cart', 'sage');
+    $panelMeta = __('Review before checkout', 'sage');
+    $panelStats = [
+      ['value' => number_format_i18n($cartCount), 'label' => __('Items in cart', 'sage')],
+      ['value' => __('Edit', 'sage'), 'label' => __('Quantities below', 'sage')],
+      ['value' => __('Digital', 'sage'), 'label' => __('No shipping', 'sage')],
+      ['value' => __('Help', 'sage'), 'label' => __('Say hello anytime', 'sage')],
+    ];
+    $panelLink = ['label' => __('Continue shopping', 'sage'), 'href' => $shopUrl];
   } elseif ($isCheckout) {
     $eyebrow = __('Checkout', 'sage');
+    $panelTitle = __('Almost done', 'sage');
+    $panelMeta = __('Secure payment', 'sage');
+    $panelStats = [
+      ['value' => __('Secure', 'sage'), 'label' => __('Encrypted fields', 'sage')],
+      ['value' => __('Digital', 'sage'), 'label' => __('Instant access', 'sage')],
+      ['value' => __('Email', 'sage'), 'label' => __('Receipt + files', 'sage')],
+      ['value' => __('Questions', 'sage'), 'label' => __('Contact me', 'sage')],
+    ];
+    $panelLink = ['label' => __('Back to cart', 'sage'), 'href' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/')];
   } elseif ($isAccount) {
     $eyebrow = __('Account', 'sage');
+    $panelTitle = __('Your orders', 'sage');
+    $panelMeta = __('Downloads & history', 'sage');
+    $panelStats = [
+      ['value' => __('Orders', 'sage'), 'label' => __('Purchase history', 'sage')],
+      ['value' => __('Files', 'sage'), 'label' => __('Theme downloads', 'sage')],
+      ['value' => __('Profile', 'sage'), 'label' => __('Billing details', 'sage')],
+      ['value' => __('Help', 'sage'), 'label' => __('Say hello', 'sage')],
+    ];
+    $panelLink = ['label' => __('Open shop', 'sage'), 'href' => $shopUrl];
   }
   $lead = '';
   if ($isCart) {
@@ -49,16 +86,26 @@
 @endphp
 
 @section('content')
-  @component('partials.page-hero', ['extra' => $heroExtra])
+  @component('partials.page-hero', ['extra' => $heroExtra, 'split' => true, 'asideLabel' => __('Shop details', 'sage')])
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
     <p class="eyebrow">{{ $eyebrow }}</p>
     <h1 class="display-title is-hero">{{ $title }}</h1>
     @if ($lead !== '')
       <p class="lead">{{ $lead }}</p>
     @endif
+    @slot('aside')
+      @include('partials.hero-panel', [
+        'chrome' => 'matthummel.com'.($isCart ? '/cart' : ($isCheckout ? '/checkout' : ($isAccount ? '/account' : '/shop'))),
+        'icon' => $isAccount ? 'user' : 'briefcase',
+        'title' => $panelTitle,
+        'meta' => $panelMeta,
+        'stats' => $panelStats,
+        'link' => $panelLink,
+      ])
+    @endslot
   @endcomponent
 
-  <div class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}">
+  <div class="container wide page-block woocommerce-wrap woo-checkout-shell{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}">
     @if ($shortcode !== '')
       {!! do_shortcode($shortcode) !!}
       @if ($isCheckout && function_exists('WC') && WC()->cart && WC()->cart->is_empty())

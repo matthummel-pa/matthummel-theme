@@ -48,13 +48,9 @@
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Hire snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('hire_kicker', __('Hire me', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
-      {{ \App\field('hire_h1', \App\mh_availability_label($gh, __('Open for new work', 'sage')).'.') }}
-    @else
-      {{ \App\field('hire_h1', __('Hire a full-stack developer with deep WordPress experience.', 'sage')) }}
-    @endif
+    {{ \App\field('hire_h1', __('Hire a WordPress developer.', 'sage')) }}
   </h1>
-  <p class="lead">{{ \App\field('hire_lede', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Remote or on-site.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('hire_lede', __('Open for full-time roles, contract work, agency overflow, and freelance builds. WordPress, plugins, and full-stack apps — remote or on-site near Gettysburg.', 'sage')) }}</p>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])

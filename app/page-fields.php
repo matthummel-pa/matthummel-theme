@@ -178,9 +178,9 @@ function mh_home_fields(): array
     return [
         __('Hero', 'sage') => [
             ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
-            ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel', 'sage')],
-            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack & WordPress developer.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.', 'sage')],
+            ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel — WordPress developer', 'sage')],
+            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('Browse work', 'sage')],
@@ -279,8 +279,8 @@ function page_field_map(): array
         'template-about.blade.php' => [
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('Matt Hummel', 'sage')],
-                ['about_h1', __('Heading', 'sage'), 'text', __('Full-stack developer. WordPress specialist.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.', 'sage')],
+                ['about_h1', __('Heading', 'sage'), 'text', __('WordPress developer for shops and agencies.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
@@ -358,9 +358,9 @@ function page_field_map(): array
         ],
         'template-services.blade.php' => [
             __('Intro', 'sage') => [
-                ['svc_kicker', __('Kicker', 'sage'), 'text', __('Full-stack developer · WordPress specialist', 'sage')],
-                ['svc_h1', __('Heading', 'sage'), 'text', __('Full-stack web development for businesses, agencies, and developers.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.', 'sage')],
+                ['svc_kicker', __('Kicker', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
+                ['svc_h1', __('Heading', 'sage'), 'text', __('WordPress development for shops and agencies.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -453,7 +453,7 @@ function page_field_map(): array
         'template-code.blade.php' => [
             __('Intro', 'sage') => [
                 ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
-                ['code_h1', __('Heading', 'sage'), 'text', __('Code & open-source work.', 'sage')],
+                ['code_h1', __('Heading', 'sage'), 'text', __('WordPress and full-stack code you can use.', 'sage')],
                 ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')],
             ],
             __('Practice', 'sage') => [
@@ -505,8 +505,8 @@ function page_field_map(): array
         'template-hire.blade.php' => [
             __('Intro', 'sage') => [
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
-                ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a full-stack developer with deep WordPress experience.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Available for full-stack web applications, custom WordPress work, plugins, integrations, agency overflow, and full-time or contract roles. Remote or on-site.', 'sage')],
+                ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time roles, contract work, agency overflow, and freelance builds. WordPress, plugins, and full-stack apps — remote or on-site near Gettysburg.', 'sage')],
             ],
             __('LinkedIn', 'sage') => [
                 ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
@@ -532,8 +532,8 @@ function page_field_map(): array
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', __('Work', 'sage')],
-                ['work_h1', __('Heading', 'sage'), 'text', __('Selected WordPress work.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Concept sites with real stack notes and demos. Hire me to adapt one for your shop, buy a theme when it is for sale, or study the free code on GitHub.', 'sage')],
+                ['work_h1', __('Heading', 'sage'), 'text', __('Example WordPress sites.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.', 'sage')],
                 ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search sites…', 'sage')],
                 ['work_cta_view', __('View project label', 'sage'), 'text', __('View project', 'sage')],
@@ -562,8 +562,8 @@ function page_field_map(): array
         'index.blade.php' => [
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
-                ['write_h1', __('Heading', 'sage'), 'text', __('Full-stack and WordPress development notes.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical notes on WordPress, PHP, JavaScript, React, APIs, and the tools I use on real projects. Most include code you can adapt or use.', 'sage')],
+                ['write_h1', __('Heading', 'sage'), 'text', __('WordPress development notes.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
                 ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Recent posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],

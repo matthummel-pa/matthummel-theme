@@ -17,6 +17,14 @@
     $shopUrl = function_exists('wc_get_page_permalink')
       ? wc_get_page_permalink('shop')
       : home_url('/shop/');
+    $productCount = 0;
+    if (function_exists('wc_get_products')) {
+        $productCount = count(wc_get_products([
+            'limit' => -1,
+            'status' => 'publish',
+            'return' => 'ids',
+        ]));
+    }
     $crumbItems = [
       ['label' => __('Home', 'sage'), 'url' => home_url('/')],
       ['label' => __('Work', 'sage'), 'url' => $catalogUrl],
@@ -29,9 +37,9 @@
     }
   @endphp
 
-  @component('partials.page-hero', ['extra' => 'page-header--shop'])
+  @component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Shop snapshot', 'sage')])
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
-    <p class="eyebrow">{{ __('Shop', 'sage') }}</p>
+    <p class="eyebrow">{{ __('Theme shop', 'sage') }}</p>
     @if (apply_filters('woocommerce_show_page_title', true))
       <h1 class="display-title is-hero woocommerce-products-header__title">{{ $archiveTitle }}</h1>
     @endif
@@ -43,52 +51,74 @@
         echo $archiveDesc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
       @endphp
       @if ($archiveDesc === '' && $isShop)
-        <p>{{ __('WordPress themes from studio Work projects. Open a concept page for the story; buy here when you want the pack — or hire me to build something custom.', 'sage') }}</p>
+        <p>{{ __('Studio WordPress themes from Work projects. Read the concept page first, buy the pack here, or hire me for a custom build.', 'sage') }}</p>
       @endif
     </div>
-    <p class="about-hero-links" style="margin-top:1rem">
-      <a href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
-      <a href="{{ esc_url(home_url('/contact/')) }}">{{ __('Get help', 'sage') }}</a>
-    </p>
+    <div class="page-header-split__actions">
+      <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+      <a class="h-text-arrow" href="{{ esc_url(home_url('/contact/')) }}">
+        {{ __('Get help', 'sage') }} <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    @slot('aside')
+      @include('partials.hero-panel', [
+        'chrome' => 'matthummel.com/shop',
+        'icon' => 'briefcase',
+        'title' => __('Digital themes', 'sage'),
+        'meta' => __('From studio Work projects', 'sage'),
+        'stats' => [
+          ['value' => number_format_i18n($productCount), 'label' => __('Themes listed', 'sage')],
+          ['value' => __('Instant', 'sage'), 'label' => __('Digital delivery', 'sage')],
+          ['value' => 'Sage', 'label' => __('Tailwind · Vite', 'sage')],
+          ['value' => __('Support', 'sage'), 'label' => __('Say hello anytime', 'sage')],
+        ],
+        'link' => [
+          'label' => __('See example sites', 'sage'),
+          'href' => $catalogUrl,
+        ],
+      ])
+    @endslot
   @endcomponent
 
-  @php
-    do_action('woocommerce_before_main_content');
-  @endphp
-
-  @if (woocommerce_product_loop())
+  <div class="container wide woo-catalog-shell">
     @php
-      do_action('woocommerce_before_shop_loop');
-      woocommerce_product_loop_start();
+      do_action('woocommerce_before_main_content');
     @endphp
 
-    @if (wc_get_loop_prop('total'))
-      @while (have_posts())
-        @php
-          the_post();
-          do_action('woocommerce_shop_loop');
-          wc_get_template_part('content', 'product');
-        @endphp
-      @endwhile
+    @if (woocommerce_product_loop())
+      @php
+        do_action('woocommerce_before_shop_loop');
+        woocommerce_product_loop_start();
+      @endphp
+
+      @if (wc_get_loop_prop('total'))
+        @while (have_posts())
+          @php
+            the_post();
+            do_action('woocommerce_shop_loop');
+            wc_get_template_part('content', 'product');
+          @endphp
+        @endwhile
+      @endif
+
+      @php
+        woocommerce_product_loop_end();
+        do_action('woocommerce_after_shop_loop');
+      @endphp
+    @else
+      <div class="woo-empty" role="status">
+        <p class="woo-empty__title">{{ __('No products yet', 'sage') }}</p>
+        <p class="woo-empty__text">{{ __('Studio themes sync here when they are marked for sale. Browse work in the meantime, or say hello about a build.', 'sage') }}</p>
+        <p class="woo-empty__actions">
+          <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+          <a class="btn btn-outline" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'sage') }}</a>
+        </p>
+      </div>
     @endif
 
     @php
-      woocommerce_product_loop_end();
-      do_action('woocommerce_after_shop_loop');
+      do_action('woocommerce_after_main_content');
+      do_action('get_footer', 'shop');
     @endphp
-  @else
-    <div class="woo-empty" role="status">
-      <p class="woo-empty__title">{{ __('No products yet', 'sage') }}</p>
-      <p class="woo-empty__text">{{ __('Studio themes sync here when they are marked for sale. Browse work in the meantime, or say hello about a build.', 'sage') }}</p>
-      <p class="woo-empty__actions">
-        <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
-        <a class="btn btn-outline" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'sage') }}</a>
-      </p>
-    </div>
-  @endif
-
-  @php
-    do_action('woocommerce_after_main_content');
-    do_action('get_footer', 'shop');
-  @endphp
+  </div>
 @endsection

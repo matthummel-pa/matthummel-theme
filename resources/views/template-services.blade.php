@@ -192,12 +192,12 @@
 
 {{-- ── HERO ─────────────────────────────────────────── --}}
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Service snapshot', 'sage')])
-  <p class="eyebrow">{{ \App\field('svc_kicker', __('Full-stack developer · WordPress specialist', 'sage')) }}</p>
+  <p class="eyebrow">{{ \App\field('svc_kicker', __('WordPress · plugins · web apps', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('svc_h1', __('Full-stack web development for businesses, agencies, and developers.', 'sage')) }}
+    {{ \App\field('svc_h1', __('WordPress development for shops and agencies.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('svc_lede', __('Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.', 'sage')) }}
+    {{ \App\field('svc_lede', __('Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.', 'sage')) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
