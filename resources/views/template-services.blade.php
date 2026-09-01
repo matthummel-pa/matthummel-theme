@@ -191,7 +191,7 @@
 <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 
 {{-- ── HERO ─────────────────────────────────────────── --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Service snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('svc_kicker', __('Full-stack developer · WordPress specialist', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('svc_h1', __('Full-stack web development for businesses, agencies, and developers.', 'sage')) }}
@@ -199,7 +199,7 @@
   <p class="lead">
     {{ \App\field('svc_lede', __('Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.', 'sage')) }}
   </p>
-  <div class="svc-hero-actions">
+  <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
@@ -207,19 +207,25 @@
       See example sites <span aria-hidden="true">→</span>
     </a>
   </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/services',
+      'icon' => 'briefcase',
+      'title' => __('How I work', 'sage'),
+      'meta' => __('Written scope · clean handoff', 'sage'),
+      'stats' => [
+        ['value' => '4', 'label' => __('Service pillars', 'sage')],
+        ['value' => __('Scope first', 'sage'), 'label' => __('Before build', 'sage')],
+        ['value' => __('You own it', 'sage'), 'label' => __('At handoff', 'sage')],
+        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
+      ],
+      'link' => [
+        'label' => __('See example sites', 'sage'),
+        'href' => home_url('/projects/'),
+      ],
+    ])
+  @endslot
 @endcomponent
-
-{{-- ── COMMITMENT STRIP ────────────────────────────── --}}
-<div class="svc-strip" aria-label="Key commitments">
-  <div class="container wide svc-strip__inner">
-    @foreach ($commitments as $c)
-      <div class="svc-strip__item">
-        {!! \App\mh_svg_icon($c['icon'], 15) !!}
-        <span>{{ $c['label'] }}</span>
-      </div>
-    @endforeach
-  </div>
-</div>
 
 {{-- ── WHO THIS IS FOR ─────────────────────────────── --}}
 <section class="pf-section" aria-labelledby="svc-who-heading" id="fit">

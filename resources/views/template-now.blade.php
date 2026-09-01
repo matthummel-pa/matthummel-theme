@@ -13,26 +13,39 @@
 @section('content')
 
 {{-- ── HERO ─────────────────────────────────────────────── --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Current snapshot', 'sage')])
   <p class="eyebrow">Now</p>
   <h1 class="display-title is-hero">What I'm doing right now.</h1>
   <p class="lead">A snapshot of where my time and attention are going — updated {{ $updated }}. Inspired by <a href="https://nownownow.com" rel="noopener" target="_blank">nownownow.com</a>.</p>
-  <div class="now-hero-meta">
-    @if (\App\mh_is_hireable($gh))
-      <span class="now-hero-status">
-        @include('partials.avail-mark', ['gh' => $gh])
-        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-      </span>
-    @endif
-    <span class="now-hero-location">
-      {!! \App\mh_svg_icon('clock', 14) !!} Eastern Time
-    </span>
+  <div class="page-header-split__actions">
+    <a class="btn" href="{{ home_url('/contact/') }}">
+      {!! \App\mh_svg_icon('mail', 15) !!} Say hello
+    </a>
+    <a class="h-text-arrow" href="{{ home_url('/about/') }}">
+      Full background <span aria-hidden="true">→</span>
+    </a>
   </div>
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="{{ home_url('/about/') }}">{!! \App\mh_svg_icon('user', 14) !!} Full background</a>
-    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('briefcase', 14) !!} Hire me</a>
-    <a href="{{ home_url('/uses/') }}">{!! \App\mh_svg_icon('code', 14) !!} Stack I use</a>
-  </p>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/now',
+      'icon' => 'clock',
+      'title' => __('Updated', 'sage'),
+      'meta' => $updated,
+      'status' => \App\mh_is_hireable($gh)
+        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
+        : null,
+      'stats' => [
+        ['value' => __('Studio', 'sage'), 'label' => __('Example sites', 'sage')],
+        ['value' => __('Journal', 'sage'), 'label' => __('Writing', 'sage')],
+        ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
+        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
+      ],
+      'link' => [
+        'label' => __('See example sites', 'sage'),
+        'href' => home_url('/projects/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 {{-- ── MAIN CONTENT + SIDEBAR ─────────────────────────── --}}

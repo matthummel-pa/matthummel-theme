@@ -45,7 +45,7 @@
 @section('content')
 
 {{-- ── HERO ────────────────────────────────────────────── --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Hire snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('hire_kicker', __('Hire me', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
@@ -61,22 +61,7 @@
       {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — reply within a day
     </p>
   @endif
-  <div class="hire-good-for">
-    <span class="hire-good-for__label">Good for:</span>
-    @foreach ($goodFor as [$label, $icon])
-      <span class="hire-good-for__pill">
-        {!! \App\mh_svg_icon($icon, 13) !!} {{ $label }}
-      </span>
-    @endforeach
-  </div>
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="#linkedin">{!! \App\mh_svg_icon('linkedin', 15) !!} {{ __('LinkedIn', 'sage') }}</a>
-    <a href="#resume">{!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Resume', 'sage') }}</a>
-    <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} {{ __('Skills', 'sage') }}</a>
-    <a href="#process">{!! \App\mh_svg_icon('calendar', 15) !!} {{ __('Process', 'sage') }}</a>
-    <a href="#contact-cta">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Say hello', 'sage') }}</a>
-  </p>
-  <div class="svc-hero-actions" style="margin-top:1.25rem">
+  <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
@@ -88,6 +73,28 @@
       Full services detail <span aria-hidden="true">→</span>
     </a>
   </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/hire',
+      'icon' => 'briefcase',
+      'title' => __('Good fit for', 'sage'),
+      'meta' => __('Shops · agencies · developers', 'sage'),
+      'status' => (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
+        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
+        : null,
+      'stats' => [
+        ['value' => number_format_i18n($roleCount), 'label' => __('Roles on resume', 'sage')],
+        ['value' => number_format_i18n(count($skills)), 'label' => __('Skills listed', 'sage')],
+        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
+        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress focus', 'sage')],
+      ],
+      'link' => [
+        'label' => __('View LinkedIn', 'sage'),
+        'href' => $liUrl,
+        'external' => true,
+      ],
+    ])
+  @endslot
 @endcomponent
 
 {{-- ── LINKEDIN PROFILE ────────────────────────────────── --}}

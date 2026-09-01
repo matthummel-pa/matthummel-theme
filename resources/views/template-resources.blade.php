@@ -8,11 +8,12 @@
   $sections = \App\mh_resources_catalog();
   $disclosureUrl = \App\mh_affiliate_disclosure_url();
   $hasAffiliate = false;
+  $resourceCount = 0;
   foreach ($sections as $section) {
+    $resourceCount += count($section['items']);
     foreach ($section['items'] as $item) {
       if (! empty($item['affiliate'])) {
         $hasAffiliate = true;
-        break 2;
       }
     }
   }
@@ -20,15 +21,34 @@
 
 @section('content')
 
-@component('partials.page-hero', ['extra' => 'page-header--resources'])
+@component('partials.page-hero', ['extra' => 'page-header--resources', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
   <p class="eyebrow">{{ __('Resources', 'sage') }}</p>
   <h1 class="display-title is-hero">{{ __('Free starters, themes, and tools.', 'sage') }}</h1>
   <p class="lead">{{ __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage') }}</p>
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-    <a href="{{ home_url('/projects/') }}">{{ __('Browse work', 'sage') }}</a>
-    <a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a>
-  </p>
+  <div class="page-header-split__actions">
+    <a class="btn" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
+    <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+      {{ __('Browse work', 'sage') }} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/resources',
+      'icon' => 'globe',
+      'title' => __('Resource catalog', 'sage'),
+      'meta' => __('Starters · themes · tools', 'sage'),
+      'stats' => [
+        ['value' => number_format_i18n(count($sections)), 'label' => __('Sections', 'sage')],
+        ['value' => number_format_i18n($resourceCount), 'label' => __('Listed items', 'sage')],
+        ['value' => __('Open code', 'sage'), 'label' => __('Free starters', 'sage')],
+        ['value' => $hasAffiliate ? __('Disclosed', 'sage') : __('None', 'sage'), 'label' => __('Affiliate links', 'sage')],
+      ],
+      'link' => [
+        'label' => __('View code', 'sage'),
+        'href' => home_url('/code/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 @if ($hasAffiliate)

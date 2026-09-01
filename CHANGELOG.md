@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.44 — Marketing page hero panels
+
+- Split marketing heroes: copy left, illustration panel right (Services, Hire, Contact, Work, Code, Now, Resources, Uses, About).
+- Reusable `hero-panel` partial shares home hero window-card styling.
+- Decluttered heroes: removed link rows, pill strips, and duplicate stat bands where the panel covers them.
+
 ## 3.1.43 — Code practice title parsing
 
 - Preserve hyphenated titles such as `Front-end` and `Full-stack` when splitting Code practice lines.

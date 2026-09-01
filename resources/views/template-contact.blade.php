@@ -18,7 +18,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero', ['extra' => 'contact-hero'])
+@component('partials.page-hero', ['extra' => 'contact-hero', 'split' => true, 'asideLabel' => __('Contact details', 'sage')])
   <p class="eyebrow">{{ \App\field('cnt_kicker', __('Contact', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}
@@ -26,22 +26,33 @@
   <p class="lead">
     {{ \App\field('cnt_lede', __('Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I read everything and reply within one or two business days.', 'sage')) }}
   </p>
-  <div class="contact-hero-signals">
-    @if (\App\mh_is_hireable($gh))
-      <span class="contact-signal">
-        @include('partials.avail-mark', ['gh' => $gh])
-        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-      </span>
-    @endif
-    <span class="contact-signal">
-      {!! \App\mh_svg_icon('calendar', 14) !!}
-      Replies within 1–2 business days
-    </span>
-    <span class="contact-signal">
-      {!! \App\mh_svg_icon('map', 14) !!}
-      Eastern Time
-    </span>
-  </div>
+  @if (\App\mh_is_hireable($gh))
+    <p class="hire-avail">
+      @include('partials.avail-mark', ['gh' => $gh])
+      {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
+    </p>
+  @endif
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/contact',
+      'icon' => 'mail',
+      'title' => __('Direct to inbox', 'sage'),
+      'meta' => __('No ticket queue', 'sage'),
+      'status' => \App\mh_is_hireable($gh)
+        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
+        : null,
+      'stats' => [
+        ['value' => '1–2 days', 'label' => __('Typical reply', 'sage')],
+        ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
+        ['value' => __('Email', 'sage'), 'label' => __('Primary channel', 'sage')],
+        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
+      ],
+      'link' => [
+        'label' => __('See hire details', 'sage'),
+        'href' => home_url('/hire/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 {{-- FORM + ASIDE --}}

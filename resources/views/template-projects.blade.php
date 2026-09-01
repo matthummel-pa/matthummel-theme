@@ -28,7 +28,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Work snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('work_h1', __('Example WordPress sites.', 'sage')) }}
@@ -36,13 +36,32 @@
   <p class="lead">
     {{ \App\field('work_lede', __('I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.', 'sage')) }}
   </p>
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="{{ home_url('/code/') }}">
-      {!! \App\mh_svg_icon('code', 15) !!} {{ __('Code and repos', 'sage') }}
+  <div class="page-header-split__actions">
+    <a class="btn" href="{{ home_url('/contact/') }}">
+      {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
     </a>
-    <a href="{{ home_url('/services/') }}">{!! \App\mh_svg_icon('briefcase', 15) !!} How I can help</a>
-    <a href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 15) !!} Start a project</a>
-  </p>
+    <a class="h-text-arrow" href="{{ home_url('/services/') }}">
+      {{ __('How I can help', 'sage') }} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/projects',
+      'icon' => 'globe',
+      'title' => __('Example sites', 'sage'),
+      'meta' => __('Live WordPress demos', 'sage'),
+      'stats' => [
+        ['value' => number_format_i18n($total), 'label' => __('Published sites', 'sage')],
+        ['value' => number_format_i18n(max(1, count($cats))), 'label' => __('Business types', 'sage')],
+        ['value' => 'Sage', 'label' => __('Tailwind · Vite', 'sage')],
+        ['value' => 'WordPress', 'label' => __('Every project', 'sage')],
+      ],
+      'link' => [
+        'label' => __('View code and repos', 'sage'),
+        'href' => home_url('/code/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 @if ($isEmpty)
@@ -81,23 +100,7 @@
 @else
   {{-- ABOUT THESE PROJECTS --}}
   <div class="work-context">
-    <div class="container wide work-context__inner">
-      <div class="work-context__stat">
-        <strong>{{ $total }}</strong>
-        <span>projects</span>
-      </div>
-      <div class="work-context__stat">
-        <strong>{{ max(1, count($cats)) }}</strong>
-        <span>business types</span>
-      </div>
-      <div class="work-context__stat">
-        <strong>WordPress</strong>
-        <span>Sage · Tailwind · Vite</span>
-      </div>
-      <div class="work-context__stat">
-        <strong>WordPress</strong>
-        <span>every project</span>
-      </div>
+    <div class="container wide work-context__inner work-context__inner--note">
       <p class="work-context__note">
         These are WordPress projects on this site — the same stack I use for client work, showing what a finished build looks like for a specific type of local business. Real client work stays private unless the shop asks to be featured. If one fits what you run, <a href="{{ home_url('/contact/') }}">write and say which</a>.
       </p>

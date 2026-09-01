@@ -23,7 +23,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('code_h1', __('Full-stack and WordPress code you can use.', 'sage')) }}
@@ -34,15 +34,44 @@
   @if (\App\mh_is_hireable($profile))
     <p class="hire-avail" style="margin-top:.85rem">
       @include('partials.avail-mark', ['gh' => $profile])
-      {{ \App\mh_availability_label($profile, __('Open for new work', 'sage')) }} — full-time, contract, agency overflow
+      {{ \App\mh_availability_label($profile, __('Open for new work', 'sage')) }}
     </p>
   @endif
-  <p class="about-hero-links" style="margin-top:1rem">
-    <a href="#github">{!! \App\mh_svg_icon('git', 15) !!} {{ __('Open source', 'sage') }}</a>
-    <a href="#skills">{!! \App\mh_svg_icon('code', 15) !!} {{ __('Skills', 'sage') }}</a>
-    <a href="#docs">{!! \App\mh_svg_icon('globe', 15) !!} {{ __('Docs', 'sage') }}</a>
-    <a href="{{ home_url('/hire/') }}">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Hire me', 'sage') }}</a>
-  </p>
+  <div class="page-header-split__actions">
+    <a class="btn" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
+      {!! \App\mh_svg_icon('github', 16) !!} {{ __('View GitHub', 'sage') }}
+      <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+    </a>
+    <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
+      {{ __('Hire me', 'sage') }} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'github.com/'.$login,
+      'icon' => 'github',
+      'title' => $login,
+      'meta' => __('Live profile signals', 'sage'),
+      'status' => \App\mh_is_hireable($profile)
+        ? ['label' => \App\mh_availability_label($profile, __('Open', 'sage')), 'gh' => $profile]
+        : null,
+      'stats' => array_values(array_filter([
+        ! empty($profile['public_repos'])
+          ? ['value' => number_format_i18n((int) $profile['public_repos']), 'label' => __('Public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
+          : null,
+        $yearTotal > 0
+          ? ['value' => number_format_i18n($yearTotal), 'label' => __('Contributions (year)', 'sage')]
+          : null,
+        ['value' => number_format_i18n(count($repos)), 'label' => __('Featured repos', 'sage')],
+        ['value' => number_format_i18n(count($practiceGroups)), 'label' => __('Practice areas', 'sage')],
+      ])),
+      'link' => [
+        'label' => __('Open GitHub profile', 'sage'),
+        'href' => $ghUrl,
+        'external' => true,
+      ],
+    ])
+  @endslot
 @endcomponent
 
 {{-- PRACTICE --}}
