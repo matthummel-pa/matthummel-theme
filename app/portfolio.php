@@ -1970,7 +1970,7 @@ function mh_code_practice_parse(string $text): array
         return ['title' => '', 'body' => ''];
     }
 
-    if (preg_match('/^(.+?)\s*[—–-]\s*(.+)$/u', $text, $matches)) {
+    if (preg_match('/^(.+?)(?:\s*[—–]\s*|\s+-\s+)(.+)$/u', $text, $matches)) {
         return [
             'title' => trim($matches[1]),
             'body' => trim($matches[2]),
