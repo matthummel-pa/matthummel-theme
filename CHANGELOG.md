@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.42 — Bugbot copy/link repairs
+
+- Merge duplicate `home_help_p1` migration maps; apply help + short hero copy after hireable pass.
+- Stop substring-replacing short labels like `Example sites` (repairs `Work are on the way.`).
+- Resources cards only `target="_blank"` for off-site URLs.
+
 ## 3.1.41 — Home hero polish
 
 - Quiet the above-the-fold hero: one kicker, shorter role/lede, Hire + Browse only.

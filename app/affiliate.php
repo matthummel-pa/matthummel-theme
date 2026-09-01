@@ -51,6 +51,29 @@ function mh_outbound_rel(bool $affiliate = false): string
     return $affiliate ? 'sponsored noopener' : 'noopener';
 }
 
+/**
+ * Whether a URL leaves this site (absolute, different host).
+ *
+ * Relative paths and same-host absolute URLs stay in-tab.
+ */
+function mh_is_external_url(string $url): bool
+{
+    $url = trim($url);
+    if ($url === '' || str_starts_with($url, '#') || str_starts_with($url, '/')) {
+        return false;
+    }
+    if (! preg_match('#^https?://#i', $url)) {
+        return false;
+    }
+
+    $host = strtolower((string) (wp_parse_url($url, PHP_URL_HOST) ?: ''));
+    $home = strtolower((string) (wp_parse_url(home_url('/'), PHP_URL_HOST) ?: ''));
+    $host = preg_replace('#^www\.#', '', $host) ?: '';
+    $home = preg_replace('#^www\.#', '', $home) ?: '';
+
+    return $host !== '' && $home !== '' && $host !== $home;
+}
+
 /** Public URL for the affiliate disclosure page. */
 function mh_affiliate_disclosure_url(): string
 {

@@ -71,7 +71,7 @@
                   href="{{ esc_url($item['url']) }}"
                   rel="{{ $rel }}"
                   @if ($isAff) data-affiliate="true" class="affiliate-link" @endif
-                  @if (\Illuminate\Support\Str::startsWith($item['url'], 'http')) target="_blank" @endif
+                  @if (\App\mh_is_external_url($item['url'])) target="_blank" @endif
                 >{{ $item['name'] }}</a>
               </h3>
               <p class="resources-card__blurb">{{ $item['blurb'] }}</p>
