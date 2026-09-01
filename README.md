@@ -7,7 +7,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 | | |
 | --- | --- |
 | **Live site** | [matthummel.com](https://matthummel.com) |
-| **Version** | `3.1.32` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
+| **Version** | `3.1.47` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |
@@ -19,19 +19,19 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
 
 ```text
+● 2026-09-01  3.1.47   Home hero SEO: H1, role, lede, shared mh_home_hero_default()
+● 2026-09-01  3.1.46   Work page fields, Uses/Resources, site-wide a11y
+● 2026-09-01  3.1.45   Per-page SEO titles/meta; Woo split heroes
+● 2026-09-01  3.1.44   Marketing heroes: split layout + snapshot panels
+● 2026-09-01  3.1.43   Hyphenated Code practice titles (Front-end, Full-stack)
+● 2026-09-01  3.1.42   Copy-migration repairs; Resources only blank-target off-site
+● 2026-09-01  3.1.41   Home hero illustration; quieter above-the-fold
+● 2026-09-01  3.1.39   Hireable portfolio + disclosed affiliates
+● 2026-08-31  3.1.38   Woo shop/cart/checkout/account UX and SEO titles
+● 2026-08-31  3.1.36   Skill-first SEO (no city stuffing on landings)
+● 2026-08-31  3.1.33   Stale Acorn cache white-screen fix
 ● 2026-08-31  3.1.32   Buy theme + Get help on Work; public brand is Matt Hummel
-● 2026-08-31  3.1.31   Marketplace files + audit: screenshot, readme.txt, CREDITS; submit Acreline
-● 2026-08-31  3.1.30   Project singles at /projects/{slug}/; hero screenshot; buyer docs
-● 2026-08-31  3.1.29   WooCommerce Blade shop/product templates and classic Cart/Checkout pages
-● 2026-08-31  3.1.27   Contact and /start/ forms POST to the n8n CRM webhook
-● 2026-08-29  3.1.26   Concept pages honor Rank Math / Yoast title and meta description
-● 2026-08-28  3.1.25   Projects admin: Generate featured image (DALL·E → Media → Work card)
-● 2026-08-28  3.1.24   Concept custom fields + On site toggles, filters, newest-first Work grid
-● 2026-08-28  3.1.23   On-site concept pages at /concept/{slug}/ (non-live stay 404)
-● 2026-08-28  3.1.22   Projects CPT: Ridges & Valleys concepts, Show on site / Hide from site
-● 2026-08-27  3.1.21   Post editor: Generate featured image (shared OpenAI key with DEV.to)
-● 2026-08-27  3.1.20   Journal CTA + author bio: WordPress platforms + full-stack web apps
-● 2026-08-27  3.1.18   Social share (Bluesky / LinkedIn / Facebook / Reddit) + DEV.to helpers
+● 2026-08-31  3.1.31   Marketplace files + audit; submit Acreline, not this theme
 ```
 
 | Watch this | Why |
@@ -58,8 +58,10 @@ Stuck on a white screen or missing CSS? Start in the [error cheatsheet](docs/ERR
 
 ## What’s in the theme
 
-- Named Blade page templates (Home, About, Services, Hire, Work, Code, Contact, Now, Uses, …)
+- Named Blade page templates (Home, About, Services, Hire, Work, Code, Contact, Now, Uses, Resources, …)
 - Projects CPT with on-site project pages at `/projects/{slug}/`
+- Hireable portfolio: Hire page, Work **Buy theme** / **Get help**, optional WooCommerce shop
+- Disclosed affiliate links on Uses / Resources (`rel="sponsored noopener"`)
 - Plugin-free contact + project brief forms (nonce, honeypot)
 - GitHub API showcase (profile, contribs, activity, repos) via transients
 - Journal with share intents, comments, and DEV.to / Bluesky helpers

@@ -1,11 +1,14 @@
 # Changelog
 
+All notable changes to this theme are recorded here. The GitHub README activity feed is a short recent-ship list; this file is the full history.
+
 ## 3.1.47 — Home hero SEO copy
 
 - Sharpen home H1, role line, and lede for hire intent and WordPress keywords (fields + Blade fallbacks).
 - One-shot `mh_home_hero_seo_copy_v1` updates matching saved home meta without overwriting custom copy.
 - `mh_home_hero_default()` is the single source for empty-field H1, role, lede, and SEO title.
 - Slightly wider hero role/lede measure so the three-sentence intro wraps cleanly.
+- README activity feed, version badge, and `readme.txt` Stable tag catch up to 3.1.47 (Hire, affiliates, Woo, SEO).
 
 ## 3.1.46 — Work page content, site-wide a11y, Uses/Resources fields
 
@@ -64,8 +67,6 @@
 - One-time field migration `mh_hireable_affiliate_copy_v1` updates saved page meta that still matched old defaults
 - Affiliate disclosure page covers Journal, Uses, and Resources (not articles only)
 - Product permalinks continue to land on linked Work concept pages
-
-All notable changes to this theme are recorded here.
 
 ## 3.1.38 — 2026-08-31
 

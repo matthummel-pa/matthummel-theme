@@ -3,7 +3,7 @@ Contributors: matthummel
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 3.1.37
+Stable tag: 3.1.47
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 Tags: blog, custom-menu, featured-images, threaded-comments, translation-ready
@@ -32,14 +32,20 @@ Acreline: https://github.com/matthummel-pa/wp-acreline
 
 == Changelog ==
 
-= 3.1.31 =
-* Marketplace readiness files: screenshot.png, readme.txt, CREDITS.md, Tested up to, automatic-feed-links
+= 3.1.47 =
+* Home hero SEO: H1, role, lede, and document title share mh_home_hero_default()
 
-= 3.1.30 =
-* Project singles at /projects/{slug}/; buyer docs on project pages
+= 3.1.46 =
+* Work page fields, Uses/Resources hero copy, site-wide a11y
 
-= 3.1.29 =
-* WooCommerce Blade templates and required store pages
+= 3.1.45 =
+* Per-page SEO titles and meta; WooCommerce split heroes
+
+= 3.1.39 =
+* Hireable portfolio and disclosed affiliate links
+
+= 3.1.32 =
+* Buy theme + Get help on Work; public brand is Matt Hummel
 
 Full history: CHANGELOG.md
 
