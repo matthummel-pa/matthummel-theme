@@ -27,42 +27,143 @@ const MARK_SLUGS = {
   Vi: 'vi',
 }
 
+const MARK_TO_ICON = {
+  Cu: 'cursor-ai',
+  GPT: 'chatgpt',
+  Cl: 'claude',
+  Ge: 'gemini',
+  VS: 'vscode',
+  n8: 'n8n',
+  MC: 'code',
+  GH: 'github',
+  Vi: 'vite',
+}
+
 function markSlug(mark) {
   const key = String(mark || '').trim()
   if (MARK_SLUGS[key]) return MARK_SLUGS[key]
   return key.toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 4) || 'cu'
 }
 
+function iconChoices() {
+  const fromPhp = window.mhToolBlocks?.icons
+  if (Array.isArray(fromPhp) && fromPhp.length) return fromPhp
+  return [
+    { value: '', label: __('Letter mark only', 'sage') },
+    { value: 'cursor-ai', label: 'Cursor' },
+    { value: 'chatgpt', label: 'ChatGPT' },
+    { value: 'claude', label: 'Claude' },
+    { value: 'gemini', label: 'Gemini' },
+    { value: 'vscode', label: 'VS Code' },
+    { value: 'n8n', label: 'n8n' },
+    { value: 'code', label: 'MCP / code' },
+    { value: 'github', label: 'GitHub' },
+    { value: 'vite', label: 'Vite' },
+  ]
+}
+
+function iconSvg(icon) {
+  if (!icon) return ''
+  const hit = iconChoices().find((row) => row.value === icon)
+  return hit?.svg || ''
+}
+
 function Edit({ attributes, setAttributes }) {
-  const { mark, name, role, bestFor, weakAt, humanRequired } = attributes
+  const {
+    icon,
+    mark,
+    name,
+    role,
+    bestForLabel,
+    weakAtLabel,
+    humanRequiredLabel,
+    bestFor,
+    weakAt,
+    humanRequired,
+  } = attributes
   const slug = markSlug(mark)
+  const hasIcon = Boolean(icon)
   const blockProps = useBlockProps({
-    className: `mh-tool-card mh-tool-card--${slug}`,
+    className: [
+      'mh-tool-card',
+      `mh-tool-card--${slug}`,
+      hasIcon ? 'mh-tool-card--has-icon' : '',
+    ]
+      .filter(Boolean)
+      .join(' '),
+    'data-mark': mark || '',
   })
+  const svg = iconSvg(icon)
 
   return (
     <>
       <InspectorControls>
-        <PanelBody title={__('Tool card', 'sage')} initialOpen={true}>
+        <PanelBody title={__('Icon & mark', 'sage')} initialOpen={true}>
           <SelectControl
-            label={__('Mark chip', 'sage')}
+            label={__('Icon', 'sage')}
+            value={icon || ''}
+            options={iconChoices().map(({ value, label }) => ({ value, label }))}
+            onChange={(value) => setAttributes({ icon: value })}
+            help={__('Theme SVG icons. Leave empty to show the letter mark only.', 'sage')}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
+          <SelectControl
+            label={__('Mark preset', 'sage')}
             value={MARK_SLUGS[mark] ? mark : 'Cu'}
             options={MARK_OPTIONS}
-            onChange={(value) => setAttributes({ mark: value })}
+            onChange={(value) => {
+              const next = { mark: value }
+              if (!icon && MARK_TO_ICON[value]) next.icon = MARK_TO_ICON[value]
+              setAttributes(next)
+            }}
             __next40pxDefaultSize
             __nextHasNoMarginBottom
           />
           <TextControl
-            label={__('Custom mark', 'sage')}
+            label={__('Custom mark letters', 'sage')}
             value={mark}
             onChange={(value) => setAttributes({ mark: value })}
-            help={__('Overrides the chip letters if you need a one-off.', 'sage')}
+            help={__('Shown when no icon is selected, and used for the card color slug.', 'sage')}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
+        </PanelBody>
+        <PanelBody title={__('Section labels', 'sage')} initialOpen={false}>
+          <TextControl
+            label={__('Best-for label', 'sage')}
+            value={bestForLabel}
+            onChange={(value) => setAttributes({ bestForLabel: value })}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
+          <TextControl
+            label={__('Weak-at label', 'sage')}
+            value={weakAtLabel}
+            onChange={(value) => setAttributes({ weakAtLabel: value })}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
+          <TextControl
+            label={__('Human-required label', 'sage')}
+            value={humanRequiredLabel}
+            onChange={(value) => setAttributes({ humanRequiredLabel: value })}
             __next40pxDefaultSize
             __nextHasNoMarginBottom
           />
         </PanelBody>
       </InspectorControls>
       <div {...blockProps}>
+        <span className="mh-tool-card__mark" aria-hidden="true">
+          {svg ? (
+            <span
+              className="mh-tool-card__icon"
+              dangerouslySetInnerHTML={{ __html: svg }}
+            />
+          ) : (
+            mark || '·'
+          )}
+        </span>
         <RichText
           tagName="p"
           className="mh-tool-card__name"
@@ -79,7 +180,14 @@ function Edit({ attributes, setAttributes }) {
           onChange={(value) => setAttributes({ role: value })}
           allowedFormats={[]}
         />
-        <p className="mh-tool-card__dt mh-tool-card__dt--best">{__('Best for', 'sage')}</p>
+        <RichText
+          tagName="p"
+          className="mh-tool-card__dt mh-tool-card__dt--best"
+          placeholder={__('Best for', 'sage')}
+          value={bestForLabel}
+          onChange={(value) => setAttributes({ bestForLabel: value })}
+          allowedFormats={[]}
+        />
         <RichText
           tagName="p"
           className="mh-tool-card__dd"
@@ -88,7 +196,14 @@ function Edit({ attributes, setAttributes }) {
           onChange={(value) => setAttributes({ bestFor: value })}
           allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
         />
-        <p className="mh-tool-card__dt mh-tool-card__dt--weak">{__('Weak at', 'sage')}</p>
+        <RichText
+          tagName="p"
+          className="mh-tool-card__dt mh-tool-card__dt--weak"
+          placeholder={__('Weak at', 'sage')}
+          value={weakAtLabel}
+          onChange={(value) => setAttributes({ weakAtLabel: value })}
+          allowedFormats={[]}
+        />
         <RichText
           tagName="p"
           className="mh-tool-card__dd"
@@ -97,7 +212,14 @@ function Edit({ attributes, setAttributes }) {
           onChange={(value) => setAttributes({ weakAt: value })}
           allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
         />
-        <p className="mh-tool-card__dt mh-tool-card__dt--human">{__('Human still required', 'sage')}</p>
+        <RichText
+          tagName="p"
+          className="mh-tool-card__dt mh-tool-card__dt--human"
+          placeholder={__('Human still required', 'sage')}
+          value={humanRequiredLabel}
+          onChange={(value) => setAttributes({ humanRequiredLabel: value })}
+          allowedFormats={[]}
+        />
         <RichText
           tagName="p"
           className="mh-tool-card__dd"
@@ -111,31 +233,10 @@ function Edit({ attributes, setAttributes }) {
   )
 }
 
-function Save({ attributes }) {
-  const { mark, name, role, bestFor, weakAt, humanRequired } = attributes
-  const slug = markSlug(mark)
-  const blockProps = useBlockProps.save({
-    className: `mh-tool-card mh-tool-card--${slug}`,
-  })
-
-  return (
-    <div {...blockProps}>
-      <RichText.Content tagName="p" className="mh-tool-card__name" value={name} />
-      <RichText.Content tagName="p" className="mh-tool-card__role" value={role} />
-      <p className="mh-tool-card__dt mh-tool-card__dt--best">Best for</p>
-      <RichText.Content tagName="p" className="mh-tool-card__dd" value={bestFor} />
-      <p className="mh-tool-card__dt mh-tool-card__dt--weak">Weak at</p>
-      <RichText.Content tagName="p" className="mh-tool-card__dd" value={weakAt} />
-      <p className="mh-tool-card__dt mh-tool-card__dt--human">Human still required</p>
-      <RichText.Content tagName="p" className="mh-tool-card__dd" value={humanRequired} />
-    </div>
-  )
-}
-
 registerBlockType('matthummel/tool-card', {
   apiVersion: 3,
   title: __('Tool card', 'sage'),
-  description: __('One tool: mark, role, best for, weak at, human still required.', 'sage'),
+  description: __('One tool: icon or mark, name, role, and comparison fields.', 'sage'),
   category: 'matthummel',
   icon: 'index-card',
   parent: ['matthummel/tool-grid'],
@@ -145,13 +246,17 @@ registerBlockType('matthummel/tool-card', {
     className: true,
   },
   attributes: {
+    icon: { type: 'string', default: '' },
     mark: { type: 'string', default: 'Cu' },
     name: { type: 'string', default: '' },
     role: { type: 'string', default: '' },
+    bestForLabel: { type: 'string', default: 'Best for' },
+    weakAtLabel: { type: 'string', default: 'Weak at' },
+    humanRequiredLabel: { type: 'string', default: 'Human still required' },
     bestFor: { type: 'string', default: '' },
     weakAt: { type: 'string', default: '' },
     humanRequired: { type: 'string', default: '' },
   },
   edit: Edit,
-  save: Save,
+  save: () => null,
 })

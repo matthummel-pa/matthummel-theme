@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.56 — Tool Blocks fields and icons
+
+- Parent block renamed to **Tool Blocks** (`matthummel/tool-grid`).
+- Tool cards: inspector fields for icon (theme SVG), mark letters, editable section labels, and body copy; PHP render outputs the chip SVG.
+- Add more cards via the inner-block appender and an **Add tool card** control in the sidebar and under the grid.
+- Journal source post + docs updated to dynamic tool-card markup with icons.
+
 ## 3.1.55 — Custom journal comparison blocks
 
 - Theme blocks: `matthummel/tool-grid`, `tool-card`, `ship-pipe`, `ship-step` (inserter category “Matt Hummel”).
