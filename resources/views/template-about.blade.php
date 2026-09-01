@@ -18,71 +18,53 @@
 
 @section('content')
 
-{{-- HERO (above the fold: name, headline, short lede, CTAs, photo, proof) --}}
-@component('partials.page-hero', ['extra' => 'about-hero', 'innerClass' => 'about-hero__stage'])
-  <div class="about-hero__main hero-intro about-hero__inner">
-    <div class="about-hero__copy">
-      <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
-      <h1 class="display-title is-hero">
-        {{ \App\field('about_h1', __('Full-stack developer. WordPress specialist.', 'sage')) }}
-      </h1>
-      <p class="lead about-hero__lede">
-        {{ \App\field('about_lede', __('I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.', 'sage')) }}
+{{-- HERO (above the fold: name, headline, short lede, CTAs, photo panel) --}}
+@component('partials.page-hero', ['extra' => 'about-hero', 'split' => true, 'asideLabel' => __('Quick facts', 'sage')])
+  <div class="about-hero__copy">
+    <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
+    <h1 class="display-title is-hero">
+      {{ \App\field('about_h1', __('Full-stack developer. WordPress specialist.', 'sage')) }}
+    </h1>
+    <p class="lead about-hero__lede">
+      {{ \App\field('about_lede', __('I build accessible, maintainable web software from front end to back end, with deep experience in custom WordPress development.', 'sage')) }}
+    </p>
+    @if ($isHireable)
+      <p class="hire-avail about-hero__avail">
+        @include('partials.avail-mark', ['gh' => $gh])
+        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
       </p>
-      @if ($isHireable)
-        <p class="hire-avail about-hero__avail">
-          @include('partials.avail-mark', ['gh' => $gh])
-          {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-        </p>
-      @endif
-      <div class="about-hero__actions">
-        <a class="btn" href="{{ home_url('/contact/') }}">
-          {!! \App\mh_svg_icon('mail', 16) !!}
-          {{ __('Say hello', 'sage') }}
-        </a>
-        <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
-          {{ __('Hire me', 'sage') }}
-        </a>
-        <a class="about-hero__ghost" href="#story">{{ __('Read my story', 'sage') }}</a>
-      </div>
-    </div>
-    <div class="about-hero__photo">
-      @include('partials.profile-photo', [
-        'size'  => 360,
-        'class' => 'profile-photo profile-photo--hero about-hero__img',
-        'eager' => true,
-      ])
-      <p class="about-hero__photo-cap">{{ __('Full-stack · WordPress', 'sage') }}</p>
+    @endif
+    <div class="page-header-split__actions about-hero__actions">
+      <a class="btn" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        {{ __('Say hello', 'sage') }}
+      </a>
+      <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
+        {{ __('Hire me', 'sage') }}
+      </a>
+      <a class="about-hero__ghost" href="#story">{{ __('Read my story', 'sage') }}</a>
     </div>
   </div>
-
-  <div class="about-hero__proof" role="region" aria-label="{{ __('Quick facts', 'sage') }}">
-    <dl class="about-stats__grid about-hero__proof-grid">
-      <div class="about-stat">
-        <dt class="about-stat__value">{{ $yearsBuilding }}+</dt>
-        <dd class="about-stat__label">{{ __('years on the web', 'sage') }}</dd>
-      </div>
-      @if (! empty($gh['public_repos']))
-        <div class="about-stat">
-          <dt class="about-stat__value">
-            <a href="{{ esc_url($ghUrl.'?tab=repositories') }}" rel="me noopener" target="_blank">
-              {{ number_format_i18n($gh['public_repos']) }}
-              <span class="visually-hidden"> {{ __('public repositories (opens in a new window)', 'sage') }}</span>
-            </a>
-          </dt>
-          <dd class="about-stat__label">{{ __('public repos', 'sage') }}</dd>
-        </div>
-      @endif
-      <div class="about-stat">
-        <dt class="about-stat__value">{{ __('Full stack', 'sage') }}</dt>
-        <dd class="about-stat__label">{{ __('WordPress specialist', 'sage') }}</dd>
-      </div>
-      <div class="about-stat">
-        <dt class="about-stat__value">{{ __('EST', 'sage') }}</dt>
-        <dd class="about-stat__label">{{ __('Remote / on-site', 'sage') }}</dd>
-      </div>
-    </dl>
-  </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/about',
+      'profileSize' => 280,
+      'profileCaption' => __('Full-stack · WordPress', 'sage'),
+      'stats' => array_values(array_filter([
+        ['value' => $yearsBuilding.'+', 'label' => __('years on the web', 'sage')],
+        ! empty($gh['public_repos'])
+          ? ['value' => number_format_i18n((int) $gh['public_repos']), 'label' => __('public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
+          : null,
+        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress specialist', 'sage')],
+        ['value' => __('EST', 'sage'), 'label' => __('Remote / on-site', 'sage')],
+      ])),
+      'link' => [
+        'label' => __('View GitHub', 'sage'),
+        'href' => $ghUrl,
+        'external' => true,
+      ],
+    ])
+  @endslot
 @endcomponent
 
 <nav class="about-jump-band" aria-label="{{ __('On this page', 'sage') }}">

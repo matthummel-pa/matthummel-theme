@@ -74,17 +74,45 @@
   ];
 @endphp
 
+@php
+  $toolCount = 0;
+  foreach ($sections as $section) {
+    $toolCount += count($section['items']);
+  }
+@endphp
+
 @section('content')
 
-@component('partials.page-hero')
+@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Stack snapshot', 'sage')])
   <p class="eyebrow">Uses</p>
   <h1 class="display-title is-hero">What I use.</h1>
   <p class="lead">The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.</p>
-  <p class="about-hero-links" style="margin-top:1rem">
-    @foreach ($sections as $s)
-      <a href="#uses-{{ \Str::slug($s['title']) }}">{!! \App\mh_svg_icon($s['icon'], 14) !!} {{ $s['title'] }}</a>
-    @endforeach
-  </p>
+  <div class="page-header-split__actions">
+    <a class="btn" href="{{ home_url('/code/') }}">
+      {!! \App\mh_svg_icon('github', 15) !!} See the code
+    </a>
+    <a class="h-text-arrow" href="{{ home_url('/services/') }}">
+      How I build <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  @slot('aside')
+    @include('partials.hero-panel', [
+      'chrome' => 'matthummel.com/uses',
+      'icon' => 'code',
+      'title' => __('Daily stack', 'sage'),
+      'meta' => __('Sage · PHP · Tailwind', 'sage'),
+      'stats' => [
+        ['value' => number_format_i18n(count($sections)), 'label' => __('Categories', 'sage')],
+        ['value' => number_format_i18n($toolCount), 'label' => __('Tools listed', 'sage')],
+        ['value' => 'WordPress', 'label' => __('Primary platform', 'sage')],
+        ['value' => 'Vite', 'label' => __('Asset pipeline', 'sage')],
+      ],
+      'link' => [
+        'label' => __('View services', 'sage'),
+        'href' => home_url('/services/'),
+      ],
+    ])
+  @endslot
 @endcomponent
 
 @php
