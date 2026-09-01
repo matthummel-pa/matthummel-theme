@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.47 — Home hero SEO copy
+
+- Sharpen home H1, role line, and lede for hire intent and WordPress keywords (fields + Blade fallbacks).
+- One-shot `mh_home_hero_seo_copy_v1` updates matching saved home meta.
+
 ## 3.1.46 — Work page content, site-wide a11y, Uses/Resources fields
 
 - Work page: field-driven context, audience cards, hire-from-demo steps, FAQ with JSON-LD; Gettysburg SEO title.

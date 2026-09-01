@@ -2911,3 +2911,66 @@ add_action('init', function (): void {
 
     update_option('mh_site_content_a11y_v3', true);
 }, 81);
+
+/**
+ * One-time: refresh home hero H1 / role / lede for SEO (3.1.47).
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_hero_seo_copy_v1')) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if (! $home) {
+        update_option('mh_home_hero_seo_copy_v1', true);
+
+        return;
+    }
+
+    $id = (int) $home->ID;
+    $map = [
+        'mh_f_home_h1' => [
+            'from' => [
+                'Matt Hummel',
+                'Web Engineering for Growing Businesses & Agency Partners',
+            ],
+            'to' => 'Matt Hummel — WordPress developer',
+        ],
+        'mh_f_home_role' => [
+            'from' => [
+                'Full-stack & WordPress developer.',
+                'Full-stack & WordPress developer',
+                'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+            ],
+            'to' => 'Full-stack themes, plugins, and web apps for shops and agencies.',
+        ],
+        'mh_f_home_lede' => [
+            'from' => [
+                'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.',
+                'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
+                'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
+            ],
+            'to' => 'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+        ],
+        'mh_f_seo_title' => [
+            'from' => [
+                'Full-Stack & WordPress Developer | Matt Hummel',
+                '',
+            ],
+            'to' => 'WordPress Developer for Shops & Agencies | Matt Hummel',
+        ],
+    ];
+
+    foreach ($map as $key => $swap) {
+        $cur = (string) get_post_meta($id, $key, true);
+        if ($cur === '' || in_array($cur, $swap['from'], true)) {
+            update_post_meta($id, $key, $swap['to']);
+        }
+    }
+
+    update_option('mh_home_hero_seo_copy_v1', true);
+}, 82);
