@@ -1370,12 +1370,12 @@ function mh_who_page_items(?int $post_id = null): array
 /** Primary + footer menus. Safe to re-run; replaces those two menus only. */
 function mh_sync_nav_menus(): void
 {
-    if (get_option('mh_nav_synced_v3') === '3') {
+    if (get_option('mh_nav_synced_v4') === '4') {
         return;
     }
 
     $bySlug = [];
-    foreach (['home', 'about', 'projects', 'services', 'code', 'contact', 'now', 'blog'] as $slug) {
+    foreach (['home', 'about', 'projects', 'hire', 'services', 'code', 'contact', 'now', 'blog'] as $slug) {
         $page = get_page_by_path($slug);
         if ($page instanceof \WP_Post) {
             $bySlug[$slug] = (int) $page->ID;
@@ -1409,16 +1409,16 @@ function mh_sync_nav_menus(): void
         return $menuId;
     };
 
-    // Logo is Home. Contact is the header button. Keep the bar short.
-    $primaryId = $build('Primary', ['projects', 'services', 'blog', 'code', 'about']);
-    $footerId = $build('Footer', ['projects', 'blog', 'code', 'about', 'now', 'contact']);
+    // Logo is Home. Contact is the header button. Hire stays primary; Shop/Uses stay out of the bar.
+    $primaryId = $build('Primary', ['projects', 'hire', 'blog', 'code', 'about']);
+    $footerId = $build('Footer', ['projects', 'hire', 'blog', 'code', 'about', 'now', 'contact']);
 
     $locations = get_theme_mod('nav_menu_locations', []);
     $locations['primary_navigation'] = $primaryId;
     $locations['footer_navigation'] = $footerId;
     set_theme_mod('nav_menu_locations', $locations);
 
-    update_option('mh_nav_synced_v3', '3');
+    update_option('mh_nav_synced_v4', '4');
 }
 
 add_action('init', __NAMESPACE__.'\\mh_sync_nav_menus', 50);
@@ -1612,6 +1612,9 @@ function mh_apply_home_redesign_copy(): void
         'mh_f_home_work_intro' => [
             'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops. Useful if you run a local business and want to see what a clear WordPress site can look like.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
             'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
+        ],
+        'mh_f_home_help_p1' => [
+            'I build WordPress sites and plugins shops can edit. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
         ],
         'mh_f_home_help_h2' => [
             'If you need a hand' => 'Let\'s talk.',
@@ -2436,3 +2439,148 @@ function mh_apply_how_i_work_v1(): void
 }
 
 add_action('init', __NAMESPACE__.'\mh_apply_how_i_work_v1', 73);
+
+/**
+ * One-time swap of saved page-field meta to hireable + disclosed-affiliate copy.
+ * Only replaces values that still match the previous defaults.
+ */
+function mh_apply_hireable_affiliate_copy_v1(): void
+{
+    if (get_option('mh_hireable_affiliate_copy_v1')) {
+        return;
+    }
+
+    $swaps = [
+        'This site. A journal, public code, snippets, and a quiet way to say hello. Built so you can learn or copy without a sales funnel.' => 'Hireable portfolio with journal, public code, optional theme sales, and disclosed tool recommendations.',
+        'Helping with a few extra builds when I have room — WordPress platforms, plugins, integrations, and full-stack applications.' => 'Curating Uses/Resources with clear affiliate disclosure when a link is compensated.',
+        'No. This site is for WordPress builds and sharing, including example sites you can open.' => 'No social management. I may earn from disclosed affiliate links on Uses/Resources, and I sell themes from studio work. The site stays a portfolio first.',
+        'Live WordPress demos for shops, tours, and inns. Hire me here for a real build.' => 'Concept WordPress projects with demos and stack notes. Hire me to adapt one, or buy a theme when listed.',
+        'Raising kids. Nights and weekends are scarce, so I keep extra projects small.' => 'Raising kids — nights and weekends stay scarce, so side work stays focused.',
+        'This Sage 11 site is a notebook: a journal, snippets, and example shops.' => 'Shipping concept sites and themes from studio projects (Work + optional Shop).',
+        'Full-stack work: WordPress, plugins, and other web apps.' => 'Open for full-time, contract, and freelance WordPress / full-stack work.',
+        'Sharing notes on this blog, DEV.to, Bluesky, and Reddit.' => 'Publishing notes on the journal, DEV.to, Bluesky, and Reddit.',
+        'Example sites' => 'Work',
+    ];
+
+    $keyed = [
+        'mh_f_about_p3' => [
+            'I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.' => 'Work shows concept sites and themes from studio projects. Hire me to adapt one, buy a theme when it is for sale, or browse free code on GitHub.',
+        ],
+        'mh_f_cnt_lede' => [
+            'Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I usually reply in one or two business days.' => 'Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply in one or two business days.',
+        ],
+        'mh_f_code_h1' => [
+            'Full-stack and WordPress code you can use.' => 'Code & open-source work.',
+        ],
+        'mh_f_footer_blurb' => [
+            'Notes, code, and example sites. Developers, shops, and agencies are welcome.' => 'Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+        ],
+        'mh_f_home_avail_status' => [
+            'Open to new projects' => 'Open for work',
+        ],
+        'mh_f_home_cta_primary' => [
+            'Start a conversation' => 'Hire me',
+        ],
+        'mh_f_home_cta_primary_url' => [
+            '/contact/' => '/hire/',
+        ],
+        'mh_f_home_cta_secondary' => [
+            'Explore projects' => 'Browse work',
+        ],
+        'mh_f_home_help_h2' => [
+            'Working on something?' => 'Hiring or building?',
+        ],
+        'mh_f_home_help_p2' => [
+            'Say hello. A question about a post is just as welcome as a project inquiry.' => 'Say hello on <a href="/hire/">Hire</a> or <a href="/contact/">Contact</a>. Roles, freelance builds, and post questions are all welcome.',
+        ],
+        'mh_f_home_lede' => [
+            'I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.' => 'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
+        ],
+        'mh_f_home_process_note' => [
+            'No ongoing contracts unless you want one. A question about a post is just as welcome as a <a href="/contact/">build request</a>.' => 'Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/hire/">hire conversation</a>.',
+        ],
+        'mh_f_home_role' => [
+            'Full-stack web development, with WordPress at the center.' => 'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+        ],
+        'mh_f_home_work_h2' => [
+            'Example WordPress sites for shops, tours, and inns.' => 'Selected WordPress work.',
+        ],
+        'mh_f_home_work_intro' => [
+            'I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.' => 'Concept sites and themes from real studio work. Browse a project for the story; hire me to adapt it, or buy a theme when one is for sale.',
+        ],
+        'mh_f_now_studio_p1' => [
+            'I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.' => 'I publish concept WordPress projects here. Hire me for a production build, or buy a theme when a project is for sale.',
+        ],
+        'mh_f_svc_fair' => [
+            'I don’t run ads or social accounts for shops. This site is for WordPress builds and sharing. If a build would help, <a href="/contact/">write a short note</a> and tell me what you’re trying to do.' => 'This site is a hireable portfolio first. Themes and tool recommendations are secondary — affiliate links are disclosed. If a build or role fits, <a href="/hire/">start on Hire</a>.',
+        ],
+        'mh_f_work_band_h2' => [
+            'Want a site in this shape?' => 'Like this shape?',
+        ],
+        'mh_f_work_band_lede' => [
+            'These projects are starting points for a real build. If one fits a tour, inn, shop, or restaurant you run, write and say which project you want to start from.' => 'These projects are starting points. Hire me to adapt one, buy the theme when it is listed, or say hello about a role.',
+        ],
+        'mh_f_work_h1' => [
+            'Example WordPress sites.' => 'Selected WordPress work.',
+        ],
+        'mh_f_work_lede' => [
+            'I publish example WordPress sites here — live demos for shops, tours, and inns. Hire me on this site for a real build.' => 'Concept sites with real stack notes and demos. Hire me to adapt one for your shop, buy a theme when it is for sale, or study the free code on GitHub.',
+        ],
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        $all = get_post_meta($id);
+        if (! is_array($all)) {
+            continue;
+        }
+
+        foreach (array_keys($all) as $key) {
+            if (! is_string($key) || ! str_starts_with($key, 'mh_f_')) {
+                continue;
+            }
+            $raw = get_post_meta($id, $key, true);
+            if (! is_string($raw) || $raw === '') {
+                continue;
+            }
+
+            if (isset($keyed[$key][$raw])) {
+                update_post_meta($id, $key, $keyed[$key][$raw]);
+
+                continue;
+            }
+
+            if ($raw === '/contact/' && $key !== 'mh_f_home_cta_primary_url') {
+                continue;
+            }
+
+            if (isset($swaps[$raw])) {
+                update_post_meta($id, $key, $swaps[$raw]);
+
+                continue;
+            }
+
+            $next = $raw;
+            foreach ($swaps as $old => $new) {
+                if (str_contains($next, $old)) {
+                    $next = str_replace($old, $new, $next);
+                }
+            }
+            if ($next !== $raw) {
+                update_post_meta($id, $key, $next);
+            }
+        }
+    }
+
+    update_option('mh_hireable_affiliate_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_apply_hireable_affiliate_copy_v1', 74);

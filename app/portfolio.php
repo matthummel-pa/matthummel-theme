@@ -3043,6 +3043,7 @@ function mh_ensure_utility_pages(): void
         'terms' => ['Terms', 'template-terms.blade.php'],
         'accessibility' => ['Accessibility', 'template-accessibility.blade.php'],
         'uses' => ['Uses', 'template-uses.blade.php'],
+        'resources' => ['Resources', 'template-resources.blade.php'],
         'thank-you' => ['Thank you', 'template-thankyou.blade.php'],
     ];
 

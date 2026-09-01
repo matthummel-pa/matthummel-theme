@@ -12,7 +12,7 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ __('Full-stack developer and WordPress specialist. I build web software businesses can own and development teams can maintain.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
+      <p class="footer-blurb">{{ __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
       @if (\App\mh_is_hireable($gh))
         <p class="footer-avail">
           @include('partials.avail-mark', ['gh' => $gh])
@@ -30,12 +30,11 @@
     <nav class="footer-nav-col" aria-label="Work">
       <p class="footer-nav-label">Work</p>
       <ul class="footer-nav">
-        <li><a href="{{ home_url('/services/') }}">Services</a></li>
-        <li><a href="{{ home_url('/hire/') }}">Hire me</a></li>
-        <li><a href="{{ home_url('/projects/') }}">Example sites</a></li>
-        <li><a href="{{ home_url('/uses/') }}">Uses</a></li>
-        <li><a href="{{ home_url('/code/') }}">Code &amp; GitHub</a></li>
-        <li><a href="{{ home_url('/changelog/') }}">Changelog</a></li>
+        <li><a href="{{ home_url('/projects/') }}">{{ __('Work', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/services/') }}">{{ __('Services', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/code/') }}">{{ __('Code & GitHub', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>
       </ul>
     </nav>
 
@@ -43,12 +42,14 @@
     <nav class="footer-nav-col" aria-label="Site">
       <p class="footer-nav-label">Site</p>
       <ul class="footer-nav">
-        <li><a href="{{ home_url('/about/') }}">About</a></li>
-        <li><a href="{{ $writing }}">Journal</a></li>
-        <li><a href="{{ home_url('/now/') }}">Now</a></li>
-        <li><a href="{{ home_url('/contact/') }}">Contact</a></li>
+        <li><a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a></li>
+        <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/uses/') }}">{{ __('Uses', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
         @if (\App\mh_woocommerce_is_active())
-          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Shop', 'sage') }}</a></li>
+          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Themes', 'sage') }}</a></li>
           <li><a href="{{ esc_url(wc_get_page_permalink('cart')) }}">{{ __('Cart', 'sage') }}</a></li>
         @endif
       </ul>
@@ -68,6 +69,8 @@
       <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
       <span aria-hidden="true">·</span>
       <a href="{{ home_url('/terms-of-use/') }}">Terms</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
       <span aria-hidden="true">·</span>
       <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
     </nav>

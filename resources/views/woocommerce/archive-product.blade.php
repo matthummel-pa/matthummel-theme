@@ -43,7 +43,7 @@
         echo $archiveDesc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
       @endphp
       @if ($archiveDesc === '' && $isShop)
-        <p>{{ __('WordPress themes from studio projects. Buy a theme here, or say hello if you need help adapting one for your shop.', 'sage') }}</p>
+        <p>{{ __('WordPress themes from studio Work projects. Open a concept page for the story; buy here when you want the pack — or hire me to build something custom.', 'sage') }}</p>
       @endif
     </div>
     <p class="about-hero-links" style="margin-top:1rem">

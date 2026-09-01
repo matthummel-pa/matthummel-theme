@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Affiliate disclosure and link handling for journal posts.
+ * Affiliate disclosure and compensated-link helpers (Journal, Uses, Resources).
  */
 
 namespace App;
@@ -35,9 +35,41 @@ add_action('init', function (): void {
     }
 }, 70);
 
+/** Whether a journal post is flagged as containing affiliate links. */
 function mh_post_has_affiliate_links(int $postId): bool
 {
     return get_post_meta($postId, MH_AFFILIATE_META, true) === '1';
+}
+
+/**
+ * `rel` attribute for outbound links.
+ *
+ * Compensated links get `sponsored` (FTC-friendly) plus `noopener`.
+ */
+function mh_outbound_rel(bool $affiliate = false): string
+{
+    return $affiliate ? 'sponsored noopener' : 'noopener';
+}
+
+/** Public URL for the affiliate disclosure page. */
+function mh_affiliate_disclosure_url(): string
+{
+    $page = get_page_by_path('affiliate-disclosure');
+    if ($page instanceof \WP_Post) {
+        $url = get_permalink($page);
+
+        return is_string($url) ? $url : home_url('/affiliate-disclosure/');
+    }
+
+    return home_url('/affiliate-disclosure/');
+}
+
+/**
+ * Short disclosure copy for Uses / Resources / tool lists.
+ */
+function mh_affiliate_disclosure_note(): string
+{
+    return __('Some links on this page are affiliate links. If you buy through them, I may earn a commission at no extra cost to you. I only list tools I would use on a real project.', 'sage');
 }
 
 add_action('add_meta_boxes_post', function (): void {
@@ -92,3 +124,100 @@ add_filter('the_content', function (string $content): string {
 
     return $html->get_updated_html();
 }, 20);
+
+/**
+ * Curated Resources catalog: free starters + recommended tools (some affiliate).
+ *
+ * Replace affiliate URLs with your live partner links when you join a program.
+ * Set `affiliate` => true only when the URL is a compensated referral.
+ *
+ * @return list<array{title: string, intro: string, items: list<array{name: string, blurb: string, url: string, affiliate: bool, badge: string}>}>
+ */
+function mh_resources_catalog(): array
+{
+    $gh = 'https://github.com/'.mh_github_login();
+
+    return [
+        [
+            'title' => __('Free starters', 'sage'),
+            'intro' => __('Open code and example builds from this site. Fork them, read them, or hire me to turn one into a production site.', 'sage'),
+            'items' => [
+                [
+                    'name' => __('Work — example sites', 'sage'),
+                    'blurb' => __('Concept WordPress sites with stack notes, demos, and buy/help CTAs when a theme is for sale.', 'sage'),
+                    'url' => home_url('/projects/'),
+                    'affiliate' => false,
+                    'badge' => __('Portfolio', 'sage'),
+                ],
+                [
+                    'name' => __('Code & GitHub', 'sage'),
+                    'blurb' => __('Public repos, contribution activity, and snippets you can adapt. Proof of how I ship.', 'sage'),
+                    'url' => home_url('/code/'),
+                    'affiliate' => false,
+                    'badge' => __('Open source', 'sage'),
+                ],
+                [
+                    'name' => __('GitHub profile', 'sage'),
+                    'blurb' => __('Themes, plugins, and apps under MIT or similar licenses unless a repo says otherwise.', 'sage'),
+                    'url' => $gh,
+                    'affiliate' => false,
+                    'badge' => __('GitHub', 'sage'),
+                ],
+            ],
+        ],
+        [
+            'title' => __('Themes for sale', 'sage'),
+            'intro' => __('Paid packs from studio projects. Story and screenshots live on Work; checkout is optional Shop.', 'sage'),
+            'items' => [
+                [
+                    'name' => __('Browse Work', 'sage'),
+                    'blurb' => __('See the concept page first — problem, approach, stack — then buy if you want the theme pack.', 'sage'),
+                    'url' => home_url('/projects/'),
+                    'affiliate' => false,
+                    'badge' => __('Primary', 'sage'),
+                ],
+                [
+                    'name' => __('Theme shop', 'sage'),
+                    'blurb' => __('Short catalog of purchasable themes. Product links open the matching Work landing.', 'sage'),
+                    'url' => function_exists('wc_get_page_permalink') ? (string) wc_get_page_permalink('shop') : home_url('/shop/'),
+                    'affiliate' => false,
+                    'badge' => __('Paid', 'sage'),
+                ],
+            ],
+        ],
+        [
+            'title' => __('Tools I recommend', 'sage'),
+            'intro' => __('Hosting, editors, and marketing tools I actually use. Affiliate links are marked; swap in your partner URLs when active.', 'sage'),
+            'items' => [
+                [
+                    'name' => 'Cursor',
+                    'blurb' => __('AI-assisted editor I use daily for Sage, PHP, and front-end work.', 'sage'),
+                    'url' => 'https://cursor.com',
+                    'affiliate' => false,
+                    'badge' => __('Editor', 'sage'),
+                ],
+                [
+                    'name' => 'SiteGround',
+                    'blurb' => __('Managed WordPress hosting I use for client and studio sites (SSH, PHP 8.3, solid support).', 'sage'),
+                    'url' => 'https://www.siteground.com',
+                    'affiliate' => true,
+                    'badge' => __('Hosting', 'sage'),
+                ],
+                [
+                    'name' => 'HubSpot',
+                    'blurb' => __('CRM and form capture when a shop needs a simple pipeline without a custom build.', 'sage'),
+                    'url' => 'https://www.hubspot.com',
+                    'affiliate' => true,
+                    'badge' => __('CRM', 'sage'),
+                ],
+                [
+                    'name' => __('Full Uses list', 'sage'),
+                    'blurb' => __('Stack notes for WordPress, deploy, analytics, and design — with the same disclosure rules.', 'sage'),
+                    'url' => home_url('/uses/'),
+                    'affiliate' => false,
+                    'badge' => __('Stack', 'sage'),
+                ],
+            ],
+        ],
+    ];
+}

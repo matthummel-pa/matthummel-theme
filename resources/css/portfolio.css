@@ -10724,3 +10724,164 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
     transform: none;
   }
 }
+
+
+/* —— Affiliate disclosure + Resources catalog —— */
+.affiliate-note,
+.affiliate-disclosure,
+.post-extra-note.affiliate-disclosure {
+  margin: 0 0 1.5rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-bg));
+  font-size: .9rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.affiliate-note strong,
+.affiliate-disclosure strong {
+  color: var(--color-text);
+  font-weight: 650;
+}
+.affiliate-note a,
+.affiliate-disclosure a {
+  color: var(--color-accent);
+  text-underline-offset: 2px;
+}
+
+.uses-item__aff,
+.resources-card__aff {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: .1rem .4rem;
+  border-radius: 4px;
+  font: 600 .68rem/1.2 var(--font-display);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  vertical-align: middle;
+}
+
+.resources-body {
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+}
+.resources-body__grid {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+.resources-section__title {
+  font: 700 clamp(1.15rem, 1.5vw, 1.35rem)/1.25 var(--font-display);
+  letter-spacing: -0.03em;
+  margin: 0 0 .4rem;
+}
+.resources-section__intro {
+  margin: 0 0 1rem;
+  color: var(--color-text-secondary);
+  max-width: 42rem;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.resources-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .85rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.5rem), 1fr));
+}
+.resources-card {
+  padding: 1rem 1.05rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  transition: border-color .15s, transform .15s;
+}
+.resources-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  transform: translateY(-1px);
+}
+.resources-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-bottom: .45rem;
+}
+.resources-card__badge {
+  font: 600 .68rem/1.2 var(--font-display);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.resources-card__name {
+  font: 700 .98rem/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+  margin: 0 0 .35rem;
+}
+.resources-card__name a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+.resources-card__name a:hover,
+.resources-card__name a.affiliate-link:hover {
+  color: var(--color-accent);
+}
+.resources-card__blurb {
+  margin: 0;
+  font-size: .875rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resources-card,
+  .resources-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+
+.affiliate-note {
+  margin: 0 0 1.5rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-bg, #fff));
+  font-size: .9rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.affiliate-note strong { color: var(--color-text); font-weight: 650; }
+.affiliate-note a { color: var(--color-accent); text-underline-offset: 2px; }
+
+.uses-item__aff,
+.resources-card__aff {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: .1rem .4rem;
+  border-radius: 4px;
+  font: 600 .68rem/1.2 var(--font-display);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  vertical-align: middle;
+}
+
+.resources-section__head { margin-bottom: .75rem; }
+.resources-section__title {
+  font: 700 clamp(1.15rem, 1.5vw, 1.35rem)/1.25 var(--font-display);
+  letter-spacing: -0.03em;
+  margin: 0 0 .4rem;
+}
+.resources-section__intro {
+  margin: 0;
+  color: var(--color-text-secondary);
+  max-width: 42rem;
+  font-size: .95rem;
+  line-height: 1.6;
+}

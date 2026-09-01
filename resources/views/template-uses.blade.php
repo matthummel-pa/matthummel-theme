@@ -34,7 +34,8 @@
       'title' => 'Hosting and deploy',
       'icon'  => 'server',
       'items' => [
-        ['SiteGround', 'Managed WordPress hosting for client sites. Solid uptime, decent caching, easy SSH access. PHP 8.3 support is there when you ask for it.', 'https://www.siteground.com'],
+        // 4th value true = disclosed affiliate / compensated link
+        ['SiteGround', 'Managed WordPress hosting for client sites. Solid uptime, decent caching, easy SSH access. PHP 8.3 support is there when you ask for it.', 'https://www.siteground.com', true],
         ['GitHub Releases', 'Theme deployment method for this site. CI builds a zip, publishes it as a release, and wp-admin pulls it over HTTPS. No FTP.', null],
         ['SQLite (local)', 'Local WordPress database for development and Cloud Agent environments. No MySQL required, no Docker overhead. The sqlite-database-integration plugin handles it.', null],
       ],
@@ -45,7 +46,7 @@
       'items' => [
         ['Google Analytics 4', 'Site traffic, page performance, and audience data. Linked through Google Tag Manager.', 'https://analytics.google.com'],
         ['Google Tag Manager', 'Single container for all tracking scripts. One snippet on the page, everything else managed in GTM.', 'https://tagmanager.google.com'],
-        ['HubSpot', 'CRM and contact capture. Picks up form submissions and tracks visitor activity for follow-up.', 'https://www.hubspot.com'],
+        ['HubSpot', 'CRM and contact capture. Picks up form submissions and tracks visitor activity for follow-up.', 'https://www.hubspot.com', true],
         ['Microsoft Clarity / Bing', 'Bing Webmaster Tools for search performance. Microsoft UET for ad conversion tracking.', 'https://clarity.microsoft.com'],
         ['Meta Pixel', 'Facebook and Instagram ad measurement. Planned — not fully active yet.', null],
       ],
@@ -78,13 +79,36 @@
 @component('partials.page-hero')
   <p class="eyebrow">Uses</p>
   <h1 class="display-title is-hero">What I use.</h1>
-  <p class="lead">The tools, stack, and services that show up on real projects. Not an exhaustive list — just what I actually reach for.</p>
+  <p class="lead">The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.</p>
   <p class="about-hero-links" style="margin-top:1rem">
     @foreach ($sections as $s)
       <a href="#uses-{{ \Str::slug($s['title']) }}">{!! \App\mh_svg_icon($s['icon'], 14) !!} {{ $s['title'] }}</a>
     @endforeach
   </p>
 @endcomponent
+
+@php
+  $hasAffiliate = false;
+  foreach ($sections as $s) {
+    foreach ($s['items'] as $row) {
+      if (! empty($row[3])) {
+        $hasAffiliate = true;
+        break 2;
+      }
+    }
+  }
+@endphp
+@if ($hasAffiliate)
+  <div class="container wide">
+    <aside class="affiliate-note" role="note" aria-label="{{ __('Affiliate disclosure', 'sage') }}">
+      <p>
+        <strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
+        {{ \App\mh_affiliate_disclosure_note() }}
+        <a href="{{ esc_url(\App\mh_affiliate_disclosure_url()) }}">{{ __('How affiliate links work', 'sage') }}</a>
+      </p>
+    </aside>
+  </div>
+@endif
 
 <div class="uses-body pf-section">
   <div class="container wide uses-body__grid">
@@ -95,11 +119,23 @@
           <h2 id="uses-{{ \Str::slug($s['title']) }}-heading" class="uses-section__title">{{ $s['title'] }}</h2>
         </div>
         <ul class="uses-list">
-          @foreach ($s['items'] as [$name, $desc, $url])
+          @foreach ($s['items'] as $row)
+            @php
+              [$name, $desc, $url] = array_pad(array_values($row), 3, null);
+              $affiliate = ! empty($row[3]);
+            @endphp
             <li class="uses-item">
               <div class="uses-item__name">
                 @if ($url)
-                  <a href="{{ esc_url($url) }}" rel="noopener" target="_blank">{{ $name }}</a>
+                  <a
+                    href="{{ esc_url($url) }}"
+                    rel="{{ \App\mh_outbound_rel($affiliate) }}"
+                    target="_blank"
+                    @if ($affiliate) data-affiliate="true" class="affiliate-link" @endif
+                  >{{ $name }}</a>
+                  @if ($affiliate)
+                    <span class="uses-item__aff">{{ __('Affiliate', 'sage') }}</span>
+                  @endif
                 @else
                   {{ $name }}
                 @endif
@@ -113,7 +149,6 @@
   </div>
 </div>
 
-{{-- CTA --}}
 @php $gh = \App\Github::fetchUser(\App\mh_github_login()); @endphp
 <section class="cta-band" aria-labelledby="uses-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
@@ -124,14 +159,14 @@
           {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}
         </p>
       @endif
-      <h2 id="uses-cta-heading" class="display-title is-section">{{ __('Want to build something?', 'sage') }}</h2>
-      <p>{{ __('I use this stack on real projects for shops, agencies, and developers. If you have something in mind, say hello.', 'sage') }}</p>
+      <h2 id="uses-cta-heading" class="display-title is-section">{{ __('Want this stack on your project?', 'sage') }}</h2>
+      <p>{{ __('I use these tools on real WordPress and full-stack work. Full-time, contract, or freelance — say hello.', 'sage') }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/code/') }}">{{ __('See my code', 'sage') }}</a>
+      <a class="btn btn-ghost" href="{{ home_url('/resources/') }}">{{ __('Browse resources', 'sage') }}</a>
       <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>

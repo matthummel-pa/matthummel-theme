@@ -64,10 +64,82 @@ function mh_shop_product_payload(int $product_id): ?array
         'regular_price' => (string) $product->get_regular_price(),
         'is_free' => $is_free,
         'purchasable' => $product->is_purchasable() && $product->is_in_stock(),
-        'permalink' => $product->get_permalink(),
+        'permalink' => mh_product_landing_url($product_id) ?: $product->get_permalink(),
         'add_to_cart_url' => mh_product_add_to_cart_url($product_id),
         'short_description' => wp_strip_all_tags((string) $product->get_short_description()),
     ];
+}
+
+/**
+ * Project ID linked to a WooCommerce product (0 when unset).
+ */
+function mh_product_project_id(int $product_id): int
+{
+    if ($product_id <= 0) {
+        return 0;
+    }
+
+    return max(0, (int) get_post_meta($product_id, '_mh_product_project_id', true));
+}
+
+/**
+ * Public landing URL for a product — the linked Work concept page when available.
+ */
+function mh_product_landing_url(int $product_id): string
+{
+    $project_id = mh_product_project_id($product_id);
+    if ($project_id <= 0) {
+        return '';
+    }
+
+    $project = get_post($project_id);
+    if (! $project instanceof \WP_Post || $project->post_status !== 'publish') {
+        return '';
+    }
+
+    $url = get_permalink($project_id);
+
+    return is_string($url) ? $url : '';
+}
+
+/**
+ * Point product permalinks at the Work concept page so shop cards open the portfolio landing.
+ *
+ * @param  string  $permalink  Default product URL.
+ * @param  \WC_Product  $product  Product object.
+ */
+function mh_filter_product_permalink(string $permalink, $product): string
+{
+    if (! is_object($product) || ! method_exists($product, 'get_id')) {
+        return $permalink;
+    }
+
+    $landing = mh_product_landing_url((int) $product->get_id());
+
+    return $landing !== '' ? $landing : $permalink;
+}
+
+/**
+ * Send direct /product/{slug}/ visits to the linked Work concept page (one story URL).
+ */
+function mh_redirect_product_to_project(): void
+{
+    if (! mh_shop_ready() || ! function_exists('is_product') || ! is_product()) {
+        return;
+    }
+
+    // Opt out for Woo admin preview / explicit raw product view.
+    if (isset($_GET['mh_wc_product']) || is_preview()) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        return;
+    }
+
+    $landing = mh_product_landing_url((int) get_queried_object_id());
+    if ($landing === '') {
+        return;
+    }
+
+    wp_safe_redirect($landing, 301);
+    exit;
 }
 
 /**
@@ -521,6 +593,8 @@ add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
 }, 30);
 
 add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_catalog_url');
+add_filter('woocommerce_product_get_permalink', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_product_to_project', 5);
 add_filter('loop_shop_columns', fn (): int => 3);
 add_filter('woocommerce_product_single_add_to_cart_text', function ($text, $product = null) {
     return mh_woocommerce_buy_label($product);

@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.39 — 2026-09-01
+
+### Changed
+
+- Sitewide copy retuned for hireable portfolio + secondary monetization: Work and Hire primary; Themes shop secondary; Resources for free starters and disclosed tool recommendations
+- Uses and Resources show affiliate disclosure and Affiliate badges on compensated links (`rel="sponsored noopener"`)
+- Footer: Resources + Affiliate disclosure; Themes label replaces Shop; Uses under Site
+- Primary nav sync (`mh_nav_synced_v4`): Work, Hire, Journal, Code, About
+- One-time field migration `mh_hireable_affiliate_copy_v1` updates saved page meta that still matched old defaults
+- Affiliate disclosure page covers Journal, Uses, and Resources (not articles only)
+- Product permalinks continue to land on linked Work concept pages
+
 All notable changes to this theme are recorded here.
 
 ## 3.1.38 — 2026-08-31

@@ -14,6 +14,7 @@ What the 3.x Sage theme does, and where it lives.
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
 | Work | Featured project, search, type counts, Grid/List, share/copy links to on-site `/projects/{slug}/` pages; **Buy theme** (WooCommerce add-to-cart when a product exists) + **Get help** (contact prefill); **Projects CPT** with per-project “Show on site” from wp-admin | `template-projects.blade.php`, `single-project.blade.php`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `mh_project_*()` / `app/concept-pages.php`, `app/shop.php` |
+| Resources | Free starters, themes for sale, and disclosed tool recommendations; hire CTAs | `template-resources.blade.php`, `mh_resources_catalog()`, `app/affiliate.php` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
 | Code | Open-source GitHub showcase (profile, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
@@ -30,6 +31,11 @@ What the 3.x Sage theme does, and where it lives.
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
+
+## Editor’s notes (3.1.39 hireable + affiliate)
+
+- Portfolio stays primary (Work / Hire / Code / Journal). Shop is Themes only in footer. Resources holds free starters + disclosed affiliates.
+- Compensated links: visible Affiliate badge + page disclosure + `rel="sponsored noopener"`.
 
 ## Content helpers
 
