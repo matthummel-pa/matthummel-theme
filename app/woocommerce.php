@@ -204,15 +204,44 @@ add_action('wp', function (): void {
     remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10);
     remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
     remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
+    // Theme Blade heroes include breadcrumbs; drop the default WC trail to avoid duplicates.
+    remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+    // Hero already prints the product name as the page H1.
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 5);
 
     add_action('woocommerce_before_main_content', function (): void {
-        echo '<div class="container wide page-block woocommerce-wrap">';
+        $mod = '';
+        if (function_exists('is_cart') && is_cart()) {
+            $mod = ' woocommerce-wrap--cart';
+        } elseif (function_exists('is_checkout') && is_checkout()) {
+            $mod = ' woocommerce-wrap--checkout';
+        } elseif (function_exists('is_account_page') && is_account_page()) {
+            $mod = ' woocommerce-wrap--account';
+        } elseif (function_exists('is_product') && is_product()) {
+            $mod = ' woocommerce-wrap--product';
+        } elseif (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
+            $mod = ' woocommerce-wrap--shop';
+        }
+        echo '<div class="container wide page-block woocommerce-wrap'.esc_attr($mod).'">';
     }, 10);
 
     add_action('woocommerce_after_main_content', function (): void {
         echo '</div>';
     }, 10);
 });
+
+add_action('woocommerce_before_cart_table', function (): void {
+    echo '<div class="shop-table-scroll" tabindex="0" role="region" aria-label="'.esc_attr__('Cart items', 'sage').'">';
+}, 5);
+add_action('woocommerce_after_cart_table', function (): void {
+    echo '</div>';
+}, 50);
+add_action('woocommerce_checkout_before_order_review', function (): void {
+    echo '<div class="shop-table-scroll" tabindex="0" role="region" aria-label="'.esc_attr__('Order review', 'sage').'">';
+}, 5);
+add_action('woocommerce_checkout_after_order_review', function (): void {
+    echo '</div>';
+}, 50);
 
 add_action('init', __NAMESPACE__.'\\mh_seed_woocommerce_pages', 42);
 add_action('woocommerce_installed', __NAMESPACE__.'\\mh_seed_woocommerce_pages');

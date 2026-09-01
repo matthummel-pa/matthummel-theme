@@ -67,11 +67,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     $map = [
         'front-page.blade.php' => [
             'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Say hello to start.',
+            'desc' => 'Full-stack and WordPress developer open for full-time, contract, and freelance work. Portfolio, themes, and disclosed tool recommendations.',
         ],
         'template-home.blade.php' => [
             'title' => 'Full-Stack & WordPress Developer | '.$brand,
-            'desc' => 'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Say hello to start.',
+            'desc' => 'Full-stack and WordPress developer open for full-time, contract, and freelance work. Portfolio, themes, and disclosed tool recommendations.',
         ],
         'template-services.blade.php' => [
             'title' => 'Full-Stack & WordPress Development Services | '.$brand,
@@ -82,8 +82,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => 'A short discovery form for agencies and shops. Four steps so I can prepare for our first meeting.',
         ],
         'template-projects.blade.php' => [
-            'title' => 'Example WordPress Sites | '.$brand,
-            'desc' => 'Studio WordPress projects for tours, inns, and shops. See example sites or say hello.',
+            'title' => 'Selected WordPress Work | '.$brand,
+            'desc' => 'Concept WordPress projects with demos and stack notes. Hire me to adapt one, or buy a theme when it is for sale.',
         ],
         'template-thankyou.blade.php' => [
             'title' => 'Message received | '.$brand,
@@ -91,7 +91,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-uses.blade.php' => [
             'title' => 'Uses — tools and stack | '.$brand,
-            'desc' => 'The tools I use on real WordPress projects — Sage, Tailwind, Cursor AI, GitHub Actions, and more. Say hello if you want to build together.',
+            'desc' => 'Tools I use on real WordPress and full-stack projects. Some links may be affiliates — disclosure on the page.',
+        ],
+        'template-resources.blade.php' => [
+            'title' => 'Resources — starters, themes, and tools | '.$brand,
+            'desc' => 'Free starters, themes from studio work, and tools I recommend. Affiliate links are disclosed. Hire me for a full build.',
         ],
         'template-hire.blade.php' => [
             'title' => 'Hire a Full-Stack & WordPress Developer | '.$brand,
@@ -115,7 +119,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-woocommerce.blade.php' => [
             'title' => '',
-            'desc' => 'Shop cart, checkout, and account pages for matthummel.com.',
+            'desc' => 'Cart, checkout, and account for WordPress themes and digital products from Matt Hummel.',
         ],
         'template-contact.blade.php' => [
             'title' => 'Contact a Full-Stack & WordPress Developer | '.$brand,
@@ -131,7 +135,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => 'What I\'m doing now | '.$brand,
-            'desc' => 'Publishing example WordPress projects, writing notes, and open for new work.',
+            'desc' => 'Open for full-time and contract work, shipping WordPress projects and themes, writing notes, and recommending tools with clear disclosure.',
         ],
         'index.blade.php' => [
             'title' => 'Journal — Full-Stack & WordPress Development | '.$brand,
@@ -158,6 +162,59 @@ function mh_seo_current_post_id(): int
 
 function mh_seo_document_title(): string
 {
+    if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        $label = function_exists('woocommerce_page_title')
+            ? wp_strip_all_tags((string) woocommerce_page_title(false))
+            : __('Shop', 'sage');
+        if ($label === '') {
+            $label = __('Shop', 'sage');
+        }
+        $built = is_shop()
+            ? __('WordPress Themes', 'sage').' | '.$brand
+            : $label.' | '.__('Themes', 'sage').' | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+
+    if (function_exists('is_product') && is_product()) {
+        $post_id = (int) get_queried_object_id();
+        $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
+        if ($pluginTitle === false) {
+            return '';
+        }
+        if ($pluginTitle !== '') {
+            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+        }
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        $title = trim(get_the_title($post_id));
+        if ($title === '') {
+            return '';
+        }
+        $built = $title.' | '.__('WordPress Theme', 'sage').' | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+
+    if (function_exists('is_cart') && is_cart()) {
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        $built = __('Cart', 'sage').' | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+    if (function_exists('is_checkout') && is_checkout()) {
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        $built = __('Checkout', 'sage').' | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+    if (function_exists('is_account_page') && is_account_page()) {
+        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+        $built = __('My account', 'sage').' | '.$brand;
+
+        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+
     if (is_singular(mh_project_post_type())) {
         $post_id = (int) get_queried_object_id();
         $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
@@ -252,6 +309,47 @@ function mh_seo_plugin_meta(int $post_id, array $keys): string|false
  */
 function mh_seo_meta_description(): string
 {
+    if (function_exists('is_shop') && is_shop()) {
+        $desc = __('Themes from studio Work projects. Browse the concept page for context, buy the pack here, or say hello to hire me for a custom build.', 'sage');
+
+        return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
+    }
+    if (function_exists('is_product') && is_product()) {
+        $post_id = (int) get_queried_object_id();
+        $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);
+        if ($pluginDesc === false) {
+            return '';
+        }
+        if ($pluginDesc !== '') {
+            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+        }
+        $desc = wp_strip_all_tags((string) (get_the_excerpt($post_id) ?: get_the_title($post_id)));
+        $desc = wp_trim_words($desc, 28, '');
+        if ($desc !== '' && ! str_ends_with($desc, '.')) {
+            $desc .= '.';
+        }
+        if ($desc === '') {
+            $desc = __('WordPress theme for sale. See the details or say hello for help adapting it.', 'sage');
+        }
+
+        return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
+    }
+    if (function_exists('is_cart') && is_cart()) {
+        $desc = __('Review themes in your cart, update quantities, and continue to secure checkout.', 'sage');
+
+        return $desc;
+    }
+    if (function_exists('is_checkout') && is_checkout()) {
+        $desc = __('Secure checkout for digital WordPress themes. Access details arrive by email after payment.', 'sage');
+
+        return $desc;
+    }
+    if (function_exists('is_account_page') && is_account_page()) {
+        $desc = __('View orders, downloads, and account details for your WordPress theme purchases.', 'sage');
+
+        return $desc;
+    }
+
     if (is_singular(mh_project_post_type())) {
         $post_id = (int) get_queried_object_id();
         $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);

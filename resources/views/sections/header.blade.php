@@ -63,7 +63,7 @@
         >
           {!! \App\mh_svg_icon('cart', 18) !!}
           @if ($cartCount > 0)
-            <span class="header-cart__count">{{ $cartCount }}</span>
+            <span class="header-cart__count" aria-hidden="true">{{ $cartCount }}</span>
           @endif
         </a>
       @endif

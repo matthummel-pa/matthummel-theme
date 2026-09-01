@@ -1,6 +1,40 @@
 # Changelog
 
+## 3.1.41 — Home hero polish
+
+- Quiet the above-the-fold hero: one kicker, shorter role/lede, Hire + Browse only.
+- Move live stats into a right-column illustration (window chrome, soft orbs, status pill, 2×2 grid).
+- Availability badge lives on the illustration instead of duplicating in the copy column.
+
+## 3.1.40 — 2026-09-01
+
+### Improved
+
+- Home hero: two-column above-the-fold — copy left, GitHub stats as a clean illustration panel on the right
+- Shorter home lede; page jump links move below the ticker; quick-link row trimmed to Hire / Browse work / GitHub
+
+## 3.1.39 — 2026-09-01
+
+### Changed
+
+- Sitewide copy retuned for hireable portfolio + secondary monetization: Work and Hire primary; Themes shop secondary; Resources for free starters and disclosed tool recommendations
+- Uses and Resources show affiliate disclosure and Affiliate badges on compensated links (`rel="sponsored noopener"`)
+- Footer: Resources + Affiliate disclosure; Themes label replaces Shop; Uses under Site
+- Primary nav sync (`mh_nav_synced_v4`): Work, Hire, Journal, Code, About
+- One-time field migration `mh_hireable_affiliate_copy_v1` updates saved page meta that still matched old defaults
+- Affiliate disclosure page covers Journal, Uses, and Resources (not articles only)
+- Product permalinks continue to land on linked Work concept pages
+
 All notable changes to this theme are recorded here.
+
+## 3.1.38 — 2026-08-31
+
+### Improved
+
+- WooCommerce shop, product, cart, checkout, and account pages: page heroes, accessible breadcrumbs, empty states, scrollable cart/order tables, clearer notices/forms, product grid cards, sticky checkout review, My Account nav pills
+- Shop/product/cart/checkout/account document titles and meta descriptions when Rank Math / Yoast are not set
+- Get help / View project links include visually-hidden product names for screen readers; header cart badge is `aria-hidden` (count stays in the link label)
+- Single-product H1 lives in the hero only (default Woo title removed); dark-mode styles for shop surfaces
 
 ## 3.1.37 — 2026-08-31
 

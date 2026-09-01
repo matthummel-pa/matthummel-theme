@@ -157,7 +157,7 @@
         @if ($hasAffiliateLinks)
           <aside class="post-extra-note affiliate-disclosure" aria-label="Affiliate disclosure">
             <strong>Affiliate disclosure:</strong>
-            I may earn a commission if you purchase through links in this post, at no additional cost to you. I only recommend tools I believe fit the use case described.
+            I may earn a commission if you buy through links in this post, at no extra cost to you. I only recommend tools I would use on a real project. The same disclosure covers Uses and Resources.
             <a href="{{ home_url('/affiliate-disclosure/') }}">How affiliate links work on this site.</a>
           </aside>
         @endif

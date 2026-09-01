@@ -31,11 +31,11 @@
     $problemHeading = __('Built for this niche', 'sage');
     $approachHeading = __('How the theme works', 'sage');
     $resultHeading = __('What you get', 'sage');
-    $relatedHeading = __('More themes', 'sage');
+    $relatedHeading = __('More projects', 'sage');
     $crumbBrowse = __('All work', 'sage');
-    $ctaKicker = __('Theme shop', 'sage');
+    $ctaKicker = __('From this project', 'sage');
     $ctaTitle = sprintf(__('Ready for %s?', 'sage'), $title);
-    $ctaText = __('Buy the theme for a self-serve install, or get help to customize it for your shop.', 'sage');
+    $ctaText = __('Hire me to customize it for your shop, or buy the theme for a self-serve install.', 'sage');
     $ctaLabel = $primaryLabel;
     $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
   } elseif ($isPlugin) {
@@ -49,11 +49,11 @@
     $problemHeading = __('The problem it solves', 'sage');
     $approachHeading = __('How it works', 'sage');
     $resultHeading = __('What you get', 'sage');
-    $relatedHeading = __('More products', 'sage');
+    $relatedHeading = __('More projects', 'sage');
     $crumbBrowse = __('All work', 'sage');
-    $ctaKicker = __('Plugin shop', 'sage');
+    $ctaKicker = __('From this project', 'sage');
     $ctaTitle = sprintf(__('Get %s', 'sage'), $title);
-    $ctaText = __('Download the plugin, or get help to extend it for your stack.', 'sage');
+    $ctaText = __('Hire me to extend it for your stack, or download the plugin for a self-serve install.', 'sage');
     $ctaLabel = $primaryLabel;
     $ctaHref = ! empty($product['add_to_cart_url']) ? $product['add_to_cart_url'] : $useUrl;
   } else {
