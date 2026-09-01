@@ -1,1 +1,45 @@
 @import "tailwindcss";
+@import "./journal-blocks.css";
+
+/**
+ * Block editor canvas — match journal post chrome for comparison grids.
+ * Fonts are also enqueued via enqueue_block_editor_assets in portfolio.php.
+ */
+.editor-styles-wrapper {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.editor-styles-wrapper .wp-block {
+  max-width: 720px;
+}
+
+/* Comparison figure / pipeline can span the wider editor canvas */
+.editor-styles-wrapper .wp-block-matthummel-tool-grid,
+.editor-styles-wrapper .wp-block-matthummel-ship-pipe,
+.editor-styles-wrapper .wp-block-group.mh-ai-figure,
+.editor-styles-wrapper .wp-block-group.mh-tool-grid {
+  max-width: 920px;
+}
+
+/* Keep selected custom blocks from looking like bare Group chrome */
+.editor-styles-wrapper .wp-block-matthummel-tool-card.is-selected,
+.editor-styles-wrapper .wp-block-matthummel-ship-step.is-selected {
+  outline-offset: 3px;
+}
+
+.editor-styles-wrapper .wp-block-heading {
+  font-family: Inter, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  color: #111827;
+}
+
+.editor-styles-wrapper p {
+  font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  color: #1f2937;
+}
+
+.editor-styles-wrapper a {
+  color: #2563eb;
+}
