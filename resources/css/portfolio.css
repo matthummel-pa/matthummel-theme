@@ -11621,7 +11621,6 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
   color: var(--color-accent);
   font: 700 .72rem/1 var(--font-display);
   letter-spacing: .04em;
-  text-transform: uppercase;
   box-sizing: border-box;
 }
 .mh-tool-card:hover,
