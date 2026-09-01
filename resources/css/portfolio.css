@@ -804,14 +804,14 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   letter-spacing: -0.02em;
   color: var(--color-text-muted);
   margin: 0 0 .7rem;
-  max-width: 32ch;
+  max-width: 38ch;
   text-wrap: balance;
 }
 .h-hero__lede {
   font-size: clamp(.95rem, 1.4vw, 1.08rem);
   line-height: 1.6;
   color: var(--color-text-secondary);
-  max-width: 40ch;
+  max-width: 48ch;
   margin: 0 0 1.35rem;
   text-wrap: pretty;
 }

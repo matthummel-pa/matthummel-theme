@@ -35,6 +35,14 @@ What the 3.x Sage theme does, and where it lives.
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
 | WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
 
+## Editor’s notes (3.1.47 home hero SEO)
+
+- H1 keeps the name and adds the primary phrase (`WordPress developer`).
+- Role line carries stack + audience (shops / agencies).
+- Lede: ownership benefit, stack proof, open-for-work close — three short sentences.
+- Empty fields restore via `mh_home_hero_default()` (Blade + `mh_seo_landing_defaults`). Do not pass older H1/role/lede strings into `field()`.
+- One-shot `mh_home_hero_seo_copy_v1` only writes empty or exact prior home meta.
+
 ## Editor’s notes (3.1.41 home hero)
 
 Above-the-fold is copy left + illustration right. Stats (repos, followers, Remote, Full stack) sit in the illustration only — not under the CTAs. Availability is a status pill on the card. Keep the left column to kicker, name, role, lede, and two actions.

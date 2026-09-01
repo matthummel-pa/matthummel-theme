@@ -240,15 +240,15 @@
       </p>
 
       <h1 id="h-hero-name" class="h-hero__name">
-        {{ \App\field('home_h1', $gh['name'] ?: __('Matt Hummel', 'sage')) }}
+        {{ \App\field('home_h1', \App\mh_home_hero_default('h1')) }}
       </h1>
 
       <p class="h-hero__role">
-        {{ \App\field('home_role', __('Full-stack & WordPress developer.', 'sage')) }}
+        {{ \App\field('home_role', \App\mh_home_hero_default('role')) }}
       </p>
 
       <p class="h-hero__lede">
-        {{ \App\field('home_lede', __('I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.', 'sage')) }}
+        {{ \App\field('home_lede', \App\mh_home_hero_default('lede')) }}
       </p>
 
       <div class="h-hero__actions">

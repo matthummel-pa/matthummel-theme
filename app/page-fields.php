@@ -167,6 +167,29 @@ function mh_seo_field_group(): array
 }
 
 /**
+ * Canonical home-hero copy for field defaults, Blade fallbacks, and SEO title.
+ *
+ * Clearing a Page content box restores these strings. Keep Blade and
+ * mh_seo_landing_defaults on this helper so empty meta cannot drift.
+ *
+ * @since 3.1.47
+ *
+ * @param  string  $key  One of h1, role, lede, seo_title.
+ * @param  string  $brand  Site name appended to seo_title.
+ */
+function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): string
+{
+    $copy = [
+        'h1' => __('Matt Hummel — WordPress developer', 'sage'),
+        'role' => __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage'),
+        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage'),
+        'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+    ];
+
+    return $copy[$key] ?? '';
+}
+
+/**
  * Field group definitions for the Home/front-page template.
  *
  * @since 3.1.0
@@ -178,9 +201,9 @@ function mh_home_fields(): array
     return [
         __('Hero', 'sage') => [
             ['home_kicker', __('Kicker (above name)', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
-            ['home_h1', __('Heading', 'sage'), 'text', __('Matt Hummel — WordPress developer', 'sage')],
-            ['home_role', __('Role line', 'sage'), 'text', __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage')],
-            ['home_lede', __('Intro', 'sage'), 'textarea', __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage')],
+            ['home_h1', __('Heading', 'sage'), 'text', mh_home_hero_default('h1')],
+            ['home_role', __('Role line', 'sage'), 'text', mh_home_hero_default('role')],
+            ['home_lede', __('Intro', 'sage'), 'textarea', mh_home_hero_default('lede')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('Browse work', 'sage')],
