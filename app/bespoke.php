@@ -1613,15 +1613,13 @@ function mh_apply_home_redesign_copy(): void
             'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops. Useful if you run a local business and want to see what a clear WordPress site can look like.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
             'Concept work from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg tours, inns, and shops.' => 'Concept sites from <a href="https://ridgesandvalleys.com">Ridges &amp; Valleys</a> for Gettysburg shops, tours, and inns.',
         ],
-        'mh_f_home_help_p1' => [
-            'I build WordPress sites and plugins shops can edit. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
-        ],
         'mh_f_home_help_h2' => [
             'If you need a hand' => 'Let\'s talk.',
         ],
         'mh_f_home_help_p1' => [
-            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
-            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
+            'I build WordPress sites and plugins shops can edit. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
+            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
+            'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
         ],
         'mh_f_home_help_p2' => [
             'Read <a href="/services/">how I can help</a>, or <a href="/contact/">send a note</a>. A question about a post or a snippet is just as welcome as a build request.' => 'Read <a href="/services/">how I can help</a>, or just send a note. A question about a post is just as welcome as a project inquiry.',
@@ -2459,7 +2457,6 @@ function mh_apply_hireable_affiliate_copy_v1(): void
         'This Sage 11 site is a notebook: a journal, snippets, and example shops.' => 'Shipping concept sites and themes from studio projects (Work + optional Shop).',
         'Full-stack work: WordPress, plugins, and other web apps.' => 'Open for full-time, contract, and freelance WordPress / full-stack work.',
         'Sharing notes on this blog, DEV.to, Bluesky, and Reddit.' => 'Publishing notes on the journal, DEV.to, Bluesky, and Reddit.',
-        'Example sites' => 'Work',
     ];
 
     $keyed = [
@@ -2489,6 +2486,11 @@ function mh_apply_hireable_affiliate_copy_v1(): void
         ],
         'mh_f_home_help_h2' => [
             'Working on something?' => 'Hiring or building?',
+        ],
+        'mh_f_home_help_p1' => [
+            'I build WordPress sites and plugins shops can edit. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
+            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
+            'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.' => 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.',
         ],
         'mh_f_home_help_p2' => [
             'Say hello. A question about a post is just as welcome as a project inquiry.' => 'Say hello on <a href="/hire/">Hire</a> or <a href="/contact/">Contact</a>. Roles, freelance builds, and post questions are all welcome.',
@@ -2570,6 +2572,10 @@ function mh_apply_hireable_affiliate_copy_v1(): void
 
             $next = $raw;
             foreach ($swaps as $old => $new) {
+                // Skip short labels in substring mode (avoids "Example sites are…" → "Work are…").
+                if (strlen($old) < 24) {
+                    continue;
+                }
                 if (str_contains($next, $old)) {
                     $next = str_replace($old, $new, $next);
                 }
@@ -2583,11 +2589,14 @@ function mh_apply_hireable_affiliate_copy_v1(): void
     update_option('mh_hireable_affiliate_copy_v1', true);
 }
 
+add_action('init', __NAMESPACE__.'\\mh_apply_hireable_affiliate_copy_v1', 74);
+
 /**
- * One-time: shorten home hero role/lede defaults after illustration layout.
+ * One-time: shorten home hero role/lede after hireable copy lands, and repair
+ * a few migration footguns from the hireable/affiliate pass.
  */
 add_action('init', function (): void {
-    if (get_option('mh_home_hero_illu_v1')) {
+    if (get_option('mh_bugbot_copy_fixes_v1')) {
         return;
     }
 
@@ -2596,36 +2605,64 @@ add_action('init', function (): void {
         $id = (int) get_option('page_on_front');
         $home = $id ? get_post($id) : null;
     }
-    if (! $home) {
-        update_option('mh_home_hero_illu_v1', true);
 
-        return;
+    if ($home) {
+        $id = (int) $home->ID;
+        $roleKey = 'mh_f_home_role';
+        $ledeKey = 'mh_f_home_lede';
+        $helpKey = 'mh_f_home_help_p1';
+        $shortRole = 'Full-stack & WordPress developer.';
+        $shortLede = 'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.';
+        $helpTarget = 'I build WordPress sites, plugins, and web apps teams can own. Looking for a full-time or contract developer, or a shop that needs a site? Start here.';
+
+        $oldRoles = [
+            'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+            'Full-stack & WordPress developer — open for full-time, contract, and freelance',
+            'Full-stack web development, with WordPress at the center.',
+        ];
+        $oldLedes = [
+            'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
+            'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build',
+            'I build custom WordPress platforms and web applications with PHP, JavaScript, React, and APIs. Businesses get software they own; agencies get clean code built for a confident handoff.',
+            'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
+        ];
+        $oldHelp = [
+            'I build WordPress sites and plugins shops can edit. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
+            'I build WordPress sites, plugins, and other web apps. I still do some Power Platform work when a team already lives in Microsoft 365.',
+            'I build WordPress sites and plugins from Gettysburg, PA. I\'ve done Power Platform work when a team runs on Microsoft 365, but WordPress is what I reach for.',
+        ];
+
+        $role = (string) get_post_meta($id, $roleKey, true);
+        $lede = (string) get_post_meta($id, $ledeKey, true);
+        $help = (string) get_post_meta($id, $helpKey, true);
+
+        if ($role === '' || in_array($role, $oldRoles, true)) {
+            update_post_meta($id, $roleKey, $shortRole);
+        }
+        if ($lede === '' || in_array($lede, $oldLedes, true)) {
+            update_post_meta($id, $ledeKey, $shortLede);
+        }
+        if ($help === '' || in_array($help, $oldHelp, true)) {
+            update_post_meta($id, $helpKey, $helpTarget);
+        }
     }
 
-    $id = (int) $home->ID;
-    $roleKey = 'mh_f_home_role';
-    $ledeKey = 'mh_f_home_lede';
-    $oldRoles = [
-        'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
-        'Full-stack & WordPress developer — open for full-time, contract, and freelance',
-    ];
-    $oldLedes = [
-        'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
-        'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build',
-    ];
-    $role = (string) get_post_meta($id, $roleKey, true);
-    $lede = (string) get_post_meta($id, $ledeKey, true);
-    if ($role === '' || in_array($role, $oldRoles, true)) {
-        update_post_meta($id, $roleKey, 'Full-stack & WordPress developer.');
+    // Repair corrupted empty-state copy from substring "Example sites" → "Work".
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+    foreach ($pages as $pid) {
+        $pid = (int) $pid;
+        $empty = (string) get_post_meta($pid, 'mh_f_work_empty_h2', true);
+        if ($empty === 'Work are on the way.') {
+            update_post_meta($pid, 'mh_f_work_empty_h2', 'Example sites are on the way.');
+        }
     }
-    if ($lede === '' || in_array($lede, $oldLedes, true)) {
-        update_post_meta(
-            $id,
-            $ledeKey,
-            'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.'
-        );
-    }
+
     update_option('mh_home_hero_illu_v1', true);
-}, 32);
-
-add_action('init', __NAMESPACE__.'\\mh_apply_hireable_affiliate_copy_v1', 74);
+    update_option('mh_bugbot_copy_fixes_v1', true);
+}, 80);
