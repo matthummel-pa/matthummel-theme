@@ -149,9 +149,9 @@ img { max-width: 100%; display: block; }
   margin-top: 0;
 }
 .display-title.is-hero {
-  font-size: clamp(2.6rem, 7.5vw, 5.25rem);
+  font-size: clamp(2.2rem, 6vw, 4.15rem);
   letter-spacing: var(--type-hero-track);
-  margin-bottom: 1.1rem;
+  margin-bottom: .8rem;
 }
 .display-title.is-section {
   font-size: clamp(1.7rem, 3.6vw, 2.65rem);
@@ -723,7 +723,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   --h-hero-viz-bg: color-mix(in srgb, var(--color-navy, #0f1c2e) 4%, var(--color-bg, #fff));
   --h-hero-viz-line: color-mix(in srgb, var(--color-navy, #0f1c2e) 12%, transparent);
   background: var(--white, var(--color-bg, #fff));
-  padding: clamp(3.25rem, 7vh, 5.5rem) 0 clamp(2.5rem, 5vh, 4rem);
+  padding: clamp(2.5rem, 5.5vh, 4.25rem) 0 clamp(2rem, 4vh, 3.25rem);
   min-height: calc(100svh - 5rem);
   display: flex;
   align-items: center;
@@ -795,10 +795,10 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 }
 
 .h-hero__name {
-  font: 800 clamp(2.15rem, 5vw, 3.75rem)/1.05 var(--font-display);
+  font: 800 clamp(1.9rem, 4.4vw, 3.15rem)/1.05 var(--font-display);
   letter-spacing: -0.05em;
   color: var(--color-text);
-  margin: 0 0 .85rem;
+  margin: 0 0 .65rem;
   text-wrap: balance;
 }
 .h-hero__role {
@@ -1321,7 +1321,7 @@ html.mh-dark .h-badge--open {
   overflow: hidden;
   background: var(--white);
   color: var(--color-text);
-  padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(2.5rem, 4vw, 3.75rem);
+  padding: clamp(2.75rem, 5vw, 4.25rem) 0 clamp(2rem, 3.5vw, 3rem);
   border-bottom: 1px solid var(--color-border);
 }
 .page-header::before,
@@ -1338,7 +1338,7 @@ html.mh-dark .h-badge--open {
 }
 .page-header-inner { position: relative; z-index: 1; }
 .page-header .display-title { color: var(--color-text); }
-.page-header .display-title.is-hero { font-size: clamp(2.5rem, 6.5vw, 4.5rem); max-width: 18ch; letter-spacing: var(--type-hero-track); }
+.page-header .display-title.is-hero { font-size: clamp(2.1rem, 5.4vw, 3.55rem); max-width: 18ch; letter-spacing: var(--type-hero-track); }
 .page-header .eyebrow { color: var(--color-accent); }
 .page-header .lead { color: var(--color-text-secondary); max-width: 40rem; margin-bottom: 0; }
 .page-header .lead a { color: var(--color-accent); }
@@ -1365,7 +1365,7 @@ html.mh-dark .h-badge--open {
 }
 .page-header-split__copy .display-title.is-hero {
   max-width: 16ch;
-  margin-bottom: .65rem;
+  margin-bottom: .5rem;
 }
 .page-header-split__copy .lead {
   max-width: 36rem;
@@ -1451,8 +1451,8 @@ html.mh-dark .h-badge--open {
 .post-hero-inner { position: relative; z-index: 1; }
 .post-hero-title {
   color: var(--color-text);
-  font-size: clamp(2rem, 6vw, 3.75rem);
-  margin: .35rem 0 .9rem;
+  font-size: clamp(1.85rem, 5.2vw, 3.15rem);
+  margin: .35rem 0 .75rem;
   font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1.05;
@@ -6407,7 +6407,7 @@ html.mh-dark .h-badge--open {
 }
 .page-header--project .display-title.is-hero {
   max-width: 14ch;
-  font-size: clamp(2.05rem, 4.4vw, 3.35rem);
+  font-size: clamp(1.85rem, 4vw, 2.85rem);
 }
 .page-header--project .lead {
   max-width: 38rem;
@@ -6893,7 +6893,7 @@ html.mh-dark .h-badge--open {
     font-size: clamp(1.5rem, 4.5vw, 2.4rem);
   }
   .display-title.is-hero {
-    font-size: clamp(2rem, 6vw, 3.25rem);
+    font-size: clamp(1.85rem, 5.4vw, 2.75rem);
   }
 }
 
@@ -6901,7 +6901,7 @@ html.mh-dark .h-badge--open {
 @media (max-width: 560px) {
   body { font-size: 1.05rem; }
   .h-hero__name {
-    font-size: clamp(1.65rem, 8vw, 2.5rem) !important;
+    font-size: clamp(1.55rem, 7vw, 2.25rem) !important;
     letter-spacing: -0.04em !important;
   }
   .h-section__title {
@@ -6920,7 +6920,7 @@ html.mh-dark .h-badge--open {
     font-size: 1rem;
   }
   .display-title.is-hero {
-    font-size: clamp(1.85rem, 8vw, 2.5rem);
+    font-size: clamp(1.7rem, 7vw, 2.25rem);
   }
   .display-title.is-section {
     font-size: clamp(1.35rem, 5.5vw, 1.75rem);
@@ -6931,7 +6931,7 @@ html.mh-dark .h-badge--open {
   .svc-process__num,
   .svc-v2-card__num { font-size: 1.5rem !important; }
   .resume-who h3 { font-size: 1.05rem; }
-  .post-hero-title { font-size: clamp(1.75rem, 7vw, 2.5rem); }
+  .post-hero-title { font-size: clamp(1.6rem, 6.5vw, 2.25rem); }
   .h-journal__featured-title { font-size: clamp(1.2rem, 5vw, 1.5rem); }
   .h-work-featured__title { font-size: clamp(1.35rem, 5.5vw, 1.85rem); }
 }
@@ -9690,15 +9690,15 @@ html.mh-dark .h-badge--open {
 .post-breadcrumb a:hover { color: var(--color-accent); }
 
 .post-hero-title {
-  font: 800 clamp(1.9rem, 4.5vw, 3rem)/1.1 var(--font-display);
+  font: 800 clamp(1.75rem, 4vw, 2.65rem)/1.1 var(--font-display);
   letter-spacing: -0.05em;
   color: var(--color-text);
-  margin: 0 0 1.1rem;
+  margin: 0 0 .85rem;
   max-width: none;
   text-wrap: balance;
   text-align: left;
 }
-@media (max-width: 560px) { .post-hero-title { font-size: clamp(1.65rem, 7vw, 2.25rem); } }
+@media (max-width: 560px) { .post-hero-title { font-size: clamp(1.55rem, 6.5vw, 2.05rem); } }
 
 .post-hero-meta {
   display: flex;
