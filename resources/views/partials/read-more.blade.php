@@ -1,6 +1,6 @@
 @php
   $url = $url ?? get_permalink();
-  $name = $name ?? wp_strip_all_tags(get_the_title());
+  $name = $name ?? wp_strip_all_tags(\App\mh_post_title());
   $label = $label ?? __('Read more', 'sage');
   $external = ! empty($external);
 @endphp

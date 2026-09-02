@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.60 — Post title special characters
+
+- Decode WordPress texturized title entities before Blade output so apostrophes and quotes render correctly (fixes `doesn&#8217;t` showing literally).
+
 ## 3.1.59 — Tool card semantic markup + heading level control
 
 - Tool cards render as `<article>` inside a `<ul>` grid; tool names use a configurable H2–H4 heading (default H3).
