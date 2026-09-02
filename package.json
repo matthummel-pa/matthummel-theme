@@ -21,6 +21,6 @@
     "highlight.js": "^11.12.0",
     "laravel-vite-plugin": "^3.0.0",
     "tailwindcss": "^4.0.0",
-    "vite": "^8.0.0"
+    "vite": "^8.2.2"
   }
 }

@@ -4,6 +4,7 @@
 
 - Wait for the bundled catalog JSON before marking the migration complete during an in-place theme update.
 - Rerun Acreline and TOCflow pricing, copy, screenshots, and WooCommerce visibility on production.
+- Update Vite to 8.2.2 and resolve the transitive `fast-uri` security advisories.
 
 ## 3.1.67 — Marketplace-ready product pages
 
