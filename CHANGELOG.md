@@ -6,6 +6,10 @@
 - Comparison fields use `<dl>` / `<dt>` / `<dd>` instead of paragraph tags.
 - Tool grid wrapper is a `<section>`; ship pipeline uses `<ol>` / `<li>` with step titles as `<h3>`.
 
+## 3.1.58 — Post hero featured image fit
+
+- Post hero featured images use `object-fit: contain` and natural aspect ratio so the full image shows instead of being cropped.
+
 ## 3.1.57 — Tighter hero headings
 
 - Slightly smaller hero H1s (home, page headers, post heroes) and a bit less hero padding so more fits above the fold.
