@@ -39,10 +39,22 @@ const MARK_TO_ICON = {
   Vi: 'vite',
 }
 
+const HEADING_OPTIONS = [
+  { label: __('H2', 'sage'), value: 2 },
+  { label: __('H3', 'sage'), value: 3 },
+  { label: __('H4', 'sage'), value: 4 },
+]
+
 function markSlug(mark) {
   const key = String(mark || '').trim()
   if (MARK_SLUGS[key]) return MARK_SLUGS[key]
   return key.toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 4) || 'cu'
+}
+
+function headingTag(level) {
+  const n = Number(level)
+  if (n >= 2 && n <= 4) return `h${n}`
+  return 'h3'
 }
 
 function iconChoices() {
@@ -74,6 +86,7 @@ function Edit({ attributes, setAttributes }) {
     mark,
     name,
     role,
+    nameHeadingLevel,
     bestForLabel,
     weakAtLabel,
     humanRequiredLabel,
@@ -94,6 +107,7 @@ function Edit({ attributes, setAttributes }) {
     'data-mark': mark || '',
   })
   const svg = iconSvg(icon)
+  const nameTag = headingTag(nameHeadingLevel)
 
   return (
     <>
@@ -129,7 +143,16 @@ function Edit({ attributes, setAttributes }) {
             __nextHasNoMarginBottom
           />
         </PanelBody>
-        <PanelBody title={__('Section labels', 'sage')} initialOpen={false}>
+        <PanelBody title={__('Headings & labels', 'sage')} initialOpen={false}>
+          <SelectControl
+            label={__('Tool name heading', 'sage')}
+            value={Number(nameHeadingLevel) || 3}
+            options={HEADING_OPTIONS}
+            onChange={(value) => setAttributes({ nameHeadingLevel: Number(value) })}
+            help={__('Heading level for the tool name. Default H3 under a Tool Comparison H2.', 'sage')}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
           <TextControl
             label={__('Best-for label', 'sage')}
             value={bestForLabel}
@@ -153,7 +176,7 @@ function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
       </InspectorControls>
-      <div {...blockProps}>
+      <article {...blockProps}>
         <span className="mh-tool-card__mark" aria-hidden="true">
           {svg ? (
             <span
@@ -165,7 +188,7 @@ function Edit({ attributes, setAttributes }) {
           )}
         </span>
         <RichText
-          tagName="p"
+          tagName={nameTag}
           className="mh-tool-card__name"
           placeholder={__('Tool name', 'sage')}
           value={name}
@@ -180,55 +203,57 @@ function Edit({ attributes, setAttributes }) {
           onChange={(value) => setAttributes({ role: value })}
           allowedFormats={[]}
         />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dt mh-tool-card__dt--best"
-          placeholder={__('Best for', 'sage')}
-          value={bestForLabel}
-          onChange={(value) => setAttributes({ bestForLabel: value })}
-          allowedFormats={[]}
-        />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dd"
-          placeholder={__('What this tool is best for…', 'sage')}
-          value={bestFor}
-          onChange={(value) => setAttributes({ bestFor: value })}
-          allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
-        />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dt mh-tool-card__dt--weak"
-          placeholder={__('Weak at', 'sage')}
-          value={weakAtLabel}
-          onChange={(value) => setAttributes({ weakAtLabel: value })}
-          allowedFormats={[]}
-        />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dd"
-          placeholder={__('Where it falls short…', 'sage')}
-          value={weakAt}
-          onChange={(value) => setAttributes({ weakAt: value })}
-          allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
-        />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dt mh-tool-card__dt--human"
-          placeholder={__('Human still required', 'sage')}
-          value={humanRequiredLabel}
-          onChange={(value) => setAttributes({ humanRequiredLabel: value })}
-          allowedFormats={[]}
-        />
-        <RichText
-          tagName="p"
-          className="mh-tool-card__dd"
-          placeholder={__('What you still own…', 'sage')}
-          value={humanRequired}
-          onChange={(value) => setAttributes({ humanRequired: value })}
-          allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
-        />
-      </div>
+        <dl className="mh-tool-card__details">
+          <RichText
+            tagName="dt"
+            className="mh-tool-card__dt mh-tool-card__dt--best"
+            placeholder={__('Best for', 'sage')}
+            value={bestForLabel}
+            onChange={(value) => setAttributes({ bestForLabel: value })}
+            allowedFormats={[]}
+          />
+          <RichText
+            tagName="dd"
+            className="mh-tool-card__dd"
+            placeholder={__('What this tool is best for…', 'sage')}
+            value={bestFor}
+            onChange={(value) => setAttributes({ bestFor: value })}
+            allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
+          />
+          <RichText
+            tagName="dt"
+            className="mh-tool-card__dt mh-tool-card__dt--weak"
+            placeholder={__('Weak at', 'sage')}
+            value={weakAtLabel}
+            onChange={(value) => setAttributes({ weakAtLabel: value })}
+            allowedFormats={[]}
+          />
+          <RichText
+            tagName="dd"
+            className="mh-tool-card__dd"
+            placeholder={__('Where it falls short…', 'sage')}
+            value={weakAt}
+            onChange={(value) => setAttributes({ weakAt: value })}
+            allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
+          />
+          <RichText
+            tagName="dt"
+            className="mh-tool-card__dt mh-tool-card__dt--human"
+            placeholder={__('Human still required', 'sage')}
+            value={humanRequiredLabel}
+            onChange={(value) => setAttributes({ humanRequiredLabel: value })}
+            allowedFormats={[]}
+          />
+          <RichText
+            tagName="dd"
+            className="mh-tool-card__dd"
+            placeholder={__('What you still own…', 'sage')}
+            value={humanRequired}
+            onChange={(value) => setAttributes({ humanRequired: value })}
+            allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
+          />
+        </dl>
+      </article>
     </>
   )
 }
@@ -250,6 +275,7 @@ registerBlockType('matthummel/tool-card', {
     mark: { type: 'string', default: 'Cu' },
     name: { type: 'string', default: '' },
     role: { type: 'string', default: '' },
+    nameHeadingLevel: { type: 'number', default: 3 },
     bestForLabel: { type: 'string', default: 'Best for' },
     weakAtLabel: { type: 'string', default: 'Weak at' },
     humanRequiredLabel: { type: 'string', default: 'Human still required' },

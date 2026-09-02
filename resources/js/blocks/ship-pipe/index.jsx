@@ -14,13 +14,13 @@ function Edit() {
   })
 
   return (
-    <div {...blockProps}>
+    <ol {...blockProps}>
       <InnerBlocks
         allowedBlocks={ALLOWED}
         template={TEMPLATE}
         templateLock={false}
       />
-    </div>
+    </ol>
   )
 }
 
@@ -30,9 +30,9 @@ function Save() {
   })
 
   return (
-    <div {...blockProps}>
+    <ol {...blockProps}>
       <InnerBlocks.Content />
-    </div>
+    </ol>
   )
 }
 

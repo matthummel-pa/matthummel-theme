@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.59 — Tool card semantic markup + heading level control
+
+- Tool cards render as `<article>` inside a `<ul>` grid; tool names use a configurable H2–H4 heading (default H3).
+- Comparison fields use `<dl>` / `<dt>` / `<dd>` instead of paragraph tags.
+- Tool grid wrapper is a `<section>`; ship pipeline uses `<ol>` / `<li>` with step titles as `<h3>`.
+
 ## 3.1.57 — Tighter hero headings
 
 - Slightly smaller hero H1s (home, page headers, post heroes) and a bit less hero padding so more fits above the fold.

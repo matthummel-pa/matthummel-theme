@@ -51,6 +51,20 @@ function mh_tool_block_icon_choices(): array
 /**
  * CSS slug for a tool-card mark chip.
  */
+/**
+ * Allowed heading tag for tool-card titles (H2–H4).
+ */
+function mh_tool_card_heading_tag(string $level): string
+{
+    $n = (int) $level;
+
+    if ($n < 2 || $n > 4) {
+        $n = 3;
+    }
+
+    return 'h'.$n;
+}
+
 function mh_tool_card_mark_slug(string $mark): string
 {
     $key = trim($mark);
@@ -97,6 +111,9 @@ function mh_render_tool_card_block(array $attributes, string $content = ''): str
     $humanRequiredLabel = isset($attributes['humanRequiredLabel']) && (string) $attributes['humanRequiredLabel'] !== ''
         ? (string) $attributes['humanRequiredLabel']
         : __('Human still required', 'sage');
+    $nameHeadingLevel = mh_tool_card_heading_tag(
+        isset($attributes['nameHeadingLevel']) ? (string) $attributes['nameHeadingLevel'] : '3'
+    );
 
     $slug = mh_tool_card_mark_slug($mark);
     $classes = ['mh-tool-card', 'mh-tool-card--'.$slug];
@@ -113,8 +130,8 @@ function mh_render_tool_card_block(array $attributes, string $content = ''): str
         'data-mark' => $mark,
     ]);
 
-    return sprintf(
-        '<div %1$s><span class="mh-tool-card__mark" aria-hidden="true">%2$s</span><p class="mh-tool-card__name">%3$s</p><p class="mh-tool-card__role">%4$s</p><p class="mh-tool-card__dt mh-tool-card__dt--best">%5$s</p><p class="mh-tool-card__dd">%6$s</p><p class="mh-tool-card__dt mh-tool-card__dt--weak">%7$s</p><p class="mh-tool-card__dd">%8$s</p><p class="mh-tool-card__dt mh-tool-card__dt--human">%9$s</p><p class="mh-tool-card__dd">%10$s</p></div>',
+    $card = sprintf(
+        '<article %1$s><span class="mh-tool-card__mark" aria-hidden="true">%2$s</span><%11$s class="mh-tool-card__name">%3$s</%11$s><p class="mh-tool-card__role">%4$s</p><dl class="mh-tool-card__details"><dt class="mh-tool-card__dt mh-tool-card__dt--best">%5$s</dt><dd class="mh-tool-card__dd">%6$s</dd><dt class="mh-tool-card__dt mh-tool-card__dt--weak">%7$s</dt><dd class="mh-tool-card__dd">%8$s</dd><dt class="mh-tool-card__dt mh-tool-card__dt--human">%9$s</dt><dd class="mh-tool-card__dd">%10$s</dd></dl></article>',
         $wrapper,
         $markInner,
         esc_html($name),
@@ -124,8 +141,11 @@ function mh_render_tool_card_block(array $attributes, string $content = ''): str
         esc_html($weakAtLabel),
         wp_kses_post($weakAt),
         esc_html($humanRequiredLabel),
-        wp_kses_post($humanRequired)
+        wp_kses_post($humanRequired),
+        $nameHeadingLevel
     );
+
+    return '<li class="mh-tool-grid__item">'.$card.'</li>';
 }
 
 /**
@@ -143,6 +163,7 @@ add_action('init', function () {
         'bestFor' => ['type' => 'string', 'default' => ''],
         'weakAt' => ['type' => 'string', 'default' => ''],
         'humanRequired' => ['type' => 'string', 'default' => ''],
+        'nameHeadingLevel' => ['type' => 'number', 'default' => 3],
     ];
 
     $blocks = [
