@@ -31,6 +31,51 @@
   color: var(--color-text);
 }
 
+/* ── Gutenberg List blocks (restore markers after Tailwind preflight) ── */
+.post-prose :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe),
+.editor-styles-wrapper :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) {
+  margin: 0 0 1.45em;
+  padding-inline-start: 1.35em;
+  list-style-position: outside;
+}
+
+.post-prose ul.wp-block-list:not(.mh-tool-grid),
+.editor-styles-wrapper ul.wp-block-list:not(.mh-tool-grid) {
+  list-style-type: disc;
+}
+
+.post-prose ol.wp-block-list:not(.mh-ship-pipe),
+.editor-styles-wrapper ol.wp-block-list:not(.mh-ship-pipe) {
+  list-style-type: decimal;
+}
+
+.post-prose ul.wp-block-list ul,
+.editor-styles-wrapper ul.wp-block-list ul {
+  list-style-type: circle;
+  margin-top: .35em;
+  margin-bottom: 0;
+}
+
+.post-prose ol.wp-block-list ol,
+.editor-styles-wrapper ol.wp-block-list ol {
+  list-style-type: lower-alpha;
+  margin-top: .35em;
+  margin-bottom: 0;
+}
+
+.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li,
+.editor-styles-wrapper .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li {
+  display: list-item;
+  margin: 0 0 .4em;
+  padding-inline-start: .15em;
+}
+
+.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker,
+.editor-styles-wrapper .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
+  color: var(--color-text-muted, #6b7280);
+  font-weight: 600;
+}
+
 /* ── Tool comparison figure ── */
 .post-prose .mh-ai-figure,
 .editor-styles-wrapper .mh-ai-figure {
