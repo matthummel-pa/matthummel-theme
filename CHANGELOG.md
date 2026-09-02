@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.63 — Code page community panel
+
+- Code page: GitHub followers grid, stargazer thank-you with live star totals, and milestone badges from API stats.
+- New page fields for community copy; optional curated follower list when the API is empty.
+
 ## 3.1.62 — style.css merge conflict cleanup
 
 - Remove accidental git conflict markers from `style.css` and `CHANGELOG.md` that shipped in 3.1.61.

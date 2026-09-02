@@ -238,6 +238,101 @@ GQL;
     }
 
     /**
+     * Fetch and cache recent public followers for a user.
+     *
+     * @param  string  $user  GitHub login.
+     * @param  int  $count  Maximum followers to return (1–100).
+     * @return list<array{login: string, name: string, avatar: string, url: string}>
+     */
+    public static function fetchFollowers(string $user, int $count = 24): array
+    {
+        $count = max(1, min(100, $count));
+        $key = 'mh_ghfol1_'.md5($user.$count);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $out = [];
+        $r = wp_remote_get(
+            'https://api.github.com/users/'.rawurlencode($user).'/followers?per_page='.$count,
+            self::args()
+        );
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                if (! is_array($j)) {
+                    continue;
+                }
+                $login = sanitize_user((string) ($j['login'] ?? ''), true);
+                if ($login === '') {
+                    continue;
+                }
+                $out[] = [
+                    'login' => $login,
+                    'name' => trim((string) ($j['name'] ?? '')) ?: $login,
+                    'avatar' => esc_url_raw((string) ($j['avatar_url'] ?? '')),
+                    'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$login)),
+                ];
+                if (count($out) >= $count) {
+                    break;
+                }
+            }
+        }
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
+     * Fetch and cache recent stargazers for a repository.
+     *
+     * @param  string  $owner  Repository owner login.
+     * @param  string  $repo  Repository name.
+     * @param  int  $count  Maximum stargazers to return (1–100).
+     * @return list<array{login: string, name: string, avatar: string, url: string, repo: string}>
+     */
+    public static function fetchStargazers(string $owner, string $repo, int $count = 30): array
+    {
+        $count = max(1, min(100, $count));
+        $repoName = $repo;
+        $ownerEnc = rawurlencode($owner);
+        $repoEnc = rawurlencode($repo);
+        $key = 'mh_ghstar1_'.md5($ownerEnc.'/'.$repoEnc.$count);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $out = [];
+        $r = wp_remote_get(
+            "https://api.github.com/repos/{$ownerEnc}/{$repoEnc}/stargazers?per_page={$count}",
+            self::args('application/vnd.github.v3+json')
+        );
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                if (! is_array($j)) {
+                    continue;
+                }
+                $login = sanitize_user((string) ($j['login'] ?? ''), true);
+                if ($login === '') {
+                    continue;
+                }
+                $out[] = [
+                    'login' => $login,
+                    'name' => trim((string) ($j['name'] ?? '')) ?: $login,
+                    'avatar' => esc_url_raw((string) ($j['avatar_url'] ?? '')),
+                    'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$login)),
+                    'repo' => $repoName,
+                ];
+                if (count($out) >= $count) {
+                    break;
+                }
+            }
+        }
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
      * Fetch and cache a user's own public repositories, excluding forks.
      *
      * @param  string  $user  GitHub login.

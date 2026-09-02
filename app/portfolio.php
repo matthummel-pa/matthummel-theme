@@ -529,6 +529,319 @@ function mh_github_profile(): array
     return Github::fetchUser(mh_github_login());
 }
 
+/**
+ * Normalize a GitHub follower row for the Code page community panel.
+ *
+ * @param  array<string, mixed>  $row
+ * @return array{login: string, name: string, avatar: string, url: string}|null
+ */
+function mh_github_follower_row(array $row): ?array
+{
+    $login = sanitize_user((string) ($row['login'] ?? $row['username'] ?? ''), true);
+    if ($login === '') {
+        return null;
+    }
+    $name = trim((string) ($row['name'] ?? $login));
+    if ($name === '') {
+        $name = $login;
+    }
+    $avatar = esc_url_raw((string) ($row['avatar'] ?? $row['avatar_url'] ?? $row['image'] ?? ''));
+    $url = esc_url_raw((string) ($row['url'] ?? ''));
+    if ($url === '') {
+        $url = 'https://github.com/'.rawurlencode($login);
+    }
+
+    return compact('login', 'name', 'avatar', 'url');
+}
+
+/**
+ * Curated GitHub followers from Code page fields (fallback when API is empty).
+ *
+ * @return list<array{login: string, name: string, avatar: string, url: string}>
+ */
+function mh_github_followers_curated(int $limit = 24, ?int $codeId = null): array
+{
+    $codeId = $codeId ?? mh_code_page_id();
+    $rows = field_rows('code_github_followers', [], $codeId ?: null);
+    $out = [];
+    foreach ($rows as $row) {
+        if (! is_array($row)) {
+            continue;
+        }
+        $norm = mh_github_follower_row($row);
+        if ($norm === null) {
+            continue;
+        }
+        $out[] = $norm;
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * GitHub followers for the Code page: API then curated fields.
+ *
+ * @return list<array{login: string, name: string, avatar: string, url: string}>
+ */
+function mh_github_followers(int $limit = 24): array
+{
+    $limit = max(1, min(80, $limit));
+    $filtered = apply_filters('mh/github_followers', null, $limit);
+    if (is_array($filtered)) {
+        $out = [];
+        foreach ($filtered as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $norm = mh_github_follower_row($row);
+            if ($norm !== null) {
+                $out[] = $norm;
+            }
+            if (count($out) >= $limit) {
+                break;
+            }
+        }
+
+        return $out;
+    }
+
+    $login = mh_github_login();
+    $key = 'mh_github_followers_v1_'.md5($login);
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        $api = $cached;
+    } else {
+        $api = Github::fetchFollowers($login, min(80, max($limit, 30)));
+        set_transient($key, $api, 6 * HOUR_IN_SECONDS);
+    }
+
+    if ($api !== []) {
+        return array_slice($api, 0, $limit);
+    }
+
+    return mh_github_followers_curated($limit);
+}
+
+/**
+ * Normalize a GitHub stargazer row for the Code page.
+ *
+ * @param  array<string, mixed>  $row
+ * @return array{login: string, name: string, avatar: string, url: string, repo: string}|null
+ */
+function mh_github_stargazer_row(array $row): ?array
+{
+    $norm = mh_github_follower_row($row);
+    if ($norm === null) {
+        return null;
+    }
+
+    return array_merge($norm, [
+        'repo' => sanitize_text_field((string) ($row['repo'] ?? '')),
+    ]);
+}
+
+/**
+ * Recent stargazers across featured Code page repos (deduped by login).
+ *
+ * @return list<array{login: string, name: string, avatar: string, url: string, repo: string}>
+ */
+function mh_github_stargazers(int $limit = 24, ?int $post_id = null): array
+{
+    $limit = max(1, min(48, $limit));
+    $login = mh_github_login();
+    $key = 'mh_github_stargazers_v1_'.md5($login.(string) $limit);
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        return array_slice($cached, 0, $limit);
+    }
+
+    $repos = mh_code_page_repos($post_id);
+    $seen = [];
+    $out = [];
+
+    foreach ($repos as $repo) {
+        $name = trim((string) ($repo['name'] ?? ''));
+        if ($name === '' || mh_github_is_hidden_repo($name)) {
+            continue;
+        }
+        foreach (Github::fetchStargazers($login, $name, 20) as $row) {
+            $loginKey = strtolower((string) ($row['login'] ?? ''));
+            if ($loginKey === '' || isset($seen[$loginKey])) {
+                continue;
+            }
+            $seen[$loginKey] = true;
+            $norm = mh_github_stargazer_row($row);
+            if ($norm !== null) {
+                $out[] = $norm;
+            }
+            if (count($out) >= $limit) {
+                break 2;
+            }
+        }
+    }
+
+    set_transient($key, $out, 6 * HOUR_IN_SECONDS);
+
+    return $out;
+}
+
+/**
+ * Total stars across featured Code page repos (live API metadata).
+ */
+function mh_github_star_total(?int $post_id = null): int
+{
+    $login = mh_github_login();
+    $key = 'mh_github_star_total_v1_'.md5($login);
+    $cached = get_transient($key);
+    if (is_int($cached)) {
+        return $cached;
+    }
+
+    $total = 0;
+    foreach (mh_code_page_repos($post_id) as $repo) {
+        $name = trim((string) ($repo['name'] ?? ''));
+        if ($name === '') {
+            continue;
+        }
+        $meta = Github::fetchRepoMeta($login, $name);
+        $total += (int) ($meta['stars'] ?? 0);
+    }
+    set_transient($key, $total, 6 * HOUR_IN_SECONDS);
+
+    return $total;
+}
+
+/**
+ * Milestone badges earned from live GitHub stats (no fake achievements).
+ *
+ * @return list<array{label: string, detail: string, icon: string, class: string}>
+ */
+function mh_code_page_github_badges(?int $post_id = null): array
+{
+    $profile = mh_github_profile();
+    $calendar = mh_github_calendar();
+    $starTotal = mh_github_star_total($post_id);
+    $followers = (int) ($profile['followers'] ?? 0);
+    $repos = (int) ($profile['public_repos'] ?? 0);
+    $contributions = (int) ($calendar['total'] ?? 0);
+    $badges = [];
+
+    if ($repos >= 1) {
+        $badges[] = [
+            'label' => __('Open source', 'sage'),
+            'detail' => sprintf(_n('%s public repo', '%s public repos', $repos, 'sage'), number_format_i18n($repos)),
+            'icon' => 'github',
+            'class' => 'code-gh-badge--oss',
+        ];
+    }
+
+    foreach ([100, 50, 25, 10] as $tier) {
+        if ($starTotal >= $tier) {
+            $badges[] = [
+                'label' => sprintf(__('%s+ stars', 'sage'), number_format_i18n($tier)),
+                'detail' => sprintf(
+                    /* translators: %s: formatted star count */
+                    __('Across featured repos — %s total', 'sage'),
+                    number_format_i18n($starTotal)
+                ),
+                'icon' => 'star',
+                'class' => 'code-gh-badge--stars',
+            ];
+            break;
+        }
+    }
+
+    foreach ([100, 50, 25, 10] as $tier) {
+        if ($followers >= $tier) {
+            $badges[] = [
+                'label' => sprintf(__('%s+ followers', 'sage'), number_format_i18n($tier)),
+                'detail' => sprintf(
+                    /* translators: %s: formatted follower count */
+                    __('GitHub community — %s following', 'sage'),
+                    number_format_i18n($followers)
+                ),
+                'icon' => 'users',
+                'class' => 'code-gh-badge--followers',
+            ];
+            break;
+        }
+    }
+
+    foreach ([1000, 500, 100] as $tier) {
+        if ($contributions >= $tier) {
+            $badges[] = [
+                'label' => sprintf(__('%s+ contributions', 'sage'), number_format_i18n($tier)),
+                'detail' => sprintf(
+                    /* translators: %s: formatted contribution count */
+                    __('Public commits this year — %s total', 'sage'),
+                    number_format_i18n($contributions)
+                ),
+                'icon' => 'git',
+                'class' => 'code-gh-badge--contrib',
+            ];
+            break;
+        }
+    }
+
+    $activityLabels = [];
+    foreach (mh_code_page_repos($post_id) as $repo) {
+        $name = trim((string) ($repo['name'] ?? ''));
+        if ($name === '') {
+            continue;
+        }
+        $meta = Github::fetchRepoMeta(mh_github_login(), $name);
+        [$badge] = mh_repo_activity_badge(
+            (string) ($meta['pushed'] ?? ''),
+            (int) ($meta['stars'] ?? 0),
+            (int) ($meta['forks'] ?? 0),
+            (string) ($meta['desc'] ?? '')
+        );
+        if ($badge !== '' && ! in_array($badge, $activityLabels, true)) {
+            $activityLabels[] = $badge;
+        }
+    }
+    foreach ($activityLabels as $label) {
+        $class = match ($label) {
+            'Active' => 'badge--active',
+            'Recent' => 'badge--recent',
+            'Maintained' => 'badge--maintained',
+            'Stable' => 'badge--stable',
+            default => 'badge--archived',
+        };
+        $badges[] = [
+            'label' => $label,
+            'detail' => __('Repo activity badge on a featured project', 'sage'),
+            'icon' => 'git',
+            'class' => 'code-gh-badge--activity '.$class,
+        ];
+    }
+
+    return $badges;
+}
+
+/**
+ * Resolve the Code page post ID for field lookups.
+ */
+function mh_code_page_id(): int
+{
+    static $id = null;
+    if ($id !== null) {
+        return $id;
+    }
+    $pages = get_pages([
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'template-code.blade.php',
+        'number' => 1,
+        'post_status' => 'publish',
+    ]);
+    $id = ($pages && ! is_wp_error($pages)) ? (int) ($pages[0]->ID ?? 0) : 0;
+
+    return $id;
+}
+
 function mh_github_events(int $limit = 10): array
 {
     return Github::fetchEvents(mh_github_login(), $limit);

@@ -3438,6 +3438,235 @@ html.mh-dark .h-badge--open {
   color: var(--color-text-muted);
 }
 
+/* Community: followers, stargazers, badges */
+.code-gh-community {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--white);
+  padding: 1.45rem 1.5rem 1.55rem;
+  margin-bottom: 1.35rem;
+  overflow: hidden;
+}
+.code-gh-community__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.code-gh-community__title {
+  margin: .35rem 0 0;
+  font: 700 clamp(1.05rem, 2vw, 1.25rem)/1.2 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.code-gh-community__intro {
+  margin: .45rem 0 0;
+  max-width: 42rem;
+  font-size: .92rem;
+  color: var(--color-text-muted);
+}
+.code-gh-community__stats {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: .55rem .85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--gray-50);
+}
+.code-gh-community__stats div { text-align: center; min-width: 4.5rem; }
+.code-gh-community__stats dt {
+  margin: 0;
+  font: 600 .68rem/1 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.code-gh-community__stats dd {
+  margin: .25rem 0 0;
+  font: 700 1.15rem/1 var(--font-display);
+  color: var(--color-text);
+}
+.code-gh-community__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.code-gh-community__panel {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.1rem 1.15rem 1.15rem;
+  background: color-mix(in srgb, var(--gray-50) 55%, var(--white));
+  min-width: 0;
+}
+.code-gh-community__panel-title {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  font: 700 .95rem/1.25 var(--font-display);
+  color: var(--color-text);
+}
+.code-gh-community__panel-title .mh-ico { color: var(--color-accent); flex-shrink: 0; }
+.code-gh-community__thanks {
+  margin: .55rem 0 .85rem;
+  font-size: .88rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+.code-gh-community__stat-line {
+  margin: 0 0 .75rem;
+  font-size: .88rem;
+  color: var(--color-text-muted);
+}
+.code-gh-community__stat-line strong {
+  font: 700 1rem/1 var(--font-display);
+  color: var(--color-text);
+  margin-right: .25rem;
+}
+.code-gh-people {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: .35rem;
+  list-style: none;
+  margin: 0 0 .85rem;
+  padding: 0;
+}
+.code-gh-person {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .35rem .45rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+.code-gh-person:hover,
+.code-gh-person:focus-visible {
+  background: var(--white);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--blue-100);
+}
+.code-gh-person__img {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+}
+.code-gh-person__img--empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 .75rem/1 var(--font-display);
+  background: var(--blue-50);
+  color: var(--color-accent);
+}
+.code-gh-person__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.code-gh-person__name {
+  font: 600 .78rem/1.25 var(--font-display);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.code-gh-person__user {
+  font-size: .72rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.code-gh-community__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.code-gh-community__link:hover { text-decoration: underline; text-underline-offset: .15em; }
+.code-gh-badges {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--color-border);
+}
+.code-gh-badges__title {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  font: 700 .95rem/1.25 var(--font-display);
+}
+.code-gh-badges__title .mh-ico { color: var(--color-accent); }
+.code-gh-badges__intro {
+  margin: .45rem 0 .85rem;
+  font-size: .88rem;
+  color: var(--color-text-muted);
+}
+.code-gh-badges__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: .65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.code-gh-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  padding: .75rem .85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--white);
+}
+.code-gh-badge__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: var(--blue-50);
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+.code-gh-badge--stars .code-gh-badge__icon { background: #fffbeb; color: #92400e; }
+.code-gh-badge--followers .code-gh-badge__icon { background: #f0fdf4; color: #166534; }
+.code-gh-badge--contrib .code-gh-badge__icon { background: var(--blue-50); color: var(--blue-700); }
+.code-gh-badge--activity .code-gh-badge__icon { background: var(--gray-100); color: var(--gray-600); }
+.code-gh-badge__copy { min-width: 0; }
+.code-gh-badge__label {
+  display: block;
+  font: 700 .82rem/1.25 var(--font-display);
+  color: var(--color-text);
+}
+.code-gh-badge__detail {
+  display: block;
+  margin-top: .2rem;
+  font-size: .75rem;
+  color: var(--color-text-muted);
+  line-height: 1.35;
+}
+html.mh-dark .code-gh-community,
+html.mh-dark .code-gh-community__panel,
+html.mh-dark .code-gh-badge {
+  background: color-mix(in srgb, var(--gray-900, #0f172a) 92%, var(--white));
+}
+html.mh-dark .code-gh-community__stats { background: color-mix(in srgb, var(--gray-800) 80%, transparent); }
+html.mh-dark .code-gh-person:hover,
+html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(--gray-800) 70%, transparent); }
+
 .code-gh-split {
   display: grid;
   grid-template-columns: 1fr;
@@ -4763,6 +4992,18 @@ html.mh-dark .h-badge--open {
   .code-gh-profile__actions .btn {
     width: 100%;
     justify-content: center;
+  }
+  .code-gh-community {
+    padding: 1.1rem 1rem 1.2rem;
+  }
+  .code-gh-community__grid {
+    grid-template-columns: 1fr;
+  }
+  .code-gh-community__head {
+    flex-direction: column;
+  }
+  .code-gh-badges__grid {
+    grid-template-columns: 1fr;
   }
 
   .code-gh-panel,
