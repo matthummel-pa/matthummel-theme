@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.68 — Reliable product catalog migration
+
+- Wait for the bundled catalog JSON before marking the migration complete during an in-place theme update.
+- Rerun Acreline and TOCflow pricing, copy, screenshots, and WooCommerce visibility on production.
+
 ## 3.1.67 — Marketplace-ready product pages
 
 - Redesign product heroes with the featured screenshot on the right, purchase details, and a responsive product gallery.
