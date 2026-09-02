@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.57 — Tighter hero headings
+
+- Slightly smaller hero H1s (home, page headers, post heroes) and a bit less hero padding so more fits above the fold.
+
 ## 3.1.56 — Tool Blocks fields and icons
 
 - Parent block renamed to **Tool Blocks** (`matthummel/tool-grid`).
