@@ -101,7 +101,11 @@
 @endphp
 
 <article class="{{ $articleClass }}">
-  @component('partials.page-hero')
+  @component('partials.page-hero', [
+    'extra' => 'page-header--project',
+    'split' => $shot !== '',
+    'asideLabel' => $shot !== '' ? sprintf(__('%s preview', 'sage'), $title) : '',
+  ])
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Work', 'sage') }}</a>
       <span aria-hidden="true"> / </span>
@@ -153,39 +157,53 @@
         {{ $crumbBrowse }} →
       </a>
     </div>
+    @if ($isProduct)
+      <ul class="concept-hero-trust" aria-label="{{ __('Purchase details', 'sage') }}">
+        <li>{{ ! empty($product['is_free']) ? __('Free download', 'sage') : __('One-time purchase', 'sage') }}</li>
+        <li>{{ __('GPL-compatible', 'sage') }}</li>
+        <li>{{ __('Instant download', 'sage') }}</li>
+      </ul>
+    @endif
+    @if ($shot !== '')
+      @slot('aside')
+        <figure class="concept-hero-shot">
+          <div class="concept-hero-shot__bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <img
+            src="{{ esc_url($shot) }}"
+            alt="{{ esc_attr(sprintf($isTheme ? __('Screenshot of the %s theme', 'sage') : ($isPlugin ? __('Screenshot of the %s plugin', 'sage') : __('Screenshot of the %s project', 'sage')), $title)) }}"
+            width="1200"
+            height="675"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          >
+          <figcaption>{{ $shotCaption }}</figcaption>
+        </figure>
+      @endslot
+    @endif
   @endcomponent
 
   <div class="container wide page-block concept-layout">
-    @if ($shot !== '')
-      <figure class="concept-shot">
-        <img
-          src="{{ esc_url($shot) }}"
-          alt="{{ esc_attr(sprintf($isTheme ? __('Screenshot of the %s theme', 'sage') : ($isPlugin ? __('Screenshot of the %s plugin', 'sage') : __('Screenshot of the %s concept', 'sage')), $title)) }}"
-          width="1200"
-          height="675"
-          loading="eager"
-          decoding="async"
-        >
-        <figcaption>{{ $shotCaption }}</figcaption>
-      </figure>
-    @endif
-
     @if ($sidebar['screenshots'] !== [])
       <div class="concept-gallery" aria-label="{{ __('More screenshots', 'sage') }}">
         @foreach ($sidebar['screenshots'] as $shotRow)
-          <figure>
-            <img
-              src="{{ esc_url($shotRow[0]) }}"
-              alt="{{ esc_attr($shotRow[1] !== '' ? $shotRow[1] : sprintf(__('%s screenshot', 'sage'), $title)) }}"
-              width="800"
-              height="450"
-              loading="lazy"
-              decoding="async"
-            >
-            @if ($shotRow[1] !== '')
-              <figcaption>{{ $shotRow[1] }}</figcaption>
-            @endif
-          </figure>
+          @if ($shotRow[0] !== $shot)
+            <figure>
+              <img
+                src="{{ esc_url($shotRow[0]) }}"
+                alt="{{ esc_attr($shotRow[1] !== '' ? $shotRow[1] : sprintf(__('%s screenshot', 'sage'), $title)) }}"
+                width="800"
+                height="450"
+                loading="lazy"
+                decoding="async"
+              >
+              @if ($shotRow[1] !== '')
+                <figcaption>{{ $shotRow[1] }}</figcaption>
+              @endif
+            </figure>
+          @endif
         @endforeach
       </div>
     @endif

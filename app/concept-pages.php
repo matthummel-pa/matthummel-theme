@@ -858,13 +858,17 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
     $title = (string) ($seed['title'] ?? $slug);
     $postId = $posts !== [] ? (int) $posts[0] : 0;
     if ($postId <= 0) {
-        $postId = (int) wp_insert_post([
+        $inserted = wp_insert_post([
             'post_type' => mh_project_post_type(),
             'post_status' => 'publish',
             'post_title' => $title,
             'post_name' => $slug,
         ], true);
-        if ($postId <= 0 || is_wp_error($postId)) {
+        if (is_wp_error($inserted)) {
+            return 0;
+        }
+        $postId = (int) $inserted;
+        if ($postId <= 0) {
             return 0;
         }
     } elseif ($force && $title !== '') {
