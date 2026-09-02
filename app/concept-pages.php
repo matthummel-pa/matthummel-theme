@@ -950,10 +950,18 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 /**
  * One-time: seed Acreline + TOCflow as sellable products, pull concept demos off the shop,
  * and apply marketplace-ready copy + screenshots.
+ *
+ * V2 waits for the bundled catalog to be readable before recording completion. This
+ * matters during an in-place theme update, where a request can arrive mid-swap.
  */
-function mh_apply_product_catalog_v1(): void
+function mh_apply_product_catalog_v2(): void
 {
-    if (get_option('mh_product_catalog_v1') || wp_installing()) {
+    if (get_option('mh_product_catalog_v2') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    if ($catalog === []) {
         return;
     }
 
@@ -964,7 +972,7 @@ function mh_apply_product_catalog_v1(): void
         if ($id <= 0) {
             continue;
         }
-        if (isset(mh_product_catalog_seed_data()[$slug])) {
+        if (isset($catalog[$slug])) {
             continue;
         }
         update_post_meta($id, '_mh_project_for_sale', '0');
@@ -977,19 +985,24 @@ function mh_apply_product_catalog_v1(): void
         }
     }
 
-    foreach (mh_product_catalog_seed_data() as $slug => $seed) {
+    $processed = 0;
+    foreach ($catalog as $slug => $seed) {
         if (! is_array($seed)) {
             continue;
         }
-        mh_upsert_catalog_product((string) $slug, $seed, true);
+        if (mh_upsert_catalog_product((string) $slug, $seed, true) > 0) {
+            $processed++;
+        }
     }
 
-    update_option('mh_product_catalog_v1', true);
+    if ($processed === count($catalog)) {
+        update_option('mh_product_catalog_v2', true);
+    }
 }
 
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
-add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v1', 37);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v2', 37);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
