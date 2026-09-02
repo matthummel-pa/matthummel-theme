@@ -72,11 +72,14 @@
 }
 
 .post-prose .mh-tool-grid > li,
+.post-prose .mh-tool-grid > .mh-tool-grid__item,
 .post-prose .mh-tool-grid > .mh-tool-card,
-.editor-styles-wrapper .mh-tool-grid > .mh-tool-card {
+.editor-styles-wrapper .mh-tool-grid > .mh-tool-card,
+.editor-styles-wrapper .mh-tool-grid > .mh-tool-grid__item {
   margin: 0;
   min-width: 0;
   height: 100%;
+  list-style: none;
 }
 
 @media (min-width: 720px) {
@@ -90,6 +93,7 @@
 
 /* ── Individual tool card ── */
 .mh-tool-card,
+article.mh-tool-card,
 .editor-styles-wrapper .wp-block-group.mh-tool-card {
   display: grid !important;
   grid-template-columns: auto minmax(0, 1fr);
@@ -197,7 +201,13 @@
 }
 
 .post-prose .mh-tool-card__name,
+.post-prose .mh-tool-card h2.mh-tool-card__name,
+.post-prose .mh-tool-card h3.mh-tool-card__name,
+.post-prose .mh-tool-card h4.mh-tool-card__name,
 .editor-styles-wrapper .mh-tool-card__name,
+.editor-styles-wrapper .mh-tool-card h2.mh-tool-card__name,
+.editor-styles-wrapper .mh-tool-card h3.mh-tool-card__name,
+.editor-styles-wrapper .mh-tool-card h4.mh-tool-card__name,
 .editor-styles-wrapper .mh-tool-card p.mh-tool-card__name {
   grid-column: 2;
   margin: 0 !important;
@@ -225,21 +235,29 @@
 }
 
 .mh-tool-card dl,
-.mh-tool-card__dt,
-.mh-tool-card__dd,
+.mh-tool-card__details,
 .editor-styles-wrapper .mh-tool-card p.mh-tool-card__dt,
 .editor-styles-wrapper .mh-tool-card p.mh-tool-card__dd {
   grid-column: 1 / -1;
 }
 
-.mh-tool-card dl {
+.mh-tool-card dl,
+.mh-tool-card__details {
   margin: .9rem 0 0;
   display: grid;
   gap: 0;
 }
 
+.mh-tool-card__details dt,
+.mh-tool-card__details dd,
+.mh-tool-card dl dt,
+.mh-tool-card dl dd {
+  grid-column: auto;
+}
+
 .mh-tool-card dt,
 .mh-tool-card__dt,
+.editor-styles-wrapper .mh-tool-card dt,
 .editor-styles-wrapper .mh-tool-card p.mh-tool-card__dt {
   display: inline-flex;
   align-items: center;
@@ -284,6 +302,7 @@
 
 .mh-tool-card dd,
 .mh-tool-card__dd,
+.editor-styles-wrapper .mh-tool-card dd,
 .editor-styles-wrapper .mh-tool-card p.mh-tool-card__dd {
   margin: .35rem 0 0 !important;
   padding: 0 0 .75rem !important;
@@ -372,7 +391,9 @@
 }
 
 .post-prose .mh-ship-pipe__name,
+.post-prose .mh-ship-pipe h3.mh-ship-pipe__name,
 .editor-styles-wrapper .mh-ship-pipe__name,
+.editor-styles-wrapper .mh-ship-pipe h3.mh-ship-pipe__name,
 .editor-styles-wrapper .mh-ship-pipe p.mh-ship-pipe__name {
   grid-column: 2;
   margin: 0 0 .25rem !important;

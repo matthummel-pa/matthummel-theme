@@ -9,9 +9,9 @@ function Edit({ attributes, setAttributes }) {
   })
 
   return (
-    <div {...blockProps}>
+    <li {...blockProps}>
       <RichText
-        tagName="p"
+        tagName="h3"
         className="mh-ship-pipe__name"
         placeholder={__('Step title', 'sage')}
         value={title}
@@ -26,7 +26,7 @@ function Edit({ attributes, setAttributes }) {
         onChange={(value) => setAttributes({ body: value })}
         allowedFormats={['core/code', 'core/link', 'core/bold', 'core/italic']}
       />
-    </div>
+    </li>
   )
 }
 
@@ -37,10 +37,10 @@ function Save({ attributes }) {
   })
 
   return (
-    <div {...blockProps}>
-      <RichText.Content tagName="p" className="mh-ship-pipe__name" value={title} />
+    <li {...blockProps}>
+      <RichText.Content tagName="h3" className="mh-ship-pipe__name" value={title} />
       <RichText.Content tagName="p" className="mh-ship-pipe__body" value={body} />
-    </div>
+    </li>
   )
 }
 

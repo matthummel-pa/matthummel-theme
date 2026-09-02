@@ -17,6 +17,7 @@ const TEMPLATE = [
       mark: 'Cu',
       name: 'Cursor',
       role: 'Primary editor',
+      nameHeadingLevel: 3,
     },
   ],
   [
@@ -26,6 +27,7 @@ const TEMPLATE = [
       mark: 'GPT',
       name: 'ChatGPT',
       role: 'Editor outside the repo',
+      nameHeadingLevel: 3,
     },
   ],
 ]
@@ -49,6 +51,7 @@ function Edit({ clientId, attributes, setAttributes }) {
         icon: '',
         name: '',
         role: '',
+        nameHeadingLevel: 3,
       }),
       blockCount,
       clientId,
@@ -73,8 +76,8 @@ function Edit({ clientId, attributes, setAttributes }) {
           </Button>
         </PanelBody>
       </InspectorControls>
-      <div {...blockProps} role="region" aria-label={ariaLabel || __('Tool comparison', 'sage')}>
-        <div className="mh-tool-grid">
+      <section {...blockProps} aria-label={ariaLabel || __('Tool comparison', 'sage')}>
+        <ul className="mh-tool-grid">
           <InnerBlocks
             allowedBlocks={ALLOWED}
             template={TEMPLATE}
@@ -82,13 +85,13 @@ function Edit({ clientId, attributes, setAttributes }) {
             orientation="horizontal"
             renderAppender={() => <InnerBlocks.ButtonBlockAppender />}
           />
-        </div>
+        </ul>
         <div className="mh-tool-blocks-add">
           <Button variant="secondary" onClick={addToolCard}>
             {__('Add tool card', 'sage')}
           </Button>
         </div>
-      </div>
+      </section>
     </>
   )
 }
@@ -100,15 +103,14 @@ function Save({ attributes }) {
   })
 
   return (
-    <div
+    <section
       {...blockProps}
-      role="region"
       aria-label={ariaLabel || 'Comparison of tools I use to ship WordPress work'}
     >
-      <div className="mh-tool-grid">
+      <ul className="mh-tool-grid">
         <InnerBlocks.Content />
-      </div>
-    </div>
+      </ul>
+    </section>
   )
 }
 
