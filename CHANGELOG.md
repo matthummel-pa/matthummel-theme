@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.65 — Stars earned total + watching list
+
+- Stars earned now sum all public owned repos (not just featured) and list each starred repo.
+- Code page lists repos I watch (subscriptions) or starred repos when the public watch list is empty.
+
 ## 3.1.64 — Code page layout polish
 
 - Move badges earned into the community column (where stars/stargazers sat); stargazers become a compact strip under the grid.

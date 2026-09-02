@@ -333,6 +333,166 @@ GQL;
     }
 
     /**
+     * Fetch and cache repositories a user has starred.
+     *
+     * @param  string  $user  GitHub login.
+     * @param  int  $count  Maximum starred repos to return (1–100).
+     * @return list<array{name: string, full: string, desc: string, url: string, stars: int, lang: string, owner: string}>
+     */
+    public static function fetchStarred(string $user, int $count = 40): array
+    {
+        $count = max(1, min(100, $count));
+        $key = 'mh_ghstarred1_'.md5($user.$count);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $out = [];
+        $r = wp_remote_get(
+            'https://api.github.com/users/'.rawurlencode($user).'/starred?per_page='.$count.'&sort=created',
+            self::args()
+        );
+        if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                if (! is_array($j)) {
+                    continue;
+                }
+                $name = (string) ($j['name'] ?? '');
+                $full = (string) ($j['full_name'] ?? '');
+                if ($name === '' || $full === '') {
+                    continue;
+                }
+                $out[] = [
+                    'name' => $name,
+                    'full' => $full,
+                    'desc' => (string) ($j['description'] ?? ''),
+                    'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$full)),
+                    'stars' => (int) ($j['stargazers_count'] ?? 0),
+                    'lang' => (string) ($j['language'] ?? ''),
+                    'owner' => (string) ($j['owner']['login'] ?? ''),
+                ];
+                if (count($out) >= $count) {
+                    break;
+                }
+            }
+        }
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
+     * Fetch and cache repositories a user is watching (subscriptions).
+     *
+     * GitHub often returns 204 for public watching lists; fails soft to [].
+     *
+     * @param  string  $user  GitHub login.
+     * @param  int  $count  Maximum watched repos to return (1–100).
+     * @return list<array{name: string, full: string, desc: string, url: string, stars: int, lang: string, owner: string}>
+     */
+    public static function fetchWatching(string $user, int $count = 40): array
+    {
+        $count = max(1, min(100, $count));
+        $key = 'mh_ghwatch1_'.md5($user.$count);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $out = [];
+        $r = wp_remote_get(
+            'https://api.github.com/users/'.rawurlencode($user).'/subscriptions?per_page='.$count,
+            self::args()
+        );
+        $code = is_wp_error($r) ? 0 : (int) wp_remote_retrieve_response_code($r);
+        if ($code === 200) {
+            foreach ((array) json_decode(wp_remote_retrieve_body($r), true) as $j) {
+                if (! is_array($j)) {
+                    continue;
+                }
+                $name = (string) ($j['name'] ?? '');
+                $full = (string) ($j['full_name'] ?? '');
+                if ($name === '' || $full === '') {
+                    continue;
+                }
+                $out[] = [
+                    'name' => $name,
+                    'full' => $full,
+                    'desc' => (string) ($j['description'] ?? ''),
+                    'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$full)),
+                    'stars' => (int) ($j['stargazers_count'] ?? 0),
+                    'lang' => (string) ($j['language'] ?? ''),
+                    'owner' => (string) ($j['owner']['login'] ?? ''),
+                ];
+                if (count($out) >= $count) {
+                    break;
+                }
+            }
+        }
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
+     * Sum stargazer counts across a user's public, non-fork repositories.
+     *
+     * @param  string  $user  GitHub login.
+     * @return array{total: int, repos: list<array{name: string, stars: int, url: string}>}
+     */
+    public static function fetchStarTotals(string $user): array
+    {
+        $key = 'mh_ghstartot2_'.md5($user);
+        if (($d = get_transient($key)) !== false && is_array($d)) {
+            return $d;
+        }
+
+        $total = 0;
+        $repos = [];
+        $page = 1;
+        while ($page <= 3) {
+            $r = wp_remote_get(
+                'https://api.github.com/users/'.rawurlencode($user).'/repos?per_page=100&type=owner&page='.$page,
+                self::args()
+            );
+            if (is_wp_error($r) || wp_remote_retrieve_response_code($r) !== 200) {
+                break;
+            }
+            $batch = (array) json_decode(wp_remote_retrieve_body($r), true);
+            if ($batch === []) {
+                break;
+            }
+            foreach ($batch as $j) {
+                if (! is_array($j) || ! empty($j['fork'])) {
+                    continue;
+                }
+                $name = (string) ($j['name'] ?? '');
+                if ($name === '' || mh_github_is_hidden_repo($name)) {
+                    continue;
+                }
+                $stars = (int) ($j['stargazers_count'] ?? 0);
+                $total += $stars;
+                if ($stars > 0) {
+                    $repos[] = [
+                        'name' => $name,
+                        'stars' => $stars,
+                        'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$user.'/'.$name)),
+                    ];
+                }
+            }
+            if (count($batch) < 100) {
+                break;
+            }
+            $page++;
+        }
+
+        usort($repos, static fn (array $a, array $b): int => $b['stars'] <=> $a['stars']);
+        $out = ['total' => $total, 'repos' => $repos];
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
+
+    /**
      * Fetch and cache a user's own public repositories, excluding forks.
      *
      * @param  string  $user  GitHub login.
