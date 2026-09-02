@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./journal-blocks.css";
+@import "./code-blocks.css";
 
 /**
  * Block editor canvas — match journal post chrome for comparison grids.
@@ -8,6 +9,7 @@
 .editor-styles-wrapper {
   font-size: 1.05rem;
   line-height: 1.7;
+  color: #111827;
 }
 
 .editor-styles-wrapper .wp-block {
@@ -35,11 +37,106 @@
   color: #111827;
 }
 
-.editor-styles-wrapper p {
+.editor-styles-wrapper h2.wp-block-heading {
+  font-size: clamp(1.4rem, 2.2vw, 1.65rem);
+  margin: 2em 0 .85em;
+  line-height: 1.15;
+}
+
+.editor-styles-wrapper h3.wp-block-heading {
+  font-size: clamp(1.2rem, 1.6vw, 1.35rem);
+  margin: 1.75em 0 .75em;
+  line-height: 1.2;
+}
+
+.editor-styles-wrapper p,
+.editor-styles-wrapper .wp-block-paragraph {
   font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
   color: #1f2937;
+  margin: 0 0 1.45em;
+  line-height: 1.78;
 }
 
 .editor-styles-wrapper a {
   color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.editor-styles-wrapper blockquote,
+.editor-styles-wrapper .wp-block-quote {
+  margin: 0 0 1.45em;
+  padding-left: 1.25rem;
+  border-left: 3px solid #e5e7eb;
+  color: #374151;
+  font-style: italic;
+}
+
+.editor-styles-wrapper blockquote p:last-child,
+.editor-styles-wrapper .wp-block-quote p:last-child {
+  margin-bottom: 0;
+}
+
+.editor-styles-wrapper :not(pre) > code,
+.editor-styles-wrapper .wp-block-code code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .88em;
+  background: #f3f4f6;
+  color: #111827;
+  padding: .15em .4em;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.editor-styles-wrapper pre,
+.editor-styles-wrapper .wp-block-code {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 0 1.45em;
+}
+
+.editor-styles-wrapper pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.editor-styles-wrapper hr,
+.editor-styles-wrapper .wp-block-separator {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2em 0;
+}
+
+.editor-styles-wrapper img,
+.editor-styles-wrapper .wp-block-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.editor-styles-wrapper table,
+.editor-styles-wrapper .wp-block-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .95rem;
+  margin: 0 0 1.45em;
+}
+
+.editor-styles-wrapper th,
+.editor-styles-wrapper td {
+  padding: .6rem .85rem;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.editor-styles-wrapper th {
+  background: #f9fafb;
+  font-weight: 700;
+}
+
+.editor-styles-wrapper .wp-block-details,
+.editor-styles-wrapper details {
+  margin: 0 0 .65rem;
 }

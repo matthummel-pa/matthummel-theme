@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.61 — Editor prose lists + canvas parity
+
+- Restore bullets and numbers on Gutenberg List blocks in posts and the block editor (Tailwind preflight had removed list markers).
+- Editor canvas styles now mirror post prose for headings, blockquote, inline code, tables, images, and separators; code block chrome loads in the editor.
+
 ## 3.1.59 — Tool card semantic markup + heading level control
 
 - Tool cards render as `<article>` inside a `<ul>` grid; tool names use a configurable H2–H4 heading (default H3).

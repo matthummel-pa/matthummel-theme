@@ -9775,6 +9775,22 @@ html.mh-dark .h-badge--open {
 .post-prose p,
 .post-prose li { font-size: 1.05em; line-height: 1.78; letter-spacing: -0.011em; text-wrap: pretty; }
 .post-prose :where(p, ul, ol, blockquote, pre, figure, table) { margin: 0 0 1.45em; }
+.post-prose :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) {
+  padding-inline-start: 1.35em;
+  list-style-position: outside;
+}
+.post-prose ul.wp-block-list:not(.mh-tool-grid) { list-style-type: disc; }
+.post-prose ol.wp-block-list:not(.mh-ship-pipe) { list-style-type: decimal; }
+.post-prose ul.wp-block-list ul { list-style-type: circle; margin-top: .35em; margin-bottom: 0; }
+.post-prose ol.wp-block-list ol { list-style-type: lower-alpha; margin-top: .35em; margin-bottom: 0; }
+.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li {
+  display: list-item;
+  padding-inline-start: .15em;
+}
+.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
 .post-prose li { margin: 0 0 .4em; }
 .post-prose :where(h2, h3, h4) {
   color: var(--color-text);
