@@ -1,5 +1,58 @@
 /* Product landing (theme / plugin) */
 .concept-page--product .concept-hero-actions .btn { min-height: 2.75rem; }
+.concept-page--product .page-header-split__aside {
+  max-width: 38rem;
+}
+.concept-page--product .concept-hero-shot {
+  transform: rotate(.35deg);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.concept-page--product .concept-hero-shot:hover {
+  transform: rotate(0) translateY(-2px);
+  box-shadow: 0 22px 50px color-mix(in srgb, var(--color-navy) 16%, transparent);
+}
+.concept-hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-secondary);
+  font-size: .84rem;
+  font-weight: 600;
+}
+.concept-hero-trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.concept-hero-trust li::before {
+  content: "✓";
+  color: var(--color-accent);
+  font-weight: 800;
+}
+.concept-page--product .concept-gallery {
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--gray-50);
+}
+.concept-page--product .concept-gallery figure {
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--white);
+}
+.concept-page--product .concept-gallery img {
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 10px 10px 0 0;
+}
+.concept-page--product .concept-gallery figcaption {
+  margin: 0;
+  padding: .65rem .75rem .75rem;
+}
 .concept-price-inline :where(.amount) {
   font-weight: 700;
   color: var(--color-text);
@@ -212,4 +265,13 @@
   margin-top: .45rem;
   font-size: .88rem;
   color: var(--color-text-secondary);
+}
+
+@media (max-width: 720px) {
+  .concept-page--product .page-header-split__aside {
+    max-width: none;
+  }
+  .concept-page--product .concept-hero-shot {
+    transform: none;
+  }
 }

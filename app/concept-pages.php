@@ -718,8 +718,278 @@ function mh_gate_concept_page_access(): void
     nocache_headers();
 }
 
+/**
+ * Resolve a bundled product/work image path to a public URL.
+ */
+function mh_product_image_url(string $rel): string
+{
+    $rel = trim($rel);
+    if ($rel === '') {
+        return '';
+    }
+    if (preg_match('#^https?://#i', $rel)) {
+        return esc_url_raw($rel);
+    }
+
+    return mh_studio_project_image_url(['image' => $rel]);
+}
+
+/**
+ * Path to sellable product catalog JSON (Acreline, TOCflow, …).
+ */
+function mh_product_catalog_data_path(): string
+{
+    return get_theme_file_path('resources/data/product-catalog.json');
+}
+
+/**
+ * @return array<string, array<string, mixed>>
+ */
+function mh_product_catalog_seed_data(): array
+{
+    static $data = null;
+    if ($data !== null) {
+        return $data;
+    }
+
+    $path = mh_product_catalog_data_path();
+    if (! is_readable($path)) {
+        $data = [];
+
+        return $data;
+    }
+
+    $decoded = json_decode((string) file_get_contents($path), true);
+    $data = is_array($decoded) ? $decoded : [];
+
+    return $data;
+}
+
+/**
+ * Format FAQ pairs for project meta storage.
+ *
+ * @param  list<array{0: string, 1: string}>  $pairs
+ */
+function mh_product_faq_meta_text(array $pairs): string
+{
+    $lines = [];
+    foreach ($pairs as $pair) {
+        if (! is_array($pair) || count($pair) < 2) {
+            continue;
+        }
+        $q = trim((string) $pair[0]);
+        $a = trim((string) $pair[1]);
+        if ($q === '' || $a === '') {
+            continue;
+        }
+        $lines[] = $q.'|||'.$a;
+    }
+
+    return implode("\n", $lines);
+}
+
+/**
+ * Format screenshot pairs (theme-relative or absolute) for project meta.
+ *
+ * @param  list<array{0: string, 1: string}>  $pairs
+ */
+function mh_product_screenshots_meta_text(array $pairs): string
+{
+    $lines = [];
+    foreach ($pairs as $pair) {
+        if (! is_array($pair) || count($pair) < 1) {
+            continue;
+        }
+        $url = mh_product_image_url((string) ($pair[0] ?? ''));
+        $caption = trim((string) ($pair[1] ?? ''));
+        if ($url === '') {
+            continue;
+        }
+        $lines[] = $caption !== '' ? $url.'|'.$caption : $url;
+    }
+
+    return implode("\n", $lines);
+}
+
+/**
+ * Format docs Label|||URL lines.
+ *
+ * @param  list<array{0: string, 1: string}>  $pairs
+ */
+function mh_product_docs_meta_text(array $pairs): string
+{
+    $lines = [];
+    foreach ($pairs as $pair) {
+        if (! is_array($pair) || count($pair) < 2) {
+            continue;
+        }
+        $label = trim((string) $pair[0]);
+        $url = trim((string) $pair[1]);
+        if ($label === '' || $url === '') {
+            continue;
+        }
+        $lines[] = $label.'|||'.$url;
+    }
+
+    return implode("\n", $lines);
+}
+
+/**
+ * Create or update one sellable catalog product from JSON.
+ *
+ * @param  array<string, mixed>  $seed
+ */
+function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true): int
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '' || $seed === []) {
+        return 0;
+    }
+
+    $posts = get_posts([
+        'post_type' => mh_project_post_type(),
+        'name' => $slug,
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    $title = (string) ($seed['title'] ?? $slug);
+    $postId = $posts !== [] ? (int) $posts[0] : 0;
+    if ($postId <= 0) {
+        $inserted = wp_insert_post([
+            'post_type' => mh_project_post_type(),
+            'post_status' => 'publish',
+            'post_title' => $title,
+            'post_name' => $slug,
+        ], true);
+        if (is_wp_error($inserted)) {
+            return 0;
+        }
+        $postId = (int) $inserted;
+        if ($postId <= 0) {
+            return 0;
+        }
+    } elseif ($force && $title !== '') {
+        wp_update_post([
+            'ID' => $postId,
+            'post_title' => $title,
+        ]);
+    }
+
+    $tech = $seed['tech'] ?? [];
+    $techText = is_array($tech) ? implode(', ', array_map('strval', $tech)) : (string) $tech;
+
+    $cardMap = [
+        '_mh_project_cat' => (string) ($seed['cat'] ?? ''),
+        '_mh_project_place' => (string) ($seed['place'] ?? ''),
+        '_mh_project_blurb' => (string) ($seed['blurb'] ?? ''),
+        '_mh_project_tech' => $techText,
+        '_mh_project_image' => (string) ($seed['image'] ?? ''),
+        '_mh_project_demo' => (string) ($seed['demo'] ?? ''),
+        '_mh_project_github' => (string) ($seed['github'] ?? ''),
+        '_mh_project_product_type' => sanitize_key((string) ($seed['product_type'] ?? 'theme')),
+        '_mh_project_price' => (string) ($seed['price'] ?? ''),
+        '_mh_project_version' => (string) ($seed['version'] ?? ''),
+        '_mh_project_compatible' => (string) ($seed['compatible'] ?? ''),
+        '_mh_project_license' => (string) ($seed['license'] ?? ''),
+        '_mh_project_support' => (string) ($seed['support'] ?? ''),
+        '_mh_project_topics' => (string) ($seed['topics'] ?? ''),
+        '_mh_project_languages' => (string) ($seed['languages'] ?? ''),
+        '_mh_project_brand_tagline' => (string) ($seed['brand_tagline'] ?? ''),
+        '_mh_project_brand_palette' => (string) ($seed['brand_palette'] ?? ''),
+    ];
+
+    foreach ($cardMap as $key => $value) {
+        if ($value === '' && ! $force) {
+            continue;
+        }
+        if ($force || (string) get_post_meta($postId, $key, true) === '') {
+            update_post_meta($postId, $key, $value);
+        }
+    }
+
+    update_post_meta($postId, mh_project_live_meta_key(), ! empty($seed['live']) ? '1' : '0');
+    update_post_meta($postId, '_mh_project_for_sale', ! empty($seed['for_sale']) ? '1' : '0');
+
+    $files = $seed['files_included'] ?? [];
+    if (is_array($files) && ($force || (string) get_post_meta($postId, '_mh_project_files_included', true) === '')) {
+        update_post_meta($postId, '_mh_project_files_included', implode("\n", array_map('strval', $files)));
+    }
+
+    $docs = $seed['docs'] ?? [];
+    if (is_array($docs) && ($force || (string) get_post_meta($postId, '_mh_project_docs', true) === '')) {
+        update_post_meta($postId, '_mh_project_docs', mh_product_docs_meta_text($docs));
+    }
+
+    $screens = $seed['screenshots'] ?? [];
+    if (is_array($screens) && ($force || (string) get_post_meta($postId, '_mh_project_screenshots', true) === '')) {
+        update_post_meta($postId, '_mh_project_screenshots', mh_product_screenshots_meta_text($screens));
+    }
+
+    $benefits = $seed['benefits'] ?? [];
+    if (is_array($benefits) && ($force || (string) get_post_meta($postId, '_mh_project_benefits', true) === '')) {
+        update_post_meta($postId, '_mh_project_benefits', implode("\n", array_map('strval', $benefits)));
+    }
+
+    $faq = $seed['faq'] ?? [];
+    if (is_array($faq) && ($force || (string) get_post_meta($postId, '_mh_project_faq', true) === '')) {
+        update_post_meta($postId, '_mh_project_faq', mh_product_faq_meta_text($faq));
+    }
+
+    mh_seed_project_concept_narrative($postId, $seed, $force);
+
+    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+        mh_sync_project_product($postId);
+    }
+
+    return $postId;
+}
+
+/**
+ * One-time: seed Acreline + TOCflow as sellable products, pull concept demos off the shop,
+ * and apply marketplace-ready copy + screenshots.
+ */
+function mh_apply_product_catalog_v1(): void
+{
+    if (get_option('mh_product_catalog_v1') || wp_installing()) {
+        return;
+    }
+
+    // Concept demos are hire-only — not ThemeForest packs.
+    foreach (mh_query_project_cards(['live_only' => false]) as $card) {
+        $id = (int) ($card['post_id'] ?? 0);
+        $slug = (string) ($card['slug'] ?? '');
+        if ($id <= 0) {
+            continue;
+        }
+        if (isset(mh_product_catalog_seed_data()[$slug])) {
+            continue;
+        }
+        update_post_meta($id, '_mh_project_for_sale', '0');
+        $type = sanitize_key((string) get_post_meta($id, '_mh_project_product_type', true));
+        if ($type === '' || $type === 'theme') {
+            update_post_meta($id, '_mh_project_product_type', 'concept');
+        }
+        if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+            mh_sync_project_product($id);
+        }
+    }
+
+    foreach (mh_product_catalog_seed_data() as $slug => $seed) {
+        if (! is_array($seed)) {
+            continue;
+        }
+        mh_upsert_catalog_product((string) $slug, $seed, true);
+    }
+
+    update_option('mh_product_catalog_v1', true);
+}
+
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v1', 37);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');

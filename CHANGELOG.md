@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.67 — Marketplace-ready product pages
+
+- Redesign product heroes with the featured screenshot on the right, purchase details, and a responsive product gallery.
+- Seed Acreline and TOCflow from reviewed repository content with buyer-focused copy, compatibility, licensing, documentation, and screenshots.
+- Price Acreline at $79 and keep TOCflow free; unsellable concept demos are removed from WooCommerce checkout.
+- Make product publishing opt-in and assign theme/plugin products to the correct catalog category.
+
 ## 3.1.66 — Projects catalog: themes & plugins for sale
 
 - Reposition `/projects/` as the themes and plugins catalog (demos + buy), not concept/example language.

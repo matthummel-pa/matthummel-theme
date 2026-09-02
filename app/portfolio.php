@@ -1469,7 +1469,7 @@ function mh_studio_projects(): array
     ];
 }
 
-/** Screenshot URL for a Work card (bundled JPEG, or an http(s) override). */
+/** Screenshot URL for a Work card (bundled image under resources/images/, or an http(s) override). */
 function mh_studio_project_image_url(array $project): string
 {
     $img = trim((string) ($project['image'] ?? ''));
@@ -1480,9 +1480,16 @@ function mh_studio_project_image_url(array $project): string
         return $img;
     }
 
-    $rel = 'resources/images/work/'.ltrim($img, '/');
-    if (is_readable(get_theme_file_path($rel))) {
-        return get_theme_file_uri($rel);
+    $img = ltrim($img, '/');
+    $candidates = [
+        'resources/images/'.$img,
+        'resources/images/work/'.$img,
+        'resources/images/products/'.$img,
+    ];
+    foreach ($candidates as $rel) {
+        if (is_readable(get_theme_file_path($rel))) {
+            return get_theme_file_uri($rel);
+        }
     }
 
     return '';
@@ -1832,7 +1839,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     }
     $productId = (string) get_post_meta($post->ID, '_mh_project_product_id', true);
     $price = (string) get_post_meta($post->ID, '_mh_project_price', true);
-    $forSale = get_post_meta($post->ID, '_mh_project_for_sale', true) !== '0';
+    $forSale = get_post_meta($post->ID, '_mh_project_for_sale', true) === '1';
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
     $live = mh_project_is_live((int) $post->ID);
     $metrics = [];
@@ -1845,7 +1852,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
     echo '<strong>'.esc_html__('Show on site', 'sage').'</strong></label></p>';
-    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public /concept/ page.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public product page.', 'sage').'</p>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
@@ -1857,14 +1864,14 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: hallowed-ground.jpg or https://… Featured image always wins on the Work grid and concept page.', 'sage')
+        __('Fallback only: used when this project has no Featured image. Example: products/acreline/featured.webp or hallowed-ground.jpg. Featured image always wins on the Work grid and product page.', 'sage')
     );
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('WooCommerce', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Live projects become WooCommerce products when the plugin is active. Buy theme adds to cart; Get help opens the contact form.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('Opt in to sell this project. Concept demos stay hire-only unless For sale is checked.', 'sage').'</p>';
     echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
-    echo esc_html__('For sale (Buy theme)', 'sage').'</label></p>';
+    echo esc_html__('For sale (Buy theme / plugin)', 'sage').'</label></p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Landing type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
