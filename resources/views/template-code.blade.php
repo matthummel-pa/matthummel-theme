@@ -67,8 +67,8 @@
         $followerCount > 0
           ? ['value' => number_format_i18n($followerCount), 'label' => __('Followers', 'sage'), 'href' => $ghUrl.'?tab=followers', 'external' => true]
           : null,
-        $starTotal > 0
-          ? ['value' => number_format_i18n($starTotal), 'label' => __('Stars (featured)', 'sage')]
+        count($ghBadges) > 0
+          ? ['value' => number_format_i18n(count($ghBadges)), 'label' => __('Badges earned', 'sage'), 'href' => '#gh-community']
           : null,
         $yearTotal > 0
           ? ['value' => number_format_i18n($yearTotal), 'label' => __('Contributions (year)', 'sage')]
@@ -90,8 +90,8 @@
   <div class="container wide">
     <div class="code-practice-shell">
       <div class="code-practice-shell__mesh" aria-hidden="true"></div>
-      <div class="code-practice-shell__inner">
-        <header class="code-practice-shell__head">
+      <div class="code-practice-shell__inner code-practice-layout">
+        <aside class="code-practice-aside" aria-label="{{ __('Practice overview', 'sage') }}">
           <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
           <h2 id="code-practice-heading" class="display-title is-section">
             {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
@@ -120,9 +120,9 @@
               {{ __('Example sites', 'sage') }}
             </a>
           </div>
-        </header>
+        </aside>
 
-        <div class="code-practice-groups">
+        <div class="code-practice-board">
           @foreach ($practiceGroups as $group)
             <section
               class="code-practice-group"
@@ -134,7 +134,7 @@
                 <span class="code-practice-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
                 <h3 class="code-practice-group__title" id="practice-head-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</h3>
                 <span class="code-practice-group__rule" aria-hidden="true"></span>
-                <span class="code-practice-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
+                <span class="code-practice-group__count">{{ sprintf(_n('%s focus', '%s focuses', count($group['items']), 'sage'), number_format_i18n(count($group['items']))) }}</span>
               </div>
               <ol class="code-practice-grid">
                 @foreach ($group['items'] as $i => $item)
@@ -274,7 +274,7 @@
           <h3 class="code-gh-community__title">{{ \App\field('code_comm_h2', __('People who follow and star my repos', 'sage')) }}</h3>
           <p class="code-gh-community__intro">{{ \App\field('code_comm_intro', __('Public GitHub followers and stargazers below. Thank you for reading the code, starring a repo, or following along.', 'sage')) }}</p>
         </div>
-        @if ($starTotal > 0 || $followerCount > 0)
+        @if ($followerCount > 0 || count($ghBadges) > 0)
           <dl class="code-gh-community__stats">
             @if ($followerCount > 0)
               <div>
@@ -282,10 +282,10 @@
                 <dd>{{ number_format_i18n($followerCount) }}</dd>
               </div>
             @endif
-            @if ($starTotal > 0)
+            @if (count($ghBadges) > 0)
               <div>
-                <dt>{{ __('Stars', 'sage') }}</dt>
-                <dd>{{ number_format_i18n($starTotal) }}</dd>
+                <dt>{{ __('Badges', 'sage') }}</dt>
+                <dd>{{ number_format_i18n(count($ghBadges)) }}</dd>
               </div>
             @endif
           </dl>
@@ -325,60 +325,59 @@
         </section>
         @endif
 
-        @if ($ghStargazers || $starTotal > 0)
-        <section class="code-gh-community__panel" aria-labelledby="code-star-heading">
-          <h4 class="code-gh-community__panel-title" id="code-star-heading">
-            {!! \App\mh_svg_icon('star', 16) !!}
-            {{ \App\field('code_star_h3', __('Repo stargazers', 'sage')) }}
+        @if ($ghBadges)
+        <section class="code-gh-community__panel code-gh-community__panel--badges" aria-labelledby="code-badges-heading">
+          <h4 class="code-gh-community__panel-title" id="code-badges-heading">
+            {!! \App\mh_svg_icon('shield', 16) !!}
+            {{ \App\field('code_badges_h3', __('Badges earned', 'sage')) }}
           </h4>
-          <p class="code-gh-community__thanks">{{ \App\field('code_star_thanks', __('Thank you to everyone who starred a public repo. Stars help other developers find the work.', 'sage')) }}</p>
-          @if ($starTotal > 0)
-            <p class="code-gh-community__stat-line">
-              <strong>{{ number_format_i18n($starTotal) }}</strong>
-              {{ sprintf(_n('star across featured repos', 'stars across featured repos', $starTotal, 'sage')) }}
-            </p>
-          @endif
-          @if ($ghStargazers)
-            <ul class="code-gh-people">
-              @foreach ($ghStargazers as $s)
-                <li>
-                  <a class="code-gh-person" href="{{ esc_url($s['url']) }}" rel="noopener noreferrer" target="_blank" title="{{ esc_attr($s['name']) }}">
-                    @if ($s['avatar'] !== '')
-                      <img class="code-gh-person__img" src="{{ esc_url($s['avatar']) }}" alt="" width="40" height="40" loading="lazy" decoding="async">
-                    @else
-                      <span class="code-gh-person__img code-gh-person__img--empty" aria-hidden="true">{{ mb_strtoupper(mb_substr($s['name'], 0, 1)) }}</span>
-                    @endif
-                    <span class="code-gh-person__meta">
-                      <span class="code-gh-person__name">{{ $s['name'] }}</span>
-                      <span class="code-gh-person__user">{{ '@'.$s['login'] }}</span>
-                    </span>
-                  </a>
-                </li>
-              @endforeach
-            </ul>
-          @endif
+          <p class="code-gh-community__thanks">{{ \App\field('code_badges_intro', __('Milestone badges from live GitHub stats — stars, followers, contributions, and repo activity.', 'sage')) }}</p>
+          <ul class="code-gh-badges__grid code-gh-badges__grid--panel">
+            @foreach ($ghBadges as $badge)
+              <li class="code-gh-badge {{ esc_attr($badge['class']) }}">
+                <span class="code-gh-badge__icon" aria-hidden="true">{!! \App\mh_svg_icon($badge['icon'], 18) !!}</span>
+                <span class="code-gh-badge__copy">
+                  <span class="code-gh-badge__label">{{ $badge['label'] }}</span>
+                  <span class="code-gh-badge__detail">{{ $badge['detail'] }}</span>
+                </span>
+              </li>
+            @endforeach
+          </ul>
         </section>
         @endif
       </div>
 
-      @if ($ghBadges)
-      <section class="code-gh-badges" aria-labelledby="code-badges-heading">
-        <h4 class="code-gh-badges__title" id="code-badges-heading">
-          {!! \App\mh_svg_icon('shield', 16) !!}
-          {{ \App\field('code_badges_h3', __('Badges earned', 'sage')) }}
-        </h4>
-        <p class="code-gh-badges__intro">{{ \App\field('code_badges_intro', __('Milestone badges from live GitHub stats — stars, followers, contributions, and repo activity.', 'sage')) }}</p>
-        <ul class="code-gh-badges__grid">
-          @foreach ($ghBadges as $badge)
-            <li class="code-gh-badge {{ esc_attr($badge['class']) }}">
-              <span class="code-gh-badge__icon" aria-hidden="true">{!! \App\mh_svg_icon($badge['icon'], 18) !!}</span>
-              <span class="code-gh-badge__copy">
-                <span class="code-gh-badge__label">{{ $badge['label'] }}</span>
-                <span class="code-gh-badge__detail">{{ $badge['detail'] }}</span>
-              </span>
-            </li>
-          @endforeach
-        </ul>
+      @if ($ghStargazers || $starTotal > 0)
+      <section class="code-gh-stargazers" aria-labelledby="code-star-heading">
+        <div class="code-gh-stargazers__head">
+          <h4 class="code-gh-stargazers__title" id="code-star-heading">
+            {!! \App\mh_svg_icon('star', 16) !!}
+            {{ \App\field('code_star_h3', __('Repo stargazers', 'sage')) }}
+          </h4>
+          <p class="code-gh-stargazers__thanks">{{ \App\field('code_star_thanks', __('Thank you to everyone who starred a public repo. Stars help other developers find the work.', 'sage')) }}</p>
+          @if ($starTotal > 0)
+            <p class="code-gh-stargazers__stat">
+              <strong>{{ number_format_i18n($starTotal) }}</strong>
+              {{ sprintf(_n('star across featured repos', 'stars across featured repos', $starTotal, 'sage')) }}
+            </p>
+          @endif
+        </div>
+        @if ($ghStargazers)
+          <ul class="code-gh-stargazers__people">
+            @foreach ($ghStargazers as $s)
+              <li>
+                <a class="code-gh-stargazer" href="{{ esc_url($s['url']) }}" rel="noopener noreferrer" target="_blank" title="{{ esc_attr($s['name']) }}">
+                  @if ($s['avatar'] !== '')
+                    <img class="code-gh-stargazer__img" src="{{ esc_url($s['avatar']) }}" alt="" width="36" height="36" loading="lazy" decoding="async">
+                  @else
+                    <span class="code-gh-stargazer__img code-gh-stargazer__img--empty" aria-hidden="true">{{ mb_strtoupper(mb_substr($s['name'], 0, 1)) }}</span>
+                  @endif
+                  <span class="code-gh-stargazer__name">{{ $s['name'] }}</span>
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        @endif
       </section>
       @endif
     </div>

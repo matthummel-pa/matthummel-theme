@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.64 — Code page layout polish
+
+- Move badges earned into the community column (where stars/stargazers sat); stargazers become a compact strip under the grid.
+- Redesign “What I work on” as a sticky aside + board layout with clearer group shelves.
+
 ## 3.1.63 — Code page community panel
 
 - Code page: GitHub followers grid, stargazer thank-you with live star totals, and milestone badges from API stats.
