@@ -3,7 +3,7 @@
   $postId = (int) get_the_ID();
   $card = \App\mh_project_post_to_card(get_post($postId));
   $story = \App\mh_project_concept_narrative($postId);
-  $title = (string) ($card['title'] ?? get_the_title());
+  $title = (string) ($card['title'] ?? \App\mh_post_title());
   $shot = (string) ($card['image'] ?? '');
   $cat = (string) ($card['cat'] ?? '');
   $place = (string) ($card['place'] ?? '');

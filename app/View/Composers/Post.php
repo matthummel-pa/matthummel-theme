@@ -4,6 +4,8 @@ namespace App\View\Composers;
 
 use Roots\Acorn\View\Composer;
 
+use function App\mh_post_title;
+
 class Post extends Composer
 {
     /**
@@ -25,12 +27,12 @@ class Post extends Composer
     public function title(): string
     {
         if ($this->view->name() !== 'partials.page-header') {
-            return get_the_title();
+            return mh_post_title();
         }
 
         if (is_home()) {
             if ($home = get_option('page_for_posts', true)) {
-                return get_the_title($home);
+                return mh_post_title($home);
             }
 
             return __('Latest Posts', 'sage');
@@ -52,7 +54,7 @@ class Post extends Composer
             return __('Not Found', 'sage');
         }
 
-        return get_the_title();
+        return mh_post_title();
     }
 
     /**

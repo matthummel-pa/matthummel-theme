@@ -4,6 +4,8 @@ namespace App\View\Composers;
 
 use Roots\Acorn\View\Composer;
 
+use function App\mh_post_title;
+
 class Comments extends Composer
 {
     /**
@@ -24,7 +26,7 @@ class Comments extends Composer
             /* translators: %1$s is replaced with the number of comments and %2$s with the post title */
             _nx('%1$s comment on "%2$s"', '%1$s comments on "%2$s"', get_comments_number(), 'comments title', 'sage'),
             number_format_i18n((int) get_comments_number()),
-            get_the_title()
+            mh_post_title()
         );
     }
 

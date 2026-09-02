@@ -361,6 +361,17 @@ function mh_home_github_repos(int $limit = 6): array
     return array_slice($featured, 0, max(1, $limit));
 }
 
+/**
+ * Post/page title for Blade {{ }} output.
+ *
+ * WordPress texturizes titles (e.g. apostrophe → &#8217;). Blade escapes & again,
+ * which shows literal entities on the front end unless decoded first.
+ */
+function mh_post_title(int|\WP_Post|null $post = null): string
+{
+    return html_entity_decode((string) get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
 function mh_title_label(string $text): string
 {
     $text = trim((string) preg_replace('/[\-_]+/', ' ', $text));
@@ -2617,7 +2628,7 @@ function mh_latest_posts(int $limit = 3): array
         $cat = ($cats && ! is_wp_error($cats)) ? $cats[0] : null;
         $out[] = [
             'id' => (int) $p->ID,
-            'title' => get_the_title($p),
+            'title' => mh_post_title($p),
             'url' => get_permalink($p),
             'date' => get_the_date('M j, Y', $p),
             'date_iso' => get_the_date('c', $p),
@@ -2907,7 +2918,7 @@ function mh_popular_posts(int $limit = 5, int $exclude = 0): array
             continue;
         }
         $out[] = [
-            'title' => get_the_title($p),
+            'title' => mh_post_title($p),
             'url' => get_permalink($p),
             'date' => get_the_date('', $p),
             'comments' => $comments,
