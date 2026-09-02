@@ -22,7 +22,12 @@
   $yearTotal = (int) ($calendarYear['total'] ?? 0);
   $ghFollowers = \App\mh_github_followers(20);
   $ghStargazers = \App\mh_github_stargazers(20);
-  $starTotal = \App\mh_github_star_total();
+  $starsEarned = \App\mh_github_stars_earned();
+  $starTotal = (int) ($starsEarned['total'] ?? 0);
+  $starRepos = $starsEarned['repos'] ?? [];
+  $watching = \App\mh_github_watching(36);
+  $watchingItems = $watching['items'] ?? [];
+  $watchingSource = (string) ($watching['source'] ?? 'starred');
   $ghBadges = \App\mh_code_page_github_badges();
   $followerCount = (int) ($profile['followers'] ?? 0);
 @endphp
@@ -66,6 +71,9 @@
           : null,
         $followerCount > 0
           ? ['value' => number_format_i18n($followerCount), 'label' => __('Followers', 'sage'), 'href' => $ghUrl.'?tab=followers', 'external' => true]
+          : null,
+        $starTotal > 0
+          ? ['value' => number_format_i18n($starTotal), 'label' => __('Stars earned', 'sage'), 'href' => '#gh-community']
           : null,
         count($ghBadges) > 0
           ? ['value' => number_format_i18n(count($ghBadges)), 'label' => __('Badges earned', 'sage'), 'href' => '#gh-community']
@@ -180,8 +188,11 @@
         @if (! empty($profile['login']))
           <a href="#gh-profile">{{ __('Profile', 'sage') }}</a>
         @endif
-        @if ($ghFollowers || $ghStargazers || $ghBadges)
+        @if ($ghFollowers || $ghStargazers || $ghBadges || $watchingItems)
           <a href="#gh-community">{{ __('Community', 'sage') }}</a>
+        @endif
+        @if ($watchingItems)
+          <a href="#gh-watching">{{ __('Watching', 'sage') }}</a>
         @endif
         @if ($weeks)
           <a href="#gh-contributions">{{ __('Contributions', 'sage') }}</a>
@@ -265,8 +276,8 @@
     </div>
     @endif
 
-    {{-- Community: followers, stargazers, badges --}}
-    @if ($ghFollowers || $ghStargazers || $ghBadges)
+    {{-- Community: followers, badges, stars earned, watching --}}
+    @if ($ghFollowers || $ghStargazers || $ghBadges || $starTotal > 0 || $watchingItems)
     <div class="code-gh-community" id="gh-community">
       <header class="code-gh-community__head">
         <div>
@@ -274,12 +285,18 @@
           <h3 class="code-gh-community__title">{{ \App\field('code_comm_h2', __('People who follow and star my repos', 'sage')) }}</h3>
           <p class="code-gh-community__intro">{{ \App\field('code_comm_intro', __('Public GitHub followers and stargazers below. Thank you for reading the code, starring a repo, or following along.', 'sage')) }}</p>
         </div>
-        @if ($followerCount > 0 || count($ghBadges) > 0)
+        @if ($followerCount > 0 || $starTotal > 0 || count($ghBadges) > 0)
           <dl class="code-gh-community__stats">
             @if ($followerCount > 0)
               <div>
                 <dt>{{ __('Followers', 'sage') }}</dt>
                 <dd>{{ number_format_i18n($followerCount) }}</dd>
+              </div>
+            @endif
+            @if ($starTotal > 0)
+              <div>
+                <dt>{{ __('Stars earned', 'sage') }}</dt>
+                <dd>{{ number_format_i18n($starTotal) }}</dd>
               </div>
             @endif
             @if (count($ghBadges) > 0)
@@ -347,21 +364,34 @@
         @endif
       </div>
 
-      @if ($ghStargazers || $starTotal > 0)
+      @if ($starTotal > 0 || $ghStargazers)
       <section class="code-gh-stargazers" aria-labelledby="code-star-heading">
         <div class="code-gh-stargazers__head">
           <h4 class="code-gh-stargazers__title" id="code-star-heading">
             {!! \App\mh_svg_icon('star', 16) !!}
-            {{ \App\field('code_star_h3', __('Repo stargazers', 'sage')) }}
+            {{ \App\field('code_star_h3', __('Stars earned', 'sage')) }}
           </h4>
           <p class="code-gh-stargazers__thanks">{{ \App\field('code_star_thanks', __('Thank you to everyone who starred a public repo. Stars help other developers find the work.', 'sage')) }}</p>
           @if ($starTotal > 0)
             <p class="code-gh-stargazers__stat">
               <strong>{{ number_format_i18n($starTotal) }}</strong>
-              {{ sprintf(_n('star across featured repos', 'stars across featured repos', $starTotal, 'sage')) }}
+              {{ sprintf(_n('star across public repos', 'stars across public repos', $starTotal, 'sage')) }}
             </p>
           @endif
         </div>
+        @if ($starRepos)
+          <ul class="code-gh-star-repos">
+            @foreach ($starRepos as $sr)
+              <li>
+                <a class="code-gh-star-repo" href="{{ esc_url($sr['url']) }}" rel="noopener" target="_blank">
+                  <span class="code-gh-star-repo__name">{{ $sr['name'] }}</span>
+                  <span class="code-gh-star-repo__n">{!! \App\mh_svg_icon('star', 12) !!} {{ number_format_i18n((int) $sr['stars']) }}</span>
+                  <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        @endif
         @if ($ghStargazers)
           <ul class="code-gh-stargazers__people">
             @foreach ($ghStargazers as $s)
@@ -378,6 +408,48 @@
             @endforeach
           </ul>
         @endif
+      </section>
+      @endif
+
+      @if ($watchingItems)
+      <section class="code-gh-watching" id="gh-watching" aria-labelledby="code-watch-heading">
+        <div class="code-gh-watching__head">
+          <h4 class="code-gh-watching__title" id="code-watch-heading">
+            {!! \App\mh_svg_icon('globe', 16) !!}
+            {{ \App\field('code_watch_h3', __('Repos I watch', 'sage')) }}
+          </h4>
+          <p class="code-gh-watching__intro">
+            @if ($watchingSource === 'watching')
+              {{ \App\field('code_watch_intro', __('Public repositories I watch on GitHub.', 'sage')) }}
+            @else
+              {{ \App\field('code_watch_intro_starred', __('Repos I star and follow on GitHub.', 'sage')) }}
+            @endif
+          </p>
+          <p class="code-gh-watching__meta">
+            {{ sprintf(_n('%s repo', '%s repos', count($watchingItems), 'sage'), number_format_i18n(count($watchingItems))) }}
+            ·
+            <a href="{{ esc_url($ghUrl.'?tab=stars') }}" rel="me noopener" target="_blank">
+              {{ __('All starred on GitHub', 'sage') }}
+              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+            </a>
+          </p>
+        </div>
+        <ul class="code-gh-watching__list">
+          @foreach ($watchingItems as $w)
+            <li>
+              <a class="code-gh-watch-repo" href="{{ esc_url($w['url']) }}" rel="noopener" target="_blank">
+                <span class="code-gh-watch-repo__full">{{ $w['full'] }}</span>
+                @if (($w['lang'] ?? '') !== '')
+                  <span class="code-gh-watch-repo__lang">{{ $w['lang'] }}</span>
+                @endif
+                @if ((int) ($w['stars'] ?? 0) > 0)
+                  <span class="code-gh-watch-repo__stars">{!! \App\mh_svg_icon('star', 11) !!} {{ number_format_i18n((int) $w['stars']) }}</span>
+                @endif
+                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+            </li>
+          @endforeach
+        </ul>
       </section>
       @endif
     </div>

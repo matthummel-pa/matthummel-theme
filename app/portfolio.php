@@ -689,29 +689,62 @@ function mh_github_stargazers(int $limit = 24, ?int $post_id = null): array
 }
 
 /**
- * Total stars across featured Code page repos (live API metadata).
+ * Total stars earned across all public owned repos (not just featured).
+ *
+ * @return array{total: int, repos: list<array{name: string, stars: int, url: string}>}
+ */
+function mh_github_stars_earned(): array
+{
+    $login = mh_github_login();
+    $filtered = apply_filters('mh/github_stars_earned', null, $login);
+    if (is_array($filtered) && isset($filtered['total'])) {
+        return [
+            'total' => (int) $filtered['total'],
+            'repos' => is_array($filtered['repos'] ?? null) ? $filtered['repos'] : [],
+        ];
+    }
+
+    return Github::fetchStarTotals($login);
+}
+
+/**
+ * Total stars across all public owned repos (live API).
  */
 function mh_github_star_total(?int $post_id = null): int
 {
+    unset($post_id);
+
+    return (int) (mh_github_stars_earned()['total'] ?? 0);
+}
+
+/**
+ * Repos Matt watches: GitHub subscriptions when available, else starred list.
+ *
+ * Public watching often returns empty (HTTP 204); starred is the public fallback.
+ *
+ * @return array{source: string, items: list<array{name: string, full: string, desc: string, url: string, stars: int, lang: string, owner: string}>}
+ */
+function mh_github_watching(int $limit = 36): array
+{
+    $limit = max(1, min(100, $limit));
     $login = mh_github_login();
-    $key = 'mh_github_star_total_v1_'.md5($login);
-    $cached = get_transient($key);
-    if (is_int($cached)) {
-        return $cached;
+    $filtered = apply_filters('mh/github_watching', null, $limit);
+    if (is_array($filtered) && isset($filtered['items']) && is_array($filtered['items'])) {
+        return [
+            'source' => (string) ($filtered['source'] ?? 'filter'),
+            'items' => array_slice($filtered['items'], 0, $limit),
+        ];
     }
 
-    $total = 0;
-    foreach (mh_code_page_repos($post_id) as $repo) {
-        $name = trim((string) ($repo['name'] ?? ''));
-        if ($name === '') {
-            continue;
-        }
-        $meta = Github::fetchRepoMeta($login, $name);
-        $total += (int) ($meta['stars'] ?? 0);
+    $watching = Github::fetchWatching($login, $limit);
+    if ($watching !== []) {
+        return ['source' => 'watching', 'items' => $watching];
     }
-    set_transient($key, $total, 6 * HOUR_IN_SECONDS);
 
-    return $total;
+    return [
+        'source' => 'starred',
+        'items' => Github::fetchStarred($login, $limit),
+    ];
 }
 
 /**
@@ -723,7 +756,8 @@ function mh_code_page_github_badges(?int $post_id = null): array
 {
     $profile = mh_github_profile();
     $calendar = mh_github_calendar();
-    $starTotal = mh_github_star_total($post_id);
+    $starsEarned = mh_github_stars_earned();
+    $starTotal = (int) ($starsEarned['total'] ?? 0);
     $followers = (int) ($profile['followers'] ?? 0);
     $repos = (int) ($profile['public_repos'] ?? 0);
     $contributions = (int) ($calendar['total'] ?? 0);
@@ -741,10 +775,10 @@ function mh_code_page_github_badges(?int $post_id = null): array
     foreach ([100, 50, 25, 10] as $tier) {
         if ($starTotal >= $tier) {
             $badges[] = [
-                'label' => sprintf(__('%s+ stars', 'sage'), number_format_i18n($tier)),
+                'label' => sprintf(__('%s+ stars earned', 'sage'), number_format_i18n($tier)),
                 'detail' => sprintf(
                     /* translators: %s: formatted star count */
-                    __('Across featured repos — %s total', 'sage'),
+                    __('Across public repos — %s total', 'sage'),
                     number_format_i18n($starTotal)
                 ),
                 'icon' => 'star',

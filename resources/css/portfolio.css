@@ -3703,6 +3703,126 @@ html.mh-dark .h-badge--open {
   text-overflow: ellipsis;
   max-width: 8rem;
 }
+.code-gh-star-repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  list-style: none;
+  margin: 0 0 .85rem;
+  padding: 0;
+}
+.code-gh-star-repo {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .4rem .7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s, background .15s;
+}
+.code-gh-star-repo:hover,
+.code-gh-star-repo:focus-visible {
+  border-color: #fde68a;
+  background: #fffbeb;
+  outline: none;
+}
+.code-gh-star-repo__name {
+  font: 600 .8rem/1.2 var(--font-display);
+  color: var(--color-text);
+}
+.code-gh-star-repo__n {
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+  font: 700 .72rem/1 var(--font-display);
+  color: #92400e;
+}
+.code-gh-watching {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--color-border);
+}
+.code-gh-watching__head {
+  display: grid;
+  gap: .4rem;
+  margin-bottom: .85rem;
+}
+.code-gh-watching__title {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  font: 700 .95rem/1.25 var(--font-display);
+}
+.code-gh-watching__title .mh-ico { color: var(--color-accent); }
+.code-gh-watching__intro {
+  margin: 0;
+  font-size: .88rem;
+  color: var(--color-text-muted);
+  max-width: 42rem;
+  line-height: 1.45;
+}
+.code-gh-watching__meta {
+  margin: 0;
+  font-size: .82rem;
+  color: var(--color-text-muted);
+}
+.code-gh-watching__meta a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.code-gh-watching__meta a:hover { text-decoration: underline; text-underline-offset: .15em; }
+.code-gh-watching__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: .4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.code-gh-watch-repo {
+  display: grid;
+  gap: .2rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--gray-50) 50%, var(--white));
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  transition: border-color .15s, background .15s;
+}
+.code-gh-watch-repo:hover,
+.code-gh-watch-repo:focus-visible {
+  border-color: var(--blue-200);
+  background: var(--white);
+  outline: none;
+}
+.code-gh-watch-repo__full {
+  font: 600 .8rem/1.3 var(--font-display);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.code-gh-watch-repo__lang,
+.code-gh-watch-repo__stars {
+  font-size: .72rem;
+  color: var(--color-text-muted);
+}
+.code-gh-watch-repo__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+}
+html.mh-dark .code-gh-star-repo,
+html.mh-dark .code-gh-watch-repo {
+  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+}
 html.mh-dark .code-gh-stargazer {
   background: color-mix(in srgb, var(--gray-800) 70%, transparent);
 }
