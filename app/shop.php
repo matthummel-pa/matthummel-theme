@@ -176,7 +176,22 @@ add_filter('body_class', __NAMESPACE__.'\\mh_shop_body_class');
 /** Default USD price for a project theme when none is set on the project. */
 function mh_default_theme_price(): string
 {
-    return '149';
+    return '79';
+}
+
+/** Default USD price for a project plugin when none is set (0 = free lead magnet). */
+function mh_default_plugin_price(): string
+{
+    return '0';
+}
+
+/**
+ * Whether a project is explicitly marked for sale (opt-in).
+ * Empty meta means not for sale — concept demos stay hire-only.
+ */
+function mh_project_is_for_sale(int $project_id): bool
+{
+    return $project_id > 0 && get_post_meta($project_id, '_mh_project_for_sale', true) === '1';
 }
 
 /** Items in the WooCommerce cart (0 when the cart is not loaded). */
@@ -268,26 +283,40 @@ function mh_project_buy_label(int $project_id): string
     return __('Buy theme', 'sage');
 }
 
-/** Product category used for synced project themes. */
-function mh_woocommerce_themes_category_id(): int
+/**
+ * Ensure a product_cat term exists and return its ID.
+ */
+function mh_woocommerce_ensure_product_category(string $slug, string $label): int
 {
     if (! taxonomy_exists('product_cat')) {
         return 0;
     }
 
-    $term = get_term_by('slug', 'themes', 'product_cat');
+    $term = get_term_by('slug', $slug, 'product_cat');
     if ($term instanceof \WP_Term) {
         return (int) $term->term_id;
     }
 
-    $created = wp_insert_term(__('Themes', 'sage'), 'product_cat', [
-        'slug' => 'themes',
+    $created = wp_insert_term($label, 'product_cat', [
+        'slug' => $slug,
     ]);
     if (is_wp_error($created)) {
         return 0;
     }
 
     return (int) ($created['term_id'] ?? 0);
+}
+
+/** Product category used for synced project themes. */
+function mh_woocommerce_themes_category_id(): int
+{
+    return mh_woocommerce_ensure_product_category('themes', __('Themes', 'sage'));
+}
+
+/** Product category used for synced project plugins. */
+function mh_woocommerce_plugins_category_id(): int
+{
+    return mh_woocommerce_ensure_product_category('plugins', __('Plugins', 'sage'));
 }
 
 /**
@@ -314,9 +343,11 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
     }
 
     if ($slug !== '' && function_exists('wc_get_product_id_by_sku')) {
-        $bySku = (int) wc_get_product_id_by_sku('theme-'.$slug);
-        if ($bySku > 0) {
-            return $bySku;
+        foreach (['theme-'.$slug, 'plugin-'.$slug] as $trySku) {
+            $bySku = (int) wc_get_product_id_by_sku($trySku);
+            if ($bySku > 0) {
+                return $bySku;
+            }
         }
     }
 
@@ -355,7 +386,13 @@ function mh_sync_project_product_unchecked(int $project_id): int
     }
 
     $slug = sanitize_title((string) $post->post_name);
-    $sku = 'theme-'.($slug !== '' ? $slug : (string) $project_id);
+    $type = sanitize_key((string) get_post_meta($project_id, '_mh_project_product_type', true));
+    if ($type === '') {
+        $type = 'theme';
+        update_post_meta($project_id, '_mh_project_product_type', $type);
+    }
+    $skuPrefix = $type === 'plugin' ? 'plugin-' : 'theme-';
+    $sku = $skuPrefix.($slug !== '' ? $slug : (string) $project_id);
     $productId = mh_find_product_id_for_project($project_id, $slug);
     $isNew = $productId <= 0;
     $product = $isNew ? new \WC_Product_Simple : wc_get_product($productId);
@@ -411,12 +448,21 @@ function mh_sync_project_product_unchecked(int $project_id): int
     $price = trim((string) get_post_meta($project_id, '_mh_project_price', true));
     if ($price !== '' && is_numeric($price)) {
         $product->set_regular_price($price);
+        if ((float) $price <= 0.0) {
+            $product->set_sale_price('');
+            $product->set_price('0');
+        }
     } elseif ($isNew || (string) $product->get_regular_price() === '') {
-        $product->set_regular_price(mh_default_theme_price());
+        $fallback = $type === 'plugin' ? mh_default_plugin_price() : mh_default_theme_price();
+        $product->set_regular_price($fallback);
+        if ((float) $fallback <= 0.0) {
+            $product->set_sale_price('');
+            $product->set_price('0');
+        }
     }
 
     $live = mh_project_is_live($project_id) && $post->post_status === 'publish';
-    $forSale = get_post_meta($project_id, '_mh_project_for_sale', true) !== '0';
+    $forSale = mh_project_is_for_sale($project_id);
     $product->set_status($live && $forSale ? 'publish' : 'private');
 
     $thumb = (int) get_post_thumbnail_id($project_id);
@@ -424,7 +470,9 @@ function mh_sync_project_product_unchecked(int $project_id): int
         $product->set_image_id($thumb);
     }
 
-    $catId = mh_woocommerce_themes_category_id();
+    $catId = $type === 'plugin'
+        ? mh_woocommerce_plugins_category_id()
+        : mh_woocommerce_themes_category_id();
     if ($catId > 0) {
         $product->set_category_ids([$catId]);
     }
@@ -436,10 +484,6 @@ function mh_sync_project_product_unchecked(int $project_id): int
     }
 
     update_post_meta($project_id, '_mh_project_product_id', (string) $saved);
-    $type = sanitize_key((string) get_post_meta($project_id, '_mh_project_product_type', true));
-    if ($type === '') {
-        update_post_meta($project_id, '_mh_project_product_type', 'theme');
-    }
 
     return $saved;
 }

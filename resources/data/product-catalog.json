@@ -1,0 +1,192 @@
+{
+  "acreline": {
+    "title": "Acreline",
+    "cat": "Themes",
+    "place": "Land & farms",
+    "blurb": "WordPress theme for farms, land, and historic homes — listings, agents, and showing requests.",
+    "tech": ["Sage", "WordPress", "Customizer"],
+    "product_type": "theme",
+    "for_sale": true,
+    "live": true,
+    "price": "79",
+    "eyebrow": "WordPress theme · Farms & land",
+    "summary": "Acreline is a WordPress real estate theme for farms, land, and historic homes. Searchable listings, map views, agents, and showing requests — Customizer identity, eight color styles, no page builder required.",
+    "challenge": "Land and farm buyers need acreage, township, and lot-type filters plus a map. Generic luxury realtor skins bury parcels and force IDX chrome offices do not need.",
+    "approach": "Listings, agents, and bookings ship in the theme. Identity and colors live in the Customizer. Filters are query args. Payment-estimate and showing requests stay vanilla JS — no Elementor, no ACF Pro required.",
+    "result": "A ThemeForest-ready pack: install the zip, brand it under Customize → Identity, seed demo inventory, and sell land the way rural buyers search for it.",
+    "audience": "Land offices, farm brokerages, and agents selling acreage or historic homes who cannot use a suburban MLS skin. Also agencies that need a rural real estate base they can white-label.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite. Listings, agents, and bookings as post types (optional Acreline Core plugin so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math. Classic metaboxes on purpose.",
+    "handoff": "You own the theme zip, child theme, and Core plugin. Brokers edit parcels, photos, and copy in wp-admin. HTML docs ship in the pack. Hire me to import your inventory or brand the Customizer.",
+    "benefits": [
+      "Ship a land-and-farm listing site without starting from a luxury realtor kit",
+      "Filters that match acreage, parcel context, and historic homes",
+      "Showing requests and agents built into the theme flow",
+      "Customizer identity + eight color styles — brand it in minutes",
+      "Child theme + Acreline Core so listings survive a theme switch",
+      "100% GPL-compatible theme code — sell or customize freely"
+    ],
+    "deliverables": [
+      "Searchable listings (grid + map)",
+      "Type, price, acreage, and area filters",
+      "Payment-estimate modal",
+      "Agents and showing-request bookings",
+      "Customizer identity + eight color styles",
+      "Child theme + Acreline Core plugin",
+      "HTML documentation hub",
+      "Mobile-first, accessible build"
+    ],
+    "metrics": [
+      ["8", "color styles"],
+      ["Grid + map", "listings"],
+      ["GPL", "theme pack"]
+    ],
+    "faq": [
+      [
+        "What do I get when I buy Acreline?",
+        "The marketplace pack: acreline.zip (upload in Appearance → Themes), optional child theme, Acreline Core plugin, and HTML documentation. Instant download after checkout."
+      ],
+      [
+        "Is Acreline a live MLS or IDX theme?",
+        "No. It is a concept office with sample inventory. Listings are a custom post type you edit in WordPress. Wire a real feed later if you need one — the UI does not depend on IDX chrome."
+      ],
+      [
+        "Can I use it commercially / is it GPL?",
+        "Yes. Theme code is GPLv2 or later. Sage / Acorn remain MIT (GPL-compatible). You can customize, resell services on top, or white-label for a client."
+      ],
+      [
+        "Do I need Elementor or ACF?",
+        "No. Fields and identity live in Customizer + metaboxes. Do not add a page builder “to make it work.”"
+      ],
+      [
+        "Can you install or customize it for my office?",
+        "Yes. Buy the pack for self-serve, or Get help and I brand it, import listings, and hand off wp-admin editing."
+      ]
+    ],
+    "demo": "https://acreline.matthummel.com/",
+    "github": "https://github.com/matthummel-pa/wp-acreline",
+    "version": "1.2.2",
+    "compatible": "WordPress 6.6+, PHP 8.3+",
+    "license": "GPLv2 or later",
+    "files_included": [
+      "acreline.zip (parent theme)",
+      "acreline-child.zip",
+      "acreline-core.zip",
+      "Documentation/ (HTML hub)",
+      "Licensing/"
+    ],
+    "docs": [
+      ["Buyer guide", "https://github.com/matthummel-pa/wp-acreline/blob/main/docs/marketplace/buyer-guide.html"],
+      ["Support", "https://github.com/matthummel-pa/wp-acreline/blob/main/SUPPORT.md"],
+      ["ThemeForest listing copy", "https://github.com/matthummel-pa/wp-acreline/blob/main/docs/marketplace/themeforest-listing.md"]
+    ],
+    "support": "https://github.com/matthummel-pa/wp-acreline/blob/main/SUPPORT.md",
+    "topics": "wordpress-theme, real-estate, farms, land, sage, acreline",
+    "languages": "PHP, Blade, CSS, JavaScript",
+    "brand_tagline": "Rural inventory, not another luxury brokerage skin.",
+    "brand_palette": "Ink|#141210\nForest|#1f6b4a\nForest dark|#155539\nPaper|#f4f1ea",
+    "image": "products/acreline/featured.webp",
+    "screenshots": [
+      ["products/acreline/01-homepage.webp", "Homepage search + featured land"],
+      ["products/acreline/02-listings.webp", "Listings grid with filters"],
+      ["products/acreline/03-listing.webp", "Land & farm listing detail"],
+      ["products/acreline/04-agents.webp", "Agents directory"],
+      ["products/acreline/07-book.webp", "Showing request booking"],
+      ["products/acreline/05-contact.webp", "Contact the office"]
+    ],
+    "ad_keywords": [
+      "WordPress real estate theme",
+      "farm and land WordPress theme",
+      "rural realtor theme",
+      "acreage listings WordPress",
+      "historic homes WordPress theme"
+    ]
+  },
+  "tocflow": {
+    "title": "TOCflow",
+    "cat": "Plugins",
+    "place": "Table of contents",
+    "blurb": "Free WordPress TOC block — accessible, SEO-friendly outline from your headings. Zero config.",
+    "tech": ["WordPress", "Gutenberg", "PHP"],
+    "product_type": "plugin",
+    "for_sale": true,
+    "live": true,
+    "price": "0",
+    "eyebrow": "WordPress plugin · Table of contents",
+    "summary": "TOCflow is a lightweight WordPress plugin that builds an accessible, SEO-friendly table of contents from your post headings. Free download for publishers who want a clean TOC without heavy JavaScript.",
+    "challenge": "Long posts need a jump list. Most TOC plugins ship a block library, client-only rendering, or settings you never touch — and the outline misses the first HTML response search engines and screen readers need.",
+    "approach": "One Gutenberg block (plus a shortcode). The outline is server-rendered. Anchors match heading ids. Collapse, sticky, and scroll-spy stay small and optional.",
+    "result": "Insert the block, publish, done. Free on this site and GitHub — a top-of-funnel plugin that shows how I ship focused WordPress tools.",
+    "audience": "Bloggers, docs sites, agencies, and developers who want a TOC without a bloated block pack. Also a free lead-in to hiring me for custom blocks or theme work.",
+    "architecture": "PHP block render callback, small editor script, optional ItemList JSON-LD. No React runtime on the front end for the list itself.",
+    "handoff": "Download the zip, activate, insert Table of Contents. Settings live under Settings → TOCflow. Source on GitHub if you want to fork it.",
+    "benefits": [
+      "Zero config — insert the block; the outline builds itself",
+      "Server-rendered HTML for SEO and screen readers",
+      "Accurate anchors with aria-current while you read",
+      "Numbered or bulleted lists, five style presets",
+      "Shortcode for classic content",
+      "Free forever — GPLv2 or later"
+    ],
+    "deliverables": [
+      "Gutenberg Table of Contents block",
+      "[tocflow] shortcode",
+      "Live editor preview",
+      "Sticky + scroll-spy options",
+      "Optional ItemList JSON-LD",
+      "Settings + Docs screens"
+    ],
+    "metrics": [
+      ["Free", "download"],
+      ["Server", "rendered"],
+      ["GPLv2", "or later"]
+    ],
+    "faq": [
+      [
+        "Is TOCflow really free?",
+        "Yes. $0 checkout captures your email for update notices if you want them, or download from GitHub Releases. No freemium lock."
+      ],
+      [
+        "Does it work with classic editor posts?",
+        "Yes — use the [tocflow] shortcode. Heading anchors still inject on the front end."
+      ],
+      [
+        "Will it slow my site?",
+        "The list is in the first HTML response. Front-end JS is optional for sticky/scroll-spy and respects prefers-reduced-motion."
+      ],
+      [
+        "Can you customize it for my theme?",
+        "Yes. Get help for sticky-header offsets, style presets that match your brand, or a private fork."
+      ]
+    ],
+    "demo": "https://matthummel-pa.github.io/tocflow/",
+    "github": "https://github.com/matthummel-pa/tocflow",
+    "version": "1.0.2",
+    "compatible": "WordPress 6.4+, PHP 7.4+",
+    "license": "GPLv2 or later",
+    "files_included": [
+      "tocflow.zip",
+      "readme.txt",
+      "languages/"
+    ],
+    "docs": [
+      ["Docs site", "https://matthummel-pa.github.io/tocflow/"],
+      ["Support", "https://github.com/matthummel-pa/tocflow/blob/main/SUPPORT.md"],
+      ["GitHub Releases", "https://github.com/matthummel-pa/tocflow/releases"]
+    ],
+    "support": "https://github.com/matthummel-pa/tocflow/blob/main/SUPPORT.md",
+    "topics": "wordpress-plugin, table-of-contents, gutenberg, seo, accessibility",
+    "languages": "PHP, JavaScript, CSS",
+    "brand_tagline": "One block. An accessible outline from your headings.",
+    "image": "products/tocflow/featured.webp",
+    "screenshots": [
+      ["products/tocflow/featured.webp", "TOCflow docs — block overview"]
+    ],
+    "ad_keywords": [
+      "WordPress table of contents plugin",
+      "Gutenberg TOC block",
+      "accessible table of contents",
+      "SEO friendly TOC WordPress",
+      "free WordPress TOC plugin"
+    ]
+  }
+}
