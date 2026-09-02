@@ -12,7 +12,7 @@
     </span>
   @else
     <span class="post-shot post-shot--fallback" aria-hidden="true">
-      <span class="post-shot-fallback">{{ wp_trim_words(get_the_title(), 4, '') }}</span>
+      <span class="post-shot-fallback">{{ wp_trim_words(\App\mh_post_title(), 4, '') }}</span>
     </span>
   @endif
   <div class="post-body">
@@ -35,7 +35,7 @@
       </p>
     @endif
 
-    <h2 class="post-card-title">{!! $title !!}</h2>
+    <h2 class="post-card-title">{{ $title }}</h2>
 
     <div class="post-card-excerpt">
       @php(the_excerpt())

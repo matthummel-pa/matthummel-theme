@@ -1,9 +1,15 @@
 # Changelog
 
+<<<<<<< HEAD
 ## 3.1.61 — Editor prose lists + canvas parity
 
 - Restore bullets and numbers on Gutenberg List blocks in posts and the block editor (Tailwind preflight had removed list markers).
 - Editor canvas styles now mirror post prose for headings, blockquote, inline code, tables, images, and separators; code block chrome loads in the editor.
+=======
+## 3.1.60 — Post title special characters
+
+- Decode WordPress texturized title entities before Blade output so apostrophes and quotes render correctly (fixes `doesn&#8217;t` showing literally).
+>>>>>>> origin/main
 
 ## 3.1.59 — Tool card semantic markup + heading level control
 

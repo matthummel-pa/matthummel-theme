@@ -1,10 +1,10 @@
 @php
   $currentPageTitle = '';
   if (is_singular()) {
-    $currentPageTitle = get_the_title();
+    $currentPageTitle = \App\mh_post_title();
   } elseif (is_home()) {
     $blog = (int) get_option('page_for_posts');
-    $currentPageTitle = $blog ? get_the_title($blog) : __('Journal', 'sage');
+    $currentPageTitle = $blog ? \App\mh_post_title($blog) : __('Journal', 'sage');
   } elseif (is_search()) {
     $currentPageTitle = __('Search', 'sage');
   } elseif (is_404()) {

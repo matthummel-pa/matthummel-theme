@@ -12,7 +12,7 @@
   $words     = str_word_count(wp_strip_all_tags($bodyHtml));
   $readMins  = max(1, (int) round($words / 200));
   $postUrl   = get_permalink($postId);
-  $postTitle = get_the_title();
+  $postTitle = \App\mh_post_title();
   $postDate  = get_the_date('M j, Y');
   $postIso   = get_post_time('c', true);
   $writing   = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
@@ -38,7 +38,7 @@
     foreach ($relQ->posts as $rp) {
       $rc = get_the_category($rp->ID);
       $relatedPosts[] = [
-        'title' => get_the_title($rp),
+        'title' => \App\mh_post_title($rp),
         'url'   => get_permalink($rp),
         'date'  => get_the_date('M j, Y', $rp),
         'cat'   => $rc ? $rc[0]->name : '',
@@ -77,7 +77,7 @@
 
       {{-- Title --}}
       <h1 id="post-title-{{ $postId }}" class="post-hero-title p-name" itemprop="headline">
-        {{ get_the_title() }}
+        {{ \App\mh_post_title() }}
       </h1>
 
       {{-- Meta row --}}
@@ -228,7 +228,7 @@
             static fn ($c) => trim(($c->name ?? '').' '.($c->slug ?? '')),
             is_array($postCats) ? $postCats : []
           )));
-          $titleLow = strtolower(get_the_title());
+          $titleLow = strtolower(\App\mh_post_title());
           $isPower  = str_contains($catBlob, 'power')
             || str_contains($titleLow, 'power apps')
             || str_contains($titleLow, 'power automate')
@@ -269,7 +269,7 @@
             @if ($prevPost)
               <a class="post-nav__link post-nav__link--prev" href="{{ get_permalink($prevPost) }}">
                 <span class="post-nav__dir">← Previous post</span>
-                <span class="post-nav__title">{{ get_the_title($prevPost) }}</span>
+                <span class="post-nav__title">{{ \App\mh_post_title($prevPost) }}</span>
               </a>
             @else
               <span></span>
@@ -277,7 +277,7 @@
             @if ($nextPost)
               <a class="post-nav__link post-nav__link--next" href="{{ get_permalink($nextPost) }}">
                 <span class="post-nav__dir">Next post →</span>
-                <span class="post-nav__title">{{ get_the_title($nextPost) }}</span>
+                <span class="post-nav__title">{{ \App\mh_post_title($nextPost) }}</span>
               </a>
             @endif
           </nav>
