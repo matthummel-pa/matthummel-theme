@@ -167,7 +167,7 @@ function mh_resources_catalog(): array
             'items' => [
                 [
                     'name' => __('Work — example sites', 'sage'),
-                    'blurb' => __('Concept WordPress sites with stack notes, demos, and buy/help CTAs when a theme is for sale.', 'sage'),
+                    'blurb' => __('WordPress themes and plugins with stack notes, demos, and buy/help CTAs when a pack is for sale.', 'sage'),
                     'url' => home_url('/projects/'),
                     'affiliate' => false,
                     'badge' => __('Portfolio', 'sage'),
@@ -194,7 +194,7 @@ function mh_resources_catalog(): array
             'items' => [
                 [
                     'name' => __('Browse Work', 'sage'),
-                    'blurb' => __('See the concept page first — problem, approach, stack — then buy if you want the theme pack.', 'sage'),
+                    'blurb' => __('See the product page first — problem, approach, stack — then buy if you want the theme or plugin pack.', 'sage'),
                     'url' => home_url('/projects/'),
                     'affiliate' => false,
                     'badge' => __('Primary', 'sage'),

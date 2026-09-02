@@ -3232,3 +3232,277 @@ add_action('init', function (): void {
 
     update_option('mh_adjacent_work_copy_v1', true);
 }, 85);
+
+/**
+ * One-time: Projects + Shop catalog copy — themes/plugins for sale, drop "concept" language.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_projects_catalog_seo_v1')) {
+        return;
+    }
+
+    $workId = mh_page_id_by_template('template-projects.blade.php');
+    if ($workId > 0) {
+        $swaps = [
+            'mh_f_work_kicker' => [
+                'from' => ['Concept sites', 'Spec builds', 'Example sites'],
+                'to' => 'Themes & plugins',
+            ],
+            'mh_f_work_h1' => [
+                'from' => [
+                    'Concept WordPress sites, not a client gallery.',
+                    'Spec WordPress sites, not a client gallery.',
+                    'Example WordPress sites.',
+                    'Selected WordPress work.',
+                ],
+                'to' => 'WordPress themes and plugins for sale.',
+            ],
+            'mh_f_work_lede' => [
+                'from' => [
+                    'Public Sage 11 examples for tours, shops, and inns. Some cards include a theme pack you can buy; that is a storefront side path. Employer and production work stays private unless a shop asks to be featured.',
+                    'Public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. Hire me here for a real build.',
+                    'Live demos for tours, inns, and shops — the same Sage stack I use for client work in Gettysburg and beyond. Hire me for a real build.',
+                    'I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.',
+                ],
+                'to' => 'Browse Sage 11 themes and plugins with live demos for tours, shops, and inns. Buy a pack from the shop, or hire me to adapt one for your business. Employer work stays private unless a shop asks to be featured.',
+            ],
+            'mh_f_work_hero_cta_secondary' => [
+                'from' => ['How I can help', 'See services'],
+                'to' => 'Open shop',
+            ],
+            'mh_f_work_context_h2' => [
+                'from' => ['These are concept sites.', 'These are spec builds.', 'What these example sites show.'],
+                'to' => 'What you can buy or hire me to build.',
+            ],
+            'mh_f_work_context_p1' => [
+                'from' => [
+                    'Each site is a public Sage 11 example — Blade, Tailwind, Vite — built for a business type so you can see layout and wp-admin editing. They are not client sites or my employer portfolio.',
+                    'These are WordPress projects on this site — the same Sage, Tailwind, and Vite stack I use for client work. Each one is built for a specific type of local business so you can see layout, speed, and wp-admin editing in context.',
+                ],
+                'to' => 'Each card is a WordPress theme or plugin with screenshots, stack notes, and a live demo when available. Buy the pack from the shop, or hire me to adapt it for your shop.',
+            ],
+            'mh_f_work_fit_h2' => [
+                'from' => ['Who these demos are for.'],
+                'to' => 'Who this catalog is for.',
+            ],
+            'mh_f_work_fit_intro' => [
+                'from' => [
+                    'Shops, hiring managers, agencies, and developers browse Work for different reasons. All four are welcome.',
+                    'Shops, agencies, and developers browse Work for different reasons. All three are welcome.',
+                ],
+                'to' => 'Shops buying a ready theme, agencies needing a solid base, developers evaluating plugins, and hiring managers reviewing my public work.',
+            ],
+            'mh_f_work_how_h2' => [
+                'from' => ['How to start from an example site.'],
+                'to' => 'How to buy or start a build.',
+            ],
+            'mh_f_work_how_intro' => [
+                'from' => ['You do not need to pick the perfect demo first. A short note about your shop and what you would change is enough.'],
+                'to' => 'You do not need the perfect match first. Open a product page, buy the pack, or send a short note about what you would change.',
+            ],
+            'mh_f_work_faq_h2' => [
+                'from' => ['Questions about Work.'],
+                'to' => 'Questions about themes and plugins.',
+            ],
+            'mh_f_work_faq_intro' => [
+                'from' => ['Straight answers about concept sites, themes for sale, and hiring me for a production build.'],
+                'to' => 'Straight answers about buying a pack, licensing, demos, and hiring me for a custom build.',
+            ],
+            'mh_f_work_band_h2' => [
+                'from' => ['Like this shape?', 'Want to start from one of these?'],
+                'to' => 'Want one of these on your site?',
+            ],
+            'mh_f_work_band_lede' => [
+                'from' => [
+                    'These projects are starting points. Hire me to adapt one, buy the theme when it is listed, or say hello about a role.',
+                    'These projects are available as a starting point for a real build. Tell me which one fits your business and what you\'d change.',
+                    'These are concept demos, not a case-study deck. If one fits a tour, inn, shop, or restaurant you run, write and say which concept you want to start from.',
+                ],
+                'to' => 'Buy the theme or plugin when it is listed, or hire me to customize it. Tell me which one fits and what you would change.',
+            ],
+            'mh_f_work_foot' => [
+                'from' => [
+                    'Repos and snippets: <a href="/code/">Code</a>. Live demos open from each project page when available.',
+                    'Code and repos: <a href="/code/">Code page</a>. Live clickable demos open from each project page when available.',
+                ],
+                'to' => 'Checkout lives in the <a href="/shop/">shop</a>. Code and repos: <a href="/code/">Code page</a>. Live demos open from each product page when available.',
+            ],
+            'mh_f_work_search_ph' => [
+                'from' => ['Search sites…', 'Search sites...'],
+                'to' => 'Search themes and plugins…',
+            ],
+            'mh_f_work_cta_view' => [
+                'from' => ['View project', 'View concept'],
+                'to' => 'View details',
+            ],
+            'mh_f_seo_title' => [
+                'from' => [
+                    'Concept WordPress Sites | Matt Hummel',
+                    'Spec WordPress Sites | Matt Hummel',
+                    'Example WordPress Sites | Matt Hummel',
+                    'Example WordPress Sites in Gettysburg | Matt Hummel',
+                ],
+                'to' => 'WordPress Themes & Plugins | Matt Hummel',
+            ],
+            'mh_f_seo_description' => [
+                'from' => [
+                    'Public Sage 11 concept sites for tours, inns, and shops — not a client gallery. Hire me for a real build. Say hello.',
+                    'Public Sage 11 concept sites for tours, inns, and shops in Gettysburg — not a client gallery. Hire me for a real build. Say hello.',
+                ],
+                'to' => 'Browse WordPress themes and plugins with live demos. Buy a pack from the shop or hire me to adapt one. Say hello.',
+            ],
+        ];
+
+        foreach ($swaps as $key => $swap) {
+            $cur = (string) get_post_meta($workId, $key, true);
+            if ($cur === '' || in_array($cur, $swap['from'], true)) {
+                update_post_meta($workId, $key, $swap['to']);
+
+                continue;
+            }
+            // Catch leftover location-stuffed SEO titles that still point at the old gallery framing.
+            if ($key === 'mh_f_seo_title' && (str_contains($cur, 'Concept') || str_contains($cur, 'Example WordPress') || str_contains($cur, 'Gettysburg'))) {
+                update_post_meta($workId, $key, $swap['to']);
+            }
+            if ($key === 'mh_f_seo_description' && (str_contains($cur, 'concept') || str_contains($cur, 'client gallery'))) {
+                update_post_meta($workId, $key, $swap['to']);
+            }
+        }
+
+        $faq = get_post_meta($workId, 'mh_f_work_faq', true);
+        if (! is_array($faq) || $faq === []) {
+            update_post_meta($workId, 'mh_f_work_faq', mh_work_faq_defaults());
+        } else {
+            $faqTextMap = [
+                'No. These are concept sites — public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. I have done a handful of silent agency-sub jobs; this gallery is not that work.' => true,
+                'No. These are spec builds — public Sage 11 examples for tours, shops, and inns. Employer and production client work stays private unless a shop asks to be featured. I have done a handful of silent agency-sub jobs; this gallery is not that work.' => true,
+                'Some cards include a theme pack in the shop. Buy theme is a storefront side path — the gallery is still concept work. Otherwise hire me to adapt the layout for your shop.' => true,
+                'Some projects are for sale in the shop when a theme pack is ready. Each card shows Buy theme when checkout is available. Otherwise hire me to adapt the layout for your shop.' => true,
+            ];
+            $looksLegacy = false;
+            foreach ($faq as $row) {
+                $text = (string) ($row['text'] ?? '');
+                $title = (string) ($row['title'] ?? '');
+                if (isset($faqTextMap[$text]) || str_contains($text, 'concept') || str_contains($title, 'real client')) {
+                    $looksLegacy = true;
+                    break;
+                }
+            }
+            if ($looksLegacy) {
+                update_post_meta($workId, 'mh_f_work_faq', mh_work_faq_defaults());
+            }
+        }
+
+        $fit = get_post_meta($workId, 'mh_f_work_fit_items', true);
+        if (! is_array($fit) || $fit === []) {
+            update_post_meta($workId, 'mh_f_work_fit_items', mh_work_fit_defaults());
+        } else {
+            $fitLegacy = false;
+            foreach ($fit as $row) {
+                $body = (string) ($row['body'] ?? '');
+                if (str_contains($body, 'concept') || str_contains($body, 'spec builds')) {
+                    $fitLegacy = true;
+                    break;
+                }
+            }
+            if ($fitLegacy) {
+                update_post_meta($workId, 'mh_f_work_fit_items', mh_work_fit_defaults());
+            }
+        }
+
+        $how = get_post_meta($workId, 'mh_f_work_how_steps', true);
+        if (! is_array($how) || $how === []) {
+            update_post_meta($workId, 'mh_f_work_how_steps', mh_work_how_defaults());
+        } else {
+            $howLegacy = false;
+            foreach ($how as $row) {
+                $title = (string) ($row['title'] ?? '');
+                if ($title === 'Browse the gallery.' || $title === 'Tell me what fits.') {
+                    $howLegacy = true;
+                    break;
+                }
+            }
+            if ($howLegacy) {
+                update_post_meta($workId, 'mh_f_work_how_steps', mh_work_how_defaults());
+            }
+        }
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if ($home instanceof \WP_Post) {
+        $homeSwaps = [
+            'mh_f_home_work_h2' => [
+                'from' => ['Concept WordPress sites.', 'Spec WordPress sites.', 'Example sites', 'Example sites.'],
+                'to' => 'WordPress themes and plugins.',
+            ],
+            'mh_f_home_work_intro' => [
+                'from' => [
+                    'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.',
+                    'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Employer and production work stays private unless a shop asks to be featured.',
+                ],
+                'to' => 'Themes and plugins with live demos for tours, shops, and inns. Buy a pack when it is listed, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            ],
+            'mh_f_home_about_p2' => [
+                'from' => [
+                    'The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+                ],
+                'to' => 'The gallery showcases WordPress themes and plugins I ship on Sage 11. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+            ],
+            'mh_f_home_help_p2' => [
+                'from' => [
+                    'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse concept sites</a>. I usually reply within a day.',
+                    'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse spec builds</a>. I usually reply within a day.',
+                ],
+                'to' => 'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse themes and plugins</a>. I usually reply within a day.',
+            ],
+        ];
+        foreach ($homeSwaps as $key => $swap) {
+            $cur = (string) get_post_meta((int) $home->ID, $key, true);
+            if ($cur === '' || in_array($cur, $swap['from'], true)) {
+                update_post_meta((int) $home->ID, $key, $swap['to']);
+            }
+        }
+
+        $footer = (string) get_post_meta((int) $home->ID, 'mh_f_footer_blurb', true);
+        $footerFrom = [
+            'Full-stack & WordPress developer. Concept sites, a handful of theme packs, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+            'Notes, code, and example sites. Developers, shops, and agencies are welcome.',
+        ];
+        if ($footer === '' || in_array($footer, $footerFrom, true) || str_contains($footer, 'Concept sites')) {
+            update_post_meta((int) $home->ID, 'mh_f_footer_blurb', 'Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.');
+        }
+    }
+
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    if ($aboutId > 0) {
+        $cur = (string) get_post_meta($aboutId, 'mh_f_about_p3', true);
+        $from = [
+            'The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.',
+            'The Work gallery is spec builds — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.',
+        ];
+        if ($cur === '' || in_array($cur, $from, true)) {
+            update_post_meta($aboutId, 'mh_f_about_p3', 'The Projects page showcases WordPress themes and plugins — Sage 11 builds you can buy or hire me to adapt. Production client and in-house work stays private unless a shop asks to be featured.');
+        }
+    }
+
+    $shopId = (int) get_option('woocommerce_shop_page_id');
+    if ($shopId > 0) {
+        $desc = (string) get_post_field('post_content', $shopId);
+        $legacyShop = [
+            'Studio WordPress themes from Work projects. Read the concept page first, buy the pack here, or hire me for a custom build.',
+            'Studio WordPress themes with concept pages for context. Buy the pack here or say hello for a custom Gettysburg build.',
+        ];
+        if (in_array(trim(wp_strip_all_tags($desc)), array_map(static fn ($s) => wp_strip_all_tags($s), $legacyShop), true) || trim($desc) === '') {
+            wp_update_post([
+                'ID' => $shopId,
+                'post_content' => '<!-- wp:paragraph --><p>WordPress themes and plugins ready for checkout. Browse demos and product details on <a href="/projects/">Projects</a>, then buy the pack here — or hire me for a custom build.</p><!-- /wp:paragraph -->',
+            ]);
+        }
+    }
+
+    update_option('mh_projects_catalog_seo_v1', true);
+}, 86);

@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.1.66 projects catalog)
+
+- `/projects/` is the SEO catalog for themes and plugins for sale (demos + buy). `/shop/` is checkout for the same packs — do not merge the URLs.
+- Drop visitor-facing “concept / example gallery” language. Badges are Theme / Plugin / Demo.
+- One-shot `mh_projects_catalog_seo_v1` only writes empty or exact prior meta (plus legacy FAQ/fit/how arrays that still say concept).
+
 ## Public site
 
 | Feature | Notes | Code |
@@ -15,7 +21,7 @@ What the 3.x Sage theme does, and where it lives.
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items | `template-now.blade.php` |
-| Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ sections (field-driven); **Concept** badge; **View concept** primary, **Buy theme** ghost; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ; **Theme / Plugin / Demo** badges; **View details** primary, **Buy theme/plugin** when listed; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
@@ -64,7 +70,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - Glance sits under the ticker. Named employers and Power Platform copy come from `/hire/` — do not invent extra companies, a demo, a public email, or a resume PDF.
 - GitHub featured list is theme-hardcoded: pressroot, matthummel-theme, tocflow, ridgesandvalleys, keepary. Pin those on github.com too. tocflow is not claimed as a WordPress.org listing.
-- Work cards stay **Concept** even when a theme pack is for sale. Checkout is a side path.
+- Work cards use **Theme / Plugin / Demo** badges. Projects is the catalog; Shop is checkout.
 - Homepage about strip should not repeat glance facts (years, availability types, Power Platform).
 - One-shot `mh_hireability_recruiter_v1` only writes empty or exact prior meta.
 
