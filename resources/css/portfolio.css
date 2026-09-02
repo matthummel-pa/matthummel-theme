@@ -3600,6 +3600,116 @@ html.mh-dark .h-badge--open {
   padding-top: 1.15rem;
   border-top: 1px solid var(--color-border);
 }
+.code-gh-badges__grid--panel {
+  margin: 0;
+  grid-template-columns: 1fr;
+  gap: .55rem;
+}
+.code-gh-community__panel--badges .code-gh-badge {
+  padding: .65rem .75rem;
+}
+.code-gh-community__panel--badges .code-gh-badge__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.code-gh-community__panel--badges .code-gh-badge__detail {
+  font-size: .72rem;
+}
+.code-gh-stargazers {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+.code-gh-stargazers__head {
+  display: grid;
+  gap: .35rem;
+  margin-bottom: .75rem;
+}
+.code-gh-stargazers__title {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  font: 700 .9rem/1.25 var(--font-display);
+  color: var(--color-text);
+}
+.code-gh-stargazers__title .mh-ico { color: #92400e; flex-shrink: 0; }
+.code-gh-stargazers__thanks {
+  margin: 0;
+  font-size: .86rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  max-width: 42rem;
+}
+.code-gh-stargazers__stat {
+  margin: 0;
+  font-size: .82rem;
+  color: var(--color-text-muted);
+}
+.code-gh-stargazers__stat strong {
+  font: 700 .95rem/1 var(--font-display);
+  color: var(--color-text);
+  margin-right: .25rem;
+}
+.code-gh-stargazers__people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.code-gh-stargazer {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .28rem .55rem .28rem .28rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  max-width: 100%;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.code-gh-stargazer:hover,
+.code-gh-stargazer:focus-visible {
+  border-color: #fde68a;
+  background: #fffbeb;
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #f59e0b 20%, transparent);
+}
+.code-gh-stargazer__img {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+}
+.code-gh-stargazer__img--empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 .68rem/1 var(--font-display);
+  background: #fffbeb;
+  color: #92400e;
+}
+.code-gh-stargazer__name {
+  font: 600 .74rem/1.2 var(--font-display);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 8rem;
+}
+html.mh-dark .code-gh-stargazer {
+  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+}
+html.mh-dark .code-gh-stargazer:hover,
+html.mh-dark .code-gh-stargazer:focus-visible {
+  background: color-mix(in srgb, #92400e 12%, var(--gray-800));
+}
 .code-gh-badges__title {
   display: flex;
   align-items: center;
@@ -4212,6 +4322,43 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   mask-image: linear-gradient(180deg, #000 10%, transparent 74%);
 }
 .code-practice-shell__inner { position: relative; z-index: 1; }
+.code-practice-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.35rem;
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .code-practice-layout {
+    grid-template-columns: minmax(13rem, 19rem) minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+}
+.code-practice-aside {
+  display: grid;
+  gap: .75rem;
+  align-content: start;
+}
+@media (min-width: 960px) {
+  .code-practice-aside {
+    position: sticky;
+    top: calc(var(--header-offset, 4.5rem) + .75rem);
+    padding-right: .25rem;
+    border-right: 1px solid var(--color-border-light);
+  }
+}
+.code-practice-aside .display-title { margin: 0; }
+.code-practice-aside .sec-intro {
+  margin: 0;
+  max-width: none;
+  font-size: .92rem;
+  line-height: 1.55;
+}
+.code-practice-board {
+  display: grid;
+  gap: 1.1rem;
+  min-width: 0;
+}
 .code-practice-shell__head {
   display: grid;
   gap: .75rem;
@@ -4226,13 +4373,22 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 }
 .code-practice-jump {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: .45rem;
-  overflow-x: auto;
-  padding: .15rem 0 .25rem;
+  padding: 0;
   margin: .15rem 0 0;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+}
+@media (min-width: 960px) {
+  .code-practice-jump {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+  .code-practice-jump a {
+    justify-content: flex-start;
+    border-radius: 10px;
+  }
 }
 .code-practice-jump a {
   display: inline-flex;
@@ -4273,7 +4429,13 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   display: flex;
   flex-wrap: wrap;
   gap: .55rem;
-  margin-top: .15rem;
+  margin-top: .35rem;
+}
+@media (min-width: 960px) {
+  .code-practice-shell__links {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 .code-practice-shell__link {
   display: inline-flex;
@@ -4294,41 +4456,35 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   background: var(--white);
   color: var(--color-text);
 }
-.code-practice-groups {
+.code-practice-groups,
+.code-practice-board {
   display: grid;
   gap: 1rem;
 }
 .code-practice-group {
-  padding: .95rem 1rem 1.05rem;
-  border: 1px solid var(--color-border-light);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--gray-50) 65%, var(--white));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
-.code-practice-group[data-group="WordPress"] {
-  background: color-mix(in srgb, #21759b 4%, var(--white));
-  border-color: color-mix(in srgb, #21759b 14%, var(--color-border));
+.code-practice-group + .code-practice-group {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-light);
 }
-.code-practice-group[data-group="Front-end"] {
-  background: color-mix(in srgb, #0ea5e9 4%, var(--white));
-  border-color: color-mix(in srgb, #0ea5e9 14%, var(--color-border));
-}
-.code-practice-group[data-group="Integrations"] {
-  background: color-mix(in srgb, #525ddc 4%, var(--white));
-  border-color: color-mix(in srgb, #525ddc 14%, var(--color-border));
-}
-.code-practice-group[data-group="Studio"] {
-  background: color-mix(in srgb, #0f766e 4%, var(--white));
-  border-color: color-mix(in srgb, #0f766e 14%, var(--color-border));
-}
-.code-practice-group[data-group="Microsoft"] {
-  background: color-mix(in srgb, #742774 4%, var(--white));
-  border-color: color-mix(in srgb, #742774 14%, var(--color-border));
+.code-practice-group[data-group="WordPress"],
+.code-practice-group[data-group="Front-end"],
+.code-practice-group[data-group="Integrations"],
+.code-practice-group[data-group="Studio"],
+.code-practice-group[data-group="Microsoft"],
+.code-practice-group[data-group="Full stack"] {
+  background: transparent;
+  border-color: transparent;
 }
 .code-practice-group__head {
   display: flex;
   align-items: center;
   gap: .55rem;
-  margin-bottom: .8rem;
+  margin-bottom: .65rem;
 }
 .code-practice-group__mark {
   display: inline-flex;
@@ -4346,6 +4502,7 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 .code-practice-group[data-group="Integrations"] .code-practice-group__mark { color: #525ddc; }
 .code-practice-group[data-group="Studio"] .code-practice-group__mark { color: #0f766e; }
 .code-practice-group[data-group="Microsoft"] .code-practice-group__mark { color: #742774; }
+.code-practice-group[data-group="Full stack"] .code-practice-group__mark { color: #0284c7; }
 .code-practice-group__title {
   margin: 0;
   font: 700 1.02rem/1.2 var(--font-display);
@@ -4368,19 +4525,29 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
   gap: .65rem;
 }
+@media (min-width: 960px) {
+  .code-practice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .code-practice-group[data-group="Studio"] .code-practice-grid,
+  .code-practice-group[data-group="Integrations"] .code-practice-grid {
+    grid-template-columns: 1fr;
+  }
+}
 .code-practice-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: .75rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  align-items: stretch;
   margin: 0;
-  padding: .9rem .95rem;
+  padding: 1rem 1.05rem;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--white);
+  min-height: 100%;
   transition: border-color .15s, transform .2s, box-shadow .2s;
 }
 .code-practice-card:hover,
@@ -4399,13 +4566,15 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   padding: .38rem .42rem;
   min-width: 2rem;
   text-align: center;
+  align-self: flex-start;
 }
 .code-practice-group[data-group="WordPress"] .code-practice-card__n {
   color: #21759b;
   background: color-mix(in srgb, #21759b 10%, white);
   border-color: color-mix(in srgb, #21759b 18%, white);
 }
-.code-practice-group[data-group="Front-end"] .code-practice-card__n {
+.code-practice-group[data-group="Front-end"] .code-practice-card__n,
+.code-practice-group[data-group="Full stack"] .code-practice-card__n {
   color: #0284c7;
   background: color-mix(in srgb, #0ea5e9 12%, white);
   border-color: color-mix(in srgb, #0ea5e9 20%, white);
@@ -5004,6 +5173,13 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   }
   .code-gh-badges__grid {
     grid-template-columns: 1fr;
+  }
+  .code-practice-aside {
+    position: static;
+    border-right: 0;
+    padding-right: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
   }
 
   .code-gh-panel,
