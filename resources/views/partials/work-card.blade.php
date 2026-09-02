@@ -14,15 +14,18 @@
   $buyUrl = (string) ($p['buy_url'] ?? '');
   $buyLabel = (string) ($p['buy_label'] ?? \App\field('work_cta_buy', __('Buy theme', 'sage')));
   $priceLabel = (string) ($p['price_label'] ?? '');
-  $spec = \App\mh_project_is_spec($p);
   $featured = ! empty($featured);
   $ghost = $featured ? 'btn btn-ghost' : 'btn btn-outline';
+  $shareKind = (($p['product_type'] ?? '') === 'plugin')
+    ? __('Plugin: %s', 'sage')
+    : __('Theme: %s', 'sage');
   $haystack = strtolower(trim(implode(' ', array_filter([
     $title,
     $p['cat'] ?? '',
     $p['place'] ?? '',
     $p['blurb'] ?? '',
     implode(' ', $p['tech'] ?? []),
+    $p['product_type'] ?? '',
   ]))));
 @endphp
 <article
@@ -59,7 +62,7 @@
     @endif
     <div class="work-actions">
       <a class="btn" href="{{ esc_url($conceptUrl) }}">
-        {{ $spec ? __('View concept', 'sage') : \App\field('work_cta_view', __('View project', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        {{ \App\field('work_cta_view', __('View details', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
       <a class="{{ $ghost }}" href="{{ esc_url($helpUrl) }}">
         {!! \App\mh_svg_icon('mail', 14) !!}
@@ -84,7 +87,7 @@
         data-share-project
         data-share-url="{{ esc_url($shareUrl) }}"
         data-share-title="{{ esc_attr($title) }}"
-        data-share-text="{{ esc_attr(sprintf(__('Concept: %s', 'sage'), $title)) }}"
+        data-share-text="{{ esc_attr(sprintf($shareKind, $title)) }}"
       >
         {{ __('Share', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' %s', 'sage'), $title) }}</span>
       </button>

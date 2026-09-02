@@ -298,7 +298,7 @@ function mh_recruiter_glance(): array
                 'external' => false,
             ],
             [
-                'label' => __('Concept sites', 'sage'),
+                'label' => __('Themes & plugins', 'sage'),
                 'href' => home_url('/projects/'),
                 'icon' => 'globe',
                 'external' => false,
@@ -314,9 +314,7 @@ function mh_recruiter_glance(): array
 }
 
 /**
- * Whether a Work card is a spec/concept example (not a live client site).
- *
- * A theme pack for sale does not turn the gallery into a client case study.
+ * Whether a Work card is a studio product/demo (not a live client site).
  *
  * @param  array<string, mixed>  $project
  */
@@ -330,7 +328,7 @@ function mh_project_is_spec(array $project): bool
 }
 
 /**
- * Short label for spec/concept Work cards. Theme packs for sale still read as Concept.
+ * Short label for Work cards: Theme, Plugin, or Demo (never "Concept").
  *
  * @param  array<string, mixed>  $project
  */
@@ -340,7 +338,20 @@ function mh_spec_badge_label(array $project = []): string
         return '';
     }
 
-    return __('Concept', 'sage');
+    $type = sanitize_key((string) ($project['product_type'] ?? ''));
+    if ($type === '' && ! empty($project['post_id']) && function_exists(__NAMESPACE__.'\\mh_project_product_type')) {
+        $type = mh_project_product_type((int) $project['post_id']);
+    }
+
+    if ($type === 'plugin') {
+        return __('Plugin', 'sage');
+    }
+
+    if ($type === 'theme' || ($project['buy_url'] ?? '') !== '') {
+        return __('Theme', 'sage');
+    }
+
+    return __('Demo', 'sage');
 }
 
 /** Featured repos plus recent public GitHub work (forks and the profile repo skipped). */
@@ -1577,6 +1588,9 @@ function mh_project_post_to_card(\WP_Post $post): array
     $buyUrl = function_exists(__NAMESPACE__.'\\mh_project_buy_url') ? mh_project_buy_url($post_id) : '';
     $priceLabel = function_exists(__NAMESPACE__.'\\mh_project_price_label') ? mh_project_price_label($post_id) : '';
     $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('Buy theme', 'sage');
+    $productType = function_exists(__NAMESPACE__.'\\mh_project_product_type')
+        ? mh_project_product_type($post_id)
+        : 'theme';
     $card = [
         'slug' => $post->post_name,
         'title' => wp_specialchars_decode((string) $post->post_title, ENT_QUOTES),
@@ -1590,6 +1604,7 @@ function mh_project_post_to_card(\WP_Post $post): array
         'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
         'product_id' => function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0,
+        'product_type' => $productType,
         'buy_url' => $buyUrl,
         'buy_label' => $buyLabel,
         'price_label' => $priceLabel,

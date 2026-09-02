@@ -3,6 +3,12 @@
   $footerName  = $gh['name'] ?: 'Matt Hummel';
   $ghUrl       = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing     = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
+  $footerHomeId = (int) get_option('page_on_front');
+  $footerBlurb = \App\field(
+    'footer_blurb',
+    __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
+    $footerHomeId > 0 ? $footerHomeId : null
+  );
 @endphp
 <footer class="site-footer">
   <div class="container wide footer-inner">
@@ -12,7 +18,7 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ __('Full-stack & WordPress developer. Concept sites, a handful of theme packs, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage') }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
+      <p class="footer-blurb">{{ $footerBlurb }}@if (\App\mh_is_hireable($gh)) {{ __('Open for new work and collaboration.', 'sage') }}@endif</p>
       @if (\App\mh_is_hireable($gh))
         <p class="footer-avail">
           @include('partials.avail-mark', ['gh' => $gh])
@@ -28,9 +34,9 @@
 
     {{-- Work --}}
     <nav class="footer-nav-col" aria-label="Work">
-      <p class="footer-nav-label">Work</p>
+      <p class="footer-nav-label">{{ __('Themes', 'sage') }}</p>
       <ul class="footer-nav">
-        <li><a href="{{ home_url('/projects/') }}">{{ __('Work', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/projects/') }}">{{ __('Themes & plugins', 'sage') }}</a></li>
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
         <li><a href="{{ home_url('/services/') }}">{{ __('Services', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code & GitHub', 'sage') }}</a></li>

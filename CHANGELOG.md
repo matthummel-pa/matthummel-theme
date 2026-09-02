@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.66 — Projects catalog: themes & plugins for sale
+
+- Reposition `/projects/` as the themes and plugins catalog (demos + buy), not concept/example language.
+- Align `/shop/` hero and SEO with the same story; Shop stays checkout, Projects stays the SEO landing.
+- Card badges: Theme / Plugin / Demo. CTAs: View details, Open shop. One-shot `mh_projects_catalog_seo_v1` updates saved field meta.
+
 ## 3.1.65 — Stars earned total + watching list
 
 - Stars earned now sum all public owned repos (not just featured) and list each starred repo.

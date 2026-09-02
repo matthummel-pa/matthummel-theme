@@ -82,8 +82,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('A short discovery form for shops and agencies. Four steps so I can prepare for our first meeting. Say hello when you are ready.', 'sage'),
         ],
         'template-projects.blade.php' => [
-            'title' => __('Concept WordPress Sites', 'sage').' | '.$brand,
-            'desc' => __('Public Sage 11 concept sites for tours, inns, and shops — not a client gallery. Hire me for a real build. Say hello.', 'sage'),
+            'title' => __('WordPress Themes & Plugins', 'sage').' | '.$brand,
+            'desc' => __('Browse WordPress themes and plugins with live demos. Buy a pack from the shop or hire me to adapt one. Say hello.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
@@ -175,8 +175,8 @@ function mh_seo_document_title(): string
             $label = __('Shop', 'sage');
         }
         $built = is_shop()
-            ? __('WordPress Theme Shop', 'sage').' | '.$brand
-            : $label.' | '.__('Themes', 'sage').' | '.$brand;
+            ? __('WordPress Themes & Plugins', 'sage').' | '.$brand
+            : $label.' | '.__('Shop', 'sage').' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
     }
@@ -314,7 +314,7 @@ function mh_seo_plugin_meta(int $post_id, array $keys): string|false
 function mh_seo_meta_description(): string
 {
     if (function_exists('is_shop') && is_shop()) {
-        $desc = __('Studio WordPress themes with concept pages for context. Buy the pack here or say hello for a custom Gettysburg build.', 'sage');
+        $desc = __('WordPress themes and plugins for sale. Browse demos on Projects, check out here, or say hello for a custom build.', 'sage');
 
         return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
     }

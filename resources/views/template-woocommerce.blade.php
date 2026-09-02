@@ -25,9 +25,9 @@
     ['value' => __('SSL', 'sage'), 'label' => __('Encrypted checkout', 'sage')],
     ['value' => __('Email', 'sage'), 'label' => __('Delivery after payment', 'sage')],
     ['value' => __('Support', 'sage'), 'label' => __('Questions welcome', 'sage')],
-    ['value' => __('Work', 'sage'), 'label' => __('Concept pages first', 'sage')],
+    ['value' => __('Projects', 'sage'), 'label' => __('Demos before checkout', 'sage')],
   ];
-  $panelLink = ['label' => __('Browse work', 'sage'), 'href' => $catalogUrl];
+  $panelLink = ['label' => __('Browse catalog', 'sage'), 'href' => $catalogUrl];
   if ($isCart) {
     $eyebrow = __('Cart', 'sage');
     $panelTitle = __('Your cart', 'sage');

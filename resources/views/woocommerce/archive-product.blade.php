@@ -27,7 +27,7 @@
     }
     $crumbItems = [
       ['label' => __('Home', 'sage'), 'url' => home_url('/')],
-      ['label' => __('Work', 'sage'), 'url' => $catalogUrl],
+      ['label' => __('Projects', 'sage'), 'url' => $catalogUrl],
     ];
     if ($isShop) {
       $crumbItems[] = ['label' => $archiveTitle, 'current' => true];
@@ -39,7 +39,7 @@
 
   @component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Shop snapshot', 'sage')])
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
-    <p class="eyebrow">{{ __('Theme shop', 'sage') }}</p>
+    <p class="eyebrow">{{ __('Themes & plugins', 'sage') }}</p>
     @if (apply_filters('woocommerce_show_page_title', true))
       <h1 class="display-title is-hero woocommerce-products-header__title">{{ $archiveTitle }}</h1>
     @endif
@@ -51,29 +51,29 @@
         echo $archiveDesc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
       @endphp
       @if ($archiveDesc === '' && $isShop)
-        <p>{{ __('Studio WordPress themes from Work projects. Read the concept page first, buy the pack here, or hire me for a custom build.', 'sage') }}</p>
+        <p>{{ __('WordPress themes and plugins ready for checkout. Browse demos and product details on Projects, then buy the pack here — or hire me for a custom build.', 'sage') }}</p>
       @endif
     </div>
     <div class="page-header-split__actions">
-      <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+      <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse catalog', 'sage') }}</a>
       <a class="h-text-arrow" href="{{ esc_url(home_url('/contact/')) }}">
-        {{ __('Get help', 'sage') }} <span aria-hidden="true">→</span>
+        {{ __('Say hello', 'sage') }} <span aria-hidden="true">→</span>
       </a>
     </div>
     @slot('aside')
       @include('partials.hero-panel', [
         'chrome' => 'matthummel.com/shop',
         'icon' => 'briefcase',
-        'title' => __('Digital themes', 'sage'),
-        'meta' => __('From studio Work projects', 'sage'),
+        'title' => __('Themes & plugins', 'sage'),
+        'meta' => __('Checkout for Projects packs', 'sage'),
         'stats' => [
-          ['value' => number_format_i18n($productCount), 'label' => __('Themes listed', 'sage')],
+          ['value' => number_format_i18n($productCount), 'label' => __('Products listed', 'sage')],
           ['value' => __('Instant', 'sage'), 'label' => __('Digital delivery', 'sage')],
           ['value' => 'Sage', 'label' => __('Tailwind · Vite', 'sage')],
           ['value' => __('Support', 'sage'), 'label' => __('Say hello anytime', 'sage')],
         ],
         'link' => [
-          'label' => __('See example sites', 'sage'),
+          'label' => __('See demos on Projects', 'sage'),
           'href' => $catalogUrl,
         ],
       ])
@@ -108,9 +108,9 @@
     @else
       <div class="woo-empty" role="status">
         <p class="woo-empty__title">{{ __('No products yet', 'sage') }}</p>
-        <p class="woo-empty__text">{{ __('Studio themes sync here when they are marked for sale. Browse work in the meantime, or say hello about a build.', 'sage') }}</p>
+        <p class="woo-empty__text">{{ __('Themes and plugins sync here when they are marked for sale. Browse the Projects catalog in the meantime, or say hello about a build.', 'sage') }}</p>
         <p class="woo-empty__actions">
-          <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+          <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse catalog', 'sage') }}</a>
           <a class="btn btn-outline" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'sage') }}</a>
         </p>
       </div>
