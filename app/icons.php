@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_REPLACE
+file:///tmp/matthummel-theme-devto/app/icons.php
