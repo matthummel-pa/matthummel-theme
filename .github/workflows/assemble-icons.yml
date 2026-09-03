@@ -1,0 +1,38 @@
+name: Assemble icons.php
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/icons-parts/**'
+      - '.github/workflows/assemble-icons.yml'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/devto-logo-fix-f168
+      - name: Assemble icons.php and cleanup
+        run: |
+          python3 << 'PY'
+          import base64, pathlib, zlib
+          root = pathlib.Path('.github/icons-parts')
+          parts = sorted(root.glob('zicons.*'), key=lambda p: int(p.name.split('.')[-1]))
+          b64 = ''.join(p.read_text() for p in parts)
+          raw = zlib.decompress(base64.b64decode(b64))
+          assert raw.startswith(b'<?php')
+          assert b'M0 4.94v14.12h24V4.94H0z' in raw
+          assert b'LOADING' not in raw
+          assert b'PLACEHOLDER' not in raw
+          pathlib.Path('app/icons.php').write_bytes(raw)
+          print('icons.php', len(raw))
+          PY
+          rm -rf .github/icons-parts
+          rm -f .github/workflows/assemble-icons.yml
+          git config user.name "matt-hummel"
+          git config user.email "matt@matthummel.com"
+          git add -A
+          git commit -m "Fix DEV.to social icon to use the official logo"
+          git push origin HEAD:cursor/devto-logo-fix-f168
