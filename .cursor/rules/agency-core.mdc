@@ -15,7 +15,9 @@ Load these together. If they conflict, **this file plus what already ships in th
 | --- | --- |
 | `agency-core.mdc` (this file) | Who, why, delivery, hard no’s |
 | `growth-design-powerhouse.mdc` | CRO/SEO copy, brand tokens, a11y/frontend |
-| `portfolio-seo-playbook.mdc` | Dual audience, Gettysburg keywords, on-page title/meta limits |
+| `portfolio-seo-playbook.mdc` | Dual audience, skill-first keywords, on-page title/meta limits |
+| `seo-ai-search.mdc` | Google AI Search / GEO (E-E-A-T, extractability, schema-when-asked) |
+| `seo-ai-search-blog.mdc` | GEO blog draft prompt (BLUF, FAQ, Article JSON-LD) |
 | `master-content-writer.mdc` | Voice, scanability, edit passes |
 | `sage-roots.mdc` | Sage 11 templates, Vite, live folder name |
 | `sage-bespoke-2026.mdc` | ACF-when-asked, Customizer, SSH deploy layout, WP security |

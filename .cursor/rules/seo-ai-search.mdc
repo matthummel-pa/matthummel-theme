@@ -1,0 +1,48 @@
+---
+description: Enforce Google's latest SEO standards for AI Search (AI Overviews, SGE, and LLM indexing)
+globs: "**/*.{html,jsx,tsx,astro,md,mdx,blade.php,php}"
+alwaysApply: false
+---
+
+# Google AI Search Optimization (GEO) Standards
+
+When writing, refactoring, or generating content, web pages, or components, strictly adhere to Google's official guidelines for Generative AI search features.
+
+## This repository (do not ignore)
+
+This is the **matthummel** Sage 11 theme. Apply GEO standards to field copy, posts, and Blade markup without fighting what already ships.
+
+- **Copy location:** visitor sentences live in **Page content (theme)** (`app/page-fields.php`, `\App\field()`), posts, and comments — not hardcoded Blade except UI chrome.
+- **JSON-LD:** add schema only when Matt asks for a specific type (`Article`, `FAQPage`, `Organization`, `HowTo`). Do not spray fake `AggregateRating` or invent Product schemas (`portfolio-seo-playbook.mdc`, `docs/FEATURES.md`).
+- **Canonical / titles:** WordPress document title, Yoast, and theme `document` helpers own `<title>` and canonicals. Do not hardcode a second title or canonical stack in Blade.
+- **SSR:** Sage Blade is already server-rendered. Prefer that over locking indexable copy behind tabs or JS-only UI.
+- If this file conflicts with `agency-core.mdc` or shipping patterns, **shipping patterns win** until Matt asks to migrate.
+
+---
+
+## 1. Information Gain & "Non-Commodity" Content (E-E-A-T)
+- **Avoid Repetitive AI Filler:** Do not write generic summaries that rehash widely known information.
+- **Inject Original Value:** Prioritize unique insights, real-world experience, original data, expert commentary, or practical examples over reworded baseline text.
+- **Answer Search Intent Directly:** Put direct, concise, factual answers near the top of sections (BLUF: Bottom Line Up Front) to make them easily extraction-ready for AI summaries.
+
+## 2. Structural Clarity & Extractability
+- **Logical Heading Hierarchy:** Use strict `<h1>`, `<h2>`, `<h3>` hierarchy. Never skip levels.
+- **Scannable Elements:** Use lists (`<ul>`, `<ol>`), bolding for key concepts, and concise tables for multi-attribute comparisons.
+- **FAQ Pattern:** Format questions as descriptive `<h2>` or `<h3>` headings followed immediately by a direct 1–2 sentence answer before expanding into details.
+- **Semantic HTML:** Use native elements (`<article>`, `<section>`, `<header>`, `<footer>`, `<nav>`, `<aside>`) instead of plain `<div>` wrappers.
+
+## 3. Technical & Structured Data
+- **JSON-LD Schema Markup:** When Matt requests schema, implement appropriate markup (e.g., `Article`, `FAQPage`, `Organization`, `HowTo`) using standard `application/ld+json`.
+- **Crawlability & JavaScript:** Ensure main content is renderable server-side or during initial HTML hydration. Avoid locking critical content behind user interaction (like tabs or accordion clicks) if it needs to be indexed.
+- **Ignore Unnecessary AI "Hacks":** Google Search **ignores** `llms.txt` files or specialized AI markdown tags for Google indexing. Rely on standard semantic HTML and canonical URLs.
+
+## 4. Content Formatting Guidelines
+- **Sentence 1 Value:** Ensure every section's opening sentence provides substantive value rather than introductory fluff.
+- **Clear Authorship & Sourcing:** Include clear author bio components, publication dates, and citations/links to authoritative primary sources when writing posts or long-form pages.
+- **Canonicalization:** Maintain clean URL structures; leave canonical tags to WordPress/Yoast unless Matt asks for a theme-level override.
+
+## Rules Checklist Before Committing Content/Pages:
+- [ ] Is the primary answer easily extractable in 1-2 sentences near the top?
+- [ ] Is JSON-LD structured data included and valid when this page was asked to ship schema?
+- [ ] Does this page offer unique information that isn't easily found on 10 other sites?
+- [ ] Is semantic HTML used properly throughout the markup?
