@@ -117,7 +117,7 @@ Synced from `matthummel-pa/wp-acreline` (Sept 2026):
 
 - **Truth:** marketing pages are **21 Core Gutenberg blocks** (ServerSideRender, Block Generator, Migrate to Blocks). Listings / agents / bookings stay **classic metaboxes**. Customizer owns identity + eight color styles.
 - **Version:** read `style.css` (e.g. 1.2.3). Demo: `https://acreline.matthummel.com/`.
-- **Brand:** `BRAND.md` — tagline `Farms · land · historic homes`; paper `#f5f4f1` (not the older cream).
+- **Brand:** matthummel.com labels Acreline as **Real estate** (place / eyebrow / tagline). Product-repo `BRAND.md` may still say farms/land — catalog labeling on this site wins when Matt asks for Real estate. Palette paper `#f5f4f1` (not the older cream).
 - **Honesty:** fiction demo, 555 phones, `@acreline-concept.test`, not a live MLS/IDX.
 - **Do not** claim Elementor, ACF, or live IDX. **Do** describe Gutenberg blocks when the product ships them.
 - ThemeForest attribute “Gutenberg optimized” in seller docs may lag the product — catalog copy should match the **shipping theme**, and call out listing drift in the PR.

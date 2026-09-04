@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.75 — Acreline Real estate label
+
+- Relabel Acreline on Work cards and the product page as a **Real estate** theme (place, eyebrow, brand tagline) instead of Land & farms / Farms & land.
+- Refresh buyer-facing Acreline copy to lead with real estate; keep listing/agent/map features intact.
+- Re-apply sellable product meta via `mh_product_catalog_v5` after theme update.
+
 ## 3.1.74 — Acreline product sync (Gutenberg)
 
 - Refresh the Acreline catalog entry from `wp-acreline` 1.2.3: 21 Core Gutenberg blocks, Block Generator, Migrate to Blocks, brand kit palette/tagline, and buyer FAQ.

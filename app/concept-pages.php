@@ -470,9 +470,9 @@ function mh_project_buyer_defaults(string $slug, string $cat, string $title): ar
     }
 
     if (in_array($slug, ['keystone-homes', 'acreline'], true)) {
-        $audience = __('Land offices, farm brokerages, and agents selling acreage or historic homes who cannot use a suburban MLS skin. Acreline is the WordPress starting point: listings, map, and financing tools aimed at that inventory.', 'sage');
-        $architecture = __('Marketing pages use twenty-one Core Gutenberg blocks with ServerSideRender previews. Listings render as a grid and a map, with acreage, township, and lot-type filters as query args. Agents and bookings use classic metaboxes. Stack is Sage 11 + Vite 8; optional Acreline Core keeps inventory after a theme switch. No Elementor, no ACF, no IDX chrome unless we wire a real feed later.', 'sage');
-        $handoff = __('You own the theme zip, child theme, and Core plugin. Edit marketing pages in the block editor. Brokers edit parcels, photos, and agent fields in wp-admin. I document the listing schema so the next developer can extend filters without rebuilding the front end.', 'sage');
+        $audience = __('Real estate offices, brokerages, and agents who need a WordPress starting point for listings, map, and showing requests — not a suburban MLS skin. Acreline is built for that inventory.', 'sage');
+        $architecture = __('Marketing pages use twenty-one Core Gutenberg blocks with ServerSideRender previews. Listings render as a grid and a map, with type, price, acreage, and area filters as query args. Agents and bookings use classic metaboxes. Stack is Sage 11 + Vite 8; optional Acreline Core keeps inventory after a theme switch. No Elementor, no ACF, no IDX chrome unless we wire a real feed later.', 'sage');
+        $handoff = __('You own the theme zip, child theme, and Core plugin. Edit marketing pages in the block editor. Brokers edit listings, photos, and agent fields in wp-admin. I document the listing schema so the next developer can extend filters without rebuilding the front end.', 'sage');
     }
 
     $faq = [
@@ -1059,11 +1059,27 @@ function mh_apply_product_catalog_v4(): void
     }
 }
 
+/**
+ * One-time: relabel Acreline as a Real estate theme (not Land & farms) and
+ * refresh catalog meta/Woo copy after theme update.
+ */
+function mh_apply_product_catalog_v5(): void
+{
+    if (get_option('mh_product_catalog_v5') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v5', true);
+    }
+}
+
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v2', 37);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v3', 38);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v4', 39);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
