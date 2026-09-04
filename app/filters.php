@@ -67,23 +67,19 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     $map = [
         'front-page.blade.php' => [
             'title' => mh_home_hero_default('seo_title', $brand),
-            'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+            'desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-home.blade.php' => [
             'title' => mh_home_hero_default('seo_title', $brand),
-            'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+            'desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-services.blade.php' => [
             'title' => __('Custom WordPress Sites & Plugins', 'sage').' | '.$brand,
             'desc' => __('Custom WordPress sites, plugins, and web apps for shops and agencies. Clear scope and clean handoffs. Say hello.', 'sage'),
         ],
-        'template-start.blade.php' => [
-            'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
-            'desc' => __('Start a WordPress project with a short brief. Scope, stack, and handoff for shops and agencies. Say hello.', 'sage'),
-        ],
         'template-projects.blade.php' => [
             'title' => __('WordPress Example Sites', 'sage').' | '.$brand,
-            'desc' => __('Studio example WordPress sites, themes, and plugins I build and maintain. See the work, then say hello.', 'sage'),
+            'desc' => __('WordPress example sites, themes, and plugins I build and maintain. See the work, then say hello.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
@@ -91,11 +87,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-uses.blade.php' => [
             'title' => __('WordPress Developer Tools', 'sage').' | '.$brand,
-            'desc' => __('The WordPress developer tools and stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths.', 'sage'),
+            'desc' => __('WordPress developer tools and stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths.', 'sage'),
         ],
         'template-resources.blade.php' => [
-            'title' => __('Free WordPress Starters & Tools', 'sage').' | '.$brand,
-            'desc' => __('Free WordPress starters and tools I share for shops, agencies, and developers learning the craft.', 'sage'),
+            'title' => __('WordPress Starters & Free Tools', 'sage').' | '.$brand,
+            'desc' => __('WordPress starters and free tools I share for shops, agencies, and developers learning the craft.', 'sage'),
         ],
         'template-affiliate-disclosure.blade.php' => [
             'title' => __('Affiliate Disclosure', 'sage').' | '.$brand,
@@ -103,7 +99,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-hire.blade.php' => [
             'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('Hire me for full-time, contract, or freelance WordPress work. Themes, plugins, and handoffs shops keep. Say hello.', 'sage'),
+            'desc' => __('Hire a WordPress developer for full-time, contract, or freelance work. Themes, plugins, and handoffs shops keep.', 'sage'),
         ],
         'template-changelog.blade.php' => [
             'title' => __('Theme Changelog', 'sage').' | '.$brand,
@@ -127,19 +123,23 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-contact.blade.php' => [
             'title' => __('Contact WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('Contact me about WordPress themes, plugins, or a site your shop can edit. I reply with clear next steps.', 'sage'),
+            'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => __('About a WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('I am a full-stack WordPress developer. I build sites shops can edit and agencies can hand off. Say hello.', 'sage'),
+            'title' => __('WordPress Developer Bio', 'sage').' | '.$brand,
+            'desc' => __('WordPress developer bio: I build sites shops can edit and agencies can hand off. Say hello.', 'sage'),
         ],
         'template-code.blade.php' => [
             'title' => __('WordPress Open Source Code', 'sage').' | '.$brand,
-            'desc' => __('Open WordPress and full-stack code I ship on GitHub. Themes, plugins, and notes developers can reuse.', 'sage'),
+            'desc' => __('WordPress open source and full-stack code I ship on GitHub. Themes, plugins, and notes developers can reuse.', 'sage'),
         ],
         'template-now.blade.php' => [
-            'title' => __('What I\'m Building in WordPress', 'sage').' | '.$brand,
-            'desc' => __('What I am building now in WordPress: themes, plugins, and shipping notes. Updated as work moves.', 'sage'),
+            'title' => __('WordPress Themes I\'m Building', 'sage').' | '.$brand,
+            'desc' => __('WordPress themes and plugins I am building now, plus shipping notes. Updated as work moves.', 'sage'),
+        ],
+        'template-start.blade.php' => [
+            'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
+            'desc' => __('WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,

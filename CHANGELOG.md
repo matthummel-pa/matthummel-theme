@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.71 — Rank Math scores for field-driven pages
+
+- Build Rank Math analysis HTML from Page content (theme) fields into `post_content` (templates still do not render it).
+- Admin JS feeds `mh_f_*` fields into Rank Math’s Content Analysis API so scores leave the empty-body ~40s.
+- One-shot repairs for label-prefixed field meta and sync of analysis bodies / score meta on theme load.
+- Drop the Content AI test on pages (marketing layouts are not AI drafts).
+
 ## 3.1.70 — Wider-audience SEO snippets
 
 - Skill-first Rank Math titles/descriptions across pages, posts, products, and projects (shops, agencies, developers, learners).
