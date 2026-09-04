@@ -22,6 +22,7 @@ Load these together. If they conflict, **this file plus what already ships in th
 | `sage-roots.mdc` | Sage 11 templates, Vite, live folder name |
 | `sage-bespoke-2026.mdc` | ACF-when-asked, Customizer, SSH deploy layout, WP security |
 | `coding-conventions.mdc` | PHP/JS/Blade/Tailwind style |
+| `product-theme-sync.mdc` | Sync sellable products (Acreline, TOCflow, …) from their repos into `product-catalog.json` |
 
 Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks in this repository.
 

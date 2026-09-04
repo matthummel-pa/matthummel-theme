@@ -3,41 +3,45 @@
     "title": "Acreline",
     "cat": "Themes",
     "place": "Land & farms",
-    "blurb": "WordPress theme for farms, land, and historic homes — listings, agents, and showing requests.",
-    "tech": ["Sage", "WordPress", "Customizer"],
+    "blurb": "WordPress theme for farms, land, and historic homes — 21 Gutenberg blocks, listings, agents, and showing requests.",
+    "tech": ["Sage", "WordPress", "Gutenberg", "Customizer"],
     "product_type": "theme",
     "for_sale": true,
     "live": true,
     "price": "79",
     "eyebrow": "WordPress theme · Farms & land",
-    "summary": "Acreline is a WordPress real estate theme for farms, land, and historic homes. Searchable listings, map views, agents, and showing requests — Customizer identity, eight color styles, no page builder required.",
+    "summary": "Acreline is a WordPress real estate theme for farms, land, and historic homes. Twenty-one Core Gutenberg blocks build the marketing pages. Searchable listings, map views, agents, and showing requests ship with Customizer identity and eight color styles — no Elementor or ACF required.",
     "challenge": "Land and farm buyers need acreage, township, and lot-type filters plus a map. Generic luxury realtor skins bury parcels and force IDX chrome offices do not need.",
-    "approach": "Listings, agents, and bookings ship in the theme. Identity and colors live in the Customizer. Filters are query args. Payment-estimate and showing requests stay vanilla JS — no Elementor, no ACF Pro required.",
-    "result": "A ThemeForest-ready pack: install the zip, brand it under Customize → Identity, seed demo inventory, and sell land the way rural buyers search for it.",
+    "approach": "Marketing pages are real Gutenberg blocks with ServerSideRender previews. Listings, agents, and bookings stay as post types with classic metaboxes. Identity and colors live in the Customizer. Filters are query args. Tools → Block Generator and Migrate to Blocks ship in the theme.",
+    "result": "A ThemeForest-ready pack: install the zip, brand it under Customize → Identity, seed demo inventory and block-built pages, and sell land the way rural buyers search for it.",
     "audience": "Land offices, farm brokerages, and agents selling acreage or historic homes who cannot use a suburban MLS skin. Also agencies that need a rural real estate base they can white-label.",
-    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite. Listings, agents, and bookings as post types (optional Acreline Core plugin so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math. Classic metaboxes on purpose.",
-    "handoff": "You own the theme zip, child theme, and Core plugin. Brokers edit parcels, photos, and copy in wp-admin. HTML docs ship in the pack. Hire me to import your inventory or brand the Customizer.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Twenty-one server-rendered Core Gutenberg blocks for marketing pages (Block Generator + Migrate to Blocks). Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
+    "handoff": "You own the theme zip, child theme, and Core plugin. Edit marketing pages in the block editor. Brokers edit parcels, photos, and agent fields in wp-admin metaboxes. HTML docs ship in the pack. Hire me to import your inventory or brand the Customizer.",
     "benefits": [
       "Ship a land-and-farm listing site without starting from a luxury realtor kit",
+      "21 Gutenberg blocks with true WYSIWYG ServerSideRender previews",
       "Filters that match acreage, parcel context, and historic homes",
       "Showing requests and agents built into the theme flow",
       "Customizer identity + eight color styles — brand it in minutes",
+      "Block Generator and Migrate to Blocks for pages without writing PHP",
       "Child theme + Acreline Core so listings survive a theme switch",
       "100% GPL-compatible theme code — sell or customize freely"
     ],
     "deliverables": [
+      "21 Core Gutenberg blocks (hero, listings grid, FAQ, CTA, and more)",
       "Searchable listings (grid + map)",
       "Type, price, acreage, and area filters",
-      "Payment-estimate modal",
+      "Land-loan and pre-qual tools",
       "Agents and showing-request bookings",
       "Customizer identity + eight color styles",
+      "Block Generator + Migrate to Blocks",
       "Child theme + Acreline Core plugin",
       "HTML documentation hub",
       "Mobile-first, accessible build"
     ],
     "metrics": [
+      ["21", "Gutenberg blocks"],
       ["8", "color styles"],
-      ["Grid + map", "listings"],
       ["GPL", "theme pack"]
     ],
     "faq": [
@@ -50,12 +54,16 @@
         "No. It is a concept office with sample inventory. Listings are a custom post type you edit in WordPress. Wire a real feed later if you need one — the UI does not depend on IDX chrome."
       ],
       [
+        "How do I edit page copy?",
+        "Marketing pages use Core Gutenberg blocks with live ServerSideRender previews. Listings, agents, and bookings use classic metaboxes. Brand, phone, and colors stay in Customize → Identity."
+      ],
+      [
         "Can I use it commercially / is it GPL?",
         "Yes. Theme code is GPLv2 or later. Sage / Acorn remain MIT (GPL-compatible). You can customize, resell services on top, or white-label for a client."
       ],
       [
         "Do I need Elementor or ACF?",
-        "No. Fields and identity live in Customizer + metaboxes. Do not add a page builder “to make it work.”"
+        "No. Pages use the included Gutenberg blocks. Listings and agents use metaboxes. Identity lives in the Customizer. Do not add a page builder “to make it work.”"
       ],
       [
         "Can you install or customize it for my office?",
@@ -64,8 +72,8 @@
     ],
     "demo": "https://acreline.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-acreline",
-    "version": "1.2.2",
-    "compatible": "WordPress 6.6+, PHP 8.3+",
+    "version": "1.2.3",
+    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
     "license": "GPLv2 or later",
     "files_included": [
       "acreline.zip (parent theme)",
@@ -81,10 +89,10 @@
       ["Brand kit", "https://github.com/matthummel-pa/wp-acreline/blob/main/BRAND.md"]
     ],
     "support": "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/support.html",
-    "topics": "wordpress-theme, real-estate, farms, land, sage, acreline",
+    "topics": "wordpress-theme, real-estate, farms, land, sage, gutenberg, acreline",
     "languages": "PHP, Blade, CSS, JavaScript",
-    "brand_tagline": "Rural inventory, not another luxury brokerage skin.",
-    "brand_palette": "Ink|#141210\nForest|#1f6b4a\nForest dark|#155539\nPaper|#f4f1ea",
+    "brand_tagline": "Farms · land · historic homes",
+    "brand_palette": "Ink|#141210\nForest|#1f6b4a\nForest dark|#155539\nPaper|#f5f4f1",
     "image": "products/acreline/featured.webp",
     "screenshots": [
       ["products/acreline/01-homepage.webp", "Homepage search + featured land"],
@@ -99,7 +107,8 @@
       "farm and land WordPress theme",
       "rural realtor theme",
       "acreage listings WordPress",
-      "historic homes WordPress theme"
+      "historic homes WordPress theme",
+      "Gutenberg real estate theme"
     ]
   },
   "tocflow": {

@@ -48,7 +48,7 @@ Envato wants a **buyer product**: unique slug, public docs, unit-test content, E
 
 This theme is branded Matt Hummel, seeds personal pages, talks to your CRM, and is not a reusable office/shop theme. Slug `matthummel` also risks colliding with a future wordpress.org listing (buyers “updating” to the wrong theme).
 
-Acreline is the Envato item: Customizer identity, listings, child theme, Core plugin, seller pack, listing copy in `docs/marketplace/themeforest-listing.md`.
+Acreline is the Envato item: Customizer identity, **21 Core Gutenberg blocks** for marketing pages, listings/agents/bookings (metaboxes), child theme, Core plugin, seller pack. Listing paste lives in Acreline `docs/marketplace/themeforest-listing.md` (may lag README — prefer shipping product truth when syncing matthummel.com; see `.cursor/rules/product-theme-sync.mdc`).
 
 ---
 
@@ -77,8 +77,9 @@ Work in **wp-acreline**, not this repo.
 4. Confirm the ThemeForest pack has no Unsplash binaries, no `.git`, no plugin zip **inside** the theme folder.
 5. Live preview: concept banner on for honesty; one screenshot with chrome off.
 6. Sales page: **100% GPL-compatible**. Footer credit optional + `rel="nofollow"`.
-7. WordPress.org later: theme zip only, CPTs in Acreline Core (separate plugin), no “Gutenberg optimized.”
+7. WordPress.org later: theme zip only, CPTs in Acreline Core (separate plugin). Do not claim Envato “Gutenberg optimized” unless the listing and product match; marketing pages already use Core blocks — keep ThemeForest attributes honest.
 8. Price/docs: Acreline `docs/marketplace/SELLING.md`.
+9. After Acreline ships a release, sync matthummel.com via `resources/data/product-catalog.json` + `mh_product_catalog_vN` (playbook: `.cursor/rules/product-theme-sync.mdc`).
 
 ---
 
