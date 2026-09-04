@@ -97,6 +97,13 @@
   if ($sidebar['stars'] > 0) {
     $detailRows[] = [__('GitHub stars', 'sage'), (string) $sidebar['stars'], $sidebar['github']];
   }
+  $projectSlug = (string) ($card['slug'] ?? get_post_field('post_name', $postId));
+  $showSupportHub = in_array($productType, ['theme', 'plugin'], true)
+    || (! empty($story['is_product']))
+    || ((string) get_post_meta($postId, '_mh_project_for_sale', true) === '1');
+  $supportHubUrl = $showSupportHub && function_exists('\\App\\mh_support_page_url_for_product')
+    ? \App\mh_support_page_url_for_product($projectSlug)
+    : '';
   $articleClass = implode(' ', get_post_class($pageClass));
 @endphp
 
@@ -347,16 +354,30 @@
             @if ($demo !== '')
               <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Open live demo', 'sage') }} ↗</a>
             @endif
-            <a class="btn {{ $demo !== '' ? 'btn-outline' : '' }}" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
+            @if ($supportHubUrl !== '')
+              <a class="btn btn-outline concept-support-btn" href="{{ esc_url($supportHubUrl) }}">
+                {!! \App\mh_svg_icon('wordpress', 16) !!}
+                {{ __('Open support docs', 'sage') }}
+              </a>
+            @endif
+            <a class="btn {{ ($demo !== '' || $supportHubUrl !== '') ? 'btn-outline' : '' }}" href="{{ esc_url($useUrl) }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ $hireLabel }}</a>
             @if ($buyUrl !== '')
               <a class="btn btn-outline" href="{{ esc_url($buyUrl) }}">{!! \App\mh_svg_icon('cart', 16) !!} {{ $primaryLabel }}</a>
             @endif
           </div>
         @endif
 
-        @if ($detailRows !== [] || $sidebar['files_included'] !== [] || $sidebar['docs'] !== [] || $sidebar['github'] !== '')
+        @if ($detailRows !== [] || $sidebar['files_included'] !== [] || $sidebar['docs'] !== [] || $sidebar['github'] !== '' || $supportHubUrl !== '')
           <div class="concept-aside-card concept-aside-card--facts">
             <h2 class="concept-aside-title">{{ $isTheme ? __('Theme details', 'sage') : ($isPlugin ? __('Plugin details', 'sage') : __('Spec details', 'sage')) }}</h2>
+            @if ($supportHubUrl !== '')
+              <p class="concept-fact-support-cta">
+                <a class="btn concept-support-btn" href="{{ esc_url($supportHubUrl) }}">
+                  {!! \App\mh_svg_icon('wordpress', 16) !!}
+                  {{ __('Open support docs', 'sage') }}
+                </a>
+              </p>
+            @endif
             @if ($detailRows !== [])
               <dl class="concept-fact-list">
                 @foreach ($detailRows as $row)
@@ -388,7 +409,7 @@
                   <li><a href="{{ esc_url($doc[1]) }}" rel="noopener" target="_blank">{{ $doc[0] }} <span aria-hidden="true">↗</span></a></li>
                 @endforeach
               </ul>
-            @elseif ($sidebar['support'] !== '')
+            @elseif ($sidebar['support'] !== '' && $supportHubUrl === '')
               <p class="concept-fact-support">
                 <a href="{{ esc_url($sidebar['support']) }}" rel="noopener" target="_blank">{{ __('Support docs', 'sage') }} ↗</a>
               </p>
