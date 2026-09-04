@@ -657,6 +657,16 @@ function page_field_map(): array
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
         ],
+        'template-support.blade.php' => [
+            __('Intro', 'sage') => [
+                ['support_kicker', __('Kicker', 'sage'), 'text', __('Support', 'sage')],
+                ['support_h1', __('Heading', 'sage'), 'text', __('Theme & plugin documentation.', 'sage')],
+                ['support_lede', __('Intro', 'sage'), 'textarea', __('HTML guides for products I sell — the same Documentation hub that ships in the ThemeForest-style pack. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')],
+                ['support_intro_h2', __('Below-hero heading', 'sage'), 'text', __('How this works.', 'sage')],
+                ['support_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Each product links to viewable HTML docs (install, Customizer, FAQ, support) hosted from the product repo. Pack buyers also get the same files offline under Documentation/. Contact me for paid install or customization.', 'sage')],
+                ['support_contact_label', __('Contact CTA label', 'sage'), 'text', __('Say hello', 'sage')],
+            ],
+        ],
         'index.blade.php' => [
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],

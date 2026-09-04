@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.73 — HTML-viewable product support docs
+
+- Add a Support page (`/support/`) that links to ThemeForest-style HTML guides from product repos (Acreline Documentation hub, install, FAQ, support).
+- Serve GitHub `.html` docs through jsDelivr so they open as real pages instead of source blobs.
+- Point Acreline catalog docs/support at the viewable HTML guides; refresh project meta via `mh_product_catalog_v3`.
+- Link Support from the site footer.
+- Add a full-width **Open support docs** button in Theme / Plugin details on product pages (`/projects/{slug}/` → `/support/#{slug}`).
+
 ## 3.1.72 — Archived Power Platform writing
 
 - Keep 29 earlier Power Platform posts published and available at their existing URLs.

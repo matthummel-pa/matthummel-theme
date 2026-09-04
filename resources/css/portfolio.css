@@ -12192,6 +12192,133 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
 
 .contact-form .btn { min-height: 48px; }
 
+/* Product Theme details → Support hub CTA */
+.concept-fact-support-cta {
+  margin: 0 0 1.1rem;
+}
+.concept-support-btn {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: .45rem;
+  min-height: 48px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Support / HTML docs hub */
+.support-body__stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+.support-product {
+  background: var(--white);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--gray-900) 4%, transparent);
+}
+.support-product__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.support-product__eyebrow {
+  margin: 0 0 .35rem;
+  font: 600 .8rem/1.3 var(--font-sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--blue-600, #2563eb);
+}
+.support-product__title {
+  margin: 0 0 .5rem;
+  font: 800 clamp(1.45rem, 2.6vw, 1.9rem)/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+.support-product__blurb {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--gray-700);
+}
+.support-product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+}
+.support-product__sub {
+  margin: 0 0 .85rem;
+  font: 700 .95rem/1.3 var(--font-sans);
+}
+.support-guide-grid {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: .75rem;
+}
+.support-guide-card {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  height: 100%;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--gray-50);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.support-guide-card:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+.support-guide-card__title {
+  font: 700 .95rem/1.3 var(--font-sans);
+  color: var(--gray-900);
+}
+.support-guide-card__blurb {
+  font: 400 .85rem/1.45 var(--font-sans);
+  color: var(--gray-600);
+}
+.support-doc-list {
+  margin: 0 0 1.25rem;
+  padding-left: 1.1rem;
+}
+.support-doc-list a { font-weight: 600; }
+.support-product__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .85rem 1.25rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  font-size: .9rem;
+}
+.support-product__meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-weight: 600;
+}
+.support-help {
+  border-top: 1px solid var(--color-border);
+  padding-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.support-help__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
 .h-principle__practice { display: none; }
 @media (min-width: 900px) {
   .h-principle__practice { display: block; }

@@ -75,11 +75,12 @@
       "Licensing/"
     ],
     "docs": [
-      ["Buyer guide", "https://github.com/matthummel-pa/wp-acreline/blob/main/docs/marketplace/buyer-guide.html"],
-      ["Support", "https://github.com/matthummel-pa/wp-acreline/blob/main/SUPPORT.md"],
-      ["ThemeForest listing copy", "https://github.com/matthummel-pa/wp-acreline/blob/main/docs/marketplace/themeforest-listing.md"]
+      ["Documentation hub", "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/index.html"],
+      ["Buyer guide", "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/buyer-guide.html"],
+      ["Support guide", "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/support.html"],
+      ["Brand kit", "https://github.com/matthummel-pa/wp-acreline/blob/main/BRAND.md"]
     ],
-    "support": "https://github.com/matthummel-pa/wp-acreline/blob/main/SUPPORT.md",
+    "support": "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/support.html",
     "topics": "wordpress-theme, real-estate, farms, land, sage, acreline",
     "languages": "PHP, Blade, CSS, JavaScript",
     "brand_tagline": "Rural inventory, not another luxury brokerage skin.",
