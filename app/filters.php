@@ -105,6 +105,10 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Theme Changelog', 'sage').' | '.$brand,
             'desc' => __('Changelog for the Matt Hummel WordPress theme: releases, fixes, and shipping notes.', 'sage'),
         ],
+        'template-support.blade.php' => [
+            'title' => __('Theme & Plugin Support Docs', 'sage').' | '.$brand,
+            'desc' => __('HTML documentation for Acreline and other WordPress products: install, Customizer, FAQ, and support guides.', 'sage'),
+        ],
         'template-accessibility.blade.php' => [
             'title' => __('Accessibility Statement', 'sage').' | '.$brand,
             'desc' => __('How I keep this WordPress site usable. Standards I aim for, and how to report an accessibility issue.', 'sage'),

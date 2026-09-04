@@ -894,7 +894,9 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
         '_mh_project_version' => (string) ($seed['version'] ?? ''),
         '_mh_project_compatible' => (string) ($seed['compatible'] ?? ''),
         '_mh_project_license' => (string) ($seed['license'] ?? ''),
-        '_mh_project_support' => (string) ($seed['support'] ?? ''),
+        '_mh_project_support' => function_exists(__NAMESPACE__.'\\mh_github_html_doc_url')
+            ? mh_github_html_doc_url((string) ($seed['support'] ?? ''))
+            : (string) ($seed['support'] ?? ''),
         '_mh_project_topics' => (string) ($seed['topics'] ?? ''),
         '_mh_project_languages' => (string) ($seed['languages'] ?? ''),
         '_mh_project_brand_tagline' => (string) ($seed['brand_tagline'] ?? ''),
@@ -920,7 +922,21 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 
     $docs = $seed['docs'] ?? [];
     if (is_array($docs) && ($force || (string) get_post_meta($postId, '_mh_project_docs', true) === '')) {
-        update_post_meta($postId, '_mh_project_docs', mh_product_docs_meta_text($docs));
+        $normalized = [];
+        foreach ($docs as $pair) {
+            if (! is_array($pair) || count($pair) < 2) {
+                continue;
+            }
+            $label = trim((string) $pair[0]);
+            $url = function_exists(__NAMESPACE__.'\\mh_github_html_doc_url')
+                ? mh_github_html_doc_url(trim((string) $pair[1]))
+                : trim((string) $pair[1]);
+            if ($label === '' || $url === '') {
+                continue;
+            }
+            $normalized[] = [$label, $url];
+        }
+        update_post_meta($postId, '_mh_project_docs', mh_product_docs_meta_text($normalized));
     }
 
     $screens = $seed['screenshots'] ?? [];
@@ -1014,9 +1030,7 @@ function mh_apply_product_catalog_v2(): void
 }
 
 /**
- * One-time: refresh catalog products from product-catalog.json (Acreline Gutenberg
- * blocks / 1.2.3, TOCflow, and any future sellable themes). Re-runs force upsert
- * so buyer-facing copy matches the product repos after a theme update.
+ * Refresh catalog docs/support URLs to HTML-viewable CDN links (and Support page meta).
  */
 function mh_apply_product_catalog_v3(): void
 {
@@ -1029,10 +1043,27 @@ function mh_apply_product_catalog_v3(): void
     }
 }
 
+/**
+ * One-time: refresh catalog products from product-catalog.json (Acreline Gutenberg
+ * blocks / 1.2.3, TOCflow, HTML-viewable docs, and any future sellable themes).
+ * Force upsert so buyer-facing copy matches the product repos after a theme update.
+ */
+function mh_apply_product_catalog_v4(): void
+{
+    if (get_option('mh_product_catalog_v4') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v4', true);
+    }
+}
+
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v2', 37);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v3', 38);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v4', 39);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');

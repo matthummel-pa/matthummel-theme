@@ -1,10 +1,18 @@
 # Changelog
 
-## 3.1.73 — Acreline product sync (Gutenberg)
+## 3.1.74 — Acreline product sync (Gutenberg)
 
 - Refresh the Acreline catalog entry from `wp-acreline` 1.2.3: 21 Core Gutenberg blocks, Block Generator, Migrate to Blocks, brand kit palette/tagline, and buyer FAQ.
-- Re-apply sellable product meta via `mh_product_catalog_v3` so project and Woo pages pick up the new copy after theme update.
+- Re-apply sellable product meta via `mh_product_catalog_v4` so project and Woo pages pick up the new copy (and HTML-viewable docs URLs) after theme update.
 - Add `.cursor/rules/product-theme-sync.mdc` as the playbook for syncing future product themes/plugins from their repos.
+
+## 3.1.73 — HTML-viewable product support docs
+
+- Add a Support page (`/support/`) that links to ThemeForest-style HTML guides from product repos (Acreline Documentation hub, install, FAQ, support).
+- Serve GitHub `.html` docs through jsDelivr so they open as real pages instead of source blobs.
+- Point Acreline catalog docs/support at the viewable HTML guides; refresh project meta via `mh_product_catalog_v3`.
+- Link Support from the site footer.
+- Add a full-width **Open support docs** button in Theme / Plugin details on product pages (`/projects/{slug}/` → `/support/#{slug}`).
 
 ## 3.1.72 — Archived Power Platform writing
 

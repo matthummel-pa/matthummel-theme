@@ -52,6 +52,7 @@
         <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
         <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
         <li><a href="{{ home_url('/uses/') }}">{{ __('Uses', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
         @if (\App\mh_woocommerce_is_active())
