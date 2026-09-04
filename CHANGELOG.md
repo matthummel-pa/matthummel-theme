@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.73 — Acreline product sync (Gutenberg)
+
+- Refresh the Acreline catalog entry from `wp-acreline` 1.2.3: 21 Core Gutenberg blocks, Block Generator, Migrate to Blocks, brand kit palette/tagline, and buyer FAQ.
+- Re-apply sellable product meta via `mh_product_catalog_v3` so project and Woo pages pick up the new copy after theme update.
+- Add `.cursor/rules/product-theme-sync.mdc` as the playbook for syncing future product themes/plugins from their repos.
+
 ## 3.1.72 — Archived Power Platform writing
 
 - Keep 29 earlier Power Platform posts published and available at their existing URLs.

@@ -471,8 +471,8 @@ function mh_project_buyer_defaults(string $slug, string $cat, string $title): ar
 
     if (in_array($slug, ['keystone-homes', 'acreline'], true)) {
         $audience = __('Land offices, farm brokerages, and agents selling acreage or historic homes who cannot use a suburban MLS skin. Acreline is the WordPress starting point: listings, map, and financing tools aimed at that inventory.', 'sage');
-        $architecture = __('Listings render as a grid and a map, with acreage, township, and lot-type filters as query args. The land-loan estimate and pre-qualification widgets are vanilla JS. Intended production stack is Sage 11, a listing CPT or imported feed, and Rank Math for titles and schema. No page builder, no IDX chrome unless we wire a real feed later.', 'sage');
-        $handoff = __('You own the theme and the listing fields. Brokers edit parcels, photos, and copy in wp-admin. I document the listing schema (filters, map pin fields, financing copy) so the next developer can extend it. Hire me to map this onto your inventory, or start from the public demo and tell me what to change.', 'sage');
+        $architecture = __('Marketing pages use twenty-one Core Gutenberg blocks with ServerSideRender previews. Listings render as a grid and a map, with acreage, township, and lot-type filters as query args. Agents and bookings use classic metaboxes. Stack is Sage 11 + Vite 8; optional Acreline Core keeps inventory after a theme switch. No Elementor, no ACF, no IDX chrome unless we wire a real feed later.', 'sage');
+        $handoff = __('You own the theme zip, child theme, and Core plugin. Edit marketing pages in the block editor. Brokers edit parcels, photos, and agent fields in wp-admin. I document the listing schema so the next developer can extend filters without rebuilding the front end.', 'sage');
     }
 
     $faq = [
@@ -948,40 +948,37 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 }
 
 /**
- * One-time: seed Acreline + TOCflow as sellable products, pull concept demos off the shop,
- * and apply marketplace-ready copy + screenshots.
+ * Apply the bundled product catalog: demote non-catalog projects off the shop,
+ * then force-upsert every catalog entry (copy, screenshots, Woo sync).
  *
- * V2 waits for the bundled catalog to be readable before recording completion. This
- * matters during an in-place theme update, where a request can arrive mid-swap.
+ * @return bool True when every catalog slug was processed.
  */
-function mh_apply_product_catalog_v2(): void
+function mh_apply_product_catalog(bool $demoteNonCatalog = true): bool
 {
-    if (get_option('mh_product_catalog_v2') || wp_installing()) {
-        return;
-    }
-
     $catalog = mh_product_catalog_seed_data();
     if ($catalog === []) {
-        return;
+        return false;
     }
 
-    // Concept demos are hire-only — not ThemeForest packs.
-    foreach (mh_query_project_cards(['live_only' => false]) as $card) {
-        $id = (int) ($card['post_id'] ?? 0);
-        $slug = (string) ($card['slug'] ?? '');
-        if ($id <= 0) {
-            continue;
-        }
-        if (isset($catalog[$slug])) {
-            continue;
-        }
-        update_post_meta($id, '_mh_project_for_sale', '0');
-        $type = sanitize_key((string) get_post_meta($id, '_mh_project_product_type', true));
-        if ($type === '' || $type === 'theme') {
-            update_post_meta($id, '_mh_project_product_type', 'concept');
-        }
-        if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
-            mh_sync_project_product($id);
+    if ($demoteNonCatalog) {
+        // Concept demos are hire-only — not ThemeForest packs.
+        foreach (mh_query_project_cards(['live_only' => false]) as $card) {
+            $id = (int) ($card['post_id'] ?? 0);
+            $slug = (string) ($card['slug'] ?? '');
+            if ($id <= 0) {
+                continue;
+            }
+            if (isset($catalog[$slug])) {
+                continue;
+            }
+            update_post_meta($id, '_mh_project_for_sale', '0');
+            $type = sanitize_key((string) get_post_meta($id, '_mh_project_product_type', true));
+            if ($type === '' || $type === 'theme') {
+                update_post_meta($id, '_mh_project_product_type', 'concept');
+            }
+            if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+                mh_sync_project_product($id);
+            }
         }
     }
 
@@ -995,14 +992,47 @@ function mh_apply_product_catalog_v2(): void
         }
     }
 
-    if ($processed === count($catalog)) {
+    return $processed === count($catalog);
+}
+
+/**
+ * One-time: seed Acreline + TOCflow as sellable products, pull concept demos off the shop,
+ * and apply marketplace-ready copy + screenshots.
+ *
+ * V2 waits for the bundled catalog to be readable before recording completion. This
+ * matters during an in-place theme update, where a request can arrive mid-swap.
+ */
+function mh_apply_product_catalog_v2(): void
+{
+    if (get_option('mh_product_catalog_v2') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(true)) {
         update_option('mh_product_catalog_v2', true);
+    }
+}
+
+/**
+ * One-time: refresh catalog products from product-catalog.json (Acreline Gutenberg
+ * blocks / 1.2.3, TOCflow, and any future sellable themes). Re-runs force upsert
+ * so buyer-facing copy matches the product repos after a theme update.
+ */
+function mh_apply_product_catalog_v3(): void
+{
+    if (get_option('mh_product_catalog_v3') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v3', true);
     }
 }
 
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
 add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v2', 37);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v3', 38);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');

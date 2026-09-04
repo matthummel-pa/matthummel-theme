@@ -1,0 +1,142 @@
+---
+description: Playbook for syncing matthummel.com product pages from product theme/plugin repos (Acreline, TOCflow, future packs).
+alwaysApply: false
+globs:
+  - resources/data/product-catalog.json
+  - app/concept-pages.php
+  - docs/MARKETPLACE.md
+---
+
+# Product theme sync playbook
+
+Use this when Matt asks to update a sellable product on matthummel.com from its source repo (e.g. `wp-acreline`, `tocflow`), or when a product repo ships a material release (blocks, version, brand, pricing, screenshots).
+
+If this file conflicts with `agency-core.mdc` or shipping patterns, **shipping patterns win** until Matt asks to migrate.
+
+## What “the product page” is
+
+| Surface | Source of truth on matthummel.com |
+| --- | --- |
+| Project + Woo product copy | `resources/data/product-catalog.json` → `mh_upsert_catalog_product()` |
+| Public URL | `/projects/{slug}/` (e.g. `/projects/acreline/`) |
+| Checkout | WooCommerce product linked via `_mh_product_project_id` |
+| Screenshots | Theme files under `resources/images/products/{slug}/` |
+
+Do **not** hardcode buyer copy in Blade. Do **not** invent metrics, IDX claims, or ThemeForest approval.
+
+## Product repos (current)
+
+| Catalog slug | GitHub | Demo | Notes |
+| --- | --- | --- | --- |
+| `acreline` | `matthummel-pa/wp-acreline` | https://acreline.matthummel.com/ | Theme pack; Core + child; Gutenberg blocks |
+| `tocflow` | `matthummel-pa/tocflow` | GitHub Pages docs | Free plugin |
+
+Add a new row here when a new sellable product lands in the catalog JSON.
+
+## Sync checklist (every product update)
+
+### 1. Read the product repo first
+
+Pull these from the product repo `main` (GitHub API or clone) — do not guess from memory:
+
+1. `style.css` / plugin header → **version**, requires PHP/WP, tested up to
+2. `readme.txt` Stable tag + Description / FAQ (store parser truth)
+3. `CHANGELOG.md` latest entry (user-facing “what changed”)
+4. `README.md` marketing summary (features, install, fiction callout)
+5. `BRAND.md` (if present) → tagline, palette hex, voice
+6. `docs/marketplace/themeforest-listing.md` or equivalent listing copy
+7. Latest commits / `theme-latest` release assets (confirm the zip version shipped)
+
+Prefer **code + README + BRAND** over a stale listing file when they disagree. If `readme.txt` or ThemeForest copy still says “classic / non-block” but README and commits ship Gutenberg blocks, update the **matthummel catalog** to match the shipping product, and note the drift in the PR (do not silently keep the stale claim).
+
+### 2. Map into `product-catalog.json`
+
+Update only the product’s object under `resources/data/product-catalog.json`. Keep first-person / plain voice on matthummel (`master-content-writer.mdc`). Shop glossary: shops, agencies, developers, learners — not “clients” unless Matt already used it.
+
+Required fields to re-check every sync:
+
+| Field | Where it comes from |
+| --- | --- |
+| `version` | Product `style.css` / Stable tag |
+| `compatible` | Requires at least + Requires PHP (+ tested up to when useful) |
+| `summary` / `blurb` / `eyebrow` | README one-liner + audience |
+| `approach` / `architecture` / `handoff` | How buyers actually edit (blocks vs metaboxes vs Customizer) |
+| `benefits` / `deliverables` / `metrics` | Real features only (block count, color styles, GPL) |
+| `faq` | Store FAQ + honesty (no live MLS/IDX unless true) |
+| `demo` / `github` / `support` / `docs` | Live demo, repo, SUPPORT.md, buyer guide |
+| `brand_tagline` / `brand_palette` | `BRAND.md` |
+| `tech` | Accurate stack tags (e.g. Gutenberg when blocks ship) |
+| `price` / `for_sale` / `live` | Only change when Matt sets price or visibility |
+| `screenshots` / `image` | Paths under `resources/images/products/{slug}/` |
+
+Keep `files_included` aligned with the marketplace pack (theme zip, child, Core, Documentation, Licensing).
+
+### 3. Re-seed existing sites
+
+Catalog JSON alone does not update published project meta after an earlier migration ran.
+
+1. Bump a one-shot option in `app/concept-pages.php` (e.g. `mh_product_catalog_vN`).
+2. Call `mh_apply_product_catalog(...)` (or the shared helper) with **force upsert** so meta + Woo sync refresh.
+3. Wait until `mh_product_catalog_seed_data()` is non-empty before setting the option (in-place theme swap safety — same pattern as v2).
+4. Prefer demoting non-catalog projects only on the first marketplace migration; later refreshes can upsert catalog slugs only.
+
+### 4. Screenshots and assets
+
+- Prefer the product repo’s `docs/marketplace/screenshots/` set (01–07 for Acreline).
+- Convert / copy into `resources/images/products/{slug}/` as WebP when adding or replacing stills.
+- Captions stay factual (what the screen shows). No fake “sold in 2 days” overlays.
+- Featured image: `products/{slug}/featured.webp` unless the project already has a WP featured image (featured wins on cards).
+
+### 5. Hardcoded fallbacks
+
+If `app/concept-pages.php` (or similar) still has slug-specific audience / architecture / handoff for that product, update those strings to match the catalog so empty-meta fallbacks are not stale.
+
+### 6. Docs and version on this theme
+
+- `CHANGELOG.md` — user-visible product page refresh
+- `docs/FEATURES.md` — mention the new catalog migration option if added
+- `docs/MARKETPLACE.md` — only if marketplace submission guidance changed
+- Bump this theme’s `style.css` Version when shipping the sync
+
+### 7. Verify locally
+
+```bash
+ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel
+cd ~/wp-site && wp theme activate matthummel
+# Delete the new option once if re-testing: wp option delete mh_product_catalog_vN
+cd ~/wp-site && wp eval 'do_action("init"); echo get_option("mh_product_catalog_vN") ? "ok" : "pending";'
+# Or hit /projects/{slug}/ and confirm version, benefits, FAQ, demo URL
+vendor/bin/pint --test
+```
+
+Visitor-facing CSS/JS only needs `npm run build` if assets changed.
+
+## Acreline-specific notes (reference implementation)
+
+Synced from `matthummel-pa/wp-acreline` (Sept 2026):
+
+- **Truth:** marketing pages are **21 Core Gutenberg blocks** (ServerSideRender, Block Generator, Migrate to Blocks). Listings / agents / bookings stay **classic metaboxes**. Customizer owns identity + eight color styles.
+- **Version:** read `style.css` (e.g. 1.2.3). Demo: `https://acreline.matthummel.com/`.
+- **Brand:** `BRAND.md` — tagline `Farms · land · historic homes`; paper `#f5f4f1` (not the older cream).
+- **Honesty:** fiction demo, 555 phones, `@acreline-concept.test`, not a live MLS/IDX.
+- **Do not** claim Elementor, ACF, or live IDX. **Do** describe Gutenberg blocks when the product ships them.
+- ThemeForest attribute “Gutenberg optimized” in seller docs may lag the product — catalog copy should match the **shipping theme**, and call out listing drift in the PR.
+
+## Future product themes
+
+Repeat the same pipeline:
+
+1. Add `{slug}` to `product-catalog.json` with the field map above.
+2. Drop screenshots under `resources/images/products/{slug}/`.
+3. Bump `mh_product_catalog_vN` (or extend the shared apply helper).
+4. Add the repo to the table in this file.
+5. Keep one primary CTA on matthummel.com (**Say hello** / buy on the product page) — do not invent a second funnel.
+
+## PR shape
+
+One concern per PR when possible: “Sync {Product} product page from {repo}@{version}.” Include:
+
+- Version + headline feature changes
+- Migration option name
+- Note any drift left in the product repo’s own `readme.txt` / ThemeForest listing
+- Local verify of `/projects/{slug}/`
