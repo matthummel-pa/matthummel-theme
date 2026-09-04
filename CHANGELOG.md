@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.72 — Archived Power Platform writing
+
+- Keep 29 earlier Power Platform posts published and available at their existing URLs.
+- Add a visible archive notice and an Archived category without replacing existing categories.
+- Set archived posts to Rank Math `noindex, follow` so they do not compete with the current WordPress focus.
+
 ## 3.1.71 — Rank Math scores for field-driven pages
 
 - Build Rank Math analysis HTML from Page content (theme) fields into `post_content` (templates still do not render it).

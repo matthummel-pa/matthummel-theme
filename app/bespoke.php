@@ -3506,3 +3506,92 @@ add_action('init', function (): void {
 
     update_option('mh_projects_catalog_seo_v1', true);
 }, 86);
+
+/**
+ * Keep earlier Power Platform writing available without presenting it as current work.
+ *
+ * Posts remain published and retain their URLs. The visible note gives readers
+ * context, the Archived category groups the material, and noindex keeps it from
+ * competing with the site's current WordPress focus.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_archived_power_platform_posts_v1')) {
+        return;
+    }
+
+    $slugs = [
+        'why-moving-away-from-power-platform-back-to-wordpress',
+        'why-im-moving-away-from-power-platform-and-back-to-modern-wordpress',
+        'power-apps-project-planning-7-simple-steps-to-build-better-apps',
+        'power-apps-project-planning-7-steps',
+        'how-to-debug-a-blank-power-apps-gallery',
+        'power-apps-gallery-not-showing-items',
+        'power-apps-filter-vs-lookup-vs-collections-quick-guide-for-beginners',
+        'power-apps-filter-lookup-collection',
+        'your-power-app-isnt-slow-its-built-wrong',
+        'power-apps-performance-tips',
+        'power-apps-form-submit-not-working',
+        'power-apps-patch-function-fixes',
+        'power-apps-beginner-guide-how-id-build-my-first-app-step-by-step',
+        'power-apps-beginners-guide',
+        'power-apps-delegation-explained-why-your-app-only-shows-500-rows',
+        'power-apps-delegation',
+        'power-apps-variables-explained-global-vs-context-vs-collections',
+        'power-apps-variables-explained',
+        'power-apps-naming-conventions-i-wish-i-used-from-day-one',
+        'power-apps-naming-conventions-guide',
+        'pull-office-365-user-data-in-power-apps-simple-example',
+        'pull-office-365-user-data',
+        'power-automate-triggers-part-2',
+        'power-automate-triggers-explained',
+        'creating-custom-date-picker-in-powerapps',
+        'power-automate-basics',
+        'power-apps-for-beginners-what-i-learned-building-my-first-app',
+        'power-platform-learning-journey',
+        'from-reader-to-contributor-why-im-finally-posting-on-devto',
+    ];
+
+    $term = term_exists('Archived', 'category');
+    if (! $term) {
+        $term = wp_insert_term('Archived', 'category', [
+            'slug' => 'archived',
+            'description' => 'Earlier work kept available for reference.',
+        ]);
+    }
+    if (is_wp_error($term)) {
+        return;
+    }
+
+    $termId = (int) (is_array($term) ? $term['term_id'] : $term);
+    $noticeText = 'Archived Power Platform article.';
+    $notice = '<!-- wp:paragraph {"className":"mh-archive-note"} -->'
+        .'<p class="mh-archive-note"><strong>'.$noticeText.'</strong> '
+        .'I’m keeping this earlier work available for reference, but my current focus is WordPress themes, plugins, and web apps.</p>'
+        .'<!-- /wp:paragraph -->';
+
+    $posts = get_posts([
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'post_name__in' => $slugs,
+        'no_found_rows' => true,
+    ]);
+
+    foreach ($posts as $post) {
+        $content = (string) $post->post_content;
+        if (! str_contains($content, $noticeText)) {
+            wp_update_post([
+                'ID' => $post->ID,
+                'post_content' => $notice."\n\n".$content,
+            ]);
+        }
+
+        wp_set_post_categories($post->ID, [$termId], true);
+        update_post_meta($post->ID, 'rank_math_robots', ['noindex', 'follow']);
+    }
+
+    update_option('mh_archived_power_platform_posts_v1', [
+        'count' => count($posts),
+        'post_ids' => array_map(static fn (\WP_Post $post): int => (int) $post->ID, $posts),
+    ], false);
+}, 87);
