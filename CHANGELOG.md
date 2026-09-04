@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.69 — Rank Math–first skill SEO
+
+- Prefer Rank Math (or Yoast) stored titles and meta descriptions on landing pages before theme page fields and template defaults.
+- Refresh skill-first SEO defaults (drop Gettysburg stuffing from titles/meta; tighten CTAs on Hire, Contact, Uses, Journal, and related landings).
+
 ## 3.1.68 — Reliable product catalog migration
 
 - Wait for the bundled catalog JSON before marking the migration complete during an in-place theme update.

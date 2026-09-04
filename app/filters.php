@@ -74,8 +74,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-services.blade.php' => [
-            'title' => __('WordPress Web Design in Gettysburg', 'sage').' | '.$brand,
-            'desc' => __('Custom WordPress sites, plugins, and web apps for Gettysburg shops and agencies. Written scope and clean handoffs. Say hello.', 'sage'),
+            'title' => __('Custom WordPress Sites and Plugins', 'sage').' | '.$brand,
+            'desc' => __('Custom WordPress sites, plugins, and web apps for shops and agencies. Written scope and clean handoffs. Say hello.', 'sage'),
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
@@ -91,7 +91,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-uses.blade.php' => [
             'title' => __('WordPress Dev Stack & Tools', 'sage').' | '.$brand,
-            'desc' => __('Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects in Gettysburg and remote work. Affiliate links disclosed.', 'sage'),
+            'desc' => __('Sage, PHP, Tailwind, Vite, and the tools I use on real WordPress projects. Affiliate links disclosed. Say hello.', 'sage'),
         ],
         'template-resources.blade.php' => [
             'title' => __('Free WordPress Starters & Tools', 'sage').' | '.$brand,
@@ -103,7 +103,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-hire.blade.php' => [
             'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('Full-time, contract, and freelance WordPress work for shops and agencies. Remote or on-site near Gettysburg. Say hello.', 'sage'),
+            'desc' => __('Full-time, contract, and freelance WordPress work for shops and agencies. Remote-friendly. Say hello.', 'sage'),
         ],
         'template-changelog.blade.php' => [
             'title' => __('Theme Changelog', 'sage').' | '.$brand,
@@ -111,7 +111,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-accessibility.blade.php' => [
             'title' => __('Accessibility Statement', 'sage').' | '.$brand,
-            'desc' => __('WCAG 2.1 Level AA goals for matthummel.com. Features, known limits, and how to report issues.', 'sage'),
+            'desc' => __('WCAG 2.1 Level AA goals for matthummel.com. Features, known limits, and how to report issues. Contact me about barriers.', 'sage'),
         ],
         'template-privacy.blade.php' => [
             'title' => __('Privacy Policy', 'sage').' | '.$brand,
@@ -119,7 +119,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-terms.blade.php' => [
             'title' => __('Terms of Use', 'sage').' | '.$brand,
-            'desc' => __('Code reuse, content copyright, example-site disclaimers, and acceptable use of matthummel.com.', 'sage'),
+            'desc' => __('Code reuse, content copyright, example-site disclaimers, and acceptable use of matthummel.com. Contact me with questions.', 'sage'),
         ],
         'template-woocommerce.blade.php' => [
             'title' => '',
@@ -131,7 +131,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-about.blade.php' => [
             'title' => __('About Matt Hummel, WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.', 'sage'),
+            'desc' => __('Full-stack WordPress developer building sites shops can edit and agencies can hand off. Say hello.', 'sage'),
         ],
         'template-code.blade.php' => [
             'title' => __('Open WordPress & Full-Stack Code', 'sage').' | '.$brand,
@@ -139,11 +139,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-now.blade.php' => [
             'title' => __('What I\'m Building Now', 'sage').' | '.$brand,
-            'desc' => __('Studio projects, open work, and writing — updated periodically. Say hello about a role or build.', 'sage'),
+            'desc' => __('Studio projects, open work, and writing — updated periodically. Say hello about a role or WordPress build.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,
-            'desc' => __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage'),
+            'desc' => __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt. Say hello.', 'sage'),
         ],
     ];
 
@@ -243,6 +243,16 @@ function mh_seo_document_title(): string
     }
 
     $post_id = mh_seo_current_post_id();
+    if ($post_id) {
+        $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
+        if ($pluginTitle === false) {
+            return '';
+        }
+        if ($pluginTitle !== '') {
+            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+        }
+    }
+
     $defaults = mh_seo_landing_defaults($post_id);
     $custom = $post_id ? trim(field('seo_title', '', $post_id)) : '';
     $title = $custom !== '' ? $custom : $defaults['title'];
@@ -379,6 +389,16 @@ function mh_seo_meta_description(): string
     }
 
     $post_id = mh_seo_current_post_id();
+    if ($post_id) {
+        $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);
+        if ($pluginDesc === false) {
+            return '';
+        }
+        if ($pluginDesc !== '') {
+            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+        }
+    }
+
     $defaults = mh_seo_landing_defaults($post_id);
     $custom = $post_id ? trim(field('seo_desc', '', $post_id)) : '';
     $desc = $custom !== '' ? $custom : $defaults['desc'];
