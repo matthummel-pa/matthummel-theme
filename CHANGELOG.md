@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.70 — Wider-audience SEO snippets
+
+- Skill-first Rank Math titles/descriptions across pages, posts, products, and projects (shops, agencies, developers, learners).
+- Shop document title default: "WordPress Themes Shop".
+- Landing SEO defaults aligned with focus keywords and under 60/155 limits.
+- Live: freed `/accessibility/` from a category slug conflict; utility pages remain noindex.
+
 ## 3.1.69 — Rank Math–first skill SEO
 
 - Prefer Rank Math (or Yoast) stored titles and meta descriptions on landing pages before theme page fields and template defaults.
