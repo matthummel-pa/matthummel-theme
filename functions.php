@@ -147,7 +147,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'shop', 'concept-pages', 'woocommerce', 'icons', 'page-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share', 'featured-image', 'blocks'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'shop', 'concept-pages', 'woocommerce', 'icons', 'page-fields', 'rank-math-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share', 'featured-image', 'blocks'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

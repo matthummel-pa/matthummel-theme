@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.1.71 — Rank Math scores for field-driven pages
+
+- Build Rank Math analysis HTML from Page content (theme) fields into `post_content` (templates still do not render it).
+- Admin JS feeds `mh_f_*` fields into Rank Math’s Content Analysis API so scores leave the empty-body ~40s.
+- One-shot repairs for label-prefixed field meta and sync of analysis bodies / score meta on theme load.
+- Drop the Content AI test on pages (marketing layouts are not AI drafts).
+
+## 3.1.70 — Wider-audience SEO snippets
+
+- Skill-first Rank Math titles/descriptions across pages, posts, products, and projects (shops, agencies, developers, learners).
+- Shop document title default: "WordPress Themes Shop".
+- Landing SEO defaults aligned with focus keywords and under 60/155 limits.
+- Live: freed `/accessibility/` from a category slug conflict; utility pages remain noindex.
+
+## 3.1.69 — Rank Math–first skill SEO
+
+- Prefer Rank Math (or Yoast) stored titles and meta descriptions on landing pages before theme page fields and template defaults.
+- Refresh skill-first SEO defaults (drop Gettysburg stuffing from titles/meta; tighten CTAs on Hire, Contact, Uses, Journal, and related landings).
+
 ## 3.1.68 — Reliable product catalog migration
 
 - Wait for the bundled catalog JSON before marking the migration complete during an in-place theme update.
