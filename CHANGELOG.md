@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.1.77 — Acreline legacy URL cleanup
+
+- Redirect retired Acreline SEO paths (`/projects/wordpress-theme-real-estate-agents/`, `/shop/…`, old product slugs) to the live Woo product before Rank Math can send them elsewhere.
+- Prefer the canonical `acreline` product slug when resolving `/projects/{slug}/` aliases.
+
+## 3.1.76 — Acreline Real estate live cleanup
+
+- Keep Acreline labeled **Real estate** in `product-catalog.json` (place, eyebrow, brand tagline) after marketplace copy drift back to land/farms.
+- Resolve catalog data for SEO product slugs (`wordpress-theme-real-estate-agents`, etc.).
+- Re-seed via `mh_product_catalog_v6`; map legacy `/projects/acreline/` URLs to the live Woo product.
+
 ## 3.4.0 — WooCommerce template consolidation
 
 - **Single source of truth**: WooCommerce `archive-product` and `single-product` templates are now the sole product and listing pages — no parallel template code.
