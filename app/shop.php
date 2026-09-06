@@ -173,6 +173,133 @@ function mh_shop_body_class(array $classes): array
 
 add_filter('body_class', __NAMESPACE__.'\\mh_shop_body_class');
 
+/**
+ * Read a product's entry from product-catalog.json by WooCommerce product ID.
+ *
+ * Resolution order: linked project post slug → SKU prefix-stripped slug.
+ *
+ * @since 3.2.0
+ *
+ * @param  int  $product_id  WooCommerce product post ID.
+ * @return array<string, mixed> Catalog entry, or empty array when not found.
+ */
+function mh_product_catalog_data(int $product_id): array
+{
+    if ($product_id <= 0) {
+        return [];
+    }
+
+    static $catalog = null;
+    if ($catalog === null) {
+        $path = get_theme_file_path('resources/data/product-catalog.json');
+        $catalog = [];
+        if (is_readable($path)) {
+            $decoded = json_decode((string) file_get_contents($path), true);
+            $catalog = is_array($decoded) ? $decoded : [];
+        }
+    }
+
+    // Try linked project slug first.
+    $project_id = mh_product_project_id($product_id);
+    if ($project_id > 0) {
+        $post = get_post($project_id);
+        if ($post instanceof \WP_Post && isset($catalog[$post->post_name])) {
+            return $catalog[$post->post_name];
+        }
+    }
+
+    // Fallback: strip theme-/plugin- prefix from SKU.
+    if (mh_shop_ready() && function_exists('wc_get_product')) {
+        $wc = wc_get_product($product_id);
+        if ($wc instanceof \WC_Product) {
+            $slug = (string) preg_replace('/^(theme|plugin)-/', '', (string) $wc->get_sku());
+            if ($slug !== '' && isset($catalog[$slug])) {
+                return $catalog[$slug];
+            }
+        }
+    }
+
+    return [];
+}
+
+/**
+ * Build rich HTML long-description for a product from its catalog entry.
+ *
+ * Used during WooCommerce product sync so Rank Math / Yoast score the
+ * product page against substantial, keyword-dense content rather than a
+ * one-sentence blurb.
+ *
+ * @since 3.2.0
+ *
+ * @param  array<string, mixed>  $entry  Catalog JSON entry for the product.
+ * @return string Safe HTML ready for set_description().
+ */
+function mh_product_description_html(array $entry): string
+{
+    $parts = [];
+
+    $summary = trim((string) ($entry['summary'] ?? ''));
+    if ($summary !== '') {
+        $parts[] = '<p>'.esc_html($summary).'</p>';
+    }
+
+    $challenge = trim((string) ($entry['challenge'] ?? ''));
+    if ($challenge !== '') {
+        $parts[] = '<h2>'.esc_html__('The problem it solves', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($challenge).'</p>';
+    }
+
+    $approach = trim((string) ($entry['approach'] ?? ''));
+    if ($approach !== '') {
+        $parts[] = '<h2>'.esc_html__('How it works', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($approach).'</p>';
+    }
+
+    $result = trim((string) ($entry['result'] ?? ''));
+    if ($result !== '') {
+        $parts[] = '<h2>'.esc_html__('What you get', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($result).'</p>';
+    }
+
+    $benefits = $entry['benefits'] ?? [];
+    if (is_array($benefits) && $benefits !== []) {
+        $parts[] = '<h2>'.esc_html__('Key benefits', 'sage').'</h2><ul>';
+        foreach ($benefits as $b) {
+            $parts[] = '<li>'.esc_html((string) $b).'</li>';
+        }
+        $parts[] = '</ul>';
+    }
+
+    $deliverables = $entry['deliverables'] ?? [];
+    if (is_array($deliverables) && $deliverables !== []) {
+        $parts[] = '<h2>'.esc_html__("What's included", 'sage').'</h2><ul>';
+        foreach ($deliverables as $d) {
+            $parts[] = '<li>'.esc_html((string) $d).'</li>';
+        }
+        $parts[] = '</ul>';
+    }
+
+    $audience = trim((string) ($entry['audience'] ?? ''));
+    if ($audience !== '') {
+        $parts[] = '<h2>'.esc_html__('Who it is for', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($audience).'</p>';
+    }
+
+    $architecture = trim((string) ($entry['architecture'] ?? ''));
+    if ($architecture !== '') {
+        $parts[] = '<h2>'.esc_html__('Architecture', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($architecture).'</p>';
+    }
+
+    $handoff = trim((string) ($entry['handoff'] ?? ''));
+    if ($handoff !== '') {
+        $parts[] = '<h2>'.esc_html__('Handoff', 'sage').'</h2>';
+        $parts[] = '<p>'.esc_html($handoff).'</p>';
+    }
+
+    return implode("\n", $parts);
+}
+
 /** Default USD price for a project theme when none is set on the project. */
 function mh_default_theme_price(): string
 {
@@ -407,6 +534,35 @@ function mh_sync_project_product_unchecked(int $project_id): int
         $summary = $blurb;
     }
 
+    // Enrich blurb + description from the product catalog JSON when available.
+    // A rich description helps Rank Math / Yoast score the product page against
+    // substantial, keyword-dense content instead of a one-sentence blurb.
+    $catalogEntry = isset($catalog[$slug]) ? $catalog[$slug] : [];
+    if ($catalogEntry === [] && is_readable(get_theme_file_path('resources/data/product-catalog.json'))) {
+        static $catalogJson = null;
+        if ($catalogJson === null) {
+            $decoded = json_decode((string) file_get_contents(get_theme_file_path('resources/data/product-catalog.json')), true);
+            $catalogJson = is_array($decoded) ? $decoded : [];
+        }
+        $catalogEntry = $catalogJson[$slug] ?? [];
+    }
+
+    if ($catalogEntry !== []) {
+        $catalogBlurb = trim((string) ($catalogEntry['blurb'] ?? ''));
+        if ($catalogBlurb !== '') {
+            $blurb = $catalogBlurb;
+        }
+        $catalogSummary = trim((string) ($catalogEntry['summary'] ?? ''));
+        if ($catalogSummary !== '') {
+            $summary = $catalogSummary;
+        }
+    }
+
+    $richDescription = $catalogEntry !== [] ? mh_product_description_html($catalogEntry) : '';
+    if ($richDescription === '') {
+        $richDescription = $summary;
+    }
+
     $product->set_name($post->post_title);
     if ($slug !== '') {
         $product->set_slug($slug);
@@ -415,7 +571,7 @@ function mh_sync_project_product_unchecked(int $project_id): int
     $product->set_sold_individually(true);
     $product->set_catalog_visibility('visible');
     $product->set_short_description($blurb);
-    $product->set_description($summary);
+    $product->set_description($richDescription);
 
     $currentSku = (string) $product->get_sku();
     if ($isNew || $currentSku === '') {
@@ -439,7 +595,7 @@ function mh_sync_project_product_unchecked(int $project_id): int
                     $product->set_sold_individually(true);
                     $product->set_catalog_visibility('visible');
                     $product->set_short_description($blurb);
-                    $product->set_description($summary);
+                    $product->set_description($richDescription);
                 }
             }
         }
@@ -628,6 +784,66 @@ function mh_woocommerce_loop_get_help(): void
 
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_seed_project_products', 30);
 add_action('woocommerce_installed', __NAMESPACE__.'\\mh_seed_project_products');
+
+/**
+ * Re-sync all products to populate catalog-enriched descriptions.
+ *
+ * Runs once after theme update to push rich content (challenge, approach, benefits,
+ * deliverables) into WooCommerce product descriptions so Rank Math scores improve.
+ *
+ * @since 3.2.0
+ */
+function mh_resync_product_descriptions_v2(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_product_descriptions_synced_v2')) {
+        return;
+    }
+
+    try {
+        mh_sync_all_project_products();
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_resync_product_descriptions_v2: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_product_descriptions_synced_v2', true);
+    }
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v2', 35);
+
+/**
+ * Supply Rank Math with a meta description from the product catalog blurb.
+ *
+ * Rank Math reads the post excerpt for products; the WooCommerce short_description
+ * is stored as post_excerpt. This filter catches any remaining gap for product
+ * archives or single pages where Rank Math may pull a generic description.
+ *
+ * @since 3.2.0
+ */
+function mh_rank_math_product_description(string $desc): string
+{
+    if (! function_exists('is_product') || ! is_product()) {
+        return $desc;
+    }
+
+    if ($desc !== '') {
+        return $desc;
+    }
+
+    $product_id = (int) get_queried_object_id();
+    $entry = mh_product_catalog_data($product_id);
+    $blurb = trim((string) ($entry['blurb'] ?? ''));
+
+    return $blurb !== '' ? $blurb : $desc;
+}
+
+add_filter('rank_math/frontend/description', __NAMESPACE__.'\\mh_rank_math_product_description');
+add_filter('wpseo_metadesc', __NAMESPACE__.'\\mh_rank_math_product_description');
 
 add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
     if (wp_is_post_revision($post_id) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)) {
