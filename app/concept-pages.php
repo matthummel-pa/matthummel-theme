@@ -710,27 +710,39 @@ function mh_redirect_legacy_concept_urls(): void
         $target = $shopBase.'/';
 
         if ($rest !== '' && function_exists('wc_get_products')) {
-            $ids = wc_get_products([
-                'slug' => $rest,
-                'limit' => 1,
-                'return' => 'ids',
-                'status' => ['publish', 'private'],
-            ]);
-            if ($ids !== []) {
-                $link = get_permalink((int) $ids[0]);
-                if (is_string($link) && $link !== '') {
-                    $target = $link;
+            $slugCandidates = [$rest];
+            // Legacy Acreline project/product slugs → canonical shop product.
+            if (in_array($rest, ['acreline', 'real-estate-wordpress-theme-acreline', 'wordpress-theme-real-estate-agents'], true)) {
+                $slugCandidates = ['acreline', 'wordpress-theme-real-estate-agents', 'real-estate-wordpress-theme-acreline'];
+            }
+
+            foreach ($slugCandidates as $candidate) {
+                $ids = wc_get_products([
+                    'slug' => $candidate,
+                    'limit' => 1,
+                    'return' => 'ids',
+                    'status' => ['publish'],
+                ]);
+                if ($ids !== []) {
+                    $link = get_permalink((int) $ids[0]);
+                    if (is_string($link) && $link !== '') {
+                        $target = $link;
+                        break;
+                    }
                 }
             }
+
             // Fallback: match by SKU prefix (theme-{slug} or plugin-{slug}).
             if ($target === $shopBase.'/' && function_exists('wc_get_product_id_by_sku')) {
-                foreach (['theme-', 'plugin-'] as $prefix) {
-                    $pid = (int) wc_get_product_id_by_sku($prefix.$rest);
-                    if ($pid > 0) {
-                        $link = get_permalink($pid);
-                        if (is_string($link) && $link !== '') {
-                            $target = $link;
-                            break;
+                foreach ($slugCandidates as $candidate) {
+                    foreach (['theme-', 'plugin-'] as $prefix) {
+                        $pid = (int) wc_get_product_id_by_sku($prefix.$candidate);
+                        if ($pid > 0) {
+                            $link = get_permalink($pid);
+                            if (is_string($link) && $link !== '') {
+                                $target = $link;
+                                break 2;
+                            }
                         }
                     }
                 }
@@ -900,20 +912,54 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
         return 0;
     }
 
-    $posts = get_posts([
-        'post_type' => mh_project_post_type(),
-        'name' => $slug,
-        'post_status' => 'any',
-        'posts_per_page' => 1,
-        'fields' => 'ids',
-        'no_found_rows' => true,
-    ]);
-
     $title = (string) ($seed['title'] ?? $slug);
-    $postId = $posts !== [] ? (int) $posts[0] : 0;
+    $postType = mh_project_post_type();
+    $postId = 0;
+
+    $slugCandidates = [$slug];
+    if ($slug === 'acreline') {
+        $slugCandidates = ['acreline', 'wordpress-theme-real-estate-agents', 'real-estate-wordpress-theme-acreline'];
+    }
+
+    foreach ($slugCandidates as $candidate) {
+        $posts = get_posts([
+            'post_type' => $postType,
+            'name' => $candidate,
+            'post_status' => ['publish', 'draft', 'private', 'pending'],
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+        ]);
+        if ($posts !== []) {
+            $postId = (int) $posts[0];
+            break;
+        }
+    }
+
+    // Last resort: match an existing Acreline project by title so we never
+    // create a second live copy during catalog reseed.
+    if ($postId <= 0 && $slug === 'acreline') {
+        $byTitle = get_posts([
+            'post_type' => $postType,
+            'post_status' => ['publish', 'draft', 'private', 'pending'],
+            'posts_per_page' => 5,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+            's' => 'Acreline',
+        ]);
+        foreach ($byTitle as $candidateId) {
+            $candidateId = (int) $candidateId;
+            $candidateTitle = (string) get_the_title($candidateId);
+            if ($candidateId > 0 && stripos($candidateTitle, 'Acreline') !== false) {
+                $postId = $candidateId;
+                break;
+            }
+        }
+    }
+
     if ($postId <= 0) {
         $inserted = wp_insert_post([
-            'post_type' => mh_project_post_type(),
+            'post_type' => $postType,
             'post_status' => 'publish',
             'post_title' => $title,
             'post_name' => $slug,
@@ -925,11 +971,17 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
         if ($postId <= 0) {
             return 0;
         }
-    } elseif ($force && $title !== '') {
-        wp_update_post([
-            'ID' => $postId,
-            'post_title' => $title,
-        ]);
+    } elseif ($force) {
+        $update = ['ID' => $postId];
+        if ($title !== '') {
+            $update['post_title'] = $title;
+        }
+        // Canonicalize the Acreline project slug after marketplace SEO experiments.
+        if ($slug === 'acreline') {
+            $update['post_name'] = 'acreline';
+            $update['post_status'] = 'publish';
+        }
+        wp_update_post($update);
     }
 
     $tech = $seed['tech'] ?? [];
@@ -1128,8 +1180,24 @@ function mh_apply_product_catalog_v5(): void
     }
 }
 
-// CPT seeding hooks removed in 3.4.0 — project CPT retired; WooCommerce products
-// are the sole catalog source. Redirect and rewrite helpers remain active.
+/**
+ * One-time: keep Acreline labeled Real estate after marketplace copy drift,
+ * and refresh Woo/project meta from product-catalog.json.
+ */
+function mh_apply_product_catalog_v6(): void
+{
+    if (get_option('mh_product_catalog_v6') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v6', true);
+    }
+}
+
+// Catalog reseed hooks (project CPT may still exist on older DBs; Woo products are canonical).
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');

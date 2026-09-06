@@ -199,12 +199,52 @@ function mh_product_catalog_data(int $product_id): array
         }
     }
 
+    $aliases = [
+        'wordpress-theme-real-estate-agents' => 'acreline',
+        'real-estate-wordpress-theme-acreline' => 'acreline',
+        'acreline-real-estate-wordpress-theme' => 'acreline',
+    ];
+
+    $resolve = static function (string $slug) use ($catalog, $aliases): array {
+        $slug = sanitize_title($slug);
+        if ($slug === '') {
+            return [];
+        }
+        if (isset($catalog[$slug]) && is_array($catalog[$slug])) {
+            return $catalog[$slug];
+        }
+        $mapped = $aliases[$slug] ?? '';
+        if ($mapped !== '' && isset($catalog[$mapped]) && is_array($catalog[$mapped])) {
+            return $catalog[$mapped];
+        }
+
+        return [];
+    };
+
     // Try linked project slug first.
     $project_id = mh_product_project_id($product_id);
     if ($project_id > 0) {
         $post = get_post($project_id);
-        if ($post instanceof \WP_Post && isset($catalog[$post->post_name])) {
-            return $catalog[$post->post_name];
+        if ($post instanceof \WP_Post) {
+            $entry = $resolve((string) $post->post_name);
+            if ($entry !== []) {
+                return $entry;
+            }
+            if (stripos((string) $post->post_title, 'Acreline') !== false && isset($catalog['acreline']) && is_array($catalog['acreline'])) {
+                return $catalog['acreline'];
+            }
+        }
+    }
+
+    // Product post slug (SEO-friendly marketplace slugs).
+    $productPost = get_post($product_id);
+    if ($productPost instanceof \WP_Post) {
+        $entry = $resolve((string) $productPost->post_name);
+        if ($entry !== []) {
+            return $entry;
+        }
+        if (stripos((string) $productPost->post_title, 'Acreline') !== false && isset($catalog['acreline']) && is_array($catalog['acreline'])) {
+            return $catalog['acreline'];
         }
     }
 
@@ -212,9 +252,9 @@ function mh_product_catalog_data(int $product_id): array
     if (mh_shop_ready() && function_exists('wc_get_product')) {
         $wc = wc_get_product($product_id);
         if ($wc instanceof \WC_Product) {
-            $slug = (string) preg_replace('/^(theme|plugin)-/', '', (string) $wc->get_sku());
-            if ($slug !== '' && isset($catalog[$slug])) {
-                return $catalog[$slug];
+            $entry = $resolve((string) preg_replace('/^(theme|plugin)-/', '', (string) $wc->get_sku()));
+            if ($entry !== []) {
+                return $entry;
             }
         }
     }
@@ -940,7 +980,7 @@ function mh_woocommerce_plugins_category_id(): int
 function mh_find_product_id_for_project(int $project_id, string $slug): int
 {
     $id = (int) get_post_meta($project_id, '_mh_project_product_id', true);
-    if ($id > 0 && get_post_type($id) === 'product') {
+    if ($id > 0 && get_post_type($id) === 'product' && get_post_status($id) !== 'trash') {
         return $id;
     }
 
@@ -963,6 +1003,30 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
             if ($bySku > 0) {
                 return $bySku;
             }
+        }
+    }
+
+    // Acreline marketplace SEO slugs / leftover duplicates.
+    $slugCandidates = $slug !== '' ? [$slug] : [];
+    if ($slug === 'acreline' || $project_id > 0 && stripos((string) get_the_title($project_id), 'Acreline') !== false) {
+        $slugCandidates = array_values(array_unique(array_merge($slugCandidates, [
+            'acreline',
+            'wordpress-theme-real-estate-agents',
+            'real-estate-wordpress-theme-acreline',
+        ])));
+    }
+
+    foreach ($slugCandidates as $candidate) {
+        $bySlug = get_posts([
+            'post_type' => 'product',
+            'name' => $candidate,
+            'post_status' => ['publish', 'private', 'draft'],
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+        ]);
+        if ($bySlug !== []) {
+            return (int) $bySlug[0];
         }
     }
 
