@@ -300,6 +300,113 @@ function mh_product_description_html(array $entry): string
     return implode("\n", $parts);
 }
 
+/**
+ * Full product entry for a WooCommerce product.
+ *
+ * Merges `product-catalog.json` base data with any `_mh_project_*` meta saved
+ * directly on the WC product post. Meta values take precedence over the catalog
+ * so admins can fine-tune content without touching the JSON file.
+ *
+ * Replaces direct `mh_product_catalog_data()` calls in Blade templates wherever
+ * WC-product-specific overrides need to be respected.
+ *
+ * @since 3.4.0
+ *
+ * @param  int  $product_id  WooCommerce product post ID.
+ * @return array<string, mixed> Merged product entry.
+ */
+function mh_product_entry(int $product_id): array
+{
+    $entry = mh_product_catalog_data($product_id);
+
+    if ($product_id <= 0) {
+        return $entry;
+    }
+
+    $str = fn (string $key): string => trim((string) get_post_meta($product_id, '_mh_project_'.$key, true));
+
+    // Scalar string fields.
+    foreach (['eyebrow', 'summary', 'blurb', 'challenge', 'approach', 'result',
+        'audience', 'architecture', 'handoff', 'demo', 'cat', 'place',
+        'github', 'version', 'compatible', 'license', 'support'] as $key) {
+        $v = $str($key);
+        if ($v !== '') {
+            $entry[$key] = $v;
+        }
+    }
+
+    // Line-based array fields.
+    foreach (['benefits', 'deliverables', 'files_included'] as $key) {
+        $raw = $str($key);
+        if ($raw !== '') {
+            $parsed = array_values(array_filter(array_map('trim', (array) preg_split('/\r\n|\r|\n/', $raw))));
+            if ($parsed !== []) {
+                $entry[$key] = $parsed;
+            }
+        }
+    }
+
+    // FAQ pairs stored as "Question|||Answer" per line.
+    $faqRaw = $str('faq');
+    if ($faqRaw !== '') {
+        $pairs = [];
+        foreach (array_filter(array_map('trim', (array) preg_split('/\r\n|\r|\n/', $faqRaw))) as $line) {
+            if (! str_contains($line, '|||')) {
+                continue;
+            }
+            [$q, $a] = array_map('trim', explode('|||', $line, 2));
+            if ($q !== '' && $a !== '') {
+                $pairs[] = [$q, $a];
+            }
+        }
+        if ($pairs !== []) {
+            $entry['faq'] = $pairs;
+        }
+    }
+
+    // Docs links stored as "Label|||URL" per line.
+    $docsRaw = $str('docs');
+    if ($docsRaw !== '') {
+        $links = [];
+        foreach (array_filter(array_map('trim', (array) preg_split('/\r\n|\r|\n/', $docsRaw))) as $line) {
+            if (! str_contains($line, '|||')) {
+                continue;
+            }
+            [$label, $url] = array_map('trim', explode('|||', $line, 2));
+            if ($label !== '' && $url !== '') {
+                $links[] = [$label, $url];
+            }
+        }
+        if ($links !== []) {
+            $entry['docs'] = $links;
+        }
+    }
+
+    // Tech tags stored as comma-separated string.
+    $techRaw = $str('tech');
+    if ($techRaw !== '') {
+        $tags = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
+        if ($tags !== []) {
+            $entry['tech'] = $tags;
+        }
+    }
+
+    // Metrics: up to three [value, label] pairs from _mh_project_m{N}_value/label.
+    $catalogMetrics = is_array($entry['metrics'] ?? null) ? $entry['metrics'] : [];
+    for ($i = 1; $i <= 3; $i++) {
+        $v = trim((string) get_post_meta($product_id, "_mh_project_m{$i}_value", true));
+        $l = trim((string) get_post_meta($product_id, "_mh_project_m{$i}_label", true));
+        if ($v !== '' || $l !== '') {
+            $catalogMetrics[$i - 1] = [$v, $l];
+        }
+    }
+    if ($catalogMetrics !== []) {
+        $entry['metrics'] = array_values($catalogMetrics);
+    }
+
+    return $entry;
+}
+
 /** Default USD price for a project theme when none is set on the project. */
 function mh_default_theme_price(): string
 {
@@ -535,6 +642,16 @@ function mh_wc_product_admin_meta_box(\WP_Post $post): void
     $deliverables = $g('deliverables');
     $benefits = $g('benefits');
     $faq = $g('faq');
+    $audience = $g('audience');
+    $architecture = $g('architecture');
+    $handoff = $g('handoff');
+    $github = $g('github');
+    $version = $g('version');
+    $compatible = $g('compatible');
+    $license = $g('license');
+    $filesIncl = $g('files_included');
+    $docs = $g('docs');
+    $support = $g('support');
     $productType = $g('product_type') ?: (string) ($entry['product_type'] ?? 'theme');
     $price = $g('price') ?: (string) ($entry['price'] ?? '');
     $forSale = get_post_meta($id, '_mh_project_for_sale', true) === '1'
@@ -611,10 +728,24 @@ function mh_wc_product_admin_meta_box(\WP_Post $post): void
     $fieldRow(__('The problem', 'sage'), 'mh_project_challenge', $challenge, $ph('challenge'), 'textarea');
     $fieldRow(__('How it works', 'sage'), 'mh_project_approach', $approach, $ph('approach'), 'textarea');
     $fieldRow(__('What you get', 'sage'), 'mh_project_result', $result, $ph('result'), 'textarea');
+    $fieldRow(__('Who it is for', 'sage'), 'mh_project_audience', $audience, $ph('audience'), 'textarea');
+    $fieldRow(__('Architecture', 'sage'), 'mh_project_architecture', $architecture, $ph('architecture'), 'textarea');
+    $fieldRow(__('Handoff notes', 'sage'), 'mh_project_handoff', $handoff, $ph('handoff'), 'textarea');
     $fieldRow(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
     $fieldRow(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
+    $fieldRow(__('Files included (one per line)', 'sage'), 'mh_project_files_included', $filesIncl, $ph('files_included') ?: 'theme.zip', 'textarea');
     $fieldRow(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
+    $fieldRow(__('Docs (Label|||URL per line)', 'sage'), 'mh_project_docs', $docs, '', 'textarea');
     $fieldRow(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, $ph('demo') ?: 'https://');
+    $fieldRow(__('GitHub URL', 'sage'), 'mh_project_github', $github, $ph('github') ?: 'https://github.com/');
+    $fieldRow(__('Support URL', 'sage'), 'mh_project_support', $support, $ph('support') ?: 'https://');
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Release info', 'sage').'</h3>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    $fieldRow(__('Version', 'sage'), 'mh_project_version', $version, $ph('version') ?: '1.0.0');
+    $fieldRow(__('Requires (e.g. WordPress 6.6+, PHP 8.3+)', 'sage'), 'mh_project_compatible', $compatible, $ph('compatible') ?: 'WordPress 6.6+, PHP 8.3+');
+    $fieldRow(__('License', 'sage'), 'mh_project_license', $license, $ph('license') ?: 'GPLv2 or later');
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Metrics (up to 3)', 'sage').'</h3>';
@@ -678,10 +809,20 @@ function mh_save_wc_product_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_challenge', sanitize_textarea_field(wp_unslash($_POST['mh_project_challenge'] ?? '')));
     update_post_meta($post_id, '_mh_project_approach', sanitize_textarea_field(wp_unslash($_POST['mh_project_approach'] ?? '')));
     update_post_meta($post_id, '_mh_project_result', sanitize_textarea_field(wp_unslash($_POST['mh_project_result'] ?? '')));
+    update_post_meta($post_id, '_mh_project_audience', sanitize_textarea_field(wp_unslash($_POST['mh_project_audience'] ?? '')));
+    update_post_meta($post_id, '_mh_project_architecture', sanitize_textarea_field(wp_unslash($_POST['mh_project_architecture'] ?? '')));
+    update_post_meta($post_id, '_mh_project_handoff', sanitize_textarea_field(wp_unslash($_POST['mh_project_handoff'] ?? '')));
     update_post_meta($post_id, '_mh_project_deliverables', sanitize_textarea_field(wp_unslash($_POST['mh_project_deliverables'] ?? '')));
     update_post_meta($post_id, '_mh_project_benefits', sanitize_textarea_field(wp_unslash($_POST['mh_project_benefits'] ?? '')));
+    update_post_meta($post_id, '_mh_project_files_included', sanitize_textarea_field(wp_unslash($_POST['mh_project_files_included'] ?? '')));
     update_post_meta($post_id, '_mh_project_faq', sanitize_textarea_field(wp_unslash($_POST['mh_project_faq'] ?? '')));
+    update_post_meta($post_id, '_mh_project_docs', sanitize_textarea_field(wp_unslash($_POST['mh_project_docs'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
+    update_post_meta($post_id, '_mh_project_github', esc_url_raw(wp_unslash($_POST['mh_project_github'] ?? '')));
+    update_post_meta($post_id, '_mh_project_support', esc_url_raw(wp_unslash($_POST['mh_project_support'] ?? '')));
+    update_post_meta($post_id, '_mh_project_version', sanitize_text_field(wp_unslash($_POST['mh_project_version'] ?? '')));
+    update_post_meta($post_id, '_mh_project_compatible', sanitize_text_field(wp_unslash($_POST['mh_project_compatible'] ?? '')));
+    update_post_meta($post_id, '_mh_project_license', sanitize_text_field(wp_unslash($_POST['mh_project_license'] ?? '')));
 
     for ($i = 1; $i <= 3; $i++) {
         update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
