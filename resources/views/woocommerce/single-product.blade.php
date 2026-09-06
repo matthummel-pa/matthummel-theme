@@ -228,6 +228,23 @@
           @endif
         </dl>
       @endif
+
+      {{-- Section jump nav --}}
+      @php
+        $jumpLinks = [];
+        if (count($screenshots) > 1)           $jumpLinks[] = ['#screenshots', __('Screenshots', 'sage')];
+        if ($blocks !== [] && $isTheme)         $jumpLinks[] = ['#blocks',      __('Blocks', 'sage')];
+        if ($benefits !== [] || $deliverables !== []) $jumpLinks[] = ['#included', __("What's included", 'sage')];
+        $jumpLinks[] = ['#buy', __('Pricing', 'sage')];
+        if ($faq !== [])                        $jumpLinks[] = ['#faq',         __('FAQ', 'sage')];
+      @endphp
+      @if (count($jumpLinks) > 1)
+        <nav class="pf-product-hero__jumpnav" aria-label="{{ __('Jump to section', 'sage') }}">
+          @foreach ($jumpLinks as [$href, $label])
+            <a class="pf-jumpnav__link" href="{{ $href }}">{{ $label }}</a>
+          @endforeach
+        </nav>
+      @endif
     </div>
 
     {{-- Right column: purchase card --}}
@@ -313,7 +330,7 @@
      SCREENSHOTS — full gallery after the hero
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if (count($screenshots) > 1)
-  <section class="pf-section pf-product-screenshots" aria-labelledby="product-screenshots-heading">
+  <section id="screenshots" class="pf-section pf-product-screenshots" aria-labelledby="product-screenshots-heading">
     <div class="container wide">
       <div class="pf-section-head">
         <p class="eyebrow">{{ __('Screenshots', 'sage') }}</p>
@@ -331,7 +348,7 @@
             }
           @endphp
           @if ($src !== '')
-            <figure class="pf-screenshot{{ $i === 0 ? ' pf-screenshot--featured' : '' }}">
+            <figure class="pf-screenshot">
               <img
                 src="{{ esc_url($src) }}"
                 alt="{{ esc_attr($alt !== '' ? $alt : sprintf(__('%s screenshot %d', 'sage'), $productTitle, $i + 1)) }}"
@@ -427,7 +444,7 @@
      DELIVERABLES + FILES INCLUDED
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($deliverables !== [] || $filesIncl !== [])
-  <section class="pf-section pf-product-included" aria-labelledby="product-included-heading">
+  <section id="included" class="pf-section pf-product-included" aria-labelledby="product-included-heading">
     <div class="container wide pf-included-grid">
 
       @if ($deliverables !== [])
@@ -490,7 +507,7 @@
      GUTENBERG BLOCKS INCLUDED (themes only)
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($blocks !== [] && $isTheme)
-  <section class="pf-section pf-section--alt pf-product-blocks" aria-labelledby="product-blocks-heading">
+  <section id="blocks" class="pf-section pf-section--alt pf-product-blocks" aria-labelledby="product-blocks-heading">
     <div class="container wide">
       <div class="pf-section-head">
         <p class="eyebrow">{{ __('Built-in blocks', 'sage') }}</p>

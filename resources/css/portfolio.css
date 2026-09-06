@@ -11515,8 +11515,11 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 
 .pf-screenshots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .875rem;
+}
+@media (max-width: 640px) {
+  .pf-screenshots-grid { grid-template-columns: 1fr 1fr; }
 }
 .pf-screenshot {
   margin: 0;
@@ -11525,20 +11528,16 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   border: 1.5px solid var(--color-border);
   background: var(--gray-100);
 }
-.pf-screenshot--featured {
-  grid-column: 1 / -1;
-  max-height: 520px;
-}
 .pf-screenshot img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
+  object-position: top;
   display: block;
 }
-.pf-screenshot--featured img { max-height: 520px; object-fit: cover; aspect-ratio: auto; }
 .pf-screenshot__cap {
-  padding: .5rem .8rem;
-  font: 400 .8rem/1.4 var(--font-body);
+  padding: .4rem .7rem;
+  font: 400 .75rem/1.4 var(--font-body);
   color: var(--color-text-secondary);
   border-top: 1px solid var(--color-border);
 }
@@ -11854,6 +11853,35 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   padding: 0 0 1rem;
   margin: 0;
   max-width: 66ch;
+}
+
+/* ── Hero jump nav ── */
+.pf-product-hero__jumpnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .5rem;
+  margin-top: 1.5rem;
+}
+.pf-jumpnav__link {
+  display: inline-block;
+  padding: .3rem .75rem;
+  border-radius: 99px;
+  border: 1.5px solid var(--color-border);
+  font: 500 .78rem/1 var(--font-display);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.pf-jumpnav__link:hover,
+.pf-jumpnav__link:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+  outline: none;
+}
+html.mh-dark .pf-jumpnav__link {
+  border-color: color-mix(in srgb, var(--color-border) 80%, white 10%);
 }
 
 /* ── Summary strip ── */

@@ -149,28 +149,28 @@
     "image": "products/acreline/featured.webp",
     "screenshots": [
       [
-        "products/acreline/01-homepage.webp",
-        "Homepage search + featured land"
-      ],
-      [
         "products/acreline/02-listings.webp",
-        "Listings grid with filters"
+        "Listings grid with acreage and price filters"
       ],
       [
         "products/acreline/03-listing.webp",
-        "Land & farm listing detail"
+        "Land and farm listing detail page"
       ],
       [
         "products/acreline/04-agents.webp",
-        "Agents directory"
+        "Agents directory with bios and listings count"
       ],
       [
         "products/acreline/07-book.webp",
-        "Showing request booking"
+        "Showing request booking form"
       ],
       [
         "products/acreline/05-contact.webp",
         "Contact the office"
+      ],
+      [
+        "products/acreline/01-homepage.webp",
+        "Homepage with search and featured listings"
       ]
     ],
     "ad_keywords": [
