@@ -19,6 +19,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
 
 ```text
+● 2026-09-04  3.1.75   Acreline labeled Real estate (not Land & farms)
 ● 2026-09-04  3.1.73   Acreline product page synced from wp-acreline 1.2.3 (Gutenberg blocks)
 ● 2026-08-31  3.1.32   Buy theme + Get help on Work; public brand is Matt Hummel
 ● 2026-08-31  3.1.31   Marketplace files + audit: screenshot, readme.txt, CREDITS; submit Acreline
