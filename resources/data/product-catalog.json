@@ -3,7 +3,7 @@
     "title": "Acreline",
     "cat": "Themes",
     "place": "Real estate agencies · Land & farms",
-    "blurb": "WordPress real estate agency theme for land offices, farm brokerages, and rural agents — 21 Gutenberg blocks, searchable listings, agents, and showing requests.",
+    "blurb": "WordPress real estate agency theme for land offices and farm brokerages — 21 Gutenberg blocks, listings, agents, and showing requests.",
     "tech": [
       "Sage",
       "WordPress",
@@ -43,6 +43,29 @@
       "Child theme + Acreline Core plugin",
       "HTML documentation hub",
       "Mobile-first, accessible build"
+    ],
+    "blocks": [
+      ["Home Hero", "home"],
+      ["Page Hero", "page"],
+      ["Intent Cards", "grid-4"],
+      ["Featured Listings Spotlight", "star"],
+      ["Booking Form Section", "calendar"],
+      ["Market Stats", "chart-line"],
+      ["How It Works", "list-steps"],
+      ["Agent Tools", "wrench"],
+      ["SEO Content Block", "search"],
+      ["Client Reviews", "comment"],
+      ["FAQ List", "question"],
+      ["CTA Band", "megaphone"],
+      ["Intro Section", "layout-text"],
+      ["Listing Grid", "grid-add"],
+      ["Area Grid", "pin"],
+      ["Tools Section", "calculator"],
+      ["How We Work", "users"],
+      ["Office Info", "building"],
+      ["Contact Form", "mail"],
+      ["Booking Note + Form", "thumbtack"],
+      ["Custom Block", "lightbulb"]
     ],
     "metrics": [
       [
