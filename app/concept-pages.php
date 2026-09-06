@@ -656,7 +656,12 @@ function mh_maybe_flush_concept_rewrites(): void
 }
 
 /**
- * 301 /concept/ and /concept/{slug}/ to /projects/ and /projects/{slug}/.
+ * 301 redirects for retired URL prefixes.
+ *
+ * - /concept/{slug}/ → /shop/{slug}/      (old concept URLs)
+ * - /concept/         → /shop/
+ * - /projects/{slug}/ → /shop/{slug}/      (CPT singles retired in 3.3.0)
+ * - /projects/        → /shop/             (listing retired; shop is now primary)
  */
 function mh_redirect_legacy_concept_urls(): void
 {
@@ -674,22 +679,71 @@ function mh_redirect_legacy_concept_urls(): void
         $requestPath = substr($requestPath, strlen($homePath) + 1);
     }
 
-    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/')) {
-        return;
+    $shopBase = function_exists('wc_get_page_permalink') ? rtrim((string) wc_get_page_permalink('shop'), '/') : home_url('/shop');
+
+    // /concept/ and /concept/{slug}/
+    if ($requestPath === 'concept' || str_starts_with($requestPath, 'concept/')) {
+        $rest = $requestPath === 'concept' ? '' : substr($requestPath, strlen('concept/'));
+        $target = $rest === '' ? $shopBase.'/' : $shopBase.'/'.$rest.'/';
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
+        wp_safe_redirect($target, 301);
+        exit;
     }
 
-    $rest = $requestPath === 'concept' ? '' : substr($requestPath, strlen('concept/'));
-    $target = $rest === ''
-        ? home_url('/projects/')
-        : home_url('/projects/'.$rest.'/');
-
-    $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
-    if ($query !== '') {
-        $target .= (str_contains($target, '?') ? '&' : '?').$query;
+    // /projects/ listing page → /shop/
+    if ($requestPath === 'projects') {
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        $target = $shopBase.'/';
+        if ($query !== '') {
+            $target .= '?'.$query;
+        }
+        wp_safe_redirect($target, 301);
+        exit;
     }
 
-    wp_safe_redirect($target, 301);
-    exit;
+    // /projects/{slug}/ → try to find the WC product permalink by slug, else /shop/
+    if (str_starts_with($requestPath, 'projects/')) {
+        $rest = trim(substr($requestPath, strlen('projects/')), '/');
+        $target = $shopBase.'/';
+
+        if ($rest !== '' && function_exists('wc_get_products')) {
+            $ids = wc_get_products([
+                'slug' => $rest,
+                'limit' => 1,
+                'return' => 'ids',
+                'status' => ['publish', 'private'],
+            ]);
+            if ($ids !== []) {
+                $link = get_permalink((int) $ids[0]);
+                if (is_string($link) && $link !== '') {
+                    $target = $link;
+                }
+            }
+            // Fallback: match by SKU prefix (theme-{slug} or plugin-{slug}).
+            if ($target === $shopBase.'/' && function_exists('wc_get_product_id_by_sku')) {
+                foreach (['theme-', 'plugin-'] as $prefix) {
+                    $pid = (int) wc_get_product_id_by_sku($prefix.$rest);
+                    if ($pid > 0) {
+                        $link = get_permalink($pid);
+                        if (is_string($link) && $link !== '') {
+                            $target = $link;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
+        wp_safe_redirect($target, 301);
+        exit;
+    }
 }
 
 /** Hide non-live project pages from the public site (editors can still preview). */

@@ -339,7 +339,354 @@ function mh_cart_count(): int
 /** Catalog URL for empty-cart / return-to-shop links. */
 function mh_theme_catalog_url(): string
 {
-    return home_url('/projects/');
+    // /shop/ is now the primary product listing. /projects/ 301-redirects there.
+    if (mh_shop_ready() && function_exists('wc_get_page_permalink')) {
+        $url = wc_get_page_permalink('shop');
+        if (is_string($url) && $url !== '') {
+            return $url;
+        }
+    }
+
+    return home_url('/shop/');
+}
+
+/**
+ * Map a published WooCommerce product to the Work card array shape.
+ *
+ * Meta stored on the product (`_mh_project_*`) overrides catalog JSON defaults
+ * so the admin can fine-tune per-product without touching the catalog file.
+ *
+ * @since 3.3.0
+ *
+ * @param  int  $product_id  WooCommerce product post ID.
+ * @return array<string, mixed> Work card array, or empty when the product is invalid.
+ */
+function mh_wc_product_to_work_card(int $product_id): array
+{
+    if (! mh_shop_ready() || ! function_exists('wc_get_product')) {
+        return [];
+    }
+
+    $wc = wc_get_product($product_id);
+    if (! $wc instanceof \WC_Product) {
+        return [];
+    }
+
+    $entry = mh_product_catalog_data($product_id);
+
+    // Meta on the product overrides catalog JSON.
+    $meta = fn (string $key, string $fallback = ''): string => (function () use ($product_id, $key, $fallback, $entry): string {
+        $v = trim((string) get_post_meta($product_id, $key, true));
+
+        return $v !== '' ? $v : (string) ($entry[ltrim($key, '_mh_project_')] ?? $fallback);
+    })();
+
+    $slug = (string) $wc->get_slug();
+    $blurb = trim((string) get_post_meta($product_id, '_mh_project_blurb', true));
+    if ($blurb === '') {
+        $blurb = trim((string) ($entry['blurb'] ?? ''));
+    }
+    if ($blurb === '') {
+        $blurb = trim(wp_strip_all_tags((string) $wc->get_short_description()));
+    }
+
+    $cat = trim((string) get_post_meta($product_id, '_mh_project_cat', true));
+    if ($cat === '') {
+        $cat = trim((string) ($entry['cat'] ?? ''));
+    }
+
+    $place = trim((string) get_post_meta($product_id, '_mh_project_place', true));
+    if ($place === '') {
+        $place = trim((string) ($entry['place'] ?? ''));
+    }
+
+    $techRaw = trim((string) get_post_meta($product_id, '_mh_project_tech', true));
+    $tech = $techRaw !== ''
+        ? array_values(array_filter(array_map('trim', explode(',', $techRaw))))
+        : (is_array($entry['tech'] ?? null) ? $entry['tech'] : []);
+
+    $demo = trim((string) get_post_meta($product_id, '_mh_project_demo', true));
+    if ($demo === '') {
+        $demo = trim((string) ($entry['demo'] ?? ''));
+    }
+
+    $productType = trim((string) get_post_meta($product_id, '_mh_project_product_type', true));
+    if ($productType === '' || ! in_array($productType, ['theme', 'plugin', 'concept'], true)) {
+        $productType = (string) ($entry['product_type'] ?? 'theme');
+    }
+
+    // Image: featured image first, then catalog screenshot.
+    $image = '';
+    if (has_post_thumbnail($product_id)) {
+        $image = (string) wp_get_attachment_image_url((int) get_post_thumbnail_id($product_id), 'large');
+    }
+    if ($image === '') {
+        $screenshots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
+        if ($screenshots !== []) {
+            $imgRel = (string) ($screenshots[0][0] ?? '');
+            if ($imgRel !== '') {
+                $image = str_starts_with($imgRel, 'http') ? $imgRel : get_theme_file_uri('resources/images/'.$imgRel);
+            }
+        }
+    }
+
+    // Buy / price labels.
+    $isFree = (float) $wc->get_price() <= 0.0;
+    $buyLabel = $isFree
+        ? ($productType === 'plugin' ? __('Download plugin', 'sage') : __('Get theme', 'sage'))
+        : ($productType === 'plugin' ? __('Buy plugin', 'sage') : __('Buy theme', 'sage'));
+    $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
+
+    $buyUrl = mh_product_add_to_cart_url($product_id);
+
+    $productLink = (string) get_permalink($product_id);
+
+    $card = [
+        'slug' => $slug,
+        'title' => wp_specialchars_decode((string) $wc->get_name(), ENT_QUOTES),
+        'cat' => $cat,
+        'place' => $place,
+        'blurb' => $blurb,
+        'tech' => $tech,
+        'concept' => trim((string) ($entry['github'] ?? '')),
+        'demo' => $demo,
+        'url' => $productLink,
+        'image' => $image,
+        'post_id' => $product_id,
+        'product_id' => $product_id,
+        'product_type' => $productType,
+        'buy_url' => $buyUrl,
+        'buy_label' => $buyLabel,
+        'price_label' => $priceLabel,
+        'is_free' => $isFree,
+    ];
+    $card['help_url'] = function_exists(__NAMESPACE__.'\\mh_work_help_url') ? mh_work_help_url($card) : home_url('/contact/');
+
+    return $card;
+}
+
+/**
+ * All published WooCommerce products as Work card arrays, ordered by menu_order then title.
+ *
+ * Used by mh_work_page_items() after the project CPT is removed.
+ *
+ * @since 3.3.0
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_wc_products_for_work(): array
+{
+    if (! mh_shop_ready() || ! function_exists('wc_get_products')) {
+        return [];
+    }
+
+    $ids = wc_get_products([
+        'status' => 'publish',
+        'limit' => -1,
+        'return' => 'ids',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ]);
+
+    $cards = [];
+    foreach ($ids as $id) {
+        $card = mh_wc_product_to_work_card((int) $id);
+        if ($card !== []) {
+            $cards[] = $card;
+        }
+    }
+
+    return $cards;
+}
+
+/**
+ * Render the "Product fields" metabox on the WooCommerce product edit screen.
+ *
+ * All `_mh_project_*` fields that previously lived on the project CPT are now
+ * stored directly on the WC product post, using the same meta keys. Catalog JSON
+ * values are shown as placeholder text so the field can be left blank to inherit.
+ *
+ * @since 3.3.0
+ */
+function mh_wc_product_admin_meta_box(\WP_Post $post): void
+{
+    if ($post->post_type !== 'product') {
+        return;
+    }
+
+    wp_nonce_field('mh_product_meta', 'mh_product_meta_nonce');
+
+    $id = (int) $post->ID;
+    $entry = mh_product_catalog_data($id);
+
+    $g = fn (string $key): string => trim((string) get_post_meta($id, '_mh_project_'.$key, true));
+    $ph = fn (string $key): string => trim((string) ($entry[$key] ?? ''));
+
+    $cat = $g('cat');
+    $place = $g('place');
+    $blurb = $g('blurb');
+    $tech = $g('tech');
+    $demo = $g('demo');
+    $eyebrow = $g('eyebrow');
+    $summary = $g('summary');
+    $challenge = $g('challenge');
+    $approach = $g('approach');
+    $result = $g('result');
+    $deliverables = $g('deliverables');
+    $benefits = $g('benefits');
+    $faq = $g('faq');
+    $productType = $g('product_type') ?: (string) ($entry['product_type'] ?? 'theme');
+    $price = $g('price') ?: (string) ($entry['price'] ?? '');
+    $forSale = get_post_meta($id, '_mh_project_for_sale', true) === '1'
+        || ($entry['for_sale'] ?? false);
+    $isLive = get_post_meta($id, mh_project_live_meta_key(), true) === '1'
+        || ($entry['live'] ?? false);
+    $image = $g('image');
+
+    $metrics = [];
+    for ($i = 1; $i <= 3; $i++) {
+        $catalogMetric = is_array($entry['metrics'] ?? null) ? ($entry['metrics'][$i - 1] ?? []) : [];
+        $metrics[$i] = [
+            'value' => (string) get_post_meta($id, "_mh_project_m{$i}_value", true) ?: (string) ($catalogMetric[0] ?? ''),
+            'label' => (string) get_post_meta($id, "_mh_project_m{$i}_label", true) ?: (string) ($catalogMetric[1] ?? ''),
+        ];
+    }
+
+    $fieldRow = static function (string $label, string $name, string $value, string $placeholder = '', string $type = 'text'): void {
+        $rows = in_array($name, ['mh_project_challenge', 'mh_project_approach', 'mh_project_result', 'mh_project_deliverables', 'mh_project_benefits', 'mh_project_faq'], true) ? 5 : 3;
+        echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
+        if ($type === 'textarea') {
+            printf(
+                '<textarea class="large-text" rows="%4$d" id="%1$s" name="%1$s" placeholder="%2$s">%3$s</textarea>',
+                esc_attr($name),
+                esc_attr($placeholder),
+                esc_textarea($value),
+                $rows
+            );
+        } else {
+            printf(
+                '<input class="large-text" type="%1$s" id="%2$s" name="%2$s" value="%3$s" placeholder="%4$s">',
+                esc_attr($type === 'url' ? 'url' : 'text'),
+                esc_attr($name),
+                esc_attr($value),
+                esc_attr($placeholder)
+            );
+        }
+        echo '</td></tr>';
+    };
+
+    echo '<p><small>'.esc_html__('Leave a field blank to inherit from product-catalog.json. Values here override the catalog.', 'sage').'</small></p>';
+
+    echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($isLive, true, false).'> ';
+    echo '<strong>'.esc_html__('Show on site (work grid + shop)', 'sage').'</strong></label></p>';
+
+    echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
+    echo esc_html__('For sale (Buy theme / plugin button)', 'sage').'</label></p>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    $fieldRow(__('Category', 'sage'), 'mh_project_cat', $cat, $ph('cat') ?: 'Themes, Plugins…');
+    $fieldRow(__('Place', 'sage'), 'mh_project_place', $place, $ph('place') ?: 'Real estate agencies · Land & farms');
+    $fieldRow(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, $ph('blurb'), 'textarea');
+    $fieldRow(__('Tech (comma-separated)', 'sage'), 'mh_project_tech', $tech, $ph('tech') ?: 'Sage, WordPress, Tailwind');
+    $fieldRow(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('Fallback when no featured image. Path: products/acreline/featured.webp or full URL.', 'sage'));
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Pricing', 'sage').'</h3>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Type', 'sage').'</label></th><td>';
+    echo '<select id="mh_project_product_type" name="mh_project_product_type">';
+    foreach (['theme' => __('Theme', 'sage'), 'plugin' => __('Plugin', 'sage'), 'concept' => __('Concept (hire copy)', 'sage')] as $val => $lbl) {
+        printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($val), selected($productType, $val, false), esc_html($lbl));
+    }
+    echo '</select></td></tr>';
+    $fieldRow(__('Price (USD)', 'sage'), 'mh_project_price', $price, mh_default_theme_price());
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Product page', 'sage').'</h3>';
+    echo '<p class="description">'.esc_html__('These fields power the single product page. Blank = inherited from product-catalog.json.', 'sage').'</p>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    $fieldRow(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, $ph('eyebrow') ?: 'WordPress real estate agency theme');
+    $fieldRow(__('Summary', 'sage'), 'mh_project_summary', $summary, $ph('summary'), 'textarea');
+    $fieldRow(__('The problem', 'sage'), 'mh_project_challenge', $challenge, $ph('challenge'), 'textarea');
+    $fieldRow(__('How it works', 'sage'), 'mh_project_approach', $approach, $ph('approach'), 'textarea');
+    $fieldRow(__('What you get', 'sage'), 'mh_project_result', $result, $ph('result'), 'textarea');
+    $fieldRow(__('Deliverables (one per line)', 'sage'), 'mh_project_deliverables', $deliverables, '', 'textarea');
+    $fieldRow(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
+    $fieldRow(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
+    $fieldRow(__('Live demo URL', 'sage'), 'mh_project_demo', $demo, $ph('demo') ?: 'https://');
+    echo '</tbody></table>';
+
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Metrics (up to 3)', 'sage').'</h3>';
+    echo '<table class="form-table" role="presentation"><tbody>';
+    for ($i = 1; $i <= 3; $i++) {
+        echo '<tr><th scope="row">'.esc_html(sprintf(__('Metric %d', 'sage'), $i)).'</th><td>';
+        printf(
+            '<input class="regular-text" type="text" name="mh_project_m%1$d_value" value="%2$s" placeholder="%3$s" style="max-width:8rem;margin-right:.5rem">',
+            $i,
+            esc_attr($metrics[$i]['value']),
+            esc_attr__('Value', 'sage')
+        );
+        printf(
+            '<input class="regular-text" type="text" name="mh_project_m%1$d_label" value="%2$s" placeholder="%3$s">',
+            $i,
+            esc_attr($metrics[$i]['label']),
+            esc_attr__('Label', 'sage')
+        );
+        echo '</td></tr>';
+    }
+    echo '</tbody></table>';
+}
+
+/**
+ * Save project-field meta posted from the WooCommerce product metabox.
+ *
+ * @since 3.3.0
+ */
+function mh_save_wc_product_project_meta(int $post_id): void
+{
+    if (
+        defined('DOING_AUTOSAVE') && DOING_AUTOSAVE
+        || ! isset($_POST['mh_product_meta_nonce'])
+        || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['mh_product_meta_nonce'])), 'mh_product_meta')
+        || ! current_user_can('edit_post', $post_id)
+    ) {
+        return;
+    }
+
+    update_post_meta($post_id, mh_project_live_meta_key(), isset($_POST['mh_project_live']) ? '1' : '0');
+    update_post_meta($post_id, '_mh_project_for_sale', isset($_POST['mh_project_for_sale']) ? '1' : '0');
+    update_post_meta($post_id, '_mh_project_cat', sanitize_text_field(wp_unslash($_POST['mh_project_cat'] ?? '')));
+    update_post_meta($post_id, '_mh_project_place', sanitize_text_field(wp_unslash($_POST['mh_project_place'] ?? '')));
+    update_post_meta($post_id, '_mh_project_blurb', sanitize_textarea_field(wp_unslash($_POST['mh_project_blurb'] ?? '')));
+    update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+
+    $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'theme'));
+    if (! in_array($productType, ['theme', 'plugin', 'concept'], true)) {
+        $productType = 'theme';
+    }
+    update_post_meta($post_id, '_mh_project_product_type', $productType);
+
+    $price = sanitize_text_field(wp_unslash($_POST['mh_project_price'] ?? ''));
+    if ($price !== '' && ! is_numeric($price)) {
+        $price = '';
+    }
+    update_post_meta($post_id, '_mh_project_price', $price);
+    update_post_meta($post_id, '_mh_project_eyebrow', sanitize_text_field(wp_unslash($_POST['mh_project_eyebrow'] ?? '')));
+    update_post_meta($post_id, '_mh_project_summary', sanitize_textarea_field(wp_unslash($_POST['mh_project_summary'] ?? '')));
+    update_post_meta($post_id, '_mh_project_challenge', sanitize_textarea_field(wp_unslash($_POST['mh_project_challenge'] ?? '')));
+    update_post_meta($post_id, '_mh_project_approach', sanitize_textarea_field(wp_unslash($_POST['mh_project_approach'] ?? '')));
+    update_post_meta($post_id, '_mh_project_result', sanitize_textarea_field(wp_unslash($_POST['mh_project_result'] ?? '')));
+    update_post_meta($post_id, '_mh_project_deliverables', sanitize_textarea_field(wp_unslash($_POST['mh_project_deliverables'] ?? '')));
+    update_post_meta($post_id, '_mh_project_benefits', sanitize_textarea_field(wp_unslash($_POST['mh_project_benefits'] ?? '')));
+    update_post_meta($post_id, '_mh_project_faq', sanitize_textarea_field(wp_unslash($_POST['mh_project_faq'] ?? '')));
+    update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
+
+    for ($i = 1; $i <= 3; $i++) {
+        update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
+        update_post_meta($post_id, "_mh_project_m{$i}_label", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_label"] ?? '')));
+    }
 }
 
 /**
@@ -845,12 +1192,23 @@ function mh_rank_math_product_description(string $desc): string
 add_filter('rank_math/frontend/description', __NAMESPACE__.'\\mh_rank_math_product_description');
 add_filter('wpseo_metadesc', __NAMESPACE__.'\\mh_rank_math_product_description');
 
-add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
-    if (wp_is_post_revision($post_id) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)) {
+add_action('add_meta_boxes', function (): void {
+    add_meta_box(
+        'mh_product_project_fields',
+        __('Product fields', 'sage'),
+        __NAMESPACE__.'\\mh_wc_product_admin_meta_box',
+        'product',
+        'normal',
+        'high'
+    );
+});
+
+add_action('save_post_product', function (int $post_id): void {
+    if (wp_is_post_revision($post_id)) {
         return;
     }
-    mh_sync_project_product($post_id);
-}, 30);
+    mh_save_wc_product_project_meta($post_id);
+}, 20);
 
 add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_catalog_url');
 add_filter('woocommerce_product_get_permalink', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);

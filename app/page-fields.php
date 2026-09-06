@@ -1261,10 +1261,15 @@ function mh_work_page_faq(?int $post_id = null): array
  */
 function mh_work_page_items(?int $post_id = null): array
 {
-    if (mh_project_cpt_has_posts()) {
-        return mh_projects_live_for_work();
+    // Primary source: published WooCommerce products (project CPT retired in 3.3.0).
+    if (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
+        $wc = mh_wc_products_for_work();
+        if ($wc !== []) {
+            return $wc;
+        }
     }
 
+    // Fallback: admin-editable repeater on the Work/Projects page, then static catalog.
     $defaults = [];
     foreach (mh_studio_projects() as $p) {
         $defaults[$p['slug']] = $p;
@@ -1280,6 +1285,7 @@ function mh_work_page_items(?int $post_id = null): array
             return $p;
         }, mh_studio_projects());
     }
+
     $out = [];
     foreach ($rows as $r) {
         $tech = $r['tech'] ?? [];
