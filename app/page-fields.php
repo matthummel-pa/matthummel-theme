@@ -1404,6 +1404,18 @@ add_action('admin_enqueue_scripts', function ($hook) {
 function render_page_fields_box(\WP_Post $post): void
 {
     $key = page_template_key($post->ID);
+
+    // The WooCommerce shop page is a plain WordPress page with no blade template
+    // assignment, but it owns the work_* catalog fields now that the Projects
+    // template is retired. Reuse the template-projects key so existing saved
+    // field values carry forward without a migration.
+    if ($key === '' || $key === 'default') {
+        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
+        if ($shopId > 0 && $post->ID === $shopId) {
+            $key = 'template-projects.blade.php';
+        }
+    }
+
     $map = page_field_map();
 
     if (empty($map[$key])) {
@@ -1503,6 +1515,14 @@ add_action('save_post_page', function ($post_id) {
     $key = page_template_key((int) $post_id);
     if (isset($_POST['page_template']) && $_POST['page_template'] !== 'default') {
         $key = sanitize_text_field(wp_unslash($_POST['page_template']));
+    }
+
+    // WooCommerce shop page reuses the work_* catalog fields.
+    if ($key === '' || $key === 'default') {
+        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
+        if ($shopId > 0 && (int) $post_id === $shopId) {
+            $key = 'template-projects.blade.php';
+        }
     }
 
     $map = page_field_map();

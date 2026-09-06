@@ -1128,12 +1128,8 @@ function mh_apply_product_catalog_v5(): void
     }
 }
 
-add_action('init', __NAMESPACE__.'\\mh_seed_concept_pages_v1', 35);
-add_action('init', __NAMESPACE__.'\\mh_seed_concept_fields_admin_v1', 36);
-add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v2', 37);
-add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v3', 38);
-add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v4', 39);
-add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
+// CPT seeding hooks removed in 3.4.0 — project CPT retired; WooCommerce products
+// are the sole catalog source. Redirect and rewrite helpers remain active.
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
