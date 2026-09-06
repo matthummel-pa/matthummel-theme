@@ -980,7 +980,7 @@ function mh_woocommerce_plugins_category_id(): int
 function mh_find_product_id_for_project(int $project_id, string $slug): int
 {
     $id = (int) get_post_meta($project_id, '_mh_project_product_id', true);
-    if ($id > 0 && get_post_type($id) === 'product') {
+    if ($id > 0 && get_post_type($id) === 'product' && get_post_status($id) !== 'trash') {
         return $id;
     }
 
