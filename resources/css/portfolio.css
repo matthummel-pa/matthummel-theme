@@ -11676,25 +11676,28 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 }
 
 /* ── Purchase section ── */
+/* Purchase section — single column: copy → WC widget stacked */
 .pf-purchase-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
-}
-@media (max-width: 860px) {
-  .pf-purchase-layout { grid-template-columns: 1fr; }
-}
-.pf-purchase-copy .eyebrow { margin-bottom: .4rem; }
-.pf-purchase-copy .display-title { margin: 0 0 .85rem; }
-.pf-purchase-includes {
-  list-style: none;
-  margin: 1.25rem 0 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: .45rem;
-  font-size: .9rem;
+  gap: 2.5rem;
+  max-width: 680px;
+  margin-inline: auto;
+}
+.pf-purchase-copy { text-align: center; }
+.pf-purchase-copy .eyebrow { margin-bottom: .4rem; }
+.pf-purchase-copy .display-title { margin: 0 0 .85rem; }
+.pf-purchase-copy .lead { max-width: 54ch; margin-inline: auto; }
+.pf-purchase-includes {
+  list-style: none;
+  margin: 1.5rem auto 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: .4rem .75rem;
+  font-size: .88rem;
+  text-align: left;
+  max-width: 560px;
 }
 .pf-purchase-includes li {
   display: flex;
@@ -11705,13 +11708,14 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .pf-purchase-includes__more {
   color: var(--color-text-secondary);
   font-style: italic;
+  grid-column: 1 / -1;
 }
 .pf-purchase-widget {
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-card, 12px);
-  padding: 1.75rem;
+  padding: 2rem;
   background: var(--color-bg);
-  box-shadow: 0 2px 16px -2px rgb(0 0 0 / .06);
+  box-shadow: 0 4px 24px -4px rgb(0 0 0 / .08);
 }
 .pf-purchase-widget__help {
   margin: 1rem 0 0;
