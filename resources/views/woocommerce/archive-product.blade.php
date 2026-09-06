@@ -247,7 +247,7 @@
 @include('partials.cta-band', [
   'kicker'        => __('Work with me', 'sage'),
   'title'         => __('Ready to buy or customize a pack?', 'sage'),
-  'text'          => __('Tell me which theme or plugin fits your shop and what you'd change. I usually reply within a day.', 'sage'),
+  'text'          => __('Tell me which theme or plugin fits your shop and what you\'d change. I usually reply within a day.', 'sage'),
   'label'         => __('Say hello', 'sage'),
   'secondary'     => __('GitHub portfolio', 'sage'),
   'secondaryHref' => home_url('/portfolio/'),
