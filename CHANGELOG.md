@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.0 — WooCommerce template consolidation
+
+- **Single source of truth**: WooCommerce `archive-product` and `single-product` templates are now the sole product and listing pages — no parallel template code.
+- **Shop page fields in WP admin**: The WooCommerce "Shop" page now shows the `work_*` "Page content (theme)" fields in wp-admin (previously only accessible on the dead Projects redirect page).
+- **Explicit field context**: `archive-product.blade.php` passes `$shopPostId` to every `field()`, `field_html()`, and `mh_work_page_*()` call so content is reliably read from and written to the WC shop page.
+- **Remove dead redirect template**: `template-projects.blade.php` deleted; `/projects/` → `/shop/` redirect was already in `concept-pages.php`.
+- **Remove dead CPT init hooks**: Six `add_action('init', ...)` calls that attempted to seed the retired project CPT on every request are removed; they always failed silently since CPT registration is a no-op (3.3.0).
+
 ## 3.1.75 — Acreline Real estate label
 
 - Relabel Acreline on Work cards and the product page as a **Real estate** theme (place, eyebrow, brand tagline) instead of Land & farms / Farms & land.
