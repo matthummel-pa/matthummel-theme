@@ -713,7 +713,8 @@ function mh_redirect_legacy_concept_urls(): void
             $slugCandidates = [$rest];
             // Legacy Acreline project/product slugs → canonical shop product.
             if (in_array($rest, ['acreline', 'real-estate-wordpress-theme-acreline', 'wordpress-theme-real-estate-agents'], true)) {
-                $slugCandidates = ['acreline', 'wordpress-theme-real-estate-agents', 'real-estate-wordpress-theme-acreline'];
+                // Canonical Woo slug only — legacy SEO slugs may still exist on trash rows.
+                $slugCandidates = ['acreline'];
             }
 
             foreach ($slugCandidates as $candidate) {
@@ -1195,9 +1196,68 @@ function mh_apply_product_catalog_v6(): void
     }
 }
 
+/**
+ * Beat Rank Math and old-slug redirects for retired Acreline SEO paths.
+ *
+ * Rank Math still has an auto-redirect from the retired project slug to
+ * /shop/wordpress-theme-real-estate-agents, which then lands on a blog post.
+ * Run on `wp` priority 1 (Rank Math redirections use priority 11).
+ */
+function mh_redirect_acreline_legacy_paths(): void
+{
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return;
+    }
+
+    $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+    $requestPath = trim((string) (parse_url($uri, PHP_URL_PATH) ?? ''), '/');
+    $homePath = trim((string) (parse_url(home_url('/'), PHP_URL_PATH) ?? ''), '/');
+    if ($homePath !== '') {
+        if ($requestPath === $homePath || ! str_starts_with($requestPath, $homePath.'/')) {
+            return;
+        }
+        $requestPath = substr($requestPath, strlen($homePath) + 1);
+    }
+
+    $legacyPaths = [
+        'projects/wordpress-theme-real-estate-agents',
+        'projects/real-estate-wordpress-theme-acreline',
+        'shop/wordpress-theme-real-estate-agents',
+        'shop/real-estate-wordpress-theme-acreline',
+        'product/wordpress-theme-real-estate-agents',
+        'product/real-estate-wordpress-theme-acreline',
+        'products/real-estate-wordpress-theme-acreline',
+        'products/wordpress-theme-real-estate-agents',
+    ];
+
+    if (! in_array($requestPath, $legacyPaths, true)) {
+        return;
+    }
+
+    $target = home_url('/product/acreline/');
+    if (function_exists('wc_get_product_id_by_sku')) {
+        $pid = (int) wc_get_product_id_by_sku('theme-acreline');
+        if ($pid > 0) {
+            $link = get_permalink($pid);
+            if (is_string($link) && $link !== '') {
+                $target = $link;
+            }
+        }
+    }
+
+    $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+    if ($query !== '') {
+        $target .= (str_contains($target, '?') ? '&' : '?').$query;
+    }
+
+    wp_safe_redirect($target, 301);
+    exit;
+}
+
 // Catalog reseed hooks (project CPT may still exist on older DBs; Woo products are canonical).
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
+add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
