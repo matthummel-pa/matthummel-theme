@@ -657,6 +657,39 @@ function page_field_map(): array
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
         ],
+        'template-portfolio.blade.php' => [
+            __('Intro', 'sage') => [
+                ['portfolio_kicker', __('Kicker', 'sage'), 'text', __('Portfolio', 'sage')],
+                ['portfolio_h1', __('Heading', 'sage'), 'text', __('WordPress and full-stack code on GitHub.', 'sage')],
+                ['portfolio_lede', __('Intro', 'sage'), 'textarea', __('All public repos — Sage themes, WordPress plugins, React apps, and spec builds you can fork, study, and use. This is the codebase trail I started in 2025.', 'sage')],
+            ],
+            __('Intro section', 'sage') => [
+                ['portfolio_intro_h2', __('Heading', 'sage'), 'text', __('Code I ship publicly.', 'sage')],
+                ['portfolio_intro_p', __('Paragraph', 'sage'), 'textarea', __('Most production work lived inside employers. What is here are Sage WordPress themes, WordPress plugins, and full-stack apps I have published since 2025. Fork anything, copy any snippet — a note if you ship something with it is kind, not required.', 'sage')],
+            ],
+            __('Featured repos', 'sage') => [
+                ['portfolio_feat_h2', __('Heading', 'sage'), 'text', __('Repos worth starting with.', 'sage')],
+                ['portfolio_feat_intro', __('Intro', 'sage'), 'textarea', __('Sage themes, WordPress plugins, and web apps — each one built to be read, forked, or hired from. Stack notes and live demos where available.', 'sage')],
+            ],
+            __('Recently pushed', 'sage') => [
+                ['portfolio_live_h2', __('Heading', 'sage'), 'text', __('Recently pushed.', 'sage')],
+                ['portfolio_live_intro', __('Intro', 'sage'), 'textarea', __('Fresh commits on public repos — what I am shipping this week. These pull live from the GitHub API.', 'sage')],
+                ['portfolio_all_label', __('All repos label', 'sage'), 'text', __('Browse all public repos on GitHub', 'sage')],
+            ],
+            __('Practice', 'sage') => [
+                ['portfolio_practice_h2', __('Heading', 'sage'), 'text', __('What you will find in the repos.', 'sage')],
+                ['portfolio_practice_p', __('Paragraph', 'sage'), 'textarea', __('The public repos cover Sage 11 WordPress themes, WordPress plugins (Gutenberg blocks, PHP class libraries), full-stack React and TypeScript apps, and developer tooling. Code is documented at handoff quality — comments explain intent, not syntax.', 'sage')],
+            ],
+            __('Community', 'sage') => [
+                ['portfolio_community_h2', __('Heading', 'sage'), 'text', __('People who follow and star my repos.', 'sage')],
+                ['portfolio_community_p', __('Paragraph', 'sage'), 'textarea', __('Thank you for reading the code, starring a repo, or following along. Every star and follower matters.', 'sage')],
+            ],
+            __('Call to action', 'sage') => [
+                ['portfolio_cta_h2', __('Heading', 'sage'), 'text', __('Want to build, collaborate, or compare notes?', 'sage')],
+                ['portfolio_cta_lede', __('Intro', 'sage'), 'textarea', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')],
+                ['portfolio_cta_btn', __('Button label', 'sage'), 'text', __('Say hello', 'sage')],
+            ],
+        ],
         'template-support.blade.php' => [
             __('Intro', 'sage') => [
                 ['support_kicker', __('Kicker', 'sage'), 'text', __('Support', 'sage')],
@@ -1368,7 +1401,7 @@ function render_page_fields_box(\WP_Post $post): void
     $map = page_field_map();
 
     if (empty($map[$key])) {
-        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Work, Services, Code, Contact, Now, or Journal to edit theme fields here.', 'sage').'</p>';
+        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Work, Services, Code, Contact, Now, Portfolio, or Journal to edit theme fields here.', 'sage').'</p>';
 
         return;
     }
