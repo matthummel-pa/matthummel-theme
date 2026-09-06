@@ -3,7 +3,7 @@
     "title": "Acreline",
     "cat": "Themes",
     "place": "Real estate",
-    "blurb": "WordPress real estate theme — 21 Gutenberg blocks, searchable listings, agents, and showing requests.",
+    "blurb": "WordPress real estate theme with a setup wizard — 21 Gutenberg blocks, searchable listings, agents, and showing requests.",
     "tech": [
       "Sage",
       "WordPress",
@@ -15,15 +15,16 @@
     "live": true,
     "price": "79",
     "eyebrow": "WordPress theme · Real estate",
-    "summary": "Acreline is a WordPress real estate theme for listings, agents, and showing requests. Twenty-one Core Gutenberg blocks build the marketing pages. Searchable listings, map views, and Customizer identity with eight color styles ship ready — no Elementor or ACF required.",
+    "summary": "Acreline is a WordPress real estate theme for listings, agents, and showing requests. A built-in setup wizard walks identity, colors, and optional demo content after you activate. Twenty-one Core Gutenberg blocks build the marketing pages. Searchable listings, map views, and Customizer identity with eight color styles ship ready — no Elementor or ACF required.",
     "challenge": "Real estate offices need listing filters, a map, and agent pages that match their inventory. Generic luxury realtor skins bury parcels and force IDX chrome offices do not need.",
-    "approach": "Marketing pages are real Gutenberg blocks with ServerSideRender previews — agencies edit them in the block editor without a developer. Listings, agents, and bookings stay as post types with classic metaboxes so brokers manage their own inventory. Identity and colors live in the Customizer. Filters are query args. Tools → Block Generator and Migrate to Blocks ship in the theme so agencies can build pages without writing PHP.",
-    "result": "A ThemeForest-ready pack: install the zip, brand it under Customize → Identity, seed demo inventory and block-built pages, and sell listings the way buyers search for them.",
+    "approach": "Activate Acreline and run Appearance → Acreline Setup: brand the office, pick a color style, and optionally load demo listings without leaving wp-admin. Marketing pages are real Gutenberg blocks with ServerSideRender previews — agencies edit them in the block editor without a developer. Listings, agents, and bookings stay as post types with classic metaboxes so brokers manage their own inventory. Identity and colors also live in the Customizer. Tools → Block Generator and Migrate to Blocks ship in the theme so agencies can build pages without writing PHP.",
+    "result": "A ThemeForest-ready pack: install the zip, finish the setup wizard, brand it under Customize → Identity, and sell listings the way buyers search for them.",
     "audience": "Real estate offices, brokerages, and agents who need a WordPress starting point for listings, map, and showing requests — not a suburban MLS skin. Also agencies that need a real estate base they can white-label.",
-    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Twenty-one server-rendered Core Gutenberg blocks for marketing pages (Block Generator + Migrate to Blocks). Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO. Rank Math and Yoast both score well out of the box — listings include open-graph meta and structured post types for agency directories.",
-    "handoff": "You own the theme zip, child theme, and Core plugin. Edit marketing pages in the block editor. Agencies and brokers edit parcels, photos, and agent fields in wp-admin metaboxes. HTML docs ship in the pack. Hire me to import your inventory, brand the Customizer, or wire a real MLS feed.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Setup wizard under Appearance → Acreline Setup. Twenty-one server-rendered Core Gutenberg blocks for marketing pages (Block Generator + Migrate to Blocks). Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO. Rank Math and Yoast both score well out of the box — listings include open-graph meta and structured post types for agency directories.",
+    "handoff": "You own the theme zip, child theme, and Core plugin. Run the setup wizard once, then edit marketing pages in the block editor. Agencies and brokers edit parcels, photos, and agent fields in wp-admin metaboxes. HTML docs ship in the pack. Hire me to import your inventory, brand the Customizer, or wire a real MLS feed.",
     "benefits": [
       "Ship a real estate listing site without starting from a luxury realtor kit",
+      "Built-in setup wizard for identity, colors, and demo content",
       "21 Gutenberg blocks with true WYSIWYG ServerSideRender previews",
       "Filters that match type, price, acreage, and area",
       "Showing requests and agents built into the theme flow",
@@ -33,6 +34,7 @@
       "100% GPL-compatible theme code — sell or customize freely"
     ],
     "deliverables": [
+      "Setup wizard (Appearance → Acreline Setup)",
       "21 Core Gutenberg blocks (hero, listings grid, FAQ, CTA, and more)",
       "Searchable listings (grid + map)",
       "Type, price, acreage, and area filters",
@@ -136,6 +138,10 @@
         "Gutenberg blocks"
       ],
       [
+        "5",
+        "setup wizard steps"
+      ],
+      [
         "8",
         "color styles"
       ],
@@ -150,8 +156,12 @@
         "Yes. Acreline is a WordPress real estate theme for offices that need listings, a map, agents, and showing requests — without a suburban MLS skin or Elementor stack."
       ],
       [
+        "Does Acreline include a setup wizard?",
+        "Yes. After you activate the theme, Appearance → Acreline Setup walks identity, color style, and optional demo content. You can skip it and use Customize anytime."
+      ],
+      [
         "What do I get when I buy Acreline?",
-        "The marketplace pack: acreline.zip (upload in Appearance → Themes), optional child theme, Acreline Core plugin, and HTML documentation. Instant download after checkout. Hire me if you want branded installation or inventory import."
+        "The marketplace pack: acreline.zip (upload in Appearance → Themes), optional child theme, Acreline Core plugin, and HTML documentation. Instant download after checkout. The theme includes the setup wizard. Hire me if you want branded installation or inventory import."
       ],
       [
         "Is Acreline a live MLS or IDX theme?",
@@ -159,7 +169,7 @@
       ],
       [
         "How does a real estate agency edit page copy?",
-        "Marketing pages use Core Gutenberg blocks with live ServerSideRender previews — your agents edit them directly in wp-admin. Listings, agents, and bookings use classic metaboxes. Brand, phone, and colors stay in Customize → Identity. No developer needed for day-to-day edits."
+        "Marketing pages use Core Gutenberg blocks with live ServerSideRender previews — your agents edit them directly in wp-admin. Listings, agents, and bookings use classic metaboxes. Brand, phone, and colors stay in Customize → Identity (or the setup wizard). No developer needed for day-to-day edits."
       ],
       [
         "Can I white-label Acreline for a client real estate agency?",
@@ -167,7 +177,7 @@
       ],
       [
         "Do I need Elementor or ACF for Acreline?",
-        "No. Marketing pages use the included Gutenberg blocks. Listings and agents use metaboxes. Identity lives in the Customizer. Do not install a page builder — it adds no value and conflicts with the block architecture."
+        "No. Marketing pages use the included Gutenberg blocks. Listings and agents use metaboxes. Identity lives in the Customizer and the setup wizard. Do not install a page builder — it adds no value and conflicts with the block architecture."
       ],
       [
         "Can you install or customize Acreline for my real estate office?",
@@ -176,7 +186,7 @@
     ],
     "demo": "https://acreline.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-acreline",
-    "version": "1.2.3",
+    "version": "1.3.0",
     "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
     "license": "GPLv2 or later",
     "files_included": [
