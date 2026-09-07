@@ -1,5 +1,30 @@
 # Changelog
 
+## 3.1.77 — Acreline legacy URL cleanup
+
+- Redirect retired Acreline SEO paths (`/projects/wordpress-theme-real-estate-agents/`, `/shop/…`, old product slugs) to the live Woo product before Rank Math can send them elsewhere.
+- Prefer the canonical `acreline` product slug when resolving `/projects/{slug}/` aliases.
+
+## 3.1.76 — Acreline Real estate live cleanup
+
+- Keep Acreline labeled **Real estate** in `product-catalog.json` (place, eyebrow, brand tagline) after marketplace copy drift back to land/farms.
+- Resolve catalog data for SEO product slugs (`wordpress-theme-real-estate-agents`, etc.).
+- Re-seed via `mh_product_catalog_v6`; map legacy `/projects/acreline/` URLs to the live Woo product.
+
+## 3.4.0 — WooCommerce template consolidation
+
+- **Single source of truth**: WooCommerce `archive-product` and `single-product` templates are now the sole product and listing pages — no parallel template code.
+- **Shop page fields in WP admin**: The WooCommerce "Shop" page now shows the `work_*` "Page content (theme)" fields in wp-admin (previously only accessible on the dead Projects redirect page).
+- **Explicit field context**: `archive-product.blade.php` passes `$shopPostId` to every `field()`, `field_html()`, and `mh_work_page_*()` call so content is reliably read from and written to the WC shop page.
+- **Remove dead redirect template**: `template-projects.blade.php` deleted; `/projects/` → `/shop/` redirect was already in `concept-pages.php`.
+- **Remove dead CPT init hooks**: Six `add_action('init', ...)` calls that attempted to seed the retired project CPT on every request are removed; they always failed silently since CPT registration is a no-op (3.3.0).
+
+## 3.1.75 — Acreline Real estate label
+
+- Relabel Acreline on Work cards and the product page as a **Real estate** theme (place, eyebrow, brand tagline) instead of Land & farms / Farms & land.
+- Refresh buyer-facing Acreline copy to lead with real estate; keep listing/agent/map features intact.
+- Re-apply sellable product meta via `mh_product_catalog_v5` after theme update.
+
 ## 3.1.74 — Acreline product sync (Gutenberg)
 
 - Refresh the Acreline catalog entry from `wp-acreline` 1.2.3: 21 Core Gutenberg blocks, Block Generator, Migrate to Blocks, brand kit palette/tagline, and buyer FAQ.
