@@ -1381,6 +1381,37 @@ function mh_resync_product_descriptions_v3(): void
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v3', 35);
 
 /**
+ * Re-syncs all CPT-linked products after the dedup fix that corrected the
+ * project→product meta pointers.  The v3 resync updated the stub duplicates
+ * (now trashed); this v4 run ensures the canonical products receive the
+ * current rich descriptions and correct prices.
+ *
+ * @since 3.5.3
+ */
+function mh_resync_product_descriptions_v4(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_product_descriptions_synced_v4')) {
+        return;
+    }
+
+    try {
+        mh_sync_all_project_products();
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_resync_product_descriptions_v4: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_product_descriptions_synced_v4', true);
+    }
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v4', 35);
+
+/**
  * Sync WooCommerce products that are defined in the product catalog JSON but
  * do NOT have a corresponding project CPT post (e.g. WalkRidge).  Runs once
  * per theme update via a versioned option.
