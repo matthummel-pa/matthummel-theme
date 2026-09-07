@@ -183,36 +183,32 @@
       $filterPlugins = $pluginCount;
     @endphp
 
-    {{-- Catalog filter nav --}}
+    {{-- Catalog filter nav — JS-powered, no page navigation --}}
     <nav class="catalog-filter-nav" aria-label="{{ __('Filter by product type', 'sage') }}">
-      <span class="catalog-filter-nav__label">{{ __('Filter', 'sage') }}</span>
+      <span class="catalog-filter-nav__label" aria-hidden="true">{{ __('Show', 'sage') }}</span>
       <ul class="catalog-filter-nav__links" role="list">
         <li>
-          <a class="catalog-filter-nav__link"
-             href="{{ $shopUrl }}"
-             aria-current="{{ $isShop && !isset($_GET['product_cat']) ? 'true' : 'false' }}">
+          <button class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
             {{ __('All products', 'sage') }}
             @if ($filterAll > 0)
-              <span class="catalog-filter-nav__count">{{ $filterAll }}</span>
+              <span class="catalog-filter-nav__count" aria-label="{{ $filterAll }} {{ __('total', 'sage') }}">{{ $filterAll }}</span>
             @endif
-          </a>
+          </button>
         </li>
         @if ($filterThemes > 0)
         <li>
-          <a class="catalog-filter-nav__link"
-             href="{{ add_query_arg('product_cat', 'themes', $shopUrl) }}">
-            {!! \App\mh_svg_icon('home', 12) !!} {{ __('Themes', 'sage') }}
-            <span class="catalog-filter-nav__count">{{ $filterThemes }}</span>
-          </a>
+          <button class="catalog-filter-nav__link" data-filter-type="theme">
+            {!! \App\mh_svg_icon('home', 11) !!} {{ __('Themes', 'sage') }}
+            <span class="catalog-filter-nav__count" aria-label="{{ $filterThemes }} {{ __('themes', 'sage') }}">{{ $filterThemes }}</span>
+          </button>
         </li>
         @endif
         @if ($filterPlugins > 0)
         <li>
-          <a class="catalog-filter-nav__link"
-             href="{{ add_query_arg('product_cat', 'plugins', $shopUrl) }}">
-            {!! \App\mh_svg_icon('code', 12) !!} {{ __('Plugins', 'sage') }}
-            <span class="catalog-filter-nav__count">{{ $filterPlugins }}</span>
-          </a>
+          <button class="catalog-filter-nav__link" data-filter-type="plugin">
+            {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
+            <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
+          </button>
         </li>
         @endif
       </ul>
