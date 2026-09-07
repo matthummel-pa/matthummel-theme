@@ -12588,18 +12588,23 @@ html.mh-dark .pf-block-card {
 
 /* ─── Sale badge ─────────────────────────────────────────────────── */
 .woocommerce ul.products li.product .onsale {
-  position: absolute;
-  top: .75rem;
-  left: .75rem;
+  display: inline-flex !important;
+  align-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  position: absolute !important;
+  top: .75rem !important;
+  left: .75rem !important;
   z-index: 2;
-  margin: 0;
-  padding: .3rem .65rem;
-  border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--white);
-  font: 700 .68rem/1 var(--font-display);
+  margin: 0 !important;
+  padding: .3rem .75rem !important;
+  border-radius: 999px !important;
+  background: var(--color-accent) !important;
+  color: var(--white) !important;
+  font: 700 .68rem/1 var(--font-display) !important;
   letter-spacing: .05em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ─── Catalog controls bar ───────────────────────────────────────── */
