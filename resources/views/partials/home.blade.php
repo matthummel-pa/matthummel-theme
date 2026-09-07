@@ -243,7 +243,7 @@
 
     <div class="h-hero__copy">
       <p class="h-hero__kicker">
-        {!! \App\mh_svg_icon('code', 14) !!}
+        <span class="h-hero__kicker-dot" aria-hidden="true"></span>
         {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
       </p>
 
@@ -269,6 +269,21 @@
           <span aria-hidden="true">→</span>
         </a>
       </div>
+
+      <ul class="h-hero__trust" aria-label="{{ __('Quick facts', 'sage') }}">
+        <li class="h-hero__trust-item">
+          {!! \App\mh_svg_icon('check', 12) !!} {{ __('GPL — you own the code', 'sage') }}
+        </li>
+        <li class="h-hero__trust-item">
+          {!! \App\mh_svg_icon('code', 12) !!} {{ __('Sage 11 · PHP 8.3 · Tailwind v4', 'sage') }}
+        </li>
+        <li class="h-hero__trust-item">
+          {!! \App\mh_svg_icon('github', 12) !!} {{ __('GitHub-first workflow', 'sage') }}
+        </li>
+        <li class="h-hero__trust-item">
+          {!! \App\mh_svg_icon('briefcase', 12) !!} {{ __('Remote · contract &amp; full-time open', 'sage') }}
+        </li>
+      </ul>
     </div>
 
     <aside class="h-hero__viz" aria-label="{{ __('Profile highlights', 'sage') }}">

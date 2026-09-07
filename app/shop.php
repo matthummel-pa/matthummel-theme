@@ -1667,6 +1667,43 @@ add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_cata
 add_filter('woocommerce_product_get_permalink', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_product_to_project', 5);
 add_filter('loop_shop_columns', fn (): int => 3);
+
+/**
+ * Inject the catalog featured image when the WC product has no thumbnail set.
+ *
+ * WooCommerce calls get_image() for the loop thumbnail; the result is filtered
+ * here so the catalog `image` key provides the fallback instead of the WC
+ * placeholder graphic.
+ */
+add_filter('woocommerce_product_get_image', function (string $html, \WC_Product $product): string {
+    // If WC has a real attachment, honour it.
+    if ((int) $product->get_image_id() > 0) {
+        return $html;
+    }
+
+    $entry = mh_product_catalog_data((int) $product->get_id());
+    $imgPath = trim((string) ($entry['image'] ?? ''));
+    if ($imgPath === '') {
+        return $html;
+    }
+
+    $src = get_theme_file_uri('resources/images/'.$imgPath);
+    $name = esc_attr(html_entity_decode((string) $product->get_name(), ENT_QUOTES, 'UTF-8'));
+
+    return '<img src="'.esc_url($src).'" alt="'.$name.'" width="800" height="534" class="mh-catalog-img wp-post-image" loading="lazy" decoding="async">';
+}, 10, 2);
+
+/**
+ * Add a `mh-type-{type}` class to each product <li> in the shop loop so the
+ * client-side catalog filter can show/hide items without a page navigation.
+ */
+add_filter('woocommerce_post_class', function (array $classes, \WC_Product $product): array {
+    $entry = mh_product_catalog_data((int) $product->get_id());
+    $productType = trim((string) ($entry['product_type'] ?? 'theme')) ?: 'theme';
+    $classes[] = 'mh-type-'.$productType;
+
+    return $classes;
+}, 10, 2);
 add_filter('woocommerce_product_single_add_to_cart_text', function ($text, $product = null) {
     return mh_woocommerce_buy_label($product);
 }, 10, 2);
