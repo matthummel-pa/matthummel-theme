@@ -12558,12 +12558,15 @@ html.mh-dark .pf-block-card {
 }
 
 /* ─── Add-to-cart button — pill, left-aligned ────────────────────── */
+/* !important needed to override WooCommerce core stylesheet (display:block; width:100%) */
+.woocommerce ul.products li.product a.button,
 .woocommerce ul.products li.product .button {
-  display: inline-flex;
+  display: inline-flex !important;
+  width: auto !important;
   align-items: center;
   gap: .4rem;
-  align-self: flex-start;
-  margin: 0 1.35rem .55rem;
+  align-self: flex-start !important;
+  margin: 0 1.35rem .55rem !important;
   padding: .55rem 1.35rem;
   border-radius: 999px;
   font-size: .875rem;
