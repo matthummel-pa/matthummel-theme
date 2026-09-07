@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.78 — Acreline setup wizard on product page
+
+- Sync Acreline catalog to **1.3.0**: product copy now says the theme ships with a setup wizard (Appearance → Acreline Setup).
+- Re-seed via `mh_product_catalog_v7`.
+
 ## 3.1.77 — Acreline legacy URL cleanup
 
 - Redirect retired Acreline SEO paths (`/projects/wordpress-theme-real-estate-agents/`, `/shop/…`, old product slugs) to the live Woo product before Rank Math can send them elsewhere.
