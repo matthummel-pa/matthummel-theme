@@ -1669,6 +1669,29 @@ add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_product_to_project'
 add_filter('loop_shop_columns', fn (): int => 3);
 
 /**
+ * Output a short product blurb in the shop loop for UX and SEO.
+ *
+ * Priority 6 places it after the star-rating (5) and before the price (10).
+ */
+add_action('woocommerce_after_shop_loop_item_title', function (): void {
+    global $product;
+    if (! is_object($product) || ! method_exists($product, 'get_id')) {
+        return;
+    }
+
+    $entry = mh_product_catalog_data((int) $product->get_id());
+    $blurb = trim((string) ($entry['blurb'] ?? ''));
+
+    if ($blurb === '') {
+        $blurb = wp_trim_words(wp_strip_all_tags((string) $product->get_short_description()), 20, '…');
+    }
+
+    if ($blurb !== '') {
+        printf('<p class="product-loop-blurb">%s</p>', esc_html($blurb));
+    }
+}, 6);
+
+/**
  * Inject the catalog featured image when the WC product has no thumbnail set.
  *
  * WooCommerce calls get_image() for the loop thumbnail; the result is filtered
