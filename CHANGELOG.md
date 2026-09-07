@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.3 — Fix duplicate product creation
+
+- `mh_find_product_id_for_project`: SKU check now runs **before** the stored meta pointer so a stale pointer (pointing at an empty stub duplicate) is bypassed whenever a product owns the canonical `theme-`/`plugin-` SKU. This self-heals without any data migration.
+- Added `orderby => ID ASC` to the slug-fallback `get_posts` call so the oldest (canonical) product always wins when multiple share a slug.
+- New `mh_resync_catalog_only_products_v1` (runs once via `woocommerce_init` at priority 36): syncs price, description, SKU, virtual flag, `_mh_product_type`, and Rank Math meta for products in `product-catalog.json` that have no project CPT post (WalkRidge and any future catalog-only products). Does **not** create products.
+- Live data fix (via SQL): corrected `_mh_project_product_id` pointers on Acreline project (5116→5113) and TOCflow project (4821→4827); trashed stub duplicates `acreline-2` and `tocflow-2`.
+
 ## 3.5.2 — WalkRidge product launch
 
 - Added `walkridge` to `resources/data/product-catalog.json`: full catalog entry with 38 fields (summary, challenge, approach, result, audience, architecture, handoff, benefits, deliverables, 10 blocks, metrics, 7 FAQ, docs, brand palette, screenshots, ad keywords).

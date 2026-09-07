@@ -986,6 +986,18 @@ function mh_woocommerce_plugins_category_id(): int
  */
 function mh_find_product_id_for_project(int $project_id, string $slug): int
 {
+    // SKU is globally unique in WooCommerce — a SKU match is authoritative.
+    // Checking SKU first self-heals stale meta pointers (e.g. if a resync
+    // previously created a stub duplicate and stored its ID in the meta).
+    if ($slug !== '' && function_exists('wc_get_product_id_by_sku')) {
+        foreach (['theme-'.$slug, 'plugin-'.$slug] as $trySku) {
+            $bySku = (int) wc_get_product_id_by_sku($trySku);
+            if ($bySku > 0 && get_post_status($bySku) !== 'trash') {
+                return $bySku;
+            }
+        }
+    }
+
     $id = (int) get_post_meta($project_id, '_mh_project_product_id', true);
     if ($id > 0 && get_post_type($id) === 'product' && get_post_status($id) !== 'trash') {
         return $id;
@@ -1002,15 +1014,6 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
     ]);
     if ($found !== []) {
         return (int) $found[0];
-    }
-
-    if ($slug !== '' && function_exists('wc_get_product_id_by_sku')) {
-        foreach (['theme-'.$slug, 'plugin-'.$slug] as $trySku) {
-            $bySku = (int) wc_get_product_id_by_sku($trySku);
-            if ($bySku > 0) {
-                return $bySku;
-            }
-        }
     }
 
     // Acreline marketplace SEO slugs / leftover duplicates.
@@ -1031,6 +1034,8 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
             'posts_per_page' => 1,
             'fields' => 'ids',
             'no_found_rows' => true,
+            'orderby' => 'ID',
+            'order' => 'ASC',
         ]);
         if ($bySlug !== []) {
             return (int) $bySlug[0];
@@ -1374,6 +1379,166 @@ function mh_resync_product_descriptions_v3(): void
 }
 
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v3', 35);
+
+/**
+ * Re-syncs all CPT-linked products after the dedup fix that corrected the
+ * project→product meta pointers.  The v3 resync updated the stub duplicates
+ * (now trashed); this v4 run ensures the canonical products receive the
+ * current rich descriptions and correct prices.
+ *
+ * @since 3.5.3
+ */
+function mh_resync_product_descriptions_v4(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_product_descriptions_synced_v4')) {
+        return;
+    }
+
+    try {
+        mh_sync_all_project_products();
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_resync_product_descriptions_v4: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_product_descriptions_synced_v4', true);
+    }
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v4', 35);
+
+/**
+ * Sync WooCommerce products that are defined in the product catalog JSON but
+ * do NOT have a corresponding project CPT post (e.g. WalkRidge).  Runs once
+ * per theme update via a versioned option.
+ *
+ * For each catalog entry with `is_product: true` and `for_sale: true` this
+ * function finds the existing WC product by SKU (`theme-<slug>` /
+ * `plugin-<slug>`) or by slug and updates its price, description, and SEO
+ * meta.  It never creates a new product — creation is intentional and done
+ * via wp-admin or the add-product workflow.
+ *
+ * @since 3.5.3
+ */
+function mh_resync_catalog_only_products_v1(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_catalog_only_products_synced_v1')) {
+        return;
+    }
+
+    try {
+        $catalogPath = get_theme_file_path('resources/data/product-catalog.json');
+        if (! is_readable($catalogPath)) {
+            return;
+        }
+        $catalog = json_decode((string) file_get_contents($catalogPath), true);
+        if (! is_array($catalog)) {
+            return;
+        }
+
+        foreach ($catalog as $slugKey => $entry) {
+            if (empty($entry['is_product']) || empty($entry['for_sale'])) {
+                continue;
+            }
+
+            $type = sanitize_key((string) ($entry['product_type'] ?? 'theme'));
+            $skuPrefix = $type === 'plugin' ? 'plugin-' : 'theme-';
+            $sku = $skuPrefix.$slugKey;
+
+            $productId = 0;
+            if (function_exists('wc_get_product_id_by_sku')) {
+                $productId = (int) wc_get_product_id_by_sku($sku);
+            }
+            if ($productId <= 0) {
+                $bySlug = get_posts([
+                    'post_type' => 'product',
+                    'name' => $slugKey,
+                    'post_status' => ['publish', 'private', 'draft'],
+                    'posts_per_page' => 1,
+                    'fields' => 'ids',
+                    'no_found_rows' => true,
+                ]);
+                $productId = $bySlug !== [] ? (int) $bySlug[0] : 0;
+            }
+
+            if ($productId <= 0) {
+                continue;
+            }
+
+            $product = wc_get_product($productId);
+            if (! $product instanceof \WC_Product) {
+                continue;
+            }
+
+            // Only update if the product is not already linked to a CPT project
+            // (those are handled by mh_sync_all_project_products).
+            $linkedProjectId = (int) get_post_meta($productId, '_mh_product_project_id', true);
+            if ($linkedProjectId > 0 && get_post_type($linkedProjectId) === mh_project_post_type()) {
+                continue;
+            }
+
+            $blurb = trim((string) ($entry['blurb'] ?? ''));
+            $richDescription = mh_product_description_html($entry);
+            if ($richDescription === '') {
+                $richDescription = trim((string) ($entry['summary'] ?? $blurb));
+            }
+
+            if ($blurb !== '') {
+                $product->set_short_description($blurb);
+            }
+            if ($richDescription !== '') {
+                $product->set_description($richDescription);
+            }
+
+            $price = trim((string) ($entry['price'] ?? ''));
+            if ($price !== '' && is_numeric($price)) {
+                $product->set_regular_price($price);
+            }
+
+            // Ensure correct SKU is set.
+            $currentSku = (string) $product->get_sku();
+            if ($currentSku === '') {
+                try {
+                    $product->set_sku($sku);
+                } catch (\WC_Data_Exception $e) {
+                    // SKU conflict — another product owns it; skip SKU update.
+                }
+            }
+
+            $product->set_virtual(true);
+            $product->set_sold_individually(true);
+            $product->set_catalog_visibility('visible');
+            $product->update_meta_data('_mh_product_type', $type);
+            $product->save();
+
+            // Set Rank Math SEO meta directly on the post.
+            $postId = $product->get_id();
+            $focusKw = trim((string) ($entry['ad_keywords'][0] ?? $entry['name'] ?? ''));
+            if ($focusKw !== '' && get_post_meta($postId, 'rank_math_focus_keyword', true) === '') {
+                update_post_meta($postId, 'rank_math_focus_keyword', $focusKw);
+            }
+            if ($blurb !== '' && get_post_meta($postId, 'rank_math_description', true) === '') {
+                update_post_meta($postId, 'rank_math_description', $blurb);
+            }
+        }
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_resync_catalog_only_products_v1: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_catalog_only_products_synced_v1', true);
+    }
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_catalog_only_products_v1', 36);
 
 /**
  * Supply Rank Math with a meta description from the product catalog blurb.
