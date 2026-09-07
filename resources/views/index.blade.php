@@ -9,7 +9,73 @@
   $featuredId   = $showFeatured ? \App\mh_journal_featured_post_id() : 0;
   $showFeatured = $showFeatured && $featuredId > 0;
   $rssUrl       = home_url('/feed/');
+
+  $journalTopics = [
+    [
+      'icon'  => 'wordpress',
+      'title' => __('WordPress', 'sage'),
+      'desc'  => __('Custom theme architecture, Sage 11, Blade templates, the_loop, WP-CLI, and real admin UI patterns.', 'sage'),
+    ],
+    [
+      'icon'  => 'php',
+      'title' => __('PHP', 'sage'),
+      'desc'  => __('Plugin development, hooks, filters, typed functions, REST endpoints, and clean handoff code.', 'sage'),
+    ],
+    [
+      'icon'  => 'javascript',
+      'title' => __('JavaScript', 'sage'),
+      'desc'  => __('Vanilla JS, ES modules, async patterns, fetch, and TypeScript notes from real projects.', 'sage'),
+    ],
+    [
+      'icon'  => 'tailwind',
+      'title' => __('CSS & Tailwind', 'sage'),
+      'desc'  => __('Tailwind v4, CSS custom properties, container queries, fluid type, and component patterns.', 'sage'),
+    ],
+    [
+      'icon'  => 'vite',
+      'title' => __('Build & Deploy', 'sage'),
+      'desc'  => __('Vite, GitHub Actions, SSH rsync, WP-CLI, asset pipelines, and CI/CD for WordPress themes.', 'sage'),
+    ],
+    [
+      'icon'  => 'cursor-ai',
+      'title' => __('AI-assisted dev', 'sage'),
+      'desc'  => __('Using Cursor, Claude, and ChatGPT in a reviewed, production-safe WordPress workflow.', 'sage'),
+    ],
+  ];
 @endphp
+
+{{-- ── JSON-LD: Blog schema for Google / AI search ───────────────── --}}
+@php
+  $postCount = (int) wp_count_posts('post')->publish;
+  $blogUrl   = $writeUrl;
+  $blogLd = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Blog',
+    'name'        => \App\field('write_h1', __('WordPress, PHP, and JavaScript — in practice.', 'sage'), $writeId),
+    'description' => \App\field('write_lede', __('Practical code notes from WordPress theme development, PHP plugins, Tailwind, Vite, and full-stack web work. Most posts ship with a working snippet you can paste and adapt on your own projects.', 'sage'), $writeId),
+    'url'         => esc_url($blogUrl),
+    'inLanguage'  => 'en-US',
+    'author'      => [
+      '@type' => 'Person',
+      'name'  => 'Matt Hummel',
+      'url'   => home_url('/'),
+    ],
+    'publisher' => [
+      '@type' => 'Person',
+      'name'  => 'Matt Hummel',
+      'url'   => home_url('/'),
+    ],
+    'potentialAction' => [
+      '@type'       => 'SearchAction',
+      'target'      => [
+        '@type'       => 'EntryPoint',
+        'urlTemplate' => home_url('/?s={search_term_string}'),
+      ],
+      'query-input' => 'required name=search_term_string',
+    ],
+  ];
+@endphp
+<script type="application/ld+json">{!! wp_json_encode($blogLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
 {{-- HERO --}}
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Journal snapshot', 'sage')])
@@ -52,6 +118,25 @@
     ])
   @endslot
 @endcomponent
+
+{{-- ── What I write about — topic coverage grid ───────────────────── --}}
+<section class="journal-topics-section" aria-labelledby="journal-topics-heading">
+  <div class="container wide">
+    <div class="journal-topics-head">
+      <h2 id="journal-topics-heading" class="journal-topics__title">{{ __('What I write about', 'sage') }}</h2>
+      <p class="journal-topics__sub">{{ __('Mostly WordPress and its surrounding stack — from theme architecture to deploy pipelines.', 'sage') }}</p>
+    </div>
+    <div class="journal-topics-grid">
+      @foreach ($journalTopics as $topic)
+        <div class="journal-topic-card">
+          <span class="journal-topic-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($topic['icon'], 22) !!}</span>
+          <h3 class="journal-topic-card__title">{{ $topic['title'] }}</h3>
+          <p class="journal-topic-card__desc">{{ $topic['desc'] }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</section>
 
 {{-- POSTS --}}
 <div class="container wide page-block write-hub write-hub--home">
@@ -102,48 +187,52 @@
   {{-- Subscribe / RSS --}}
   <div class="journal-subscribe">
     <div class="journal-subscribe__copy">
-      <h2>{{ \App\field('write_subscribe_h2', __('Follow along.', 'sage'), $writeId) }}</h2>
-      <p>{{ \App\field('write_subscribe_lede', __('There\'s no email list. The RSS feed is the most reliable way to read new posts as they come out — paste the URL into any reader.', 'sage'), $writeId) }}</p>
+      <h2>{{ \App\field('write_subscribe_h2', __('Get new posts by RSS.', 'sage'), $writeId) }}</h2>
+      <p>{{ \App\field('write_subscribe_lede', __('No email list. Paste the feed URL into Feedly, NetNewsWire, or any reader you already use — posts land there as they publish.', 'sage'), $writeId) }}</p>
     </div>
     <div class="journal-subscribe__rss">
-      <a class="journal-rss-btn" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
-        {!! \App\mh_svg_icon('rss', 18) !!}
+      <a class="journal-rss-btn" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml" aria-label="{{ __('Subscribe to RSS feed', 'sage') }}">
+        {!! \App\mh_svg_icon('rss', 20) !!}
         <span>
-          <strong>RSS feed</strong>
+          <strong>{{ __('RSS feed', 'sage') }}</strong>
           <small>{{ esc_url($rssUrl) }}</small>
         </span>
       </a>
+      <p class="journal-subscribe__note">
+        {!! \App\mh_svg_icon('book-open', 13) !!}
+        {{ __('Works in Feedly, NetNewsWire, Reeder, Inoreader, and any Atom-compatible reader.', 'sage') }}
+      </p>
     </div>
   </div>
 
   {{-- DEV.to mirror --}}
   @if ($devto)
     <div class="journal-devto">
-      <h2 class="display-title is-section journal-devto__heading">
-        {{ \App\field('write_devto_h2', __('Also on DEV.to', 'sage'), $writeId) }}
-      </h2>
-      <p class="journal-devto__note">Some posts are cross-posted to DEV.to for the broader developer community.</p>
+      <div class="journal-devto__head">
+        <div>
+          <h2 class="journal-devto__heading">
+            {{ \App\field('write_devto_h2', __('Cross-posted to DEV.to', 'sage'), $writeId) }}
+          </h2>
+          <p class="journal-devto__note">{{ __('Selected posts are mirrored to DEV.to for broader reach. Comment threads on both.', 'sage') }}</p>
+        </div>
+        <a class="h-text-arrow" href="https://dev.to/matthummel" rel="noopener" target="_blank">{{ __('Follow on DEV.to', 'sage') }} →</a>
+      </div>
       <div class="dev-cards">
         @foreach ($devto as $d)
           <article class="dev-card">
-            <p class="eyebrow">DEV.to</p>
-            <h3>{{ $d['title'] }}</h3>
+            <span class="dev-card__source" aria-label="Source">DEV.to</span>
+            <h3 class="dev-card__title"><a href="{{ esc_url($d['url']) }}" rel="noopener" target="_blank">{{ $d['title'] }}</a></h3>
             @if (! empty($d['ex']))
-              <p>{{ $d['ex'] }}</p>
+              <p class="dev-card__ex">{{ $d['ex'] }}</p>
             @endif
             @if (! empty($d['date']) && strtotime($d['date']))
-              <p class="post-meta">
-                <time datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">
-                  {{ wp_date(get_option('date_format'), strtotime($d['date'])) }}
-                </time>
-              </p>
+              <time class="dev-card__date" datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">
+                {{ wp_date(get_option('date_format'), strtotime($d['date'])) }}
+              </time>
             @endif
-            @include('partials.read-more', [
-              'url'      => $d['url'],
-              'name'     => $d['title'],
-              'label'    => __('Read on DEV.to', 'sage'),
-              'external' => true,
-            ])
+            <a class="dev-card__read" href="{{ esc_url($d['url']) }}" rel="noopener" target="_blank">
+              {{ __('Read on DEV.to', 'sage') }} <span aria-hidden="true">→</span>
+            </a>
           </article>
         @endforeach
       </div>
@@ -152,7 +241,7 @@
 
   {{-- Elsewhere --}}
   <div class="journal-elsewhere">
-    <p class="write-follow">{{ \App\field('write_follow', __('Find me elsewhere', 'sage'), $writeId) }}</p>
+    <p class="write-follow">{{ \App\field('write_follow', __('More of my writing', 'sage'), $writeId) }}</p>
     @include('partials.social', ['labeled' => true])
   </div>
 </div>

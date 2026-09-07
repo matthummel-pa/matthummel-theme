@@ -181,8 +181,8 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
 {
     $copy = [
         'h1' => __('Matt Hummel — WordPress developer', 'sage'),
-        'role' => __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage'),
-        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage'),
+        'role' => __('Custom WordPress themes, PHP plugins, and full-stack web apps — delivered clean.', 'sage'),
+        'lede' => __('I build WordPress platforms shops can edit themselves and agencies can hand off without guesswork. Sage 11 themes, focused PHP plugins, and clear deploy paths. GPL code you own outright. Open for full-time, contract, or freelance.', 'sage'),
         'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
     ];
 
@@ -702,16 +702,16 @@ function page_field_map(): array
         ],
         'index.blade.php' => [
             __('Intro', 'sage') => [
-                ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
-                ['write_h1', __('Heading', 'sage'), 'text', __('WordPress development notes.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage')],
+                ['write_kicker', __('Kicker', 'sage'), 'text', __('WordPress developer journal', 'sage')],
+                ['write_h1', __('Heading', 'sage'), 'text', __('WordPress, PHP, and JavaScript — in practice.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical code notes from WordPress theme development, PHP plugins, Tailwind, Vite, and full-stack web work. Most posts ship with a working snippet you can paste and adapt on your own projects.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
-                ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Recent posts', 'sage')],
-                ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Also on DEV.to', 'sage')],
-                ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search posts', 'sage')],
-                ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Follow with RSS', 'sage')],
-                ['write_subscribe_lede', __('Subscribe intro', 'sage'), 'textarea', __('There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.', 'sage')],
-                ['write_follow', __('Follow line', 'sage'), 'text', __('More of my notes', 'sage')],
+                ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Latest posts', 'sage')],
+                ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Cross-posted to DEV.to', 'sage')],
+                ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search WordPress, PHP, Tailwind…', 'sage')],
+                ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Get new posts by RSS.', 'sage')],
+                ['write_subscribe_lede', __('Subscribe intro', 'sage'), 'textarea', __('No email list. Paste the feed URL into Feedly, NetNewsWire, or any reader you already use — posts land there as they publish.', 'sage')],
+                ['write_follow', __('Follow line', 'sage'), 'text', __('More of my writing', 'sage')],
                 ['write_aside_years', __('Years heading', 'sage'), 'text', __('Years', 'sage')],
                 ['write_aside_discussed', __('Discussed heading', 'sage'), 'text', __('Most discussed', 'sage')],
                 ['write_aside_tags', __('Tags heading', 'sage'), 'text', __('Tags', 'sage')],
