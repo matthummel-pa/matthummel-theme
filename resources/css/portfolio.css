@@ -11677,26 +11677,29 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 /* ── Purchase section ── */
 /* Purchase section — single column: copy → WC widget stacked */
 .pf-purchase-layout {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 2.5rem;
-  max-width: 680px;
-  margin-inline: auto;
+  align-items: start;
 }
-.pf-purchase-copy { text-align: center; }
+@media (min-width: 860px) {
+  .pf-purchase-layout {
+    grid-template-columns: 1fr 400px;
+    gap: 3.5rem;
+  }
+}
+.pf-purchase-copy { text-align: left; }
 .pf-purchase-copy .eyebrow { margin-bottom: .4rem; }
 .pf-purchase-copy .display-title { margin: 0 0 .85rem; }
-.pf-purchase-copy .lead { max-width: 54ch; margin-inline: auto; }
+.pf-purchase-copy .lead { max-width: 60ch; }
 .pf-purchase-includes {
   list-style: none;
-  margin: 1.5rem auto 0;
+  margin: 1.5rem 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: .4rem .75rem;
   font-size: .88rem;
-  text-align: left;
-  max-width: 560px;
 }
 .pf-purchase-includes li {
   display: flex;
@@ -11715,6 +11718,24 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   padding: 2rem;
   background: var(--color-bg);
   box-shadow: 0 4px 24px -4px rgb(0 0 0 / .08);
+  width: 100%;
+  min-width: 0;
+}
+/* Hide WC elements already shown by the custom template above the fold */
+.pf-purchase-widget .woocommerce-product-gallery,
+.pf-purchase-widget .product_title,
+.pf-purchase-widget .woocommerce-tabs,
+.pf-purchase-widget .related,
+.pf-purchase-widget .upsells {
+  display: none !important;
+}
+/* Ensure the WC product div doesn't try to be a two-column grid inside the widget */
+.pf-purchase-widget div.product {
+  display: block !important;
+  grid-template-columns: unset !important;
+}
+.pf-purchase-widget div.product .summary {
+  margin: 0;
 }
 .pf-purchase-widget__help {
   margin: 1rem 0 0;
