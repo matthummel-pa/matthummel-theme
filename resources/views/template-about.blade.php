@@ -159,11 +159,11 @@
           </div>
 
           <div class="about-aside-card about-aside-card--studio">
-            <p class="about-aside-kicker">{!! \App\mh_svg_icon('globe', 14) !!} {{ __('Concept sites', 'sage') }}</p>
+            <p class="about-aside-kicker">{!! \App\mh_svg_icon('briefcase', 14) !!} {{ __('Themes & plugins', 'sage') }}</p>
             <h3 class="about-aside-card__title">Matt Hummel</h3>
-            <p class="about-aside-card__bio">{{ __('Concept WordPress sites for shops, tours, and inns — not a client gallery. Hire me here for a real build.', 'sage') }}</p>
-            <a class="about-aside-card__link" href="{{ home_url('/projects/') }}">
-              {{ __('See concept sites', 'sage') }} →
+            <p class="about-aside-card__bio">{{ __('WordPress themes and plugins you can buy from the shop. Hire me for a custom build.', 'sage') }}</p>
+            <a class="about-aside-card__link" href="{{ home_url('/shop/') }}">
+              {{ __('Browse products', 'sage') }} →
             </a>
           </div>
         </aside>

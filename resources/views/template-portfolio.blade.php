@@ -16,6 +16,24 @@
   $followers    = (int) ($ghProfile['followers'] ?? 0);
   $ghUrl        = 'https://github.com/'.$ghLogin;
   $ghStars      = \App\mh_github_star_total();
+
+  // Products for the mini-showcase strip.
+  $portfolioProducts = [];
+  if (\App\mh_shop_ready() && function_exists('wc_get_products')) {
+    $pids = wc_get_products(['limit' => 3, 'status' => 'publish', 'return' => 'ids']);
+    foreach ($pids as $pid) {
+      $payload = \App\mh_shop_product_payload((int) $pid);
+      if (! $payload) {
+        continue;
+      }
+      $entry = \App\mh_product_entry((int) $pid);
+      $portfolioProducts[] = array_merge($entry, [
+        'price_html' => $payload['price_html'],
+        'permalink'  => $payload['permalink'],
+        'is_free'    => $payload['is_free'],
+      ]);
+    }
+  }
 @endphp
 
 {{-- HERO --}}
@@ -25,13 +43,15 @@
     {{ \App\field('portfolio_h1', __('WordPress and full-stack code on GitHub.', 'sage'), $postId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('portfolio_lede', __('All public repos — Sage themes, WordPress plugins, React apps, and spec builds you can fork, study, and use. This is the codebase trail I started in 2025.', 'sage'), $postId) }}
+    {{ \App\field('portfolio_lede', __('All public repos — Sage themes, WordPress plugins, React apps, and spec builds you can fork, study, and use. Some power themes and plugins you can buy in the shop.', 'sage'), $postId) }}
   </p>
   <div class="page-header-split__actions">
-    <a class="btn" href="{{ esc_url($ghUrl) }}" target="_blank" rel="noopener">
-      {!! \App\mh_svg_icon('github', 16) !!} {{ __('GitHub profile', 'sage') }}
+    <a class="btn" href="{{ home_url('/shop/') }}">
+      {!! \App\mh_svg_icon('briefcase', 16) !!} {{ __('Browse products', 'sage') }}
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }} <span aria-hidden="true">→</span></a>
+    <a class="h-text-arrow" href="{{ esc_url($ghUrl) }}" target="_blank" rel="noopener">
+      {{ __('GitHub profile', 'sage') }} <span aria-hidden="true">→</span>
+    </a>
   </div>
   @slot('aside')
     @include('partials.hero-panel', [
@@ -62,6 +82,53 @@
     </p>
   </div>
 </section>
+
+{{-- PRODUCTS FOR SALE --}}
+@if ($portfolioProducts !== [])
+  <section class="pf-section pf-section--alt portfolio-products" aria-labelledby="portfolio-products-heading">
+    <div class="container wide page-block">
+      <p class="eyebrow">{{ __('For sale', 'sage') }}</p>
+      <h2 id="portfolio-products-heading" class="display-title is-section">
+        {{ \App\field('portfolio_products_h2', __('Themes and plugins built from these repos.', 'sage'), $postId) }}
+      </h2>
+      <p class="lead" style="margin-bottom:2rem">
+        {{ \App\field('portfolio_products_intro', __('The public repos are the codebase behind these products. Buy a pack and get the finished theme or plugin — no setup from scratch required.', 'sage'), $postId) }}
+      </p>
+      <div class="portfolio-product-grid">
+        @foreach ($portfolioProducts as $p)
+          @php
+            $pName  = (string) ($p['name'] ?? $p['title'] ?? '');
+            $pBlurb = (string) ($p['blurb'] ?? $p['summary'] ?? '');
+            $pLink  = (string) ($p['permalink'] ?? '');
+            $pTech  = (array)  ($p['tech'] ?? []);
+          @endphp
+          @if ($pName !== '' && $pLink !== '')
+            <article class="portfolio-product-card">
+              <div class="portfolio-product-card__copy">
+                <h3 class="portfolio-product-card__title">{{ $pName }}</h3>
+                @if ($pBlurb !== '')
+                  <p class="portfolio-product-card__blurb">{{ $pBlurb }}</p>
+                @endif
+                @if ($pTech !== [])
+                  <p class="portfolio-product-card__tech">{{ implode(' · ', array_slice($pTech, 0, 4)) }}</p>
+                @endif
+              </div>
+              <div class="portfolio-product-card__foot">
+                @if (! ($p['is_free'] ?? false))
+                  <span class="portfolio-product-card__price">{!! $p['price_html'] !!}</span>
+                @endif
+                <a class="btn btn--sm" href="{{ esc_url($pLink) }}">{{ __('View product', 'sage') }}</a>
+              </div>
+            </article>
+          @endif
+        @endforeach
+      </div>
+      <p style="margin-top:1.5rem">
+        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }} <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </section>
+@endif
 
 {{-- FEATURED REPOS --}}
 @if ($featured !== [])
@@ -174,10 +241,11 @@
 {{-- CTA --}}
 @include('partials.cta-band', [
   'kicker'        => __('Work together', 'sage'),
-  'title'         => \App\field('portfolio_cta_h2', __('Want to build, collaborate, or compare notes?', 'sage'), $postId),
-  'text'          => \App\field('portfolio_cta_lede', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage'), $postId),
-  'label'         => \App\field('portfolio_cta_btn', __('Say hello', 'sage'), $postId),
-  'secondary'     => __('Browse products', 'sage'),
-  'secondaryHref' => home_url('/shop/'),
+  'title'         => \App\field('portfolio_cta_h2', __('Buy a theme, fork a repo, or say hello.', 'sage'), $postId),
+  'text'          => \App\field('portfolio_cta_lede', __('Browse the shop for ready-to-buy WordPress themes and plugins. Fork any repo on GitHub, or write if you want to work together.', 'sage'), $postId),
+  'label'         => \App\field('portfolio_cta_btn', __('Browse products', 'sage'), $postId),
+  'href'          => home_url('/shop/'),
+  'secondary'     => __('Say hello', 'sage'),
+  'secondaryHref' => home_url('/contact/'),
 ])
 @endsection

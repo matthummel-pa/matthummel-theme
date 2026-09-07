@@ -72,7 +72,13 @@
   $isPlugin = $productType === 'plugin';
 
   if ($eyebrow === '') {
-    $eyebrow = $isPlugin ? __('WordPress plugin', 'sage') : __('WordPress theme', 'sage');
+    if ($isPlugin) {
+      $eyebrow = __('WordPress plugin', 'sage');
+    } elseif ($productType === 'app') {
+      $eyebrow = __('Web app', 'sage');
+    } else {
+      $eyebrow = __('WordPress theme', 'sage');
+    }
   }
 
   $productPayload = \App\mh_shop_product_payload($productId);
@@ -327,15 +333,33 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     SCREENSHOTS — full gallery after the hero
+     SUMMARY — full product overview (1–4 sentences, SEO body copy)
+     Placed before screenshots so visitors have context before seeing images.
+════════════════════════════════════════════════════════════════════════════ --}}
+@if ($summary !== '' && $summary !== $blurb)
+  <section class="pf-section pf-product-summary" aria-label="{{ __('Product overview', 'sage') }}">
+    <div class="container wide">
+      <p class="lead">{{ $summary }}</p>
+    </div>
+  </section>
+@endif
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     SCREENSHOTS — full gallery
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if (count($screenshots) > 1)
-  <section id="screenshots" class="pf-section pf-product-screenshots" aria-labelledby="product-screenshots-heading">
+  <section id="screenshots" class="pf-section pf-section--alt pf-product-screenshots" aria-labelledby="product-screenshots-heading">
     <div class="container wide">
       <div class="pf-section-head">
         <p class="eyebrow">{{ __('Screenshots', 'sage') }}</p>
         <h2 id="product-screenshots-heading" class="display-title is-section">
-          {{ $isPlugin ? __('See it in action.', 'sage') : __('Inside the theme.', 'sage') }}
+          @if ($isPlugin)
+            {{ __('See it in action.', 'sage') }}
+          @elseif ($productType === 'app')
+            {{ __('Inside the app.', 'sage') }}
+          @else
+            {{ __('Inside the theme.', 'sage') }}
+          @endif
         </h2>
       </div>
       <div class="pf-screenshots-grid">
@@ -369,27 +393,14 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     SUMMARY — full product overview (1–4 sentences, SEO body copy)
-════════════════════════════════════════════════════════════════════════════ --}}
-@if ($summary !== '' && $summary !== $blurb)
-  <section class="pf-section pf-product-summary" aria-label="{{ __('Product overview', 'sage') }}">
-    <div class="container wide">
-      <p class="lead">{{ $summary }}</p>
-    </div>
-  </section>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
      BENEFITS / KEY FEATURES
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($benefits !== [])
   <section class="pf-section pf-section--alt pf-product-benefits" aria-labelledby="product-benefits-heading">
     <div class="container wide">
       <div class="pf-section-head">
-        <p class="eyebrow">{{ __('Why it works', 'sage') }}</p>
-        <h2 id="product-benefits-heading" class="display-title is-section">
-          {{ $isPlugin ? __('What you get.', 'sage') : __('What makes it different.', 'sage') }}
-        </h2>
+        <p class="eyebrow">{{ __('Features', 'sage') }}</p>
+        <h2 id="product-benefits-heading" class="display-title is-section">{{ __('What you get.', 'sage') }}</h2>
       </div>
       <ul class="pf-benefits-grid">
         @foreach ($benefits as $b)
@@ -412,18 +423,14 @@
       @if ($challenge !== '')
         <div class="pf-story-col">
           <p class="eyebrow">{{ __('The problem', 'sage') }}</p>
-          <h2 id="product-story-heading" class="display-title is-section">
-            {{ $isPlugin ? __('The problem it solves.', 'sage') : __('Built for this niche.', 'sage') }}
-          </h2>
+          <h2 id="product-story-heading" class="display-title is-section">{{ __('Built for this niche.', 'sage') }}</h2>
           <p class="pf-story-body">{{ $challenge }}</p>
         </div>
       @endif
       @if ($approach !== '')
         <div class="pf-story-col">
-          <p class="eyebrow">{{ __('The approach', 'sage') }}</p>
-          <h2 class="display-title is-section">
-            {{ $isPlugin ? __('How it works.', 'sage') : __('How the theme works.', 'sage') }}
-          </h2>
+          <p class="eyebrow">{{ __('How it works', 'sage') }}</p>
+          <h2 class="display-title is-section">{{ __('The approach.', 'sage') }}</h2>
           <p class="pf-story-body">{{ $approach }}</p>
         </div>
       @endif
@@ -502,6 +509,27 @@
     </div>
   </section>
 @endif
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     MID-PAGE NUDGE — customize / hire callout (between features and purchase)
+════════════════════════════════════════════════════════════════════════════ --}}
+<div class="pf-section pf-product-hire-nudge" aria-label="{{ __('Custom work', 'sage') }}">
+  <div class="container wide">
+    <div class="pf-hire-nudge">
+      <div class="pf-hire-nudge__copy">
+        <p class="eyebrow">{{ __('Need it customized?', 'sage') }}</p>
+        <p class="pf-hire-nudge__text">
+          {{ $isPlugin
+            ? __('Buy the plugin as-is, or hire me to extend it for your stack. I scope custom builds from a short brief.', 'sage')
+            : __('Buy the pack for a self-serve install, or hire me to brand it, import your content, and hand off wp-admin to your team.', 'sage') }}
+        </p>
+      </div>
+      <a class="btn btn-outline pf-hire-nudge__cta" href="{{ esc_url($helpUrl) }}">
+        {!! \App\mh_svg_icon('mail', 15) !!} {{ __('Get help', 'sage') }}
+      </a>
+    </div>
+  </div>
+</div>
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
      GUTENBERG BLOCKS INCLUDED (themes only)
@@ -610,8 +638,8 @@
 @if ($architecture !== '' || $handoff !== '' || $tech !== [])
   <section class="pf-section pf-section--alt pf-product-technical" aria-labelledby="product-tech-heading">
     <div class="container wide">
-      <p class="eyebrow">{{ __('Technical', 'sage') }}</p>
-      <h2 id="product-tech-heading" class="display-title is-section">{{ __('Stack and handoff.', 'sage') }}</h2>
+      <p class="eyebrow">{{ __('Stack &amp; code', 'sage') }}</p>
+      <h2 id="product-tech-heading" class="display-title is-section">{{ __('How it is built.', 'sage') }}</h2>
 
       @if ($tech !== [])
         <div class="pf-tech-tags">

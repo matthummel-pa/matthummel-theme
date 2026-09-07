@@ -70,11 +70,11 @@
 
     <div class="ty-browse-grid">
 
-      <a class="ty-browse-card" href="{{ home_url('/projects/') }}">
-        <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('globe', 22) !!}</div>
-        <h3 class="ty-browse-card__title">Example sites</h3>
-        <p class="ty-browse-card__body">WordPress projects for shops, inns, tours, and restaurants. A clear picture of what a finished build looks like.</p>
-        <span class="ty-browse-card__link">Browse all projects →</span>
+      <a class="ty-browse-card" href="{{ home_url('/shop/') }}">
+        <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('briefcase', 22) !!}</div>
+        <h3 class="ty-browse-card__title">Themes &amp; plugins</h3>
+        <p class="ty-browse-card__body">WordPress themes and plugins for sale — ready to install, brand, and ship. Browse the shop while you wait.</p>
+        <span class="ty-browse-card__link">Browse products →</span>
       </a>
 
       <a class="ty-browse-card" href="{{ home_url('/services/') }}">
@@ -144,7 +144,7 @@
       @endforeach
     </div>
     <p style="margin-top:1.75rem;text-align:center">
-      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all {{ count(\App\mh_work_page_items()) }} projects →</a>
+      <a class="h-text-arrow" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }} →</a>
     </p>
   </div>
 </section>
@@ -158,10 +158,11 @@
 @include('partials.cta-band', [
   'kicker' => __('Still here?', 'sage'),
   'title' => __('Want to keep exploring?', 'sage'),
-  'text' => __('Browse example sites, read the journal, or write if you already know what you need.', 'sage'),
-  'label' => __('Say hello', 'sage'),
-  'secondary' => __('Example sites', 'sage'),
-  'secondaryHref' => home_url('/projects/'),
+  'text' => __('Browse the shop, read the journal, or write if you already know what you need.', 'sage'),
+  'label' => __('Browse products', 'sage'),
+  'href' => home_url('/shop/'),
+  'secondary' => __('Say hello', 'sage'),
+  'secondaryHref' => home_url('/contact/'),
 ])
 
 @endsection

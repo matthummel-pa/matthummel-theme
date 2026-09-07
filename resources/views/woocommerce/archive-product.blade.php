@@ -6,7 +6,7 @@
   so existing saved values carry forward unchanged.
 
   @see https://woocommerce.com/document/template-structure/
-  @version 3.4.0
+  @version 3.5.0
 --}}
 @extends('layouts.app')
 
@@ -40,15 +40,18 @@
   $howSteps = \App\mh_work_page_how($shopPostId);
   $workFaqs = \App\mh_work_page_faq($shopPostId);
 
-  // FAQ JSON-LD for Rank Math.
-  $faqSchema = array_map(
-    fn ($f) => ['@type' => 'Question', 'name' => $f['title'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['text']]],
-    $workFaqs
-  );
-  $faqJsonLd = json_encode(
-    ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqSchema],
-    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
-  );
+  // FAQ JSON-LD for Rank Math — only output when there are real FAQ items.
+  $faqJsonLd = '';
+  if ($workFaqs !== []) {
+    $faqSchema = array_map(
+      fn ($f) => ['@type' => 'Question', 'name' => $f['title'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['text']]],
+      $workFaqs
+    );
+    $faqJsonLd = json_encode(
+      ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqSchema],
+      JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
+    );
+  }
 
   $crumbItems = [
     ['label' => __('Home', 'sage'), 'url' => home_url('/')],
@@ -61,39 +64,41 @@
   }
 @endphp
 
-<script type="application/ld+json">{!! $faqJsonLd !!}</script>
+@if ($faqJsonLd !== '')
+  <script type="application/ld+json">{!! $faqJsonLd !!}</script>
+@endif
 
 {{-- HERO --}}
 @component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
   @include('partials.woocommerce-crumb', ['items' => $crumbItems])
-  <p class="eyebrow">{{ \App\field('work_kicker', __('Themes & plugins', 'sage'), $shopPostId) }}</p>
+  <p class="eyebrow">{{ \App\field('work_kicker', __('Digital products', 'sage'), $shopPostId) }}</p>
   @if (apply_filters('woocommerce_show_page_title', true))
     <h1 class="display-title is-hero woocommerce-products-header__title">
-      {{ \App\field('work_h1', __('WordPress themes and plugins for sale.', 'sage'), $shopPostId) }}
+      {{ \App\field('work_h1', __('WordPress themes, plugins, and web apps.', 'sage'), $shopPostId) }}
     </h1>
   @endif
   <p class="lead">
-    {{ \App\field('work_lede', __('Browse Sage 11 themes and plugins with live demos. Buy a pack from the shop, or hire me to adapt one for your business. Employer work stays private unless a shop asks to be featured.', 'sage'), $shopPostId) }}
+    {{ \App\field('work_lede', __('Ready-to-buy digital products with live demos and instant download. Buy a pack from the shop, or hire me to adapt one for your business.', 'sage'), $shopPostId) }}
   </p>
   <div class="page-header-split__actions">
-    <a class="btn" href="{{ home_url('/contact/') }}">
-      {!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', __('Say hello', 'sage'), $shopPostId) }}
+    <a class="btn" href="#shop-products">
+      {!! \App\mh_svg_icon('briefcase', 16) !!} {{ \App\field('work_hero_cta_primary', __('Browse products', 'sage'), $shopPostId) }}
     </a>
-    <a class="h-text-arrow" href="{{ esc_url(home_url('/portfolio/')) }}">
-      {{ __('GitHub portfolio', 'sage') }} <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="{{ home_url('/contact/') }}">
+      {{ __('Say hello', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/shop',
       'icon'   => 'briefcase',
-      'title'  => __('Themes & plugins', 'sage'),
+      'title'  => __('Digital products', 'sage'),
       'meta'   => __('Demos, packs, checkout', 'sage'),
       'stats'  => [
         ['value' => number_format_i18n($productCount), 'label' => __('Listed products', 'sage')],
         ['value' => number_format_i18n($forSaleCount), 'label' => __('Ready to buy', 'sage')],
-        ['value' => 'Sage 11',   'label' => __('Tailwind · Vite', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Themes & plugins', 'sage')],
+        ['value' => 'GPL',       'label' => __('Open license', 'sage')],
+        ['value' => 'Instant',   'label' => __('Download &amp; install', 'sage')],
       ],
       'link' => [
         'label' => __('Browse GitHub portfolio', 'sage'),
@@ -103,21 +108,8 @@
   @endslot
 @endcomponent
 
-{{-- CONTEXT --}}
-<section class="pf-section work-guide" aria-labelledby="shop-context-heading">
-  <div class="container wide">
-    <h2 id="shop-context-heading" class="display-title is-section">
-      {{ \App\field('work_context_h2', __('What you can buy or hire me to build.', 'sage'), $shopPostId) }}
-    </h2>
-    <div class="work-guide__prose">
-      <p>{{ \App\field('work_context_p1', __('Each product is a WordPress theme or plugin with screenshots, stack notes, and a live demo when available. Buy the pack, or hire me to adapt it for your shop.', 'sage'), $shopPostId) }}</p>
-      {!! \App\field_html('work_context_p2', __('Production client and in-house work stays private unless a shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>. Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage'), $shopPostId) !!}
-    </div>
-  </div>
-</section>
-
-{{-- PRODUCT LOOP --}}
-<div class="container wide woo-catalog-shell page-block" data-work-hub>
+{{-- PRODUCT LOOP — appears first so buyers reach products immediately --}}
+<div id="shop-products" class="container wide woo-catalog-shell page-block" data-work-hub>
   @php
     do_action('woocommerce_before_main_content');
   @endphp
@@ -164,9 +156,22 @@
   @endphp
 
   <div class="work-footer-links">
-    {!! \App\field_html('work_foot', __('Code and repos: <a href="/portfolio/">Portfolio page</a>. Live demos open from each product page when available.', 'sage'), $shopPostId) !!}
+    {!! \App\field_html('work_foot', __('Full GitHub portfolio: <a href="/portfolio/">repos and open-source code</a>. Live demos open from each product page when available.', 'sage'), $shopPostId) !!}
   </div>
 </div>
+
+{{-- CONTEXT — what each pack includes and who buys them --}}
+<section class="pf-section work-guide" aria-labelledby="shop-context-heading">
+  <div class="container wide">
+    <h2 id="shop-context-heading" class="display-title is-section">
+      {{ \App\field('work_context_h2', __('What you can buy or hire me to build.', 'sage'), $shopPostId) }}
+    </h2>
+    <div class="work-guide__prose">
+      <p>{{ \App\field('work_context_p1', __('Each product has screenshots, a tech summary, pricing, and a live demo when one exists. Buy the pack for an instant download, or hire me to adapt it for your business.', 'sage'), $shopPostId) }}</p>
+      {!! \App\field_html('work_context_p2', __('These are studio builds — not agency client sites. If nothing here fits exactly, <a href="/contact/">write and tell me what you need</a>. I build custom from a brief.', 'sage'), $shopPostId) !!}
+    </div>
+  </div>
+</section>
 
 {{-- WHO THIS IS FOR --}}
 <section class="pf-section pf-section--alt work-guide" aria-labelledby="shop-fit-heading">
@@ -215,40 +220,43 @@
 </section>
 
 {{-- FAQ --}}
-<section class="pf-section pf-section--alt work-guide" aria-labelledby="shop-faq-heading" id="shop-faq">
-  <div class="container wide svc-faq-layout">
-    <div class="svc-faq-aside">
-      <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
-      <h2 id="shop-faq-heading" class="display-title is-section">
-        {{ \App\field('work_faq_h2', __('Questions about themes and plugins.', 'sage'), $shopPostId) }}
-      </h2>
-      <p class="svc-faq-aside__intro">
-        {{ \App\field('work_faq_intro', __('Straight answers about buying a pack, licensing, demos, and hiring me for a custom build.', 'sage'), $shopPostId) }}
-      </p>
-      <div class="svc-faq-aside__cta">
-        <p>{{ __('Question not here?', 'sage') }}</p>
-        <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
-          {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me directly', 'sage') }}
-        </a>
+@if ($workFaqs !== [])
+  <section class="pf-section pf-section--alt work-guide" aria-labelledby="shop-faq-heading" id="shop-faq">
+    <div class="container wide svc-faq-layout">
+      <div class="svc-faq-aside">
+        <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
+        <h2 id="shop-faq-heading" class="display-title is-section">
+          {{ \App\field('work_faq_h2', __('Questions about themes and plugins.', 'sage'), $shopPostId) }}
+        </h2>
+        <p class="svc-faq-aside__intro">
+          {{ \App\field('work_faq_intro', __('Straight answers about buying a pack, licensing, demos, and hiring me for a custom build.', 'sage'), $shopPostId) }}
+        </p>
+        <div class="svc-faq-aside__cta">
+          <p>{{ __('Question not here?', 'sage') }}</p>
+          <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
+            {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me directly', 'sage') }}
+          </a>
+        </div>
+      </div>
+      <div class="faq-list">
+        @foreach ($workFaqs as $i => $faq)
+          <details {{ $i === 0 ? 'open' : '' }}>
+            <summary>{{ $faq['title'] }}</summary>
+            <p>{{ $faq['text'] }}</p>
+          </details>
+        @endforeach
       </div>
     </div>
-    <div class="faq-list">
-      @foreach ($workFaqs as $i => $faq)
-        <details {{ $i === 0 ? 'open' : '' }}>
-          <summary>{{ $faq['title'] }}</summary>
-          <p>{{ $faq['text'] }}</p>
-        </details>
-      @endforeach
-    </div>
-  </div>
-</section>
+  </section>
+@endif
 
 {{-- BOTTOM CTA --}}
 @include('partials.cta-band', [
-  'kicker'        => __('Work with me', 'sage'),
-  'title'         => __('Ready to buy or customize a pack?', 'sage'),
-  'text'          => __('Tell me which theme or plugin fits your shop and what you\'d change. I usually reply within a day.', 'sage'),
+  'kicker'        => __('From this catalog', 'sage'),
+  'title'         => __('Buy a product or hire me to build one.', 'sage'),
+  'text'          => __('Each product ships as an instant digital download. Need something custom built, branded, and handed off? Write and tell me what you need.', 'sage'),
   'label'         => __('Say hello', 'sage'),
+  'href'          => home_url('/contact/'),
   'secondary'     => __('GitHub portfolio', 'sage'),
   'secondaryHref' => home_url('/portfolio/'),
 ])

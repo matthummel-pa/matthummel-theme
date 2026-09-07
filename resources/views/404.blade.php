@@ -8,7 +8,7 @@
     <div class="search-wrap">{!! get_search_form(false) !!}</div>
     <ul class="elsewhere error-links">
       <li><a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a></li>
-      <li><a href="{{ home_url('/projects/') }}">{{ __('Example sites', 'sage') }}</a></li>
+      <li><a href="{{ home_url('/shop/') }}">{{ __('Themes & plugins', 'sage') }}</a></li>
       <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
       <li><a href="{{ get_permalink(get_option('page_for_posts')) ?: home_url('/blog/') }}">{{ __('Journal', 'sage') }}</a></li>
       <li><a href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a></li>
