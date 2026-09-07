@@ -77,9 +77,9 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Custom WordPress Sites & Plugins', 'sage').' | '.$brand,
             'desc' => __('Custom WordPress sites, plugins, and web apps for shops and agencies. Clear scope and clean handoffs. Say hello.', 'sage'),
         ],
-        'template-projects.blade.php' => [
-            'title' => __('WordPress Example Sites', 'sage').' | '.$brand,
-            'desc' => __('WordPress example sites, themes, and plugins I build and maintain. See the work, then say hello.', 'sage'),
+        'template-portfolio.blade.php' => [
+            'title' => __('WordPress Developer Portfolio & GitHub', 'sage').' | '.$brand,
+            'desc' => __('Open-source WordPress themes, plugins, and web app repos on GitHub. Browse the code or say hello about a custom build.', 'sage'),
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
@@ -123,7 +123,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-woocommerce.blade.php' => [
             'title' => '',
-            'desc' => __('Cart, checkout, and account for digital WordPress themes from studio Work projects.', 'sage'),
+            'desc' => __('Cart, checkout, and account for digital WordPress products. Download links arrive by email after payment.', 'sage'),
         ],
         'template-contact.blade.php' => [
             'title' => __('Contact WordPress Developer', 'sage').' | '.$brand,
@@ -179,7 +179,7 @@ function mh_seo_document_title(): string
             $label = __('Shop', 'sage');
         }
         $built = is_shop()
-            ? __('WordPress Themes Shop', 'sage').' | '.$brand
+            ? __('WordPress Themes, Plugins & Web Apps', 'sage').' | '.$brand
             : $label.' | '.__('Shop', 'sage').' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
@@ -199,7 +199,17 @@ function mh_seo_document_title(): string
         if ($title === '') {
             return '';
         }
-        $built = $title.' | '.__('WordPress Theme', 'sage').' | '.$brand;
+        $productTypeLabel = __('WordPress Theme', 'sage');
+        $wcp = function_exists('wc_get_product') ? wc_get_product($post_id) : null;
+        if ($wcp) {
+            $metaType = strtolower((string) $wcp->get_meta('_mh_project_product_type'));
+            if ($metaType === 'plugin') {
+                $productTypeLabel = __('WordPress Plugin', 'sage');
+            } elseif ($metaType === 'app') {
+                $productTypeLabel = __('Web App', 'sage');
+            }
+        }
+        $built = $title.' | '.$productTypeLabel.' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
     }
@@ -328,7 +338,7 @@ function mh_seo_plugin_meta(int $post_id, array $keys): string|false
 function mh_seo_meta_description(): string
 {
     if (function_exists('is_shop') && is_shop()) {
-        $desc = __('WordPress themes and plugins for sale. Browse demos on Projects, check out here, or say hello for a custom build.', 'sage');
+        $desc = __('WordPress themes, plugins, and web apps for sale. Browse demos, buy a ready-made pack, or say hello for a custom build.', 'sage');
 
         return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
     }
@@ -347,23 +357,38 @@ function mh_seo_meta_description(): string
             $desc .= '.';
         }
         if ($desc === '') {
-            $desc = __('WordPress theme for sale. See the details or say hello for help adapting it.', 'sage');
+            $productTypeLabel = 'digital product';
+            $wcp = function_exists('wc_get_product') ? wc_get_product($post_id) : null;
+            if ($wcp) {
+                $metaType = strtolower((string) $wcp->get_meta('_mh_project_product_type'));
+                if ($metaType === 'plugin') {
+                    $productTypeLabel = 'WordPress plugin';
+                } elseif ($metaType === 'app') {
+                    $productTypeLabel = 'web app';
+                } else {
+                    $productTypeLabel = 'WordPress theme';
+                }
+            }
+            $desc = sprintf(
+                __('Buy this %s or say hello for a custom adaptation. Instant download, GPL-licensed, includes demo.', 'sage'),
+                $productTypeLabel
+            );
         }
 
         return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
     }
     if (function_exists('is_cart') && is_cart()) {
-        $desc = __('Review themes in your cart, update quantities, and continue to secure checkout.', 'sage');
+        $desc = __('Review digital products in your cart, update quantities, and continue to secure checkout.', 'sage');
 
         return $desc;
     }
     if (function_exists('is_checkout') && is_checkout()) {
-        $desc = __('Secure checkout for digital WordPress themes. Access details arrive by email after payment.', 'sage');
+        $desc = __('Secure checkout for digital WordPress products. Download links and access details arrive by email after payment.', 'sage');
 
         return $desc;
     }
     if (function_exists('is_account_page') && is_account_page()) {
-        $desc = __('View orders, downloads, and account details for your WordPress theme purchases.', 'sage');
+        $desc = __('View orders, downloads, and account details for your WordPress product purchases.', 'sage');
 
         return $desc;
     }

@@ -27,12 +27,12 @@ function mh_page_focus_keyword_defaults(): array
         'template-about.blade.php' => 'WordPress developer',
         'template-services.blade.php' => 'custom WordPress sites',
         'template-hire.blade.php' => 'hire a WordPress developer',
-        'template-projects.blade.php' => 'WordPress example sites',
+        'template-portfolio.blade.php' => 'WordPress developer portfolio',
         'template-code.blade.php' => 'WordPress open source',
         'template-uses.blade.php' => 'WordPress developer tools',
         'template-contact.blade.php' => 'contact WordPress developer',
         'template-start.blade.php' => 'WordPress project brief',
-        'template-now.blade.php' => 'WordPress themes',
+        'template-now.blade.php' => 'WordPress developer building now',
         'template-resources.blade.php' => 'WordPress starters',
         'index.blade.php' => 'WordPress development',
     ];
@@ -50,7 +50,7 @@ function mh_page_focus_keyword(int $post_id): string
         return $parts[0] !== '' ? $parts[0] : '';
     }
 
-    $key = page_template_key($post_id);
+    $key = mh_effective_field_map_key($post_id);
     if ((int) get_option('page_for_posts') === $post_id) {
         $key = 'index.blade.php';
     }
@@ -58,9 +58,35 @@ function mh_page_focus_keyword(int $post_id): string
         $key = 'front-page.blade.php';
     }
 
+    // Shop page: use the digital products keyword if no explicit RM meta is saved.
+    if (function_exists('wc_get_page_id')) {
+        $shopId = (int) wc_get_page_id('shop');
+        if ($shopId > 0 && $post_id === $shopId) {
+            return 'WordPress themes plugins';
+        }
+    }
+
     $defaults = mh_page_focus_keyword_defaults();
 
     return $defaults[$key] ?? 'WordPress';
+}
+
+/**
+ * Resolve the effective page_field_map key for a post, including the WooCommerce
+ * shop page which has no Blade template assigned but reuses the work_* field set.
+ */
+function mh_effective_field_map_key(int $post_id): string
+{
+    $key = page_template_key($post_id);
+
+    if (($key === '' || $key === 'default') && function_exists('wc_get_page_id')) {
+        $shopId = (int) wc_get_page_id('shop');
+        if ($shopId > 0 && $post_id === $shopId) {
+            return 'template-projects.blade.php';
+        }
+    }
+
+    return $key;
 }
 
 /**
@@ -72,11 +98,11 @@ function mh_page_has_theme_fields(int $post_id): bool
         return false;
     }
 
-    $key = page_template_key($post_id);
     if ((int) get_option('page_for_posts') === $post_id) {
         return false;
     }
 
+    $key = mh_effective_field_map_key($post_id);
     $map = page_field_map();
 
     return ! empty($map[$key]);
@@ -173,7 +199,7 @@ function mh_repair_page_field_label_prefixes(): void
  */
 function mh_page_field_analysis_parts(int $post_id): array
 {
-    $key = page_template_key($post_id);
+    $key = mh_effective_field_map_key($post_id);
     $map = page_field_map();
     $groups = $map[$key] ?? [];
     $h1 = '';
@@ -408,9 +434,10 @@ function mh_page_seo_analysis_html(int $post_id): string
 
     $links = '<p>'
         .'Internal paths: <a href="/contact/">Say hello</a>, '
-        .'<a href="/projects/">example sites</a>, '
+        .'<a href="/shop/">themes and plugins</a>, '
         .'<a href="/hire/">hire</a>, '
-        .'<a href="/services/">services</a>. '
+        .'<a href="/services/">services</a>, '
+        .'<a href="/portfolio/">portfolio</a>. '
         .'External references: <a href="https://roots.io/sage/">Roots Sage</a>, '
         .'<a href="https://wordpress.org/">WordPress.org</a>, '
         .'<a href="https://github.com/matthummel-pa">GitHub</a>.'
@@ -581,7 +608,7 @@ function mh_on_save_page_seo_analysis_body(int $post_id): void
  */
 function mh_sync_all_page_seo_analysis_bodies(): void
 {
-    if (get_option('mh_synced_seo_analysis_bodies_v3')) {
+    if (get_option('mh_synced_seo_analysis_bodies_v4')) {
         return;
     }
 
@@ -597,7 +624,16 @@ function mh_sync_all_page_seo_analysis_bodies(): void
         mh_sync_page_seo_analysis_body((int) $id);
     }
 
-    update_option('mh_synced_seo_analysis_bodies_v3', true, false);
+    // Also sync the WooCommerce shop page, which has no Blade template assigned
+    // but uses the work_* field set for analysis (mapped via mh_effective_field_map_key).
+    if (function_exists('wc_get_page_id')) {
+        $shopId = (int) wc_get_page_id('shop');
+        if ($shopId > 0) {
+            mh_sync_page_seo_analysis_body($shopId);
+        }
+    }
+
+    update_option('mh_synced_seo_analysis_bodies_v4', true, false);
 }
 
 add_action('init', __NAMESPACE__.'\\mh_repair_page_field_label_prefixes', 48);

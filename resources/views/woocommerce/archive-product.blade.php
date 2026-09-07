@@ -53,6 +53,29 @@
     );
   }
 
+  // ItemList / CollectionPage JSON-LD: gives Google a structured product listing
+  // and improves Rank Math's CollectionPage signal on the shop archive.
+  $listItems = [];
+  if (function_exists('wc_get_products')) {
+    $pubIds = wc_get_products(['limit' => -1, 'status' => 'publish', 'return' => 'ids']);
+    foreach ($pubIds as $i => $pid) {
+      $listItems[] = [
+        '@type'    => 'ListItem',
+        'position' => $i + 1,
+        'url'      => (string) get_permalink($pid),
+        'name'     => html_entity_decode(get_the_title($pid), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+      ];
+    }
+  }
+  $collectionJsonLd = json_encode([
+    '@context'        => 'https://schema.org',
+    '@type'           => 'CollectionPage',
+    'name'            => __('WordPress Themes, Plugins & Web Apps', 'sage'),
+    'description'     => __('Ready-to-buy WordPress themes, plugins, and web apps with live demos and instant download.', 'sage'),
+    'url'             => $shopUrl,
+    'hasPart'         => $listItems,
+  ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
+
   $crumbItems = [
     ['label' => __('Home', 'sage'), 'url' => home_url('/')],
   ];
@@ -67,6 +90,7 @@
 @if ($faqJsonLd !== '')
   <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 @endif
+<script type="application/ld+json">{!! $collectionJsonLd !!}</script>
 
 {{-- HERO --}}
 @component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])

@@ -46,7 +46,7 @@ Make the demo site do more selling work:
 - Add a brief "About this theme" footer strip with the tagline and product page link.
 - Make the demo listing inventory accurate to what a real rural office would show (farm parcels, not suburban condos).
 
-#### Product page (matthummel.com/shop/acreline — or `/projects/acreline/`)
+#### Product page (matthummel.com/shop/acreline`/shop/acreline/`)
 The product page now ships with:
 - Full benefits list (8 points)
 - Challenge / approach narrative
