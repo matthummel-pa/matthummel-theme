@@ -584,9 +584,9 @@ function page_field_map(): array
         ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
-                ['work_kicker', __('Kicker', 'sage'), 'text', __('Themes & plugins', 'sage')],
-                ['work_h1', __('Heading', 'sage'), 'text', __('WordPress themes and plugins for sale.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Browse Sage 11 themes and plugins with live demos for tours, shops, and inns. Buy a pack from the shop, or hire me to adapt one for your business. Employer work stays private unless a shop asks to be featured.', 'sage')],
+                ['work_kicker', __('Kicker', 'sage'), 'text', __('Digital products', 'sage')],
+                ['work_h1', __('Heading', 'sage'), 'text', __('WordPress themes, plugins, and web apps.', 'sage')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', __('Ready-to-buy digital products built on Sage 11 and Tailwind v4. Browse WordPress themes for tour operators, real estate, and local shops — plus plugins and web apps. Live demos, instant download, GPL license. Buy a pack, or hire me to adapt one for your business.', 'sage')],
                 ['work_hero_cta_primary', __('Primary hero button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['work_hero_cta_secondary', __('Secondary hero link', 'sage'), 'text', __('Open shop', 'sage')],
                 ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Checkout lives in the <a href="/shop/">shop</a>. Code and repos: <a href="/code/">Code page</a>. Live demos open from each product page when available.', 'sage')],
@@ -603,8 +603,8 @@ function page_field_map(): array
             ],
             __('Context & guides', 'sage') => [
                 ['work_context_h2', __('Context heading', 'sage'), 'text', __('What you can buy or hire me to build.', 'sage')],
-                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('Each card is a WordPress theme or plugin with screenshots, stack notes, and a live demo when available. Buy the pack from the shop, or hire me to adapt it for your shop.', 'sage')],
-                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Production client and in-house work stays private unless a shop asks to be featured. If one fits what you run, <a href="/contact/">write and say which</a>. Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')],
+                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('Each product ships as a full pack — theme zip, child theme starter, docs, and a live demo when available. Buy the pack for an instant download and self-serve install, or hire me to brand it, import content, and hand off wp-admin to your team.', 'sage')],
+                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('These are studio builds — GPL-licensed, GitHub-backed, and built on Sage 11 with Tailwind v4. Not repurposed client work. If one fits what you run, <a href="/contact/">write and say which</a>. Hiring managers can ask for a private walkthrough under NDA.', 'sage')],
                 ['work_fit_h2', __('Who fits heading', 'sage'), 'text', __('Who this catalog is for.', 'sage')],
                 ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', __('Shops buying a ready theme, agencies needing a solid base, developers evaluating plugins, and hiring managers reviewing my public work.', 'sage')],
                 ['work_fit_items', __('Audience cards', 'sage'), 'repeater', mh_work_fit_defaults(), [
@@ -1154,19 +1154,31 @@ function mh_work_faq_defaults(): array
     return [
         [
             'title' => __('What kinds of products do you sell?', 'sage'),
-            'text' => __('WordPress themes, WordPress plugins, and web apps. Each product page lists what is included, the tech stack, pricing, and a live demo when one exists. All products check out through the shop.', 'sage'),
+            'text' => __('WordPress themes, WordPress plugins, and web apps. Each product page lists what is included, the tech stack, pricing, and a live demo when one exists. All products check out through the shop and deliver as an instant digital download.', 'sage'),
+        ],
+        [
+            'title' => __('What stack do you build on?', 'sage'),
+            'text' => __('Sage 11 (Roots) with Blade templates, Tailwind v4 design tokens, Vite for asset bundling, and Core Gutenberg blocks — no page builders. PHP 8.3, GPL license, and clean handoff notes included with every pack.', 'sage'),
         ],
         [
             'title' => __('Are these real client sites or studio builds?', 'sage'),
-            'text' => __('Studio builds. Production client and employer work stays private. These are products I made to sell, study, or demo a specific approach — not repurposed client deliverables.', 'sage'),
+            'text' => __('Studio builds. Production client and employer work stays private. These are products I made to sell, study, or demo a specific approach — not repurposed client deliverables. Source is on GitHub for every product.', 'sage'),
+        ],
+        [
+            'title' => __('What license do the products ship under?', 'sage'),
+            'text' => __('GPLv2 or later on every theme and plugin. You own the code outright after checkout. There are no subscription fees, usage limits, or domain restrictions.', 'sage'),
         ],
         [
             'title' => __('Can I hire you to customize a product?', 'sage'),
-            'text' => __('Yes. Buy the pack for a self-serve install, or write and tell me what you would change. I take on custom builds from a written brief and hand off work you own.', 'sage'),
+            'text' => __('Yes. Buy the pack for a self-serve install, or write and tell me what you would change. I take on custom builds from a written brief and hand off work you own outright — no lock-in.', 'sage'),
+        ],
+        [
+            'title' => __('Do the products work with standard WordPress hosting?', 'sage'),
+            'text' => __('Yes. All themes and plugins require WordPress 6.6 or later, PHP 8.3+, and standard shared or managed hosting. No proprietary server stack or platform lock-in.', 'sage'),
         ],
         [
             'title' => __('What if nothing here matches my business?', 'sage'),
-            'text' => __('Say hello anyway. The catalog is a starting point. I build custom WordPress sites, plugins, and web apps when nothing ready-made fits what you need.', 'sage'),
+            'text' => __('Say hello anyway. The catalog is a starting point. I build custom WordPress sites, plugins, and web apps when nothing ready-made fits what you need. Send a short note about what you are building.', 'sage'),
         ],
     ];
 }
