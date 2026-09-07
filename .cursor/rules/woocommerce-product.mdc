@@ -1,0 +1,125 @@
+---
+description: Standards for WooCommerce product pages, catalog JSON, and product SEO on matthummel.com
+alwaysApply: false
+---
+
+# WooCommerce product pages
+
+This repo sells WordPress themes, plugins, and web apps through WooCommerce. Apply these rules whenever touching the shop or product templates, catalog JSON, or product SEO.
+
+## This repository (do not ignore)
+
+- **Data source:** `resources/data/product-catalog.json` is the ground truth. `_mh_project_*` post meta on WC products wins over JSON when set.
+- **Loader:** `mh_product_entry(int $product_id)` in `app/shop.php` merges both sources.
+- **Templates:** `resources/views/woocommerce/archive-product.blade.php` (shop listing), `resources/views/woocommerce/single-product.blade.php` (product detail).
+- **Copy:** visitor-facing copy lives in `product-catalog.json` and `_mh_project_*` meta, not hardcoded in Blade.
+- **Skill:** see `.cursor/skills/add-product/add-product.md` for the full flow to add a product.
+
+---
+
+## 1. Catalog JSON schema
+
+Each product entry must have at minimum:
+
+```json
+{
+  "slug": "kebab-case-matches-wc-permalink",
+  "name": "Human-readable product name",
+  "product_type": "theme|plugin|app",
+  "blurb": "2-3 sentence hook. Appears in Rank Math meta description.",
+  "is_product": true,
+  "for_sale": true
+}
+```
+
+**`product_type`** drives:
+- `eyebrow` label (WordPress theme / WordPress plugin / Web app)
+- `SoftwareApplication.applicationCategory` (WebApplication for themes/apps, BusinessApplication for plugins)
+- `SoftwareApplication.operatingSystem` (WordPress for themes/plugins, Browser for apps)
+- Buy/download button label
+
+Do not use `product_type: "concept"` — concepts are not sold and should not have `for_sale: true`.
+
+---
+
+## 2. SEO standards per product page
+
+Every live product page must have:
+
+- [ ] Rank Math focus keyphrase set in wp-admin (not auto-generated)
+- [ ] Rank Math meta description = the `blurb` field (≤155 chars, ends with a CTA)
+- [ ] Featured image uploaded to the WC product (1200×750 px, WebP preferred)
+- [ ] At least one internal link from another page (About, Now, or a blog post)
+- [ ] FAQPage JSON-LD (auto-output by `single-product.blade.php` when `faq` array is non-empty)
+- [ ] SoftwareApplication + Product JSON-LD (auto-output by `single-product.blade.php`)
+
+Target Rank Math score: **80+** per product.
+
+---
+
+## 3. Archive (shop) page standards
+
+The shop listing at `/shop/` is a WooCommerce archive routed through `archive-product.blade.php`. Its editable copy is on the WooCommerce "Shop" page in wp-admin via **Page content (theme)** fields.
+
+Required schema on the shop page:
+- `CollectionPage` with `hasPart` array of product URLs (auto-output)
+- `FAQPage` when FAQ items are set (auto-output)
+
+Required SEO defaults:
+- Title: "WordPress Themes, Plugins & Web Apps | Matt Hummel"
+- Meta description: covers themes + plugins + apps, ends with CTA (set in `app/filters.php → mh_seo_meta_description()`)
+
+---
+
+## 4. Single product page layout order
+
+Do not reorder these sections without a strong reason:
+
+1. Hero — product title, price, buy/demo CTAs, trust signals
+2. Summary — full overview paragraph (context before screenshots)
+3. Screenshots gallery
+4. Features / benefits (What you get)
+5. Story — challenge + approach (Built for this niche / The approach)
+6. Deliverables (What's included)
+7. Hire nudge strip (Need it customized?)
+8. Gutenberg blocks (themes only)
+9. Technical / Stack & code
+10. Documentation links
+11. FAQ (accordion, drives FAQPage schema)
+12. Purchase CTA band
+
+---
+
+## 5. `mh_product_entry()` — adding a new field
+
+When you need a field not in the JSON catalog, follow this pattern in `app/shop.php`:
+
+1. Add the key to the JSON catalog under the product.
+2. In `mh_product_entry()`, read it from `$entry` (already merged from JSON + meta).
+3. In the Blade template, extract it from `$entry` at the top `@php` block.
+4. Do NOT hardcode copy in the template.
+
+Do not install ACF or add a new metabox for product fields — use `_mh_project_*` meta (saved by the catalog seed) or `mh_product_entry()`.
+
+---
+
+## 6. Pricing rules
+
+- Free product: `price` = 0 or empty, `is_free: true` in catalog JSON.
+- Paid product: one-time price in USD, no subscription or recurring unless Matt explicitly requests.
+- Do not create coupon logic, upsell popups, or "limited time" countdowns without Matt's approval.
+- WooCommerce checkout is the only purchase flow. Do not add Stripe or Paddle SDKs directly.
+
+---
+
+## 7. SEO title format
+
+Built in `app/filters.php → mh_seo_document_title()`:
+
+- Shop archive: `WordPress Themes, Plugins & Web Apps | [Brand]`
+- Product (theme): `[Product name] | WordPress Theme | [Brand]`
+- Product (plugin): `[Product name] | WordPress Plugin | [Brand]`
+- Product (app): `[Product name] | Web App | [Brand]`
+- All clipped at 60 characters.
+
+Do not override these with a custom filter unless the product has a Rank Math title explicitly set in wp-admin (that wins automatically).

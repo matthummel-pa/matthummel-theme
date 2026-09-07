@@ -2,6 +2,8 @@
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
+!.cursor/skills/
+!.cursor/skills/**
 
 # GitHub Actions stay in git (un-ignore workflows and scripts)
 .github/*
