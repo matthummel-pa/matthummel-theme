@@ -301,21 +301,60 @@
       "Mobile-first, accessible build"
     ],
     "blocks": [
-      ["Home Hero", "home"],
-      ["Page Intro", "layout-text"],
-      ["Section Heading", "layout-text"],
-      ["Tour Grid", "grid-4"],
-      ["Pathway Cards", "grid-add"],
-      ["About Split", "users"],
-      ["CTA Band", "megaphone"],
-      ["Book Band", "calendar"],
-      ["Info Strip", "building"],
-      ["Custom Block", "lightbulb"]
+      [
+        "Home Hero",
+        "home"
+      ],
+      [
+        "Page Intro",
+        "layout-text"
+      ],
+      [
+        "Section Heading",
+        "layout-text"
+      ],
+      [
+        "Tour Grid",
+        "grid-4"
+      ],
+      [
+        "Pathway Cards",
+        "grid-add"
+      ],
+      [
+        "About Split",
+        "users"
+      ],
+      [
+        "CTA Band",
+        "megaphone"
+      ],
+      [
+        "Book Band",
+        "calendar"
+      ],
+      [
+        "Info Strip",
+        "building"
+      ],
+      [
+        "Custom Block",
+        "lightbulb"
+      ]
     ],
     "metrics": [
-      ["10", "Gutenberg blocks"],
-      ["WooCommerce", "tour shop"],
-      ["GPL", "theme pack"]
+      [
+        "10",
+        "Gutenberg blocks"
+      ],
+      [
+        "WooCommerce",
+        "tour shop"
+      ],
+      [
+        "GPL",
+        "theme pack"
+      ]
     ],
     "faq": [
       [
@@ -378,7 +417,30 @@
     "brand_palette": "Slate|#0c1218\nSlate mid|#17212c\nGold|#e0be72\nParchment|#f7f1e3",
     "image": "products/walkridge/featured.webp",
     "screenshots": [
-      ["products/walkridge/screenshot.webp", "WalkRidge homepage — compass mark, hero, and path to book a tour"]
+      [
+        "products/walkridge/01-homepage.webp",
+        "WalkRidge homepage — compass mark hero, featured tour cards, and guide bios"
+      ],
+      [
+        "products/walkridge/02-tours.webp",
+        "Tours listing page with grid of bookable battlefield tours"
+      ],
+      [
+        "products/walkridge/03-shop.webp",
+        "WooCommerce shop — tour products with pricing and booking CTAs"
+      ],
+      [
+        "products/walkridge/04-product.webp",
+        "Individual tour page — itinerary, booking form, and guide details"
+      ],
+      [
+        "products/walkridge/05-guides.webp",
+        "Licensed guides directory with bios and tour assignments"
+      ],
+      [
+        "products/walkridge/06-area.webp",
+        "Gettysburg area attractions page with history and visitor info"
+      ]
     ],
     "ad_keywords": [
       "WordPress tour theme",

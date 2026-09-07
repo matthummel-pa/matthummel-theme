@@ -11897,6 +11897,9 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 /* Hide WC elements already shown by the custom template above the fold */
 .pf-purchase-widget .woocommerce-product-gallery,
 .pf-purchase-widget .product_title,
+.pf-purchase-widget .woocommerce-product-details__short-description,
+.pf-purchase-widget .woocommerce-product-rating,
+.pf-purchase-widget .product_meta,
 .pf-purchase-widget .woocommerce-tabs,
 .pf-purchase-widget .related,
 .pf-purchase-widget .upsells {
@@ -11910,11 +11913,40 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .pf-purchase-widget div.product .summary {
   margin: 0;
 }
+/* Price: larger, prominent */
+.pf-purchase-widget div.product .summary .price {
+  font: 750 2rem/1.1 var(--font-display);
+  color: var(--color-text);
+  margin: 0 0 1.25rem;
+  display: block;
+}
+/* Add-to-cart form: full-width button */
+.pf-purchase-widget div.product .cart {
+  margin: 0;
+}
+.pf-purchase-widget div.product .cart .qty { display: none; }
+.pf-purchase-widget div.product .cart .single_add_to_cart_button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: .85rem 1.25rem;
+  font: 600 1rem/1.2 var(--font-display);
+  background: var(--color-accent, #1a56db);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-btn, 8px);
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity .15s;
+}
+.pf-purchase-widget div.product .cart .single_add_to_cart_button:hover { opacity: .88; }
 .pf-purchase-widget__help {
-  margin: 1rem 0 0;
-  font: 400 .85rem/1.45 var(--font-body);
+  margin: 1.25rem 0 0;
+  font: 400 .83rem/1.45 var(--font-body);
   color: var(--color-text-secondary);
   text-align: center;
+  border-top: 1px solid var(--color-border);
+  padding-top: .9rem;
 }
 .pf-purchase-widget__help a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
 
