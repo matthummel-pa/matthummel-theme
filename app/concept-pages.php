@@ -716,6 +716,10 @@ function mh_redirect_legacy_concept_urls(): void
                 // Canonical Woo slug only — legacy SEO slugs may still exist on trash rows.
                 $slugCandidates = ['acreline'];
             }
+            // Legacy WalkRidge concept page → WalkRidge product.
+            if (in_array($rest, ['hallowed-ground', 'walkridge', 'hallowed-ground-battlefield-tours', 'wordpress-tour-theme-walkridge'], true)) {
+                $slugCandidates = ['walkridge'];
+            }
 
             foreach ($slugCandidates as $candidate) {
                 $ids = wc_get_products([
@@ -1243,6 +1247,30 @@ function mh_redirect_acreline_legacy_paths(): void
         'products/real-estate-wordpress-theme-acreline',
         'products/wordpress-theme-real-estate-agents',
     ];
+
+    $legacyWalkridgePaths = [
+        'projects/hallowed-ground',
+        'projects/hallowed-ground-battlefield-tours',
+        'projects/walkridge',
+        'product/hallowed-ground',
+        'product/hallowed-ground-battlefield-tours',
+        'shop/hallowed-ground',
+    ];
+
+    if (in_array($requestPath, $legacyWalkridgePaths, true)) {
+        $target = home_url('/product/walkridge/');
+        if (function_exists('wc_get_product_id_by_sku')) {
+            $pid = (int) wc_get_product_id_by_sku('theme-walkridge');
+            if ($pid > 0) {
+                $link = get_permalink($pid);
+                if (is_string($link) && $link !== '') {
+                    $target = $link;
+                }
+            }
+        }
+        wp_safe_redirect($target, 301);
+        exit;
+    }
 
     if (! in_array($requestPath, $legacyPaths, true)) {
         return;

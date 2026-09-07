@@ -207,6 +207,8 @@ function mh_product_catalog_data(int $product_id): array
     $aliases = [
         'wordpress-theme-real-estate-agents' => 'acreline',
         'real-estate-wordpress-theme-acreline' => 'acreline',
+        'wordpress-tour-theme-walkridge' => 'walkridge',
+        'walkridge-tour-wordpress-theme' => 'walkridge',
         'acreline-real-estate-wordpress-theme' => 'acreline',
     ];
 
@@ -1350,13 +1352,13 @@ add_action('woocommerce_installed', __NAMESPACE__.'\\mh_seed_project_products');
  *
  * @since 3.2.0
  */
-function mh_resync_product_descriptions_v2(): void
+function mh_resync_product_descriptions_v3(): void
 {
     if (! mh_shop_ready() || wp_installing()) {
         return;
     }
 
-    if (get_option('mh_product_descriptions_synced_v2')) {
+    if (get_option('mh_product_descriptions_synced_v3')) {
         return;
     }
 
@@ -1364,14 +1366,14 @@ function mh_resync_product_descriptions_v2(): void
         mh_sync_all_project_products();
     } catch (\Throwable $e) {
         if (function_exists('error_log')) {
-            error_log('mh_resync_product_descriptions_v2: '.$e->getMessage());
+            error_log('mh_resync_product_descriptions_v3: '.$e->getMessage());
         }
     } finally {
-        update_option('mh_product_descriptions_synced_v2', true);
+        update_option('mh_product_descriptions_synced_v3', true);
     }
 }
 
-add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v2', 35);
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_product_descriptions_v3', 35);
 
 /**
  * Supply Rank Math with a meta description from the product catalog blurb.
