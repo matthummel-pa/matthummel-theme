@@ -10,7 +10,7 @@
   field without touching the JSON file.
 
   @see https://woocommerce.com/document/template-structure/
-  @version 3.4.0
+  @version 3.5.0
 --}}
 @extends('layouts.app')
 
@@ -140,27 +140,36 @@
       )
     : '';
 
-  // JSON-LD: SoftwareApplication.
+  // JSON-LD: SoftwareApplication — type-aware applicationCategory.
+  // Plugins → BusinessApplication; themes and apps → WebApplication.
+  $appCategory = $isPlugin ? 'BusinessApplication' : 'WebApplication';
+  $offerData = [];
+  if ($priceHtml !== '') {
+    $plainPrice = html_entity_decode(wp_strip_all_tags($priceHtml), ENT_QUOTES, 'UTF-8');
+    $offerData = [
+      '@type'         => 'Offer',
+      'priceCurrency' => 'USD',
+      'price'         => $isFree ? '0' : preg_replace('/[^0-9.]/', '', $plainPrice),
+      'availability'  => 'https://schema.org/InStock',
+      'url'           => (string) get_permalink($productId),
+    ];
+  }
   $productSchema = [
     '@context'            => 'https://schema.org',
-    '@type'               => 'SoftwareApplication',
+    '@type'               => ['SoftwareApplication', 'Product'],
     'name'                => $productTitle,
-    'applicationCategory' => 'WebApplication',
-    'operatingSystem'     => 'WordPress',
+    'applicationCategory' => $appCategory,
+    'operatingSystem'     => $productType === 'app' ? 'Browser' : 'WordPress',
     'description'         => $blurb ?: $summary,
   ];
   if ($version !== '') { $productSchema['softwareVersion'] = $version; }
   if ($demoUrl !== '')  { $productSchema['url'] = $demoUrl; }
   if ($license !== '')  { $productSchema['license'] = $license; }
-  if ($priceHtml !== '') {
-    $plainPrice = html_entity_decode(wp_strip_all_tags($priceHtml), ENT_QUOTES, 'UTF-8');
-    $productSchema['offers'] = [
-      '@type'         => 'Offer',
-      'priceCurrency' => 'USD',
-      'price'         => $isFree ? '0' : preg_replace('/[^0-9.]/', '', $plainPrice),
-      'availability'  => 'https://schema.org/InStock',
-    ];
-  }
+  if ($offerData !== []) { $productSchema['offers'] = $offerData; }
+
+  // Add image from hero screenshot so Rank Math picks up the image schema check.
+  if ($heroImage !== '') { $productSchema['image'] = $heroImage; }
+
   $productJsonLd = json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
 @endphp
 

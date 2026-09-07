@@ -1,9 +1,19 @@
 # Changelog
 
-## 3.1.78 — Acreline setup wizard on product page
+## 3.5.1 — Shop & portfolio finishing pass
 
-- Sync Acreline catalog to **1.3.0**: product copy now says the theme ships with a setup wizard (Appearance → Acreline Setup).
-- Re-seed via `mh_product_catalog_v7`.
+_Includes 3.1.78 — Acreline setup wizard on product page (Acreline catalog → 1.3.0; mh_product_catalog_v7 seed)._
+
+- Generalized `archive-product.blade.php`: eyebrow, H1, lede, hero CTAs, and aside stats now cover any digital product (themes, plugins, web apps), not just Sage-specific stack.
+- Products section moved above "context" on the shop listing so buyers see products first.
+- Generalized `single-product.blade.php`: product summary moved before screenshots; mid-page hire-nudge strip added after deliverables; section headings broadened ("What you get", "Stack & code", "The approach").
+- Generalized `app/page-fields.php` defaults: `work_*` fit/how/FAQ copy no longer references Sage 11 stack; covers any digital product type.
+- Added CSS for `.pf-product-summary` bottom rule and `.pf-hire-nudge` flex strip (stacks on mobile ≤560px).
+- Fixed last stray `/projects/` link on Services hero aside → `/shop/`.
+- Removed dead `partials/content-single-project.blade.php` (CPT retired in 3.3.0; no live callers).
+- Updated `docs/MARKETING.md` `/projects/` product URLs → `/shop/`.
+- Added `.cursor/rules/woocommerce-product.mdc`, `.cursor/skills/add-product/SKILL.md`, `.cursor/skills/new-blog-post/SKILL.md`.
+- Added `docs/GROWTH-PLAN.md` — dev roadmap, content calendar, marketing and outreach cadence.
 
 ## 3.1.77 — Acreline legacy URL cleanup
 

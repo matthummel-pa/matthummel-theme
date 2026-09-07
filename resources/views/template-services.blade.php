@@ -219,9 +219,9 @@
         ['value' => __('You own it', 'sage'), 'label' => __('At handoff', 'sage')],
         ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
       ],
-      'link' => [
-        'label' => __('See example sites', 'sage'),
-        'href' => home_url('/projects/'),
+        'link' => [
+        'label' => __('Browse products', 'sage'),
+        'href' => home_url('/shop/'),
       ],
     ])
   @endslot
