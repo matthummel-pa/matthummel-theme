@@ -255,6 +255,141 @@
       "WordPress listing theme"
     ]
   },
+  "walkridge": {
+    "title": "WalkRidge",
+    "cat": "Themes",
+    "place": "Tour sites",
+    "blurb": "WordPress tour theme for licensed guides — bookable WooCommerce tours, guide bios, area pages, and Customizer identity. No page builder.",
+    "tech": [
+      "Sage",
+      "WordPress",
+      "WooCommerce",
+      "Gutenberg",
+      "Customizer"
+    ],
+    "product_type": "theme",
+    "for_sale": true,
+    "live": true,
+    "price": "59",
+    "eyebrow": "WordPress theme · Tour sites",
+    "summary": "WalkRidge is a WooCommerce-ready WordPress theme for licensed-guide tour companies. Visitors browse tours, meet guides, explore the area, and book directly from the WooCommerce shop — without a page builder. Ten Gutenberg blocks build the marketing pages. Brand, phone, hours, and the header CTA all live in Customize → Identity so operators never touch code.",
+    "challenge": "Tour operators need a site that shows schedules, guide bios, and an area guide alongside a checkout — not a generic booking widget bolted onto a generic theme. Most options are either a bare WooCommerce store with no personality or a full travel agency stack with IDX-level bloat.",
+    "approach": "Marketing pages are dynamic Gutenberg blocks with editor previews — operators build and edit them in wp-admin without a developer. WooCommerce handles the bookable tour products, cart, and checkout. Customizer Identity controls every office-specific detail so the site is fully brandable without touching a template file. Optional companion plugins (Walkridge Bookings, Walkridge Field Map) extend the experience and are sold separately.",
+    "result": "A marketplace-ready pack: install the zip, run Tools → Walkridge Blocks to seed page layouts, brand it in Customize → Identity, and sell tours the way visitors discover them.",
+    "audience": "Licensed-guide tour operators, battlefield park concessionaires, heritage tourism companies, and agencies building tour sites for local businesses. Also developers who need a clean WooCommerce tour base to white-label.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Ten server-rendered Core Gutenberg blocks for marketing pages (Block Generator for custom layouts). WooCommerce optional — marketing site, contact form, and blog run without it. Customizer Identity for brand, phone, email, address, hours, header CTA, social URLs. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
+    "handoff": "You own the theme zip, child theme, and optional companion plugins. Seed page layouts with Tools → Walkridge Blocks, brand the office in Customize → Identity, and load tour products in WooCommerce. HTML docs ship in the pack. Hire me to import your tour inventory, customize the block layout, or build the optional Bookings or Field Map extensions.",
+    "benefits": [
+      "WooCommerce shop for bookable tour products — no separate booking system required",
+      "Ten Gutenberg blocks with editor previews for marketing pages",
+      "Customizer Identity: brand, phone, email, address, hours, and header CTA in one panel",
+      "Tools → Walkridge Blocks seeds all page layouts without writing PHP",
+      "Optional companion plugins: Walkridge Bookings and Walkridge Field Map (sold separately)",
+      "Child theme included for safe agency customization",
+      "WooCommerce is optional — the marketing site runs without it",
+      "100% GPL-compatible theme code — white-label or customize freely"
+    ],
+    "deliverables": [
+      "10 Core Gutenberg blocks (hero, tour grid, guide bios, CTA band, and more)",
+      "WooCommerce shop integration (tour products, cart, checkout)",
+      "Bookable tour product structure",
+      "Customizer Identity panel (brand, phone, email, address, hours, CTA, social)",
+      "Block Generator for custom page layouts",
+      "Tools → Walkridge Blocks page seeder",
+      "Child theme starter",
+      "HTML documentation hub",
+      "Mobile-first, accessible build"
+    ],
+    "blocks": [
+      ["Home Hero", "home"],
+      ["Page Intro", "layout-text"],
+      ["Section Heading", "layout-text"],
+      ["Tour Grid", "grid-4"],
+      ["Pathway Cards", "grid-add"],
+      ["About Split", "users"],
+      ["CTA Band", "megaphone"],
+      ["Book Band", "calendar"],
+      ["Info Strip", "building"],
+      ["Custom Block", "lightbulb"]
+    ],
+    "metrics": [
+      ["10", "Gutenberg blocks"],
+      ["WooCommerce", "tour shop"],
+      ["GPL", "theme pack"]
+    ],
+    "faq": [
+      [
+        "Is WalkRidge a WordPress tour theme?",
+        "Yes. WalkRidge is a WordPress theme built for licensed-guide tour companies: bookable tour products in WooCommerce, guide bios, an area context page, and a contact desk — without a page builder."
+      ],
+      [
+        "Do I need WooCommerce to use WalkRidge?",
+        "WooCommerce is optional. The marketing site, blog, and contact form all run without it. You only need WooCommerce if you want to sell bookable tour products through a cart and checkout."
+      ],
+      [
+        "What do I get when I buy WalkRidge?",
+        "The marketplace pack: walkridge.zip (upload in Appearance → Themes), a child theme starter, and HTML documentation. Optional companion plugins — Walkridge Bookings and Walkridge Field Map — are sold separately. Instant download after checkout."
+      ],
+      [
+        "How do I add my tour company's branding?",
+        "Go to Appearance → Customize → Identity. Brand name, phone, email, address, hours, the header CTA label and URL, and social links are all there. Upload your logo under Customize → Site Identity. No code required."
+      ],
+      [
+        "How do I build the marketing pages?",
+        "After activating the theme, go to Tools → Walkridge Blocks and click Seed pages. That creates your Tours, Guides, Area, and Contact pages with the right Gutenberg block layouts. Edit them directly in the block editor."
+      ],
+      [
+        "Can I white-label WalkRidge for a tour operator client?",
+        "Yes. Theme code is GPLv2 or later. You can install it for a client, customize it, resell services on top, or use the child theme as a white-label base."
+      ],
+      [
+        "Can you install or customize WalkRidge for my tour company?",
+        "Yes. Buy the pack for self-serve, or get help and I brand it, load your tour inventory, and hand off wp-admin editing to your team."
+      ]
+    ],
+    "demo": "",
+    "github": "https://github.com/matthummel-pa/wp-walkridge",
+    "version": "1.1.0",
+    "compatible": "WordPress 6.6+, PHP 8.3+",
+    "license": "GPLv2 or later",
+    "files_included": [
+      "walkridge.zip (parent theme)",
+      "walkridge-child.zip",
+      "Documentation/ (HTML hub)"
+    ],
+    "docs": [
+      [
+        "Buyer guide",
+        "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-walkridge@main/docs/marketplace/buyer-guide.html"
+      ],
+      [
+        "Support guide",
+        "https://github.com/matthummel-pa/wp-walkridge/blob/main/SUPPORT.md"
+      ],
+      [
+        "Brand kit",
+        "https://github.com/matthummel-pa/wp-walkridge/blob/main/BRAND.md"
+      ]
+    ],
+    "support": "https://github.com/matthummel-pa/wp-walkridge/blob/main/SUPPORT.md",
+    "topics": "wordpress-theme, tour, woocommerce, sage, gutenberg, walkridge",
+    "languages": "PHP, Blade, CSS, JavaScript",
+    "brand_tagline": "Tours · guides · WooCommerce",
+    "brand_palette": "Slate|#0c1218\nSlate mid|#17212c\nGold|#e0be72\nParchment|#f7f1e3",
+    "image": "products/walkridge/featured.webp",
+    "screenshots": [
+      ["products/walkridge/screenshot.webp", "WalkRidge homepage — compass mark, hero, and path to book a tour"]
+    ],
+    "ad_keywords": [
+      "WordPress tour theme",
+      "WordPress battlefield tour theme",
+      "WooCommerce tour theme",
+      "WordPress heritage tourism theme",
+      "tour guide WordPress theme",
+      "WordPress bookable tours theme"
+    ],
+    "is_product": true
+  },
   "tocflow": {
     "title": "TOCflow",
     "cat": "Plugins",

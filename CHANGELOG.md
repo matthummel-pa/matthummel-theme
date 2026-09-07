@@ -1,8 +1,18 @@
 # Changelog
 
-## 3.5.1 — Shop & portfolio finishing pass
+## 3.5.2 — WalkRidge product launch
 
-_Includes 3.1.78 — Acreline setup wizard on product page (Acreline catalog → 1.3.0; mh_product_catalog_v7 seed)._
+- Added `walkridge` to `resources/data/product-catalog.json`: full catalog entry with 38 fields (summary, challenge, approach, result, audience, architecture, handoff, benefits, deliverables, 10 blocks, metrics, 7 FAQ, docs, brand palette, screenshots, ad keywords).
+- Added `resources/images/products/walkridge/featured.webp` and `screenshot.webp` — WebP optimized from the theme `screenshot.png` (62 KB at 1200×750, down from 1.07 MB PNG).
+- Added WalkRidge slug aliases to `mh_product_catalog_data()` in `app/shop.php` (`wordpress-tour-theme-walkridge`, `walkridge-tour-wordpress-theme`).
+- Added legacy `hallowed-ground` → `walkridge` redirect to `app/concept-pages.php` (fixes the live site mis-redirect that was sending `/projects/hallowed-ground/` to Acreline).
+- Bumped product description resync from `mh_resync_product_descriptions_v2` → `v3` so new WalkRidge copy populates on next WooCommerce init.
+- Fixed `single-product.blade.php`: `image` field now included in SoftwareApplication JSON-LD; `applicationCategory` and `operatingSystem` are type-aware (plugin → BusinessApplication / WordPress, app → Browser, theme → WebApplication / WordPress).
+- Added skill files: `.cursor/skills/add-product/add-product.md`, `.cursor/skills/new-blog-post/new-blog-post.md`, `.cursor/skills/site-review/site-review.md` (from previous branch, now on this branch).
+- Added `.cursor/rules/woocommerce-product.mdc` and `docs/GROWTH-PLAN.md` (from previous branch).
+- WalkRidge WooCommerce product (ID 207): slug `walkridge`, price $59, virtual, sold individually, Rank Math focus keyword set to "WordPress tour theme".
+
+## 3.5.1 — Shop & portfolio finishing pass
 
 - Generalized `archive-product.blade.php`: eyebrow, H1, lede, hero CTAs, and aside stats now cover any digital product (themes, plugins, web apps), not just Sage-specific stack.
 - Products section moved above "context" on the shop listing so buyers see products first.
