@@ -286,56 +286,89 @@
       </ul>
     </div>
 
-    <aside class="h-hero__viz" aria-label="{{ __('Profile highlights', 'sage') }}">
-      <div class="h-hero-illu">
-        <span class="h-hero-illu__glow" aria-hidden="true"></span>
-        <span class="h-hero-illu__orb h-hero-illu__orb--a" aria-hidden="true"></span>
-        <span class="h-hero-illu__orb h-hero-illu__orb--b" aria-hidden="true"></span>
+    <aside class="h-hero__viz" aria-label="{{ __('Selected work preview', 'sage') }}">
+      <div class="h-hero-work" aria-hidden="false">
 
-        <div class="h-hero-illu__card">
-          <div class="h-hero-illu__chrome" aria-hidden="true">
-            <span class="h-hero-illu__dot"></span>
-            <span class="h-hero-illu__dot"></span>
-            <span class="h-hero-illu__dot"></span>
-            <span class="h-hero-illu__url">github.com/{{ $ghLogin }}</span>
-          </div>
-
-          <div class="h-hero-illu__head">
-            <div class="h-hero-illu__identity">
-              {!! \App\mh_svg_icon('github', 18) !!}
-              <div>
-                <p class="h-hero-illu__handle">{{ $ghLogin }}</p>
-                <p class="h-hero-illu__meta">{{ __('Live profile signals', 'sage') }}</p>
-              </div>
+        {{-- Browser-chrome frame containing the featured project screenshot --}}
+        @php $fp = $work[0] ?? null; @endphp
+        @if ($fp)
+          <div class="h-hero-work__frame">
+            <div class="h-hero-work__chrome" aria-hidden="true">
+              <span class="h-hero-work__dot"></span>
+              <span class="h-hero-work__dot"></span>
+              <span class="h-hero-work__dot"></span>
+              <span class="h-hero-work__addr">matthummel.com/shop</span>
             </div>
-            @if (\App\mh_is_hireable($gh))
-              <span class="h-hero-illu__status">
-                @include('partials.avail-mark', ['gh' => $gh])
-                {{ \App\mh_availability_label($gh, __('Open', 'sage')) }}
+            <a class="h-hero-work__main-link"
+               href="{{ esc_url($fp['url'] ?? home_url('/shop/')) }}"
+               aria-label="{{ esc_attr(__('View ', 'sage') . ($fp['title'] ?? '') . __(' project', 'sage')) }}">
+              @if (! empty($fp['image']))
+                <img
+                  class="h-hero-work__main-img"
+                  src="{{ esc_url($fp['image']) }}"
+                  alt="{{ esc_attr(($fp['title'] ?? '') . ' — ' . ($fp['cat'] ?? '') . ' website') }}"
+                  width="640" height="400"
+                  loading="eager"
+                  decoding="async"
+                >
+              @else
+                <div class="h-hero-work__main-img h-hero-work__main-img--text">
+                  {{ $fp['title'] ?? '' }}
+                </div>
+              @endif
+              <span class="h-hero-work__main-overlay" aria-hidden="true">
+                <span class="h-hero-work__main-name">{{ $fp['title'] ?? '' }}</span>
+                <span class="h-hero-work__main-cat">{{ $fp['cat'] ?? '' }}</span>
               </span>
-            @endif
+            </a>
           </div>
+        @endif
 
-          <dl class="h-hero-illu__stats">
-            @foreach ($heroStats as $stat)
-              <div class="h-hero-illu__stat">
-                <dt>
-                  @if (! empty($stat['href']))
-                    <a href="{{ esc_url($stat['href']) }}" rel="me noopener" target="_blank">{{ $stat['value'] }}</a>
-                  @else
-                    {{ $stat['value'] }}
-                  @endif
-                </dt>
-                <dd>{{ $stat['label'] }}</dd>
-              </div>
+        {{-- Two smaller thumbnails --}}
+        @php $miniWork = array_slice($work, 1, 2); @endphp
+        @if (! empty($miniWork))
+          <div class="h-hero-work__grid">
+            @foreach ($miniWork as $pw)
+              <a class="h-hero-work__mini"
+                 href="{{ esc_url($pw['url'] ?? home_url('/shop/')) }}"
+                 aria-label="{{ esc_attr($pw['title'] ?? '') }}">
+                @if (! empty($pw['image']))
+                  <img
+                    src="{{ esc_url($pw['image']) }}"
+                    alt="{{ esc_attr($pw['title'] ?? '') }}"
+                    width="300" height="180"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                @else
+                  <span class="h-hero-work__mini-fallback" aria-hidden="true">
+                    {{ $pw['title'] ?? '' }}
+                  </span>
+                @endif
+                <span class="h-hero-work__mini-label">{{ $pw['title'] ?? '' }}</span>
+              </a>
             @endforeach
-          </dl>
+          </div>
+        @endif
 
-          <a class="h-hero-illu__link" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-            {{ __('View GitHub', 'sage') }}
-            <span aria-hidden="true">→</span>
+        {{-- Footer strip — compact stats + view-all link --}}
+        <div class="h-hero-work__foot">
+          @php $totalW = count(\App\mh_work_page_items()); @endphp
+          <span class="h-hero-work__foot-count">
+            {!! \App\mh_svg_icon('briefcase', 13) !!}
+            {{ $totalW }} projects
+          </span>
+          @if (\App\mh_is_hireable($gh))
+            <span class="h-hero-work__foot-avail">
+              @include('partials.avail-mark', ['gh' => $gh])
+              {{ \App\mh_availability_label($gh, __('Open to work', 'sage')) }}
+            </span>
+          @endif
+          <a class="h-hero-work__foot-link" href="{{ home_url('/shop/') }}">
+            {{ __('Browse all', 'sage') }} →
           </a>
         </div>
+
       </div>
     </aside>
 
