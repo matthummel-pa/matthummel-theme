@@ -1197,6 +1197,20 @@ function mh_apply_product_catalog_v6(): void
 }
 
 /**
+ * One-time: Acreline 1.3.0 setup wizard copy on the product page.
+ */
+function mh_apply_product_catalog_v7(): void
+{
+    if (get_option('mh_product_catalog_v7') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v7', true);
+    }
+}
+
+/**
  * Beat Rank Math and old-slug redirects for retired Acreline SEO paths.
  *
  * Rank Math still has an auto-redirect from the retired project slug to
@@ -1257,6 +1271,7 @@ function mh_redirect_acreline_legacy_paths(): void
 // Catalog reseed hooks (project CPT may still exist on older DBs; Woo products are canonical).
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

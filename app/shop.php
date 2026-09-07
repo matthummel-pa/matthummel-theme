@@ -87,6 +87,11 @@ function mh_product_project_id(int $product_id): int
  */
 function mh_product_landing_url(int $product_id): string
 {
+    // Project CPT is retired — keep products on their WooCommerce URLs.
+    if (! post_type_exists(mh_project_post_type())) {
+        return '';
+    }
+
     $project_id = mh_product_project_id($product_id);
     if ($project_id <= 0) {
         return '';

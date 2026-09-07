@@ -2,6 +2,8 @@
 
 ## 3.5.1 — Shop & portfolio finishing pass
 
+_Includes 3.1.78 — Acreline setup wizard on product page (Acreline catalog → 1.3.0; mh_product_catalog_v7 seed)._
+
 - Generalized `archive-product.blade.php`: eyebrow, H1, lede, hero CTAs, and aside stats now cover any digital product (themes, plugins, web apps), not just Sage-specific stack.
 - Products section moved above "context" on the shop listing so buyers see products first.
 - Generalized `single-product.blade.php`: product summary moved before screenshots; mid-page hire-nudge strip added after deliverables; section headings broadened ("What you get", "Stack & code", "The approach").
