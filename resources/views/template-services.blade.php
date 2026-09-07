@@ -89,8 +89,8 @@
         'You\'re a tour, inn, shop, restaurant, or service business',
         'You want a written scope agreed before anything starts',
       ],
-      'cta'    => 'See example sites',
-      'href'   => '/projects/',
+      'cta'    => 'Browse products',
+      'href'   => '/shop/',
       'accent' => 'blue',
     ],
     [
@@ -203,8 +203,8 @@
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-      See example sites <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
+      Browse products <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -379,8 +379,8 @@
       @endforeach
     </div>
     <p style="margin-top:1.75rem;text-align:center">
-      <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-        Browse all {{ count(\App\mh_work_page_items()) }} projects →
+      <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
+        {{ __('Browse all products', 'sage') }} →
       </a>
     </p>
   </div>
@@ -450,8 +450,8 @@
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">
-        {{ __('See example sites', 'sage') }}
+      <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">
+        {{ __('Browse products', 'sage') }}
       </a>
       <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>

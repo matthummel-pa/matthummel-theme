@@ -41,8 +41,8 @@
         ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
       ],
       'link' => [
-        'label' => __('See concept sites', 'sage'),
-        'href' => home_url('/projects/'),
+        'label' => __('Browse products', 'sage'),
+        'href' => home_url('/shop/'),
       ],
     ])
   @endslot
@@ -63,10 +63,10 @@
             <h2 class="now-block__title">Matt Hummel</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I publish concept WordPress projects here. Hire me for a production build, or buy a theme when a project is for sale.', 'sage')) }}</p>
-        <p>{{ \App\field('now_studio_p2', __('Browse the Work page. When you\'re ready for a real build, say hello here.', 'sage')) }}</p>
-        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-          {{ __('See concept sites', 'sage') }} →
+        <p>{{ \App\field('now_studio_p1', __('I publish WordPress themes and plugins for sale. Hire me for a production build, or buy a theme from the shop.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p2', __('Browse the shop for ready-to-buy themes. When you\'re ready for a custom build, say hello.', 'sage')) }}</p>
+        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
+          {{ __('Browse products', 'sage') }} →
         </a>
       </article>
 
@@ -197,8 +197,8 @@
       <div class="now-sidebar-card">
         <p class="now-sidebar-card__label">Studio work</p>
         <p class="now-sidebar-card__value">Matt Hummel</p>
-        <p class="now-sidebar-card__sub">Concept WordPress demos</p>
-        <a class="now-sidebar-card__link" href="{{ home_url('/projects/') }}">{{ __('See concept sites', 'sage') }} →</a>
+        <p class="now-sidebar-card__sub">WordPress themes &amp; plugins</p>
+        <a class="now-sidebar-card__link" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }} →</a>
       </div>
 
       @if (! empty($gh['public_repos']))

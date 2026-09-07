@@ -123,9 +123,9 @@
               {!! \App\mh_svg_icon('briefcase', 13) !!}
               {{ __('Services page', 'sage') }}
             </a>
-            <a class="code-practice-shell__link" href="{{ home_url('/projects/') }}">
-              {!! \App\mh_svg_icon('globe', 13) !!}
-              {{ __('Example sites', 'sage') }}
+            <a class="code-practice-shell__link" href="{{ home_url('/shop/') }}">
+              {!! \App\mh_svg_icon('tag', 13) !!}
+              {{ __('Browse products', 'sage') }}
             </a>
           </div>
         </aside>
@@ -747,15 +747,18 @@
 <section class="cta-band code-cta" aria-labelledby="code-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
     <div class="cta-band__copy code-cta__copy">
-      <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Work together', 'sage')) }}</p>
+      <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Buy or hire', 'sage')) }}</p>
       <h2 id="code-cta-heading" class="display-title is-section">
-        {{ \App\field('code_cta_h2', __('Want to build, collaborate, or compare notes?', 'sage')) }}
+        {{ \App\field('code_cta_h2', __('Buy a theme, hire me, or compare notes.', 'sage')) }}
       </h2>
-      <p>{{ \App\field('code_cta_lede', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')) }}</p>
+      <p>{{ \App\field('code_cta_lede', __('Browse the shop for ready-to-buy WordPress themes and plugins. Hire me for custom work. Fork a repo or copy a snippet — free to use.', 'sage')) }}</p>
     </div>
     <div class="cta-band__actions code-cta__actions">
-      <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!}
+      <a class="btn btn-on-dark" href="{{ home_url('/shop/') }}">
+        {!! \App\mh_svg_icon('briefcase', 16) !!}
+        {{ __('Browse products', 'sage') }}
+      </a>
+      <a class="btn btn-ghost code-cta__hire" href="{{ home_url('/hire/') }}">
         {{ \App\field('code_cta_btn', __('Hire me', 'sage')) }}
       </a>
       <a class="code-cta__gh" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">

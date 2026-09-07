@@ -1098,22 +1098,22 @@ function mh_work_fit_defaults(): array
         [
             'icon' => 'home',
             'title' => __('Shops and local businesses', 'sage'),
-            'body' => __('You want a WordPress theme with a live demo for a tour, inn, shop, or restaurant — and a clear path to buy it or hire me to customize it.', 'sage'),
+            'body' => __('You want a ready-made WordPress theme or web app for a tour, inn, shop, or restaurant — with a live demo and a clear path to buy or customize it.', 'sage'),
         ],
         [
             'icon' => 'users',
             'title' => __('Agencies with overflow', 'sage'),
-            'body' => __('You need a solid Sage theme base or a plugin with clean handoff notes before you sub-contract a WordPress build.', 'sage'),
+            'body' => __('You need a solid WordPress theme or plugin base with clean handoff notes before you sub-contract a build to a client.', 'sage'),
         ],
         [
             'icon' => 'code',
             'title' => __('Developers and learners', 'sage'),
-            'body' => __('You want to evaluate themes and plugins built with Sage, Blade, Tailwind, and Vite — then buy the pack or study the public code.', 'sage'),
+            'body' => __('You want to evaluate well-structured WordPress themes and plugins, buy the pack, or study the public code on GitHub.', 'sage'),
         ],
         [
             'icon' => 'briefcase',
             'title' => __('Hiring managers', 'sage'),
-            'body' => __('These product pages show how I structure WordPress work. Employers and role details are on Hire. Public GitHub is the trail I started in 2025.', 'sage'),
+            'body' => __('These product pages show how I structure and ship WordPress and web work. Employers and role details are on Hire. Public GitHub is the code trail.', 'sage'),
         ],
     ];
 }
@@ -1129,17 +1129,17 @@ function mh_work_how_defaults(): array
         [
             'num' => '01',
             'title' => __('Browse the catalog.', 'sage'),
-            'body' => __('Filter by business type or search by name. Open a product page for stack notes, screenshots, pricing, and a live demo when one is available.', 'sage'),
+            'body' => __('Open any product page for screenshots, stack notes, pricing, and a live demo when one is available. No account needed to browse.', 'sage'),
         ],
         [
             'num' => '02',
             'title' => __('Buy or hire.', 'sage'),
-            'body' => __('Buy theme or Buy plugin adds the pack to the shop cart. Prefer a custom build? Send a short note about what you would change.', 'sage'),
+            'body' => __('Add to cart for an instant digital download. Prefer a custom adaptation? Send a short note about what you would change and I will scope it.', 'sage'),
         ],
         [
             'num' => '03',
-            'title' => __('Install or hand off.', 'sage'),
-            'body' => __('Digital packs deliver instantly after checkout. Custom builds get a written scope, staged previews, and a handoff you own.', 'sage'),
+            'title' => __('Download or hand off.', 'sage'),
+            'body' => __('Digital products deliver immediately after checkout. Custom builds get a written scope, staged previews, and a handoff you own outright.', 'sage'),
         ],
     ];
 }
@@ -1153,20 +1153,20 @@ function mh_work_faq_defaults(): array
 {
     return [
         [
-            'title' => __('Are these themes and plugins for sale?', 'sage'),
-            'text' => __('Yes. This page is the catalog. Cards with a Buy button sync to the shop for checkout. Hire me if you want a custom adaptation instead of the stock pack.', 'sage'),
+            'title' => __('What kinds of products do you sell?', 'sage'),
+            'text' => __('WordPress themes, WordPress plugins, and web apps. Each product page lists what is included, the tech stack, pricing, and a live demo when one exists. All products check out through the shop.', 'sage'),
         ],
         [
-            'title' => __('Are these real client sites?', 'sage'),
-            'text' => __('No. These are studio themes and plugins with live demos. Employer and production client work stays private unless a shop asks to be featured.', 'sage'),
+            'title' => __('Are these real client sites or studio builds?', 'sage'),
+            'text' => __('Studio builds. Production client and employer work stays private. These are products I made to sell, study, or demo a specific approach — not repurposed client deliverables.', 'sage'),
         ],
         [
-            'title' => __('Do you sell plugins as well as themes?', 'sage'),
-            'text' => __('Yes. Product pages marked Plugin are WordPress plugins. Themes are Sage 11 packs with Blade, Tailwind, and Vite. Both check out through the shop.', 'sage'),
+            'title' => __('Can I hire you to customize a product?', 'sage'),
+            'text' => __('Yes. Buy the pack for a self-serve install, or write and tell me what you would change. I take on custom builds from a written brief and hand off work you own.', 'sage'),
         ],
         [
-            'title' => __('What if none of these match my business?', 'sage'),
-            'text' => __('Say hello anyway. These packs are starting points, not a closed menu. I build custom WordPress sites and plugins from a written brief when a demo does not fit.', 'sage'),
+            'title' => __('What if nothing here matches my business?', 'sage'),
+            'text' => __('Say hello anyway. The catalog is a starting point. I build custom WordPress sites, plugins, and web apps when nothing ready-made fits what you need.', 'sage'),
         ],
     ];
 }
@@ -1261,10 +1261,15 @@ function mh_work_page_faq(?int $post_id = null): array
  */
 function mh_work_page_items(?int $post_id = null): array
 {
-    if (mh_project_cpt_has_posts()) {
-        return mh_projects_live_for_work();
+    // Primary source: published WooCommerce products (project CPT retired in 3.3.0).
+    if (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
+        $wc = mh_wc_products_for_work();
+        if ($wc !== []) {
+            return $wc;
+        }
     }
 
+    // Fallback: admin-editable repeater on the Work/Projects page, then static catalog.
     $defaults = [];
     foreach (mh_studio_projects() as $p) {
         $defaults[$p['slug']] = $p;
@@ -1280,6 +1285,7 @@ function mh_work_page_items(?int $post_id = null): array
             return $p;
         }, mh_studio_projects());
     }
+
     $out = [];
     foreach ($rows as $r) {
         $tech = $r['tech'] ?? [];
@@ -1398,6 +1404,18 @@ add_action('admin_enqueue_scripts', function ($hook) {
 function render_page_fields_box(\WP_Post $post): void
 {
     $key = page_template_key($post->ID);
+
+    // The WooCommerce shop page is a plain WordPress page with no blade template
+    // assignment, but it owns the work_* catalog fields now that the Projects
+    // template is retired. Reuse the template-projects key so existing saved
+    // field values carry forward without a migration.
+    if ($key === '' || $key === 'default') {
+        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
+        if ($shopId > 0 && $post->ID === $shopId) {
+            $key = 'template-projects.blade.php';
+        }
+    }
+
     $map = page_field_map();
 
     if (empty($map[$key])) {
@@ -1497,6 +1515,14 @@ add_action('save_post_page', function ($post_id) {
     $key = page_template_key((int) $post_id);
     if (isset($_POST['page_template']) && $_POST['page_template'] !== 'default') {
         $key = sanitize_text_field(wp_unslash($_POST['page_template']));
+    }
+
+    // WooCommerce shop page reuses the work_* catalog fields.
+    if ($key === '' || $key === 'default') {
+        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
+        if ($shopId > 0 && (int) $post_id === $shopId) {
+            $key = 'template-projects.blade.php';
+        }
     }
 
     $map = page_field_map();

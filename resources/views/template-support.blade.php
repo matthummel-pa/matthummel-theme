@@ -18,7 +18,7 @@
   <p class="lead">{{ \App\field('support_lede', __('HTML guides for products I sell — the same Documentation hub that ships in the ThemeForest-style pack. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ esc_url($contactUrl) }}">{{ \App\field('support_contact_label', __('Say hello', 'sage')) }}</a>
-    <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+    <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
       {{ __('Browse products', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>

@@ -34,9 +34,13 @@
 
     {{-- Work --}}
     <nav class="footer-nav-col" aria-label="Work">
-      <p class="footer-nav-label">{{ __('Themes', 'sage') }}</p>
+      <p class="footer-nav-label">{{ __('Shop', 'sage') }}</p>
       <ul class="footer-nav">
-        <li><a href="{{ home_url('/projects/') }}">{{ __('Themes & plugins', 'sage') }}</a></li>
+        @if (\App\mh_woocommerce_is_active())
+          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Themes & plugins', 'sage') }}</a></li>
+        @else
+          <li><a href="{{ home_url('/shop/') }}">{{ __('Themes & plugins', 'sage') }}</a></li>
+        @endif
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
         <li><a href="{{ home_url('/services/') }}">{{ __('Services', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code & GitHub', 'sage') }}</a></li>
@@ -56,7 +60,6 @@
         <li><a href="{{ home_url('/uses/') }}">{{ __('Uses', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
         @if (\App\mh_woocommerce_is_active())
-          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Themes', 'sage') }}</a></li>
           <li><a href="{{ esc_url(wc_get_page_permalink('cart')) }}">{{ __('Cart', 'sage') }}</a></li>
         @endif
       </ul>

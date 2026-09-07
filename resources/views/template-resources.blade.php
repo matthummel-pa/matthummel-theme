@@ -27,8 +27,8 @@
   <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-    <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
-      {{ __('Browse work', 'sage') }} <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
+      {{ __('Browse products', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -129,7 +129,7 @@
       <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">{{ __('See Work', 'sage') }}</a>
+      <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
       <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>

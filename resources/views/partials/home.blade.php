@@ -264,7 +264,7 @@
           {!! \App\mh_svg_icon('mail', 17) !!}
           {{ \App\field('home_cta_primary', __('Hire me', 'sage')) }}
         </a>
-        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
+        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/shop/')) }}">
           {{ \App\field('home_cta_secondary', __('Browse work', 'sage')) }}
           <span aria-hidden="true">→</span>
         </a>
@@ -632,7 +632,7 @@
       </div>
       <div class="h-work-header__meta">
         <span class="h-work-count">{{ $totalProjects }} projects</span>
-        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">Browse all →</a>
+        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">Browse all →</a>
       </div>
     </div>
 
@@ -671,8 +671,8 @@
           <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">
             {{ __('View concept', 'sage') }}
           </a>
-          <a class="h-work-ghost-link" href="{{ home_url('/projects/') }}?cat={{ rawurlencode((string) ($fp['cat'] ?? '')) }}">
-            See all {{ strtolower($fp['cat']) }} projects →
+          <a class="h-work-ghost-link" href="{{ home_url('/shop/') }}">
+            {{ __('Browse all products', 'sage') }} →
           </a>
         </div>
         @if (! empty($fp['tech']))
@@ -747,8 +747,8 @@
 
     {{-- Bottom CTA bar --}}
     <div class="h-work-cta-bar">
-      <p>Concept sites for tours, inns, shops, restaurants, and land offices.</p>
-      <a class="btn" href="{{ home_url('/projects/') }}">Browse all {{ $totalProjects }} concept sites</a>
+      <p>{{ __('WordPress themes and plugins for sale — install, brand, and ship.', 'sage') }}</p>
+      <a class="btn" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }}</a>
     </div>
 
   </div>
@@ -1146,14 +1146,14 @@
     <div class="cta-band__copy">
       <p class="eyebrow eyebrow--on-dark">{{ __('Get in touch', 'sage') }}</p>
       <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Hiring or building?', 'sage')) }}</h2>
-      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse concept sites</a>. I usually reply within a day.', 'sage')) !!}</p>
+      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/shop/">browse themes and plugins</a>. I usually reply within a day.', 'sage')) !!}</p>
     </div>
     <div class="cta-band__actions h-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 17) !!}
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/projects/') }}">{{ __('Browse concept sites', 'sage') }}</a>
+      <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
       <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
     </div>
   </div>
