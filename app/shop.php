@@ -1320,6 +1320,82 @@ function mh_woocommerce_get_help_button(): void
     echo '</p>';
 }
 
+/**
+ * Product-type badge overlaid on the thumbnail in the shop loop.
+ *
+ * Fires on `woocommerce_before_shop_loop_item_title` at priority 15,
+ * after the default thumbnail (priority 10) so the badge sits inside
+ * the `.woocommerce-loop-product__link` anchor which is position:relative.
+ */
+function mh_woocommerce_loop_type_badge(): void
+{
+    global $product;
+    if (! is_object($product) || ! method_exists($product, 'get_id')) {
+        return;
+    }
+
+    $entry = mh_product_catalog_data((int) $product->get_id());
+    $productType = (string) ($entry['product_type'] ?? 'theme');
+    $eyebrow = trim((string) ($entry['eyebrow'] ?? ''));
+
+    if ($eyebrow === '') {
+        $eyebrow = match ($productType) {
+            'plugin' => __('WordPress plugin', 'sage'),
+            'app' => __('Web app', 'sage'),
+            default => __('WordPress theme', 'sage'),
+        };
+    }
+
+    // Only the short label for the badge (before the ·).
+    $badgeLabel = explode(' · ', $eyebrow)[0];
+
+    printf(
+        '<span class="product-type-badge product-type-badge--%s" aria-label="%s">%s</span>',
+        esc_attr($productType),
+        esc_attr($eyebrow),
+        esc_html($badgeLabel)
+    );
+}
+
+/**
+ * Tech-stack tags + live-demo pill after the price in the shop loop.
+ *
+ * Fires on `woocommerce_after_shop_loop_item_title` at priority 15,
+ * after the default price (priority 10).
+ */
+function mh_woocommerce_loop_card_meta(): void
+{
+    global $product;
+    if (! is_object($product) || ! method_exists($product, 'get_id')) {
+        return;
+    }
+
+    $entry = mh_product_catalog_data((int) $product->get_id());
+    $tech = is_array($entry['tech'] ?? null) ? (array) $entry['tech'] : [];
+    $demoUrl = trim((string) ($entry['demo'] ?? ''));
+
+    if ($tech === [] && $demoUrl === '') {
+        return;
+    }
+
+    echo '<div class="product-card-meta">';
+    if ($tech !== []) {
+        echo '<div class="product-tech-tags" aria-label="'.esc_attr__('Stack', 'sage').'">';
+        foreach (array_slice($tech, 0, 4) as $t) {
+            printf('<span class="product-tech-tag">%s</span>', esc_html((string) $t));
+        }
+        echo '</div>';
+    }
+    if ($demoUrl !== '') {
+        printf(
+            '<span class="product-demo-badge">%s %s</span>',
+            mh_svg_icon('arrow-up-right', 10),
+            esc_html__('Live demo', 'sage')
+        );
+    }
+    echo '</div>';
+}
+
 /** Get help under each shop-loop add-to-cart button. */
 function mh_woocommerce_loop_get_help(): void
 {
@@ -1599,3 +1675,5 @@ add_filter('woocommerce_product_add_to_cart_text', function ($text, $product = n
 }, 10, 2);
 add_action('woocommerce_after_add_to_cart_form', __NAMESPACE__.'\\mh_woocommerce_get_help_button');
 add_action('woocommerce_after_shop_loop_item', __NAMESPACE__.'\\mh_woocommerce_loop_get_help', 15);
+add_action('woocommerce_before_shop_loop_item_title', __NAMESPACE__.'\\mh_woocommerce_loop_type_badge', 15);
+add_action('woocommerce_after_shop_loop_item_title', __NAMESPACE__.'\\mh_woocommerce_loop_card_meta', 15);
