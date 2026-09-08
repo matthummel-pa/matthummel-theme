@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.8 — Unstick mobile header
+
+- `.site-header` is no longer sticky at the hamburger breakpoint (`max-width: 900px`). It scrolls away with the page on phones and tablets.
+- Desktop (`min-width: 901px`) keeps the sticky header. Admin-bar `top` offsets stay desktop-only. `.mh-popout` remains `position: fixed`.
+- In-page `scroll-margin-top` on home section jumps drops from `5.5rem` to `1rem` on mobile so anchors are not over-cleared.
+
 ## 3.5.7 — Dark glossy blue, heavier type, more air
 
 - Header brand is the wordmark only — the MH mark is removed from the navbar (footer mark stays).
