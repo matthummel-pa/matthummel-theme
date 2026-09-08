@@ -48,8 +48,8 @@
   --blue-900: #0d2444;
 
   /* Semantic aliases */
-  --color-canvas: #f3f6fb;
-  --color-bg: #e6edf4;
+  --color-canvas: #f6f8fc;
+  --color-bg: #d8e2ed;
   --color-surface: var(--gray-50);
   --color-border: var(--gray-200);
   --color-border-light: var(--gray-100);
@@ -397,7 +397,7 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 40;
-  background: color-mix(in srgb, var(--color-canvas) 92%, transparent);
+  background: color-mix(in srgb, var(--color-canvas) 94%, #fff);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--color-border);
@@ -1588,7 +1588,7 @@ html.mh-dark .h-hero-work__foot {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: var(--white);
+  background: var(--color-bg);
   color: var(--color-text);
   padding: clamp(2.75rem, 5vw, 4.25rem) 0 clamp(2rem, 3.5vw, 3rem);
   border-bottom: 1px solid var(--color-border);

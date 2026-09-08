@@ -3,7 +3,7 @@
 ## 3.5.5 — Contrast and readability lift
 
 - Deepen brand blues toward navy `#2C5A95` (`#1e4f8c` accent, `#173e70` navy) and shift neutrals one notch darker (blue-gray, not muddy).
-- `#main` content canvas (`--color-bg` `#e6edf4`) sits slightly darker than header/footer chrome (`--color-canvas` `#f3f6fb`). Cards stay white.
+- `#main` content canvas (`--color-bg` `#d8e2ed`) sits slightly darker than header/footer chrome (`--color-canvas` `#f6f8fc`). Inner page heroes use the same panel, not white. Cards stay white.
 - Body text closer to slate-900 (`#0b1220`); muted copy `#3a4554` so secondary lines stay readable.
 - Readability: drop `antialiased` thinning on light paper; slightly stronger borders (`#c5d0de`).
 - Align Tailwind `@theme` and Gutenberg `tailwind.config.js` tokens with the live CSS variables.
