@@ -182,7 +182,7 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
     $copy = [
         'h1' => __('Matt Hummel — WordPress developer', 'sage'),
         'role' => __('Custom WordPress themes, PHP plugins, and full-stack web apps — delivered clean.', 'sage'),
-        'lede' => __('I build WordPress platforms shops can edit themselves and agencies can hand off without guesswork. Sage 11 themes, focused PHP plugins, and clear deploy paths. GPL code you own outright. Open for full-time, contract, or freelance.', 'sage'),
+        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage 11, focused plugins, clear deploys. GPL code you own. Open for full-time, contract, or freelance.', 'sage'),
         'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
     ];
 
@@ -228,7 +228,7 @@ function mh_home_fields(): array
         ],
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress themes and plugins.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Themes and plugins with live demos for tours, shops, and inns. Buy a pack when it is listed, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('The work I can share.', 'sage')],
@@ -239,7 +239,7 @@ function mh_home_fields(): array
             ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/hire/">hire conversation</a>.', 'sage')],
         ],
         __('About strip extra', 'sage') => [
-            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery showcases WordPress themes and plugins I ship on Sage 11. I have done a handful of silent agency-sub jobs; this site is not a client grid.', 'sage')],
+            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is Sage 11 themes and plugins I ship — not a client grid. Agency-sub work stays in the background.', 'sage')],
         ],
         __('Recruiter glance', 'sage') => [
             ['glance_role', __('Role', 'sage'), 'text', __('WordPress / full-stack PHP', 'sage')],
@@ -401,7 +401,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['svc_kicker', __('Kicker', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
                 ['svc_h1', __('Heading', 'sage'), 'text', __('WordPress development for shops and agencies.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Custom WordPress sites, plugins, and integrations — written scope, clean handoff. I work with shops, agencies, and developer teams.', 'sage')],
             ],
             __('Who this is for', 'sage') => [
                 ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
@@ -576,7 +576,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
                 ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years in-house; public Sage/WordPress on GitHub since 2025. Remote or on-site.', 'sage')],
                 ['hire_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
                 ['hire_price_line', __('Pricing one-liner', 'sage'), 'textarea', __('Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.', 'sage')],
             ],
@@ -1699,4 +1699,51 @@ add_action('save_post_page', function ($post_id) {
             }
         }
     }
+});
+
+/**
+ * One-time: rewrite exact prior field defaults to shorter, scannable copy.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_portfolio_polish_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $frontId = (int) get_option('page_on_front');
+    $homeId = mh_page_id_by_template('template-home.blade.php') ?: $frontId;
+    $svcId = mh_page_id_by_template('template-services.blade.php');
+    $hireId = mh_page_id_by_template('template-hire.blade.php');
+
+    $swaps = [
+        [$homeId, 'home_lede', [
+            'I build WordPress platforms shops can edit themselves and agencies can hand off without guesswork. Sage 11 themes, focused PHP plugins, and clear deploy paths. GPL code you own outright. Open for full-time, contract, or freelance.',
+            'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+        ], 'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage 11, focused plugins, clear deploys. GPL code you own. Open for full-time, contract, or freelance.'],
+        [$homeId, 'home_work_intro', [
+            'Themes and plugins with live demos for tours, shops, and inns. Buy a pack when it is listed, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.',
+        ], 'Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.'],
+        [$homeId, 'home_about_p2', [
+            'The gallery showcases WordPress themes and plugins I ship on Sage 11. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+            'The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+        ], 'The gallery is Sage 11 themes and plugins I ship — not a client grid. Agency-sub work stays in the background.'],
+        [$svcId, 'svc_lede', [
+            'Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.',
+        ], 'Custom WordPress sites, plugins, and integrations — written scope, clean handoff. I work with shops, agencies, and developer teams.'],
+        [$hireId, 'hire_lede', [
+            'Open for full-time, contract, freelance, and agency overflow. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.',
+        ], 'Open for full-time, contract, freelance, and agency overflow. Seventeen years in-house; public Sage/WordPress on GitHub since 2025. Remote or on-site.'],
+    ];
+
+    foreach ($swaps as [$postId, $key, $from, $to]) {
+        if ((int) $postId <= 0) {
+            continue;
+        }
+        $current = (string) get_post_meta((int) $postId, 'mh_f_'.$key, true);
+        if (in_array($current, $from, true)) {
+            update_post_meta((int) $postId, 'mh_f_'.$key, $to);
+        }
+    }
+
+    update_option('mh_portfolio_polish_copy_v1', true, false);
 });

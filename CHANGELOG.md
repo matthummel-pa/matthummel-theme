@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.5.5 — Contrast, color pop, and portfolio polish
+
+- Deepen brand blues toward navy `#2C5A95`, then lift the accent to a richer `#1a5cad` so links and buttons pop without dropping WCAG AA.
+- Teal spark (`#0e8a7c`) on kickers, ticker icons, section-label dots, and card chrome. Not a second conversion funnel — decoration only.
+- `#main` content canvas (`--color-bg` `#d8e2ed`) sits darker than header/footer chrome (`--color-canvas` `#f6f8fc`). Inner page heroes use the same panel. Cards stay white with a light spark highlight.
+- Hero and page-header washes, button gradient, and stronger section grouping (jump-nav chips, hire fact strip, clearer band padding).
+- Body text `#0b1220`; muted `#3a4554`. Drop `antialiased` thinning on light paper.
+- Scannable field defaults for home lede / work intro / about, services lede, and hire lede. One-shot `mh_portfolio_polish_copy_v1` rewrites exact prior strings only.
+- Align Tailwind `@theme` and Gutenberg `tailwind.config.js` tokens with the live CSS variables.
+
 ## 3.5.4 — Hire traction: Work links, pricing, SLA
 
 - Dead Work links: Now / Services / home / terms copy that said “Work page” now links to `/projects/`. One-shot `mh_hire_traction_copy_v1` rewrites stored `/work/` hrefs to `/projects/` and updates live Now/Hire field values. Rank Math still owns any `/work/` → `/projects/` redirect.

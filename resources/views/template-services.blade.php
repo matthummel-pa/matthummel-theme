@@ -203,7 +203,7 @@
     {{ \App\field('svc_h1', __('WordPress development for shops and agencies.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('svc_lede', __('Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.', 'sage')) }}
+    {{ \App\field('svc_lede', __('Custom WordPress sites, plugins, and integrations — written scope, clean handoff. I work with shops, agencies, and developer teams.', 'sage')) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
