@@ -93,12 +93,15 @@ This site was built entirely with [Cursor AI](https://cursor.com) as the plannin
 All tokens are CSS custom properties defined in `resources/css/app.css` using `@theme`. Key values:
 
 ```css
---color-text:      #111827  /* gray-900 */
---color-accent:    #2563eb  /* blue-600 */
---color-border:    #e5e7eb  /* gray-200 */
---color-text-muted: #6b7280 /* gray-500 — WCAG AA compliant */
---page-max:        1200px
---page-gutter:     clamp(1.25rem, 4vw, 2rem)
+--color-canvas:     #f3f6fb  /* header / footer chrome */
+--color-bg:         #e6edf4  /* #main content panel */
+--color-text:       #0b1220  /* near slate-900 */
+--color-accent:     #1e4f8c  /* deepened brand navy */
+--color-navy:       #173e70  /* #2C5A95 deepened */
+--color-border:     #c5d0de
+--color-text-muted: #3a4554  /* WCAG AA on content bg */
+--page-max:         1200px
+--page-gutter:      clamp(1.25rem, 4vw, 2rem)
 ```
 
 ---

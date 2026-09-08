@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.5 — Contrast and readability lift
+
+- Deepen brand blues toward navy `#2C5A95` (`#1e4f8c` accent, `#173e70` navy) and shift neutrals one notch darker (blue-gray, not muddy).
+- `#main` content canvas (`--color-bg` `#e6edf4`) sits slightly darker than header/footer chrome (`--color-canvas` `#f3f6fb`). Cards stay white.
+- Body text closer to slate-900 (`#0b1220`); muted copy `#3a4554` so secondary lines stay readable.
+- Readability: drop `antialiased` thinning on light paper; slightly stronger borders (`#c5d0de`).
+- Align Tailwind `@theme` and Gutenberg `tailwind.config.js` tokens with the live CSS variables.
+
 ## 3.5.4 — Hire traction: Work links, pricing, SLA
 
 - Dead Work links: Now / Services / home / terms copy that said “Work page” now links to `/projects/`. One-shot `mh_hire_traction_copy_v1` rewrites stored `/work/` hrefs to `/projects/` and updates live Now/Hire field values. Rank Math still owns any `/work/` → `/projects/` redirect.

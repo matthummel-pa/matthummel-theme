@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    Matt Hummel — complete redesign 2026
-   Research: near-black on white = best readability for blogs/portfolios.
+   Research: near-black on cool paper = best readability for blogs/portfolios.
+   Brand navy ~#2C5A95, deepened one notch. Chrome stays lighter than #main.
    Single accent (blue). Generous whitespace. No decorative shadows.
    Palette refs: Linear, Vercel, Josh Comeau, Dan Abramov's blog.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -24,27 +25,31 @@
   --type-display-track: -0.055em;
   --type-hero-track: -0.06em;
 
-  /* Colors */
+  /* Neutrals — blue-gray, one notch darker than default Tailwind gray */
   --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
+  --gray-50: #dde5ef;
+  --gray-100: #d4dce8;
+  --gray-200: #c5d0de;
+  --gray-300: #a8b4c4;
+  --gray-400: #6e7c8e;
+  --gray-500: #4f5c6e;
+  --gray-600: #3a4554;
+  --gray-700: #243041;
+  --gray-800: #141c28;
+  --gray-900: #0b1220;
 
-  --blue-50: #eff6ff;
-  --blue-100: #dbeafe;
-  --blue-400: #60a5fa;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
+  /* Blues — brand navy ~#2C5A95, deepened for links/buttons */
+  --blue-50: #e4edf7;
+  --blue-100: #c9d9ec;
+  --blue-400: #4a7eb8;
+  --blue-600: #1e4f8c;
+  --blue-700: #173e70;
+  --blue-800: #12325a;
+  --blue-900: #0d2444;
 
   /* Semantic aliases */
-  --color-bg: var(--white);
+  --color-canvas: #f3f6fb;
+  --color-bg: #e6edf4;
   --color-surface: var(--gray-50);
   --color-border: var(--gray-200);
   --color-border-light: var(--gray-100);
@@ -57,10 +62,10 @@
   --color-focus: var(--blue-600);
 
   /* Legacy aliases kept for compatibility */
-  --color-paper: var(--white);
+  --color-paper: var(--color-canvas);
   --color-card: var(--white);
   --color-ink: var(--gray-900);
-  --color-navy: var(--gray-900);
+  --color-navy: var(--blue-700);
   --color-blue: var(--blue-600);
   --color-blue-ink: var(--blue-700);
   --color-blue-soft: var(--blue-50);
@@ -69,7 +74,7 @@
   --color-muted: var(--gray-600);
   --color-line: var(--gray-200);
   --color-khaki: var(--gray-50);
-  --color-cream: var(--gray-100);
+  --color-cream: var(--color-canvas);
 
   /* Layout tokens (for compatibility) */
   --space-section: var(--section-gap);
@@ -89,14 +94,14 @@ html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   overflow-x: clip;
-  background: var(--color-bg);
+  background: var(--color-canvas);
   color: var(--color-text);
   font-family: var(--font-body, 'IBM Plex Sans', system-ui, sans-serif);
   font-size: var(--type-body);
   line-height: var(--type-body-leading);
   font-weight: 400;
-  letter-spacing: -0.011em;
-  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.008em;
+  -webkit-font-smoothing: auto;
   text-rendering: optimizeLegibility;
 }
 
@@ -114,7 +119,12 @@ h1, h2, h3, h4, h5 {
 }
 h3, h4 { letter-spacing: -0.035em; margin-bottom: .65em; font-weight: 700; }
 
-a { color: var(--color-accent); text-underline-offset: 3px; }
+a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: from-font;
+  text-decoration-skip-ink: auto;
+}
 a:hover { color: var(--color-accent-hover); }
 
 :where(a, button, input, textarea, select):focus-visible {
@@ -136,7 +146,10 @@ img { max-width: 100%; display: block; }
 }
 .container.wide { max-width: var(--page-max); }
 .measure, .reader { max-width: 42rem; }
-.main { min-height: 50vh; }
+.main {
+  min-height: 50vh;
+  background: var(--color-bg);
+}
 
 /* ─── TYPOGRAPHY UTILITIES ────────────────────────────────────────────────── */
 .display-title {
@@ -384,7 +397,7 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(255,255,255,.95);
+  background: color-mix(in srgb, var(--color-canvas) 92%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--color-border);
@@ -722,7 +735,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
 .h-hero {
   --h-hero-viz-bg: color-mix(in srgb, var(--color-navy, #0f1c2e) 4%, var(--color-bg, #fff));
   --h-hero-viz-line: color-mix(in srgb, var(--color-navy, #0f1c2e) 12%, transparent);
-  background: var(--white, var(--color-bg, #fff));
+  background: transparent;
   padding: clamp(2.5rem, 5.5vh, 4.25rem) 0 clamp(2rem, 4vh, 3.25rem);
   min-height: calc(100svh - 5rem);
   display: flex;
@@ -7729,8 +7742,8 @@ html.mh-dark .journal-topic-card {
   overflow: hidden;
   border-top: 1px solid var(--color-border);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--blue-50) 55%, var(--gray-50)) 0%, var(--gray-50) 28%),
-    var(--gray-50);
+    linear-gradient(180deg, color-mix(in srgb, var(--blue-50) 40%, var(--color-canvas)) 0%, var(--color-canvas) 32%),
+    var(--color-canvas);
   padding: clamp(3.5rem, 6vw, 5rem) 0 2rem;
   color: var(--color-text-secondary);
 }
@@ -8583,7 +8596,7 @@ html.mh-dark .journal-topic-card {
   width: 34px;
   height: 34px;
   border-radius: 7px;
-  background: color-mix(in srgb, var(--skill-color, #2563eb) 12%, #f9fafb);
+  background: color-mix(in srgb, var(--skill-color, var(--color-accent)) 12%, var(--color-canvas));
   color: var(--skill-color, var(--color-accent));
   flex-shrink: 0;
 }

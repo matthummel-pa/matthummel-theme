@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.5 contrast)
+
+- Light UI stays light. Chrome (`--color-canvas`) is lighter than `#main` (`--color-bg`). Do not flip to dark mode.
+- Brand navy is deepened `#2C5A95` → `#173e70`. Accent is `#1e4f8c`, not Tailwind `#2563eb`.
+- Tokens live in `resources/css/portfolio.css` `:root`; keep `app.css` `@theme` and `tailwind.config.js` in lockstep.
+
 ## Editor’s notes (3.5.4 hire traction)
 
 - Work listing lives at `/projects/` (301s to `/shop/` via `mh_redirect_legacy_concept_urls`). Do not add `/work/` hrefs.
