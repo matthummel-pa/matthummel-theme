@@ -2,10 +2,16 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.7 dark glossy blue)
+
+- Accent is `#0d2e57` (`#1a5cad` halfway to black). Navy matches. Shine/highlight is `#4f8fd4` on buttons only. Baby blues stay atmosphere.
+- Type is Inter 900 on display, larger fluid scale, more section/card air. Do not shrink it back to the 3.5.6 clamps without Matt asking.
+- Later home type rules use `!important` around `.h-hero__name` / `.h-section__title` — edit those, not only the early utilities.
+
 ## Editor’s notes (3.5.6 bolder blue + mark)
 
 - Navbar brand is mark + wordmark (`mh_logo_uri()`, `resources/images/logo-mark.svg`). Do not revert to text-only `.brand-name`.
-- Keep the 3.5.5 token lockstep: accent `#1a5cad`, navy `#173e70`, canvas `#f6f8fc`, `#main` `#d8e2ed`. Baby blues (`--blue-200` `#93c5fd`) are atmosphere only — not body text.
+- Keep the token lockstep: accent `#0d2e57`, navy `#0d2e57`, canvas `#f6f8fc`, `#main` `#d8e2ed`. Baby blues (`--blue-200` `#93c5fd`) are atmosphere only — not body text.
 - Motion lives in `resources/js/app.js` (`initMagneticButtons`, `initCardTilt`, `initHeroParallax`, `initPresenceReveal`). Honor `prefers-reduced-motion`. No Framer / GSAP.
 - Spark teal stays decorative. Primary CTA remains Say hello → `/contact/`.
 
