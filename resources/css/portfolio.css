@@ -642,6 +642,12 @@ body.mh-popout-open .menu-toggle__bar:nth-child(3) { transform: translateY(-5.5p
   .menu-toggle { display: inline-flex; }
   .site-header-inner { padding-block: .65rem; gap: .65rem; }
   .brand-name { font-size: 1rem; }
+  /* Scroll away with the page; hamburger + .mh-popout stay fixed. */
+  .site-header {
+    position: static;
+    top: auto;
+  }
+  .admin-bar .site-header { top: auto; }
 }
 @media (max-width: 360px) {
   .menu-toggle__text { display: none; }
@@ -1505,6 +1511,27 @@ html.mh-dark .h-hero-work__foot {
 .h-journal,
 .h-glance {
   scroll-margin-top: 5.5rem;
+}
+@media (max-width: 900px) {
+  #about,
+  #skills,
+  #process,
+  #fit,
+  #principles,
+  #work,
+  #journal,
+  #faq,
+  #oss,
+  #glance,
+  .h-about,
+  .h-skills,
+  .h-process,
+  .h-fit,
+  .h-journal,
+  .h-glance,
+  .h-principles {
+    scroll-margin-top: 1rem; /* header is not sticky on mobile */
+  }
 }
 
 /* Shared white shell for home content clusters */
@@ -9673,7 +9700,7 @@ html.mh-dark .journal-topic-card {
    ═══════════════════════════════════════════════════════════════════════════ */
 .h-principles {
   padding: var(--section-gap) 0;
-  scroll-margin-top: 5.5rem; /* clear sticky .site-header on #principles jumps */
+  scroll-margin-top: 5.5rem; /* clear sticky .site-header on #principles jumps (desktop) */
   background:
     radial-gradient(ellipse 70% 55% at 0% 0%, color-mix(in srgb, var(--blue-100) 55%, transparent), transparent 60%),
     radial-gradient(ellipse 55% 50% at 100% 100%, color-mix(in srgb, var(--blue-50) 80%, transparent), transparent 55%),
