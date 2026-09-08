@@ -204,7 +204,7 @@
         @endif
         @if ($demoUrl !== '')
           <a class="btn btn-outline" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
-            {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('View live demo', 'sage') }}
+            {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('Live demo', 'sage') }}
           </a>
         @endif
         <a class="h-text-arrow pf-product-hero__help" href="{{ esc_url($helpUrl) }}">
@@ -288,7 +288,7 @@
 
         @if ($demoUrl !== '')
           <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
-            {{ __('View live demo', 'sage') }}
+            {{ __('Live demo', 'sage') }}
           </a>
         @endif
 
@@ -593,7 +593,9 @@
         </h2>
         <p class="lead">
           @if ($isFree)
-            {{ __('Free download. Activate under Appearance → Themes, or copy the zip from GitHub Releases.', 'sage') }}
+            {{ $isPlugin
+              ? __('Free download. Activate under Plugins → Installed Plugins, or copy the zip from GitHub Releases.', 'sage')
+              : __('Free download. Activate under Appearance → Themes, or copy the zip from GitHub Releases.', 'sage') }}
           @else
             {{ __('Instant digital download after checkout. Need it branded and installed? Get help and I\'ll ship the full build.', 'sage') }}
           @endif

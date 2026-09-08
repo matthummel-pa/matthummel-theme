@@ -64,9 +64,9 @@
           </div>
         </div>
         <p>{{ \App\field('now_studio_p1', __('I publish WordPress themes and plugins for sale. Hire me for a production build, or buy a theme from the shop.', 'sage')) }}</p>
-        <p>{{ \App\field('now_studio_p2', __('Browse the shop for ready-to-buy themes. When you\'re ready for a custom build, say hello.', 'sage')) }}</p>
-        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
-          {{ __('Browse products', 'sage') }} →
+        <p>{!! \App\field_html('now_studio_p2', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.', 'sage')) !!}</p>
+        <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
+          {{ __('See the Work page', 'sage') }} →
         </a>
       </article>
 
@@ -126,7 +126,7 @@
             <h2 class="now-block__title">Family and focus</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_life_p1', __('I live with my family. Nights and weekends belong to people, not projects. I keep work well-scoped, which is why I only take on a handful of extra projects at a time. I work Eastern Time hours.', 'sage')) }}</p>
+        <p>{{ \App\field('now_life_p1', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')) }}</p>
       </article>
 
       {{-- The short list --}}
@@ -140,11 +140,11 @@
         </div>
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
-            __('Publishing concept WordPress sites — Sage 11 examples, not a client gallery', 'sage'),
-            __('Actively looking for full-time, contract, and freelance WordPress work', 'sage'),
+            __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
+            __('Shipping WordPress themes and plugins from studio projects (Work page + Shop).', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
-            __('Keeping extra projects small — family time is non-negotiable', 'sage'),
+            __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
             __('Working Eastern Time, available for remote and local clients', 'sage'),
           ]) as $item)
             <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $item }}</span></li>
@@ -223,14 +223,14 @@
     <div class="cta-band__copy">
       <p class="eyebrow eyebrow--on-dark">{{ __('Let’s work together', 'sage') }}</p>
       <h2 id="now-cta-heading" class="display-title is-section">{{ __('Something I can help with?', 'sage') }}</h2>
-      <p>{{ __('A short note is enough to start. I usually reply within a day.', 'sage') }}</p>
+      <p>{{ __('A short note is enough to start.', 'sage') }} {{ \App\mh_reply_sla() }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

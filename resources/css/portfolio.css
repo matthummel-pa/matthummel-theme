@@ -6828,6 +6828,20 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 }
 .svc-audience-card__link:hover { gap: .45rem; }
 
+.svc-price-card__amount {
+  font: 700 1.15rem/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+  margin: 0;
+}
+.svc-price-note {
+  margin: .25rem 0 0;
+  font-size: .92rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
 /* ── Not a good fit callout ── */
 .svc-not-fit {
   padding: 1.1rem 1.4rem 1.25rem;

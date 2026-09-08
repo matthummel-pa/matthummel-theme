@@ -204,6 +204,10 @@
       'q' => 'Do you only do WordPress?',
       'a' => \App\mh_adjacent_range_copy(),
     ],
+    [
+      'q' => 'What do you charge?',
+      'a' => 'Theme install and brand starts around $400. A small shop site is usually $3,000–$6,000. Agency overflow is half-day, day, or a project floor. Full packages are on Services. Custom quotes when the scope is different.',
+    ],
   ];
 @endphp
 
@@ -1194,7 +1198,10 @@
     <div class="cta-band__copy">
       <p class="eyebrow eyebrow--on-dark">{{ __('Get in touch', 'sage') }}</p>
       <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Hiring or building?', 'sage')) }}</h2>
-      <p class="h-cta__body">{!! \App\field_html('home_help_p2', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/shop/">browse themes and plugins</a>. I usually reply within a day.', 'sage')) !!}</p>
+      <p class="h-cta__body">{!! \App\field_html('home_help_p2', sprintf(
+        __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse the Work page</a>. I usually reply %s.', 'sage'),
+        \App\mh_reply_sla('phrase')
+      )) !!}</p>
     </div>
     <div class="cta-band__actions h-cta__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
@@ -1202,7 +1209,7 @@
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

@@ -218,6 +218,20 @@ function mh_adjacent_range_copy(): string
 }
 
 /**
+ * Shared reply-SLA copy so contact, hire, and CTA bands stay consistent.
+ *
+ * @param  'sentence'|'phrase'|'note'  $kind
+ */
+function mh_reply_sla(string $kind = 'sentence'): string
+{
+    return match ($kind) {
+        'note' => __('Remote · within one business day (ET)', 'sage'),
+        'phrase' => __('within one business day (ET)', 'sage'),
+        default => __('I usually reply within one business day (ET).', 'sage'),
+    };
+}
+
+/**
  * Recruiter "at a glance" facts for the homepage (scannable in a few seconds).
  *
  * @return array{
@@ -3864,7 +3878,7 @@ if (defined('WP_CLI') && WP_CLI) {
 }
 
 add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
-add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply in one or two business days.', 'matthummel'));
+add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply within one business day (ET).', 'matthummel'));
 add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
 
 /**

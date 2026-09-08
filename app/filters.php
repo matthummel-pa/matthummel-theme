@@ -83,7 +83,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
-            'desc' => __('Your note is in my inbox. I reply within one or two business days.', 'sage'),
+            'desc' => __('Your note is in my inbox. I reply within one business day (ET).', 'sage'),
         ],
         'template-uses.blade.php' => [
             'title' => __('WordPress Developer Tools', 'sage').' | '.$brand,

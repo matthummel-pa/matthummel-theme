@@ -249,7 +249,7 @@
 @include('partials.cta-band', [
   'kicker' => __('Get in touch', 'sage'),
   'title' => __('Questions about a post?', 'sage'),
-  'text' => __('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within a day.', 'sage'),
+  'text' => __('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within one business day (ET).', 'sage'),
   'label' => __('Say hello', 'sage'),
 ])
 @endsection

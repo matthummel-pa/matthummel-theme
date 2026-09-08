@@ -704,23 +704,25 @@ function mh_redirect_legacy_concept_urls(): void
         exit;
     }
 
-    // /projects/{slug}/ → try to find the WC product permalink by slug, else /shop/
+    // /projects/{slug}/ → matching Woo product only. Unknown slugs (including
+    // retired concept URLs like bradley-goldsmith-law) fall through so WordPress
+    // can 404 instead of sending visitors to the shop or the wrong product.
     if (str_starts_with($requestPath, 'projects/')) {
         $rest = trim(substr($requestPath, strlen('projects/')), '/');
-        $target = $shopBase.'/';
+        if ($rest === '' || $rest === 'bradley-goldsmith-law') {
+            return;
+        }
 
-        if ($rest !== '' && function_exists('wc_get_products')) {
-            $slugCandidates = [$rest];
-            // Legacy Acreline project/product slugs → canonical shop product.
-            if (in_array($rest, ['acreline', 'real-estate-wordpress-theme-acreline', 'wordpress-theme-real-estate-agents'], true)) {
-                // Canonical Woo slug only — legacy SEO slugs may still exist on trash rows.
-                $slugCandidates = ['acreline'];
-            }
-            // Legacy WalkRidge concept page → WalkRidge product.
-            if (in_array($rest, ['hallowed-ground', 'walkridge', 'hallowed-ground-battlefield-tours', 'wordpress-tour-theme-walkridge'], true)) {
-                $slugCandidates = ['walkridge'];
-            }
+        $slugCandidates = [$rest];
+        if (in_array($rest, ['acreline', 'real-estate-wordpress-theme-acreline', 'wordpress-theme-real-estate-agents'], true)) {
+            $slugCandidates = ['acreline'];
+        }
+        if (in_array($rest, ['hallowed-ground', 'walkridge', 'hallowed-ground-battlefield-tours', 'wordpress-tour-theme-walkridge'], true)) {
+            $slugCandidates = ['walkridge'];
+        }
 
+        $target = '';
+        if (function_exists('wc_get_products')) {
             foreach ($slugCandidates as $candidate) {
                 $ids = wc_get_products([
                     'slug' => $candidate,
@@ -737,8 +739,7 @@ function mh_redirect_legacy_concept_urls(): void
                 }
             }
 
-            // Fallback: match by SKU prefix (theme-{slug} or plugin-{slug}).
-            if ($target === $shopBase.'/' && function_exists('wc_get_product_id_by_sku')) {
+            if ($target === '' && function_exists('wc_get_product_id_by_sku')) {
                 foreach ($slugCandidates as $candidate) {
                     foreach (['theme-', 'plugin-'] as $prefix) {
                         $pid = (int) wc_get_product_id_by_sku($prefix.$candidate);
@@ -752,6 +753,10 @@ function mh_redirect_legacy_concept_urls(): void
                     }
                 }
             }
+        }
+
+        if ($target === '') {
+            return;
         }
 
         $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
@@ -1215,6 +1220,20 @@ function mh_apply_product_catalog_v7(): void
 }
 
 /**
+ * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
+ */
+function mh_apply_product_catalog_v8(): void
+{
+    if (get_option('mh_product_catalog_v8') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v8', true);
+    }
+}
+
+/**
  * Beat Rank Math and old-slug redirects for retired Acreline SEO paths.
  *
  * Rank Math still has an auto-redirect from the retired project slug to
@@ -1300,6 +1319,7 @@ function mh_redirect_acreline_legacy_paths(): void
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

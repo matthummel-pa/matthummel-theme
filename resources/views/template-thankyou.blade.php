@@ -22,9 +22,9 @@
         <h1 class="ty-confirm__heading">{{ $fromStart ? 'Brief received.' : 'Message received.' }}</h1>
         <p class="ty-confirm__lede">
           @if ($fromStart)
-            Your project brief is in my inbox. I’ll read it before we talk so the first meeting starts with context, not a blank page. I usually reply within a business day.
+            Your project brief is in my inbox. I’ll read it before we talk so the first meeting starts with context, not a blank page. I usually reply within one business day (ET).
           @else
-            Your note is in my inbox. I usually reply within a business day — occasionally two if I'm heads-down on a build.
+            Your note is in my inbox. I usually reply within one business day (ET).
           @endif
         </p>
       </div>

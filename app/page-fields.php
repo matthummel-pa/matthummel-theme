@@ -260,7 +260,11 @@ function mh_home_fields(): array
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Hiring or building?', 'sage')],
             ['home_help_p1', __('First paragraph', 'sage'), 'textarea', __('Hiring managers: write about a role. Shops: start from a spec build or a short note. One inbox for both.', 'sage')],
-            ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse themes and plugins</a>. I usually reply within a day.', 'sage')],
+            ['home_help_p2', __('Second paragraph (basic HTML ok)', 'sage'), 'html', sprintf(
+                /* translators: %s: reply SLA phrase */
+                __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse the Work page</a>. I usually reply %s.', 'sage'),
+                mh_reply_sla('phrase')
+            )],
         ],
         __('Footer (site-wide)', 'sage') => [
             ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
@@ -367,7 +371,7 @@ function page_field_map(): array
             __('Call to action', 'sage') => [
                 ['about_cta_kicker', __('Kicker', 'sage'), 'text', __('Get in touch', 'sage')],
                 ['about_cta_h2', __('Heading', 'sage'), 'text', __('Need a full-stack or WordPress development partner?', 'sage')],
-                ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')],
+                ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')],
                 ['about_cta_btn', __('Button label', 'sage'), 'text', __('Write a note', 'sage')],
             ],
         ],
@@ -380,16 +384,17 @@ function page_field_map(): array
             __('List', 'sage') => [
                 ['now_items', __('Items', 'sage'), 'lines', [
                     __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
-                    __('Shipping WordPress themes and plugins from studio projects (Projects + Shop).', 'sage'),
+                    __('Shipping WordPress themes and plugins from studio projects (Work page + Shop).', 'sage'),
                     __('Publishing notes on the journal, DEV.to, Bluesky, and Reddit.', 'sage'),
                     __('Curating Uses/Resources with clear affiliate disclosure when a link is compensated.', 'sage'),
-                    __('Raising kids — nights and weekends stay scarce, so side work stays focused.', 'sage'),
+                    __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
                 ]],
                 ['now_link', __('Link label', 'sage'), 'text', __('Say hello', 'sage')],
             ],
             __('Studio', 'sage') => [
                 ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish WordPress themes and plugins here. Buy a pack when it is listed, or hire me for a custom build.', 'sage')],
-                ['now_studio_p2', __('Paragraph 2', 'sage'), 'textarea', __('Browse the Projects catalog. When you\'re ready to buy or customize, say hello here.', 'sage')],
+                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready to buy or customize, say hello here.', 'sage')],
+                ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
             ],
         ],
         'template-services.blade.php' => [
@@ -410,6 +415,18 @@ function page_field_map(): array
                     ['text', __('Text', 'sage'), 'textarea'],
                 ]],
             ],
+            __('Pricing', 'sage') => [
+                ['svc_price_h2', __('Heading', 'sage'), 'text', __('Starting packages.', 'sage')],
+                ['svc_price_intro', __('Intro', 'sage'), 'textarea', __('Three starting ranges for shops and agencies. These are floors, not a menu. Write and I will quote the actual scope.', 'sage')],
+                ['svc_price', __('Packages', 'sage'), 'repeater', mh_services_pricing_defaults(), [
+                    ['title', __('Title', 'sage'), 'text'],
+                    ['price', __('Price line', 'sage'), 'text'],
+                    ['text', __('Description', 'sage'), 'textarea'],
+                    ['cta', __('Link label', 'sage'), 'text'],
+                    ['href', __('Link path', 'sage'), 'text'],
+                ]],
+                ['svc_price_note', __('Note under packages (basic HTML ok)', 'sage'), 'html', __('Need something else? <a href="/contact/">Ask for a custom quote</a>. I reply within one business day (ET).', 'sage')],
+            ],
             __('How a project usually goes', 'sage') => [
                 ['svc_process_h2', __('Heading', 'sage'), 'text', __('How a project usually goes', 'sage')],
                 ['svc_process', __('Steps', 'sage'), 'repeater', [
@@ -425,6 +442,7 @@ function page_field_map(): array
                 ['svc_faq_h2', __('Heading', 'sage'), 'text', __('Quick answers', 'sage')],
                 ['svc_faq', __('Questions', 'sage'), 'repeater', [
                     ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
+                    ['title' => __('What do you charge?', 'sage'), 'text' => __('Theme install and brand starts around $400. A small shop site is usually $3,000–$6,000. Agency overflow is half-day, day, or a project floor. Custom quotes when the scope is different.', 'sage')],
                     ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
                     ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No social management. I may earn from disclosed affiliate links on Uses/Resources, and I sell themes from studio work. The site stays a portfolio first.', 'sage')],
                 ], [
@@ -443,7 +461,7 @@ function page_field_map(): array
             ],
             __('Form', 'sage') => [
                 ['start_submit', __('Submit button', 'sage'), 'text', __('Send brief', 'sage')],
-                ['start_reply_note', __('Note under submit', 'sage'), 'text', __('I usually reply within one or two business days (Eastern Time).', 'sage')],
+                ['start_reply_note', __('Note under submit', 'sage'), 'text', mh_reply_sla()],
                 ['start_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
             ],
         ],
@@ -451,14 +469,14 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
                 ['cnt_h1', __('Heading', 'sage'), 'text', __('Say hello.', 'sage')],
-                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply in one or two business days.', 'sage')],
+                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')],
             ],
             __('Form', 'sage') => [
                 ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
                 ['cnt_form_intro', __('Intro', 'sage'), 'textarea', __('Name, email, and a few sentences are enough. I read every note. This form is the reliable inbox.', 'sage')],
                 ['cnt_who_label', __('Audience label', 'sage'), 'text', __('Who you are', 'sage')],
                 ['cnt_message_hint', __('Message hint', 'sage'), 'text', __('A few sentences are enough. Paste a URL if you have one. No need for a long brief.', 'sage')],
-                ['cnt_reply_note', __('Note under submit', 'sage'), 'text', __('I usually reply in one or two business days (Eastern Time).', 'sage')],
+                ['cnt_reply_note', __('Note under submit', 'sage'), 'text', mh_reply_sla()],
                 ['cnt_success', __('Success message', 'sage'), 'text', __('Thanks. I got it and will write back soon.', 'sage')],
                 ['cnt_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
                 ['cnt_submit', __('Submit button', 'sage'), 'text', __('Send hello', 'sage')],
@@ -558,8 +576,9 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
                 ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')],
+                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')],
                 ['hire_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
+                ['hire_price_line', __('Pricing one-liner', 'sage'), 'textarea', __('Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.', 'sage')],
             ],
             __('LinkedIn', 'sage') => [
                 ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
@@ -1142,6 +1161,68 @@ function mh_work_how_defaults(): array
             'body' => __('Digital products deliver immediately after checkout. Custom builds get a written scope, staged previews, and a handoff you own outright.', 'sage'),
         ],
     ];
+}
+
+/**
+ * Default Services pricing packages (editable in Page content).
+ *
+ * @return list<array{title: string, price: string, text: string, cta: string, href: string}>
+ */
+function mh_services_pricing_defaults(): array
+{
+    return [
+        [
+            'title' => __('Theme install & brand', 'sage'),
+            'price' => __('From $400', 'sage'),
+            'text' => __('I install a theme you bought, set identity and colors, and leave wp-admin you can edit. Good when the layout already fits the shop.', 'sage'),
+            'cta' => __('Request a quote', 'sage'),
+            'href' => '/contact/',
+        ],
+        [
+            'title' => __('Small site', 'sage'),
+            'price' => __('$3,000–$6,000', 'sage'),
+            'text' => __('A custom WordPress site for a shop, inn, tour, or restaurant — a few pages, contact, and fields you edit yourself. Written scope before I start.', 'sage'),
+            'cta' => __('Start a brief', 'sage'),
+            'href' => '/start/',
+        ],
+        [
+            'title' => __('Agency overflow', 'sage'),
+            'price' => __('Half-day $400 · day $750 · from $1,200', 'sage'),
+            'text' => __('You keep the relationship. I build the WordPress piece. Day, half-day, or a project floor. NDA available. Custom quotes when the scope is bigger.', 'sage'),
+            'cta' => __('Custom quote', 'sage'),
+            'href' => '/contact/',
+        ],
+    ];
+}
+
+/**
+ * Services pricing packages from Page content, falling back to defaults.
+ *
+ * @return list<array{title: string, price: string, text: string, cta: string, href: string}>
+ */
+function mh_services_pricing(?int $post_id = null): array
+{
+    $rows = field_rows('svc_price', [], $post_id);
+    if ($rows === []) {
+        return mh_services_pricing_defaults();
+    }
+
+    $out = [];
+    foreach ($rows as $row) {
+        $title = trim((string) ($row['title'] ?? ''));
+        if ($title === '') {
+            continue;
+        }
+        $out[] = [
+            'title' => $title,
+            'price' => trim((string) ($row['price'] ?? '')),
+            'text' => trim((string) ($row['text'] ?? '')),
+            'cta' => trim((string) ($row['cta'] ?? '')) ?: __('Custom quote', 'sage'),
+            'href' => trim((string) ($row['href'] ?? '')) ?: '/contact/',
+        ];
+    }
+
+    return $out !== [] ? $out : mh_services_pricing_defaults();
 }
 
 /**

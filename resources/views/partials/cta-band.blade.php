@@ -1,12 +1,12 @@
 @php
   $ctaTitle = $title ?? __('Need a full-stack or WordPress development partner?', 'sage');
-  $ctaText = $text ?? __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage');
+  $ctaText = $text ?? __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage');
   $ctaLabel = $label ?? __('Say hello', 'sage');
   $ctaHref = $href ?? home_url('/contact/');
   $ctaKicker = $kicker ?? __('Get in touch', 'sage');
   $ctaSecondary = $secondary ?? __('Hire me', 'sage');
   $ctaSecondaryHref = $secondaryHref ?? home_url('/hire/');
-  $ctaNote = $note ?? __('Remote · usually within a day', 'sage');
+  $ctaNote = $note ?? \App\mh_reply_sla('note');
 @endphp
 <section class="cta-band" aria-labelledby="cta-heading" data-reveal>
   <div class="container wide cta-band-inner">

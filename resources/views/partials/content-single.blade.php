@@ -255,7 +255,7 @@
             <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">
               {{ __('Hire me', 'sage') }}
             </a>
-            <p class="post-cta__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+            <p class="post-cta__note">{{ \App\mh_reply_sla('note') }}</p>
           </div>
         </aside>
 
