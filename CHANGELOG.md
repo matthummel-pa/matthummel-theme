@@ -1,9 +1,19 @@
 # Changelog
 
+## 3.5.7 — Dark glossy blue, heavier type, more air
+
+- Header brand is the wordmark only — the MH mark is removed from the navbar (footer mark stays).
+- Accent is `#1a5cad` pulled halfway to black: `#0d2e57`. Hover `#0a2446`. Shine stays `#4f8fd4` so buttons read dark, bright, and glossy — not flat navy.
+- Display type goes Inter 900 with a larger fluid scale (hero up to ~5.8rem). Body and leads step up. Section titles and page heroes match.
+- More whitespace: wider gutters, ~9.5rem section rhythm, roomier cards and header. Buttons are 52px with a specular gradient.
+- Home hero mesh + glow, baby-blue chrome, magnetic-feel buttons, card tilt, and wider scroll-reveal. All respect `prefers-reduced-motion`.
+- Ticker edge fades keep `--ticker-edge-start` / `--ticker-edge-end` locked to the wash so the 5rem caps do not flash a gray slab.
+- Tokens stay locked in `portfolio.css` `:root`, `app.css` `@theme`, and `tailwind.config.js`. No new marketing copy.
+
 ## 3.5.6 — Token lockstep and ticker fades
 
-- Restore `--color-navy` to brand `#173e70` (not accent-hover `#154a8a`) so `portfolio.css` matches `@theme`, Gutenberg `tailwind.config.js`, and journal-block fallbacks.
-- Home ticker edge fades now use the same spark-soft / gray-50 stops as the ticker wash, so the 5rem caps no longer flash a gray slab.
+- Restore `--color-navy` to brand `#173e70` (not accent-hover `#154a8a`) so `portfolio.css` matches `@theme`, Gutenberg `tailwind.config.js`, and journal-block fallbacks. 3.5.7 then remaps navy with the darker accent `#0d2e57`.
+- Home ticker edge fades now use the same stops as the ticker wash, so the 5rem caps no longer flash a gray slab.
 
 ## 3.5.5 — Contrast, color pop, and portfolio polish
 

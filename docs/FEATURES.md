@@ -2,10 +2,19 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.7 dark glossy blue)
+
+- Accent is `#0d2e57` (`#1a5cad` halfway to black). Navy matches. Shine/highlight is `#4f8fd4` on buttons only. Baby blues stay atmosphere.
+- Type is Inter 900 on display, larger fluid scale, more section/card air. Do not shrink it back to the 3.5.6 clamps without Matt asking.
+- Later home type rules use `!important` around `.h-hero__name` / `.h-section__title` — edit those, not only the early utilities.
+- Header brand is the “Matt Hummel” wordmark only. The MH mark stays in the footer (`mh_logo_uri()`, `resources/images/logo-mark.svg`).
+- Motion lives in `resources/js/app.js` (`initMagneticButtons`, `initCardTilt`, `initHeroParallax`, `initPresenceReveal`). Honor `prefers-reduced-motion`. No Framer / GSAP.
+- Spark teal stays decorative. Primary CTA remains Say hello → `/contact/`.
+
 ## Editor’s notes (3.5.6 token lockstep)
 
-- `--color-navy` is `#173e70` in `portfolio.css`, `@theme`, and Gutenberg. Do not alias it to `--blue-700` (`#154a8a` is accent-hover / blue-ink).
-- Home ticker fades must use `--ticker-edge-start` / `--ticker-edge-end`, not a leftover `--gray-50` cap.
+- 3.5.6 locked `--color-navy` to `#173e70` (not `--blue-700` / accent-hover `#154a8a`). 3.5.7 remaps navy and accent together to `#0d2e57` in `portfolio.css`, `@theme`, and Gutenberg.
+- Home ticker fades must use `--ticker-edge-start` / `--ticker-edge-end` matching the wash, not a leftover `--gray-50` cap.
 
 ## Editor’s notes (3.5.5 contrast + polish)
 
@@ -52,7 +61,7 @@ What the 3.x Sage theme does, and where it lives.
 | Search titles / meta | Rank Math title/description win when set (skill-first WordPress wording, no city stuffing); theme page fields and `mh_seo_landing_defaults()` are fallbacks; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc`, Rank Math |
 | Rank Math page scores | Field-driven pages sync analysis HTML into `post_content` (not shown on the front) and feed fields via the Rank Math Content Analysis API so marketing scores can reach ~80+ | `app/rank-math-fields.php`, `resources/js/admin-rank-math-fields.js` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
-| Site header | Sticky on all viewports; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
+| Site header | Sticky on all viewports; wordmark; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
 | Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
 | Project brief | `/start/` stepped discovery form for agencies/shops; CTA on Home + Services process; POST `mh_discovery` → n8n CRM webhook (`wp_mail` fallback) | `template-start.blade.php`, `partials/discovery-cta.blade.php`, `app/contact.php` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |

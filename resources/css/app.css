@@ -18,25 +18,26 @@
   --font-heading: Inter, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-btn: 8px;
-  --radius-card: 12px;
-  --page-max: 1200px;
-  --page-gutter: 1.5rem;
-  --space-section: clamp(5.5rem, 10vw, 9rem);
-  --space-grid: 1.35rem;
+  --radius-btn: 10px;
+  --radius-card: 16px;
+  --page-max: 1280px;
+  --page-gutter: 1.75rem;
+  --space-section: clamp(5.5rem, 11vw, 9.5rem);
+  --space-grid: 2rem;
 
   --color-khaki: #dde5ef;
   --color-cream: #f6f8fc;
-  --color-blue: #1a5cad;
-  --color-blue-ink: #154a8a;
+  --color-blue: #0d2e57;
+  --color-blue-ink: #0a2446;
   --color-blue-soft: #dceaf8;
-  --color-navy: #173e70;
+  --color-baby: #93c5fd;
+  --color-navy: #0d2e57;
   --color-slate: #243041;
   --color-ink: #0b1220;
   --color-paper: #f6f8fc;
   --color-body: #141c28;
   --color-muted: #3a4554;
   --color-line: #c5d0de;
-  --color-focus: #1a5cad;
+  --color-focus: #0d2e57;
   --color-card: #ffffff;
 }

@@ -243,6 +243,11 @@
   $ghLogin = \App\mh_github_login();
 @endphp
 <section class="h-hero" aria-labelledby="h-hero-name">
+  <div class="h-hero__atmosphere" aria-hidden="true">
+    <span class="h-hero__blob h-hero__blob--a" data-parallax="0.12"></span>
+    <span class="h-hero__blob h-hero__blob--b" data-parallax="0.07"></span>
+    <span class="h-hero__mesh"></span>
+  </div>
   <div class="container wide h-hero__inner">
 
     <div class="h-hero__copy">
