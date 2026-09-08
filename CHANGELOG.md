@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.6 — Token lockstep and ticker fades
+
+- Restore `--color-navy` to brand `#173e70` (not accent-hover `#154a8a`) so `portfolio.css` matches `@theme`, Gutenberg `tailwind.config.js`, and journal-block fallbacks.
+- Home ticker edge fades now use the same spark-soft / gray-50 stops as the ticker wash, so the 5rem caps no longer flash a gray slab.
+
 ## 3.5.5 — Contrast, color pop, and portfolio polish
 
 - Deepen brand blues toward navy `#2C5A95`, then lift the accent to a richer `#1a5cad` so links and buttons pop without dropping WCAG AA.
