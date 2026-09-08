@@ -2,6 +2,7 @@
 
 ## 3.5.7 — Dark glossy blue, heavier type, more air
 
+- Header brand is the wordmark only — the MH mark is removed from the navbar (footer mark stays).
 - Accent is `#1a5cad` pulled halfway to black: `#0d2e57`. Hover `#0a2446`. Shine stays `#4f8fd4` so buttons read dark, bright, and glossy — not flat navy.
 - Display type goes Inter 900 with a larger fluid scale (hero up to ~5.8rem). Body and leads step up. Section titles and page heroes match.
 - More whitespace: wider gutters, ~9.5rem section rhythm, roomier cards and header. Buttons are 52px with a specular gradient.

@@ -10,7 +10,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.6 bolder blue + mark)
 
-- Navbar brand is mark + wordmark (`mh_logo_uri()`, `resources/images/logo-mark.svg`). Do not revert to text-only `.brand-name`.
+- Header brand is the “Matt Hummel” wordmark only. The MH mark stays in the footer (`mh_logo_uri()`, `resources/images/logo-mark.svg`).
 - Keep the token lockstep: accent `#0d2e57`, navy `#0d2e57`, canvas `#f6f8fc`, `#main` `#d8e2ed`. Baby blues (`--blue-200` `#93c5fd`) are atmosphere only — not body text.
 - Motion lives in `resources/js/app.js` (`initMagneticButtons`, `initCardTilt`, `initHeroParallax`, `initPresenceReveal`). Honor `prefers-reduced-motion`. No Framer / GSAP.
 - Spark teal stays decorative. Primary CTA remains Say hello → `/contact/`.
@@ -60,7 +60,7 @@ What the 3.x Sage theme does, and where it lives.
 | Search titles / meta | Rank Math title/description win when set (skill-first WordPress wording, no city stuffing); theme page fields and `mh_seo_landing_defaults()` are fallbacks; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc`, Rank Math |
 | Rank Math page scores | Field-driven pages sync analysis HTML into `post_content` (not shown on the front) and feed fields via the Rank Math Content Analysis API so marketing scores can reach ~80+ | `app/rank-math-fields.php`, `resources/js/admin-rank-math-fields.js` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
-| Site header | Sticky on all viewports; MH mark + wordmark; primary nav + availability + Say hello; current page underline | `sections/header.blade.php`, `resources/images/logo-mark.svg` |
+| Site header | Sticky on all viewports; wordmark; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
 | Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
 | Project brief | `/start/` stepped discovery form for agencies/shops; CTA on Home + Services process; POST `mh_discovery` → n8n CRM webhook (`wp_mail` fallback) | `template-start.blade.php`, `partials/discovery-cta.blade.php`, `app/contact.php` |
 | Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
