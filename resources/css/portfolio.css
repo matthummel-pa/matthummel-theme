@@ -68,7 +68,7 @@
   --color-paper: var(--color-canvas);
   --color-card: var(--white);
   --color-ink: var(--gray-900);
-  --color-navy: var(--blue-700);
+  --color-navy: #173e70;
   --color-blue: var(--blue-600);
   --color-blue-ink: var(--blue-700);
   --color-blue-soft: var(--blue-50);
@@ -8299,12 +8299,14 @@ html.mh-dark .journal-topic-card {
 
 /* ── Scrolling ticker ── */
 .h-ticker {
+  --ticker-edge-start: color-mix(in srgb, var(--color-spark-soft) 55%, var(--gray-50));
+  --ticker-edge-end: var(--gray-50);
   overflow: hidden;
   padding: 1.05rem 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--color-spark-soft) 55%, var(--gray-50)), var(--blue-50) 50%, var(--gray-50));
+    linear-gradient(90deg, var(--ticker-edge-start), var(--blue-50) 50%, var(--ticker-edge-end));
   position: relative;
 }
 .h-ticker::before,
@@ -8317,8 +8319,8 @@ html.mh-dark .journal-topic-card {
   z-index: 2;
   pointer-events: none;
 }
-.h-ticker::before { left: 0; background: linear-gradient(to right, var(--gray-50), transparent); }
-.h-ticker::after  { right: 0; background: linear-gradient(to left, var(--gray-50), transparent); }
+.h-ticker::before { left: 0; background: linear-gradient(to right, var(--ticker-edge-start), transparent); }
+.h-ticker::after  { right: 0; background: linear-gradient(to left, var(--ticker-edge-end), transparent); }
 .h-ticker__track {
   display: flex;
   align-items: center;

@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.6 token lockstep)
+
+- `--color-navy` is `#173e70` in `portfolio.css`, `@theme`, and Gutenberg. Do not alias it to `--blue-700` (`#154a8a` is accent-hover / blue-ink).
+- Home ticker fades must use `--ticker-edge-start` / `--ticker-edge-end`, not a leftover `--gray-50` cap.
+
 ## Editor’s notes (3.5.5 contrast + polish)
 
 - Light UI stays light. Chrome (`--color-canvas` `#f6f8fc`) is lighter than `#main` (`--color-bg` `#d8e2ed`). Page heroes inherit the panel. Do not flip to dark mode.
