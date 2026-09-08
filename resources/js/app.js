@@ -384,9 +384,79 @@ function initShareButtons() {
   });
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function canHoverFine() {
+  return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+}
+
+function initMagneticButtons() {
+  if (prefersReducedMotion() || !canHoverFine()) {
+    return;
+  }
+
+  document.querySelectorAll('.btn').forEach((btn) => {
+    btn.addEventListener('pointermove', (event) => {
+      const rect = btn.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 6;
+      btn.style.setProperty('--btn-mx', `${x.toFixed(1)}px`);
+      btn.style.setProperty('--btn-my', `${y.toFixed(1)}px`);
+    });
+    btn.addEventListener('pointerleave', () => {
+      btn.style.setProperty('--btn-mx', '0px');
+      btn.style.setProperty('--btn-my', '0px');
+    });
+  });
+}
+
+function initCardTilt() {
+  if (prefersReducedMotion() || !canHoverFine()) {
+    return;
+  }
+
+  document.querySelectorAll('.work-card, .who-card, .lift-card, .repo-card, .post-card, .h-work-card-v2').forEach((card) => {
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width;
+      const py = (event.clientY - rect.top) / rect.height;
+      const tiltY = ((px - 0.5) * 6).toFixed(2);
+      const tiltX = ((0.5 - py) * 5).toFixed(2);
+      card.style.setProperty('--tilt-x', `${tiltX}deg`);
+      card.style.setProperty('--tilt-y', `${tiltY}deg`);
+      card.classList.add('is-tilting');
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+      card.classList.remove('is-tilting');
+    });
+  });
+}
+
+function initHeroParallax() {
+  const layers = document.querySelectorAll('[data-parallax]');
+  if (!layers.length || prefersReducedMotion()) {
+    return;
+  }
+
+  const onScroll = () => {
+    const y = window.scrollY;
+    layers.forEach((el) => {
+      const factor = Number(el.getAttribute('data-parallax') || 0.08);
+      el.style.transform = `translate3d(0, ${(y * factor).toFixed(1)}px, 0)`;
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 function initPresenceReveal() {
   // Mark shared section shells without editing every template.
-  document.querySelectorAll('.pf-section > .container > .about-shell, .pf-section > .container > .content-shell, .pf-section > .container > .code-repos-shell, .work-card, .who-card, .cta-band, .h-cta, .lift-card, .now-block, .uses-section').forEach((el) => {
+  document.querySelectorAll('.pf-section > .container > .about-shell, .pf-section > .container > .content-shell, .pf-section > .container > .code-repos-shell, .work-card, .who-card, .cta-band, .h-cta, .lift-card, .now-block, .uses-section, .h-about, .h-skills, .h-process, .h-glance__card, .h-hero-work, .h-process__step, .h-work-card-v2, .hire-card, .svc-v2-card, .repo-card, .contact-aside').forEach((el) => {
     if (! el.hasAttribute('data-reveal')) {
       el.setAttribute('data-reveal', '');
     }
@@ -436,4 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDiscoveryForm();
   initShopFilter();
   initPresenceReveal();
+  initMagneticButtons();
+  initCardTilt();
+  initHeroParallax();
 });

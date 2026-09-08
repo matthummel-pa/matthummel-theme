@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.6 — Bolder blue chrome, MH mark, interactive motion
+
+- Navbar and footer brand now use a rounded-square MH mark (`resources/images/logo-mark.svg`) plus the “Matt Hummel” wordmark. Full lockup ships as `logo.svg`.
+- Baby-blue tokens (`--blue-200` / `--blue-300` / `--grad-mark`) sit on the 3.5.5 navy `#173e70` + accent `#1a5cad` family. Canvas and body ink stay readable.
+- Home hero adds mesh + glow blobs with optional scroll parallax. Display type is larger. Skills ticker and page-header washes lean further into soft blue.
+- CSS/JS motion on existing patterns: magnetic-feel buttons, card tilt on fine pointers, wider scroll-reveal. All respect `prefers-reduced-motion`. Header Say hello stays 44px.
+- `html.mh-dark` fallbacks are untouched. No new marketing copy.
+
 ## 3.5.5 — Contrast, color pop, and portfolio polish
 
 - Deepen brand blues toward navy `#2C5A95`, then lift the accent to a richer `#1a5cad` so links and buttons pop without dropping WCAG AA.

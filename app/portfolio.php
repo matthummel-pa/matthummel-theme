@@ -3196,6 +3196,14 @@ function mh_seed_portfolio_pages(): void
     update_option('mh_portfolio_seeded_v2', true);
 }
 
+/** Navbar / footer logo URI (`mark` or `full` lockup). */
+function mh_logo_uri(string $kind = 'mark'): string
+{
+    $file = $kind === 'full' ? 'logo.svg' : 'logo-mark.svg';
+
+    return get_theme_file_uri('resources/images/'.$file);
+}
+
 /**
  * Profile photo: Customizer upload, then GitHub avatar, then bundled headshot, then Gravatar.
  */

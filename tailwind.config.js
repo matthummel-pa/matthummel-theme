@@ -19,6 +19,7 @@ const config = {
         blue: '#1a5cad',
         'blue-ink': '#154a8a',
         'blue-soft': '#dceaf8',
+        baby: '#93c5fd',
         navy: '#173e70',
         slate: '#243041',
         ink: '#0b1220',

@@ -19,6 +19,14 @@
 
     {{-- Brand / home link --}}
     <a class="brand" href="{{ home_url('/') }}" rel="home">
+      <img
+        class="brand-mark"
+        src="{{ esc_url(\App\mh_logo_uri('mark')) }}"
+        alt=""
+        width="36"
+        height="36"
+        decoding="async"
+      >
       <span class="brand-name">Matt Hummel</span>
     </a>
 
