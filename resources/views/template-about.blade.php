@@ -348,7 +348,7 @@
       <h2 id="about-cta-heading" class="display-title is-section">
         {{ \App\field('about_cta_h2', __('Need a full-stack or WordPress development partner?', 'sage')) }}
       </h2>
-      <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within a day.', 'sage')) }}</p>
+      <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')) }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
@@ -356,7 +356,7 @@
         {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

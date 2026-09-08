@@ -250,7 +250,7 @@
   'text' => __('If something blocks you, write and tell me what you ran into. I take accessibility reports seriously.', 'sage'),
   'label' => __('Write a note', 'sage'),
   'secondary' => '',
-  'note' => __('Remote · usually within a day', 'sage'),
+  'note' => \App\mh_reply_sla('note'),
 ])
 
 @endsection

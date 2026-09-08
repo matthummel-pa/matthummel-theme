@@ -130,7 +130,7 @@
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
       </a>
       <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

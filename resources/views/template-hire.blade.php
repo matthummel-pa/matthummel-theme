@@ -50,12 +50,13 @@
   <h1 class="display-title is-hero">
     {{ \App\field('hire_h1', __('Hire a WordPress developer.', 'sage')) }}
   </h1>
-  <p class="lead">{{ \App\field('hire_lede', __('Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('hire_lede', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.', 'sage')) }}</p>
   <p class="sec-intro range-note">{{ \App\field('hire_range', \App\mh_adjacent_range_copy()) }}</p>
+  <p class="sec-intro">{{ \App\field('hire_price_line', __('Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.', 'sage')) }}</p>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
       @include('partials.avail-mark', ['gh' => $gh])
-      {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — reply within a day
+      {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — {{ \App\mh_reply_sla('phrase') }}
     </p>
   @endif
   <div class="page-header-split__actions">
@@ -241,7 +242,7 @@
       </div>
       <div class="hire-need-cta">
         <h3 class="hire-need-cta__heading">Ready to write?</h3>
-        <p class="hire-need-cta__body">Use the contact form — a paragraph is plenty. I reply within a day.</p>
+        <p class="hire-need-cta__body">Use the contact form — a paragraph is plenty. {{ \App\mh_reply_sla() }}</p>
         <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.85rem">
           {!! \App\mh_svg_icon('mail', 15) !!} Say hello
         </a>
@@ -309,7 +310,7 @@
     <div class="cta-band__copy">
       <p class="eyebrow eyebrow--on-dark">{{ __('Let’s go', 'sage') }}</p>
       <h2 id="hire-cta-heading" class="display-title is-section">{{ __('Ready to start?', 'sage') }}</h2>
-      <p>{{ __('Write a short note about what you’re building. I’ll reply within a day. LinkedIn works too if you prefer.', 'sage') }}</p>
+      <p>{{ __('Write a short note about what you’re building. LinkedIn works too if you prefer.', 'sage') }} {{ \App\mh_reply_sla() }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
@@ -319,7 +320,7 @@
         {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

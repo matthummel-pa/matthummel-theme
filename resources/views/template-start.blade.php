@@ -55,7 +55,7 @@
       'stats' => [
         ['value' => '4', 'label' => __('Steps', 'sage')],
         ['value' => __('Written', 'sage'), 'label' => __('Scope before build', 'sage')],
-        ['value' => '1–2', 'label' => __('Business days to reply', 'sage')],
+        ['value' => '1', 'label' => __('Business day to reply (ET)', 'sage')],
         ['value' => __('Remote', 'sage'), 'label' => __('Or on-site', 'sage')],
       ],
       'link' => [
@@ -218,7 +218,7 @@
           <span class="discovery-step__eyebrow">Step 4 of 4</span>
           Anything else?
         </legend>
-        <p class="discovery-step__intro">Optional notes, then send. I’ll reply within one or two business days.</p>
+        <p class="discovery-step__intro">Optional notes, then send. {{ \App\mh_reply_sla() }}</p>
 
         <div class="field">
           <label for="df-notes">Other notes <span class="field-opt">(optional)</span></label>
@@ -235,7 +235,7 @@
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('start_submit', __('Send brief', 'sage')) }}
           </button>
-          <p class="field-hint">{{ \App\field('start_reply_note', __('I usually reply within one or two business days (EST).', 'sage')) }}</p>
+          <p class="field-hint">{{ \App\field('start_reply_note', \App\mh_reply_sla()) }}</p>
         </div>
       </fieldset>
 

@@ -3595,3 +3595,191 @@ add_action('init', function (): void {
         'post_ids' => array_map(static fn (\WP_Post $post): int => (int) $post->ID, $posts),
     ], false);
 }, 87);
+
+/**
+ * Replace leftover /work/ hrefs and rewrite a string value.
+ */
+function mh_rewrite_dead_work_href(string $value): string
+{
+    $value = str_replace(
+        ['href="/work/"', "href='/work/'", 'href="/work"', "href='/work'"],
+        ['href="/projects/"', "href='/projects/'", 'href="/projects/"', "href='/projects/'"],
+        $value
+    );
+
+    $trimmed = trim($value);
+    if ($trimmed === '/work/' || $trimmed === '/work') {
+        return '/projects/';
+    }
+
+    return $value;
+}
+
+/**
+ * Recursively rewrite /work/ hrefs in post meta values.
+ */
+function mh_rewrite_dead_work_href_value(mixed $value): mixed
+{
+    if (is_string($value)) {
+        return mh_rewrite_dead_work_href($value);
+    }
+    if (! is_array($value)) {
+        return $value;
+    }
+
+    foreach ($value as $key => $item) {
+        $value[$key] = mh_rewrite_dead_work_href_value($item);
+    }
+
+    return $value;
+}
+
+/**
+ * One-time: hire-traction copy — dead /work/ hrefs, open-hire language, unified SLA.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_hire_traction_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => ['publish', 'draft', 'private'],
+        'posts_per_page' => -1,
+        'no_found_rows' => true,
+    ]);
+
+    foreach ($pages as $page) {
+        $meta = get_post_meta($page->ID);
+        if (! is_array($meta)) {
+            continue;
+        }
+        foreach ($meta as $key => $values) {
+            if (! is_string($key) || ! str_starts_with($key, 'mh_f_')) {
+                continue;
+            }
+            $current = get_post_meta($page->ID, $key, true);
+            $rewritten = mh_rewrite_dead_work_href_value($current);
+            if ($rewritten !== $current) {
+                update_post_meta($page->ID, $key, $rewritten);
+            }
+        }
+    }
+
+    $nowId = mh_page_id_by_template('template-now.blade.php');
+    if ($nowId > 0) {
+        $studioSwaps = [
+            'Browse the Work page. When you\'re ready for a real build, say hello here.' => 'Browse the <a href="/projects/">Work page</a>. When you\'re ready for a real build, say hello here.',
+            'Browse the shop for ready-to-buy themes. When you\'re ready for a custom build, say hello.' => 'Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.',
+            'Browse the Projects catalog. When you\'re ready to buy or customize, say hello here.' => 'Browse the <a href="/projects/">Work page</a>. When you\'re ready to buy or customize, say hello here.',
+        ];
+        $cur = (string) get_post_meta($nowId, 'mh_f_now_studio_p2', true);
+        if ($cur === '' || isset($studioSwaps[$cur])) {
+            update_post_meta($nowId, 'mh_f_now_studio_p2', $studioSwaps[$cur] ?? 'Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.');
+        }
+
+        $lifeFrom = [
+            'I live with my family. Nights and weekends belong to people, not projects. I keep work well-scoped, which is why I only take on a handful of extra projects at a time. I work Eastern Time hours.',
+        ];
+        $lifeTo = 'I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.';
+        $life = (string) get_post_meta($nowId, 'mh_f_now_life_p1', true);
+        if ($life === '' || in_array($life, $lifeFrom, true)) {
+            update_post_meta($nowId, 'mh_f_now_life_p1', $lifeTo);
+        }
+
+        $items = get_post_meta($nowId, 'mh_f_now_items', true);
+        $itemSwaps = [
+            'Publishing concept WordPress sites — Sage 11 examples, not a client gallery' => 'Open for full-time, contract, and freelance WordPress / full-stack work.',
+            'Keeping extra projects small — family time is non-negotiable' => 'Raising kids — nights and weekends stay with family. Weekdays I take hireable work.',
+            'Raising kids — nights and weekends stay scarce, so side work stays focused.' => 'Raising kids — nights and weekends stay with family. Weekdays I take hireable work.',
+            'Shipping WordPress themes and plugins from studio projects (Projects + Shop).' => 'Shipping WordPress themes and plugins from studio projects (Work page + Shop).',
+        ];
+        if (is_array($items) && $items !== []) {
+            $changed = false;
+            foreach ($items as $i => $item) {
+                $line = trim((string) $item);
+                if (isset($itemSwaps[$line])) {
+                    $items[$i] = $itemSwaps[$line];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($nowId, 'mh_f_now_items', $items);
+            }
+        } elseif (is_string($items) && $items !== '') {
+            $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
+            $changed = false;
+            foreach ($lines as $i => $line) {
+                $trim = trim($line);
+                if (isset($itemSwaps[$trim])) {
+                    $lines[$i] = $itemSwaps[$trim];
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($nowId, 'mh_f_now_items', implode("\n", $lines));
+            }
+        }
+    }
+
+    $hireId = mh_page_id_by_template('template-hire.blade.php');
+    if ($hireId > 0) {
+        $ledeFrom = [
+            'Open for full-time, contract, freelance, and a handful of agency-overflow jobs. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.',
+        ];
+        $ledeTo = 'Open for full-time, contract, freelance, and agency overflow. Seventeen years of in-house web work; public Sage/WordPress on GitHub since 2025. Remote or on-site near Gettysburg.';
+        $lede = (string) get_post_meta($hireId, 'mh_f_hire_lede', true);
+        if ($lede === '' || in_array($lede, $ledeFrom, true)) {
+            update_post_meta($hireId, 'mh_f_hire_lede', $ledeTo);
+        }
+        if ((string) get_post_meta($hireId, 'mh_f_hire_price_line', true) === '') {
+            update_post_meta($hireId, 'mh_f_hire_price_line', 'Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.');
+        }
+    }
+
+    $slaSwaps = [
+        'I usually reply within a day.' => 'I usually reply within one business day (ET).',
+        'I reply within a day.' => 'I usually reply within one business day (ET).',
+        'I usually reply in one or two business days.' => 'I usually reply within one business day (ET).',
+        'I usually reply within one or two business days.' => 'I usually reply within one business day (ET).',
+        'I usually reply within one or two business days (Eastern Time).' => 'I usually reply within one business day (ET).',
+        'I usually reply within one or two business days (EST).' => 'I usually reply within one business day (ET).',
+        'I usually reply in one or two business days (Eastern Time).' => 'I usually reply within one business day (ET).',
+        'Got a question about a post, a project, or a role? Send it over. I usually reply within a day.' => 'Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).',
+        'Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply in one or two business days.' => 'Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).',
+        'Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I read everything and reply within one or two business days.' => 'Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).',
+    ];
+
+    $slaKeys = [
+        'mh_f_cnt_lede',
+        'mh_f_cnt_reply_note',
+        'mh_f_start_reply_note',
+        'mh_f_about_cta_lede',
+        'mh_f_home_help_p2',
+    ];
+    foreach ($pages as $page) {
+        foreach ($slaKeys as $key) {
+            $cur = (string) get_post_meta($page->ID, $key, true);
+            if ($cur === '') {
+                continue;
+            }
+            if (isset($slaSwaps[$cur])) {
+                update_post_meta($page->ID, $key, $slaSwaps[$cur]);
+
+                continue;
+            }
+            $next = $cur;
+            $next = str_replace('I usually reply within a day.', 'I usually reply within one business day (ET).', $next);
+            $next = str_replace('I usually reply within one or two business days (EST).', 'I usually reply within one business day (ET).', $next);
+            $next = str_replace('I usually reply within one or two business days (Eastern Time).', 'I usually reply within one business day (ET).', $next);
+            $next = str_replace('I usually reply in one or two business days.', 'I usually reply within one business day (ET).', $next);
+            $next = str_replace('browse themes and plugins', 'browse the Work page', $next);
+            $next = str_replace('href="/shop/"', 'href="/projects/"', $next);
+            if ($next !== $cur) {
+                update_post_meta($page->ID, $key, $next);
+            }
+        }
+    }
+
+    update_option('mh_hire_traction_copy_v1', true);
+}, 88);

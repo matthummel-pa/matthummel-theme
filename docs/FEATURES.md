@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.4 hire traction)
+
+- Work listing lives at `/projects/` (301s to `/shop/` via `mh_redirect_legacy_concept_urls`). Do not add `/work/` hrefs.
+- One-shot `mh_hire_traction_copy_v1` rewrites stored `/work/` hrefs and exact prior Now/Hire/SLA meta only.
+- Services pricing is `svc_price*` Page content fields. Edit ranges in wp-admin; defaults are floors, not a menu.
+- Catalog refresh `mh_product_catalog_v8` pushes the TOCflow Plugins install path.
+
 ## Editor’s notes (3.1.66 projects catalog)
 
 - `/projects/` is the SEO catalog for themes and plugins for sale (demos + buy). `/shop/` is checkout for the same packs — do not merge the URLs.
@@ -20,11 +27,11 @@ What the 3.x Sage theme does, and where it lives.
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items | `template-now.blade.php` |
+| Now | Dated list of current focus items; studio copy links to the Work page at `/projects/` | `template-now.blade.php` |
 | Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ; **Theme / Plugin / Demo** badges; **View details** primary, **Buy theme/plugin** when listed; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
-| Services | Principles section (6 cards + icons), numbered offers, process, FAQ | `template-services.blade.php` |
+| Services | Audience cards, 3-package pricing strip (Page content fields), numbered offers, process, FAQ | `template-services.blade.php`, `mh_services_pricing()` |
 | Code | Open-source GitHub showcase (profile, followers + stargazers thank-you, earned badges, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` as Gutenberg block markup; single-post hero shows featured image beside title/meta; **Tool Blocks** (`matthummel/tool-grid` + `tool-card` with icon/mark/labels) plus `ship-pipe` / `ship-step` | `index.blade.php`, `archive.blade.php`, `partials/content-single.blade.php`, `resources/js/blocks/`, `app/blocks.php`, `resources/css/journal-blocks.css`, `resources/css/editor.css`, `docs/posts/` |

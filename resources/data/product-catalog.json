@@ -473,7 +473,7 @@
     "result": "Insert the block, publish, done. Free on this site and GitHub — a top-of-funnel plugin that shows how I ship focused WordPress tools.",
     "audience": "Bloggers, docs sites, agencies, and developers who want a TOC without a bloated block pack. Also a free lead-in to hiring me for custom blocks or theme work.",
     "architecture": "PHP block render callback, small editor script, optional ItemList JSON-LD. No React runtime on the front end for the list itself.",
-    "handoff": "Download the zip, activate, insert Table of Contents. Settings live under Settings → TOCflow. Source on GitHub if you want to fork it.",
+    "handoff": "Download the zip, activate under Plugins → Installed Plugins, insert Table of Contents. Settings live under Settings → TOCflow. Source on GitHub if you want to fork it.",
     "benefits": [
       "Zero config — insert the block; the outline builds itself",
       "Server-rendered HTML for SEO and screen readers",

@@ -137,6 +137,8 @@
     ['icon' => 'check', 'label' => 'Remote & on-site'],
   ];
 
+  $packages = \App\mh_services_pricing();
+
   $faqs = [
     [
       'q' => 'Do you take WordPress projects for shops and agencies?',
@@ -160,7 +162,11 @@
     ],
     [
       'q' => 'What does a finished WordPress site from you look like?',
-      'a' => 'The example sites on the Work page are the clearest answer — working projects for shops like tours, inns, and retail. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
+      'a' => 'The example sites on the <a href="'.esc_url(home_url('/projects/')).'">Work page</a> are the clearest answer — working projects for shops like tours, inns, and retail. In practice: a custom theme, pages the owner can edit in wp-admin, fast load times, and mobile-first markup. No page-builder clutter.',
+    ],
+    [
+      'q' => 'What do you charge?',
+      'a' => 'Theme install and brand starts around $400. A small shop site is usually $3,000–$6,000. Agency overflow is half-day, day, or a project floor. Custom quotes when the scope is different.',
     ],
     [
       'q' => 'Do you work remotely?',
@@ -185,7 +191,7 @@
 
 {{-- FAQ JSON-LD --}}
 @php
-  $faqSchema  = array_map(fn($f) => ['@type' => 'Question', 'name' => $f['q'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['a']]], $faqs);
+  $faqSchema  = array_map(fn($f) => ['@type' => 'Question', 'name' => $f['q'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => wp_strip_all_tags($f['a'])]], $faqs);
   $faqJsonLd  = json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqSchema], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
 @endphp
 <script type="application/ld+json">{!! $faqJsonLd !!}</script>
@@ -270,8 +276,41 @@
   </div>
 </section>
 
+{{-- ── PRICING ──────────────────────────────────────── --}}
+@if ($packages !== [])
+<section class="pf-section pf-section--alt" aria-labelledby="svc-price-heading" id="pricing">
+  <div class="container wide">
+    <p class="eyebrow">{{ __('Starting ranges', 'sage') }}</p>
+    <h2 id="svc-price-heading" class="display-title is-section">
+      {{ \App\field('svc_price_h2', __('Starting packages.', 'sage')) }}
+    </h2>
+    <p class="sec-intro" style="max-width:52ch">{{ \App\field('svc_price_intro', __('Three starting ranges for shops and agencies. These are floors, not a menu. Write and I will quote the actual scope.', 'sage')) }}</p>
+
+    <div class="svc-audience-grid">
+      @foreach ($packages as $pkg)
+        <article class="svc-audience-card svc-price-card">
+          @if ($pkg['price'] !== '')
+            <p class="svc-price-card__amount">{{ $pkg['price'] }}</p>
+          @endif
+          <h3 class="svc-audience-card__title">{{ $pkg['title'] }}</h3>
+          <p class="svc-audience-card__body">{{ $pkg['text'] }}</p>
+          @php
+            $pkgHref = (string) ($pkg['href'] ?? '/contact/');
+            $pkgHref = preg_match('#^(https?:)?//#i', $pkgHref) === 1 ? $pkgHref : home_url($pkgHref);
+          @endphp
+          <a class="svc-audience-card__link" href="{{ esc_url($pkgHref) }}">
+            {{ $pkg['cta'] }} →
+          </a>
+        </article>
+      @endforeach
+    </div>
+    <p class="svc-price-note">{!! \App\field_html('svc_price_note', __('Need something else? <a href="/contact/">Ask for a custom quote</a>. I reply within one business day (ET).', 'sage')) !!}</p>
+  </div>
+</section>
+@endif
+
 {{-- ── SERVICES ─────────────────────────────────────── --}}
-<section class="pf-section pf-section--alt" aria-labelledby="svc-ways-heading">
+<section class="pf-section" aria-labelledby="svc-ways-heading">
   <div class="container wide">
     <p class="eyebrow">What I build</p>
     <h2 id="svc-ways-heading" class="display-title is-section">
@@ -303,7 +342,7 @@
 
     {{-- Mid-page CTA --}}
     <div class="svc-mid-cta">
-      <p class="svc-mid-cta__copy">Have a project in mind? I usually reply within a day.</p>
+      <p class="svc-mid-cta__copy">Have a project in mind? {{ \App\mh_reply_sla() }}</p>
       <a class="h-text-arrow" href="{{ home_url('/contact/') }}">
         Get in touch <span aria-hidden="true">→</span>
       </a>
@@ -419,14 +458,14 @@
         @foreach ($faqs as $i => $faq)
           <details {{ $i === 0 ? 'open' : '' }}>
             <summary>{{ $faq['q'] }}</summary>
-            <p>{{ $faq['a'] }}</p>
+            <p>{!! wp_kses_post($faq['a']) !!}</p>
           </details>
         @endforeach
       </div>
 
       {{-- End-of-list prompt --}}
       <div class="faq-end-cta">
-        <p class="faq-end-cta__copy">Still have a question? I usually reply within a day.</p>
+        <p class="faq-end-cta__copy">Still have a question? {{ \App\mh_reply_sla() }}</p>
         <a href="{{ home_url('/contact/') }}" class="h-text-arrow">
           Write a note <span aria-hidden="true">→</span>
         </a>
@@ -444,7 +483,7 @@
       <h2 id="svc-cta-heading" class="display-title is-section">
         {{ \App\field('svc_fair_h2', __('Ready to talk?', 'sage')) }}
       </h2>
-      <p>{{ __('Tell me what you’re building or fixing. A paragraph is enough to get started. I reply within a day.', 'sage') }}</p>
+      <p>{{ __('Tell me what you’re building or fixing. A paragraph is enough to get started.', 'sage') }} {{ \App\mh_reply_sla() }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
@@ -453,7 +492,7 @@
       <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">
         {{ __('Browse products', 'sage') }}
       </a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

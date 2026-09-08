@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.5.4 — Hire traction: Work links, pricing, SLA
+
+- Dead Work links: Now / Services / home / terms copy that said “Work page” now links to `/projects/`. One-shot `mh_hire_traction_copy_v1` rewrites stored `/work/` hrefs to `/projects/` and updates live Now/Hire field values. Rank Math still owns any `/work/` → `/projects/` redirect.
+- `/projects/{slug}/` no longer catch-all redirects unknown slugs (including `bradley-goldsmith-law`) to the shop or the wrong product. Known Acreline / WalkRidge aliases still resolve.
+- Removed leftover “handful of extra / side work” hire language from Now and Hire defaults. Open for full-time, contract, freelance, and agency overflow.
+- Services: editable 3-package pricing strip (theme install/brand, small site, agency overflow) plus a custom-quote note. Same ranges mirrored on home FAQ and Hire.
+- Reply SLA unified to “within one business day (ET)” on marketing defaults, contact, start, and CTA bands. Privacy / accessibility data-request SLAs unchanged.
+- Product trust: free plugin downloads say Plugins → Installed Plugins (not Appearance → Themes). TOCflow catalog handoff matches. Live demo CTAs use “Live demo”.
+- `style.css` Version aligned with the 3.5.x changelog track (was 3.1.78).
+
 ## 3.5.3 — Fix duplicate product creation
 
 - `mh_find_product_id_for_project`: SKU check now runs **before** the stored meta pointer so a stale pointer (pointing at an empty stub duplicate) is bypassed whenever a product owns the canonical `theme-`/`plugin-` SKU. This self-heals without any data migration.

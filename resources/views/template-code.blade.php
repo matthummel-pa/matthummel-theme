@@ -766,7 +766,7 @@
         {{ '@'.$login }} →
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
       </a>
-      <p class="cta-band__note">{{ __('Remote · usually within a day', 'sage') }}</p>
+      <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>
 </section>

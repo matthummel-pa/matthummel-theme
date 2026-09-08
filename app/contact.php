@@ -174,7 +174,7 @@ function mh_contact_expect(): array
     return [
         [
             'title' => __('A real reply', 'sage'),
-            'text' => __('I write back in one or two business days, Eastern Time. If I cannot help, I say so.', 'sage'),
+            'text' => __('I write back within one business day (ET). If I cannot help, I say so.', 'sage'),
         ],
         [
             'title' => __('No ads or social retainers', 'sage'),

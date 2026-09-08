@@ -24,7 +24,7 @@
     {{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('cnt_lede', __('Questions about a post, a code snippet, or GitHub are welcome. So are conversations about full-stack applications, WordPress platforms, roles, and development partnerships. I read everything and reply within one or two business days.', 'sage')) }}
+    {{ \App\field('cnt_lede', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')) }}
   </p>
   @if (\App\mh_is_hireable($gh))
     <p class="hire-avail">
@@ -127,7 +127,7 @@
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('cnt_submit', __('Send note', 'sage')) }}
           </button>
-          <p class="field-hint">{{ \App\field('cnt_reply_note', __('I usually reply within one or two business days (EST).', 'sage')) }}</p>
+          <p class="field-hint">{{ \App\field('cnt_reply_note', \App\mh_reply_sla()) }}</p>
         </div>
       </form>
     </div>
@@ -143,7 +143,7 @@
             <span class="contact-info-icon">{!! \App\mh_svg_icon('calendar', 16) !!}</span>
             <div>
               <strong>Reply time</strong>
-              <p>Usually one or two business days. I read every note.</p>
+              <p>{{ ucfirst(\App\mh_reply_sla('phrase')) }}. I read every note.</p>
             </div>
           </li>
           @if (\App\mh_is_hireable($gh))
