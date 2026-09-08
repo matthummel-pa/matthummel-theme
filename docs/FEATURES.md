@@ -2,11 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
-## Editor’s notes (3.5.5 contrast)
+## Editor’s notes (3.5.5 contrast + polish)
 
 - Light UI stays light. Chrome (`--color-canvas` `#f6f8fc`) is lighter than `#main` (`--color-bg` `#d8e2ed`). Page heroes inherit the panel. Do not flip to dark mode.
-- Brand navy is deepened `#2C5A95` → `#173e70`. Accent is `#1e4f8c`, not Tailwind `#2563eb`.
+- Accent is richer `#1a5cad`. Navy stays `#173e70`. Spark teal `#0e8a7c` is decorative only.
 - Tokens live in `resources/css/portfolio.css` `:root`; keep `app.css` `@theme` and `tailwind.config.js` in lockstep.
+- `mh_portfolio_polish_copy_v1` only rewrites exact prior home/hire/services field defaults.
 
 ## Editor’s notes (3.5.4 hire traction)
 

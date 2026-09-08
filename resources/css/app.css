@@ -27,9 +27,9 @@
 
   --color-khaki: #dde5ef;
   --color-cream: #f6f8fc;
-  --color-blue: #1e4f8c;
-  --color-blue-ink: #173e70;
-  --color-blue-soft: #e4edf7;
+  --color-blue: #1a5cad;
+  --color-blue-ink: #154a8a;
+  --color-blue-soft: #dceaf8;
   --color-navy: #173e70;
   --color-slate: #243041;
   --color-ink: #0b1220;
@@ -37,6 +37,6 @@
   --color-body: #141c28;
   --color-muted: #3a4554;
   --color-line: #c5d0de;
-  --color-focus: #1e4f8c;
+  --color-focus: #1a5cad;
   --color-card: #ffffff;
 }

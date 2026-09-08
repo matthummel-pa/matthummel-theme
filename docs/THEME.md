@@ -96,7 +96,8 @@ All tokens are CSS custom properties defined in `resources/css/app.css` using `@
 --color-canvas:     #f6f8fc  /* header / footer chrome */
 --color-bg:         #d8e2ed  /* #main content panel */
 --color-text:       #0b1220  /* near slate-900 */
---color-accent:     #1e4f8c  /* deepened brand navy */
+--color-accent:     #1a5cad  /* richer brand blue */
+--color-spark:      #0e8a7c  /* decorative teal pop */
 --color-navy:       #173e70  /* #2C5A95 deepened */
 --color-border:     #c5d0de
 --color-text-muted: #3a4554  /* WCAG AA on content bg */

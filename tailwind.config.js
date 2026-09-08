@@ -16,9 +16,9 @@ const config = {
         // Live matthummel.com tokens (also in resources/css/app.css @theme)
         khaki: '#dde5ef',
         cream: '#f6f8fc',
-        blue: '#1e4f8c',
-        'blue-ink': '#173e70',
-        'blue-soft': '#e4edf7',
+        blue: '#1a5cad',
+        'blue-ink': '#154a8a',
+        'blue-soft': '#dceaf8',
         navy: '#173e70',
         slate: '#243041',
         ink: '#0b1220',
@@ -26,7 +26,7 @@ const config = {
         body: '#141c28',
         muted: '#3a4554',
         line: '#c5d0de',
-        focus: '#1e4f8c',
+        focus: '#1a5cad',
         card: '#ffffff',
       },
       fontFamily: {

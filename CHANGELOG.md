@@ -1,11 +1,13 @@
 # Changelog
 
-## 3.5.5 — Contrast and readability lift
+## 3.5.5 — Contrast, color pop, and portfolio polish
 
-- Deepen brand blues toward navy `#2C5A95` (`#1e4f8c` accent, `#173e70` navy) and shift neutrals one notch darker (blue-gray, not muddy).
-- `#main` content canvas (`--color-bg` `#d8e2ed`) sits slightly darker than header/footer chrome (`--color-canvas` `#f6f8fc`). Inner page heroes use the same panel, not white. Cards stay white.
-- Body text closer to slate-900 (`#0b1220`); muted copy `#3a4554` so secondary lines stay readable.
-- Readability: drop `antialiased` thinning on light paper; slightly stronger borders (`#c5d0de`).
+- Deepen brand blues toward navy `#2C5A95`, then lift the accent to a richer `#1a5cad` so links and buttons pop without dropping WCAG AA.
+- Teal spark (`#0e8a7c`) on kickers, ticker icons, section-label dots, and card chrome. Not a second conversion funnel — decoration only.
+- `#main` content canvas (`--color-bg` `#d8e2ed`) sits darker than header/footer chrome (`--color-canvas` `#f6f8fc`). Inner page heroes use the same panel. Cards stay white with a light spark highlight.
+- Hero and page-header washes, button gradient, and stronger section grouping (jump-nav chips, hire fact strip, clearer band padding).
+- Body text `#0b1220`; muted `#3a4554`. Drop `antialiased` thinning on light paper.
+- Scannable field defaults for home lede / work intro / about, services lede, and hire lede. One-shot `mh_portfolio_polish_copy_v1` rewrites exact prior strings only.
 - Align Tailwind `@theme` and Gutenberg `tailwind.config.js` tokens with the live CSS variables.
 
 ## 3.5.4 — Hire traction: Work links, pricing, SLA

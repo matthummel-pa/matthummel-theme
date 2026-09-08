@@ -82,7 +82,7 @@
       'num'      => '01',
       'icon'     => 'briefcase',
       'headline' => 'You own the stack at handoff.',
-      'body'     => 'Hosting, DNS, the database, and the Git repo sit in accounts under your name before we close. The Sage theme, plugins, env notes, and deploy path go with the site — so another developer can pick up without guessing.',
+      'body'     => 'Hosting, DNS, the database, and the Git repo sit in accounts under your name before we close. Theme, plugins, and deploy notes go with the site.',
       'practice' => 'Separate host login, GitHub access, and wp-admin for the shop — never a seat under my reseller account.',
     ],
     [
@@ -96,7 +96,7 @@
       'num'      => '03',
       'icon'     => 'code',
       'headline' => 'AI drafts. I ship the review.',
-      'body'     => 'Cursor, Claude, and ChatGPT help with scaffolding, boilerplate, and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.',
+      'body'     => 'Cursor, Claude, and ChatGPT help with scaffolding. I still read, test, and own every line that reaches production.',
       'practice' => 'A typical marketing site lands in about one to two weeks. Same review bar as a longer build — less time on work that does not need a human rewrite.',
     ],
     [
@@ -140,7 +140,7 @@
     [
       'num'    => '03',
       'title'  => 'Build.',
-      'body'   => 'I use modern tools — including AI assistants — to move faster on the parts that are repeatable. Every line ships only after I\'ve read and tested it myself. You get staged previews on real pages, not mockups.',
+      'body'   => 'I use modern tools — including AI — on the repeatable parts. Every line ships after I have read and tested it. You get staged previews on real pages, not mockups.',
       'timing' => '1–2 weeks',
       'gets'   => ['Faster turnaround than traditional builds', 'Every line reviewed by me before it ships', 'Staged previews you can click through and give feedback on'],
     ],
@@ -407,6 +407,7 @@
   <a href="#about">About</a>
   <a href="#skills">Skills</a>
   <a href="#process">Process</a>
+  <a href="#fit">Fit</a>
   <a href="#work">Work</a>
   <a href="#journal">Journal</a>
   <a href="#faq">FAQ</a>
@@ -449,7 +450,7 @@
             {{ \App\field('home_about_text', __('I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.', 'sage')) }}
           </p>
           <p class="h-about__text">
-            {{ \App\field('home_about_p2', __('The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.', 'sage')) }}
+            {{ \App\field('home_about_p2', __('The gallery is Sage 11 themes and plugins I ship — not a client grid. Agency-sub work stays in the background.', 'sage')) }}
           </p>
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
@@ -585,7 +586,7 @@
       <div class="h-fit__head">
         <p class="h-section-label">Honest expectations</p>
         <h2 id="h-fit-heading" class="h-section__title">Is this a good fit?</h2>
-        <p class="h-fit__intro">Most conversations start with the wrong question ("how much does a website cost?"). These answers might save us both time.</p>
+        <p class="h-fit__intro">Most conversations start with “how much does a website cost?” These answers might save us both time.</p>
       </div>
       <div class="h-fit__grid">
         <div class="h-fit__col h-fit__col--yes">
@@ -629,7 +630,7 @@
             How I ship WordPress platforms shops can keep.
           </h2>
           <p class="h-principles__intro">
-            Sage 11, Blade, Tailwind, Vite, and PHP 8.3 — deployed through GitHub. Here is how I run a build from the first note to a clean handoff.
+            Sage 11, Blade, Tailwind, Vite, PHP 8.3 — GitHub deploys. From the first note to a clean handoff.
           </p>
         </div>
       </div>
@@ -679,7 +680,7 @@
           {{ \App\field('home_work_h2', __('Concept WordPress sites.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">

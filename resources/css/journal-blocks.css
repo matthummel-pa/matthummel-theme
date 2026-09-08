@@ -17,16 +17,16 @@
   --gray-700: #243041;
   --gray-800: #141c28;
   --gray-900: #0b1220;
-  --blue-50: #e4edf7;
-  --blue-100: #c9d9ec;
-  --blue-400: #4a7eb8;
+  --blue-50: #dceaf8;
+  --blue-100: #bdd6f0;
+  --blue-400: #4f8fd4;
   --color-border: #c5d0de;
   --color-text: #0b1220;
   --color-text-secondary: #243041;
   --color-text-muted: #3a4554;
-  --color-accent: #1e4f8c;
+  --color-accent: #1a5cad;
   --color-navy: #173e70;
-  --color-focus: #1e4f8c;
+  --color-focus: #1a5cad;
   font-family: var(--font-body);
   color: var(--color-text);
 }
