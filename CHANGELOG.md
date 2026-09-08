@@ -6,15 +6,14 @@
 - Accent is `#1a5cad` pulled halfway to black: `#0d2e57`. Hover `#0a2446`. Shine stays `#4f8fd4` so buttons read dark, bright, and glossy — not flat navy.
 - Display type goes Inter 900 with a larger fluid scale (hero up to ~5.8rem). Body and leads step up. Section titles and page heroes match.
 - More whitespace: wider gutters, ~9.5rem section rhythm, roomier cards and header. Buttons are 52px with a specular gradient.
+- Home hero mesh + glow, baby-blue chrome, magnetic-feel buttons, card tilt, and wider scroll-reveal. All respect `prefers-reduced-motion`.
+- Ticker edge fades keep `--ticker-edge-start` / `--ticker-edge-end` locked to the wash so the 5rem caps do not flash a gray slab.
 - Tokens stay locked in `portfolio.css` `:root`, `app.css` `@theme`, and `tailwind.config.js`. No new marketing copy.
 
-## 3.5.6 — Bolder blue chrome, MH mark, interactive motion
+## 3.5.6 — Token lockstep and ticker fades
 
-- Navbar and footer brand now use a rounded-square MH mark (`resources/images/logo-mark.svg`) plus the “Matt Hummel” wordmark. Full lockup ships as `logo.svg`.
-- Baby-blue tokens (`--blue-200` / `--blue-300` / `--grad-mark`) sit on the 3.5.5 navy `#173e70` + accent `#1a5cad` family. Canvas and body ink stay readable.
-- Home hero adds mesh + glow blobs with optional scroll parallax. Display type is larger. Skills ticker and page-header washes lean further into soft blue.
-- CSS/JS motion on existing patterns: magnetic-feel buttons, card tilt on fine pointers, wider scroll-reveal. All respect `prefers-reduced-motion`. Header Say hello stays 44px.
-- `html.mh-dark` fallbacks are untouched. No new marketing copy.
+- Restore `--color-navy` to brand `#173e70` (not accent-hover `#154a8a`) so `portfolio.css` matches `@theme`, Gutenberg `tailwind.config.js`, and journal-block fallbacks. 3.5.7 then remaps navy with the darker accent `#0d2e57`.
+- Home ticker edge fades now use the same stops as the ticker wash, so the 5rem caps no longer flash a gray slab.
 
 ## 3.5.5 — Contrast, color pop, and portfolio polish
 

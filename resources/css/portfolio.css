@@ -8327,12 +8327,14 @@ html.mh-dark .journal-topic-card {
 
 /* ── Scrolling ticker ── */
 .h-ticker {
+  --ticker-edge-start: color-mix(in srgb, var(--blue-50) 85%, var(--white));
+  --ticker-edge-end: var(--blue-50);
   overflow: hidden;
   padding: 1.05rem 0;
   border-top: 1px solid color-mix(in srgb, var(--blue-200) 50%, var(--color-border));
   border-bottom: 1px solid color-mix(in srgb, var(--blue-200) 50%, var(--color-border));
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--blue-50) 85%, var(--white)), color-mix(in srgb, var(--blue-200) 28%, var(--blue-50)) 50%, var(--blue-50));
+    linear-gradient(90deg, var(--ticker-edge-start), color-mix(in srgb, var(--blue-200) 28%, var(--blue-50)) 50%, var(--ticker-edge-end));
   position: relative;
 }
 .h-ticker::before,
@@ -8345,8 +8347,8 @@ html.mh-dark .journal-topic-card {
   z-index: 2;
   pointer-events: none;
 }
-.h-ticker::before { left: 0; background: linear-gradient(to right, var(--blue-50), transparent); }
-.h-ticker::after  { right: 0; background: linear-gradient(to left, var(--blue-50), transparent); }
+.h-ticker::before { left: 0; background: linear-gradient(to right, var(--ticker-edge-start), transparent); }
+.h-ticker::after  { right: 0; background: linear-gradient(to left, var(--ticker-edge-end), transparent); }
 .h-ticker__track {
   display: flex;
   align-items: center;

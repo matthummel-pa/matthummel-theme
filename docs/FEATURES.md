@@ -7,13 +7,14 @@ What the 3.x Sage theme does, and where it lives.
 - Accent is `#0d2e57` (`#1a5cad` halfway to black). Navy matches. Shine/highlight is `#4f8fd4` on buttons only. Baby blues stay atmosphere.
 - Type is Inter 900 on display, larger fluid scale, more section/card air. Do not shrink it back to the 3.5.6 clamps without Matt asking.
 - Later home type rules use `!important` around `.h-hero__name` / `.h-section__title` — edit those, not only the early utilities.
-
-## Editor’s notes (3.5.6 bolder blue + mark)
-
 - Header brand is the “Matt Hummel” wordmark only. The MH mark stays in the footer (`mh_logo_uri()`, `resources/images/logo-mark.svg`).
-- Keep the token lockstep: accent `#0d2e57`, navy `#0d2e57`, canvas `#f6f8fc`, `#main` `#d8e2ed`. Baby blues (`--blue-200` `#93c5fd`) are atmosphere only — not body text.
 - Motion lives in `resources/js/app.js` (`initMagneticButtons`, `initCardTilt`, `initHeroParallax`, `initPresenceReveal`). Honor `prefers-reduced-motion`. No Framer / GSAP.
 - Spark teal stays decorative. Primary CTA remains Say hello → `/contact/`.
+
+## Editor’s notes (3.5.6 token lockstep)
+
+- 3.5.6 locked `--color-navy` to `#173e70` (not `--blue-700` / accent-hover `#154a8a`). 3.5.7 remaps navy and accent together to `#0d2e57` in `portfolio.css`, `@theme`, and Gutenberg.
+- Home ticker fades must use `--ticker-edge-start` / `--ticker-edge-end` matching the wash, not a leftover `--gray-50` cap.
 
 ## Editor’s notes (3.5.5 contrast + polish)
 
