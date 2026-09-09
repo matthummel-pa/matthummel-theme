@@ -321,6 +321,13 @@ add_action('wp_enqueue_scripts', function (): void {
     wp_dequeue_style('wc-blocks-checkout-style');
     wp_dequeue_style('wc-blocks-cart-style');
 
+    // Classic Blade templates — drop storefront block/order-attribution JS.
+    wp_dequeue_script('wc-order-attribution');
+    wp_dequeue_script('sourcebuster-js');
+    if (function_exists('WC') && WC()->cart && WC()->cart->is_empty()) {
+        wp_dequeue_script('wc-cart-fragments');
+    }
+
     if (! function_exists('is_product') || is_product()) {
         return;
     }
@@ -333,3 +340,13 @@ add_action('wp_enqueue_scripts', function (): void {
     wp_dequeue_style('photoswipe');
     wp_dequeue_style('photoswipe-default-skin');
 }, 99);
+
+/** Emoji detection CSS/JS is unused on this portfolio theme. */
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+remove_action('admin_print_scripts', 'print_emoji_detection_script');
+remove_action('admin_print_styles', 'print_emoji_styles');
+remove_filter('the_content_feed', 'wp_staticize_emoji');
+remove_filter('comment_text_rss', 'wp_staticize_emoji');
+remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+add_filter('emoji_svg_url', '__return_false');

@@ -1676,6 +1676,57 @@ function mh_resync_catalog_only_products_v1(): void
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_catalog_only_products_v1', 36);
 
 /**
+ * Hide publish stub products that have no SKU (acreline-2 style duplicates)
+ * from the shop catalog. Does not trash or delete posts.
+ *
+ * @since 3.5.9
+ */
+function mh_hide_sku_less_product_stubs_v1(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_hide_sku_less_product_stubs_v1')) {
+        return;
+    }
+
+    try {
+        $ids = get_posts([
+            'post_type' => 'product',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+        ]);
+
+        foreach ($ids as $id) {
+            $id = (int) $id;
+            $product = wc_get_product($id);
+            if (! $product instanceof \WC_Product) {
+                continue;
+            }
+            if ((string) $product->get_sku() !== '') {
+                continue;
+            }
+            if ($product->get_catalog_visibility() === 'hidden') {
+                continue;
+            }
+            $product->set_catalog_visibility('hidden');
+            $product->save();
+        }
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_hide_sku_less_product_stubs_v1: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_hide_sku_less_product_stubs_v1', true);
+    }
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_hide_sku_less_product_stubs_v1', 37);
+
+/**
  * Supply Rank Math with a meta description from the product catalog blurb.
  *
  * Rank Math reads the post excerpt for products; the WooCommerce short_description
