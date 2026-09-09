@@ -1679,6 +1679,8 @@ add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_catalog_only_products_
  * Hide publish stub products that have no SKU (acreline-2 style duplicates)
  * from the shop catalog. Does not trash or delete posts.
  *
+ * Runs on `init` (not `woocommerce_init`) so product meta is queryable.
+ *
  * @since 3.5.9
  */
 function mh_hide_sku_less_product_stubs_v1(): void
@@ -1691,40 +1693,34 @@ function mh_hide_sku_less_product_stubs_v1(): void
         return;
     }
 
-    try {
-        $ids = get_posts([
-            'post_type' => 'product',
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'fields' => 'ids',
-            'no_found_rows' => true,
-        ]);
+    $ids = get_posts([
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
 
-        foreach ($ids as $id) {
-            $id = (int) $id;
-            $product = wc_get_product($id);
-            if (! $product instanceof \WC_Product) {
-                continue;
-            }
-            if ((string) $product->get_sku() !== '') {
-                continue;
-            }
-            if ($product->get_catalog_visibility() === 'hidden') {
-                continue;
-            }
-            $product->set_catalog_visibility('hidden');
-            $product->save();
+    foreach ($ids as $id) {
+        $id = (int) $id;
+        $product = wc_get_product($id);
+        if (! $product instanceof \WC_Product) {
+            continue;
         }
-    } catch (\Throwable $e) {
-        if (function_exists('error_log')) {
-            error_log('mh_hide_sku_less_product_stubs_v1: '.$e->getMessage());
+        if ((string) $product->get_sku() !== '') {
+            continue;
         }
-    } finally {
-        update_option('mh_hide_sku_less_product_stubs_v1', true);
+        if ($product->get_catalog_visibility() === 'hidden') {
+            continue;
+        }
+        $product->set_catalog_visibility('hidden');
+        $product->save();
     }
+
+    update_option('mh_hide_sku_less_product_stubs_v1', true);
 }
 
-add_action('woocommerce_init', __NAMESPACE__.'\\mh_hide_sku_less_product_stubs_v1', 37);
+add_action('init', __NAMESPACE__.'\\mh_hide_sku_less_product_stubs_v1', 50);
 
 /**
  * Supply Rank Math with a meta description from the product catalog blurb.
