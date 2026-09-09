@@ -1,131 +1,233 @@
 {{--
   Template Name: WooCommerce
   Cart, Checkout, and My account — classic shortcodes, not WooCommerce blocks.
+
+  2026 redesign: purpose-built compact headers for each page type, replacing
+  the generic hero-panel pattern. Cart → two-column with order summary. Checkout
+  → secure form with trust signals. Account → dashboard with clear nav.
 --}}
 @extends('layouts.app')
 
 @php
-  $title = html_entity_decode(get_the_title(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $title     = html_entity_decode(get_the_title(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
   $shortcode = \App\mh_woocommerce_page_shortcode();
   if ($shortcode === '') {
     $shortcode = trim((string) get_post_field('post_content', get_the_ID()));
   }
-  $shopUrl = function_exists('wc_get_page_permalink')
-    ? wc_get_page_permalink('shop')
-    : home_url('/shop/');
+  $shopUrl    = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
   $catalogUrl = \App\mh_theme_catalog_url();
-  $isCart = function_exists('is_cart') && is_cart();
+  $isCart     = function_exists('is_cart') && is_cart();
   $isCheckout = function_exists('is_checkout') && is_checkout();
-  $isAccount = function_exists('is_account_page') && is_account_page();
-  $cartCount = function_exists('WC') && WC()->cart ? (int) WC()->cart->get_cart_contents_count() : 0;
-  $eyebrow = __('Shop', 'sage');
-  $panelTitle = __('Secure checkout', 'sage');
-  $panelMeta = __('Digital WordPress themes', 'sage');
-  $panelStats = [
-    ['value' => __('SSL', 'sage'), 'label' => __('Encrypted checkout', 'sage')],
-    ['value' => __('Email', 'sage'), 'label' => __('Delivery after payment', 'sage')],
-    ['value' => __('Support', 'sage'), 'label' => __('Questions welcome', 'sage')],
-    ['value' => __('Projects', 'sage'), 'label' => __('Demos before checkout', 'sage')],
-  ];
-  $panelLink = ['label' => __('Browse catalog', 'sage'), 'href' => $catalogUrl];
-  if ($isCart) {
-    $eyebrow = __('Cart', 'sage');
-    $panelTitle = __('Your cart', 'sage');
-    $panelMeta = __('Review before checkout', 'sage');
-    $panelStats = [
-      ['value' => number_format_i18n($cartCount), 'label' => __('Items in cart', 'sage')],
-      ['value' => __('Edit', 'sage'), 'label' => __('Quantities below', 'sage')],
-      ['value' => __('Digital', 'sage'), 'label' => __('No shipping', 'sage')],
-      ['value' => __('Help', 'sage'), 'label' => __('Say hello anytime', 'sage')],
-    ];
-    $panelLink = ['label' => __('Continue shopping', 'sage'), 'href' => $shopUrl];
-  } elseif ($isCheckout) {
-    $eyebrow = __('Checkout', 'sage');
-    $panelTitle = __('Almost done', 'sage');
-    $panelMeta = __('Secure payment', 'sage');
-    $panelStats = [
-      ['value' => __('Secure', 'sage'), 'label' => __('Encrypted fields', 'sage')],
-      ['value' => __('Digital', 'sage'), 'label' => __('Instant access', 'sage')],
-      ['value' => __('Email', 'sage'), 'label' => __('Receipt + files', 'sage')],
-      ['value' => __('Questions', 'sage'), 'label' => __('Contact me', 'sage')],
-    ];
-    $panelLink = ['label' => __('Back to cart', 'sage'), 'href' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/')];
-  } elseif ($isAccount) {
-    $eyebrow = __('Account', 'sage');
-    $panelTitle = __('Your orders', 'sage');
-    $panelMeta = __('Downloads & history', 'sage');
-    $panelStats = [
-      ['value' => __('Orders', 'sage'), 'label' => __('Purchase history', 'sage')],
-      ['value' => __('Files', 'sage'), 'label' => __('Theme downloads', 'sage')],
-      ['value' => __('Profile', 'sage'), 'label' => __('Billing details', 'sage')],
-      ['value' => __('Help', 'sage'), 'label' => __('Say hello', 'sage')],
-    ];
-    $panelLink = ['label' => __('Open shop', 'sage'), 'href' => $shopUrl];
+  $isAccount  = function_exists('is_account_page') && is_account_page();
+  $isLoggedIn = is_user_logged_in();
+
+  $cartCount = 0;
+  $cartTotal = '';
+  if (function_exists('WC') && WC()->cart) {
+    $cartCount = (int) WC()->cart->get_cart_contents_count();
+    $cartTotal = function_exists('wc_price') ? WC()->cart->get_cart_total() : '';
   }
-  $lead = '';
-  if ($isCart) {
-    $lead = __('Review your themes, update quantities, then continue to checkout.', 'sage');
-  } elseif ($isCheckout) {
-    $lead = __('Secure checkout for digital themes. Access details arrive by email after payment.', 'sage');
-  } elseif ($isAccount) {
-    $lead = __('Orders, downloads, and account details in one place.', 'sage');
-  }
+
   $crumbItems = [
     ['label' => __('Home', 'sage'), 'url' => home_url('/')],
     ['label' => __('Shop', 'sage'), 'url' => $shopUrl],
     ['label' => $title, 'current' => true],
   ];
-  $heroExtra = 'page-header--woo';
+
+  $lead = '';
   if ($isCart) {
-    $heroExtra .= ' page-header--cart';
+    $lead = $cartCount > 0
+      ? sprintf(_n('You have %d item in your cart.', 'You have %d items in your cart.', $cartCount, 'sage'), $cartCount)
+      : __('Your cart is empty.', 'sage');
   } elseif ($isCheckout) {
-    $heroExtra .= ' page-header--checkout';
+    $lead = __('Secure payment. Access details arrive by email after purchase.', 'sage');
   } elseif ($isAccount) {
-    $heroExtra .= ' page-header--account';
+    $lead = $isLoggedIn
+      ? __('Orders, downloads, and billing details in one place.', 'sage')
+      : __('Log in to view your orders and download your themes.', 'sage');
   }
+
+  // Step indicator for checkout progress.
+  $steps = [
+    __('Cart', 'sage')     => ['url' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/'), 'done' => ! $isCart],
+    __('Checkout', 'sage') => ['url' => '', 'done' => false],
+    __('Complete', 'sage') => ['url' => '', 'done' => false],
+  ];
 @endphp
 
 @section('content')
-  @component('partials.page-hero', ['extra' => $heroExtra, 'split' => true, 'asideLabel' => __('Shop details', 'sage')])
-    @include('partials.woocommerce-crumb', ['items' => $crumbItems])
-    <p class="eyebrow">{{ $eyebrow }}</p>
-    <h1 class="display-title is-hero">{{ $title }}</h1>
-    @if ($lead !== '')
-      <p class="lead">{{ $lead }}</p>
-    @endif
-    @slot('aside')
-      @include('partials.hero-panel', [
-        'chrome' => 'matthummel.com'.($isCart ? '/cart' : ($isCheckout ? '/checkout' : ($isAccount ? '/account' : '/shop'))),
-        'icon' => $isAccount ? 'user' : 'briefcase',
-        'title' => $panelTitle,
-        'meta' => $panelMeta,
-        'stats' => $panelStats,
-        'link' => $panelLink,
-      ])
-    @endslot
-  @endcomponent
 
-  <div class="container wide page-block woocommerce-wrap woo-checkout-shell{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}">
-    @if ($shortcode !== '')
-      {!! do_shortcode($shortcode) !!}
-      @if ($isCheckout && function_exists('WC') && WC()->cart && WC()->cart->is_empty())
-        <div class="woo-empty" role="status">
-          <p class="woo-empty__title">{{ __('Your cart is empty', 'sage') }}</p>
-          <p class="woo-empty__text">{{ __('Add a theme from the shop or work grid, then come back to checkout.', 'sage') }}</p>
-          <p class="woo-empty__actions">
-            <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
-            <a class="btn btn-outline" href="{{ esc_url($shopUrl) }}">{{ __('Open shop', 'sage') }}</a>
-          </p>
-        </div>
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     COMPACT PAGE HEADER — purpose-built per page type (no hero-panel)
+════════════════════════════════════════════════════════════════════════════ --}}
+<div class="woo-page-header{{ $isCart ? ' woo-page-header--cart' : '' }}{{ $isCheckout ? ' woo-page-header--checkout' : '' }}{{ $isAccount ? ' woo-page-header--account' : '' }}">
+  <div class="container wide woo-page-header__inner">
+
+    @include('partials.woocommerce-crumb', ['items' => $crumbItems])
+
+    <div class="woo-page-header__row">
+      <h1 class="woo-page-header__title">{{ $title }}</h1>
+
+      @if ($isCheckout)
+        <span class="woo-secure-badge" aria-label="{{ __('Secure checkout', 'sage') }}">
+          {!! \App\mh_svg_icon('check', 12) !!}
+          <span>{{ __('Secure checkout', 'sage') }}</span>
+        </span>
+      @elseif ($isCart && $cartCount > 0)
+        <span class="woo-page-header__count">
+          {{ sprintf(_n('%d item', '%d items', $cartCount, 'sage'), $cartCount) }}
+          @if ($cartTotal !== '')
+            <span class="woo-page-header__total">{!! wp_kses_post($cartTotal) !!}</span>
+          @endif
+        </span>
+      @elseif ($isAccount && $isLoggedIn)
+        <span class="woo-page-header__account-id">
+          {!! \App\mh_svg_icon('user', 13) !!}
+          {{ wp_get_current_user()->display_name }}
+        </span>
       @endif
-    @else
+    </div>
+
+    @if ($lead !== '')
+      <p class="woo-page-header__lead">{{ $lead }}</p>
+    @endif
+
+    {{-- Checkout progress steps --}}
+    @if ($isCheckout || $isCart)
+      <nav class="woo-steps" aria-label="{{ __('Checkout steps', 'sage') }}">
+        <ol class="woo-steps__list">
+          <li class="woo-steps__item{{ $isCart ? ' is-current' : ' is-done' }}">
+            @if (! $isCart)
+              <a href="{{ function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/') }}" class="woo-steps__link">
+                {!! \App\mh_svg_icon('check', 11) !!} {{ __('Cart', 'sage') }}
+              </a>
+            @else
+              <span>{{ __('Cart', 'sage') }}</span>
+            @endif
+          </li>
+          <li class="woo-steps__sep" aria-hidden="true">›</li>
+          <li class="woo-steps__item{{ $isCheckout ? ' is-current' : '' }}">
+            @if ($isCart)
+              <a href="{{ function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/checkout/') }}" class="woo-steps__link">{{ __('Checkout', 'sage') }}</a>
+            @else
+              <span>{{ __('Checkout', 'sage') }}</span>
+            @endif
+          </li>
+          <li class="woo-steps__sep" aria-hidden="true">›</li>
+          <li class="woo-steps__item">
+            <span>{{ __('Confirmation', 'sage') }}</span>
+          </li>
+        </ol>
+      </nav>
+    @endif
+
+  </div>
+</div>
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     TRUST STRIP — Cart and Checkout only
+════════════════════════════════════════════════════════════════════════════ --}}
+@if ($isCart || $isCheckout)
+  <div class="woo-trust-strip" aria-label="{{ __('Purchase assurance', 'sage') }}">
+    <div class="container wide woo-trust-strip__inner">
+      <span class="woo-trust-item">
+        {!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL license — you own the code', 'sage') }}
+      </span>
+      <span class="woo-trust-item">
+        {!! \App\mh_svg_icon('download', 13) !!} {{ __('Instant digital download', 'sage') }}
+      </span>
+      <span class="woo-trust-item">
+        {!! \App\mh_svg_icon('check', 13) !!} {{ __('SSL-encrypted payment', 'sage') }}
+      </span>
+      <span class="woo-trust-item">
+        {!! \App\mh_svg_icon('mail', 13) !!}
+        <a href="{{ home_url('/contact/') }}">{{ __('Questions? Say hello', 'sage') }}</a>
+      </span>
+    </div>
+  </div>
+@endif
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     MAIN WC CONTENT
+════════════════════════════════════════════════════════════════════════════ --}}
+<div class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}">
+
+  @if ($shortcode !== '')
+    {!! do_shortcode($shortcode) !!}
+
+    {{-- Empty cart shown at checkout --}}
+    @if ($isCheckout && function_exists('WC') && WC()->cart && WC()->cart->is_empty())
       <div class="woo-empty" role="status">
-        <p class="woo-empty__title">{{ __('Shop tools are offline', 'sage') }}</p>
-        <p class="woo-empty__text">{{ __('WooCommerce is not active, so this page has nothing to show yet.', 'sage') }}</p>
+        <div class="woo-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
+        <p class="woo-empty__title">{{ __('Your cart is empty', 'sage') }}</p>
+        <p class="woo-empty__text">{{ __('Add a theme from the shop or work grid, then come back to checkout.', 'sage') }}</p>
         <p class="woo-empty__actions">
-          <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+          <a class="btn" href="{{ esc_url($catalogUrl) }}">
+            {!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Browse products', 'sage') }}
+          </a>
+          <a class="btn btn-outline" href="{{ esc_url($shopUrl) }}">{{ __('Open shop', 'sage') }}</a>
         </p>
       </div>
     @endif
+
+    {{-- Empty cart page --}}
+    @if ($isCart && $cartCount === 0 && ! WC()->cart->get_cart_contents_count())
+      <div class="woo-continue-shopping">
+        <a class="btn btn-outline" href="{{ esc_url($shopUrl) }}">
+          {!! \App\mh_svg_icon('arrow-left', 14) !!} {{ __('Continue shopping', 'sage') }}
+        </a>
+      </div>
+    @endif
+
+  @else
+    <div class="woo-empty" role="status">
+      <div class="woo-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
+      <p class="woo-empty__title">{{ __('Shop tools are offline', 'sage') }}</p>
+      <p class="woo-empty__text">{{ __('WooCommerce is not active, so this page has nothing to show yet.', 'sage') }}</p>
+      <p class="woo-empty__actions">
+        <a class="btn" href="{{ esc_url($catalogUrl) }}">{{ __('Browse work', 'sage') }}</a>
+      </p>
+    </div>
+  @endif
+
+</div>
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     FOOTER TRUST / REASSURANCE BAND — Cart only
+════════════════════════════════════════════════════════════════════════════ --}}
+@if ($isCart && $cartCount > 0)
+  <div class="woo-cart-footer-band">
+    <div class="container wide woo-cart-footer-band__inner">
+      <div class="woo-cart-footer-item">
+        {!! \App\mh_svg_icon('download', 16) !!}
+        <div>
+          <strong>{{ __('Digital delivery', 'sage') }}</strong>
+          <span>{{ __('Download link in your receipt email', 'sage') }}</span>
+        </div>
+      </div>
+      <div class="woo-cart-footer-item">
+        {!! \App\mh_svg_icon('check', 16) !!}
+        <div>
+          <strong>{{ __('GPL license', 'sage') }}</strong>
+          <span>{{ __('You own the code after purchase', 'sage') }}</span>
+        </div>
+      </div>
+      <div class="woo-cart-footer-item">
+        {!! \App\mh_svg_icon('github', 16) !!}
+        <div>
+          <strong>{{ __('Source on GitHub', 'sage') }}</strong>
+          <span>{{ __('Review the code before you buy', 'sage') }}</span>
+        </div>
+      </div>
+      <div class="woo-cart-footer-item">
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        <div>
+          <strong>{{ __('Custom builds', 'sage') }}</strong>
+          <a href="{{ home_url('/contact/') }}">{{ __('Say hello →', 'sage') }}</a>
+        </div>
+      </div>
+    </div>
   </div>
+@endif
+
 @endsection

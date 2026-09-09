@@ -2,7 +2,7 @@
   $posts   = \App\mh_home_journal_posts(5);
   $work    = array_slice(\App\mh_work_page_items(), 0, 4);
   $gh      = \App\Github::fetchUser(\App\mh_github_login());
-  $ossData = \App\mh_home_oss_live_data(5);
+  $ossData = \App\mh_home_oss_live_data(3);
   $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 
@@ -895,105 +895,60 @@
 
     </div>
 
-    {{-- Repo cards with live stats --}}
-    @if (! empty($ossData['repos']))
-      <div class="h-oss-grid">
-        @foreach ($ossData['repos'] as $r)
-          <article class="h-oss-card">
+    {{-- Latest commits + Featured repos --}}
+    <div class="h-oss-split">
 
-            {{-- Header: name + activity badge --}}
-            <div class="h-oss-card__head">
-              <span class="h-oss-card__icon" aria-hidden="true">{!! \App\mh_svg_icon('github', 18) !!}</span>
-              <h3 class="h-oss-card__name">
-                <a href="{{ esc_url($r['url']) }}" rel="noopener" target="_blank">
-                  {{ $r['display_name'] ?? \App\mh_title_label($r['name']) }}<span class="visually-hidden"> (opens in a new window)</span>
-                </a>
-              </h3>
-              @if (! empty($r['badge']))
-                <span class="h-oss-badge {{ $r['badge_class'] }}">{{ $r['badge'] }}</span>
-              @endif
-            </div>
-
-            {{-- Description --}}
-            <p class="h-oss-card__desc">{{ $r['desc'] }}</p>
-
-            {{-- Live stats row --}}
-            <div class="h-oss-card__stats">
-              @if ($r['stars'] > 0)
-                <span class="h-oss-stat">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 8.7H24l-7.5 5.5 2.9 8.8L12 19.4l-7.4 5.6 2.9-8.8L0 10.7h9.1z"/></svg>
-                  {{ number_format_i18n($r['stars']) }}
+      {{-- Recent commits / activity feed --}}
+      @if (! empty($ossData['events']))
+        <div class="h-oss-commits">
+          <p class="h-oss-commits__label">
+            {!! \App\mh_svg_icon('git', 14) !!} {{ __('Latest commits', 'sage') }}
+          </p>
+          <ol class="h-oss-commits__feed" role="list">
+            @foreach ($ossData['events'] as $ev)
+              @php $evWhen = ! empty($ev['when']) ? human_time_diff(strtotime($ev['when'])).' ago' : ''; @endphp
+              <li class="h-oss-commit">
+                <span class="h-oss-commit__icon" aria-hidden="true">
+                  {!! \App\mh_svg_icon(\App\mh_github_event_icon((string) ($ev['type'] ?? '')), 13) !!}
                 </span>
-              @endif
-              @if ($r['forks'] > 0)
-                <span class="h-oss-stat">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM7 5h.01M17 5h.01M7 9v3a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3m1-8h.01M12 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/></svg>
-                  {{ number_format_i18n($r['forks']) }}
+                <span class="h-oss-commit__body">
+                  @if (! empty($ev['url']))
+                    <a class="h-oss-commit__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
+                      {{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+                    </a>
+                  @else
+                    {{ $ev['text'] }}
+                  @endif
+                  @if (! empty($ev['repo']))
+                    <span class="h-oss-commit__repo">{!! \App\mh_svg_icon('github', 11) !!} {{ $ev['repo'] }}</span>
+                  @endif
                 </span>
-              @endif
-              @if ($r['lang'])
-                <span class="h-oss-stat">
-                  {!! \App\mh_svg_icon($r['lang'], 14) !!} {{ $r['lang'] }}
-                </span>
-              @endif
-              @if ($r['pushed_ago'])
-                <span class="h-oss-stat h-oss-stat--muted">Updated {{ $r['pushed_ago'] }}</span>
-              @endif
-            </div>
+                @if ($evWhen)
+                  <time class="h-oss-commit__when" datetime="{{ esc_attr($ev['when']) }}">{{ $evWhen }}</time>
+                @endif
+              </li>
+            @endforeach
+          </ol>
+          <a class="h-text-arrow" href="{{ home_url('/code/#gh-activity') }}">{{ __('All activity', 'sage') }} →</a>
+        </div>
+      @endif
 
-            {{-- Health / activity score bar --}}
-            @if (! empty($r['health']))
-              <div class="h-oss-card__health">
-                <span class="h-oss-card__health-label">Activity score</span>
-                <div class="h-oss-health-bar" role="progressbar" aria-valuenow="{{ $r['health'] }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ $r['health'] }}/100">
-                  <div class="h-oss-health-bar__fill" style="width: {{ $r['health'] }}%"></div>
-                </div>
-                <span class="h-oss-card__health-score">{{ $r['health'] }}<span aria-hidden="true">/100</span></span>
-              </div>
-            @endif
+      {{-- Featured repos from the code page --}}
+      @if (! empty($ossData['repos']))
+        <div class="h-oss-featured">
+          <p class="h-oss-featured__label">
+            {!! \App\mh_svg_icon('code', 14) !!} {{ __('Featured repos', 'sage') }}
+          </p>
+          <div class="h-oss-featured__grid">
+            @foreach ($ossData['repos'] as $i => $r)
+              @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
+            @endforeach
+          </div>
+          <a class="h-text-arrow" href="{{ home_url('/code/#gh-featured') }}">{{ __('All featured repos', 'sage') }} →</a>
+        </div>
+      @endif
 
-            {{-- Language breakdown bars --}}
-            @if (! empty($r['lang_bars']))
-              <div class="h-lang-bars" aria-label="Language breakdown">
-                <div class="h-lang-bars__track">
-                  @foreach ($r['lang_bars'] as $lb)
-                    @php
-                      $langColors = [
-                        'PHP' => '#7a86b8', 'JavaScript' => '#f7df1e', 'TypeScript' => '#3178c6',
-                        'CSS' => '#563d7c', 'HTML' => '#e34c26', 'Blade' => '#e3342f',
-                        'Shell' => '#89e051', 'Python' => '#3572a5', 'Ruby' => '#701516',
-                      ];
-                      $lc = $langColors[$lb['lang']] ?? '#6b7280';
-                    @endphp
-                    <span class="h-lang-bar" style="width:{{ $lb['pct'] }}%; background:{{ $lc }}" title="{{ $lb['lang'] }}: {{ $lb['pct'] }}%"></span>
-                  @endforeach
-                </div>
-                <div class="h-lang-bars__labels">
-                  @foreach (array_slice($r['lang_bars'], 0, 3) as $lb)
-                    @php $lc = $langColors[$lb['lang']] ?? '#6b7280'; @endphp
-                    <span class="h-lang-label" style="--lang-color:{{ $lc }}">{{ $lb['lang'] }} {{ $lb['pct'] }}%</span>
-                  @endforeach
-                </div>
-              </div>
-            @endif
-
-            {{-- Tags --}}
-            @if (! empty($r['tags']))
-              <div class="pill-row">
-                @foreach (array_slice($r['tags'], 0, 4) as $t)
-                  <span class="pill">{!! \App\mh_svg_icon($t, 12) !!} {{ $t }}</span>
-                @endforeach
-              </div>
-            @endif
-
-            <a class="h-oss-card__link" href="{{ esc_url($r['url']) }}" rel="noopener" target="_blank">
-              {!! \App\mh_svg_icon('code', 15) !!} View on GitHub
-            </a>
-
-          </article>
-        @endforeach
-      </div>
-    @endif
+    </div>
 
   </div>
 </section>

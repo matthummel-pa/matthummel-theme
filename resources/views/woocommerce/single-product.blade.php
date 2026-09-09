@@ -739,6 +739,70 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
+     RELATED PRODUCTS / UPSELLS — pulls from WooCommerce linked products
+════════════════════════════════════════════════════════════════════════════ --}}
+@php
+  $relatedIds = function_exists('wc_get_related_products') ? wc_get_related_products($productId, 3) : [];
+  $upsellIds  = $wcProduct ? array_slice($wcProduct->get_upsell_ids(), 0, 3) : [];
+  $relatedShow = array_filter(array_unique(array_merge($upsellIds, $relatedIds)));
+  $relatedShow = array_slice(array_values($relatedShow), 0, 3);
+@endphp
+@if (! empty($relatedShow))
+  <section class="pf-section pf-section--alt pf-product-related" aria-labelledby="product-related-heading">
+    <div class="container wide">
+      <div class="pf-section-head">
+        <p class="eyebrow">{{ __('Also in the catalog', 'sage') }}</p>
+        <h2 id="product-related-heading" class="display-title is-section">{{ __('You might also like.', 'sage') }}</h2>
+      </div>
+      <div class="pf-related-grid">
+        @foreach ($relatedShow as $relId)
+          @php
+            $relWcp   = function_exists('wc_get_product') ? wc_get_product($relId) : null;
+            $relEntry = \App\mh_product_catalog_data((int) $relId);
+            if (! $relWcp) continue;
+            $relTitle = html_entity_decode($relWcp->get_name(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $relBlurb = trim((string) ($relEntry['blurb'] ?? ($relEntry['summary'] ?? '')));
+            $relPrice = $relWcp->get_price_html();
+            $relUrl   = (string) get_permalink($relId);
+            $relThumb = has_post_thumbnail($relId)
+              ? wp_get_attachment_image_url((int) get_post_thumbnail_id($relId), 'medium')
+              : '';
+            $relType  = (string) ($relEntry['product_type'] ?? 'theme');
+          @endphp
+          <article class="pf-related-card">
+            @if ($relThumb !== '')
+              <a class="pf-related-card__img-wrap" href="{{ esc_url($relUrl) }}" tabindex="-1" aria-hidden="true">
+                <img
+                  src="{{ esc_url($relThumb) }}"
+                  alt="{{ esc_attr(sprintf(__('%s preview', 'sage'), $relTitle)) }}"
+                  width="480" height="300"
+                  loading="lazy" decoding="async"
+                >
+              </a>
+            @endif
+            <div class="pf-related-card__body">
+              <p class="pf-related-card__type eyebrow">{{ ucfirst($relType) }}</p>
+              <h3 class="pf-related-card__title">
+                <a href="{{ esc_url($relUrl) }}">{{ $relTitle }}</a>
+              </h3>
+              @if ($relBlurb !== '')
+                <p class="pf-related-card__blurb">{{ Str::limit($relBlurb, 100) }}</p>
+              @endif
+              <div class="pf-related-card__footer">
+                @if ($relPrice !== '')
+                  <span class="pf-related-card__price">{!! wp_kses_post($relPrice) !!}</span>
+                @endif
+                <a class="btn btn--sm" href="{{ esc_url($relUrl) }}">{{ __('View', 'sage') }}</a>
+              </div>
+            </div>
+          </article>
+        @endforeach
+      </div>
+    </div>
+  </section>
+@endif
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
      BOTTOM CTA BAND
 ════════════════════════════════════════════════════════════════════════════ --}}
 @include('partials.cta-band', [
@@ -754,6 +818,42 @@
   'secondary'     => __('Browse all products', 'sage'),
   'secondaryHref' => $projectsUrl,
 ])
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+     STICKY BUY BAR — appears when hero purchase card scrolls out of view
+════════════════════════════════════════════════════════════════════════════ --}}
+@if ($buyUrl !== '' || $demoUrl !== '')
+  <div
+    class="pf-sticky-bar"
+    id="pf-sticky-bar"
+    aria-hidden="true"
+    data-trigger=".pf-product-hero__card"
+  >
+    <div class="container wide pf-sticky-bar__inner">
+      <div class="pf-sticky-bar__info">
+        <span class="pf-sticky-bar__title">{{ $productTitle }}</span>
+        @if (! $isFree && $priceHtml !== '')
+          <span class="pf-sticky-bar__price">{!! wp_kses_post($priceHtml) !!}</span>
+        @elseif ($isFree)
+          <span class="pf-sticky-bar__price">{{ __('Free', 'sage') }}</span>
+        @endif
+      </div>
+      <div class="pf-sticky-bar__actions">
+        @if ($demoUrl !== '')
+          <a class="btn btn-outline btn--sm pf-sticky-bar__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
+            {{ __('Live demo', 'sage') }}
+          </a>
+        @endif
+        @if ($buyUrl !== '')
+          <a class="btn btn--sm pf-sticky-bar__buy" href="{{ esc_url($buyUrl) }}">
+            {!! \App\mh_svg_icon($isPlugin ? 'download' : 'cart', 14) !!}
+            {{ $primaryLabel }}
+          </a>
+        @endif
+      </div>
+    </div>
+  </div>
+@endif
 
 @php do_action('get_footer', 'shop'); @endphp
 @endsection
