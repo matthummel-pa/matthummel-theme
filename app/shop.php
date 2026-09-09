@@ -43,6 +43,7 @@ function mh_shop_listing_snapshot(): array
         'limit' => -1,
         'status' => 'publish',
         'return' => 'ids',
+        'catalog_visibility' => 'visible',
     ]);
     $cached['count'] = count($ids);
 
