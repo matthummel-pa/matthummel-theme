@@ -895,60 +895,70 @@
 
     </div>
 
-    {{-- Latest commits + Featured repos --}}
-    <div class="h-oss-split">
-
-      {{-- Recent commits / activity feed --}}
-      @if (! empty($ossData['events']))
-        <div class="h-oss-commits">
-          <p class="h-oss-commits__label">
-            {!! \App\mh_svg_icon('git', 14) !!} {{ __('Latest commits', 'sage') }}
-          </p>
-          <ol class="h-oss-commits__feed" role="list">
-            @foreach ($ossData['events'] as $ev)
-              @php $evWhen = ! empty($ev['when']) ? human_time_diff(strtotime($ev['when'])).' ago' : ''; @endphp
-              <li class="h-oss-commit">
-                <span class="h-oss-commit__icon" aria-hidden="true">
-                  {!! \App\mh_svg_icon(\App\mh_github_event_icon((string) ($ev['type'] ?? '')), 13) !!}
-                </span>
-                <span class="h-oss-commit__body">
-                  @if (! empty($ev['url']))
-                    <a class="h-oss-commit__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
-                      {{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-                    </a>
-                  @else
-                    {{ $ev['text'] }}
-                  @endif
-                  @if (! empty($ev['repo']))
-                    <span class="h-oss-commit__repo">{!! \App\mh_svg_icon('github', 11) !!} {{ $ev['repo'] }}</span>
-                  @endif
-                </span>
-                @if ($evWhen)
-                  <time class="h-oss-commit__when" datetime="{{ esc_attr($ev['when']) }}">{{ $evWhen }}</time>
+    {{-- Activity feed — same markup as the code page --}}
+    @if (! empty($ossData['events']))
+      <div class="code-gh-panel code-gh-activity">
+        <div class="code-gh-panel__head">
+          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
+          <div>
+            <h3 class="code-gh-panel__title">{{ __('Public activity', 'sage') }}</h3>
+            <p class="code-gh-panel__intro">{{ __('Pushes, releases, and pull requests — newest first.', 'sage') }}</p>
+          </div>
+        </div>
+        <ol class="code-gh-feed">
+          @foreach ($ossData['events'] as $ev)
+            @php
+              $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? ''));
+              $evType = (string) ($ev['type'] ?? '');
+              $evRepo = (string) ($ev['repo'] ?? '');
+            @endphp
+            <li class="code-gh-feed__item" data-type="{{ esc_attr($evType) }}">
+              <span class="code-gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon($evIcon, 14) !!}</span>
+              <div class="code-gh-feed__body">
+                @if (! empty($ev['url']))
+                  <a class="code-gh-feed__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
+                    {{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+                  </a>
+                @else
+                  <span class="code-gh-feed__link">{{ $ev['text'] }}</span>
                 @endif
+                @if ($evRepo !== '')
+                  <span class="code-gh-feed__repo">{!! \App\mh_svg_icon('github', 12) !!} {{ $evRepo }}</span>
+                @endif
+              </div>
+              @if (! empty($ev['when']))
+                <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
+              @endif
+            </li>
+          @endforeach
+        </ol>
+      </div>
+    @endif
+
+    {{-- Featured repos — same markup as the code page --}}
+    @if (! empty($ossData['repos']))
+      <div class="code-repos-shell code-repos-shell--featured">
+        <div class="code-repos-shell__mesh" aria-hidden="true"></div>
+        <div class="code-repos-shell__inner">
+          <header class="code-repos-shell__head">
+            <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
+            <h3 class="code-repos-shell__title">{{ __('Featured WordPress and app repos', 'sage') }}</h3>
+            <p class="sec-intro">{{ __('The repos I point developers to first. Each one is meant to be forked.', 'sage') }}</p>
+            <p class="code-repos-shell__meta">
+              {{ sprintf(_n('%s repo', '%s repos', count($ossData['repos']), 'sage'), number_format_i18n(count($ossData['repos']))) }}
+              · {{ __('WordPress, plugins, and apps', 'sage') }}
+            </p>
+          </header>
+          <ol class="code-repos-grid code-repos-grid--featured">
+            @foreach ($ossData['repos'] as $i => $r)
+              <li class="code-repos-grid__item">
+                @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
               </li>
             @endforeach
           </ol>
-          <a class="h-text-arrow" href="{{ home_url('/code/#gh-activity') }}">{{ __('All activity', 'sage') }} →</a>
         </div>
-      @endif
-
-      {{-- Featured repos from the code page --}}
-      @if (! empty($ossData['repos']))
-        <div class="h-oss-featured">
-          <p class="h-oss-featured__label">
-            {!! \App\mh_svg_icon('code', 14) !!} {{ __('Featured repos', 'sage') }}
-          </p>
-          <div class="h-oss-featured__grid">
-            @foreach ($ossData['repos'] as $i => $r)
-              @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
-            @endforeach
-          </div>
-          <a class="h-text-arrow" href="{{ home_url('/code/#gh-featured') }}">{{ __('All featured repos', 'sage') }} →</a>
-        </div>
-      @endif
-
-    </div>
+      </div>
+    @endif
 
   </div>
 </section>
