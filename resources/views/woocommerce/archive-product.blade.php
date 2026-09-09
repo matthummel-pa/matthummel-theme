@@ -177,42 +177,63 @@
 
   @if (woocommerce_product_loop())
     @php
-      // Catalog filter nav counts.
-      $filterAll    = $productCount;
-      $filterThemes = $themeCount;
+      $filterAll     = $productCount;
+      $filterThemes  = $themeCount;
       $filterPlugins = $pluginCount;
+
+      // Suppress default WC result-count + ordering dropdowns; we render our own toolbar.
+      remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
+      remove_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30);
     @endphp
 
-    {{-- Catalog filter nav — JS-powered, no page navigation --}}
-    <nav class="catalog-filter-nav" aria-label="{{ __('Filter by product type', 'sage') }}">
-      <span class="catalog-filter-nav__label" aria-hidden="true">{{ __('Show', 'sage') }}</span>
-      <ul class="catalog-filter-nav__links" role="list">
-        <li>
-          <button class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
-            {{ __('All products', 'sage') }}
-            @if ($filterAll > 0)
-              <span class="catalog-filter-nav__count" aria-label="{{ $filterAll }} {{ __('total', 'sage') }}">{{ $filterAll }}</span>
-            @endif
-          </button>
-        </li>
-        @if ($filterThemes > 0)
-        <li>
-          <button class="catalog-filter-nav__link" data-filter-type="theme">
-            {!! \App\mh_svg_icon('home', 11) !!} {{ __('Themes', 'sage') }}
-            <span class="catalog-filter-nav__count" aria-label="{{ $filterThemes }} {{ __('themes', 'sage') }}">{{ $filterThemes }}</span>
-          </button>
-        </li>
-        @endif
-        @if ($filterPlugins > 0)
-        <li>
-          <button class="catalog-filter-nav__link" data-filter-type="plugin">
-            {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
-            <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
-          </button>
-        </li>
-        @endif
-      </ul>
-    </nav>
+    {{-- Catalog toolbar: filter tabs + result count + sort --}}
+    <div class="catalog-toolbar" role="region" aria-label="{{ __('Catalog controls', 'sage') }}">
+
+      {{-- Type filter tabs --}}
+      <nav class="catalog-filter-nav" aria-label="{{ __('Filter by product type', 'sage') }}">
+        <ul class="catalog-filter-nav__links" role="list">
+          <li>
+            <button class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
+              {{ __('All', 'sage') }}
+              @if ($filterAll > 0)
+                <span class="catalog-filter-nav__count" aria-label="{{ $filterAll }} {{ __('total', 'sage') }}">{{ $filterAll }}</span>
+              @endif
+            </button>
+          </li>
+          @if ($filterThemes > 0)
+          <li>
+            <button class="catalog-filter-nav__link" data-filter-type="theme">
+              {!! \App\mh_svg_icon('home', 11) !!} {{ __('Themes', 'sage') }}
+              <span class="catalog-filter-nav__count" aria-label="{{ $filterThemes }} {{ __('themes', 'sage') }}">{{ $filterThemes }}</span>
+            </button>
+          </li>
+          @endif
+          @if ($filterPlugins > 0)
+          <li>
+            <button class="catalog-filter-nav__link" data-filter-type="plugin">
+              {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
+              <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
+            </button>
+          </li>
+          @endif
+        </ul>
+      </nav>
+
+      {{-- Result count + sort order --}}
+      <div class="catalog-toolbar__right">
+        <span
+          class="catalog-toolbar__count"
+          id="catalog-filter-live"
+          role="status"
+          aria-live="polite"
+        >{{ sprintf(_n('%d product', '%d products', $filterAll, 'sage'), $filterAll) }}</span>
+        @php
+          // Render WooCommerce's built-in ordering select in our toolbar slot.
+          do_action('woocommerce_catalog_ordering');
+        @endphp
+      </div>
+
+    </div>
 
     @php
       do_action('woocommerce_before_shop_loop');

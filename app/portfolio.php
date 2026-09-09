@@ -1279,78 +1279,15 @@ function mh_github_calendar_months(array $weeks): array
 function mh_home_oss_live_data(int $repo_count = 3): array
 {
     $login = mh_github_login();
-    $cache_key = 'mh_oss_live_v3_'.md5($login.(string) $repo_count);
+    $cache_key = 'mh_oss_live_v4_'.md5($login.(string) $repo_count);
 
     if (($cached = get_transient($cache_key)) !== false && is_array($cached)) {
         return $cached;
     }
 
     $profile = Github::fetchUser($login);
-    $events = Github::fetchEvents($login, 6);
-    $base = array_slice(mh_featured_repos(), 0, $repo_count);
-    $repos = [];
-
-    foreach ($base as $r) {
-        $name = (string) ($r['name'] ?? '');
-        if ($name === '') {
-            continue;
-        }
-
-        /* Live metadata */
-        $meta = Github::fetchRepoMeta($login, $name);
-        $langs = Github::fetchLanguages($login, $name);  // ['PHP', 'JavaScript', ...]
-
-        /* Re-fetch raw language bytes for percentage bars */
-        $lang_bytes = mh_github_lang_bytes($login, $name);
-        $lang_bars = mh_github_lang_percentages($lang_bytes, 4);
-
-        /* Merge description: live API wins if the hardcoded one is the default */
-        $desc = trim((string) ($r['desc'] ?? ''));
-        if ($desc === '' || $desc === ($meta['desc'] ?? '')) {
-            $desc = trim((string) ($meta['desc'] ?? $desc));
-        }
-        $desc = mh_visitor_brand_text($desc);
-
-        /* Build URL */
-        $url = (string) ($r['url'] ?? '');
-        if ($url === '') {
-            $url = 'https://github.com/'.$login.'/'.$name;
-        }
-
-        /* Stars, forks, language */
-        $stars = (int) ($meta['stars'] ?? 0);
-        $forks = (int) ($meta['forks'] ?? 0);
-        $lang = (string) ($meta['lang'] ?? ($langs[0] ?? ''));
-        $pushed = (string) ($meta['pushed'] ?? '');
-
-        /* Activity badge */
-        [$badge, $badge_class, $health] = mh_repo_activity_badge($pushed, $stars, $forks, $desc);
-
-        /* Relative time */
-        $pushed_ago = '';
-        if ($pushed !== '') {
-            $t = strtotime($pushed);
-            $pushed_ago = $t ? human_time_diff($t).' ago' : '';
-        }
-
-        $repos[] = [
-            'name' => $name,
-            'display_name' => mh_title_label($name),
-            'desc' => $desc,
-            'url' => $url,
-            'tags' => $r['tags'] ?? [],
-            'stars' => $stars,
-            'forks' => $forks,
-            'lang' => $lang,
-            'langs' => $langs,
-            'lang_bars' => $lang_bars,
-            'pushed' => $pushed,
-            'pushed_ago' => $pushed_ago,
-            'badge' => $badge,
-            'badge_class' => $badge_class,
-            'health' => $health,
-        ];
-    }
+    $events = Github::fetchEvents($login, 5);
+    $repos = array_slice(mh_code_page_repos(), 0, $repo_count);
 
     $result = compact('profile', 'events', 'repos');
     set_transient($cache_key, $result, HOUR_IN_SECONDS);

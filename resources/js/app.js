@@ -8,6 +8,7 @@ import { initWritingTools } from './writing-tools.js';
 import { initWorkTools } from './work-tools.js';
 import { initDiscoveryForm } from './discovery-form.js';
 import { initShopFilter } from './shop-filter.js';
+import { initStickyBar } from './woo-sticky-bar.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -505,6 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWorkTools();
   initDiscoveryForm();
   initShopFilter();
+  initStickyBar();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();

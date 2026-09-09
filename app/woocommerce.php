@@ -230,18 +230,79 @@ add_action('wp', function (): void {
     }, 10);
 });
 
+// ── Cart: accessible scroll wrapper on the table ──────────────────────────────
 add_action('woocommerce_before_cart_table', function (): void {
     echo '<div class="shop-table-scroll" tabindex="0" role="region" aria-label="'.esc_attr__('Cart items', 'sage').'">';
 }, 5);
 add_action('woocommerce_after_cart_table', function (): void {
     echo '</div>';
 }, 50);
+
+// ── Checkout: accessible scroll wrapper around order review ───────────────────
 add_action('woocommerce_checkout_before_order_review', function (): void {
     echo '<div class="shop-table-scroll" tabindex="0" role="region" aria-label="'.esc_attr__('Order review', 'sage').'">';
 }, 5);
 add_action('woocommerce_checkout_after_order_review', function (): void {
     echo '</div>';
 }, 50);
+
+// ── Checkout: trust badge row below the payment button ────────────────────────
+add_action('woocommerce_review_order_after_submit', function (): void {
+    echo '<div class="checkout-trust-signals" aria-label="'.esc_attr__('Checkout security', 'sage').'">';
+    echo '<span class="checkout-trust-signal">'.esc_html__('SSL encrypted', 'sage').'</span>';
+    echo '<span class="checkout-trust-signal">'.esc_html__('GPL license', 'sage').'</span>';
+    echo '<span class="checkout-trust-signal">'.esc_html__('Instant download', 'sage').'</span>';
+    echo '</div>';
+}, 15);
+
+// ── Cart: "continue shopping" link at top of cart ────────────────────────────
+add_action('woocommerce_before_cart', function (): void {
+    $shopUrl = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
+    echo '<div class="woo-cart-header-actions">';
+    echo '<a class="woo-continue-link" href="'.esc_url($shopUrl).'">← '.esc_html__('Continue shopping', 'sage').'</a>';
+    echo '</div>';
+}, 5);
+
+// ── Product loop: stamp mh-type-* class onto each product <li> ───────────────
+// Used by the JS filter in shop-filter.js. The product loop <li> classes come
+// from post_class(), so we filter that hook for product post types.
+add_filter('post_class', function (array $classes, array $class, int $postId): array {
+    if (get_post_type($postId) !== 'product') {
+        return $classes;
+    }
+
+    $entry = mh_product_catalog_data($postId);
+    $type = (string) ($entry['product_type'] ?? 'theme');
+    $classes[] = 'mh-type-'.sanitize_html_class($type);
+
+    return $classes;
+}, 10, 3);
+
+// ── Shop archive: remove star ratings (not relevant for digital products) ─────
+remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
+
+// ── My account: add download shortcut link in account nav ────────────────────
+add_filter('woocommerce_account_menu_items', function (array $items): array {
+    // Ensure Downloads appears early and prominently (position 2).
+    if (isset($items['downloads'])) {
+        $dl = ['downloads' => $items['downloads']];
+        unset($items['downloads']);
+        $keys = array_keys($items);
+        $values = array_values($items);
+        $pos = min(1, count($keys));
+        array_splice($keys, $pos, 0, array_keys($dl));
+        array_splice($values, $pos, 0, array_values($dl));
+        $items = array_combine($keys, $values);
+    }
+
+    return $items;
+});
+
+// ── Checkout: set custom order button text ────────────────────────────────────
+add_filter('woocommerce_order_button_text', fn (): string => __('Complete purchase →', 'sage'));
+
+// ── Checkout: remove default "Your order" heading (we style it via CSS) ───────
+add_filter('woocommerce_checkout_order_review_heading', fn (): string => __('Order summary', 'sage'));
 
 add_action('init', __NAMESPACE__.'\\mh_seed_woocommerce_pages', 42);
 add_action('woocommerce_installed', __NAMESPACE__.'\\mh_seed_woocommerce_pages');
