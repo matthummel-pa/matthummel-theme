@@ -83,15 +83,29 @@
 
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
-    <nav class="footer-legal-links" aria-label="Legal">
-      <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ home_url('/terms-of-use/') }}">Terms</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
-    </nav>
+    @php
+      $bottomMenuItems = has_nav_menu('footer_bottom_navigation')
+        ? wp_get_nav_menu_items(get_nav_menu_locations()['footer_bottom_navigation'] ?? 0) ?: []
+        : [];
+    @endphp
+    @if ($bottomMenuItems)
+      <nav class="footer-legal-links" aria-label="Legal">
+        @foreach ($bottomMenuItems as $i => $item)
+          @if ($i > 0)<span aria-hidden="true">·</span>@endif
+          <a href="{{ esc_url($item->url) }}"{{ $item->target ? ' target="'.esc_attr($item->target).'" rel="noopener"' : '' }}>{{ esc_html($item->title) }}</a>
+        @endforeach
+      </nav>
+    @else
+      <nav class="footer-legal-links" aria-label="Legal">
+        <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ home_url('/terms-of-use/') }}">Terms</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
+      </nav>
+    @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage</a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI</a>.</p>
   </div>
 </footer>
