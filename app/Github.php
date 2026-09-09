@@ -1057,4 +1057,108 @@ GQL;
 
         return $out.'</div>';
     }
+
+    /**
+     * Fetch up to 6 pinned repositories for a GitHub user via GraphQL.
+     * Returns the same shape as mh_code_page_repos() entries so repo-card works unchanged.
+     *
+     * @param  string  $user  GitHub login.
+     * @return list<array<string, mixed>>
+     */
+    public static function fetchPinnedRepos(string $user): array
+    {
+        $key = 'mh_ghpinned_v1_'.md5($user);
+        if (($d = get_transient($key)) !== false) {
+            return is_array($d) ? $d : [];
+        }
+
+        $empty = [];
+
+        $token = github_token();
+        if ($token === '') {
+            set_transient($key, $empty, self::ttl());
+
+            return $empty;
+        }
+
+        $query = <<<'GQL'
+query($login: String!) {
+  user(login: $login) {
+    pinnedItems(first: 6, types: REPOSITORY) {
+      nodes {
+        ... on Repository {
+          name
+          description
+          url
+          stargazerCount
+          forkCount
+          primaryLanguage { name color }
+          repositoryTopics(first: 8) {
+            nodes { topic { name } }
+          }
+          pushedAt
+          homepageUrl
+        }
+      }
+    }
+  }
+}
+GQL;
+
+        $headers = github_headers();
+        $headers['Content-Type'] = 'application/json';
+        $headers['Accept'] = 'application/json';
+
+        $res = wp_remote_post('https://api.github.com/graphql', [
+            'timeout' => 12,
+            'headers' => $headers,
+            'body' => wp_json_encode([
+                'query' => $query,
+                'variables' => ['login' => $user],
+            ]),
+        ]);
+
+        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
+            set_transient($key, $empty, self::ttl());
+
+            return $empty;
+        }
+
+        $payload = json_decode((string) wp_remote_retrieve_body($res), true);
+        $nodes = is_array($payload) ? ($payload['data']['user']['pinnedItems']['nodes'] ?? []) : [];
+
+        $out = [];
+        foreach ((array) $nodes as $node) {
+            if (! is_array($node) || empty($node['name'])) {
+                continue;
+            }
+
+            $topics = [];
+            foreach ((array) ($node['repositoryTopics']['nodes'] ?? []) as $t) {
+                $name = (string) ($t['topic']['name'] ?? '');
+                if ($name !== '') {
+                    $topics[] = $name;
+                }
+            }
+
+            $lang = (string) ($node['primaryLanguage']['name'] ?? '');
+
+            $out[] = [
+                'name' => (string) $node['name'],
+                'title' => \App\mh_title_label((string) $node['name']),
+                'desc' => (string) ($node['description'] ?? ''),
+                'url' => (string) ($node['url'] ?? ''),
+                'demo' => (string) ($node['homepageUrl'] ?? ''),
+                'lang' => $lang,
+                'stars' => (int) ($node['stargazerCount'] ?? 0),
+                'forks' => (int) ($node['forkCount'] ?? 0),
+                'pushed' => (string) ($node['pushedAt'] ?? ''),
+                'tags' => $topics,
+            ];
+        }
+
+        set_transient($key, $out, self::ttl());
+
+        return $out;
+    }
 }

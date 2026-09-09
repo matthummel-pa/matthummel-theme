@@ -1276,10 +1276,10 @@ function mh_github_calendar_months(array $weeks): array
  * All API calls are individually transient-cached. The composite result
  * is cached for one hour so the home page stays fast on repeated loads.
  */
-function mh_home_oss_live_data(int $repo_count = 3): array
+function mh_home_oss_live_data(int $repo_count = 6): array
 {
     $login = mh_github_login();
-    $cache_key = 'mh_oss_live_v4_'.md5($login.(string) $repo_count);
+    $cache_key = 'mh_oss_live_v5_'.md5($login.(string) $repo_count);
 
     if (($cached = get_transient($cache_key)) !== false && is_array($cached)) {
         return $cached;
@@ -1287,7 +1287,10 @@ function mh_home_oss_live_data(int $repo_count = 3): array
 
     $profile = Github::fetchUser($login);
     $events = Github::fetchEvents($login, 5);
-    $repos = array_slice(mh_code_page_repos(), 0, $repo_count);
+
+    // Prefer pinned repos from GitHub profile; fall back to code-page configured list.
+    $pinned = Github::fetchPinnedRepos($login);
+    $repos = $pinned !== [] ? array_slice($pinned, 0, $repo_count) : array_slice(mh_code_page_repos(), 0, $repo_count);
 
     $result = compact('profile', 'events', 'repos');
     set_transient($cache_key, $result, HOUR_IN_SECONDS);

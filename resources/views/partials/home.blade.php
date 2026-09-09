@@ -2,7 +2,7 @@
   $posts   = \App\mh_home_journal_posts(5);
   $work    = array_slice(\App\mh_work_page_items(), 0, 4);
   $gh      = \App\Github::fetchUser(\App\mh_github_login());
-  $ossData = \App\mh_home_oss_live_data(3);
+  $ossData = \App\mh_home_oss_live_data(6);
   $ghUrl   = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 
