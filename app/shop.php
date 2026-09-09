@@ -15,6 +15,65 @@ function mh_shop_ready(): bool
 }
 
 /**
+ * One-pass shop archive stats + CollectionPage list items.
+ *
+ * @return array{count: int, for_sale: int, theme: int, plugin: int, app: int, list_items: list<array<string, mixed>>}
+ */
+function mh_shop_listing_snapshot(): array
+{
+    static $cached = null;
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $cached = [
+        'count' => 0,
+        'for_sale' => 0,
+        'theme' => 0,
+        'plugin' => 0,
+        'app' => 0,
+        'list_items' => [],
+    ];
+
+    if (! function_exists('wc_get_products')) {
+        return $cached;
+    }
+
+    $ids = wc_get_products([
+        'limit' => -1,
+        'status' => 'publish',
+        'return' => 'ids',
+    ]);
+    $cached['count'] = count($ids);
+
+    foreach ($ids as $i => $pid) {
+        $pid = (int) $pid;
+        $product = wc_get_product($pid);
+        if ($product && $product->is_purchasable() && $product->is_in_stock()) {
+            $cached['for_sale']++;
+        }
+
+        $type = (string) (mh_product_catalog_data($pid)['product_type'] ?? 'theme');
+        if ($type === 'plugin') {
+            $cached['plugin']++;
+        } elseif ($type === 'app') {
+            $cached['app']++;
+        } else {
+            $cached['theme']++;
+        }
+
+        $cached['list_items'][] = [
+            '@type' => 'ListItem',
+            'position' => $i + 1,
+            'url' => (string) get_permalink($pid),
+            'name' => html_entity_decode(get_the_title($pid), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        ];
+    }
+
+    return $cached;
+}
+
+/**
  * Absolute add-to-cart URL for a product (skips single product page).
  */
 function mh_product_add_to_cart_url(int $product_id): string
@@ -1691,6 +1750,28 @@ add_action('woocommerce_after_shop_loop_item_title', function (): void {
     }
 }, 6);
 
+/** Eager-load the first two shop-loop thumbnails for LCP; lazy-load the rest. */
+add_filter('wp_get_attachment_image_attributes', function (array $attr): array {
+    if (! function_exists('is_shop') || ! is_shop() || ! in_the_loop()) {
+        return $attr;
+    }
+    if (get_post_type() !== 'product') {
+        return $attr;
+    }
+
+    static $n = 0;
+    $n++;
+    $attr['decoding'] = 'async';
+    if ($n <= 2) {
+        $attr['fetchpriority'] = 'high';
+        $attr['loading'] = 'eager';
+    } else {
+        $attr['loading'] = 'lazy';
+    }
+
+    return $attr;
+});
+
 /**
  * Inject the catalog featured image when the WC product has no thumbnail set.
  *
@@ -1723,7 +1804,7 @@ add_filter('woocommerce_product_get_image', function (string $html, \WC_Product 
 add_filter('woocommerce_post_class', function (array $classes, \WC_Product $product): array {
     $entry = mh_product_catalog_data((int) $product->get_id());
     $productType = trim((string) ($entry['product_type'] ?? 'theme')) ?: 'theme';
-    $classes[] = 'mh-type-'.$productType;
+    $classes[] = 'mh-type-'.sanitize_html_class($productType);
 
     return $classes;
 }, 10, 2);

@@ -23,24 +23,11 @@
     : __('Shop', 'sage');
   $shopUrl      = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
 
-  $productCount = 0;
-  $forSaleCount = 0;
-  $themeCount   = 0;
-  $pluginCount  = 0;
-  if (function_exists('wc_get_products')) {
-    $all = wc_get_products(['limit' => -1, 'status' => 'publish', 'return' => 'ids']);
-    $productCount = count($all);
-    foreach ($all as $pid) {
-      $wcp = wc_get_product($pid);
-      if ($wcp && $wcp->is_purchasable() && $wcp->is_in_stock()) {
-        $forSaleCount++;
-      }
-      $entry = \App\mh_product_catalog_data((int) $pid);
-      $pType = (string) ($entry['product_type'] ?? 'theme');
-      if ($pType === 'theme')  $themeCount++;
-      if ($pType === 'plugin') $pluginCount++;
-    }
-  }
+  $catalog      = \App\mh_shop_listing_snapshot();
+  $productCount = $catalog['count'];
+  $forSaleCount = $catalog['for_sale'];
+  $themeCount   = $catalog['theme'];
+  $pluginCount  = $catalog['plugin'];
 
   $fitCards = \App\mh_work_page_fit($shopPostId);
   $howSteps = \App\mh_work_page_how($shopPostId);
@@ -61,18 +48,7 @@
 
   // ItemList / CollectionPage JSON-LD: gives Google a structured product listing
   // and improves Rank Math's CollectionPage signal on the shop archive.
-  $listItems = [];
-  if (function_exists('wc_get_products')) {
-    $pubIds = wc_get_products(['limit' => -1, 'status' => 'publish', 'return' => 'ids']);
-    foreach ($pubIds as $i => $pid) {
-      $listItems[] = [
-        '@type'    => 'ListItem',
-        'position' => $i + 1,
-        'url'      => (string) get_permalink($pid),
-        'name'     => html_entity_decode(get_the_title($pid), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-      ];
-    }
-  }
+  $listItems = $catalog['list_items'];
   $collectionJsonLd = json_encode([
     '@context'        => 'https://schema.org',
     '@type'           => 'CollectionPage',

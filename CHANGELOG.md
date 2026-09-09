@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.9 — Shop listings, CSS cleanup, page speed
+
+- Shop product grid is 3 / 2 / 1 columns on desktop / tablet / phone. WooCommerce `layout` + `smallscreen` float CSS is dequeued so 48% widths no longer squeeze cards below 768px.
+- Shop Blade no longer nests a second `.container` around the loop.
+- Catalog toolbar stacks on small screens; filter chips are no longer double-boxed.
+- Shop archive stats and CollectionPage JSON-LD share one product query. First two loop images load eager.
+- Unused duplicate `post_class` type stamp and leftover 2-col `.h-work-grid` override removed. Gallery scripts stay off non-product pages; WooCommerce block CSS is dequeued (classic templates).
+
 ## 3.5.8 — Unstick mobile header
 
 - `.site-header` is no longer sticky at the hamburger breakpoint (`max-width: 900px`). It scrolls away with the page on phones and tablets.
