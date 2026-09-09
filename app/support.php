@@ -24,7 +24,7 @@ function mh_github_html_doc_url(string $url): string
     }
 
     if (preg_match(
-        '#^https?://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+\.html?)(?:[?#].*)?$#i',
+        '~^https?://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+\.html?)(?:[?#].*)?$~i',
         $url,
         $matches
     ) !== 1) {
