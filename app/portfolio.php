@@ -452,24 +452,39 @@ function mh_repo_card(array $repo): array
     $name = (string) ($repo['name'] ?? '');
     $url = (string) ($repo['url'] ?? '');
     $owner = mh_github_login();
+
+    // Determine whether the repo already has enough data to skip extra API calls.
+    // A repo is "complete" when it has a URL, a language, and either description or topics.
+    $hasUrl = $url !== '';
+    $hasLang = ! empty($repo['lang']);
+    $hasTopics = ! empty($repo['topics']) || ! empty($repo['tags']);
+    $hasDesc = trim((string) ($repo['desc'] ?? '')) !== '';
+    $isComplete = $hasUrl && $hasLang && ($hasDesc || $hasTopics);
+
+    // Fetch remote meta only when the repo is genuinely missing critical fields.
     $meta = [];
-    if ($name !== '' && ($url === '' || empty($repo['homepage']) && empty($repo['topics']) && empty($repo['lang']))) {
+    if ($name !== '' && ! $isComplete) {
         $meta = Github::fetchRepoMeta($owner, $name);
     }
+
     $desc = trim((string) ($repo['desc'] ?? ''));
     if ($desc === '') {
         $desc = (string) ($meta['desc'] ?? '');
     }
     $desc = mh_visitor_brand_text($desc);
+
     if ($url === '') {
         $url = (string) ($meta['url'] ?? '');
     }
     if ($url === '' && $name !== '') {
         $url = 'https://github.com/'.$owner.'/'.$name;
     }
+
     $homepage = mh_repo_demo_url((string) ($repo['homepage'] ?? $meta['homepage'] ?? ''));
+
+    // Only hit the languages endpoint when the primary language is unknown.
     $langs = [];
-    if ($name !== '') {
+    if ($name !== '' && ! $hasLang) {
         $langs = Github::fetchLanguages($owner, $name);
     }
     if ($langs === [] && ! empty($repo['lang'])) {
@@ -477,6 +492,7 @@ function mh_repo_card(array $repo): array
     } elseif ($langs === [] && ! empty($meta['lang'])) {
         $langs = [(string) $meta['lang']];
     }
+
     $tags = $repo['tags'] ?? [];
     if (is_string($tags)) {
         $tags = array_values(array_filter(array_map('trim', explode(',', $tags))));
@@ -779,6 +795,11 @@ function mh_github_watching(int $limit = 36): array
  */
 function mh_code_page_github_badges(?int $post_id = null): array
 {
+    $key = 'mh_code_badges_v1_'.md5((string) $post_id);
+    if (($cached = get_transient($key)) !== false && is_array($cached)) {
+        return $cached;
+    }
+
     $profile = mh_github_profile();
     $calendar = mh_github_calendar();
     $starsEarned = mh_github_stars_earned();
@@ -877,6 +898,8 @@ function mh_code_page_github_badges(?int $post_id = null): array
             'class' => 'code-gh-badge--activity '.$class,
         ];
     }
+
+    set_transient($key, $badges, 6 * HOUR_IN_SECONDS);
 
     return $badges;
 }
@@ -1093,6 +1116,11 @@ function mh_github_live_repos(int $limit = 8): array
  */
 function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
 {
+    $key = 'mh_code_live_v1_'.md5((string) $limit.(string) $post_id);
+    if (($cached = get_transient($key)) !== false && is_array($cached)) {
+        return $cached;
+    }
+
     $featuredNames = array_map(
         static fn (array $r): string => strtolower((string) ($r['name'] ?? '')),
         mh_code_page_repos($post_id)
@@ -1109,6 +1137,8 @@ function mh_code_page_live_repos(int $limit = 6, ?int $post_id = null): array
             break;
         }
     }
+
+    set_transient($key, $live, 6 * HOUR_IN_SECONDS);
 
     return $live;
 }
@@ -3196,21 +3226,21 @@ function mh_font_stylesheet(): string
     return 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@600;700;800;900&display=swap';
 }
 
-$enqueueFonts = static function (): void {
+// Fonts: preconnect hints + non-render-blocking async load via media swap trick.
+// The <noscript> fallback ensures fonts load even when JS is disabled.
+add_action('wp_head', static function (): void {
+    // esc_url_raw keeps & intact; esc_attr prevents attribute injection.
+    $url = esc_attr(esc_url_raw(mh_font_stylesheet()));
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">'."\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'."\n";
+    echo '<link rel="preload" href="'.$url.'" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">'."\n";
+    echo '<noscript><link rel="stylesheet" href="'.$url.'"></noscript>'."\n";
+}, 1);
+
+// Block-editor still needs the stylesheet synchronously (no paint delay there).
+add_action('enqueue_block_editor_assets', static function (): void {
     wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
-};
-add_action('wp_enqueue_scripts', $enqueueFonts, 5);
-add_action('enqueue_block_editor_assets', $enqueueFonts, 5);
-add_filter('style_loader_tag', function (string $html, string $handle): string {
-    if ($handle !== 'mh-fonts') {
-        return $html;
-    }
-
-    $pre = '<link rel="preconnect" href="https://fonts.googleapis.com">'."\n";
-    $pre .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'."\n";
-
-    return $pre.$html;
-}, 10, 2);
+}, 5);
 
 add_action('after_switch_theme', __NAMESPACE__.'\\mh_seed_portfolio_pages');
 add_action('init', function () {
