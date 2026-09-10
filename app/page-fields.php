@@ -399,25 +399,18 @@ function page_field_map(): array
         ],
         'template-services.blade.php' => [
             __('Intro', 'sage') => [
-                ['svc_kicker', __('Kicker', 'sage'), 'text', __('WordPress · plugins · web apps', 'sage')],
-                ['svc_h1', __('Heading', 'sage'), 'text', __('WordPress development for shops and agencies.', 'sage')],
-                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Custom WordPress sites, plugins, and integrations — written scope, clean handoff. I work with shops, agencies, and developer teams.', 'sage')],
+                ['svc_kicker', __('Kicker', 'sage'), 'text', __('Acreline add-ons · custom work', 'sage')],
+                ['svc_h1', __('Heading', 'sage'), 'text', __('Services', 'sage')],
+                ['svc_lede', __('Intro', 'sage'), 'textarea', __('Install, setup, listings, and care for Acreline — plus custom WordPress when a shop or agency needs a build.', 'sage')],
             ],
-            __('Who this is for', 'sage') => [
-                ['who_h2', __('Heading', 'sage'), 'text', __('Who this site is for', 'sage')],
-                ['who_intro', __('Intro', 'sage'), 'textarea', __('Developers, people learning the web, shops, and agencies can all use this site. Pick the door that fits.', 'sage')],
-                ['who_items', __('Audiences', 'sage'), 'repeater', mh_who_items(), mh_who_item_fields()],
+            __('Acreline add-ons', 'sage') => [
+                ['svc_addons_h2', __('Heading', 'sage'), 'text', __('Acreline add-ons.', 'sage')],
+                ['svc_addons_intro', __('Intro', 'sage'), 'textarea', __('Live shop products with checkout. Prices below come from WooCommerce when the product exists.', 'sage')],
+                ['svc_theme_note', __('Acreline note (basic HTML ok)', 'sage'), 'html', __('Need the theme first? <a href="/product/acreline/">Acreline</a> is the listing theme. <a href="https://acreline.matthummel.com/">See the demo</a>.', 'sage')],
             ],
-            __('Ways I can help', 'sage') => [
-                ['svc_ways_h2', __('Heading', 'sage'), 'text', __('Ways I can help', 'sage')],
-                ['svc_items', __('Cards', 'sage'), 'repeater', $svcItems, [
-                    ['title', __('Title', 'sage'), 'text'],
-                    ['text', __('Text', 'sage'), 'textarea'],
-                ]],
-            ],
-            __('Pricing', 'sage') => [
-                ['svc_price_h2', __('Heading', 'sage'), 'text', __('Starting packages.', 'sage')],
-                ['svc_price_intro', __('Intro', 'sage'), 'textarea', __('Three starting ranges for shops and agencies. These are floors, not a menu. Write and I will quote the actual scope.', 'sage')],
+            __('Custom work', 'sage') => [
+                ['svc_price_h2', __('Heading', 'sage'), 'text', __('Custom WordPress.', 'sage')],
+                ['svc_price_intro', __('Intro', 'sage'), 'textarea', __('Floors for a custom build or agency overflow — not a menu. Write and I will quote the actual scope.', 'sage')],
                 ['svc_price', __('Packages', 'sage'), 'repeater', mh_services_pricing_defaults(), [
                     ['title', __('Title', 'sage'), 'text'],
                     ['price', __('Price line', 'sage'), 'text'],
@@ -427,30 +420,14 @@ function page_field_map(): array
                 ]],
                 ['svc_price_note', __('Note under packages (basic HTML ok)', 'sage'), 'html', __('Need something else? <a href="/contact/">Ask for a custom quote</a>. I reply within one business day (ET).', 'sage')],
             ],
-            __('How a project usually goes', 'sage') => [
-                ['svc_process_h2', __('Heading', 'sage'), 'text', __('How a project usually goes', 'sage')],
-                ['svc_process', __('Steps', 'sage'), 'repeater', [
-                    ['title' => __('Write', 'sage'), 'text' => __('Tell me who it is for and what is broken or missing. A paragraph is enough.', 'sage')],
-                    ['title' => __('Scope', 'sage'), 'text' => __('I send a short list of work, a timeline, and what I will not do (ads, social, ongoing support contracts).', 'sage')],
-                    ['title' => __('Ship', 'sage'), 'text' => __('You get pages you can edit, notes in plain words, and the repo if the work is public.', 'sage')],
-                ], [
-                    ['title', __('Title', 'sage'), 'text'],
-                    ['text', __('Text', 'sage'), 'textarea'],
-                ]],
-            ],
             __('Quick answers', 'sage') => [
                 ['svc_faq_h2', __('Heading', 'sage'), 'text', __('Quick answers', 'sage')],
-                ['svc_faq', __('Questions', 'sage'), 'repeater', [
-                    ['title' => __('Do you take agency overflow?', 'sage'), 'text' => __('Yes, when the work is a real WordPress site, plugin, or other web app. You keep the relationship. I stay the developer.', 'sage')],
-                    ['title' => __('What do you charge?', 'sage'), 'text' => __('Theme install and brand starts around $400. A small shop site is usually $3,000–$6,000. Agency overflow is half-day, day, or a project floor. Custom quotes when the scope is different.', 'sage')],
-                    ['title' => __('Can I copy the code for free?', 'sage'), 'text' => __('Yes. Public repos and snippets are there to borrow. A note if you ship something with them is kind, not required.', 'sage')],
-                    ['title' => __('Do you run ads or social?', 'sage'), 'text' => __('No social management. I may earn from disclosed affiliate links on Uses/Resources, and I sell themes from studio work. The site stays a portfolio first.', 'sage')],
-                ], [
+                ['svc_faq', __('Questions', 'sage'), 'repeater', mh_services_faq_defaults(), [
                     ['title', __('Question', 'sage'), 'text'],
                     ['text', __('Answer', 'sage'), 'textarea'],
                 ]],
-                ['svc_fair_h2', __('CTA kicker', 'sage'), 'text', __('A fair picture', 'sage')],
-                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('This site is a hireable portfolio first. Themes and tool recommendations are secondary — affiliate links are disclosed. If a build or role fits, <a href="/hire/">start on Hire</a>.', 'sage')],
+                ['svc_fair_h2', __('CTA kicker', 'sage'), 'text', __('Ready to talk?', 'sage')],
+                ['svc_fair', __('Paragraph (basic HTML ok)', 'sage'), 'html', __('Pick an Acreline add-on in the shop, or write about a custom build. I reply within one business day (ET).', 'sage')],
             ],
         ],
         'template-start.blade.php' => [
@@ -1226,6 +1203,202 @@ function mh_services_pricing(?int $post_id = null): array
 }
 
 /**
+ * Acreline add-on products shown on Services (slug + fallback price/copy).
+ *
+ * @return list<array{slug: string, title: string, price: string, suffix: string, icon: string, blurb: string}>
+ */
+function mh_acreline_addon_catalog(): array
+{
+    return [
+        [
+            'slug' => 'acreline-express-install',
+            'title' => __('Express Install', 'sage'),
+            'price' => '$99',
+            'suffix' => '',
+            'icon' => 'download',
+            'blurb' => __('I install Acreline on your WordPress site and leave the basics ready.', 'sage'),
+        ],
+        [
+            'slug' => 'acreline-setup-launch',
+            'title' => __('Setup & Launch', 'sage'),
+            'price' => '$349',
+            'suffix' => '',
+            'icon' => 'wordpress',
+            'blurb' => __('Theme setup, identity, and a launch-ready Acreline site you can edit.', 'sage'),
+        ],
+        [
+            'slug' => 'listing-population-10-listings',
+            'title' => __('Listing Population ×10', 'sage'),
+            'price' => '$199',
+            'suffix' => '',
+            'icon' => 'home',
+            'blurb' => __('I add ten listings so the site looks real on day one.', 'sage'),
+        ],
+        [
+            'slug' => 'listing-population-25-listings',
+            'title' => __('Listing Population ×25', 'sage'),
+            'price' => '$449',
+            'suffix' => '',
+            'icon' => 'home',
+            'blurb' => __('Twenty-five listings entered and checked against your source data.', 'sage'),
+        ],
+        [
+            'slug' => 'marketing-content-pack',
+            'title' => __('Marketing Content Pack', 'sage'),
+            'price' => '$499',
+            'suffix' => '',
+            'icon' => 'plugins',
+            'blurb' => __('Page copy and listing language written to match the Acreline layout.', 'sage'),
+        ],
+        [
+            'slug' => 'acreline-site-care',
+            'title' => __('Site Care', 'sage'),
+            'price' => '$99',
+            'suffix' => '/mo',
+            'icon' => 'calendar',
+            'blurb' => __('Monthly updates and light care so Acreline stays current.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Services add-on cards: live Woo product when the slug exists, else fallbacks.
+ *
+ * @return list<array{slug: string, id: int, title: string, price: string, blurb: string, icon: string, permalink: string, add_to_cart_url: string}>
+ */
+function mh_acreline_addon_products(): array
+{
+    $out = [];
+    foreach (mh_acreline_addon_catalog() as $item) {
+        $id = function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')
+            ? mh_product_id_by_slug($item['slug'])
+            : 0;
+        $payload = $id > 0 ? mh_shop_product_payload($id) : null;
+        $title = $item['title'];
+        $blurb = $item['blurb'];
+        $permalink = home_url('/product/'.$item['slug'].'/');
+        $cart = '';
+        $price = $item['price'].$item['suffix'];
+
+        if (is_array($payload)) {
+            if (($payload['name'] ?? '') !== '') {
+                $title = html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            }
+            if (($payload['short_description'] ?? '') !== '') {
+                $blurb = html_entity_decode((string) $payload['short_description'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            }
+            if (($payload['permalink'] ?? '') !== '') {
+                $permalink = (string) $payload['permalink'];
+            }
+            $cart = (string) ($payload['add_to_cart_url'] ?? '');
+            $live = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $live = trim(preg_replace('/\s+/', ' ', $live) ?? $live);
+            if ($live !== '') {
+                $price = preg_replace('/\.00\b/', '', $live) ?? $live;
+                $suffix = $item['suffix'];
+                if ($suffix !== '' && ! str_contains(strtolower($price), 'mo') && ! str_contains($price, '/')) {
+                    $price .= $suffix;
+                }
+            }
+        }
+
+        $out[] = [
+            'slug' => $item['slug'],
+            'id' => $id,
+            'title' => $title,
+            'price' => $price,
+            'blurb' => $blurb,
+            'icon' => $item['icon'],
+            'permalink' => $permalink,
+            'add_to_cart_url' => $cart,
+        ];
+    }
+
+    return $out;
+}
+
+/**
+ * Acreline theme + demo links for the Services hero / band.
+ *
+ * @return array{title: string, permalink: string, demo: string, price: string}
+ */
+function mh_services_acreline_theme(): array
+{
+    $id = function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')
+        ? mh_product_id_by_slug('acreline')
+        : 0;
+    $payload = $id > 0 ? mh_shop_product_payload($id) : null;
+    $price = '';
+    if (is_array($payload)) {
+        $price = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
+        $price = trim(preg_replace('/\s+/', ' ', $price) ?? $price);
+    }
+
+    return [
+        'title' => is_array($payload) && ($payload['name'] ?? '') !== ''
+            ? html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8')
+            : __('Acreline', 'sage'),
+        'permalink' => is_array($payload) && ($payload['permalink'] ?? '') !== ''
+            ? (string) $payload['permalink']
+            : home_url('/product/acreline/'),
+        'demo' => 'https://acreline.matthummel.com/',
+        'price' => $price,
+    ];
+}
+
+/**
+ * Default FAQ items for the Services page.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_services_faq_defaults(): array
+{
+    return [
+        [
+            'title' => __('What is an Acreline add-on?', 'sage'),
+            'text' => __('A shop product for the Acreline theme: install, setup, listings, copy, or monthly care. Each card goes to checkout on its product page.', 'sage'),
+        ],
+        [
+            'title' => __('Do you still take custom WordPress work?', 'sage'),
+            'text' => __('Yes. Shops, inns, and agency overflow when the work is a real site or plugin. You keep the relationship. I stay the developer.', 'sage'),
+        ],
+        [
+            'title' => __('What do custom builds cost?', 'sage'),
+            'text' => __('Theme install and brand starts around $400. A small shop site is usually $3,000–$6,000. Agency overflow is half-day, day, or a project floor. Custom quotes when the scope is different.', 'sage'),
+        ],
+        [
+            'title' => __('Can I edit the site after launch?', 'sage'),
+            'text' => __('That is the goal. Acreline and custom builds use wp-admin fields for the copy that changes. I leave a short note for anything that is not obvious.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Services FAQ from Page content, falling back to defaults.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_services_faq(?int $post_id = null): array
+{
+    $rows = field_rows('svc_faq', [], $post_id);
+    if ($rows === []) {
+        return mh_services_faq_defaults();
+    }
+
+    $out = [];
+    foreach ($rows as $row) {
+        $title = trim((string) ($row['title'] ?? ''));
+        $text = trim((string) ($row['text'] ?? ''));
+        if ($title === '' || $text === '') {
+            continue;
+        }
+        $out[] = ['title' => $title, 'text' => $text];
+    }
+
+    return $out !== [] ? $out : mh_services_faq_defaults();
+}
+
+/**
  * Default FAQ items for the Work page.
  *
  * @return list<array{title: string, text: string}>
@@ -1746,4 +1919,102 @@ add_action('init', function (): void {
     }
 
     update_option('mh_portfolio_polish_copy_v1', true, false);
+});
+
+/**
+ * One-shot: Services page leads with Acreline add-ons; stop SEO body rewrite.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_services_acreline_page_v1') || wp_installing()) {
+        return;
+    }
+
+    $svcId = mh_page_id_by_template('template-services.blade.php');
+    if ($svcId > 0) {
+        $swaps = [
+            'svc_kicker' => [
+                ['WordPress · plugins · web apps', 'Full-stack developer · WordPress specialist'],
+                'Acreline add-ons · custom work',
+            ],
+            'svc_h1' => [
+                [
+                    'WordPress development for shops and agencies.',
+                    'Full-stack web development for businesses, agencies, and developers.',
+                ],
+                'Services',
+            ],
+            'svc_lede' => [
+                [
+                    'Custom WordPress sites, plugins, and integrations — written scope, clean handoff. I work with shops, agencies, and developer teams.',
+                    'Custom WordPress sites, plugins, and integrations with written scope and clean handoffs. I work with Gettysburg shops, quiet agency partners, and developer teams.',
+                    'Custom WordPress platforms, plugins, integrations, and web applications built with clear scope and clean handoffs. I work directly with businesses, partner quietly with agencies, and collaborate with development teams.',
+                ],
+                'Install, setup, listings, and care for Acreline — plus custom WordPress when a shop or agency needs a build.',
+            ],
+            'svc_price_h2' => [
+                ['Starting packages.'],
+                'Custom WordPress.',
+            ],
+            'svc_price_intro' => [
+                ['Three starting ranges for shops and agencies. These are floors, not a menu. Write and I will quote the actual scope.'],
+                'Floors for a custom build or agency overflow — not a menu. Write and I will quote the actual scope.',
+            ],
+        ];
+
+        foreach ($swaps as $key => [$from, $to]) {
+            $current = (string) get_post_meta($svcId, 'mh_f_'.$key, true);
+            if ($current === '' || in_array($current, $from, true)) {
+                update_post_meta($svcId, 'mh_f_'.$key, $to);
+            }
+        }
+
+        $faq = get_post_meta($svcId, 'mh_f_svc_faq', true);
+        $faqJson = is_array($faq) ? wp_json_encode($faq) : (string) $faq;
+        if (is_array($faq) && str_contains($faqJson, 'Theme install and brand starts around $400')) {
+            update_post_meta($svcId, 'mh_f_svc_faq', mh_services_faq_defaults());
+        }
+
+        $content = (string) get_post_field('post_content', $svcId, 'raw');
+        if (str_contains($content, 'wp-block-rank-math-toc-block') || str_contains($content, 'custom WordPress sites')) {
+            remove_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
+            wp_update_post([
+                'ID' => $svcId,
+                'post_content' => '',
+            ]);
+            add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
+        }
+    }
+
+    update_option('mh_services_acreline_page_v1', true, false);
+});
+
+/**
+ * One-shot: drop stuffed Services title/meta so skill-first defaults win.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_services_acreline_seo_v1') || wp_installing()) {
+        return;
+    }
+
+    $svcId = mh_page_id_by_template('template-services.blade.php');
+    if ($svcId > 0) {
+        $titleFrom = [
+            'WordPress Web Design in Gettysburg | Matt Hummel',
+            'Custom WordPress Sites & Plugins | Matt Hummel',
+        ];
+        $descFrom = [
+            'Custom WordPress platforms, plugins, integrations, and full-stack web applications for businesses, agencies, and development teams.',
+            'Custom WordPress sites, plugins, and web apps for shops and agencies. Clear scope and clean handoffs. Say hello.',
+        ];
+        $title = (string) get_post_meta($svcId, 'mh_f_seo_title', true);
+        if (in_array($title, $titleFrom, true)) {
+            update_post_meta($svcId, 'mh_f_seo_title', 'Acreline Services | Matt Hummel');
+        }
+        $desc = (string) get_post_meta($svcId, 'mh_f_seo_desc', true);
+        if (in_array($desc, $descFrom, true)) {
+            update_post_meta($svcId, 'mh_f_seo_desc', 'Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.');
+        }
+    }
+
+    update_option('mh_services_acreline_seo_v1', true, false);
 });

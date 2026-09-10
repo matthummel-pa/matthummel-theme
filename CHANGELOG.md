@@ -1,15 +1,29 @@
 # Changelog
 
-## 3.5.9 — Shop listings, CSS cleanup, page speed
+## 3.5.11 — Shop listings, CSS cleanup, page speed
 
 - Shop product grid is 3 / 2 / 1 columns on desktop / tablet / phone. WooCommerce `layout` + `smallscreen` float CSS is dequeued so 48% widths no longer squeeze cards below 768px.
 - Shop Blade no longer nests a second `.container` around the loop.
 - Catalog toolbar stacks on small screens; filter chips are no longer double-boxed.
-- Shop archive stats and CollectionPage JSON-LD share one product query. First two loop images load eager.
+- Shop archive stats and CollectionPage JSON-LD share one product query (visible catalog only, including services). First two loop images load eager.
 - Unused duplicate `post_class` type stamp and leftover 2-col `.h-work-grid` override removed. Gallery scripts stay off non-product pages; WooCommerce block CSS is dequeued (classic templates).
-- Front-end drops emoji detection CSS/JS, `wc-order-attribution` / `sourcebuster-js`, and `wc-cart-fragments` (header cart is server-rendered).
+- Front-end drops emoji detection CSS/JS, `wc-order-attribution` / `sourcebuster-js`, and `wc-cart-fragments` when the cart is empty (header cart is server-rendered).
 - One-shot `mh_hide_sku_less_product_stubs_v1` hides SKU-less stub products from the catalog (does not delete).
 - Fix `mh_github_html_doc_url()` regex delimiter that spammed WP-CLI warnings.
+
+## 3.5.10 — Services page lists Acreline add-ons
+
+- `/services/` leads with live Acreline shop products (install, setup, listings, content, site care) plus theme and demo links.
+- Custom WordPress and agency overflow stay a shorter secondary section. One H1. Mobile-first card grid.
+- Rank Math analysis HTML no longer overwrites Services `post_content`, so editor and REST body edits stick.
+
+## 3.5.9 — Product page shop polish
+
+- Single product hero is gallery + buy box: title, price, short description, and add-to-cart sit in one scannable column on desktop and stack cleanly on phones.
+- Screenshot thumbs, keyboard controls, and a lightbox. Mixed landscape and portrait shots stay in a fixed frame so the layout does not jump.
+- Products without images (TOCflow, Services packs) show a typed placeholder instead of an empty hole.
+- Related products and shop cards share the same image ratio, sale-price treatment, and service badge.
+- Sticky buy bar stays available after the hero scrolls away, including for reduced-motion visitors. Phone CTA is full-width.
 
 ## 3.5.8 — Unstick mobile header
 
