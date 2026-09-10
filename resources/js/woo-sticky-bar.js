@@ -13,14 +13,23 @@ export function initStickyBar() {
   const trigger = document.querySelector(triggerSelector)
   if (!trigger) return
 
+  // html/body use overflow-x: clip, which makes position:fixed resolve against
+  // that box instead of the viewport. Pin the bar to <body> so bottom: 0 is
+  // the screen edge, not just below the fold.
+  if (bar.parentElement !== document.body) {
+    document.body.appendChild(bar)
+  }
+
   const show = () => {
     bar.classList.add('is-visible')
     bar.setAttribute('aria-hidden', 'false')
+    bar.removeAttribute('inert')
   }
 
   const hide = () => {
     bar.classList.remove('is-visible')
     bar.setAttribute('aria-hidden', 'true')
+    bar.setAttribute('inert', '')
   }
 
   if (!('IntersectionObserver' in window)) {

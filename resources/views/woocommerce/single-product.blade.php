@@ -174,7 +174,14 @@
     {{-- Left: product gallery --}}
     <div class="pf-product-gallery" data-product-gallery>
       @if ($gallerySlides !== [])
-        <figure class="pf-product-gallery__stage">
+        <figure
+          class="pf-product-gallery__stage"
+          @if (count($gallerySlides) > 1)
+            role="tabpanel"
+            id="pf-gallery-panel"
+            aria-labelledby="pf-gallery-tab-0"
+          @endif
+        >
           <button
             type="button"
             class="pf-product-gallery__main"
@@ -203,7 +210,9 @@
                 role="tab"
                 id="pf-gallery-tab-{{ $i }}"
                 aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
-                aria-controls="pf-gallery-main"
+                aria-controls="pf-gallery-panel"
+                tabindex="{{ $i === 0 ? '0' : '-1' }}"
+                aria-label="{{ esc_attr($slide['alt'] !== '' ? $slide['alt'] : sprintf(__('Screenshot %d', 'sage'), $i + 1)) }}"
                 data-gallery-index="{{ $i }}"
                 data-gallery-src="{{ esc_url($slide['src']) }}"
                 data-gallery-alt="{{ esc_attr($slide['alt']) }}"
@@ -216,7 +225,6 @@
                   loading="{{ $i < 4 ? 'eager' : 'lazy' }}"
                   decoding="async"
                 >
-                <span class="visually-hidden">{{ sprintf(__('Screenshot %d', 'sage'), $i + 1) }}</span>
               </button>
             @endforeach
           </div>
@@ -861,7 +869,10 @@
   <div
     class="pf-sticky-bar"
     id="pf-sticky-bar"
+    role="region"
+    aria-label="{{ __('Buy this product', 'sage') }}"
     aria-hidden="true"
+    inert
     data-trigger=".pf-product-buybox"
   >
     <div class="container wide pf-sticky-bar__inner">
@@ -895,21 +906,25 @@
     $gallerySlides,
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
   ) !!}</script>
-  <dialog class="pf-lightbox" data-product-lightbox aria-labelledby="pf-lightbox-caption">
+  <dialog class="pf-lightbox" data-product-lightbox aria-modal="true" aria-labelledby="pf-lightbox-caption">
     <div class="pf-lightbox__frame">
       <button type="button" class="pf-lightbox__close" data-lightbox-close aria-label="{{ __('Close screenshot', 'sage') }}">
         <span aria-hidden="true">×</span>
       </button>
-      <button type="button" class="pf-lightbox__nav pf-lightbox__nav--prev" data-lightbox-prev aria-label="{{ __('Previous screenshot', 'sage') }}">
-        <span aria-hidden="true">‹</span>
-      </button>
+      @if (count($gallerySlides) > 1)
+        <button type="button" class="pf-lightbox__nav pf-lightbox__nav--prev" data-lightbox-prev aria-label="{{ __('Previous screenshot', 'sage') }}">
+          <span aria-hidden="true">‹</span>
+        </button>
+      @endif
       <figure class="pf-lightbox__figure">
         <img src="" alt="" width="1600" height="1000" data-lightbox-image>
         <figcaption class="pf-lightbox__caption" id="pf-lightbox-caption" data-lightbox-caption></figcaption>
       </figure>
-      <button type="button" class="pf-lightbox__nav pf-lightbox__nav--next" data-lightbox-next aria-label="{{ __('Next screenshot', 'sage') }}">
-        <span aria-hidden="true">›</span>
-      </button>
+      @if (count($gallerySlides) > 1)
+        <button type="button" class="pf-lightbox__nav pf-lightbox__nav--next" data-lightbox-next aria-label="{{ __('Next screenshot', 'sage') }}">
+          <span aria-hidden="true">›</span>
+        </button>
+      @endif
     </div>
   </dialog>
 @endif

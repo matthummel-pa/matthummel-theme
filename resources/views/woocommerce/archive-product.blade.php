@@ -195,7 +195,7 @@
       <nav class="catalog-filter-nav" aria-label="{{ __('Filter by product type', 'sage') }}">
         <ul class="catalog-filter-nav__links" role="list">
           <li>
-            <button class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
               {{ __('All', 'sage') }}
               @if ($filterAll > 0)
                 <span class="catalog-filter-nav__count" aria-label="{{ $filterAll }} {{ __('total', 'sage') }}">{{ $filterAll }}</span>
@@ -204,7 +204,7 @@
           </li>
           @if ($filterThemes > 0)
           <li>
-            <button class="catalog-filter-nav__link" data-filter-type="theme">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="theme">
               {!! \App\mh_svg_icon('home', 11) !!} {{ __('Themes', 'sage') }}
               <span class="catalog-filter-nav__count" aria-label="{{ $filterThemes }} {{ __('themes', 'sage') }}">{{ $filterThemes }}</span>
             </button>
@@ -212,7 +212,7 @@
           @endif
           @if ($filterPlugins > 0)
           <li>
-            <button class="catalog-filter-nav__link" data-filter-type="plugin">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="plugin">
               {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
               <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
             </button>
@@ -220,7 +220,7 @@
           @endif
           @if ($filterServices > 0)
           <li>
-            <button class="catalog-filter-nav__link" data-filter-type="service">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="service">
               {!! \App\mh_svg_icon('briefcase', 11) !!} {{ __('Services', 'sage') }}
               <span class="catalog-filter-nav__count" aria-label="{{ $filterServices }} {{ __('services', 'sage') }}">{{ $filterServices }}</span>
             </button>
