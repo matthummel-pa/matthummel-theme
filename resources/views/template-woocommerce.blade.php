@@ -133,18 +133,24 @@
 </div>
 
 @if ($isCheckout && $cartCount > 0)
-  <div class="woo-receipt" aria-label="{{ __('What I send after payment', 'sage') }}">
+  @php
+    $suggestedWants = \App\mh_cart_suggested_want_keys();
+    $liveBrief = \App\mh_install_brief_text($suggestedWants);
+    if ($liveBrief === '') {
+      $liveBrief = $servicesOnly
+        ? __('Tap what applies. This sentence becomes your kickoff.', 'sage')
+        : __('The zip lands in the receipt email. Tap below if you want help installing.', 'sage');
+    }
+  @endphp
+  <div class="woo-receipt" aria-label="{{ __('Kickoff brief preview', 'sage') }}">
     <div class="container wide">
-      <article class="woo-receipt__card">
-        <p class="woo-receipt__meta">{{ __('From Matt · after payment', 'sage') }}</p>
+      <article class="woo-receipt__card mh-ticket" data-mh-live-ticket>
+        <p class="woo-receipt__meta">{{ __('From Matt · kickoff brief', 'sage') }}</p>
         <h2 class="woo-receipt__subject">
-          {{ $servicesOnly ? __('Next steps for your order', 'sage') : __('Your download is ready', 'sage') }}
+          {{ $servicesOnly ? __('What I will start with', 'sage') : __('What happens after you pay', 'sage') }}
         </h2>
-        <p class="woo-receipt__body">
-          {{ $servicesOnly
-            ? __('I will write to the email you enter below with a short kickoff. Use the notes field if you want the install tailored.', 'sage')
-            : __('The zip and license note land in that same inbox. Add install notes if you want help after you download.', 'sage') }}
-        </p>
+        <p class="woo-receipt__body" data-mh-live-brief>{{ $liveBrief }}</p>
+        <p class="woo-receipt__site" data-mh-live-site hidden></p>
       </article>
     </div>
   </div>

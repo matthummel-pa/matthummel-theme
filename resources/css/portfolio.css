@@ -15545,6 +15545,40 @@ html.mh-dark .catalog-toolbar__right select.orderby {
   font: 400 .92rem/1.5 var(--font-body);
   color: var(--color-text-secondary);
 }
+.woo-receipt__body.is-rewriting {
+  animation: mh-brief-in .35s ease;
+}
+.woo-receipt__site {
+  margin: .55rem 0 0;
+  font: 650 .85rem/1.3 var(--font-display);
+  color: var(--color-accent);
+}
+@keyframes mh-brief-in {
+  from { opacity: .35; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .woo-receipt__body.is-rewriting { animation: none; }
+}
+.mh-ticket {
+  position: relative;
+  padding-left: 1.55rem;
+  background-image:
+    radial-gradient(circle at 0 12px, var(--color-bg, #d8e2ed) 6px, transparent 7px),
+    radial-gradient(circle at 0 36px, var(--color-bg, #d8e2ed) 6px, transparent 7px),
+    radial-gradient(circle at 0 60px, var(--color-bg, #d8e2ed) 6px, transparent 7px);
+  background-repeat: no-repeat;
+  background-size: 12px 72px, 12px 72px, 12px 72px;
+  background-position: left 8px, left 8px, left 8px;
+}
+.mh-ticket::before {
+  content: "";
+  position: absolute;
+  left: .7rem;
+  top: .85rem;
+  bottom: .85rem;
+  border-left: 1px dashed color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+}
 
 /* ── Install wants on checkout ───────────────────────────────────────────── */
 .woocommerce-wrap--checkout .woocommerce-additional-fields {
@@ -15581,10 +15615,27 @@ html.mh-dark .catalog-toolbar__right select.orderby {
   color: var(--color-text);
 }
 .mh-install-notes__lede {
-  margin: 0 0 .85rem;
+  margin: 0 0 .45rem;
   max-width: 46ch;
   font: 400 .9rem/1.5 var(--font-body);
   color: var(--color-text-secondary);
+}
+.mh-install-notes__hint {
+  margin: 0 0 .75rem;
+  max-width: 46ch;
+  font: 500 .82rem/1.45 var(--font-body);
+  color: var(--color-accent);
+}
+.mh-install-notes__chip.is-suggested {
+  border-style: dashed;
+}
+.mh-install-notes__site {
+  margin: 0 0 .85rem;
+}
+.mh-install-notes__site label {
+  display: block;
+  margin: 0 0 .35rem;
+  font: 600 .88rem/1.35 var(--font-display);
 }
 .mh-install-notes__chips {
   display: flex;
@@ -15635,6 +15686,30 @@ html.mh-dark .catalog-toolbar__right select.orderby {
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--color-text-muted);
+}
+.mh-install-echo__brief {
+  margin: 0 0 .7rem;
+  font: 650 1.05rem/1.45 var(--font-display);
+}
+.mh-install-echo__site {
+  margin: 0 0 .7rem;
+  font: 650 .9rem/1.3 var(--font-display);
+}
+.mh-install-echo__site a { color: var(--color-accent); }
+.mh-install-echo__copy-wrap { margin: 0 0 .65rem; }
+.mh-install-echo__copy {
+  appearance: none;
+  border: 1.5px solid var(--color-border);
+  background: var(--white);
+  border-radius: 999px;
+  padding: .4rem .85rem;
+  font: 600 .82rem/1.2 var(--font-display);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.mh-install-echo__copy:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 .mh-install-echo__wants {
   display: flex;

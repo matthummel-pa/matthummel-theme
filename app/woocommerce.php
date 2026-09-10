@@ -490,9 +490,11 @@ add_filter('woocommerce_checkout_fields', function (array $fields): array {
 
 add_action('woocommerce_before_order_notes', function (): void {
     $prompts = mh_checkout_install_prompts();
+    $suggested = mh_cart_suggested_want_keys();
     $hasService = in_array('service', mh_cart_product_types(), true);
 
-    echo '<div class="mh-install-notes" data-mh-install-notes>';
+    echo '<div class="mh-install-notes" data-mh-install-notes data-mh-brief-config="'
+        .esc_attr(wp_json_encode(mh_install_brief_config())).'">';
     echo '<p class="mh-install-notes__kicker">'.esc_html__('For after purchase', 'sage').'</p>';
     echo '<h3 class="mh-install-notes__title">'.esc_html__('What should I set up?', 'sage').'</h3>';
     echo '<p class="mh-install-notes__lede">'.esc_html(
@@ -501,16 +503,26 @@ add_action('woocommerce_before_order_notes', function (): void {
             : __('Optional. I use this if you want help installing or a custom setup later.', 'sage')
     ).'</p>';
 
+    if ($suggested !== []) {
+        echo '<p class="mh-install-notes__hint">'.esc_html__('I marked a few from what is in the cart. Untap anything that is wrong.', 'sage').'</p>';
+    }
+
     if ($prompts !== []) {
         echo '<div class="mh-install-notes__chips" role="group" aria-label="'.esc_attr__('Possible wants', 'sage').'">';
         foreach ($prompts as $key => $label) {
-            echo '<button type="button" class="mh-install-notes__chip" data-mh-want="'
-                .esc_attr($key).'" aria-pressed="false">'.esc_html($label).'</button>';
+            $on = in_array($key, $suggested, true);
+            echo '<button type="button" class="mh-install-notes__chip'.($on ? ' is-suggested' : '').'" data-mh-want="'
+                .esc_attr($key).'" aria-pressed="'.($on ? 'true' : 'false').'">'.esc_html($label).'</button>';
         }
         echo '</div>';
     }
 
-    echo '<input type="hidden" name="mh_install_wants" value="" autocomplete="off">';
+    echo '<p class="form-row mh-install-notes__site">';
+    echo '<label for="mh_install_site">'.esc_html__('Site I should look at', 'sage').'</label>';
+    echo '<input type="url" class="input-text" name="mh_install_site" id="mh_install_site" placeholder="https://yoursite.com" inputmode="url" autocomplete="url">';
+    echo '</p>';
+
+    echo '<input type="hidden" name="mh_install_wants" value="'.esc_attr(implode(',', $suggested)).'" autocomplete="off">';
     echo '</div>';
 });
 
@@ -521,7 +533,8 @@ add_action('woocommerce_checkout_create_order', function ($order, $data): void {
 
     $wants = mh_sanitize_install_wants(wp_unslash($_POST['mh_install_wants'] ?? ''));
     $note = sanitize_textarea_field((string) ($data['order_comments'] ?? ''));
-    if ($wants === [] && $note === '') {
+    $site = mh_sanitize_install_site((string) wp_unslash($_POST['mh_install_site'] ?? ''));
+    if ($wants === [] && $note === '' && $site === '') {
         return;
     }
 
@@ -531,8 +544,18 @@ add_action('woocommerce_checkout_create_order', function ($order, $data): void {
     if ($note !== '') {
         $order->update_meta_data('_mh_install_note', $note);
     }
+    if ($site !== '') {
+        $order->update_meta_data('_mh_install_site', $site);
+    }
 
     $parts = [];
+    $brief = mh_install_brief_text($wants, $site, '');
+    if ($brief !== '') {
+        $parts[] = $brief;
+    }
+    if ($site !== '') {
+        $parts[] = __('Site:', 'sage').' '.$site;
+    }
     $labels = mh_install_want_labels($wants);
     if ($labels !== []) {
         $parts[] = __('Wants for the install:', 'sage').' '.implode(', ', $labels);
@@ -607,6 +630,148 @@ function mh_checkout_install_prompts(): array
 }
 
 /**
+ * Chip keys suggested from product slugs already in the cart.
+ *
+ * @return list<string>
+ */
+function mh_cart_suggested_want_keys(): array
+{
+    if (! function_exists('WC') || ! WC()->cart) {
+        return [];
+    }
+
+    $map = [
+        'acreline-express-install' => ['domain', 'brand'],
+        'express-install' => ['domain', 'brand'],
+        'acreline-setup-launch' => ['domain', 'walkthrough'],
+        'listing-population-10-listings' => ['listings'],
+        'listing-population-25-listings' => ['listings'],
+        'marketing-content-pack' => ['brand'],
+        'acreline-site-care' => ['walkthrough'],
+        'site-care' => ['walkthrough'],
+        'acreline' => ['install-help'],
+    ];
+
+    $allowed = array_keys(mh_checkout_install_prompts());
+    $out = [];
+    foreach (WC()->cart->get_cart() as $item) {
+        $id = (int) ($item['product_id'] ?? 0);
+        $post = $id > 0 ? get_post($id) : null;
+        $slug = $post instanceof \WP_Post ? (string) $post->post_name : '';
+        foreach ($map[$slug] ?? [] as $key) {
+            if (! in_array($key, $allowed, true) || in_array($key, $out, true)) {
+                continue;
+            }
+            $out[] = $key;
+        }
+    }
+
+    return array_slice($out, 0, 3);
+}
+
+/** Allowlisted http(s) URL for an install site, or empty. */
+function mh_sanitize_install_site(string $raw): string
+{
+    $url = esc_url_raw(trim($raw), ['http', 'https']);
+    if ($url === '' || ! preg_match('#^https?://#i', $url)) {
+        return '';
+    }
+
+    return $url;
+}
+
+function mh_install_site_host(string $url): string
+{
+    $host = (string) wp_parse_url($url, PHP_URL_HOST);
+    $host = preg_replace('/^www\./i', '', $host) ?? $host;
+
+    return $host;
+}
+
+/**
+ * @param  list<string>  $items
+ */
+function mh_join_and(array $items): string
+{
+    $items = array_values(array_filter($items, static fn ($item): bool => trim((string) $item) !== ''));
+    $n = count($items);
+    if ($n === 0) {
+        return '';
+    }
+    if ($n === 1) {
+        return (string) $items[0];
+    }
+    if ($n === 2) {
+        return $items[0].' '.__('and', 'sage').' '.$items[1];
+    }
+    $last = array_pop($items);
+
+    return implode(', ', $items).', '.__('and', 'sage').' '.$last;
+}
+
+/**
+ * First-person kickoff sentence from wants + optional site.
+ *
+ * @param  list<string>  $wantKeys
+ */
+function mh_install_brief_text(array $wantKeys, string $site = '', string $note = ''): string
+{
+    $labels = mh_install_want_labels($wantKeys);
+    $host = mh_install_site_host($site);
+    $list = mh_join_and($labels);
+
+    $sentence = '';
+    if ($host !== '' && $list !== '') {
+        $sentence = sprintf(
+            /* translators: 1: site host, 2: list of wants */
+            __('I will start from %1$s — %2$s.', 'sage'),
+            $host,
+            $list
+        );
+    } elseif ($host !== '') {
+        $sentence = sprintf(
+            /* translators: %s site host */
+            __('I will start from %s.', 'sage'),
+            $host
+        );
+    } elseif ($list !== '') {
+        $sentence = sprintf(
+            /* translators: %s list of wants */
+            __('I will start with %s.', 'sage'),
+            $list
+        );
+    }
+
+    $note = trim($note);
+    if ($note === '') {
+        return $sentence;
+    }
+
+    return $sentence === '' ? $note : $sentence.' '.$note;
+}
+
+/**
+ * Config for the live checkout brief (JSON in the page).
+ *
+ * @return array<string, mixed>
+ */
+function mh_install_brief_config(): array
+{
+    $hasService = in_array('service', mh_cart_product_types(), true);
+
+    return [
+        'labels' => mh_install_want_catalog(),
+        'empty' => $hasService
+            ? __('Tap what applies. This sentence becomes your kickoff.', 'sage')
+            : __('Tap what applies if you want help after you download.', 'sage'),
+        'and' => __('and', 'sage'),
+        'with' => __('I will start with %s.', 'sage'),
+        'from' => __('I will start from %s.', 'sage'),
+        'fromWith' => __('I will start from %1$s — %2$s.', 'sage'),
+    ];
+}
+
+/**
  * @param  mixed  $raw  Comma string or list of keys from checkout POST.
  * @return list<string>
  */
@@ -650,24 +815,28 @@ function mh_install_want_labels(array $keys): array
 }
 
 /**
- * @return array{wants: list<string>, note: string}
+ * @return array{wants: list<string>, want_keys: list<string>, note: string, site: string, brief: string}
  */
 function mh_order_install_notes(\WC_Order $order): array
 {
-    $wants = mh_sanitize_install_wants($order->get_meta('_mh_install_wants'));
+    $wantKeys = mh_sanitize_install_wants($order->get_meta('_mh_install_wants'));
     $note = trim((string) $order->get_meta('_mh_install_note'));
-    if ($note === '' && $wants === []) {
+    $site = mh_sanitize_install_site((string) $order->get_meta('_mh_install_site'));
+    if ($note === '' && $wantKeys === [] && $site === '') {
         $note = trim((string) $order->get_customer_note());
     }
 
     return [
-        'wants' => mh_install_want_labels($wants),
+        'wants' => mh_install_want_labels($wantKeys),
+        'want_keys' => $wantKeys,
         'note' => $note,
+        'site' => $site,
+        'brief' => mh_install_brief_text($wantKeys, $site, ''),
     ];
 }
 
 /**
- * Thank-you and My account: echo submitted install notes.
+ * Thank-you and My account: kickoff ticket with submitted install notes.
  *
  * @param  mixed  $order  Order object or order ID from Woo hooks.
  */
@@ -681,12 +850,29 @@ function mh_render_order_install_notes_front(mixed $order): void
     }
 
     $notes = mh_order_install_notes($order);
-    if ($notes['wants'] === [] && $notes['note'] === '') {
+    $hasDetail = $notes['wants'] !== [] || $notes['note'] !== '' || $notes['site'] !== '';
+    $isThankYou = function_exists('is_order_received_page') && is_order_received_page();
+    if (! $hasDetail && ! $isThankYou) {
         return;
     }
 
-    echo '<aside class="mh-install-echo" aria-label="'.esc_attr__('Install notes on this order', 'sage').'">';
-    echo '<p class="mh-install-echo__kicker">'.esc_html__('I have this for the install', 'sage').'</p>';
+    $copy = trim($notes['brief'].($notes['note'] !== '' ? "\n\n".$notes['note'] : '').($notes['site'] !== '' ? "\n".$notes['site'] : ''));
+    $number = $order->get_order_number();
+
+    echo '<aside class="mh-install-echo mh-ticket" aria-label="'.esc_attr__('Kickoff brief for this order', 'sage').'">';
+    echo '<p class="mh-install-echo__kicker">'.esc_html(sprintf(
+        /* translators: %s order number */
+        __('Kickoff brief · ticket %s', 'sage'),
+        $number
+    )).'</p>';
+    if ($notes['brief'] !== '') {
+        echo '<p class="mh-install-echo__brief">'.esc_html($notes['brief']).'</p>';
+    } elseif ($isThankYou) {
+        echo '<p class="mh-install-echo__brief">'.esc_html__('No extra notes. Reply to the receipt if something comes up.', 'sage').'</p>';
+    }
+    if ($notes['site'] !== '') {
+        echo '<p class="mh-install-echo__site"><a href="'.esc_url($notes['site']).'">'.esc_html(mh_install_site_host($notes['site'])).'</a></p>';
+    }
     if ($notes['wants'] !== []) {
         echo '<ul class="mh-install-echo__wants">';
         foreach ($notes['wants'] as $label) {
@@ -697,6 +883,11 @@ function mh_render_order_install_notes_front(mixed $order): void
     if ($notes['note'] !== '') {
         echo '<p class="mh-install-echo__note">'.nl2br(esc_html($notes['note'])).'</p>';
     }
+    if ($copy !== '') {
+        echo '<p class="mh-install-echo__copy-wrap"><button type="button" class="mh-install-echo__copy" data-mh-copy-brief>'
+            .esc_html__('Copy brief', 'sage').'</button></p>';
+        echo '<textarea class="mh-install-echo__copy-src" readonly hidden>'.esc_textarea($copy).'</textarea>';
+    }
     echo '<p class="mh-install-echo__foot">'.esc_html__('Reply to the receipt if something changes.', 'sage').'</p>';
     echo '</aside>';
 }
@@ -704,7 +895,7 @@ function mh_render_order_install_notes_front(mixed $order): void
 function mh_render_order_install_notes_email(\WC_Order $order, bool $sentToAdmin): void
 {
     $notes = mh_order_install_notes($order);
-    if ($notes['wants'] === [] && $notes['note'] === '') {
+    if ($notes['wants'] === [] && $notes['note'] === '' && $notes['site'] === '') {
         return;
     }
 
@@ -714,6 +905,12 @@ function mh_render_order_install_notes_email(\WC_Order $order, bool $sentToAdmin
 
     echo '<div class="mh-install-email" style="margin:16px 0;padding:16px;border:1px solid #d1d5db">';
     echo '<p style="margin:0 0 8px;font-weight:700">'.esc_html($title).'</p>';
+    if ($notes['brief'] !== '') {
+        echo '<p style="margin:0 0 8px">'.esc_html($notes['brief']).'</p>';
+    }
+    if ($notes['site'] !== '') {
+        echo '<p style="margin:0 0 8px"><a href="'.esc_url($notes['site']).'">'.esc_html($notes['site']).'</a></p>';
+    }
     if ($notes['wants'] !== []) {
         echo '<p style="margin:0 0 8px">'.esc_html(implode(' · ', $notes['wants'])).'</p>';
     }
@@ -726,12 +923,18 @@ function mh_render_order_install_notes_email(\WC_Order $order, bool $sentToAdmin
 function mh_render_order_install_notes_admin(\WC_Order $order): void
 {
     $notes = mh_order_install_notes($order);
-    if ($notes['wants'] === [] && $notes['note'] === '') {
+    if ($notes['wants'] === [] && $notes['note'] === '' && $notes['site'] === '') {
         return;
     }
 
     echo '<div class="mh-admin-install-notes" style="margin-top:12px;padding:12px 14px;border:1px solid #c3c4c7;background:#fff">';
-    echo '<p style="margin:0 0 6px"><strong>'.esc_html__('Install wants', 'sage').'</strong></p>';
+    echo '<p style="margin:0 0 6px"><strong>'.esc_html__('Kickoff brief', 'sage').'</strong></p>';
+    if ($notes['brief'] !== '') {
+        echo '<p style="margin:0 0 6px">'.esc_html($notes['brief']).'</p>';
+    }
+    if ($notes['site'] !== '') {
+        echo '<p style="margin:0 0 6px"><a href="'.esc_url($notes['site']).'">'.esc_html($notes['site']).'</a></p>';
+    }
     if ($notes['wants'] !== []) {
         echo '<p style="margin:0 0 6px">'.esc_html(implode(' · ', $notes['wants'])).'</p>';
     }

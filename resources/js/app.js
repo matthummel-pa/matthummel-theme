@@ -11,7 +11,7 @@ import { initShopFilter } from './shop-filter.js';
 import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
 import { initStudioCart } from './studio-cart.js';
-import { initCheckoutInstallNotes } from './checkout-notes.js';
+import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -513,6 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductGallery();
   initStudioCart();
   initCheckoutInstallNotes();
+  initCopyBrief();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();

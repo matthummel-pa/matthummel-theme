@@ -7,6 +7,7 @@
 - Empty cart offers Acreline plus two add-ons. Services cards add to cart first.
 - Product buy box shows a three-step “what happens next” so purchase feels obvious, not salesy.
 - Checkout collects optional install wants: tap chips plus a notes field. Saved on the order, thank-you page, emails, and wp-admin so I can customize after purchase.
+- Kickoff brief writes itself as chips and a site URL change. Cart lines pre-mark a few wants. Thank-you is a copyable studio ticket.
 
 ## 3.5.10 — Services page lists Acreline add-ons
 
