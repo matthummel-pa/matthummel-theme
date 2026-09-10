@@ -10,6 +10,8 @@ import { initDiscoveryForm } from './discovery-form.js';
 import { initShopFilter } from './shop-filter.js';
 import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
+import { initStudioCart } from './studio-cart.js';
+import { initCheckoutInstallNotes } from './checkout-notes.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -509,6 +511,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initShopFilter();
   initStickyBar();
   initProductGallery();
+  initStudioCart();
+  initCheckoutInstallNotes();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();

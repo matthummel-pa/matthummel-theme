@@ -93,12 +93,16 @@
           </h3>
           <p class="svc-addon-card__body">{{ $addon['blurb'] }}</p>
           <div class="svc-addon-card__actions">
-            <a class="btn btn--sm" href="{{ esc_url($addon['permalink']) }}">
-              {{ __('View details', 'sage') }}
-            </a>
             @if ($addon['add_to_cart_url'] !== '')
-              <a class="h-text-arrow" href="{{ esc_url($addon['add_to_cart_url']) }}">
-                {{ __('Add to cart', 'sage') }} <span aria-hidden="true">→</span>
+              <a class="btn btn--sm" href="{{ esc_url($addon['add_to_cart_url']) }}">
+                {!! \App\mh_svg_icon('cart', 14) !!} {{ __('Add to cart', 'sage') }}
+              </a>
+              <a class="h-text-arrow" href="{{ esc_url($addon['permalink']) }}">
+                {{ __('Details', 'sage') }} <span aria-hidden="true">→</span>
+              </a>
+            @else
+              <a class="btn btn--sm" href="{{ esc_url($addon['permalink']) }}">
+                {{ __('View details', 'sage') }}
               </a>
             @endif
           </div>

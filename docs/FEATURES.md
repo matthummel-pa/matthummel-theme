@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.11 checkout ease)
+
+- Cart/checkout trust lines switch when the cart is services-only (`mh_cart_is_services_only()`). Do not put GPL/zip copy on a Site Care cart.
+- Email field stays first. No coupons, countdowns, or fake urgency.
+- Empty-cart “Easy start” cards come from live slugs via `mh_checkout_start_here_products()`.
+- Install wants: Woo `order_comments` plus `_mh_install_wants` / `_mh_install_note`. Chip keys are allowlisted in `mh_install_want_catalog()`. Optional, never required. Do not add a second funnel.
+
 ## Editor’s notes (3.5.10 Services add-ons)
 
 - Services is product-led: `mh_acreline_addon_products()` + `template-services.blade.php`. Do not put the old SEO lede or 4-pillar cards back in the hero.

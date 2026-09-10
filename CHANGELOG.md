@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.11 — Easier checkout, still professional
+
+- Cart and checkout copy tells you what happens next: guest checkout, receipt email, no mailing list. Service carts drop the zip/GPL lines.
+- Email is first on checkout. Place-order and add-to-cart messages point at one next step.
+- Empty cart offers Acreline plus two add-ons. Services cards add to cart first.
+- Product buy box shows a three-step “what happens next” so purchase feels obvious, not salesy.
+- Checkout collects optional install wants: tap chips plus a notes field. Saved on the order, thank-you page, emails, and wp-admin so I can customize after purchase.
+
 ## 3.5.10 — Services page lists Acreline add-ons
 
 - `/services/` leads with live Acreline shop products (install, setup, listings, content, site care) plus theme and demo links.

@@ -34,13 +34,21 @@
     ['label' => $title, 'current' => true],
   ];
 
+  $servicesOnly = \App\mh_cart_is_services_only();
+  $trustItems   = \App\mh_checkout_trust_items();
+  $startHere    = \App\mh_checkout_start_here_products();
+
   $lead = '';
   if ($isCart) {
     $lead = $cartCount > 0
-      ? sprintf(_n('You have %d item in your cart.', 'You have %d items in your cart.', $cartCount, 'sage'), $cartCount)
-      : __('Your cart is empty.', 'sage');
+      ? ($servicesOnly
+        ? __('Ready when you are. Checkout books the work — I write back after payment.', 'sage')
+        : __('Ready when you are. Checkout is one screen. Guest checkout is fine.', 'sage'))
+      : __('Nothing here yet. Grab a theme or an Acreline add-on and come back.', 'sage');
   } elseif ($isCheckout) {
-    $lead = __('Secure payment. Access details arrive by email after purchase.', 'sage');
+    $lead = $servicesOnly
+      ? __('Pay once. I email next steps. No surprise retainers.', 'sage')
+      : __('Pay once. The zip is in the receipt email. Guest checkout is fine.', 'sage');
   } elseif ($isAccount) {
     $lead = $isLoggedIn
       ? __('Orders, downloads, and billing details in one place.', 'sage')
@@ -124,25 +132,40 @@
   </div>
 </div>
 
+@if ($isCheckout && $cartCount > 0)
+  <div class="woo-receipt" aria-label="{{ __('What I send after payment', 'sage') }}">
+    <div class="container wide">
+      <article class="woo-receipt__card">
+        <p class="woo-receipt__meta">{{ __('From Matt · after payment', 'sage') }}</p>
+        <h2 class="woo-receipt__subject">
+          {{ $servicesOnly ? __('Next steps for your order', 'sage') : __('Your download is ready', 'sage') }}
+        </h2>
+        <p class="woo-receipt__body">
+          {{ $servicesOnly
+            ? __('I will write to the email you enter below with a short kickoff. Use the notes field if you want the install tailored.', 'sage')
+            : __('The zip and license note land in that same inbox. Add install notes if you want help after you download.', 'sage') }}
+        </p>
+      </article>
+    </div>
+  </div>
+@endif
+
 {{-- ═══════════════════════════════════════════════════════════════════════════
      TRUST STRIP — Cart and Checkout only
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($isCart || $isCheckout)
   <div class="woo-trust-strip" aria-label="{{ __('Purchase assurance', 'sage') }}">
     <div class="container wide woo-trust-strip__inner">
-      <span class="woo-trust-item">
-        {!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL license — you own the code', 'sage') }}
-      </span>
-      <span class="woo-trust-item">
-        {!! \App\mh_svg_icon('download', 13) !!} {{ __('Instant digital download', 'sage') }}
-      </span>
-      <span class="woo-trust-item">
-        {!! \App\mh_svg_icon('check', 13) !!} {{ __('SSL-encrypted payment', 'sage') }}
-      </span>
-      <span class="woo-trust-item">
-        {!! \App\mh_svg_icon('mail', 13) !!}
-        <a href="{{ home_url('/contact/') }}">{{ __('Questions? Say hello', 'sage') }}</a>
-      </span>
+      @foreach ($trustItems as $item)
+        <span class="woo-trust-item">
+          {!! \App\mh_svg_icon($item['icon'], 13) !!}
+          @if (! empty($item['href']))
+            <a href="{{ esc_url($item['href']) }}">{{ $item['label'] }}</a>
+          @else
+            {{ $item['label'] }}
+          @endif
+        </span>
+      @endforeach
     </div>
   </div>
 @endif
@@ -160,7 +183,7 @@
       <div class="woo-empty" role="status">
         <div class="woo-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
         <p class="woo-empty__title">{{ __('Your cart is empty', 'sage') }}</p>
-        <p class="woo-empty__text">{{ __('Add a theme from the shop or work grid, then come back to checkout.', 'sage') }}</p>
+        <p class="woo-empty__text">{{ __('Start with Acreline, or pick an add-on from Services. Checkout is one screen.', 'sage') }}</p>
         <p class="woo-empty__actions">
           <a class="btn" href="{{ esc_url($catalogUrl) }}">
             {!! \App\mh_svg_icon('briefcase', 15) !!} {{ __('Browse products', 'sage') }}
@@ -171,10 +194,30 @@
     @endif
 
     {{-- Empty cart page --}}
-    @if ($isCart && $cartCount === 0 && ! WC()->cart->get_cart_contents_count())
+    @if ($isCart && $cartCount === 0)
+      @if ($startHere !== [])
+        <div class="woo-start-here" aria-label="{{ __('Start here', 'sage') }}">
+          <p class="woo-start-here__label">{{ __('Easy start', 'sage') }}</p>
+          <div class="woo-start-here__grid">
+            @foreach ($startHere as $pick)
+              <article class="woo-start-here__card">
+                <h3 class="woo-start-here__title">
+                  <a href="{{ esc_url($pick['permalink']) }}">{{ $pick['title'] }}</a>
+                </h3>
+                @if ($pick['price'] !== '')
+                  <p class="woo-start-here__price">{{ $pick['price'] }}</p>
+                @endif
+                @if ($pick['add_to_cart_url'] !== '')
+                  <a class="btn btn--sm" href="{{ esc_url($pick['add_to_cart_url']) }}">{{ __('Add to cart', 'sage') }}</a>
+                @endif
+              </article>
+            @endforeach
+          </div>
+        </div>
+      @endif
       <div class="woo-continue-shopping">
         <a class="btn btn-outline" href="{{ esc_url($shopUrl) }}">
-          {!! \App\mh_svg_icon('arrow-left', 14) !!} {{ __('Continue shopping', 'sage') }}
+          {!! \App\mh_svg_icon('arrow-left', 14) !!} {{ __('Browse the shop', 'sage') }}
         </a>
       </div>
     @endif
@@ -198,31 +241,41 @@
 @if ($isCart && $cartCount > 0)
   <div class="woo-cart-footer-band">
     <div class="container wide woo-cart-footer-band__inner">
-      <div class="woo-cart-footer-item">
-        {!! \App\mh_svg_icon('download', 16) !!}
-        <div>
-          <strong>{{ __('Digital delivery', 'sage') }}</strong>
-          <span>{{ __('Download link in your receipt email', 'sage') }}</span>
+      @if ($servicesOnly)
+        <div class="woo-cart-footer-item">
+          {!! \App\mh_svg_icon('check', 16) !!}
+          <div>
+            <strong>{{ __('What happens next', 'sage') }}</strong>
+            <span>{{ __('I email a short kickoff after payment. Checkout has a notes field for wants.', 'sage') }}</span>
+          </div>
         </div>
-      </div>
-      <div class="woo-cart-footer-item">
-        {!! \App\mh_svg_icon('check', 16) !!}
-        <div>
-          <strong>{{ __('GPL license', 'sage') }}</strong>
-          <span>{{ __('You own the code after purchase', 'sage') }}</span>
+        <div class="woo-cart-footer-item">
+          {!! \App\mh_svg_icon('calendar', 16) !!}
+          <div>
+            <strong>{{ __('Timing', 'sage') }}</strong>
+            <span>{{ __('Reply within one business day (ET)', 'sage') }}</span>
+          </div>
         </div>
-      </div>
-      <div class="woo-cart-footer-item">
-        {!! \App\mh_svg_icon('github', 16) !!}
-        <div>
-          <strong>{{ __('Source on GitHub', 'sage') }}</strong>
-          <span>{{ __('Review the code before you buy', 'sage') }}</span>
+      @else
+        <div class="woo-cart-footer-item">
+          {!! \App\mh_svg_icon('download', 16) !!}
+          <div>
+            <strong>{{ __('Digital delivery', 'sage') }}</strong>
+            <span>{{ __('Download link in your receipt email', 'sage') }}</span>
+          </div>
         </div>
-      </div>
+        <div class="woo-cart-footer-item">
+          {!! \App\mh_svg_icon('check', 16) !!}
+          <div>
+            <strong>{{ __('GPL license', 'sage') }}</strong>
+            <span>{{ __('You own the code after purchase', 'sage') }}</span>
+          </div>
+        </div>
+      @endif
       <div class="woo-cart-footer-item">
         {!! \App\mh_svg_icon('mail', 16) !!}
         <div>
-          <strong>{{ __('Custom builds', 'sage') }}</strong>
+          <strong>{{ __('Need a custom build?', 'sage') }}</strong>
           <a href="{{ home_url('/contact/') }}">{{ __('Say hello →', 'sage') }}</a>
         </div>
       </div>
