@@ -115,7 +115,7 @@ All tokens are CSS custom properties defined in `resources/css/app.css` using `@
 |---|---|---|
 | `/` | `template-home.blade.php` | Home / landing |
 | `/about/` | `template-about.blade.php` | Background, story, availability |
-| `/services/` | `template-services.blade.php` | Service offerings, process, FAQ |
+| `/services/` | `template-services.blade.php` | Acreline add-ons, custom WordPress floors, FAQ |
 | `/hire/` | `template-hire.blade.php` | Focused hire-me conversion page |
 | `/projects/` | `template-projects.blade.php` | Studio project portfolio |
 | `/code/` | `template-code.blade.php` | GitHub showcase, resume, skills |

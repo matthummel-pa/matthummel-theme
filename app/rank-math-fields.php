@@ -25,7 +25,7 @@ function mh_page_focus_keyword_defaults(): array
         'front-page.blade.php' => 'WordPress developer',
         'template-home.blade.php' => 'WordPress developer',
         'template-about.blade.php' => 'WordPress developer',
-        'template-services.blade.php' => 'custom WordPress sites',
+        'template-services.blade.php' => 'Acreline services',
         'template-hire.blade.php' => 'hire a WordPress developer',
         'template-portfolio.blade.php' => 'WordPress developer portfolio',
         'template-code.blade.php' => 'WordPress open source',
@@ -87,6 +87,15 @@ function mh_effective_field_map_key(int $post_id): string
     }
 
     return $key;
+}
+
+/**
+ * Services uses a product-led Blade layout. Do not rewrite post_content
+ * with keyword-padded analysis HTML (that overwrites REST/editor body).
+ */
+function mh_page_skips_seo_analysis_body(int $post_id): bool
+{
+    return mh_effective_field_map_key($post_id) === 'template-services.blade.php';
 }
 
 /**
@@ -373,7 +382,7 @@ function mh_page_seo_pad_paragraphs(array $paragraphs, string $keyword, int $min
  */
 function mh_page_seo_analysis_html(int $post_id): string
 {
-    if (! mh_page_has_theme_fields($post_id)) {
+    if (! mh_page_has_theme_fields($post_id) || mh_page_skips_seo_analysis_body($post_id)) {
         return (string) get_post_field('post_content', $post_id, 'raw');
     }
 
@@ -486,7 +495,7 @@ function mh_page_seo_analysis_html(int $post_id): string
  */
 function mh_sync_page_seo_analysis_body(int $post_id): void
 {
-    if (! mh_page_has_theme_fields($post_id)) {
+    if (! mh_page_has_theme_fields($post_id) || mh_page_skips_seo_analysis_body($post_id)) {
         return;
     }
 

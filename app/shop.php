@@ -71,6 +71,28 @@ function mh_shop_product_payload(int $product_id): ?array
 }
 
 /**
+ * Published WooCommerce product ID for a permalink slug.
+ */
+function mh_product_id_by_slug(string $slug): int
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return 0;
+    }
+
+    $found = get_posts([
+        'name' => $slug,
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    return $found !== [] ? (int) $found[0] : 0;
+}
+
+/**
  * Project ID linked to a WooCommerce product (0 when unset).
  */
 function mh_product_project_id(int $product_id): int

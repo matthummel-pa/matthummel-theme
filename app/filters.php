@@ -74,8 +74,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
         ],
         'template-services.blade.php' => [
-            'title' => __('Custom WordPress Sites & Plugins', 'sage').' | '.$brand,
-            'desc' => __('Custom WordPress sites, plugins, and web apps for shops and agencies. Clear scope and clean handoffs. Say hello.', 'sage'),
+            'title' => __('Acreline Services', 'sage').' | '.$brand,
+            'desc' => __('Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.', 'sage'),
         ],
         'template-portfolio.blade.php' => [
             'title' => __('WordPress Developer Portfolio & GitHub', 'sage').' | '.$brand,
