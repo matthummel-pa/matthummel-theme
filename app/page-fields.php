@@ -1282,10 +1282,10 @@ function mh_acreline_addon_products(): array
 
         if (is_array($payload)) {
             if (($payload['name'] ?? '') !== '') {
-                $title = (string) $payload['name'];
+                $title = html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
             }
             if (($payload['short_description'] ?? '') !== '') {
-                $blurb = (string) $payload['short_description'];
+                $blurb = html_entity_decode((string) $payload['short_description'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
             }
             if (($payload['permalink'] ?? '') !== '') {
                 $permalink = (string) $payload['permalink'];
@@ -1294,7 +1294,7 @@ function mh_acreline_addon_products(): array
             $live = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
             $live = trim(preg_replace('/\s+/', ' ', $live) ?? $live);
             if ($live !== '') {
-                $price = $live;
+                $price = preg_replace('/\.00\b/', '', $live) ?? $live;
                 $suffix = $item['suffix'];
                 if ($suffix !== '' && ! str_contains(strtolower($price), 'mo') && ! str_contains($price, '/')) {
                     $price .= $suffix;
@@ -1336,7 +1336,7 @@ function mh_services_acreline_theme(): array
 
     return [
         'title' => is_array($payload) && ($payload['name'] ?? '') !== ''
-            ? (string) $payload['name']
+            ? html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8')
             : __('Acreline', 'sage'),
         'permalink' => is_array($payload) && ($payload['permalink'] ?? '') !== ''
             ? (string) $payload['permalink']
@@ -1986,4 +1986,35 @@ add_action('init', function (): void {
     }
 
     update_option('mh_services_acreline_page_v1', true, false);
+});
+
+/**
+ * One-shot: drop stuffed Services title/meta so skill-first defaults win.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_services_acreline_seo_v1') || wp_installing()) {
+        return;
+    }
+
+    $svcId = mh_page_id_by_template('template-services.blade.php');
+    if ($svcId > 0) {
+        $titleFrom = [
+            'WordPress Web Design in Gettysburg | Matt Hummel',
+            'Custom WordPress Sites & Plugins | Matt Hummel',
+        ];
+        $descFrom = [
+            'Custom WordPress platforms, plugins, integrations, and full-stack web applications for businesses, agencies, and development teams.',
+            'Custom WordPress sites, plugins, and web apps for shops and agencies. Clear scope and clean handoffs. Say hello.',
+        ];
+        $title = (string) get_post_meta($svcId, 'mh_f_seo_title', true);
+        if (in_array($title, $titleFrom, true)) {
+            update_post_meta($svcId, 'mh_f_seo_title', 'Acreline Services | Matt Hummel');
+        }
+        $desc = (string) get_post_meta($svcId, 'mh_f_seo_desc', true);
+        if (in_array($desc, $descFrom, true)) {
+            update_post_meta($svcId, 'mh_f_seo_desc', 'Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.');
+        }
+    }
+
+    update_option('mh_services_acreline_seo_v1', true, false);
 });
