@@ -15573,7 +15573,7 @@ html.mh-dark .catalog-toolbar__right select.orderby {
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
-.woocommerce-wrap--checkout .mh-install-notes__title {
+.woocommerce-wrap--checkout .woocommerce-checkout .mh-install-notes__title {
   margin: 0 0 .4rem;
   padding-bottom: 0;
   border-bottom: 0;
