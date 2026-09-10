@@ -16,11 +16,13 @@ export function initStickyBar() {
   const show = () => {
     bar.classList.add('is-visible')
     bar.setAttribute('aria-hidden', 'false')
+    bar.removeAttribute('inert')
   }
 
   const hide = () => {
     bar.classList.remove('is-visible')
     bar.setAttribute('aria-hidden', 'true')
+    bar.setAttribute('inert', '')
   }
 
   if (!('IntersectionObserver' in window)) {

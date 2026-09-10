@@ -13,6 +13,7 @@ export function initProductGallery() {
   if (!slides.length) return
 
   const mainImg = root?.querySelector('[data-gallery-main]')
+  const panel = root?.querySelector('#pf-gallery-panel')
   const thumbs = [...(root?.querySelectorAll('.pf-product-gallery__thumb') || [])]
   let index = 0
 
@@ -30,10 +31,18 @@ export function initProductGallery() {
       const active = i === index
       thumb.classList.toggle('is-active', active)
       thumb.setAttribute('aria-selected', active ? 'true' : 'false')
+      thumb.tabIndex = active ? 0 : -1
       if (active && announce) {
         thumb.focus({ preventScroll: true })
       }
     })
+
+    if (panel) {
+      const activeThumb = thumbs[index]
+      if (activeThumb?.id) {
+        panel.setAttribute('aria-labelledby', activeThumb.id)
+      }
+    }
 
     syncLightbox()
   }
@@ -89,7 +98,7 @@ export function initProductGallery() {
       }
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
-        openLightbox(Number(thumb.dataset.galleryIndex || index))
+        showSlide(Number(thumb.dataset.galleryIndex || index), { announce: false })
       }
     })
   })
