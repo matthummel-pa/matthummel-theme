@@ -27,6 +27,7 @@
   $priceHtml    = '';
   $regularPrice = '';
   $isFree       = false;
+  $isOnSale     = false;
   $projectId    = 0;
 
   if (function_exists('wc_get_product')) {
@@ -36,6 +37,7 @@
       $priceHtml    = $wcProduct->get_price_html();
       $regularPrice = (string) $wcProduct->get_regular_price();
       $isFree       = (float) $wcProduct->get_price() <= 0.0;
+      $isOnSale     = ! $isFree && $wcProduct->is_on_sale();
     }
   }
 
@@ -68,17 +70,13 @@
   $tech         = is_array($entry['tech'] ?? null) ? $entry['tech'] : [];
   $blocks       = is_array($entry['blocks'] ?? null) ? $entry['blocks'] : [];
 
-  $isTheme  = $productType === 'theme';
-  $isPlugin = $productType === 'plugin';
+  $isTheme   = $productType === 'theme';
+  $isPlugin  = $productType === 'plugin';
+  $isService = $productType === 'service';
+  $typeChrome = \App\mh_product_type_chrome($productType);
 
   if ($eyebrow === '') {
-    if ($isPlugin) {
-      $eyebrow = __('WordPress plugin', 'sage');
-    } elseif ($productType === 'app') {
-      $eyebrow = __('Web app', 'sage');
-    } else {
-      $eyebrow = __('WordPress theme', 'sage');
-    }
+    $eyebrow = $typeChrome['eyebrow'];
   }
 
   $productPayload = \App\mh_shop_product_payload($productId);
@@ -100,23 +98,13 @@
     'who'     => 'business',
   ], home_url('/contact/'));
 
-  $primaryLabel = $isFree
-    ? ($isPlugin ? __('Download plugin — free', 'sage') : __('Get theme — free', 'sage'))
-    : ($isPlugin ? __('Buy plugin', 'sage')              : __('Buy theme', 'sage'));
+  $primaryLabel = \App\mh_product_buy_copy($productId, $isFree);
 
   $priceDisplay = $isFree ? __('Free', 'sage') : ('$'.ltrim($regularPrice, '$'));
 
-  // Featured image: WC product thumbnail or catalog screenshot[0].
-  $heroImage = '';
-  if ($productId > 0 && has_post_thumbnail($productId)) {
-    $heroImage = (string) wp_get_attachment_image_url((int) get_post_thumbnail_id($productId), 'large');
-  }
-  if ($heroImage === '' && $screenshots !== []) {
-    $firstShot = (string) ($screenshots[0][0] ?? '');
-    if ($firstShot !== '') {
-      $heroImage = str_starts_with($firstShot, 'http') ? $firstShot : get_theme_file_uri('resources/images/'.$firstShot);
-    }
-  }
+  $gallerySlides = \App\mh_product_gallery_slides($productId, $entry, $wcProduct);
+  $heroImage = (string) ($gallerySlides[0]['src'] ?? '');
+  $heroImageAlt = (string) ($gallerySlides[0]['alt'] ?? sprintf(__('%s — featured screenshot', 'sage'), $productTitle));
 
   $crumbItems = [
     ['label' => __('Home', 'sage'),     'url' => home_url('/')],
@@ -140,15 +128,17 @@
       )
     : '';
 
-  // JSON-LD: SoftwareApplication — type-aware categories per woocommerce-product.mdc.
+  // JSON-LD: SoftwareApplication for digital products; Service for shop services.
   $productSchema = [
-    '@context'            => 'https://schema.org',
-    '@type'               => 'SoftwareApplication',
-    'name'                => $productTitle,
-    'applicationCategory' => $productType === 'plugin' ? 'BusinessApplication' : 'WebApplication',
-    'operatingSystem'     => $productType === 'app' ? 'Browser' : 'WordPress',
-    'description'         => $blurb ?: $summary,
+    '@context'    => 'https://schema.org',
+    '@type'       => $isService ? 'Service' : 'SoftwareApplication',
+    'name'        => $productTitle,
+    'description' => $blurb ?: $summary,
   ];
+  if (! $isService) {
+    $productSchema['applicationCategory'] = $productType === 'plugin' ? 'BusinessApplication' : 'WebApplication';
+    $productSchema['operatingSystem'] = $productType === 'app' ? 'Browser' : 'WordPress';
+  }
   if ($heroImage !== '') { $productSchema['image'] = $heroImage; }
   if ($version !== '') { $productSchema['softwareVersion'] = $version; }
   if ($demoUrl !== '')  { $productSchema['url'] = $demoUrl; }
@@ -173,15 +163,73 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     HERO — two-column: product info (left) + purchase card (right)
+     HERO — gallery (left) + buy box (right)
 ════════════════════════════════════════════════════════════════════════════ --}}
 <header class="pf-product-hero mh-shop page-header--product" aria-label="{{ __('Product', 'sage') }}">
+  <div class="container wide">
+    @include('partials.woocommerce-crumb', ['items' => $crumbItems])
+  </div>
   <div class="container wide pf-product-hero__inner">
 
-    {{-- Left column: identity + CTAs --}}
-    <div class="pf-product-hero__main">
-      @include('partials.woocommerce-crumb', ['items' => $crumbItems])
+    {{-- Left: product gallery --}}
+    <div class="pf-product-gallery" data-product-gallery>
+      @if ($gallerySlides !== [])
+        <figure class="pf-product-gallery__stage">
+          <button
+            type="button"
+            class="pf-product-gallery__main"
+            id="pf-gallery-main"
+            data-gallery-open
+            data-gallery-index="0"
+            aria-label="{{ __('Open screenshot', 'sage') }}"
+          >
+            <img
+              src="{{ esc_url($heroImage) }}"
+              alt="{{ esc_attr($heroImageAlt) }}"
+              width="1200"
+              height="750"
+              loading="eager"
+              decoding="async"
+              data-gallery-main
+            >
+          </button>
+        </figure>
+        @if (count($gallerySlides) > 1)
+          <div class="pf-product-gallery__thumbs" role="tablist" aria-label="{{ __('Product screenshots', 'sage') }}">
+            @foreach ($gallerySlides as $i => $slide)
+              <button
+                type="button"
+                class="pf-product-gallery__thumb{{ $i === 0 ? ' is-active' : '' }}"
+                role="tab"
+                id="pf-gallery-tab-{{ $i }}"
+                aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+                aria-controls="pf-gallery-main"
+                data-gallery-index="{{ $i }}"
+                data-gallery-src="{{ esc_url($slide['src']) }}"
+                data-gallery-alt="{{ esc_attr($slide['alt']) }}"
+              >
+                <img
+                  src="{{ esc_url($slide['src']) }}"
+                  alt=""
+                  width="160"
+                  height="100"
+                  loading="{{ $i < 4 ? 'eager' : 'lazy' }}"
+                  decoding="async"
+                >
+                <span class="visually-hidden">{{ sprintf(__('Screenshot %d', 'sage'), $i + 1) }}</span>
+              </button>
+            @endforeach
+          </div>
+        @endif
+      @else
+        <div class="pf-product-gallery__stage pf-product-gallery__stage--empty">
+          {!! \App\mh_product_fallback_markup($productId, $productTitle, $productType) !!}
+        </div>
+      @endif
+    </div>
 
+    {{-- Right: scannable buy box --}}
+    <div class="pf-product-buybox pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
       <p class="eyebrow pf-product-hero__eyebrow">{{ $eyebrow }}</p>
       <h1 class="display-title is-hero pf-product-hero__title">{{ $productTitle }}</h1>
 
@@ -189,30 +237,56 @@
         <p class="pf-product-hero__tagline">{{ $tagline }}</p>
       @endif
 
-      {{-- Blurb = one-sentence pitch (155 chars max); summary goes in the body --}}
       <p class="lead pf-product-hero__lead">{{ $blurb ?: $summary }}</p>
+
+      <div class="pf-product-buybox__price">
+        @if ($isOnSale)
+          <span class="pf-sale-badge">{{ __('Sale', 'sage') }}</span>
+        @endif
+        @if ($isFree)
+          <span class="pf-product-card__price-free">{{ __('Free', 'sage') }}</span>
+        @elseif ($priceHtml !== '')
+          <span class="pf-product-card__price-amount">{!! wp_kses_post($priceHtml) !!}</span>
+        @endif
+        @if (! $isFree && $priceHtml !== '')
+          <span class="pf-product-card__price-note">
+            {{ $isService ? __('one-time · scoped deliverable', 'sage') : __('one-time · instant download', 'sage') }}
+          </span>
+        @endif
+      </div>
 
       <div class="pf-product-hero__actions">
         @if ($buyUrl !== '')
-          <a class="btn pf-product-hero__buy" href="{{ esc_url($buyUrl) }}">
-            {!! \App\mh_svg_icon($isPlugin ? 'download' : 'cart', 16) !!}
+          <a class="btn pf-product-card__cta" href="{{ esc_url($buyUrl) }}">
+            {!! \App\mh_svg_icon($isPlugin ? 'download' : ($isService ? 'briefcase' : 'cart'), 16) !!}
             {{ $primaryLabel }}
-            @if (! $isFree && $priceHtml !== '')
-              <span class="btn-price" aria-label="{{ sprintf(__('Price: %s', 'sage'), strip_tags($priceHtml)) }}">{!! wp_kses_post($priceHtml) !!}</span>
-            @endif
           </a>
         @endif
         @if ($demoUrl !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
+          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
             {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('Live demo', 'sage') }}
           </a>
         @endif
-        <a class="h-text-arrow pf-product-hero__help" href="{{ esc_url($helpUrl) }}">
-          {{ __('Questions? Get help', 'sage') }} <span aria-hidden="true">→</span>
-        </a>
       </div>
 
-      {{-- Quick-spec bar --}}
+      <ul class="pf-product-card__checklist">
+        @if ($isService)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Clear scope and handoff', 'sage') }}</li>
+        @elseif ($isFree)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Free download', 'sage') }}</li>
+        @else
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Instant digital download', 'sage') }}</li>
+        @endif
+        @if ($license !== '')
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $license }}</li>
+        @elseif (! $isService)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL licensed', 'sage') }}</li>
+        @endif
+        @foreach (array_slice($deliverables, 0, 3) as $d)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $d }}</li>
+        @endforeach
+      </ul>
+
       @if ($version !== '' || $compatible !== '' || $license !== '')
         <dl class="pf-product-specs">
           @if ($version !== '')
@@ -236,10 +310,15 @@
         </dl>
       @endif
 
-      {{-- Section jump nav --}}
+      <p class="pf-product-card__help">
+        <a href="{{ esc_url($helpUrl) }}">
+          {{ $isService ? __('Need a different scope? Get help →', 'sage') : __('Questions? Get help →', 'sage') }}
+        </a>
+      </p>
+
       @php
         $jumpLinks = [];
-        if (count($screenshots) > 1)           $jumpLinks[] = ['#screenshots', __('Screenshots', 'sage')];
+        if (count($gallerySlides) > 1)          $jumpLinks[] = ['#screenshots', __('Screenshots', 'sage')];
         if ($blocks !== [] && $isTheme)         $jumpLinks[] = ['#blocks',      __('Blocks', 'sage')];
         if ($benefits !== [] || $deliverables !== []) $jumpLinks[] = ['#included', __("What's included", 'sage')];
         $jumpLinks[] = ['#buy', __('Pricing', 'sage')];
@@ -252,66 +331,6 @@
           @endforeach
         </nav>
       @endif
-    </div>
-
-    {{-- Right column: purchase card --}}
-    <div class="pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
-      @if ($heroImage !== '')
-        <figure class="pf-product-card__image">
-          <img
-            src="{{ esc_url($heroImage) }}"
-            alt="{{ esc_attr(sprintf(__('%s — featured screenshot', 'sage'), $productTitle)) }}"
-            width="800"
-            height="500"
-            loading="eager"
-            decoding="async"
-          >
-        </figure>
-      @endif
-
-      <div class="pf-product-card__body">
-        <div class="pf-product-card__price">
-          @if ($isFree)
-            <span class="pf-product-card__price-free">{{ __('Free', 'sage') }}</span>
-          @elseif ($priceHtml !== '')
-            <span class="pf-product-card__price-amount">{!! wp_kses_post($priceHtml) !!}</span>
-            <span class="pf-product-card__price-note">{{ __('one-time · instant download', 'sage') }}</span>
-          @endif
-        </div>
-
-        @if ($buyUrl !== '')
-          <a class="btn pf-product-card__cta" href="{{ esc_url($buyUrl) }}">
-            {!! \App\mh_svg_icon($isPlugin ? 'download' : 'cart', 16) !!}
-            {{ $primaryLabel }}
-          </a>
-        @endif
-
-        @if ($demoUrl !== '')
-          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
-            {{ __('Live demo', 'sage') }}
-          </a>
-        @endif
-
-        <ul class="pf-product-card__checklist">
-          @if ($isFree)
-            <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Free download', 'sage') }}</li>
-          @else
-            <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Instant digital download', 'sage') }}</li>
-          @endif
-          @if ($license !== '')
-            <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $license }}</li>
-          @else
-            <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL licensed', 'sage') }}</li>
-          @endif
-          @foreach (array_slice($deliverables, 0, 3) as $d)
-            <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $d }}</li>
-          @endforeach
-        </ul>
-
-        <p class="pf-product-card__help">
-          <a href="{{ esc_url($helpUrl) }}">{{ __('Need it customized? Get help →', 'sage') }}</a>
-        </p>
-      </div>
     </div>
 
   </div>
@@ -338,7 +357,7 @@
      Placed before screenshots so visitors have context before seeing images.
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($summary !== '' && $summary !== $blurb)
-  <section class="pf-section pf-product-summary" aria-label="{{ __('Product overview', 'sage') }}">
+  <section class="pf-section pf-product-summary pf-prose" aria-label="{{ __('Product overview', 'sage') }}">
     <div class="container wide">
       <p class="lead">{{ $summary }}</p>
     </div>
@@ -348,7 +367,7 @@
 {{-- ═══════════════════════════════════════════════════════════════════════════
      SCREENSHOTS — full gallery
 ════════════════════════════════════════════════════════════════════════════ --}}
-@if (count($screenshots) > 1)
+@if (count($gallerySlides) > 1)
   <section id="screenshots" class="pf-section pf-section--alt pf-product-screenshots" aria-labelledby="product-screenshots-heading">
     <div class="container wide">
       <div class="pf-section-head">
@@ -358,35 +377,36 @@
             {{ __('See it in action.', 'sage') }}
           @elseif ($productType === 'app')
             {{ __('Inside the app.', 'sage') }}
+          @elseif ($isService)
+            {{ __('What this looks like.', 'sage') }}
           @else
             {{ __('Inside the theme.', 'sage') }}
           @endif
         </h2>
       </div>
       <div class="pf-screenshots-grid">
-        @foreach ($screenshots as $i => $shot)
-          @php
-            $src = (string) ($shot[0] ?? '');
-            $alt = (string) ($shot[1] ?? '');
-            if ($src !== '' && ! str_starts_with($src, 'http')) {
-              $src = get_theme_file_uri('resources/images/'.$src);
-            }
-          @endphp
-          @if ($src !== '')
-            <figure class="pf-screenshot">
+        @foreach ($gallerySlides as $i => $slide)
+          <figure class="pf-screenshot">
+            <button
+              type="button"
+              class="pf-screenshot__open"
+              data-gallery-open
+              data-gallery-index="{{ $i }}"
+              aria-label="{{ esc_attr(sprintf(__('Open screenshot %d', 'sage'), $i + 1)) }}"
+            >
               <img
-                src="{{ esc_url($src) }}"
-                alt="{{ esc_attr($alt !== '' ? $alt : sprintf(__('%s screenshot %d', 'sage'), $productTitle, $i + 1)) }}"
+                src="{{ esc_url($slide['src']) }}"
+                alt="{{ esc_attr($slide['alt']) }}"
                 width="1200"
                 height="750"
                 loading="{{ $i < 2 ? 'eager' : 'lazy' }}"
                 decoding="async"
               >
-              @if ($alt !== '')
-                <figcaption class="pf-screenshot__cap">{{ $alt }}</figcaption>
-              @endif
-            </figure>
-          @endif
+            </button>
+            @if ($slide['alt'] !== '')
+              <figcaption class="pf-screenshot__cap">{{ $slide['alt'] }}</figcaption>
+            @endif
+          </figure>
         @endforeach
       </div>
     </div>
@@ -520,9 +540,13 @@
       <div class="pf-hire-nudge__copy">
         <p class="eyebrow">{{ __('Need it customized?', 'sage') }}</p>
         <p class="pf-hire-nudge__text">
-          {{ $isPlugin
-            ? __('Buy the plugin as-is, or hire me to extend it for your stack. I scope custom builds from a short brief.', 'sage')
-            : __('Buy the pack for a self-serve install, or hire me to brand it, import your content, and hand off wp-admin to your team.', 'sage') }}
+          @if ($isService)
+            {{ __('This pack has a fixed scope. Need something adjacent or a custom quote? Write a short brief and I will price it.', 'sage') }}
+          @elseif ($isPlugin)
+            {{ __('Buy the plugin as-is, or hire me to extend it for your stack. I scope custom builds from a short brief.', 'sage') }}
+          @else
+            {{ __('Buy the pack for a self-serve install, or hire me to brand it, import your content, and hand off wp-admin to your team.', 'sage') }}
+          @endif
         </p>
       </div>
       <a class="btn btn-outline pf-hire-nudge__cta" href="{{ esc_url($helpUrl) }}">
@@ -592,7 +616,9 @@
             : sprintf(__('Get %s.', 'sage'), $productTitle) }}
         </h2>
         <p class="lead">
-          @if ($isFree)
+          @if ($isService)
+            {{ __('Checkout books this pack as scoped. Need a custom version? Get help and I will quote it.', 'sage') }}
+          @elseif ($isFree)
             {{ $isPlugin
               ? __('Free download. Activate under Plugins → Installed Plugins, or copy the zip from GitHub Releases.', 'sage')
               : __('Free download. Activate under Appearance → Themes, or copy the zip from GitHub Releases.', 'sage') }}
@@ -767,21 +793,28 @@
             $relThumb = has_post_thumbnail($relId)
               ? wp_get_attachment_image_url((int) get_post_thumbnail_id($relId), 'medium')
               : '';
-            $relType  = (string) ($relEntry['product_type'] ?? 'theme');
+            $relType  = \App\mh_resolve_product_type((int) $relId);
+            $relChrome = \App\mh_product_type_chrome($relType);
+            if ($relThumb === '') {
+              $relSlides = \App\mh_product_gallery_slides((int) $relId, $relEntry, $relWcp);
+              $relThumb = (string) ($relSlides[0]['src'] ?? '');
+            }
           @endphp
           <article class="pf-related-card">
-            @if ($relThumb !== '')
-              <a class="pf-related-card__img-wrap" href="{{ esc_url($relUrl) }}" tabindex="-1" aria-hidden="true">
+            <a class="pf-related-card__img-wrap{{ $relThumb === '' ? ' is-empty' : '' }}" href="{{ esc_url($relUrl) }}" tabindex="-1" aria-hidden="true">
+              @if ($relThumb !== '')
                 <img
                   src="{{ esc_url($relThumb) }}"
                   alt="{{ esc_attr(sprintf(__('%s preview', 'sage'), $relTitle)) }}"
                   width="480" height="300"
                   loading="lazy" decoding="async"
                 >
-              </a>
-            @endif
+              @else
+                {!! \App\mh_product_fallback_markup((int) $relId, $relTitle, $relType) !!}
+              @endif
+            </a>
             <div class="pf-related-card__body">
-              <p class="pf-related-card__type eyebrow">{{ ucfirst($relType) }}</p>
+              <p class="pf-related-card__type eyebrow">{{ $relChrome['short'] }}</p>
               <h3 class="pf-related-card__title">
                 <a href="{{ esc_url($relUrl) }}">{{ $relTitle }}</a>
               </h3>
@@ -810,9 +843,11 @@
   'title'         => $isFree
     ? sprintf(__('Install %s today — it\'s free.', 'sage'), $productTitle)
     : sprintf(__('Ready for %s?', 'sage'), $productTitle),
-  'text'          => $isPlugin
-    ? __('Download, activate, done. Or hire me to extend it for your stack.', 'sage')
-    : __('Buy the pack for a self-serve install, or hire me to brand it, import your inventory, and hand off wp-admin to your team.', 'sage'),
+  'text'          => $isService
+    ? __('Book the pack as scoped, or write and I will quote a custom version.', 'sage')
+    : ($isPlugin
+      ? __('Download, activate, done. Or hire me to extend it for your stack.', 'sage')
+      : __('Buy the pack for a self-serve install, or hire me to brand it, import your inventory, and hand off wp-admin to your team.', 'sage')),
   'label'         => $primaryLabel,
   'href'          => $buyUrl ?: $helpUrl,
   'secondary'     => __('Browse all products', 'sage'),
@@ -827,7 +862,7 @@
     class="pf-sticky-bar"
     id="pf-sticky-bar"
     aria-hidden="true"
-    data-trigger=".pf-product-hero__card"
+    data-trigger=".pf-product-buybox"
   >
     <div class="container wide pf-sticky-bar__inner">
       <div class="pf-sticky-bar__info">
@@ -853,6 +888,30 @@
       </div>
     </div>
   </div>
+@endif
+
+@if ($gallerySlides !== [])
+  <script type="application/json" id="pf-gallery-data">{!! json_encode(
+    $gallerySlides,
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
+  ) !!}</script>
+  <dialog class="pf-lightbox" data-product-lightbox aria-labelledby="pf-lightbox-caption">
+    <div class="pf-lightbox__frame">
+      <button type="button" class="pf-lightbox__close" data-lightbox-close aria-label="{{ __('Close screenshot', 'sage') }}">
+        <span aria-hidden="true">×</span>
+      </button>
+      <button type="button" class="pf-lightbox__nav pf-lightbox__nav--prev" data-lightbox-prev aria-label="{{ __('Previous screenshot', 'sage') }}">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <figure class="pf-lightbox__figure">
+        <img src="" alt="" width="1600" height="1000" data-lightbox-image>
+        <figcaption class="pf-lightbox__caption" id="pf-lightbox-caption" data-lightbox-caption></figcaption>
+      </figure>
+      <button type="button" class="pf-lightbox__nav pf-lightbox__nav--next" data-lightbox-next aria-label="{{ __('Next screenshot', 'sage') }}">
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+  </dialog>
 @endif
 
 @php do_action('get_footer', 'shop'); @endphp

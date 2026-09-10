@@ -27,6 +27,7 @@
   $forSaleCount = 0;
   $themeCount   = 0;
   $pluginCount  = 0;
+  $serviceCount = 0;
   if (function_exists('wc_get_products')) {
     $all = wc_get_products(['limit' => -1, 'status' => 'publish', 'return' => 'ids']);
     $productCount = count($all);
@@ -35,10 +36,10 @@
       if ($wcp && $wcp->is_purchasable() && $wcp->is_in_stock()) {
         $forSaleCount++;
       }
-      $entry = \App\mh_product_catalog_data((int) $pid);
-      $pType = (string) ($entry['product_type'] ?? 'theme');
+      $pType = \App\mh_resolve_product_type((int) $pid);
       if ($pType === 'theme')  $themeCount++;
       if ($pType === 'plugin') $pluginCount++;
+      if ($pType === 'service') $serviceCount++;
     }
   }
 
@@ -177,9 +178,10 @@
 
   @if (woocommerce_product_loop())
     @php
-      $filterAll     = $productCount;
-      $filterThemes  = $themeCount;
-      $filterPlugins = $pluginCount;
+      $filterAll      = $productCount;
+      $filterThemes   = $themeCount;
+      $filterPlugins  = $pluginCount;
+      $filterServices = $serviceCount;
 
       // Suppress default WC result-count + ordering dropdowns; we render our own toolbar.
       remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
@@ -213,6 +215,14 @@
             <button class="catalog-filter-nav__link" data-filter-type="plugin">
               {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
               <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
+            </button>
+          </li>
+          @endif
+          @if ($filterServices > 0)
+          <li>
+            <button class="catalog-filter-nav__link" data-filter-type="service">
+              {!! \App\mh_svg_icon('briefcase', 11) !!} {{ __('Services', 'sage') }}
+              <span class="catalog-filter-nav__count" aria-label="{{ $filterServices }} {{ __('services', 'sage') }}">{{ $filterServices }}</span>
             </button>
           </li>
           @endif

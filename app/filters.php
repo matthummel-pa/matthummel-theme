@@ -199,16 +199,7 @@ function mh_seo_document_title(): string
         if ($title === '') {
             return '';
         }
-        $productTypeLabel = __('WordPress Theme', 'sage');
-        $wcp = function_exists('wc_get_product') ? wc_get_product($post_id) : null;
-        if ($wcp) {
-            $metaType = strtolower((string) $wcp->get_meta('_mh_project_product_type'));
-            if ($metaType === 'plugin') {
-                $productTypeLabel = __('WordPress Plugin', 'sage');
-            } elseif ($metaType === 'app') {
-                $productTypeLabel = __('Web App', 'sage');
-            }
-        }
+        $productTypeLabel = mh_product_type_chrome(mh_resolve_product_type($post_id))['seo'];
         $built = $title.' | '.$productTypeLabel.' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
@@ -357,22 +348,17 @@ function mh_seo_meta_description(): string
             $desc .= '.';
         }
         if ($desc === '') {
-            $productTypeLabel = 'digital product';
-            $wcp = function_exists('wc_get_product') ? wc_get_product($post_id) : null;
-            if ($wcp) {
-                $metaType = strtolower((string) $wcp->get_meta('_mh_project_product_type'));
-                if ($metaType === 'plugin') {
-                    $productTypeLabel = 'WordPress plugin';
-                } elseif ($metaType === 'app') {
-                    $productTypeLabel = 'web app';
-                } else {
-                    $productTypeLabel = 'WordPress theme';
-                }
-            }
-            $desc = sprintf(
-                __('Buy this %s or say hello for a custom adaptation. Instant download, GPL-licensed, includes demo.', 'sage'),
-                $productTypeLabel
-            );
+            $type = mh_resolve_product_type($post_id);
+            $productTypeLabel = strtolower(mh_product_type_chrome($type)['eyebrow']);
+            $desc = $type === 'service'
+                ? sprintf(
+                    __('Book this %s or say hello for a custom scope. Clear deliverables, one-time price.', 'sage'),
+                    $productTypeLabel
+                )
+                : sprintf(
+                    __('Buy this %s or say hello for a custom adaptation. Instant download, GPL-licensed, includes demo.', 'sage'),
+                    $productTypeLabel
+                );
         }
 
         return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;

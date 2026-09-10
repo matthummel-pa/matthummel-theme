@@ -271,8 +271,7 @@ add_filter('post_class', function (array $classes, array $class, int $postId): a
         return $classes;
     }
 
-    $entry = mh_product_catalog_data($postId);
-    $type = (string) ($entry['product_type'] ?? 'theme');
+    $type = mh_resolve_product_type($postId);
     $classes[] = 'mh-type-'.sanitize_html_class($type);
 
     return $classes;
