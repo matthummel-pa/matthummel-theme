@@ -15032,6 +15032,7 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
 }
 
 /* ── Sticky product buy bar ──────────────────────────────────────────────── */
+/* JS appends #pf-sticky-bar to body so overflow-x: clip on html does not trap fixed. */
 .pf-sticky-bar {
   position: fixed;
   bottom: 0;

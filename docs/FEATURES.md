@@ -5,7 +5,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.5.11 shop a11y)
 
 - Sale `del` must stay opaque (`--color-text-muted`). Type badges are solid light chips so they read on navy `.mh-product-fallback` plates.
-- Sticky buy bar uses `inert` + `aria-hidden` while off-screen. Gallery thumbs are a roving tablist; Enter selects, the stage button opens the dialog.
+- Sticky buy bar uses `inert` + `aria-hidden` while off-screen. JS moves `#pf-sticky-bar` onto `document.body` so `position: fixed` is not trapped by `html`/`body` `overflow-x: clip`. Gallery thumbs are a roving tablist; Enter selects, the stage button opens the dialog.
 - Dual-tone `.btn:focus-visible` (white ring + navy halo) so primary CTAs are visible on `#0d2e57`. Lightbox controls use `#93c5fd`.
 - Do not drop `_mh_project_*` metrics, `#buy`, upsells/related, or the Rank Math Services skip.
 

@@ -4,7 +4,7 @@
 
 - Sale prices keep a readable strikethrough next to the current price. Type badges (Theme, Plugin, Service) stay clear on photos and on empty-image placeholders.
 - Product gallery thumbs, lightbox, shop filters, and the sticky buy bar keep a visible focus ring. The buy bar stays out of the tab order until it is on screen. Escape still closes the screenshot lightbox.
-- Products without screenshots (TOCflow, service packs) show a typed placeholder plate instead of a blank frame. Services cards and the sticky bar hold spacing on phones.
+- Products without screenshots (TOCflow, service packs) show a typed placeholder plate instead of a blank frame. Services cards keep a readable grid on phones, tablets, and wide screens. The sticky buy bar stays at the bottom of the screen after you scroll past add to cart.
 
 ## 3.5.10 — Services page lists Acreline add-ons
 
