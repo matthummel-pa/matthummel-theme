@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.5.10 — Services page lists Acreline add-ons
+
+- `/services/` leads with live Acreline shop products (install, setup, listings, content, site care) plus theme and demo links.
+- Custom WordPress and agency overflow stay a shorter secondary section. One H1. Mobile-first card grid.
+- Rank Math analysis HTML no longer overwrites Services `post_content`, so editor and REST body edits stick.
+
+## 3.5.9 — Product page shop polish
+
+- Single product hero is gallery + buy box: title, price, short description, and add-to-cart sit in one scannable column on desktop and stack cleanly on phones.
+- Screenshot thumbs, keyboard controls, and a lightbox. Mixed landscape and portrait shots stay in a fixed frame so the layout does not jump.
+- Products without images (TOCflow, Services packs) show a typed placeholder instead of an empty hole.
+- Related products and shop cards share the same image ratio, sale-price treatment, and service badge.
+- Sticky buy bar stays available after the hero scrolls away, including for reduced-motion visitors. Phone CTA is full-width.
+
 ## 3.5.8 — Unstick mobile header
 
 - `.site-header` is no longer sticky at the hamburger breakpoint (`max-width: 900px`). It scrolls away with the page on phones and tablets.

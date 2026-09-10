@@ -71,6 +71,28 @@ function mh_shop_product_payload(int $product_id): ?array
 }
 
 /**
+ * Published WooCommerce product ID for a permalink slug.
+ */
+function mh_product_id_by_slug(string $slug): int
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return 0;
+    }
+
+    $found = get_posts([
+        'name' => $slug,
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    return $found !== [] ? (int) $found[0] : 0;
+}
+
+/**
  * Project ID linked to a WooCommerce product (0 when unset).
  */
 function mh_product_project_id(int $product_id): int
@@ -370,6 +392,8 @@ function mh_product_entry(int $product_id): array
         return $entry;
     }
 
+    $entry['product_type'] = mh_resolve_product_type($product_id);
+
     $str = fn (string $key): string => trim((string) get_post_meta($product_id, '_mh_project_'.$key, true));
 
     // Scalar string fields.
@@ -564,10 +588,7 @@ function mh_wc_product_to_work_card(int $product_id): array
         $demo = trim((string) ($entry['demo'] ?? ''));
     }
 
-    $productType = trim((string) get_post_meta($product_id, '_mh_project_product_type', true));
-    if ($productType === '' || ! in_array($productType, ['theme', 'plugin', 'concept'], true)) {
-        $productType = (string) ($entry['product_type'] ?? 'theme');
-    }
+    $productType = mh_resolve_product_type($product_id);
 
     // Image: featured image first, then catalog screenshot.
     $image = '';
@@ -586,9 +607,7 @@ function mh_wc_product_to_work_card(int $product_id): array
 
     // Buy / price labels.
     $isFree = (float) $wc->get_price() <= 0.0;
-    $buyLabel = $isFree
-        ? ($productType === 'plugin' ? __('Download plugin', 'sage') : __('Get theme', 'sage'))
-        : ($productType === 'plugin' ? __('Buy plugin', 'sage') : __('Buy theme', 'sage'));
+    $buyLabel = mh_product_buy_copy($product_id, $isFree);
     $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
 
     $buyUrl = mh_product_add_to_cart_url($product_id);
@@ -760,7 +779,13 @@ function mh_wc_product_admin_meta_box(\WP_Post $post): void
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
-    foreach (['theme' => __('Theme', 'sage'), 'plugin' => __('Plugin', 'sage'), 'concept' => __('Concept (hire copy)', 'sage')] as $val => $lbl) {
+    foreach ([
+        'theme' => __('Theme', 'sage'),
+        'plugin' => __('Plugin', 'sage'),
+        'app' => __('App', 'sage'),
+        'service' => __('Service', 'sage'),
+        'concept' => __('Concept (hire copy)', 'sage'),
+    ] as $val => $lbl) {
         printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($val), selected($productType, $val, false), esc_html($lbl));
     }
     echo '</select></td></tr>';
@@ -841,7 +866,7 @@ function mh_save_wc_product_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
 
     $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'theme'));
-    if (! in_array($productType, ['theme', 'plugin', 'concept'], true)) {
+    if (! in_array($productType, ['theme', 'plugin', 'app', 'service', 'concept'], true)) {
         $productType = 'theme';
     }
     update_post_meta($post_id, '_mh_project_product_type', $productType);
@@ -935,14 +960,221 @@ function mh_project_price_label(int $project_id): string
     return html_entity_decode(wp_strip_all_tags((string) $payload['price_html']), ENT_QUOTES, 'UTF-8');
 }
 
+/** Allowed public product types for shop / product UI. */
+function mh_product_type_keys(): array
+{
+    return ['theme', 'plugin', 'app', 'service'];
+}
+
+/**
+ * Resolve a product's public type from meta, catalog, or Services category.
+ */
+function mh_resolve_product_type(int $product_id): string
+{
+    if ($product_id <= 0) {
+        return 'theme';
+    }
+
+    $allowed = mh_product_type_keys();
+
+    $meta = sanitize_key((string) get_post_meta($product_id, '_mh_project_product_type', true));
+    if (in_array($meta, $allowed, true)) {
+        return $meta;
+    }
+
+    if (mh_shop_ready() && function_exists('wc_get_product')) {
+        $product = wc_get_product($product_id);
+        if ($product instanceof \WC_Product) {
+            $wcType = sanitize_key((string) $product->get_meta('_mh_product_type'));
+            if (in_array($wcType, $allowed, true)) {
+                return $wcType;
+            }
+        }
+    }
+
+    $entry = mh_product_catalog_data($product_id);
+    $fromEntry = sanitize_key((string) ($entry['product_type'] ?? ''));
+    if (in_array($fromEntry, $allowed, true)) {
+        return $fromEntry;
+    }
+
+    if (function_exists('has_term') && taxonomy_exists('product_cat') && has_term(['services', 'service'], 'product_cat', $product_id)) {
+        return 'service';
+    }
+
+    return 'theme';
+}
+
+/**
+ * Chrome copy and icon for a product type.
+ *
+ * @return array{eyebrow: string, buy: string, buy_free: string, icon: string, seo: string, short: string}
+ */
+function mh_product_type_chrome(string $type): array
+{
+    return match ($type) {
+        'plugin' => [
+            'eyebrow' => __('WordPress plugin', 'sage'),
+            'buy' => __('Buy plugin', 'sage'),
+            'buy_free' => __('Download plugin — free', 'sage'),
+            'icon' => 'plugins',
+            'seo' => __('WordPress Plugin', 'sage'),
+            'short' => __('Plugin', 'sage'),
+        ],
+        'app' => [
+            'eyebrow' => __('Web app', 'sage'),
+            'buy' => __('Buy app', 'sage'),
+            'buy_free' => __('Get app — free', 'sage'),
+            'icon' => 'globe',
+            'seo' => __('Web App', 'sage'),
+            'short' => __('App', 'sage'),
+        ],
+        'service' => [
+            'eyebrow' => __('Service', 'sage'),
+            'buy' => __('Buy service', 'sage'),
+            'buy_free' => __('Get started — free', 'sage'),
+            'icon' => 'briefcase',
+            'seo' => __('Service', 'sage'),
+            'short' => __('Service', 'sage'),
+        ],
+        default => [
+            'eyebrow' => __('WordPress theme', 'sage'),
+            'buy' => __('Buy theme', 'sage'),
+            'buy_free' => __('Get theme — free', 'sage'),
+            'icon' => 'wordpress',
+            'seo' => __('WordPress Theme', 'sage'),
+            'short' => __('Theme', 'sage'),
+        ],
+    };
+}
+
+/** Buy / download label for a Woo product, type-aware (including services). */
+function mh_product_buy_copy(int $product_id, bool $is_free = false): string
+{
+    $chrome = mh_product_type_chrome(mh_resolve_product_type($product_id));
+
+    return $is_free ? $chrome['buy_free'] : $chrome['buy'];
+}
+
+/** Turn a catalog path or absolute URL into a public image URL. */
+function mh_product_media_url(string $src): string
+{
+    $src = trim($src);
+    if ($src === '') {
+        return '';
+    }
+    if (preg_match('#^(https?:)?//#', $src) === 1) {
+        return $src;
+    }
+
+    return get_theme_file_uri('resources/images/'.$src);
+}
+
+/**
+ * Unique gallery slides: featured image, Woo gallery, then catalog screenshots.
+ *
+ * @param  array<string, mixed>  $entry
+ * @return list<array{src: string, alt: string}>
+ */
+function mh_product_gallery_slides(int $product_id, array $entry = [], $product = null): array
+{
+    $slides = [];
+    $seen = [];
+    $title = $product_id > 0
+        ? html_entity_decode((string) get_the_title($product_id), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+        : '';
+
+    $add = static function (string $src, string $alt) use (&$slides, &$seen, $title): void {
+        $src = trim($src);
+        if ($src === '') {
+            return;
+        }
+        $key = md5($src);
+        if (isset($seen[$key])) {
+            return;
+        }
+        $seen[$key] = true;
+        if ($alt === '') {
+            $alt = $title !== '' ? sprintf(__('%s screenshot', 'sage'), $title) : __('Product screenshot', 'sage');
+        }
+        $slides[] = ['src' => $src, 'alt' => $alt];
+    };
+
+    if ($product_id > 0 && has_post_thumbnail($product_id)) {
+        $thumbId = (int) get_post_thumbnail_id($product_id);
+        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
+        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
+        $add($src, $alt);
+    }
+
+    if ($product instanceof \WC_Product) {
+        foreach ($product->get_gallery_image_ids() as $attachmentId) {
+            $attachmentId = (int) $attachmentId;
+            if ($attachmentId <= 0) {
+                continue;
+            }
+            $src = (string) wp_get_attachment_image_url($attachmentId, 'large');
+            $alt = trim((string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true));
+            $add($src, $alt);
+        }
+    }
+
+    $screenshots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
+    foreach ($screenshots as $shot) {
+        $src = mh_product_media_url((string) ($shot[0] ?? ''));
+        $alt = trim((string) ($shot[1] ?? ''));
+        $add($src, $alt);
+    }
+
+    if ($slides === []) {
+        $catalogImage = mh_product_media_url((string) ($entry['image'] ?? ''));
+        $add($catalogImage, $title !== '' ? sprintf(__('%s — featured screenshot', 'sage'), $title) : '');
+    }
+
+    return $slides;
+}
+
+/**
+ * Gradient / icon placeholder when a product has no image (services, TOCflow).
+ */
+function mh_product_fallback_markup(int $product_id, string $name = '', string $type = ''): string
+{
+    if ($type === '') {
+        $type = mh_resolve_product_type($product_id);
+    }
+    if ($name === '' && $product_id > 0) {
+        $name = html_entity_decode((string) get_the_title($product_id), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    $chrome = mh_product_type_chrome($type);
+    $label = $name !== '' ? $name : $chrome['short'];
+
+    return sprintf(
+        '<span class="mh-product-fallback mh-product-fallback--%1$s" aria-hidden="true"><span class="mh-product-fallback__icon">%2$s</span><span class="mh-product-fallback__label">%3$s</span></span>',
+        esc_attr($type),
+        mh_svg_icon($chrome['icon'], 28),
+        esc_html($label)
+    );
+}
+
 /** Primary buy label for a project (theme vs plugin). */
 function mh_project_buy_label(int $project_id): string
 {
-    if ($project_id > 0 && mh_project_product_type($project_id) === 'plugin') {
-        return __('Buy plugin', 'sage');
+    if ($project_id <= 0) {
+        return __('Buy theme', 'sage');
     }
 
-    return __('Buy theme', 'sage');
+    $type = mh_project_product_type($project_id);
+    if ($type === 'concept') {
+        $linked = mh_project_product_id($project_id);
+        if ($linked > 0) {
+            return mh_product_buy_copy($linked, false);
+        }
+    }
+
+    $chrome = mh_product_type_chrome($type === 'concept' ? 'theme' : $type);
+
+    return $chrome['buy'];
 }
 
 /**
@@ -1261,16 +1493,22 @@ function mh_seed_project_products(): void
 function mh_woocommerce_buy_label($product = null): string
 {
     $productId = 0;
+    $wcProduct = null;
     if (is_object($product) && method_exists($product, 'get_id')) {
         $productId = (int) $product->get_id();
+        $wcProduct = $product instanceof \WC_Product ? $product : null;
     } elseif (function_exists('wc_get_product')) {
-        $current = wc_get_product(get_the_ID());
-        $productId = $current ? (int) $current->get_id() : 0;
+        $wcProduct = wc_get_product(get_the_ID());
+        $productId = $wcProduct ? (int) $wcProduct->get_id() : 0;
     }
 
-    $projectId = $productId > 0 ? (int) get_post_meta($productId, '_mh_product_project_id', true) : 0;
-    if ($projectId > 0) {
-        return mh_project_buy_label($projectId);
+    $isFree = false;
+    if ($wcProduct instanceof \WC_Product) {
+        $isFree = (float) $wcProduct->get_price() <= 0.0;
+    }
+
+    if ($productId > 0) {
+        return mh_product_buy_copy($productId, $isFree);
     }
 
     return __('Buy theme', 'sage');
@@ -1334,16 +1572,13 @@ function mh_woocommerce_loop_type_badge(): void
         return;
     }
 
-    $entry = mh_product_catalog_data((int) $product->get_id());
-    $productType = (string) ($entry['product_type'] ?? 'theme');
+    $productId = (int) $product->get_id();
+    $entry = mh_product_catalog_data($productId);
+    $productType = mh_resolve_product_type($productId);
     $eyebrow = trim((string) ($entry['eyebrow'] ?? ''));
 
     if ($eyebrow === '') {
-        $eyebrow = match ($productType) {
-            'plugin' => __('WordPress plugin', 'sage'),
-            'app' => __('Web app', 'sage'),
-            default => __('WordPress theme', 'sage'),
-        };
+        $eyebrow = mh_product_type_chrome($productType)['eyebrow'];
     }
 
     // Only the short label for the badge (before the ·).
@@ -1704,16 +1939,17 @@ add_filter('woocommerce_product_get_image', function (string $html, \WC_Product 
         return $html;
     }
 
-    $entry = mh_product_catalog_data((int) $product->get_id());
+    $productId = (int) $product->get_id();
+    $entry = mh_product_catalog_data($productId);
     $imgPath = trim((string) ($entry['image'] ?? ''));
-    if ($imgPath === '') {
-        return $html;
+    if ($imgPath !== '') {
+        $src = mh_product_media_url($imgPath);
+        $name = esc_attr(html_entity_decode((string) $product->get_name(), ENT_QUOTES, 'UTF-8'));
+
+        return '<img src="'.esc_url($src).'" alt="'.$name.'" width="800" height="534" class="mh-catalog-img wp-post-image" loading="lazy" decoding="async">';
     }
 
-    $src = get_theme_file_uri('resources/images/'.$imgPath);
-    $name = esc_attr(html_entity_decode((string) $product->get_name(), ENT_QUOTES, 'UTF-8'));
-
-    return '<img src="'.esc_url($src).'" alt="'.$name.'" width="800" height="534" class="mh-catalog-img wp-post-image" loading="lazy" decoding="async">';
+    return mh_product_fallback_markup($productId, (string) $product->get_name());
 }, 10, 2);
 
 /**
@@ -1721,9 +1957,14 @@ add_filter('woocommerce_product_get_image', function (string $html, \WC_Product 
  * client-side catalog filter can show/hide items without a page navigation.
  */
 add_filter('woocommerce_post_class', function (array $classes, \WC_Product $product): array {
-    $entry = mh_product_catalog_data((int) $product->get_id());
-    $productType = trim((string) ($entry['product_type'] ?? 'theme')) ?: 'theme';
+    $productType = mh_resolve_product_type((int) $product->get_id());
     $classes[] = 'mh-type-'.$productType;
+    if ((int) $product->get_image_id() <= 0) {
+        $entry = mh_product_catalog_data((int) $product->get_id());
+        if (trim((string) ($entry['image'] ?? '')) === '') {
+            $classes[] = 'mh-product--no-image';
+        }
+    }
 
     return $classes;
 }, 10, 2);

@@ -2,6 +2,18 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.10 Services add-ons)
+
+- Services is product-led: `mh_acreline_addon_products()` + `template-services.blade.php`. Do not put the old SEO lede or 4-pillar cards back in the hero.
+- `mh_page_skips_seo_analysis_body()` keeps Rank Math from rewriting Services `post_content`. One-shot `mh_services_acreline_page_v1` clears stuffed TOC HTML and exact prior field defaults only.
+- Custom floors stay in `svc_price*` fields. Add-on prices come from Woo when the slug exists.
+
+## Editor’s notes (3.5.9 product shop UI)
+
+- Product hero is gallery left / buy box right. Do not put the H1 back in a separate left column or hide the Woo add-to-cart widget in `#buy`.
+- Empty product images use `.mh-product-fallback`, not the Woo placeholder PNG. Service type is first-class (`mh_resolve_product_type()`).
+- Gallery JS is `resources/js/product-gallery.js`. Lightbox is a native `<dialog>`. Honor `prefers-reduced-motion` on the sticky bar (show it; skip the slide).
+
 ## Editor’s notes (3.5.7 dark glossy blue)
 
 - Accent is `#0d2e57` (`#1a5cad` halfway to black). Navy matches. Shine/highlight is `#4f8fd4` on buttons only. Baby blues stay atmosphere.
@@ -52,7 +64,7 @@ What the 3.x Sage theme does, and where it lives.
 | Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ; **Theme / Plugin / Demo** badges; **View details** primary, **Buy theme/plugin** when listed; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
-| Services | Audience cards, 3-package pricing strip (Page content fields), numbered offers, process, FAQ | `template-services.blade.php`, `mh_services_pricing()` |
+| Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
 | Code | Open-source GitHub showcase (profile, followers + stargazers thank-you, earned badges, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Featured latest post, hero search, newest/oldest sort, Grid/List, topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` as Gutenberg block markup; single-post hero shows featured image beside title/meta; **Tool Blocks** (`matthummel/tool-grid` + `tool-card` with icon/mark/labels) plus `ship-pipe` / `ship-step` | `index.blade.php`, `archive.blade.php`, `partials/content-single.blade.php`, `resources/js/blocks/`, `app/blocks.php`, `resources/css/journal-blocks.css`, `resources/css/editor.css`, `docs/posts/` |
@@ -68,7 +80,7 @@ What the 3.x Sage theme does, and where it lives.
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with heroes, crumbs, empty states; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `portfolio.css`, `generoi/sage-woocommerce` |
+| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery + buy-box heroes, crumbs, empty-image fallbacks, related cards; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `portfolio.css`, `generoi/sage-woocommerce` |
 
 ## Editor’s notes (3.1.52 AI comparison UX)
 
