@@ -15573,8 +15573,10 @@ html.mh-dark .catalog-toolbar__right select.orderby {
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
-.mh-install-notes__title {
+.woocommerce-wrap--checkout .mh-install-notes__title {
   margin: 0 0 .4rem;
+  padding-bottom: 0;
+  border-bottom: 0;
   font: 800 1.2rem/1.25 var(--font-display);
   color: var(--color-text);
 }
@@ -15606,8 +15608,8 @@ html.mh-dark .catalog-toolbar__right select.orderby {
 }
 .mh-install-notes__chip[aria-pressed="true"] {
   border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 12%, var(--white));
-  color: var(--color-navy);
+  background: var(--color-accent);
+  color: #fff;
 }
 .mh-install-notes__chip:focus-visible {
   outline: 2px solid var(--color-focus);
