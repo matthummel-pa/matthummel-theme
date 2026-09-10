@@ -13,6 +13,7 @@
     <div id="app">
       <a class="skip-link" href="#main">{{ __('Skip to main content', 'sage') }}</a>
       @include('sections.header')
+      @include('partials.studio-cart')
       <main id="main" class="main" tabindex="-1">
         @yield('content')
       </main>
