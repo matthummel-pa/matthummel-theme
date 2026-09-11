@@ -222,6 +222,13 @@ add_action('wp', function (): void {
         } elseif (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
             $mod = ' woocommerce-wrap--shop';
         }
+        // Shop Blade already sits in `.container.wide`. A second container here
+        // shrinks the product grid on tablet and phone.
+        if ($mod === ' woocommerce-wrap--shop') {
+            echo '<div class="woocommerce-wrap'.esc_attr($mod).'">';
+
+            return;
+        }
         echo '<div class="container wide page-block woocommerce-wrap'.esc_attr($mod).'">';
     }, 10);
 
@@ -263,21 +270,8 @@ add_action('woocommerce_before_cart', function (): void {
     echo '</div>';
 }, 5);
 
-// ── Product loop: stamp mh-type-* class onto each product <li> ───────────────
-// Used by the JS filter in shop-filter.js. The product loop <li> classes come
-// from post_class(), so we filter that hook for product post types.
-add_filter('post_class', function (array $classes, array $class, int $postId): array {
-    if (get_post_type($postId) !== 'product') {
-        return $classes;
-    }
-
-    $type = mh_resolve_product_type($postId);
-    $classes[] = 'mh-type-'.sanitize_html_class($type);
-
-    return $classes;
-}, 10, 3);
-
 // ── Shop archive: remove star ratings (not relevant for digital products) ─────
+// mh-type-* loop classes live on woocommerce_post_class in shop.php.
 remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
 
 // ── My account: add download shortcut link in account nav ────────────────────
@@ -305,3 +299,54 @@ add_filter('woocommerce_checkout_order_review_heading', fn (): string => __('Ord
 
 add_action('init', __NAMESPACE__.'\\mh_seed_woocommerce_pages', 42);
 add_action('woocommerce_installed', __NAMESPACE__.'\\mh_seed_woocommerce_pages');
+
+/**
+ * Drop WooCommerce's float-column CSS. Theme grid in portfolio.css owns
+ * 3/2/1 columns; `woocommerce-smallscreen` otherwise forces 48% widths
+ * below 768px and leaves skinny cards on tablet and phone.
+ *
+ * @param  array<string, array<string, mixed>>  $styles
+ * @return array<string, array<string, mixed>>
+ */
+add_filter('woocommerce_enqueue_styles', function (array $styles): array {
+    unset($styles['woocommerce-layout'], $styles['woocommerce-smallscreen']);
+
+    return $styles;
+});
+
+/** Skip gallery scripts off the single product page. Skip WC block CSS everywhere (classic templates). */
+add_action('wp_enqueue_scripts', function (): void {
+    wp_dequeue_style('wc-blocks-style');
+    wp_dequeue_style('wc-blocks-vendors-style');
+    wp_dequeue_style('wc-blocks-checkout-style');
+    wp_dequeue_style('wc-blocks-cart-style');
+
+    // Classic Blade templates — drop storefront block/order-attribution JS.
+    wp_dequeue_script('wc-order-attribution');
+    wp_dequeue_script('sourcebuster-js');
+    if (function_exists('WC') && WC()->cart && WC()->cart->is_empty()) {
+        wp_dequeue_script('wc-cart-fragments');
+    }
+
+    if (! function_exists('is_product') || is_product()) {
+        return;
+    }
+
+    wp_dequeue_script('zoom');
+    wp_dequeue_script('flexslider');
+    wp_dequeue_script('photoswipe');
+    wp_dequeue_script('photoswipe-ui-default');
+    wp_dequeue_script('wc-single-product');
+    wp_dequeue_style('photoswipe');
+    wp_dequeue_style('photoswipe-default-skin');
+}, 99);
+
+/** Emoji detection CSS/JS is unused on this portfolio theme. */
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+remove_action('admin_print_scripts', 'print_emoji_detection_script');
+remove_action('admin_print_styles', 'print_emoji_styles');
+remove_filter('the_content_feed', 'wp_staticize_emoji');
+remove_filter('comment_text_rss', 'wp_staticize_emoji');
+remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+add_filter('emoji_svg_url', '__return_false');

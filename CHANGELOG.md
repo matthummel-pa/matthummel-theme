@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.5.12 — Shop listings, CSS cleanup, page speed
+
+- Shop product grid is 3 / 2 / 1 columns on desktop / tablet / phone. WooCommerce `layout` + `smallscreen` float CSS is dequeued so 48% widths no longer squeeze cards below 768px.
+- Shop Blade no longer nests a second `.container` around the loop.
+- Catalog toolbar stacks on small screens; filter chips are no longer double-boxed.
+- Shop archive stats and CollectionPage JSON-LD share one product query (visible catalog only, including services). First two loop images load eager.
+- Unused duplicate `post_class` type stamp and leftover 2-col `.h-work-grid` override removed. Gallery scripts stay off non-product pages; WooCommerce block CSS is dequeued (classic templates).
+- Front-end drops emoji detection CSS/JS, `wc-order-attribution` / `sourcebuster-js`, and `wc-cart-fragments` when the cart is empty (header cart is server-rendered).
+- One-shot `mh_hide_sku_less_product_stubs_v1` hides SKU-less stub products from the catalog (does not delete).
+- Fix `mh_github_html_doc_url()` regex delimiter that spammed WP-CLI warnings.
+
 ## 3.5.11 — Shop contrast and keyboard polish
 
 - Sale prices keep a readable strikethrough next to the current price. Type badges (Theme, Plugin, Service) stay clear on photos and on empty-image placeholders.
