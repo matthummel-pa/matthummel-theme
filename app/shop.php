@@ -15,6 +15,69 @@ function mh_shop_ready(): bool
 }
 
 /**
+ * One-pass shop archive stats + CollectionPage list items.
+ *
+ * @return array{count: int, for_sale: int, theme: int, plugin: int, app: int, service: int, list_items: list<array<string, mixed>>}
+ */
+function mh_shop_listing_snapshot(): array
+{
+    static $cached = null;
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $cached = [
+        'count' => 0,
+        'for_sale' => 0,
+        'theme' => 0,
+        'plugin' => 0,
+        'app' => 0,
+        'service' => 0,
+        'list_items' => [],
+    ];
+
+    if (! function_exists('wc_get_products')) {
+        return $cached;
+    }
+
+    $ids = wc_get_products([
+        'limit' => -1,
+        'status' => 'publish',
+        'return' => 'ids',
+        'visibility' => 'visible',
+    ]);
+    $cached['count'] = count($ids);
+
+    foreach ($ids as $i => $pid) {
+        $pid = (int) $pid;
+        $product = wc_get_product($pid);
+        if ($product && $product->is_purchasable() && $product->is_in_stock()) {
+            $cached['for_sale']++;
+        }
+
+        $type = mh_resolve_product_type($pid);
+        if ($type === 'plugin') {
+            $cached['plugin']++;
+        } elseif ($type === 'app') {
+            $cached['app']++;
+        } elseif ($type === 'service') {
+            $cached['service']++;
+        } else {
+            $cached['theme']++;
+        }
+
+        $cached['list_items'][] = [
+            '@type' => 'ListItem',
+            'position' => $i + 1,
+            'url' => (string) get_permalink($pid),
+            'name' => html_entity_decode(get_the_title($pid), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        ];
+    }
+
+    return $cached;
+}
+
+/**
  * Absolute add-to-cart URL for a product (skips single product page).
  */
 function mh_product_add_to_cart_url(int $product_id): string
@@ -1148,10 +1211,12 @@ function mh_product_fallback_markup(int $product_id, string $name = '', string $
 
     $chrome = mh_product_type_chrome($type);
     $label = $name !== '' ? $name : $chrome['short'];
+    $modifier = $type !== '' ? $type : 'theme';
 
     return sprintf(
-        '<span class="mh-product-fallback mh-product-fallback--%1$s" aria-hidden="true"><span class="mh-product-fallback__icon">%2$s</span><span class="mh-product-fallback__label">%3$s</span></span>',
-        esc_attr($type),
+        '<span class="mh-product-fallback mh-product-fallback--%1$s" aria-hidden="true"><span class="mh-product-fallback__kicker">%2$s</span><span class="mh-product-fallback__icon">%3$s</span><span class="mh-product-fallback__label">%4$s</span></span>',
+        esc_attr($modifier),
+        esc_html($chrome['short']),
         mh_svg_icon($chrome['icon'], 28),
         esc_html($label)
     );
@@ -1852,6 +1917,53 @@ function mh_resync_catalog_only_products_v1(): void
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_resync_catalog_only_products_v1', 36);
 
 /**
+ * Hide publish stub products that have no SKU (acreline-2 style duplicates)
+ * from the shop catalog. Does not trash or delete posts.
+ *
+ * Runs on `init` (not `woocommerce_init`) so product meta is queryable.
+ *
+ * @since 3.5.9
+ */
+function mh_hide_sku_less_product_stubs_v1(): void
+{
+    if (! mh_shop_ready() || wp_installing()) {
+        return;
+    }
+
+    if (get_option('mh_hide_sku_less_product_stubs_v1')) {
+        return;
+    }
+
+    $ids = get_posts([
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    foreach ($ids as $id) {
+        $id = (int) $id;
+        $product = wc_get_product($id);
+        if (! $product instanceof \WC_Product) {
+            continue;
+        }
+        if ((string) $product->get_sku() !== '') {
+            continue;
+        }
+        if ($product->get_catalog_visibility() === 'hidden') {
+            continue;
+        }
+        $product->set_catalog_visibility('hidden');
+        $product->save();
+    }
+
+    update_option('mh_hide_sku_less_product_stubs_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\\mh_hide_sku_less_product_stubs_v1', 50);
+
+/**
  * Supply Rank Math with a meta description from the product catalog blurb.
  *
  * Rank Math reads the post excerpt for products; the WooCommerce short_description
@@ -1926,6 +2038,28 @@ add_action('woocommerce_after_shop_loop_item_title', function (): void {
     }
 }, 6);
 
+/** Eager-load the first two shop-loop thumbnails for LCP; lazy-load the rest. */
+add_filter('wp_get_attachment_image_attributes', function (array $attr): array {
+    if (! function_exists('is_shop') || ! is_shop() || ! in_the_loop()) {
+        return $attr;
+    }
+    if (get_post_type() !== 'product') {
+        return $attr;
+    }
+
+    static $n = 0;
+    $n++;
+    $attr['decoding'] = 'async';
+    if ($n <= 2) {
+        $attr['fetchpriority'] = 'high';
+        $attr['loading'] = 'eager';
+    } else {
+        $attr['loading'] = 'lazy';
+    }
+
+    return $attr;
+});
+
 /**
  * Inject the catalog featured image when the WC product has no thumbnail set.
  *
@@ -1957,10 +2091,11 @@ add_filter('woocommerce_product_get_image', function (string $html, \WC_Product 
  * client-side catalog filter can show/hide items without a page navigation.
  */
 add_filter('woocommerce_post_class', function (array $classes, \WC_Product $product): array {
-    $productType = mh_resolve_product_type((int) $product->get_id());
-    $classes[] = 'mh-type-'.$productType;
+    $productId = (int) $product->get_id();
+    $productType = mh_resolve_product_type($productId);
+    $classes[] = 'mh-type-'.sanitize_html_class($productType);
     if ((int) $product->get_image_id() <= 0) {
-        $entry = mh_product_catalog_data((int) $product->get_id());
+        $entry = mh_product_catalog_data($productId);
         if (trim((string) ($entry['image'] ?? '')) === '') {
             $classes[] = 'mh-product--no-image';
         }

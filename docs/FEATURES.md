@@ -2,12 +2,19 @@
 
 What the 3.x Sage theme does, and where it lives.
 
-## Editor’s notes (3.5.11 checkout ease)
+## Editor’s notes (3.5.13 checkout ease)
 
 - Cart/checkout trust lines switch when the cart is services-only (`mh_cart_is_services_only()`). Do not put GPL/zip copy on a Site Care cart.
 - Email field stays first. No coupons, countdowns, or fake urgency.
 - Empty-cart “Easy start” cards come from live slugs via `mh_checkout_start_here_products()`.
 - Install wants: Woo `order_comments` plus `_mh_install_wants` / `_mh_install_note` / `_mh_install_site`. Chip keys are allowlisted in `mh_install_want_catalog()`. Cart suggestions from `mh_cart_suggested_want_keys()`. Optional, never required. Do not add a second funnel.
+
+## Editor’s notes (3.5.11 shop a11y)
+
+- Sale `del` must stay opaque (`--color-text-muted`). Type badges are solid light chips so they read on navy `.mh-product-fallback` plates.
+- Sticky buy bar uses `inert` + `aria-hidden` while off-screen. JS moves `#pf-sticky-bar` onto `document.body` so `position: fixed` is not trapped by `html`/`body` `overflow-x: clip`. Gallery thumbs are a roving tablist; Enter selects, the stage button opens the dialog.
+- Dual-tone `.btn:focus-visible` (white ring + navy halo) so primary CTAs are visible on `#0d2e57`. Lightbox controls use `#93c5fd`.
+- Do not drop `_mh_project_*` metrics, `#buy`, upsells/related, or the Rank Math Services skip.
 
 ## Editor’s notes (3.5.10 Services add-ons)
 
@@ -87,7 +94,7 @@ What the 3.x Sage theme does, and where it lives.
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery + buy-box heroes, crumbs, empty-image fallbacks, related cards; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `portfolio.css`, `generoi/sage-woocommerce` |
+| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery + buy-box heroes, crumbs, empty-image fallbacks, related cards; Cart / Checkout / My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready; shop grid 3/2/1 without WC float CSS | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `portfolio.css`, `generoi/sage-woocommerce` |
 
 ## Editor’s notes (3.1.52 AI comparison UX)
 

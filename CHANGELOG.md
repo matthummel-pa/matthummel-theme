@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.5.11 — Easier checkout, still professional
+## 3.5.13 — Easier checkout, still professional
 
 - Cart and checkout copy tells you what happens next: guest checkout, receipt email, no mailing list. Service carts drop the zip/GPL lines.
 - Email is first on checkout. Place-order and add-to-cart messages point at one next step.
@@ -8,6 +8,23 @@
 - Product buy box shows a three-step “what happens next” so purchase feels obvious, not salesy.
 - Checkout collects optional install wants: tap chips plus a notes field. Saved on the order, thank-you page, emails, and wp-admin so I can customize after purchase.
 - Kickoff brief writes itself as chips and a site URL change. Cart lines pre-mark a few wants. Thank-you is a copyable studio ticket.
+
+## 3.5.12 — Shop listings, CSS cleanup, page speed
+
+- Shop product grid is 3 / 2 / 1 columns on desktop / tablet / phone. WooCommerce `layout` + `smallscreen` float CSS is dequeued so 48% widths no longer squeeze cards below 768px.
+- Shop Blade no longer nests a second `.container` around the loop.
+- Catalog toolbar stacks on small screens; filter chips are no longer double-boxed.
+- Shop archive stats and CollectionPage JSON-LD share one product query (visible catalog only, including services). First two loop images load eager.
+- Unused duplicate `post_class` type stamp and leftover 2-col `.h-work-grid` override removed. Gallery scripts stay off non-product pages; WooCommerce block CSS is dequeued (classic templates).
+- Front-end drops emoji detection CSS/JS, `wc-order-attribution` / `sourcebuster-js`, and `wc-cart-fragments` when the cart is empty (header cart is server-rendered).
+- One-shot `mh_hide_sku_less_product_stubs_v1` hides SKU-less stub products from the catalog (does not delete).
+- Fix `mh_github_html_doc_url()` regex delimiter that spammed WP-CLI warnings.
+
+## 3.5.11 — Shop contrast and keyboard polish
+
+- Sale prices keep a readable strikethrough next to the current price. Type badges (Theme, Plugin, Service) stay clear on photos and on empty-image placeholders.
+- Product gallery thumbs, lightbox, shop filters, and the sticky buy bar keep a visible focus ring. The buy bar stays out of the tab order until it is on screen. Escape still closes the screenshot lightbox.
+- Products without screenshots (TOCflow, service packs) show a typed placeholder plate instead of a blank frame. Services cards keep a readable grid on phones, tablets, and wide screens. The sticky buy bar stays at the bottom of the screen after you scroll past add to cart.
 
 ## 3.5.10 — Services page lists Acreline add-ons
 
