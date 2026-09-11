@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.13 checkout ease)
+
+- Cart/checkout trust lines switch when the cart is services-only (`mh_cart_is_services_only()`). Do not put GPL/zip copy on a Site Care cart.
+- Email field stays first. No coupons, countdowns, or fake urgency.
+- Empty-cart “Easy start” cards come from live slugs via `mh_checkout_start_here_products()`.
+- Install wants: Woo `order_comments` plus `_mh_install_wants` / `_mh_install_note` / `_mh_install_site`. Chip keys are allowlisted in `mh_install_want_catalog()`. Cart suggestions from `mh_cart_suggested_want_keys()`. Optional, never required. Do not add a second funnel.
+
 ## Editor’s notes (3.5.11 shop a11y)
 
 - Sale `del` must stay opaque (`--color-text-muted`). Type badges are solid light chips so they read on navy `.mh-product-fallback` plates.

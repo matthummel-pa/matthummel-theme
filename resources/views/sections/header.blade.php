@@ -56,16 +56,18 @@
 
       @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
         @php $cartCount = \App\mh_cart_count(); @endphp
-        <a
+        <button
+          type="button"
           class="header-cart"
-          href="{{ esc_url(wc_get_cart_url()) }}"
-          aria-label="{{ $cartCount > 0 ? sprintf(__('Cart, %d items', 'sage'), $cartCount) : __('Cart', 'sage') }}"
+          data-mh-slip-open
+          aria-controls="mh-slip"
+          aria-label="{{ $cartCount > 0 ? sprintf(__('Open cart, %d items', 'sage'), $cartCount) : __('Open cart', 'sage') }}"
         >
           {!! \App\mh_svg_icon('cart', 18) !!}
           @if ($cartCount > 0)
             <span class="header-cart__count" aria-hidden="true">{{ $cartCount }}</span>
           @endif
-        </a>
+        </button>
       @endif
 
       {{-- Desktop CTA --}}
@@ -149,13 +151,13 @@
   </div>
 
   @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
-    <a class="btn btn-outline mh-popout-cart" href="{{ esc_url(wc_get_cart_url()) }}">
+    <button type="button" class="btn btn-outline mh-popout-cart" data-mh-slip-open aria-controls="mh-slip">
       {!! \App\mh_svg_icon('cart', 15) !!}
       {{ __('Cart', 'sage') }}
       @if (\App\mh_cart_count() > 0)
         ({{ \App\mh_cart_count() }})
       @endif
-    </a>
+    </button>
   @endif
 
   <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/contact/')) }}">

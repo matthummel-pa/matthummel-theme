@@ -277,6 +277,22 @@
         @endif
       </div>
 
+      <ol class="pf-buy-next" aria-label="{{ __('What happens next', 'sage') }}">
+        @if ($isService)
+          <li>{{ __('Add this pack to your cart', 'sage') }}</li>
+          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
+          <li>{{ __('I email next steps within one business day', 'sage') }}</li>
+        @elseif ($isFree)
+          <li>{{ __('Download the zip', 'sage') }}</li>
+          <li>{{ __('Activate it in wp-admin', 'sage') }}</li>
+          <li>{{ __('Write if you want it installed', 'sage') }}</li>
+        @else
+          <li>{{ __('Add to cart — one click', 'sage') }}</li>
+          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
+          <li>{{ __('Open the zip from the receipt email', 'sage') }}</li>
+        @endif
+      </ol>
+
       <ul class="pf-product-card__checklist">
         @if ($isService)
           <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Clear scope and handoff', 'sage') }}</li>
@@ -625,7 +641,7 @@
         </h2>
         <p class="lead">
           @if ($isService)
-            {{ __('Checkout books this pack as scoped. Need a custom version? Get help and I will quote it.', 'sage') }}
+            {{ __('Checkout books this pack. I write back with next steps. Need a different scope? Get help and I will quote it.', 'sage') }}
           @elseif ($isFree)
             {{ $isPlugin
               ? __('Free download. Activate under Plugins → Installed Plugins, or copy the zip from GitHub Releases.', 'sage')
@@ -892,7 +908,7 @@
         @endif
         @if ($buyUrl !== '')
           <a class="btn btn--sm pf-sticky-bar__buy" href="{{ esc_url($buyUrl) }}">
-            {!! \App\mh_svg_icon($isPlugin ? 'download' : 'cart', 14) !!}
+            {!! \App\mh_svg_icon($isPlugin ? 'download' : ($isService ? 'briefcase' : 'cart'), 14) !!}
             {{ $primaryLabel }}
           </a>
         @endif
