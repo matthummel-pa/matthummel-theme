@@ -1211,10 +1211,12 @@ function mh_product_fallback_markup(int $product_id, string $name = '', string $
 
     $chrome = mh_product_type_chrome($type);
     $label = $name !== '' ? $name : $chrome['short'];
+    $modifier = $type !== '' ? $type : 'theme';
 
     return sprintf(
-        '<span class="mh-product-fallback mh-product-fallback--%1$s" aria-hidden="true"><span class="mh-product-fallback__icon">%2$s</span><span class="mh-product-fallback__label">%3$s</span></span>',
-        esc_attr($type),
+        '<span class="mh-product-fallback mh-product-fallback--%1$s" aria-hidden="true"><span class="mh-product-fallback__kicker">%2$s</span><span class="mh-product-fallback__icon">%3$s</span><span class="mh-product-fallback__label">%4$s</span></span>',
+        esc_attr($modifier),
+        esc_html($chrome['short']),
         mh_svg_icon($chrome['icon'], 28),
         esc_html($label)
     );
