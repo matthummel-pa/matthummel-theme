@@ -1,13 +1,15 @@
 # Matt Hummel — WordPress theme
 
-Sage 11 theme for **[matthummel.com](https://matthummel.com)** — portfolio, services, and journal for a WordPress / full-stack developer in Gettysburg, PA.
+Sage 11 theme for **[hummelwp.com](https://hummelwp.com)** — portfolio, services, and journal for a WordPress / full-stack developer in Gettysburg, PA.
+
+The primary site is [hummelwp.com](https://hummelwp.com). [matthummel.com](https://matthummel.com) may still exist as a legacy or secondary host. Product demos stay on their own subdomains (for example `acreline.matthummel.com`).
 
 No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not hardcoded in Blade. Front end is Blade + Tailwind + a few small JS modules. PHP does the heavy lifting; Vite ships the assets.
 
 | | |
 | --- | --- |
-| **Live site** | [matthummel.com](https://matthummel.com) |
-| **Version** | `3.1.73` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
+| **Live site** | [hummelwp.com](https://hummelwp.com) |
+| **Version** | `3.1.73` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://hummelwp.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |
@@ -16,7 +18,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 
 ## Activity feed
 
-Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [matthummel.com/changelog](https://matthummel.com/changelog/).
+Recent ship log — useful if you’re cloning, reviewing a PR, or picking up where CI left off. Full history: [`CHANGELOG.md`](CHANGELOG.md) · live list: [hummelwp.com/changelog](https://hummelwp.com/changelog/).
 
 ```text
 ● 2026-09-06  3.1.78   Acreline product page: setup wizard copy (1.3.0)
@@ -83,7 +85,7 @@ Day-to-day links a full-stack WordPress / Sage developer actually opens.
 | Resource | Use it when |
 | --- | --- |
 | [CHANGELOG.md](CHANGELOG.md) | You need exact version notes before updating live |
-| [matthummel.com/changelog](https://matthummel.com/changelog/) | Public-facing “what changed” |
+| [hummelwp.com/changelog](https://hummelwp.com/changelog/) | Public-facing “what changed” |
 | [`theme-latest` release](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) | Grab the built zip CI publishes |
 | [GitHub Actions](https://github.com/matthummel-pa/matthummel-theme/actions) | CI failed, or you want the last green build |
 
@@ -115,10 +117,10 @@ Day-to-day links a full-stack WordPress / Sage developer actually opens.
 
 | URL | Why open it |
 | --- | --- |
-| [matthummel.com/code](https://matthummel.com/code/) | Live GitHub panel this theme powers |
-| [matthummel.com/uses](https://matthummel.com/uses/) | Stack and tools list |
-| [matthummel.com/changelog](https://matthummel.com/changelog/) | Public release notes |
-| [matthummel.com/accessibility](https://matthummel.com/accessibility/) | WCAG / 508 statement |
+| [hummelwp.com/code](https://hummelwp.com/code/) | Live GitHub panel this theme powers |
+| [hummelwp.com/uses](https://hummelwp.com/uses/) | Stack and tools list |
+| [hummelwp.com/changelog](https://hummelwp.com/changelog/) | Public release notes |
+| [hummelwp.com/accessibility](https://hummelwp.com/accessibility/) | WCAG / 508 statement |
 
 ---
 

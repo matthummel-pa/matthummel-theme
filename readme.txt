@@ -8,11 +8,11 @@ License: MIT
 License URI: https://opensource.org/licenses/MIT
 Tags: blog, custom-menu, featured-images, threaded-comments, translation-ready
 
-Sage 11 theme for matthummel.com — portfolio, journal, and services. Not a WordPress.org or ThemeForest listing.
+Sage 11 theme for hummelwp.com — portfolio, journal, and services. Not a WordPress.org or ThemeForest listing.
 
 == Description ==
 
-This is the live theme for [matthummel.com](https://matthummel.com). It is a Sage 11 (Blade, Acorn, Vite, Tailwind v4) site theme: named page templates, Projects CPT, contact and project-brief forms, GitHub / DEV.to helpers, and optional WooCommerce wrappers.
+This is the live theme for [hummelwp.com](https://hummelwp.com). It is a Sage 11 (Blade, Acorn, Vite, Tailwind v4) site theme: named page templates, Projects CPT, contact and project-brief forms, GitHub / DEV.to helpers, and optional WooCommerce wrappers.
 
 **Do not upload this zip to WordPress.org or ThemeForest.** Those directories reject site-specific themes with plugin-territory features (forms, custom post types, remote APIs, auto-seeded pages). The product theme for those channels is [Acreline](https://github.com/matthummel-pa/wp-acreline). See `docs/MARKETPLACE.md`.
 
@@ -24,7 +24,7 @@ This theme is installed from the `theme-latest` GitHub Release (Appearance → U
 
 = Can I use this on my own site? =
 
-The code is MIT. It is built for one site. Names, copy fields, and GitHub wiring assume matthummel.com.
+The code is MIT. It is built for one site. Names, copy fields, and GitHub wiring assume hummelwp.com.
 
 = Where is the ThemeForest / WordPress.org theme? =
 

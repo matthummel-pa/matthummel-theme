@@ -116,7 +116,11 @@ jobs:
           FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
           FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir }}
-          LIVE_ORIGIN: https://matthummel.com
+          # Primary live origin is hummelwp.com (Hostinger). Theme folder stays matthummel.
+          # TODO (Matt): SITEGROUND_* / SERVER_* Actions secrets may still target
+          # the old SiteGround host. Update those secrets for Hostinger SSH/FTP
+          # if needed — do not hardcode Hostinger credentials in this workflow.
+          LIVE_ORIGIN: https://hummelwp.com
         run: python3 .github/scripts/preserve-vite-assets.py
 
       - name: Pack WordPress theme zip
@@ -172,7 +176,7 @@ jobs:
           FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
           FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          LIVE_URL: https://matthummel.com/
+          LIVE_URL: https://hummelwp.com/
         run: python3 .github/scripts/siteground-ftp-clear-acorn-cache.py
 
       - name: Install fatal probe MU-plugin and hit live site
@@ -182,7 +186,7 @@ jobs:
           FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
           FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          LIVE_URL: https://matthummel.com/
+          LIVE_URL: https://hummelwp.com/
         run: python3 .github/scripts/siteground-ftp-install-fatal-probe.py
 
       - name: Diagnose live fatal over FTP
@@ -195,6 +199,8 @@ jobs:
           DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
         run: python3 .github/scripts/siteground-ftp-diagnose-live.py
 
+      # TODO (Matt): if optional SSH rsync should hit Hostinger instead of
+      # SiteGround, update SERVER_* / SITEGROUND_* secrets — do not hardcode hosts.
       - name: Set up SSH Key for Remote Server Access
         continue-on-error: true
         uses: shimataro/ssh-key-action@v2
