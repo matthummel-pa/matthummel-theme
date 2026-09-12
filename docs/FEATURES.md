@@ -2,6 +2,15 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.14 shop a11y + tighter products)
+
+- Do not put the full-page `#screenshots` grid back. Hero gallery + lightbox is the screenshot UI.
+- Keep `#buy`, related/upsells, FAQ schema, metrics, and `_mh_project_*`. Version/license stay in the hero specs, not a second `dl`.
+- Shop filters are toggle buttons (`aria-pressed`). Visible count is `#catalog-filter-count`; `#catalog-filter-live` is the polite live region. Do not write English-only “N products shown” over the visible count.
+- Product/shop `.pf-section` padding is local. Do not shrink global `--section-gap`.
+- `#buy` is price + add-to-cart. Do not re-hook Woo tabs, gallery, excerpt, or related on `is_product()`. Product wrap has no second `.page-block`.
+- Catalog sort id is `mh-catalog-orderby` (`woocommerce/loop/orderby.blade.php`). Jump targets need the same `scroll-margin-top` as `#faq`.
+
 ## Editor’s notes (3.5.13 checkout ease)
 
 - Cart/checkout trust lines switch when the cart is services-only (`mh_cart_is_services_only()`). Do not put GPL/zip copy on a Site Care cart.

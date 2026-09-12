@@ -29,7 +29,7 @@ Open `resources/data/product-catalog.json`. Each product is an object keyed by `
     "eyebrow": "WordPress theme",
     "tagline": "One sentence that hooks a buyer.",
     "blurb": "Two or three sentences. Appears in Rank Math meta description.",
-    "summary": "Longer overview paragraph shown before screenshots on the product page.",
+    "summary": "Longer overview paragraph shown under the hero when it differs from the blurb.",
     "challenge": "What problem this solves.",
     "approach": "How I built or architected it.",
     "result": "What you walk away with.",

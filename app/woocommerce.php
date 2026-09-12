@@ -209,6 +209,19 @@ add_action('wp', function (): void {
     // Hero already prints the product name as the page H1.
     remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 5);
 
+    if (function_exists('is_product') && is_product()) {
+        // Blade already owns gallery, copy, tabs, related. #buy keeps price + cart.
+        remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_sale_flash', 10);
+        remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20);
+        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10);
+        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
+        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_sharing', 50);
+        remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
+        remove_action('woocommerce_after_single_product_summary', 'woocommerce_upsell_display', 15);
+        remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
+    }
+
     add_action('woocommerce_before_main_content', function (): void {
         $mod = '';
         if (function_exists('is_cart') && is_cart()) {
@@ -222,9 +235,9 @@ add_action('wp', function (): void {
         } elseif (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
             $mod = ' woocommerce-wrap--shop';
         }
-        // Shop Blade already sits in `.container.wide`. A second container here
-        // shrinks the product grid on tablet and phone.
-        if ($mod === ' woocommerce-wrap--shop') {
+        // Shop and product Blade already sit in `.container.wide`. A second
+        // `.page-block` here adds a full --section-gap and shrinks the grid.
+        if (in_array($mod, [' woocommerce-wrap--shop', ' woocommerce-wrap--product'], true)) {
             echo '<div class="woocommerce-wrap'.esc_attr($mod).'">';
 
             return;

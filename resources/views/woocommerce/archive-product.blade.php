@@ -115,7 +115,7 @@
         ['value' => number_format_i18n($productCount), 'label' => __('Listed products', 'sage')],
         ['value' => number_format_i18n($forSaleCount), 'label' => __('Ready to buy', 'sage')],
         ['value' => 'GPL',       'label' => __('Open license', 'sage')],
-        ['value' => 'Instant',   'label' => __('Download &amp; install', 'sage')],
+        ['value' => 'Instant',   'label' => __('Download & install', 'sage')],
       ],
       'link' => [
         'label' => __('Browse GitHub portfolio', 'sage'),
@@ -171,34 +171,34 @@
       <nav class="catalog-filter-nav" aria-label="{{ __('Filter by product type', 'sage') }}">
         <ul class="catalog-filter-nav__links" role="list">
           <li>
-            <button type="button" class="catalog-filter-nav__link" data-filter-type="all" aria-current="true">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="all" aria-pressed="true">
               {{ __('All', 'sage') }}
               @if ($filterAll > 0)
-                <span class="catalog-filter-nav__count" aria-label="{{ $filterAll }} {{ __('total', 'sage') }}">{{ $filterAll }}</span>
+                <span class="catalog-filter-nav__count">{{ $filterAll }}</span>
               @endif
             </button>
           </li>
           @if ($filterThemes > 0)
           <li>
-            <button type="button" class="catalog-filter-nav__link" data-filter-type="theme">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="theme" aria-pressed="false">
               {!! \App\mh_svg_icon('home', 11) !!} {{ __('Themes', 'sage') }}
-              <span class="catalog-filter-nav__count" aria-label="{{ $filterThemes }} {{ __('themes', 'sage') }}">{{ $filterThemes }}</span>
+              <span class="catalog-filter-nav__count">{{ $filterThemes }}</span>
             </button>
           </li>
           @endif
           @if ($filterPlugins > 0)
           <li>
-            <button type="button" class="catalog-filter-nav__link" data-filter-type="plugin">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="plugin" aria-pressed="false">
               {!! \App\mh_svg_icon('code', 11) !!} {{ __('Plugins', 'sage') }}
-              <span class="catalog-filter-nav__count" aria-label="{{ $filterPlugins }} {{ __('plugins', 'sage') }}">{{ $filterPlugins }}</span>
+              <span class="catalog-filter-nav__count">{{ $filterPlugins }}</span>
             </button>
           </li>
           @endif
           @if ($filterServices > 0)
           <li>
-            <button type="button" class="catalog-filter-nav__link" data-filter-type="service">
+            <button type="button" class="catalog-filter-nav__link" data-filter-type="service" aria-pressed="false">
               {!! \App\mh_svg_icon('briefcase', 11) !!} {{ __('Services', 'sage') }}
-              <span class="catalog-filter-nav__count" aria-label="{{ $filterServices }} {{ __('services', 'sage') }}">{{ $filterServices }}</span>
+              <span class="catalog-filter-nav__count">{{ $filterServices }}</span>
             </button>
           </li>
           @endif
@@ -209,14 +209,19 @@
       <div class="catalog-toolbar__right">
         <span
           class="catalog-toolbar__count"
-          id="catalog-filter-live"
-          role="status"
-          aria-live="polite"
+          id="catalog-filter-count"
+          data-label-one="{{ esc_attr(__('%d product', 'sage')) }}"
+          data-label-many="{{ esc_attr(__('%d products', 'sage')) }}"
         >{{ sprintf(_n('%d product', '%d products', $filterAll, 'sage'), $filterAll) }}</span>
-        @php
-          // Render WooCommerce's built-in ordering select in our toolbar slot.
-          do_action('woocommerce_catalog_ordering');
-        @endphp
+        <span id="catalog-filter-live" class="visually-hidden" role="status" aria-live="polite"></span>
+        <div class="catalog-toolbar__sort">
+          <label class="visually-hidden" for="mh-catalog-orderby">{{ __('Sort products', 'sage') }}</label>
+          @php
+            if (function_exists('woocommerce_catalog_ordering')) {
+                woocommerce_catalog_ordering();
+            }
+          @endphp
+        </div>
       </div>
 
     </div>
@@ -297,7 +302,7 @@
         </div>
       @endforeach
     </div>
-    <p class="work-guide__prose" style="margin-top:1.5rem;">
+    <p class="work-guide__prose shop-stack-follow">
       {{ __('The same stack powers this site. Source is on GitHub if you want to evaluate the code before you buy.', 'sage') }}
       <a class="h-text-arrow" href="{{ home_url('/portfolio/') }}">{{ __('Browse the portfolio', 'sage') }} <span aria-hidden="true">→</span></a>
     </p>
@@ -371,7 +376,7 @@
       </div>
       <div class="faq-list">
         @foreach ($workFaqs as $i => $faq)
-          <details {{ $i === 0 ? 'open' : '' }}>
+          <details>
             <summary>{{ $faq['title'] }}</summary>
             <p>{{ $faq['text'] }}</p>
           </details>

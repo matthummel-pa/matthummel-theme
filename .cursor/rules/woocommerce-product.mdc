@@ -75,18 +75,18 @@ Required SEO defaults:
 
 Do not reorder these sections without a strong reason:
 
-1. Hero — product title, price, buy/demo CTAs, trust signals
-2. Summary — full overview paragraph (context before screenshots)
-3. Screenshots gallery
-4. Features / benefits (What you get)
-5. Story — challenge + approach (Built for this niche / The approach)
-6. Deliverables (What's included)
-7. Hire nudge strip (Need it customized?)
-8. Gutenberg blocks (themes only)
-9. Technical / Stack & code
-10. Documentation links
-11. FAQ (accordion, drives FAQPage schema)
-12. Purchase CTA band
+1. Hero — gallery left, buy box right (title, price, buy/demo, trust). Screenshots open in the lightbox; do not add a second full-page grid.
+2. Summary — full overview paragraph (tight band when it differs from the blurb)
+3. Features / benefits (What you get)
+4. Story — one H2, challenge + approach as H3s, result as a closing line
+5. Deliverables (What's included). Version/license stay in the hero specs only.
+6. Hire nudge strip (Need it customized?)
+7. Gutenberg blocks (themes only)
+8. Audience — tight one-liner when present
+9. Purchase (`#buy`) — Woo add-to-cart widget. Do not repeat the deliverables list.
+10. Technical / stack + docs/GitHub in one section
+11. FAQ (accordion, drives FAQPage schema; items start closed)
+12. Related / upsells, then the CTA band and sticky buy bar
 
 ---
 
