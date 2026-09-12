@@ -50,9 +50,12 @@
       ? __('Pay once. I email next steps. No surprise retainers.', 'sage')
       : __('Pay once. The zip is in the receipt email. Guest checkout is fine.', 'sage');
   } elseif ($isAccount) {
-    $lead = $isLoggedIn
-      ? __('Orders, downloads, and billing details in one place.', 'sage')
-      : __('Log in to view your orders and download your themes.', 'sage');
+    $isDownloads = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('downloads');
+    $lead = ! $isLoggedIn
+      ? __('Log in to view your orders and download your themes.', 'sage')
+      : ($isDownloads
+        ? __('Theme and plugin zips you bought. When I ship a new version, I email you and the file here updates.', 'sage')
+        : __('Orders, downloads, and billing details in one place. I email this account when a zip you bought gets a new version.', 'sage'));
   }
 
   // Step indicator for checkout progress.

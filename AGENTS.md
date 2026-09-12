@@ -17,10 +17,12 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Changelog: `CHANGELOG.md`
 
 Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
-On the live site, Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).
+On the live site (**hummelwp.com**), Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).
 FTP remains an optional, best-effort step in `.github/workflows/deploy.yml`.
 The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
 WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
+
+Theme zip products (Acreline, WalkRidge): see `docs/SHOP-DOWNLOADS.md`.
 
 ## Cursor Cloud specific instructions
 

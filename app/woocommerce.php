@@ -572,6 +572,10 @@ add_action('woocommerce_email_after_order_table', function ($order, $sent_to_adm
         return;
     }
     mh_render_order_install_notes_email($order, (bool) $sent_to_admin);
+    if ($sent_to_admin || ! mh_order_has_catalog_download($order)) {
+        return;
+    }
+    echo '<p>'.esc_html__('When I ship a new theme or plugin zip, I email this same address. The latest file stays on My account → Downloads.', 'sage').'</p>';
 }, 12, 2);
 add_action('woocommerce_admin_order_data_after_billing_address', function ($order): void {
     if (! $order instanceof \WC_Order) {
