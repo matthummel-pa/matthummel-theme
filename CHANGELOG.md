@@ -7,6 +7,8 @@
 - Shop filters use `aria-pressed` and a separate live region so the visible count stays translated. Sort has a hidden label. Related card images inside `aria-hidden` wraps use empty `alt`.
 - Jump-nav, gallery, and new-tab links keep a visible focus ring or screen-reader hint. Lightbox returns focus on close.
 - Shop and product sections use a tighter rhythm than marketing pages. Global `--section-gap` is unchanged.
+- `#buy` keeps price and add-to-cart only. Woo no longer reprints gallery, description tabs, or related inside the purchase card.
+- Jump links (`#included`, `#blocks`, `#buy`, `#shop-products`) clear the sticky header. Sort select has a real `id`. Related cards drop the hidden image link.
 
 ## 3.5.13 — Easier checkout, still professional
 

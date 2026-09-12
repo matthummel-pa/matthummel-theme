@@ -61,7 +61,7 @@ export function initProductGallery() {
     const caption = lightbox.querySelector('[data-lightbox-caption]')
     if (img) {
       img.src = slide.src
-      img.alt = slide.alt
+      img.alt = caption && slide.alt !== '' ? '' : slide.alt
     }
     if (caption) {
       caption.textContent = slide.alt

@@ -601,7 +601,7 @@
 @if ($architecture !== '' || $handoff !== '' || $tech !== [] || $docs !== [] || $githubUrl !== '' || $support !== '')
   <section class="pf-section pf-section--alt pf-product-technical" aria-labelledby="product-tech-heading">
     <div class="container wide">
-      <p class="eyebrow">{{ __('Stack &amp; code', 'sage') }}</p>
+      <p class="eyebrow">{{ __('Stack & code', 'sage') }}</p>
       <h2 id="product-tech-heading" class="display-title is-section">{{ __('How it is built.', 'sage') }}</h2>
 
       @if ($tech !== [])
@@ -729,7 +729,7 @@
             }
           @endphp
           <article class="pf-related-card">
-            <a class="pf-related-card__img-wrap{{ $relThumb === '' ? ' is-empty' : '' }}" href="{{ esc_url($relUrl) }}" tabindex="-1" aria-hidden="true">
+            <div class="pf-related-card__img-wrap{{ $relThumb === '' ? ' is-empty' : '' }}" aria-hidden="true">
               @if ($relThumb !== '')
                 <img
                   src="{{ esc_url($relThumb) }}"
@@ -740,7 +740,7 @@
               @else
                 {!! \App\mh_product_fallback_markup((int) $relId, $relTitle, $relType) !!}
               @endif
-            </a>
+            </div>
             <div class="pf-related-card__body">
               <p class="pf-related-card__type eyebrow">{{ $relChrome['short'] }}</p>
               <h3 class="pf-related-card__title">
@@ -753,7 +753,10 @@
                 @if ($relPrice !== '')
                   <span class="pf-related-card__price">{!! wp_kses_post($relPrice) !!}</span>
                 @endif
-                <a class="btn btn--sm" href="{{ esc_url($relUrl) }}">{{ __('View', 'sage') }}</a>
+                <a class="btn btn--sm" href="{{ esc_url($relUrl) }}">
+                  {{ __('View', 'sage') }}
+                  <span class="visually-hidden"> {{ $relTitle }}</span>
+                </a>
               </div>
             </div>
           </article>

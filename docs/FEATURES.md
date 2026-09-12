@@ -8,6 +8,8 @@ What the 3.x Sage theme does, and where it lives.
 - Keep `#buy`, related/upsells, FAQ schema, metrics, and `_mh_project_*`. Version/license stay in the hero specs, not a second `dl`.
 - Shop filters are toggle buttons (`aria-pressed`). Visible count is `#catalog-filter-count`; `#catalog-filter-live` is the polite live region. Do not write English-only “N products shown” over the visible count.
 - Product/shop `.pf-section` padding is local. Do not shrink global `--section-gap`.
+- `#buy` is price + add-to-cart. Do not re-hook Woo tabs, gallery, excerpt, or related on `is_product()`. Product wrap has no second `.page-block`.
+- Catalog sort id is `mh-catalog-orderby` (`woocommerce/loop/orderby.blade.php`). Jump targets need the same `scroll-margin-top` as `#faq`.
 
 ## Editor’s notes (3.5.13 checkout ease)
 
