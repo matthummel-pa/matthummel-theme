@@ -1,9 +1,9 @@
 {{--
   Single product — marketplace-quality landing page.
 
-  Layout follows professional WordPress theme/plugin seller conventions:
-  hero with buy card → screenshots → features → story → included → purchase
-  → technical → docs → FAQ → CTA.
+  Layout: hero (gallery + buy) → summary → features → story → included
+  → hire → blocks → technical/docs → FAQ → related → CTA.
+  Screenshots stay in the hero gallery and lightbox — no second full-page grid.
 
   Data source: mh_product_entry() merges product-catalog.json with _mh_project_*
   meta saved directly on the WooCommerce product, so the admin can override any
@@ -21,7 +21,6 @@
   $productId    = (int) get_the_ID();
   $productTitle = html_entity_decode(get_the_title(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
   $shopUrl      = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');
-  $projectsUrl  = \App\mh_theme_catalog_url();
 
   $wcProduct    = null;
   $priceHtml    = '';
@@ -108,7 +107,7 @@
 
   $crumbItems = [
     ['label' => __('Home', 'sage'),     'url' => home_url('/')],
-    ['label' => __('Shop', 'sage'),     'url' => $projectsUrl],
+    ['label' => __('Shop', 'sage'),     'url' => $shopUrl],
     ['label' => $productTitle, 'current' => true],
   ];
 
@@ -189,6 +188,7 @@
             data-gallery-open
             data-gallery-index="0"
             aria-label="{{ __('Open screenshot', 'sage') }}"
+            data-open-label="{{ __('Open screenshot', 'sage') }}"
           >
             <img
               src="{{ esc_url($heroImage) }}"
@@ -271,8 +271,9 @@
           </a>
         @endif
         @if ($demoUrl !== '')
-          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
+          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener noreferrer">
             {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('Live demo', 'sage') }}
+            <span class="visually-hidden">{{ __(' (opens in a new tab)', 'sage') }}</span>
           </a>
         @endif
       </div>
@@ -342,9 +343,8 @@
 
       @php
         $jumpLinks = [];
-        if (count($gallerySlides) > 1)          $jumpLinks[] = ['#screenshots', __('Screenshots', 'sage')];
+        if ($deliverables !== [] || $filesIncl !== []) $jumpLinks[] = ['#included', __("What's included", 'sage')];
         if ($blocks !== [] && $isTheme)         $jumpLinks[] = ['#blocks',      __('Blocks', 'sage')];
-        if ($benefits !== [] || $deliverables !== []) $jumpLinks[] = ['#included', __("What's included", 'sage')];
         $jumpLinks[] = ['#buy', __('Pricing', 'sage')];
         if ($faq !== [])                        $jumpLinks[] = ['#faq',         __('FAQ', 'sage')];
       @endphp
@@ -364,7 +364,7 @@
      METRICS STRIP
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($metrics !== [])
-  <div class="pf-metrics-strip">
+  <div class="pf-metrics-strip" role="group" aria-label="{{ __('Product facts', 'sage') }}">
     <div class="container wide pf-metrics-strip__inner">
       @foreach ($metrics as $m)
         <div class="pf-metric">
@@ -378,61 +378,12 @@
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
      SUMMARY — full product overview (1–4 sentences, SEO body copy)
-     Placed before screenshots so visitors have context before seeing images.
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($summary !== '' && $summary !== $blurb)
-  <section class="pf-section pf-product-summary pf-prose" aria-label="{{ __('Product overview', 'sage') }}">
+  <section class="pf-section pf-section--tight pf-product-summary pf-prose" aria-labelledby="product-summary-heading">
     <div class="container wide">
+      <h2 id="product-summary-heading" class="visually-hidden">{{ __('Product overview', 'sage') }}</h2>
       <p class="lead">{{ $summary }}</p>
-    </div>
-  </section>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     SCREENSHOTS — full gallery
-════════════════════════════════════════════════════════════════════════════ --}}
-@if (count($gallerySlides) > 1)
-  <section id="screenshots" class="pf-section pf-section--alt pf-product-screenshots" aria-labelledby="product-screenshots-heading">
-    <div class="container wide">
-      <div class="pf-section-head">
-        <p class="eyebrow">{{ __('Screenshots', 'sage') }}</p>
-        <h2 id="product-screenshots-heading" class="display-title is-section">
-          @if ($isPlugin)
-            {{ __('See it in action.', 'sage') }}
-          @elseif ($productType === 'app')
-            {{ __('Inside the app.', 'sage') }}
-          @elseif ($isService)
-            {{ __('What this looks like.', 'sage') }}
-          @else
-            {{ __('Inside the theme.', 'sage') }}
-          @endif
-        </h2>
-      </div>
-      <div class="pf-screenshots-grid">
-        @foreach ($gallerySlides as $i => $slide)
-          <figure class="pf-screenshot">
-            <button
-              type="button"
-              class="pf-screenshot__open"
-              data-gallery-open
-              data-gallery-index="{{ $i }}"
-              aria-label="{{ esc_attr(sprintf(__('Open screenshot %d', 'sage'), $i + 1)) }}"
-            >
-              <img
-                src="{{ esc_url($slide['src']) }}"
-                alt="{{ esc_attr($slide['alt']) }}"
-                width="1200"
-                height="750"
-                loading="{{ $i < 2 ? 'eager' : 'lazy' }}"
-                decoding="async"
-              >
-            </button>
-            @if ($slide['alt'] !== '')
-              <figcaption class="pf-screenshot__cap">{{ $slide['alt'] }}</figcaption>
-            @endif
-          </figure>
-        @endforeach
-      </div>
     </div>
   </section>
 @endif
@@ -462,32 +413,30 @@
 {{-- ═══════════════════════════════════════════════════════════════════════════
      THE STORY: Problem → Approach → Result
 ════════════════════════════════════════════════════════════════════════════ --}}
-@if ($challenge !== '' || $approach !== '')
+@if ($challenge !== '' || $approach !== '' || $result !== '')
   <section class="pf-section pf-product-story" aria-labelledby="product-story-heading">
-    <div class="container wide pf-story-grid">
-      @if ($challenge !== '')
-        <div class="pf-story-col">
-          <p class="eyebrow">{{ __('The problem', 'sage') }}</p>
-          <h2 id="product-story-heading" class="display-title is-section">{{ __('Built for this niche.', 'sage') }}</h2>
-          <p class="pf-story-body">{{ $challenge }}</p>
-        </div>
-      @endif
-      @if ($approach !== '')
-        <div class="pf-story-col">
-          <p class="eyebrow">{{ __('How it works', 'sage') }}</p>
-          <h2 class="display-title is-section">{{ __('The approach.', 'sage') }}</h2>
-          <p class="pf-story-body">{{ $approach }}</p>
-        </div>
-      @endif
-    </div>
-  </section>
-@endif
-
-@if ($result !== '')
-  <section class="pf-section pf-section--alt pf-product-result" aria-labelledby="product-result-heading">
     <div class="container wide">
-      <h2 id="product-result-heading" class="display-title is-section">{{ __('What you get.', 'sage') }}</h2>
-      <p class="lead pf-result-body">{{ $result }}</p>
+      <div class="pf-section-head">
+        <p class="eyebrow">{{ __('The work', 'sage') }}</p>
+        <h2 id="product-story-heading" class="display-title is-section">{{ __('Built for this niche.', 'sage') }}</h2>
+      </div>
+      <div class="pf-story-grid">
+        @if ($challenge !== '')
+          <div class="pf-story-col">
+            <h3 class="pf-story-sub">{{ __('The challenge.', 'sage') }}</h3>
+            <p class="pf-story-body">{{ $challenge }}</p>
+          </div>
+        @endif
+        @if ($approach !== '')
+          <div class="pf-story-col">
+            <h3 class="pf-story-sub">{{ __('The approach.', 'sage') }}</h3>
+            <p class="pf-story-body">{{ $approach }}</p>
+          </div>
+        @endif
+      </div>
+      @if ($result !== '')
+        <p class="lead pf-result-body pf-product-result-line">{{ $result }}</p>
+      @endif
     </div>
   </section>
 @endif
@@ -497,60 +446,35 @@
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($deliverables !== [] || $filesIncl !== [])
   <section id="included" class="pf-section pf-product-included" aria-labelledby="product-included-heading">
-    <div class="container wide pf-included-grid">
+    <div class="container wide">
+      <h2 id="product-included-heading" class="display-title is-section">
+        {{ $isPlugin ? __("What\'s included.", 'sage') : __("What\'s in the pack.", 'sage') }}
+      </h2>
+      <div class="pf-included-grid">
+        @if ($deliverables !== [])
+          <div class="pf-included-col">
+            <ul class="pf-checklist">
+              @foreach ($deliverables as $d)
+                <li class="pf-checklist__item">
+                  <span aria-hidden="true">{!! \App\mh_svg_icon('check', 13) !!}</span>
+                  {{ $d }}
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
 
-      @if ($deliverables !== [])
-        <div class="pf-included-col">
-          <h2 id="product-included-heading" class="display-title is-section">
-            {{ $isPlugin ? __("What\'s included.", 'sage') : __("What\'s in the pack.", 'sage') }}
-          </h2>
-          <ul class="pf-checklist">
-            @foreach ($deliverables as $d)
-              <li class="pf-checklist__item">
-                <span aria-hidden="true">{!! \App\mh_svg_icon('check', 13) !!}</span>
-                {{ $d }}
-              </li>
-            @endforeach
-          </ul>
-        </div>
-      @endif
-
-      @if ($filesIncl !== [] || $version !== '' || $compatible !== '' || $license !== '')
-        <div class="pf-included-col">
-          @if ($filesIncl !== [])
+        @if ($filesIncl !== [])
+          <div class="pf-included-col">
             <h3 class="pf-included-sub">{{ __('Files in the pack', 'sage') }}</h3>
             <ul class="pf-file-list">
               @foreach ($filesIncl as $f)
                 <li>{!! \App\mh_svg_icon('file', 13) !!} {{ $f }}</li>
               @endforeach
             </ul>
-          @endif
-
-          @if ($version !== '' || $compatible !== '' || $license !== '')
-            <dl class="pf-release-meta">
-              @if ($version !== '')
-                <div class="pf-release-meta__row">
-                  <dt>{{ __('Version', 'sage') }}</dt>
-                  <dd>{{ $version }}</dd>
-                </div>
-              @endif
-              @if ($compatible !== '')
-                <div class="pf-release-meta__row">
-                  <dt>{{ __('Requires', 'sage') }}</dt>
-                  <dd>{{ $compatible }}</dd>
-                </div>
-              @endif
-              @if ($license !== '')
-                <div class="pf-release-meta__row">
-                  <dt>{{ __('License', 'sage') }}</dt>
-                  <dd>{{ $license }}</dd>
-                </div>
-              @endif
-            </dl>
-          @endif
-        </div>
-      @endif
-
+          </div>
+        @endif
+      </div>
     </div>
   </section>
 @endif
@@ -558,11 +482,11 @@
 {{-- ═══════════════════════════════════════════════════════════════════════════
      MID-PAGE NUDGE — customize / hire callout (between features and purchase)
 ════════════════════════════════════════════════════════════════════════════ --}}
-<div class="pf-section pf-product-hire-nudge" aria-label="{{ __('Custom work', 'sage') }}">
+<section class="pf-section pf-section--tight pf-product-hire-nudge" aria-labelledby="product-hire-heading">
   <div class="container wide">
     <div class="pf-hire-nudge">
       <div class="pf-hire-nudge__copy">
-        <p class="eyebrow">{{ __('Need it customized?', 'sage') }}</p>
+        <h2 id="product-hire-heading" class="eyebrow">{{ __('Need it customized?', 'sage') }}</h2>
         <p class="pf-hire-nudge__text">
           @if ($isService)
             {{ __('This pack has a fixed scope. Need something adjacent or a custom quote? Write a short brief and I will price it.', 'sage') }}
@@ -578,7 +502,7 @@
       </a>
     </div>
   </div>
-</div>
+</section>
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
      GUTENBERG BLOCKS INCLUDED (themes only)
@@ -615,10 +539,9 @@
      WHO IT IS FOR
 ════════════════════════════════════════════════════════════════════════════ --}}
 @if ($audience !== '')
-  <section class="pf-section pf-section--alt pf-product-audience" aria-labelledby="product-audience-heading">
+  <section class="pf-section pf-section--tight pf-product-audience" aria-labelledby="product-audience-heading">
     <div class="container wide">
-      <p class="eyebrow">{{ __('Audience', 'sage') }}</p>
-      <h2 id="product-audience-heading" class="display-title is-section">{{ __('Who it is for.', 'sage') }}</h2>
+      <h2 id="product-audience-heading" class="visually-hidden">{{ __('Who it is for', 'sage') }}</h2>
       <p class="lead">{{ $audience }}</p>
     </div>
   </section>
@@ -650,19 +573,6 @@
             {{ __('Instant digital download after checkout. Need it branded and installed? Get help and I\'ll ship the full build.', 'sage') }}
           @endif
         </p>
-
-        @if ($deliverables !== [])
-          <ul class="pf-purchase-includes">
-            @foreach (array_slice($deliverables, 0, 5) as $d)
-              <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $d }}</li>
-            @endforeach
-            @if (count($deliverables) > 5)
-              <li class="pf-purchase-includes__more">
-                {{ sprintf(__('+ %d more items', 'sage'), count($deliverables) - 5) }}
-              </li>
-            @endif
-          </ul>
-        @endif
       </div>
 
       <div class="pf-purchase-widget">
@@ -688,7 +598,7 @@
 {{-- ═══════════════════════════════════════════════════════════════════════════
      TECHNICAL — stack, architecture, handoff
 ════════════════════════════════════════════════════════════════════════════ --}}
-@if ($architecture !== '' || $handoff !== '' || $tech !== [])
+@if ($architecture !== '' || $handoff !== '' || $tech !== [] || $docs !== [] || $githubUrl !== '' || $support !== '')
   <section class="pf-section pf-section--alt pf-product-technical" aria-labelledby="product-tech-heading">
     <div class="container wide">
       <p class="eyebrow">{{ __('Stack &amp; code', 'sage') }}</p>
@@ -710,51 +620,45 @@
         <h3 class="pf-technical-sub">{{ __('Handoff', 'sage') }}</h3>
         <p class="pf-technical-body">{{ $handoff }}</p>
       @endif
-    </div>
-  </section>
-@endif
 
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     DOCS + GITHUB
-════════════════════════════════════════════════════════════════════════════ --}}
-@if ($docs !== [] || $githubUrl !== '' || $support !== '')
-  <section class="pf-section pf-product-docs" aria-labelledby="product-docs-heading">
-    <div class="container wide pf-docs-layout">
-      <div>
-        <h2 id="product-docs-heading" class="display-title is-section">{{ __('Documentation.', 'sage') }}</h2>
-        @if ($docs !== [])
-          <ul class="pf-docs-list">
-            @foreach ($docs as $doc)
-              @php $docLabel = (string) ($doc[0] ?? ''); $docUrl = (string) ($doc[1] ?? ''); @endphp
-              @if ($docLabel !== '' && $docUrl !== '')
-                <li>
-                  <a href="{{ esc_url($docUrl) }}" target="_blank" rel="noopener">
-                    {!! \App\mh_svg_icon('file', 14) !!}
-                    {{ $docLabel }}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              @endif
-            @endforeach
-          </ul>
-        @endif
-      </div>
-
-      @if ($githubUrl !== '' || $support !== '')
-        <div class="pf-docs-links">
-          @if ($githubUrl !== '')
-            <a class="pf-docs-ext-link" href="{{ esc_url($githubUrl) }}" target="_blank" rel="noopener">
-              {!! \App\mh_svg_icon('github', 16) !!}
-              {{ __('View source on GitHub', 'sage') }}
-              <span aria-hidden="true">↗</span>
-            </a>
+      @if ($docs !== [] || $githubUrl !== '' || $support !== '')
+        <div class="pf-docs-layout pf-docs-layout--inline">
+          @if ($docs !== [])
+            <ul class="pf-docs-list">
+              @foreach ($docs as $doc)
+                @php $docLabel = (string) ($doc[0] ?? ''); $docUrl = (string) ($doc[1] ?? ''); @endphp
+                @if ($docLabel !== '' && $docUrl !== '')
+                  <li>
+                    <a href="{{ esc_url($docUrl) }}" target="_blank" rel="noopener noreferrer">
+                      {!! \App\mh_svg_icon('file', 14) !!}
+                      {{ $docLabel }}
+                      <span class="visually-hidden">{{ __(' (opens in a new tab)', 'sage') }}</span>
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                @endif
+              @endforeach
+            </ul>
           @endif
-          @if ($support !== '')
-            <a class="pf-docs-ext-link" href="{{ esc_url($support) }}" target="_blank" rel="noopener">
-              {!! \App\mh_svg_icon('mail', 16) !!}
-              {{ __('Support guide', 'sage') }}
-              <span aria-hidden="true">↗</span>
-            </a>
+          @if ($githubUrl !== '' || $support !== '')
+            <div class="pf-docs-links">
+              @if ($githubUrl !== '')
+                <a class="pf-docs-ext-link" href="{{ esc_url($githubUrl) }}" target="_blank" rel="noopener noreferrer">
+                  {!! \App\mh_svg_icon('github', 16) !!}
+                  {{ __('View source on GitHub', 'sage') }}
+                  <span class="visually-hidden">{{ __(' (opens in a new tab)', 'sage') }}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              @endif
+              @if ($support !== '')
+                <a class="pf-docs-ext-link" href="{{ esc_url($support) }}" target="_blank" rel="noopener noreferrer">
+                  {!! \App\mh_svg_icon('mail', 16) !!}
+                  {{ __('Support guide', 'sage') }}
+                  <span class="visually-hidden">{{ __(' (opens in a new tab)', 'sage') }}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              @endif
+            </div>
           @endif
         </div>
       @endif
@@ -778,7 +682,7 @@
       </div>
       <div class="pf-faq-list">
         @foreach ($faq as $i => $f)
-          <details class="pf-faq-item" {{ $i === 0 ? 'open' : '' }}>
+          <details class="pf-faq-item">
             <summary class="pf-faq-item__q">{{ $f[0] ?? '' }}</summary>
             <p class="pf-faq-item__a">{{ $f[1] ?? '' }}</p>
           </details>
@@ -829,7 +733,7 @@
               @if ($relThumb !== '')
                 <img
                   src="{{ esc_url($relThumb) }}"
-                  alt="{{ esc_attr(sprintf(__('%s preview', 'sage'), $relTitle)) }}"
+                  alt=""
                   width="480" height="300"
                   loading="lazy" decoding="async"
                 >
@@ -875,7 +779,7 @@
   'label'         => $primaryLabel,
   'href'          => $buyUrl ?: $helpUrl,
   'secondary'     => __('Browse all products', 'sage'),
-  'secondaryHref' => $projectsUrl,
+  'secondaryHref' => $shopUrl,
 ])
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
@@ -902,8 +806,9 @@
       </div>
       <div class="pf-sticky-bar__actions">
         @if ($demoUrl !== '')
-          <a class="btn btn-outline btn--sm pf-sticky-bar__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
+          <a class="btn btn-outline btn--sm pf-sticky-bar__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener noreferrer">
             {{ __('Live demo', 'sage') }}
+            <span class="visually-hidden">{{ __(' (opens in a new tab)', 'sage') }}</span>
           </a>
         @endif
         @if ($buyUrl !== '')

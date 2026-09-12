@@ -12064,7 +12064,7 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 
 /* ── Hero: gallery + buy box ── */
 .pf-product-hero {
-  padding: clamp(2.25rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.75rem);
+  padding: clamp(1.5rem, 4vw, 2.75rem) 0 clamp(1.35rem, 3vw, 2.25rem);
   overflow-x: clip;
 }
 .pf-product-hero > .container:first-child .woo-crumb {
@@ -12523,6 +12523,11 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 }
 .pf-story-col .eyebrow { margin-bottom: .4rem; }
 .pf-story-col .display-title { margin: 0 0 1rem; }
+.pf-story-sub {
+  font: 650 1.05rem/1.3 var(--font-display);
+  color: var(--color-text);
+  margin: 0 0 .55rem;
+}
 .pf-story-body {
   font: 400 1rem/1.7 var(--font-body);
   color: var(--color-text);
@@ -12531,6 +12536,14 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 
 /* ── What you get (result) ── */
 .pf-result-body { max-width: 72ch; }
+.pf-product-result-line {
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+.pf-product-included .display-title {
+  margin: 0 0 1.15rem;
+}
 
 /* ── Deliverables + files ── */
 .pf-included-grid {
@@ -12757,6 +12770,12 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   gap: 3rem 4rem;
   align-items: start;
 }
+.pf-docs-layout--inline {
+  margin-top: 1.5rem;
+}
+.pf-docs-layout--inline .pf-docs-list {
+  margin-top: 0;
+}
 @media (max-width: 720px) {
   .pf-docs-layout { grid-template-columns: 1fr; gap: 2rem; }
 }
@@ -12869,12 +12888,17 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   white-space: nowrap;
   transition: border-color .15s ease, color .15s ease, background .15s ease;
 }
-.pf-jumpnav__link:hover,
+.pf-jumpnav__link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
 .pf-jumpnav__link:focus-visible {
   border-color: var(--color-accent);
   color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
-  outline: none;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 html.mh-dark .pf-jumpnav__link {
   border-color: color-mix(in srgb, var(--color-border) 80%, white 10%);
@@ -13640,18 +13664,21 @@ html.mh-dark .pf-block-card {
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
-.catalog-filter-nav__link[aria-current="true"]:focus-visible {
+.catalog-filter-nav__link[aria-current="true"]:focus-visible,
+.catalog-filter-nav__link[aria-pressed="true"]:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--color-focus);
 }
-.catalog-filter-nav__link[aria-current="true"] {
+.catalog-filter-nav__link[aria-current="true"],
+.catalog-filter-nav__link[aria-pressed="true"] {
   border-color: var(--color-accent);
   color: var(--white);
   background: var(--color-accent);
   box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
-.catalog-filter-nav__link[aria-current="true"] .catalog-filter-nav__count {
+.catalog-filter-nav__link[aria-current="true"] .catalog-filter-nav__count,
+.catalog-filter-nav__link[aria-pressed="true"] .catalog-filter-nav__count {
   background: color-mix(in srgb, var(--white) 25%, transparent);
   color: var(--white);
 }
@@ -13756,7 +13783,8 @@ html.mh-dark .catalog-filter-nav__link {
   border-color: var(--color-border);
   color: var(--color-text-secondary);
 }
-html.mh-dark .catalog-filter-nav__link[aria-current="true"] {
+html.mh-dark .catalog-filter-nav__link[aria-current="true"],
+html.mh-dark .catalog-filter-nav__link[aria-pressed="true"] {
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: var(--white);
@@ -15101,6 +15129,10 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
   white-space: nowrap;
 }
 /* Style the WooCommerce ordering select inside the toolbar */
+.catalog-toolbar__sort {
+  display: flex;
+  align-items: center;
+}
 .catalog-toolbar__right .woocommerce-ordering {
   margin: 0;
 }
@@ -15118,6 +15150,31 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
+/* Shop + product pages only — tighter section rhythm than marketing pages. */
+.single-product .pf-section,
+.woocommerce-shop .pf-section,
+.tax-product_cat .pf-section {
+  padding-block: clamp(1.75rem, 3.8vw, 3rem);
+}
+.single-product .pf-section--tight,
+.woocommerce-shop .pf-section--tight {
+  padding-block: clamp(1rem, 2.4vw, 1.5rem);
+}
+.single-product .pf-section-head,
+.woocommerce-shop .pf-section-head {
+  margin-bottom: 1.1rem;
+}
+.woocommerce-shop .woo-catalog-shell.page-block,
+.tax-product_cat .woo-catalog-shell.page-block {
+  padding-block: clamp(1.75rem, 4vw, 2.75rem);
+}
+.shop-stack-follow {
+  margin-top: 1.5rem;
+}
+.single-product .pf-product-audience .lead {
+  margin-bottom: 0;
+}
+
 @media (max-width: 720px) {
   .catalog-toolbar {
     flex-direction: column;

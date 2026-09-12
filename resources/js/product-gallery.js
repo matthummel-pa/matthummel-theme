@@ -1,8 +1,8 @@
 /**
  * Product gallery: thumbnail swap, keyboard tabs, and a native dialog lightbox.
  *
- * Works with the Blade hero gallery and the screenshots grid. Slides come from
- * #pf-gallery-data (JSON) when present, otherwise from thumbnail data attrs.
+ * Works with the Blade hero gallery. Slides come from #pf-gallery-data (JSON)
+ * when present, otherwise from thumbnail data attrs.
  */
 export function initProductGallery() {
   const root = document.querySelector('[data-product-gallery]')
@@ -13,9 +13,12 @@ export function initProductGallery() {
   if (!slides.length) return
 
   const mainImg = root?.querySelector('[data-gallery-main]')
+  const openBtn = root?.querySelector('[data-gallery-open]')
   const panel = root?.querySelector('#pf-gallery-panel')
   const thumbs = [...(root?.querySelectorAll('.pf-product-gallery__thumb') || [])]
+  const openLabel = openBtn?.dataset.openLabel || 'Open screenshot'
   let index = 0
+  let lastFocus = null
 
   function showSlide(next, { announce = true } = {}) {
     if (!slides.length) return
@@ -25,6 +28,10 @@ export function initProductGallery() {
     if (mainImg) {
       mainImg.src = slide.src
       mainImg.alt = slide.alt
+    }
+
+    if (openBtn) {
+      openBtn.setAttribute('aria-label', slide.alt !== '' ? `${openLabel}: ${slide.alt}` : openLabel)
     }
 
     thumbs.forEach((thumb, i) => {
@@ -63,6 +70,7 @@ export function initProductGallery() {
 
   function openLightbox(at) {
     if (!lightbox || typeof lightbox.showModal !== 'function') return
+    lastFocus = document.activeElement
     showSlide(at, { announce: false })
     syncLightbox()
     lightbox.showModal()
@@ -72,6 +80,13 @@ export function initProductGallery() {
   function closeLightbox() {
     if (!lightbox?.open) return
     lightbox.close()
+  }
+
+  function restoreFocus() {
+    if (lastFocus && typeof lastFocus.focus === 'function') {
+      lastFocus.focus()
+    }
+    lastFocus = null
   }
 
   thumbs.forEach((thumb) => {
@@ -117,6 +132,7 @@ export function initProductGallery() {
     lightbox.addEventListener('click', (event) => {
       if (event.target === lightbox) closeLightbox()
     })
+    lightbox.addEventListener('close', restoreFocus)
     lightbox.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowRight') {
         event.preventDefault()

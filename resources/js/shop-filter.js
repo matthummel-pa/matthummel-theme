@@ -9,51 +9,53 @@
  * nothing (they have no href to follow).
  */
 export function initShopFilter() {
-  const nav = document.querySelector('.catalog-filter-nav');
-  if (!nav) return;
+  const nav = document.querySelector('.catalog-filter-nav')
+  if (!nav) return
 
-  const grid = document.querySelector('.woocommerce ul.products');
-  if (!grid) return;
+  const grid = document.querySelector('.woocommerce ul.products')
+  if (!grid) return
 
-  const links = [...nav.querySelectorAll('.catalog-filter-nav__link[data-filter-type]')];
-  if (!links.length) return;
+  const links = [...nav.querySelectorAll('.catalog-filter-nav__link[data-filter-type]')]
+  if (!links.length) return
+
+  const countEl = document.getElementById('catalog-filter-count')
+  const liveRegion = document.getElementById('catalog-filter-live')
+  const sortSelect = document.querySelector('.catalog-toolbar__right select.orderby')
+  if (sortSelect && !sortSelect.id) {
+    sortSelect.id = 'mh-catalog-orderby'
+  }
+
+  function formatCount(visible) {
+    const one = countEl?.dataset.labelOne || '%d product'
+    const many = countEl?.dataset.labelMany || '%d products'
+    const template = visible === 1 ? one : many
+    return template.replace('%d', String(visible))
+  }
 
   function applyFilter(type) {
-    const items = [...grid.querySelectorAll('li.product')];
+    const items = [...grid.querySelectorAll('li.product')]
     items.forEach((item) => {
-      if (type === 'all') {
-        item.hidden = false;
-        item.removeAttribute('aria-hidden');
-      } else {
-        const match = item.classList.contains('mh-type-' + type);
-        item.hidden = !match;
-        item.setAttribute('aria-hidden', match ? 'false' : 'true');
-      }
-    });
+      const match = type === 'all' || item.classList.contains('mh-type-' + type)
+      item.hidden = !match
+      item.removeAttribute('aria-hidden')
+    })
 
-    // Announce the visible count to screen readers via a live region.
-    const visible = items.filter((i) => !i.hidden).length;
-    let liveRegion = document.getElementById('catalog-filter-live');
-    if (!liveRegion) {
-      liveRegion = document.createElement('span');
-      liveRegion.id = 'catalog-filter-live';
-      liveRegion.setAttribute('role', 'status');
-      liveRegion.setAttribute('aria-live', 'polite');
-      liveRegion.className = 'visually-hidden';
-      document.body.appendChild(liveRegion);
-    }
-    liveRegion.textContent = visible + ' product' + (visible !== 1 ? 's' : '') + ' shown';
+    const visible = items.filter((item) => !item.hidden).length
+    const label = formatCount(visible)
+    if (countEl) countEl.textContent = label
+    if (liveRegion) liveRegion.textContent = label
   }
 
   links.forEach((link) => {
     link.addEventListener('click', () => {
-      const type = link.dataset.filterType || 'all';
+      const type = link.dataset.filterType || 'all'
 
-      links.forEach((l) => {
-        l.setAttribute('aria-current', l === link ? 'true' : 'false');
-      });
+      links.forEach((button) => {
+        button.setAttribute('aria-pressed', button === link ? 'true' : 'false')
+        button.removeAttribute('aria-current')
+      })
 
-      applyFilter(type);
-    });
-  });
+      applyFilter(type)
+    })
+  })
 }
