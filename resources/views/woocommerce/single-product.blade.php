@@ -448,7 +448,7 @@
   <section id="included" class="pf-section pf-product-included" aria-labelledby="product-included-heading">
     <div class="container wide">
       <h2 id="product-included-heading" class="display-title is-section">
-        {{ $isPlugin ? __("What\'s included.", 'sage') : __("What\'s in the pack.", 'sage') }}
+        {{ $isPlugin ? __("What's included.", 'sage') : __("What's in the pack.", 'sage') }}
       </h2>
       <div class="pf-included-grid">
         @if ($deliverables !== [])
