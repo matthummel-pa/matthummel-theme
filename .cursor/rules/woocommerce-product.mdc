@@ -32,6 +32,20 @@ Each product entry must have at minimum:
 }
 ```
 
+**`download`** (paid or free zips):
+
+```json
+"download": {
+  "github_repo": "matthummel-pa/wp-acreline",
+  "release": "theme-latest",
+  "asset": "latest",
+  "asset_prefix": "acreline-",
+  "label": "acreline.zip"
+}
+```
+
+WooCommerce attaches that GitHub asset as a virtual + downloadable file. Do not commit zips. After a new release, `wp mh shop-downloads --force --slug=acreline` updates the file and emails buyers.
+
 **`product_type`** drives:
 - `eyebrow` label (WordPress theme / WordPress plugin / Web app)
 - `SoftwareApplication.applicationCategory` (WebApplication for themes/apps, BusinessApplication for plugins)

@@ -264,6 +264,30 @@ function mh_shop_body_class(array $classes): array
 add_filter('body_class', __NAMESPACE__.'\\mh_shop_body_class');
 
 /**
+ * Decoded product-catalog.json keyed by slug.
+ *
+ * @since 3.5.14
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function mh_product_catalog_entries(): array
+{
+    static $catalog = null;
+    if ($catalog !== null) {
+        return $catalog;
+    }
+
+    $catalog = [];
+    $path = get_theme_file_path('resources/data/product-catalog.json');
+    if (is_readable($path)) {
+        $decoded = json_decode((string) file_get_contents($path), true);
+        $catalog = is_array($decoded) ? $decoded : [];
+    }
+
+    return $catalog;
+}
+
+/**
  * Read a product's entry from product-catalog.json by WooCommerce product ID.
  *
  * Resolution order: linked project post slug → SKU prefix-stripped slug.
@@ -279,15 +303,7 @@ function mh_product_catalog_data(int $product_id): array
         return [];
     }
 
-    static $catalog = null;
-    if ($catalog === null) {
-        $path = get_theme_file_path('resources/data/product-catalog.json');
-        $catalog = [];
-        if (is_readable($path)) {
-            $decoded = json_decode((string) file_get_contents($path), true);
-            $catalog = is_array($decoded) ? $decoded : [];
-        }
-    }
+    $catalog = mh_product_catalog_entries();
 
     $aliases = [
         'wordpress-theme-real-estate-agents' => 'acreline',
@@ -822,6 +838,7 @@ function mh_wc_product_admin_meta_box(\WP_Post $post): void
     };
 
     echo '<p><small>'.esc_html__('Leave a field blank to inherit from product-catalog.json. Values here override the catalog.', 'sage').'</small></p>';
+    mh_wc_product_download_admin_notice($id, $forSale, $productType);
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($isLive, true, false).'> ';
     echo '<strong>'.esc_html__('Show on site (work grid + shop)', 'sage').'</strong></label></p>';
@@ -1501,6 +1518,7 @@ function mh_sync_project_product_unchecked(int $project_id): int
     }
 
     update_post_meta($project_id, '_mh_project_product_id', (string) $saved);
+    mh_apply_catalog_download_file($saved, false);
 
     return $saved;
 }
@@ -1552,6 +1570,1058 @@ function mh_seed_project_products(): void
     } finally {
         update_option('mh_woocommerce_project_products_seeded_v1', true);
     }
+}
+
+/**
+ * Digital-download shop defaults: guest checkout + receipt email, no shipping.
+ *
+ * Does not require login to download so guests can use the link in the receipt.
+ * Account creation at checkout is on so buyers can reopen My account → Downloads.
+ *
+ * @since 3.5.14
+ */
+function mh_seed_digital_download_store(): void
+{
+    if (! mh_shop_ready() || wp_installing() || get_option('mh_woocommerce_digital_downloads_seeded_v1')) {
+        return;
+    }
+
+    update_option('woocommerce_cart_redirect_after_add', 'yes');
+    update_option('woocommerce_enable_guest_checkout', 'yes');
+    update_option('woocommerce_enable_signup_and_login_from_checkout', 'yes');
+    update_option('woocommerce_enable_checkout_login_reminder', 'yes');
+    update_option('woocommerce_ship_to_countries', 'disabled');
+    update_option('woocommerce_enable_shipping_calc', 'no');
+    update_option('woocommerce_file_download_method', 'force');
+    update_option('woocommerce_downloads_grant_access_after_payment', 'yes');
+    update_option('woocommerce_downloads_require_login', 'no');
+    update_option('woocommerce_downloads_redirect_fallback_allowed', 'no');
+    update_option('woocommerce_enable_reviews', 'no');
+    update_option('woocommerce_calc_taxes', 'no');
+    update_option('woocommerce_default_country', 'US:PA');
+    update_option('woocommerce_email_base_color', '#0d2e57');
+    if (trim((string) get_option('woocommerce_email_from_name', '')) === '') {
+        update_option('woocommerce_email_from_name', 'Matt Hummel');
+    }
+
+    foreach (['woocommerce_customer_completed_order_settings', 'woocommerce_customer_processing_order_settings'] as $emailOption) {
+        $settings = get_option($emailOption, []);
+        if (! is_array($settings)) {
+            $settings = [];
+        }
+        $settings['enabled'] = 'yes';
+        update_option($emailOption, $settings);
+    }
+
+    update_option('mh_woocommerce_digital_downloads_seeded_v1', true);
+}
+
+/**
+ * Catalog `download` object, or null when this entry is not a zip product.
+ *
+ * @param  array<string, mixed>  $entry
+ * @return array{repo: string, release: string, asset: string, prefix: string, label: string}|null
+ */
+function mh_catalog_download_spec(array $entry): ?array
+{
+    $type = sanitize_key((string) ($entry['product_type'] ?? 'theme'));
+    if (in_array($type, ['service', 'concept'], true)) {
+        return null;
+    }
+
+    $download = is_array($entry['download'] ?? null) ? $entry['download'] : [];
+    $repo = trim((string) ($download['github_repo'] ?? ''));
+    if ($repo === '') {
+        $github = trim((string) ($entry['github'] ?? ''));
+        if (preg_match('#github\\.com/([^/]+/[^/?#]+)#', $github, $m) === 1) {
+            $repo = trim($m[1], '/');
+        }
+    }
+    if ($repo === '' || ! preg_match('#^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$#', $repo)) {
+        return null;
+    }
+
+    return [
+        'repo' => $repo,
+        'release' => trim((string) ($download['release'] ?? 'latest')) ?: 'latest',
+        'asset' => trim((string) ($download['asset'] ?? 'latest')) ?: 'latest',
+        'prefix' => trim((string) ($download['asset_prefix'] ?? '')),
+        'label' => trim((string) ($download['label'] ?? '')),
+    ];
+}
+
+/** Whether an order includes a catalog theme/plugin zip. */
+function mh_order_has_catalog_download(\WC_Order $order): bool
+{
+    foreach ($order->get_items() as $item) {
+        if (! $item instanceof \WC_Order_Item_Product) {
+            continue;
+        }
+        if (mh_catalog_download_spec(mh_product_catalog_data((int) $item->get_product_id())) !== null) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Pick a GitHub release zip from a catalog download spec.
+ *
+ * @param  array{repo: string, release: string, asset: string, prefix: string, label: string}  $spec
+ * @return array{name: string, url: string, label: string, size: int}|null
+ */
+function mh_github_release_download_file(array $spec): ?array
+{
+    $repo = $spec['repo'];
+    $tag = $spec['release'];
+    $url = $tag === '' || $tag === 'latest'
+        ? "https://api.github.com/repos/{$repo}/releases/latest"
+        : 'https://api.github.com/repos/'.$repo.'/releases/tags/'.rawurlencode($tag);
+
+    $data = github_get($url);
+    if (! is_array($data) || empty($data['assets']) || ! is_array($data['assets'])) {
+        return null;
+    }
+
+    $assets = [];
+    foreach ($data['assets'] as $asset) {
+        if (! is_array($asset)) {
+            continue;
+        }
+        $name = (string) ($asset['name'] ?? '');
+        $fileUrl = (string) ($asset['browser_download_url'] ?? '');
+        if ($name === '' || $fileUrl === '' || ! str_ends_with(strtolower($name), '.zip')) {
+            continue;
+        }
+        $assets[] = [
+            'name' => $name,
+            'url' => $fileUrl,
+            'size' => (int) ($asset['size'] ?? 0),
+        ];
+    }
+    if ($assets === []) {
+        return null;
+    }
+
+    $wanted = $spec['asset'];
+    if ($wanted !== '' && $wanted !== 'latest') {
+        foreach ($assets as $asset) {
+            if ($asset['name'] === $wanted) {
+                return $asset + ['label' => $spec['label'] !== '' ? $spec['label'] : $asset['name']];
+            }
+        }
+    }
+
+    $prefix = $spec['prefix'];
+    $versioned = [];
+    foreach ($assets as $asset) {
+        $pattern = $prefix !== ''
+            ? '#^'.preg_quote($prefix, '#').'(\\d+\\.\\d+\\.\\d+)\\.zip$#'
+            : '#^[A-Za-z0-9-]+-(\\d+\\.\\d+\\.\\d+)\\.zip$#';
+        if (preg_match($pattern, $asset['name'], $m) === 1) {
+            $versioned[$m[1]] = $asset;
+        }
+    }
+    if ($versioned !== []) {
+        uksort($versioned, 'version_compare');
+        $asset = end($versioned);
+        if (is_array($asset)) {
+            return $asset + ['label' => $spec['label'] !== '' ? $spec['label'] : $asset['name']];
+        }
+    }
+
+    foreach ($assets as $asset) {
+        $label = $spec['label'] !== '' ? $spec['label'] : $asset['name'];
+        if ($asset['name'] === $label) {
+            return $asset + ['label' => $label];
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Mark a catalog product virtual+downloadable and attach the GitHub zip.
+ *
+ * Skips when files already exist unless $force. Does not localize the zip
+ * (that is CLI-only) so front-end init never pulls a 20 MB file.
+ *
+ * @return array{ok: bool, message: string, file: string}
+ */
+function mh_apply_catalog_download_file(int $product_id, bool $force = false, bool $notify = true): array
+{
+    $empty = ['ok' => false, 'message' => '', 'file' => ''];
+    if ($product_id <= 0 || ! mh_shop_ready() || ! class_exists('WC_Product_Download')) {
+        return $empty + ['message' => 'shop not ready'];
+    }
+
+    $product = wc_get_product($product_id);
+    if (! $product instanceof \WC_Product) {
+        return $empty + ['message' => 'product missing'];
+    }
+
+    $entry = mh_product_catalog_data($product_id);
+    $spec = mh_catalog_download_spec($entry);
+    if ($spec === null) {
+        return $empty + ['message' => 'no download spec'];
+    }
+
+    $oldVersion = trim((string) $product->get_meta('_mh_download_version'));
+
+    $existing = $product->get_downloads();
+    if ($existing !== [] && ! $force) {
+        if (trim((string) $product->get_meta('_mh_download_version')) === '') {
+            $entryVersion = trim((string) ($entry['version'] ?? ''));
+            if ($entryVersion !== '') {
+                $product->update_meta_data('_mh_download_version', $entryVersion);
+                $product->save();
+            }
+        }
+
+        return ['ok' => true, 'message' => 'already attached', 'file' => ''];
+    }
+
+    $file = mh_github_release_download_file($spec);
+    if ($file === null) {
+        return $empty + ['message' => 'no GitHub zip for '.$spec['repo']];
+    }
+
+    $download = new \WC_Product_Download;
+    $download->set_name($file['label']);
+    $download->set_file($file['url']);
+
+    $product->set_virtual(true);
+    $product->set_downloadable(true);
+    $product->set_download_limit(-1);
+    $product->set_download_expiry(-1);
+    $product->set_reviews_allowed(false);
+    $product->set_sold_individually(true);
+    $product->set_downloads([$download]);
+    $version = mh_version_from_zip_name($file['name']);
+    if ($version === '') {
+        $version = trim((string) ($entry['version'] ?? ''));
+    }
+    if ($version !== '') {
+        $product->update_meta_data('_mh_download_version', $version);
+    }
+    $product->update_meta_data('_mh_download_asset', $file['name']);
+    $saved = (int) $product->save();
+    if ($saved <= 0) {
+        return $empty + ['message' => 'save failed'];
+    }
+
+    if ($notify && $oldVersion !== '' && $version !== '' && version_compare($version, $oldVersion, '>')) {
+        mh_notify_buyers_of_download_update($saved, $version, $oldVersion, false);
+    }
+
+    return ['ok' => true, 'message' => 'attached', 'file' => $file['name']];
+}
+
+/**
+ * Copy a remote Woo download into woocommerce_uploads (protected).
+ *
+ * @return array{ok: bool, message: string, file: string}
+ */
+function mh_localize_product_download(int $product_id): array
+{
+    $empty = ['ok' => false, 'message' => '', 'file' => ''];
+    if ($product_id <= 0 || ! mh_shop_ready()) {
+        return $empty + ['message' => 'shop not ready'];
+    }
+
+    $product = wc_get_product($product_id);
+    if (! $product instanceof \WC_Product) {
+        return $empty + ['message' => 'product missing'];
+    }
+
+    $downloads = $product->get_downloads();
+    if ($downloads === []) {
+        return $empty + ['message' => 'no files to localize'];
+    }
+
+    $uploads = wp_upload_dir();
+    if (! empty($uploads['error'])) {
+        return $empty + ['message' => (string) $uploads['error']];
+    }
+
+    $dir = trailingslashit((string) $uploads['basedir']).'woocommerce_uploads';
+    if (! wp_mkdir_p($dir)) {
+        return $empty + ['message' => 'could not create woocommerce_uploads'];
+    }
+
+    $changed = false;
+    $localized = [];
+    foreach ($downloads as $key => $download) {
+        if (! $download instanceof \WC_Product_Download) {
+            continue;
+        }
+        $remote = trim((string) $download->get_file());
+        if (! preg_match('#^https?://#i', $remote)) {
+            continue;
+        }
+
+        $tmp = download_url($remote, 180);
+        if (is_wp_error($tmp)) {
+            return $empty + ['message' => $tmp->get_error_message()];
+        }
+
+        $name = sanitize_file_name((string) $download->get_name());
+        if ($name === '') {
+            $name = 'download.zip';
+        }
+        if (! str_ends_with(strtolower($name), '.zip')) {
+            $name .= '.zip';
+        }
+
+        $dest = $dir.'/'.$name;
+        if (! @copy((string) $tmp, $dest)) {
+            @unlink((string) $tmp);
+
+            return $empty + ['message' => 'could not write '.$name];
+        }
+        @unlink((string) $tmp);
+
+        $localUrl = trailingslashit((string) $uploads['baseurl']).'woocommerce_uploads/'.$name;
+        $download->set_file($localUrl);
+        $downloads[$key] = $download;
+        $localized[] = $name;
+        $changed = true;
+    }
+
+    if (! $changed) {
+        return ['ok' => true, 'message' => 'already local', 'file' => ''];
+    }
+
+    $product->set_downloads($downloads);
+    $product->save();
+
+    return ['ok' => true, 'message' => 'localized', 'file' => implode(', ', $localized)];
+}
+
+/**
+ * WooCommerce product IDs for for-sale catalog slugs (themes and plugins).
+ *
+ * @return array<string, int>
+ */
+function mh_catalog_download_product_ids(): array
+{
+    $ids = [];
+    foreach (mh_product_catalog_entries() as $slug => $entry) {
+        if (! is_array($entry) || empty($entry['for_sale'])) {
+            continue;
+        }
+        if (mh_catalog_download_spec($entry) === null) {
+            continue;
+        }
+
+        $slug = sanitize_title((string) $slug);
+        $type = sanitize_key((string) ($entry['product_type'] ?? 'theme'));
+        $skuPrefix = $type === 'plugin' ? 'plugin-' : 'theme-';
+        $productId = 0;
+        if (function_exists('wc_get_product_id_by_sku')) {
+            $productId = (int) wc_get_product_id_by_sku($skuPrefix.$slug);
+        }
+        if ($productId <= 0) {
+            $bySlug = get_posts([
+                'post_type' => 'product',
+                'name' => $slug,
+                'post_status' => ['publish', 'private', 'draft'],
+                'posts_per_page' => 1,
+                'fields' => 'ids',
+                'no_found_rows' => true,
+            ]);
+            $productId = $bySlug !== [] ? (int) $bySlug[0] : 0;
+        }
+        if ($productId > 0) {
+            $ids[$slug] = $productId;
+        }
+    }
+
+    return $ids;
+}
+
+/**
+ * Attach catalog GitHub zips to matching Woo products (one-shot).
+ *
+ * @since 3.5.14
+ */
+function mh_sync_catalog_download_files_v1(): void
+{
+    if (! mh_shop_ready() || wp_installing() || get_option('mh_catalog_download_files_synced_v1')) {
+        return;
+    }
+
+    try {
+        foreach (mh_catalog_download_product_ids() as $productId) {
+            mh_apply_catalog_download_file($productId, false);
+        }
+    } catch (\Throwable $e) {
+        if (function_exists('error_log')) {
+            error_log('mh_sync_catalog_download_files_v1: '.$e->getMessage());
+        }
+    } finally {
+        update_option('mh_catalog_download_files_synced_v1', true);
+    }
+}
+
+/**
+ * Admin warning when a for-sale theme/plugin has no downloadable file.
+ */
+function mh_wc_product_download_admin_notice(int $product_id, bool $forSale, string $productType): void
+{
+    if (! $forSale || in_array($productType, ['service', 'concept'], true) || ! function_exists('wc_get_product')) {
+        return;
+    }
+
+    $product = wc_get_product($product_id);
+    if (! $product instanceof \WC_Product) {
+        return;
+    }
+
+    $files = $product->get_downloads();
+    if ($product->is_downloadable() && $files !== []) {
+        $names = [];
+        foreach ($files as $download) {
+            if ($download instanceof \WC_Product_Download) {
+                $names[] = $download->get_name();
+            }
+        }
+        printf(
+            '<div class="notice notice-success inline"><p>%s</p></div>',
+            esc_html(sprintf(
+                /* translators: %s: download file names */
+                __('Buyers get these files after payment: %s', 'sage'),
+                implode(', ', $names)
+            ))
+        );
+
+        return;
+    }
+
+    echo '<div class="notice notice-warning inline"><p>';
+    echo esc_html__('This product is for sale but has no downloadable file. After checkout the receipt and My account → Downloads stay empty. Run `wp mh shop-downloads` or add a zip under Product data → Downloadable files.', 'sage');
+    echo '</p></div>';
+}
+
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_seed_digital_download_store', 37);
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_sync_catalog_download_files_v1', 38);
+
+/**
+ * Semver from a zip filename such as acreline-1.5.4.zip.
+ */
+function mh_version_from_zip_name(string $name): string
+{
+    return preg_match('#(\\d+\\.\\d+\\.\\d+)\\.zip$#i', $name, $m) === 1 ? $m[1] : '';
+}
+
+/**
+ * Latest zip version for a Woo product (attached download, then catalog).
+ */
+function mh_product_download_version(int $product_id): string
+{
+    if ($product_id <= 0) {
+        return '';
+    }
+
+    $stored = trim((string) get_post_meta($product_id, '_mh_download_version', true));
+    if ($stored !== '') {
+        return $stored;
+    }
+
+    $entry = mh_product_catalog_data($product_id);
+
+    return trim((string) ($entry['version'] ?? ''));
+}
+
+/**
+ * Version stored on the order line when the customer bought or last downloaded.
+ */
+function mh_order_purchased_version(int $order_id, int $product_id): string
+{
+    if ($order_id <= 0 || $product_id <= 0 || ! function_exists('wc_get_order')) {
+        return '';
+    }
+
+    $order = wc_get_order($order_id);
+    if (! $order) {
+        return '';
+    }
+
+    foreach ($order->get_items() as $item) {
+        if ((int) $item->get_product_id() === $product_id) {
+            return trim((string) $item->get_meta('_mh_purchased_version', true));
+        }
+    }
+
+    return '';
+}
+
+/**
+ * GitHub Releases URL for a catalog entry.
+ *
+ * @param  array<string, mixed>  $entry
+ */
+function mh_product_releases_url(array $entry): string
+{
+    $github = trim((string) ($entry['github'] ?? ''));
+    if ($github === '') {
+        return '';
+    }
+
+    return untrailingslashit($github).'/releases';
+}
+
+/**
+ * Latest vs purchased version for one Woo download row.
+ *
+ * @param  array<string, mixed>  $download
+ * @return array{product_id: int, order_id: int, name: string, latest: string, purchased: string, has_update: bool, releases: string, type: string}
+ */
+function mh_download_update_payload(array $download): array
+{
+    $productId = (int) ($download['product_id'] ?? 0);
+    $orderId = (int) ($download['order_id'] ?? 0);
+    $entry = $productId > 0 ? mh_product_catalog_data($productId) : [];
+    $latest = mh_product_download_version($productId);
+    $purchased = mh_order_purchased_version($orderId, $productId);
+    $hasUpdate = $purchased !== '' && $latest !== '' && version_compare($latest, $purchased, '>');
+
+    return [
+        'product_id' => $productId,
+        'order_id' => $orderId,
+        'name' => (string) ($download['product_name'] ?? ''),
+        'latest' => $latest,
+        'purchased' => $purchased,
+        'has_update' => $hasUpdate,
+        'releases' => mh_product_releases_url($entry),
+        'type' => $productId > 0 ? mh_resolve_product_type($productId) : 'theme',
+    ];
+}
+
+/**
+ * Products the logged-in customer can update (newer zip than last download).
+ *
+ * @return list<array{product_id: int, order_id: int, name: string, latest: string, purchased: string, has_update: bool, releases: string, type: string}>
+ */
+function mh_customer_download_updates(): array
+{
+    if (! is_user_logged_in() || ! function_exists('wc_get_customer_available_downloads')) {
+        return [];
+    }
+
+    $updates = [];
+    foreach (wc_get_customer_available_downloads((int) get_current_user_id()) as $download) {
+        if (! is_array($download)) {
+            continue;
+        }
+        $payload = mh_download_update_payload($download);
+        if ($payload['has_update']) {
+            $updates[$payload['product_id']] = $payload;
+        }
+    }
+
+    return array_values($updates);
+}
+
+/**
+ * Paid orders that include a catalog download product.
+ *
+ * @return list<array{order: \WC_Order, item: \WC_Order_Item_Product, email: string, notified: string}>
+ */
+function mh_product_download_recipients(int $product_id): array
+{
+    if ($product_id <= 0 || ! function_exists('wc_get_orders')) {
+        return [];
+    }
+
+    $orders = wc_get_orders([
+        'status' => ['completed', 'processing'],
+        'limit' => 500,
+        'type' => 'shop_order',
+        'return' => 'objects',
+    ]);
+
+    $recipients = [];
+    foreach ($orders as $order) {
+        if (! $order instanceof \WC_Order) {
+            continue;
+        }
+        $email = sanitize_email((string) $order->get_billing_email());
+        if ($email === '' || ! is_email($email)) {
+            continue;
+        }
+        foreach ($order->get_items() as $item) {
+            if (! $item instanceof \WC_Order_Item_Product || (int) $item->get_product_id() !== $product_id) {
+                continue;
+            }
+            $recipients[] = [
+                'order' => $order,
+                'item' => $item,
+                'email' => $email,
+                'notified' => trim((string) $item->get_meta('_mh_notified_version', true)),
+            ];
+        }
+    }
+
+    return $recipients;
+}
+
+/**
+ * Email buyers when a purchased zip gets a newer version.
+ *
+ * @return int Number of messages sent
+ */
+function mh_notify_buyers_of_download_update(int $product_id, string $new_version, string $old_version = '', bool $resend = false): int
+{
+    if ($product_id <= 0 || $new_version === '' || ! function_exists('WC')) {
+        return 0;
+    }
+    if ($old_version !== '' && ! version_compare($new_version, $old_version, '>')) {
+        return 0;
+    }
+
+    $mailer = WC()->mailer();
+    if (! is_object($mailer) || ! method_exists($mailer, 'get_emails')) {
+        return 0;
+    }
+
+    $emails = $mailer->get_emails();
+    $email = is_array($emails) ? ($emails['mh_customer_download_update'] ?? null) : null;
+    if (! $email instanceof Email_Customer_Download_Update || ! $email->is_enabled()) {
+        return 0;
+    }
+
+    $sent = 0;
+    $seen = [];
+    foreach (mh_product_download_recipients($product_id) as $row) {
+        if (isset($seen[$row['email']])) {
+            continue;
+        }
+        if (! $resend && $row['notified'] !== '' && ! version_compare($new_version, $row['notified'], '>')) {
+            continue;
+        }
+
+        $email->trigger($row['order'], $product_id, $new_version, $old_version !== '' ? $old_version : $row['notified']);
+        if ($email->sent) {
+            $seen[$row['email']] = true;
+            $row['item']->update_meta_data('_mh_notified_version', $new_version);
+            $row['item']->save();
+            $sent++;
+        }
+    }
+
+    return $sent;
+}
+
+/** Register the buyer update email with WooCommerce → Settings → Emails. */
+function mh_register_download_update_email(array $emails): array
+{
+    if (! class_exists('WC_Email')) {
+        return $emails;
+    }
+
+    mh_define_download_update_email_class();
+    $emails['mh_customer_download_update'] = new Email_Customer_Download_Update;
+
+    return $emails;
+}
+
+/** Load the WC_Email subclass after WooCommerce has the parent class. */
+function mh_define_download_update_email_class(): void
+{
+    if (! class_exists('WC_Email') || class_exists(Email_Customer_Download_Update::class)) {
+        return;
+    }
+
+    class Email_Customer_Download_Update extends \WC_Email
+    {
+        public bool $sent = false;
+
+        public int $product_id = 0;
+
+        public string $new_version = '';
+
+        public string $old_version = '';
+
+        public function __construct()
+        {
+            $this->id = 'mh_customer_download_update';
+            $this->customer_email = true;
+            $this->title = __('Product download update', 'sage');
+            $this->description = __('Sent to buyers when a theme or plugin zip they purchased gets a new version.', 'sage');
+            $this->heading = __('A new zip is ready', 'sage');
+            $this->subject = __('{product_name} {version} is ready to download', 'sage');
+            $this->placeholders = [
+                '{product_name}' => '',
+                '{version}' => '',
+                '{previous_version}' => '',
+            ];
+
+            parent::__construct();
+            $this->enabled = $this->get_option('enabled', 'yes');
+        }
+
+        public function trigger(\WC_Order $order, int $product_id, string $new_version, string $old_version = ''): void
+        {
+            $this->sent = false;
+            $this->setup_locale();
+            $this->object = $order;
+            $this->product_id = $product_id;
+            $this->new_version = $new_version;
+            $this->old_version = $old_version;
+            $this->recipient = $order->get_billing_email();
+            $productName = (string) get_the_title($product_id);
+            $itemId = $this->matching_item_id($order, $product_id);
+            if ($itemId > 0) {
+                $line = $order->get_item($itemId);
+                if (is_object($line) && method_exists($line, 'get_name')) {
+                    $productName = (string) $line->get_name();
+                }
+            }
+            $this->placeholders['{product_name}'] = $productName;
+            $this->placeholders['{version}'] = $new_version;
+            $this->placeholders['{previous_version}'] = $old_version;
+
+            if ($this->is_enabled() && $this->get_recipient() !== '') {
+                $this->sent = (bool) $this->send(
+                    $this->get_recipient(),
+                    $this->get_subject(),
+                    $this->get_content(),
+                    $this->get_headers(),
+                    $this->get_attachments()
+                );
+            }
+
+            $this->restore_locale();
+        }
+
+        public function get_content_html(): string
+        {
+            return $this->format_html_body();
+        }
+
+        public function get_content_plain(): string
+        {
+            return wp_strip_all_tags($this->format_html_body());
+        }
+
+        public function get_content(): string
+        {
+            if ($this->get_email_type() === 'plain') {
+                return $this->get_content_plain();
+            }
+
+            $mailer = WC()->mailer();
+            $wrapped = method_exists($mailer, 'wrap_message')
+                ? $mailer->wrap_message($this->get_heading(), $this->format_html_body())
+                : $this->format_html_body();
+
+            return $this->style_inline($wrapped);
+        }
+
+        public function get_default_additional_content(): string
+        {
+            return __('Reply to this email if the new zip does not install.', 'sage');
+        }
+
+        private function matching_item_id(\WC_Order $order, int $product_id): int
+        {
+            foreach ($order->get_items() as $item) {
+                if ((int) $item->get_product_id() === $product_id) {
+                    return (int) $item->get_id();
+                }
+            }
+
+            return 0;
+        }
+
+        private function format_html_body(): string
+        {
+            $productId = $this->product_id;
+            $entry = mh_product_catalog_data($productId);
+            $name = $this->placeholders['{product_name}'] ?? get_the_title($productId);
+            $type = mh_resolve_product_type($productId);
+            $downloadsUrl = function_exists('wc_get_account_endpoint_url')
+                ? wc_get_account_endpoint_url('downloads')
+                : home_url('/my-account/downloads/');
+            $releases = mh_product_releases_url($entry);
+            $install = $type === 'plugin'
+                ? __('Download the zip, then upload it under Plugins → Add New → Upload Plugin.', 'sage')
+                : __('Download the zip, then upload it under Appearance → Themes → Add New → Upload Theme.', 'sage');
+
+            $html = '<p>'.esc_html(sprintf(
+                /* translators: 1: product name, 2: new version */
+                __('I shipped a new %1$s zip — version %2$s.', 'sage'),
+                $name,
+                $this->new_version
+            )).'</p>';
+            if ($this->old_version !== '') {
+                $html .= '<p>'.esc_html(sprintf(
+                    /* translators: 1: previous version, 2: new version */
+                    __('That replaces %1$s. The file on My account → Downloads is now %2$s.', 'sage'),
+                    $this->old_version,
+                    $this->new_version
+                )).'</p>';
+            } else {
+                $html .= '<p>'.esc_html__('The file on My account → Downloads is the current zip.', 'sage').'</p>';
+            }
+            $html .= '<p>'.esc_html($install).'</p>';
+            $html .= '<p><a href="'.esc_url($downloadsUrl).'">'.esc_html__('Get the new zip', 'sage').'</a></p>';
+            if ($releases !== '') {
+                $html .= '<p><a href="'.esc_url($releases).'">'.esc_html__('What changed', 'sage').'</a></p>';
+            }
+            $extra = trim((string) $this->get_additional_content());
+            if ($extra !== '') {
+                $html .= '<p>'.wp_kses_post(wpautop($extra)).'</p>';
+            }
+
+            return $html;
+        }
+    }
+}
+
+/** Remember the catalog/download version on the order line at checkout. */
+function mh_store_purchased_download_version($item, string $cart_item_key, array $values, $order): void
+{
+    unset($cart_item_key, $values, $order);
+    if (! is_object($item) || ! method_exists($item, 'get_product_id')) {
+        return;
+    }
+
+    $version = mh_product_download_version((int) $item->get_product_id());
+    if ($version === '') {
+        return;
+    }
+
+    $item->add_meta_data('_mh_purchased_version', $version, true);
+}
+
+/**
+ * Clear the update badge after the customer downloads the current zip.
+ *
+ * @param  mixed  $user_email
+ * @param  mixed  $order_key
+ * @param  mixed  $product_id
+ * @param  mixed  $user_id
+ * @param  mixed  $download_id
+ * @param  mixed  $order_id
+ */
+function mh_mark_download_version_current($user_email, $order_key, $product_id, $user_id, $download_id, $order_id = 0): void
+{
+    unset($user_email, $order_key, $user_id, $download_id);
+    $productId = (int) $product_id;
+    $orderId = (int) $order_id;
+    $version = mh_product_download_version($productId);
+    if ($version === '' || $orderId <= 0 || ! function_exists('wc_get_order')) {
+        return;
+    }
+
+    $order = wc_get_order($orderId);
+    if (! $order) {
+        return;
+    }
+
+    foreach ($order->get_items() as $item) {
+        if ((int) $item->get_product_id() !== $productId) {
+            continue;
+        }
+        $item->update_meta_data('_mh_purchased_version', $version);
+        $item->save();
+    }
+}
+
+/**
+ * Version + update columns on My account → Downloads. Hide leftover/expires.
+ *
+ * @param  array<string, string>  $columns
+ * @return array<string, string>
+ */
+function mh_account_downloads_columns(array $columns): array
+{
+    unset($columns['download-remaining'], $columns['download-expires']);
+
+    $out = [];
+    foreach ($columns as $key => $label) {
+        $out[$key] = $label;
+        if ($key === 'download-product') {
+            $out['download-version'] = __('Version', 'sage');
+        }
+    }
+
+    return $out;
+}
+
+/** Version cell: current zip, plus an update chip when a newer pack shipped. */
+function mh_account_downloads_column_version(array $download): void
+{
+    $payload = mh_download_update_payload($download);
+    if ($payload['latest'] === '') {
+        echo '<span class="mh-dl-version mh-dl-version--empty">'.esc_html__('—', 'sage').'</span>';
+
+        return;
+    }
+
+    echo '<div class="mh-dl-version">';
+    echo '<span class="mh-dl-version__current">'.esc_html(sprintf(
+        /* translators: %s: latest theme/plugin version */
+        __('Latest %s', 'sage'),
+        $payload['latest']
+    )).'</span>';
+    if ($payload['has_update']) {
+        echo '<span class="mh-dl-version__update">'.esc_html(sprintf(
+            /* translators: %s: version the customer last downloaded */
+            __('You have %s', 'sage'),
+            $payload['purchased']
+        )).'</span>';
+    }
+    if ($payload['releases'] !== '') {
+        echo '<a class="mh-dl-version__notes" href="'.esc_url($payload['releases']).'">'.esc_html__('What changed', 'sage').'</a>';
+    }
+    echo '</div>';
+}
+
+/** Banner at the top of Downloads when a newer zip is ready. */
+function mh_account_downloads_update_banner(): void
+{
+    $updates = mh_customer_download_updates();
+    echo '<div class="mh-dl-intro">';
+    echo '<p class="mh-dl-intro__lead">'.esc_html__('Theme and plugin zips you bought. When I ship a new version, download again — the file here updates.', 'sage').'</p>';
+    echo '</div>';
+
+    if ($updates === []) {
+        return;
+    }
+
+    echo '<div class="mh-dl-updates" role="status">';
+    echo '<p class="mh-dl-updates__title">'.esc_html__('Updates ready', 'sage').'</p>';
+    echo '<ul class="mh-dl-updates__list">';
+    foreach ($updates as $row) {
+        echo '<li>';
+        echo '<strong>'.esc_html($row['name']).'</strong> ';
+        echo esc_html(sprintf(
+            /* translators: 1: older version, 2: newer version */
+            __('%1$s → %2$s. Download the file again to get the new zip.', 'sage'),
+            $row['purchased'],
+            $row['latest']
+        ));
+        echo '</li>';
+    }
+    echo '</ul>';
+    echo '</div>';
+}
+
+/** Version + update note on the single order page. */
+function mh_order_item_download_version($item_id, $item, $order): void
+{
+    unset($item_id);
+    if (! is_object($item) || ! method_exists($item, 'get_product_id')) {
+        return;
+    }
+
+    $productId = (int) $item->get_product_id();
+    $orderId = is_object($order) && method_exists($order, 'get_id') ? (int) $order->get_id() : 0;
+    $latest = mh_product_download_version($productId);
+    if ($latest === '') {
+        return;
+    }
+
+    $purchased = $orderId > 0
+        ? mh_order_purchased_version($orderId, $productId)
+        : trim((string) $item->get_meta('_mh_purchased_version', true));
+    $hasUpdate = $purchased !== '' && version_compare($latest, $purchased, '>');
+
+    echo '<p class="mh-order-dl-version">';
+    echo esc_html(sprintf(
+        /* translators: %s: latest version */
+        __('Latest zip %s', 'sage'),
+        $latest
+    ));
+    if ($hasUpdate) {
+        $downloadsUrl = function_exists('wc_get_account_endpoint_url')
+            ? wc_get_account_endpoint_url('downloads')
+            : home_url('/my-account/downloads/');
+        echo ' — <a href="'.esc_url($downloadsUrl).'">'.esc_html__('Update ready on Downloads', 'sage').'</a>';
+    }
+    echo '</p>';
+}
+
+add_filter('woocommerce_email_classes', __NAMESPACE__.'\\mh_register_download_update_email');
+add_action('woocommerce_checkout_create_order_line_item', __NAMESPACE__.'\\mh_store_purchased_download_version', 20, 4);
+add_action('woocommerce_download_product', __NAMESPACE__.'\\mh_mark_download_version_current', 20, 6);
+add_filter('woocommerce_account_downloads_columns', __NAMESPACE__.'\\mh_account_downloads_columns');
+add_action('woocommerce_account_downloads_column_download-version', __NAMESPACE__.'\\mh_account_downloads_column_version');
+add_action('woocommerce_before_account_downloads', __NAMESPACE__.'\\mh_account_downloads_update_banner', 5);
+add_action('woocommerce_order_item_meta_end', __NAMESPACE__.'\\mh_order_item_download_version', 20, 3);
+
+add_filter('body_class', function (array $classes): array {
+    if (function_exists('is_account_page') && is_account_page() && mh_customer_download_updates() !== []) {
+        $classes[] = 'mh-has-theme-updates';
+    }
+
+    return $classes;
+});
+
+if (defined('WP_CLI') && WP_CLI) {
+    \WP_CLI::add_command('mh shop-downloads', function ($args, array $assoc): void {
+        unset($args);
+        if (! mh_shop_ready()) {
+            \WP_CLI::error('WooCommerce is not active.');
+        }
+
+        $force = ! empty($assoc['force']);
+        $localize = ! empty($assoc['localize']);
+        $notify = empty($assoc['no-notify']);
+        $only = sanitize_title((string) ($assoc['slug'] ?? ''));
+        $ids = mh_catalog_download_product_ids();
+        if ($ids === []) {
+            \WP_CLI::warning('No catalog products with a download spec.');
+
+            return;
+        }
+
+        foreach ($ids as $slug => $productId) {
+            if ($only !== '' && $slug !== $only) {
+                continue;
+            }
+            $result = mh_apply_catalog_download_file($productId, $force, $notify);
+            \WP_CLI::log(sprintf('%s #%d %s %s', $slug, $productId, $result['message'], $result['file']));
+            if ($localize && $result['ok']) {
+                $local = mh_localize_product_download($productId);
+                \WP_CLI::log(sprintf('  localize: %s %s', $local['message'], $local['file']));
+            }
+        }
+
+        \WP_CLI::success('Shop downloads sync finished.');
+    });
+
+    \WP_CLI::add_command('mh shop-notify-updates', function ($args, array $assoc): void {
+        unset($args);
+        if (! mh_shop_ready()) {
+            \WP_CLI::error('WooCommerce is not active.');
+        }
+
+        $only = sanitize_title((string) ($assoc['slug'] ?? ''));
+        $resend = ! empty($assoc['resend']);
+        $ids = mh_catalog_download_product_ids();
+        $sent = 0;
+        foreach ($ids as $slug => $productId) {
+            if ($only !== '' && $slug !== $only) {
+                continue;
+            }
+            $version = mh_product_download_version($productId);
+            if ($version === '') {
+                \WP_CLI::warning($slug.' has no download version yet.');
+
+                continue;
+            }
+            $count = mh_notify_buyers_of_download_update($productId, $version, '', $resend);
+            $sent += $count;
+            \WP_CLI::log(sprintf('%s #%d emailed %d buyer(s)', $slug, $productId, $count));
+        }
+
+        \WP_CLI::success(sprintf('Update emails sent: %d', $sent));
+    });
 }
 
 /** Add-to-cart label that matches the linked project type. */
@@ -1894,6 +2964,7 @@ function mh_resync_catalog_only_products_v1(): void
             $product->set_catalog_visibility('visible');
             $product->update_meta_data('_mh_product_type', $type);
             $product->save();
+            mh_apply_catalog_download_file((int) $product->get_id(), false);
 
             // Set Rank Math SEO meta directly on the post.
             $postId = $product->get_id();
