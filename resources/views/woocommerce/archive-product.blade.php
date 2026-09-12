@@ -217,7 +217,9 @@
         <div class="catalog-toolbar__sort">
           <label class="visually-hidden" for="mh-catalog-orderby">{{ __('Sort products', 'sage') }}</label>
           @php
-            do_action('woocommerce_catalog_ordering');
+            if (function_exists('woocommerce_catalog_ordering')) {
+                woocommerce_catalog_ordering();
+            }
           @endphp
         </div>
       </div>
