@@ -94,6 +94,7 @@ Open `resources/data/product-catalog.json`. Each product is an object keyed by `
 6. Upload a **Featured image** (1200×750 px for themes; 1200×600 for plugins). Rank Math picks this up for the `image` schema field.
 7. **Do not** fill in the product short or long description — these come from the JSON file.
 8. Publish. Note the product ID.
+9. Add a `download` object on the catalog entry (GitHub repo + release + asset or `latest`). After deploy, run `wp mh shop-downloads --slug=my-new-product` so the zip attaches. Buyers then get the file on My account → Downloads and an email when that zip version increases.
 
 ---
 

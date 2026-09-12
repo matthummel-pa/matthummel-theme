@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.14 — Theme zips after purchase, plus update emails
+
+- Acreline, WalkRidge, and TOCflow catalog entries declare a GitHub release zip. Woo marks those products virtual + downloadable and attaches the latest zip (`wp mh shop-downloads`).
+- My account → Downloads shows the latest version, an update chip when a newer zip shipped, and a What changed link. The Downloads nav marks **Update** when one is waiting.
+- Buyers get a WooCommerce email when I attach a newer zip (`Product download update` under WooCommerce → Settings → Emails). Seed enables that mail plus completed/processing order mail. Purchase receipts mention that follow-up. Resend with `wp mh shop-notify-updates`.
+- GitHub release URLs are added to WooCommerce approved download directories so zip attach (and the update email) works from WP-CLI.
+- WalkRidge still needs a built GitHub release zip before that product can attach a file. Operator guide: `docs/SHOP-DOWNLOADS.md` (live shop host: hummelwp.com).
+
 ## 3.5.13 — Easier checkout, still professional
 
 - Cart and checkout copy tells you what happens next: guest checkout, receipt email, no mailing list. Service carts drop the zip/GPL lines.

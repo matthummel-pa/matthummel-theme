@@ -1,12 +1,12 @@
 # Matt Hummel — WordPress theme
 
-Sage 11 theme for **[matthummel.com](https://matthummel.com)** — portfolio, services, and journal for a WordPress / full-stack developer in Gettysburg, PA.
+Sage 11 theme for **[hummelwp.com](https://hummelwp.com)** — portfolio, services, and journal for a WordPress / full-stack developer in Gettysburg, PA.
 
 No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not hardcoded in Blade. Front end is Blade + Tailwind + a few small JS modules. PHP does the heavy lifting; Vite ships the assets.
 
 | | |
 | --- | --- |
-| **Live site** | [matthummel.com](https://matthummel.com) |
+| **Live site** | [hummelwp.com](https://hummelwp.com) |
 | **Version** | `3.1.73` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://matthummel.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
