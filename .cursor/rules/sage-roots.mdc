@@ -1,5 +1,5 @@
 ---
-description: Roots Sage 11 theme conventions for matthummel.com. Use official Sage docs before inventing WordPress template or Vite patterns.
+description: Roots Sage 11 theme conventions for the matthummel theme (production: hummelwp.com). Use official Sage docs before inventing WordPress template or Vite patterns.
 alwaysApply: true
 ---
 
@@ -8,6 +8,7 @@ alwaysApply: true
 This repo is a Sage 11.2.1 WordPress theme. Follow official docs, not classic PHP themes or page builders.
 
 Agency operating system: `.cursor/rules/agency-core.mdc`.
+Production host, GitHub, and WPVibe safety: `.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
 Growth, CRO, and visual guardrails: `.cursor/rules/growth-design-powerhouse.mdc`.
 Portfolio and local SEO: `.cursor/rules/portfolio-seo-playbook.mdc`.
 Editorial voice and editing passes: `.cursor/rules/master-content-writer.mdc`.
@@ -55,4 +56,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Production site is `hummelwp.com` on Hostinger. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.mdc`.

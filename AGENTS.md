@@ -16,6 +16,10 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
 
+Production WordPress is **[hummelwp.com](https://hummelwp.com)** on Hostinger (theme folder
+`wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
+`.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
+
 Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
 On the live site, Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).
 FTP remains an optional, best-effort step in `.github/workflows/deploy.yml`.
@@ -28,7 +32,7 @@ The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The upd
 runs `composer install` and `npm install`. Services are not auto-started.
 
 Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/` so it
-matches the live SiteGround folder name (`wp-content/themes/matthummel`). Local WordPress
+matches the live Hostinger folder name (`wp-content/themes/matthummel`). Local WordPress
 must use that same directory name (symlink `/workspace` to
 `~/wp-site/wp-content/themes/matthummel`), not `matthummel-theme`.
 

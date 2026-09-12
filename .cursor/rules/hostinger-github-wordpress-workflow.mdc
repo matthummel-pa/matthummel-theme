@@ -1,0 +1,159 @@
+---
+description: Hostinger + GitHub + WordPress operating rules. Production is hummelwp.com. Always apply for hosting, deploy, WPVibe, and content vs theme changes.
+alwaysApply: true
+---
+
+# Hostinger + GitHub + WordPress development workflow
+
+## This repository (do not ignore)
+
+This is the **matthummel** Sage 11 theme. Map these workflow rules onto files and hosts that already ship. If they conflict with `agency-core.mdc` or what already ships, **this file wins on production host and domain**; shipping theme patterns still win on Sage, Blade, Vite, and “do not rip out what works.”
+
+- **Production site:** `https://hummelwp.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`.
+- **Source of truth for custom code:** this GitHub repo. Do not treat live theme-file edits as canonical.
+- **WordPress connection:** WPVibe (`vibe-ai` plugin + `https://mcp.wpvibe.ai/mcp`) for posts, pages, settings, plugins, and site inspection.
+- **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
+- **This theme is already custom.** Do not add a child theme of `matthummel`. Do not edit WordPress core or third-party plugin files on the server.
+- **Git branches:** `main` is production code. Cloud agents use `cursor/*-ed2a`. Do not invent a git `staging` branch unless Matt creates one. A Hostinger staging *site* is welcome when it exists.
+- **Deploy today:** `.github/workflows/deploy.yml` still builds the GitHub Release zip (`theme-latest`). Do not replace that workflow with a second production deploy unless Matt asks. Live install path remains Appearance → **Update Theme** / `wp mh theme-update`.
+- **Copy vs code:** visitor sentences stay in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`). Keep content PRs/edits separate from theme/plugin/infrastructure PRs.
+
+---
+
+## 1. Core operating principles
+
+- Treat `hummelwp.com` as the production WordPress site.
+- Never make production changes without first showing the proposed change and receiving explicit approval.
+- Prefer small, reversible changes over large rewrites.
+- Inspect the current code and configuration before editing anything.
+- Keep WordPress content changes separate from theme, plugin, and infrastructure changes.
+- Do not expose, log, commit, or paste secrets, passwords, API tokens, application passwords, database credentials, or private keys.
+- Never place secrets in GitHub, WordPress content, JavaScript sent to browsers, screenshots, or issue comments.
+- If the target site or environment is unclear, stop and ask which environment is intended.
+
+## 2. Environment separation
+
+Use three environments whenever possible:
+
+- **Local:** Cloud/local WordPress at `http://localhost:8080` (`~/wp-site`, theme symlink `matthummel`).
+- **Staging:** a Hostinger copy of the site when Matt has one. Do not invent a git `staging` branch.
+- **Production:** `hummelwp.com`; changes here must be deliberate and approved.
+
+Rules:
+
+- Do not debug by experimenting directly on production when a local or staging option exists.
+- Do not copy production secrets into local files.
+- Use `.env.example` with placeholder values, and keep real `.env` files ignored by Git.
+- Before any migration, deployment, plugin update, database change, or bulk content operation, create or verify a recent backup.
+
+## 3. Hostinger workflow
+
+- Use Hostinger MCP tools for hosting, domain, DNS, SSL, backups, PHP, databases, deployment, and account infrastructure.
+- Use the Hostinger connection primarily to inspect state and perform narrowly scoped infrastructure actions.
+- Never change DNS, nameservers, domains, email records, PHP versions, databases, SSL, or production files unless the target and intended result are explicit.
+- Before changing DNS, record the current relevant records and explain the expected effect.
+- Before changing PHP or server configuration, check WordPress and plugin compatibility (this theme targets PHP 8.3+; Hostinger may report a newer patch).
+- After infrastructure changes, verify the site URL, HTTPS, WordPress admin, homepage, and critical forms (`/contact/`).
+- Do not delete domains, sites, databases, backups, or subscriptions without a separate explicit confirmation.
+- Confirm destructive Hostinger actions (deploys, DNS overwrites, plugin/theme/PHP changes, purchases) and wait for a yes.
+- If Hostinger reports an active service incident, do not apply speculative workarounds; verify whether the issue is platform-wide first.
+- Access logs, PHP error logs, and Node.js env vars are not in the Hostinger API — those stay in hPanel.
+
+## 4. Git and GitHub workflow
+
+- GitHub is the source of truth for custom code.
+- Before editing, run or inspect `git status`, the current branch, and recent commits.
+- Work on a feature branch; do not develop directly on `main` or the production branch.
+- Use descriptive branch names such as `feature/contact-form-validation`, `fix/mobile-navigation`, or cloud `cursor/<name>-ed2a`.
+- Make focused commits with clear messages.
+- Never commit generated secrets, `.env` files, backups, database dumps, uploads, cache files, `node_modules`, `vendor`, `public/build`, `.deploy-keys/`, or private customer data.
+- Review the diff before every commit and pull request.
+- Keep pull requests small and explain:
+  - what changed;
+  - why it changed;
+  - how it was tested;
+  - how to roll it back.
+- Do not force-push shared branches.
+- Do not merge or deploy a pull request with failing tests, unresolved conflicts, or unexplained warnings.
+- If GitHub and the live server differ, compare them before overwriting either side.
+
+## 5. WordPress development workflow
+
+- Use the WordPress / WPVibe connection for pages, posts, settings, users, media, plugins, themes, and site inspection.
+- Treat WordPress content and custom code as different assets.
+- Do not edit plugin or theme files directly in production unless there is no safer deployment path. Prefer a PR in this repo, then the built `theme-latest` zip.
+- Do not modify WordPress core files.
+- Before changing a plugin, theme, permalink setting, database schema, or major option, verify compatibility and confirm a rollback path.
+- Never delete users, pages, posts, media, plugins, themes, or settings in bulk without listing the exact items first.
+- Do not use raw SQL for destructive operations unless the exact query, affected rows, backup, and rollback plan are known. WPVibe: prefer abilities, REST, or WP-CLI before raw SQL.
+- Sanitize and validate all input; escape output according to context (`esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()`).
+- Use nonces and capability checks for admin actions and custom forms. The public contact form still needs a nonce.
+- Keep API keys and third-party credentials server-side (`MH_GITHUB_TOKEN`, Hostinger secrets). Do not put secrets in WordPress options if an environment variable or server secret is available.
+
+## 6. WPVibe-specific safety
+
+- WPVibe here is the **`vibe-ai` plugin** plus the MCP at `https://mcp.wpvibe.ai/mcp`. It is not this theme and not a page-builder store.
+- Inspect its files, settings, dependencies, and current version before changing it.
+- Do not overwrite WPVibe plugin code or settings until a backup and rollback method are confirmed.
+- Do not edit `vibe-ai` plugin files on the server. Use its documented hooks, settings, or a small custom plugin in this repo only if Matt asks.
+- Theme work through WPVibe is draft-first. Preview, then `publish_draft_theme` only when Matt says publish, go live, or ship it.
+- Application Passwords must stay enabled on `hummelwp.com` or the MCP cannot reconnect. Do not turn them off in Hostinger Tools or Wordfence without a replacement auth path.
+- Test WPVibe-driven content or permission changes with a non-administrator account when front-end behavior is affected.
+- Verify mobile layout, forms, links, media, and logged-out behavior after changes.
+
+## 7. Required change sequence
+
+For every code or WordPress change:
+
+1. Identify the target: local, staging, or `hummelwp.com` production.
+2. Inspect the current implementation and dependencies.
+3. Explain the planned change in plain language.
+4. Create or verify a backup when data or production code may be affected.
+5. Implement the smallest safe change.
+6. Run linting, tests, or a syntax check where available (`vendor/bin/pint`, `npm run build`). After Blade edits in Cloud: `cd ~/wp-site && wp acorn view:clear`.
+7. Review the complete diff.
+8. Test the affected page or feature and nearby functionality.
+9. Ask for approval before applying the production change.
+10. After deployment, verify the public site and WordPress admin.
+11. Record the commit, deployment, test result, and rollback instructions.
+
+## 8. Deployment rules
+
+- Deploy from a reviewed Git commit, not from untracked local files.
+- Confirm the destination before deployment (`hummelwp.com` vs local vs any staging host).
+- Never deploy secrets or development configuration.
+- Prefer atomic or easily reversible deployments (built `theme-latest` zip over partial `public/` copies).
+- Do not run database migrations automatically against production without approval and a backup.
+- When code and database changes must ship together, document the order and rollback plan.
+- After deployment, check HTTP status, HTTPS, homepage, changed functionality, login, forms, and (in hPanel) error logs.
+- If a deployment partially fails, stop and report the exact state instead of repeatedly retrying destructive steps.
+- Never `--delete` over rsync. Cached HTML may still reference old Vite hashes.
+
+## 9. Testing checklist
+
+Before approval, check the affected feature on:
+
+- logged-out desktop;
+- logged-out mobile;
+- an administrator account only if admin behavior changed;
+- at least one non-admin role if permissions changed;
+- a clean browser session;
+- the main affected URL and related navigation.
+
+For forms and integrations, test validation, success behavior, failure behavior, email delivery, spam protection, and error handling without exposing credentials. Cloud has no mail server; the contact form should still redirect.
+
+## 10. Communication format for Cursor
+
+For each requested task, respond with:
+
+- **Target:** environment and site;
+- **Plan:** files, settings, or WordPress objects affected;
+- **Risk:** possible downtime, data loss, or compatibility concerns;
+- **Backup:** status and location;
+- **Change:** exact implementation summary;
+- **Tests:** commands and browser checks performed;
+- **Diff:** files and important lines changed;
+- **Deployment:** what is ready and what still requires approval;
+- **Rollback:** the precise reversal path.
+
+If any required detail is missing, do not guess. Inspect safely or ask one focused question.
