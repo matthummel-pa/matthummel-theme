@@ -400,7 +400,7 @@
     "license": "GPLv2 or later",
     "download": {
       "github_repo": "matthummel-pa/wp-walkridge",
-      "release": "latest",
+      "release": "theme-latest",
       "asset": "latest",
       "asset_prefix": "walkridge-",
       "label": "walkridge.zip"

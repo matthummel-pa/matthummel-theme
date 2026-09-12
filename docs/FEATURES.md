@@ -9,6 +9,7 @@ What the 3.x Sage theme does, and where it lives.
 - Buyer update mail is Woo email id `mh_customer_download_update`. Enabled by `mh_seed_download_update_notifications()`. Trigger only when the zip version increases. First attach does not email. `_mh_notified_version` on the line item prevents duplicates.
 - GitHub release hosts are added to WooCommerce approved download directories (`mh_approve_product_download_url()`). Without that, attaching a zip fatals and buyers never get the update mail.
 - CLI: `wp mh shop-downloads [--force] [--localize] [--no-notify] [--slug=acreline]` and `wp mh shop-notify-updates [--slug=acreline] [--resend]`.
+- Live shop host is **hummelwp.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
 
 ## Editor’s notes (3.5.13 checkout ease)
 
