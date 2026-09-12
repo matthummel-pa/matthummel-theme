@@ -1862,18 +1862,18 @@ function mh_apply_catalog_download_file(int $product_id, bool $force = false, bo
 {
     $empty = ['ok' => false, 'message' => '', 'file' => ''];
     if ($product_id <= 0 || ! mh_shop_ready() || ! class_exists('WC_Product_Download')) {
-        return $empty + ['message' => 'shop not ready'];
+        return array_merge($empty, ['message' => 'shop not ready']);
     }
 
     $product = wc_get_product($product_id);
     if (! $product instanceof \WC_Product) {
-        return $empty + ['message' => 'product missing'];
+        return array_merge($empty, ['message' => 'product missing']);
     }
 
     $entry = mh_product_catalog_data($product_id);
     $spec = mh_catalog_download_spec($entry);
     if ($spec === null) {
-        return $empty + ['message' => 'no download spec'];
+        return array_merge($empty, ['message' => 'no download spec']);
     }
 
     $oldVersion = trim((string) $product->get_meta('_mh_download_version'));
@@ -1893,7 +1893,7 @@ function mh_apply_catalog_download_file(int $product_id, bool $force = false, bo
 
     $file = mh_github_release_download_file($spec);
     if ($file === null) {
-        return $empty + ['message' => 'no GitHub zip for '.$spec['repo']];
+        return array_merge($empty, ['message' => 'no GitHub zip for '.$spec['repo']]);
     }
 
     $download = new \WC_Product_Download;
@@ -1910,7 +1910,7 @@ function mh_apply_catalog_download_file(int $product_id, bool $force = false, bo
     try {
         $product->set_downloads([$download]);
     } catch (\Throwable $e) {
-        return $empty + ['message' => $e->getMessage()];
+        return array_merge($empty, ['message' => $e->getMessage()]);
     }
     $version = mh_version_from_zip_name($file['name']);
     if ($version === '') {
@@ -1922,7 +1922,7 @@ function mh_apply_catalog_download_file(int $product_id, bool $force = false, bo
     $product->update_meta_data('_mh_download_asset', $file['name']);
     $saved = (int) $product->save();
     if ($saved <= 0) {
-        return $empty + ['message' => 'save failed'];
+        return array_merge($empty, ['message' => 'save failed']);
     }
 
     if ($notify && $oldVersion !== '' && $version !== '' && version_compare($version, $oldVersion, '>')) {
@@ -1941,27 +1941,27 @@ function mh_localize_product_download(int $product_id): array
 {
     $empty = ['ok' => false, 'message' => '', 'file' => ''];
     if ($product_id <= 0 || ! mh_shop_ready()) {
-        return $empty + ['message' => 'shop not ready'];
+        return array_merge($empty, ['message' => 'shop not ready']);
     }
 
     $product = wc_get_product($product_id);
     if (! $product instanceof \WC_Product) {
-        return $empty + ['message' => 'product missing'];
+        return array_merge($empty, ['message' => 'product missing']);
     }
 
     $downloads = $product->get_downloads();
     if ($downloads === []) {
-        return $empty + ['message' => 'no files to localize'];
+        return array_merge($empty, ['message' => 'no files to localize']);
     }
 
     $uploads = wp_upload_dir();
     if (! empty($uploads['error'])) {
-        return $empty + ['message' => (string) $uploads['error']];
+        return array_merge($empty, ['message' => (string) $uploads['error']]);
     }
 
     $dir = trailingslashit((string) $uploads['basedir']).'woocommerce_uploads';
     if (! wp_mkdir_p($dir)) {
-        return $empty + ['message' => 'could not create woocommerce_uploads'];
+        return array_merge($empty, ['message' => 'could not create woocommerce_uploads']);
     }
 
     $changed = false;
@@ -1977,7 +1977,7 @@ function mh_localize_product_download(int $product_id): array
 
         $tmp = download_url($remote, 180);
         if (is_wp_error($tmp)) {
-            return $empty + ['message' => $tmp->get_error_message()];
+            return array_merge($empty, ['message' => $tmp->get_error_message()]);
         }
 
         $name = sanitize_file_name((string) $download->get_name());
@@ -1992,7 +1992,7 @@ function mh_localize_product_download(int $product_id): array
         if (! @copy((string) $tmp, $dest)) {
             @unlink((string) $tmp);
 
-            return $empty + ['message' => 'could not write '.$name];
+            return array_merge($empty, ['message' => 'could not write '.$name]);
         }
         @unlink((string) $tmp);
 
@@ -2488,7 +2488,7 @@ function mh_define_download_update_email_class(): void
             }
             $extra = trim((string) $this->get_additional_content());
             if ($extra !== '') {
-                $html .= '<p>'.wp_kses_post(wpautop($extra)).'</p>';
+                $html .= wp_kses_post(wpautop($extra));
             }
 
             return $html;
