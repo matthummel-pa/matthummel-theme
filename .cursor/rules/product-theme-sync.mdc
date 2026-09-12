@@ -1,5 +1,5 @@
 ---
-description: Playbook for syncing matthummel.com product pages from product theme/plugin repos (Acreline, TOCflow, future packs).
+description: Playbook for syncing hummelwp.com product pages from product theme/plugin repos (Acreline, TOCflow, future packs).
 alwaysApply: false
 globs:
   - resources/data/product-catalog.json
@@ -9,13 +9,13 @@ globs:
 
 # Product theme sync playbook
 
-Use this when Matt asks to update a sellable product on matthummel.com from its source repo (e.g. `wp-acreline`, `tocflow`), or when a product repo ships a material release (blocks, version, brand, pricing, screenshots).
+Use this when Matt asks to update a sellable product on hummelwp.com from its source repo (e.g. `wp-acreline`, `tocflow`), or when a product repo ships a material release (blocks, version, brand, pricing, screenshots).
 
 If this file conflicts with `agency-core.mdc` or shipping patterns, **shipping patterns win** until Matt asks to migrate.
 
 ## What “the product page” is
 
-| Surface | Source of truth on matthummel.com |
+| Surface | Source of truth on hummelwp.com |
 | --- | --- |
 | Project + Woo product copy | `resources/data/product-catalog.json` → `mh_upsert_catalog_product()` |
 | Public URL | `/projects/{slug}/` (e.g. `/projects/acreline/`) |
@@ -118,7 +118,7 @@ Synced from `matthummel-pa/wp-acreline` (Sept 2026):
 - **Truth:** marketing pages are **21 Core Gutenberg blocks** (ServerSideRender, Block Generator, Migrate to Blocks). Listings / agents / bookings stay **classic metaboxes**. Customizer owns identity + eight color styles.
 - **Version:** read `style.css` (e.g. 1.3.0). Demo: `https://acreline.matthummel.com/`.
 - **Setup wizard:** Appearance → Acreline Setup (identity, colors, optional demo). Catalog copy should mention it when the product ships it.
-- **Brand:** matthummel.com labels Acreline as **Real estate** (place / eyebrow / tagline). Product-repo `BRAND.md` may still say farms/land — catalog labeling on this site wins when Matt asks for Real estate. Palette paper `#f5f4f1` (not the older cream).
+- **Brand:** hummelwp.com labels Acreline as **Real estate** (place / eyebrow / tagline). Product-repo `BRAND.md` may still say farms/land — catalog labeling on this site wins when Matt asks for Real estate. Palette paper `#f5f4f1` (not the older cream).
 - **Honesty:** fiction demo, 555 phones, `@acreline-concept.test`, not a live MLS/IDX.
 - **Do not** claim Elementor, ACF, or live IDX. **Do** describe Gutenberg blocks when the product ships them.
 - ThemeForest attribute “Gutenberg optimized” in seller docs may lag the product — catalog copy should match the **shipping theme**, and call out listing drift in the PR.
@@ -131,7 +131,7 @@ Repeat the same pipeline:
 2. Drop screenshots under `resources/images/products/{slug}/`.
 3. Bump `mh_product_catalog_vN` (or extend the shared apply helper).
 4. Add the repo to the table in this file.
-5. Keep one primary CTA on matthummel.com (**Say hello** / buy on the product page) — do not invent a second funnel.
+5. Keep one primary CTA on hummelwp.com (**Say hello** / buy on the product page) — do not invent a second funnel.
 
 ## PR shape
 
