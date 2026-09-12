@@ -44,7 +44,7 @@ Each product entry must have at minimum:
 }
 ```
 
-WooCommerce attaches that GitHub asset as a virtual + downloadable file. Do not commit zips. After a new release, `wp mh shop-downloads --force --slug=acreline` updates the file and emails buyers.
+WooCommerce attaches that GitHub asset as a virtual + downloadable file. Do not commit zips. After a new release, `wp mh shop-downloads --force --slug=acreline` updates the file and emails buyers. Keep **Product download update** enabled under WooCommerce → Settings → Emails.
 
 **`product_type`** drives:
 - `eyebrow` label (WordPress theme / WordPress plugin / Web app)

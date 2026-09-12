@@ -6,6 +6,9 @@
 
 namespace App;
 
+use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Register;
+use Automattic\WooCommerce\Internal\Utilities\URL;
+
 /**
  * Whether WooCommerce is available for product landings.
  */
@@ -1617,6 +1620,36 @@ function mh_seed_digital_download_store(): void
 }
 
 /**
+ * Enable buyer zip-update mail and approve GitHub release hosts.
+ *
+ * Separate from the first shop seed so existing shops still pick this up.
+ */
+function mh_seed_download_update_notifications(): void
+{
+    if (! mh_shop_ready() || wp_installing() || get_option('mh_woocommerce_download_update_email_seeded_v1')) {
+        return;
+    }
+
+    foreach ([
+        'woocommerce_customer_completed_order_settings',
+        'woocommerce_customer_processing_order_settings',
+        'woocommerce_mh_customer_download_update_settings',
+    ] as $emailOption) {
+        $settings = get_option($emailOption, []);
+        if (! is_array($settings)) {
+            $settings = [];
+        }
+        if (! isset($settings['enabled']) || $settings['enabled'] === '') {
+            $settings['enabled'] = 'yes';
+            update_option($emailOption, $settings);
+        }
+    }
+
+    mh_approve_catalog_github_download_hosts();
+    update_option('mh_woocommerce_download_update_email_seeded_v1', true);
+}
+
+/**
  * Catalog `download` object, or null when this entry is not a zip product.
  *
  * @param  array<string, mixed>  $entry
@@ -1742,6 +1775,82 @@ function mh_github_release_download_file(array $spec): ?array
 }
 
 /**
+ * Allow a remote zip URL in WooCommerce approved download directories.
+ *
+ * WooCommerce 8+ rejects GitHub release URLs unless the parent path is
+ * enabled. WP-CLI and front-end init are not site admins, so auto-add
+ * would leave the rule disabled and `set_downloads()` would fatal.
+ */
+function mh_approve_product_download_url(string $fileUrl): bool
+{
+    $fileUrl = trim($fileUrl);
+    if ($fileUrl === '' || ! function_exists('wc_get_container')) {
+        return false;
+    }
+
+    try {
+        $register = wc_get_container()->get(
+            Register::class
+        );
+    } catch (\Throwable $e) {
+        return false;
+    }
+
+    if (! is_object($register) || ! method_exists($register, 'add_approved_directory')) {
+        return false;
+    }
+
+    $parent = preg_replace('#/[^/]+$#', '/', $fileUrl) ?: $fileUrl;
+    if (class_exists(URL::class)) {
+        try {
+            $parsed = new URL($fileUrl);
+            if (method_exists($parsed, 'get_parent_url')) {
+                $fromParent = trim((string) $parsed->get_parent_url());
+                if ($fromParent !== '') {
+                    $parent = $fromParent;
+                }
+            }
+        } catch (\Throwable $e) {
+            // keep dirname fallback
+        }
+    }
+
+    try {
+        $register->add_approved_directory($parent, true);
+        $existing = method_exists($register, 'get_by_url') ? $register->get_by_url($parent) : false;
+        if (is_object($existing) && method_exists($existing, 'is_enabled') && ! $existing->is_enabled() && method_exists($register, 'enable_by_id')) {
+            $register->enable_by_id((int) $existing->get_id());
+        }
+
+        return method_exists($register, 'is_valid_path')
+            ? (bool) $register->is_valid_path($fileUrl)
+            : true;
+    } catch (\Throwable $e) {
+        return false;
+    }
+}
+
+/** Approve GitHub release parents for every catalog zip product. */
+function mh_approve_catalog_github_download_hosts(): void
+{
+    $urls = ['https://github.com/matthummel-pa/placeholder.zip'];
+    foreach (mh_product_catalog_entries() as $entry) {
+        if (! is_array($entry)) {
+            continue;
+        }
+        $spec = mh_catalog_download_spec($entry);
+        if ($spec === null) {
+            continue;
+        }
+        $urls[] = 'https://github.com/'.$spec['repo'].'/placeholder.zip';
+    }
+
+    foreach (array_unique($urls) as $url) {
+        mh_approve_product_download_url($url);
+    }
+}
+
+/**
  * Mark a catalog product virtual+downloadable and attach the GitHub zip.
  *
  * Skips when files already exist unless $force. Does not localize the zip
@@ -1797,7 +1906,12 @@ function mh_apply_catalog_download_file(int $product_id, bool $force = false, bo
     $product->set_download_expiry(-1);
     $product->set_reviews_allowed(false);
     $product->set_sold_individually(true);
-    $product->set_downloads([$download]);
+    mh_approve_product_download_url($file['url']);
+    try {
+        $product->set_downloads([$download]);
+    } catch (\Throwable $e) {
+        return $empty + ['message' => $e->getMessage()];
+    }
     $version = mh_version_from_zip_name($file['name']);
     if ($version === '') {
         $version = trim((string) ($entry['version'] ?? ''));
@@ -2005,6 +2119,7 @@ function mh_wc_product_download_admin_notice(int $product_id, bool $forSale, str
 }
 
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_seed_digital_download_store', 37);
+add_action('woocommerce_init', __NAMESPACE__.'\\mh_seed_download_update_notifications', 37);
 add_action('woocommerce_init', __NAMESPACE__.'\\mh_sync_catalog_download_files_v1', 38);
 
 /**
