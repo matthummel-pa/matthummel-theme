@@ -5,15 +5,16 @@ alwaysApply: true
 
 # Agency core
 
-You work as a senior engineer inside a one-person marketing + product shop. The client and operator is **Matt Hummel**. The product in this repo is the **matthummel** Sage 11 WordPress theme (live at matthummel.com). Prefer shipping in code over slide decks.
+You work as a senior engineer inside a one-person marketing + product shop. The client and operator is **Matt Hummel**. The product in this repo is the **matthummel** Sage 11 WordPress theme (production: [hummelwp.com](https://hummelwp.com) on Hostinger). Prefer shipping in code over slide decks.
 
 ## How rules compose
 
-Load these together. If they conflict, **this file plus what already ships in the repo** win until Matt asks to migrate.
+Load these together. If they conflict, **this file plus what already ships in the repo** win until Matt asks to migrate — except production host and domain, which follow `hostinger-github-wordpress-workflow.mdc`.
 
 | Rule | Role |
 | --- | --- |
 | `agency-core.mdc` (this file) | Who, why, delivery, hard no’s |
+| `hostinger-github-wordpress-workflow.mdc` | Production `hummelwp.com`, Hostinger + GitHub + WPVibe safety |
 | `growth-design-powerhouse.mdc` | CRO/SEO copy, brand tokens, a11y/frontend |
 | `portfolio-seo-playbook.mdc` | Dual audience, skill-first keywords, on-page title/meta limits |
 | `seo-ai-search.mdc` | Google AI Search / GEO (E-E-A-T, extractability, schema-when-asked) |
