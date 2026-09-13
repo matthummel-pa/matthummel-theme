@@ -10,6 +10,7 @@ import { initDiscoveryForm } from './discovery-form.js';
 import { initShopFilter } from './shop-filter.js';
 import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
+import { initProductSectionNav } from './product-section-nav.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 
@@ -511,6 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShopFilter();
   initStickyBar();
   initProductGallery();
+  initProductSectionNav();
   initStudioCart();
   initCheckoutInstallNotes();
   initCopyBrief();
