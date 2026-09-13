@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.15 — Product pages: tighter ATF, blog body, section pills
+
+- Global `.display-title.is-hero` / page H1 scale is smaller for readable product and marketing titles (home name marque stays large).
+- Single product hero is denser: gallery + compact buy box above the fold.
+- Long-form product copy sits in a blog-width article under the gallery (no duplicate screenshots grid).
+- Sticky “On this page” section pills with scrollspy (`product-section-nav.js`).
+
 ## 3.5.14 — Theme zips after purchase, plus update emails
 
 - Acreline, WalkRidge, and TOCflow catalog entries declare a GitHub release zip. Woo marks those products virtual + downloadable and attaches the latest zip (`wp mh shop-downloads`).

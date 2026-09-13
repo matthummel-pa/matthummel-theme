@@ -89,19 +89,24 @@ Required SEO defaults:
 
 Do not reorder these sections without a strong reason:
 
-1. Hero — product title, price, buy/demo CTAs, trust signals
-2. Summary — full overview paragraph (context before screenshots)
-3. Screenshots gallery
-4. Features / benefits (What you get)
-5. Story — challenge + approach (Built for this niche / The approach)
-6. Deliverables (What's included)
-7. Hire nudge strip (Need it customized?)
-8. Gutenberg blocks (themes only)
-9. Technical / Stack & code
-10. Documentation links
-11. FAQ (accordion, drives FAQPage schema)
-12. Purchase CTA band
+1. Hero — gallery left + compact buy box (title, price, buy/demo, next steps, short trust)
+2. Sticky section pills — jump links for Overview / Features / Story / Included / Blocks / Pricing / Stack / Docs / FAQ
+3. Article body (blog-width under the gallery) —
+   - Overview summary
+   - Features / benefits
+   - Story (challenge + approach + outcome)
+   - Deliverables / files included
+   - Hire nudge
+   - Gutenberg blocks (themes only)
+   - Audience
+   - Purchase widget
+   - Technical / stack
+   - Documentation links
+   - FAQ
+4. Related products
+5. Bottom CTA band + sticky buy bar
 
+Screenshots live in the hero gallery (thumbs + lightbox). Do not duplicate a full screenshots grid below the fold — it adds scroll without new info.
 ---
 
 ## 5. `mh_product_entry()` — adding a new field
