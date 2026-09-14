@@ -1,21 +1,19 @@
 # Changelog
 
-## 3.5.22 — My Account desk (same post-style layout)
+## 3.5.22 — Cart, checkout & My Account desk (post-style layout)
 
-- My Account uses the cart/checkout desk: content left, sticky account nav + tools right.
-- Endpoint-aware page title, lead, and sidebar copy (dashboard, downloads, orders, addresses, details).
-- Login / register uses the same desk: forms left, help tools right.
-- Header pills jump to Dashboard, Downloads, Orders, and Details.
-- Contrast pass for light and `html.mh-dark` on account panels, tables, and fields.
-
-## 3.5.21 — Cart & checkout desk (post-style layout)
-
-- Cart and checkout use a journal-style desk: main column left, sticky tools sidebar right.
+- Cart, checkout, and My Account use a journal-style desk: main column left, sticky tools sidebar right.
 - Cart lines read as product cards (type badge, optional blurb, clear price) instead of a dense table.
 - Sidebar tools: what happens next, included trust lines, quick FAQ, often-added add-ons, and help / keep shopping.
 - Checkout keeps pay fields on the left; order summary, payment, kickoff brief, and tools stack on the right.
+- My Account: endpoint-aware title/lead/tools; login/register desk; header pills for Dashboard, Downloads, Orders, Details.
 - Mobile cart gets a sticky total + continue bar; coupons fold behind “Have a coupon?”
-- Contrast pass for light and `html.mh-dark` on desk surfaces, secondary text, and form controls.
+- Contrast pass for light and `html.mh-dark` on desk and account surfaces, secondary text, and form controls.
+
+## 3.5.21 — About sticky section nav
+
+- About “On this page” uses the same sticky `.h-page-nav` + `data-section-nav` pattern as Home (pills, mobile dropdown, scrollspy).
+- About section IDs get sticky-header scroll-margin; old `.about-jump` card styles removed.
 
 ## 3.5.20 — Shop-first marketing cleanup
 

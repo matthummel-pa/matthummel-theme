@@ -2,6 +2,16 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.22 My Account desk)
+
+- Account mirrors cart/checkout desk (`woo-desk--account` / `woo-desk--login`): main left, sticky nav + tools right. Do not restore the old full-width pill nav above content.
+- Endpoint title/lead/tools come from `mh_account_desk_header()` and `mh_account_desk_tools()`. Keep copy honest (downloads, update email, GPL) — no fake urgency.
+- Blade overrides: `woocommerce/myaccount/my-account.blade.php`, `form-login.blade.php`, `partials/woo-account-aside.blade.php`.
+
+## Editor’s notes (3.5.21 About section nav)
+
+- About page sticky pills are `.h-page-nav` with `data-section-nav` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
+
 ## Editor’s notes (3.5.20 shop-first marketing)
 
 - Marketing pages (Home, Hire, Shop, Start, Journal topics) stay outcome-led for shops and agencies. Named stack (Sage, Blade, Vite, Tailwind, PHP 8.3) belongs on **About**, Uses, and light product tech tags.
@@ -40,11 +50,6 @@ What the 3.x Sage theme does, and where it lives.
 - CLI: `wp mh shop-downloads [--force] [--localize] [--no-notify] [--slug=acreline]` and `wp mh shop-notify-updates [--slug=acreline] [--resend]`.
 - Live shop host is **hummelwp.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
 
-## Editor’s notes (3.5.22 My Account desk)
-
-- Account mirrors cart/checkout desk (`woo-desk--account` / `woo-desk--login`): main left, sticky nav + tools right. Do not restore the old full-width pill nav above content.
-- Endpoint title/lead/tools come from `mh_account_desk_header()` and `mh_account_desk_tools()`. Keep copy honest (downloads, update email, GPL) — no fake urgency.
-- Blade overrides: `woocommerce/myaccount/my-account.blade.php`, `form-login.blade.php`, `partials/woo-account-aside.blade.php`.
 
 ## Editor’s notes (3.5.21 cart/checkout desk)
 
