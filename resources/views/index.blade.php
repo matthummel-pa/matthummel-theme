@@ -11,32 +11,32 @@
     [
       'icon'  => 'wordpress',
       'title' => __('WordPress', 'sage'),
-      'desc'  => __('Custom theme architecture, Sage 11, Blade templates, the_loop, WP-CLI, and real admin UI patterns.', 'sage'),
+      'desc'  => __('Custom themes, plugins, admin UI, and handoffs shops can keep using.', 'sage'),
     ],
     [
       'icon'  => 'php',
       'title' => __('PHP', 'sage'),
-      'desc'  => __('Plugin development, hooks, filters, typed functions, REST endpoints, and clean handoff code.', 'sage'),
+      'desc'  => __('Plugins, hooks, and clean code another developer can pick up without a scavenger hunt.', 'sage'),
     ],
     [
       'icon'  => 'javascript',
       'title' => __('JavaScript', 'sage'),
-      'desc'  => __('Vanilla JS, ES modules, async patterns, fetch, and TypeScript notes from real projects.', 'sage'),
+      'desc'  => __('Front-end behavior, forms, and small modules from real WordPress projects.', 'sage'),
     ],
     [
       'icon'  => 'tailwind',
-      'title' => __('CSS & Tailwind', 'sage'),
-      'desc'  => __('Tailwind v4, CSS custom properties, container queries, fluid type, and component patterns.', 'sage'),
+      'title' => __('CSS & layout', 'sage'),
+      'desc'  => __('Readable layouts, fluid type, and styles that hold up on phones and wide screens.', 'sage'),
     ],
     [
       'icon'  => 'vite',
-      'title' => __('Build & Deploy', 'sage'),
-      'desc'  => __('Vite, GitHub Actions, SSH rsync, WP-CLI, asset pipelines, and CI/CD for WordPress themes.', 'sage'),
+      'title' => __('Build & deploy', 'sage'),
+      'desc'  => __('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage'),
     ],
     [
       'icon'  => 'cursor-ai',
-      'title' => __('AI-assisted dev', 'sage'),
-      'desc'  => __('Using Cursor, Claude, and ChatGPT in a reviewed, production-safe WordPress workflow.', 'sage'),
+      'title' => __('AI-assisted work', 'sage'),
+      'desc'  => __('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage'),
     ],
   ];
 @endphp
@@ -49,7 +49,7 @@
     '@context'    => 'https://schema.org',
     '@type'       => 'Blog',
     'name'        => \App\field('write_h1', __('WordPress, PHP, and JavaScript — in practice.', 'sage'), $writeId),
-    'description' => \App\field('write_lede', __('Practical code notes from WordPress theme development, PHP plugins, Tailwind, Vite, and full-stack web work. Most posts ship with a working snippet you can paste and adapt on your own projects.', 'sage'), $writeId),
+    'description' => \App\field('write_lede', __('Practical notes from WordPress themes, PHP plugins, and full-stack web work. Most posts ship with a working snippet you can paste and adapt.', 'sage'), $writeId),
     'url'         => esc_url($blogUrl),
     'inLanguage'  => 'en-US',
     'author'      => [
@@ -121,7 +121,7 @@
   <div class="container wide">
     <div class="journal-topics-head">
       <h2 id="journal-topics-heading" class="journal-topics__title">{{ __('What I write about', 'sage') }}</h2>
-      <p class="journal-topics__sub">{{ __('Mostly WordPress and its surrounding stack — from theme architecture to deploy pipelines.', 'sage') }}</p>
+      <p class="journal-topics__sub">{{ __('Mostly WordPress — themes, plugins, and the practical notes that help a build ship.', 'sage') }}</p>
     </div>
     <div class="journal-topics-grid">
       @foreach ($journalTopics as $topic)

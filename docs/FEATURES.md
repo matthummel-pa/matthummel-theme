@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.20 shop-first marketing)
+
+- Marketing pages (Home, Hire, Shop, Start, Journal topics) stay outcome-led for shops and agencies. Named stack (Sage, Blade, Vite, Tailwind, PHP 8.3) belongs on **About**, Uses, and light product tech tags.
+- Home `#help` uses `home_build_*` fields. Do not restore the old multi-group skill grid without Matt asking.
+- Recruiter glance defaults in `mh_recruiter_glance()` must stay shop-first; empty meta falls through to those PHP defaults, not the old Sage parade.
+- Portfolio and Code stay developer-facing, but ledes point stack depth at About instead of naming every tool in the hero.
+
 ## Editor’s notes (3.5.19 home first impression)
 
 - Hero name is deliberately smaller so role + CTAs clear the first viewport; proof strip uses `home_proof_*` fields.

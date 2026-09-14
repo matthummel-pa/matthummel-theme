@@ -87,7 +87,7 @@
       <a class="ty-browse-card" href="{{ home_url('/uses/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('code', 22) !!}</div>
         <h3 class="ty-browse-card__title">Stack and tools</h3>
-        <p class="ty-browse-card__body">The tools and frameworks I use on real projects — Sage, Tailwind, Cursor AI, GitHub Actions, HubSpot, and more.</p>
+        <p class="ty-browse-card__body">The tools I reach for on real projects — with a short note on why each one shows up.</p>
         <span class="ty-browse-card__link">See what I use →</span>
       </a>
 

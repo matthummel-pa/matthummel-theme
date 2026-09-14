@@ -54,7 +54,7 @@
     '@context'        => 'https://schema.org',
     '@type'           => 'CollectionPage',
     'name'            => __('WordPress Themes, Plugins & Web Apps', 'sage'),
-    'description'     => __('Ready-to-buy WordPress themes, plugins, and web apps built on Sage 11, Tailwind v4, and Gutenberg. Live demos and instant download.', 'sage'),
+    'description'     => __('Ready-to-buy WordPress themes, plugins, and web apps. Live demos, instant download, GPL license.', 'sage'),
     'url'             => $shopUrl,
     'hasPart'         => $listItems,
   ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
@@ -69,14 +69,14 @@
     $crumbItems[] = ['label' => $archiveTitle, 'current' => true];
   }
 
-  // Stack tiles shown in the "Built on modern WordPress" section.
+  // Light stack tiles — shops skim; developers get a short pointer to About.
   $stackTiles = [
-    ['name' => 'Sage 11',       'desc' => __('Roots Sage — Blade templates, Acorn, and a clean PHP namespace. Not a child theme.', 'sage')],
-    ['name' => 'Tailwind v4',   'desc' => __('CSS-native design tokens, container queries, and fluid type — no utility sprawl.', 'sage')],
-    ['name' => 'Gutenberg',     'desc' => __('Server-rendered Core blocks with live editor previews. No page builder required.', 'sage')],
-    ['name' => 'Vite 8',        'desc' => __('Fast HMR in dev, hashed production bundles, and a zero-commit public/ folder.', 'sage')],
-    ['name' => 'WooCommerce',   'desc' => __('Cart and checkout on themes that need it — tours, shops, digital downloads.', 'sage')],
-    ['name' => 'GPL licensed',  'desc' => __('GPLv2 or later on every product. You own the code outright after checkout.', 'sage')],
+    ['name' => __('Custom themes', 'sage'), 'desc' => __('Built for WordPress — not a page-builder skin or generic template.', 'sage')],
+    ['name' => __('Editable in wp-admin', 'sage'), 'desc' => __('Page fields and Core blocks so owners can update content without a developer.', 'sage')],
+    ['name' => __('GPL licensed', 'sage'),       'desc' => __('GPLv2 or later on every product. You own the code outright after checkout.', 'sage')],
+    ['name' => __('WooCommerce ready', 'sage'),  'desc' => __('Cart and checkout on themes that need it — tours, shops, digital downloads.', 'sage')],
+    ['name' => __('Source on GitHub', 'sage'),   'desc' => __('Repos and handoff notes included. Fork what helps.', 'sage')],
+    ['name' => __('Modern WordPress', 'sage'),   'desc' => __('Current PHP and WordPress versions. Stack details for developers are on About.', 'sage')],
   ];
 @endphp
 
@@ -95,7 +95,7 @@
     </h1>
   @endif
   <p class="lead">
-    {{ \App\field('work_lede', __('Ready-to-buy digital products built on Sage 11 and Tailwind v4. Live demos, instant download, GPL license. Buy a pack from the shop, or hire me to adapt one for your business.', 'sage'), $shopPostId) }}
+    {{ \App\field('work_lede', __('Ready-to-buy WordPress themes, plugins, and web apps. Live demos, instant download, GPL license. Buy a pack from the shop, or hire me to adapt one for your business.', 'sage'), $shopPostId) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="#shop-products">
@@ -141,7 +141,7 @@
       {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Custom builds available', 'sage') }}
     </span>
     <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('code', 14) !!} {{ __('Sage 11 + Tailwind v4', 'sage') }}
+      {!! \App\mh_svg_icon('code', 14) !!} {{ __('Modern WordPress stack', 'sage') }}
     </span>
   </div>
 </div>
@@ -282,12 +282,12 @@
 {{-- BUILT ON MODERN WORDPRESS — stack section for SEO and developer credibility --}}
 <section class="pf-section pf-section--alt shop-stack-section" aria-labelledby="shop-stack-heading">
   <div class="container wide">
-    <p class="eyebrow">{{ __('The stack', 'sage') }}</p>
+    <p class="eyebrow">{{ __('Why these packs', 'sage') }}</p>
     <h2 id="shop-stack-heading" class="display-title is-section">
-      {{ __('Built on modern WordPress.', 'sage') }}
+      {{ __('Built for shops — clear for developers.', 'sage') }}
     </h2>
     <p class="lead work-guide__intro">
-      {{ __('Every product in this catalog runs on the same production stack I use for client work. No page builders. No bloated frameworks. Clean PHP 8.3, Blade templates, and CSS design tokens.', 'sage') }}
+      {{ __('Every product is a WordPress theme or plugin you can install, edit, and own. No page builders. Developers who want the full stack can read About or each product’s tech notes.', 'sage') }}
     </p>
     <div class="shop-stack-grid">
       @foreach ($stackTiles as $tile)

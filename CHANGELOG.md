@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.20 — Shop-first marketing cleanup
+
+- Home drops the tool parade and duplicate GitHub activity; skills become three outcome cards; principles shrink to three shop-friendly points with stack depth pointed at About.
+- Recruiter glance, Hire, Shop, and Work copy lead with WordPress outcomes; Sage/Vite/Blade details stay on About and product tech notes.
+- Start page adds a clearer brief heading, “what happens next” proof, and a Hire-focused footer CTA.
+- Receive walkthrough deploy step uses plain install language instead of npm/Composer theater.
+
 ## 3.5.19 — Home first impression + pathways + case studies
 
 - Hero name scale and spacing tightened so the role, lede, and CTAs land sooner; proof strip covers experience, ownership, and availability.
