@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.21 — About sticky section nav
+
+- About “On this page” uses the same sticky `.h-page-nav` + `data-section-nav` pattern as Home (pills, mobile dropdown, scrollspy).
+- About section IDs get sticky-header scroll-margin; old `.about-jump` card styles removed.
+
 ## 3.5.20 — Shop-first marketing cleanup
 
 - Home drops the tool parade and duplicate GitHub activity; skills become three outcome cards; principles shrink to three shop-friendly points with stack depth pointed at About.

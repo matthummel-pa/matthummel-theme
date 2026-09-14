@@ -67,22 +67,38 @@
   @endslot
 @endcomponent
 
-<nav class="about-jump-band" aria-label="{{ __('On this page', 'sage') }}">
-  <div class="container wide">
-    <div class="about-jump">
-      <p class="about-jump__label">{{ __('On this page', 'sage') }}</p>
-      <div class="about-jump__track">
-        <a href="#story">{!! \App\mh_svg_icon('book-open', 13) !!} {{ __('Story', 'sage') }}</a>
-        <a href="#build">{!! \App\mh_svg_icon('wordpress', 13) !!} {{ __('What I build', 'sage') }}</a>
-        @if ($isHireable)
-          <a href="#availability">{!! \App\mh_svg_icon('briefcase', 13) !!} {{ __('Open for work', 'sage') }}</a>
-        @endif
-        <a href="#approach">{!! \App\mh_svg_icon('code', 13) !!} {{ __('How I work', 'sage') }}</a>
-        @if (! empty($latestPosts))
-          <a href="#journal">{!! \App\mh_svg_icon('pen', 13) !!} {{ __('Journal', 'sage') }}</a>
-        @endif
-        <a href="#elsewhere">{!! \App\mh_svg_icon('globe', 13) !!} {{ __('Elsewhere', 'sage') }}</a>
+@php
+  $aboutNav = [
+    ['story', __('Story', 'sage')],
+    ['build', __('What I build', 'sage')],
+  ];
+  if ($isHireable) {
+    $aboutNav[] = ['availability', __('Open for work', 'sage')];
+  }
+  $aboutNav[] = ['approach', __('How I work', 'sage')];
+  if (! empty($latestPosts)) {
+    $aboutNav[] = ['journal', __('Journal', 'sage')];
+  }
+  $aboutNav[] = ['elsewhere', __('Elsewhere', 'sage')];
+  $aboutNavFirst = $aboutNav[0][1] ?? __('Story', 'sage');
+@endphp
+<nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
+  <div class="container wide h-page-nav__inner">
+    <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
+    <details class="h-page-nav__mobile">
+      <summary class="h-page-nav__mobile-summary">
+        <span data-section-nav-current>{{ $aboutNavFirst }}</span>
+      </summary>
+      <div class="h-page-nav__mobile-list" role="list">
+        @foreach ($aboutNav as [$id, $label])
+          <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
+        @endforeach
       </div>
+    </details>
+    <div class="h-page-nav__pills" role="list">
+      @foreach ($aboutNav as [$id, $label])
+        <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
+      @endforeach
     </div>
   </div>
 </nav>
