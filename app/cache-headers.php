@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Do not let SiteGround cache HTML that points at old Vite hashes.
+ * Do not let the host cache HTML that points at old Vite hashes (Hostinger LiteSpeed).
  */
 
 namespace App;

@@ -9,6 +9,6 @@
 | [INSTALL.md](./INSTALL.md) | Activate the theme after deploy |
 | [sage/README.md](./sage/README.md) | Roots Sage index |
 | [sage/theme-templates.md](./sage/theme-templates.md) | Blade hierarchy |
-| [sage/deployment.md](./sage/deployment.md) | SiteGround deploy and token setup |
+| [sage/deployment.md](./sage/deployment.md) | Hostinger / GitHub zip deploy and token setup |
 
 Repo landing README: [../README.md](../README.md). Changelog: [../CHANGELOG.md](../CHANGELOG.md).

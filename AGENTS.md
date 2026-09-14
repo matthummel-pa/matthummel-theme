@@ -16,9 +16,13 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
 
+Production WordPress is **[hummelwp.com](https://hummelwp.com)** on Hostinger (theme folder
+`wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
+`.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
+
 Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
-On the live site (**hummelwp.com**), Appearance → **Update Theme** downloads that zip over HTTPS (no FTP).
-FTP remains an optional, best-effort step in `.github/workflows/deploy.yml`.
+On Hostinger (`hummelwp.com`), Appearance → **Update Theme** downloads that zip over HTTPS.
+There is no SiteGround FTP or SSH step. After install, purge LiteSpeed.
 The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
 WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
 
@@ -30,7 +34,7 @@ The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The upd
 runs `composer install` and `npm install`. Services are not auto-started.
 
 Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/` so it
-matches the live SiteGround folder name (`wp-content/themes/matthummel`). Local WordPress
+matches the live Hostinger folder name (`wp-content/themes/matthummel`). Local WordPress
 must use that same directory name (symlink `/workspace` to
 `~/wp-site/wp-content/themes/matthummel`), not `matthummel-theme`.
 
@@ -86,8 +90,8 @@ Gotchas:
 - Cloud Agents: add the same HTTP URL once at https://cursor.com/agents
   (MCP dropdown → custom HTTP server, no client ID/secret), then complete
   OAuth. Project `.cursor/mcp.json` is not loaded in Cloud Agent VMs.
-  Plugin is on the live site (`vibe-ai`). Theme **files** still ship via
-  FTP into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
+  Plugin is on the live site (`vibe-ai`). Theme **files** still ship as the
+  `theme-latest` zip into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
   WPVibe then connects, lists themes, and activates — it cannot replace
   `npm run build` / Composer for Sage. Theme edits on a connected site: draft →
   preview → publish.

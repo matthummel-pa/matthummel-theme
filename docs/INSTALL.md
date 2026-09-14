@@ -2,11 +2,11 @@
 
 Do this **after** files are on the server (Update Theme in wp-admin, a `main` push, or a manual upload).
 
-## 0. PHP 8.3 on SiteGround (required)
+## 0. PHP 8.3+ on Hostinger (required)
 
-Sage fatals on 8.2. In SiteGround **Site Tools → Devs → PHP Manager**, set `matthummel.com` to **8.3** (or 8.4). Then flush SuperCacher.
+Sage fatals on 8.2. In Hostinger hPanel, set `hummelwp.com` to **PHP 8.3** or newer. Then purge LiteSpeed cache.
 
-The live site is still the June **block** theme. GitHub has been uploading Sage into a `public_html/…/matthummel` folder that is **not** what nginx serves. After a deploy, in **Site Tools → Site → File Manager** search `style.css` under themes: the copy dated **June 2026** (~2 KB, no “Sage 11” in the header) is the live theme. That is the folder WordPress uses.
+Production is **[hummelwp.com](https://hummelwp.com)**. Theme folder is `wp-content/themes/matthummel/`.
 
 ## 1. Folder name
 
@@ -71,7 +71,7 @@ Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
 ## 7. Later deploys
 
-Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`).
+Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`). Then purge LiteSpeed.
 
 ## Must-use plugins (optional)
 
@@ -85,7 +85,7 @@ Optional real must-use install (runs earlier than the theme; same file):
 # Local Cloud
 cp /workspace/mu-plugins/rank-math-rest-meta.php ~/wp-site/wp-content/mu-plugins/
 
-# Live (SiteGround File Manager or SSH)
+# Live (Hostinger File Manager)
 # Copy to: public_html/wp-content/mu-plugins/rank-math-rest-meta.php
 ```
 
