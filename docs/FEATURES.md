@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.21 About section nav)
+
+- About page sticky pills are `.h-page-nav` with `data-section-nav` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
+
 ## Editor’s notes (3.5.20 shop-first marketing)
 
 - Marketing pages (Home, Hire, Shop, Start, Journal topics) stay outcome-led for shops and agencies. Named stack (Sage, Blade, Vite, Tailwind, PHP 8.3) belongs on **About**, Uses, and light product tech tags.

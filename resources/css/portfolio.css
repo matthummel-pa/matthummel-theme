@@ -1517,6 +1517,13 @@ html.mh-dark .h-hero-work__foot {
 #faq,
 #oss,
 #glance,
+#help,
+#receive,
+#story,
+#build,
+#availability,
+#approach,
+#elsewhere,
 .h-about,
 .h-skills,
 .h-process,
@@ -1536,6 +1543,13 @@ html.mh-dark .h-hero-work__foot {
   #faq,
   #oss,
   #glance,
+  #help,
+  #receive,
+  #story,
+  #build,
+  #availability,
+  #approach,
+  #elsewhere,
   .h-about,
   .h-skills,
   .h-process,
@@ -6149,75 +6163,7 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   font-size: .78rem;
 }
 
-.about-jump-band {
-  margin: -.15rem 0 .85rem;
-}
-.about-jump {
-  display: flex;
-  align-items: center;
-  gap: .75rem 1.15rem;
-  flex-wrap: wrap;
-  /* Match .about-shell horizontal padding so links line up with section copy */
-  padding: .8rem clamp(1.25rem, 2.4vw, 1.85rem);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--blue-50) 45%, white) 0%, var(--white) 70%);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-navy, #0f172a) 4%, transparent);
-}
-.about-jump__label {
-  margin: 0;
-  flex-shrink: 0;
-  font: 700 .68rem/1.2 var(--font-display);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-.about-jump__track {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .35rem .55rem;
-  min-width: 0;
-  flex: 1 1 14rem;
-}
-.about-jump__track a {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  font: 600 .82rem/1.2 var(--font-display);
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  padding: .4rem .7rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: color-mix(in srgb, var(--white) 70%, transparent);
-  transition: color .15s, border-color .15s, background .15s;
-}
-.about-jump__track a:hover,
-.about-jump__track a:focus-visible {
-  color: var(--color-accent);
-  border-color: var(--blue-200);
-  background: var(--white);
-}
-.about-jump__track .mh-ico { color: var(--color-accent); flex-shrink: 0; }
-@media (max-width: 640px) {
-  .about-jump {
-    padding: .75rem 1rem;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: .55rem;
-  }
-  .about-jump__track {
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: .15rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-  .about-jump__track a { flex: 0 0 auto; }
-}
-
+/* About page sticky section pills use shared .h-page-nav (home/product pattern). */
 @keyframes about-hero-in {
   from {
     opacity: 0;
