@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.16 — Hostinger-only theme zip (no SiteGround)
+
+- Production WordPress is [hummelwp.com](https://hummelwp.com) on Hostinger. SiteGround FTP and SSH are no longer part of deploy.
+- CI publishes the `theme-latest` zip only. Install with Appearance → Update Theme or `wp mh theme-update`, then purge LiteSpeed.
+- Cursor rules and install docs follow the Hostinger + GitHub + WPVibe workflow.
+
 ## 3.5.15 — Product pages: tighter ATF, blog body, section pills
 
 - Global `.display-title.is-hero` / page H1 scale is smaller for readable product and marketing titles (home name marque stays large).

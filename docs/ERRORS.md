@@ -26,8 +26,7 @@ tail -f ~/wp-site/wp-content/debug.log
 # WP-CLI
 wp eval 'echo file_get_contents(WP_CONTENT_DIR . "/debug.log");' | tail -50
 
-# SiteGround (SSH)
-tail -f ~/public_html/wp-content/debug.log
+# Hostinger: PHP error log is in hPanel (not in the Hostinger API)
 ```
 
 ---
@@ -37,7 +36,7 @@ tail -f ~/public_html/wp-content/debug.log
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | `RuntimeException: Vite manifest not found` | `public/build/manifest.json` is missing | Run `npm run build`; check GitHub Actions for a failed build step |
-| CSS/JS returning 404 in production | SiteGround HTML cache serving an old Vite hash | Push a new deploy; `preserve-vite-assets.py` keeps old hash files so cached pages keep working |
+| CSS/JS returning 404 in production | LiteSpeed HTML cache serving an old Vite hash | Install the new `theme-latest` zip, then purge LiteSpeed in hPanel |
 | `npm run build` fails with `Cannot find module` | `node_modules` missing or stale | Run `npm ci` then `npm run build` |
 | Styles load in dev but not production | `npm run dev` manifest used in production | Stop the dev server; run `npm run build` and deploy |
 
@@ -51,7 +50,7 @@ tail -f ~/public_html/wp-content/debug.log
 | `Class "App\..." not found` | Composer autoload out of date | `composer dump-autoload` |
 | `View [partials.xxx] not found` | Partial missing or typo in file name | Check `resources/views/partials/` — file names must use dashes, not underscores |
 | `502 Bad Gateway` on first page load after deploy | Acorn config cache stale | `wp acorn config:clear && wp acorn view:clear` |
-| Critical error / white screen on every URL (incl. `wp-login.php`) | Stale `wp-content/cache/acorn/framework/cache/packages.php` still lists a removed provider (e.g. `BladeUI\Heroicons\…`) | Delete `packages.php` and `services.php` in that folder (Site Tools → File Manager), or redeploy — `functions.php` self-heals missing providers, and deploy FTP clears those two files |
+| Critical error / white screen on every URL (incl. `wp-login.php`) | Stale `wp-content/cache/acorn/framework/cache/packages.php` still lists a removed provider (e.g. `BladeUI\Heroicons\…`) | Delete `packages.php` and `services.php` in that folder (Hostinger File Manager), or reinstall the theme zip — `functions.php` self-heals missing providers |
 
 ---
 
@@ -100,9 +99,9 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| `SSH connection refused` | Wrong host / port, or SiteGround firewall | Verify `MH_SSH_HOST`, `MH_SSH_PORT` in `wp-config.php`; SiteGround SSH port is usually non-22 |
-| `Permission denied (publickey)` | SSH key not authorized, wrong key, or **passphrase-protected key without passphrase** | Site Tools → Devs → SSH Manager → add public key. For Cloud Agents: use an unencrypted deploy key as `SERVER_SSH_PRIVATE_KEY`, or set `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`. Pass `--ssh-identity=/path/to/key` if the key is not a default `~/.ssh/id_*` name. |
-| `command not found: wp` on remote | WP-CLI not on `$PATH` on SiteGround | Use the full path `~/bin/wp` or set `MH_SSH_WP_PATH` |
+| `SSH connection refused` | Wrong host / port, or Hostinger firewall | Verify `MH_SSH_HOST`, `MH_SSH_PORT` in `wp-config.php` if you still use SSH db-pull |
+| `Permission denied (publickey)` | SSH key not authorized, wrong key, or **passphrase-protected key without passphrase** | Hostinger hPanel → SSH → add public key. For Cloud Agents: use an unencrypted deploy key as `SERVER_SSH_PRIVATE_KEY`, or set `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`. Pass `--ssh-identity=/path/to/key` if the key is not a default `~/.ssh/id_*` name. |
+| `command not found: wp` on remote | WP-CLI not on `$PATH` on Hostinger | Use the full path or set `MH_SSH_WP_PATH` |
 | `db-push` refused without `--yes` | Safety guard | Run `wp mh db-push --yes` to confirm overwriting production |
 | Search-replace misses URLs | Non-standard domain or http/https mismatch | Pass `--remote-url` / `--local-url` explicitly |
 | `incorrect passphrase` / ssh-add fails | Wrong or missing passphrase secret | Update `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`, or replace the key with an unencrypted one |
@@ -114,19 +113,17 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | Build fails: `PHP Fatal error` | PHP version mismatch | Ensure Actions runner uses PHP 8.3; check `setup-php` step in `deploy.yml` |
-| FTP upload times out | SiteGround FTP down or wrong credentials | FTP is best-effort (`continue-on-error: true`); the zip release still publishes |
-| `SITEGROUND_FTP_HOST — MISSING` in secrets check | Secret not set in repo | Settings → Secrets → Actions; add `SITEGROUND_FTP_HOST` |
-| Workflow cancelled before finishing | Concurrent deploy triggered cancellation | This is by design (`concurrency: siteground-deploy`); the latest push wins |
+| Workflow cancelled before finishing | Concurrent deploy triggered cancellation | This is by design (`concurrency: hostinger-theme-release`); the latest push wins |
 | Release not updated after merge to `main` | Workflow was skipped or failed | Check Actions tab; re-run from GitHub UI if needed |
 
 ---
 
-## SiteGround-specific
+## Hostinger-specific
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Sage fatal on live site | Live PHP still 8.2 | Site Tools → Devs → PHP Manager → set to 8.3 or 8.4 |
-| Old styles served after deploy | SuperCacher serving stale HTML | Site Tools → Speed → Caching → Flush cache; or wait for `no-cache` headers to expire |
+| Sage fatal on live site | Live PHP still 8.2 | hPanel → PHP → set `hummelwp.com` to 8.3 or newer |
+| Old styles served after deploy | LiteSpeed serving stale HTML | Purge LiteSpeed / website cache in hPanel |
 | `Vite manifest not found` on live site | `public/build/` not in the deploy zip | Check that `npm run build` ran in CI; `public/build/` must ship in the zip |
 
 ---

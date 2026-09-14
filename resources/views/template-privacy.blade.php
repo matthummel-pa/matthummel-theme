@@ -121,7 +121,7 @@
         </ul>
         <div class="priv-collect-card__trust">
           {!! \App\mh_svg_icon('shield', 14) !!}
-          Retained by SiteGround for security only. Not used to track individuals.
+          Retained by Hostinger for security only. Not used to track individuals.
         </div>
       </div>
 
@@ -258,7 +258,7 @@
         <li><strong>Meta (Facebook)</strong> — the Meta Pixel (planned) sends event data to Meta for ad measurement and reach reporting. Subject to <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta's privacy policy</a>.</li>
         <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
         <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
-        <li><strong>SiteGround</strong> — the web hosting provider stores the site database and files. <a href="https://www.siteground.com/gdpr" rel="noopener" target="_blank">SiteGround's privacy policy</a>.</li>
+        <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
         <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the Code page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
         <li><strong>Law enforcement</strong> — data may be disclosed if required by a valid legal process.</li>
       </ul>
