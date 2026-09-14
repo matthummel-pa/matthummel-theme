@@ -405,17 +405,21 @@
      02 — ABOUT
      ═══════════════════════════════════════════════════ --}}
 
-{{-- Quiet jump links — kept below the fold so the hero stays one composition --}}
-<nav class="h-page-nav container wide" aria-label="On this page">
-  <span class="h-page-nav__label">On this page</span>
-  <a href="#glance">Glance</a>
-  <a href="#about">About</a>
-  <a href="#skills">Skills</a>
-  <a href="#process">Process</a>
-  <a href="#fit">Fit</a>
-  <a href="#work">Work</a>
-  <a href="#journal">Journal</a>
-  <a href="#faq">FAQ</a>
+{{-- Sticky section pills — below the fold so the hero stays one composition --}}
+<nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
+  <div class="container wide h-page-nav__inner">
+    <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
+    <div class="h-page-nav__pills" role="list">
+      <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#skills">{{ __('Skills', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
+    </div>
+  </div>
 </nav>
 
 <section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">

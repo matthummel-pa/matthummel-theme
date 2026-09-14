@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.17 — Product content box + home sticky pills
+
+- Section pills and article body sit in the same content box as the product screenshots (same width), directly under the gallery.
+- Buy box stays sticky on the right; related products stay full-width below.
+- Home “On this page” matches the product submenu: sticky bar, scrollable pills, active scrollspy.
+- Shared `section-nav.js` drives home and product jump links.
+
 ## 3.5.16 — Hostinger-only theme zip (no SiteGround)
 
 - Production WordPress is [hummelwp.com](https://hummelwp.com) on Hostinger. SiteGround FTP and SSH are no longer part of deploy.

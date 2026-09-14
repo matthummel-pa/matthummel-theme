@@ -1,14 +1,11 @@
 {{--
-  Single product — tight above-the-fold buy hero + blog-style article body.
-
-  Hero: gallery + compact buy box (title, price, CTAs, next steps).
-  Sticky section pills jump into a narrow prose column under the gallery.
-  Long-form sections stay under the fold to cut empty scroll.
+  Single product — gallery + buy box ATF; section pills and article share
+  the gallery column width (same content box, directly under screenshots).
 
   Data: mh_product_entry() merges product-catalog.json with _mh_project_* meta.
 
   @see https://woocommerce.com/document/template-structure/
-  @version 3.5.15
+  @version 3.5.16
 --}}
 @extends('layouts.app')
 
@@ -151,6 +148,36 @@
     ];
   }
   $productJsonLd = json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
+
+  $sectionNav = [];
+  if ($summary !== '' && $summary !== $blurb) {
+    $sectionNav[] = ['overview', __('Overview', 'sage')];
+  }
+  if ($benefits !== []) {
+    $sectionNav[] = ['features', __('Features', 'sage')];
+  }
+  if ($challenge !== '' || $approach !== '') {
+    $sectionNav[] = ['story', __('Story', 'sage')];
+  }
+  if ($deliverables !== [] || $filesIncl !== []) {
+    $sectionNav[] = ['included', __('Included', 'sage')];
+  }
+  if ($blocks !== [] && $isTheme) {
+    $sectionNav[] = ['blocks', __('Blocks', 'sage')];
+  }
+  if ($audience !== '') {
+    $sectionNav[] = ['audience', __('Audience', 'sage')];
+  }
+  $sectionNav[] = ['buy', __('Pricing', 'sage')];
+  if ($architecture !== '' || $handoff !== '' || $tech !== []) {
+    $sectionNav[] = ['stack', __('Stack', 'sage')];
+  }
+  if ($docs !== [] || $githubUrl !== '' || $support !== '') {
+    $sectionNav[] = ['docs', __('Docs', 'sage')];
+  }
+  if ($faq !== []) {
+    $sectionNav[] = ['faq', __('FAQ', 'sage')];
+  }
 @endphp
 
 @if ($faqJsonLd !== '')
@@ -161,15 +188,16 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     HERO — gallery (left) + buy box (right)
+     LAYOUT — gallery | buy box; TOC + article under gallery (same column width)
 ════════════════════════════════════════════════════════════════════════════ --}}
-<header class="pf-product-hero mh-shop page-header--product" aria-label="{{ __('Product', 'sage') }}">
+<div class="pf-product-page mh-shop page-header--product">
   <div class="container wide">
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
   </div>
-  <div class="container wide pf-product-hero__inner">
+  <div class="container wide pf-product-layout">
 
-    {{-- Left: product gallery --}}
+    <div class="pf-product-main">
+    {{-- Gallery (screenshots) --}}
     <div class="pf-product-gallery" data-product-gallery>
       @if ($gallerySlides !== [])
         <figure
@@ -234,157 +262,19 @@
       @endif
     </div>
 
-    {{-- Right: scannable buy box --}}
-    <div class="pf-product-buybox pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
-      <p class="eyebrow pf-product-hero__eyebrow">{{ $eyebrow }}</p>
-      <h1 class="display-title is-hero pf-product-hero__title">{{ $productTitle }}</h1>
+    @if (count($sectionNav) > 1)
+      <nav class="pf-product-toc" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
+        <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
+        <div class="pf-product-toc__pills" role="list">
+          @foreach ($sectionNav as [$id, $label])
+            <a class="pf-product-toc__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
+          @endforeach
+        </div>
+      </nav>
+    @endif
 
-      @if ($tagline !== '')
-        <p class="pf-product-hero__tagline">{{ $tagline }}</p>
-      @endif
-
-      <p class="lead pf-product-hero__lead">{{ $blurb ?: Str::limit($summary, 160) }}</p>
-
-      <div class="pf-product-buybox__price">
-        @if ($isOnSale)
-          <span class="pf-sale-badge">{{ __('Sale', 'sage') }}</span>
-        @endif
-        @if ($isFree)
-          <span class="pf-product-card__price-free">{{ __('Free', 'sage') }}</span>
-        @elseif ($priceHtml !== '')
-          <span class="pf-product-card__price-amount">{!! wp_kses_post($priceHtml) !!}</span>
-        @endif
-        @if (! $isFree && $priceHtml !== '')
-          <span class="pf-product-card__price-note">
-            {{ $isService ? __('one-time · scoped deliverable', 'sage') : __('one-time · instant download', 'sage') }}
-          </span>
-        @endif
-      </div>
-
-      <div class="pf-product-hero__actions">
-        @if ($buyUrl !== '')
-          <a class="btn pf-product-card__cta" href="{{ esc_url($buyUrl) }}">
-            {!! \App\mh_svg_icon($isPlugin ? 'download' : ($isService ? 'briefcase' : 'cart'), 16) !!}
-            {{ $primaryLabel }}
-          </a>
-        @endif
-        @if ($demoUrl !== '')
-          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
-            {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('Live demo', 'sage') }}
-          </a>
-        @endif
-      </div>
-
-      <ol class="pf-buy-next" aria-label="{{ __('What happens next', 'sage') }}">
-        @if ($isService)
-          <li>{{ __('Add this pack to your cart', 'sage') }}</li>
-          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
-          <li>{{ __('I email next steps within one business day', 'sage') }}</li>
-        @elseif ($isFree)
-          <li>{{ __('Download the zip', 'sage') }}</li>
-          <li>{{ __('Activate it in wp-admin', 'sage') }}</li>
-          <li>{{ __('Write if you want it installed', 'sage') }}</li>
-        @else
-          <li>{{ __('Add to cart — one click', 'sage') }}</li>
-          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
-          <li>{{ __('Open the zip from the receipt email', 'sage') }}</li>
-        @endif
-      </ol>
-
-      <ul class="pf-product-card__checklist">
-        @if ($isService)
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Clear scope and handoff', 'sage') }}</li>
-        @elseif ($isFree)
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Free download', 'sage') }}</li>
-        @else
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Instant digital download', 'sage') }}</li>
-        @endif
-        @if ($license !== '')
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $license }}</li>
-        @elseif (! $isService)
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL licensed', 'sage') }}</li>
-        @endif
-        @foreach (array_slice($deliverables, 0, 2) as $d)
-          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $d }}</li>
-        @endforeach
-      </ul>
-
-      @if ($version !== '' || $compatible !== '')
-        <dl class="pf-product-specs">
-          @if ($version !== '')
-            <div class="pf-product-spec">
-              <dt>{{ __('Version', 'sage') }}</dt>
-              <dd>{{ $version }}</dd>
-            </div>
-          @endif
-          @if ($compatible !== '')
-            <div class="pf-product-spec">
-              <dt>{{ __('Requires', 'sage') }}</dt>
-              <dd>{{ $compatible }}</dd>
-            </div>
-          @endif
-        </dl>
-      @endif
-
-      <p class="pf-product-card__help">
-        <a href="{{ esc_url($helpUrl) }}">
-          {{ $isService ? __('Need a different scope? Get help →', 'sage') : __('Questions? Get help →', 'sage') }}
-        </a>
-      </p>
-    </div>
-
-  </div>
-</header>
-
-@php
-  $sectionNav = [];
-  if ($summary !== '' && $summary !== $blurb) {
-    $sectionNav[] = ['overview', __('Overview', 'sage')];
-  }
-  if ($benefits !== []) {
-    $sectionNav[] = ['features', __('Features', 'sage')];
-  }
-  if ($challenge !== '' || $approach !== '') {
-    $sectionNav[] = ['story', __('Story', 'sage')];
-  }
-  if ($deliverables !== [] || $filesIncl !== []) {
-    $sectionNav[] = ['included', __('Included', 'sage')];
-  }
-  if ($blocks !== [] && $isTheme) {
-    $sectionNav[] = ['blocks', __('Blocks', 'sage')];
-  }
-  if ($audience !== '') {
-    $sectionNav[] = ['audience', __('Audience', 'sage')];
-  }
-  $sectionNav[] = ['buy', __('Pricing', 'sage')];
-  if ($architecture !== '' || $handoff !== '' || $tech !== []) {
-    $sectionNav[] = ['stack', __('Stack', 'sage')];
-  }
-  if ($docs !== [] || $githubUrl !== '' || $support !== '') {
-    $sectionNav[] = ['docs', __('Docs', 'sage')];
-  }
-  if ($faq !== []) {
-    $sectionNav[] = ['faq', __('FAQ', 'sage')];
-  }
-@endphp
-@if (count($sectionNav) > 1)
-  <nav class="pf-product-toc" data-product-section-nav aria-label="{{ __('On this page', 'sage') }}">
-    <div class="container narrow pf-product-toc__inner">
-      <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
-      <div class="pf-product-toc__pills" role="list">
-        @foreach ($sectionNav as [$id, $label])
-          <a class="pf-product-toc__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-        @endforeach
-      </div>
-    </div>
-  </nav>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     ARTICLE BODY — blog-width prose under the gallery
-════════════════════════════════════════════════════════════════════════════ --}}
-<article class="pf-product-article">
-  <div class="container narrow pf-product-article__inner">
+    {{-- Article body — same box / width as screenshots --}}
+    <article class="pf-product-article">
 
 @if ($metrics !== [])
   <div class="pf-metrics-strip pf-metrics-strip--inline" aria-label="{{ __('Highlights', 'sage') }}">
@@ -651,8 +541,110 @@
   </section>
 @endif
 
-  </div>
-</article>
+    </article>
+    </div>{{-- /.pf-product-main --}}
+
+    {{-- Buy box (sticky right column) --}}
+    <aside class="pf-product-buybox pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
+      <p class="eyebrow pf-product-hero__eyebrow">{{ $eyebrow }}</p>
+      <h1 class="display-title is-hero pf-product-hero__title">{{ $productTitle }}</h1>
+
+      @if ($tagline !== '')
+        <p class="pf-product-hero__tagline">{{ $tagline }}</p>
+      @endif
+
+      <p class="lead pf-product-hero__lead">{{ $blurb ?: Str::limit($summary, 160) }}</p>
+
+      <div class="pf-product-buybox__price">
+        @if ($isOnSale)
+          <span class="pf-sale-badge">{{ __('Sale', 'sage') }}</span>
+        @endif
+        @if ($isFree)
+          <span class="pf-product-card__price-free">{{ __('Free', 'sage') }}</span>
+        @elseif ($priceHtml !== '')
+          <span class="pf-product-card__price-amount">{!! wp_kses_post($priceHtml) !!}</span>
+        @endif
+        @if (! $isFree && $priceHtml !== '')
+          <span class="pf-product-card__price-note">
+            {{ $isService ? __('one-time · scoped deliverable', 'sage') : __('one-time · instant download', 'sage') }}
+          </span>
+        @endif
+      </div>
+
+      <div class="pf-product-hero__actions">
+        @if ($buyUrl !== '')
+          <a class="btn pf-product-card__cta" href="{{ esc_url($buyUrl) }}">
+            {!! \App\mh_svg_icon($isPlugin ? 'download' : ($isService ? 'briefcase' : 'cart'), 16) !!}
+            {{ $primaryLabel }}
+          </a>
+        @endif
+        @if ($demoUrl !== '')
+          <a class="btn btn-outline pf-product-card__demo" href="{{ esc_url($demoUrl) }}" target="_blank" rel="noopener">
+            {!! \App\mh_svg_icon('arrow-up-right', 16) !!} {{ __('Live demo', 'sage') }}
+          </a>
+        @endif
+      </div>
+
+      <ol class="pf-buy-next" aria-label="{{ __('What happens next', 'sage') }}">
+        @if ($isService)
+          <li>{{ __('Add this pack to your cart', 'sage') }}</li>
+          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
+          <li>{{ __('I email next steps within one business day', 'sage') }}</li>
+        @elseif ($isFree)
+          <li>{{ __('Download the zip', 'sage') }}</li>
+          <li>{{ __('Activate it in wp-admin', 'sage') }}</li>
+          <li>{{ __('Write if you want it installed', 'sage') }}</li>
+        @else
+          <li>{{ __('Add to cart — one click', 'sage') }}</li>
+          <li>{{ __('Checkout — guest is fine', 'sage') }}</li>
+          <li>{{ __('Open the zip from the receipt email', 'sage') }}</li>
+        @endif
+      </ol>
+
+      <ul class="pf-product-card__checklist">
+        @if ($isService)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Clear scope and handoff', 'sage') }}</li>
+        @elseif ($isFree)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Free download', 'sage') }}</li>
+        @else
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('Instant digital download', 'sage') }}</li>
+        @endif
+        @if ($license !== '')
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $license }}</li>
+        @elseif (! $isService)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ __('GPL licensed', 'sage') }}</li>
+        @endif
+        @foreach (array_slice($deliverables, 0, 2) as $d)
+          <li>{!! \App\mh_svg_icon('check', 13) !!} {{ $d }}</li>
+        @endforeach
+      </ul>
+
+      @if ($version !== '' || $compatible !== '')
+        <dl class="pf-product-specs">
+          @if ($version !== '')
+            <div class="pf-product-spec">
+              <dt>{{ __('Version', 'sage') }}</dt>
+              <dd>{{ $version }}</dd>
+            </div>
+          @endif
+          @if ($compatible !== '')
+            <div class="pf-product-spec">
+              <dt>{{ __('Requires', 'sage') }}</dt>
+              <dd>{{ $compatible }}</dd>
+            </div>
+          @endif
+        </dl>
+      @endif
+
+      <p class="pf-product-card__help">
+        <a href="{{ esc_url($helpUrl) }}">
+          {{ $isService ? __('Need a different scope? Get help →', 'sage') : __('Questions? Get help →', 'sage') }}
+        </a>
+      </p>
+    </aside>
+
+  </div>{{-- /.pf-product-layout --}}
+</div>{{-- /.pf-product-page --}}
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
      RELATED PRODUCTS / UPSELLS — pulls from WooCommerce linked products

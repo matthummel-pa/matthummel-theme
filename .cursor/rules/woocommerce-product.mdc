@@ -89,9 +89,9 @@ Required SEO defaults:
 
 Do not reorder these sections without a strong reason:
 
-1. Hero — gallery left + compact buy box (title, price, buy/demo, next steps, short trust)
-2. Sticky section pills — jump links for Overview / Features / Story / Included / Blocks / Pricing / Stack / Docs / FAQ
-3. Article body (blog-width under the gallery) —
+1. Hero row — gallery left + compact buy box right (title, price, buy/demo, next steps, short trust)
+2. Section pills + article body — same column width as the gallery, directly under the screenshots
+   - Sticky "On this page" pills
    - Overview summary
    - Features / benefits
    - Story (challenge + approach + outcome)
@@ -103,10 +103,11 @@ Do not reorder these sections without a strong reason:
    - Technical / stack
    - Documentation links
    - FAQ
-4. Related products
-5. Bottom CTA band + sticky buy bar
+3. Related products
+4. Bottom CTA band + sticky buy bar
 
 Screenshots live in the hero gallery (thumbs + lightbox). Do not duplicate a full screenshots grid below the fold — it adds scroll without new info.
+Do not put the section pills or article in a narrower centered column than the gallery.
 ---
 
 ## 5. `mh_product_entry()` — adding a new field
