@@ -2381,17 +2381,6 @@ html.mh-dark .h-hero-work__foot {
 .post-list.is-list .post-shot { width: min(16rem, 38%); flex: 0 0 min(16rem, 38%); aspect-ratio: 4/3; }
 @media (max-width: 640px) { .post-list.is-list .post-card { flex-direction: column; } .post-list.is-list .post-shot { width: 100%; flex: none; aspect-ratio: 16/9; } }
 
-.post-card--featured {
-  display: grid;
-  grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
-  margin: 0 0 var(--card-gap);
-  min-height: 18rem;
-}
-.post-card--featured .post-shot { aspect-ratio: auto; height: 100%; }
-.post-card--featured .post-body { padding: 1.75rem 1.85rem; }
-.post-card--featured .post-card-title { font-size: clamp(1.35rem, 2.5vw, 1.9rem); }
-@media (max-width: 780px) { .post-card--featured { grid-template-columns: 1fr; } .post-card--featured .post-shot { aspect-ratio: 16/9; height: auto; } }
-
 /* ─── PILLS & TAGS ────────────────────────────────────────────────────────── */
 .pill, .tech-pill {
   display: inline-flex;

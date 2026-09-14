@@ -1,11 +1,17 @@
+function resolvePostList(root) {
+  if (!root) return null
+  if (root.classList.contains('post-list')) return root
+  return root.querySelector('.post-list') || root
+}
+
 function setView(list, view) {
-  const isList = view === 'list';
-  list.classList.toggle('is-list', isList);
+  const isList = view === 'list'
+  list.classList.toggle('is-list', isList)
   document.querySelectorAll('[data-write-view]').forEach((button) => {
-    const on = button.getAttribute('data-write-view') === view;
-    button.classList.toggle('is-active', on);
-    button.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
+    const on = button.getAttribute('data-write-view') === view
+    button.classList.toggle('is-active', on)
+    button.setAttribute('aria-pressed', on ? 'true' : 'false')
+  })
 }
 
 export async function copyText(text) {
@@ -51,32 +57,33 @@ async function copyRss(button) {
 }
 
 export function initWritingTools() {
-  const list = document.querySelector('[data-post-list]');
-  const search = document.querySelector('.js-mh-search');
+  const listRoot = document.querySelector('[data-post-list]')
+  const list = resolvePostList(listRoot)
+  const search = document.querySelector('.js-mh-search')
 
   if (list) {
-    let view = 'grid';
+    let view = 'grid'
     try {
-      const stored = window.localStorage.getItem('mh-write-view');
+      const stored = window.localStorage.getItem('mh-write-view')
       if (stored === 'list' || stored === 'grid') {
-        view = stored;
+        view = stored
       }
     } catch {
       /* private mode */
     }
-    setView(list, view);
+    setView(list, view)
 
     document.querySelectorAll('[data-write-view]').forEach((button) => {
       button.addEventListener('click', () => {
-        const next = button.getAttribute('data-write-view') === 'list' ? 'list' : 'grid';
-        setView(list, next);
+        const next = button.getAttribute('data-write-view') === 'list' ? 'list' : 'grid'
+        setView(list, next)
         try {
-          window.localStorage.setItem('mh-write-view', next);
+          window.localStorage.setItem('mh-write-view', next)
         } catch {
           /* private mode */
         }
-      });
-    });
+      })
+    })
   }
 
   document.querySelectorAll('[data-copy-rss]').forEach((button) => {

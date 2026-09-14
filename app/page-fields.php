@@ -702,7 +702,6 @@ function page_field_map(): array
                 ['write_h1', __('Heading', 'sage'), 'text', __('WordPress, PHP, and JavaScript — in practice.', 'sage')],
                 ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical code notes from WordPress theme development, PHP plugins, Tailwind, Vite, and full-stack web work. Most posts ship with a working snippet you can paste and adapt on your own projects.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
-                ['write_recent_h2', __('Recent heading', 'sage'), 'text', __('Latest posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Cross-posted to DEV.to', 'sage')],
                 ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search WordPress, PHP, Tailwind…', 'sage')],
                 ['write_subscribe_h2', __('Subscribe heading', 'sage'), 'text', __('Get new posts by RSS.', 'sage')],

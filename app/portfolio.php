@@ -2779,50 +2779,6 @@ function mh_is_devto_post(int $postId): bool
     return ($catId > 0 && has_category($catId, $postId)) || has_category('dev-to', $postId);
 }
 
-function mh_journal_featured_post_id(): int
-{
-    foreach (mh_home_journal_posts(5) as $p) {
-        if (! empty($p['deemphasize'])) {
-            continue;
-        }
-        $id = (int) ($p['id'] ?? 0);
-        if ($id > 0) {
-            return $id;
-        }
-    }
-
-    $exclude = [];
-    $catId = mh_devto_category_id();
-    if ($catId > 0) {
-        $exclude[] = $catId;
-    }
-
-    $q = new \WP_Query([
-        'post_type' => 'post',
-        'posts_per_page' => 1,
-        'ignore_sticky_posts' => true,
-        'no_found_rows' => true,
-        'category__not_in' => $exclude,
-        'meta_query' => [
-            'relation' => 'OR',
-            [
-                'key' => '_mh_devto_id',
-                'compare' => 'NOT EXISTS',
-            ],
-            [
-                'key' => '_mh_devto_id',
-                'value' => '',
-                'compare' => '=',
-            ],
-        ],
-    ]);
-
-    $id = isset($q->posts[0]) ? (int) $q->posts[0]->ID : 0;
-    wp_reset_postdata();
-
-    return $id;
-}
-
 function mh_journal_is_oldest(): bool
 {
     return strtolower((string) get_query_var('order')) === 'asc';
@@ -2903,6 +2859,10 @@ add_action('pre_get_posts', function (\WP_Query $query): void {
     if (! ($query->is_home() || $query->is_category() || $query->is_tag() || $query->is_date() || $query->is_search())) {
         return;
     }
+
+    // Journal lists posts chronologically — no sticky “Latest” hero.
+    $query->set('ignore_sticky_posts', true);
+
     if (strtolower((string) $query->get('order')) !== 'asc') {
         return;
     }
