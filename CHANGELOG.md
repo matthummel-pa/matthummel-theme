@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.18 — Journal grid/list toggle + no sticky Latest
+
+- Grid/List on Journal applies `is-list` to `.post-list` (was stuck on a wrapper, so list layout never switched).
+- Removed the sticky/“Latest” featured post hero on the blog index. Posts list chronologically with `ignore_sticky_posts`.
+
 ## 3.5.17 — Product content box + home sticky pills
 
 - Section pills and article body sit in the same content box as the product screenshots (same width), directly under the gallery.

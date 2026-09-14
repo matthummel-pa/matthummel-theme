@@ -5,10 +5,7 @@
   $devto    = \App\mh_devto_posts(6);
   $writeId  = \App\mh_writing_id();
   $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
-  $showFeatured = is_home() && ! is_paged() && have_posts() && ! \App\mh_journal_is_oldest();
-  $featuredId   = $showFeatured ? \App\mh_journal_featured_post_id() : 0;
-  $showFeatured = $showFeatured && $featuredId > 0;
-  $rssUrl       = home_url('/feed/');
+  $rssUrl   = home_url('/feed/');
 
   $journalTopics = [
     [
@@ -146,31 +143,13 @@
   @if (! have_posts())
     <p>No posts yet.</p>
   @else
-    @if ($showFeatured)
-      @php($featuredPost = get_post($featuredId))
-      @if ($featuredPost instanceof \WP_Post)
-        @php($GLOBALS['post'] = $featuredPost)
-        @php(setup_postdata($featuredPost))
-        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'], ['featured' => true])
-        @php(wp_reset_postdata())
-      @endif
-    @endif
-
     <div class="write-layout">
       <div class="write-main" id="journal-posts">
-        @if ($showFeatured && have_posts())
-          <h2 class="write-list-h">{{ \App\field('write_recent_h2', __('Recent posts', 'sage'), $writeId) }}</h2>
-        @endif
-        <div class="post-stack" data-post-list>
-          <div class="post-list">
-            @while(have_posts())
-              @php(the_post())
-              @if ((int) get_the_ID() === $featuredId)
-                @continue
-              @endif
-              @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-            @endwhile
-          </div>
+        <div class="post-list" data-post-list>
+          @while(have_posts())
+            @php(the_post())
+            @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
+          @endwhile
         </div>
         <div class="posts-nav">
           {!! get_the_posts_pagination([
@@ -180,7 +159,7 @@
           ]) !!}
         </div>
       </div>
-      @include('partials.write-aside', ['writeId' => $writeId, 'exclude' => $featuredId])
+      @include('partials.write-aside', ['writeId' => $writeId])
     </div>
   @endif
 
