@@ -214,34 +214,6 @@
 {{-- ═══════════════════════════════════════════════════
      01 — HERO
      ═══════════════════════════════════════════════════ --}}
-@php
-  $heroStats = [];
-  if (! empty($gh['public_repos'])) {
-    $heroStats[] = [
-      'value' => number_format_i18n((int) $gh['public_repos']),
-      'label' => __('Public repos', 'sage'),
-      'href' => $ghUrl.'?tab=repositories',
-    ];
-  }
-  if (! empty($gh['followers'])) {
-    $heroStats[] = [
-      'value' => number_format_i18n((int) $gh['followers']),
-      'label' => __('Followers', 'sage'),
-      'href' => $ghUrl.'?tab=followers',
-    ];
-  }
-  $heroStats[] = [
-    'value' => __('Remote', 'sage'),
-    'label' => __('On-site welcome', 'sage'),
-    'href' => null,
-  ];
-  $heroStats[] = [
-    'value' => __('Full stack', 'sage'),
-    'label' => __('WordPress focus', 'sage'),
-    'href' => null,
-  ];
-  $ghLogin = \App\mh_github_login();
-@endphp
 <section class="h-hero" aria-labelledby="h-hero-name">
   <div class="h-hero__atmosphere" aria-hidden="true">
     <span class="h-hero__blob h-hero__blob--a" data-parallax="0.12"></span>
@@ -279,18 +251,18 @@
         </a>
       </div>
 
-      <ul class="h-hero__trust" aria-label="{{ __('Quick facts', 'sage') }}">
-        <li class="h-hero__trust-item">
-          {!! \App\mh_svg_icon('check', 12) !!} {{ __('GPL — you own the code', 'sage') }}
+      <ul class="h-hero__proof" aria-label="{{ __('Proof points', 'sage') }}">
+        <li class="h-hero__proof-item">
+          <span class="h-hero__proof-label">{{ __('Experience', 'sage') }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_1', __('17 years in-house web work', 'sage')) }}</span>
         </li>
-        <li class="h-hero__trust-item">
-          {!! \App\mh_svg_icon('code', 12) !!} {{ __('Sage 11 · PHP 8.3 · Tailwind v4', 'sage') }}
+        <li class="h-hero__proof-item">
+          <span class="h-hero__proof-label">{{ __('Ownership', 'sage') }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_2', __('GPL — you own the code', 'sage')) }}</span>
         </li>
-        <li class="h-hero__trust-item">
-          {!! \App\mh_svg_icon('github', 12) !!} {{ __('GitHub-first workflow', 'sage') }}
-        </li>
-        <li class="h-hero__trust-item">
-          {!! \App\mh_svg_icon('briefcase', 12) !!} {{ __('Remote · contract &amp; full-time open', 'sage') }}
+        <li class="h-hero__proof-item">
+          <span class="h-hero__proof-label">{{ __('Availability', 'sage') }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_3', __('Open for full-time & contract', 'sage')) }}</span>
         </li>
       </ul>
     </div>
@@ -399,21 +371,84 @@
   </div>
 </div>
 
+{{-- Visitor pathways — hire / build / shop --}}
+<section class="h-pathways" id="start" aria-labelledby="h-pathways-heading">
+  <div class="container wide">
+    <div class="h-pathways__head">
+      <h2 id="h-pathways-heading" class="h-pathways__title">
+        {{ \App\field('home_path_h2', __('Where to start', 'sage')) }}
+      </h2>
+      <p class="h-pathways__lede">
+        {{ \App\field('home_path_lede', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')) }}
+      </p>
+    </div>
+    <div class="h-pathways__grid">
+      @php
+        $pathways = [
+          [
+            'icon' => 'briefcase',
+            'title' => \App\field('home_path_1_title', __('Hire me', 'sage')),
+            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Stack, employers, and how I work.', 'sage')),
+            'url' => \App\field_href('home_path_1_url', '/hire/'),
+            'cta' => \App\field('home_path_1_cta', __('See hire page', 'sage')),
+          ],
+          [
+            'icon' => 'pen',
+            'title' => \App\field('home_path_2_title', __('Build with me', 'sage')),
+            'text' => \App\field('home_path_2_text', __('A short brief for shops and agencies. I use it to prepare for the first meeting.', 'sage')),
+            'url' => \App\field_href('home_path_2_url', '/start/'),
+            'cta' => \App\field('home_path_2_cta', __('Start a brief', 'sage')),
+          ],
+          [
+            'icon' => 'cart',
+            'title' => \App\field('home_path_3_title', __('Explore themes & plugins', 'sage')),
+            'text' => \App\field('home_path_3_text', __('Buy a pack, try a live demo, or read what ships in the zip.', 'sage')),
+            'url' => \App\field_href('home_path_3_url', '/shop/'),
+            'cta' => \App\field('home_path_3_cta', __('Browse the shop', 'sage')),
+          ],
+        ];
+      @endphp
+      @foreach ($pathways as $i => $path)
+        <a class="h-pathway" href="{{ esc_url($path['url']) }}">
+          <span class="h-pathway__num" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+          <span class="h-pathway__icon" aria-hidden="true">{!! \App\mh_svg_icon($path['icon'], 22) !!}</span>
+          <h3 class="h-pathway__title">{{ $path['title'] }}</h3>
+          <p class="h-pathway__text">{{ $path['text'] }}</p>
+          <span class="h-pathway__cta">{{ $path['cta'] }} <span aria-hidden="true">→</span></span>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</section>
+
 @include('partials.recruiter-glance')
 
-{{-- ═══════════════════════════════════════════════════
-     02 — ABOUT
-     ═══════════════════════════════════════════════════ --}}
-
-{{-- Sticky section pills — below the fold so the hero stays one composition --}}
+{{-- Sticky section pills — desktop pills + mobile dropdown --}}
 <nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
   <div class="container wide h-page-nav__inner">
     <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
+    <details class="h-page-nav__mobile">
+      <summary class="h-page-nav__mobile-summary">
+        <span data-section-nav-current>{{ __('Glance', 'sage') }}</span>
+      </summary>
+      <div class="h-page-nav__mobile-list" role="list">
+        <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#skills">{{ __('Skills', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
+      </div>
+    </details>
     <div class="h-page-nav__pills" role="list">
       <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#skills">{{ __('Skills', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
@@ -422,7 +457,7 @@
   </div>
 </nav>
 
-<section class="h-about" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
+<section class="h-about h-band" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
   <meta itemprop="jobTitle" content="Full-Stack Developer and WordPress Specialist">
   <!-- address omitted: marketing SEO is skill-first, not local -->
@@ -511,7 +546,7 @@
 {{-- ═══════════════════════════════════════════════════
      03 — SKILLS (grouped icon grid)
      ═══════════════════════════════════════════════════ --}}
-<section class="h-skills" id="skills" aria-labelledby="h-skills-heading">
+<section class="h-skills h-band h-band--tint" id="skills" aria-labelledby="h-skills-heading">
   <div class="container wide">
     <div class="h-skills__head">
       <div>
@@ -544,7 +579,7 @@
 {{-- ═══════════════════════════════════════════════════
      04 — HOW A PROJECT GOES
      ═══════════════════════════════════════════════════ --}}
-<section class="h-process" id="process" aria-labelledby="h-process-heading">
+<section class="h-process h-band" id="process" aria-labelledby="h-process-heading">
   <div class="container wide">
     <div class="h-section-shell">
       <div class="h-process__head">
@@ -577,6 +612,134 @@
         @endforeach
       </div>
     </div>
+  </div>
+</section>
+
+{{-- What you receive — interactive deliverables walkthrough --}}
+@php
+  $receiveVideo = trim((string) \App\field('home_receive_video', ''));
+  $receiveSteps = [
+    [
+      'id' => 'fields',
+      'icon' => 'layout-text',
+      'title' => __('Editable WordPress fields', 'sage'),
+      'body' => __('Page content lives in wp-admin fields you can change — headlines, blurbs, CTAs — without touching theme files.', 'sage'),
+      'preview' => __('Page content (theme)', 'sage'),
+    ],
+    [
+      'id' => 'repo',
+      'icon' => 'github',
+      'title' => __('Repository access', 'sage'),
+      'body' => __('GitHub-first delivery. You get the repo (or a clean handoff zip) so another developer can keep shipping.', 'sage'),
+      'preview' => __('matthummel-pa / your-theme', 'sage'),
+    ],
+    [
+      'id' => 'deploy',
+      'icon' => 'server',
+      'title' => __('Deployment notes', 'sage'),
+      'body' => __('How assets build, where the theme folder lives, and what to run after deploy — written for the next person, not just me.', 'sage'),
+      'preview' => __('npm run build → theme-latest', 'sage'),
+    ],
+    [
+      'id' => 'guide',
+      'icon' => 'book-open',
+      'title' => __('Admin guide', 'sage'),
+      'body' => __('HTML docs in the pack: install, Customizer, FAQ, support. Same files buyers get under Documentation/.', 'sage'),
+      'preview' => __('Documentation / buyer-guide', 'sage'),
+    ],
+  ];
+@endphp
+<section class="h-receive h-band h-band--tint" id="receive" aria-labelledby="h-receive-heading" data-receive-walkthrough>
+  <div class="container wide">
+    <div class="h-receive__head">
+      <p class="h-section-label">{{ __('Handoff', 'sage') }}</p>
+      <h2 id="h-receive-heading" class="h-section__title">
+        {{ \App\field('home_receive_h2', __('What you receive', 'sage')) }}
+      </h2>
+      <p class="h-receive__lede">
+        {{ \App\field('home_receive_lede', __('Editable fields, the repo, deploy notes, and an admin guide — so the site stays yours after handoff.', 'sage')) }}
+      </p>
+    </div>
+
+    <div class="h-receive__layout">
+      <div class="h-receive__steps" role="tablist" aria-label="{{ __('Deliverables', 'sage') }}">
+        @foreach ($receiveSteps as $i => $step)
+          <button
+            type="button"
+            class="h-receive__step{{ $i === 0 ? ' is-active' : '' }}"
+            role="tab"
+            id="receive-tab-{{ $step['id'] }}"
+            aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+            aria-controls="receive-panel-{{ $step['id'] }}"
+            data-receive-step="{{ $step['id'] }}"
+          >
+            <span class="h-receive__step-icon" aria-hidden="true">{!! \App\mh_svg_icon($step['icon'], 18) !!}</span>
+            <span class="h-receive__step-copy">
+              <strong>{{ $step['title'] }}</strong>
+              <span>{{ $step['body'] }}</span>
+            </span>
+          </button>
+        @endforeach
+      </div>
+
+      <div class="h-receive__stage">
+        @if ($receiveVideo !== '')
+          <figure class="h-receive__video">
+            <video controls playsinline preload="metadata" poster="">
+              <source src="{{ esc_url($receiveVideo) }}">
+            </video>
+            <figcaption>{{ \App\field('home_receive_caption', __('Owner updating a page in wp-admin — fields you can edit without a developer.', 'sage')) }}</figcaption>
+          </figure>
+        @else
+          @foreach ($receiveSteps as $i => $step)
+            <div
+              class="h-receive__panel{{ $i === 0 ? ' is-active' : '' }}"
+              role="tabpanel"
+              id="receive-panel-{{ $step['id'] }}"
+              aria-labelledby="receive-tab-{{ $step['id'] }}"
+              @if ($i !== 0) hidden @endif
+              data-receive-panel="{{ $step['id'] }}"
+            >
+              <div class="h-receive__mock" aria-hidden="true">
+                <div class="h-receive__mock-chrome">
+                  <span></span><span></span><span></span>
+                  <em>{{ $step['preview'] }}</em>
+                </div>
+                <div class="h-receive__mock-body h-receive__mock-body--{{ $step['id'] }}">
+                  @if ($step['id'] === 'fields')
+                    <div class="h-receive__field"><label></label><i></i></div>
+                    <div class="h-receive__field"><label></label><i class="is-wide"></i></div>
+                    <div class="h-receive__field"><label></label><i class="is-tall"></i></div>
+                    <span class="h-receive__cursor"></span>
+                  @elseif ($step['id'] === 'repo')
+                    <ul>
+                      <li>app/</li>
+                      <li>resources/</li>
+                      <li>style.css</li>
+                      <li>README.md</li>
+                    </ul>
+                  @elseif ($step['id'] === 'deploy')
+                    <pre>composer install
+npm ci && npm run build
+wp mh theme-update</pre>
+                  @else
+                    <ol>
+                      <li>Install zip</li>
+                      <li>Customizer identity</li>
+                      <li>Edit page fields</li>
+                      <li>Support FAQ</li>
+                    </ol>
+                  @endif
+                </div>
+              </div>
+              <p class="h-receive__caption">
+                {{ \App\field('home_receive_caption', __('Owner updating a page in wp-admin — fields you can edit without a developer.', 'sage')) }}
+              </p>
+            </div>
+          @endforeach
+        @endif
+      </div>
+    </div>
 
     @include('partials.discovery-cta', [
       'title' => __('Start a project brief.', 'sage'),
@@ -589,7 +752,7 @@
 {{-- ═══════════════════════════════════════════════════
      04b — GOOD FIT / NOT A FIT
      ═══════════════════════════════════════════════════ --}}
-<section class="h-fit" id="fit" aria-labelledby="h-fit-heading">
+<section class="h-fit h-band" id="fit" aria-labelledby="h-fit-heading">
   <div class="container wide">
     <div class="h-section-shell">
       <div class="h-fit__head">
@@ -628,7 +791,7 @@
 {{-- ═══════════════════════════════════════════════════
      05 — VALUES / PRINCIPLES
      ═══════════════════════════════════════════════════ --}}
-<section class="h-principles" id="principles" aria-labelledby="h-principles-heading">
+<section class="h-principles h-band" id="principles" aria-labelledby="h-principles-heading">
   <div class="container wide">
 
     <div class="h-section-shell h-principles__shell">
@@ -674,19 +837,18 @@
      ═══════════════════════════════════════════════════ --}}
 @if (! empty($work))
 @php
-  $totalProjects = count(\App\mh_work_page_items());
-  $featuredWork  = $work[0] ?? null;
-  $remainingWork = array_slice($work, 1, 3);
+  $allWork = \App\mh_work_page_items();
+  $totalProjects = count($allWork);
+  $caseWork = \App\mh_home_case_study_cards($allWork, 3);
 @endphp
-<section class="h-section h-section--tinted" id="work" aria-labelledby="h-work-heading">
+<section class="h-section h-section--tinted h-band h-band--tint" id="work" aria-labelledby="h-work-heading">
   <div class="container wide">
 
-    {{-- Section header: SEO-rich heading + count + link --}}
     <div class="h-work-header">
       <div>
         <p class="h-section-label">Projects</p>
         <h2 id="h-work-heading" class="h-section__title">
-          {{ \App\field('home_work_h2', __('Concept WordPress sites.', 'sage')) }}
+          {{ \App\field('home_work_h2', __('WordPress themes and plugins.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
           {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
@@ -698,116 +860,12 @@
       </div>
     </div>
 
-    {{-- Featured project — full-width image card with overlay --}}
-    @if ($featuredWork)
-    @php $fp = $featuredWork; @endphp
-    <article class="h-work-featured" aria-label="{{ esc_attr($fp['title'] ?? '') }}">
-      @if (! empty($fp['image']))
-        <div class="h-work-featured__img">
-          <img
-            src="{{ esc_url($fp['image']) }}"
-            alt="{{ esc_attr($fp['title']) }} — {{ esc_attr($fp['cat']) }} website project for {{ esc_attr($fp['place']) }}"
-            width="1200"
-            height="630"
-            loading="eager"
-            decoding="async"
-          >
-        </div>
-      @else
-        <div class="h-work-featured__img h-work-featured__img--text">
-          <span>{{ $fp['title'] }}</span>
-        </div>
-      @endif
-
-      <div class="h-work-featured__overlay">
-        <div class="h-work-featured__meta">
-          @include('partials.spec-badge', ['p' => $fp, 'onDark' => true])
-          <span class="h-work-cat-badge">{{ $fp['cat'] }}</span>
-          <span class="h-work-place">{!! \App\mh_svg_icon('map', 13) !!} {{ $fp['place'] }}</span>
-        </div>
-        <h3 class="h-work-featured__title">
-          <a href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">{{ $fp['title'] }}</a>
-        </h3>
-        <p class="h-work-featured__blurb">{{ $fp['blurb'] }}</p>
-        <div class="h-work-featured__actions">
-          <a class="btn btn-on-dark h-work-btn" href="{{ esc_url($fp['url'] ?? \App\mh_concept_page_url((string) ($fp['slug'] ?? ''))) }}">
-            {{ __('View concept', 'sage') }}
-          </a>
-          <a class="h-work-ghost-link" href="{{ home_url('/shop/') }}">
-            {{ __('Browse all products', 'sage') }} →
-          </a>
-        </div>
-        @if (! empty($fp['tech']))
-          <div class="h-work-featured__pills">
-            @foreach (array_slice($fp['tech'], 0, 5) as $t)
-              <span class="h-work-pill">{!! \App\mh_svg_icon($t, 13) !!} {{ $t }}</span>
-            @endforeach
-          </div>
-        @endif
-      </div>
-    </article>
-    @endif
-
-    {{-- Remaining 3 cards — clean uniform grid --}}
-    @if (! empty($remainingWork))
-    <div class="h-work-grid">
-      @foreach ($remainingWork as $p)
-        <article class="h-work-card-v2">
-
-          {{-- Image --}}
-          @php
-            $cardHref = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
-          @endphp
-          <a class="h-work-card-v2__imglink" href="{{ $cardHref }}" aria-label="View {{ esc_attr($p['title']) }} project">
-            @if (! empty($p['image']))
-              <div class="h-work-card-v2__img">
-                <img
-                  src="{{ esc_url($p['image']) }}"
-                  alt="{{ esc_attr($p['title']) }} — {{ esc_attr($p['cat']) }} website project, {{ esc_attr($p['place']) }}"
-                  width="640"
-                  height="360"
-                  loading="lazy"
-                  decoding="async"
-                >
-              </div>
-            @else
-              <div class="h-work-card-v2__img h-work-card-v2__img--text">
-                {{ $p['title'] }}
-              </div>
-            @endif
-          </a>
-
-          {{-- Content --}}
-          <div class="h-work-card-v2__body">
-            <div class="h-work-card-v2__top">
-              @include('partials.spec-badge', ['p' => $p])
-              <span class="h-work-cat-badge h-work-cat-badge--sm">{{ $p['cat'] }}</span>
-              <span class="h-work-place h-work-place--sm">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</span>
-            </div>
-            <h3 class="h-work-card-v2__title">
-              <a href="{{ $cardHref }}">{{ $p['title'] }}</a>
-            </h3>
-            <p class="h-work-card-v2__blurb">{{ $p['blurb'] }}</p>
-            @if (! empty($p['tech']))
-              <div class="pill-row h-work-card-v2__pills">
-                @foreach (array_slice($p['tech'], 0, 3) as $t)
-                  <span class="pill">{!! \App\mh_svg_icon($t, 12) !!} {{ $t }}</span>
-                @endforeach
-              </div>
-            @endif
-            <div class="h-work-card-v2__links">
-              <a class="h-work-cta-link" href="{{ $cardHref }}">
-                {{ __('View concept', 'sage') }} →
-              </a>
-            </div>
-          </div>
-
-        </article>
+    <div class="h-case-list">
+      @foreach ($caseWork as $i => $p)
+        @include('partials.home-case-card', ['p' => $p, 'featured' => $i === 0])
       @endforeach
     </div>
-    @endif
 
-    {{-- Bottom CTA bar --}}
     <div class="h-work-cta-bar">
       <p>{{ __('WordPress themes and plugins for sale — install, brand, and ship.', 'sage') }}</p>
       <a class="btn" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }}</a>
@@ -975,7 +1033,7 @@
   $journalStack    = array_slice($posts, 1, 4);
   $rssUrl = home_url('/feed/');
 @endphp
-<section class="h-journal" id="journal" aria-labelledby="h-writing-heading">
+<section class="h-journal h-band h-band--tint" id="journal" aria-labelledby="h-writing-heading">
   <div class="container wide">
 
     {{-- Header ─ SEO-rich heading + intro + links --}}
@@ -1138,7 +1196,7 @@
 {{-- ═══════════════════════════════════════════════════
      09 — FAQ
      ═══════════════════════════════════════════════════ --}}
-<section class="h-faq" id="faq" aria-labelledby="h-faq-heading">
+<section class="h-faq h-band" id="faq" aria-labelledby="h-faq-heading">
   <div class="container wide h-faq__inner">
 
     <div class="h-faq__sidebar">

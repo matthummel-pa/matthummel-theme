@@ -11,6 +11,7 @@ import { initShopFilter } from './shop-filter.js';
 import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
 import { initSectionNav } from './section-nav.js';
+import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 
@@ -513,6 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStickyBar();
   initProductGallery();
   initSectionNav();
+  initReceiveWalkthrough();
   initStudioCart();
   initCheckoutInstallNotes();
   initCopyBrief();

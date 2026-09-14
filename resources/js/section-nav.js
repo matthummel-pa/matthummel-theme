@@ -9,14 +9,16 @@ export function initSectionNav() {
   const links = [...nav.querySelectorAll('a[href^="#"]')]
   if (links.length === 0) return
 
-  const sections = links
-    .map((link) => {
-      const id = link.getAttribute('href')?.slice(1)
-      if (!id) return null
-      const el = document.getElementById(id)
-      return el ? { id, link, el } : null
-    })
-    .filter(Boolean)
+  const seen = new Set()
+  const sections = []
+  for (const link of links) {
+    const id = link.getAttribute('href')?.slice(1)
+    if (!id || seen.has(id)) continue
+    const el = document.getElementById(id)
+    if (!el) continue
+    seen.add(id)
+    sections.push({ id, link, el })
+  }
 
   if (sections.length === 0) return
 
@@ -30,6 +32,17 @@ export function initSectionNav() {
         link.removeAttribute('aria-current')
       }
     })
+
+    const current = nav.querySelector('[data-section-nav-current]')
+    const activeLink = links.find((link) => link.getAttribute('href') === `#${id}`)
+    if (current && activeLink) {
+      current.textContent = activeLink.textContent?.trim() || id
+    }
+
+    const mobile = nav.querySelector('.h-page-nav__mobile')
+    if (mobile instanceof HTMLDetailsElement && mobile.open) {
+      mobile.open = false
+    }
   }
 
   links.forEach((link) => {

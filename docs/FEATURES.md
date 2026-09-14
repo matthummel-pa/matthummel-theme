@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.19 home first impression)
+
+- Hero name is deliberately smaller so role + CTAs clear the first viewport; proof strip uses `home_proof_*` fields.
+- If an old long `home_h1` is saved in Page content (theme), clear it so the shorter default (`Matt Hummel`) applies — or edit it in wp-admin.
+- Pathways (`#start`) and Receive (`#receive`) are field-driven. Optional `home_receive_video` swaps the mock walkthrough for a real captioned clip.
+- Work case cards prefer Acreline → WalkRidge → TOCflow via `mh_home_case_study_cards()`, pulling `challenge` / `approach` / screenshots from the Woo catalog card shape.
+
 ## Editor’s notes (3.5.17 home section pills)
 
 - Home “On this page” is sticky with scrollspy pills, same pattern as product pages (`section-nav.js`).

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.19 — Home first impression + pathways + case studies
+
+- Hero name scale and spacing tightened so the role, lede, and CTAs land sooner; proof strip covers experience, ownership, and availability.
+- Three visitor pathways under the hero: Hire me, Build with me, Explore themes & plugins.
+- Home Work uses case-study cards (desktop/detail shots, problem/solution, Live demo / Code / Product details) with Concept labels when not for sale.
+- Sticky “On this page” adds a mobile dropdown, a Receive jump, and clearer section banding.
+- New interactive “What you receive” walkthrough (fields, repo, deploy notes, admin guide) ending in Start a brief.
+
 ## 3.5.18 — Journal grid/list toggle + no sticky Latest
 
 - Grid/List on Journal applies `is-list` to `.post-list` (was stuck on a wrapper, so list layout never switched).
