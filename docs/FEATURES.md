@@ -4,7 +4,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.16 product gallery column)
 
-- “On this page” pills and the long-form article use the same column width as the screenshot gallery, directly underneath — not a narrower centered blog column.
+- “On this page” pills and the long-form article live in the same content box as the screenshot gallery (same width), directly underneath — not a separate narrower column.
 
 ## Editor’s notes (3.5.15 product page readability)
 

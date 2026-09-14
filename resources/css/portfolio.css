@@ -12064,7 +12064,7 @@ html.mh-dark .entry-content > .mh-archive-note strong {
    pf-story-grid, pf-included-grid, pf-purchase-layout, pf-faq-layout, etc.
 ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Product page: gallery | buy box; TOC + article under gallery ── */
+/* ── Product page: gallery+content box | buy box ── */
 .pf-product-page {
   padding: clamp(1.25rem, 3.5vw, 2.25rem) 0 0;
   overflow-x: clip;
@@ -12075,20 +12075,26 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .pf-product-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 24rem);
-  grid-template-areas:
-    "gallery buy"
-    "toc buy"
-    "article buy";
+  grid-template-areas: "main buy";
   column-gap: clamp(1.25rem, 3vw, 2.25rem);
-  row-gap: clamp(.85rem, 2vw, 1.15rem);
+  row-gap: clamp(1rem, 2.5vw, 1.5rem);
   align-items: start;
   padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
-.pf-product-gallery { grid-area: gallery; }
+.pf-product-main {
+  grid-area: main;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(.85rem, 2vw, 1.15rem);
+  padding: clamp(.9rem, 2vw, 1.25rem);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-card, 16px);
+  background: #fff;
+  box-shadow: 0 4px 24px -4px rgb(0 0 0 / .08), 0 1px 4px rgb(0 0 0 / .04);
+}
 .pf-product-buybox,
 .pf-product-hero__card { grid-area: buy; }
-.pf-product-toc { grid-area: toc; }
-.pf-product-article { grid-area: article; }
 @media (max-width: 860px) {
   .pf-product-layout {
     grid-template-columns: 1fr;
@@ -12098,6 +12104,16 @@ html.mh-dark .entry-content > .mh-archive-note strong {
       "toc"
       "article";
   }
+  .pf-product-main {
+    display: contents;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+  .pf-product-gallery { grid-area: gallery; }
+  .pf-product-toc { grid-area: toc; }
+  .pf-product-article { grid-area: article; }
 }
 /* Legacy hero hooks (kept for sticky-bar / dark-mode selectors) */
 .pf-product-hero {
@@ -12889,7 +12905,7 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   display: none;
 }
 
-/* ── Sticky section pills (gallery column width) ── */
+/* ── Sticky section pills (inside gallery content box) ── */
 .pf-product-toc {
   position: sticky;
   top: var(--header-h, 4.5rem);
@@ -12898,10 +12914,10 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   flex-wrap: wrap;
   align-items: center;
   gap: .65rem 1rem;
-  padding: .7rem 0;
+  padding: .75rem 0;
   margin: 0;
   border-block: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  background: color-mix(in srgb, #fff 88%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   min-width: 0;
@@ -13243,6 +13259,11 @@ html.mh-dark .pf-product-gallery__stage {
     linear-gradient(180deg, #121a26 0%, #0b1220 100%);
 }
 html.mh-dark .pf-product-gallery__thumb { background: #1e293b; }
+html.mh-dark .pf-product-main {
+  background: color-mix(in srgb, var(--color-surface, #0b1220) 92%, var(--color-accent) 4%);
+  border-color: var(--color-border);
+  box-shadow: 0 4px 24px -4px rgb(0 0 0 / .3);
+}
 html.mh-dark .pf-product-hero__card,
 html.mh-dark .pf-product-buybox,
 html.mh-dark .pf-purchase-widget {

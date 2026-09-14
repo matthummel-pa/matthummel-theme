@@ -2,7 +2,7 @@
 
 ## 3.5.16 — Product page: content under gallery column
 
-- Section pills and article body sit in the same grid column as the screenshots (same width), directly under the gallery.
+- Section pills and article body sit in the same content box as the screenshots (same width), directly under the gallery.
 - Buy box stays sticky on the right; related products stay full-width below.
 
 ## 3.5.15 — Product pages: tighter ATF, blog body, section pills
