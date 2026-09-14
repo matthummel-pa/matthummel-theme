@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.14 — Hostinger production (`hummelwp.com`)
+
+- Production WordPress is [hummelwp.com](https://hummelwp.com) on Hostinger. SiteGround FTP and SSH are no longer part of deploy.
+- CI publishes the `theme-latest` zip only. Install with Appearance → Update Theme or `wp mh theme-update`, then purge LiteSpeed.
+- Cursor rules and install docs follow the Hostinger + GitHub + WPVibe workflow.
+
 ## 3.5.13 — Easier checkout, still professional
 
 - Cart and checkout copy tells you what happens next: guest checkout, receipt email, no mailing list. Service carts drop the zip/GPL lines.

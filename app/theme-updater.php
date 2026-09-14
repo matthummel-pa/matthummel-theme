@@ -4,9 +4,9 @@
  * Theme updater — Appearance → Update Theme.
  *
  * Primary path: download the built zip from the GitHub Release `theme-latest`
- * (HTTPS into this WordPress install). No SiteGround FTP.
+ * (HTTPS into this WordPress install). No FTP.
  *
- * Optional: dispatch deploy.yml so CI rebuilds that zip (and may still try FTP).
+ * Optional: dispatch deploy.yml so CI rebuilds that zip.
  *
  * Auth: Appearance → Customize → GitHub token, this screen, or MH_GITHUB_TOKEN.
  * Fine-grained PAT on matthummel-theme:
@@ -444,7 +444,7 @@ function render_theme_updater_page(): void
 
     echo '<div class="wrap">';
     echo '<h1>'.esc_html__('Update Theme', 'sage').'</h1>';
-    echo '<p style="max-width:70ch">'.esc_html__('Install the built theme over HTTPS from GitHub (a zip with vendor and Vite assets). This does not use SiteGround FTP and does not touch your database, posts, or uploads.', 'sage').'</p>';
+    echo '<p style="max-width:70ch">'.esc_html__('Install the built theme over HTTPS from GitHub (a zip with vendor and Vite assets). This does not use FTP and does not touch your database, posts, or uploads.', 'sage').'</p>';
 
     if ($notice) {
         printf('<div class="notice %1$s is-dismissible"><p>%2$s</p></div>', esc_attr($notice[0]), esc_html($notice[1]));

@@ -48,7 +48,7 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 - No Kadence, no child themes of this theme, no extra theme-options admin, no Gutenberg patterns on marketing pages.
 - No installing ACF, WooCommerce, or new `app/*.php` modules unless Matt asks.
 - No rewriting dark mode off `html.mh-dark` unless Matt asks.
-- No replacing `.github/workflows/deploy.yml` with a second production deploy unless Matt asks. Live theme path is `wp-content/themes/matthummel/`.
+- Do not add a second production deploy workflow. Edit `.github/workflows/deploy.yml` in place. Production is `hummelwp.com` on Hostinger. Live theme path is `wp-content/themes/matthummel/`. No SiteGround FTP or SSH.
 - No inventing a `staging` branch or changing Vite `base` unless the live folder name actually changes.
 
 ## Quality bar

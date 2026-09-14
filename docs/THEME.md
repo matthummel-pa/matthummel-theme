@@ -1,6 +1,6 @@
-# matthummel.com — Theme documentation
+# hummelwp.com — Theme documentation
 
-Deep dive for the Sage theme that powers [matthummel.com](https://matthummel.com). For the short GitHub landing page, see the [root README](../README.md).
+Deep dive for the Sage theme that powers [hummelwp.com](https://hummelwp.com). For the short GitHub landing page, see the [root README](../README.md).
 
 Built on [Sage 11](https://roots.io/sage/) with Blade templates, Tailwind v4, Vite 8, and Acorn 6.
 
@@ -76,7 +76,7 @@ This site was built entirely with [Cursor AI](https://cursor.com) as the plannin
 | Dependency manager | Composer | 2 |
 | Code style | Laravel Pint | — |
 | CI/CD | GitHub Actions | — |
-| Hosting | SiteGround | — |
+| Hosting | Hostinger (`hummelwp.com`) | — |
 | Local DB | SQLite (dev only) | — |
 | Editor | Cursor AI | — |
 
@@ -227,7 +227,7 @@ matthummel/
 │
 ├── .github/
 │   ├── workflows/
-│   │   └── deploy.yml           # CI: build → zip → GitHub Release → optional FTP
+│   │   └── deploy.yml           # CI: build → zip → GitHub Release theme-latest
 │   └── scripts/
 │       ├── preserve-vite-assets.py  # Keep old Vite hashes so cached HTML never 404s
 │       ├── db-pull.sh               # Shell-only DB pull (no WP bootstrap needed)
@@ -343,10 +343,8 @@ push to main
 GitHub Actions runner
     ├── composer install --no-dev --optimize-autoloader
     ├── npm ci && npm run build
-    ├── preserve-vite-assets.py (keep old hashes)
     ├── zip theme as matthummel.zip
-    ├── publish GitHub Release `theme-latest`
-    └── optional: FTP to SiteGround (best-effort, non-blocking)
+    └── publish GitHub Release `theme-latest` (install on Hostinger)
 ```
 
 ### Install on the live site
@@ -464,7 +462,7 @@ The `/thank-you/` page (post-form redirect) is the primary conversion goal acros
 | [FEATURES.md](FEATURES.md) | Feature log and dev tools reference |
 | [MARKETPLACE.md](MARKETPLACE.md) | ThemeForest / WordPress.org: submit Acreline, not this theme |
 | [INSTALL.md](INSTALL.md) | WordPress install after deploy |
-| [sage/deployment.md](sage/deployment.md) | SiteGround deploy and token setup |
+| [sage/deployment.md](sage/deployment.md) | Hostinger / GitHub zip deploy and token setup |
 | [../AGENTS.md](../AGENTS.md) | Cursor Cloud environment and commands |
 
 ---

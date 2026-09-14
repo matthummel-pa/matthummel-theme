@@ -56,4 +56,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`, optional FTP, optional SSH rsync. Production site is `hummelwp.com` on Hostinger. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.mdc`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`. Install on Hostinger (`hummelwp.com`) with Appearance → Update Theme. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.mdc`.

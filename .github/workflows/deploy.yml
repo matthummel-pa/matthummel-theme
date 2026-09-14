@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: siteground-deploy
+  group: hostinger-theme-release
   cancel-in-progress: true
 
 permissions:
@@ -15,67 +15,12 @@ permissions:
 
 jobs:
   deploy:
-    name: Build Assets & Push Code
+    name: Build Assets & Publish Theme Zip
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
-
-      - name: Check SiteGround connection secrets
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          FTP_DIR: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          SSH_KEY: ${{ secrets.SERVER_SSH_PRIVATE_KEY || secrets.SITEGROUND_SSH_PRIVATE_KEY || secrets.STR_SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SERVER_SSH_KNOWN_HOSTS || secrets.SITEGROUND_SSH_KNOWN_HOSTS }}
-          SSH_PORT: ${{ secrets.SITEGROUND_PORT || secrets.SERVER_SSH_PORT }}
-          SSH_USER: ${{ secrets.SERVER_USER || secrets.SITEGROUND_USER }}
-          SSH_HOST: ${{ secrets.SERVER_IP || secrets.SITEGROUND_HOST }}
-          SSH_PATH: ${{ secrets.SERVER_DESTINATION_PATH }}
-        run: |
-          echo "──────────────── SiteGround secrets check ────────────────"
-          ok=true
-
-          check() {
-            local label="$1" val="$2" required="$3"
-            if [ -n "$val" ]; then
-              echo "  ✅  $label — set"
-            elif [ "$required" = "required" ]; then
-              echo "  ❌  $label — MISSING (required for FTP deploy)"
-              ok=false
-            else
-              echo "  ⚠️   $label — not set (optional)"
-            fi
-          }
-
-          echo ""
-          echo "FTP credentials (needed for 'Upload theme over FTP' step):"
-          check "SITEGROUND_FTP_HOST"     "$FTP_HOST" required
-          check "SITEGROUND_FTP_USER"     "$FTP_USER" required
-          check "SITEGROUND_FTP_PASSWORD" "$FTP_PASS" required
-          check "SITEGROUND_FTP_REMOTE_DIR (hint)" "$FTP_DIR" optional
-
-          echo ""
-          echo "SSH / rsync credentials (optional — enables rsync step):"
-          check "SSH private key (SERVER_SSH_PRIVATE_KEY / SITEGROUND_SSH_PRIVATE_KEY / STR_SSH_PRIVATE_KEY)" "$SSH_KEY" optional
-          check "SSH known_hosts (SERVER_SSH_KNOWN_HOSTS / SITEGROUND_SSH_KNOWN_HOSTS)" "$SSH_KNOWN_HOSTS" optional
-          check "SSH port   (SITEGROUND_PORT / SERVER_SSH_PORT)" "$SSH_PORT" optional
-          check "SSH user   (SERVER_USER / SITEGROUND_USER)"     "$SSH_USER" optional
-          check "SSH host   (SERVER_IP / SITEGROUND_HOST)"       "$SSH_HOST" optional
-          check "Rsync path (SERVER_DESTINATION_PATH)"           "$SSH_PATH" optional
-
-          echo ""
-          echo "──────────────────────────────────────────────────────────"
-
-          if [ "$ok" = "false" ]; then
-            echo "⛔  One or more required FTP secrets are missing."
-            echo "    Add them at: Settings → Secrets → Actions in your GitHub repo."
-            echo "    The FTP deploy step will be skipped but the release zip will still publish."
-          else
-            echo "✅  All required secrets present. FTP deploy is enabled."
-          fi
 
       - name: Setup PHP Environment
         uses: shivammathur/setup-php@v2
@@ -99,26 +44,6 @@ jobs:
           npm ci
           npm run build
 
-      - name: Locate live WordPress theme folder on FTP
-        id: ftpdir
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          FTP_HINT: ${{ secrets.SITEGROUND_FTP_REMOTE_DIR }}
-        run: python3 .github/scripts/siteground-ftp-locate.py
-
-      - name: Keep previous Vite hashes (SiteGround HTML cache)
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir }}
-          LIVE_ORIGIN: https://matthummel.com
-        run: python3 .github/scripts/preserve-vite-assets.py
-
       - name: Pack WordPress theme zip
         run: bash .github/scripts/pack-theme.sh "$GITHUB_WORKSPACE/matthummel.zip"
 
@@ -130,7 +55,9 @@ jobs:
           body: |
             Built Sage theme (Composer vendor + Vite `public/build`).
             Commit: ${{ github.sha }}
-            Install from wp-admin → Appearance → Update Theme, or unzip into `wp-content/themes/matthummel/` via SiteGround File Manager.
+            Production: https://hummelwp.com (Hostinger).
+            Install from wp-admin → Appearance → Update Theme, or `wp mh theme-update`.
+            Unzip into `wp-content/themes/matthummel/` via Hostinger File Manager if needed.
           files: matthummel.zip
           fail_on_unmatched_files: true
           make_latest: true
@@ -142,89 +69,3 @@ jobs:
           name: matthummel-theme
           path: matthummel.zip
           if-no-files-found: error
-
-      - name: Upload theme over FTP (optional)
-        continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
-        with:
-          server: ${{ secrets.SITEGROUND_FTP_HOST }}
-          username: ${{ secrets.SITEGROUND_FTP_USER }}
-          password: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          server-dir: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          protocol: ftp
-          timeout: 180000
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/.cursor/**
-            **/node_modules/**
-            **/.env*
-            **/docs/**
-            **/matthummel.zip
-
-      # Theme FTP does not touch wp-content/cache/acorn. Stale packages.php that
-      # still lists a removed provider white-screens the live site until cleared.
-      - name: Clear stale Acorn provider cache over FTP
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          LIVE_URL: https://matthummel.com/
-        run: python3 .github/scripts/siteground-ftp-clear-acorn-cache.py
-
-      - name: Install fatal probe MU-plugin and hit live site
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-          LIVE_URL: https://matthummel.com/
-        run: python3 .github/scripts/siteground-ftp-install-fatal-probe.py
-
-      - name: Diagnose live fatal over FTP
-        if: always()
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.SITEGROUND_FTP_HOST }}
-          FTP_USER: ${{ secrets.SITEGROUND_FTP_USER }}
-          FTP_PASS: ${{ secrets.SITEGROUND_FTP_PASSWORD }}
-          DEPLOY_DIR: ${{ steps.ftpdir.outputs.deploy_dir || secrets.SITEGROUND_FTP_REMOTE_DIR }}
-        run: python3 .github/scripts/siteground-ftp-diagnose-live.py
-
-      - name: Set up SSH Key for Remote Server Access
-        continue-on-error: true
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY || secrets.SITEGROUND_SSH_PRIVATE_KEY || secrets.STR_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SERVER_SSH_KNOWN_HOSTS || secrets.SITEGROUND_SSH_KNOWN_HOSTS }}
-          if_key_exists: replace
-
-      - name: Deploy Compiled Framework via RSYNC
-        continue-on-error: true
-        env:
-          SSH_PORT: ${{ secrets.SITEGROUND_PORT || secrets.SERVER_SSH_PORT }}
-          RSYNC_USER: ${{ secrets.SERVER_USER || secrets.SITEGROUND_USER }}
-          RSYNC_HOST: ${{ secrets.SERVER_IP || secrets.SITEGROUND_HOST }}
-          RSYNC_PATH: ${{ secrets.SERVER_DESTINATION_PATH }}
-        run: |
-          if [ -z "${RSYNC_USER}" ] || [ -z "${RSYNC_HOST}" ] || [ -z "${RSYNC_PATH}" ]; then
-            echo "SSH rsync skipped: set SERVER_USER, SERVER_IP, and SERVER_DESTINATION_PATH (SiteGround: theme path wp-content/themes/matthummel/)."
-            exit 0
-          fi
-          # Do not use --delete: SiteGround HTML cache still references old Vite hashes.
-          rsync -azP \
-            -e "ssh -p ${SSH_PORT:-22} -o StrictHostKeyChecking=yes" \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude '.cursor/' \
-            --exclude 'node_modules/' \
-            --exclude 'docs/' \
-            --exclude '.env' \
-            --exclude '.env.*' \
-            --exclude '.deploy-keys/' \
-            --exclude 'matthummel.zip' \
-            ./ "${RSYNC_USER}@${RSYNC_HOST}:${RSYNC_PATH}"

@@ -15,7 +15,7 @@ This is the **matthummel** Sage 11 theme. Map these workflow rules onto files an
 - **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
 - **This theme is already custom.** Do not add a child theme of `matthummel`. Do not edit WordPress core or third-party plugin files on the server.
 - **Git branches:** `main` is production code. Cloud agents use `cursor/*-ed2a`. Do not invent a git `staging` branch unless Matt creates one. A Hostinger staging *site* is welcome when it exists.
-- **Deploy today:** `.github/workflows/deploy.yml` still builds the GitHub Release zip (`theme-latest`). Do not replace that workflow with a second production deploy unless Matt asks. Live install path remains Appearance → **Update Theme** / `wp mh theme-update`.
+- **Deploy today:** `.github/workflows/deploy.yml` builds the GitHub Release zip (`theme-latest`). No SiteGround FTP or SSH. Install on Hostinger with Appearance → **Update Theme** / `wp mh theme-update`, then purge LiteSpeed. Do not add a second production workflow.
 - **Copy vs code:** visitor sentences stay in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`). Keep content PRs/edits separate from theme/plugin/infrastructure PRs.
 
 ---
