@@ -260,14 +260,14 @@ function mh_recruiter_glance(): array
 
     return [
         'role' => field('glance_role', __('WordPress / full-stack PHP', 'sage')),
-        'stack' => field('glance_stack', __('Sage 11, Blade, Tailwind, Vite, PHP 8.3, Gutenberg', 'sage')),
+        'stack' => field('glance_stack', __('WordPress, PHP, custom themes & plugins', 'sage')),
         'timezone' => field('glance_tz', __('America/New_York (ET)', 'sage')),
         'location' => field('glance_location', __('Gettysburg, PA · remote OK', 'sage')),
         'experience' => field(
             'glance_experience',
             sprintf(
                 /* translators: 1: years of in-house work, 2: public GitHub start year */
-                __('%1$d years in-house web · public Sage/WordPress since %2$s', 'sage'),
+                __('%1$d years in-house web · public WordPress work since %2$s', 'sage'),
                 mh_years_in_house(),
                 $ghYear
             )
@@ -275,7 +275,7 @@ function mh_recruiter_glance(): array
         'availability' => field('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
         'note' => field(
             'glance_note',
-            __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub.', 'sage')
+            __('Most production work lived inside employers, so I am now publishing WordPress themes, plugins, and builds on GitHub. Stack details are on About.', 'sage')
         ),
         'employers' => field_html(
             'glance_employers',
@@ -2237,7 +2237,7 @@ function mh_code_resume_defaults(): array
             'period' => 'Current',
             'type' => 'Studio work · Remote',
             'url' => 'https://matthummel.com',
-            'bullets' => "Publishing concept WordPress sites — Sage 11 examples, not a client gallery.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "Publishing concept WordPress sites — live demos, not a client gallery.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',

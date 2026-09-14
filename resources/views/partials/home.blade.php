@@ -7,118 +7,37 @@
   $writing = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 
   $marqueeItems = [
-    ['WordPress',     'wordpress'],
-    ['PHP',           'php'],
-    ['Sage / Blade',  'sage'],
-    ['JavaScript',    'javascript'],
-    ['TypeScript',    'typescript'],
-    ['React',         'react'],
-    ['Tailwind CSS',  'tailwind'],
-    ['Vite',          'vite'],
-    ['HTML & CSS',    'html'],
-    ['Git',           'git'],
-    ['GitHub',        'github'],
-    ['Cursor AI',     'cursor-ai'],
-    ['Claude',        'claude'],
-    ['ChatGPT',       'chatgpt'],
-    ['Gemini',        'gemini'],
-    ['Notion',        'notion'],
-    ['Google Drive',  'google-drive'],
-    ['HubSpot',       'hubspot'],
-    ['Rank Math SEO', 'rank-math'],
-    ['MySQL',         'database'],
-    ['VS Code',       'vscode'],
-    ['Node.js',       'nodejs'],
-    ['Netlify',       'netlify'],
-    ['Supabase',      'supabase'],
-  ];
-
-  $skillGroups = [
-    'WordPress'  => [
-      ['WordPress',   'wordpress',  '#2271b1'],
-      ['PHP',         'php',        '#7a86b8'],
-      ['Sage / Blade','sage',       '#e3342f'],
-      ['Plugins',     'plugins',    '#2271b1'],
-    ],
-    'JavaScript' => [
-      ['JavaScript',  'javascript', '#f7df1e'],
-      ['TypeScript',  'typescript', '#3178c6'],
-      ['React',       'react',      '#61dafb'],
-      ['Node.js',     'nodejs',     '#339933'],
-    ],
-    'Frontend'   => [
-      ['Tailwind CSS','tailwind',   '#38bdf8'],
-      ['Vite',        'vite',       '#646cff'],
-      ['HTML & CSS',  'html',       '#e34c26'],
-      ['Sass',        'sass',       '#cc6699'],
-    ],
-    'Dev Tools'  => [
-      ['Git',         'git',        '#f05032'],
-      ['GitHub',      'github',     '#111827'],
-      ['VS Code',     'vscode',     '#007acc'],
-      ['MySQL',       'database',   '#3ecf8e'],
-      ['Netlify',     'netlify',    '#00c7b7'],
-      ['Supabase',    'supabase',   '#3ecf8e'],
-    ],
-    'AI & Tooling' => [
-      ['Cursor AI',   'cursor-ai',  '#111827'],
-      ['Claude',      'claude',     '#d97706'],
-      ['ChatGPT',     'chatgpt',    '#10a37f'],
-      ['Gemini',      'gemini',     '#8E75B2'],
-    ],
-    'Workflow'   => [
-      ['Notion',      'notion',     '#000000'],
-      ['Google Drive','google-drive','#4285f4'],
-      ['n8n',         'n8n',        '#EA4B71'],
-    ],
-    'Marketing'  => [
-      ['HubSpot',     'hubspot',    '#ff7a59'],
-      ['Rank Math SEO','rank-math', '#f50c24'],
-    ],
+    ['WordPress sites', 'wordpress'],
+    ['Themes & plugins', 'plugins'],
+    ['Shops & agencies', 'briefcase'],
+    ['Clean handoff', 'check'],
+    ['You own the code', 'code'],
+    ['Editable in wp-admin', 'layout-text'],
+    ['Live demos', 'globe'],
+    ['GPL licensed', 'book-open'],
   ];
 
   $values = [
     [
       'num'      => '01',
       'icon'     => 'briefcase',
-      'headline' => 'You own the stack at handoff.',
-      'body'     => 'Hosting, DNS, the database, and the Git repo sit in accounts under your name before we close. Theme, plugins, and deploy notes go with the site.',
-      'practice' => 'Separate host login, GitHub access, and wp-admin for the shop — never a seat under my reseller account.',
+      'headline' => 'You own it at handoff.',
+      'body'     => 'Hosting, the domain, the files, and the login are yours before we close. No reseller seat. No lock-in.',
+      'practice' => 'I leave deploy notes and a short admin guide so the next person is not guessing.',
     ],
     [
       'num'      => '02',
       'icon'     => 'users',
-      'headline' => 'wp-admin is part of the architecture.',
-      'body'     => 'I build with Sage 11, Blade templates, Tailwind, and page fields shops edit in WordPress — not a page builder. If an owner cannot update hours or a product in a couple of minutes, the theme is not done.',
-      'practice' => 'Before launch I walk every editable field, leave a short handoff note, and record a Loom when the edit path is non-obvious.',
+      'headline' => 'Your team can edit it.',
+      'body'     => 'Pages use WordPress fields you change in wp-admin — not a page builder. If an owner cannot update hours or a product in a couple of minutes, the theme is not done.',
+      'practice' => 'Before launch I walk every editable field and note anything unusual in plain English.',
     ],
     [
       'num'      => '03',
       'icon'     => 'code',
-      'headline' => 'AI drafts. I ship the review.',
-      'body'     => 'Cursor, Claude, and ChatGPT help with scaffolding. I still read, test, and own every line that reaches production.',
-      'practice' => 'A typical marketing site lands in about one to two weeks. Same review bar as a longer build — less time on work that does not need a human rewrite.',
-    ],
-    [
-      'num'      => '04',
-      'icon'     => 'plugins',
-      'headline' => 'Small plugins. Clear hooks.',
-      'body'     => 'Custom work lives in focused PHP plugins or theme modules with standard WordPress hooks, PHPDoc, and a clean uninstall path. If a feature fits in dozens of lines, it should not arrive as a kitchen-sink plugin.',
-      'practice' => 'Most sites run a short plugin list. I audit and remove weight that does not earn its keep.',
-    ],
-    [
-      'num'      => '05',
-      'icon'     => 'book-open',
-      'headline' => 'Readable PHP for the next developer.',
-      'body'     => 'Blade stays thin; logic lives in App helpers with typed functions and explicit names. If another developer cannot follow a function in half a minute, I rewrite it before handoff.',
-      'practice' => 'PHPDoc on public functions, short files, and Git commits that explain why — not clever abbreviations.',
-    ],
-    [
-      'num'      => '06',
-      'icon'     => 'pen',
-      'headline' => 'Accessible markup and plain words.',
-      'body'     => 'Semantic HTML, keyboard paths, and contrast that hold up. Labels, errors, and handoff notes read like they were written for a busy shop owner — welcoming to developers, clear for everyone else.',
-      'practice' => 'Field labels and button text get the same care as the public page. If I have to explain a field, I rename it.',
+      'headline' => 'Readable for the next developer.',
+      'body'     => 'Modern WordPress themes and focused plugins. Source on GitHub when it ships as a product. Stack details live on About for peers who want them.',
+      'practice' => 'Short files, clear names, and commits that explain why — not clever abbreviations.',
     ],
   ];
 
@@ -388,7 +307,7 @@
           [
             'icon' => 'briefcase',
             'title' => \App\field('home_path_1_title', __('Hire me', 'sage')),
-            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Stack, employers, and how I work.', 'sage')),
+            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')),
             'url' => \App\field_href('home_path_1_url', '/hire/'),
             'cta' => \App\field('home_path_1_cta', __('See hire page', 'sage')),
           ],
@@ -434,7 +353,7 @@
       <div class="h-page-nav__mobile-list" role="list">
         <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#skills">{{ __('Skills', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#help">{{ __('Help', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
@@ -446,7 +365,7 @@
     <div class="h-page-nav__pills" role="list">
       <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#skills">{{ __('Skills', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#help">{{ __('Help', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
@@ -476,8 +395,8 @@
             'decorative' => false,
           ])
           <div class="h-about__meta">
-            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Sage · Tailwind · Vite</span>
-            <span class="h-meta-item">{!! \App\mh_svg_icon('code', 14) !!} Full-stack developer · WordPress specialist</span>
+            <span class="h-meta-item">{!! \App\mh_svg_icon('wordpress', 14) !!} {{ __('WordPress · themes · plugins', 'sage') }}</span>
+            <span class="h-meta-item">{!! \App\mh_svg_icon('briefcase', 14) !!} {{ __('Full-stack developer', 'sage') }}</span>
             <span class="h-meta-item" itemprop="url">
               {!! \App\mh_svg_icon('github', 14) !!}
               <a href="https://github.com/matthummel-pa" rel="me noopener" target="_blank">@matthummel-pa</a>
@@ -491,14 +410,14 @@
             {{ \App\field('home_about_h2', __('The work I can share.', 'sage')) }}
           </h2>
           <p class="h-about__text" itemprop="description">
-            {{ \App\field('home_about_text', __('I started in higher-ed marketing. The public trail is Sage, WordPress, plugins, and spec builds on GitHub.', 'sage')) }}
+            {{ \App\field('home_about_text', __('I started in higher-ed marketing. The public trail is WordPress themes, plugins, and builds on GitHub.', 'sage')) }}
           </p>
           <p class="h-about__text">
-            {{ \App\field('home_about_p2', __('The gallery is Sage 11 themes and plugins I ship — not a client grid. Agency-sub work stays in the background.', 'sage')) }}
+            {{ \App\field('home_about_p2', __('The gallery is themes and plugins I ship — not a client grid. Agency-sub work stays in the background. Stack notes are on About.', 'sage')) }}
           </p>
           <div class="h-about__links">
-            <a class="h-text-arrow" href="{{ home_url('/about/') }}">Full background →</a>
-            <a class="h-text-arrow" href="{{ home_url('/now/') }}">What I\'m doing now →</a>
+            <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('Full background & stack', 'sage') }} →</a>
+            <a class="h-text-arrow" href="{{ home_url('/now/') }}">{{ __('What I\'m doing now', 'sage') }} →</a>
             <a class="h-text-arrow" href="{{ home_url('/hire/') }}">{{ __('Employers and resume', 'sage') }} →</a>
           </div>
         </div>
@@ -543,34 +462,46 @@
   </div>
 </section>
 
-{{-- ═══════════════════════════════════════════════════
-     03 — SKILLS (grouped icon grid)
-     ═══════════════════════════════════════════════════ --}}
-<section class="h-skills h-band h-band--tint" id="skills" aria-labelledby="h-skills-heading">
+{{-- What I help with — outcomes, not a tool parade --}}
+@php
+  $helpCards = [
+    [
+      'icon' => 'wordpress',
+      'title' => \App\field('home_build_1_title', __('WordPress sites', 'sage')),
+      'text' => \App\field('home_build_1_text', __('Clean, fast, and editable. Shops get something they own — not a subscription they rent.', 'sage')),
+    ],
+    [
+      'icon' => 'plugins',
+      'title' => \App\field('home_build_2_title', __('Plugins & tools', 'sage')),
+      'text' => \App\field('home_build_2_text', __('Custom PHP when WordPress needs a new part. Small, focused, and readable.', 'sage')),
+    ],
+    [
+      'icon' => 'code',
+      'title' => \App\field('home_build_3_title', __('Full-stack web apps', 'sage')),
+      'text' => \App\field('home_build_3_text', __('Interfaces, services, and APIs built as one maintainable system when a theme is not enough.', 'sage')),
+    ],
+  ];
+@endphp
+<section class="h-skills h-band h-band--tint" id="help" aria-labelledby="h-help-heading">
   <div class="container wide">
     <div class="h-skills__head">
       <div>
-        <p class="h-section-label">Skills &amp; tools</p>
-        <h2 id="h-skills-heading" class="h-section__title">{{ \App\field('home_build_h2', __('What I work with', 'sage')) }}</h2>
+        <p class="h-section-label">{{ __('Services', 'sage') }}</p>
+        <h2 id="h-help-heading" class="h-section__title">{{ \App\field('home_build_h2', __('What I help with', 'sage')) }}</h2>
       </div>
-      <p class="h-skills__note">Tools I reach for on real projects. Not an exhaustive list.</p>
+      <p class="h-skills__note">
+        {{ __('Plain outcomes for shops and agencies. Developers who want the stack can read About.', 'sage') }}
+        <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('Stack & approach', 'sage') }} →</a>
+      </p>
     </div>
 
-    <div class="h-skill-groups">
-      @foreach ($skillGroups as $groupName => $groupSkills)
-        <div class="h-skill-group">
-          <p class="h-skill-group__label">{{ $groupName }}</p>
-          <div class="h-skill-group__tiles">
-            @foreach ($groupSkills as [$label, $icon, $color])
-              <div class="h-skill-tile" title="{{ $label }}">
-                <span class="h-skill-tile__icon" style="--skill-color: {{ $color }}">
-                  {!! \App\mh_svg_icon($icon, 26) !!}
-                </span>
-                <span class="h-skill-tile__name">{{ $label }}</span>
-              </div>
-            @endforeach
-          </div>
-        </div>
+    <div class="h-help-grid">
+      @foreach ($helpCards as $card)
+        <article class="h-help-card">
+          <span class="h-help-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($card['icon'], 22) !!}</span>
+          <h3 class="h-help-card__title">{{ $card['title'] }}</h3>
+          <p class="h-help-card__text">{{ $card['text'] }}</p>
+        </article>
       @endforeach
     </div>
   </div>
@@ -637,8 +568,8 @@
       'id' => 'deploy',
       'icon' => 'server',
       'title' => __('Deployment notes', 'sage'),
-      'body' => __('How assets build, where the theme folder lives, and what to run after deploy — written for the next person, not just me.', 'sage'),
-      'preview' => __('npm run build → theme-latest', 'sage'),
+      'body' => __('How to install or update the theme on your host, written for the next person — not only for me.', 'sage'),
+      'preview' => __('Install → activate → edit', 'sage'),
     ],
     [
       'id' => 'guide',
@@ -719,9 +650,12 @@
                       <li>README.md</li>
                     </ul>
                   @elseif ($step['id'] === 'deploy')
-                    <pre>composer install
-npm ci && npm run build
-wp mh theme-update</pre>
+                    <ol>
+                      <li>{{ __('Upload or update the theme', 'sage') }}</li>
+                      <li>{{ __('Activate in Appearance', 'sage') }}</li>
+                      <li>{{ __('Edit page content in wp-admin', 'sage') }}</li>
+                      <li>{{ __('Keep the handoff notes', 'sage') }}</li>
+                    </ol>
                   @else
                     <ol>
                       <li>Install zip</li>
@@ -797,17 +731,18 @@ wp mh theme-update</pre>
     <div class="h-section-shell h-principles__shell">
       <div class="h-principles__head">
         <div>
-          <p class="h-section-label">How I work</p>
+          <p class="h-section-label">{{ __('How I work', 'sage') }}</p>
           <h2 id="h-principles-heading" class="h-section__title">
-            How I ship WordPress platforms shops can keep.
+            {{ __('Sites shops can keep.', 'sage') }}
           </h2>
           <p class="h-principles__intro">
-            Sage 11, Blade, Tailwind, Vite, PHP 8.3 — GitHub deploys. From the first note to a clean handoff.
+            {{ __('Written scope, editable pages, and a clean handoff. Deep stack notes stay on About for developers and hiring managers.', 'sage') }}
           </p>
         </div>
+        <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('How I build (About)', 'sage') }} →</a>
       </div>
 
-      <div class="h-principles__grid">
+      <div class="h-principles__grid h-principles__grid--compact">
         @foreach ($values as $v)
           <article class="h-principle">
             <div class="h-principle__top">
@@ -820,7 +755,7 @@ wp mh theme-update</pre>
             <p class="h-principle__body">{{ $v['body'] }}</p>
             @if (! empty($v['practice']))
               <div class="h-principle__practice">
-                <span class="h-principle__practice-label">In practice</span>
+                <span class="h-principle__practice-label">{{ __('In practice', 'sage') }}</span>
                 <p class="h-principle__practice-text">{{ $v['practice'] }}</p>
               </div>
             @endif
@@ -882,8 +817,8 @@ wp mh theme-update</pre>
   <div class="container wide">
     <div class="h-section__head">
       <div>
-        <p class="h-section-label">Open source</p>
-        <h2 id="h-oss-heading" class="h-section__title">{{ __('Code you can use.', 'sage') }}</h2>
+        <p class="h-section-label">{{ __('Open source', 'sage') }}</p>
+        <h2 id="h-oss-heading" class="h-section__title">{{ __('Code you can browse.', 'sage') }}</h2>
       </div>
       <a class="h-text-arrow" href="{{ home_url('/code/') }}">All repos →</a>
     </div>
@@ -957,62 +892,22 @@ wp mh theme-update</pre>
 
     </div>
 
-    {{-- Activity feed — same markup as the code page --}}
-    @if (! empty($ossData['events']))
-      <div class="code-gh-panel code-gh-activity">
-        <div class="code-gh-panel__head">
-          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
-          <div>
-            <h3 class="code-gh-panel__title">{{ __('Public activity', 'sage') }}</h3>
-            <p class="code-gh-panel__intro">{{ __('Pushes, releases, and pull requests — newest first.', 'sage') }}</p>
-          </div>
-        </div>
-        <ol class="code-gh-feed">
-          @foreach ($ossData['events'] as $ev)
-            @php
-              $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? ''));
-              $evType = (string) ($ev['type'] ?? '');
-              $evRepo = (string) ($ev['repo'] ?? '');
-            @endphp
-            <li class="code-gh-feed__item" data-type="{{ esc_attr($evType) }}">
-              <span class="code-gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon($evIcon, 14) !!}</span>
-              <div class="code-gh-feed__body">
-                @if (! empty($ev['url']))
-                  <a class="code-gh-feed__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
-                    {{ $ev['text'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-                  </a>
-                @else
-                  <span class="code-gh-feed__link">{{ $ev['text'] }}</span>
-                @endif
-                @if ($evRepo !== '')
-                  <span class="code-gh-feed__repo">{!! \App\mh_svg_icon('github', 12) !!} {{ $evRepo }}</span>
-                @endif
-              </div>
-              @if (! empty($ev['when']))
-                <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
-              @endif
-            </li>
-          @endforeach
-        </ol>
-      </div>
-    @endif
-
-    {{-- Featured repos — same markup as the code page --}}
+    {{-- Featured repos for developers; full activity lives on /code/ --}}
     @if (! empty($ossData['repos']))
       <div class="code-repos-shell code-repos-shell--featured">
         <div class="code-repos-shell__mesh" aria-hidden="true"></div>
         <div class="code-repos-shell__inner">
           <header class="code-repos-shell__head">
-            <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
-            <h3 class="code-repos-shell__title">{{ __('Featured WordPress and app repos', 'sage') }}</h3>
-            <p class="sec-intro">{{ __('The repos I point developers to first. Each one is meant to be forked.', 'sage') }}</p>
+            <p class="eyebrow">{{ __('For developers', 'sage') }}</p>
+            <h3 class="code-repos-shell__title">{{ __('Open-source WordPress and app repos', 'sage') }}</h3>
+            <p class="sec-intro">{{ __('Fork what helps. Activity, skills, and docs live on the Code page.', 'sage') }}</p>
             <p class="code-repos-shell__meta">
               {{ sprintf(_n('%s repo', '%s repos', count($ossData['repos']), 'sage'), number_format_i18n(count($ossData['repos']))) }}
-              · {{ __('WordPress, plugins, and apps', 'sage') }}
+              · <a href="{{ home_url('/code/') }}">{{ __('Full Code page', 'sage') }}</a>
             </p>
           </header>
           <ol class="code-repos-grid code-repos-grid--featured">
-            @foreach ($ossData['repos'] as $i => $r)
+            @foreach (array_slice($ossData['repos'], 0, 4) as $i => $r)
               <li class="code-repos-grid__item">
                 @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
               </li>
@@ -1041,10 +936,10 @@ wp mh theme-update</pre>
       <div class="h-journal__head-copy">
         <p class="h-section-label">Journal</p>
         <h2 id="h-writing-heading" class="h-section__title">
-          {{ \App\field('home_write_h2', __('Full-stack notes, WordPress code, and project lessons.', 'sage')) }}
+          {{ \App\field('home_write_h2', __('Notes from real WordPress work.', 'sage')) }}
         </h2>
         <p class="h-journal__intro">
-          {{ \App\field('home_write_intro', __('Practical notes from WordPress, PHP, JavaScript, React, APIs, and real project work. Most posts include code you can adapt or use.', 'sage')) }}
+          {{ \App\field('home_write_intro', __('Practical posts for shops and developers — handoffs, themes, and lessons from builds. Most include something you can reuse.', 'sage')) }}
         </p>
       </div>
       <div class="h-journal__head-links">

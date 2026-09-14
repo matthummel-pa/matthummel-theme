@@ -40,26 +40,27 @@
     {{ \App\field('start_h1', __('Prepare for our first meeting.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('start_lede', __('Four short steps. The answers agencies and shops usually cover in discovery. I read every brief before we talk so the first call is useful, not a blank page.', 'sage')) }}
+    {{ \App\field('start_lede', __('Four short steps for shops and agencies. I read every brief before we talk so the first call is useful — not a blank page.', 'sage')) }}
   </p>
-  <p class="start-hero-alt">
-    {{ __('Prefer a quick note instead?', 'sage') }}
-    <a href="{{ home_url('/contact/') }}">{{ __('Say hello on the contact form', 'sage') }} <span aria-hidden="true">→</span></a>
-  </p>
+  <ul class="start-hero-proof" aria-label="{{ __('What happens next', 'sage') }}">
+    <li>{{ __('I reply within one business day (ET)', 'sage') }}</li>
+    <li>{{ __('We agree a written scope before build', 'sage') }}</li>
+    <li>{{ __('You own hosting, files, and logins at handoff', 'sage') }}</li>
+  </ul>
   @slot('aside')
     @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/start',
+      'chrome' => 'hummelwp.com/start',
       'icon' => 'briefcase',
       'title' => __('Discovery brief', 'sage'),
       'meta' => __('Four steps · one form', 'sage'),
       'stats' => [
-        ['value' => '4', 'label' => __('Steps', 'sage')],
-        ['value' => __('Written', 'sage'), 'label' => __('Scope before build', 'sage')],
-        ['value' => '1', 'label' => __('Business day to reply (ET)', 'sage')],
+        ['value' => '4', 'label' => __('Short steps', 'sage')],
+        ['value' => __('Scope', 'sage'), 'label' => __('Before any build', 'sage')],
+        ['value' => '1', 'label' => __('Business day reply', 'sage')],
         ['value' => __('Remote', 'sage'), 'label' => __('Or on-site', 'sage')],
       ],
       'link' => [
-        'label' => __('Contact form instead', 'sage'),
+        'label' => __('Prefer a short note?', 'sage'),
         'href' => home_url('/contact/'),
       ],
     ])
@@ -69,7 +70,14 @@
 <section class="start-main" aria-labelledby="start-form-heading">
   <div class="container narrow">
 
-    <h2 id="start-form-heading" class="visually-hidden">{{ __('Project discovery brief', 'sage') }}</h2>
+    <div class="start-form-head">
+      <h2 id="start-form-heading" class="display-title is-section">
+        {{ \App\field('start_form_h2', __('Start the brief.', 'sage')) }}
+      </h2>
+      <p class="sec-intro">
+        {{ \App\field('start_form_intro', __('Name, project type, and what “done” looks like. Optional fields can stay blank.', 'sage')) }}
+      </p>
+    </div>
 
     @if ($mhError)
       <p class="form-error" id="start-status" role="alert" tabindex="-1">
@@ -246,18 +254,20 @@
     </form>
 
     <p class="start-footnote">
-      Prefer email?
-      <a href="{{ home_url('/contact/') }}">Use the short contact form</a>
-      instead. Same inbox.
+      {{ __('Only need a quick question?', 'sage') }}
+      <a href="{{ home_url('/contact/') }}">{{ __('Use the short contact form', 'sage') }}</a>
+      {{ __('— same inbox.', 'sage') }}
     </p>
   </div>
 </section>
 
 @include('partials.cta-band', [
-  'kicker' => __('Prefer a short note?', 'sage'),
-  'title' => __('Skip the brief.', 'sage'),
-  'text' => __('The contact form is fine if you only need a quick question answered. Same inbox either way.', 'sage'),
-  'label' => __('Contact form', 'sage'),
-  'secondary' => __('Hire me', 'sage'),
+  'kicker' => __('Hiring instead?', 'sage'),
+  'title' => __('Roles and resume are on Hire.', 'sage'),
+  'text' => __('The brief is for project work. Recruiters and hiring managers can start from Hire or the contact form.', 'sage'),
+  'label' => __('Hire me', 'sage'),
+  'href' => home_url('/hire/'),
+  'secondary' => __('Contact form', 'sage'),
+  'secondaryHref' => home_url('/contact/'),
 ])
 @endsection

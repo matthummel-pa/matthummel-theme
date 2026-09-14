@@ -43,7 +43,7 @@
     {{ \App\field('portfolio_h1', __('WordPress and full-stack code on GitHub.', 'sage'), $postId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('portfolio_lede', __('All public repos — Sage themes, WordPress plugins, React apps, and spec builds you can fork, study, and use. Some power themes and plugins you can buy in the shop.', 'sage'), $postId) }}
+    {{ \App\field('portfolio_lede', __('Public repos — WordPress themes, plugins, and web apps you can fork, study, or hire from. Stack depth lives in the code and on About.', 'sage'), $postId) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/shop/') }}">
@@ -78,7 +78,7 @@
       {{ \App\field('portfolio_intro_h2', __('Code I ship publicly.', 'sage'), $postId) }}
     </h2>
     <p class="lead">
-      {{ \App\field('portfolio_intro_p', __('Most production work lived inside employers. What is here are Sage WordPress themes, WordPress plugins, and full-stack apps I have published since 2025. Fork anything, copy any snippet — a note if you ship something with it is kind, not required.', 'sage'), $postId) }}
+      {{ \App\field('portfolio_intro_p', __('Most production work lived inside employers. What is here are WordPress themes, plugins, and full-stack apps I have published since 2025. Fork anything — a note if you ship something with it is kind, not required.', 'sage'), $postId) }}
     </p>
   </div>
 </section>
@@ -139,7 +139,7 @@
         {{ \App\field('portfolio_feat_h2', __('Repos worth starting with.', 'sage'), $postId) }}
       </h2>
       <p class="lead" style="margin-bottom:2rem">
-        {{ \App\field('portfolio_feat_intro', __('Sage themes, WordPress plugins, and web apps — each one built to be read, forked, or hired from. Stack notes and live demos where available.', 'sage'), $postId) }}
+        {{ \App\field('portfolio_feat_intro', __('WordPress themes, plugins, and web apps — each one built to be read, forked, or hired from. Live demos where available.', 'sage'), $postId) }}
       </p>
       <div class="repo-grid" data-code-grid>
         @foreach ($featured as $i => $r)
@@ -183,7 +183,7 @@
       {{ \App\field('portfolio_practice_h2', __('What you will find in the repos.', 'sage'), $postId) }}
     </h2>
     <div class="work-guide__prose">
-      <p>{{ \App\field('portfolio_practice_p', __('The public repos cover Sage 11 WordPress themes, WordPress plugins (Gutenberg blocks, PHP class libraries), full-stack React and TypeScript apps, and developer tooling. Code is documented at handoff quality — comments explain intent, not syntax.', 'sage'), $postId) }}</p>
+      <p>{{ \App\field('portfolio_practice_p', __('The public repos cover WordPress themes, plugins, React and TypeScript apps, and developer tooling. Code is documented at handoff quality — comments explain intent, not syntax. Full stack notes are on About.', 'sage'), $postId) }}</p>
     </div>
     @php $practiceGroups = \App\mh_code_page_practice_grouped($postId); @endphp
     @if ($practiceGroups !== [])
