@@ -180,9 +180,9 @@ function mh_seo_field_group(): array
 function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): string
 {
     $copy = [
-        'h1' => __('Matt Hummel — WordPress developer', 'sage'),
-        'role' => __('Custom WordPress themes, PHP plugins, and full-stack web apps — delivered clean.', 'sage'),
-        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage 11, focused plugins, clear deploys. GPL code you own. Open for full-time, contract, or freelance.', 'sage'),
+        'h1' => __('Matt Hummel', 'sage'),
+        'role' => __('WordPress developer for shops, agencies, and product teams.', 'sage'),
+        'lede' => __('Custom themes, focused plugins, and clear deploys. GPL code you own. Open for full-time, contract, or freelance.', 'sage'),
         'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
     ];
 
@@ -207,11 +207,36 @@ function mh_home_fields(): array
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', __('Browse work', 'sage')],
-            ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/projects/'],
+            ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/shop/'],
             ['home_link_writing', __('Journal link label', 'sage'), 'text', __('Journal', 'sage')],
             ['home_link_code', __('Code link label', 'sage'), 'text', __('Code', 'sage')],
             ['home_link_about', __('About link label', 'sage'), 'text', __('About', 'sage')],
             ['home_link_hello', __('Contact link label', 'sage'), 'text', __('Say hello', 'sage')],
+            ['home_proof_1', __('Proof strip 1', 'sage'), 'text', __('17 years in-house web work', 'sage')],
+            ['home_proof_2', __('Proof strip 2', 'sage'), 'text', __('GPL — you own the code', 'sage')],
+            ['home_proof_3', __('Proof strip 3', 'sage'), 'text', __('Open for full-time & contract', 'sage')],
+        ],
+        __('Visitor pathways', 'sage') => [
+            ['home_path_h2', __('Pathways heading', 'sage'), 'text', __('Where to start', 'sage')],
+            ['home_path_lede', __('Pathways intro', 'sage'), 'textarea', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')],
+            ['home_path_1_title', __('Pathway 1 title', 'sage'), 'text', __('Hire me', 'sage')],
+            ['home_path_1_text', __('Pathway 1 text', 'sage'), 'textarea', __('Roles, contract, or agency overflow. Stack, employers, and how I work.', 'sage')],
+            ['home_path_1_url', __('Pathway 1 path', 'sage'), 'text', '/hire/'],
+            ['home_path_1_cta', __('Pathway 1 CTA', 'sage'), 'text', __('See hire page', 'sage')],
+            ['home_path_2_title', __('Pathway 2 title', 'sage'), 'text', __('Build with me', 'sage')],
+            ['home_path_2_text', __('Pathway 2 text', 'sage'), 'textarea', __('A short brief for shops and agencies. I use it to prepare for the first meeting.', 'sage')],
+            ['home_path_2_url', __('Pathway 2 path', 'sage'), 'text', '/start/'],
+            ['home_path_2_cta', __('Pathway 2 CTA', 'sage'), 'text', __('Start a brief', 'sage')],
+            ['home_path_3_title', __('Pathway 3 title', 'sage'), 'text', __('Explore themes & plugins', 'sage')],
+            ['home_path_3_text', __('Pathway 3 text', 'sage'), 'textarea', __('Buy a pack, try a live demo, or read what ships in the zip.', 'sage')],
+            ['home_path_3_url', __('Pathway 3 path', 'sage'), 'text', '/shop/'],
+            ['home_path_3_cta', __('Pathway 3 CTA', 'sage'), 'text', __('Browse the shop', 'sage')],
+        ],
+        __('What you receive', 'sage') => [
+            ['home_receive_h2', __('Heading', 'sage'), 'text', __('What you receive', 'sage')],
+            ['home_receive_lede', __('Intro', 'sage'), 'textarea', __('Editable fields, the repo, deploy notes, and an admin guide — so the site stays yours after handoff.', 'sage')],
+            ['home_receive_video', __('Walkthrough video URL (optional)', 'sage'), 'url', ''],
+            ['home_receive_caption', __('Walkthrough caption', 'sage'), 'text', __('Owner updating a page in wp-admin — fields you can edit without a developer.', 'sage')],
         ],
         __('What I build', 'sage') => [
             ['home_build_h2', __('Section label', 'sage'), 'text', __('What I build', 'sage')],

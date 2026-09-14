@@ -9,7 +9,7 @@
     ['Availability', $glance['availability'], 'users'],
   ];
 @endphp
-<section class="h-glance" id="glance" aria-labelledby="h-glance-heading">
+<section class="h-glance h-band h-band--tint" id="glance" aria-labelledby="h-glance-heading">
   <div class="container wide">
     <div class="h-glance__card">
       <header class="h-glance__head">

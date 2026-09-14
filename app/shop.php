@@ -696,6 +696,38 @@ function mh_wc_product_to_work_card(int $product_id): array
 
     $productLink = (string) get_permalink($product_id);
 
+    $github = trim((string) get_post_meta($product_id, '_mh_project_github', true));
+    if ($github === '') {
+        $github = trim((string) ($entry['github'] ?? ''));
+    }
+
+    $challenge = trim((string) get_post_meta($product_id, '_mh_project_challenge', true));
+    if ($challenge === '') {
+        $challenge = trim((string) ($entry['challenge'] ?? ''));
+    }
+
+    $approach = trim((string) get_post_meta($product_id, '_mh_project_approach', true));
+    if ($approach === '') {
+        $approach = trim((string) ($entry['approach'] ?? ''));
+    }
+
+    $forSale = get_post_meta($product_id, '_mh_project_for_sale', true) === '1'
+        || (bool) ($entry['for_sale'] ?? false);
+
+    $shotUrls = [];
+    $catalogShots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
+    foreach (array_slice($catalogShots, 0, 4) as $shot) {
+        $rel = is_array($shot) ? (string) ($shot[0] ?? '') : (string) $shot;
+        if ($rel === '') {
+            continue;
+        }
+        $shotUrls[] = str_starts_with($rel, 'http') ? $rel : get_theme_file_uri('resources/images/'.$rel);
+    }
+    if ($image !== '' && ($shotUrls === [] || $shotUrls[0] !== $image)) {
+        array_unshift($shotUrls, $image);
+        $shotUrls = array_values(array_unique($shotUrls));
+    }
+
     $card = [
         'slug' => $slug,
         'title' => wp_specialchars_decode((string) $wc->get_name(), ENT_QUOTES),
@@ -703,10 +735,16 @@ function mh_wc_product_to_work_card(int $product_id): array
         'place' => $place,
         'blurb' => $blurb,
         'tech' => $tech,
-        'concept' => trim((string) ($entry['github'] ?? '')),
+        'concept' => $github,
+        'github' => $github,
         'demo' => $demo,
         'url' => $productLink,
         'image' => $image,
+        'screenshots' => array_slice($shotUrls, 0, 4),
+        'challenge' => $challenge,
+        'approach' => $approach,
+        'for_sale' => $forSale,
+        'is_concept' => ! $forSale,
         'post_id' => $product_id,
         'product_id' => $product_id,
         'product_type' => $productType,
@@ -752,6 +790,66 @@ function mh_wc_products_for_work(): array
     }
 
     return $cards;
+}
+
+/**
+ * Home Work case studies: Acreline, WalkRidge, TOCflow when present.
+ *
+ * @param  list<array<string, mixed>>  $cards
+ * @return list<array<string, mixed>>
+ */
+function mh_home_case_study_cards(array $cards, int $limit = 3): array
+{
+    $want = ['acreline', 'walkridge', 'tocflow'];
+    $bySlug = [];
+    foreach ($cards as $card) {
+        $slug = sanitize_title((string) ($card['slug'] ?? ''));
+        if ($slug === '' || isset($bySlug[$slug])) {
+            continue;
+        }
+        $bySlug[$slug] = $card;
+    }
+
+    $out = [];
+    foreach ($want as $slug) {
+        if (isset($bySlug[$slug])) {
+            $out[] = $bySlug[$slug];
+            unset($bySlug[$slug]);
+        }
+    }
+
+    if (count($out) < $limit) {
+        foreach ($bySlug as $card) {
+            if (! empty($card['for_sale']) || ! empty($card['product_id'])) {
+                $out[] = $card;
+            }
+            if (count($out) >= $limit) {
+                break;
+            }
+        }
+    }
+
+    if (count($out) < $limit) {
+        foreach ($cards as $card) {
+            $slug = sanitize_title((string) ($card['slug'] ?? ''));
+            $already = false;
+            foreach ($out as $picked) {
+                if (sanitize_title((string) ($picked['slug'] ?? '')) === $slug) {
+                    $already = true;
+                    break;
+                }
+            }
+            if ($already) {
+                continue;
+            }
+            $out[] = $card;
+            if (count($out) >= $limit) {
+                break;
+            }
+        }
+    }
+
+    return array_slice($out, 0, max(1, $limit));
 }
 
 /**
