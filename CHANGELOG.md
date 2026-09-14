@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.5.22 — Cart, checkout & My Account desk (post-style layout)
+
+- Cart, checkout, and My Account use a journal-style desk: main column left, sticky tools sidebar right.
+- Cart lines read as product cards (type badge, optional blurb, clear price) instead of a dense table.
+- Sidebar tools: what happens next, included trust lines, quick FAQ, often-added add-ons, and help / keep shopping.
+- Checkout keeps pay fields on the left; order summary, payment, kickoff brief, and tools stack on the right.
+- My Account: endpoint-aware title/lead/tools; login/register desk; header pills for Dashboard, Downloads, Orders, Details.
+- Mobile cart gets a sticky total + continue bar; coupons fold behind “Have a coupon?”
+- Contrast pass for light and `html.mh-dark` on desk and account surfaces, secondary text, and form controls.
+
 ## 3.5.21 — About sticky section nav
 
 - About “On this page” uses the same sticky `.h-page-nav` + `data-section-nav` pattern as Home (pills, mobile dropdown, scrollspy).

@@ -14,6 +14,7 @@ import { initSectionNav } from './section-nav.js';
 import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
+import { initWooDesk } from './woo-desk.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -518,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStudioCart();
   initCheckoutInstallNotes();
   initCopyBrief();
+  initWooDesk();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();

@@ -2,9 +2,7 @@
   Template Name: WooCommerce
   Cart, Checkout, and My account — classic shortcodes, not WooCommerce blocks.
 
-  2026 redesign: purpose-built compact headers for each page type, replacing
-  the generic hero-panel pattern. Cart → two-column with order summary. Checkout
-  → secure form with trust signals. Account → dashboard with clear nav.
+  Cart / Checkout / Account use a post-like desk: main column left, sticky tools aside right.
 --}}
 @extends('layouts.app')
 
@@ -28,50 +26,47 @@
     $cartTotal = function_exists('wc_price') ? WC()->cart->get_cart_total() : '';
   }
 
+  $accountHeader = $isAccount ? \App\mh_account_desk_header() : ['title' => $title, 'lead' => ''];
+  if ($isAccount) {
+    $title = $accountHeader['title'];
+  }
+
   $crumbItems = [
     ['label' => __('Home', 'sage'), 'url' => home_url('/')],
     ['label' => __('Shop', 'sage'), 'url' => $shopUrl],
-    ['label' => $title, 'current' => true],
   ];
+  if ($isAccount && $isLoggedIn && \App\mh_account_endpoint() !== '') {
+    $crumbItems[] = [
+      'label' => __('My account', 'sage'),
+      'url' => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/my-account/'),
+    ];
+  }
+  $crumbItems[] = ['label' => $title, 'current' => true];
 
   $servicesOnly = \App\mh_cart_is_services_only();
-  $trustItems   = \App\mh_checkout_trust_items();
   $startHere    = \App\mh_checkout_start_here_products();
+  $hasDesk      = (($isCart || $isCheckout) && $cartCount > 0) || $isAccount;
 
   $lead = '';
   if ($isCart) {
     $lead = $cartCount > 0
       ? ($servicesOnly
-        ? __('Ready when you are. Checkout books the work — I write back after payment.', 'sage')
-        : __('Ready when you are. Checkout is one screen. Guest checkout is fine.', 'sage'))
+        ? __('Review the work, then checkout. I write back after payment.', 'sage')
+        : __('Review your pack, then checkout on the next screen. Guest checkout is fine.', 'sage'))
       : __('Nothing here yet. Grab a theme or an Acreline add-on and come back.', 'sage');
   } elseif ($isCheckout) {
     $lead = $servicesOnly
-      ? __('Pay once. I email next steps. No surprise retainers.', 'sage')
-      : __('Pay once. The zip is in the receipt email. Guest checkout is fine.', 'sage');
+      ? __('Pay once on the left. Order tools stay on the right.', 'sage')
+      : __('Pay once on the left. The zip is in the receipt email.', 'sage');
   } elseif ($isAccount) {
-    $isDownloads = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('downloads');
-    $lead = ! $isLoggedIn
-      ? __('Log in to view your orders and download your themes.', 'sage')
-      : ($isDownloads
-        ? __('Theme and plugin zips you bought. When I ship a new version, I email you and the file here updates.', 'sage')
-        : __('Orders, downloads, and billing details in one place. I email this account when a zip you bought gets a new version.', 'sage'));
+    $lead = $accountHeader['lead'];
   }
-
-  // Step indicator for checkout progress.
-  $steps = [
-    __('Cart', 'sage')     => ['url' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/'), 'done' => ! $isCart],
-    __('Checkout', 'sage') => ['url' => '', 'done' => false],
-    __('Complete', 'sage') => ['url' => '', 'done' => false],
-  ];
 @endphp
 
 @section('content')
 
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     COMPACT PAGE HEADER — purpose-built per page type (no hero-panel)
-════════════════════════════════════════════════════════════════════════════ --}}
-<div class="woo-page-header{{ $isCart ? ' woo-page-header--cart' : '' }}{{ $isCheckout ? ' woo-page-header--checkout' : '' }}{{ $isAccount ? ' woo-page-header--account' : '' }}">
+{{-- Compact page header --}}
+<div class="woo-page-header{{ $isCart ? ' woo-page-header--cart' : '' }}{{ $isCheckout ? ' woo-page-header--checkout' : '' }}{{ $isAccount ? ' woo-page-header--account' : '' }}{{ $hasDesk ? ' woo-page-header--desk' : '' }}">
   <div class="container wide woo-page-header__inner">
 
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
@@ -103,7 +98,6 @@
       <p class="woo-page-header__lead">{{ $lead }}</p>
     @endif
 
-    {{-- Checkout progress steps --}}
     @if ($isCheckout || $isCart)
       <nav class="woo-steps" aria-label="{{ __('Checkout steps', 'sage') }}">
         <ol class="woo-steps__list">
@@ -130,64 +124,43 @@
           </li>
         </ol>
       </nav>
+    @elseif ($isAccount && $isLoggedIn)
+      @php
+        $accountLinks = [
+          ['endpoint' => 'dashboard', 'label' => __('Dashboard', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('dashboard') : home_url('/my-account/')],
+          ['endpoint' => 'downloads', 'label' => __('Downloads', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('downloads') : home_url('/my-account/downloads/')],
+          ['endpoint' => 'orders', 'label' => __('Orders', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('orders') : home_url('/my-account/orders/')],
+          ['endpoint' => 'edit-account', 'label' => __('Details', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('edit-account') : home_url('/my-account/edit-account/')],
+        ];
+        $currentEndpoint = \App\mh_account_endpoint();
+        if ($currentEndpoint === '') {
+          $currentEndpoint = 'dashboard';
+        }
+      @endphp
+      <nav class="woo-account-pills" aria-label="{{ __('Account sections', 'sage') }}">
+        <ul class="woo-account-pills__list">
+          @foreach ($accountLinks as $link)
+            <li>
+              <a
+                class="woo-account-pills__link{{ $currentEndpoint === $link['endpoint'] ? ' is-current' : '' }}"
+                href="{{ esc_url($link['url']) }}"
+                @if ($currentEndpoint === $link['endpoint']) aria-current="page" @endif
+              >{{ $link['label'] }}</a>
+            </li>
+          @endforeach
+        </ul>
+      </nav>
     @endif
 
   </div>
 </div>
 
-@if ($isCheckout && $cartCount > 0)
-  @php
-    $suggestedWants = \App\mh_cart_suggested_want_keys();
-    $liveBrief = \App\mh_install_brief_text($suggestedWants);
-    if ($liveBrief === '') {
-      $liveBrief = $servicesOnly
-        ? __('Tap what applies. This sentence becomes your kickoff.', 'sage')
-        : __('The zip lands in the receipt email. Tap below if you want help installing.', 'sage');
-    }
-  @endphp
-  <div class="woo-receipt" aria-label="{{ __('Kickoff brief preview', 'sage') }}">
-    <div class="container wide">
-      <article class="woo-receipt__card mh-ticket" data-mh-live-ticket>
-        <p class="woo-receipt__meta">{{ __('From Matt · kickoff brief', 'sage') }}</p>
-        <h2 class="woo-receipt__subject">
-          {{ $servicesOnly ? __('What I will start with', 'sage') : __('What happens after you pay', 'sage') }}
-        </h2>
-        <p class="woo-receipt__body" data-mh-live-brief>{{ $liveBrief }}</p>
-        <p class="woo-receipt__site" data-mh-live-site hidden></p>
-      </article>
-    </div>
-  </div>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     TRUST STRIP — Cart and Checkout only
-════════════════════════════════════════════════════════════════════════════ --}}
-@if ($isCart || $isCheckout)
-  <div class="woo-trust-strip" aria-label="{{ __('Purchase assurance', 'sage') }}">
-    <div class="container wide woo-trust-strip__inner">
-      @foreach ($trustItems as $item)
-        <span class="woo-trust-item">
-          {!! \App\mh_svg_icon($item['icon'], 13) !!}
-          @if (! empty($item['href']))
-            <a href="{{ esc_url($item['href']) }}">{{ $item['label'] }}</a>
-          @else
-            {{ $item['label'] }}
-          @endif
-        </span>
-      @endforeach
-    </div>
-  </div>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     MAIN WC CONTENT
-════════════════════════════════════════════════════════════════════════════ --}}
-<div class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}">
+{{-- Main WC content --}}
+<div class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}{{ $hasDesk ? ' woocommerce-wrap--desk' : '' }}">
 
   @if ($shortcode !== '')
     {!! do_shortcode($shortcode) !!}
 
-    {{-- Empty cart shown at checkout --}}
     @if ($isCheckout && function_exists('WC') && WC()->cart && WC()->cart->is_empty())
       <div class="woo-empty" role="status">
         <div class="woo-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
@@ -202,7 +175,6 @@
       </div>
     @endif
 
-    {{-- Empty cart page --}}
     @if ($isCart && $cartCount === 0)
       @if ($startHere !== [])
         <div class="woo-start-here" aria-label="{{ __('Start here', 'sage') }}">
@@ -243,53 +215,5 @@
   @endif
 
 </div>
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     FOOTER TRUST / REASSURANCE BAND — Cart only
-════════════════════════════════════════════════════════════════════════════ --}}
-@if ($isCart && $cartCount > 0)
-  <div class="woo-cart-footer-band">
-    <div class="container wide woo-cart-footer-band__inner">
-      @if ($servicesOnly)
-        <div class="woo-cart-footer-item">
-          {!! \App\mh_svg_icon('check', 16) !!}
-          <div>
-            <strong>{{ __('What happens next', 'sage') }}</strong>
-            <span>{{ __('I email a short kickoff after payment. Checkout has a notes field for wants.', 'sage') }}</span>
-          </div>
-        </div>
-        <div class="woo-cart-footer-item">
-          {!! \App\mh_svg_icon('calendar', 16) !!}
-          <div>
-            <strong>{{ __('Timing', 'sage') }}</strong>
-            <span>{{ __('Reply within one business day (ET)', 'sage') }}</span>
-          </div>
-        </div>
-      @else
-        <div class="woo-cart-footer-item">
-          {!! \App\mh_svg_icon('download', 16) !!}
-          <div>
-            <strong>{{ __('Digital delivery', 'sage') }}</strong>
-            <span>{{ __('Download link in your receipt email', 'sage') }}</span>
-          </div>
-        </div>
-        <div class="woo-cart-footer-item">
-          {!! \App\mh_svg_icon('check', 16) !!}
-          <div>
-            <strong>{{ __('GPL license', 'sage') }}</strong>
-            <span>{{ __('You own the code after purchase', 'sage') }}</span>
-          </div>
-        </div>
-      @endif
-      <div class="woo-cart-footer-item">
-        {!! \App\mh_svg_icon('mail', 16) !!}
-        <div>
-          <strong>{{ __('Need a custom build?', 'sage') }}</strong>
-          <a href="{{ home_url('/contact/') }}">{{ __('Say hello →', 'sage') }}</a>
-        </div>
-      </div>
-    </div>
-  </div>
-@endif
 
 @endsection
