@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.24 — Shop catalog content padding
+
+- Product grid on `/shop/` has more vertical space above and below the catalog (`.woo-catalog-shell` padding-block). Horizontal gutters stay on `.container`.
+
 ## 3.5.23 — Shop catalog edge padding
 
 - Product grid on `/shop/` keeps page gutters again (`.woo-catalog-shell` no longer zeroes horizontal padding).

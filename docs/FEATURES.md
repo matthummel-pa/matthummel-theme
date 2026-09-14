@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.24 shop catalog padding)
+
+- Shop catalog uses `padding-block` on `.woo-catalog-shell`. Do not set horizontal padding to `0` on that shell — `.container` gutters keep cards off the viewport edge.
+
 ## Editor’s notes (3.5.22 My Account desk)
 
 - Account mirrors cart/checkout desk (`woo-desk--account` / `woo-desk--login`): main left, sticky nav + tools right. Do not restore the old full-width pill nav above content.
