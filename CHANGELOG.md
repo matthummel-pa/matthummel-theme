@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.16 — Product page: content under gallery column
+
+- Section pills and article body sit in the same grid column as the screenshots (same width), directly under the gallery.
+- Buy box stays sticky on the right; related products stay full-width below.
+
 ## 3.5.15 — Product pages: tighter ATF, blog body, section pills
 
 - Global `.display-title.is-hero` / page H1 scale is smaller for readable product and marketing titles (home name marque stays large).

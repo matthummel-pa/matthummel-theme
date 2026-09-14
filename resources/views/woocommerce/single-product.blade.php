@@ -1,14 +1,11 @@
 {{--
-  Single product — tight above-the-fold buy hero + blog-style article body.
-
-  Hero: gallery + compact buy box (title, price, CTAs, next steps).
-  Sticky section pills jump into a narrow prose column under the gallery.
-  Long-form sections stay under the fold to cut empty scroll.
+  Single product — gallery + buy box ATF; section pills and article share
+  the gallery column width (same content box, directly under screenshots).
 
   Data: mh_product_entry() merges product-catalog.json with _mh_project_* meta.
 
   @see https://woocommerce.com/document/template-structure/
-  @version 3.5.15
+  @version 3.5.16
 --}}
 @extends('layouts.app')
 
@@ -151,6 +148,36 @@
     ];
   }
   $productJsonLd = json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
+
+  $sectionNav = [];
+  if ($summary !== '' && $summary !== $blurb) {
+    $sectionNav[] = ['overview', __('Overview', 'sage')];
+  }
+  if ($benefits !== []) {
+    $sectionNav[] = ['features', __('Features', 'sage')];
+  }
+  if ($challenge !== '' || $approach !== '') {
+    $sectionNav[] = ['story', __('Story', 'sage')];
+  }
+  if ($deliverables !== [] || $filesIncl !== []) {
+    $sectionNav[] = ['included', __('Included', 'sage')];
+  }
+  if ($blocks !== [] && $isTheme) {
+    $sectionNav[] = ['blocks', __('Blocks', 'sage')];
+  }
+  if ($audience !== '') {
+    $sectionNav[] = ['audience', __('Audience', 'sage')];
+  }
+  $sectionNav[] = ['buy', __('Pricing', 'sage')];
+  if ($architecture !== '' || $handoff !== '' || $tech !== []) {
+    $sectionNav[] = ['stack', __('Stack', 'sage')];
+  }
+  if ($docs !== [] || $githubUrl !== '' || $support !== '') {
+    $sectionNav[] = ['docs', __('Docs', 'sage')];
+  }
+  if ($faq !== []) {
+    $sectionNav[] = ['faq', __('FAQ', 'sage')];
+  }
 @endphp
 
 @if ($faqJsonLd !== '')
@@ -161,15 +188,15 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     HERO — gallery (left) + buy box (right)
+     LAYOUT — gallery | buy box; TOC + article under gallery (same column width)
 ════════════════════════════════════════════════════════════════════════════ --}}
-<header class="pf-product-hero mh-shop page-header--product" aria-label="{{ __('Product', 'sage') }}">
+<div class="pf-product-page mh-shop page-header--product">
   <div class="container wide">
     @include('partials.woocommerce-crumb', ['items' => $crumbItems])
   </div>
-  <div class="container wide pf-product-hero__inner">
+  <div class="container wide pf-product-layout">
 
-    {{-- Left: product gallery --}}
+    {{-- Gallery column (screenshots) --}}
     <div class="pf-product-gallery" data-product-gallery>
       @if ($gallerySlides !== [])
         <figure
@@ -235,7 +262,7 @@
     </div>
 
     {{-- Right: scannable buy box --}}
-    <div class="pf-product-buybox pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
+    <aside class="pf-product-buybox pf-product-hero__card" aria-label="{{ __('Purchase', 'sage') }}">
       <p class="eyebrow pf-product-hero__eyebrow">{{ $eyebrow }}</p>
       <h1 class="display-title is-hero pf-product-hero__title">{{ $productTitle }}</h1>
 
@@ -331,60 +358,21 @@
           {{ $isService ? __('Need a different scope? Get help →', 'sage') : __('Questions? Get help →', 'sage') }}
         </a>
       </p>
-    </div>
+    </aside>
 
-  </div>
-</header>
+    @if (count($sectionNav) > 1)
+      <nav class="pf-product-toc" data-product-section-nav aria-label="{{ __('On this page', 'sage') }}">
+        <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
+        <div class="pf-product-toc__pills" role="list">
+          @foreach ($sectionNav as [$id, $label])
+            <a class="pf-product-toc__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
+          @endforeach
+        </div>
+      </nav>
+    @endif
 
-@php
-  $sectionNav = [];
-  if ($summary !== '' && $summary !== $blurb) {
-    $sectionNav[] = ['overview', __('Overview', 'sage')];
-  }
-  if ($benefits !== []) {
-    $sectionNav[] = ['features', __('Features', 'sage')];
-  }
-  if ($challenge !== '' || $approach !== '') {
-    $sectionNav[] = ['story', __('Story', 'sage')];
-  }
-  if ($deliverables !== [] || $filesIncl !== []) {
-    $sectionNav[] = ['included', __('Included', 'sage')];
-  }
-  if ($blocks !== [] && $isTheme) {
-    $sectionNav[] = ['blocks', __('Blocks', 'sage')];
-  }
-  if ($audience !== '') {
-    $sectionNav[] = ['audience', __('Audience', 'sage')];
-  }
-  $sectionNav[] = ['buy', __('Pricing', 'sage')];
-  if ($architecture !== '' || $handoff !== '' || $tech !== []) {
-    $sectionNav[] = ['stack', __('Stack', 'sage')];
-  }
-  if ($docs !== [] || $githubUrl !== '' || $support !== '') {
-    $sectionNav[] = ['docs', __('Docs', 'sage')];
-  }
-  if ($faq !== []) {
-    $sectionNav[] = ['faq', __('FAQ', 'sage')];
-  }
-@endphp
-@if (count($sectionNav) > 1)
-  <nav class="pf-product-toc" data-product-section-nav aria-label="{{ __('On this page', 'sage') }}">
-    <div class="container narrow pf-product-toc__inner">
-      <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
-      <div class="pf-product-toc__pills" role="list">
-        @foreach ($sectionNav as [$id, $label])
-          <a class="pf-product-toc__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-        @endforeach
-      </div>
-    </div>
-  </nav>
-@endif
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     ARTICLE BODY — blog-width prose under the gallery
-════════════════════════════════════════════════════════════════════════════ --}}
-<article class="pf-product-article">
-  <div class="container narrow pf-product-article__inner">
+    {{-- Article body — same column width as screenshots --}}
+    <article class="pf-product-article">
 
 @if ($metrics !== [])
   <div class="pf-metrics-strip pf-metrics-strip--inline" aria-label="{{ __('Highlights', 'sage') }}">
@@ -651,8 +639,10 @@
   </section>
 @endif
 
-  </div>
-</article>
+    </article>
+
+  </div>{{-- /.pf-product-layout --}}
+</div>{{-- /.pf-product-page --}}
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
      RELATED PRODUCTS / UPSELLS — pulls from WooCommerce linked products

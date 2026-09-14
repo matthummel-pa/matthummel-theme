@@ -12064,24 +12064,47 @@ html.mh-dark .entry-content > .mh-archive-note strong {
    pf-story-grid, pf-included-grid, pf-purchase-layout, pf-faq-layout, etc.
 ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Hero: gallery + buy box ── */
-.pf-product-hero {
-  padding: clamp(1.25rem, 3.5vw, 2.25rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+/* ── Product page: gallery | buy box; TOC + article under gallery ── */
+.pf-product-page {
+  padding: clamp(1.25rem, 3.5vw, 2.25rem) 0 0;
   overflow-x: clip;
 }
-.pf-product-hero > .container:first-child .woo-crumb {
+.pf-product-page > .container:first-child .woo-crumb {
   margin-bottom: .75rem;
 }
-.pf-product-hero__inner {
+.pf-product-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 24rem);
-  gap: clamp(1.25rem, 3vw, 2.25rem);
+  grid-template-areas:
+    "gallery buy"
+    "toc buy"
+    "article buy";
+  column-gap: clamp(1.25rem, 3vw, 2.25rem);
+  row-gap: clamp(.85rem, 2vw, 1.15rem);
   align-items: start;
+  padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
+.pf-product-gallery { grid-area: gallery; }
+.pf-product-buybox,
+.pf-product-hero__card { grid-area: buy; }
+.pf-product-toc { grid-area: toc; }
+.pf-product-article { grid-area: article; }
 @media (max-width: 860px) {
-  .pf-product-hero__inner {
+  .pf-product-layout {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "gallery"
+      "buy"
+      "toc"
+      "article";
   }
+}
+/* Legacy hero hooks (kept for sticky-bar / dark-mode selectors) */
+.pf-product-hero {
+  padding: 0;
+}
+.pf-product-hero__inner {
+  display: contents;
 }
 .pf-product-hero__eyebrow { margin-bottom: .35rem; }
 .pf-product-hero__title.display-title.is-hero {
@@ -12866,15 +12889,22 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   display: none;
 }
 
-/* ── Sticky section pills ── */
+/* ── Sticky section pills (gallery column width) ── */
 .pf-product-toc {
   position: sticky;
   top: var(--header-h, 4.5rem);
   z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1rem;
+  padding: .7rem 0;
+  margin: 0;
   border-block: 1px solid var(--color-border);
   background: color-mix(in srgb, var(--color-bg) 92%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  min-width: 0;
 }
 .admin-bar .pf-product-toc {
   top: calc(var(--header-h, 4.5rem) + 32px);
@@ -12885,11 +12915,7 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   }
 }
 .pf-product-toc__inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .65rem 1rem;
-  padding-block: .7rem;
+  display: contents;
 }
 .pf-product-toc__label {
   margin: 0;
@@ -12907,6 +12933,8 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   scrollbar-width: thin;
   padding-bottom: .1rem;
   -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 .pf-product-toc__pill {
   display: inline-flex;
@@ -12943,12 +12971,13 @@ html.mh-dark .pf-product-toc__pill[aria-current="true"] {
   border-color: var(--color-accent);
 }
 
-/* ── Blog-width product article ── */
+/* ── Product article (matches screenshot column width) ── */
 .pf-product-article {
-  padding: clamp(1.75rem, 4vw, 3rem) 0 clamp(3rem, 7vw, 5rem);
+  padding: 0;
+  min-width: 0;
 }
 .pf-product-article__inner {
-  max-width: 42rem;
+  max-width: none;
 }
 .container.narrow {
   max-width: 42rem;
