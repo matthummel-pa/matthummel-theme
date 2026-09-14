@@ -263,12 +263,12 @@ add_action('woocommerce_before_cart_collaterals', function (): void {
     echo '<aside class="woo-desk__aside" aria-label="'.esc_attr__('Order tools', 'sage').'">';
 }, 1);
 
-add_action('woocommerce_after_cart_totals', function (): void {
+add_action('woocommerce_cart_collaterals', function (): void {
     if (! function_exists('is_cart') || ! is_cart()) {
         return;
     }
     mh_render_woo_desk_aside('cart');
-}, 20);
+}, 15);
 
 add_action('woocommerce_after_cart', function (): void {
     if (! function_exists('WC') || ! WC()->cart || WC()->cart->is_empty()) {

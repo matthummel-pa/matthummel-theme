@@ -17168,6 +17168,9 @@ body.mh-cart-sold-individually .woocommerce-wrap--cart .shop_table.cart .actions
 .woocommerce-wrap--cart .cart-collaterals {
   margin: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
 }
 .woocommerce-wrap--cart .cart_totals,
 .woocommerce-wrap--checkout #order_review {
