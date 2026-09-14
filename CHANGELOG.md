@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.17 — Home sticky section pills
+
+- Home “On this page” matches the product submenu: sticky bar, scrollable pills, active scrollspy.
+- Shared `section-nav.js` drives home and product jump links.
+
 ## 3.5.16 — Product page: content under gallery column
 
 - Section pills and article body sit in the same content box as the screenshots (same width), directly under the gallery.

@@ -263,7 +263,7 @@
     </div>
 
     @if (count($sectionNav) > 1)
-      <nav class="pf-product-toc" data-product-section-nav aria-label="{{ __('On this page', 'sage') }}">
+      <nav class="pf-product-toc" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
         <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
         <div class="pf-product-toc__pills" role="list">
           @foreach ($sectionNav as [$id, $label])
