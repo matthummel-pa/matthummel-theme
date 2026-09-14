@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.25 — WooCommerce notice icons and padding
+
+- Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.
+- Block notice banners (SVG) get the same layout if WooCommerce prints them on classic checkout.
+- Payment, gateway, and nested notice padding is tighter so the empty-methods message is not a box-in-a-box in the checkout sidebar.
+
 ## 3.5.24 — Shop catalog content padding
 
 - Product grid on `/shop/` has more vertical space above and below the catalog (`.woo-catalog-shell` padding-block). Horizontal gutters stay on `.container`.
