@@ -17001,6 +17001,17 @@ html.mh-dark .h-help-card {
   font: 500 1rem/1.6 var(--font-body);
   color: var(--color-text-secondary);
 }
+.woocommerce-wrap--checkout .woocommerce-form-login-toggle .woocommerce-info,
+.woocommerce-wrap--checkout .woocommerce-form-coupon-toggle .woocommerce-info {
+  color: var(--color-text);
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--white));
+}
+.woocommerce-wrap--checkout .woocommerce-form-login-toggle .woocommerce-info a,
+.woocommerce-wrap--checkout .woocommerce-form-coupon-toggle .woocommerce-info a {
+  color: var(--color-accent);
+  font-weight: 700;
+}
 @media (max-width: 960px) {
   .woocommerce-wrap--checkout form.checkout.woocommerce-checkout {
     grid-template-columns: 1fr;

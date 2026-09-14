@@ -292,10 +292,12 @@ add_action('woocommerce_checkout_after_customer_details', function (): void {
 
 add_action('woocommerce_checkout_before_order_review_heading', function (): void {
     echo '<aside class="woo-desk__aside" aria-label="'.esc_attr__('Order summary and tools', 'sage').'">';
+    // Brief + next steps sit above the pay box so sticky scroll still shows guidance.
+    mh_render_woo_desk_aside('checkout', ['brief', 'steps', 'trust']);
 }, 1);
 
 add_action('woocommerce_checkout_after_order_review', function (): void {
-    mh_render_woo_desk_aside('checkout');
+    mh_render_woo_desk_aside('checkout', ['faq', 'addons', 'help']);
     echo '</aside>'; // .woo-desk__aside
 }, 60);
 
@@ -564,8 +566,12 @@ function mh_cart_type_label(string $type): string
     };
 }
 
-/** Render the sticky tools column for cart or checkout. */
-function mh_render_woo_desk_aside(string $context): void
+/**
+ * Render the sticky tools column for cart or checkout.
+ *
+ * @param  list<string>|null  $sections
+ */
+function mh_render_woo_desk_aside(string $context, ?array $sections = null): void
 {
     if (! in_array($context, ['cart', 'checkout'], true)) {
         return;
@@ -573,6 +579,7 @@ function mh_render_woo_desk_aside(string $context): void
     echo view('partials.woo-desk-aside', [
         'context' => $context,
         'servicesOnly' => mh_cart_is_services_only(),
+        'sections' => $sections,
     ])->render();
 }
 
