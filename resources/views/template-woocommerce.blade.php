@@ -2,7 +2,7 @@
   Template Name: WooCommerce
   Cart, Checkout, and My account — classic shortcodes, not WooCommerce blocks.
 
-  Cart / Checkout use a post-like desk: main column left, sticky tools aside right.
+  Cart / Checkout / Account use a post-like desk: main column left, sticky tools aside right.
 --}}
 @extends('layouts.app')
 
@@ -26,15 +26,26 @@
     $cartTotal = function_exists('wc_price') ? WC()->cart->get_cart_total() : '';
   }
 
+  $accountHeader = $isAccount ? \App\mh_account_desk_header() : ['title' => $title, 'lead' => ''];
+  if ($isAccount) {
+    $title = $accountHeader['title'];
+  }
+
   $crumbItems = [
     ['label' => __('Home', 'sage'), 'url' => home_url('/')],
     ['label' => __('Shop', 'sage'), 'url' => $shopUrl],
-    ['label' => $title, 'current' => true],
   ];
+  if ($isAccount && $isLoggedIn && \App\mh_account_endpoint() !== '') {
+    $crumbItems[] = [
+      'label' => __('My account', 'sage'),
+      'url' => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/my-account/'),
+    ];
+  }
+  $crumbItems[] = ['label' => $title, 'current' => true];
 
   $servicesOnly = \App\mh_cart_is_services_only();
   $startHere    = \App\mh_checkout_start_here_products();
-  $hasDesk      = ($isCart || $isCheckout) && $cartCount > 0;
+  $hasDesk      = (($isCart || $isCheckout) && $cartCount > 0) || $isAccount;
 
   $lead = '';
   if ($isCart) {
@@ -48,12 +59,7 @@
       ? __('Pay once on the left. Order tools stay on the right.', 'sage')
       : __('Pay once on the left. The zip is in the receipt email.', 'sage');
   } elseif ($isAccount) {
-    $isDownloads = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('downloads');
-    $lead = ! $isLoggedIn
-      ? __('Log in to view your orders and download your themes.', 'sage')
-      : ($isDownloads
-        ? __('Theme and plugin zips you bought. When I ship a new version, I email you and the file here updates.', 'sage')
-        : __('Orders, downloads, and billing details in one place. I email this account when a zip you bought gets a new version.', 'sage'));
+    $lead = $accountHeader['lead'];
   }
 @endphp
 
@@ -117,6 +123,32 @@
             <span>{{ __('Confirmation', 'sage') }}</span>
           </li>
         </ol>
+      </nav>
+    @elseif ($isAccount && $isLoggedIn)
+      @php
+        $accountLinks = [
+          ['endpoint' => 'dashboard', 'label' => __('Dashboard', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('dashboard') : home_url('/my-account/')],
+          ['endpoint' => 'downloads', 'label' => __('Downloads', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('downloads') : home_url('/my-account/downloads/')],
+          ['endpoint' => 'orders', 'label' => __('Orders', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('orders') : home_url('/my-account/orders/')],
+          ['endpoint' => 'edit-account', 'label' => __('Details', 'sage'), 'url' => function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('edit-account') : home_url('/my-account/edit-account/')],
+        ];
+        $currentEndpoint = \App\mh_account_endpoint();
+        if ($currentEndpoint === '') {
+          $currentEndpoint = 'dashboard';
+        }
+      @endphp
+      <nav class="woo-account-pills" aria-label="{{ __('Account sections', 'sage') }}">
+        <ul class="woo-account-pills__list">
+          @foreach ($accountLinks as $link)
+            <li>
+              <a
+                class="woo-account-pills__link{{ $currentEndpoint === $link['endpoint'] ? ' is-current' : '' }}"
+                href="{{ esc_url($link['url']) }}"
+                @if ($currentEndpoint === $link['endpoint']) aria-current="page" @endif
+              >{{ $link['label'] }}</a>
+            </li>
+          @endforeach
+        </ul>
       </nav>
     @endif
 

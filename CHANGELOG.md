@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.22 — My Account desk (same post-style layout)
+
+- My Account uses the cart/checkout desk: content left, sticky account nav + tools right.
+- Endpoint-aware page title, lead, and sidebar copy (dashboard, downloads, orders, addresses, details).
+- Login / register uses the same desk: forms left, help tools right.
+- Header pills jump to Dashboard, Downloads, Orders, and Details.
+- Contrast pass for light and `html.mh-dark` on account panels, tables, and fields.
+
 ## 3.5.21 — Cart & checkout desk (post-style layout)
 
 - Cart and checkout use a journal-style desk: main column left, sticky tools sidebar right.

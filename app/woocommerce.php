@@ -695,6 +695,142 @@ add_action('woocommerce_before_cart', function (): void {
 // mh-type-* loop classes live on woocommerce_post_class in shop.php.
 remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
 
+/**
+ * Current My Account endpoint slug (empty string = dashboard).
+ */
+function mh_account_endpoint(): string
+{
+    if (! function_exists('is_account_page') || ! is_account_page()) {
+        return '';
+    }
+    if (! function_exists('WC') || ! WC()->query) {
+        return '';
+    }
+    $endpoint = (string) WC()->query->get_current_endpoint();
+
+    return $endpoint;
+}
+
+/**
+ * Page title + lead for My Account (dashboard and endpoints).
+ *
+ * @return array{title: string, lead: string}
+ */
+function mh_account_desk_header(): array
+{
+    $endpoint = mh_account_endpoint();
+    $loggedIn = is_user_logged_in();
+
+    if (! $loggedIn) {
+        return [
+            'title' => __('My account', 'sage'),
+            'lead' => __('Log in for downloads and orders. Guest checkout still works without an account.', 'sage'),
+        ];
+    }
+
+    return match ($endpoint) {
+        'downloads' => [
+            'title' => __('Downloads', 'sage'),
+            'lead' => __('Theme and plugin zips from your orders. When I ship a new version, I email you and the file here updates.', 'sage'),
+        ],
+        'orders' => [
+            'title' => __('Orders', 'sage'),
+            'lead' => __('Your purchase history. Open an order for the receipt and download links.', 'sage'),
+        ],
+        'view-order' => [
+            'title' => __('Order details', 'sage'),
+            'lead' => __('Receipt, totals, and files for this order.', 'sage'),
+        ],
+        'edit-address' => [
+            'title' => __('Addresses', 'sage'),
+            'lead' => __('Billing details used on receipts. Digital orders do not need a shipping address.', 'sage'),
+        ],
+        'edit-account' => [
+            'title' => __('Account details', 'sage'),
+            'lead' => __('Name, email, and password. I use this email for zip update notices.', 'sage'),
+        ],
+        'payment-methods' => [
+            'title' => __('Payment methods', 'sage'),
+            'lead' => __('Saved cards if your gateway supports them. Most packs are a one-time pay.', 'sage'),
+        ],
+        'customer-logout' => [
+            'title' => __('Log out', 'sage'),
+            'lead' => __('You are leaving your account on this device.', 'sage'),
+        ],
+        default => [
+            'title' => __('My account', 'sage'),
+            'lead' => __('Orders, downloads, and billing in one place. I email this account when a zip you bought gets a new version.', 'sage'),
+        ],
+    };
+}
+
+/**
+ * Sidebar tools copy for the current account endpoint.
+ *
+ * @return array{
+ *   next: list<array{title: string, text: string}>,
+ *   facts: list<array{icon: string, label: string}>,
+ *   faq: list<array{q: string, a: string}>
+ * }
+ */
+function mh_account_desk_tools(): array
+{
+    $endpoint = mh_account_endpoint();
+
+    $next = match ($endpoint) {
+        'downloads' => [
+            ['title' => __('Grab the zip', 'sage'), 'text' => __('Download the latest file for each product you bought.', 'sage')],
+            ['title' => __('Install on your site', 'sage'), 'text' => __('Themes under Appearance → Themes; plugins under Plugins → Add New.', 'sage')],
+            ['title' => __('Watch for updates', 'sage'), 'text' => __('I email this account when a newer zip ships.', 'sage')],
+        ],
+        'orders', 'view-order' => [
+            ['title' => __('Find the order', 'sage'), 'text' => __('Open a row for the receipt and status.', 'sage')],
+            ['title' => __('Get the files', 'sage'), 'text' => __('Downloads live on the order and under Downloads.', 'sage')],
+            ['title' => __('Ask if something looks off', 'sage'), 'text' => __('Reply to the receipt or say hello from Contact.', 'sage')],
+        ],
+        'edit-address' => [
+            ['title' => __('Keep billing current', 'sage'), 'text' => __('Used on invoices and receipts.', 'sage')],
+            ['title' => __('No shipping needed', 'sage'), 'text' => __('Digital packs do not ship.', 'sage')],
+        ],
+        'edit-account' => [
+            ['title' => __('Update your email', 'sage'), 'text' => __('That is where update notices go.', 'sage')],
+            ['title' => __('Change your password', 'sage'), 'text' => __('Only if you want a new one.', 'sage')],
+        ],
+        default => [
+            ['title' => __('Downloads first', 'sage'), 'text' => __('Zips for themes and plugins you bought.', 'sage')],
+            ['title' => __('Check orders', 'sage'), 'text' => __('Receipts and status for every purchase.', 'sage')],
+            ['title' => __('Keep details fresh', 'sage'), 'text' => __('Email and billing for receipts and updates.', 'sage')],
+        ],
+    };
+
+    $facts = [
+        ['icon' => 'download', 'label' => __('Latest zip stays under Downloads', 'sage')],
+        ['icon' => 'mail', 'label' => __('Update notice goes to this account email', 'sage')],
+        ['icon' => 'check', 'label' => __('GPL on theme and plugin packs', 'sage')],
+    ];
+
+    $faq = match ($endpoint) {
+        'downloads' => [
+            ['q' => __('Where is my file?', 'sage'), 'a' => __('On this page after payment, and in the receipt email.', 'sage')],
+            ['q' => __('Will old links keep working?', 'sage'), 'a' => __('When I ship a new zip, this list updates. Use the newest file.', 'sage')],
+        ],
+        'orders', 'view-order' => [
+            ['q' => __('Need an invoice?', 'sage'), 'a' => __('Open the order for totals. Say hello if you need a PDF.', 'sage')],
+            ['q' => __('Missing a download?', 'sage'), 'a' => __('Check Downloads, then the receipt email. Still stuck? Contact me.', 'sage')],
+        ],
+        default => [
+            ['q' => __('Do I need an account to buy?', 'sage'), 'a' => __('No. Guest checkout is fine. An account just keeps downloads handy.', 'sage')],
+            ['q' => __('Lost the receipt?', 'sage'), 'a' => __('Orders lists every purchase tied to this email.', 'sage')],
+        ],
+    };
+
+    return [
+        'next' => $next,
+        'facts' => $facts,
+        'faq' => $faq,
+    ];
+}
+
 // ── My account: add download shortcut link in account nav ────────────────────
 add_filter('woocommerce_account_menu_items', function (array $items): array {
     // Ensure Downloads appears early and prominently (position 2).

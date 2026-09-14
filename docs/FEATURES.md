@@ -40,6 +40,12 @@ What the 3.x Sage theme does, and where it lives.
 - CLI: `wp mh shop-downloads [--force] [--localize] [--no-notify] [--slug=acreline]` and `wp mh shop-notify-updates [--slug=acreline] [--resend]`.
 - Live shop host is **hummelwp.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
 
+## Editor’s notes (3.5.22 My Account desk)
+
+- Account mirrors cart/checkout desk (`woo-desk--account` / `woo-desk--login`): main left, sticky nav + tools right. Do not restore the old full-width pill nav above content.
+- Endpoint title/lead/tools come from `mh_account_desk_header()` and `mh_account_desk_tools()`. Keep copy honest (downloads, update email, GPL) — no fake urgency.
+- Blade overrides: `woocommerce/myaccount/my-account.blade.php`, `form-login.blade.php`, `partials/woo-account-aside.blade.php`.
+
 ## Editor’s notes (3.5.21 cart/checkout desk)
 
 - Desk layout mirrors journal posts (`woo-desk__main` + sticky `woo-desk__aside`). Do not put order tools back in a full-width trust strip above the form.
@@ -138,7 +144,7 @@ What the 3.x Sage theme does, and where it lives.
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery+buy layout, section pills + article under the gallery column (same width), crumbs, empty-image fallbacks, related cards; Cart / Checkout desk (post-style main + sticky tools aside); My account classic shortcodes; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready; shop grid 3/2/1 without WC float CSS; catalog GitHub zips as downloadable files; Downloads version/update UI; buyer update email | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `partials/woo-desk-aside.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `resources/js/section-nav.js`, `resources/js/woo-desk.js`, `portfolio.css`, `generoi/sage-woocommerce` |
+| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery+buy layout, section pills + article under the gallery column (same width), crumbs, empty-image fallbacks, related cards; Cart / Checkout / My Account desk (post-style main + sticky tools aside); login desk; SEO titles/meta; a11y focus/notices/tables; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready; shop grid 3/2/1 without WC float CSS; catalog GitHub zips as downloadable files; Downloads version/update UI; buyer update email | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `partials/woo-desk-aside.blade.php`, `partials/woo-account-aside.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `resources/js/section-nav.js`, `resources/js/woo-desk.js`, `portfolio.css`, `generoi/sage-woocommerce` |
 
 ## Editor’s notes (3.1.52 AI comparison UX)
 
