@@ -13548,7 +13548,7 @@ html.mh-dark .pf-block-card {
 .woo-catalog-shell {
   /* padding-block only — keep .container padding-inline so product cards
      do not sit flush against the viewport edge */
-  padding-block: clamp(2rem, 3.5vw, 3rem) clamp(3rem, 5vw, 4.5rem);
+  padding-block: clamp(4rem, 8vw, 6.5rem) clamp(4.5rem, 8vw, 7rem);
 }
 .woo-checkout-shell {
   padding: clamp(1.25rem, 3vw, 2rem);
