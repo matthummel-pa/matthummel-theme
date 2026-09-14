@@ -7,7 +7,7 @@ No page builders. Visitor copy lives in wp-admin (**Page content (theme)**), not
 | | |
 | --- | --- |
 | **Live site** | [hummelwp.com](https://hummelwp.com) (Hostinger) |
-| **Version** | `3.5.14` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://hummelwp.com/changelog/) |
+| **Version** | `3.5.16` · [CHANGELOG](CHANGELOG.md) · [public changelog](https://hummelwp.com/changelog/) |
 | **Stack** | Sage 11.2.1 · PHP 8.3 · Acorn 6 · Blade · Tailwind v4 · Vite 8 · WordPress 6.6+ |
 | **Release** | [`theme-latest`](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) (CI zip for Appearance → Update Theme) |
 | **License** | [MIT](LICENSE.md) |

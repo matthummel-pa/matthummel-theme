@@ -26,6 +26,8 @@ There is no SiteGround FTP or SSH step. After install, purge LiteSpeed.
 The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
 WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
 
+Theme zip products (Acreline, WalkRidge): see `docs/SHOP-DOWNLOADS.md`.
+
 ## Cursor Cloud specific instructions
 
 The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The update script
@@ -88,8 +90,8 @@ Gotchas:
 - Cloud Agents: add the same HTTP URL once at https://cursor.com/agents
   (MCP dropdown → custom HTTP server, no client ID/secret), then complete
   OAuth. Project `.cursor/mcp.json` is not loaded in Cloud Agent VMs.
-  Plugin is on the live site (`vibe-ai`). Theme **files** still ship via
-  FTP into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
+  Plugin is on the live site (`vibe-ai`). Theme **files** still ship as the
+  `theme-latest` zip into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
   WPVibe then connects, lists themes, and activates — it cannot replace
   `npm run build` / Composer for Sage. Theme edits on a connected site: draft →
   preview → publish.

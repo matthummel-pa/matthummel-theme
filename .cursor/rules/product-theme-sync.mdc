@@ -29,6 +29,7 @@ Do **not** hardcode buyer copy in Blade. Do **not** invent metrics, IDX claims, 
 | Catalog slug | GitHub | Demo | Notes |
 | --- | --- | --- | --- |
 | `acreline` | `matthummel-pa/wp-acreline` | https://acreline.matthummel.com/ | Theme pack; Core + child; Gutenberg blocks |
+| `walkridge` | `matthummel-pa/wp-walkridge` | — | Theme pack; needs a GitHub release zip before Woo can attach a download |
 | `tocflow` | `matthummel-pa/tocflow` | GitHub Pages docs | Free plugin |
 
 Add a new row here when a new sellable product lands in the catalog JSON.
