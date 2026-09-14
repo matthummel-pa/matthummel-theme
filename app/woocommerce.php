@@ -245,6 +245,128 @@ add_action('woocommerce_after_cart_table', function (): void {
     echo '</div>';
 }, 50);
 
+// ── Cart / Checkout desk layout (article left, tools sidebar right) ───────────
+add_action('woocommerce_before_cart', function (): void {
+    if (! function_exists('WC') || ! WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    echo '<div class="woo-desk">';
+    echo '<div class="woo-desk__layout">';
+    echo '<div class="woo-desk__main">';
+}, 1);
+
+add_action('woocommerce_before_cart_collaterals', function (): void {
+    if (! function_exists('WC') || ! WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    echo '</div>'; // .woo-desk__main
+    echo '<aside class="woo-desk__aside" aria-label="'.esc_attr__('Order tools', 'sage').'">';
+}, 1);
+
+add_action('woocommerce_after_cart_totals', function (): void {
+    if (! function_exists('is_cart') || ! is_cart()) {
+        return;
+    }
+    mh_render_woo_desk_aside('cart');
+}, 20);
+
+add_action('woocommerce_after_cart', function (): void {
+    if (! function_exists('WC') || ! WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    echo '</aside>'; // .woo-desk__aside
+    echo '</div>'; // .woo-desk__layout
+    echo '</div>'; // .woo-desk
+    mh_render_woo_cart_mobile_bar();
+}, 5);
+
+remove_action('woocommerce_cart_collaterals', 'woocommerce_cross_sell_display');
+
+add_action('woocommerce_checkout_before_customer_details', function (): void {
+    echo '<div class="woo-desk__main">';
+}, 1);
+
+add_action('woocommerce_checkout_after_customer_details', function (): void {
+    echo '</div>'; // .woo-desk__main
+}, 99);
+
+add_action('woocommerce_checkout_before_order_review_heading', function (): void {
+    echo '<aside class="woo-desk__aside" aria-label="'.esc_attr__('Order summary and tools', 'sage').'">';
+}, 1);
+
+add_action('woocommerce_checkout_after_order_review', function (): void {
+    mh_render_woo_desk_aside('checkout');
+    echo '</aside>'; // .woo-desk__aside
+}, 60);
+
+/** Sticky mobile checkout CTA under the cart (desktop uses the sidebar). */
+function mh_render_woo_cart_mobile_bar(): void
+{
+    if (! function_exists('WC') || ! WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    $checkout = function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/checkout/');
+    $total = WC()->cart->get_cart_total();
+    $count = (int) WC()->cart->get_cart_contents_count();
+    echo '<div class="woo-cart-mobile-bar" data-mh-cart-mobile-bar>';
+    echo '<div class="woo-cart-mobile-bar__inner">';
+    echo '<p class="woo-cart-mobile-bar__meta">';
+    echo '<span>'.esc_html(sprintf(_n('%d item', '%d items', $count, 'sage'), $count)).'</span>';
+    echo '<strong class="woo-cart-mobile-bar__total">'.wp_kses_post($total).'</strong>';
+    echo '</p>';
+    echo '<a class="btn woo-cart-mobile-bar__cta" href="'.esc_url($checkout).'">'.esc_html__('Continue to checkout', 'sage').'</a>';
+    echo '</div></div>';
+}
+
+// Type badge + short blurb under cart line names.
+add_action('woocommerce_after_cart_item_name', function (array $cart_item, string $cart_item_key): void {
+    $id = (int) ($cart_item['product_id'] ?? 0);
+    if ($id <= 0) {
+        return;
+    }
+    $type = mh_resolve_product_type($id);
+    $label = mh_cart_type_label($type);
+    $blurb = '';
+    $payload = mh_shop_product_payload($id);
+    if (is_array($payload)) {
+        $blurb = trim((string) ($payload['short_description'] ?? ''));
+    }
+    if ($blurb === '' && function_exists('App\\mh_product_entry')) {
+        $entry = mh_product_entry($id);
+        if (is_array($entry)) {
+            $blurb = trim(wp_strip_all_tags((string) ($entry['blurb'] ?? $entry['summary'] ?? '')));
+        }
+    }
+    if (strlen($blurb) > 110) {
+        $blurb = rtrim(substr($blurb, 0, 107)).'…';
+    }
+    echo '<span class="woo-cart-line__meta">';
+    echo '<span class="woo-cart-line__type">'.esc_html($label).'</span>';
+    if ($blurb !== '') {
+        echo '<span class="woo-cart-line__blurb">'.esc_html($blurb).'</span>';
+    }
+    echo '</span>';
+}, 10, 2);
+
+// Hide quantity UI when every line is sold individually (digital packs).
+add_filter('body_class', function (array $classes): array {
+    if (! function_exists('is_cart') || ! is_cart() || ! function_exists('WC') || ! WC()->cart) {
+        return $classes;
+    }
+    foreach (WC()->cart->get_cart() as $item) {
+        $product = $item['data'] ?? null;
+        if (! $product instanceof \WC_Product || ! $product->is_sold_individually()) {
+            return $classes;
+        }
+    }
+    if (WC()->cart->is_empty()) {
+        return $classes;
+    }
+    $classes[] = 'mh-cart-sold-individually';
+
+    return $classes;
+});
+
 // ── Checkout: accessible scroll wrapper around order review ───────────────────
 add_action('woocommerce_checkout_before_order_review', function (): void {
     echo '<div class="shop-table-scroll" tabindex="0" role="region" aria-label="'.esc_attr__('Order review', 'sage').'">';
@@ -305,6 +427,153 @@ function mh_checkout_trust_items(): array
         ['icon' => 'check', 'label' => __('SSL-encrypted payment', 'sage')],
         ['icon' => 'mail', 'label' => __('Questions? Say hello', 'sage'), 'href' => home_url('/contact/')],
     ];
+}
+
+/**
+ * Numbered “what happens next” for the cart/checkout tools sidebar.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_checkout_next_steps(): array
+{
+    if (mh_cart_is_services_only()) {
+        return [
+            [
+                'title' => __('Pay once', 'sage'),
+                'text' => __('Guest checkout is fine. No retainers.', 'sage'),
+            ],
+            [
+                'title' => __('I write back', 'sage'),
+                'text' => __('Kickoff email within one business day (ET).', 'sage'),
+            ],
+            [
+                'title' => __('We ship the work', 'sage'),
+                'text' => __('Notes from checkout guide the first pass.', 'sage'),
+            ],
+        ];
+    }
+
+    return [
+        [
+            'title' => __('Pay once', 'sage'),
+            'text' => __('One screen. Guest checkout is fine.', 'sage'),
+        ],
+        [
+            'title' => __('Get the zip', 'sage'),
+            'text' => __('Download link lands in the receipt email.', 'sage'),
+        ],
+        [
+            'title' => __('Install or hire me', 'sage'),
+            'text' => __('Optional help chips stay on the order.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Short FAQ rows for the cart/checkout tools sidebar.
+ *
+ * @return list<array{q: string, a: string}>
+ */
+function mh_checkout_sidebar_faq(): array
+{
+    if (mh_cart_is_services_only()) {
+        return [
+            [
+                'q' => __('Do I need an account?', 'sage'),
+                'a' => __('No. Guest checkout works. I email next steps to the address you enter.', 'sage'),
+            ],
+            [
+                'q' => __('When do we start?', 'sage'),
+                'a' => __('After payment I reply within one business day with scope and timing.', 'sage'),
+            ],
+        ];
+    }
+
+    return [
+        [
+            'q' => __('Where is the download?', 'sage'),
+            'a' => __('In the receipt email, and later under My account → Downloads.', 'sage'),
+        ],
+        [
+            'q' => __('Do I need an account?', 'sage'),
+            'a' => __('No. Guest checkout is fine. Use the same email if you want update notices.', 'sage'),
+        ],
+        [
+            'q' => __('Can I get a refund?', 'sage'),
+            'a' => __('Digital packs are final once the zip is delivered. Ask before you pay if unsure.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Suggested add-ons for the cart/checkout sidebar (not already in the cart).
+ *
+ * @return list<array{title: string, price: string, permalink: string, add_to_cart_url: string}>
+ */
+function mh_cart_sidebar_addons(int $limit = 3): array
+{
+    $inCart = [];
+    if (function_exists('WC') && WC()->cart) {
+        foreach (WC()->cart->get_cart() as $item) {
+            $post = get_post((int) ($item['product_id'] ?? 0));
+            if ($post instanceof \WP_Post) {
+                $inCart[] = (string) $post->post_name;
+            }
+        }
+    }
+
+    $candidates = mh_cart_is_services_only()
+        ? ['acreline', 'acreline-site-care', 'acreline-setup-launch']
+        : ['acreline-express-install', 'acreline-setup-launch', 'acreline-site-care', 'tocflow'];
+
+    $out = [];
+    foreach ($candidates as $slug) {
+        if (in_array($slug, $inCart, true)) {
+            continue;
+        }
+        $id = function_exists('App\\mh_product_id_by_slug') ? mh_product_id_by_slug($slug) : 0;
+        $payload = $id > 0 ? mh_shop_product_payload($id) : null;
+        if (! is_array($payload) || empty($payload['add_to_cart_url'])) {
+            continue;
+        }
+        $title = html_entity_decode((string) ($payload['name'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $price = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
+        $price = trim(preg_replace('/\.00\b/', '', preg_replace('/\s+/', ' ', $price) ?? $price) ?? $price);
+        $out[] = [
+            'title' => $title,
+            'price' => $price,
+            'permalink' => (string) ($payload['permalink'] ?? ''),
+            'add_to_cart_url' => (string) ($payload['add_to_cart_url'] ?? ''),
+        ];
+        if (count($out) >= $limit) {
+            break;
+        }
+    }
+
+    return $out;
+}
+
+/** Human label for a product type badge on cart lines. */
+function mh_cart_type_label(string $type): string
+{
+    return match ($type) {
+        'plugin' => __('Plugin', 'sage'),
+        'service' => __('Service', 'sage'),
+        'app' => __('App', 'sage'),
+        default => __('Theme', 'sage'),
+    };
+}
+
+/** Render the sticky tools column for cart or checkout. */
+function mh_render_woo_desk_aside(string $context): void
+{
+    if (! in_array($context, ['cart', 'checkout'], true)) {
+        return;
+    }
+    echo view('partials.woo-desk-aside', [
+        'context' => $context,
+        'servicesOnly' => mh_cart_is_services_only(),
+    ])->render();
 }
 
 /**
@@ -445,6 +714,18 @@ add_filter('woocommerce_order_button_text', function (): string {
 
 // ── Checkout: remove default "Your order" heading (we style it via CSS) ───────
 add_filter('woocommerce_checkout_order_review_heading', fn (): string => __('Order summary', 'sage'));
+
+// form-checkout.php hardcodes “Your order”; map it on checkout screens.
+add_filter('gettext', function (string $translation, string $text, string $domain): string {
+    if ($domain !== 'woocommerce' || $text !== 'Your order') {
+        return $translation;
+    }
+    if (! function_exists('is_checkout') || ! is_checkout()) {
+        return $translation;
+    }
+
+    return __('Order summary', 'sage');
+}, 20, 3);
 
 // ── Cart: clearer proceed CTA ─────────────────────────────────────────────────
 remove_action('woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20);
