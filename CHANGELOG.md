@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.23 — Shop catalog edge padding
+
+- Product grid on `/shop/` keeps page gutters again (`.woo-catalog-shell` no longer zeroes horizontal padding).
+
 ## 3.5.22 — Cart, checkout & My Account desk (post-style layout)
 
 - Cart, checkout, and My Account use a journal-style desk: main column left, sticky tools sidebar right.
