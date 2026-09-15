@@ -34,8 +34,9 @@ The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The upd
 runs `composer install` and `npm install`. Services are not auto-started.
 
 Browser GUI recording is part of this Cloud Agent environment. The VM desktop is
-`DISPLAY=:1`. Use `/usr/local/bin/google-chrome` (not a headless `google-chrome`
-binary) so computer-use and `RecordScreen` hit the VNC session. `.cursor/environment.json`
+`DISPLAY=:1`. The start script waits for that display before the agent works.
+Use `/usr/local/bin/google-chrome` (not a headless `google-chrome` binary) so
+computer-use and `RecordScreen` hit the VNC session. `.cursor/environment.json`
 sets `chromeExecutablePath` and `enable_testing`. For walkthrough videos: open the
 page with `computerUse`, then `RecordScreen` START → click through the flow →
 SAVE_RECORDING. Do not use headless Chrome for GUI demos.
