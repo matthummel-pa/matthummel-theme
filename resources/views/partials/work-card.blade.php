@@ -50,7 +50,7 @@
     @endif
     <div class="work-actions">
       <a class="btn" href="{{ esc_url($conceptUrl) }}">
-        {{ \App\field('work_cta_view', __('View details', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        {{ \App\field('work_cta_view', \App\mh_projects_listing_default('cta_view')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
       @if ($demo !== '')
         <a class="{{ $ghost }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">

@@ -341,7 +341,7 @@ function mh_project_case_study(int $post_id, array $card, array $story): array
         'architecture' => (string) ($docs['architecture'] ?? ''),
         'handoff' => (string) ($docs['handoff'] ?? ''),
         'notice' => __(
-            'This is a spec build — a public Sage 11 example, not a client or employer site. Production work stays private unless a shop asks to be featured.',
+            'This is sample work I built in public. It is not a client or employer site.',
             'sage'
         ),
     ];

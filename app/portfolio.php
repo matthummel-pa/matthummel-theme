@@ -3883,6 +3883,125 @@ add_action('init', function (): void {
     update_option('mh_projects_portfolio_copy_v2', '1', false);
 }, 38);
 
+add_action('init', function (): void {
+    if (get_option('mh_projects_readable_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    mh_apply_projects_readable_copy();
+    update_option('mh_projects_readable_copy_v1', '1', false);
+}, 39);
+
+/**
+ * Rewrite Projects listing fields and catalog sample stories for grade 6–8 scan.
+ *
+ * @since 3.5.29
+ */
+function mh_apply_projects_readable_copy(): void
+{
+    $projects = get_page_by_path('projects');
+    if ($projects instanceof \WP_Post) {
+        $id = (int) $projects->ID;
+        $keys = [
+            'work_kicker' => 'kicker',
+            'work_h1' => 'h1',
+            'work_lede' => 'lede',
+            'work_hero_cta_primary' => 'hero_cta_primary',
+            'work_hero_cta_secondary' => 'hero_cta_secondary',
+            'work_foot' => 'foot',
+            'work_search_ph' => 'search_ph',
+            'work_cta_view' => 'cta_view',
+            'work_cta_buy' => 'cta_buy',
+            'work_cta_help' => 'cta_help',
+            'work_cta_use' => 'cta_use',
+            'work_band_h2' => 'band_h2',
+            'work_band_lede' => 'band_lede',
+            'work_empty_h2' => 'empty_h2',
+            'work_empty_text' => 'empty_text',
+            'work_empty_cta' => 'empty_cta',
+            'work_context_h2' => 'context_h2',
+            'work_context_p1' => 'context_p1',
+            'work_context_p2' => 'context_p2',
+            'work_fit_h2' => 'fit_h2',
+            'work_fit_intro' => 'fit_intro',
+            'work_how_h2' => 'how_h2',
+            'work_how_intro' => 'how_intro',
+            'work_faq_h2' => 'faq_h2',
+            'work_faq_intro' => 'faq_intro',
+        ];
+        foreach ($keys as $field => $defaultKey) {
+            update_post_meta($id, 'mh_f_'.$field, mh_projects_listing_default($defaultKey));
+        }
+        update_post_meta($id, 'mh_f_work_fit_items', mh_work_fit_defaults());
+        update_post_meta($id, 'mh_f_work_how_steps', mh_work_how_defaults());
+        update_post_meta($id, 'mh_f_work_faq', mh_work_faq_defaults());
+    }
+
+    $home = get_page_by_path('home');
+    if (! $home instanceof \WP_Post) {
+        $frontId = (int) get_option('page_on_front');
+        $home = $frontId > 0 ? get_post($frontId) : null;
+    }
+    if ($home instanceof \WP_Post) {
+        $workIntro = (string) get_post_meta($home->ID, 'mh_f_home_work_intro', true);
+        $oldWork = [
+            '',
+            'Studio WordPress themes and plugins with live demos and stack notes. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            'Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            'Themes and plugins with live demos for tours, shops, and inns. Buy a pack when it is listed, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.',
+        ];
+        if (in_array($workIntro, $oldWork, true)) {
+            update_post_meta(
+                $home->ID,
+                'mh_f_home_work_intro',
+                __('Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.', 'sage')
+            );
+        }
+
+        $aboutP2 = (string) get_post_meta($home->ID, 'mh_f_home_about_p2', true);
+        $oldAbout = [
+            'The gallery is themes and plugins I ship — not a client grid. Agency-sub work stays in the background. Stack notes are on About.',
+            'The gallery is Sage 11 themes and plugins I ship — not a client grid. Agency-sub work stays in the background.',
+            'The gallery showcases WordPress themes and plugins I ship on Sage 11. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+            'The gallery is concept sites showing the Sage 11 stack I ship. I have done a handful of silent agency-sub jobs; this site is not a client grid.',
+        ];
+        if (in_array($aboutP2, $oldAbout, true)) {
+            update_post_meta(
+                $home->ID,
+                'mh_f_home_about_p2',
+                __('The gallery is sample work I can show. Client and employer sites stay private. Stack notes are on About.', 'sage')
+            );
+        }
+    }
+
+    if (! function_exists(__NAMESPACE__.'\\mh_product_catalog_entries') || ! function_exists(__NAMESPACE__.'\\mh_upsert_project_from_catalog_entry')) {
+        return;
+    }
+    if (! post_type_exists(mh_project_post_type())) {
+        return;
+    }
+
+    $order = 0;
+    $catalog = mh_product_catalog_entries();
+    if (! is_array($catalog)) {
+        return;
+    }
+
+    foreach ($catalog as $slug => $entry) {
+        if (! is_array($entry)) {
+            continue;
+        }
+        $productId = 0;
+        if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
+            $productId = mh_product_id_by_slug((string) $slug);
+        }
+        if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
+            $order++;
+        }
+    }
+}
+
 /**
  * Ensure the project brief page exists (idempotent).
  *

@@ -281,6 +281,54 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
 }
 
 /**
+ * Canonical Projects listing copy for field defaults and Blade fallbacks.
+ *
+ * Written for hiring managers and shops: short sentences, grade 6–8.
+ *
+ * @since 3.5.29
+ *
+ * @param  string  $key  Field key without the work_ prefix, or a full work_* key.
+ * @param  string  $brand  Site name appended to seo_title.
+ */
+function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel'): string
+{
+    $copy = [
+        'kicker' => __('Projects', 'sage'),
+        'h1' => __('Sample WordPress work.', 'sage'),
+        'lede' => __('I built these themes and plugins so you can see how I work. Open a page, try the live demo, and read a short story. I take full-time, contract, and freelance jobs.', 'sage'),
+        'hero_cta_primary' => __('Say hello', 'sage'),
+        'hero_cta_secondary' => __('Hire me', 'sage'),
+        'foot' => __('Want the repos? See the <a href="/code/">Code page</a>. Live demos open from each project when I have one.', 'sage'),
+        'search_ph' => __('Search projects…', 'sage'),
+        'cta_view' => __('Open project', 'sage'),
+        'cta_buy' => __('Open project', 'sage'),
+        'cta_help' => __('Say hello', 'sage'),
+        'cta_use' => __('Say hello', 'sage'),
+        'band_h2' => __('Want work like this?', 'sage'),
+        'band_lede' => __('Tell me the role you are filling, or what you would change. I usually reply within a day.', 'sage'),
+        'empty_h2' => __('Projects are on the way.', 'sage'),
+        'empty_text' => __('I am adding the first sample sites here. Write and tell me what you need built, or the role you are filling.', 'sage'),
+        'empty_cta' => __('Say hello', 'sage'),
+        'context_h2' => __('What you will find.', 'sage'),
+        'context_p1' => __('Each card is a sample I built in public. You get screenshots, a short story, and a live demo when I have one.', 'sage'),
+        'context_p2' => __('These are not client sites. Code is on GitHub. If one fits, <a href="/contact/">write and say which</a>.', 'sage'),
+        'fit_h2' => __('Who this page is for.', 'sage'),
+        'fit_intro' => __('Hiring managers reviewing public work, and shops or agencies that need a site like one of these.', 'sage'),
+        'how_h2' => __('How to use this page.', 'sage'),
+        'how_intro' => __('You do not need a perfect match. Open one, look around, then write.', 'sage'),
+        'faq_h2' => __('Quick answers.', 'sage'),
+        'faq_intro' => __('Short answers for hiring managers and shops.', 'sage'),
+        'seo_title' => __('WordPress Projects', 'sage').' | '.$brand,
+        'seo_desc' => __('Sample WordPress themes and plugins with live demos. Open a project, then say hello.', 'sage'),
+        'gallery_h2' => __('Browse the samples', 'sage'),
+    ];
+
+    $key = str_starts_with($key, 'work_') ? substr($key, 5) : $key;
+
+    return $copy[$key] ?? '';
+}
+
+/**
  * Field group definitions for the Home/front-page template.
  *
  * @since 3.1.0
@@ -319,7 +367,7 @@ function mh_home_fields(): array
             ['home_path_2_url', __('Pathway 2 path', 'sage'), 'text', '/start/'],
             ['home_path_2_cta', __('Pathway 2 CTA', 'sage'), 'text', __('Start a brief', 'sage')],
             ['home_path_3_title', __('Pathway 3 title', 'sage'), 'text', __('See the projects', 'sage')],
-            ['home_path_3_text', __('Pathway 3 text', 'sage'), 'textarea', __('Studio WordPress themes and plugins with demos and stack notes. Hire me to adapt one.', 'sage')],
+            ['home_path_3_text', __('Pathway 3 text', 'sage'), 'textarea', __('Sample WordPress themes and plugins with live demos. Open one, then say hello.', 'sage')],
             ['home_path_3_url', __('Pathway 3 path', 'sage'), 'text', '/projects/'],
             ['home_path_3_cta', __('Pathway 3 CTA', 'sage'), 'text', __('Browse projects', 'sage')],
         ],
@@ -345,19 +393,19 @@ function mh_home_fields(): array
         ],
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('Selected projects.', 'sage')],
-            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Studio WordPress themes and plugins with live demos and stack notes. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')],
+            ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('The work I can share.', 'sage')],
             ['home_about_text', __('Bio text', 'sage'), 'textarea', __('I started in higher-ed marketing. The public trail is WordPress themes, plugins, and builds on GitHub.', 'sage')],
-            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is themes and plugins I ship — not a client grid. Agency-sub work stays in the background. Stack notes are on About.', 'sage')],
+            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is sample work I can show. Client and employer sites stay private. Stack notes are on About.', 'sage')],
         ],
         __('Process section', 'sage') => [
             ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
             ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/hire/">hire conversation</a>.', 'sage')],
         ],
         __('About strip extra', 'sage') => [
-            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is themes and plugins I ship — not a client grid. Agency-sub work stays in the background. Stack notes are on About.', 'sage')],
+            ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is sample work I can show. Client and employer sites stay private. Stack notes are on About.', 'sage')],
         ],
         __('Recruiter glance', 'sage') => [
             ['glance_role', __('Role', 'sage'), 'text', __('WordPress / full-stack PHP', 'sage')],
@@ -697,43 +745,43 @@ function page_field_map(): array
         ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
-                ['work_kicker', __('Kicker', 'sage'), 'text', __('Projects', 'sage')],
-                ['work_h1', __('Heading', 'sage'), 'text', __('Selected WordPress work.', 'sage')],
-                ['work_lede', __('Intro', 'sage'), 'textarea', __('Studio themes and plugins I built to show how I work. Live demos and stack notes. Hire me to adapt one for a shop, agency, or full-time role.', 'sage')],
-                ['work_hero_cta_primary', __('Primary hero button', 'sage'), 'text', __('Say hello', 'sage')],
-                ['work_hero_cta_secondary', __('Secondary hero link', 'sage'), 'text', __('Hire me', 'sage')],
-                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', __('Code and repos: <a href="/code/">Code page</a>. Live demos open from each project when available.', 'sage')],
-                ['work_search_ph', __('Search placeholder', 'sage'), 'text', __('Search projects…', 'sage')],
-                ['work_cta_view', __('View project label', 'sage'), 'text', __('View details', 'sage')],
-                ['work_cta_buy', __('Buy button', 'sage'), 'text', __('View details', 'sage')],
-                ['work_cta_help', __('Help button', 'sage'), 'text', __('Say hello', 'sage')],
-                ['work_cta_use', __('Use project label (legacy)', 'sage'), 'text', __('Say hello', 'sage')],
-                ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', __('Want something like this?', 'sage')],
-                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', __('These are studio projects. Hire me to adapt one, or write about a role. Tell me which one fits.', 'sage')],
-                ['work_empty_h2', __('Empty state heading', 'sage'), 'text', __('Projects are on the way.', 'sage')],
-                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', __('I am publishing the first studio projects here. Write and tell me what kind of shop you run, or what you need built.', 'sage')],
-                ['work_empty_cta', __('Empty state button', 'sage'), 'text', __('Say hello', 'sage')],
+                ['work_kicker', __('Kicker', 'sage'), 'text', mh_projects_listing_default('kicker')],
+                ['work_h1', __('Heading', 'sage'), 'text', mh_projects_listing_default('h1')],
+                ['work_lede', __('Intro', 'sage'), 'textarea', mh_projects_listing_default('lede')],
+                ['work_hero_cta_primary', __('Primary hero button', 'sage'), 'text', mh_projects_listing_default('hero_cta_primary')],
+                ['work_hero_cta_secondary', __('Secondary hero link', 'sage'), 'text', mh_projects_listing_default('hero_cta_secondary')],
+                ['work_foot', __('Footer line (basic HTML ok)', 'sage'), 'html', mh_projects_listing_default('foot')],
+                ['work_search_ph', __('Search placeholder', 'sage'), 'text', mh_projects_listing_default('search_ph')],
+                ['work_cta_view', __('View project label', 'sage'), 'text', mh_projects_listing_default('cta_view')],
+                ['work_cta_buy', __('Buy button', 'sage'), 'text', mh_projects_listing_default('cta_buy')],
+                ['work_cta_help', __('Help button', 'sage'), 'text', mh_projects_listing_default('cta_help')],
+                ['work_cta_use', __('Use project label (legacy)', 'sage'), 'text', mh_projects_listing_default('cta_use')],
+                ['work_band_h2', __('Bottom CTA heading', 'sage'), 'text', mh_projects_listing_default('band_h2')],
+                ['work_band_lede', __('Bottom CTA intro', 'sage'), 'textarea', mh_projects_listing_default('band_lede')],
+                ['work_empty_h2', __('Empty state heading', 'sage'), 'text', mh_projects_listing_default('empty_h2')],
+                ['work_empty_text', __('Empty state text', 'sage'), 'textarea', mh_projects_listing_default('empty_text')],
+                ['work_empty_cta', __('Empty state button', 'sage'), 'text', mh_projects_listing_default('empty_cta')],
             ],
             __('Context & guides', 'sage') => [
-                ['work_context_h2', __('Context heading', 'sage'), 'text', __('What these projects show.', 'sage')],
-                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', __('Each card is a studio project — screenshots, stack notes, and a live demo when one exists. Hire me to adapt one for a shop, agency overflow, or a full-time role.', 'sage')],
-                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', __('These are studio builds, not client sites. Source is on GitHub. Developers can read the stack on each page or on <a href="/about/">About</a>. If one fits, <a href="/contact/">write and say which</a>.', 'sage')],
-                ['work_fit_h2', __('Who fits heading', 'sage'), 'text', __('Who this page is for.', 'sage')],
-                ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', __('Shops that need a WordPress site, agencies with overflow, developers reading the code, and hiring managers reviewing public work.', 'sage')],
+                ['work_context_h2', __('Context heading', 'sage'), 'text', mh_projects_listing_default('context_h2')],
+                ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', mh_projects_listing_default('context_p1')],
+                ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', mh_projects_listing_default('context_p2')],
+                ['work_fit_h2', __('Who fits heading', 'sage'), 'text', mh_projects_listing_default('fit_h2')],
+                ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', mh_projects_listing_default('fit_intro')],
                 ['work_fit_items', __('Audience cards', 'sage'), 'repeater', mh_work_fit_defaults(), [
                     ['icon', __('Icon key', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
                     ['body', __('Body', 'sage'), 'textarea'],
                 ]],
-                ['work_how_h2', __('How to hire heading', 'sage'), 'text', __('How to start from a project.', 'sage')],
-                ['work_how_intro', __('How to hire intro', 'sage'), 'textarea', __('You do not need the perfect match first. Open a project, try the demo, or send a short note about what you would change.', 'sage')],
+                ['work_how_h2', __('How to hire heading', 'sage'), 'text', mh_projects_listing_default('how_h2')],
+                ['work_how_intro', __('How to hire intro', 'sage'), 'textarea', mh_projects_listing_default('how_intro')],
                 ['work_how_steps', __('Steps', 'sage'), 'repeater', mh_work_how_defaults(), [
                     ['num', __('Step number', 'sage'), 'text'],
                     ['title', __('Title', 'sage'), 'text'],
                     ['body', __('Body', 'sage'), 'textarea'],
                 ]],
-                ['work_faq_h2', __('FAQ heading', 'sage'), 'text', __('Questions about these projects.', 'sage')],
-                ['work_faq_intro', __('FAQ intro', 'sage'), 'textarea', __('Straight answers about these studio builds, demos, and hiring me for a custom site.', 'sage')],
+                ['work_faq_h2', __('FAQ heading', 'sage'), 'text', mh_projects_listing_default('faq_h2')],
+                ['work_faq_intro', __('FAQ intro', 'sage'), 'textarea', mh_projects_listing_default('faq_intro')],
                 ['work_faq', __('FAQ items', 'sage'), 'repeater', mh_work_faq_defaults(), [
                     ['title', __('Question', 'sage'), 'text'],
                     ['text', __('Answer', 'sage'), 'textarea'],
@@ -1208,24 +1256,14 @@ function mh_work_fit_defaults(): array
 {
     return [
         [
-            'icon' => 'home',
-            'title' => __('Shops and local businesses', 'sage'),
-            'body' => __('You want a WordPress site for a tour, inn, shop, or restaurant — with a live demo and a clear path to hire me.', 'sage'),
-        ],
-        [
-            'icon' => 'users',
-            'title' => __('Agencies with overflow', 'sage'),
-            'body' => __('You need a solid WordPress theme or plugin base with clean handoff notes before you sub-contract a build to a client.', 'sage'),
-        ],
-        [
-            'icon' => 'code',
-            'title' => __('Developers and learners', 'sage'),
-            'body' => __('You want to evaluate well-structured WordPress themes and plugins, or study the public code on GitHub.', 'sage'),
-        ],
-        [
             'icon' => 'briefcase',
             'title' => __('Hiring managers', 'sage'),
-            'body' => __('These concept pages show how I structure and ship WordPress and web work. Employers and role details are on Hire. Public GitHub is the code trail.', 'sage'),
+            'body' => __('You want to see real pages, not just a résumé. These samples show how I plan, build, and hand off WordPress work.', 'sage'),
+        ],
+        [
+            'icon' => 'home',
+            'title' => __('Shops and agencies', 'sage'),
+            'body' => __('You need a site like one of these. Open a demo, then write and tell me what to change.', 'sage'),
         ],
     ];
 }
@@ -1240,18 +1278,18 @@ function mh_work_how_defaults(): array
     return [
         [
             'num' => '01',
-            'title' => __('Browse the projects.', 'sage'),
-            'body' => __('Open any page for screenshots, stack notes, and a live demo when one is available. No account needed to browse.', 'sage'),
+            'title' => __('Open a project.', 'sage'),
+            'body' => __('Click a card. Read the short story. Try the demo if there is one. No account needed.', 'sage'),
         ],
         [
             'num' => '02',
-            'title' => __('Write or hire.', 'sage'),
-            'body' => __('Send a short note about what you would change, or a role you are filling. I will reply within one business day.', 'sage'),
+            'title' => __('See if it fits.', 'sage'),
+            'body' => __('Look at the screenshots and the tools I used. You do not need a perfect match.', 'sage'),
         ],
         [
             'num' => '03',
-            'title' => __('Scope and hand off.', 'sage'),
-            'body' => __('Custom builds get a written scope, staged previews, and a handoff you own outright.', 'sage'),
+            'title' => __('Write a short note.', 'sage'),
+            'body' => __('Tell me the role, or what you would change. I reply within a day.', 'sage'),
         ],
     ];
 }
@@ -1523,28 +1561,16 @@ function mh_work_faq_defaults(): array
 {
     return [
         [
-            'title' => __('What is on this page?', 'sage'),
-            'text' => __('Studio projects — WordPress themes, plugins, and web apps I built to show how I work. Each page lists the problem, the stack, and a live demo when one exists.', 'sage'),
+            'title' => __('Are these client sites?', 'sage'),
+            'text' => __('No. These are samples I built in public. Client and employer work stays private unless a shop asks to show it.', 'sage'),
         ],
         [
-            'title' => __('What stack do you build on?', 'sage'),
-            'text' => __('Custom WordPress themes and plugins you edit in wp-admin — no page builder. Source is on GitHub. Developers who want Sage, Tailwind, Vite, and PHP details can read About or the concept tech notes.', 'sage'),
+            'title' => __('Can I hire you from one of these?', 'sage'),
+            'text' => __('Yes. Write and tell me what you want. I take full-time, contract, and freelance work.', 'sage'),
         ],
         [
-            'title' => __('Are these real client sites or studio builds?', 'sage'),
-            'text' => __('Studio builds. Production client and employer work stays private. These concepts demo a specific approach — not repurposed client deliverables. Source is on GitHub.', 'sage'),
-        ],
-        [
-            'title' => __('Can I hire you to adapt one?', 'sage'),
-            'text' => __('Yes. Write and tell me what you would change. I take on custom builds from a written brief and hand off work you own outright — no lock-in.', 'sage'),
-        ],
-        [
-            'title' => __('Do these work with standard WordPress hosting?', 'sage'),
-            'text' => __('Yes. Themes and plugins I build target WordPress 6.6 or later, PHP 8.3+, and standard shared or managed hosting. No proprietary server stack.', 'sage'),
-        ],
-        [
-            'title' => __('What if nothing here matches?', 'sage'),
-            'text' => __('Say hello anyway. These concepts are a starting point. I build custom WordPress sites, plugins, and web apps when nothing here fits. Send a short note about what you are building.', 'sage'),
+            'title' => __('Where is the code?', 'sage'),
+            'text' => __('Each project links to GitHub when the repo is public. The Code page lists more.', 'sage'),
         ],
     ];
 }
