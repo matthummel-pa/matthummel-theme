@@ -111,6 +111,51 @@
   </div>
 </section>
 
+{{-- What I do --}}
+@php
+  $helpCards = [
+    [
+      'icon' => 'wordpress',
+      'title' => \App\field('home_build_1_title', __('WordPress sites', 'sage')),
+      'text' => \App\field('home_build_1_text', __('Custom themes shops can edit in wp-admin. You own the code.', 'sage')),
+    ],
+    [
+      'icon' => 'plugins',
+      'title' => \App\field('home_build_2_title', __('Plugins & tools', 'sage')),
+      'text' => \App\field('home_build_2_text', __('Small PHP plugins when WordPress needs a new part.', 'sage')),
+    ],
+    [
+      'icon' => 'code',
+      'title' => \App\field('home_build_3_title', __('Full-stack web apps', 'sage')),
+      'text' => \App\field('home_build_3_text', __('Interfaces, services, and APIs when a theme alone is not enough.', 'sage')),
+    ],
+  ];
+@endphp
+<section class="h-skills h-band h-band--tint" id="do" aria-labelledby="h-do-heading">
+  <div class="container wide">
+    <div class="h-skills__head">
+      <div>
+        <p class="h-section-label">{{ __('Services', 'sage') }}</p>
+        <h2 id="h-do-heading" class="h-section__title">
+          {{ \App\field('home_build_h2', __('What I do.', 'sage')) }}
+        </h2>
+      </div>
+      <p class="h-skills__note">
+        {{ __('For shops and agencies. Stack notes are on About and Code.', 'sage') }}
+      </p>
+    </div>
+    <div class="h-help-grid">
+      @foreach ($helpCards as $card)
+        <article class="h-help-card">
+          <span class="h-help-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($card['icon'], 22) !!}</span>
+          <h3 class="h-help-card__title">{{ $card['title'] }}</h3>
+          <p class="h-help-card__text">{{ $card['text'] }}</p>
+        </article>
+      @endforeach
+    </div>
+  </div>
+</section>
+
 {{-- Projects --}}
 @if (! empty($work))
 @php

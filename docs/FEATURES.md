@@ -5,10 +5,10 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.5.31 minimal blue)
 
 - Visual system is cool paper + navy/blue accents (`#0d2e57` family). Edit `resources/css/studio.css` for the skin; `portfolio.css` owns layout.
-- Home keeps hero + projects + journal + CTA only. Process, fit, FAQ, principles, and recruiter glance live in `partials/about-hire-sections.blade.php` on About. Do not restore the long Home hire funnel unless Matt asks.
+- Home keeps hero + **What I do** + projects + journal + CTA. Process, fit, FAQ, principles, and recruiter glance live in `partials/about-hire-sections.blade.php` on About. Do not restore the long Home hire funnel unless Matt asks.
 - GitHub repos, activity, and stack detail stay on Code — not Home.
 - Copy voice stays plain and first-person. Prefer short sentences over CRO jargon (“without guesswork”, “Pick the door”).
-- `mh_minimal_blue_copy_v1` rewrites exact prior home/about/code field defaults once.
+- `mh_minimal_blue_copy_v2` rewrites exact prior home/about/code field defaults once (includes What I do heading).
 
 ## Editor’s notes (3.5.30 studio skin)
 

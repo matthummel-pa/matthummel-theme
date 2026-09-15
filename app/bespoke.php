@@ -3920,7 +3920,7 @@ add_action('init', function (): void {
  * One-time: shorter home hero + About/Code copy for the minimal portfolio layout.
  */
 add_action('init', function (): void {
-    if (get_option('mh_minimal_blue_copy_v1') || wp_installing()) {
+    if (get_option('mh_minimal_blue_copy_v2') || wp_installing()) {
         return;
     }
 
@@ -3997,6 +3997,25 @@ add_action('init', function (): void {
                 ],
                 'to' => __('WordPress themes and plugins I built in public. Open one for a short story and a live demo when I have one.', 'sage'),
             ],
+            'mh_f_home_build_h2' => [
+                'from' => [
+                    'What I help with',
+                    'What I do.',
+                ],
+                'to' => __('What I do.', 'sage'),
+            ],
+            'mh_f_home_build_1_text' => [
+                'from' => [
+                    'Clean, fast, and editable. Shops get something they own — not a subscription they rent.',
+                ],
+                'to' => __('Custom themes shops can edit in wp-admin. You own the code.', 'sage'),
+            ],
+            'mh_f_home_build_2_text' => [
+                'from' => [
+                    'Custom PHP when WordPress needs a new part. Small, focused, and readable.',
+                ],
+                'to' => __('Small PHP plugins when WordPress needs a new part.', 'sage'),
+            ],
             'mh_f_seo_title' => [
                 'from' => [
                     'WordPress Developer for Shops & Agencies | Matt Hummel',
@@ -4055,5 +4074,5 @@ add_action('init', function (): void {
         }
     }
 
-    update_option('mh_minimal_blue_copy_v1', true);
+    update_option('mh_minimal_blue_copy_v2', true);
 }, 92);
