@@ -3810,6 +3810,7 @@ add_action('init', function (): void {
         'mh_f_home_h1' => [
             'from' => [
                 'Matt Hummel',
+                'Matt Hummel — WordPress developer',
                 'Web Engineering for Growing Businesses & Agency Partners',
             ],
             'to' => mh_home_hero_default('h1'),
@@ -3817,6 +3818,7 @@ add_action('init', function (): void {
         'mh_f_home_role' => [
             'from' => [
                 'WordPress developer for shops, agencies, and product teams.',
+                'Full-stack themes, plugins, and web apps for shops and agencies.',
                 'Full-stack & WordPress developer.',
                 'Full-stack & WordPress developer',
                 'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
@@ -3826,6 +3828,7 @@ add_action('init', function (): void {
         'mh_f_home_lede' => [
             'from' => [
                 'I build WordPress sites shops can edit and agencies can hand off without guesswork. Clear deploys. GPL code you own. Open for full-time, contract, or freelance.',
+                'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
                 'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.',
                 'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
                 'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
@@ -3914,3 +3917,50 @@ add_action('init', function (): void {
 
     update_option('mh_home_sales_hero_v1', true);
 }, 89);
+
+/**
+ * Follow-up: rewrite the live resume-style H1/role/lede if v1 already ran.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_sales_hero_v2') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if (! $home) {
+        update_option('mh_home_sales_hero_v2', true);
+
+        return;
+    }
+
+    $id = (int) $home->ID;
+    $extra = [
+        'mh_f_home_h1' => [
+            'Matt Hummel — WordPress developer',
+        ],
+        'mh_f_home_role' => [
+            'Full-stack themes, plugins, and web apps for shops and agencies.',
+        ],
+        'mh_f_home_lede' => [
+            'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+        ],
+    ];
+
+    foreach ($extra as $key => $from) {
+        $cur = (string) get_post_meta($id, $key, true);
+        if (in_array($cur, $from, true)) {
+            $toKey = match ($key) {
+                'mh_f_home_h1' => 'h1',
+                'mh_f_home_role' => 'role',
+                default => 'lede',
+            };
+            update_post_meta($id, $key, mh_home_hero_default($toKey));
+        }
+    }
+
+    update_option('mh_home_sales_hero_v2', true);
+}, 90);
