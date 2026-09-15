@@ -1,9 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    Matt Hummel — complete redesign 2026
-   Research: near-black on cool paper = best readability for blogs/portfolios.
-   Brand accent is #1a5cad pulled halfway to black (#0d2e57), still shiny.
-   Chrome stays lighter than #main. Heavy display type. More air.
-   Palette refs: Linear, Vercel, Josh Comeau, Dan Abramov's blog.
+   Studio skin (3.5.30) remaps these tokens in studio.css: warm paper, ink,
+   and Gutenberg agencyAccent (#FF3E3E) instead of navy. Keep Inter / IBM Plex.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── TOKENS ──────────────────────────────────────────────────────────────── */
