@@ -3783,3 +3783,134 @@ add_action('init', function (): void {
 
     update_option('mh_hire_traction_copy_v1', true);
 }, 88);
+
+/**
+ * One-time: shop-first home hero and CTAs (3.5.26).
+ *
+ * Exact-string replacements only so custom wp-admin copy is left alone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_sales_hero_v1') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if (! $home) {
+        update_option('mh_home_sales_hero_v1', true);
+
+        return;
+    }
+
+    $id = (int) $home->ID;
+    $map = [
+        'mh_f_home_h1' => [
+            'from' => [
+                'Matt Hummel',
+                'Web Engineering for Growing Businesses & Agency Partners',
+            ],
+            'to' => mh_home_hero_default('h1'),
+        ],
+        'mh_f_home_role' => [
+            'from' => [
+                'WordPress developer for shops, agencies, and product teams.',
+                'Full-stack & WordPress developer.',
+                'Full-stack & WordPress developer',
+                'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+            ],
+            'to' => mh_home_hero_default('role'),
+        ],
+        'mh_f_home_lede' => [
+            'from' => [
+                'I build WordPress sites shops can edit and agencies can hand off without guesswork. Clear deploys. GPL code you own. Open for full-time, contract, or freelance.',
+                'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.',
+                'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
+                'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
+            ],
+            'to' => mh_home_hero_default('lede'),
+        ],
+        'mh_f_home_kicker' => [
+            'from' => [
+                'WordPress · plugins · web apps',
+            ],
+            'to' => mh_home_hero_default('kicker'),
+        ],
+        'mh_f_home_cta_primary' => [
+            'from' => [
+                'Hire me',
+                'Start a conversation',
+            ],
+            'to' => mh_home_hero_default('cta_primary'),
+        ],
+        'mh_f_home_cta_primary_url' => [
+            'from' => [
+                '/hire/',
+                '/contact/',
+            ],
+            'to' => '/product/acreline/',
+        ],
+        'mh_f_home_cta_secondary' => [
+            'from' => [
+                'Browse work',
+                'Explore projects',
+            ],
+            'to' => mh_home_hero_default('cta_secondary'),
+        ],
+        'mh_f_home_cta_secondary_url' => [
+            'from' => [
+                '/shop/',
+                '/projects/',
+            ],
+            'to' => 'https://acreline.matthummel.com/',
+        ],
+        'mh_f_home_proof_1' => [
+            'from' => [
+                '17 years in-house web work',
+            ],
+            'to' => mh_home_hero_default('proof_1'),
+        ],
+        'mh_f_home_proof_2' => [
+            'from' => [
+                'GPL — you own the code',
+            ],
+            'to' => mh_home_hero_default('proof_2'),
+        ],
+        'mh_f_home_proof_3' => [
+            'from' => [
+                'Open for full-time & contract',
+            ],
+            'to' => mh_home_hero_default('proof_3'),
+        ],
+        'mh_f_home_path_lede' => [
+            'from' => [
+                'Pick the door that fits — hiring, building together, or browsing themes and plugins.',
+            ],
+            'to' => 'Start with a theme pack, or write if you want it installed and branded. Hire is still here.',
+        ],
+        'mh_f_seo_title' => [
+            'from' => [
+                'WordPress Developer for Shops & Agencies | Matt Hummel',
+                'Full-Stack & WordPress Developer | Matt Hummel',
+            ],
+            'to' => mh_home_hero_default('seo_title'),
+        ],
+        'mh_f_seo_desc' => [
+            'from' => [
+                'WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.',
+            ],
+            'to' => mh_home_hero_default('seo_desc'),
+        ],
+    ];
+
+    foreach ($map as $key => $swap) {
+        $cur = (string) get_post_meta($id, $key, true);
+        if ($cur === '' || in_array($cur, $swap['from'], true)) {
+            update_post_meta($id, $key, $swap['to']);
+        }
+    }
+
+    update_option('mh_home_sales_hero_v1', true);
+}, 89);

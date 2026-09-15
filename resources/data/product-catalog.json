@@ -189,6 +189,7 @@
     "version": "1.5.4",
     "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
     "license": "GPLv2 or later",
+    "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
       "github_repo": "matthummel-pa/wp-acreline",
       "release": "theme-latest",
@@ -398,6 +399,7 @@
     "version": "1.2.0",
     "compatible": "WordPress 6.6+, PHP 8.3+",
     "license": "GPLv2 or later",
+    "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
       "github_repo": "matthummel-pa/wp-walkridge",
       "release": "theme-latest",

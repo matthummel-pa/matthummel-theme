@@ -149,34 +149,23 @@
   }
   $productJsonLd = json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
 
+  $guarantee = \App\mh_product_guarantee_copy($entry, $isFree, $isService);
+  $includedItems = $deliverables !== [] ? $deliverables : $benefits;
+  $hasDevNotes = $architecture !== '' || $handoff !== '' || $tech !== [] || $githubUrl !== '' || ($blocks !== [] && $isTheme);
+
   $sectionNav = [];
-  if ($summary !== '' && $summary !== $blurb) {
-    $sectionNav[] = ['overview', __('Overview', 'sage')];
+  if ($challenge !== '') {
+    $sectionNav[] = ['problem', __('Problem', 'sage')];
   }
-  if ($benefits !== []) {
-    $sectionNav[] = ['features', __('Features', 'sage')];
-  }
-  if ($challenge !== '' || $approach !== '') {
-    $sectionNav[] = ['story', __('Story', 'sage')];
-  }
-  if ($deliverables !== [] || $filesIncl !== []) {
+  if ($includedItems !== [] || $filesIncl !== []) {
     $sectionNav[] = ['included', __('Included', 'sage')];
   }
-  if ($blocks !== [] && $isTheme) {
-    $sectionNav[] = ['blocks', __('Blocks', 'sage')];
-  }
-  if ($audience !== '') {
-    $sectionNav[] = ['audience', __('Audience', 'sage')];
-  }
-  $sectionNav[] = ['buy', __('Pricing', 'sage')];
-  if ($architecture !== '' || $handoff !== '' || $tech !== []) {
-    $sectionNav[] = ['stack', __('Stack', 'sage')];
-  }
-  if ($docs !== [] || $githubUrl !== '' || $support !== '') {
-    $sectionNav[] = ['docs', __('Docs', 'sage')];
-  }
+  $sectionNav[] = ['buy', __('Buy', 'sage')];
   if ($faq !== []) {
     $sectionNav[] = ['faq', __('FAQ', 'sage')];
+  }
+  if ($hasDevNotes || $docs !== [] || $support !== '') {
+    $sectionNav[] = ['developers', __('For developers', 'sage')];
   }
 @endphp
 
@@ -289,55 +278,19 @@
   </div>
 @endif
 
-@if ($summary !== '' && $summary !== $blurb)
-  <section id="overview" class="pf-article-section pf-prose" aria-labelledby="product-overview-heading">
-    <h2 id="product-overview-heading" class="display-title is-section">{{ __('Overview', 'sage') }}</h2>
-    <p class="lead">{{ $summary }}</p>
+@if ($challenge !== '')
+  <section id="problem" class="pf-article-section pf-prose" aria-labelledby="product-problem-heading">
+    <h2 id="product-problem-heading" class="display-title is-section">{{ __('The problem', 'sage') }}</h2>
+    <p>{{ $challenge }}</p>
   </section>
 @endif
 
-@if ($benefits !== [])
-  <section id="features" class="pf-article-section" aria-labelledby="product-benefits-heading">
-    <h2 id="product-benefits-heading" class="display-title is-section">{{ __('What you get', 'sage') }}</h2>
-    <ul class="pf-benefits-list">
-      @foreach ($benefits as $b)
-        <li class="pf-benefit">
-          <span class="pf-benefit__icon" aria-hidden="true">{!! \App\mh_svg_icon('check', 15) !!}</span>
-          <span class="pf-benefit__text">{{ $b }}</span>
-        </li>
-      @endforeach
-    </ul>
-  </section>
-@endif
-
-@if ($challenge !== '' || $approach !== '')
-  <section id="story" class="pf-article-section pf-prose" aria-labelledby="product-story-heading">
-    @if ($challenge !== '')
-      <h2 id="product-story-heading" class="display-title is-section">{{ __('Built for this niche', 'sage') }}</h2>
-      <p>{{ $challenge }}</p>
-    @endif
-    @if ($approach !== '')
-      <h2 class="display-title is-section{{ $challenge === '' ? '' : ' pf-article-section__h2-follow' }}">{{ __('The approach', 'sage') }}</h2>
-      <p>{{ $approach }}</p>
-    @endif
-  </section>
-@endif
-
-@if ($result !== '')
-  <section class="pf-article-section pf-prose" aria-labelledby="product-result-heading">
-    <h2 id="product-result-heading" class="display-title is-section">{{ __('The outcome', 'sage') }}</h2>
-    <p>{{ $result }}</p>
-  </section>
-@endif
-
-@if ($deliverables !== [] || $filesIncl !== [])
+@if ($includedItems !== [] || $filesIncl !== [])
   <section id="included" class="pf-article-section" aria-labelledby="product-included-heading">
-    <h2 id="product-included-heading" class="display-title is-section">
-      {{ $isPlugin ? __('What\'s included', 'sage') : __('What\'s in the pack', 'sage') }}
-    </h2>
-    @if ($deliverables !== [])
+    <h2 id="product-included-heading" class="display-title is-section">{{ __('What’s included', 'sage') }}</h2>
+    @if ($includedItems !== [])
       <ul class="pf-checklist">
-        @foreach ($deliverables as $d)
+        @foreach ($includedItems as $d)
           <li class="pf-checklist__item">
             <span aria-hidden="true">{!! \App\mh_svg_icon('check', 13) !!}</span>
             {{ $d }}
@@ -378,56 +331,6 @@
   </section>
 @endif
 
-<div class="pf-article-section pf-product-hire-nudge" aria-label="{{ __('Custom work', 'sage') }}">
-  <div class="pf-hire-nudge">
-    <div class="pf-hire-nudge__copy">
-      <p class="eyebrow">{{ __('Need it customized?', 'sage') }}</p>
-      <p class="pf-hire-nudge__text">
-        @if ($isService)
-          {{ __('This pack has a fixed scope. Need something adjacent or a custom quote? Write a short brief and I will price it.', 'sage') }}
-        @elseif ($isPlugin)
-          {{ __('Buy the plugin as-is, or hire me to extend it for your stack. I scope custom builds from a short brief.', 'sage') }}
-        @else
-          {{ __('Buy the pack for a self-serve install, or hire me to brand it, import your content, and hand off wp-admin to your team.', 'sage') }}
-        @endif
-      </p>
-    </div>
-    <a class="btn btn-outline pf-hire-nudge__cta" href="{{ esc_url($helpUrl) }}">
-      {!! \App\mh_svg_icon('mail', 15) !!} {{ __('Get help', 'sage') }}
-    </a>
-  </div>
-</div>
-
-@if ($blocks !== [] && $isTheme)
-  <section id="blocks" class="pf-article-section" aria-labelledby="product-blocks-heading">
-    <h2 id="product-blocks-heading" class="display-title is-section">
-      {{ sprintf(__('%d Gutenberg blocks included', 'sage'), count($blocks)) }}
-    </h2>
-    <p class="pf-blocks-intro">{{ __('Every block is a real Core Gutenberg block — live preview in the editor, no page builder required.', 'sage') }}</p>
-    <ul class="pf-blocks-grid pf-blocks-grid--compact" aria-label="{{ __('Included blocks', 'sage') }}">
-      @foreach ($blocks as $block)
-        @php
-          $blockName = is_array($block) ? (string) ($block[0] ?? '') : (string) $block;
-          $blockIcon = is_array($block) ? (string) ($block[1] ?? 'block') : 'block';
-        @endphp
-        @if ($blockName !== '')
-          <li class="pf-block-card">
-            <span class="pf-block-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($blockIcon, 24) !!}</span>
-            <span class="pf-block-card__name">{{ $blockName }}</span>
-          </li>
-        @endif
-      @endforeach
-    </ul>
-  </section>
-@endif
-
-@if ($audience !== '')
-  <section id="audience" class="pf-article-section pf-prose" aria-labelledby="product-audience-heading">
-    <h2 id="product-audience-heading" class="display-title is-section">{{ __('Who it is for', 'sage') }}</h2>
-    <p>{{ $audience }}</p>
-  </section>
-@endif
-
 <section class="pf-article-section pf-product-purchase" aria-labelledby="product-buy-heading" id="buy">
   <h2 id="product-buy-heading" class="display-title is-section">
     {{ $isFree
@@ -442,86 +345,41 @@
         ? __('Free download. Activate under Plugins → Installed Plugins, or copy the zip from GitHub Releases.', 'sage')
         : __('Free download. Activate under Appearance → Themes, or copy the zip from GitHub Releases.', 'sage') }}
     @else
-      {{ __('Instant digital download after checkout. Need it branded and installed? Get help and I\'ll ship the full build.', 'sage') }}
+      {{ __('Instant digital download after checkout.', 'sage') }}
     @endif
   </p>
 
   <div class="pf-purchase-widget">
-    @php do_action('woocommerce_before_main_content'); @endphp
-    @while (have_posts())
-      @php
-        the_post();
-        wc_get_template_part('content', 'single-product');
-      @endphp
-    @endwhile
-    @php do_action('woocommerce_after_main_content'); @endphp
+    @if ($priceHtml !== '')
+      <p class="pf-purchase-widget__price">
+        @if ($isFree)
+          <span class="pf-product-card__price-free">{{ __('Free', 'sage') }}</span>
+        @else
+          <span class="pf-product-card__price-amount">{!! wp_kses_post($priceHtml) !!}</span>
+        @endif
+      </p>
+    @endif
 
-    <p class="pf-purchase-widget__help">
-      {{ __('Questions about fit or customization?', 'sage') }}
-      <a href="{{ esc_url($helpUrl) }}">{{ __('Get help →', 'sage') }}</a>
-    </p>
+    @php
+      if (function_exists('wc_print_notices')) {
+        wc_print_notices();
+      }
+      ob_start();
+      \App\mh_render_product_add_to_cart($productId);
+      $cartForm = trim((string) ob_get_clean());
+    @endphp
+    @if ($cartForm !== '')
+      {!! $cartForm !!}
+    @elseif ($buyUrl !== '')
+      <a class="btn pf-product-card__cta" href="{{ esc_url($buyUrl) }}">
+        {!! \App\mh_svg_icon($isPlugin ? 'download' : ($isService ? 'briefcase' : 'cart'), 16) !!}
+        {{ $primaryLabel }}
+      </a>
+    @endif
+
+    @include('partials.product-buy-assurance')
   </div>
 </section>
-
-@if ($architecture !== '' || $handoff !== '' || $tech !== [])
-  <section id="stack" class="pf-article-section pf-prose" aria-labelledby="product-tech-heading">
-    <h2 id="product-tech-heading" class="display-title is-section">{{ __('How it is built', 'sage') }}</h2>
-    @if ($tech !== [])
-      <div class="pf-tech-tags">
-        @foreach ($tech as $t)
-          <span class="pf-tech-tag">{{ $t }}</span>
-        @endforeach
-      </div>
-    @endif
-    @if ($architecture !== '')
-      <p>{{ $architecture }}</p>
-    @endif
-    @if ($handoff !== '')
-      <h3 class="pf-technical-sub">{{ __('Handoff', 'sage') }}</h3>
-      <p>{{ $handoff }}</p>
-    @endif
-  </section>
-@endif
-
-@if ($docs !== [] || $githubUrl !== '' || $support !== '')
-  <section id="docs" class="pf-article-section" aria-labelledby="product-docs-heading">
-    <h2 id="product-docs-heading" class="display-title is-section">{{ __('Documentation', 'sage') }}</h2>
-    @if ($docs !== [])
-      <ul class="pf-docs-list">
-        @foreach ($docs as $doc)
-          @php $docLabel = (string) ($doc[0] ?? ''); $docUrl = (string) ($doc[1] ?? ''); @endphp
-          @if ($docLabel !== '' && $docUrl !== '')
-            <li>
-              <a href="{{ esc_url($docUrl) }}" target="_blank" rel="noopener">
-                {!! \App\mh_svg_icon('file', 14) !!}
-                {{ $docLabel }}
-                <span aria-hidden="true">↗</span>
-              </a>
-            </li>
-          @endif
-        @endforeach
-      </ul>
-    @endif
-    @if ($githubUrl !== '' || $support !== '')
-      <div class="pf-docs-links">
-        @if ($githubUrl !== '')
-          <a class="pf-docs-ext-link" href="{{ esc_url($githubUrl) }}" target="_blank" rel="noopener">
-            {!! \App\mh_svg_icon('github', 16) !!}
-            {{ __('View source on GitHub', 'sage') }}
-            <span aria-hidden="true">↗</span>
-          </a>
-        @endif
-        @if ($support !== '')
-          <a class="pf-docs-ext-link" href="{{ esc_url($support) }}" target="_blank" rel="noopener">
-            {!! \App\mh_svg_icon('mail', 16) !!}
-            {{ __('Support guide', 'sage') }}
-            <span aria-hidden="true">↗</span>
-          </a>
-        @endif
-      </div>
-    @endif
-  </section>
-@endif
 
 @if ($faq !== [])
   <section class="pf-article-section pf-product-faq" aria-labelledby="product-faq-heading" id="faq">
@@ -538,6 +396,84 @@
       {{ __('Question not answered here?', 'sage') }}
       <a href="{{ esc_url($helpUrl) }}">{{ __('Ask me directly →', 'sage') }}</a>
     </p>
+  </section>
+@endif
+
+@if ($hasDevNotes || $docs !== [] || $support !== '')
+  <section class="pf-article-section pf-dev-fold" aria-labelledby="product-dev-heading" id="developers">
+    <details class="pf-dev-details">
+      <summary class="pf-dev-details__summary" id="product-dev-heading">
+        {{ __('For developers', 'sage') }}
+      </summary>
+      <div class="pf-dev-details__body">
+        @if ($tech !== [])
+          <div class="pf-tech-tags">
+            @foreach ($tech as $t)
+              <span class="pf-tech-tag">{{ $t }}</span>
+            @endforeach
+          </div>
+        @endif
+        @if ($architecture !== '')
+          <p>{{ $architecture }}</p>
+        @endif
+        @if ($handoff !== '')
+          <h3 class="pf-technical-sub">{{ __('Handoff', 'sage') }}</h3>
+          <p>{{ $handoff }}</p>
+        @endif
+        @if ($blocks !== [] && $isTheme)
+          <h3 class="pf-technical-sub">{{ sprintf(__('%d Gutenberg blocks', 'sage'), count($blocks)) }}</h3>
+          <ul class="pf-blocks-grid pf-blocks-grid--compact" aria-label="{{ __('Included blocks', 'sage') }}">
+            @foreach ($blocks as $block)
+              @php
+                $blockName = is_array($block) ? (string) ($block[0] ?? '') : (string) $block;
+                $blockIcon = is_array($block) ? (string) ($block[1] ?? 'block') : 'block';
+              @endphp
+              @if ($blockName !== '')
+                <li class="pf-block-card">
+                  <span class="pf-block-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($blockIcon, 24) !!}</span>
+                  <span class="pf-block-card__name">{{ $blockName }}</span>
+                </li>
+              @endif
+            @endforeach
+          </ul>
+        @endif
+        @if ($docs !== [] || $githubUrl !== '' || $support !== '')
+          <h3 class="pf-technical-sub">{{ __('Documentation', 'sage') }}</h3>
+          @if ($docs !== [])
+            <ul class="pf-docs-list">
+              @foreach ($docs as $doc)
+                @php $docLabel = (string) ($doc[0] ?? ''); $docUrl = (string) ($doc[1] ?? ''); @endphp
+                @if ($docLabel !== '' && $docUrl !== '')
+                  <li>
+                    <a href="{{ esc_url($docUrl) }}" target="_blank" rel="noopener">
+                      {!! \App\mh_svg_icon('file', 14) !!}
+                      {{ $docLabel }}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                @endif
+              @endforeach
+            </ul>
+          @endif
+          <div class="pf-docs-links">
+            @if ($githubUrl !== '')
+              <a class="pf-docs-ext-link" href="{{ esc_url($githubUrl) }}" target="_blank" rel="noopener">
+                {!! \App\mh_svg_icon('github', 16) !!}
+                {{ __('View source on GitHub', 'sage') }}
+                <span aria-hidden="true">↗</span>
+              </a>
+            @endif
+            @if ($support !== '')
+              <a class="pf-docs-ext-link" href="{{ esc_url($support) }}" target="_blank" rel="noopener">
+                {!! \App\mh_svg_icon('mail', 16) !!}
+                {{ __('Support guide', 'sage') }}
+                <span aria-hidden="true">↗</span>
+              </a>
+            @endif
+          </div>
+        @endif
+      </div>
+    </details>
   </section>
 @endif
 
@@ -636,11 +572,7 @@
         </dl>
       @endif
 
-      <p class="pf-product-card__help">
-        <a href="{{ esc_url($helpUrl) }}">
-          {{ $isService ? __('Need a different scope? Get help →', 'sage') : __('Questions? Get help →', 'sage') }}
-        </a>
-      </p>
+      @include('partials.product-buy-assurance')
     </aside>
 
   </div>{{-- /.pf-product-layout --}}
@@ -756,6 +688,15 @@
           <span class="pf-sticky-bar__price">{!! wp_kses_post($priceHtml) !!}</span>
         @elseif ($isFree)
           <span class="pf-sticky-bar__price">{{ __('Free', 'sage') }}</span>
+        @endif
+        @if (! $isFree && ! $isService)
+          <ul class="pf-sticky-bar__chips" aria-label="{{ __('Included with purchase', 'sage') }}">
+            <li>{{ __('Instant download', 'sage') }}</li>
+            <li>{{ $license !== '' ? $license : __('GPL licensed', 'sage') }}</li>
+            @if ($compatible !== '')
+              <li>{{ $compatible }}</li>
+            @endif
+          </ul>
         @endif
       </div>
       <div class="pf-sticky-bar__actions">

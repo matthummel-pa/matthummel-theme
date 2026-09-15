@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.26 — Shop-first homepage + product buy path
+
+- Home hero leads with themes shops can buy (Acreline $79, live demo, hire as a text link).
+- Homepage order is Hero → pathways (shop first) → products → how to buy → FAQ → hire glance → journal.
+- Paid product pages keep a sticky buy bar with trust chips, a one-line install guarantee, and a Get help upsell.
+- Single product story is Problem → What’s included → Buy → FAQ. Sage/architecture copy sits in a For developers accordion.
+- WooCommerce add-to-cart still powers checkout; the purchase widget no longer dumps the full product description.
+
 ## 3.5.25 — About story editor
 
 - About Page content (theme) uses one story editor instead of four paragraph boxes.

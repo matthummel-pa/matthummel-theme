@@ -2,6 +2,15 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.26 shop-first sales)
+
+- Home hero defaults live in `mh_home_hero_default()`. Clearing Page content (theme) boxes restores the product offer, not the old “Matt Hummel” name marque.
+- One-shot `mh_home_sales_hero_v1` in `app/bespoke.php` rewrites only exact previous defaults.
+- Homepage shop flow is in `resources/views/partials/home.blade.php`: products and how-to-buy before the recruiter glance. Journal is `partials/home-journal.blade.php`.
+- Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
+- Single product article no longer renders Overview + benefits + story + Woo description. Hidden CSS dumps are gone; the purchase widget calls `mh_render_product_add_to_cart()`.
+- Sticky bar still uses `#pf-sticky-bar` + `woo-sticky-bar.js`. Trust chips hide under 640px so Add to cart stays reachable.
+
 ## Editor’s notes (3.5.25 About story WYSIWYG)
 
 - About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta migrates into the new field on theme load, then those four keys are removed from the edit screen.

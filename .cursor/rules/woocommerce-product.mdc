@@ -89,22 +89,16 @@ Required SEO defaults:
 
 Do not reorder these sections without a strong reason:
 
-1. Hero row — gallery left + compact buy box right (title, price, buy/demo, next steps, short trust)
+1. Hero row — gallery left + compact buy box right (title, price, buy/demo, next steps, guarantee, Get help)
 2. Section pills + article body — same column width as the gallery, directly under the screenshots
    - Sticky "On this page" pills
-   - Overview summary
-   - Features / benefits
-   - Story (challenge + approach + outcome)
-   - Deliverables / files included
-   - Hire nudge
-   - Gutenberg blocks (themes only)
-   - Audience
-   - Purchase widget
-   - Technical / stack
-   - Documentation links
+   - Problem (short `challenge`)
+   - What’s included (deliverables, else benefits)
+   - Purchase widget (Woo add-to-cart only — no description dump)
    - FAQ
+   - For developers accordion (architecture, stack, blocks, docs)
 3. Related products
-4. Bottom CTA band + sticky buy bar
+4. Bottom CTA band + sticky buy bar (name, price, Add to cart, Live demo, trust chips)
 
 Screenshots live in the hero gallery (thumbs + lightbox). Do not duplicate a full screenshots grid below the fold — it adds scroll without new info.
 Do not put the section pills or article in a narrower centered column than the gallery.
