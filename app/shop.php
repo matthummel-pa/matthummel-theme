@@ -481,7 +481,7 @@ function mh_product_entry(int $product_id): array
     // Scalar string fields.
     foreach (['eyebrow', 'summary', 'blurb', 'challenge', 'approach', 'result',
         'audience', 'architecture', 'handoff', 'demo', 'cat', 'place',
-        'github', 'version', 'compatible', 'license', 'support'] as $key) {
+        'github', 'version', 'compatible', 'license', 'support', 'guarantee'] as $key) {
         $v = $str($key);
         if ($v !== '') {
             $entry[$key] = $v;
@@ -1235,6 +1235,129 @@ function mh_product_buy_copy(int $product_id, bool $is_free = false): string
     $chrome = mh_product_type_chrome(mh_resolve_product_type($product_id));
 
     return $is_free ? $chrome['buy_free'] : $chrome['buy'];
+}
+
+/**
+ * Catalog JSON entry for a product slug.
+ *
+ * @since 3.5.26
+ *
+ * @return array<string, mixed>
+ */
+function mh_catalog_entry_by_slug(string $slug): array
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return [];
+    }
+
+    $entry = mh_product_catalog_entries()[$slug] ?? [];
+
+    return is_array($entry) ? $entry : [];
+}
+
+/**
+ * Featured paid theme (Acreline) for homepage hero CTAs.
+ *
+ * @since 3.5.26
+ *
+ * @return array{slug: string, name: string, price: string, permalink: string, demo: string, add_to_cart_url: string, buy_label: string}
+ */
+function mh_featured_theme_offer(string $slug = 'acreline'): array
+{
+    $entry = mh_catalog_entry_by_slug($slug);
+    $productId = mh_product_id_by_slug($slug);
+    $payload = $productId > 0 ? mh_shop_product_payload($productId) : null;
+
+    $price = '';
+    if (is_array($payload) && (string) ($payload['regular_price'] ?? '') !== '') {
+        $price = ltrim((string) $payload['regular_price'], '$');
+    } elseif ((string) ($entry['price'] ?? '') !== '') {
+        $price = ltrim((string) $entry['price'], '$');
+    }
+
+    $name = trim((string) ($entry['title'] ?? ''));
+    if ($name === '') {
+        $name = 'Acreline';
+    }
+
+    $permalink = is_array($payload) && (string) ($payload['permalink'] ?? '') !== ''
+        ? (string) $payload['permalink']
+        : home_url('/product/'.$slug.'/');
+
+    $demo = trim((string) ($entry['demo'] ?? ''));
+    $buyLabel = $price !== ''
+        ? sprintf(__('Buy %s — $%s', 'sage'), $name, $price)
+        : sprintf(__('Buy %s', 'sage'), $name);
+
+    return [
+        'slug' => $slug,
+        'name' => $name,
+        'price' => $price,
+        'permalink' => $permalink,
+        'demo' => $demo,
+        'add_to_cart_url' => is_array($payload) ? (string) ($payload['add_to_cart_url'] ?? '') : '',
+        'buy_label' => $buyLabel,
+    ];
+}
+
+/**
+ * One-line install guarantee for paid digital products.
+ *
+ * Catalog `guarantee` wins when set. Empty for free products and services.
+ *
+ * @since 3.5.26
+ *
+ * @param  array<string, mixed>  $entry
+ */
+function mh_product_guarantee_copy(array $entry = [], bool $is_free = false, bool $is_service = false): string
+{
+    if ($is_free || $is_service) {
+        return '';
+    }
+
+    $custom = trim((string) ($entry['guarantee'] ?? ''));
+    if ($custom !== '') {
+        return $custom;
+    }
+
+    return __('Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.', 'sage');
+}
+
+/**
+ * Soft install-help label next to Add to cart.
+ *
+ * @since 3.5.26
+ */
+function mh_product_install_help_copy(): string
+{
+    return __('Need it installed & branded? Get help', 'sage');
+}
+
+/**
+ * WooCommerce add-to-cart form only (no gallery, tabs, or description).
+ *
+ * @since 3.5.26
+ */
+function mh_render_product_add_to_cart(int $product_id): void
+{
+    if ($product_id <= 0 || ! function_exists('wc_get_product') || ! function_exists('woocommerce_template_single_add_to_cart')) {
+        return;
+    }
+
+    $wcProduct = wc_get_product($product_id);
+    if (! $wcProduct) {
+        return;
+    }
+
+    $previous = $GLOBALS['product'] ?? null;
+    $GLOBALS['product'] = $wcProduct;
+    woocommerce_template_single_add_to_cart();
+    if ($previous !== null) {
+        $GLOBALS['product'] = $previous;
+    } else {
+        unset($GLOBALS['product']);
+    }
 }
 
 /** Turn a catalog path or absolute URL into a public image URL. */

@@ -67,11 +67,11 @@ function mh_seo_landing_defaults(?int $post_id = null): array
     $map = [
         'front-page.blade.php' => [
             'title' => mh_home_hero_default('seo_title', $brand),
-            'desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+            'desc' => mh_home_hero_default('seo_desc'),
         ],
         'template-home.blade.php' => [
             'title' => mh_home_hero_default('seo_title', $brand),
-            'desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+            'desc' => mh_home_hero_default('seo_desc'),
         ],
         'template-services.blade.php' => [
             'title' => __('Acreline Services', 'sage').' | '.$brand,
