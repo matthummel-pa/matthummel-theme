@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.30 studio skin)
+
+- Visual system is warm paper + ink + tomato/amber/lime/violet. Do not restore navy `#0d2e57` as the site accent unless Matt asks.
+- Shape language is blocky (4px radius, hard shadows). Keep motion in CSS only. `prefers-reduced-motion` must stay respected.
+- Edit `resources/css/studio.css` for this look. `portfolio.css` still owns layout structure.
+
 ## Editor’s notes (3.5.29 readable project pages)
 
 - Projects listing copy lives in `mh_projects_listing_default()`. Keep sentences short (grade 6–8). Do not restore the four audience cards or dual closing CTAs unless Matt asks.

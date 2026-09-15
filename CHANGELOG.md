@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.30 — Bold blocky studio skin
+
+- Front-end palette leaves navy paper for warm cream, ink, and Gutenberg-aligned pops (tomato, amber, lime, violet).
+- Chrome is blockier: 4px corners, 2.5px ink borders, hard offset shadows on buttons, cards, and hero windows.
+- Light CSS motion on hero color blocks and card hover. Reduced-motion stays still.
+- Tokens live in `resources/css/studio.css` (imported last) so existing `var(--blue-*)` mixes pick up the new hues.
+
 ## 3.5.29 — Project pages easier to scan
 
 - Projects listing hero leads with sample work, a short lede, and Hire me / Say hello. Cards sit above the fold of the page body.
