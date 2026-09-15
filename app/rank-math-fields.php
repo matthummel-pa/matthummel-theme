@@ -266,6 +266,17 @@ function mh_page_field_analysis_parts(int $post_id): array
                 continue;
             }
 
+            if ($type === 'wysiwyg') {
+                $html = $fk === 'about_story'
+                    ? mh_about_story_html($post_id)
+                    : field_rich($fk, is_string($default) ? $default : '', $post_id);
+                if ($html !== '') {
+                    $bits[] = $html;
+                }
+
+                continue;
+            }
+
             $text = field($fk, is_string($default) ? $default : '', $post_id);
             $text = mh_strip_leading_field_label($text, (string) $f[1]);
             if ($text === '') {

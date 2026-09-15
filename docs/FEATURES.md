@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.25 About story WYSIWYG)
+
+- About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta migrates into the new field on theme load, then those four keys are removed from the edit screen.
+- Front end renders with `mh_about_story_html()` (`wpautop` + `wp_kses_post`). Style paragraphs via `.about-story__body`, not four hardcoded `<p>` tags.
+
 ## Editor’s notes (3.5.24 shop catalog padding)
 
 - Shop catalog uses `padding-block` on `.woo-catalog-shell`. Do not set horizontal padding to `0` on that shell — `.container` gutters keep cards off the viewport edge.
@@ -130,6 +135,7 @@ What the 3.x Sage theme does, and where it lives.
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Two-column hero; recruiter glance (employers + Power Platform + adjacent-work sentence → `/hire/`); section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
 | Marketing pages | Split hero: copy left, window-card panel right (stats/snapshot per page) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
+| About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |

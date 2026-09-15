@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.25 — About story editor
+
+- About Page content (theme) uses one story editor instead of four paragraph boxes.
+- Existing About story copy is kept and shown as normal paragraphs with spacing.
+
 ## 3.5.24 — Shop catalog content padding
 
 - Product grid on `/shop/` has more vertical space above and below the catalog (`.woo-catalog-shell` padding-block). Horizontal gutters stay on `.container`.

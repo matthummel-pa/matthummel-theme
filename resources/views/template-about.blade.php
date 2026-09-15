@@ -114,10 +114,9 @@
           <h2 id="about-story-heading" class="display-title is-section">
             {{ \App\field('about_story_h2', __('How I got here.', 'sage')) }}
           </h2>
-          <p class="about-story__p">{{ \App\field('about_p1', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p2', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p3', __('The Work gallery is concept sites — public Sage 11 examples, not my employer portfolio. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')) }}</p>
-          <p class="about-story__p">{{ \App\field('about_p4', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage')) }}</p>
+          <div class="about-story__body">
+            {!! \App\mh_about_story_html() !!}
+          </div>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
               {!! \App\mh_svg_icon('mail', 16) !!}
