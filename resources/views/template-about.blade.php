@@ -6,8 +6,6 @@
 @php
   $gh           = \App\Github::fetchUser(\App\mh_github_login());
   $ghUrl        = $gh['url'] ?: 'https://github.com/'.\App\mh_github_login();
-  $writing      = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
-  $latestPosts  = \App\mh_latest_posts(3);
   $yearsBuilding = \App\mh_years_in_house();
   $services     = \App\mh_about_page_services();
   $workTypes    = \App\mh_about_page_work_types();
@@ -26,7 +24,7 @@
       {{ \App\field('about_h1', __('WordPress developer for shops and agencies.', 'sage')) }}
     </h1>
     <p class="lead about-hero__lede">
-        {{ \App\field('about_lede', __('I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.', 'sage')) }}
+        {{ \App\field('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')) }}
     </p>
     @if ($isHireable)
       <p class="hire-avail about-hero__avail">
@@ -72,10 +70,11 @@
   if ($isHireable) {
     $aboutNav[] = ['availability', __('Open for work', 'sage')];
   }
+  $aboutNav[] = ['glance', __('At a glance', 'sage')];
+  $aboutNav[] = ['process', __('Process', 'sage')];
+  $aboutNav[] = ['fit', __('Fit', 'sage')];
   $aboutNav[] = ['approach', __('How I work', 'sage')];
-  if (! empty($latestPosts)) {
-    $aboutNav[] = ['journal', __('Journal', 'sage')];
-  }
+  $aboutNav[] = ['faq', __('FAQ', 'sage')];
   $aboutNav[] = ['elsewhere', __('Elsewhere', 'sage')];
   $aboutNavFirst = $aboutNav[0][1] ?? __('Story', 'sage');
 @endphp
@@ -173,7 +172,7 @@
           <div class="about-aside-card about-aside-card--studio">
             <p class="about-aside-kicker">{!! \App\mh_svg_icon('briefcase', 14) !!} {{ __('Work', 'sage') }}</p>
             <h3 class="about-aside-card__title">{{ __('Studio concepts', 'sage') }}</h3>
-            <p class="about-aside-card__bio">{{ __('WordPress themes and plugins I built as proof. Hire me to adapt one.', 'sage') }}</p>
+            <p class="about-aside-card__bio">{{ __('WordPress themes and plugins I built as samples. Hire me to adapt one.', 'sage') }}</p>
             <a class="about-aside-card__link" href="{{ esc_url(\App\mh_work_listing_url()) }}">
               {{ __('See the work', 'sage') }} →
             </a>
@@ -253,8 +252,11 @@
 </section>
 @endif
 
+{{-- Process, fit, FAQ, glance (moved from Home) --}}
+@include('partials.about-hire-sections')
+
 {{-- HOW I WORK --}}
-<section class="pf-section {{ $isHireable ? 'pf-section--alt' : '' }} about-approach-sec" id="approach" aria-labelledby="about-approach-heading">
+<section class="pf-section pf-section--alt about-approach-sec" id="approach" aria-labelledby="about-approach-heading">
   <div class="container wide">
     <div class="about-shell about-shell--approach">
       <div class="about-shell__mesh" aria-hidden="true"></div>
@@ -279,58 +281,16 @@
             </article>
           @endforeach
         </div>
+        <p class="about-services-note">
+          <a class="h-text-arrow" href="{{ home_url('/code/') }}">{{ __('Repos and stack notes on Code', 'sage') }} →</a>
+        </p>
       </div>
     </div>
   </div>
 </section>
-
-{{-- JOURNAL --}}
-@if (! empty($latestPosts))
-<section class="pf-section about-posts-sec" id="journal" aria-labelledby="about-writing-heading">
-  <div class="container wide">
-    <div class="about-shell about-shell--posts">
-      <div class="about-shell__mesh" aria-hidden="true"></div>
-      <div class="about-shell__inner">
-        <header class="about-shell__head about-shell__head--split">
-          <div>
-            <p class="eyebrow">{{ __('Journal', 'sage') }}</p>
-            <h2 id="about-writing-heading" class="display-title is-section">
-              {{ \App\field('about_posts_h2', __('Recent posts.', 'sage')) }}
-            </h2>
-          </div>
-          <a class="btn btn-outline about-shell__cta" href="{{ $writing }}">
-            {{ \App\field('about_posts_all', __('All posts', 'sage')) }} →
-          </a>
-        </header>
-        <div class="about-posts">
-          @foreach ($latestPosts as $post)
-            <article class="about-post-row">
-              <div class="about-post-row__meta">
-                @if ($post['cat'])
-                  <span class="about-post-cat">{{ $post['cat'] }}</span>
-                @endif
-                <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" class="about-post-date">{{ $post['date'] }}</time>
-                @if (! empty($post['minutes']))
-                  <span class="about-post-min">{{ sprintf(__('%s min', 'sage'), $post['minutes']) }}</span>
-                @endif
-              </div>
-              <div class="about-post-row__body">
-                <h3 class="about-post-row__title">
-                  <a href="{{ esc_url($post['url']) }}">{{ $post['title'] }}</a>
-                </h3>
-                <p class="about-post-row__ex">{{ $post['ex'] }}</p>
-              </div>
-            </article>
-          @endforeach
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-@endif
 
 {{-- ELSEWHERE --}}
-<section class="pf-section pf-section--alt about-elsewhere-sec" id="elsewhere" aria-labelledby="about-elsewhere-heading">
+<section class="pf-section about-elsewhere-sec" id="elsewhere" aria-labelledby="about-elsewhere-heading">
   <div class="container wide">
     <div class="about-shell about-shell--elsewhere">
       <div class="about-shell__mesh" aria-hidden="true"></div>
@@ -358,14 +318,14 @@
     <div class="cta-band__copy about-cta__copy">
       <p class="eyebrow eyebrow--on-dark">{{ \App\field('about_cta_kicker', __('Get in touch', 'sage')) }}</p>
       <h2 id="about-cta-heading" class="display-title is-section">
-        {{ \App\field('about_cta_h2', __('Need a full-stack or WordPress development partner?', 'sage')) }}
+        {{ \App\field('about_cta_h2', __('Need a WordPress or full-stack developer?', 'sage')) }}
       </h2>
       <p>{{ \App\field('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')) }}</p>
     </div>
     <div class="cta-band__actions">
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!}
-        {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
+        {{ \App\field('about_cta_btn', __('Say hello', 'sage')) }}
       </a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>

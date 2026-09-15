@@ -36,10 +36,10 @@
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('code_h1', __('Full-stack and WordPress code you can use.', 'sage')) }}
+    {{ \App\field('code_h1', __('Code and repos.', 'sage')) }}
   </h1>
   <p class="lead">
-    {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')) !!}
+    {!! \App\field_html('code_lede', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')) !!}
   </p>
   @if (\App\mh_is_hireable($profile))
     <p class="hire-avail" style="margin-top:.85rem">
