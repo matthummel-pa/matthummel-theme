@@ -1,0 +1,12 @@
+{
+  "name": "matthummel Sage 11",
+  "install": "test -x /usr/local/bin/google-chrome\ncomposer install --no-interaction --prefer-dist\nnpm install",
+  "chromeExecutablePath": "/usr/local/bin/google-chrome",
+  "enable_testing": true,
+  "ports": [
+    {
+      "name": "WordPress",
+      "port": 8080
+    }
+  ]
+}

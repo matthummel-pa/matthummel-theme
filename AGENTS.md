@@ -33,6 +33,13 @@ Theme zip products (Acreline, WalkRidge): see `docs/SHOP-DOWNLOADS.md`.
 The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The update script
 runs `composer install` and `npm install`. Services are not auto-started.
 
+Browser GUI recording is part of this Cloud Agent environment. The VM desktop is
+`DISPLAY=:1`. Use `/usr/local/bin/google-chrome` (not a headless `google-chrome`
+binary) so computer-use and `RecordScreen` hit the VNC session. `.cursor/environment.json`
+sets `chromeExecutablePath` and `enable_testing`. For walkthrough videos: open the
+page with `computerUse`, then `RecordScreen` START → click through the flow →
+SAVE_RECORDING. Do not use headless Chrome for GUI demos.
+
 Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/` so it
 matches the live Hostinger folder name (`wp-content/themes/matthummel`). Local WordPress
 must use that same directory name (symlink `/workspace` to
