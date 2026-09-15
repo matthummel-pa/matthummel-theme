@@ -3785,12 +3785,25 @@ add_action('init', function (): void {
 }, 88);
 
 /**
- * One-time: shop-first home hero and CTAs (3.5.26).
- *
- * Exact-string replacements only so custom wp-admin copy is left alone.
+ * Retired: 3.5.26 sales-hero one-shots. Mark complete so they never rewrite
+ * a portfolio install to shop CTAs. Restore runs in mh_home_portfolio_hero_v1.
  */
 add_action('init', function (): void {
-    if (get_option('mh_home_sales_hero_v1') || wp_installing()) {
+    if (! get_option('mh_home_sales_hero_v1')) {
+        update_option('mh_home_sales_hero_v1', true);
+    }
+    if (! get_option('mh_home_sales_hero_v2')) {
+        update_option('mh_home_sales_hero_v2', true);
+    }
+}, 89);
+
+/**
+ * One-time: restore the portfolio home hero after the 3.5.26 sales experiment.
+ *
+ * Rewrites only exact sales-offer strings so custom wp-admin copy is left alone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_portfolio_hero_v1') || wp_installing()) {
         return;
     }
 
@@ -3800,7 +3813,7 @@ add_action('init', function (): void {
         $home = $id ? get_post($id) : null;
     }
     if (! $home) {
-        update_option('mh_home_sales_hero_v1', true);
+        update_option('mh_home_portfolio_hero_v1', true);
 
         return;
     }
@@ -3809,100 +3822,85 @@ add_action('init', function (): void {
     $map = [
         'mh_f_home_h1' => [
             'from' => [
-                'Matt Hummel',
-                'Matt Hummel — WordPress developer',
-                'Web Engineering for Growing Businesses & Agency Partners',
+                'Real estate & tour WordPress themes shops can edit themselves.',
             ],
             'to' => mh_home_hero_default('h1'),
         ],
         'mh_f_home_role' => [
             'from' => [
-                'WordPress developer for shops, agencies, and product teams.',
-                'Full-stack themes, plugins, and web apps for shops and agencies.',
-                'Full-stack & WordPress developer.',
-                'Full-stack & WordPress developer',
-                'Full-stack & WordPress developer — open for full-time, contract, and freelance.',
+                'From $59 · live demos.',
             ],
             'to' => mh_home_hero_default('role'),
         ],
         'mh_f_home_lede' => [
             'from' => [
-                'I build WordPress sites shops can edit and agencies can hand off without guesswork. Clear deploys. GPL code you own. Open for full-time, contract, or freelance.',
-                'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
-                'I build platforms shops can own and agencies can hand off. Open for full-time, contract, or freelance.',
-                'I build WordPress platforms and web apps shops can own and agencies can hand off. Hire me for a role or a build.',
-                'I build custom WordPress platforms and web apps with PHP, JavaScript, React, and APIs. Open for full-time roles, contract work, and freelance builds. Shops get software they own; agencies get clean handoffs.',
+                'Acreline for listings. WalkRidge for tours. TOCflow is free. Buy a pack, try a live demo, or hire me to brand one.',
             ],
             'to' => mh_home_hero_default('lede'),
         ],
         'mh_f_home_kicker' => [
             'from' => [
-                'WordPress · plugins · web apps',
+                'WordPress themes · from $59',
             ],
             'to' => mh_home_hero_default('kicker'),
         ],
         'mh_f_home_cta_primary' => [
             'from' => [
-                'Hire me',
-                'Start a conversation',
+                'Buy Acreline — $79',
             ],
             'to' => mh_home_hero_default('cta_primary'),
         ],
         'mh_f_home_cta_primary_url' => [
             'from' => [
-                '/hire/',
-                '/contact/',
+                '/product/acreline/',
             ],
-            'to' => '/product/acreline/',
+            'to' => '/hire/',
         ],
         'mh_f_home_cta_secondary' => [
             'from' => [
-                'Browse work',
-                'Explore projects',
+                'Live demo',
             ],
             'to' => mh_home_hero_default('cta_secondary'),
         ],
         'mh_f_home_cta_secondary_url' => [
             'from' => [
-                '/shop/',
-                '/projects/',
+                'https://acreline.matthummel.com/',
             ],
-            'to' => 'https://acreline.matthummel.com/',
+            'to' => '/shop/',
         ],
         'mh_f_home_proof_1' => [
             'from' => [
-                '17 years in-house web work',
+                'From $59',
             ],
             'to' => mh_home_hero_default('proof_1'),
         ],
         'mh_f_home_proof_2' => [
             'from' => [
-                'GPL — you own the code',
+                'Live demos',
             ],
             'to' => mh_home_hero_default('proof_2'),
         ],
         'mh_f_home_proof_3' => [
             'from' => [
-                'Open for full-time & contract',
+                'GPL — you own the zip',
             ],
             'to' => mh_home_hero_default('proof_3'),
         ],
         'mh_f_home_path_lede' => [
             'from' => [
-                'Pick the door that fits — hiring, building together, or browsing themes and plugins.',
+                'Start with a theme pack, or write if you want it installed and branded. Hire is still here.',
             ],
-            'to' => 'Start with a theme pack, or write if you want it installed and branded. Hire is still here.',
+            'to' => 'Pick the door that fits — hiring, building together, or browsing themes and plugins.',
         ],
         'mh_f_seo_title' => [
             'from' => [
-                'WordPress Developer for Shops & Agencies | Matt Hummel',
-                'Full-Stack & WordPress Developer | Matt Hummel',
+                'Real Estate & Tour WordPress Themes | Matt Hummel',
             ],
             'to' => mh_home_hero_default('seo_title'),
         ],
         'mh_f_seo_desc' => [
             'from' => [
-                'WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.',
+                'Real estate and tour WordPress themes shops can edit. Acreline $79, WalkRidge $59, TOCflow free. Live demos.',
             ],
             'to' => mh_home_hero_default('seo_desc'),
         ],
@@ -3915,52 +3913,5 @@ add_action('init', function (): void {
         }
     }
 
-    update_option('mh_home_sales_hero_v1', true);
-}, 89);
-
-/**
- * Follow-up: rewrite the live resume-style H1/role/lede if v1 already ran.
- */
-add_action('init', function (): void {
-    if (get_option('mh_home_sales_hero_v2') || wp_installing()) {
-        return;
-    }
-
-    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
-    if (! $home && get_option('show_on_front') === 'page') {
-        $id = (int) get_option('page_on_front');
-        $home = $id ? get_post($id) : null;
-    }
-    if (! $home) {
-        update_option('mh_home_sales_hero_v2', true);
-
-        return;
-    }
-
-    $id = (int) $home->ID;
-    $extra = [
-        'mh_f_home_h1' => [
-            'Matt Hummel — WordPress developer',
-        ],
-        'mh_f_home_role' => [
-            'Full-stack themes, plugins, and web apps for shops and agencies.',
-        ],
-        'mh_f_home_lede' => [
-            'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
-        ],
-    ];
-
-    foreach ($extra as $key => $from) {
-        $cur = (string) get_post_meta($id, $key, true);
-        if (in_array($cur, $from, true)) {
-            $toKey = match ($key) {
-                'mh_f_home_h1' => 'h1',
-                'mh_f_home_role' => 'role',
-                default => 'lede',
-            };
-            update_post_meta($id, $key, mh_home_hero_default($toKey));
-        }
-    }
-
-    update_option('mh_home_sales_hero_v2', true);
-}, 90);
+    update_option('mh_home_portfolio_hero_v1', true);
+}, 91);

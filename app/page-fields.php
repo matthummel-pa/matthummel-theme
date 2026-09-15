@@ -264,18 +264,17 @@ function mh_seo_field_group(): array
 function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): string
 {
     $copy = [
-        'h1' => __('Real estate & tour WordPress themes shops can edit themselves.', 'sage'),
-        'role' => __('From $59 · live demos.', 'sage'),
-        'lede' => __('Acreline for listings. WalkRidge for tours. TOCflow is free. Buy a pack, try a live demo, or hire me to brand one.', 'sage'),
-        'seo_title' => __('Real Estate & Tour WordPress Themes', 'sage').' | '.$brand,
-        'seo_desc' => __('Real estate and tour WordPress themes shops can edit. Acreline $79, WalkRidge $59, TOCflow free. Live demos.', 'sage'),
-        'kicker' => __('WordPress themes · from $59', 'sage'),
-        'cta_primary' => __('Buy Acreline — $79', 'sage'),
-        'cta_secondary' => __('Live demo', 'sage'),
-        'cta_tertiary' => __('Or hire me', 'sage'),
-        'proof_1' => __('From $59', 'sage'),
-        'proof_2' => __('Live demos', 'sage'),
-        'proof_3' => __('GPL — you own the zip', 'sage'),
+        'h1' => __('Matt Hummel — WordPress developer', 'sage'),
+        'role' => __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage'),
+        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage'),
+        'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
+        'seo_desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+        'kicker' => __('WordPress · plugins · web apps', 'sage'),
+        'cta_primary' => __('Hire me', 'sage'),
+        'cta_secondary' => __('Browse work', 'sage'),
+        'proof_1' => __('17 years in-house web work', 'sage'),
+        'proof_2' => __('GPL — you own the code', 'sage'),
+        'proof_3' => __('Open for full-time & contract', 'sage'),
     ];
 
     return $copy[$key] ?? '';
@@ -297,11 +296,9 @@ function mh_home_fields(): array
             ['home_role', __('Role line', 'sage'), 'text', mh_home_hero_default('role')],
             ['home_lede', __('Intro', 'sage'), 'textarea', mh_home_hero_default('lede')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', mh_home_hero_default('cta_primary')],
-            ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/product/acreline/'],
+            ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', mh_home_hero_default('cta_secondary')],
-            ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', 'https://acreline.matthummel.com/'],
-            ['home_cta_tertiary', __('Tertiary text link', 'sage'), 'text', mh_home_hero_default('cta_tertiary')],
-            ['home_cta_tertiary_url', __('Tertiary link path or URL', 'sage'), 'text', '/contact/'],
+            ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/shop/'],
             ['home_link_writing', __('Journal link label', 'sage'), 'text', __('Journal', 'sage')],
             ['home_link_code', __('Code link label', 'sage'), 'text', __('Code', 'sage')],
             ['home_link_about', __('About link label', 'sage'), 'text', __('About', 'sage')],
@@ -312,7 +309,7 @@ function mh_home_fields(): array
         ],
         __('Visitor pathways', 'sage') => [
             ['home_path_h2', __('Pathways heading', 'sage'), 'text', __('Where to start', 'sage')],
-            ['home_path_lede', __('Pathways intro', 'sage'), 'textarea', __('Start with a theme pack, or write if you want it installed and branded. Hire is still here.', 'sage')],
+            ['home_path_lede', __('Pathways intro', 'sage'), 'textarea', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')],
             ['home_path_1_title', __('Pathway 1 title', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_path_1_text', __('Pathway 1 text', 'sage'), 'textarea', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')],
             ['home_path_1_url', __('Pathway 1 path', 'sage'), 'text', '/hire/'],
@@ -349,16 +346,6 @@ function mh_home_fields(): array
         __('Example sites section', 'sage') => [
             ['home_work_h2', __('Heading', 'sage'), 'text', __('WordPress themes and plugins.', 'sage')],
             ['home_work_intro', __('Intro sentence', 'sage'), 'textarea', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')],
-        ],
-        __('How to buy', 'sage') => [
-            ['home_buy_h2', __('Heading', 'sage'), 'text', __('How to buy a theme.', 'sage')],
-            ['home_buy_lede', __('Intro', 'sage'), 'textarea', __('Guest checkout. Instant zip. I make it right if it will not install on a current WordPress.', 'sage')],
-            ['home_buy_1_title', __('Step 1 title', 'sage'), 'text', __('Pick a pack', 'sage')],
-            ['home_buy_1_text', __('Step 1 text', 'sage'), 'textarea', __('Acreline, WalkRidge, or free TOCflow. Open the product page and try the live demo.', 'sage')],
-            ['home_buy_2_title', __('Step 2 title', 'sage'), 'text', __('Checkout', 'sage')],
-            ['home_buy_2_text', __('Step 2 text', 'sage'), 'textarea', __('Guest is fine. You get the zip on the receipt and in My account → Downloads.', 'sage')],
-            ['home_buy_3_title', __('Step 3 title', 'sage'), 'text', __('Install the zip', 'sage')],
-            ['home_buy_3_text', __('Step 3 text', 'sage'), 'textarea', __('Appearance → Themes (or Plugins for TOCflow). Need it branded? Get help after you buy.', 'sage')],
         ],
         __('About strip', 'sage') => [
             ['home_about_h2', __('Heading', 'sage'), 'text', __('The work I can share.', 'sage')],

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.27 — Portfolio homepage restored
+
+- Home is the developer portfolio again (name, hire CTA, work preview). Not a theme-sales landing.
+- Sales-hero one-shots are retired. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 offer strings.
+- Product pages keep the buy path from 3.5.26. Shop stays at `/shop/`.
+
 ## 3.5.26 — Shop-first homepage + product buy path
 
 - Home hero leads with themes shops can buy (Acreline $79, live demo, hire as a text link).

@@ -2,12 +2,16 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.27 portfolio home)
+
+- Home is the hireable portfolio. `mh_home_hero_default()` restores the name marque, Hire me → `/hire/`, and Browse work → `/shop/`.
+- Do not reintroduce a product-offer H1 or Buy Acreline as the primary home CTA unless Matt asks.
+- `mh_home_sales_hero_v1` / `v2` are no-ops. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 sales strings.
+- Product pages still use the 3.5.26 buy path (guarantee, sticky bar, For developers accordion).
+
 ## Editor’s notes (3.5.26 shop-first sales)
 
-- Home hero defaults live in `mh_home_hero_default()`. Clearing Page content (theme) boxes restores the product offer, not the old “Matt Hummel” name marque.
-- One-shot `mh_home_sales_hero_v1` in `app/bespoke.php` rewrites only exact previous defaults.
-- Homepage shop flow is in `resources/views/partials/home.blade.php`: products and how-to-buy before the recruiter glance. Journal is `partials/home-journal.blade.php`.
-- Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
+- Superseded by 3.5.27 for the homepage. Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
 - Single product article no longer renders Overview + benefits + story + Woo description. Hidden CSS dumps are gone; the purchase widget calls `mh_render_product_add_to_cart()`.
 - Sticky bar still uses `#pf-sticky-bar` + `woo-sticky-bar.js`. Trust chips hide under 640px so Add to cart stays reachable.
 

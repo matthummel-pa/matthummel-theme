@@ -92,14 +92,6 @@
 
   $faqItems = [
     [
-      'q' => 'What can I buy on this site?',
-      'a' => 'Acreline is a real estate WordPress theme at $79. WalkRidge is a tour theme at $59. TOCflow is a free table-of-contents plugin. Each pack is a zip you download after checkout.',
-    ],
-    [
-      'q' => 'How do I buy a theme?',
-      'a' => 'Open the product, add it to the cart, and check out as a guest if you want. The zip is on the receipt and in My account → Downloads. If it will not install on WordPress 6.6+ and PHP 8.3, I make it right.',
-    ],
-    [
       'q' => 'What does "you own it" actually mean?',
       'a' => 'The domain is in your name. The hosting account is yours. The database, the files, the code — all yours. I have no access after handoff unless you invite me. You can take everything to another developer tomorrow and they\'ll have what they need.',
     ],
@@ -141,8 +133,7 @@
 {{-- ═══════════════════════════════════════════════════
      01 — HERO
      ═══════════════════════════════════════════════════ --}}
-@php $offer = \App\mh_featured_theme_offer(); @endphp
-<section class="h-hero h-hero--shop" aria-labelledby="h-hero-name">
+<section class="h-hero" aria-labelledby="h-hero-name">
   <div class="h-hero__atmosphere" aria-hidden="true">
     <span class="h-hero__blob h-hero__blob--a" data-parallax="0.12"></span>
     <span class="h-hero__blob h-hero__blob--b" data-parallax="0.07"></span>
@@ -153,10 +144,10 @@
     <div class="h-hero__copy">
       <p class="h-hero__kicker">
         <span class="h-hero__kicker-dot" aria-hidden="true"></span>
-        {{ \App\field('home_kicker', \App\mh_home_hero_default('kicker')) }}
+        {{ \App\field('home_kicker', __('WordPress · plugins · web apps', 'sage')) }}
       </p>
 
-      <h1 id="h-hero-name" class="h-hero__name h-hero__name--offer">
+      <h1 id="h-hero-name" class="h-hero__name">
         {{ \App\field('home_h1', \App\mh_home_hero_default('h1')) }}
       </h1>
 
@@ -169,32 +160,28 @@
       </p>
 
       <div class="h-hero__actions">
-        <a class="btn h-hero__cta" href="{{ esc_url(\App\field_href('home_cta_primary_url', $offer['permalink'])) }}">
-          {!! \App\mh_svg_icon('cart', 17) !!}
-          {{ \App\field('home_cta_primary', $offer['buy_label']) }}
+        <a class="btn h-hero__cta" href="{{ esc_url(\App\field_href('home_cta_primary_url', '/hire/')) }}">
+          {!! \App\mh_svg_icon('mail', 17) !!}
+          {{ \App\field('home_cta_primary', __('Hire me', 'sage')) }}
         </a>
-        <a class="btn btn-outline h-hero__demo" href="{{ esc_url(\App\field_href('home_cta_secondary_url', $offer['demo'] ?: 'https://acreline.matthummel.com/')) }}" rel="noopener" target="_blank">
-          {!! \App\mh_svg_icon('arrow-up-right', 16) !!}
-          {{ \App\field('home_cta_secondary', \App\mh_home_hero_default('cta_secondary')) }}
-        </a>
-        <a class="h-text-arrow h-text-arrow--quiet" href="{{ esc_url(\App\field_href('home_cta_tertiary_url', '/contact/')) }}">
-          {{ \App\field('home_cta_tertiary', \App\mh_home_hero_default('cta_tertiary')) }}
+        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/shop/')) }}">
+          {{ \App\field('home_cta_secondary', __('Browse work', 'sage')) }}
           <span aria-hidden="true">→</span>
         </a>
       </div>
 
       <ul class="h-hero__proof" aria-label="{{ __('Proof points', 'sage') }}">
         <li class="h-hero__proof-item">
-          <span class="h-hero__proof-label">{{ __('Price', 'sage') }}</span>
-          <span class="h-hero__proof-value">{{ \App\field('home_proof_1', \App\mh_home_hero_default('proof_1')) }}</span>
-        </li>
-        <li class="h-hero__proof-item">
-          <span class="h-hero__proof-label">{{ __('Try it', 'sage') }}</span>
-          <span class="h-hero__proof-value">{{ \App\field('home_proof_2', \App\mh_home_hero_default('proof_2')) }}</span>
+          <span class="h-hero__proof-label">{{ __('Experience', 'sage') }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_1', __('17 years in-house web work', 'sage')) }}</span>
         </li>
         <li class="h-hero__proof-item">
           <span class="h-hero__proof-label">{{ __('Ownership', 'sage') }}</span>
-          <span class="h-hero__proof-value">{{ \App\field('home_proof_3', \App\mh_home_hero_default('proof_3')) }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_2', __('GPL — you own the code', 'sage')) }}</span>
+        </li>
+        <li class="h-hero__proof-item">
+          <span class="h-hero__proof-label">{{ __('Availability', 'sage') }}</span>
+          <span class="h-hero__proof-value">{{ \App\field('home_proof_3', __('Open for full-time & contract', 'sage')) }}</span>
         </li>
       </ul>
     </div>
@@ -210,7 +197,7 @@
               <span class="h-hero-work__dot"></span>
               <span class="h-hero-work__dot"></span>
               <span class="h-hero-work__dot"></span>
-              <span class="h-hero-work__addr">hummelwp.com/shop</span>
+              <span class="h-hero-work__addr">matthummel.com/shop</span>
             </div>
             <a class="h-hero-work__main-link"
                href="{{ esc_url($fp['url'] ?? home_url('/shop/')) }}"
@@ -250,7 +237,7 @@
                     src="{{ esc_url($pw['image']) }}"
                     alt="{{ esc_attr($pw['title'] ?? '') }}"
                     width="300" height="180"
-                    loading="eager"
+                    loading="lazy"
                     decoding="async"
                   >
                 @else
@@ -311,18 +298,18 @@
         {{ \App\field('home_path_h2', __('Where to start', 'sage')) }}
       </h2>
       <p class="h-pathways__lede">
-        {{ \App\field('home_path_lede', __('Start with a theme pack, or write if you want it installed and branded. Hire is still here.', 'sage')) }}
+        {{ \App\field('home_path_lede', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')) }}
       </p>
     </div>
     <div class="h-pathways__grid">
       @php
         $pathways = [
           [
-            'icon' => 'cart',
-            'title' => \App\field('home_path_3_title', __('Explore themes & plugins', 'sage')),
-            'text' => \App\field('home_path_3_text', __('Buy a pack, try a live demo, or read what ships in the zip.', 'sage')),
-            'url' => \App\field_href('home_path_3_url', '/shop/'),
-            'cta' => \App\field('home_path_3_cta', __('Browse the shop', 'sage')),
+            'icon' => 'briefcase',
+            'title' => \App\field('home_path_1_title', __('Hire me', 'sage')),
+            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')),
+            'url' => \App\field_href('home_path_1_url', '/hire/'),
+            'cta' => \App\field('home_path_1_cta', __('See hire page', 'sage')),
           ],
           [
             'icon' => 'pen',
@@ -332,11 +319,11 @@
             'cta' => \App\field('home_path_2_cta', __('Start a brief', 'sage')),
           ],
           [
-            'icon' => 'briefcase',
-            'title' => \App\field('home_path_1_title', __('Hire me', 'sage')),
-            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')),
-            'url' => \App\field_href('home_path_1_url', '/hire/'),
-            'cta' => \App\field('home_path_1_cta', __('See hire page', 'sage')),
+            'icon' => 'cart',
+            'title' => \App\field('home_path_3_title', __('Explore themes & plugins', 'sage')),
+            'text' => \App\field('home_path_3_text', __('Buy a pack, try a live demo, or read what ships in the zip.', 'sage')),
+            'url' => \App\field_href('home_path_3_url', '/shop/'),
+            'cta' => \App\field('home_path_3_cta', __('Browse the shop', 'sage')),
           ],
         ];
       @endphp
@@ -353,150 +340,41 @@
   </div>
 </section>
 
+@include('partials.recruiter-glance')
+
 {{-- Sticky section pills — desktop pills + mobile dropdown --}}
 <nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
   <div class="container wide h-page-nav__inner">
     <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
     <details class="h-page-nav__mobile">
       <summary class="h-page-nav__mobile-summary">
-        <span data-section-nav-current>{{ __('Themes', 'sage') }}</span>
+        <span data-section-nav-current>{{ __('Glance', 'sage') }}</span>
       </summary>
       <div class="h-page-nav__mobile-list" role="list">
-        <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Themes', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#buy">{{ __('How to buy', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Hire', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#help">{{ __('Help', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#code">{{ __('Code', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
       </div>
     </details>
     <div class="h-page-nav__pills" role="list">
-      <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Themes', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#buy">{{ __('How to buy', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Hire', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#glance">{{ __('Glance', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#about">{{ __('About', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#help">{{ __('Help', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#code">{{ __('Code', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
     </div>
   </div>
 </nav>
-
-{{-- Themes / products — sales first --}}
-@if (! empty($work))
-@php
-  $allWork = \App\mh_work_page_items();
-  $totalProjects = count($allWork);
-  $caseWork = \App\mh_home_case_study_cards($allWork, 3);
-@endphp
-<section class="h-section h-section--tinted h-band h-band--tint" id="work" aria-labelledby="h-work-heading">
-  <div class="container wide">
-
-    <div class="h-work-header">
-      <div>
-        <p class="h-section-label">{{ __('Shop', 'sage') }}</p>
-        <h2 id="h-work-heading" class="h-section__title">
-          {{ \App\field('home_work_h2', __('WordPress themes and plugins.', 'sage')) }}
-        </h2>
-        <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
-        </p>
-      </div>
-      <div class="h-work-header__meta">
-        <span class="h-work-count">{{ $totalProjects }} {{ __('products', 'sage') }}</span>
-        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">{{ __('Browse all', 'sage') }} →</a>
-      </div>
-    </div>
-
-    <div class="h-case-list">
-      @foreach ($caseWork as $i => $p)
-        @include('partials.home-case-card', ['p' => $p, 'featured' => $i === 0])
-      @endforeach
-    </div>
-
-    <div class="h-work-cta-bar">
-      <p>{{ __('WordPress themes and plugins for sale — install, brand, and ship.', 'sage') }}</p>
-      <a class="btn" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }}</a>
-    </div>
-
-  </div>
-</section>
-@endif
-
-{{-- How to buy --}}
-@php
-  $buySteps = [
-    [
-      'num' => '01',
-      'title' => \App\field('home_buy_1_title', __('Pick a pack', 'sage')),
-      'body' => \App\field('home_buy_1_text', __('Acreline, WalkRidge, or free TOCflow. Open the product page and try the live demo.', 'sage')),
-    ],
-    [
-      'num' => '02',
-      'title' => \App\field('home_buy_2_title', __('Checkout', 'sage')),
-      'body' => \App\field('home_buy_2_text', __('Guest is fine. You get the zip on the receipt and in My account → Downloads.', 'sage')),
-    ],
-    [
-      'num' => '03',
-      'title' => \App\field('home_buy_3_title', __('Install the zip', 'sage')),
-      'body' => \App\field('home_buy_3_text', __('Appearance → Themes (or Plugins for TOCflow). Need it branded? Get help after you buy.', 'sage')),
-    ],
-  ];
-@endphp
-<section class="h-howto h-band" id="buy" aria-labelledby="h-buy-heading">
-  <div class="container wide">
-    <div class="h-howto__head">
-      <p class="h-section-label">{{ __('Trust', 'sage') }}</p>
-      <h2 id="h-buy-heading" class="h-section__title">
-        {{ \App\field('home_buy_h2', __('How to buy a theme.', 'sage')) }}
-      </h2>
-      <p class="h-howto__lede">
-        {{ \App\field('home_buy_lede', __('Guest checkout. Instant zip. I make it right if it will not install on a current WordPress.', 'sage')) }}
-      </p>
-    </div>
-    <ol class="h-howto__steps">
-      @foreach ($buySteps as $step)
-        <li class="h-howto__step">
-          <span class="h-howto__num" aria-hidden="true">{{ $step['num'] }}</span>
-          <h3 class="h-howto__title">{{ $step['title'] }}</h3>
-          <p class="h-howto__body">{{ $step['body'] }}</p>
-        </li>
-      @endforeach
-    </ol>
-    <p class="h-howto__guarantee">
-      {!! \App\mh_svg_icon('check', 16) !!}
-      {{ \App\mh_product_guarantee_copy(['guarantee' => ''], false, false) }}
-    </p>
-  </div>
-</section>
-
-{{-- FAQ — shop questions first --}}
-<section class="h-faq h-band h-band--tint" id="faq" aria-labelledby="h-faq-heading">
-  <div class="container wide h-faq__inner">
-
-    <div class="h-faq__sidebar">
-      <p class="h-section-label">{{ __('Questions', 'sage') }}</p>
-      <h2 id="h-faq-heading" class="h-section__title">{{ __('Frequently asked.', 'sage') }}</h2>
-      <p class="h-faq__blurb">{!! wp_kses_post(__('Theme packs first, then hiring. If yours isn’t here, <a href="/contact/">just ask</a>.', 'sage')) !!}</p>
-    </div>
-
-    <div class="h-faq__list">
-      @foreach ($faqItems as $i => $faq)
-        <details class="h-faq__item" @if($i === 0) open @endif>
-          <summary class="h-faq__q">{{ $faq['q'] }}</summary>
-          <p class="h-faq__a">{{ $faq['a'] }}</p>
-        </details>
-      @endforeach
-    </div>
-
-  </div>
-</section>
-
-@include('partials.recruiter-glance')
-@include('partials.home-journal')
 
 <section class="h-about h-band" id="about" aria-labelledby="h-about-heading" itemscope itemtype="https://schema.org/Person">
   <meta itemprop="name" content="Matt Hummel">
@@ -890,7 +768,50 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     OPEN SOURCE  (live GitHub API data)
+     06 — SELECTED WORK
+     ═══════════════════════════════════════════════════ --}}
+@if (! empty($work))
+@php
+  $allWork = \App\mh_work_page_items();
+  $totalProjects = count($allWork);
+  $caseWork = \App\mh_home_case_study_cards($allWork, 3);
+@endphp
+<section class="h-section h-section--tinted h-band h-band--tint" id="work" aria-labelledby="h-work-heading">
+  <div class="container wide">
+
+    <div class="h-work-header">
+      <div>
+        <p class="h-section-label">Projects</p>
+        <h2 id="h-work-heading" class="h-section__title">
+          {{ \App\field('home_work_h2', __('WordPress themes and plugins.', 'sage')) }}
+        </h2>
+        <p class="h-work-intro">
+          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
+        </p>
+      </div>
+      <div class="h-work-header__meta">
+        <span class="h-work-count">{{ $totalProjects }} projects</span>
+        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">Browse all →</a>
+      </div>
+    </div>
+
+    <div class="h-case-list">
+      @foreach ($caseWork as $i => $p)
+        @include('partials.home-case-card', ['p' => $p, 'featured' => $i === 0])
+      @endforeach
+    </div>
+
+    <div class="h-work-cta-bar">
+      <p>{{ __('WordPress themes and plugins for sale — install, brand, and ship.', 'sage') }}</p>
+      <a class="btn" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }}</a>
+    </div>
+
+  </div>
+</section>
+@endif
+
+{{-- ═══════════════════════════════════════════════════
+     07 — OPEN SOURCE  (live GitHub API data)
      ═══════════════════════════════════════════════════ --}}
 <section class="h-section" id="code" aria-labelledby="h-oss-heading">
   <div class="container wide">
@@ -1000,7 +921,200 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     CTA
+     08 — FROM THE JOURNAL
+     ═══════════════════════════════════════════════════ --}}
+@php
+  $journalFeatured = $posts[0] ?? null;
+  $journalStack    = array_slice($posts, 1, 4);
+  $rssUrl = home_url('/feed/');
+@endphp
+<section class="h-journal h-band h-band--tint" id="journal" aria-labelledby="h-writing-heading">
+  <div class="container wide">
+
+    {{-- Header ─ SEO-rich heading + intro + links --}}
+    <div class="h-journal__head">
+      <div class="h-journal__head-copy">
+        <p class="h-section-label">Journal</p>
+        <h2 id="h-writing-heading" class="h-section__title">
+          {{ \App\field('home_write_h2', __('Notes from real WordPress work.', 'sage')) }}
+        </h2>
+        <p class="h-journal__intro">
+          {{ \App\field('home_write_intro', __('Practical posts for shops and developers — handoffs, themes, and lessons from builds. Most include something you can reuse.', 'sage')) }}
+        </p>
+      </div>
+      <div class="h-journal__head-links">
+        <a class="h-text-arrow" href="{{ $writing }}">All posts →</a>
+        <a class="h-journal__rss" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+          {!! \App\mh_svg_icon('rss', 14) !!} RSS feed
+        </a>
+      </div>
+    </div>
+
+    @if (! empty($posts))
+
+      <div class="h-journal__grid">
+
+        {{-- Featured post ─ left column ─ big card --}}
+        @if ($journalFeatured)
+        @php $fp = $journalFeatured; @endphp
+        <article class="h-journal__featured" itemscope itemtype="https://schema.org/BlogPosting">
+          <meta itemprop="author" content="Matt Hummel">
+
+          {{-- Latest badge --}}
+          <div class="h-journal__badge">
+            {!! \App\mh_svg_icon('pen', 13) !!} {{ __('Featured note', 'sage') }}
+          </div>
+
+          {{-- Thumbnail --}}
+          @if (! empty($fp['thumb']))
+            <a class="h-journal__featured-img-link" href="{{ esc_url($fp['url']) }}" tabindex="-1" aria-hidden="true">
+              <div class="h-journal__featured-img">
+                <img
+                  src="{{ esc_url($fp['thumb']) }}"
+                  alt="{{ esc_attr($fp['title']) }}{{ $fp['cat'] ? ' — ' . esc_attr($fp['cat']) . ' post' : '' }}"
+                  width="960" height="540"
+                  loading="lazy"
+                  decoding="async"
+                  itemprop="image"
+                >
+              </div>
+            </a>
+          @else
+            <a class="h-journal__featured-img-link" href="{{ esc_url($fp['url']) }}" tabindex="-1" aria-hidden="true">
+              <div class="h-journal__featured-img h-journal__featured-img--text">
+                <span>{{ wp_trim_words($fp['title'], 6, '') }}</span>
+              </div>
+            </a>
+          @endif
+
+          {{-- Content --}}
+          <div class="h-journal__featured-body">
+            <div class="h-journal__featured-meta">
+              @if ($fp['cat'])
+                <a class="h-journal__cat" href="{{ esc_url($fp['cat_url'] ?? $writing) }}" itemprop="articleSection">
+                  {{ $fp['cat'] }}
+                </a>
+              @endif
+              <time class="h-journal__date" datetime="{{ esc_attr($fp['date_iso'] ?? '') }}" itemprop="datePublished">
+                {{ $fp['date'] }}
+              </time>
+              @if (! empty($fp['minutes']))
+                <span class="h-journal__min">
+                  {!! \App\mh_svg_icon('book-open', 13) !!}
+                  {{ $fp['minutes'] }} min read
+                </span>
+              @endif
+            </div>
+
+            <h3 class="h-journal__featured-title" itemprop="headline">
+              <a href="{{ esc_url($fp['url']) }}">{{ $fp['title'] }}</a>
+            </h3>
+
+            <p class="h-journal__featured-ex" itemprop="description">{{ $fp['ex'] }}</p>
+
+            <a class="h-journal__read-link" href="{{ esc_url($fp['url']) }}">
+              Read "{{ $fp['title'] }}" <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+        @endif
+
+        {{-- Post stack ─ right column ─ digest list --}}
+        @if (! empty($journalStack))
+        <div class="h-journal__stack">
+          <p class="h-journal__stack-label">More recent posts</p>
+
+          @foreach ($journalStack as $post)
+            <article class="h-journal__post{{ ! empty($post['deemphasize']) ? ' h-journal__post--quiet' : '' }}" itemscope itemtype="https://schema.org/BlogPosting">
+              <meta itemprop="author" content="Matt Hummel">
+
+              {{-- Small thumb --}}
+              @if (! empty($post['thumb']))
+                <a class="h-journal__post-thumb" href="{{ esc_url($post['url']) }}" tabindex="-1" aria-hidden="true">
+                  <img
+                    src="{{ esc_url($post['thumb']) }}"
+                    alt="{{ esc_attr($post['title']) }}"
+                    width="120" height="80"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                </a>
+              @else
+                <div class="h-journal__post-thumb h-journal__post-thumb--text" aria-hidden="true">
+                  {!! \App\mh_svg_icon('pen', 18) !!}
+                </div>
+              @endif
+
+              {{-- Post info --}}
+              <div class="h-journal__post-body">
+                @if (! empty($post['deemphasize']))
+                  <p class="h-journal__quiet-label">{{ __('Same-day notes', 'sage') }}</p>
+                @endif
+                @if ($post['cat'])
+                  <a class="h-journal__cat h-journal__cat--sm" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">
+                    {{ $post['cat'] }}
+                  </a>
+                @endif
+                <h3 class="h-journal__post-title" itemprop="headline">
+                  <a href="{{ esc_url($post['url']) }}">{{ $post['title'] }}</a>
+                </h3>
+                <div class="h-journal__post-meta">
+                  <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" itemprop="datePublished">{{ $post['date'] }}</time>
+                  @if (! empty($post['minutes']))
+                    <span>· {{ $post['minutes'] }} min</span>
+                  @endif
+                </div>
+              </div>
+
+            </article>
+          @endforeach
+
+          {{-- Stack footer --}}
+          <div class="h-journal__stack-footer">
+            <a class="h-text-arrow" href="{{ $writing }}">Browse all posts →</a>
+            <a class="h-journal__rss h-journal__rss--sm" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
+              {!! \App\mh_svg_icon('rss', 13) !!} RSS
+            </a>
+          </div>
+        </div>
+        @endif
+
+      </div>
+
+    @else
+      <p class="h-journal__empty">{{ \App\field('home_write_empty', __('New posts coming soon.', 'sage')) }}</p>
+    @endif
+
+  </div>
+</section>
+
+{{-- ═══════════════════════════════════════════════════
+     09 — FAQ
+     ═══════════════════════════════════════════════════ --}}
+<section class="h-faq h-band" id="faq" aria-labelledby="h-faq-heading">
+  <div class="container wide h-faq__inner">
+
+    <div class="h-faq__sidebar">
+      <p class="h-section-label">Questions</p>
+      <h2 id="h-faq-heading" class="h-section__title">Frequently asked.</h2>
+      <p class="h-faq__blurb">Real questions from real conversations. If yours isn't here, <a href="{{ home_url('/contact/') }}">just ask</a>.</p>
+      <p class="h-faq__hire-note">{{ __('Open for full-time, contract, freelance, and agency overflow. Write through the contact form.', 'sage') }}</p>
+    </div>
+
+    <div class="h-faq__list">
+      @foreach ($faqItems as $i => $faq)
+        <details class="h-faq__item" @if($i === 0) open @endif>
+          <summary class="h-faq__q">{{ $faq['q'] }}</summary>
+          <p class="h-faq__a">{{ $faq['a'] }}</p>
+        </details>
+      @endforeach
+    </div>
+
+  </div>
+</section>
+
+{{-- ═══════════════════════════════════════════════════
+     10 — CTA
      ═══════════════════════════════════════════════════ --}}
 {{-- Back to top --}}
 <div class="h-back-top-row">
