@@ -9,16 +9,8 @@
   $title = (string) ($p['title'] ?? '');
   $conceptUrl = (string) ($p['url'] ?? \App\mh_concept_page_url($slug, isset($p['post_id']) ? (int) $p['post_id'] : null));
   $demo = (string) ($p['demo'] ?? '');
-  $shareUrl = \App\mh_work_permalink($slug, $pageUrl ?? null);
-  $helpUrl = (string) ($p['help_url'] ?? (function_exists('\\App\\mh_work_help_url') ? \App\mh_work_help_url($p) : \App\mh_work_contact_url($p)));
-  $buyUrl = (string) ($p['buy_url'] ?? '');
-  $buyLabel = (string) ($p['buy_label'] ?? \App\field('work_cta_buy', __('Buy theme', 'sage')));
-  $priceLabel = (string) ($p['price_label'] ?? '');
   $featured = ! empty($featured);
   $ghost = $featured ? 'btn btn-ghost' : 'btn btn-outline';
-  $shareKind = (($p['product_type'] ?? '') === 'plugin')
-    ? __('Plugin: %s', 'sage')
-    : __('Theme: %s', 'sage');
   $haystack = strtolower(trim(implode(' ', array_filter([
     $title,
     $p['cat'] ?? '',
@@ -46,10 +38,6 @@
     @endif
     <p class="pf-meta">
       {{ $p['cat'] }} · {{ $p['place'] }}
-      @if ($priceLabel !== '')
-        <span aria-hidden="true"> · </span>
-        <span class="work-card-price">{{ $priceLabel }}</span>
-      @endif
     </p>
     <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
     <p>{{ $p['blurb'] }}</p>
@@ -64,40 +52,11 @@
       <a class="btn" href="{{ esc_url($conceptUrl) }}">
         {{ \App\field('work_cta_view', __('View details', 'sage')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
       </a>
-      <a class="{{ $ghost }}" href="{{ esc_url($helpUrl) }}">
-        {!! \App\mh_svg_icon('mail', 14) !!}
-        {{ \App\field('work_cta_help', __('Get help', 'sage')) }}
-        <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
-      </a>
-      @if ($buyUrl !== '')
-        <a class="{{ $ghost }}" href="{{ esc_url($buyUrl) }}">
-          {!! \App\mh_svg_icon('cart', 14) !!}
-          {{ $buyLabel }}
-          <span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
-        </a>
-      @endif
       @if ($demo !== '')
         <a class="{{ $ghost }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
           {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
         </a>
       @endif
-      <button
-        type="button"
-        class="{{ $ghost }}"
-        data-share-project
-        data-share-url="{{ esc_url($shareUrl) }}"
-        data-share-title="{{ esc_attr($title) }}"
-        data-share-text="{{ esc_attr(sprintf($shareKind, $title)) }}"
-      >
-        {{ __('Share', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' %s', 'sage'), $title) }}</span>
-      </button>
-      <button
-        type="button"
-        class="write-tool-link"
-        data-copy-url="{{ esc_url($shareUrl) }}"
-      >
-        {{ __('Copy link', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' to %s', 'sage'), $title) }}</span>
-      </button>
     </div>
   </div>
 </article>

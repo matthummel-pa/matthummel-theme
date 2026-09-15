@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.28 — Products become Projects
+
+- Theme, plugin, and app catalog items migrate into the Projects custom post type. Listing and singles live at `/projects/` and `/projects/{slug}/`.
+- Standard portfolio copy: first-person, demos and stack notes, Hire me / Say hello. No public shop, prices, or buy CTAs.
+- Service add-ons stay out of the Projects list. WooCommerce remains installed; `/shop/` and linked `/product/` URLs redirect to Projects.
+- `mh_products_synced_to_projects_v1` imports Acreline, WalkRidge, and TOCflow once. Studio demo sites are not re-imported.
+
 ## 3.5.27 — Portfolio homepage restored
 
 - Home is the developer portfolio again (name, hire CTA, work preview). Not a theme-sales landing.

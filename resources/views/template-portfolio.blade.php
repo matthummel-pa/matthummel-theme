@@ -17,23 +17,7 @@
   $ghUrl        = 'https://github.com/'.$ghLogin;
   $ghStars      = \App\mh_github_star_total();
 
-  // Products for the mini-showcase strip.
-  $portfolioProducts = [];
-  if (\App\mh_shop_ready() && function_exists('wc_get_products')) {
-    $pids = wc_get_products(['limit' => 3, 'status' => 'publish', 'return' => 'ids']);
-    foreach ($pids as $pid) {
-      $payload = \App\mh_shop_product_payload((int) $pid);
-      if (! $payload) {
-        continue;
-      }
-      $entry = \App\mh_product_entry((int) $pid);
-      $portfolioProducts[] = array_merge($entry, [
-        'price_html' => $payload['price_html'],
-        'permalink'  => $payload['permalink'],
-        'is_free'    => $payload['is_free'],
-      ]);
-    }
-  }
+  $portfolioConcepts = array_slice(\App\mh_work_page_items(), 0, 3);
 @endphp
 
 {{-- HERO --}}
@@ -46,8 +30,8 @@
     {{ \App\field('portfolio_lede', __('Public repos — WordPress themes, plugins, and web apps you can fork, study, or hire from. Stack depth lives in the code and on About.', 'sage'), $postId) }}
   </p>
   <div class="page-header-split__actions">
-    <a class="btn" href="{{ home_url('/shop/') }}">
-      {!! \App\mh_svg_icon('briefcase', 16) !!} {{ __('Browse products', 'sage') }}
+    <a class="btn" href="{{ home_url('/contact/') }}">
+      {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
     </a>
     <a class="h-text-arrow" href="{{ esc_url($ghUrl) }}" target="_blank" rel="noopener">
       {{ __('GitHub profile', 'sage') }} <span aria-hidden="true">→</span>
@@ -83,23 +67,22 @@
   </div>
 </section>
 
-{{-- PRODUCTS FOR SALE --}}
-@if ($portfolioProducts !== [])
-  <section class="pf-section pf-section--alt portfolio-products" aria-labelledby="portfolio-products-heading">
+@if ($portfolioConcepts !== [])
+  <section class="pf-section pf-section--alt portfolio-products" aria-labelledby="portfolio-concepts-heading">
     <div class="container wide page-block">
-      <p class="eyebrow">{{ __('For sale', 'sage') }}</p>
-      <h2 id="portfolio-products-heading" class="display-title is-section">
+      <p class="eyebrow">{{ __('Concepts', 'sage') }}</p>
+      <h2 id="portfolio-concepts-heading" class="display-title is-section">
         {{ \App\field('portfolio_products_h2', __('Themes and plugins built from these repos.', 'sage'), $postId) }}
       </h2>
       <p class="lead" style="margin-bottom:2rem">
-        {{ \App\field('portfolio_products_intro', __('The public repos are the codebase behind these products. Buy a pack and get the finished theme or plugin — no setup from scratch required.', 'sage'), $postId) }}
+        {{ \App\field('portfolio_products_intro', __('Studio concepts that show how I build. Hire me to adapt one for a shop, agency, or role.', 'sage'), $postId) }}
       </p>
       <div class="portfolio-product-grid">
-        @foreach ($portfolioProducts as $p)
+        @foreach ($portfolioConcepts as $p)
           @php
-            $pName  = (string) ($p['name'] ?? $p['title'] ?? '');
-            $pBlurb = (string) ($p['blurb'] ?? $p['summary'] ?? '');
-            $pLink  = (string) ($p['permalink'] ?? '');
+            $pName  = (string) ($p['title'] ?? '');
+            $pBlurb = (string) ($p['blurb'] ?? '');
+            $pLink  = (string) ($p['url'] ?? '');
             $pTech  = (array)  ($p['tech'] ?? []);
           @endphp
           @if ($pName !== '' && $pLink !== '')
@@ -114,17 +97,14 @@
                 @endif
               </div>
               <div class="portfolio-product-card__foot">
-                @if (! ($p['is_free'] ?? false))
-                  <span class="portfolio-product-card__price">{!! $p['price_html'] !!}</span>
-                @endif
-                <a class="btn btn--sm" href="{{ esc_url($pLink) }}">{{ __('View product', 'sage') }}</a>
+                <a class="btn btn--sm" href="{{ esc_url($pLink) }}">{{ __('View concept', 'sage') }}</a>
               </div>
             </article>
           @endif
         @endforeach
       </div>
       <p style="margin-top:1.5rem">
-        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }} <span aria-hidden="true">→</span></a>
+        <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('See all work', 'sage') }} <span aria-hidden="true">→</span></a>
       </p>
     </div>
   </section>
@@ -241,11 +221,10 @@
 {{-- CTA --}}
 @include('partials.cta-band', [
   'kicker'        => __('Work together', 'sage'),
-  'title'         => \App\field('portfolio_cta_h2', __('Buy a theme, fork a repo, or say hello.', 'sage'), $postId),
-  'text'          => \App\field('portfolio_cta_lede', __('Browse the shop for ready-to-buy WordPress themes and plugins. Fork any repo on GitHub, or write if you want to work together.', 'sage'), $postId),
-  'label'         => \App\field('portfolio_cta_btn', __('Browse products', 'sage'), $postId),
-  'href'          => home_url('/shop/'),
-  'secondary'     => __('Say hello', 'sage'),
-  'secondaryHref' => home_url('/contact/'),
+  'title'         => \App\field('portfolio_cta_h2', __('Fork a repo, or say hello.', 'sage'), $postId),
+  'text'          => \App\field('portfolio_cta_lede', __('Fork any repo on GitHub, or write if you want to work together.', 'sage'), $postId),
+  'label'         => \App\field('portfolio_cta_btn', __('Say hello', 'sage'), $postId),
+  'href'          => home_url('/contact/'),
+  'secondary'     => '',
 ])
 @endsection

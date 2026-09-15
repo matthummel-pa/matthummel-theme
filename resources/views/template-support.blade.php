@@ -6,7 +6,6 @@
 
 @php
   $products = \App\mh_support_hub_products();
-  $hireUrl = home_url('/hire/');
   $contactUrl = home_url('/contact/');
 @endphp
 
@@ -15,11 +14,11 @@
 @component('partials.page-hero', ['extra' => 'page-header--support', 'split' => true, 'asideLabel' => __('Docs snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('support_kicker', __('Support', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('support_h1', __('Theme & plugin documentation.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('support_lede', __('HTML guides for products I sell — the same Documentation hub that ships in the ThemeForest-style pack. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('support_lede', __('HTML guides for the themes and plugins I publish. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ esc_url($contactUrl) }}">{{ \App\field('support_contact_label', __('Say hello', 'sage')) }}</a>
-    <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
-      {{ __('Browse products', 'sage') }} <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">
+      {{ __('See the work', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -48,7 +47,7 @@
     <h2 id="support-intro-heading" class="display-title is-section">
       {{ \App\field('support_intro_h2', __('How this works.', 'sage')) }}
     </h2>
-    <p class="lead work-guide__intro">{{ \App\field('support_intro_p', __('Each product links to viewable HTML docs (install, Customizer, FAQ, support) hosted from the product repo. Pack buyers also get the same files offline under Documentation/. Contact me for paid install or customization.', 'sage')) }}</p>
+    <p class="lead work-guide__intro">{{ \App\field('support_intro_p', __('Each concept links to viewable HTML docs (install, Customizer, FAQ) hosted from the repo. Contact me if you want one installed or customized.', 'sage')) }}</p>
   </div>
 </section>
 
@@ -75,7 +74,7 @@
                 {{ __('Open HTML docs', 'sage') }} <span aria-hidden="true">↗</span>
               </a>
             @endif
-            <a class="btn btn-outline" href="{{ esc_url($product['project_url']) }}">{{ __('Product page', 'sage') }}</a>
+            <a class="btn btn-outline" href="{{ esc_url($product['project_url']) }}">{{ __('Concept page', 'sage') }}</a>
             @if ($product['demo'] !== '')
               <a class="h-text-arrow" href="{{ esc_url($product['demo']) }}" rel="noopener" target="_blank">
                 {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
@@ -122,15 +121,14 @@
         </p>
       </section>
     @empty
-      <p class="lead">{{ __('Product documentation will appear here when sellable themes or plugins are listed in the catalog.', 'sage') }}</p>
+      <p class="lead">{{ __('Documentation will appear here when themes or plugins are listed.', 'sage') }}</p>
     @endforelse
 
     <aside class="support-help" aria-labelledby="support-help-heading">
       <h2 id="support-help-heading" class="display-title is-section">{{ __('Need a hand beyond the docs?', 'sage') }}</h2>
-      <p class="lead">{{ __('Paid install, branding, or inventory import is available. Bug reports with WordPress version, PHP version, and theme version belong on GitHub.', 'sage') }}</p>
+      <p class="lead">{{ __('Need install, branding, or a custom build? Write. Bug reports with WordPress version, PHP version, and theme version belong on GitHub.', 'sage') }}</p>
       <div class="support-help__actions">
-        <a class="btn" href="{{ esc_url($hireUrl) }}">{{ __('Hire me', 'sage') }}</a>
-        <a class="btn btn-outline" href="{{ esc_url($contactUrl) }}">{{ __('Contact', 'sage') }}</a>
+        <a class="btn" href="{{ esc_url($contactUrl) }}">{{ __('Say hello', 'sage') }}</a>
       </div>
     </aside>
   </div>

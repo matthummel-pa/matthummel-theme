@@ -54,7 +54,7 @@
     '@context'        => 'https://schema.org',
     '@type'           => 'CollectionPage',
     'name'            => __('WordPress Themes, Plugins & Web Apps', 'sage'),
-    'description'     => __('Ready-to-buy WordPress themes, plugins, and web apps. Live demos, instant download, GPL license.', 'sage'),
+    'description'     => __('Studio WordPress concepts — themes, plugins, and web apps with live demos. Hire me to adapt one.', 'sage'),
     'url'             => $shopUrl,
     'hasPart'         => $listItems,
   ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
@@ -65,7 +65,7 @@
   if ($isShop) {
     $crumbItems[] = ['label' => $archiveTitle, 'current' => true];
   } else {
-    $crumbItems[] = ['label' => __('Shop', 'sage'), 'url' => $shopUrl];
+    $crumbItems[] = ['label' => __('Work', 'sage'), 'url' => $shopUrl];
     $crumbItems[] = ['label' => $archiveTitle, 'current' => true];
   }
 
@@ -88,63 +88,42 @@
 {{-- HERO --}}
 @component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
   @include('partials.woocommerce-crumb', ['items' => $crumbItems])
-  <p class="eyebrow">{{ \App\field('work_kicker', __('Digital products', 'sage'), $shopPostId) }}</p>
+  <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage'), $shopPostId) }}</p>
   @if (apply_filters('woocommerce_show_page_title', true))
     <h1 class="display-title is-hero woocommerce-products-header__title">
-      {{ \App\field('work_h1', __('WordPress themes, plugins, and web apps.', 'sage'), $shopPostId) }}
+      {{ \App\field('work_h1', __('Concept sites I can build from.', 'sage'), $shopPostId) }}
     </h1>
   @endif
   <p class="lead">
-    {{ \App\field('work_lede', __('Ready-to-buy WordPress themes, plugins, and web apps. Live demos, instant download, GPL license. Buy a pack from the shop, or hire me to adapt one for your business.', 'sage'), $shopPostId) }}
+    {{ \App\field('work_lede', __('WordPress themes, plugins, and web apps I built as studio concepts. Live demos and stack notes. Hire me to adapt one for a shop, agency, or full-time role.', 'sage'), $shopPostId) }}
   </p>
   <div class="page-header-split__actions">
-    <a class="btn" href="#shop-products">
-      {!! \App\mh_svg_icon('briefcase', 16) !!} {{ \App\field('work_hero_cta_primary', __('Browse products', 'sage'), $shopPostId) }}
+    <a class="btn" href="{{ home_url('/contact/') }}">
+      {!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', __('Say hello', 'sage'), $shopPostId) }}
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/contact/') }}">
-      {{ __('Say hello', 'sage') }} <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="#shop-products">
+      {{ __('Browse concepts', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
     @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/shop',
+      'chrome' => 'matthummel.com/projects',
       'icon'   => 'briefcase',
-      'title'  => __('Digital products', 'sage'),
-      'meta'   => __('Demos, packs, checkout', 'sage'),
+      'title'  => __('Studio concepts', 'sage'),
+      'meta'   => __('Demos · stack · hire', 'sage'),
       'stats'  => [
-        ['value' => number_format_i18n($productCount), 'label' => __('Listed products', 'sage')],
-        ['value' => number_format_i18n($forSaleCount), 'label' => __('Ready to buy', 'sage')],
-        ['value' => 'GPL',       'label' => __('Open license', 'sage')],
-        ['value' => 'Instant',   'label' => __('Download &amp; install', 'sage')],
+        ['value' => number_format_i18n($productCount), 'label' => __('Concepts', 'sage')],
+        ['value' => number_format_i18n($themeCount), 'label' => __('Themes', 'sage')],
+        ['value' => number_format_i18n($pluginCount), 'label' => __('Plugins', 'sage')],
+        ['value' => 'GitHub', 'label' => __('Source public', 'sage')],
       ],
       'link' => [
-        'label' => __('Browse GitHub portfolio', 'sage'),
-        'href'  => home_url('/portfolio/'),
+        'label' => __('Browse GitHub', 'sage'),
+        'href'  => home_url('/code/'),
       ],
     ])
   @endslot
 @endcomponent
-
-{{-- TRUST STRIP --}}
-<div class="shop-trust-strip" aria-label="{{ __('Why buy direct', 'sage') }}">
-  <div class="container wide shop-trust-strip__inner">
-    <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('check', 14) !!} {{ __('GPL license — you own the code', 'sage') }}
-    </span>
-    <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('download', 14) !!} {{ __('Instant digital download', 'sage') }}
-    </span>
-    <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('github', 14) !!} {{ __('Full source on GitHub', 'sage') }}
-    </span>
-    <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Custom builds available', 'sage') }}
-    </span>
-    <span class="shop-trust-item">
-      {!! \App\mh_svg_icon('code', 14) !!} {{ __('Modern WordPress stack', 'sage') }}
-    </span>
-  </div>
-</div>
 
 {{-- PRODUCT LOOP — appears first so buyers reach products immediately --}}
 <div id="shop-products" class="container wide woo-catalog-shell page-block" data-work-hub>
@@ -212,7 +191,7 @@
           id="catalog-filter-live"
           role="status"
           aria-live="polite"
-        >{{ sprintf(_n('%d product', '%d products', $filterAll, 'sage'), $filterAll) }}</span>
+        >{{ sprintf(_n('%d concept', '%d concepts', $filterAll, 'sage'), $filterAll) }}</span>
         @php
           // Render WooCommerce's built-in ordering select in our toolbar slot.
           do_action('woocommerce_catalog_ordering');
@@ -244,10 +223,10 @@
     <div class="woo-empty work-empty" role="status">
       <div class="work-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
       <h2 class="work-empty__title">
-        {{ \App\field('work_empty_h2', __('Themes and plugins are on the way.', 'sage'), $shopPostId) }}
+        {{ \App\field('work_empty_h2', __('Concepts are on the way.', 'sage'), $shopPostId) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I am listing the first packs for sale here. Write and tell me what kind of shop you run, or what plugin you need.', 'sage'), $shopPostId) }}
+        {{ \App\field('work_empty_text', __('I am publishing the first studio concepts here. Write and tell me what kind of shop you run, or what you need built.', 'sage'), $shopPostId) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
@@ -262,7 +241,7 @@
   @endphp
 
   <div class="work-footer-links">
-    {!! \App\field_html('work_foot', __('Full GitHub portfolio: <a href="/portfolio/">repos and open-source code</a>. Live demos open from each product page when available.', 'sage'), $shopPostId) !!}
+    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live demos open from each concept when available.', 'sage'), $shopPostId) !!}
   </div>
 </div>
 
@@ -270,11 +249,11 @@
 <section class="pf-section work-guide" aria-labelledby="shop-context-heading">
   <div class="container wide">
     <h2 id="shop-context-heading" class="display-title is-section">
-      {{ \App\field('work_context_h2', __('What you can buy or hire me to build.', 'sage'), $shopPostId) }}
+      {{ \App\field('work_context_h2', __('What these concepts show.', 'sage'), $shopPostId) }}
     </h2>
     <div class="work-guide__prose">
-      <p>{{ \App\field('work_context_p1', __('Each product ships as a full theme or plugin pack — screenshots, a detailed tech summary, pricing, and a live demo when one exists. Buy the pack for an instant download and self-serve install, or hire me to adapt it for your business.', 'sage'), $shopPostId) }}</p>
-      {!! \App\field_html('work_context_p2', __('These are studio builds, not agency client sites. Every product ships GPL-licensed so you own the code outright. If nothing here fits exactly, <a href="/contact/">write and tell me what you need</a>. I build custom from a brief.', 'sage'), $shopPostId) !!}
+      <p>{{ \App\field('work_context_p1', __('Each card is a studio concept — screenshots, stack notes, and a live demo when one exists. Hire me to adapt one for a shop, agency overflow, or a full-time role.', 'sage'), $shopPostId) }}</p>
+      {!! \App\field_html('work_context_p2', __('These are studio builds, not client sites. Source is on GitHub. If nothing here fits exactly, <a href="/contact/">write and tell me what you need</a>.', 'sage'), $shopPostId) !!}
     </div>
   </div>
 </section>

@@ -164,8 +164,8 @@
           {!! \App\mh_svg_icon('mail', 17) !!}
           {{ \App\field('home_cta_primary', __('Hire me', 'sage')) }}
         </a>
-        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/shop/')) }}">
-          {{ \App\field('home_cta_secondary', __('Browse work', 'sage')) }}
+        <a class="h-text-arrow" href="{{ esc_url(\App\field_href('home_cta_secondary_url', '/projects/')) }}">
+          {{ \App\field('home_cta_secondary', __('Browse projects', 'sage')) }}
           <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -197,10 +197,10 @@
               <span class="h-hero-work__dot"></span>
               <span class="h-hero-work__dot"></span>
               <span class="h-hero-work__dot"></span>
-              <span class="h-hero-work__addr">matthummel.com/shop</span>
+              <span class="h-hero-work__addr">matthummel.com/projects</span>
             </div>
             <a class="h-hero-work__main-link"
-               href="{{ esc_url($fp['url'] ?? home_url('/shop/')) }}"
+               href="{{ esc_url($fp['url'] ?? \App\mh_work_listing_url()) }}"
                aria-label="{{ esc_attr(__('View ', 'sage') . ($fp['title'] ?? '') . __(' project', 'sage')) }}">
               @if (! empty($fp['image']))
                 <img
@@ -230,7 +230,7 @@
           <div class="h-hero-work__grid">
             @foreach ($miniWork as $pw)
               <a class="h-hero-work__mini"
-                 href="{{ esc_url($pw['url'] ?? home_url('/shop/')) }}"
+                 href="{{ esc_url($pw['url'] ?? \App\mh_work_listing_url()) }}"
                  aria-label="{{ esc_attr($pw['title'] ?? '') }}">
                 @if (! empty($pw['image']))
                   <img
@@ -719,15 +719,15 @@
       <div>
         <p class="h-section-label">Projects</p>
         <h2 id="h-work-heading" class="h-section__title">
-          {{ \App\field('home_work_h2', __('WordPress themes and plugins.', 'sage')) }}
+          {{ \App\field('home_work_h2', __('WordPress concepts.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">
         <span class="h-work-count">{{ $totalProjects }} projects</span>
-        <a class="h-text-arrow" href="{{ home_url('/shop/') }}">Browse all →</a>
+        <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">Browse all →</a>
       </div>
     </div>
 

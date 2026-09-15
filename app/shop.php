@@ -18,6 +18,22 @@ function mh_shop_ready(): bool
 }
 
 /**
+ * Whether the public storefront (cart, prices, buy CTAs) is shown.
+ *
+ * WooCommerce stays installed. Public listing is the Projects CPT.
+ */
+function mh_public_shop_enabled(): bool
+{
+    return false;
+}
+
+/** Public Projects listing URL. */
+function mh_work_listing_url(): string
+{
+    return home_url('/projects/');
+}
+
+/**
  * One-pass shop archive stats + CollectionPage list items.
  *
  * @return array{count: int, for_sale: int, theme: int, plugin: int, app: int, service: int, list_items: list<array<string, mixed>>}
@@ -171,11 +187,10 @@ function mh_product_project_id(int $product_id): int
 }
 
 /**
- * Public landing URL for a product — the linked Work concept page when available.
+ * Public landing URL for a product — the linked project page when available.
  */
 function mh_product_landing_url(int $product_id): string
 {
-    // Project CPT is retired — keep products on their WooCommerce URLs.
     if (! post_type_exists(mh_project_post_type())) {
         return '';
     }
@@ -213,7 +228,23 @@ function mh_filter_product_permalink(string $permalink, $product): string
 }
 
 /**
- * Send direct /product/{slug}/ visits to the linked Work concept page (one story URL).
+ * Send leftover /shop/ visits to Projects while the public storefront is off.
+ */
+function mh_redirect_shop_to_projects(): void
+{
+    if (mh_public_shop_enabled()) {
+        return;
+    }
+    if (! function_exists('is_shop') || ! is_shop()) {
+        return;
+    }
+
+    wp_safe_redirect(mh_work_listing_url(), 301);
+    exit;
+}
+
+/**
+ * Send direct /product/{slug}/ visits to the linked project page (one story URL).
  */
 function mh_redirect_product_to_project(): void
 {
@@ -599,15 +630,7 @@ function mh_cart_count(): int
 /** Catalog URL for empty-cart / return-to-shop links. */
 function mh_theme_catalog_url(): string
 {
-    // /shop/ is now the primary product listing. /projects/ 301-redirects there.
-    if (mh_shop_ready() && function_exists('wc_get_page_permalink')) {
-        $url = wc_get_page_permalink('shop');
-        if (is_string($url) && $url !== '') {
-            return $url;
-        }
-    }
-
-    return home_url('/shop/');
+    return mh_work_listing_url();
 }
 
 /**
@@ -687,12 +710,15 @@ function mh_wc_product_to_work_card(int $product_id): array
         }
     }
 
-    // Buy / price labels.
     $isFree = (float) $wc->get_price() <= 0.0;
-    $buyLabel = mh_product_buy_copy($product_id, $isFree);
-    $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
-
-    $buyUrl = mh_product_add_to_cart_url($product_id);
+    $buyLabel = '';
+    $priceLabel = '';
+    $buyUrl = '';
+    if (mh_public_shop_enabled()) {
+        $buyLabel = mh_product_buy_copy($product_id, $isFree);
+        $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
+        $buyUrl = mh_product_add_to_cart_url($product_id);
+    }
 
     $productLink = (string) get_permalink($product_id);
 
@@ -3419,8 +3445,20 @@ add_action('save_post_product', function (int $post_id): void {
 
 add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_catalog_url');
 add_filter('woocommerce_product_get_permalink', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_shop_to_projects', 4);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_product_to_project', 5);
 add_filter('loop_shop_columns', fn (): int => 3);
+
+add_action('wp', function (): void {
+    if (mh_public_shop_enabled()) {
+        return;
+    }
+
+    remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10);
+    remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
+    remove_action('woocommerce_after_shop_loop_item', __NAMESPACE__.'\\mh_woocommerce_loop_get_help', 15);
+    remove_action('woocommerce_after_add_to_cart_form', __NAMESPACE__.'\\mh_woocommerce_get_help_button');
+});
 
 /**
  * Output a short product blurb in the shop loop for UX and SEO.

@@ -275,7 +275,7 @@ function mh_recruiter_glance(): array
         'availability' => field('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
         'note' => field(
             'glance_note',
-            __('Most production work lived inside employers, so I am now publishing WordPress themes, plugins, and builds on GitHub. Stack details are on About.', 'sage')
+            __('Most production work lived inside employers, so I am now publishing WordPress concepts and builds on GitHub. Stack details are on About.', 'sage')
         ),
         'employers' => field_html(
             'glance_employers',
@@ -312,8 +312,10 @@ function mh_recruiter_glance(): array
                 'external' => false,
             ],
             [
-                'label' => __('Themes & plugins', 'sage'),
-                'href' => home_url('/projects/'),
+                'label' => __('Projects', 'sage'),
+                'href' => function_exists(__NAMESPACE__.'\\mh_work_listing_url')
+                    ? mh_work_listing_url()
+                    : home_url('/projects/'),
                 'icon' => 'globe',
                 'external' => false,
             ],
@@ -1498,7 +1500,7 @@ function mh_studio_project_categories(): array
     return $cats;
 }
 
-/** Custom post type slug for Work / example sites. */
+/** Custom post type slug for Projects. */
 function mh_project_post_type(): string
 {
     return 'project';
@@ -1509,22 +1511,28 @@ function mh_project_live_meta_key(): string
     return '_mh_project_live';
 }
 
-/** Whether a project is shown on the public Work page and home grid. */
+/** Whether a project is shown on the public Projects page and home grid. */
 function mh_project_is_live(int $post_id): bool
 {
     return get_post_meta($post_id, mh_project_live_meta_key(), true) === '1';
 }
 
-/**
- * Always returns false after the Project CPT was retired.
- *
- * Code that branched on this still compiles; it just never takes the CPT path.
- *
- * @deprecated 3.3.0 Project CPT removed in favour of WooCommerce products.
- */
+/** Whether published project posts exist for the public listing. */
 function mh_project_cpt_has_posts(): bool
 {
-    return false;
+    if (! post_type_exists(mh_project_post_type())) {
+        return false;
+    }
+
+    $found = get_posts([
+        'post_type' => mh_project_post_type(),
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    return $found !== [];
 }
 
 /**
@@ -1568,10 +1576,19 @@ function mh_project_post_to_card(\WP_Post $post): array
 
     $buyUrl = function_exists(__NAMESPACE__.'\\mh_project_buy_url') ? mh_project_buy_url($post_id) : '';
     $priceLabel = function_exists(__NAMESPACE__.'\\mh_project_price_label') ? mh_project_price_label($post_id) : '';
-    $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('Buy theme', 'sage');
+    $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('View details', 'sage');
+    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && ! mh_public_shop_enabled()) {
+        $buyUrl = '';
+        $priceLabel = '';
+        $buyLabel = '';
+    }
     $productType = function_exists(__NAMESPACE__.'\\mh_project_product_type')
         ? mh_project_product_type($post_id)
         : 'theme';
+    $github = (string) get_post_meta($post_id, '_mh_project_github', true);
+    if ($github === '') {
+        $github = (string) get_post_meta($post_id, '_mh_project_concept', true);
+    }
     $card = [
         'slug' => $post->post_name,
         'title' => wp_specialchars_decode((string) $post->post_title, ENT_QUOTES),
@@ -1579,7 +1596,8 @@ function mh_project_post_to_card(\WP_Post $post): array
         'place' => (string) get_post_meta($post_id, '_mh_project_place', true),
         'blurb' => (string) get_post_meta($post_id, '_mh_project_blurb', true),
         'tech' => $tech,
-        'concept' => (string) get_post_meta($post_id, '_mh_project_concept', true),
+        'concept' => $github,
+        'github' => $github,
         'demo' => mh_project_demo_url($post_id),
         'url' => mh_concept_page_url($post->post_name, $post_id),
         'image' => mh_project_card_image_url($post_id),
@@ -1750,17 +1768,335 @@ function mh_import_studio_projects_to_cpt(): void
     update_option('mh_projects_cpt_seeded_v1', true);
 }
 
-/**
- * CPT registration removed in 3.3.0 — WooCommerce products are now the
- * primary product/project listing surface. The function is kept as a no-op
- * so any lingering `add_action('init', 'mh_register_project_post_type')` calls
- * in cached hooks do not fatal.
- *
- * @deprecated 3.3.0
- */
 function mh_register_project_post_type(): void
 {
-    // No-op: CPT retired. Products live in WooCommerce.
+    register_post_type(mh_project_post_type(), [
+        'labels' => [
+            'name' => __('Projects', 'sage'),
+            'singular_name' => __('Project', 'sage'),
+            'add_new' => __('Add project', 'sage'),
+            'add_new_item' => __('Add project', 'sage'),
+            'edit_item' => __('Edit project', 'sage'),
+            'new_item' => __('New project', 'sage'),
+            'view_item' => __('View project', 'sage'),
+            'search_items' => __('Search projects', 'sage'),
+            'not_found' => __('No projects found.', 'sage'),
+            'not_found_in_trash' => __('No projects found in Trash.', 'sage'),
+            'all_items' => __('Projects', 'sage'),
+            'menu_name' => __('Projects', 'sage'),
+        ],
+        'public' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'show_in_nav_menus' => false,
+        'menu_icon' => 'dashicons-portfolio',
+        'menu_position' => 26,
+        'capability_type' => 'post',
+        'map_meta_cap' => true,
+        'hierarchical' => false,
+        'supports' => ['title', 'thumbnail', 'page-attributes'],
+        'has_archive' => false,
+        'rewrite' => [
+            'slug' => function_exists(__NAMESPACE__.'\\mh_concept_rewrite_slug')
+                ? mh_concept_rewrite_slug()
+                : 'projects',
+            'with_front' => false,
+        ],
+        'query_var' => true,
+        'show_in_rest' => false,
+    ]);
+}
+
+/**
+ * Line-broken project meta (deliverables, benefits).
+ *
+ * @return list<string>
+ */
+function mh_project_meta_lines(int $post_id, string $key): array
+{
+    $raw = trim((string) get_post_meta($post_id, $key, true));
+    if ($raw === '') {
+        return [];
+    }
+
+    $lines = preg_split('/\r\n|\r|\n/', $raw) ?: [];
+
+    return array_values(array_filter(array_map('trim', $lines), fn ($line) => $line !== ''));
+}
+
+/**
+ * Encode catalog FAQ rows as Question|||Answer lines.
+ *
+ * @param  mixed  $faq
+ */
+function mh_project_faq_to_meta($faq): string
+{
+    if (! is_array($faq)) {
+        return is_string($faq) ? trim($faq) : '';
+    }
+
+    $lines = [];
+    foreach ($faq as $row) {
+        if (is_string($row) && str_contains($row, '|||')) {
+            $lines[] = trim($row);
+
+            continue;
+        }
+        if (! is_array($row)) {
+            continue;
+        }
+        $question = trim((string) ($row['title'] ?? $row[0] ?? ''));
+        $answer = trim((string) ($row['text'] ?? $row[1] ?? ''));
+        if ($question === '' || $answer === '') {
+            continue;
+        }
+        $lines[] = $question.'|||'.$answer;
+    }
+
+    return implode("\n", $lines);
+}
+
+/**
+ * Create or update a project post from a catalog (or Woo-mapped) entry.
+ *
+ * Skips service add-ons. Used to convert sold themes/plugins into portfolio projects.
+ */
+function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $product_id = 0, int $menu_order = 0): int
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return 0;
+    }
+
+    $type = sanitize_key((string) ($entry['product_type'] ?? 'theme'));
+    if ($type === 'service') {
+        return 0;
+    }
+    if (! in_array($type, ['theme', 'plugin', 'app', 'concept'], true)) {
+        $type = 'theme';
+    }
+
+    $existing = get_posts([
+        'post_type' => mh_project_post_type(),
+        'name' => $slug,
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    $title = (string) ($entry['title'] ?? $slug);
+    if ($product_id > 0 && function_exists('wc_get_product')) {
+        $product = wc_get_product($product_id);
+        if ($product instanceof \WC_Product && $product->get_name() !== '') {
+            $title = wp_specialchars_decode((string) $product->get_name(), ENT_QUOTES);
+        }
+    }
+
+    $postarr = [
+        'post_type' => mh_project_post_type(),
+        'post_status' => 'publish',
+        'post_title' => $title,
+        'post_name' => $slug,
+        'menu_order' => $menu_order,
+    ];
+
+    if ($existing !== []) {
+        $postarr['ID'] = (int) $existing[0];
+        $post_id = wp_update_post($postarr, true);
+    } else {
+        $post_id = wp_insert_post($postarr, true);
+    }
+
+    if (is_wp_error($post_id) || ! $post_id) {
+        return 0;
+    }
+
+    $post_id = (int) $post_id;
+    $tech = $entry['tech'] ?? [];
+    $techStr = is_array($tech) ? implode(', ', array_map('strval', $tech)) : (string) $tech;
+    $github = (string) ($entry['github'] ?? $entry['concept'] ?? '');
+    $deliverables = $entry['deliverables'] ?? '';
+    if (is_array($deliverables)) {
+        $deliverables = implode("\n", array_map('strval', $deliverables));
+    }
+    $benefits = $entry['benefits'] ?? '';
+    if (is_array($benefits)) {
+        $benefits = implode("\n", array_map('strval', $benefits));
+    }
+
+    $meta = [
+        '_mh_project_cat' => (string) ($entry['cat'] ?? ''),
+        '_mh_project_place' => (string) ($entry['place'] ?? ''),
+        '_mh_project_blurb' => (string) ($entry['blurb'] ?? ''),
+        '_mh_project_tech' => $techStr,
+        '_mh_project_concept' => $github,
+        '_mh_project_github' => $github,
+        '_mh_project_demo' => (string) ($entry['demo'] ?? ''),
+        '_mh_project_eyebrow' => (string) ($entry['eyebrow'] ?? ''),
+        '_mh_project_summary' => (string) ($entry['summary'] ?? ''),
+        '_mh_project_challenge' => (string) ($entry['challenge'] ?? ''),
+        '_mh_project_approach' => (string) ($entry['approach'] ?? ''),
+        '_mh_project_result' => (string) ($entry['result'] ?? ''),
+        '_mh_project_audience' => (string) ($entry['audience'] ?? ''),
+        '_mh_project_architecture' => (string) ($entry['architecture'] ?? ''),
+        '_mh_project_handoff' => (string) ($entry['handoff'] ?? ''),
+        '_mh_project_deliverables' => (string) $deliverables,
+        '_mh_project_benefits' => (string) $benefits,
+        '_mh_project_faq' => mh_project_faq_to_meta($entry['faq'] ?? []),
+        '_mh_project_image' => (string) ($entry['image'] ?? ''),
+        '_mh_project_product_type' => $type,
+        '_mh_project_source' => 'product-catalog',
+        mh_project_live_meta_key() => '1',
+    ];
+
+    if ($product_id > 0) {
+        $meta['_mh_project_product_id'] = (string) $product_id;
+    }
+
+    $metrics = is_array($entry['metrics'] ?? null) ? $entry['metrics'] : [];
+    for ($i = 1; $i <= 3; $i++) {
+        $row = is_array($metrics[$i - 1] ?? null) ? $metrics[$i - 1] : [];
+        $meta["_mh_project_m{$i}_value"] = (string) ($row[0] ?? $row['value'] ?? '');
+        $meta["_mh_project_m{$i}_label"] = (string) ($row[1] ?? $row['label'] ?? '');
+    }
+
+    foreach ($meta as $key => $value) {
+        update_post_meta($post_id, $key, $value);
+    }
+
+    if ($product_id > 0) {
+        update_post_meta($product_id, '_mh_product_project_id', $post_id);
+        if (has_post_thumbnail($product_id) && ! has_post_thumbnail($post_id)) {
+            $thumb = (int) get_post_thumbnail_id($product_id);
+            if ($thumb > 0) {
+                set_post_thumbnail($post_id, $thumb);
+            }
+        }
+    }
+
+    return $post_id;
+}
+
+/** Keep the /projects/ page on the Projects template and titled Projects. */
+function mh_ensure_projects_listing_page(): void
+{
+    $page = get_page_by_path('projects');
+    if (! $page instanceof \WP_Post) {
+        $id = wp_insert_post([
+            'post_title' => 'Projects',
+            'post_name' => 'projects',
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_content' => '',
+        ], true);
+        if (is_wp_error($id) || ! $id) {
+            return;
+        }
+        $page = get_post((int) $id);
+    }
+    if (! $page instanceof \WP_Post) {
+        return;
+    }
+
+    update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
+
+    if (in_array($page->post_title, ['Work', 'Shop', 'Themes & plugins', 'Themes and plugins'], true)) {
+        wp_update_post([
+            'ID' => $page->ID,
+            'post_title' => 'Projects',
+        ]);
+    }
+
+    $locations = get_theme_mod('nav_menu_locations', []);
+    $menuId = (int) ($locations['primary_navigation'] ?? 0);
+    if ($menuId < 1) {
+        return;
+    }
+
+    $items = wp_get_nav_menu_items($menuId);
+    if (! is_array($items)) {
+        return;
+    }
+
+    foreach ($items as $item) {
+        if ((int) $item->object_id !== (int) $page->ID) {
+            continue;
+        }
+        if (! in_array((string) $item->title, ['Work', 'Shop', 'Themes & plugins'], true)) {
+            continue;
+        }
+        wp_update_post([
+            'ID' => (int) $item->ID,
+            'post_title' => 'Projects',
+        ]);
+    }
+}
+
+/**
+ * One-shot: convert theme/plugin/app products into live project posts.
+ *
+ * WooCommerce stays installed. Service add-ons are skipped. Studio demo
+ * imports stay off unless Matt asks.
+ */
+function mh_sync_products_to_project_cpt(): void
+{
+    if (get_option('mh_products_synced_to_projects_v1') || wp_installing()) {
+        return;
+    }
+    if (! post_type_exists(mh_project_post_type())) {
+        return;
+    }
+
+    $order = 0;
+    $catalog = function_exists(__NAMESPACE__.'\\mh_product_catalog_entries')
+        ? mh_product_catalog_entries()
+        : [];
+
+    if (is_array($catalog) && $catalog !== []) {
+        foreach ($catalog as $slug => $entry) {
+            if (! is_array($entry)) {
+                continue;
+            }
+            $productId = 0;
+            if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
+                $productId = mh_product_id_by_slug((string) $slug);
+            }
+            if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
+                $order++;
+            }
+        }
+    } elseif (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
+        foreach (mh_wc_products_for_work() as $card) {
+            $slug = sanitize_title((string) ($card['slug'] ?? ''));
+            $type = sanitize_key((string) ($card['product_type'] ?? 'theme'));
+            if ($slug === '' || $type === 'service') {
+                continue;
+            }
+            if (mh_upsert_project_from_catalog_entry($slug, $card, (int) ($card['product_id'] ?? 0), $order) > 0) {
+                $order++;
+            }
+        }
+    }
+
+    mh_ensure_projects_listing_page();
+    flush_rewrite_rules(false);
+    update_option('mh_products_synced_to_projects_v1', '1', false);
+}
+
+/** Flush rewrite rules once after the Projects CPT is restored. */
+function mh_maybe_flush_project_cpt_rewrites(): void
+{
+    if (get_option('mh_project_rewrite_flushed_v3') || wp_installing()) {
+        return;
+    }
+    if (! post_type_exists(mh_project_post_type())) {
+        return;
+    }
+    flush_rewrite_rules(false);
+    update_option('mh_project_rewrite_flushed_v3', '1', false);
 }
 
 function mh_project_admin_meta_box(\WP_Post $post): void
@@ -1800,9 +2136,9 @@ function mh_project_admin_meta_box(\WP_Post $post): void
 
     echo '<p><label><input type="checkbox" name="mh_project_live" value="1" '.checked($live, true, false).'> ';
     echo '<strong>'.esc_html__('Show on site', 'sage').'</strong></label></p>';
-    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/, the home grid, and its public product page.', 'sage').'</p>';
+    echo '<p class="description">'.esc_html__('When checked, this project appears on /projects/ and the home grid.', 'sage').'</p>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Work card', 'sage').'</h3>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project card', 'sage').'</h3>';
     echo '<table class="form-table" role="presentation"><tbody>';
     mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
     mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('City, State', 'sage'));
@@ -1812,21 +2148,22 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: products/acreline/featured.webp or hallowed-ground.jpg. Featured image always wins on the Work grid and product page.', 'sage')
+        __('Fallback only: used when this project has no Featured image. Example: products/acreline/featured.webp. Featured image always wins on the Projects grid and project page.', 'sage')
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('WooCommerce', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Opt in to sell this project. Concept demos stay hire-only unless For sale is checked.', 'sage').'</p>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Linked product', 'sage').'</h3>';
+    echo '<p class="description">'.esc_html__('Optional WooCommerce product this project was converted from. Public pages do not sell.', 'sage').'</p>';
     echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
-    echo esc_html__('For sale (Buy theme / plugin)', 'sage').'</label></p>';
+    echo esc_html__('Marked for sale (hidden while the public shop is off)', 'sage').'</label></p>';
     echo '<table class="form-table" role="presentation"><tbody>';
-    echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Landing type', 'sage').'</label></th><td>';
+    echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Project type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
     foreach ([
-        'theme' => __('Theme product', 'sage'),
-        'plugin' => __('Plugin product', 'sage'),
-        'concept' => __('Concept (hire copy)', 'sage'),
+        'theme' => __('Theme', 'sage'),
+        'plugin' => __('Plugin', 'sage'),
+        'app' => __('Web app', 'sage'),
+        'concept' => __('Concept', 'sage'),
     ] as $value => $label) {
         printf(
             '<option value="%1$s"%2$s>%3$s</option>',
@@ -1847,7 +2184,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     mh_project_admin_field_row(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Concept / product page', 'sage').'</h3>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Project page', 'sage').'</h3>';
     echo '<p class="description">'.esc_html__('These fields power /projects/{slug}/. Edit anytime — changes show on the next page load.', 'sage').'</p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     mh_project_admin_field_row(__('Eyebrow', 'sage'), 'mh_project_eyebrow', $eyebrow, __('Concept · Boutique inn', 'sage'));
@@ -1937,7 +2274,7 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_benefits', sanitize_textarea_field(wp_unslash($_POST['mh_project_benefits'] ?? '')));
     update_post_meta($post_id, '_mh_project_faq', sanitize_textarea_field(wp_unslash($_POST['mh_project_faq'] ?? '')));
     $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'theme'));
-    if (! in_array($productType, ['concept', 'theme', 'plugin'], true)) {
+    if (! in_array($productType, ['concept', 'theme', 'plugin', 'app'], true)) {
         $productType = 'theme';
     }
     update_post_meta($post_id, '_mh_project_product_type', $productType);
@@ -1994,8 +2331,274 @@ function mh_project_meta_choices(string $meta_key): array
     return array_values(array_filter(array_map('strval', $rows)));
 }
 
-// CPT registration hook is kept for cached hook tables; the function is now a no-op.
 add_action('init', __NAMESPACE__.'\\mh_register_project_post_type', 20);
+add_action('init', __NAMESPACE__.'\\mh_sync_products_to_project_cpt', 32);
+add_action('init', __NAMESPACE__.'\\mh_maybe_flush_project_cpt_rewrites', 99);
+
+add_action('add_meta_boxes', function (): void {
+    add_meta_box(
+        'mh_project_details',
+        __('Project fields', 'sage'),
+        __NAMESPACE__.'\\mh_project_admin_meta_box',
+        mh_project_post_type(),
+        'normal',
+        'high'
+    );
+});
+
+add_action('save_post_'.mh_project_post_type(), function (int $post_id): void {
+    if (wp_is_post_revision($post_id)) {
+        return;
+    }
+    mh_save_project_meta($post_id);
+});
+
+add_filter('manage_'.mh_project_post_type().'_posts_columns', function (array $columns): array {
+    $out = [];
+    foreach ($columns as $key => $label) {
+        if ($key === 'date') {
+            continue;
+        }
+        $out[$key] = $label;
+        if ($key === 'title') {
+            $out['mh_project_live'] = __('On site', 'sage');
+            $out['mh_project_cat'] = __('Category', 'sage');
+            $out['mh_project_place'] = __('Place', 'sage');
+        }
+    }
+    $out['date'] = __('Date', 'sage');
+
+    return $out;
+});
+
+add_filter('manage_edit-'.mh_project_post_type().'_sortable_columns', function (array $columns): array {
+    $columns['mh_project_cat'] = 'mh_project_cat';
+    $columns['mh_project_place'] = 'mh_project_place';
+    $columns['mh_project_live'] = 'mh_project_live';
+    $columns['date'] = ['date', true];
+
+    return $columns;
+});
+
+add_action('manage_'.mh_project_post_type().'_posts_custom_column', function (string $column, int $post_id): void {
+    if ($column === 'mh_project_cat') {
+        $cat = (string) get_post_meta($post_id, '_mh_project_cat', true);
+        if ($cat === '') {
+            echo '—';
+
+            return;
+        }
+        $url = add_query_arg([
+            'post_type' => mh_project_post_type(),
+            'mh_cat' => $cat,
+        ], admin_url('edit.php'));
+        printf('<a href="%s">%s</a>', esc_url($url), esc_html($cat));
+
+        return;
+    }
+    if ($column === 'mh_project_place') {
+        $place = (string) get_post_meta($post_id, '_mh_project_place', true);
+        if ($place === '') {
+            echo '—';
+
+            return;
+        }
+        $url = add_query_arg([
+            'post_type' => mh_project_post_type(),
+            'mh_place' => $place,
+        ], admin_url('edit.php'));
+        printf('<a href="%s">%s</a>', esc_url($url), esc_html($place));
+
+        return;
+    }
+    if ($column === 'mh_project_live') {
+        $live = mh_project_is_live($post_id);
+        $url = wp_nonce_url(
+            admin_url('admin.php?action=mh_toggle_project_live&post='.$post_id),
+            'mh_toggle_project_live_'.$post_id
+        );
+        $label = $live ? __('On', 'sage') : __('Off', 'sage');
+        $class = $live ? 'mh-project-toggle is-on' : 'mh-project-toggle is-off';
+        printf(
+            '<a class="%1$s" href="%2$s" title="%3$s"><span class="mh-project-toggle__track" aria-hidden="true"></span><span class="mh-project-toggle__label">%4$s</span></a>',
+            esc_attr($class),
+            esc_url($url),
+            esc_attr($live ? __('Hide from site', 'sage') : __('Show on site', 'sage')),
+            esc_html($label)
+        );
+    }
+}, 10, 2);
+
+add_action('restrict_manage_posts', function (string $post_type): void {
+    if ($post_type !== mh_project_post_type()) {
+        return;
+    }
+
+    $currentCat = isset($_GET['mh_cat']) ? sanitize_text_field(wp_unslash($_GET['mh_cat'])) : '';
+    $currentPlace = isset($_GET['mh_place']) ? sanitize_text_field(wp_unslash($_GET['mh_place'])) : '';
+    $currentLive = isset($_GET['mh_live']) ? sanitize_text_field(wp_unslash($_GET['mh_live'])) : '';
+
+    echo '<label class="screen-reader-text" for="mh_filter_cat">'.esc_html__('Filter by category', 'sage').'</label>';
+    echo '<select name="mh_cat" id="mh_filter_cat">';
+    echo '<option value="">'.esc_html__('All categories', 'sage').'</option>';
+    foreach (mh_project_meta_choices('_mh_project_cat') as $cat) {
+        printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($cat), selected($currentCat, $cat, false), esc_html($cat));
+    }
+    echo '</select>';
+
+    echo '<label class="screen-reader-text" for="mh_filter_place">'.esc_html__('Filter by place', 'sage').'</label>';
+    echo '<select name="mh_place" id="mh_filter_place">';
+    echo '<option value="">'.esc_html__('All places', 'sage').'</option>';
+    foreach (mh_project_meta_choices('_mh_project_place') as $place) {
+        printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($place), selected($currentPlace, $place, false), esc_html($place));
+    }
+    echo '</select>';
+
+    echo '<label class="screen-reader-text" for="mh_filter_live">'.esc_html__('Filter by on-site status', 'sage').'</label>';
+    echo '<select name="mh_live" id="mh_filter_live">';
+    echo '<option value="">'.esc_html__('On site: all', 'sage').'</option>';
+    printf('<option value="1"%s>%s</option>', selected($currentLive, '1', false), esc_html__('On site only', 'sage'));
+    printf('<option value="0"%s>%s</option>', selected($currentLive, '0', false), esc_html__('Hidden only', 'sage'));
+    echo '</select>';
+});
+
+add_action('pre_get_posts', function (\WP_Query $query): void {
+    if (! is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+    if ($query->get('post_type') !== mh_project_post_type()) {
+        return;
+    }
+
+    $cat = isset($_GET['mh_cat']) ? sanitize_text_field(wp_unslash($_GET['mh_cat'])) : '';
+    $place = isset($_GET['mh_place']) ? sanitize_text_field(wp_unslash($_GET['mh_place'])) : '';
+    $live = isset($_GET['mh_live']) ? sanitize_text_field(wp_unslash($_GET['mh_live'])) : '';
+
+    $metaQuery = [];
+    if ($cat !== '') {
+        $metaQuery[] = [
+            'key' => '_mh_project_cat',
+            'value' => $cat,
+            'compare' => '=',
+        ];
+    }
+    if ($place !== '') {
+        $metaQuery[] = [
+            'key' => '_mh_project_place',
+            'value' => $place,
+            'compare' => '=',
+        ];
+    }
+    if ($live === '1' || $live === '0') {
+        $metaQuery[] = [
+            'key' => mh_project_live_meta_key(),
+            'value' => $live,
+            'compare' => '=',
+        ];
+    }
+    if ($metaQuery !== []) {
+        if (count($metaQuery) > 1) {
+            $metaQuery['relation'] = 'AND';
+        }
+        $query->set('meta_query', $metaQuery);
+    }
+
+    $orderby = (string) $query->get('orderby');
+    if ($orderby === '' || $orderby === 'menu_order title' || $orderby === 'menu_order') {
+        $query->set('orderby', 'date');
+        $query->set('order', 'DESC');
+
+        return;
+    }
+
+    $order = strtoupper((string) $query->get('order')) === 'ASC' ? 'ASC' : 'DESC';
+    if ($orderby === 'mh_project_cat') {
+        $query->set('meta_key', '_mh_project_cat');
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    } elseif ($orderby === 'mh_project_place') {
+        $query->set('meta_key', '_mh_project_place');
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    } elseif ($orderby === 'mh_project_live') {
+        $query->set('meta_key', mh_project_live_meta_key());
+        $query->set('orderby', 'meta_value');
+        $query->set('order', $order);
+    }
+});
+
+add_action('admin_head', function (): void {
+    $screen = get_current_screen();
+    if (! $screen || $screen->post_type !== mh_project_post_type()) {
+        return;
+    }
+    echo '<style>
+      .column-mh_project_live { width: 6.5rem; }
+      .column-mh_project_cat { width: 8rem; }
+      .column-mh_project_place { width: 12rem; }
+      .mh-project-toggle {
+        display: inline-flex; align-items: center; gap: .4rem;
+        text-decoration: none; font-weight: 600; font-size: 12px;
+      }
+      .mh-project-toggle__track {
+        width: 2.1rem; height: 1.15rem; border-radius: 999px;
+        background: #cbd5e1; position: relative; display: inline-block;
+        transition: background .15s;
+      }
+      .mh-project-toggle__track::after {
+        content: ""; position: absolute; top: 2px; left: 2px;
+        width: .85rem; height: .85rem; border-radius: 50%;
+        background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        transition: transform .15s;
+      }
+      .mh-project-toggle.is-on .mh-project-toggle__track { background: #16a34a; }
+      .mh-project-toggle.is-on .mh-project-toggle__track::after { transform: translateX(.95rem); }
+      .mh-project-toggle.is-on .mh-project-toggle__label { color: #15803d; }
+      .mh-project-toggle.is-off .mh-project-toggle__label { color: #64748b; }
+    </style>';
+});
+
+add_filter('post_row_actions', function (array $actions, \WP_Post $post): array {
+    if ($post->post_type !== mh_project_post_type()) {
+        return $actions;
+    }
+
+    $live = mh_project_is_live((int) $post->ID);
+    $url = wp_nonce_url(
+        admin_url('admin.php?action=mh_toggle_project_live&post='.(int) $post->ID),
+        'mh_toggle_project_live_'.(int) $post->ID
+    );
+    $actions['mh_project_live'] = $live
+        ? '<a href="'.esc_url($url).'">'.esc_html__('Hide from site', 'sage').'</a>'
+        : '<a href="'.esc_url($url).'">'.esc_html__('Show on site', 'sage').'</a>';
+
+    $permalink = get_permalink($post);
+    if (is_string($permalink) && $permalink !== '' && mh_project_is_live((int) $post->ID)) {
+        $actions['view'] = '<a href="'.esc_url($permalink).'" target="_blank" rel="noopener">'.esc_html__('View project', 'sage').'</a>';
+    }
+
+    return $actions;
+}, 10, 2);
+
+add_action('admin_action_mh_toggle_project_live', function (): void {
+    $post_id = (int) ($_GET['post'] ?? 0);
+    if ($post_id <= 0) {
+        wp_die(esc_html__('Invalid project.', 'sage'));
+    }
+    check_admin_referer('mh_toggle_project_live_'.$post_id);
+    if (! current_user_can('edit_post', $post_id)) {
+        wp_die(esc_html__('You cannot edit this project.', 'sage'));
+    }
+
+    mh_set_project_live($post_id, ! mh_project_is_live($post_id));
+
+    $redirect = wp_get_referer();
+    if (! is_string($redirect) || $redirect === '') {
+        $redirect = admin_url('edit.php?post_type='.mh_project_post_type());
+    }
+    wp_safe_redirect($redirect);
+    exit;
+});
 
 function mh_work_item_by_slug(string $slug): ?array
 {
@@ -3026,7 +3629,7 @@ function mh_seed_portfolio_pages(): void
     $pages = [
         'home' => ['title' => 'Home', 'template' => 'template-home.blade.php'],
         'about' => ['title' => 'About', 'template' => 'template-about.blade.php'],
-        'projects' => ['title' => 'Work', 'template' => 'template-projects.blade.php'],
+        'projects' => ['title' => 'Projects', 'template' => 'template-projects.blade.php'],
         'services' => ['title' => 'Services', 'template' => 'template-services.blade.php'],
         'code' => ['title' => 'Code', 'template' => 'template-code.blade.php'],
         'contact' => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
@@ -3208,6 +3811,57 @@ add_action('init', function () {
         mh_seed_portfolio_pages();
     }
 }, 30);
+add_action('init', function (): void {
+    if (get_option('mh_projects_listing_page_v1') || wp_installing()) {
+        return;
+    }
+    mh_ensure_projects_listing_page();
+    update_option('mh_projects_listing_page_v1', '1', false);
+}, 36);
+
+add_action('init', function (): void {
+    if (get_option('mh_projects_portfolio_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home');
+    if ($home instanceof \WP_Post) {
+        $secUrl = (string) get_post_meta($home->ID, 'mh_f_home_cta_secondary_url', true);
+        if ($secUrl === '' || in_array($secUrl, ['/shop/', '/work/'], true)) {
+            update_post_meta($home->ID, 'mh_f_home_cta_secondary_url', '/projects/');
+        }
+        $sec = (string) get_post_meta($home->ID, 'mh_f_home_cta_secondary', true);
+        if ($sec === '' || in_array($sec, ['Browse work', 'Browse products', 'Open shop'], true)) {
+            update_post_meta($home->ID, 'mh_f_home_cta_secondary', mh_home_hero_default('cta_secondary'));
+        }
+    }
+
+    $projects = get_page_by_path('projects');
+    if ($projects instanceof \WP_Post) {
+        $id = (int) $projects->ID;
+        $swaps = [
+            'mh_f_work_kicker' => [
+                'Work' => 'Projects',
+                'Themes & plugins' => 'Projects',
+            ],
+            'mh_f_work_h1' => [
+                'WordPress themes and plugins for sale.' => 'Selected WordPress work.',
+                'Concept sites I can build from.' => 'Selected WordPress work.',
+            ],
+            'mh_f_work_hero_cta_secondary' => [
+                'Open shop' => 'Hire me',
+            ],
+        ];
+        foreach ($swaps as $key => $map) {
+            $cur = (string) get_post_meta($id, $key, true);
+            if ($cur !== '' && isset($map[$cur])) {
+                update_post_meta($id, $key, $map[$cur]);
+            }
+        }
+    }
+
+    update_option('mh_projects_portfolio_copy_v1', '1', false);
+}, 37);
 
 /**
  * Ensure the project brief page exists (idempotent).
