@@ -73,6 +73,90 @@ function field_html(string $key, string $default = '', ?int $post_id = null): st
 }
 
 /**
+ * Retrieve a theme page field as kses-filtered HTML with automatic paragraphs.
+ *
+ * TinyMCE already stores <p> tags; wpautop still turns blank lines into
+ * paragraphs when the value is plain text (including migrated copy).
+ *
+ * @since 3.5.25
+ *
+ * @param  string  $key  Field key (without the mh_f_ prefix).
+ * @param  string  $default  Fallback HTML or plain text.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ */
+function field_rich(string $key, string $default = '', ?int $post_id = null): string
+{
+    return wp_kses_post(wpautop(field($key, $default, $post_id)));
+}
+
+/**
+ * Built-in About story paragraphs (same order as the retired about_p1–about_p4 fields).
+ *
+ * @since 3.5.25
+ *
+ * @return list<string>
+ */
+function mh_about_story_default_paragraphs(): array
+{
+    return [
+        __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage'),
+        __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage'),
+        __('The Projects page showcases WordPress themes and plugins — Sage 11 builds you can buy or hire me to adapt. Production client and in-house work stays private unless a shop asks to be featured.', 'sage'),
+        __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage'),
+    ];
+}
+
+/**
+ * Default About story body as blank-line-separated paragraphs.
+ *
+ * @since 3.5.25
+ */
+function mh_about_story_default(): string
+{
+    return implode("\n\n", mh_about_story_default_paragraphs());
+}
+
+/**
+ * Join saved about_p1–about_p4 values (or their defaults) into one story body.
+ *
+ * @since 3.5.25
+ */
+function mh_about_story_from_legacy(?int $post_id = null): string
+{
+    $defaults = mh_about_story_default_paragraphs();
+    $keys = ['about_p1', 'about_p2', 'about_p3', 'about_p4'];
+    $parts = [];
+    foreach ($keys as $i => $key) {
+        $val = trim(field($key, $defaults[$i] ?? '', $post_id));
+        if ($val !== '') {
+            $parts[] = $val;
+        }
+    }
+
+    return implode("\n\n", $parts);
+}
+
+/**
+ * About story HTML for the front end.
+ *
+ * Uses the WYSIWYG value when present; otherwise joins the old paragraph
+ * fields so live copy is not lost before the one-time migration runs.
+ *
+ * @since 3.5.25
+ */
+function mh_about_story_html(?int $post_id = null): string
+{
+    $post_id = $post_id ?: (int) get_the_ID();
+    $stored = $post_id ? trim((string) get_post_meta($post_id, 'mh_f_about_story', true)) : '';
+    $raw = $stored !== '' ? $stored : mh_about_story_from_legacy($post_id);
+    if ($raw === '') {
+        $raw = mh_about_story_default();
+    }
+
+    return wp_kses_post(wpautop($raw));
+}
+
+/**
  * Retrieve a theme page field as a list of non-empty trimmed lines.
  *
  * Accepts both newline-delimited strings and serialised arrays from post meta.
@@ -351,10 +435,7 @@ function page_field_map(): array
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
-                ['about_p1', __('Paragraph 1', 'sage'), 'textarea', __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage')],
-                ['about_p2', __('Paragraph 2', 'sage'), 'textarea', __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage')],
-                ['about_p3', __('Paragraph 3', 'sage'), 'textarea', __('The Projects page showcases WordPress themes and plugins — Sage 11 builds you can buy or hire me to adapt. Production client and in-house work stays private unless a shop asks to be featured.', 'sage')],
-                ['about_p4', __('Paragraph 4', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage')],
+                ['about_story', __('Story', 'sage'), 'wysiwyg', mh_about_story_default()],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
             ],
@@ -1630,6 +1711,7 @@ function mh_writing_id(): int
 function field_group_hint(string $label): string
 {
     $hints = [
+        __('How I got here', 'sage') => __('One editor for the story. Press Enter for a new paragraph.', 'sage'),
         __('Hero', 'sage') => __('Top of the home page, next to the photo.', 'sage'),
         __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
         __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
@@ -1690,9 +1772,10 @@ add_action('admin_enqueue_scripts', function ($hook) {
     if (! $screen || $screen->post_type !== 'page') {
         return;
     }
+    wp_enqueue_editor();
     $rel = 'resources/js/admin-repeater.js';
     $path = get_theme_file_path($rel);
-    wp_enqueue_script('mh-admin-repeater', get_theme_file_uri($rel), [], file_exists($path) ? (string) filemtime($path) : '1', true);
+    wp_enqueue_script('mh-admin-repeater', get_theme_file_uri($rel), ['editor'], file_exists($path) ? (string) filemtime($path) : '1', true);
 });
 
 function render_page_fields_box(\WP_Post $post): void
@@ -1725,6 +1808,7 @@ function render_page_fields_box(\WP_Post $post): void
         .mh-fields label{display:block;font-weight:600;margin:.9em 0 .25em;font-size:13px}
         .mh-fields input[type=text],.mh-fields input[type=url],.mh-fields textarea,.mh-fields select{width:100%}
         .mh-fields textarea{min-height:56px}
+        .mh-fields .wp-editor-wrap{margin:.15em 0 .4em}
         .mh-fields .mh-desc,.mh-fields .mh-ghint{color:#646970;font-size:12px;line-height:1.5}
         .mh-pf-acc{border:1px solid #dcdcde;border-radius:6px;margin:.55em 0;background:#fff}
         .mh-pf-acc>summary{cursor:pointer;padding:.7em .85em;font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;background:#f6f7f7}
@@ -1743,7 +1827,14 @@ function render_page_fields_box(\WP_Post $post): void
 
     $i = 0;
     foreach ($map[$key] as $group => $fields) {
-        echo '<details class="mh-pf-acc"'.($i === 0 ? ' open' : '').'>';
+        $hasWysiwyg = false;
+        foreach ($fields as $check) {
+            if (($check[2] ?? '') === 'wysiwyg') {
+                $hasWysiwyg = true;
+                break;
+            }
+        }
+        echo '<details class="mh-pf-acc"'.($i === 0 || $hasWysiwyg ? ' open' : '').'>';
         echo '<summary>'.esc_html($group).'</summary><div class="mh-pf-acc-b">';
         $i++;
         if ($hint = field_group_hint($group)) {
@@ -1764,6 +1855,26 @@ function render_page_fields_box(\WP_Post $post): void
                 case 'html':
                     printf('<textarea id="%1$s" name="%1$s" rows="3" placeholder="%3$s">%2$s</textarea>', esc_attr($name), esc_textarea((string) $val), esc_attr((string) $place));
                     echo '<p class="mh-ghint">'.esc_html__('Basic HTML is allowed (links, strong).', 'sage').'</p>';
+                    break;
+                case 'wysiwyg':
+                    if ((string) $val === '' && $k === 'about_story') {
+                        $val = mh_about_story_from_legacy($post->ID);
+                    }
+                    $editorId = preg_replace('/[^A-Za-z0-9_]/', '_', $name) ?: $name;
+                    wp_editor((string) $val, $editorId, [
+                        'textarea_name' => $name,
+                        'textarea_rows' => 14,
+                        'media_buttons' => false,
+                        'teeny' => false,
+                        'quicktags' => true,
+                        'editor_class' => 'mh-wysiwyg',
+                        'tinymce' => [
+                            'wpautop' => true,
+                            'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,blockquote,link,unlink,undo,redo,removeformat',
+                            'toolbar2' => '',
+                        ],
+                    ]);
+                    echo '<p class="mh-ghint">'.esc_html__('Leave empty to keep the built-in story. Press Enter for a new paragraph.', 'sage').'</p>';
                     break;
                 case 'url':
                     printf('<input type="url" id="%1$s" name="%1$s" value="%2$s" placeholder="%3$s">', esc_attr($name), esc_attr((string) $val), esc_attr((string) $place));
@@ -1889,11 +2000,11 @@ add_action('save_post_page', function ($post_id) {
             $raw = wp_unslash($_POST[$name]);
             $val = match ($type) {
                 'textarea' => sanitize_textarea_field($raw),
-                'html' => wp_kses_post((string) $raw),
+                'html', 'wysiwyg' => wp_kses_post((string) $raw),
                 'url' => esc_url_raw(trim((string) $raw)),
                 default => sanitize_text_field($raw),
             };
-            if ($val === '') {
+            if ($val === '' || ($type === 'wysiwyg' && trim(wp_strip_all_tags($val)) === '')) {
                 delete_post_meta($post_id, $name);
             } else {
                 update_post_meta($post_id, $name, $val);
@@ -2103,4 +2214,26 @@ add_action('init', function (): void {
     }
 
     update_option('mh_services_acreline_seo_v1', true, false);
+});
+
+/**
+ * One-time: fold About about_p1–about_p4 into the single story WYSIWYG.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_about_story_wysiwyg_v1') || wp_installing()) {
+        return;
+    }
+
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    if ($aboutId > 0) {
+        $existing = trim((string) get_post_meta($aboutId, 'mh_f_about_story', true));
+        if ($existing === '') {
+            $joined = mh_about_story_from_legacy($aboutId);
+            if ($joined !== '') {
+                update_post_meta($aboutId, 'mh_f_about_story', $joined);
+            }
+        }
+    }
+
+    update_option('mh_about_story_wysiwyg_v1', true, false);
 });

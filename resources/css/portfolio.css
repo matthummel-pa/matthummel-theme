@@ -6332,6 +6332,10 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 }
 .about-story__copy > .eyebrow { margin-bottom: .55rem; }
 .about-story__copy > .display-title { margin: 0 0 1.1rem; }
+.about-story__body {
+  max-width: 40rem;
+}
+.about-story__body > p,
 .about-story__p {
   font-size: 1.05rem;
   line-height: 1.75;
@@ -6339,10 +6343,14 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   color: var(--color-text-secondary);
   max-width: 40rem;
 }
+.about-story__body > p:first-of-type,
 .about-story__p:first-of-type {
   font-size: clamp(1.08rem, 1.8vw, 1.18rem);
   color: var(--color-text);
   line-height: 1.7;
+}
+.about-story__body > p:last-child {
+  margin-bottom: 0;
 }
 .about-story__links {
   display: flex;
