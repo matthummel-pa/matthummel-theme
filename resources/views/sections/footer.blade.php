@@ -6,7 +6,7 @@
   $footerHomeId = (int) get_option('page_on_front');
   $footerBlurb = \App\field(
     'footer_blurb',
-    __('Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
+    __('Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
     $footerHomeId > 0 ? $footerHomeId : null
   );
 @endphp
@@ -42,13 +42,9 @@
 
     {{-- Work --}}
     <nav class="footer-nav-col" aria-label="Work">
-      <p class="footer-nav-label">{{ __('Shop', 'sage') }}</p>
+      <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
       <ul class="footer-nav">
-        @if (\App\mh_woocommerce_is_active())
-          <li><a href="{{ esc_url(wc_get_page_permalink('shop')) }}">{{ __('Themes & plugins', 'sage') }}</a></li>
-        @else
-          <li><a href="{{ home_url('/shop/') }}">{{ __('Themes & plugins', 'sage') }}</a></li>
-        @endif
+        <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
         <li><a href="{{ home_url('/services/') }}">{{ __('Services', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code & GitHub', 'sage') }}</a></li>
@@ -67,9 +63,6 @@
         <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
         <li><a href="{{ home_url('/uses/') }}">{{ __('Uses', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
-        @if (\App\mh_woocommerce_is_active())
-          <li><a href="{{ esc_url(wc_get_page_permalink('cart')) }}">{{ __('Cart', 'sage') }}</a></li>
-        @endif
       </ul>
     </nav>
 

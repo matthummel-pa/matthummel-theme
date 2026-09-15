@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.5.28 — Products become Projects
+
+- Theme, plugin, and app catalog items migrate into the Projects custom post type. Listing and singles live at `/projects/` and `/projects/{slug}/`.
+- Standard portfolio copy: first-person, demos and stack notes, Hire me / Say hello. No public shop, prices, or buy CTAs.
+- Service add-ons stay out of the Projects list. WooCommerce remains installed; `/shop/` and linked `/product/` URLs redirect to Projects.
+- `mh_products_synced_to_projects_v1` imports Acreline, WalkRidge, and TOCflow once. Studio demo sites are not re-imported.
+
+## 3.5.27 — Portfolio homepage restored
+
+- Home is the developer portfolio again (name, hire CTA, work preview). Not a theme-sales landing.
+- Sales-hero one-shots are retired. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 offer strings.
+- Homepage CTAs are trimmed to Hire me + Browse work in the hero, and Say hello in the closing band. Pathways, Start a brief, and extra Browse buttons are gone.
+- Product pages keep the buy path from 3.5.26. Shop stays at `/shop/`.
+
 ## 3.5.26 — Shop-first homepage + product buy path
 
 - Home hero leads with themes shops can buy (Acreline $79, live demo, hire as a text link).

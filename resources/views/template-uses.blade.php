@@ -91,8 +91,8 @@
     <a class="btn" href="{{ home_url('/code/') }}">
       {!! \App\mh_svg_icon('github', 15) !!} See the code
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/services/') }}">
-      How I build <span aria-hidden="true">→</span>
+    <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
+      Hire me <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -108,8 +108,8 @@
         ['value' => 'Vite', 'label' => __('Asset pipeline', 'sage')],
       ],
       'link' => [
-        'label' => __('View services', 'sage'),
-        'href' => home_url('/services/'),
+        'label' => __('Hire me', 'sage'),
+        'href' => home_url('/hire/'),
       ],
     ])
   @endslot
@@ -200,10 +200,9 @@
       <p>{{ __('I use these tools on real WordPress and full-stack work. Full-time, contract, or freelance — say hello.', 'sage') }}</p>
     </div>
     <div class="cta-band__actions">
-      <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
+      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/resources/') }}">{{ __('Browse resources', 'sage') }}</a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>

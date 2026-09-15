@@ -17963,74 +17963,6 @@ html.mh-dark .woo-account-auth .input-text {
   border-color: var(--color-border);
 }
 
-/* ── Home shop-mode hero + how-to-buy (3.5.26) ───────────────────────────── */
-.h-hero__name--offer {
-  font: 800 clamp(1.85rem, 4.6vw, 2.75rem)/1.12 var(--font-display) !important;
-  letter-spacing: -0.045em !important;
-  max-width: 18ch;
-}
-.h-hero--shop .h-hero__role {
-  max-width: 28ch;
-}
-.h-hero--shop .h-hero__lede {
-  max-width: 40ch;
-}
-.h-hero__demo {
-  min-height: 2.75rem;
-}
-
-.h-howto {
-  padding: clamp(3rem, 6vw, 5rem) 0;
-}
-.h-howto__head {
-  max-width: 40rem;
-  margin-bottom: 1.75rem;
-}
-.h-howto__lede {
-  color: var(--color-text-secondary);
-  max-width: 46ch;
-  margin: .65rem 0 0;
-}
-.h-howto__steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.h-howto__step {
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-card, 12px);
-  padding: 1.25rem 1.35rem;
-  background: var(--color-bg);
-}
-.h-howto__num {
-  font: 700 .78rem/1 var(--font-display);
-  letter-spacing: .1em;
-  color: var(--color-accent);
-}
-.h-howto__title {
-  margin: .45rem 0 .35rem;
-  font: 700 1.15rem/1.25 var(--font-display);
-}
-.h-howto__body {
-  margin: 0;
-  color: var(--color-text-secondary);
-}
-.h-howto__guarantee {
-  display: flex;
-  align-items: flex-start;
-  gap: .5rem;
-  margin: 1.5rem 0 0;
-  color: var(--color-text-secondary);
-  font-size: .95rem;
-}
-.h-howto__guarantee .mh-ico { color: var(--color-accent); flex-shrink: 0; margin-top: .15em; }
-@media (max-width: 760px) {
-  .h-howto__steps { grid-template-columns: 1fr; }
-}
-
 /* Product buy assurance + developer fold */
 .pf-buy-guarantee {
   display: flex;
@@ -18103,7 +18035,6 @@ html.mh-dark .woo-account-auth .input-text {
   gap: .85rem;
 }
 .pf-dev-details__body p { margin: 0; color: var(--color-text-secondary); }
-html.mh-dark .pf-dev-details,
-html.mh-dark .h-howto__step {
+html.mh-dark .pf-dev-details {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 96%, #000 4%);
 }

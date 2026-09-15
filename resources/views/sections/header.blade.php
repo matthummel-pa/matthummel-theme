@@ -54,7 +54,7 @@
         </a>
       @endif
 
-      @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
+      @if (\App\mh_public_shop_enabled() && \App\mh_shop_ready() && function_exists('wc_get_cart_url'))
         @php $cartCount = \App\mh_cart_count(); @endphp
         <button
           type="button"
@@ -150,7 +150,7 @@
     @include('partials.social', ['compact' => true])
   </div>
 
-  @if (\App\mh_shop_ready() && function_exists('wc_get_cart_url'))
+  @if (\App\mh_public_shop_enabled() && \App\mh_shop_ready() && function_exists('wc_get_cart_url'))
     <button type="button" class="btn btn-outline mh-popout-cart" data-mh-slip-open aria-controls="mh-slip">
       {!! \App\mh_svg_icon('cart', 15) !!}
       {{ __('Cart', 'sage') }}

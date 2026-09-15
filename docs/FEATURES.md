@@ -2,12 +2,24 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.28 Projects CPT)
+
+- Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`). Do not send that listing back to WooCommerce.
+- Convert theme/plugin/app products once (`mh_products_synced_to_projects_v1`). Skip service add-ons. Do not re-import the old studio demo set unless Matt asks.
+- Copy is standard portfolio (I/my, Hire me / Say hello). Keep `mh_public_shop_enabled()` false until Matt asks to sell again.
+- Home secondary CTA is Browse projects → `/projects/`.
+
+## Editor’s notes (3.5.27 portfolio home)
+
+- Home is the hireable portfolio. `mh_home_hero_default()` restores the name marque, Hire me → `/hire/`, and Browse projects → `/projects/`.
+- Keep one primary home button (hero Hire me, closing Say hello). Do not restore the pathway trio, discovery brief, or extra Browse products bars unless Matt asks.
+- Do not reintroduce a product-offer H1 or Buy Acreline as the primary home CTA unless Matt asks.
+- `mh_home_sales_hero_v1` / `v2` are no-ops. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 sales strings.
+- Product pages still exist in WooCommerce; public visitors are sent to the linked project.
+
 ## Editor’s notes (3.5.26 shop-first sales)
 
-- Home hero defaults live in `mh_home_hero_default()`. Clearing Page content (theme) boxes restores the product offer, not the old “Matt Hummel” name marque.
-- One-shot `mh_home_sales_hero_v1` in `app/bespoke.php` rewrites only exact previous defaults.
-- Homepage shop flow is in `resources/views/partials/home.blade.php`: products and how-to-buy before the recruiter glance. Journal is `partials/home-journal.blade.php`.
-- Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
+- Superseded by 3.5.27 for the homepage. Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
 - Single product article no longer renders Overview + benefits + story + Woo description. Hidden CSS dumps are gone; the purchase widget calls `mh_render_product_add_to_cart()`.
 - Sticky bar still uses `#pf-sticky-bar` + `woo-sticky-bar.js`. Trust chips hide under 640px so Add to cart stays reachable.
 
@@ -148,8 +160,8 @@ What the 3.x Sage theme does, and where it lives.
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items; studio copy links to the Work page at `/projects/` | `template-now.blade.php` |
-| Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ; **Theme / Plugin / Demo** badges; **View details** primary, **Buy theme/plugin** when listed; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
+| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT** | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
@@ -229,7 +241,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Studio projects imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); marketplace catalog seed for Acreline + TOCflow (`mh_product_catalog_v1` … `mh_product_catalog_v7`); editable project fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; **CPT retired** — listing/singles redirect to Woo shop/products; Acreline SEO aliases (`wordpress-theme-real-estate-agents`, etc.) 301 to `/product/acreline/` before Rank Math; product pages include repo-reviewed benefits, screenshots, architecture, handoff, compatibility, license, docs, and buyer FAQ; opt-in products sync to the correct WooCommerce theme/plugin category. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
+| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; singles own `/projects/{slug}/`. Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Linked Woo products 301 to the project permalink. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
 | Support docs | `/support/` hub (`template-support.blade.php`) lists sellable products with **HTML-viewable** guides (jsDelivr CDN of GitHub `docs/marketplace/*.html`, same files as the seller Documentation pack); footer link; Acreline catalog docs point at the rendered hub |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |

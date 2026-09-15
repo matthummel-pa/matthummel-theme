@@ -39,10 +39,7 @@
         {!! \App\mh_svg_icon('mail', 16) !!}
         {{ __('Say hello', 'sage') }}
       </a>
-      <a class="btn btn-outline" href="{{ home_url('/hire/') }}">
-        {{ __('Hire me', 'sage') }}
-      </a>
-      <a class="about-hero__ghost" href="#story">{{ __('Read my story', 'sage') }}</a>
+      <a class="h-text-arrow" href="#story">{{ __('Read my story', 'sage') }} <span aria-hidden="true">→</span></a>
     </div>
   </div>
   @slot('aside')
@@ -174,11 +171,11 @@
           </div>
 
           <div class="about-aside-card about-aside-card--studio">
-            <p class="about-aside-kicker">{!! \App\mh_svg_icon('briefcase', 14) !!} {{ __('Themes & plugins', 'sage') }}</p>
-            <h3 class="about-aside-card__title">Matt Hummel</h3>
-            <p class="about-aside-card__bio">{{ __('WordPress themes and plugins you can buy from the shop. Hire me for a custom build.', 'sage') }}</p>
-            <a class="about-aside-card__link" href="{{ home_url('/shop/') }}">
-              {{ __('Browse products', 'sage') }} →
+            <p class="about-aside-kicker">{!! \App\mh_svg_icon('briefcase', 14) !!} {{ __('Work', 'sage') }}</p>
+            <h3 class="about-aside-card__title">{{ __('Studio concepts', 'sage') }}</h3>
+            <p class="about-aside-card__bio">{{ __('WordPress themes and plugins I built as proof. Hire me to adapt one.', 'sage') }}</p>
+            <a class="about-aside-card__link" href="{{ esc_url(\App\mh_work_listing_url()) }}">
+              {{ __('See the work', 'sage') }} →
             </a>
           </div>
         </aside>
@@ -370,7 +367,6 @@
         {!! \App\mh_svg_icon('mail', 16) !!}
         {{ \App\field('about_cta_btn', __('Write a note', 'sage')) }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>

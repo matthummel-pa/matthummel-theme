@@ -41,8 +41,8 @@
         ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
       ],
       'link' => [
-        'label' => __('Browse products', 'sage'),
-        'href' => home_url('/shop/'),
+        'label' => __('See the work', 'sage'),
+        'href' => \App\mh_work_listing_url(),
       ],
     ])
   @endslot
@@ -63,7 +63,7 @@
             <h2 class="now-block__title">Matt Hummel</h2>
           </div>
         </div>
-        <p>{{ \App\field('now_studio_p1', __('I publish WordPress themes and plugins for sale. Hire me for a production build, or buy a theme from the shop.', 'sage')) }}</p>
+        <p>{{ \App\field('now_studio_p1', __('I publish WordPress concepts here — themes and plugins that show how I build. Hire me for a production site or a role.', 'sage')) }}</p>
         <p>{!! \App\field_html('now_studio_p2', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.', 'sage')) !!}</p>
         <a class="h-text-arrow" href="{{ home_url('/projects/') }}">
           {{ __('See the Work page', 'sage') }} →
@@ -141,7 +141,7 @@
         <ul class="now-checklist">
           @foreach (\App\field_lines('now_items', [
             __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
-            __('Shipping WordPress themes and plugins from studio projects (Work page + Shop).', 'sage'),
+            __('Shipping WordPress concepts from studio projects (Work page).', 'sage'),
             __('Writing short posts on WordPress development — code you can paste in', 'sage'),
             __('Using Cursor AI and Claude to build faster, reviewing every line before it ships', 'sage'),
             __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
@@ -198,7 +198,7 @@
         <p class="now-sidebar-card__label">Studio work</p>
         <p class="now-sidebar-card__value">Matt Hummel</p>
         <p class="now-sidebar-card__sub">WordPress themes &amp; plugins</p>
-        <a class="now-sidebar-card__link" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }} →</a>
+        <a class="now-sidebar-card__link" href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('See the work', 'sage') }} →</a>
       </div>
 
       @if (! empty($gh['public_repos']))
@@ -229,7 +229,6 @@
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>

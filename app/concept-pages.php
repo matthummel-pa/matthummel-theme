@@ -658,10 +658,9 @@ function mh_maybe_flush_concept_rewrites(): void
 /**
  * 301 redirects for retired URL prefixes.
  *
- * - /concept/{slug}/ → /shop/{slug}/      (old concept URLs)
- * - /concept/         → /shop/
- * - /projects/{slug}/ → /shop/{slug}/      (CPT singles retired in 3.3.0)
- * - /projects/        → /shop/             (listing retired; shop is now primary)
+ * - /concept/         → /projects/
+ * - /concept/{slug}/  → /projects/{slug}/
+ * /projects/ and /projects/{slug}/ stay on the Projects page and CPT.
  */
 function mh_redirect_legacy_concept_urls(): void
 {
@@ -679,93 +678,31 @@ function mh_redirect_legacy_concept_urls(): void
         $requestPath = substr($requestPath, strlen($homePath) + 1);
     }
 
-    $shopBase = function_exists('wc_get_page_permalink') ? rtrim((string) wc_get_page_permalink('shop'), '/') : home_url('/shop');
-
-    // /concept/ and /concept/{slug}/
-    if ($requestPath === 'concept' || str_starts_with($requestPath, 'concept/')) {
-        $rest = $requestPath === 'concept' ? '' : substr($requestPath, strlen('concept/'));
-        $target = $rest === '' ? $shopBase.'/' : $shopBase.'/'.$rest.'/';
-        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
-        if ($query !== '') {
-            $target .= (str_contains($target, '?') ? '&' : '?').$query;
-        }
-        wp_safe_redirect($target, 301);
-        exit;
+    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/')) {
+        return;
     }
 
-    // /projects/ listing page → /shop/
-    if ($requestPath === 'projects') {
-        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
-        $target = $shopBase.'/';
-        if ($query !== '') {
-            $target .= '?'.$query;
-        }
-        wp_safe_redirect($target, 301);
-        exit;
+    $rest = $requestPath === 'concept' ? '' : trim(substr($requestPath, strlen('concept/')), '/');
+    $aliases = [
+        'wordpress-theme-real-estate-agents' => 'acreline',
+        'real-estate-wordpress-theme-acreline' => 'acreline',
+        'hallowed-ground' => 'walkridge',
+        'hallowed-ground-battlefield-tours' => 'walkridge',
+        'wordpress-tour-theme-walkridge' => 'walkridge',
+    ];
+    if ($rest !== '' && isset($aliases[$rest])) {
+        $rest = $aliases[$rest];
     }
 
-    // /projects/{slug}/ → matching Woo product only. Unknown slugs (including
-    // retired concept URLs like bradley-goldsmith-law) fall through so WordPress
-    // can 404 instead of sending visitors to the shop or the wrong product.
-    if (str_starts_with($requestPath, 'projects/')) {
-        $rest = trim(substr($requestPath, strlen('projects/')), '/');
-        if ($rest === '' || $rest === 'bradley-goldsmith-law') {
-            return;
-        }
-
-        $slugCandidates = [$rest];
-        if (in_array($rest, ['acreline', 'real-estate-wordpress-theme-acreline', 'wordpress-theme-real-estate-agents'], true)) {
-            $slugCandidates = ['acreline'];
-        }
-        if (in_array($rest, ['hallowed-ground', 'walkridge', 'hallowed-ground-battlefield-tours', 'wordpress-tour-theme-walkridge'], true)) {
-            $slugCandidates = ['walkridge'];
-        }
-
-        $target = '';
-        if (function_exists('wc_get_products')) {
-            foreach ($slugCandidates as $candidate) {
-                $ids = wc_get_products([
-                    'slug' => $candidate,
-                    'limit' => 1,
-                    'return' => 'ids',
-                    'status' => ['publish'],
-                ]);
-                if ($ids !== []) {
-                    $link = get_permalink((int) $ids[0]);
-                    if (is_string($link) && $link !== '') {
-                        $target = $link;
-                        break;
-                    }
-                }
-            }
-
-            if ($target === '' && function_exists('wc_get_product_id_by_sku')) {
-                foreach ($slugCandidates as $candidate) {
-                    foreach (['theme-', 'plugin-'] as $prefix) {
-                        $pid = (int) wc_get_product_id_by_sku($prefix.$candidate);
-                        if ($pid > 0) {
-                            $link = get_permalink($pid);
-                            if (is_string($link) && $link !== '') {
-                                $target = $link;
-                                break 2;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($target === '') {
-            return;
-        }
-
-        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
-        if ($query !== '') {
-            $target .= (str_contains($target, '?') ? '&' : '?').$query;
-        }
-        wp_safe_redirect($target, 301);
-        exit;
+    $target = $rest === ''
+        ? home_url('/projects/')
+        : home_url('/projects/'.$rest.'/');
+    $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+    if ($query !== '') {
+        $target .= (str_contains($target, '?') ? '&' : '?').$query;
     }
+    wp_safe_redirect($target, 301);
+    exit;
 }
 
 /** Hide non-live project pages from the public site (editors can still preview). */
@@ -1270,23 +1207,13 @@ function mh_redirect_acreline_legacy_paths(): void
     $legacyWalkridgePaths = [
         'projects/hallowed-ground',
         'projects/hallowed-ground-battlefield-tours',
-        'projects/walkridge',
         'product/hallowed-ground',
         'product/hallowed-ground-battlefield-tours',
         'shop/hallowed-ground',
     ];
 
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
-        $target = home_url('/product/walkridge/');
-        if (function_exists('wc_get_product_id_by_sku')) {
-            $pid = (int) wc_get_product_id_by_sku('theme-walkridge');
-            if ($pid > 0) {
-                $link = get_permalink($pid);
-                if (is_string($link) && $link !== '') {
-                    $target = $link;
-                }
-            }
-        }
+        $target = home_url('/projects/walkridge/');
         wp_safe_redirect($target, 301);
         exit;
     }
@@ -1295,16 +1222,7 @@ function mh_redirect_acreline_legacy_paths(): void
         return;
     }
 
-    $target = home_url('/product/acreline/');
-    if (function_exists('wc_get_product_id_by_sku')) {
-        $pid = (int) wc_get_product_id_by_sku('theme-acreline');
-        if ($pid > 0) {
-            $link = get_permalink($pid);
-            if (is_string($link) && $link !== '') {
-                $target = $link;
-            }
-        }
-    }
+    $target = home_url('/projects/acreline/');
 
     $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
     if ($query !== '') {
