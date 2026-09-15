@@ -304,7 +304,7 @@
         <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
-        <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+        <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Projects', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
         <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
       </div>
@@ -316,7 +316,7 @@
       <a class="h-page-nav__pill" role="listitem" href="#process">{{ __('Process', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#receive">{{ __('Receive', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#fit">{{ __('Fit', 'sage') }}</a>
-      <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Work', 'sage') }}</a>
+      <a class="h-page-nav__pill" role="listitem" href="#work">{{ __('Projects', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#journal">{{ __('Journal', 'sage') }}</a>
       <a class="h-page-nav__pill" role="listitem" href="#faq">{{ __('FAQ', 'sage') }}</a>
     </div>
@@ -1056,7 +1056,7 @@
       <p class="eyebrow eyebrow--on-dark">{{ __('Get in touch', 'sage') }}</p>
       <h2 id="h-cta-heading" class="display-title is-section h-cta__heading">{{ \App\field('home_help_h2', __('Hiring or building?', 'sage')) }}</h2>
       <p class="h-cta__body">{!! \App\field_html('home_help_p2', sprintf(
-        __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse the Work page</a>. I usually reply %s.', 'sage'),
+        __('Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse projects</a>. I usually reply %s.', 'sage'),
         \App\mh_reply_sla('phrase')
       )) !!}</p>
     </div>

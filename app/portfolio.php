@@ -3863,6 +3863,26 @@ add_action('init', function (): void {
     update_option('mh_projects_portfolio_copy_v1', '1', false);
 }, 37);
 
+add_action('init', function (): void {
+    if (get_option('mh_projects_portfolio_copy_v2') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home');
+    if ($home instanceof \WP_Post) {
+        $help = (string) get_post_meta($home->ID, 'mh_f_home_help_p2', true);
+        $from = [
+            'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse the Work page</a>. I usually reply within one business day (ET).',
+            'Recruiters can <a href="/contact/">write through the contact form</a>. Shops can <a href="/projects/">browse the Work page</a>. I usually reply within a day.',
+        ];
+        if (in_array($help, $from, true)) {
+            update_post_meta($home->ID, 'mh_f_home_help_p2', str_replace('browse the Work page', 'browse projects', $help));
+        }
+    }
+
+    update_option('mh_projects_portfolio_copy_v2', '1', false);
+}, 38);
+
 /**
  * Ensure the project brief page exists (idempotent).
  *
