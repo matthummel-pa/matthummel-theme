@@ -3956,6 +3956,13 @@ add_action('init', function (): void {
                 ],
                 'to' => mh_home_hero_default('lede'),
             ],
+            'mh_f_home_cta_secondary' => [
+                'from' => [
+                    'Browse work',
+                    'Browse projects',
+                ],
+                'to' => mh_home_hero_default('cta_secondary'),
+            ],
             'mh_f_home_help_h2' => [
                 'from' => [
                     'Hiring or building?',
@@ -3965,14 +3972,30 @@ add_action('init', function (): void {
             'mh_f_home_write_h2' => [
                 'from' => [
                     'Notes from real WordPress work.',
+                    'Recent writing.',
                 ],
                 'to' => __('Recent writing.', 'sage'),
             ],
             'mh_f_home_work_h2' => [
                 'from' => [
                     'WordPress concepts.',
+                    'WordPress themes and plugins.',
+                    'Selected projects.',
                 ],
                 'to' => __('Selected projects.', 'sage'),
+            ],
+            'mh_f_home_write_intro' => [
+                'from' => [
+                    'Practical posts for shops and developers — handoffs, themes, and lessons from builds. Most include something you can reuse.',
+                ],
+                'to' => __('Notes from WordPress builds — themes, handoffs, and things I want to remember next time.', 'sage'),
+            ],
+            'mh_f_home_work_intro' => [
+                'from' => [
+                    'Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.',
+                    'WordPress themes and plugins.',
+                ],
+                'to' => __('WordPress themes and plugins I built in public. Open one for a short story and a live demo when I have one.', 'sage'),
             ],
             'mh_f_seo_title' => [
                 'from' => [
