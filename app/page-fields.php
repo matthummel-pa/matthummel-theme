@@ -264,11 +264,11 @@ function mh_seo_field_group(): array
 function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): string
 {
     $copy = [
-        'h1' => __('Matt Hummel — WordPress developer', 'sage'),
-        'role' => __('Full-stack themes, plugins, and web apps for shops and agencies.', 'sage'),
-        'lede' => __('I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.', 'sage'),
-        'seo_title' => __('WordPress Developer for Shops & Agencies', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.', 'sage'),
+        'h1' => __('Matt Hummel', 'sage'),
+        'role' => __('WordPress developer — themes, plugins, and web apps.', 'sage'),
+        'lede' => __('I build WordPress sites shops can edit and agencies can hand off. Open for full-time, contract, or freelance.', 'sage'),
+        'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
+        'seo_desc' => __('WordPress developer for shops and agencies. Themes, plugins, and clear handoffs. Say hello.', 'sage'),
         'kicker' => __('WordPress · plugins · web apps', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
@@ -378,11 +378,11 @@ function mh_home_fields(): array
             ['home_receive_caption', __('Walkthrough caption', 'sage'), 'text', __('Owner updating a page in wp-admin — fields you can edit without a developer.', 'sage')],
         ],
         __('What I build', 'sage') => [
-            ['home_build_h2', __('Section label', 'sage'), 'text', __('What I help with', 'sage')],
+            ['home_build_h2', __('Section heading', 'sage'), 'text', __('What I do.', 'sage')],
             ['home_build_1_title', __('Service 1 title', 'sage'), 'text', __('WordPress sites', 'sage')],
-            ['home_build_1_text', __('Service 1 description', 'sage'), 'textarea', __('Clean, fast, and editable. Shops get something they own — not a subscription they rent.', 'sage')],
+            ['home_build_1_text', __('Service 1 description', 'sage'), 'textarea', __('Custom themes shops can edit in wp-admin. You own the code.', 'sage')],
             ['home_build_2_title', __('Service 2 title', 'sage'), 'text', __('Plugins & tools', 'sage')],
-            ['home_build_2_text', __('Service 2 description', 'sage'), 'textarea', __('Custom PHP when WordPress needs a new part. Small, focused, and readable.', 'sage')],
+            ['home_build_2_text', __('Service 2 description', 'sage'), 'textarea', __('Small PHP plugins when WordPress needs a new part.', 'sage')],
             ['home_build_3_title', __('Service 3 title', 'sage'), 'text', __('Full-stack web apps', 'sage')],
             ['home_build_3_text', __('Service 3 description', 'sage'), 'textarea', __('Interfaces, services, and APIs when a theme alone is not enough.', 'sage')],
         ],
@@ -533,7 +533,7 @@ function page_field_map(): array
             ],
             __('Call to action', 'sage') => [
                 ['about_cta_kicker', __('Kicker', 'sage'), 'text', __('Get in touch', 'sage')],
-                ['about_cta_h2', __('Heading', 'sage'), 'text', __('Need a full-stack or WordPress development partner?', 'sage')],
+                ['about_cta_h2', __('Heading', 'sage'), 'text', __('Need a WordPress or full-stack developer?', 'sage')],
                 ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')],
                 ['about_cta_btn', __('Button label', 'sage'), 'text', __('Write a note', 'sage')],
             ],
@@ -649,8 +649,8 @@ function page_field_map(): array
         'template-code.blade.php' => [
             __('Intro', 'sage') => [
                 ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
-                ['code_h1', __('Heading', 'sage'), 'text', __('WordPress and full-stack code you can use.', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')],
+                ['code_h1', __('Heading', 'sage'), 'text', __('Code and repos.', 'sage')],
+                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')],
             ],
             __('Practice', 'sage') => [
                 ['code_do_h2', __('Heading', 'sage'), 'text', __('What I work on.', 'sage')],

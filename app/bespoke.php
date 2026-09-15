@@ -3915,3 +3915,164 @@ add_action('init', function (): void {
 
     update_option('mh_home_portfolio_hero_v1', true);
 }, 91);
+
+/**
+ * One-time: shorter home hero + About/Code copy for the minimal portfolio layout.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_minimal_blue_copy_v2') || wp_installing()) {
+        return;
+    }
+
+    $pages = [
+        'home' => get_page_by_path('home') ?: get_page_by_path('homepage'),
+        'about' => get_page_by_path('about'),
+        'code' => get_page_by_path('code'),
+    ];
+
+    if (! $pages['home'] && get_option('show_on_front') === 'page') {
+        $frontId = (int) get_option('page_on_front');
+        $pages['home'] = $frontId ? get_post($frontId) : null;
+    }
+
+    $swaps = [
+        'home' => [
+            'mh_f_home_h1' => [
+                'from' => [
+                    'Matt Hummel — WordPress developer',
+                    'Matt Hummel',
+                ],
+                'to' => mh_home_hero_default('h1'),
+            ],
+            'mh_f_home_role' => [
+                'from' => [
+                    'Full-stack themes, plugins, and web apps for shops and agencies.',
+                ],
+                'to' => mh_home_hero_default('role'),
+            ],
+            'mh_f_home_lede' => [
+                'from' => [
+                    'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+                ],
+                'to' => mh_home_hero_default('lede'),
+            ],
+            'mh_f_home_cta_secondary' => [
+                'from' => [
+                    'Browse work',
+                    'Browse projects',
+                ],
+                'to' => mh_home_hero_default('cta_secondary'),
+            ],
+            'mh_f_home_help_h2' => [
+                'from' => [
+                    'Hiring or building?',
+                ],
+                'to' => __('Want to work together?', 'sage'),
+            ],
+            'mh_f_home_write_h2' => [
+                'from' => [
+                    'Notes from real WordPress work.',
+                    'Recent writing.',
+                ],
+                'to' => __('Recent writing.', 'sage'),
+            ],
+            'mh_f_home_work_h2' => [
+                'from' => [
+                    'WordPress concepts.',
+                    'WordPress themes and plugins.',
+                    'Selected projects.',
+                ],
+                'to' => __('Selected projects.', 'sage'),
+            ],
+            'mh_f_home_write_intro' => [
+                'from' => [
+                    'Practical posts for shops and developers — handoffs, themes, and lessons from builds. Most include something you can reuse.',
+                ],
+                'to' => __('Notes from WordPress builds — themes, handoffs, and things I want to remember next time.', 'sage'),
+            ],
+            'mh_f_home_work_intro' => [
+                'from' => [
+                    'Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.',
+                    'WordPress themes and plugins.',
+                ],
+                'to' => __('WordPress themes and plugins I built in public. Open one for a short story and a live demo when I have one.', 'sage'),
+            ],
+            'mh_f_home_build_h2' => [
+                'from' => [
+                    'What I help with',
+                    'What I do.',
+                ],
+                'to' => __('What I do.', 'sage'),
+            ],
+            'mh_f_home_build_1_text' => [
+                'from' => [
+                    'Clean, fast, and editable. Shops get something they own — not a subscription they rent.',
+                ],
+                'to' => __('Custom themes shops can edit in wp-admin. You own the code.', 'sage'),
+            ],
+            'mh_f_home_build_2_text' => [
+                'from' => [
+                    'Custom PHP when WordPress needs a new part. Small, focused, and readable.',
+                ],
+                'to' => __('Small PHP plugins when WordPress needs a new part.', 'sage'),
+            ],
+            'mh_f_seo_title' => [
+                'from' => [
+                    'WordPress Developer for Shops & Agencies | Matt Hummel',
+                ],
+                'to' => mh_home_hero_default('seo_title'),
+            ],
+            'mh_f_seo_desc' => [
+                'from' => [
+                    'WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.',
+                ],
+                'to' => mh_home_hero_default('seo_desc'),
+            ],
+        ],
+        'about' => [
+            'mh_f_about_lede' => [
+                'from' => [
+                    'I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.',
+                ],
+                'to' => __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage'),
+            ],
+            'mh_f_about_cta_h2' => [
+                'from' => [
+                    'Need a full-stack or WordPress development partner?',
+                ],
+                'to' => __('Need a WordPress or full-stack developer?', 'sage'),
+            ],
+        ],
+        'code' => [
+            'mh_f_code_h1' => [
+                'from' => [
+                    'Full-stack and WordPress code you can use.',
+                    'WordPress and full-stack code you can use.',
+                ],
+                'to' => __('Code and repos.', 'sage'),
+            ],
+            'mh_f_code_lede' => [
+                'from' => [
+                    'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+                ],
+                'to' => __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage'),
+            ],
+        ],
+    ];
+
+    foreach ($swaps as $slug => $map) {
+        $page = $pages[$slug] ?? null;
+        if (! $page) {
+            continue;
+        }
+        $id = (int) $page->ID;
+        foreach ($map as $key => $swap) {
+            $cur = (string) get_post_meta($id, $key, true);
+            if ($cur === '' || in_array($cur, $swap['from'], true)) {
+                update_post_meta($id, $key, $swap['to']);
+            }
+        }
+    }
+
+    update_option('mh_minimal_blue_copy_v2', true);
+}, 92);

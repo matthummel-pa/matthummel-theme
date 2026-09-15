@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.31 — Minimal blue portfolio
+
+- Front-end returns to cool paper and navy/blue accents. Tomato/cream studio pops are gone; `studio.css` is now the minimal blue skin.
+- Home is short: hero, **What I do**, projects, journal, and one closing CTA. Hire process, fit, FAQ, and recruiter glance move to About. GitHub depth stays on Code.
+- Copy defaults use plainer developer language. One-shot `mh_minimal_blue_copy_v1` rewrites exact prior field strings.
+- Headings stay bold Inter (weight 900). Soft blue motion on the hero; reduced-motion still wins.
+
 ## 3.5.30 — Bold blocky studio skin
 
 - Front-end palette leaves navy paper for warm cream, ink, and Gutenberg-aligned pops (tomato, amber, lime, violet).
