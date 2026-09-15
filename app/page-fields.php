@@ -2217,10 +2217,10 @@ add_action('init', function (): void {
 });
 
 /**
- * One-time: fold About about_p1–about_p4 into the single story WYSIWYG.
+ * One-time: fold About about_p1–about_p4 into the single story WYSIWYG, then drop the old keys.
  */
 add_action('init', function (): void {
-    if (get_option('mh_about_story_wysiwyg_v1') || wp_installing()) {
+    if (get_option('mh_about_story_wysiwyg_v2') || wp_installing()) {
         return;
     }
 
@@ -2233,7 +2233,19 @@ add_action('init', function (): void {
                 update_post_meta($aboutId, 'mh_f_about_story', $joined);
             }
         }
+        foreach (['about_p1', 'about_p2', 'about_p3', 'about_p4'] as $key) {
+            delete_post_meta($aboutId, 'mh_f_'.$key);
+        }
     }
 
+    update_option('mh_about_story_wysiwyg_v2', true, false);
     update_option('mh_about_story_wysiwyg_v1', true, false);
 });
+
+add_filter('is_protected_meta', function ($protected, $meta_key, $meta_type) {
+    if ($meta_type === 'post' && in_array($meta_key, ['mh_f_about_p1', 'mh_f_about_p2', 'mh_f_about_p3', 'mh_f_about_p4'], true)) {
+        return true;
+    }
+
+    return $protected;
+}, 10, 3);

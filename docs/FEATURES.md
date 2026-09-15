@@ -4,7 +4,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.25 About story WYSIWYG)
 
-- About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta still migrates into the new field on theme load.
+- About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta migrates into the new field on theme load, then those four keys are removed from the edit screen.
 - Front end renders with `mh_about_story_html()` (`wpautop` + `wp_kses_post`). Style paragraphs via `.about-story__body`, not four hardcoded `<p>` tags.
 
 ## Editor’s notes (3.5.24 shop catalog padding)
