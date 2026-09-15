@@ -203,6 +203,7 @@ body {
 
 .h-hero__atmosphere {
   overflow: hidden;
+  z-index: 0;
 }
 
 .h-hero__mesh {
@@ -213,31 +214,59 @@ body {
   background-size: 44px 44px;
 }
 
+.h-hero__copy,
+.h-hero__viz {
+  position: relative;
+  z-index: 2;
+}
+
+.h-hero-work {
+  background: var(--color-canvas);
+}
+
 .h-hero__blob {
   border-radius: 4px;
   filter: none;
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
+  opacity: .9;
   animation: studio-drift 14s ease-in-out infinite alternate;
 }
 
 .h-hero__blob--a {
-  width: min(18rem, 46vw);
-  height: min(18rem, 46vw);
-  top: 6%;
-  right: 4%;
+  width: min(9.5rem, 22vw);
+  height: min(9.5rem, 22vw);
+  top: 3%;
+  right: 1.5%;
+  left: auto;
   background: var(--color-pop-amber);
-  box-shadow: 10px 10px 0 var(--color-pop-tomato);
+  box-shadow: 8px 8px 0 var(--color-pop-tomato);
 }
 
 .h-hero__blob--b {
-  width: min(13rem, 36vw);
-  height: min(13rem, 36vw);
-  bottom: 10%;
-  left: 2%;
+  width: min(6.5rem, 16vw);
+  height: min(6.5rem, 16vw);
+  bottom: 6%;
+  left: auto;
+  right: 22%;
   background: var(--color-pop-violet);
-  box-shadow: 8px 8px 0 var(--color-pop-lime);
+  box-shadow: 6px 6px 0 var(--color-pop-lime);
   animation-duration: 18s;
   animation-delay: -4s;
+}
+
+@media (max-width: 900px) {
+  .h-hero__blob--a {
+    width: 5.5rem;
+    height: 5.5rem;
+    top: .4rem;
+    right: .4rem;
+  }
+  .h-hero__blob--b {
+    width: 4.25rem;
+    height: 4.25rem;
+    bottom: .5rem;
+    right: 1rem;
+  }
 }
 
 .h-hero__kicker {
