@@ -1,0 +1,13 @@
+{
+  "name": "matthummel Sage 11",
+  "install": "test -x /usr/local/bin/google-chrome\ncomposer install --no-interaction --prefer-dist\nnpm install",
+  "start": "for i in $(seq 1 45); do xdpyinfo -display :1 >/dev/null 2>&1 && exit 0; sleep 1; done\necho \"VNC display :1 did not become ready\" >&2\nexit 1",
+  "chromeExecutablePath": "/usr/local/bin/google-chrome",
+  "enable_testing": true,
+  "ports": [
+    {
+      "name": "WordPress",
+      "port": 8080
+    }
+  ]
+}
