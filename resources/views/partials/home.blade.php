@@ -264,9 +264,6 @@
               {{ \App\mh_availability_label($gh, __('Open to work', 'sage')) }}
             </span>
           @endif
-          <a class="h-hero-work__foot-link" href="{{ home_url('/shop/') }}">
-            {{ __('Browse all', 'sage') }} →
-          </a>
         </div>
 
       </div>
@@ -289,56 +286,6 @@
     @endforeach
   </div>
 </div>
-
-{{-- Visitor pathways — hire / build / shop --}}
-<section class="h-pathways" id="start" aria-labelledby="h-pathways-heading">
-  <div class="container wide">
-    <div class="h-pathways__head">
-      <h2 id="h-pathways-heading" class="h-pathways__title">
-        {{ \App\field('home_path_h2', __('Where to start', 'sage')) }}
-      </h2>
-      <p class="h-pathways__lede">
-        {{ \App\field('home_path_lede', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')) }}
-      </p>
-    </div>
-    <div class="h-pathways__grid">
-      @php
-        $pathways = [
-          [
-            'icon' => 'briefcase',
-            'title' => \App\field('home_path_1_title', __('Hire me', 'sage')),
-            'text' => \App\field('home_path_1_text', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')),
-            'url' => \App\field_href('home_path_1_url', '/hire/'),
-            'cta' => \App\field('home_path_1_cta', __('See hire page', 'sage')),
-          ],
-          [
-            'icon' => 'pen',
-            'title' => \App\field('home_path_2_title', __('Build with me', 'sage')),
-            'text' => \App\field('home_path_2_text', __('A short brief for shops and agencies. I use it to prepare for the first meeting.', 'sage')),
-            'url' => \App\field_href('home_path_2_url', '/start/'),
-            'cta' => \App\field('home_path_2_cta', __('Start a brief', 'sage')),
-          ],
-          [
-            'icon' => 'cart',
-            'title' => \App\field('home_path_3_title', __('Explore themes & plugins', 'sage')),
-            'text' => \App\field('home_path_3_text', __('Buy a pack, try a live demo, or read what ships in the zip.', 'sage')),
-            'url' => \App\field_href('home_path_3_url', '/shop/'),
-            'cta' => \App\field('home_path_3_cta', __('Browse the shop', 'sage')),
-          ],
-        ];
-      @endphp
-      @foreach ($pathways as $i => $path)
-        <a class="h-pathway" href="{{ esc_url($path['url']) }}">
-          <span class="h-pathway__num" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
-          <span class="h-pathway__icon" aria-hidden="true">{!! \App\mh_svg_icon($path['icon'], 22) !!}</span>
-          <h3 class="h-pathway__title">{{ $path['title'] }}</h3>
-          <p class="h-pathway__text">{{ $path['text'] }}</p>
-          <span class="h-pathway__cta">{{ $path['cta'] }} <span aria-hidden="true">→</span></span>
-        </a>
-      @endforeach
-    </div>
-  </div>
-</section>
 
 @include('partials.recruiter-glance')
 
@@ -417,8 +364,6 @@
           </p>
           <div class="h-about__links">
             <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('Full background & stack', 'sage') }} →</a>
-            <a class="h-text-arrow" href="{{ home_url('/now/') }}">{{ __('What I\'m doing now', 'sage') }} →</a>
-            <a class="h-text-arrow" href="{{ home_url('/hire/') }}">{{ __('Employers and resume', 'sage') }} →</a>
           </div>
         </div>
       </div>
@@ -491,7 +436,6 @@
       </div>
       <p class="h-skills__note">
         {{ __('Plain outcomes for shops and agencies. Developers who want the stack can read About.', 'sage') }}
-        <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('Stack & approach', 'sage') }} →</a>
       </p>
     </div>
 
@@ -519,7 +463,6 @@
           <h2 id="h-process-heading" class="h-section__title">{{ \App\field('home_process_h2', __('How a project goes.', 'sage')) }}</h2>
           <p class="h-process__subhead">Four steps. Written scope. You own everything at the end.</p>
         </div>
-        <a class="h-text-arrow" href="{{ home_url('/services/') }}">Full services →</a>
       </div>
 
       <div class="h-process__grid">
@@ -674,12 +617,6 @@
         @endif
       </div>
     </div>
-
-    @include('partials.discovery-cta', [
-      'title' => __('Start a project brief.', 'sage'),
-      'body'  => __('A rough idea of who the site is for, what it needs to do, and what success looks like — in four short steps. I use it to prepare for our first meeting. No wireframe required.', 'sage'),
-      'cta'   => __('Start a brief', 'sage'),
-    ])
   </div>
 </section>
 
@@ -739,7 +676,6 @@
             {{ __('Written scope, editable pages, and a clean handoff. Deep stack notes stay on About for developers and hiring managers.', 'sage') }}
           </p>
         </div>
-        <a class="h-text-arrow" href="{{ home_url('/about/') }}">{{ __('How I build (About)', 'sage') }} →</a>
       </div>
 
       <div class="h-principles__grid h-principles__grid--compact">
@@ -799,11 +735,6 @@
       @foreach ($caseWork as $i => $p)
         @include('partials.home-case-card', ['p' => $p, 'featured' => $i === 0])
       @endforeach
-    </div>
-
-    <div class="h-work-cta-bar">
-      <p>{{ __('WordPress themes and plugins for sale — install, brand, and ship.', 'sage') }}</p>
-      <a class="btn" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }}</a>
     </div>
 
   </div>
@@ -1069,9 +1000,7 @@
             </article>
           @endforeach
 
-          {{-- Stack footer --}}
           <div class="h-journal__stack-footer">
-            <a class="h-text-arrow" href="{{ $writing }}">Browse all posts →</a>
             <a class="h-journal__rss h-journal__rss--sm" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml">
               {!! \App\mh_svg_icon('rss', 13) !!} RSS
             </a>
@@ -1136,7 +1065,6 @@
         {!! \App\mh_svg_icon('mail', 17) !!}
         {{ \App\field('home_link_hello', __('Say hello', 'sage')) }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>

@@ -8,8 +8,6 @@
   $desktop = $shots[0] ?? '';
   $mobile = $shots[1] ?? ($shots[0] ?? '');
   $isConcept = ! empty($p['is_concept']) || empty($p['product_id']);
-  $demo = trim((string) ($p['demo'] ?? ''));
-  $github = trim((string) ($p['github'] ?? $p['concept'] ?? ''));
   $details = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
   $challenge = trim((string) ($p['challenge'] ?? ''));
   $approach = trim((string) ($p['approach'] ?? ''));
@@ -94,15 +92,5 @@
     @elseif ($blurb !== '')
       <p class="h-case__blurb">{{ $blurb }}</p>
     @endif
-
-    <div class="h-case__actions">
-      @if ($demo !== '')
-        <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Live demo', 'sage') }}</a>
-      @endif
-      @if ($github !== '')
-        <a class="btn btn-outline" href="{{ esc_url($github) }}" rel="noopener" target="_blank">{{ __('Code', 'sage') }}</a>
-      @endif
-      <a class="h-text-arrow" href="{{ $details }}">{{ __('Product details', 'sage') }} <span aria-hidden="true">→</span></a>
-    </div>
   </div>
 </article>

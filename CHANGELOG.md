@@ -4,6 +4,7 @@
 
 - Home is the developer portfolio again (name, hire CTA, work preview). Not a theme-sales landing.
 - Sales-hero one-shots are retired. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 offer strings.
+- Homepage CTAs are trimmed to Hire me + Browse work in the hero, and Say hello in the closing band. Pathways, Start a brief, and extra Browse buttons are gone.
 - Product pages keep the buy path from 3.5.26. Shop stays at `/shop/`.
 
 ## 3.5.26 — Shop-first homepage + product buy path

@@ -5,6 +5,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.5.27 portfolio home)
 
 - Home is the hireable portfolio. `mh_home_hero_default()` restores the name marque, Hire me → `/hire/`, and Browse work → `/shop/`.
+- Keep one primary home button (hero Hire me, closing Say hello). Do not restore the pathway trio, discovery brief, or extra Browse products bars unless Matt asks.
 - Do not reintroduce a product-offer H1 or Buy Acreline as the primary home CTA unless Matt asks.
 - `mh_home_sales_hero_v1` / `v2` are no-ops. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 sales strings.
 - Product pages still use the 3.5.26 buy path (guarantee, sticky bar, For developers accordion).
