@@ -25,41 +25,40 @@
   $countLabel = $cat === ''
     ? sprintf(_n('%d project', '%d projects', $total, 'sage'), $total)
     : sprintf(_n('%d project', '%d projects', $shownCount, 'sage'), $shownCount);
-  $fitCards = \App\mh_work_page_fit();
   $howSteps = \App\mh_work_page_how();
   $workFaqs = \App\mh_work_page_faq();
 @endphp
 
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Project snapshot', 'sage')])
-  <p class="eyebrow">{{ \App\field('work_kicker', __('Projects', 'sage')) }}</p>
+  <p class="eyebrow">{{ \App\field('work_kicker', \App\mh_projects_listing_default('kicker')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('work_h1', __('Selected WordPress work.', 'sage')) }}
+    {{ \App\field('work_h1', \App\mh_projects_listing_default('h1')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('work_lede', __('Studio themes and plugins I built to show how I work. Live demos and stack notes. Hire me to adapt one for a shop, agency, or full-time role.', 'sage')) }}
+    {{ \App\field('work_lede', \App\mh_projects_listing_default('lede')) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
-      {!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', __('Say hello', 'sage')) }}
+      {!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', \App\mh_projects_listing_default('hero_cta_primary')) }}
     </a>
     <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
-      {{ \App\field('work_hero_cta_secondary', __('Hire me', 'sage')) }} <span aria-hidden="true">→</span>
+      {{ \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')) }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
     @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/projects',
+      'chrome' => 'hummelwp.com/projects',
       'icon' => 'briefcase',
-      'title' => __('Projects', 'sage'),
-      'meta' => __('Demos, stack, hire', 'sage'),
+      'title' => __('Sample work', 'sage'),
+      'meta' => __('Live demos and public code', 'sage'),
       'stats' => [
-        ['value' => number_format_i18n($total), 'label' => __('Listed projects', 'sage')],
-        ['value' => 'Sage', 'label' => __('Tailwind · Vite', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Themes & plugins', 'sage')],
-        ['value' => 'GitHub', 'label' => __('Public source', 'sage')],
+        ['value' => number_format_i18n($total), 'label' => __('Projects', 'sage')],
+        ['value' => __('Live', 'sage'), 'label' => __('Clickable demos', 'sage')],
+        ['value' => 'GitHub', 'label' => __('Public code', 'sage')],
+        ['value' => 'WordPress', 'label' => __('Themes and plugins', 'sage')],
       ],
       'link' => [
-        'label' => __('Say hello', 'sage'),
+        'label' => \App\mh_projects_listing_default('hero_cta_primary'),
         'href' => home_url('/contact/'),
       ],
     ])
@@ -71,15 +70,15 @@
     <div class="work-empty" role="status">
       <div class="work-empty__icon" aria-hidden="true">{!! \App\mh_svg_icon('briefcase', 28) !!}</div>
       <h2 class="work-empty__title">
-        {{ \App\field('work_empty_h2', __('Projects are on the way.', 'sage')) }}
+        {{ \App\field('work_empty_h2', \App\mh_projects_listing_default('empty_h2')) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I am publishing the first studio projects here. Write and tell me what kind of shop you run, or what you need built.', 'sage')) }}
+        {{ \App\field('work_empty_text', \App\mh_projects_listing_default('empty_text')) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
           {!! \App\mh_svg_icon('mail', 16) !!}
-          {{ \App\field('work_empty_cta', __('Say hello', 'sage')) }}
+          {{ \App\field('work_empty_cta', \App\mh_projects_listing_default('empty_cta')) }}
         </a>
       </div>
     </div>
@@ -87,46 +86,16 @@
 
   @include('partials.cta-band', [
     'kicker' => __('Work with me', 'sage'),
-    'title' => __('Need a WordPress site before this list fills in?', 'sage'),
-    'text' => __('Tell me what you run — tour, inn, shop, or restaurant — or the role you are filling. I usually reply within a day.', 'sage'),
+    'title' => __('Need a WordPress site?', 'sage'),
+    'text' => __('Tell me what you run, or the role you are filling. I usually reply within a day.', 'sage'),
     'label' => __('Say hello', 'sage'),
     'secondary' => __('Hire me', 'sage'),
     'secondaryHref' => home_url('/hire/'),
   ])
 @else
-  <section class="pf-section work-guide" aria-labelledby="work-context-heading">
-    <div class="container wide">
-      <h2 id="work-context-heading" class="display-title is-section">
-        {{ \App\field('work_context_h2', __('What these projects show.', 'sage')) }}
-      </h2>
-      <div class="work-guide__prose">
-        <p>{{ \App\field('work_context_p1', __('Each card is a studio project — screenshots, stack notes, and a live demo when one exists. Hire me to adapt one for a shop, agency overflow, or a full-time role.', 'sage')) }}</p>
-        {!! \App\field_html('work_context_p2', __('These are studio builds, not client sites. Source is on GitHub. Developers can read the stack on each page or on <a href="/about/">About</a>. If one fits, <a href="/contact/">write and say which</a>.', 'sage')) !!}
-      </div>
-    </div>
-  </section>
-
-  <section class="pf-section pf-section--alt work-guide" aria-labelledby="work-fit-heading">
-    <div class="container wide">
-      <p class="eyebrow">{{ __('Browse by role', 'sage') }}</p>
-      <h2 id="work-fit-heading" class="display-title is-section">
-        {{ \App\field('work_fit_h2', __('Who this page is for.', 'sage')) }}
-      </h2>
-      <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', __('Shops that need a WordPress site, agencies with overflow, developers reading the code, and hiring managers reviewing public work.', 'sage')) }}</p>
-      <div class="svc-audience-grid">
-        @foreach ($fitCards as $card)
-          <article class="svc-audience-card">
-            <div class="svc-audience-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($card['icon'], 20) !!}</div>
-            <h3 class="svc-audience-card__title">{{ $card['title'] }}</h3>
-            <p class="svc-audience-card__body">{{ $card['body'] }}</p>
-          </article>
-        @endforeach
-      </div>
-    </div>
-  </section>
-
   <div class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
-    <h2 id="work-gallery-heading" class="display-title is-section">{{ __('Projects', 'sage') }}</h2>
+    <h2 id="work-gallery-heading" class="display-title is-section">{{ \App\mh_projects_listing_default('gallery_h2') }}</h2>
+    <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', \App\mh_projects_listing_default('fit_intro')) }}</p>
 
     <div class="write-tools">
       <div class="search-wrap search-wrap--inline">
@@ -138,7 +107,7 @@
               type="search"
               class="js-mh-search"
               data-work-filter
-              placeholder="{{ esc_attr(\App\field('work_search_ph', __('Search projects…', 'sage'))) }}"
+              placeholder="{{ esc_attr(\App\field('work_search_ph', \App\mh_projects_listing_default('search_ph'))) }}"
               autocomplete="off"
             >
           </label>
@@ -187,17 +156,17 @@
     @endif
 
     <div class="work-footer-links">
-      {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live demos open from each project when available.', 'sage')) !!}
+      {!! \App\field_html('work_foot', \App\mh_projects_listing_default('foot')) !!}
     </div>
   </div>
 
   <section class="pf-section work-guide" aria-labelledby="work-how-heading">
     <div class="container wide">
-      <p class="eyebrow">{{ __('From project to hello', 'sage') }}</p>
+      <p class="eyebrow">{{ __('Three steps', 'sage') }}</p>
       <h2 id="work-how-heading" class="display-title is-section">
-        {{ \App\field('work_how_h2', __('How to start from a project.', 'sage')) }}
+        {{ \App\field('work_how_h2', \App\mh_projects_listing_default('how_h2')) }}
       </h2>
-      <p class="lead work-guide__intro">{{ \App\field('work_how_intro', __('You do not need the perfect match first. Open a project, try the demo, or send a short note about what you would change.', 'sage')) }}</p>
+      <p class="lead work-guide__intro">{{ \App\field('work_how_intro', \App\mh_projects_listing_default('how_intro')) }}</p>
       <div class="svc-process">
         @foreach ($howSteps as $step)
           <article class="svc-process__step">
@@ -226,13 +195,13 @@
       <div class="svc-faq-aside">
         <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
         <h2 id="work-faq-heading" class="display-title is-section">
-          {{ \App\field('work_faq_h2', __('Questions about these projects.', 'sage')) }}
+          {{ \App\field('work_faq_h2', \App\mh_projects_listing_default('faq_h2')) }}
         </h2>
-        <p class="svc-faq-aside__intro">{{ \App\field('work_faq_intro', __('Straight answers about these studio builds, demos, and hiring me for a custom site.', 'sage')) }}</p>
+        <p class="svc-faq-aside__intro">{{ \App\field('work_faq_intro', \App\mh_projects_listing_default('faq_intro')) }}</p>
         <div class="svc-faq-aside__cta">
-          <p>{{ __('Question not here?', 'sage') }}</p>
+          <p>{{ __('Still have a question?', 'sage') }}</p>
           <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
-            {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me directly', 'sage') }}
+            {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me', 'sage') }}
           </a>
         </div>
       </div>
@@ -247,25 +216,12 @@
     </div>
   </section>
 
-  <div class="container wide page-block">
-    <div class="work-cta-strip">
-      <div class="work-cta-strip__copy">
-        <h2>{{ \App\field('work_band_h2', __('Want something like this?', 'sage')) }}</h2>
-        <p>{{ \App\field('work_band_lede', __('These are studio projects. Hire me to adapt one, or write about a role. Tell me which one fits.', 'sage')) }}</p>
-      </div>
-      <div class="work-cta-strip__actions">
-        <a class="btn" href="{{ home_url('/contact/') }}">{!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', __('Say hello', 'sage')) }}</a>
-        <a class="about-text-link" href="{{ home_url('/hire/') }}">{{ \App\field('work_hero_cta_secondary', __('Hire me', 'sage')) }} <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </div>
-
   @include('partials.cta-band', [
     'kicker' => __('Work with me', 'sage'),
-    'title' => __('Ready to adapt one of these?', 'sage'),
-    'text' => __('Tell me which project fits and what you would change. I usually reply within a day.', 'sage'),
-    'label' => __('Say hello', 'sage'),
-    'secondary' => __('Hire me', 'sage'),
+    'title' => \App\field('work_band_h2', \App\mh_projects_listing_default('band_h2')),
+    'text' => \App\field('work_band_lede', \App\mh_projects_listing_default('band_lede')),
+    'label' => \App\field('work_hero_cta_primary', \App\mh_projects_listing_default('hero_cta_primary')),
+    'secondary' => \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')),
     'secondaryHref' => home_url('/hire/'),
   ])
 @endif

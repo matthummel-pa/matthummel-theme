@@ -722,7 +722,7 @@
           {{ \App\field('home_work_h2', __('WordPress concepts.', 'sage')) }}
         </h2>
         <p class="h-work-intro">
-          {{ \App\field('home_work_intro', __('Live demos for tours, shops, and inns. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.', 'sage')) }}
+          {{ \App\field('home_work_intro', __('Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.', 'sage')) }}
         </p>
       </div>
       <div class="h-work-header__meta">

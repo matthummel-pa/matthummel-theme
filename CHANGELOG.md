@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.29 — Project pages easier to scan
+
+- Projects listing hero leads with sample work, a short lede, and Hire me / Say hello. Cards sit above the fold of the page body.
+- Listing extras are trimmed: gallery first, three short steps, three FAQs, one closing band.
+- Project singles use plainer story headings and shorter sample-work notice. Catalog blurbs and stories are grade 6–8 for hiring managers and shops.
+- `mh_projects_readable_copy_v1` rewrites saved Projects fields and refreshes catalog-linked project posts.
+
 ## 3.5.28 — Products become Projects
 
 - Theme, plugin, and app catalog items migrate into the Projects custom post type. Listing and singles live at `/projects/` and `/projects/{slug}/`.

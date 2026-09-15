@@ -101,6 +101,10 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,
             'desc' => __('Hire a WordPress developer for full-time, contract, or freelance work. Themes, plugins, and handoffs shops keep.', 'sage'),
         ],
+        'template-projects.blade.php' => [
+            'title' => mh_projects_listing_default('seo_title', $brand),
+            'desc' => mh_projects_listing_default('seo_desc'),
+        ],
         'template-changelog.blade.php' => [
             'title' => __('Theme Changelog', 'sage').' | '.$brand,
             'desc' => __('Changelog for the Matt Hummel WordPress theme: releases, fixes, and shipping notes.', 'sage'),

@@ -33,7 +33,9 @@
     @if (! empty($case['notice']))
       <p class="concept-spec-banner" role="note">{{ $case['notice'] }}</p>
     @endif
-    <p class="lead">{{ $summary }}</p>
+    @if ($summary !== '')
+      <p class="lead">{{ $summary }}</p>
+    @endif
     <p class="pf-meta" style="margin-top:.85rem">
       @if ($cat !== '')
         <span>{{ $cat }}</span>
@@ -78,7 +80,7 @@
           loading="eager"
           decoding="async"
         >
-        <figcaption>{{ __('Studio project — a public example, not a client site.', 'sage') }}</figcaption>
+        <figcaption>{{ __('Sample project. Not a client site.', 'sage') }}</figcaption>
       </figure>
     @endif
 
@@ -93,19 +95,19 @@
     <div class="concept-story">
       @if (($story['challenge'] ?? '') !== '')
         <section class="concept-story__block">
-          <h2>{{ __('The problem', 'sage') }}</h2>
+          <h2>{{ __('Why I built it', 'sage') }}</h2>
           <p>{{ $story['challenge'] }}</p>
         </section>
       @endif
       @if (($story['approach'] ?? '') !== '')
         <section class="concept-story__block">
-          <h2>{{ __('How I shaped it', 'sage') }}</h2>
+          <h2>{{ __('What I did', 'sage') }}</h2>
           <p>{{ $story['approach'] }}</p>
         </section>
       @endif
       @if (($story['result'] ?? '') !== '')
         <section class="concept-story__block">
-          <h2>{{ __('What you get', 'sage') }}</h2>
+          <h2>{{ __('What you can use', 'sage') }}</h2>
           <p>{{ $story['result'] }}</p>
         </section>
       @endif
@@ -113,7 +115,7 @@
 
     @if ($deliverables !== [])
       <section class="pf-section" aria-labelledby="project-included">
-        <h2 id="project-included" class="display-title is-section">{{ __('What’s included', 'sage') }}</h2>
+        <h2 id="project-included" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
         <ul class="concept-deliverables">
           @foreach ($deliverables as $item)
             <li>{{ $item }}</li>
@@ -149,7 +151,7 @@
   @include('partials.cta-band', [
     'kicker' => __('Work with me', 'sage'),
     'title' => sprintf(__('Like %s?', 'sage'), $title),
-    'text' => __('Tell me what you would change, or write about a role. I usually reply within a day.', 'sage'),
+    'text' => __('Tell me what you would change, or write about a role. I usually reply in a day.', 'sage'),
     'label' => __('Say hello', 'sage'),
     'secondary' => __('Hire me', 'sage'),
     'secondaryHref' => home_url('/hire/'),

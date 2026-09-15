@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.5.29 readable project pages)
+
+- Projects listing copy lives in `mh_projects_listing_default()`. Keep sentences short (grade 6–8). Do not restore the four audience cards or dual closing CTAs unless Matt asks.
+- Single-project story headings stay Why I built it / What I did / What you can use. Developer stack stays in the accordion.
+- Catalog `summary` / `challenge` / `approach` / `result` are the single-page hero and story. Refresh live posts with `mh_projects_readable_copy_v1` (already ran once).
+
 ## Editor’s notes (3.5.28 Projects CPT)
 
 - Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`). Do not send that listing back to WooCommerce.
