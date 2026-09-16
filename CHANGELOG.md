@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0 — Decluttered white portfolio home
+
+- Home is a white, minimal developer portfolio: simplified hero (no project gallery), Projects grid, latest journal, What I do, then a six-box services icon grid.
+- Appearance → Customize → **Home hero** edits eyebrow, headline, subcopy, max-width, alignment, spacing, and Hire / Contact CTAs without code.
+- Palette is solid soft blue and gray only. No CSS gradients on home chrome. Primary navy buttons; secondary `#155a9c` links and labels.
+- Shop / cart / buy stay off public nav and home. `/shop/` still redirects to Projects while Woo is inactive.
+- Deploy env `LIVE_ORIGIN` / `LIVE_URL` is `https://matthummel.com`.
+
 ## 3.5.33 — Production site is matthummel.com
 
 - Canonical public WordPress is [matthummel.com](https://matthummel.com). WPVibe, deploy notes, and agent rules use that URL by default.

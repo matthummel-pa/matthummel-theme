@@ -2,6 +2,14 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.0 decluttered home)
+
+- Home order is hero → Projects → journal → What I do → services icon grid. Do not put project cards back in the hero.
+- Tune the hero in Appearance → Customize → **Home hero**. Empty Customizer text falls through to Page content (theme), then `mh_home_hero_default()`.
+- Services boxes use `home_svc_*` fields and `mh_svg_icon()` (WordPress, plugins, code, users, search, shield). No emoji.
+- Public shop stays off (`mh_public_shop_enabled()` is false). `mh_strip_shop_nav_v1` plus `wp_nav_menu_objects` hide Shop / Cart / Checkout while the storefront is off.
+- Skin tokens live in `resources/css/studio.css`. Home UI uses solid `--blue-*` and `--gray-*` only — do not add `linear-gradient` / `radial-gradient` to new chrome.
+
 ## Editor’s notes (3.5.33 production site)
 
 - Canonical WordPress is `https://matthummel.com`. WPVibe `site_url` defaults there. `hummelwp.com` is a separate install — do not use it as the default for content, theme update, or deploy notes.

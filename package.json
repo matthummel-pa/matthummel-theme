@@ -1,5 +1,6 @@
 {
   "name": "matthummel-theme",
+  "version": "3.6.0",
   "private": true,
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

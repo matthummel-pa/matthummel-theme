@@ -846,9 +846,7 @@ function mh_home_case_study_cards(array $cards, int $limit = 3): array
 
     if (count($out) < $limit) {
         foreach ($bySlug as $card) {
-            if (! empty($card['for_sale']) || ! empty($card['product_id'])) {
-                $out[] = $card;
-            }
+            $out[] = $card;
             if (count($out) >= $limit) {
                 break;
             }
