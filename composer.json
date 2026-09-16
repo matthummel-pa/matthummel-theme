@@ -2,12 +2,12 @@
   "name": "matthummel/theme",
   "type": "wordpress-theme",
   "license": "MIT",
-  "description": "Sage 11 theme for hummelwp.com",
-  "homepage": "https://hummelwp.com",
+  "description": "Sage 11 theme for matthummel.com",
+  "homepage": "https://matthummel.com",
   "authors": [
     {
       "name": "Matt Hummel",
-      "homepage": "https://hummelwp.com"
+      "homepage": "https://matthummel.com"
     }
   ],
   "keywords": [

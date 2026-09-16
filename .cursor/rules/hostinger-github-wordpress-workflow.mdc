@@ -1,5 +1,5 @@
 ---
-description: Hostinger + GitHub + WordPress operating rules. Production is hummelwp.com. Always apply for hosting, deploy, WPVibe, and content vs theme changes.
+description: Hostinger + GitHub + WordPress operating rules. Production is matthummel.com. Always apply for hosting, deploy, WPVibe, and content vs theme changes.
 alwaysApply: true
 ---
 
@@ -9,7 +9,7 @@ alwaysApply: true
 
 This is the **matthummel** Sage 11 theme. Map these workflow rules onto files and hosts that already ship. If they conflict with `agency-core.mdc` or what already ships, **this file wins on production host and domain**; shipping theme patterns still win on Sage, Blade, Vite, and “do not rip out what works.”
 
-- **Production site:** `https://hummelwp.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`.
+- **Production site:** `https://matthummel.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`.
 - **Source of truth for custom code:** this GitHub repo. Do not treat live theme-file edits as canonical.
 - **WordPress connection:** WPVibe (`vibe-ai` plugin + `https://mcp.wpvibe.ai/mcp`) for posts, pages, settings, plugins, and site inspection.
 - **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
@@ -22,7 +22,7 @@ This is the **matthummel** Sage 11 theme. Map these workflow rules onto files an
 
 ## 1. Core operating principles
 
-- Treat `hummelwp.com` as the production WordPress site.
+- Treat `matthummel.com` as the production WordPress site.
 - Never make production changes without first showing the proposed change and receiving explicit approval.
 - Prefer small, reversible changes over large rewrites.
 - Inspect the current code and configuration before editing anything.

@@ -1,6 +1,6 @@
-# hummelwp.com — Theme documentation
+# matthummel.com — Theme documentation
 
-Deep dive for the Sage theme that powers [hummelwp.com](https://hummelwp.com). For the short GitHub landing page, see the [root README](../README.md).
+Deep dive for the Sage theme that powers [matthummel.com](https://matthummel.com). For the short GitHub landing page, see the [root README](../README.md).
 
 Built on [Sage 11](https://roots.io/sage/) with Blade templates, Tailwind v4, Vite 8, and Acorn 6.
 
@@ -76,7 +76,7 @@ This site was built entirely with [Cursor AI](https://cursor.com) as the plannin
 | Dependency manager | Composer | 2 |
 | Code style | Laravel Pint | — |
 | CI/CD | GitHub Actions | — |
-| Hosting | Hostinger (`hummelwp.com`) | — |
+| Hosting | Hostinger (`matthummel.com`) | — |
 | Local DB | SQLite (dev only) | — |
 | Editor | Cursor AI | — |
 

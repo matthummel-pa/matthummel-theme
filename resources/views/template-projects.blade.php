@@ -47,7 +47,7 @@
   </div>
   @slot('aside')
     @include('partials.hero-panel', [
-      'chrome' => 'hummelwp.com/projects',
+      'chrome' => 'matthummel.com/projects',
       'icon' => 'briefcase',
       'title' => __('Sample work', 'sage'),
       'meta' => __('Live demos and public code', 'sage'),

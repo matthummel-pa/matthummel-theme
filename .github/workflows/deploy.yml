@@ -55,7 +55,7 @@ jobs:
           body: |
             Built Sage theme (Composer vendor + Vite `public/build`).
             Commit: ${{ github.sha }}
-            Production: https://hummelwp.com (Hostinger).
+            Production: https://matthummel.com (Hostinger).
             Install from wp-admin → Appearance → Update Theme, or `wp mh theme-update`.
             Unzip into `wp-content/themes/matthummel/` via Hostinger File Manager if needed.
           files: matthummel.zip
