@@ -348,6 +348,169 @@ function mh_project_case_study(int $post_id, array $card, array $story): array
 }
 
 /**
+ * Screenshot slides for a project page: featured image, stored shots, catalog.
+ *
+ * @param  array<string, mixed>  $card
+ * @return list<array{src: string, alt: string}>
+ */
+function mh_project_page_slides(int $post_id, array $card): array
+{
+    $slides = [];
+    $seen = [];
+    $title = (string) ($card['title'] ?? '');
+
+    $add = static function (string $src, string $alt) use (&$slides, &$seen, $title): void {
+        $src = trim($src);
+        if ($src === '') {
+            return;
+        }
+        if (preg_match('#^(https?:)?//#', $src) !== 1) {
+            $src = function_exists(__NAMESPACE__.'\\mh_product_media_url')
+                ? mh_product_media_url($src)
+                : get_theme_file_uri('resources/images/'.$src);
+        }
+        if ($src === '') {
+            return;
+        }
+        $key = md5($src);
+        if (isset($seen[$key])) {
+            return;
+        }
+        $seen[$key] = true;
+        if ($alt === '') {
+            $alt = $title !== ''
+                ? sprintf(__('Screenshot of %s', 'sage'), $title)
+                : __('Project screenshot', 'sage');
+        }
+        $slides[] = ['src' => $src, 'alt' => $alt];
+    };
+
+    if ($post_id > 0 && has_post_thumbnail($post_id)) {
+        $thumbId = (int) get_post_thumbnail_id($post_id);
+        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
+        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
+        $add($src, $alt);
+    }
+
+    foreach (mh_project_screenshot_pairs($post_id) as $pair) {
+        $add((string) ($pair[0] ?? ''), (string) ($pair[1] ?? ''));
+    }
+
+    $add((string) ($card['image'] ?? ''), '');
+
+    $productId = function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0;
+    if ($productId > 0 && function_exists(__NAMESPACE__.'\\mh_product_entry')) {
+        $entry = mh_product_entry($productId);
+        $shots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
+        foreach ($shots as $shot) {
+            $add((string) ($shot[0] ?? ''), (string) ($shot[1] ?? ''));
+        }
+        if ($slides === []) {
+            $add((string) ($entry['image'] ?? ''), '');
+        }
+    }
+
+    return $slides;
+}
+
+/**
+ * Live GitHub facts for a project page (API first, stored sidebar as fallback).
+ *
+ * @param  array<string, mixed>  $card
+ * @return array<string, mixed>
+ */
+function mh_project_github_facts(int $post_id, array $card): array
+{
+    $sidebar = mh_project_sidebar($post_id);
+    $raw = (string) ($sidebar['github'] ?? '');
+    if ($raw === '') {
+        $raw = (string) ($card['github'] ?? $card['concept'] ?? '');
+    }
+    $parsed = mh_project_parse_github_repo($raw);
+
+    $facts = [
+        'url' => ($raw !== '' && str_starts_with($raw, 'http')) ? $raw : '',
+        'owner' => '',
+        'repo' => '',
+        'desc' => '',
+        'stars' => (int) ($sidebar['stars'] ?? 0),
+        'forks' => 0,
+        'watchers' => 0,
+        'issues' => 0,
+        'lang' => '',
+        'license' => (string) ($sidebar['license'] ?? ''),
+        'homepage' => (string) ($sidebar['homepage'] ?? ''),
+        'topics' => is_array($sidebar['topics'] ?? null) ? $sidebar['topics'] : [],
+        'languages' => is_array($sidebar['languages'] ?? null) ? $sidebar['languages'] : [],
+        'pushed' => (string) ($sidebar['last_updated'] ?? ''),
+        'pushed_label' => '',
+        'release' => (string) ($sidebar['release_tag'] ?? ''),
+        'release_url' => (string) ($sidebar['release_url'] ?? ''),
+        'version' => (string) ($sidebar['version'] ?? ''),
+        'compatible' => (string) ($sidebar['compatible'] ?? ''),
+        'has_repo' => false,
+    ];
+
+    if ($parsed === null) {
+        return $facts;
+    }
+
+    [$owner, $repo] = $parsed;
+    $facts['owner'] = $owner;
+    $facts['repo'] = $repo;
+    $facts['has_repo'] = true;
+    $facts['url'] = 'https://github.com/'.$owner.'/'.$repo;
+
+    $meta = Github::fetchRepoMeta($owner, $repo);
+    $combo = Github::fetch($owner, $repo);
+    $langs = Github::fetchLanguages($owner, $repo);
+
+    if (($meta['url'] ?? '') !== '') {
+        $facts['url'] = (string) $meta['url'];
+    } elseif (($combo['url'] ?? '') !== '') {
+        $facts['url'] = (string) $combo['url'];
+    }
+
+    $facts['desc'] = (string) ($meta['desc'] ?? $combo['desc'] ?? '');
+    $facts['stars'] = (int) ($meta['stars'] ?? $combo['stars'] ?? $facts['stars']);
+    $facts['forks'] = (int) ($meta['forks'] ?? $combo['forks'] ?? 0);
+    $facts['watchers'] = (int) ($meta['watchers'] ?? 0);
+    $facts['issues'] = (int) ($meta['issues'] ?? 0);
+    $facts['lang'] = (string) ($meta['lang'] ?? $combo['lang'] ?? '');
+    if (($combo['license'] ?? '') !== '') {
+        $facts['license'] = (string) $combo['license'];
+    } elseif (($meta['license'] ?? '') !== '') {
+        $facts['license'] = (string) $meta['license'];
+    }
+    if (($meta['homepage'] ?? '') !== '') {
+        $facts['homepage'] = (string) $meta['homepage'];
+    }
+    $topics = $meta['topics'] ?? [];
+    if (is_array($topics) && $topics !== []) {
+        $facts['topics'] = array_values(array_filter(array_map('strval', $topics)));
+    }
+    if ($langs !== []) {
+        $facts['languages'] = $langs;
+    }
+
+    $pushed = (string) ($meta['pushed'] ?? '');
+    if ($pushed !== '') {
+        $facts['pushed'] = $pushed;
+        $ts = strtotime($pushed);
+        $facts['pushed_label'] = $ts !== false ? date_i18n((string) get_option('date_format'), $ts) : '';
+    } elseif ($facts['pushed'] !== '') {
+        $ts = strtotime($facts['pushed']);
+        $facts['pushed_label'] = $ts !== false ? date_i18n((string) get_option('date_format'), $ts) : $facts['pushed'];
+    }
+
+    if (($combo['release'] ?? '') !== '') {
+        $facts['release'] = (string) $combo['release'];
+    }
+
+    return $facts;
+}
+
+/**
  * Extra buyer-facing sections for a project page.
  *
  * Stored meta wins. Category defaults fill empty keys so every public

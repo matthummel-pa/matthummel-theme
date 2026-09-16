@@ -29,7 +29,6 @@
 <section
   class="h-hero h-hero--simple{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}"
   aria-labelledby="h-hero-name"
-  style="--mh-hero-max: {{ esc_attr($hero['max_width']) }};"
 >
   <div class="container wide h-hero__inner">
     <div class="h-hero__copy">
