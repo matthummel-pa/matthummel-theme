@@ -4288,11 +4288,41 @@ function mh_soften_work_shop_language(): void
             'Open shop' => mh_projects_listing_default('hero_cta_secondary'),
             'Browse products' => mh_projects_listing_default('hero_cta_secondary'),
         ],
+        'mh_f_work_lede' => [
+            'Browse Sage 11 themes and plugins with live demos for tours, shops, and inns. Buy a pack from the shop, or hire me to adapt one for your business. Employer work stays private unless a shop asks to be featured.' => mh_projects_listing_default('lede'),
+            'WordPress themes and plugins for sale.' => mh_projects_listing_default('lede'),
+        ],
+        'mh_f_work_foot' => [
+            'Checkout lives in the <a href="/shop/">shop</a>. Code and repos: <a href="/code/">Code page</a>. Live demos open from each product page when available.' => mh_projects_listing_default('foot'),
+        ],
+        'mh_f_work_band_lede' => [
+            'Buy the theme or plugin when it is listed, or hire me to customize it. Tell me which one fits and what you would change.' => mh_projects_listing_default('band_lede'),
+        ],
     ];
     foreach ($swaps as $key => $map) {
         $cur = (string) get_post_meta($id, $key, true);
         if ($cur !== '' && isset($map[$cur])) {
             update_post_meta($id, $key, $map[$cur]);
+        }
+    }
+
+    $home = get_page_by_path('home');
+    if (! $home instanceof \WP_Post) {
+        $frontId = (int) get_option('page_on_front');
+        $home = $frontId > 0 ? get_post($frontId) : null;
+    }
+    if ($home instanceof \WP_Post) {
+        $intro = (string) get_post_meta($home->ID, 'mh_f_home_work_intro', true);
+        $oldIntro = [
+            'I publish Gettysburg WordPress projects here — live demos for shops, tours, and inns. Hire me on this site for a real build.',
+            'Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+        ];
+        if (in_array($intro, $oldIntro, true)) {
+            update_post_meta(
+                $home->ID,
+                'mh_f_home_work_intro',
+                __('WordPress themes and plugins I built in public. Open one for a short story and a live demo when I have one.', 'sage')
+            );
         }
     }
 }
@@ -4304,6 +4334,14 @@ add_action('init', function (): void {
     mh_soften_work_shop_language();
     update_option('mh_work_shop_language_v360', '1', false);
 }, 44);
+
+add_action('init', function (): void {
+    if (get_option('mh_work_shop_language_v361') || wp_installing()) {
+        return;
+    }
+    mh_soften_work_shop_language();
+    update_option('mh_work_shop_language_v361', '1', false);
+}, 45);
 
 add_action('init', function (): void {
     if (get_option('mh_projects_portfolio_copy_v1') || wp_installing()) {
