@@ -1,6 +1,6 @@
 # Theme download shop (WooCommerce)
 
-How Acreline, WalkRidge, and other zip products get into buyers’ hands on **[hummelwp.com](https://hummelwp.com)**.
+How Acreline, WalkRidge, and other zip products get into buyers’ hands on **[matthummel.com](https://matthummel.com)**.
 
 ## How it works
 
@@ -65,11 +65,11 @@ Seeded by `mh_seed_digital_download_store()` when WooCommerce is active:
 | Require login to download | No (receipt link works) |
 | Reviews | Off |
 
-Payments on hummelwp.com: **WooPayments** (card + Apple Pay / Google Pay). No need for a separate Stripe plugin.
+Payments on matthummel.com: **WooPayments** (card + Apple Pay / Google Pay). No need for a separate Stripe plugin. If WooCommerce is still only active on a second install (`hummelwp.com`), run shop-download commands there until the catalog is moved.
 
 Also keep **WooCommerce → Settings → Products → Approved download directories** allowing `https://github.com/matthummel-pa/` (the theme adds these automatically).
 
-## Canonical products on hummelwp.com
+## Canonical products on matthummel.com
 
 | Product | SKU | Price | Download source |
 | --- | --- | --- | --- |

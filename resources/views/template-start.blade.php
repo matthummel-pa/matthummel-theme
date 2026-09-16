@@ -49,7 +49,7 @@
   </ul>
   @slot('aside')
     @include('partials.hero-panel', [
-      'chrome' => 'hummelwp.com/start',
+      'chrome' => 'matthummel.com/start',
       'icon' => 'briefcase',
       'title' => __('Discovery brief', 'sage'),
       'meta' => __('Four steps · one form', 'sage'),
