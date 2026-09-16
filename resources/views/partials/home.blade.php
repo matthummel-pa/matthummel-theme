@@ -57,7 +57,7 @@
   <div class="container wide">
     <div class="h-work-header">
       <div>
-        <p class="h-section-label">{{ __('01 · Projects', 'sage') }}</p>
+        <p class="h-section-label">{{ __('01 · Work', 'sage') }}</p>
         <h2 id="h-work-heading" class="h-section__title">
           {{ \App\field('home_work_h2', __('Selected projects.', 'sage')) }}
         </h2>

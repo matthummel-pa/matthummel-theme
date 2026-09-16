@@ -5,7 +5,9 @@
 - Home is a white, minimal developer portfolio: simplified hero (no project gallery), Projects grid, latest journal, What I do, then a six-box services icon grid.
 - Appearance → Customize → **Home hero** edits eyebrow, headline, subcopy, max-width, alignment, spacing, and Hire / Contact CTAs without code.
 - Palette is solid soft blue and gray only. No CSS gradients on home chrome. Primary navy buttons; secondary `#155a9c` links and labels.
-- Shop / cart / buy stay off public nav and home. `/shop/` still redirects to Projects while Woo is inactive.
+- Shop / cart / buy stay off public nav and home. Home and Work cards come from the Projects CPT (seeded from `product-catalog.json`). Woo is not required.
+- Public chrome matches the lean live set: primary Work / Hire me / Journal / Code / About; footer Work / Hire / Journal / Code / About / Now / Contact. Leftover `/shop/`, `/cart/`, `/checkout/`, and `/my-account/` pages 301 to Work when Woo is gone.
+- Work listing one-shot swaps leftover shop CTAs (`Open shop`, sale H1s) without deleting Start, Uses, Resources, Support, or Affiliate pages.
 - Deploy env `LIVE_ORIGIN` / `LIVE_URL` is `https://matthummel.com`.
 
 ## 3.5.33 — Production site is matthummel.com

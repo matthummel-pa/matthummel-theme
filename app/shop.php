@@ -20,7 +20,7 @@ function mh_shop_ready(): bool
 /**
  * Whether the public storefront (cart, prices, buy CTAs) is shown.
  *
- * WooCommerce stays installed. Public listing is the Projects CPT.
+ * Public listing is the Projects CPT. WooCommerce is optional and off.
  */
 function mh_public_shop_enabled(): bool
 {
@@ -228,14 +228,26 @@ function mh_filter_product_permalink(string $permalink, $product): string
 }
 
 /**
- * Send leftover /shop/ visits to Projects while the public storefront is off.
+ * Send leftover /shop/ visits to Work while the public storefront is off.
+ *
+ * Works when Woo is installed (`is_shop()`) and when leftover Shop / Cart /
+ * Checkout / My account pages remain after the plugin is removed.
  */
 function mh_redirect_shop_to_projects(): void
 {
     if (mh_public_shop_enabled()) {
         return;
     }
-    if (! function_exists('is_shop') || ! is_shop()) {
+    if (function_exists('is_shop') && is_shop()) {
+        wp_safe_redirect(mh_work_listing_url(), 301);
+        exit;
+    }
+    if (! is_singular('page')) {
+        return;
+    }
+
+    $slug = (string) get_post_field('post_name', get_queried_object_id());
+    if (! in_array($slug, ['shop', 'cart', 'checkout', 'my-account'], true)) {
         return;
     }
 
@@ -319,6 +331,66 @@ function mh_product_catalog_entries(): array
     }
 
     return $catalog;
+}
+
+/**
+ * Catalog entries as Work / home cards. No WooCommerce required.
+ *
+ * Skips service add-ons. Used when the Projects CPT is empty (first load
+ * after a 3.5.11 upgrade) or Woo is not installed.
+ *
+ * @since 3.6.0
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_catalog_work_cards(): array
+{
+    $cards = [];
+    foreach (mh_product_catalog_entries() as $slug => $entry) {
+        if (! is_array($entry)) {
+            continue;
+        }
+        $type = sanitize_key((string) ($entry['product_type'] ?? 'theme'));
+        if ($type === 'service') {
+            continue;
+        }
+
+        $slug = sanitize_title((string) $slug);
+        if ($slug === '') {
+            continue;
+        }
+
+        $tech = $entry['tech'] ?? [];
+        if (is_string($tech)) {
+            $tech = array_values(array_filter(array_map('trim', explode(',', $tech))));
+        }
+        if (! is_array($tech)) {
+            $tech = [];
+        }
+
+        $image = (string) ($entry['image'] ?? '');
+        $github = (string) ($entry['github'] ?? $entry['concept'] ?? '');
+        $cards[] = [
+            'slug' => $slug,
+            'title' => (string) ($entry['title'] ?? $slug),
+            'cat' => (string) ($entry['cat'] ?? ''),
+            'place' => (string) ($entry['place'] ?? ''),
+            'blurb' => (string) ($entry['blurb'] ?? ''),
+            'tech' => array_values(array_map('strval', $tech)),
+            'concept' => $github,
+            'github' => $github,
+            'demo' => (string) ($entry['demo'] ?? ''),
+            'image' => function_exists(__NAMESPACE__.'\\mh_studio_project_image_url')
+                ? mh_studio_project_image_url(['image' => $image])
+                : $image,
+            'url' => function_exists(__NAMESPACE__.'\\mh_concept_page_url')
+                ? mh_concept_page_url($slug)
+                : home_url('/projects/'.$slug.'/'),
+            'product_type' => in_array($type, ['theme', 'plugin', 'app', 'concept'], true) ? $type : 'theme',
+        ];
+    }
+
+    return $cards;
 }
 
 /**
@@ -787,7 +859,7 @@ function mh_wc_product_to_work_card(int $product_id): array
 /**
  * All published WooCommerce products as Work card arrays, ordered by menu_order then title.
  *
- * Used by mh_work_page_items() after the project CPT is removed.
+ * Used by mh_work_page_items() only when the public shop is on.
  *
  * @since 3.3.0
  *

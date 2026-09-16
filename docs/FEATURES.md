@@ -7,7 +7,9 @@ What the 3.x Sage theme does, and where it lives.
 - Home order is hero → Projects → journal → What I do → services icon grid. Do not put project cards back in the hero.
 - Tune the hero in Appearance → Customize → **Home hero**. Empty Customizer text falls through to Page content (theme), then `mh_home_hero_default()`.
 - Services boxes use `home_svc_*` fields and `mh_svg_icon()` (WordPress, plugins, code, users, search, shield). No emoji.
-- Public shop stays off (`mh_public_shop_enabled()` is false). `mh_strip_shop_nav_v1` plus `wp_nav_menu_objects` hide Shop / Cart / Checkout while the storefront is off.
+- Public shop stays off (`mh_public_shop_enabled()` is false). Home / Work cards use the Projects CPT, then `mh_catalog_work_cards()` — never Woo products.
+- On a 3.5.11 upgrade (no CPT, no Woo), `mh_sync_products_to_project_cpt` creates Acreline, WalkRidge, and TOCflow from `product-catalog.json`. Leftover Shop / Cart / Checkout / My account pages 301 to `/projects/` until they are deleted in wp-admin.
+- Keep the lean public nav (Work, Hire me, Journal, Code, About) and footer (Work, Hire, Journal, Code, About, Now, Contact). Do not delete Start, Uses, Resources, Support, or Affiliate in a theme PR.
 - Skin tokens live in `resources/css/studio.css`. Home UI uses solid `--blue-*` and `--gray-*` only — do not add `linear-gradient` / `radial-gradient` to new chrome.
 
 ## Editor’s notes (3.5.33 production site)
@@ -39,7 +41,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.28 Projects CPT)
 
-- Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`). Do not send that listing back to WooCommerce.
+- Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`), labeled **Work** in nav. Do not send that listing back to WooCommerce.
 - Convert theme/plugin/app products once (`mh_products_synced_to_projects_v1`). Skip service add-ons. Do not re-import the old studio demo set unless Matt asks.
 - Copy is standard portfolio (I/my, Hire me / Say hello). Keep `mh_public_shop_enabled()` false until Matt asks to sell again.
 - Home secondary CTA is Browse projects → `/projects/`.
@@ -276,7 +278,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; singles own `/projects/{slug}/`. Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Linked Woo products 301 to the project permalink. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
+| Projects CPT | Restored in 3.5.28. Catalog sync (`mh_products_synced_to_projects_v1`) does not need Woo. Listing page is labeled Work at `/projects/`; singles own `/projects/{slug}/`. Admin fields, On site toggle, category/place filters. `/concept/` 301s to Work. Leftover shop pages 301 to Work while Woo is off. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
 | Support docs | `/support/` hub (`template-support.blade.php`) lists sellable products with **HTML-viewable** guides (jsDelivr CDN of GitHub `docs/marketplace/*.html`, same files as the seller Documentation pack); footer link; Acreline catalog docs point at the rendered hub |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |

@@ -293,7 +293,7 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
 function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel'): string
 {
     $copy = [
-        'kicker' => __('Projects', 'sage'),
+        'kicker' => __('Work', 'sage'),
         'h1' => __('Sample WordPress work.', 'sage'),
         'lede' => __('I built these themes and plugins so you can see how I work. Open a page, try the live demo, and read a short story. I take full-time, contract, and freelance jobs.', 'sage'),
         'hero_cta_primary' => __('Say hello', 'sage'),
@@ -1676,10 +1676,10 @@ function mh_work_page_faq(?int $post_id = null): array
 }
 
 /**
- * Resolve the ordered list of studio project items for the Work/Projects page.
+ * Resolve the ordered list of project items for the Work page.
  *
- * Merges admin-saved repeater rows with built-in defaults, resolving image URLs.
- * Returns the built-in project list when no rows have been saved.
+ * Live Projects CPT first, then product-catalog.json (no Woo). Woo products
+ * only when the public shop is on. Repeater / studio demos are last.
  *
  * @since 3.1.0
  *
@@ -1695,14 +1695,23 @@ function mh_work_page_items(?int $post_id = null): array
         }
     }
 
-    if (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
+    // Catalog (Acreline, WalkRidge, TOCflow) — no Woo required.
+    if (function_exists(__NAMESPACE__.'\\mh_catalog_work_cards')) {
+        $catalog = mh_catalog_work_cards();
+        if ($catalog !== []) {
+            return $catalog;
+        }
+    }
+
+    $shopOn = function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && mh_public_shop_enabled();
+    if ($shopOn && function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
         $wc = mh_wc_products_for_work();
         if ($wc !== []) {
             return $wc;
         }
     }
 
-    // Fallback: admin-editable repeater on the Work/Projects page, then static catalog.
+    // Fallback: admin-editable repeater on the Work/Projects page, then studio demos.
     $defaults = [];
     foreach (mh_studio_projects() as $p) {
         $defaults[$p['slug']] = $p;

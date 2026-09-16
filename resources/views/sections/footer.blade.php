@@ -44,9 +44,9 @@
     <nav class="footer-nav-col" aria-label="Work">
       <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
       <ul class="footer-nav">
-        <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/#services') }}">{{ __('Services', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Work', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/hire/') }}">{{ __('Hire', 'sage') }}</a></li>
+        <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
       </ul>
     </nav>
@@ -56,7 +56,6 @@
       <p class="footer-nav-label">Site</p>
       <ul class="footer-nav">
         <li><a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a></li>
-        <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
       </ul>

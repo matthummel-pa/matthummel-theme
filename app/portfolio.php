@@ -1668,7 +1668,7 @@ function mh_projects_live_for_work(): array
 /**
  * Featured Projects CPT cards for the home listing.
  *
- * Prefers live project posts. Does not prioritize Woo sale flags.
+ * Prefers live project posts, then catalog cards. Does not use Woo.
  *
  * @since 3.6.0
  *
@@ -1678,6 +1678,9 @@ function mh_home_featured_projects(int $limit = 3): array
 {
     $limit = max(1, $limit);
     $cards = mh_projects_live_for_work();
+    if ($cards === [] && function_exists(__NAMESPACE__.'\\mh_catalog_work_cards')) {
+        $cards = mh_catalog_work_cards();
+    }
     if ($cards === []) {
         $cards = mh_work_page_items();
     }
@@ -2004,13 +2007,13 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
     return $post_id;
 }
 
-/** Keep the /projects/ page on the Projects template and titled Projects. */
+/** Keep the /projects/ listing page on the Projects template, labeled Work. */
 function mh_ensure_projects_listing_page(): void
 {
     $page = get_page_by_path('projects');
     if (! $page instanceof \WP_Post) {
         $id = wp_insert_post([
-            'post_title' => 'Projects',
+            'post_title' => 'Work',
             'post_name' => 'projects',
             'post_status' => 'publish',
             'post_type' => 'page',
@@ -2027,10 +2030,10 @@ function mh_ensure_projects_listing_page(): void
 
     update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
 
-    if (in_array($page->post_title, ['Work', 'Shop', 'Themes & plugins', 'Themes and plugins'], true)) {
+    if (in_array($page->post_title, ['Shop', 'Themes & plugins', 'Themes and plugins', 'Projects'], true)) {
         wp_update_post([
             'ID' => $page->ID,
-            'post_title' => 'Projects',
+            'post_title' => 'Work',
         ]);
     }
 
@@ -2049,20 +2052,21 @@ function mh_ensure_projects_listing_page(): void
         if ((int) $item->object_id !== (int) $page->ID) {
             continue;
         }
-        if (! in_array((string) $item->title, ['Work', 'Shop', 'Themes & plugins'], true)) {
+        if (! in_array((string) $item->title, ['Shop', 'Themes & plugins', 'Projects'], true)) {
             continue;
         }
         wp_update_post([
             'ID' => (int) $item->ID,
-            'post_title' => 'Projects',
+            'post_title' => 'Work',
         ]);
     }
 }
 
 /**
- * One-shot: convert theme/plugin/app products into live project posts.
+ * One-shot: convert theme/plugin/app catalog items into live project posts.
  *
- * WooCommerce stays installed. Service add-ons are skipped. Studio demo
+ * Prefers product-catalog.json (Acreline, WalkRidge, TOCflow). Woo is optional
+ * and unused when the shop is off. Service add-ons are skipped. Studio demo
  * imports stay off unless Matt asks.
  */
 function mh_sync_products_to_project_cpt(): void
@@ -2078,6 +2082,7 @@ function mh_sync_products_to_project_cpt(): void
     $catalog = function_exists(__NAMESPACE__.'\\mh_product_catalog_entries')
         ? mh_product_catalog_entries()
         : [];
+    $shopOn = function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && mh_public_shop_enabled();
 
     if (is_array($catalog) && $catalog !== []) {
         foreach ($catalog as $slug => $entry) {
@@ -2085,14 +2090,14 @@ function mh_sync_products_to_project_cpt(): void
                 continue;
             }
             $productId = 0;
-            if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
+            if ($shopOn && function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
                 $productId = mh_product_id_by_slug((string) $slug);
             }
             if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
                 $order++;
             }
         }
-    } elseif (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
+    } elseif ($shopOn && function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
         foreach (mh_wc_products_for_work() as $card) {
             $slug = sanitize_title((string) ($card['slug'] ?? ''));
             $type = sanitize_key((string) ($card['product_type'] ?? 'theme'));
@@ -3653,9 +3658,10 @@ function mh_seed_portfolio_pages(): void
     $pages = [
         'home' => ['title' => 'Home', 'template' => 'template-home.blade.php'],
         'about' => ['title' => 'About', 'template' => 'template-about.blade.php'],
-        'projects' => ['title' => 'Projects', 'template' => 'template-projects.blade.php'],
+        'projects' => ['title' => 'Work', 'template' => 'template-projects.blade.php'],
         'services' => ['title' => 'Services', 'template' => 'template-services.blade.php'],
         'code' => ['title' => 'Code', 'template' => 'template-code.blade.php'],
+        'hire' => ['title' => 'Hire me', 'template' => 'template-hire.blade.php'],
         'contact' => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
         'now' => ['title' => 'Now', 'template' => 'template-now.blade.php'],
     ];
@@ -3721,7 +3727,7 @@ function mh_seed_portfolio_pages(): void
         }
     }
 
-    $order = ['home', 'projects', 'blog', 'about', 'contact'];
+    $order = ['projects', 'hire', 'blog', 'code', 'about'];
     $n = 1;
     foreach ($order as $slug) {
         if (empty($ids[$slug])) {
@@ -4242,6 +4248,64 @@ add_action('init', function (): void {
 }, 42);
 
 add_action('init', function (): void {
+    if (get_option('mh_work_listing_label_v360') || wp_installing()) {
+        return;
+    }
+    mh_ensure_projects_listing_page();
+    update_option('mh_work_listing_label_v360', '1', false);
+}, 43);
+
+/**
+ * One-shot: drop leftover shop CTAs on the Work listing after a 3.5.11 upgrade.
+ *
+ * Does not delete Shop / Start / Uses / Resources / Support / Affiliate pages.
+ *
+ * @since 3.6.0
+ */
+function mh_soften_work_shop_language(): void
+{
+    $projects = get_page_by_path('projects');
+    if (! $projects instanceof \WP_Post) {
+        return;
+    }
+
+    $id = (int) $projects->ID;
+    $swaps = [
+        'mh_f_work_kicker' => [
+            'Projects' => 'Work',
+            'Themes & plugins' => 'Work',
+            'Shop' => 'Work',
+        ],
+        'mh_f_work_h1' => [
+            'WordPress themes and plugins for sale.' => mh_projects_listing_default('h1'),
+            'Concept sites I can build from.' => mh_projects_listing_default('h1'),
+        ],
+        'mh_f_work_hero_cta_primary' => [
+            'Open shop' => mh_projects_listing_default('hero_cta_primary'),
+            'Browse products' => mh_projects_listing_default('hero_cta_primary'),
+        ],
+        'mh_f_work_hero_cta_secondary' => [
+            'Open shop' => mh_projects_listing_default('hero_cta_secondary'),
+            'Browse products' => mh_projects_listing_default('hero_cta_secondary'),
+        ],
+    ];
+    foreach ($swaps as $key => $map) {
+        $cur = (string) get_post_meta($id, $key, true);
+        if ($cur !== '' && isset($map[$cur])) {
+            update_post_meta($id, $key, $map[$cur]);
+        }
+    }
+}
+
+add_action('init', function (): void {
+    if (get_option('mh_work_shop_language_v360') || wp_installing()) {
+        return;
+    }
+    mh_soften_work_shop_language();
+    update_option('mh_work_shop_language_v360', '1', false);
+}, 44);
+
+add_action('init', function (): void {
     if (get_option('mh_projects_portfolio_copy_v1') || wp_installing()) {
         return;
     }
@@ -4263,8 +4327,8 @@ add_action('init', function (): void {
         $id = (int) $projects->ID;
         $swaps = [
             'mh_f_work_kicker' => [
-                'Work' => 'Projects',
-                'Themes & plugins' => 'Projects',
+                'Themes & plugins' => 'Work',
+                'Shop' => 'Work',
             ],
             'mh_f_work_h1' => [
                 'WordPress themes and plugins for sale.' => 'Selected WordPress work.',
