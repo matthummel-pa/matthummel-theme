@@ -84,7 +84,7 @@ Day-to-day links a full-stack WordPress / Sage developer actually opens.
 | Resource | Use it when |
 | --- | --- |
 | [CHANGELOG.md](CHANGELOG.md) | You need exact version notes before updating live |
-| [hummelwp.com/changelog](https://hummelwp.com/changelog/) | Public-facing “what changed” |
+| [matthummel.com/changelog](https://matthummel.com/changelog/) | Public-facing “what changed” |
 | [`theme-latest` release](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest) | Grab the built zip CI publishes |
 | [GitHub Actions](https://github.com/matthummel-pa/matthummel-theme/actions) | CI failed, or you want the last green build |
 
@@ -116,10 +116,10 @@ Day-to-day links a full-stack WordPress / Sage developer actually opens.
 
 | URL | Why open it |
 | --- | --- |
-| [hummelwp.com/code](https://hummelwp.com/code/) | Live GitHub panel this theme powers |
-| [hummelwp.com/uses](https://hummelwp.com/uses/) | Stack and tools list |
-| [hummelwp.com/changelog](https://hummelwp.com/changelog/) | Public release notes |
-| [hummelwp.com/accessibility](https://hummelwp.com/accessibility/) | WCAG / 508 statement |
+| [matthummel.com/code](https://matthummel.com/code/) | Live GitHub panel this theme powers |
+| [matthummel.com/uses](https://matthummel.com/uses/) | Stack and tools list |
+| [matthummel.com/changelog](https://matthummel.com/changelog/) | Public release notes |
+| [matthummel.com/accessibility](https://matthummel.com/accessibility/) | WCAG / 508 statement |
 
 ---
 

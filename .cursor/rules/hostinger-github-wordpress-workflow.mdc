@@ -9,7 +9,7 @@ alwaysApply: true
 
 This is the **matthummel** Sage 11 theme. Map these workflow rules onto files and hosts that already ship. If they conflict with `agency-core.mdc` or what already ships, **this file wins on production host and domain**; shipping theme patterns still win on Sage, Blade, Vite, and “do not rip out what works.”
 
-- **Production site:** `https://matthummel.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`.
+- **Production site:** `https://matthummel.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`. WPVibe default site is this URL, not `hummelwp.com`.
 - **Source of truth for custom code:** this GitHub repo. Do not treat live theme-file edits as canonical.
 - **WordPress connection:** WPVibe (`vibe-ai` plugin + `https://mcp.wpvibe.ai/mcp`) for posts, pages, settings, plugins, and site inspection.
 - **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
@@ -37,7 +37,7 @@ Use three environments whenever possible:
 
 - **Local:** Cloud/local WordPress at `http://localhost:8080` (`~/wp-site`, theme symlink `matthummel`).
 - **Staging:** a Hostinger copy of the site when Matt has one. Do not invent a git `staging` branch.
-- **Production:** `hummelwp.com`; changes here must be deliberate and approved.
+- **Production:** `matthummel.com`; changes here must be deliberate and approved. `hummelwp.com` is a separate Hostinger install (do not treat it as the default).
 
 Rules:
 
@@ -97,7 +97,7 @@ Rules:
 - Do not overwrite WPVibe plugin code or settings until a backup and rollback method are confirmed.
 - Do not edit `vibe-ai` plugin files on the server. Use its documented hooks, settings, or a small custom plugin in this repo only if Matt asks.
 - Theme work through WPVibe is draft-first. Preview, then `publish_draft_theme` only when Matt says publish, go live, or ship it.
-- Application Passwords must stay enabled on `hummelwp.com` or the MCP cannot reconnect. Do not turn them off in Hostinger Tools or Wordfence without a replacement auth path.
+- Application Passwords must stay enabled on `matthummel.com` or the MCP cannot reconnect. Do not turn them off in Hostinger Tools or Wordfence without a replacement auth path.
 - Test WPVibe-driven content or permission changes with a non-administrator account when front-end behavior is affected.
 - Verify mobile layout, forms, links, media, and logged-out behavior after changes.
 
@@ -105,7 +105,7 @@ Rules:
 
 For every code or WordPress change:
 
-1. Identify the target: local, staging, or `hummelwp.com` production.
+1. Identify the target: local, staging, or `matthummel.com` production.
 2. Inspect the current implementation and dependencies.
 3. Explain the planned change in plain language.
 4. Create or verify a backup when data or production code may be affected.
@@ -120,7 +120,7 @@ For every code or WordPress change:
 ## 8. Deployment rules
 
 - Deploy from a reviewed Git commit, not from untracked local files.
-- Confirm the destination before deployment (`hummelwp.com` vs local vs any staging host).
+- Confirm the destination before deployment (`matthummel.com` vs local vs any staging host).
 - Never deploy secrets or development configuration.
 - Prefer atomic or easily reversible deployments (built `theme-latest` zip over partial `public/` copies).
 - Do not run database migrations automatically against production without approval and a backup.
