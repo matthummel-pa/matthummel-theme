@@ -35,7 +35,7 @@
       'icon'  => 'server',
       'items' => [
         // 4th value true = disclosed affiliate / compensated link
-        ['Hostinger', 'Managed WordPress hosting for this site (`hummelwp.com`). LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub `theme-latest` zip.', 'https://www.hostinger.com'],
+        ['Hostinger', 'Managed WordPress hosting for this site (`matthummel.com`). LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub `theme-latest` zip.', 'https://www.hostinger.com'],
         ['GitHub Releases', 'Theme deployment method for this site. CI builds a zip, publishes it as a release, and wp-admin pulls it over HTTPS. No FTP.', null],
         ['SQLite (local)', 'Local WordPress database for development and Cloud Agent environments. No MySQL required, no Docker overhead. The sqlite-database-integration plugin handles it.', null],
       ],

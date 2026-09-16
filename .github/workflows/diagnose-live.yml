@@ -11,19 +11,22 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     steps:
-      - name: Check hummelwp.com HTTP and REST
+      - name: Check matthummel.com HTTP and REST
+        env:
+          LIVE_ORIGIN: https://matthummel.com
+          LIVE_URL: https://matthummel.com
         run: |
           set -euo pipefail
-          echo "GET https://hummelwp.com/"
-          curl -sI -L --max-time 20 https://hummelwp.com/ | tee /tmp/home-headers.txt
-          code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://hummelwp.com/)
+          echo "GET ${LIVE_URL}/"
+          curl -sI -L --max-time 20 "${LIVE_URL}/" | tee /tmp/home-headers.txt
+          code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' "${LIVE_URL}/")
           echo "Homepage HTTP $code"
           test "$code" = "200"
 
           echo ""
-          echo "GET https://hummelwp.com/wp-json/"
-          curl -sI -L --max-time 20 https://hummelwp.com/wp-json/ | tee /tmp/json-headers.txt
-          json_code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://hummelwp.com/wp-json/)
+          echo "GET ${LIVE_ORIGIN}/wp-json/"
+          curl -sI -L --max-time 20 "${LIVE_ORIGIN}/wp-json/" | tee /tmp/json-headers.txt
+          json_code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' "${LIVE_ORIGIN}/wp-json/")
           echo "REST HTTP $json_code"
           test "$json_code" = "200"
 

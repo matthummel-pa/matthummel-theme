@@ -4,9 +4,9 @@ Do this **after** files are on the server (Update Theme in wp-admin, a `main` pu
 
 ## 0. PHP 8.3+ on Hostinger (required)
 
-Sage fatals on 8.2. In Hostinger hPanel, set `hummelwp.com` to **PHP 8.3** or newer. Then purge LiteSpeed cache.
+Sage fatals on 8.2. In Hostinger hPanel, set `matthummel.com` to **PHP 8.3** or newer. Then purge LiteSpeed cache.
 
-Production is **[hummelwp.com](https://hummelwp.com)**. Theme folder is `wp-content/themes/matthummel/`.
+Production is **[matthummel.com](https://matthummel.com)**. Theme folder is `wp-content/themes/matthummel/`. Do not install this zip on hummelwp.com.
 
 ## 1. Folder name
 

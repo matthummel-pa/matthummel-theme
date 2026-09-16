@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.33 — Deploy target is matthummel.com
+
+- GitHub Actions `LIVE_ORIGIN` / `LIVE_URL` point at https://matthummel.com (not hummelwp.com).
+- Theme header, README, and operator docs treat matthummel.com as the live Hostinger install for this zip.
+- Install path is unchanged: `theme-latest` → Appearance → Update Theme / `wp mh theme-update`, then purge LiteSpeed.
+
 ## 3.5.32 — WooCommerce notice icons and padding
 
 - Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.

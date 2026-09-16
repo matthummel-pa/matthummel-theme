@@ -101,7 +101,7 @@ What the 3.x Sage theme does, and where it lives.
 - Buyer update mail is Woo email id `mh_customer_download_update`. Enabled by `mh_seed_download_update_notifications()`. Trigger only when the zip version increases. First attach does not email. `_mh_notified_version` on the line item prevents duplicates.
 - GitHub release hosts are added to WooCommerce approved download directories (`mh_approve_product_download_url()`). Without that, attaching a zip fatals and buyers never get the update mail.
 - CLI: `wp mh shop-downloads [--force] [--localize] [--no-notify] [--slug=acreline]` and `wp mh shop-notify-updates [--slug=acreline] [--resend]`.
-- Live shop host is **hummelwp.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
+- Live shop host is **matthummel.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
 
 
 ## Editor’s notes (3.5.21 cart/checkout desk)
@@ -318,7 +318,7 @@ SSH credentials for `db-pull` / `db-push` resolve in this order:
 2. `MH_SSH_HOST`, `MH_SSH_PORT`, `MH_SSH_USER`, `MH_SSH_WP_PATH`, `MH_SSH_IDENTITY_FILE`, `MH_SSH_KEY_PASSPHRASE` constants in wp-config.php
 3. Env vars: `MH_SSH_HOST` / `SERVER_IP`, `MH_SSH_PORT` / `SERVER_SSH_PORT`, `MH_SSH_USER` / `SERVER_USER`, `SERVER_DESTINATION_PATH` / `LIVE_WP_PATH`, `SERVER_SSH_IDENTITY_FILE`, `SERVER_SSH_PRIVATE_KEY_PASSPHRASE`
 
-Production hosting is Hostinger (`hummelwp.com`). Prefer hPanel backups and WPVibe / `wp mh theme-update` over SSH db-push. Legacy `SITEGROUND_*` env names are not used for deploy.
+Production hosting is Hostinger (`matthummel.com`). Prefer hPanel backups and WPVibe / `wp mh theme-update` over SSH db-push. Legacy `SITEGROUND_*` env names are not used for deploy.
 
 Passphrase-protected keys need `SERVER_SSH_PRIVATE_KEY_PASSPHRASE` (or an unencrypted deploy key). Cloud Agents often write the key to `~/.ssh/id_ed25519_sg` — that path is auto-detected.
 

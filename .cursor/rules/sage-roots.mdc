@@ -1,5 +1,5 @@
 ---
-description: Roots Sage 11 theme conventions for the matthummel theme (production: hummelwp.com). Use official Sage docs before inventing WordPress template or Vite patterns.
+description: Roots Sage 11 theme conventions for the matthummel theme (production: matthummel.com). Use official Sage docs before inventing WordPress template or Vite patterns.
 alwaysApply: true
 ---
 
@@ -56,4 +56,4 @@ Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Mat
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`. Install on Hostinger (`hummelwp.com`) with Appearance → Update Theme. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.mdc`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`. Install on Hostinger (`matthummel.com`) with Appearance → Update Theme. Live folder is `wp-content/themes/matthummel`. Do not install this zip on hummelwp.com. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.mdc`.

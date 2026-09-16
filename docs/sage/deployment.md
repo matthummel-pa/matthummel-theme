@@ -20,11 +20,11 @@ GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`:
 2. Zips the theme as `matthummel.zip` (folder `matthummel/` at the zip root)
 3. Publishes it to the GitHub Release **`theme-latest`**
 
-Production WordPress is **[hummelwp.com](https://hummelwp.com)** on Hostinger.
+Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinger. Do not install this zip on hummelwp.com.
 
 ### Install on the live site (HTTPS)
 
-On hummelwp.com wp-admin:
+On matthummel.com wp-admin:
 
 1. Fine-grained PAT scoped to `matthummel-theme` with **Contents: Read**
 2. Appearance → Update Theme → paste token → Save
