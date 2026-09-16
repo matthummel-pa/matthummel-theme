@@ -2,6 +2,14 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.0 decluttered portfolio)
+
+- Home order is hero → Projects CPT → journal → What I do. Do not put project cards back in the hero.
+- Hero copy/layout: Customizer **Home hero** wins when set; otherwise Page content (theme) / `mh_home_hero_default()`.
+- No CSS gradients on the home surface. Solid soft blue (`--blue-50` / `--blue-600`) and gray only.
+- `mh_public_shop_enabled()` stays false. Do not restore shop, cart, or buy CTAs on Home, header, or footer.
+- Featured home cards come from `mh_home_featured_projects()` (live Projects CPT first).
+
 ## Editor’s notes (3.5.33 production site)
 
 - Canonical WordPress is `https://matthummel.com`. WPVibe `site_url` defaults there. `hummelwp.com` is a separate install — do not use it as the default for content, theme update, or deploy notes.

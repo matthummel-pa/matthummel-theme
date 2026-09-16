@@ -235,7 +235,13 @@ function mh_redirect_shop_to_projects(): void
     if (mh_public_shop_enabled()) {
         return;
     }
-    if (! function_exists('is_shop') || ! is_shop()) {
+
+    $isShop = function_exists('is_shop') && is_shop();
+    if (! $isShop) {
+        $path = trim((string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
+        $isShop = $path === 'shop';
+    }
+    if (! $isShop) {
         return;
     }
 
@@ -846,9 +852,7 @@ function mh_home_case_study_cards(array $cards, int $limit = 3): array
 
     if (count($out) < $limit) {
         foreach ($bySlug as $card) {
-            if (! empty($card['for_sale']) || ! empty($card['product_id'])) {
-                $out[] = $card;
-            }
+            $out[] = $card;
             if (count($out) >= $limit) {
                 break;
             }
