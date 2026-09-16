@@ -914,19 +914,21 @@ body {
   align-items: start;
   padding-top: clamp(1.5rem, 3vw, 2.25rem);
 }
+.project-stage__gallery {
+  grid-area: auto;
+  min-width: 0;
+}
 .project-stage__shot {
   position: relative;
   margin: 0;
-  aspect-ratio: 16 / 10;
-  min-height: 11rem;
-  max-height: none;
+  overflow: hidden;
   background: #e5e7eb;
 }
 .project-stage__shot img {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top center;
   background: #e5e7eb;
@@ -1078,12 +1080,15 @@ body {
   min-height: 8rem;
 }
 .work-shot img {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: top center;
+}
+.project-stage .pf-product-gallery {
+  grid-area: auto;
 }
 .page-header .eyebrow,
 .page-header .pf-meta,
@@ -1144,6 +1149,14 @@ body {
 
 @media (max-width: 420px) {
   .project-stat-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 801px) {
+  .work-card--featured .work-shot img {
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
 }
 
 html.mh-dark .h-hero,
