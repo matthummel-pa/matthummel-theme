@@ -2,11 +2,17 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.1 project pages)
+
+- Page heroes are single-column copy on a solid light gray band. Do not restore the stats panel / split hero-illu.
+- Project singles use `mh_project_page_slides()` + `mh_project_github_facts()`. Keep architecture and handoff visible — do not hide them in `<details>`.
+- Availability chips use solid `#15803d`. Do not go back to pastel `#f0fdf4`.
+
 ## Editor’s notes (3.6.0 decluttered portfolio)
 
 - Home order is hero → Projects CPT → journal → What I do. Do not put project cards back in the hero.
 - Hero copy/layout: Customizer **Home hero** wins when set; otherwise Page content (theme) / `mh_home_hero_default()`.
-- No CSS gradients on the home surface. Solid soft blue (`--blue-50` / `--blue-600`) and gray only.
+- No CSS gradients on the home surface. Solid gray hero band; optional Customizer accent stays a flat fill.
 - `mh_public_shop_enabled()` stays false. Do not restore shop, cart, or buy CTAs on Home, header, or footer.
 - Featured home cards come from `mh_home_featured_projects()` (live Projects CPT first).
 
@@ -34,7 +40,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.5.29 readable project pages)
 
 - Projects listing copy lives in `mh_projects_listing_default()`. Keep sentences short (grade 6–8). Do not restore the four audience cards or dual closing CTAs unless Matt asks.
-- Single-project story headings stay Why I built it / What I did / What you can use. Developer stack stays in the accordion.
+- Single-project story headings stay Why I built it / What I did / What you can use. Developer notes (architecture, handoff) stay on the page, not in an accordion.
 - Catalog `summary` / `challenge` / `approach` / `result` are the single-page hero and story. Refresh live posts with `mh_projects_readable_copy_v1` (already ran once).
 
 ## Editor’s notes (3.5.28 Projects CPT)

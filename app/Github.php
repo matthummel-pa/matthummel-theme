@@ -584,7 +584,7 @@ GQL;
      */
     public static function fetchRepoMeta(string $owner, string $repo): array
     {
-        $key = 'mh_ghmeta2_'.md5($owner.'/'.$repo);
+        $key = 'mh_ghmeta3_'.md5($owner.'/'.$repo);
         if (($d = get_transient($key)) !== false) {
             return is_array($d) ? $d : [];
         }
@@ -593,11 +593,15 @@ GQL;
         if (! is_wp_error($r) && wp_remote_retrieve_response_code($r) === 200) {
             $j = json_decode(wp_remote_retrieve_body($r), true);
             $topics = $j['topics'] ?? [];
+            $license = (string) ($j['license']['spdx_id'] ?? '');
             $d = [
                 'desc' => (string) ($j['description'] ?? ''),
                 'stars' => (int) ($j['stargazers_count'] ?? 0),
                 'forks' => (int) ($j['forks_count'] ?? 0),
+                'watchers' => (int) ($j['subscribers_count'] ?? $j['watchers_count'] ?? 0),
+                'issues' => (int) ($j['open_issues_count'] ?? 0),
                 'lang' => (string) ($j['language'] ?? ''),
+                'license' => ($license !== '' && $license !== 'NOASSERTION') ? $license : '',
                 'url' => (string) ($j['html_url'] ?? ''),
                 'homepage' => (string) ($j['homepage'] ?? ''),
                 'topics' => is_array($topics) ? $topics : [],

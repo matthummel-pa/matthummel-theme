@@ -3,7 +3,6 @@
   $icon = (string) ($icon ?? 'code');
   $title = (string) ($title ?? '');
   $meta = (string) ($meta ?? '');
-  $stats = is_array($stats ?? null) ? $stats : [];
   $link = is_array($link ?? null) ? $link : null;
   $status = is_array($status ?? null) ? $status : null;
   $profileSize = (int) ($profileSize ?? 0);
@@ -60,28 +59,6 @@
           </span>
         @endif
       </div>
-    @endif
-
-    @if ($stats !== [])
-      <dl class="h-hero-illu__stats">
-        @foreach ($stats as $stat)
-          <div class="h-hero-illu__stat">
-            <dt>
-              @if (! empty($stat['href']))
-                <a href="{{ esc_url($stat['href']) }}" @if (! empty($stat['external'])) rel="noopener" target="_blank" @else rel="me" @endif>
-                  {{ $stat['value'] }}
-                  @if (! empty($stat['external']))
-                    <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-                  @endif
-                </a>
-              @else
-                {{ $stat['value'] }}
-              @endif
-            </dt>
-            <dd>{{ $stat['label'] }}</dd>
-          </div>
-        @endforeach
-      </dl>
     @endif
 
     @if ($link !== null && ! empty($link['href']) && ! empty($link['label']))

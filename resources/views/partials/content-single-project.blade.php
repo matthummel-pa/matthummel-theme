@@ -5,24 +5,56 @@
   $card = $post instanceof WP_Post ? \App\mh_project_post_to_card($post) : [];
   $story = \App\mh_project_concept_narrative($postId);
   $case = \App\mh_project_case_study($postId, $card, $story);
+  $docs = \App\mh_project_buyer_docs($postId, $card);
+  $gh = \App\mh_project_github_facts($postId, $card);
+  $slides = \App\mh_project_page_slides($postId, $card);
   $title = (string) ($card['title'] ?? get_the_title());
-  $shot = (string) ($card['image'] ?? '');
   $cat = (string) ($card['cat'] ?? '');
   $place = (string) ($card['place'] ?? '');
   $tech = $card['tech'] ?? [];
   $demo = (string) ($story['demo'] !== '' ? $story['demo'] : ($card['demo'] ?? ''));
-  $github = (string) ($card['github'] ?? $card['concept'] ?? '');
+  if ($demo === '' && $gh['homepage'] !== '') {
+    $demo = (string) $gh['homepage'];
+  }
+  $github = (string) ($gh['url'] !== '' ? $gh['url'] : ($card['github'] ?? $card['concept'] ?? ''));
   $helloUrl = function_exists('\\App\\mh_work_help_url') ? \App\mh_work_help_url($card) : \App\mh_work_contact_url($card);
   $projectsUrl = home_url('/projects/');
   $related = \App\mh_related_concept_cards($card, 3);
   $summary = (string) ($story['summary'] !== '' ? $story['summary'] : ($card['blurb'] ?? ''));
+  if ($summary === '' && $gh['desc'] !== '') {
+    $summary = (string) $gh['desc'];
+  }
   $eyebrow = \App\mh_project_display_eyebrow((string) ($story['eyebrow'] ?? ''));
   $deliverables = is_array($story['deliverables'] ?? null) ? $story['deliverables'] : [];
-  $architecture = (string) ($case['architecture'] ?? '');
-  $handoff = (string) ($case['handoff'] ?? '');
+  $benefits = is_array($story['benefits'] ?? null) ? $story['benefits'] : [];
+  $features = $deliverables !== [] ? $deliverables : $benefits;
+  if ($deliverables !== [] && $benefits !== []) {
+    $features = array_values(array_unique(array_merge($deliverables, $benefits)));
+  }
+  $architecture = (string) ($case['architecture'] !== '' ? $case['architecture'] : ($docs['architecture'] ?? ''));
+  $handoff = (string) ($case['handoff'] !== '' ? $case['handoff'] : ($docs['handoff'] ?? ''));
+  $audience = (string) ($docs['audience'] ?? '');
+  $specs = is_array($docs['specs'] ?? null) ? $docs['specs'] : [];
+  $faq = is_array($story['faq'] ?? null) ? $story['faq'] : [];
+  if ($faq === [] && is_array($docs['faq'] ?? null)) {
+    $faq = $docs['faq'];
+  }
+  $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
+  $heroImage = (string) ($slides[0]['src'] ?? '');
+  $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
+  $ghStats = array_values(array_filter([
+    ['value' => number_format_i18n((int) $gh['stars']), 'label' => __('Stars', 'sage'), 'show' => $gh['has_repo']],
+    ['value' => number_format_i18n((int) $gh['forks']), 'label' => __('Forks', 'sage'), 'show' => $gh['has_repo']],
+    ['value' => number_format_i18n((int) $gh['watchers']), 'label' => __('Watchers', 'sage'), 'show' => $gh['has_repo'] && (int) $gh['watchers'] > 0],
+    ['value' => $gh['lang'], 'label' => __('Language', 'sage'), 'show' => $gh['lang'] !== ''],
+    ['value' => $gh['license'], 'label' => __('License', 'sage'), 'show' => $gh['license'] !== ''],
+    ['value' => $gh['release'] !== '' ? $gh['release'] : $gh['version'], 'label' => __('Release', 'sage'), 'show' => $gh['release'] !== '' || $gh['version'] !== ''],
+    ['value' => $gh['pushed_label'], 'label' => __('Updated', 'sage'), 'show' => $gh['pushed_label'] !== ''],
+    ['value' => number_format_i18n((int) $gh['issues']), 'label' => __('Open issues', 'sage'), 'show' => $gh['has_repo']],
+  ], static fn ($row) => ! empty($row['show']) && $row['value'] !== ''));
 @endphp
 
-<article @php(post_class('concept-page'))>
+<article @php(post_class('concept-page project-page'))>
   @component('partials.page-hero')
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
@@ -45,6 +77,10 @@
       @endif
       @if ($place !== '')
         <span>{!! \App\mh_svg_icon('map', 14) !!} {{ $place }}</span>
+      @endif
+      @if ($gh['repo'] !== '')
+        <span aria-hidden="true"> · </span>
+        <span>{{ $gh['owner'] }}/{{ $gh['repo'] }}</span>
       @endif
     </p>
     <div class="concept-hero-actions">
@@ -69,30 +105,169 @@
     </div>
   @endcomponent
 
-  <div class="container wide page-block concept-layout">
-    @if ($shot !== '')
-      <figure class="concept-shot">
-        <img
-          src="{{ esc_url($shot) }}"
-          alt="{{ esc_attr(sprintf(__('Screenshot of %s', 'sage'), $title)) }}"
-          width="1280"
-          height="720"
-          loading="eager"
-          decoding="async"
+  <div class="container wide page-block project-stage">
+    <div class="project-stage__gallery pf-product-gallery" data-product-gallery>
+      @if ($slides !== [])
+        <figure
+          class="pf-product-gallery__stage project-stage__shot"
+          @if (count($slides) > 1)
+            role="tabpanel"
+            id="pf-gallery-panel"
+            aria-labelledby="pf-gallery-tab-0"
+          @endif
         >
-        <figcaption>{{ __('Sample project. Not a client site.', 'sage') }}</figcaption>
-      </figure>
-    @endif
+          <img
+            src="{{ esc_url($heroImage) }}"
+            alt="{{ esc_attr($heroImageAlt) }}"
+            width="960"
+            height="600"
+            loading="eager"
+            decoding="async"
+            data-gallery-main
+          >
+        </figure>
+        @if (count($slides) > 1)
+          <div class="pf-product-gallery__thumbs" role="tablist" aria-label="{{ __('Project screenshots', 'sage') }}">
+            @foreach ($slides as $i => $slide)
+              <button
+                type="button"
+                class="pf-product-gallery__thumb{{ $i === 0 ? ' is-active' : '' }}"
+                role="tab"
+                id="pf-gallery-tab-{{ $i }}"
+                aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+                aria-controls="pf-gallery-panel"
+                tabindex="{{ $i === 0 ? '0' : '-1' }}"
+                aria-label="{{ esc_attr($slide['alt'] !== '' ? $slide['alt'] : sprintf(__('Screenshot %d', 'sage'), $i + 1)) }}"
+                data-gallery-index="{{ $i }}"
+                data-gallery-src="{{ esc_url($slide['src']) }}"
+                data-gallery-alt="{{ esc_attr($slide['alt']) }}"
+              >
+                <img
+                  src="{{ esc_url($slide['src']) }}"
+                  alt=""
+                  width="160"
+                  height="100"
+                  loading="{{ $i < 4 ? 'eager' : 'lazy' }}"
+                  decoding="async"
+                >
+              </button>
+            @endforeach
+          </div>
+        @endif
+        <p class="project-stage__caption">{{ __('Sample project. Not a client site.', 'sage') }}</p>
+      @endif
+    </div>
 
-    @if (! empty($tech))
-      <p class="pill-row">
-        @foreach ($tech as $t)
-          <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+    <aside class="project-stage__info" aria-label="{{ __('Project details', 'sage') }}">
+      @if ($gh['desc'] !== '' && $gh['desc'] !== $summary)
+        <p class="project-stage__gh-desc">{{ $gh['desc'] }}</p>
+      @endif
+
+      @if ($ghStats !== [])
+        <dl class="project-stat-grid">
+          @foreach ($ghStats as $stat)
+            <div class="project-stat">
+              <dt>{{ $stat['label'] }}</dt>
+              <dd>{{ $stat['value'] }}</dd>
+            </div>
+          @endforeach
+        </dl>
+      @endif
+
+      @if ($specs !== [])
+        <ul class="project-spec-list">
+          @foreach ($specs as $spec)
+            <li>
+              <span>{{ $spec[0] }}</span>
+              @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
+                <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
+              @else
+                <strong>{{ $spec[1] ?? '' }}</strong>
+              @endif
+            </li>
+          @endforeach
+        </ul>
+      @endif
+
+      @if (! empty($tech))
+        <p class="pill-row">
+          @foreach ($tech as $t)
+            <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+          @endforeach
+        </p>
+      @endif
+
+      @if ($gh['topics'] !== [])
+        <p class="pill-row">
+          @foreach ($gh['topics'] as $topic)
+            <span class="pill">{{ $topic }}</span>
+          @endforeach
+        </p>
+      @endif
+
+      @if ($gh['languages'] !== [])
+        <p class="project-langs">
+          <span>{{ __('Languages', 'sage') }}</span>
+          {{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}
+        </p>
+      @endif
+
+      @if ($gh['compatible'] !== '')
+        <p class="project-langs">
+          <span>{{ __('Compatible', 'sage') }}</span>
+          {{ $gh['compatible'] }}
+        </p>
+      @endif
+
+      <div class="project-stage__links">
+        @if ($github !== '' && str_starts_with($github, 'http'))
+          <a class="btn btn-outline" href="{{ esc_url($github) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('github', 15) !!}
+            {{ __('Repository', 'sage') }}
+          </a>
+        @endif
+        @if ($gh['release_url'] !== '')
+          <a class="h-text-arrow" href="{{ esc_url($gh['release_url']) }}" rel="noopener" target="_blank">
+            {{ __('Latest release', 'sage') }} ↗
+          </a>
+        @endif
+      </div>
+    </aside>
+  </div>
+
+  @if ($features !== [])
+    <section class="container wide page-block project-features" aria-labelledby="project-features">
+      <h2 id="project-features" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
+      <ul class="project-feat-grid">
+        @foreach ($features as $item)
+          <li class="project-feat">{{ $item }}</li>
         @endforeach
-      </p>
-    @endif
+      </ul>
+    </section>
+  @endif
 
+  @if ($metrics !== [])
+    <section class="container wide page-block" aria-labelledby="project-metrics">
+      <h2 id="project-metrics" class="display-title is-section">{{ __('At a glance', 'sage') }}</h2>
+      <div class="concept-metrics">
+        @foreach ($metrics as $metric)
+          <div class="concept-metric">
+            <strong>{{ $metric[0] ?? '' }}</strong>
+            <span>{{ $metric[1] ?? '' }}</span>
+          </div>
+        @endforeach
+      </div>
+    </section>
+  @endif
+
+  <div class="container wide page-block concept-layout">
     <div class="concept-story">
+      @if ($audience !== '')
+        <section class="concept-story__block">
+          <h2>{{ __('Who it is for', 'sage') }}</h2>
+          <p>{{ $audience }}</p>
+        </section>
+      @endif
       @if (($story['challenge'] ?? '') !== '')
         <section class="concept-story__block">
           <h2>{{ __('Why I built it', 'sage') }}</h2>
@@ -113,25 +288,42 @@
       @endif
     </div>
 
-    @if ($deliverables !== [])
-      <section class="pf-section" aria-labelledby="project-included">
-        <h2 id="project-included" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
-        <ul class="concept-deliverables">
-          @foreach ($deliverables as $item)
-            <li>{{ $item }}</li>
-          @endforeach
-        </ul>
+    @if ($architecture !== '')
+      <section class="project-detail-block" aria-labelledby="project-architecture">
+        <h2 id="project-architecture">{{ __('Architecture', 'sage') }}</h2>
+        @foreach (\App\mh_project_prose_paragraphs($architecture) as $para)
+          <p>{{ $para }}</p>
+        @endforeach
       </section>
     @endif
 
-    @if ($architecture !== '')
-      <details class="concept-dev">
-        <summary>{{ __('For developers', 'sage') }}</summary>
-        <p>{{ $architecture }}</p>
-        @if ($handoff !== '')
-          <p>{{ $handoff }}</p>
-        @endif
-      </details>
+    @if ($handoff !== '')
+      <section class="project-detail-block" aria-labelledby="project-handoff">
+        <h2 id="project-handoff">{{ __('Handoff', 'sage') }}</h2>
+        @foreach (\App\mh_project_prose_paragraphs($handoff) as $para)
+          <p>{{ $para }}</p>
+        @endforeach
+      </section>
+    @endif
+
+    @if ($faq !== [])
+      <section class="project-detail-block" aria-labelledby="project-faq">
+        <h2 id="project-faq">{{ __('Questions', 'sage') }}</h2>
+        <div class="faq-list">
+          @foreach ($faq as $item)
+            @php
+              $q = (string) ($item['q'] ?? $item[0] ?? '');
+              $a = (string) ($item['a'] ?? $item[1] ?? '');
+            @endphp
+            @if ($q !== '' && $a !== '')
+              <div class="project-faq">
+                <h3>{{ $q }}</h3>
+                <p>{{ $a }}</p>
+              </div>
+            @endif
+          @endforeach
+        </div>
+      </section>
     @endif
   </div>
 
