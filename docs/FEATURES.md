@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.4 type rhythm)
+
+- Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Do not put large `margin-top` on every heading — first-child / eyebrow → title pairs stay tight.
+- Canonical journal spacing lives in the later `.post-prose` block in `portfolio.css` (not the short layout shell earlier in the file).
+- Keep `.eyebrow + h2` tight on legal/a11y shells.
+
 ## Editor’s notes (3.6.3 projects mobile)
 
 - Featured work cards on small screens are a stacked 16:9 screenshot + body. Do not restore `height: 100%` on `.work-shot` without an explicit parent height.
