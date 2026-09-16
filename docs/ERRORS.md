@@ -122,7 +122,7 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Sage fatal on live site | Live PHP still 8.2 | hPanel → PHP → set `hummelwp.com` to 8.3 or newer |
+| Sage fatal on live site | Live PHP still 8.2 | hPanel → PHP → set `matthummel.com` to 8.3 or newer |
 | Old styles served after deploy | LiteSpeed serving stale HTML | Purge LiteSpeed / website cache in hPanel |
 | `Vite manifest not found` on live site | `public/build/` not in the deploy zip | Check that `npm run build` ran in CI; `public/build/` must ship in the zip |
 

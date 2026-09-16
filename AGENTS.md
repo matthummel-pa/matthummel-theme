@@ -16,12 +16,12 @@ Sage docs (also listed in `.cursor/docs.json`):
 - Install after deploy: `docs/INSTALL.md`
 - Changelog: `CHANGELOG.md`
 
-Production WordPress is **[hummelwp.com](https://hummelwp.com)** on Hostinger (theme folder
+Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinger (theme folder
 `wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
 `.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
 
 Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
-On Hostinger (`hummelwp.com`), Appearance → **Update Theme** downloads that zip over HTTPS.
+On Hostinger (`matthummel.com`), Appearance → **Update Theme** downloads that zip over HTTPS.
 There is no SiteGround FTP or SSH step. After install, purge LiteSpeed.
 The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
 WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).

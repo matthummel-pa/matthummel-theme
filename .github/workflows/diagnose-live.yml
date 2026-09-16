@@ -11,19 +11,19 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     steps:
-      - name: Check hummelwp.com HTTP and REST
+      - name: Check matthummel.com HTTP and REST
         run: |
           set -euo pipefail
-          echo "GET https://hummelwp.com/"
-          curl -sI -L --max-time 20 https://hummelwp.com/ | tee /tmp/home-headers.txt
-          code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://hummelwp.com/)
+          echo "GET https://matthummel.com/"
+          curl -sI -L --max-time 20 https://matthummel.com/ | tee /tmp/home-headers.txt
+          code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://matthummel.com/)
           echo "Homepage HTTP $code"
           test "$code" = "200"
 
           echo ""
-          echo "GET https://hummelwp.com/wp-json/"
-          curl -sI -L --max-time 20 https://hummelwp.com/wp-json/ | tee /tmp/json-headers.txt
-          json_code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://hummelwp.com/wp-json/)
+          echo "GET https://matthummel.com/wp-json/"
+          curl -sI -L --max-time 20 https://matthummel.com/wp-json/ | tee /tmp/json-headers.txt
+          json_code=$(curl -sI -L --max-time 20 -o /dev/null -w '%{http_code}' https://matthummel.com/wp-json/)
           echo "REST HTTP $json_code"
           test "$json_code" = "200"
 

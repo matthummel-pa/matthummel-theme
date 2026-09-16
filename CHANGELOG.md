@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.26 — Production site is matthummel.com
+
+- Canonical public WordPress is [matthummel.com](https://matthummel.com). WPVibe, deploy notes, and agent rules use that URL by default.
+- `hummelwp.com` remains a separate Hostinger install; do not treat it as the default target.
+
 ## 3.5.25 — WooCommerce notice icons and padding
 
 - Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.
@@ -75,7 +80,7 @@
 - My account → Downloads shows the latest version, an update chip when a newer zip shipped, and a What changed link. The Downloads nav marks **Update** when one is waiting.
 - Buyers get a WooCommerce email when I attach a newer zip (`Product download update` under WooCommerce → Settings → Emails). Seed enables that mail plus completed/processing order mail. Purchase receipts mention that follow-up. Resend with `wp mh shop-notify-updates`.
 - GitHub release URLs are added to WooCommerce approved download directories so zip attach (and the update email) works from WP-CLI.
-- WalkRidge still needs a built GitHub release zip before that product can attach a file. Operator guide: `docs/SHOP-DOWNLOADS.md` (live shop host: hummelwp.com).
+- WalkRidge still needs a built GitHub release zip before that product can attach a file. Operator guide: `docs/SHOP-DOWNLOADS.md` (live shop host: matthummel.com).
 
 ## 3.5.13 — Easier checkout, still professional
 
