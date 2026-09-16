@@ -39,21 +39,25 @@
 
 .editor-styles-wrapper h2.wp-block-heading {
   font-size: clamp(1.4rem, 2.2vw, 1.65rem);
-  margin: 2em 0 .85em;
+  margin: 1.85em 0 .55em;
   line-height: 1.15;
 }
 
 .editor-styles-wrapper h3.wp-block-heading {
   font-size: clamp(1.2rem, 1.6vw, 1.35rem);
-  margin: 1.75em 0 .75em;
+  margin: 1.65em 0 .5em;
   line-height: 1.2;
+}
+
+.editor-styles-wrapper .wp-block-heading:first-child {
+  margin-top: 0;
 }
 
 .editor-styles-wrapper p,
 .editor-styles-wrapper .wp-block-paragraph {
   font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
   color: #141c28;
-  margin: 0 0 1.45em;
+  margin: 0 0 1.25em;
   line-height: 1.78;
 }
 

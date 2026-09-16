@@ -109,7 +109,9 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-p { margin: 0 0 1.2em; text-wrap: pretty; }
+/* Type rhythm: paragraphs stack evenly; headings sit closer to the copy
+   they introduce and open more space after the previous block. */
+p { margin: 0 0 1.15em; text-wrap: pretty; }
 p:last-child { margin-bottom: 0; }
 
 h1, h2, h3, h4, h5 {
@@ -119,9 +121,21 @@ h1, h2, h3, h4, h5 {
   line-height: 0.98;
   letter-spacing: var(--type-display-track);
   text-wrap: balance;
-  margin: 0 0 .9em;
+  margin: 0 0 .65em;
 }
-h3, h4 { letter-spacing: -0.04em; margin-bottom: .7em; font-weight: 800; }
+h3, h4 { letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
+
+/* Mid-flow headings (not eyebrow → title pairs in page chrome). */
+:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
+:where(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-image, .wp-block-code, .wp-block-preformatted) + :where(h2, h3, h4) {
+  margin-top: 1.85em;
+}
+
+/* Keep kicker → title pairs tight on marketing + legal shells. */
+.eyebrow + :where(h1, h2, h3, h4),
+.legal-meta + :where(h2, h3) {
+  margin-top: 0;
+}
 
 a {
   color: var(--color-accent);
@@ -2930,7 +2944,12 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 
 /* ─── LEGAL PAGES (Privacy Policy, Terms of Use) ─────────────────────────── */
 .legal-prose { max-width: 65ch; }
-.legal-prose h2 { margin-top: 0; }
+/* Section shells start with eyebrow → h2; keep that pair tight. */
+.legal-prose > .eyebrow + h2,
+.legal-prose > h2:first-child { margin-top: 0; }
+.legal-prose > :where(p, ul, ol):not(.eyebrow):not(.legal-meta):not(.sec-intro) + h2 {
+  margin-top: 1.85em;
+}
 .legal-meta { font-size: .85rem; color: var(--color-text-muted); margin-top: 1.25rem; }
 .legal-bullets {
   list-style: none;
@@ -3103,7 +3122,11 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 
 /* Shared narrow prose block — keeps all text-heavy sections aligned to the same max-width */
 .a11y-prose { max-width: 56ch; }
-.a11y-prose h2 { margin-top: 0; }
+.a11y-prose > .eyebrow + h2,
+.a11y-prose > h2:first-child { margin-top: 0; }
+.a11y-prose > :where(p, ul, ol):not(.eyebrow):not(.sec-intro) + h2 {
+  margin-top: 1.85em;
+}
 
 /* Commitment bullet list */
 .a11y-commit-list {
@@ -5889,19 +5912,13 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 .post-layout { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(16rem,18rem); gap: 2.5rem 3rem; align-items: start; }
 @media (max-width: 960px) { .post-layout { grid-template-columns: 1fr; } }
 .post-main { min-width: 0; }
+/* Layout shell only — type rhythm lives with the canonical .post-prose block below. */
 .post-prose {
   max-width: none;
   font-size: var(--type-body);
   line-height: 1.78;
   letter-spacing: -0.011em;
 }
-.post-prose p, .post-prose li, .post-prose .wp-block-paragraph { font-size: 1.05em; line-height: 1.78; letter-spacing: -0.011em; }
-.post-prose :where(p, ul, ol, blockquote, pre, figure) { margin: 0 0 1.45em; }
-.post-prose :where(p, li) { text-wrap: pretty; }
-.post-prose :where(h2, h3) { margin: 2em 0 .85em; line-height: 1.15; letter-spacing: var(--type-display-track); color: var(--color-text); text-wrap: balance; }
-.post-prose li { margin: 0 0 .4em; }
-.post-prose a { color: var(--color-accent); }
-.post-prose blockquote { border-left: 3px solid var(--color-border); padding-left: 1.25rem; color: var(--color-text-secondary); font-style: italic; }
 
 .post-featured { margin: 0 0 1.75rem; }
 .post-featured-img-el { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid var(--color-border); border-radius: 10px; background: var(--gray-50); }
@@ -6340,6 +6357,13 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
   margin: 0 0 1.15em;
   color: var(--color-text-secondary);
   max-width: 40rem;
+}
+.about-story__body > :where(h2, h3) {
+  margin: 1.85em 0 .55em;
+  line-height: 1.2;
+}
+.about-story__body > :where(h2, h3):first-child {
+  margin-top: 0;
 }
 .about-story__body > p:first-of-type,
 .about-story__p:first-of-type {
@@ -11028,8 +11052,14 @@ html.mh-dark .journal-topic-card {
   color: var(--color-body);
 }
 .post-prose p,
-.post-prose li { font-size: 1.05em; line-height: 1.78; letter-spacing: -0.011em; text-wrap: pretty; }
-.post-prose :where(p, ul, ol, blockquote, pre, figure, table) { margin: 0 0 1.45em; }
+.post-prose li,
+.post-prose .wp-block-paragraph {
+  font-size: 1.05em;
+  line-height: 1.78;
+  letter-spacing: -0.011em;
+  text-wrap: pretty;
+}
+.post-prose :where(p, ul, ol, blockquote, pre, figure, table) { margin: 0 0 1.25em; }
 .post-prose :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) {
   padding-inline-start: 1.35em;
   list-style-position: outside;
@@ -11051,8 +11081,12 @@ html.mh-dark .journal-topic-card {
   color: var(--color-text);
   letter-spacing: var(--type-display-track);
   line-height: 1.15;
-  margin: 2.25em 0 .75em;
+  /* More space before a heading than after — heading belongs to what follows. */
+  margin: 1.85em 0 .55em;
   text-wrap: balance;
+}
+.post-prose > :where(h2, h3, h4):first-child {
+  margin-top: 0;
 }
 .post-prose h2 { font-size: clamp(1.4rem, 2.2vw, 1.65rem); }
 .post-prose h3 { font-size: clamp(1.2rem, 1.6vw, 1.35rem); letter-spacing: -0.035em; }
@@ -11960,7 +11994,11 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .legal-prose > .eyebrow { margin-bottom: .55rem; }
 .legal-prose > h2 {
   font: 800 clamp(1.35rem, 2.4vw, 1.75rem)/1.15 var(--font-display);
-  margin: 0 0 1rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.legal-prose > :where(p, ul, ol):not(.eyebrow):not(.legal-meta):not(.sec-intro) + h2 {
+  margin-top: 1.85em;
 }
 
 /* Uses + Now cards already styled in page sections — keep hover soft */

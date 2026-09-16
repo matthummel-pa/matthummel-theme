@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.4 — Paragraph and heading spacing
+
+- Global type rhythm: more space before mid-flow headings, less after, so headings sit with the copy they introduce.
+- Journal `.post-prose` and the block editor match that rhythm; the first heading in an article no longer opens with a large empty gap.
+- Legal and accessibility shells keep tight eyebrow → title pairs, and still open space when a heading follows a body paragraph.
+- About story WYSIWYG headings use the same spacing.
+
 ## 3.6.3 — Projects mobile layout
 
 - Projects listing featured card keeps a 16:9 screenshot on phones (image no longer collapses to an empty dark block).
