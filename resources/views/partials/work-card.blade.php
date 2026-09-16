@@ -28,7 +28,19 @@
 >
   @if ($shot !== '')
     <a class="work-shot" href="{{ esc_url($conceptUrl) }}" aria-hidden="true" tabindex="-1">
-      <img src="{{ esc_url($shot) }}" alt="" width="960" height="540" loading="{{ $featured ? 'eager' : 'lazy' }}" decoding="async">
+      <img
+        src="{{ esc_url($shot) }}"
+        alt=""
+        width="960"
+        height="540"
+        loading="{{ $featured ? 'eager' : 'lazy' }}"
+        decoding="async"
+        @if ($featured)
+          fetchpriority="high"
+          class="skip-lazy"
+          data-no-lazy="1"
+        @endif
+      >
     </a>
   @endif
   <div class="work-body">

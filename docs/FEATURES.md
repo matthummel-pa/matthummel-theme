@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.3 projects mobile)
+
+- Featured work cards on small screens are a stacked 16:9 screenshot + body. Do not restore `height: 100%` on `.work-shot` without an explicit parent height.
+- Project gallery stage uses in-flow screenshots (`width: 100%` + aspect-ratio). Do not put `grid-area: gallery` on bare `.pf-product-gallery` — that shop rule hid project galleries under 860px. Scope it to `.pf-product-layout`.
+
 ## Editor’s notes (3.6.2 project pages)
 
 - Page heroes are single-column copy on a solid light gray band. Do not restore the stats panel / split hero-illu.

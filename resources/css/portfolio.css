@@ -12096,16 +12096,16 @@ html.mh-dark .entry-content > .mh-archive-note strong {
       "toc"
       "article";
   }
-  .pf-product-main {
+  .pf-product-layout .pf-product-main {
     display: contents;
     padding: 0;
     border: 0;
     box-shadow: none;
     background: transparent;
   }
-  .pf-product-gallery { grid-area: gallery; }
-  .pf-product-toc { grid-area: toc; }
-  .pf-product-article { grid-area: article; }
+  .pf-product-layout .pf-product-gallery { grid-area: gallery; }
+  .pf-product-layout .pf-product-toc { grid-area: toc; }
+  .pf-product-layout .pf-product-article { grid-area: article; }
 }
 /* Legacy hero hooks (kept for sticky-bar / dark-mode selectors) */
 .pf-product-hero {

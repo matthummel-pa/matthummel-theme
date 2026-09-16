@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.3 — Projects mobile layout
+
+- Projects listing featured card keeps a 16:9 screenshot on phones (image no longer collapses to an empty dark block).
+- Project singles keep the screenshot gallery above GitHub facts. Stats and demo URLs wrap instead of overflowing.
+- Shop product `grid-area` rules no longer leak onto `/projects/` galleries, so the screenshot stage stays in the first column on phones.
+
 ## 3.6.2 — Project pages and aligned heroes
 
 - Home and inner-page heroes use a solid light gray band. Copy lines up with the page container (no narrow left column, no hero stats panel).

@@ -122,7 +122,10 @@
             width="960"
             height="600"
             loading="eager"
+            fetchpriority="high"
             decoding="async"
+            class="skip-lazy"
+            data-no-lazy="1"
             data-gallery-main
           >
         </figure>
@@ -149,6 +152,10 @@
                   height="100"
                   loading="{{ $i < 4 ? 'eager' : 'lazy' }}"
                   decoding="async"
+                  @if ($i < 4)
+                    class="skip-lazy"
+                    data-no-lazy="1"
+                  @endif
                 >
               </button>
             @endforeach
