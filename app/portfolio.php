@@ -3934,8 +3934,8 @@ function mh_register_home_hero_customizer(\WP_Customize_Manager $wp): void
         'sanitize_callback' => static fn ($v) => (bool) $v,
     ]);
     $wp->add_control('mh_hero_accent', [
-        'label' => __('Solid soft-blue accent band', 'sage'),
-        'description' => __('Optional solid fill. No gradients.', 'sage'),
+        'label' => __('Solid grey accent band', 'sage'),
+        'description' => __('Optional solid fill. Heroes stay light grey; no gradients or blue circles.', 'sage'),
         'section' => 'mh_home_hero',
         'type' => 'checkbox',
     ]);

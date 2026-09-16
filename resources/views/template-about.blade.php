@@ -16,7 +16,7 @@
 
 @section('content')
 
-{{-- HERO (above the fold: name, headline, short lede, CTAs, photo panel) --}}
+{{-- HERO (above the fold: name, headline, short lede, CTAs, facts panel) --}}
 @component('partials.page-hero', ['extra' => 'about-hero', 'split' => true, 'asideLabel' => __('Quick facts', 'sage')])
   <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
@@ -43,8 +43,6 @@
   @slot('aside')
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/about',
-      'profileSize' => 280,
-      'profileCaption' => __('Full-stack · WordPress', 'sage'),
       'stats' => array_values(array_filter([
         ['value' => $yearsBuilding.'+', 'label' => __('years in-house web', 'sage')],
         ! empty($gh['public_repos'])
