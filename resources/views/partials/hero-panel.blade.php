@@ -5,15 +5,9 @@
   $meta = (string) ($meta ?? '');
   $link = is_array($link ?? null) ? $link : null;
   $status = is_array($status ?? null) ? $status : null;
-  $profileSize = (int) ($profileSize ?? 0);
-  $profileCaption = (string) ($profileCaption ?? '');
   $hasHead = $title !== '' || $meta !== '' || $status !== null;
 @endphp
 <div class="h-hero-illu">
-  <span class="h-hero-illu__glow" aria-hidden="true"></span>
-  <span class="h-hero-illu__orb h-hero-illu__orb--a" aria-hidden="true"></span>
-  <span class="h-hero-illu__orb h-hero-illu__orb--b" aria-hidden="true"></span>
-
   <div class="h-hero-illu__card">
     @if ($chrome !== '')
       <div class="h-hero-illu__chrome" aria-hidden="true">
@@ -21,19 +15,6 @@
         <span class="h-hero-illu__dot"></span>
         <span class="h-hero-illu__dot"></span>
         <span class="h-hero-illu__url">{{ $chrome }}</span>
-      </div>
-    @endif
-
-    @if ($profileSize > 0)
-      <div class="h-hero-illu__profile">
-        @include('partials.profile-photo', [
-          'size'  => $profileSize,
-          'class' => 'h-hero-illu__photo',
-          'eager' => true,
-        ])
-        @if ($profileCaption !== '')
-          <p class="h-hero-illu__profile-cap">{{ $profileCaption }}</p>
-        @endif
       </div>
     @endif
 

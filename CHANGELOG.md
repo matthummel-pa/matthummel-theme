@@ -1,10 +1,17 @@
 # Changelog
 
-## 3.6.1 — Project pages and aligned heroes
+## 3.6.2 — Project pages and aligned heroes
 
 - Home and inner-page heroes use a solid light gray band. Copy lines up with the page container (no narrow left column, no hero stats panel).
 - Project singles show a smaller shop-style screenshot plus thumbnails, live GitHub facts, and feature boxes. Architecture, handoff, and FAQ stay visible.
 - Header availability uses a solid green chip instead of a pale pastel.
+
+## 3.6.1 — Grey heroes, white sections
+
+- Heroes (home and inner pages) use a flat light grey. Blue circles, radial gradients, mesh, and hero images are gone.
+- Body and following sections stay white. Dark mode still uses the existing dark surfaces.
+- About hero keeps the facts card, without the profile photo.
+- Hero copy paints at full contrast (no fade-in).
 
 ## 3.6.0 — Decluttered portfolio home
 

@@ -2,11 +2,18 @@
 
 What the 3.x Sage theme does, and where it lives.
 
-## Editor’s notes (3.6.1 project pages)
+## Editor’s notes (3.6.2 project pages)
 
 - Page heroes are single-column copy on a solid light gray band. Do not restore the stats panel / split hero-illu.
 - Project singles use `mh_project_page_slides()` + `mh_project_github_facts()`. Keep architecture and handoff visible — do not hide them in `<details>`.
 - Availability chips use solid `#15803d`. Do not go back to pastel `#f0fdf4`.
+
+## Editor’s notes (3.6.1 grey heroes)
+
+- Heroes are flat light grey (`--color-hero`). Do not restore blue radial blobs, mesh, or hero images (home gallery, About profile photo, illustration orbs).
+- Body and non-hero sections stay white. Tinted bands (`h-band--tint`) are white, not blue-50.
+- Customizer “accent band” is the same grey as the hero. Do not map it back to `--blue-50`.
+- Do not fade hero copy or About facts in from opacity 0.
 
 ## Editor’s notes (3.6.0 decluttered portfolio)
 

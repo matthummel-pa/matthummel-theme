@@ -37,8 +37,9 @@
   --blue-900: #060f22;
   --grad-mark: var(--blue-50);
 
-  --color-canvas: #f7f9fc;
-  --color-bg: #eef2f7;
+  --color-canvas: #ffffff;
+  --color-bg: #ffffff;
+  --color-hero: color-mix(in srgb, var(--gray-800) 8%, #ffffff);
   --color-surface: var(--gray-50);
   --color-border: var(--gray-200);
   --color-border-light: var(--gray-100);
@@ -87,6 +88,7 @@
 html.mh-dark {
   --color-canvas: #0b1220;
   --color-bg: #111a28;
+  --color-hero: #172233;
   --color-surface: #172233;
   --color-card: #141c28;
   --color-paper: #0b1220;
@@ -108,7 +110,7 @@ body {
 }
 
 .site-header {
-  background: color-mix(in srgb, var(--color-canvas) 92%, #fff);
+  background: var(--white);
   border-bottom: 1px solid var(--color-border);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -481,8 +483,14 @@ body {
 
 .pf-section--alt,
 .h-band--tint,
-.h-section--tinted {
-  background: color-mix(in srgb, var(--blue-50) 55%, var(--color-canvas));
+.h-skills.h-band--tint,
+.h-receive.h-band--tint,
+.h-glance.h-band--tint,
+.h-journal.h-band--tint,
+.h-section.h-band--tint,
+.h-section--tinted,
+.h-section.h-section--tinted {
+  background: var(--white);
   border-color: var(--color-border);
 }
 
@@ -524,12 +532,12 @@ body {
   to { opacity: 1; transform: none; }
 }
 
-.h-hero__copy {
-  animation: studio-in .5s ease both;
-}
-
-.h-hero__viz {
-  animation: studio-in .65s ease .06s both;
+.h-hero__copy,
+.h-hero__viz,
+.about-hero__copy,
+.h-hero-illu__stat,
+.h-hero-illu__stat:nth-child(n) {
+  animation: none;
 }
 
 .work-card,
@@ -557,7 +565,15 @@ body {
   }
 }
 
-/* ── 3.6.0 — Decluttered portfolio home (solid blue/gray, no gradients) ── */
+/* ── 3.6.1 — Grey heroes, white sections, no circles / gradients / hero images ── */
+.h-hero,
+.h-hero--simple,
+.h-hero--accent,
+.page-header,
+.post-hero {
+  min-height: 0;
+  background: var(--color-hero);
+}
 .h-hero,
 .h-hero--simple {
   min-height: 0;
@@ -567,7 +583,20 @@ body {
 .h-hero::before,
 .h-hero__atmosphere,
 .h-hero__blob,
-.h-hero__mesh {
+.h-hero__mesh,
+.page-header::before,
+.post-hero::before,
+.about-hero::before,
+.h-hero-illu__glow,
+.h-hero-illu__orb,
+.page-header .h-hero-illu__profile,
+.h-hero-illu__photo,
+.mh-shop .page-header--shop::before,
+.mh-shop .page-header--product::before,
+.mh-shop .page-header--woo::before,
+.mh-shop .page-header--cart::before,
+.mh-shop .page-header--checkout::before,
+.mh-shop .page-header--account::before {
   display: none;
 }
 .h-hero--accent {
@@ -786,7 +815,7 @@ body {
 }
 
 .h-close {
-  background: var(--blue-50);
+  background: var(--white);
   border-top: 1px solid var(--color-border);
   padding: clamp(2.5rem, 6vh, 4rem) 0;
 }
@@ -807,10 +836,14 @@ body {
 .h-close__body a { color: var(--blue-600); }
 .h-close__body a:hover { color: var(--blue-700); }
 
-.h-band--tint {
-  background: var(--gray-50);
-}
-.h-section--tinted {
+.h-band--tint,
+.h-skills.h-band--tint,
+.h-receive.h-band--tint,
+.h-glance.h-band--tint,
+.h-journal.h-band--tint,
+.h-section.h-band--tint,
+.h-section--tinted,
+.h-section.h-section--tinted {
   background: var(--white);
 }
 
@@ -822,7 +855,7 @@ body {
   display: none;
 }
 
-/* ── 3.6.1 — Page heroes, project gallery, solid availability ── */
+/* ── 3.6.2 — Page heroes, project gallery, solid availability ── */
 .page-header,
 .post-hero {
   background: #eceff1;
