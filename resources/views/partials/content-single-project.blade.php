@@ -54,7 +54,7 @@
   ], static fn ($row) => ! empty($row['show']) && $row['value'] !== ''));
 @endphp
 
-<article @php(post_class('concept-page project-page'))>
+<article {!! post_class('concept-page project-page') !!}>
   @component('partials.page-hero')
     <p class="eyebrow">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
@@ -311,14 +311,10 @@
         <h2 id="project-faq">{{ __('Questions', 'sage') }}</h2>
         <div class="faq-list">
           @foreach ($faq as $item)
-            @php
-              $q = (string) ($item['q'] ?? $item[0] ?? '');
-              $a = (string) ($item['a'] ?? $item[1] ?? '');
-            @endphp
-            @if ($q !== '' && $a !== '')
+            @if ((string) ($item['q'] ?? $item[0] ?? '') !== '' && (string) ($item['a'] ?? $item[1] ?? '') !== '')
               <div class="project-faq">
-                <h3>{{ $q }}</h3>
-                <p>{{ $a }}</p>
+                <h3>{{ $item['q'] ?? $item[0] }}</h3>
+                <p>{{ $item['a'] ?? $item[1] }}</p>
               </div>
             @endif
           @endforeach
