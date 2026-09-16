@@ -532,12 +532,12 @@ body {
   to { opacity: 1; transform: none; }
 }
 
-.h-hero__copy {
-  animation: studio-in .5s ease both;
-}
-
-.h-hero__viz {
-  animation: studio-in .65s ease .06s both;
+.h-hero__copy,
+.h-hero__viz,
+.about-hero__copy,
+.h-hero-illu__stat,
+.h-hero-illu__stat:nth-child(n) {
+  animation: none;
 }
 
 .work-card,
@@ -811,7 +811,7 @@ body {
 }
 
 .h-close {
-  background: var(--blue-50);
+  background: var(--white);
   border-top: 1px solid var(--color-border);
   padding: clamp(2.5rem, 6vh, 4rem) 0;
 }
@@ -832,10 +832,14 @@ body {
 .h-close__body a { color: var(--blue-600); }
 .h-close__body a:hover { color: var(--blue-700); }
 
-.h-band--tint {
-  background: var(--gray-50);
-}
-.h-section--tinted {
+.h-band--tint,
+.h-skills.h-band--tint,
+.h-receive.h-band--tint,
+.h-glance.h-band--tint,
+.h-journal.h-band--tint,
+.h-section.h-band--tint,
+.h-section--tinted,
+.h-section.h-section--tinted {
   background: var(--white);
 }
 
