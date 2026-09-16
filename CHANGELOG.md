@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.32 — WooCommerce notice icons and padding
+
+- Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.
+- Block notice banners (SVG) get the same layout if WooCommerce prints them on classic checkout.
+- Payment, gateway, and nested notice padding is tighter so the empty-methods message is not a box-in-a-box in the checkout sidebar.
+
 ## 3.5.31 — Minimal blue portfolio
 
 - Front-end returns to cool paper and navy/blue accents. Tomato/cream studio pops are gone; `studio.css` is now the minimal blue skin.
