@@ -13,6 +13,10 @@ concurrency:
 permissions:
   contents: write
 
+env:
+  LIVE_ORIGIN: https://matthummel.com
+  LIVE_URL: https://matthummel.com
+
 jobs:
   deploy:
     name: Build Assets & Publish Theme Zip
@@ -55,9 +59,10 @@ jobs:
           body: |
             Built Sage theme (Composer vendor + Vite `public/build`).
             Commit: ${{ github.sha }}
-            Production: https://matthummel.com (Hostinger).
-            Install from wp-admin → Appearance → Update Theme, or `wp mh theme-update`.
+            Production: ${{ env.LIVE_URL }} (Hostinger).
+            Install on matthummel.com from wp-admin → Appearance → Update Theme, or `wp mh theme-update`.
             Unzip into `wp-content/themes/matthummel/` via Hostinger File Manager if needed.
+            Do not install this zip on hummelwp.com.
           files: matthummel.zip
           fail_on_unmatched_files: true
           make_latest: true
