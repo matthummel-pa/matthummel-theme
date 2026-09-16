@@ -46,9 +46,7 @@
       <ul class="footer-nav">
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/services/') }}">{{ __('Services', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/code/') }}">{{ __('Code & GitHub', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
       </ul>
     </nav>
 
@@ -59,9 +57,6 @@
         <li><a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a></li>
         <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/uses/') }}">{{ __('Uses', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
       </ul>
     </nav>

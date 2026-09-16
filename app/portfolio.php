@@ -1665,6 +1665,30 @@ function mh_projects_live_for_work(): array
     return mh_query_project_cards(['live_only' => true]);
 }
 
+/**
+ * Featured Projects CPT cards for the home listing.
+ *
+ * Prefers live project posts. Does not prioritize Woo sale flags.
+ *
+ * @since 3.6.0
+ *
+ * @return list<array<string, mixed>>
+ */
+function mh_home_featured_projects(int $limit = 3): array
+{
+    $limit = max(1, $limit);
+    $cards = mh_projects_live_for_work();
+    if ($cards === []) {
+        $cards = mh_work_page_items();
+    }
+
+    if (function_exists(__NAMESPACE__.'\\mh_home_case_study_cards')) {
+        return mh_home_case_study_cards($cards, $limit);
+    }
+
+    return array_slice($cards, 0, $limit);
+}
+
 /** Find a project card by slug (live-only or any published project). */
 function mh_project_card_by_slug(string $slug, bool $liveOnly = false): ?array
 {
@@ -3738,6 +3762,255 @@ function mh_logo_uri(string $kind = 'mark'): string
 }
 
 /**
+ * Sanitize home-hero alignment.
+ *
+ * @since 3.6.0
+ */
+function mh_sanitize_hero_align($value): string
+{
+    return in_array($value, ['left', 'center'], true) ? $value : 'left';
+}
+
+/**
+ * Sanitize home-hero vertical spacing.
+ *
+ * @since 3.6.0
+ */
+function mh_sanitize_hero_pad($value): string
+{
+    return in_array($value, ['compact', 'default', 'roomy'], true) ? $value : 'default';
+}
+
+/**
+ * Sanitize home-hero content max-width in rem (40–72).
+ *
+ * @since 3.6.0
+ */
+function mh_sanitize_hero_max_width($value): string
+{
+    $n = (int) $value;
+    if ($n < 40) {
+        $n = 40;
+    }
+    if ($n > 72) {
+        $n = 72;
+    }
+
+    return $n.'rem';
+}
+
+/**
+ * Sanitize a hero path or URL for Customizer storage.
+ *
+ * @since 3.6.0
+ */
+function mh_sanitize_hero_href($value): string
+{
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+    if (preg_match('#^(https?:)?//#i', $value) === 1) {
+        return esc_url_raw($value);
+    }
+
+    return '/'.ltrim(sanitize_text_field($value), '/');
+}
+
+/**
+ * Register Appearance → Customize → Home hero controls.
+ *
+ * Copy fields override Page content (theme) when they are not empty.
+ * Layout controls always apply.
+ *
+ * @since 3.6.0
+ */
+function mh_register_home_hero_customizer(\WP_Customize_Manager $wp): void
+{
+    $wp->add_section('mh_home_hero', [
+        'title' => __('Home hero', 'sage'),
+        'description' => __('Advanced home hero. Leave a text box empty to use Page content (theme) or the built-in default. Layout controls always apply.', 'sage'),
+        'priority' => 31,
+    ]);
+
+    $text = [
+        'mh_hero_eyebrow' => [__('Eyebrow', 'sage'), 'text'],
+        'mh_hero_h1' => [__('Heading (H1)', 'sage'), 'text'],
+        'mh_hero_role' => [__('Role line', 'sage'), 'text'],
+        'mh_hero_subcopy' => [__('Subcopy', 'sage'), 'textarea'],
+        'mh_hero_cta_primary' => [__('Primary CTA label', 'sage'), 'text'],
+        'mh_hero_cta_primary_url' => [__('Primary CTA URL or path', 'sage'), 'text'],
+        'mh_hero_cta_secondary' => [__('Secondary CTA label', 'sage'), 'text'],
+        'mh_hero_cta_secondary_url' => [__('Secondary CTA URL or path', 'sage'), 'text'],
+    ];
+
+    foreach ($text as $id => [$label, $type]) {
+        $sanitize = str_ends_with($id, '_url') ? __NAMESPACE__.'\\mh_sanitize_hero_href' : 'sanitize_text_field';
+        if ($type === 'textarea') {
+            $sanitize = 'sanitize_textarea_field';
+        }
+        $wp->add_setting($id, [
+            'default' => '',
+            'sanitize_callback' => $sanitize,
+        ]);
+        $wp->add_control($id, [
+            'label' => $label,
+            'section' => 'mh_home_hero',
+            'type' => $type,
+        ]);
+    }
+
+    $wp->add_setting('mh_hero_show_primary', [
+        'default' => true,
+        'sanitize_callback' => static fn ($v) => (bool) $v,
+    ]);
+    $wp->add_control('mh_hero_show_primary', [
+        'label' => __('Show primary CTA', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'checkbox',
+    ]);
+
+    $wp->add_setting('mh_hero_show_secondary', [
+        'default' => true,
+        'sanitize_callback' => static fn ($v) => (bool) $v,
+    ]);
+    $wp->add_control('mh_hero_show_secondary', [
+        'label' => __('Show secondary CTA', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'checkbox',
+    ]);
+
+    $wp->add_setting('mh_hero_max_width', [
+        'default' => 56,
+        'sanitize_callback' => static function ($value): int {
+            $n = (int) $value;
+
+            return min(72, max(40, $n));
+        },
+    ]);
+    $wp->add_control('mh_hero_max_width', [
+        'label' => __('Content max-width (rem)', 'sage'),
+        'description' => __('Wider than the old 40rem column. Default 56. Range 40–72.', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'range',
+        'input_attrs' => [
+            'min' => 40,
+            'max' => 72,
+            'step' => 2,
+        ],
+    ]);
+
+    $wp->add_setting('mh_hero_align', [
+        'default' => 'left',
+        'sanitize_callback' => __NAMESPACE__.'\\mh_sanitize_hero_align',
+    ]);
+    $wp->add_control('mh_hero_align', [
+        'label' => __('Alignment', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'select',
+        'choices' => [
+            'left' => __('Left', 'sage'),
+            'center' => __('Center', 'sage'),
+        ],
+    ]);
+
+    $wp->add_setting('mh_hero_pad', [
+        'default' => 'default',
+        'sanitize_callback' => __NAMESPACE__.'\\mh_sanitize_hero_pad',
+    ]);
+    $wp->add_control('mh_hero_pad', [
+        'label' => __('Vertical spacing', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'select',
+        'choices' => [
+            'compact' => __('Compact', 'sage'),
+            'default' => __('Default', 'sage'),
+            'roomy' => __('Roomy', 'sage'),
+        ],
+    ]);
+
+    $wp->add_setting('mh_hero_accent', [
+        'default' => false,
+        'sanitize_callback' => static fn ($v) => (bool) $v,
+    ]);
+    $wp->add_control('mh_hero_accent', [
+        'label' => __('Solid soft-blue accent band', 'sage'),
+        'description' => __('Optional solid fill. No gradients.', 'sage'),
+        'section' => 'mh_home_hero',
+        'type' => 'checkbox',
+    ]);
+}
+
+/**
+ * Resolved home hero copy + layout for the front-page Blade template.
+ *
+ * Customizer text wins when set. Otherwise Page content (theme), then defaults.
+ *
+ * @since 3.6.0
+ *
+ * @return array{
+ *   eyebrow: string,
+ *   h1: string,
+ *   role: string,
+ *   subcopy: string,
+ *   cta_primary: string,
+ *   cta_primary_url: string,
+ *   cta_secondary: string,
+ *   cta_secondary_url: string,
+ *   show_primary: bool,
+ *   show_secondary: bool,
+ *   max_width: string,
+ *   align: string,
+ *   pad: string,
+ *   accent: bool
+ * }
+ */
+function mh_home_hero(): array
+{
+    $front = function_exists(__NAMESPACE__.'\\mh_front_id') ? mh_front_id() : 0;
+    $front = $front > 0 ? $front : null;
+
+    $text = static function (string $mod, string $field, string $default) use ($front): string {
+        $fromMod = trim((string) get_theme_mod($mod, ''));
+        if ($fromMod !== '') {
+            return $fromMod;
+        }
+
+        return field($field, $default, $front);
+    };
+
+    $href = static function (string $mod, string $field, string $default) use ($front): string {
+        $fromMod = trim((string) get_theme_mod($mod, ''));
+        if ($fromMod !== '') {
+            if (preg_match('#^(https?:)?//#i', $fromMod) === 1) {
+                return $fromMod;
+            }
+
+            return home_url($fromMod);
+        }
+
+        return field_href($field, $default, $front);
+    };
+
+    return [
+        'eyebrow' => $text('mh_hero_eyebrow', 'home_kicker', mh_home_hero_default('kicker')),
+        'h1' => $text('mh_hero_h1', 'home_h1', mh_home_hero_default('h1')),
+        'role' => $text('mh_hero_role', 'home_role', mh_home_hero_default('role')),
+        'subcopy' => $text('mh_hero_subcopy', 'home_lede', mh_home_hero_default('lede')),
+        'cta_primary' => $text('mh_hero_cta_primary', 'home_cta_primary', mh_home_hero_default('cta_primary')),
+        'cta_primary_url' => $href('mh_hero_cta_primary_url', 'home_cta_primary_url', '/hire/'),
+        'cta_secondary' => $text('mh_hero_cta_secondary', 'home_cta_secondary', mh_home_hero_default('cta_secondary')),
+        'cta_secondary_url' => $href('mh_hero_cta_secondary_url', 'home_cta_secondary_url', '/projects/'),
+        'show_primary' => (bool) get_theme_mod('mh_hero_show_primary', true),
+        'show_secondary' => (bool) get_theme_mod('mh_hero_show_secondary', true),
+        'max_width' => mh_sanitize_hero_max_width(get_theme_mod('mh_hero_max_width', 56)),
+        'align' => mh_sanitize_hero_align(get_theme_mod('mh_hero_align', 'left')),
+        'pad' => mh_sanitize_hero_pad(get_theme_mod('mh_hero_pad', 'default')),
+        'accent' => (bool) get_theme_mod('mh_hero_accent', false),
+    ];
+}
+
+/**
  * Profile photo: Customizer upload, then GitHub avatar, then bundled headshot, then Gravatar.
  */
 function mh_profile_photo_url(int $size = 160): string
@@ -3782,6 +4055,8 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
         'section' => 'mh_identity',
         'mime_type' => 'image',
     ]));
+
+    mh_register_home_hero_customizer($wp);
 });
 
 function mh_font_stylesheet(): string
@@ -3818,6 +4093,65 @@ add_action('init', function (): void {
     mh_ensure_projects_listing_page();
     update_option('mh_projects_listing_page_v1', '1', false);
 }, 36);
+
+/**
+ * One-shot: drop Shop / Cart / Buy labels from the primary menu.
+ *
+ * Theme cannot delete WordPress pages. This only edits the assigned Primary menu.
+ *
+ * @since 3.6.0
+ */
+function mh_strip_shop_from_primary_nav(): void
+{
+    $locations = get_theme_mod('nav_menu_locations', []);
+    $menuId = (int) ($locations['primary_navigation'] ?? 0);
+    if ($menuId < 1) {
+        return;
+    }
+
+    $items = wp_get_nav_menu_items($menuId);
+    if (! is_array($items)) {
+        return;
+    }
+
+    $dropTitles = ['shop', 'cart', 'checkout', 'buy', 'store', 'themes & plugins', 'themes and plugins'];
+    foreach ($items as $item) {
+        $title = strtolower(trim((string) $item->title));
+        $url = strtolower((string) $item->url);
+        $isShopTitle = in_array($title, $dropTitles, true);
+        $isShopUrl = str_contains($url, '/shop') || str_contains($url, '/cart') || str_contains($url, '/checkout');
+        if (! $isShopTitle && ! $isShopUrl) {
+            continue;
+        }
+        wp_delete_post((int) $item->ID, true);
+    }
+}
+
+add_action('init', function (): void {
+    if (get_option('mh_strip_shop_nav_v1') || wp_installing()) {
+        return;
+    }
+    mh_strip_shop_from_primary_nav();
+    update_option('mh_strip_shop_nav_v1', '1', false);
+}, 41);
+
+add_filter('wp_nav_menu_objects', function (array $items, $args): array {
+    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && mh_public_shop_enabled()) {
+        return $items;
+    }
+
+    return array_values(array_filter($items, static function ($item): bool {
+        $title = strtolower(trim((string) ($item->title ?? '')));
+        $url = strtolower((string) ($item->url ?? ''));
+        if (in_array($title, ['shop', 'cart', 'checkout', 'buy', 'store'], true)) {
+            return false;
+        }
+
+        return ! str_contains($url, '/shop')
+            && ! str_contains($url, '/cart')
+            && ! str_contains($url, '/checkout');
+    }));
+}, 20, 2);
 
 add_action('init', function (): void {
     if (get_option('mh_projects_portfolio_copy_v1') || wp_installing()) {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0 — Decluttered portfolio home
+
+- Home is a standard portfolio: simplified wider hero (no project gallery), featured Projects CPT, latest journal, then a What I do icon grid.
+- Appearance → Customize → **Home hero** edits eyebrow, H1, subcopy, CTA labels/URLs, width, alignment, spacing, CTA visibility, and an optional solid soft-blue band. No gradients.
+- Palette is white + soft blue + gray. Home no longer uses CSS gradients or shop/buy CTAs.
+- Primary menu one-shot drops Shop / Cart / Checkout items. Public shop stays off; `/shop/` still 301s to Projects.
+- Deploy docs and Theme URI point at [matthummel.com](https://matthummel.com).
+
 ## 3.5.32 — WooCommerce notice icons and padding
 
 - Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.
