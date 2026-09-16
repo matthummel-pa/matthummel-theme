@@ -576,7 +576,6 @@ body {
 .h-hero--simple .h-hero__inner {
   display: block;
   grid-template-columns: none;
-  max-width: none;
 }
 .h-hero--simple .h-hero__copy {
   max-width: none;
