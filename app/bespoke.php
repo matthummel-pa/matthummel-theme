@@ -3783,3 +3783,296 @@ add_action('init', function (): void {
 
     update_option('mh_hire_traction_copy_v1', true);
 }, 88);
+
+/**
+ * Retired: 3.5.26 sales-hero one-shots. Mark complete so they never rewrite
+ * a portfolio install to shop CTAs. Restore runs in mh_home_portfolio_hero_v1.
+ */
+add_action('init', function (): void {
+    if (! get_option('mh_home_sales_hero_v1')) {
+        update_option('mh_home_sales_hero_v1', true);
+    }
+    if (! get_option('mh_home_sales_hero_v2')) {
+        update_option('mh_home_sales_hero_v2', true);
+    }
+}, 89);
+
+/**
+ * One-time: restore the portfolio home hero after the 3.5.26 sales experiment.
+ *
+ * Rewrites only exact sales-offer strings so custom wp-admin copy is left alone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_home_portfolio_hero_v1') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if (! $home) {
+        update_option('mh_home_portfolio_hero_v1', true);
+
+        return;
+    }
+
+    $id = (int) $home->ID;
+    $map = [
+        'mh_f_home_h1' => [
+            'from' => [
+                'Real estate & tour WordPress themes shops can edit themselves.',
+            ],
+            'to' => mh_home_hero_default('h1'),
+        ],
+        'mh_f_home_role' => [
+            'from' => [
+                'From $59 · live demos.',
+            ],
+            'to' => mh_home_hero_default('role'),
+        ],
+        'mh_f_home_lede' => [
+            'from' => [
+                'Acreline for listings. WalkRidge for tours. TOCflow is free. Buy a pack, try a live demo, or hire me to brand one.',
+            ],
+            'to' => mh_home_hero_default('lede'),
+        ],
+        'mh_f_home_kicker' => [
+            'from' => [
+                'WordPress themes · from $59',
+            ],
+            'to' => mh_home_hero_default('kicker'),
+        ],
+        'mh_f_home_cta_primary' => [
+            'from' => [
+                'Buy Acreline — $79',
+            ],
+            'to' => mh_home_hero_default('cta_primary'),
+        ],
+        'mh_f_home_cta_primary_url' => [
+            'from' => [
+                '/product/acreline/',
+            ],
+            'to' => '/hire/',
+        ],
+        'mh_f_home_cta_secondary' => [
+            'from' => [
+                'Live demo',
+            ],
+            'to' => mh_home_hero_default('cta_secondary'),
+        ],
+        'mh_f_home_cta_secondary_url' => [
+            'from' => [
+                'https://acreline.matthummel.com/',
+            ],
+            'to' => '/shop/',
+        ],
+        'mh_f_home_proof_1' => [
+            'from' => [
+                'From $59',
+            ],
+            'to' => mh_home_hero_default('proof_1'),
+        ],
+        'mh_f_home_proof_2' => [
+            'from' => [
+                'Live demos',
+            ],
+            'to' => mh_home_hero_default('proof_2'),
+        ],
+        'mh_f_home_proof_3' => [
+            'from' => [
+                'GPL — you own the zip',
+            ],
+            'to' => mh_home_hero_default('proof_3'),
+        ],
+        'mh_f_home_path_lede' => [
+            'from' => [
+                'Start with a theme pack, or write if you want it installed and branded. Hire is still here.',
+            ],
+            'to' => 'Pick the door that fits — hiring, building together, or browsing themes and plugins.',
+        ],
+        'mh_f_seo_title' => [
+            'from' => [
+                'Real Estate & Tour WordPress Themes | Matt Hummel',
+            ],
+            'to' => mh_home_hero_default('seo_title'),
+        ],
+        'mh_f_seo_desc' => [
+            'from' => [
+                'Real estate and tour WordPress themes shops can edit. Acreline $79, WalkRidge $59, TOCflow free. Live demos.',
+            ],
+            'to' => mh_home_hero_default('seo_desc'),
+        ],
+    ];
+
+    foreach ($map as $key => $swap) {
+        $cur = (string) get_post_meta($id, $key, true);
+        if ($cur === '' || in_array($cur, $swap['from'], true)) {
+            update_post_meta($id, $key, $swap['to']);
+        }
+    }
+
+    update_option('mh_home_portfolio_hero_v1', true);
+}, 91);
+
+/**
+ * One-time: shorter home hero + About/Code copy for the minimal portfolio layout.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_minimal_blue_copy_v2') || wp_installing()) {
+        return;
+    }
+
+    $pages = [
+        'home' => get_page_by_path('home') ?: get_page_by_path('homepage'),
+        'about' => get_page_by_path('about'),
+        'code' => get_page_by_path('code'),
+    ];
+
+    if (! $pages['home'] && get_option('show_on_front') === 'page') {
+        $frontId = (int) get_option('page_on_front');
+        $pages['home'] = $frontId ? get_post($frontId) : null;
+    }
+
+    $swaps = [
+        'home' => [
+            'mh_f_home_h1' => [
+                'from' => [
+                    'Matt Hummel — WordPress developer',
+                    'Matt Hummel',
+                ],
+                'to' => mh_home_hero_default('h1'),
+            ],
+            'mh_f_home_role' => [
+                'from' => [
+                    'Full-stack themes, plugins, and web apps for shops and agencies.',
+                ],
+                'to' => mh_home_hero_default('role'),
+            ],
+            'mh_f_home_lede' => [
+                'from' => [
+                    'I build WordPress platforms shops can edit and agencies can hand off without guesswork. Sage themes, custom plugins, and clear deploy paths — not page-builder lock-in. Open for full-time, contract, or freelance.',
+                ],
+                'to' => mh_home_hero_default('lede'),
+            ],
+            'mh_f_home_cta_secondary' => [
+                'from' => [
+                    'Browse work',
+                    'Browse projects',
+                ],
+                'to' => mh_home_hero_default('cta_secondary'),
+            ],
+            'mh_f_home_help_h2' => [
+                'from' => [
+                    'Hiring or building?',
+                ],
+                'to' => __('Want to work together?', 'sage'),
+            ],
+            'mh_f_home_write_h2' => [
+                'from' => [
+                    'Notes from real WordPress work.',
+                    'Recent writing.',
+                ],
+                'to' => __('Recent writing.', 'sage'),
+            ],
+            'mh_f_home_work_h2' => [
+                'from' => [
+                    'WordPress concepts.',
+                    'WordPress themes and plugins.',
+                    'Selected projects.',
+                ],
+                'to' => __('Selected projects.', 'sage'),
+            ],
+            'mh_f_home_write_intro' => [
+                'from' => [
+                    'Practical posts for shops and developers — handoffs, themes, and lessons from builds. Most include something you can reuse.',
+                ],
+                'to' => __('Notes from WordPress builds — themes, handoffs, and things I want to remember next time.', 'sage'),
+            ],
+            'mh_f_home_work_intro' => [
+                'from' => [
+                    'Sample WordPress themes and plugins. Each one has a short story and a live demo when I have one. Employer work stays private unless a shop asks to show it.',
+                    'WordPress themes and plugins.',
+                ],
+                'to' => __('WordPress themes and plugins I built in public. Open one for a short story and a live demo when I have one.', 'sage'),
+            ],
+            'mh_f_home_build_h2' => [
+                'from' => [
+                    'What I help with',
+                    'What I do.',
+                ],
+                'to' => __('What I do.', 'sage'),
+            ],
+            'mh_f_home_build_1_text' => [
+                'from' => [
+                    'Clean, fast, and editable. Shops get something they own — not a subscription they rent.',
+                ],
+                'to' => __('Custom themes shops can edit in wp-admin. You own the code.', 'sage'),
+            ],
+            'mh_f_home_build_2_text' => [
+                'from' => [
+                    'Custom PHP when WordPress needs a new part. Small, focused, and readable.',
+                ],
+                'to' => __('Small PHP plugins when WordPress needs a new part.', 'sage'),
+            ],
+            'mh_f_seo_title' => [
+                'from' => [
+                    'WordPress Developer for Shops & Agencies | Matt Hummel',
+                ],
+                'to' => mh_home_hero_default('seo_title'),
+            ],
+            'mh_f_seo_desc' => [
+                'from' => [
+                    'WordPress developer for shops and agencies. Sage themes, plugins, and clear deploy paths. Say hello.',
+                ],
+                'to' => mh_home_hero_default('seo_desc'),
+            ],
+        ],
+        'about' => [
+            'mh_f_about_lede' => [
+                'from' => [
+                    'I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.',
+                ],
+                'to' => __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage'),
+            ],
+            'mh_f_about_cta_h2' => [
+                'from' => [
+                    'Need a full-stack or WordPress development partner?',
+                ],
+                'to' => __('Need a WordPress or full-stack developer?', 'sage'),
+            ],
+        ],
+        'code' => [
+            'mh_f_code_h1' => [
+                'from' => [
+                    'Full-stack and WordPress code you can use.',
+                    'WordPress and full-stack code you can use.',
+                ],
+                'to' => __('Code and repos.', 'sage'),
+            ],
+            'mh_f_code_lede' => [
+                'from' => [
+                    'Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.',
+                ],
+                'to' => __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage'),
+            ],
+        ],
+    ];
+
+    foreach ($swaps as $slug => $map) {
+        $page = $pages[$slug] ?? null;
+        if (! $page) {
+            continue;
+        }
+        $id = (int) $page->ID;
+        foreach ($map as $key => $swap) {
+            $cur = (string) get_post_meta($id, $key, true);
+            if ($cur === '' || in_array($cur, $swap['from'], true)) {
+                update_post_meta($id, $key, $swap['to']);
+            }
+        }
+    }
+
+    update_option('mh_minimal_blue_copy_v2', true);
+}, 92);

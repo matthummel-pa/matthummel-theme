@@ -4,7 +4,7 @@
   $ctaLabel = $label ?? __('Say hello', 'sage');
   $ctaHref = $href ?? home_url('/contact/');
   $ctaKicker = $kicker ?? __('Get in touch', 'sage');
-  $ctaSecondary = $secondary ?? __('Hire me', 'sage');
+  $ctaSecondary = $secondary ?? '';
   $ctaSecondaryHref = $secondaryHref ?? home_url('/hire/');
   $ctaNote = $note ?? \App\mh_reply_sla('note');
 @endphp

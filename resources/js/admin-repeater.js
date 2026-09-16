@@ -74,5 +74,27 @@
         moveRow(t.closest('.mh-rep-row'), 1);
       }
     });
+
+    function refreshEditors(root) {
+      if (typeof window.tinymce === 'undefined') return;
+      (root || box).querySelectorAll('textarea.wp-editor-area').forEach(function (area) {
+        var ed = window.tinymce.get(area.id);
+        if (!ed) return;
+        try {
+          ed.hidden = false;
+          ed.fire('ResizeEditor');
+        } catch (err) {}
+      });
+    }
+
+    box.querySelectorAll('details.mh-pf-acc').forEach(function (details) {
+      details.addEventListener('toggle', function () {
+        if (details.open) {
+          window.setTimeout(function () {
+            refreshEditors(details);
+          }, 40);
+        }
+      });
+    });
   });
 })();

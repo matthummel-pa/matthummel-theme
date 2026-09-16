@@ -7,7 +7,6 @@
   $gh = \App\Github::fetchUser(\App\mh_github_login());
   $li = \App\LinkedIn::fetchProfile();
   $liUrl = (string) ($li['url'] ?? \App\LinkedIn::profileUrl());
-  $shareUrl = \App\LinkedIn::shareUrl(home_url('/hire/'));
   $jobs = \App\mh_code_page_resume();
   $skills = \App\mh_code_page_skills(\App\mh_page_id_by_template('template-code.blade.php') ?: null);
   $roleCount = count($jobs);
@@ -53,7 +52,7 @@
   <p class="lead">{{ \App\field('hire_lede', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years in-house; public WordPress work on GitHub since 2025. Remote or on-site.', 'sage')) }}</p>
   <div class="hire-hero-facts">
     <p class="sec-intro range-note">{{ \App\field('hire_range', \App\mh_adjacent_range_copy()) }}</p>
-    <p class="sec-intro">{{ \App\field('hire_price_line', __('Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.', 'sage')) }}</p>
+    <p class="sec-intro">{{ \App\field('hire_price_line', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')) }}</p>
   </div>
   @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
     <p class="hire-avail">
@@ -65,12 +64,9 @@
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
-    <a class="btn btn-outline" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
-      {!! \App\mh_svg_icon('linkedin', 16) !!} LinkedIn
+    <a class="h-text-arrow" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
+      LinkedIn <span aria-hidden="true">→</span>
       <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-    </a>
-    <a class="h-text-arrow" href="{{ home_url('/services/') }}">
-      Full services detail <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -150,10 +146,6 @@
             <p class="hire-li-panel__actions">
               <a class="btn" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
                 {!! \App\mh_svg_icon('linkedin', 15) !!} {{ __('View on LinkedIn', 'sage') }}
-                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-              </a>
-              <a class="btn btn-outline" href="{{ esc_url($shareUrl) }}" rel="noopener" target="_blank">
-                {!! \App\mh_svg_icon('globe', 15) !!} {{ __('Share this page', 'sage') }}
                 <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
               </a>
               <a class="about-text-link" href="{{ home_url('/contact/') }}">
@@ -250,7 +242,6 @@
         </a>
         <p class="hire-need-cta__note">
           Or <a href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">message on LinkedIn</a>
-          · <a href="{{ home_url('/services/') }}">Read services →</a>
         </p>
       </div>
     </div>

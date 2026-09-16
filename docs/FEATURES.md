@@ -2,14 +2,58 @@
 
 What the 3.x Sage theme does, and where it lives.
 
-## Editor’s notes (3.5.26 production site)
+## Editor’s notes (3.5.33 production site)
 
 - Canonical WordPress is `https://matthummel.com`. WPVibe `site_url` defaults there. `hummelwp.com` is a separate install — do not use it as the default for content, theme update, or deploy notes.
 
-## Editor’s notes (3.5.25 Woo notice icons)
+## Editor’s notes (3.5.32 Woo notice icons)
 
 - WooCommerce notices keep an in-flow CSS-mask icon. Do not restore extra left padding for the WooCommerce icon font (`::before` was overlapping the first letter).
 - Empty payment-methods copy lives inside `#payment` — flatten the inner `.woocommerce-info` / notice banner there so it is not a nested card.
+
+## Editor’s notes (3.5.31 minimal blue)
+
+- Visual system is cool paper + navy/blue accents (`#0d2e57` family). Edit `resources/css/studio.css` for the skin; `portfolio.css` owns layout.
+- Home keeps hero + **What I do** + projects + journal + CTA. Process, fit, FAQ, principles, and recruiter glance live in `partials/about-hire-sections.blade.php` on About. Do not restore the long Home hire funnel unless Matt asks.
+- GitHub repos, activity, and stack detail stay on Code — not Home.
+- Copy voice stays plain and first-person. Prefer short sentences over CRO jargon (“without guesswork”, “Pick the door”).
+- `mh_minimal_blue_copy_v2` rewrites exact prior home/about/code field defaults once (includes What I do heading).
+
+## Editor’s notes (3.5.30 studio skin)
+
+- Superseded by 3.5.31 for palette. Historical note: 3.5.30 was warm paper + tomato/amber pops.
+
+## Editor’s notes (3.5.29 readable project pages)
+
+- Projects listing copy lives in `mh_projects_listing_default()`. Keep sentences short (grade 6–8). Do not restore the four audience cards or dual closing CTAs unless Matt asks.
+- Single-project story headings stay Why I built it / What I did / What you can use. Developer stack stays in the accordion.
+- Catalog `summary` / `challenge` / `approach` / `result` are the single-page hero and story. Refresh live posts with `mh_projects_readable_copy_v1` (already ran once).
+
+## Editor’s notes (3.5.28 Projects CPT)
+
+- Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`). Do not send that listing back to WooCommerce.
+- Convert theme/plugin/app products once (`mh_products_synced_to_projects_v1`). Skip service add-ons. Do not re-import the old studio demo set unless Matt asks.
+- Copy is standard portfolio (I/my, Hire me / Say hello). Keep `mh_public_shop_enabled()` false until Matt asks to sell again.
+- Home secondary CTA is Browse projects → `/projects/`.
+
+## Editor’s notes (3.5.27 portfolio home)
+
+- Home is the hireable portfolio. `mh_home_hero_default()` restores the name marque, Hire me → `/hire/`, and Browse projects → `/projects/`.
+- Keep one primary home button (hero Hire me, closing Say hello). Do not restore the pathway trio, discovery brief, or extra Browse products bars unless Matt asks.
+- Do not reintroduce a product-offer H1 or Buy Acreline as the primary home CTA unless Matt asks.
+- `mh_home_sales_hero_v1` / `v2` are no-ops. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 sales strings.
+- Product pages still exist in WooCommerce; public visitors are sent to the linked project.
+
+## Editor’s notes (3.5.26 shop-first sales)
+
+- Superseded by 3.5.27 for the homepage. Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
+- Single product article no longer renders Overview + benefits + story + Woo description. Hidden CSS dumps are gone; the purchase widget calls `mh_render_product_add_to_cart()`.
+- Sticky bar still uses `#pf-sticky-bar` + `woo-sticky-bar.js`. Trust chips hide under 640px so Add to cart stays reachable.
+
+## Editor’s notes (3.5.25 About story WYSIWYG)
+
+- About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta migrates into the new field on theme load, then those four keys are removed from the edit screen.
+- Front end renders with `mh_about_story_html()` (`wpautop` + `wp_kses_post`). Style paragraphs via `.about-story__body`, not four hardcoded `<p>` tags.
 
 ## Editor’s notes (3.5.24 shop catalog padding)
 
@@ -139,11 +183,12 @@ What the 3.x Sage theme does, and where it lives.
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Two-column hero; recruiter glance (employers + Power Platform + adjacent-work sentence → `/hire/`); section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
 | Marketing pages | Split hero: copy left, window-card panel right (stats/snapshot per page) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
+| About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items; studio copy links to the Work page at `/projects/` | `template-now.blade.php` |
-| Work | Featured project, search, type counts, Grid/List, share/copy links; context + audience + how-to + FAQ; **Theme / Plugin / Demo** badges; **View details** primary, **Buy theme/plugin** when listed; **Projects CPT** | `template-projects.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
+| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT** | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
@@ -223,7 +268,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Studio projects imported once (`mh_projects_cpt_seeded_v1`); narrative/custom fields seed (`mh_concept_pages_seeded_v1`, `mh_concept_fields_admin_v1`); marketplace catalog seed for Acreline + TOCflow (`mh_product_catalog_v1` … `mh_product_catalog_v7`); editable project fields in wp-admin; list columns for On site (toggle), Category, Place with filters + newest-first sort; **CPT retired** — listing/singles redirect to Woo shop/products; Acreline SEO aliases (`wordpress-theme-real-estate-agents`, etc.) 301 to `/product/acreline/` before Rank Math; product pages include repo-reviewed benefits, screenshots, architecture, handoff, compatibility, license, docs, and buyer FAQ; opt-in products sync to the correct WooCommerce theme/plugin category. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
+| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; singles own `/projects/{slug}/`. Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Linked Woo products 301 to the project permalink. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
 | Support docs | `/support/` hub (`template-support.blade.php`) lists sellable products with **HTML-viewable** guides (jsDelivr CDN of GitHub `docs/marketplace/*.html`, same files as the seller Documentation pack); footer link; Acreline catalog docs point at the rendered hub |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |

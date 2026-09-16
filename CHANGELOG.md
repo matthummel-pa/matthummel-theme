@@ -1,15 +1,63 @@
 # Changelog
 
-## 3.5.26 — Production site is matthummel.com
+## 3.5.33 — Production site is matthummel.com
 
 - Canonical public WordPress is [matthummel.com](https://matthummel.com). WPVibe, deploy notes, and agent rules use that URL by default.
 - `hummelwp.com` remains a separate Hostinger install; do not treat it as the default target.
 
-## 3.5.25 — WooCommerce notice icons and padding
+## 3.5.32 — WooCommerce notice icons and padding
 
 - Info, success, and error boxes (cart, checkout, account) keep a compact in-flow icon instead of WooCommerce’s absolute icon-font glyph sitting on the first letter.
 - Block notice banners (SVG) get the same layout if WooCommerce prints them on classic checkout.
 - Payment, gateway, and nested notice padding is tighter so the empty-methods message is not a box-in-a-box in the checkout sidebar.
+
+## 3.5.31 — Minimal blue portfolio
+
+- Front-end returns to cool paper and navy/blue accents. Tomato/cream studio pops are gone; `studio.css` is now the minimal blue skin.
+- Home is short: hero, **What I do**, projects, journal, and one closing CTA. Hire process, fit, FAQ, and recruiter glance move to About. GitHub depth stays on Code.
+- Copy defaults use plainer developer language. One-shot `mh_minimal_blue_copy_v1` rewrites exact prior field strings.
+- Headings stay bold Inter (weight 900). Soft blue motion on the hero; reduced-motion still wins.
+
+## 3.5.30 — Bold blocky studio skin
+
+- Front-end palette leaves navy paper for warm cream, ink, and Gutenberg-aligned pops (tomato, amber, lime, violet).
+- Chrome is blockier: 4px corners, 2.5px ink borders, hard offset shadows on buttons, cards, and hero windows.
+- Light CSS motion on hero color blocks and card hover. Reduced-motion stays still.
+- Tokens live in `resources/css/studio.css` (imported last) so existing `var(--blue-*)` mixes pick up the new hues.
+
+## 3.5.29 — Project pages easier to scan
+
+- Projects listing hero leads with sample work, a short lede, and Hire me / Say hello. Cards sit above the fold of the page body.
+- Listing extras are trimmed: gallery first, three short steps, three FAQs, one closing band.
+- Project singles use plainer story headings and shorter sample-work notice. Catalog blurbs and stories are grade 6–8 for hiring managers and shops.
+- `mh_projects_readable_copy_v1` rewrites saved Projects fields and refreshes catalog-linked project posts.
+
+## 3.5.28 — Products become Projects
+
+- Theme, plugin, and app catalog items migrate into the Projects custom post type. Listing and singles live at `/projects/` and `/projects/{slug}/`.
+- Standard portfolio copy: first-person, demos and stack notes, Hire me / Say hello. No public shop, prices, or buy CTAs.
+- Service add-ons stay out of the Projects list. WooCommerce remains installed; `/shop/` and linked `/product/` URLs redirect to Projects.
+- `mh_products_synced_to_projects_v1` imports Acreline, WalkRidge, and TOCflow once. Studio demo sites are not re-imported.
+
+## 3.5.27 — Portfolio homepage restored
+
+- Home is the developer portfolio again (name, hire CTA, work preview). Not a theme-sales landing.
+- Sales-hero one-shots are retired. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 offer strings.
+- Homepage CTAs are trimmed to Hire me + Browse work in the hero, and Say hello in the closing band. Pathways, Start a brief, and extra Browse buttons are gone.
+- Product pages keep the buy path from 3.5.26. Shop stays at `/shop/`.
+
+## 3.5.26 — Shop-first homepage + product buy path
+
+- Home hero leads with themes shops can buy (Acreline $79, live demo, hire as a text link).
+- Homepage order is Hero → pathways (shop first) → products → how to buy → FAQ → hire glance → journal.
+- Paid product pages keep a sticky buy bar with trust chips, a one-line install guarantee, and a Get help upsell.
+- Single product story is Problem → What’s included → Buy → FAQ. Sage/architecture copy sits in a For developers accordion.
+- WooCommerce add-to-cart still powers checkout; the purchase widget no longer dumps the full product description.
+
+## 3.5.25 — About story editor
+
+- About Page content (theme) uses one story editor instead of four paragraph boxes.
+- Existing About story copy is kept and shown as normal paragraphs with spacing.
 
 ## 3.5.24 — Shop catalog content padding
 

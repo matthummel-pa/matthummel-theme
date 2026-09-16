@@ -24,11 +24,11 @@
 @component('partials.page-hero', ['extra' => 'page-header--resources', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('resources_kicker', __('Resources', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('resources_h1', __('Free starters, themes, and tools.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, themes you can buy, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
-    <a class="btn" href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a>
-    <a class="h-text-arrow" href="{{ home_url('/shop/') }}">
-      {{ __('Browse products', 'sage') }} <span aria-hidden="true">→</span>
+    <a class="btn" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>
+    <a class="h-text-arrow" href="{{ home_url('/code/') }}">
+      {{ __('View code', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
   @slot('aside')
@@ -68,7 +68,7 @@
     <h2 id="resources-intro-heading" class="display-title is-section">
       {{ \App\field('resources_intro_h2', __('What you will find here.', 'sage')) }}
     </h2>
-    <p class="lead work-guide__intro">{{ \App\field('resources_intro_p', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')) }}</p>
+    <p class="lead work-guide__intro">{{ \App\field('resources_intro_p', __('Starters are free to fork. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')) }}</p>
   </div>
 </section>
 
@@ -126,10 +126,9 @@
       <p>{{ __('Resources here are starting points. Hire me for a production WordPress site, plugin, or web app — full-time, contract, or project.', 'sage') }}</p>
     </div>
     <div class="cta-band__actions">
-      <a class="btn btn-on-dark" href="{{ home_url('/hire/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Hire me', 'sage') }}
+      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
-      <a class="btn btn-ghost" href="{{ home_url('/shop/') }}">{{ __('Browse products', 'sage') }}</a>
       <p class="cta-band__note">{{ \App\mh_reply_sla('note') }}</p>
     </div>
   </div>

@@ -36,10 +36,10 @@
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('code_h1', __('Full-stack and WordPress code you can use.', 'sage')) }}
+    {{ \App\field('code_h1', __('Code and repos.', 'sage')) }}
   </h1>
   <p class="lead">
-    {!! \App\field_html('code_lede', __('Most of my work is public on GitHub — repos you can fork, snippets you can paste, and themes written so any developer can read them without asking me first.', 'sage')) !!}
+    {!! \App\field_html('code_lede', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')) !!}
   </p>
   @if (\App\mh_is_hireable($profile))
     <p class="hire-avail" style="margin-top:.85rem">
@@ -119,13 +119,13 @@
             </nav>
           @endif
           <div class="code-practice-shell__links">
-            <a class="code-practice-shell__link" href="{{ home_url('/services/') }}">
+            <a class="code-practice-shell__link" href="{{ home_url('/hire/') }}">
               {!! \App\mh_svg_icon('briefcase', 13) !!}
-              {{ __('Services page', 'sage') }}
+              {{ __('Hire me', 'sage') }}
             </a>
-            <a class="code-practice-shell__link" href="{{ home_url('/shop/') }}">
-              {!! \App\mh_svg_icon('tag', 13) !!}
-              {{ __('Browse products', 'sage') }}
+            <a class="code-practice-shell__link" href="{{ esc_url(\App\mh_work_listing_url()) }}">
+              {!! \App\mh_svg_icon('globe', 13) !!}
+              {{ __('See the work', 'sage') }}
             </a>
           </div>
         </aside>
@@ -747,19 +747,16 @@
 <section class="cta-band code-cta" aria-labelledby="code-cta-heading" data-reveal>
   <div class="container wide cta-band-inner">
     <div class="cta-band__copy code-cta__copy">
-      <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Buy or hire', 'sage')) }}</p>
+      <p class="eyebrow eyebrow--on-dark">{{ \App\field('code_cta_kicker', __('Work together', 'sage')) }}</p>
       <h2 id="code-cta-heading" class="display-title is-section">
-        {{ \App\field('code_cta_h2', __('Buy a theme, hire me, or compare notes.', 'sage')) }}
+        {{ \App\field('code_cta_h2', __('Hire me, or compare notes.', 'sage')) }}
       </h2>
-      <p>{{ \App\field('code_cta_lede', __('Browse the shop for ready-to-buy WordPress themes and plugins. Hire me for custom work. Fork a repo or copy a snippet — free to use.', 'sage')) }}</p>
+      <p>{{ \App\field('code_cta_lede', __('Fork a repo or copy a snippet — free to use. Write if you want to work together.', 'sage')) }}</p>
     </div>
     <div class="cta-band__actions code-cta__actions">
-      <a class="btn btn-on-dark" href="{{ home_url('/shop/') }}">
-        {!! \App\mh_svg_icon('briefcase', 16) !!}
-        {{ __('Browse products', 'sage') }}
-      </a>
-      <a class="btn btn-ghost code-cta__hire" href="{{ home_url('/hire/') }}">
-        {{ \App\field('code_cta_btn', __('Hire me', 'sage')) }}
+      <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
+        {!! \App\mh_svg_icon('mail', 16) !!}
+        {{ __('Say hello', 'sage') }}
       </a>
       <a class="code-cta__gh" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
         {!! \App\mh_svg_icon('github', 14) !!}

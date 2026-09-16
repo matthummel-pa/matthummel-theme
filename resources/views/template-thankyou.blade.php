@@ -70,11 +70,11 @@
 
     <div class="ty-browse-grid">
 
-      <a class="ty-browse-card" href="{{ home_url('/shop/') }}">
+      <a class="ty-browse-card" href="{{ esc_url(\App\mh_work_listing_url()) }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('briefcase', 22) !!}</div>
-        <h3 class="ty-browse-card__title">Themes &amp; plugins</h3>
-        <p class="ty-browse-card__body">WordPress themes and plugins for sale — ready to install, brand, and ship. Browse the shop while you wait.</p>
-        <span class="ty-browse-card__link">Browse products →</span>
+        <h3 class="ty-browse-card__title">Work</h3>
+        <p class="ty-browse-card__body">Studio concepts — WordPress themes and plugins that show how I build. Hire me to adapt one.</p>
+        <span class="ty-browse-card__link">See the work →</span>
       </a>
 
       <a class="ty-browse-card" href="{{ home_url('/services/') }}">
@@ -144,7 +144,7 @@
       @endforeach
     </div>
     <p style="margin-top:1.75rem;text-align:center">
-      <a class="h-text-arrow" href="{{ home_url('/shop/') }}">{{ __('Browse all products', 'sage') }} →</a>
+      <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('See all work', 'sage') }} →</a>
     </p>
   </div>
 </section>
@@ -158,10 +158,10 @@
 @include('partials.cta-band', [
   'kicker' => __('Still here?', 'sage'),
   'title' => __('Want to keep exploring?', 'sage'),
-  'text' => __('Browse the shop, read the journal, or write if you already know what you need.', 'sage'),
-  'label' => __('Browse products', 'sage'),
-  'href' => home_url('/shop/'),
-  'secondary' => __('Say hello', 'sage'),
+  'text' => __('Read the journal, see the work, or write if you already know what you need.', 'sage'),
+  'label' => __('See the work', 'sage'),
+  'href' => \App\mh_work_listing_url(),
+  'secondary' => '',
   'secondaryHref' => home_url('/contact/'),
 ])
 

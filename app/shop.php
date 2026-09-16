@@ -18,6 +18,22 @@ function mh_shop_ready(): bool
 }
 
 /**
+ * Whether the public storefront (cart, prices, buy CTAs) is shown.
+ *
+ * WooCommerce stays installed. Public listing is the Projects CPT.
+ */
+function mh_public_shop_enabled(): bool
+{
+    return false;
+}
+
+/** Public Projects listing URL. */
+function mh_work_listing_url(): string
+{
+    return home_url('/projects/');
+}
+
+/**
  * One-pass shop archive stats + CollectionPage list items.
  *
  * @return array{count: int, for_sale: int, theme: int, plugin: int, app: int, service: int, list_items: list<array<string, mixed>>}
@@ -171,11 +187,10 @@ function mh_product_project_id(int $product_id): int
 }
 
 /**
- * Public landing URL for a product — the linked Work concept page when available.
+ * Public landing URL for a product — the linked project page when available.
  */
 function mh_product_landing_url(int $product_id): string
 {
-    // Project CPT is retired — keep products on their WooCommerce URLs.
     if (! post_type_exists(mh_project_post_type())) {
         return '';
     }
@@ -213,7 +228,23 @@ function mh_filter_product_permalink(string $permalink, $product): string
 }
 
 /**
- * Send direct /product/{slug}/ visits to the linked Work concept page (one story URL).
+ * Send leftover /shop/ visits to Projects while the public storefront is off.
+ */
+function mh_redirect_shop_to_projects(): void
+{
+    if (mh_public_shop_enabled()) {
+        return;
+    }
+    if (! function_exists('is_shop') || ! is_shop()) {
+        return;
+    }
+
+    wp_safe_redirect(mh_work_listing_url(), 301);
+    exit;
+}
+
+/**
+ * Send direct /product/{slug}/ visits to the linked project page (one story URL).
  */
 function mh_redirect_product_to_project(): void
 {
@@ -481,7 +512,7 @@ function mh_product_entry(int $product_id): array
     // Scalar string fields.
     foreach (['eyebrow', 'summary', 'blurb', 'challenge', 'approach', 'result',
         'audience', 'architecture', 'handoff', 'demo', 'cat', 'place',
-        'github', 'version', 'compatible', 'license', 'support'] as $key) {
+        'github', 'version', 'compatible', 'license', 'support', 'guarantee'] as $key) {
         $v = $str($key);
         if ($v !== '') {
             $entry[$key] = $v;
@@ -599,15 +630,7 @@ function mh_cart_count(): int
 /** Catalog URL for empty-cart / return-to-shop links. */
 function mh_theme_catalog_url(): string
 {
-    // /shop/ is now the primary product listing. /projects/ 301-redirects there.
-    if (mh_shop_ready() && function_exists('wc_get_page_permalink')) {
-        $url = wc_get_page_permalink('shop');
-        if (is_string($url) && $url !== '') {
-            return $url;
-        }
-    }
-
-    return home_url('/shop/');
+    return mh_work_listing_url();
 }
 
 /**
@@ -687,12 +710,15 @@ function mh_wc_product_to_work_card(int $product_id): array
         }
     }
 
-    // Buy / price labels.
     $isFree = (float) $wc->get_price() <= 0.0;
-    $buyLabel = mh_product_buy_copy($product_id, $isFree);
-    $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
-
-    $buyUrl = mh_product_add_to_cart_url($product_id);
+    $buyLabel = '';
+    $priceLabel = '';
+    $buyUrl = '';
+    if (mh_public_shop_enabled()) {
+        $buyLabel = mh_product_buy_copy($product_id, $isFree);
+        $priceLabel = $isFree ? __('Free', 'sage') : ('$'.(string) $wc->get_regular_price());
+        $buyUrl = mh_product_add_to_cart_url($product_id);
+    }
 
     $productLink = (string) get_permalink($product_id);
 
@@ -1235,6 +1261,129 @@ function mh_product_buy_copy(int $product_id, bool $is_free = false): string
     $chrome = mh_product_type_chrome(mh_resolve_product_type($product_id));
 
     return $is_free ? $chrome['buy_free'] : $chrome['buy'];
+}
+
+/**
+ * Catalog JSON entry for a product slug.
+ *
+ * @since 3.5.26
+ *
+ * @return array<string, mixed>
+ */
+function mh_catalog_entry_by_slug(string $slug): array
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return [];
+    }
+
+    $entry = mh_product_catalog_entries()[$slug] ?? [];
+
+    return is_array($entry) ? $entry : [];
+}
+
+/**
+ * Featured paid theme (Acreline) for homepage hero CTAs.
+ *
+ * @since 3.5.26
+ *
+ * @return array{slug: string, name: string, price: string, permalink: string, demo: string, add_to_cart_url: string, buy_label: string}
+ */
+function mh_featured_theme_offer(string $slug = 'acreline'): array
+{
+    $entry = mh_catalog_entry_by_slug($slug);
+    $productId = mh_product_id_by_slug($slug);
+    $payload = $productId > 0 ? mh_shop_product_payload($productId) : null;
+
+    $price = '';
+    if (is_array($payload) && (string) ($payload['regular_price'] ?? '') !== '') {
+        $price = ltrim((string) $payload['regular_price'], '$');
+    } elseif ((string) ($entry['price'] ?? '') !== '') {
+        $price = ltrim((string) $entry['price'], '$');
+    }
+
+    $name = trim((string) ($entry['title'] ?? ''));
+    if ($name === '') {
+        $name = 'Acreline';
+    }
+
+    $permalink = is_array($payload) && (string) ($payload['permalink'] ?? '') !== ''
+        ? (string) $payload['permalink']
+        : home_url('/product/'.$slug.'/');
+
+    $demo = trim((string) ($entry['demo'] ?? ''));
+    $buyLabel = $price !== ''
+        ? sprintf(__('Buy %s — $%s', 'sage'), $name, $price)
+        : sprintf(__('Buy %s', 'sage'), $name);
+
+    return [
+        'slug' => $slug,
+        'name' => $name,
+        'price' => $price,
+        'permalink' => $permalink,
+        'demo' => $demo,
+        'add_to_cart_url' => is_array($payload) ? (string) ($payload['add_to_cart_url'] ?? '') : '',
+        'buy_label' => $buyLabel,
+    ];
+}
+
+/**
+ * One-line install guarantee for paid digital products.
+ *
+ * Catalog `guarantee` wins when set. Empty for free products and services.
+ *
+ * @since 3.5.26
+ *
+ * @param  array<string, mixed>  $entry
+ */
+function mh_product_guarantee_copy(array $entry = [], bool $is_free = false, bool $is_service = false): string
+{
+    if ($is_free || $is_service) {
+        return '';
+    }
+
+    $custom = trim((string) ($entry['guarantee'] ?? ''));
+    if ($custom !== '') {
+        return $custom;
+    }
+
+    return __('Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.', 'sage');
+}
+
+/**
+ * Soft install-help label next to Add to cart.
+ *
+ * @since 3.5.26
+ */
+function mh_product_install_help_copy(): string
+{
+    return __('Need it installed & branded? Get help', 'sage');
+}
+
+/**
+ * WooCommerce add-to-cart form only (no gallery, tabs, or description).
+ *
+ * @since 3.5.26
+ */
+function mh_render_product_add_to_cart(int $product_id): void
+{
+    if ($product_id <= 0 || ! function_exists('wc_get_product') || ! function_exists('woocommerce_template_single_add_to_cart')) {
+        return;
+    }
+
+    $wcProduct = wc_get_product($product_id);
+    if (! $wcProduct) {
+        return;
+    }
+
+    $previous = $GLOBALS['product'] ?? null;
+    $GLOBALS['product'] = $wcProduct;
+    woocommerce_template_single_add_to_cart();
+    if ($previous !== null) {
+        $GLOBALS['product'] = $previous;
+    } else {
+        unset($GLOBALS['product']);
+    }
 }
 
 /** Turn a catalog path or absolute URL into a public image URL. */
@@ -3296,8 +3445,20 @@ add_action('save_post_product', function (int $post_id): void {
 
 add_filter('woocommerce_return_to_shop_redirect', __NAMESPACE__.'\\mh_theme_catalog_url');
 add_filter('woocommerce_product_get_permalink', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_shop_to_projects', 4);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_product_to_project', 5);
 add_filter('loop_shop_columns', fn (): int => 3);
+
+add_action('wp', function (): void {
+    if (mh_public_shop_enabled()) {
+        return;
+    }
+
+    remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10);
+    remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
+    remove_action('woocommerce_after_shop_loop_item', __NAMESPACE__.'\\mh_woocommerce_loop_get_help', 15);
+    remove_action('woocommerce_after_add_to_cart_form', __NAMESPACE__.'\\mh_woocommerce_get_help_button');
+});
 
 /**
  * Output a short product blurb in the shop loop for UX and SEO.
