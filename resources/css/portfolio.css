@@ -2947,9 +2947,6 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 /* Section shells start with eyebrow → h2; keep that pair tight. */
 .legal-prose > .eyebrow + h2,
 .legal-prose > h2:first-child { margin-top: 0; }
-.legal-prose > :where(p, ul, ol):not(.eyebrow):not(.legal-meta):not(.sec-intro) + h2 {
-  margin-top: 1.85em;
-}
 .legal-meta { font-size: .85rem; color: var(--color-text-muted); margin-top: 1.25rem; }
 .legal-bullets {
   list-style: none;
