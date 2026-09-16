@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.1 — Grey heroes, white sections
+
+- Heroes (home and inner pages) use a flat light grey. Blue circles, radial gradients, mesh, and hero images are gone.
+- Body and following sections stay white. Dark mode still uses the existing dark surfaces.
+- About hero keeps the facts card, without the profile photo.
+
 ## 3.6.0 — Decluttered portfolio home
 
 - Home is a standard portfolio: simplified wider hero (no project gallery), featured Projects CPT, latest journal, then a What I do icon grid.

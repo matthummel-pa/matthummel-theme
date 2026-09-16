@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.1 grey heroes)
+
+- Heroes are flat light grey (`--color-hero`). Do not restore blue radial blobs, mesh, or hero images (home gallery, About profile photo, illustration orbs).
+- Body and non-hero sections stay white. Tinted bands (`h-band--tint`) are white, not blue-50.
+- Customizer “accent band” is the same grey as the hero. Do not map it back to `--blue-50`.
+
 ## Editor’s notes (3.6.0 decluttered portfolio)
 
 - Home order is hero → Projects CPT → journal → What I do. Do not put project cards back in the hero.
