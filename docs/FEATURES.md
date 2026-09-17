@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.11 FAQ toggles)
+
+- Project Questions are `<details class="project-faq">` inside `.faq-list`. Do not restore always-open `<h3>` / `<p>` pairs.
+- Grey tile: `background: var(--gray-50)` (dark: `--color-surface`), `border: 0`, `box-shadow: none`. Override lives in `studio.css` so `portfolio.css` hover shadows stay off.
+- Chevron is `summary::after`. Keep native details (no JS accordion).
+
 ## Editor’s notes (3.6.10 list markers)
 
 - Content `ul` / `ol` markers live in `studio.css` (front) and `journal-blocks.css` (editor). Do not restore disc/decimal `::marker` on `.post-prose .wp-block-list`.

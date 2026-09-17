@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.11 — FAQ toggles
+
+- Project Questions use native `<details>` / `<summary>` (closed by default) on grey tiles, same fill as feature tiles.
+- Listing FAQs (Projects, Services, shop archive) and About FAQ keep their first item open. Grey fill, no silver hover shadow; chevron on the summary.
+
 ## 3.6.10 — Content list markers
 
 - Journal, About, project, and other content lists use checkbox icons on `ul` and circular numbered badges on `ol`. Nested lists, `type` / `list-style-type`, definition lists, and Gutenberg task lists have matching styles.

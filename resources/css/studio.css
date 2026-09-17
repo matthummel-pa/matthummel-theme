@@ -349,8 +349,7 @@ body {
 .about-aside-card,
 .h-help-card,
 .h-principle,
-.h-fit__col,
-.h-faq__item {
+.h-fit__col {
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-card) !important;
   box-shadow: none;
@@ -1086,14 +1085,8 @@ body {
 }
 .project-detail-block p + p { margin-top: .75rem; }
 .project-faq {
-  margin: 0 0 1rem;
+  margin: 0;
 }
-.project-faq:last-child { margin-bottom: 0; }
-.project-faq h3 {
-  margin: 0 0 .35rem;
-  font: 650 1.02rem/1.35 var(--font-display);
-}
-.project-faq p { margin: 0; }
 
 @media (max-width: 900px) {
   .project-feat-grid { grid-template-columns: 1fr; }
@@ -1585,4 +1578,113 @@ html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-secti
   background: transparent;
   color: var(--blue-200);
   border-color: var(--blue-300);
+}
+
+/* ── FAQ grey tiles (native details/summary) ── */
+.faq-list {
+  display: grid;
+  gap: .85rem;
+}
+.faq-list details,
+.faq-list .project-faq,
+.post-prose .faq-list details,
+.h-faq__item {
+  margin: 0;
+  padding: 0;
+  background: var(--gray-50);
+  border: 0 !important;
+  border-radius: var(--radius);
+  box-shadow: none !important;
+  overflow: hidden;
+  transition: none;
+}
+.faq-list details:hover,
+.faq-list details[open],
+.post-prose .faq-list details:hover,
+.post-prose .faq-list details[open],
+.h-faq__item:hover,
+.h-faq__item[open] {
+  background: var(--gray-50);
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.faq-list summary,
+.h-faq__q {
+  font: 600 .97rem/1.45 var(--font-display);
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .85rem 1rem;
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+.faq-list summary::-webkit-details-marker,
+.faq-list summary::marker,
+.h-faq__q::-webkit-details-marker,
+.h-faq__q::marker {
+  display: none;
+  content: none;
+}
+.faq-list summary:focus-visible,
+.h-faq__q:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+.faq-list summary::after,
+.h-faq__q::after {
+  content: "" !important;
+  margin-left: auto;
+  flex-shrink: 0;
+  width: .5rem;
+  height: .5rem;
+  border: 0;
+  border-right: 2px solid var(--gray-600);
+  border-bottom: 2px solid var(--gray-600);
+  border-radius: 0;
+  background: transparent !important;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  transform: rotate(45deg);
+  transform-origin: 50% 45%;
+  transition: transform .15s ease;
+}
+.faq-list details[open] > summary::after,
+.h-faq__item[open] > .h-faq__q::after {
+  content: "" !important;
+  transform: rotate(225deg);
+  border-color: var(--gray-700);
+  background: transparent !important;
+}
+.faq-list details p,
+.h-faq__a {
+  margin: 0;
+  padding: 0 1rem 1rem;
+  padding-right: 2.25rem;
+  font-size: .95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  border-top: 0;
+}
+html.mh-dark .faq-list details,
+html.mh-dark .faq-list .project-faq,
+html.mh-dark .h-faq__item,
+html.mh-dark .faq-list details:hover,
+html.mh-dark .faq-list details[open],
+html.mh-dark .h-faq__item:hover,
+html.mh-dark .h-faq__item[open],
+html.mh-dark .post-prose .faq-list details {
+  background: var(--color-surface);
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html.mh-dark .faq-list summary::after,
+html.mh-dark .h-faq__q::after {
+  border-right-color: var(--gray-400);
+  border-bottom-color: var(--gray-400);
 }

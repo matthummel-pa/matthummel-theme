@@ -317,10 +317,10 @@
         <div class="faq-list">
           @foreach ($faq as $item)
             @if ((string) ($item['q'] ?? $item[0] ?? '') !== '' && (string) ($item['a'] ?? $item[1] ?? '') !== '')
-              <div class="project-faq">
-                <h3>{{ $item['q'] ?? $item[0] }}</h3>
+              <details class="project-faq">
+                <summary>{{ $item['q'] ?? $item[0] }}</summary>
                 <p>{{ $item['a'] ?? $item[1] }}</p>
-              </div>
+              </details>
             @endif
           @endforeach
         </div>
