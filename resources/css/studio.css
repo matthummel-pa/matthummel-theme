@@ -1850,7 +1850,6 @@ html.mh-dark .project-arch-list > li {
 }
 
 @media (max-width: 420px) {
-  .project-stat-grid { grid-template-columns: 1fr; }
   .project-spec-list > li,
   .project-spec-block .project-langs {
     grid-template-columns: 1fr;
