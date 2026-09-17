@@ -7,11 +7,13 @@ What the 3.x Sage theme does, and where it lives.
 - Content `ul` / `ol` markers live in `studio.css` (front) and `journal-blocks.css` (editor). Do not restore disc/decimal `::marker` on `.post-prose .wp-block-list`.
 - Do not put checkbox `::before` on chrome lists (`.mh-tool-grid`, `.mh-ship-pipe`, TOC, comments, process/svc cards).
 - Project sample items use `.project-feat::before` checkboxes; keep the 2-col grid.
+- Glance/stat grid tiles (`.concept-metric`, `.project-stat`, `.h-glance__fact`) use grey fill. Still no silver frame.
 
 ## Editor’s notes (3.6.9 grey heroes / features)
 
 - Heroes use `--color-hero` (`--gray-50` in light, `#172233` in `html.mh-dark`). Do not force `#fff` on `.h-hero` / `.page-header`.
 - `.project-feat` keeps a grey fill. Do not add silver `border` / `box-shadow`.
+- Info tiles (`.concept-metric`, `.project-stat`, `.h-glance__fact`, `.hire-li-stat`, `.code-gh-stat`) match that fill. Do not grey `.project-detail-block` story copy.
 
 ## Editor’s notes (3.6.8 whitespace)
 

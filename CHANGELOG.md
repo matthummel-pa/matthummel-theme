@@ -4,11 +4,13 @@
 
 - Journal, About, project, and other content lists use checkbox icons on `ul` and circular numbered badges on `ol`. Nested lists, `type` / `list-style-type`, definition lists, and Gutenberg task lists have matching styles.
 - Chrome lists stay as they were (nav, TOC, comments, tool grids, ship pipe, process/service cards).
+- Glance and stat grid tiles keep the 3.6.9 grey fill. Still no silver frame.
 
 ## 3.6.9 — Grey heroes and feature tiles
 
 - Heroes (home, page headers, post heroes) use a solid grey band again. No radial blobs or bottom rule.
 - Project “What is in this sample” items sit on grey tiles. Still no silver border or shadow.
+- Project “At a glance” metrics, GitHub facts, recruiter glance facts, hire stats, and Code GitHub stats use the same solid grey fill (`--gray-50` / `--color-surface`). Architecture and handoff prose stay unboxed.
 
 ## 3.6.8 — Whitespace content sections
 

@@ -978,10 +978,10 @@ body {
 .project-stat {
   margin: 0;
   min-width: 0;
-  padding: 0 0 1rem;
-  background: transparent;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius);
   box-shadow: none;
 }
 .project-stat dt {
@@ -1198,12 +1198,16 @@ html.mh-dark .project-detail-block {
   border: 0;
   box-shadow: none;
 }
-html.mh-dark .project-feat {
+html.mh-dark .project-feat,
+html.mh-dark .project-stat,
+html.mh-dark .concept-metric,
+html.mh-dark .h-glance__fact,
+html.mh-dark .hire-li-stat,
+html.mh-dark .code-gh-stat {
   background: var(--color-surface);
   border: 0;
   box-shadow: none;
 }
-html.mh-dark .project-stat,
 html.mh-dark .project-stage__shot,
 html.mh-dark .project-stage__shot img {
   background: transparent;
@@ -1221,7 +1225,6 @@ html.mh-dark .project-stage__shot img {
   border: 0;
   box-shadow: none;
 }
-.concept-metric,
 .concept-hero-shot,
 .concept-spec-banner,
 .project-page .pf-product-gallery__stage {
@@ -1242,10 +1245,35 @@ html.mh-dark .project-stage__shot img {
   background: transparent;
 }
 .project-stat-grid {
-  gap: 1.25rem 2rem;
+  gap: .85rem;
 }
 .project-feat-grid {
-  gap: 1.15rem 1.75rem;
+  gap: .85rem;
+}
+
+/* Glance / GitHub / hire stat cells: same solid grey tile as .project-feat. */
+.concept-metric,
+.h-glance__fact,
+.hire-li-stat,
+.code-gh-stat {
+  margin: 0;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.concept-metrics,
+.h-glance__facts,
+.hire-li-stats,
+.code-gh-stats {
+  gap: .85rem;
+  background: transparent;
+  border: 0;
+}
+.h-glance__facts {
+  overflow: visible;
 }
 
 /* Pills hug their labels in flex heroes and project cards. */
