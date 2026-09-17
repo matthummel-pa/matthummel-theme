@@ -4,7 +4,6 @@
 
 - GitHub facts on project singles use a tighter 4-column grey tile grid, small uppercase labels, and aligned tabular numbers.
 - Stat labels (`dt`: Stars, Forks, Language, and the rest) are bold. Values (`dd`) stay regular weight.
-- Stat labels (`dt`: Stars, Forks, Language, and the rest) are bold. Values (`dd`) stay regular weight.
 - Type / spec rows (and Languages / Compatible) sit in one stack with a hairline between rows. Live demo URLs stay links. Pills still hug their labels.
 
 ## 3.6.11 — FAQ toggles
