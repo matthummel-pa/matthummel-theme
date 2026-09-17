@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.12 — Project GitHub stats and type details
+
+- GitHub facts on project singles use a tighter 4-column grey tile grid, small uppercase labels, and aligned tabular numbers.
+- Type / spec rows (and Languages / Compatible) sit in one stack with a hairline between rows. Live demo URLs stay links. Pills still hug their labels.
+
 ## 3.6.11 — FAQ toggles
 
 - Project Questions use native `<details>` / `<summary>` (closed by default) on grey tiles, same fill as feature tiles.

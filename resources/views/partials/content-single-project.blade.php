@@ -181,19 +181,37 @@
         </dl>
       @endif
 
-      @if ($specs !== [])
-        <ul class="project-spec-list">
-          @foreach ($specs as $spec)
-            <li>
-              <span>{{ $spec[0] }}</span>
-              @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
-                <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
-              @else
-                <strong>{{ $spec[1] ?? '' }}</strong>
-              @endif
-            </li>
-          @endforeach
-        </ul>
+      @if ($specs !== [] || $gh['languages'] !== [] || $gh['compatible'] !== '')
+        <div class="project-spec-block">
+          @if ($specs !== [])
+            <ul class="project-spec-list">
+              @foreach ($specs as $spec)
+                <li>
+                  <span>{{ $spec[0] }}</span>
+                  @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
+                    <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
+                  @else
+                    <strong>{{ $spec[1] ?? '' }}</strong>
+                  @endif
+                </li>
+              @endforeach
+            </ul>
+          @endif
+
+          @if ($gh['languages'] !== [])
+            <p class="project-langs">
+              <span>{{ __('Languages', 'sage') }}</span>
+              {{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}
+            </p>
+          @endif
+
+          @if ($gh['compatible'] !== '')
+            <p class="project-langs">
+              <span>{{ __('Compatible', 'sage') }}</span>
+              {{ $gh['compatible'] }}
+            </p>
+          @endif
+        </div>
       @endif
 
       @if (! empty($tech))
@@ -209,20 +227,6 @@
           @foreach ($gh['topics'] as $topic)
             <span class="pill">{{ $topic }}</span>
           @endforeach
-        </p>
-      @endif
-
-      @if ($gh['languages'] !== [])
-        <p class="project-langs">
-          <span>{{ __('Languages', 'sage') }}</span>
-          {{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}
-        </p>
-      @endif
-
-      @if ($gh['compatible'] !== '')
-        <p class="project-langs">
-          <span>{{ __('Compatible', 'sage') }}</span>
-          {{ $gh['compatible'] }}
         </p>
       @endif
 

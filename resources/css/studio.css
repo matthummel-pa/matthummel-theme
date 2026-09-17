@@ -1720,3 +1720,151 @@ html.mh-dark .project-arch-list > li {
   border-bottom-color: var(--color-border);
   box-shadow: none;
 }
+
+/* ── 3.6.12 — GitHub stats + project type details ── */
+.project-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .65rem;
+  margin: 0 0 1.25rem;
+}
+.project-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 4.35rem;
+  margin: 0;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.project-stat dt {
+  margin: 0 0 .4rem;
+  font: 600 .68rem/1.2 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+.project-stat dd {
+  margin: 0;
+  font: 700 clamp(1.05rem, 1.7vw, 1.28rem)/1.15 var(--font-display);
+  letter-spacing: -.02em;
+  color: var(--gray-800);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  overflow-wrap: anywhere;
+}
+.project-spec-block {
+  margin: 0 0 1.15rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.project-spec-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+}
+.project-spec-list > li {
+  display: grid;
+  grid-template-columns: minmax(6.25rem, 8.25rem) minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: baseline;
+  position: static;
+  margin: 0;
+  padding: .72rem 0;
+  padding-inline-start: 0;
+  font-size: .95rem;
+  line-height: 1.45;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.project-spec-list > li::before,
+.project-arch-list > li::before {
+  content: none !important;
+  display: none;
+}
+.project-spec-list > li:first-child {
+  padding-top: .1rem;
+}
+.project-spec-list > li:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+.project-spec-block > .project-spec-list:not(:last-child) > li:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+.project-spec-list span {
+  font: 600 .68rem/1.45 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+.project-spec-list a,
+.project-spec-list strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.project-spec-list a {
+  color: var(--blue-600);
+  font-weight: 500;
+}
+.project-spec-list strong {
+  font: 600 .95rem/1.45 var(--font-body);
+  color: var(--gray-800);
+}
+.project-spec-block .project-langs {
+  display: grid;
+  grid-template-columns: minmax(6.25rem, 8.25rem) minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: baseline;
+  margin: 0;
+  padding: .72rem 0;
+  font-size: .95rem;
+  line-height: 1.45;
+  color: var(--gray-800);
+  border-bottom: 1px solid var(--color-border);
+}
+.project-spec-block .project-langs:last-child {
+  border-bottom: 0;
+  padding-bottom: .1rem;
+}
+.project-spec-block .project-langs span {
+  display: inline;
+  margin: 0;
+  font: 600 .68rem/1.45 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+@media (max-width: 720px) {
+  .project-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 420px) {
+  .project-stat-grid { grid-template-columns: 1fr; }
+  .project-spec-list > li,
+  .project-spec-block .project-langs {
+    grid-template-columns: 1fr;
+    row-gap: .12rem;
+  }
+}
+
+html.mh-dark .project-stat dd,
+html.mh-dark .project-spec-list strong,
+html.mh-dark .project-spec-block .project-langs {
+  color: var(--gray-100);
+}
+html.mh-dark .project-spec-list > li:not(:last-child),
+html.mh-dark .project-spec-block > .project-spec-list:not(:last-child) > li:last-child,
+html.mh-dark .project-spec-block .project-langs {
+  border-bottom-color: var(--color-border);
+}
