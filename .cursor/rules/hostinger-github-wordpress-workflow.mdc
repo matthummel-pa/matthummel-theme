@@ -35,7 +35,7 @@ This is the **matthummel** Sage 11 theme. Map these workflow rules onto files an
 
 Use three environments whenever possible:
 
-- **Local:** Cloud/local WordPress at `http://localhost:8080` (`~/wp-site`, theme symlink `matthummel`).
+- **Local:** Cloud/local WordPress at `http://localhost:8080` (`~/wp-site`, theme symlink `matthummel`). Product themes (Acreline, etc.) use a **separate** site dir and port (`AGENTS.md` isolation; user skill `sage-docs`). Never activate them on this install.
 - **Staging:** a Hostinger copy of the site when Matt has one. Do not invent a git `staging` branch.
 - **Production:** `matthummel.com`; changes here must be deliberate and approved. `hummelwp.com` is a separate Hostinger install (do not treat it as the default).
 
