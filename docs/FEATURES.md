@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.8 whitespace)
+
+- Content sections use padding/gap, not `border` + `box-shadow`. Do not wrap architecture / GitHub facts in a card again.
+- Heroes and `.pf-section--alt` stay white. Do not restore `#eceff1` bands or `page-header::before` gradients.
+
 ## Editor’s notes (3.6.7 project column)
 
 - Project singles are one column: gallery, then details, then story. Do not restore the 2-col `project-stage` sidebar.

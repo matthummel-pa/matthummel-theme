@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.8 — Whitespace content sections
+
+- Project facts, features, architecture, and metrics no longer sit in silver-bordered cards. Spacing separates them on white.
+- Page heroes and alt bands are white (no grey fill, no bottom rule, no radial blobs). Screenshots keep the photo; chrome shadows and gradients are off.
+
 ## 3.6.7 — Project details under screenshots
 
 - Single-project GitHub facts, stack pills, features, story, architecture, handoff, and FAQ stack in the left column under the screenshot gallery. The right-hand details column is gone.
