@@ -187,11 +187,11 @@
             <ul class="project-spec-list">
               @foreach ($specs as $spec)
                 <li>
-                  <span>{{ $spec[0] }}</span>
+                  <span class="project-spec-label">{{ $spec[0] }}</span>
                   @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
-                    <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
+                    <a class="project-spec-value" href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
                   @else
-                    <strong>{{ $spec[1] ?? '' }}</strong>
+                    <span class="project-spec-value">{{ $spec[1] ?? '' }}</span>
                   @endif
                 </li>
               @endforeach
@@ -200,15 +200,15 @@
 
           @if ($gh['languages'] !== [])
             <p class="project-langs">
-              <span>{{ __('Languages', 'sage') }}</span>
-              {{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}
+              <span class="project-spec-label">{{ __('Languages', 'sage') }}</span>
+              <span class="project-spec-value">{{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}</span>
             </p>
           @endif
 
           @if ($gh['compatible'] !== '')
             <p class="project-langs">
-              <span>{{ __('Compatible', 'sage') }}</span>
-              {{ $gh['compatible'] }}
+              <span class="project-spec-label">{{ __('Compatible', 'sage') }}</span>
+              <span class="project-spec-value">{{ $gh['compatible'] }}</span>
             </p>
           @endif
         </div>
