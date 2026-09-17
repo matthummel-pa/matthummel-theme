@@ -39,7 +39,7 @@
 
   --color-canvas: #ffffff;
   --color-bg: #ffffff;
-  --color-hero: color-mix(in srgb, var(--gray-800) 8%, #ffffff);
+  --color-hero: var(--gray-50);
   --color-surface: var(--gray-50);
   --color-border: var(--gray-200);
   --color-border-light: var(--gray-100);
@@ -349,8 +349,7 @@ body {
 .about-aside-card,
 .h-help-card,
 .h-principle,
-.h-fit__col,
-.h-faq__item {
+.h-fit__col {
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-card) !important;
   box-shadow: none;
@@ -504,7 +503,7 @@ body {
 .h-section--tinted,
 .h-section.h-section--tinted {
   background: var(--white);
-  border-color: var(--color-border);
+  border: 0;
 }
 
 .h-page-nav {
@@ -590,7 +589,7 @@ body {
 .h-hero,
 .h-hero--simple {
   min-height: 0;
-  background: #eceff1;
+  background: var(--color-hero);
   padding-block: clamp(3.25rem, 8vh, 5.5rem);
 }
 .h-hero::before,
@@ -613,7 +612,7 @@ body {
   display: none;
 }
 .h-hero--accent {
-  background: #e5e7eb;
+  background: var(--color-hero);
 }
 .h-hero--simple .h-hero__inner {
   display: block;
@@ -873,8 +872,8 @@ body {
 /* ── 3.6.2 — Page heroes, project gallery, solid availability ── */
 .page-header,
 .post-hero {
-  background: #eceff1;
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-hero);
+  border-bottom: 0;
 }
 .page-header::before,
 .post-hero::before,
@@ -925,11 +924,11 @@ body {
 .project-stage {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.35rem, 3vw, 2rem);
+  gap: clamp(2rem, 4.5vw, 3rem);
   align-items: stretch;
   max-width: 54rem;
   padding-top: clamp(1.5rem, 3vw, 2.25rem);
-  padding-bottom: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4.25rem);
 }
 .project-stage__gallery {
   grid-area: auto;
@@ -939,7 +938,9 @@ body {
   position: relative;
   margin: 0;
   overflow: hidden;
-  background: #e5e7eb;
+  background: var(--white);
+  border: 0;
+  box-shadow: none;
 }
 .project-stage__shot img {
   display: block;
@@ -948,7 +949,7 @@ body {
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top center;
-  background: #e5e7eb;
+  background: var(--white);
 }
 .project-stage__caption {
   margin: .65rem 0 0;
@@ -956,10 +957,11 @@ body {
   color: var(--color-text-secondary);
 }
 .project-stage__info {
-  padding: 1.15rem 1.2rem 1.25rem;
-  background: var(--white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 .project-stage__gh-desc {
   margin: 0 0 1rem;
@@ -975,10 +977,11 @@ body {
 .project-stat {
   margin: 0;
   min-width: 0;
-  padding: .7rem .75rem;
-  background: #f3f4f6;
-  border: 1px solid var(--color-border);
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
   border-radius: var(--radius);
+  box-shadow: none;
 }
 .project-stat dt {
   margin: 0 0 .2rem;
@@ -1054,20 +1057,22 @@ body {
 }
 .project-feat {
   margin: 0;
-  padding: 1rem 1.05rem;
-  background: var(--white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
   font-size: .95rem;
   line-height: 1.5;
   color: var(--gray-800);
 }
 .project-detail-block {
   margin: 0;
-  padding: 1.15rem 1.2rem;
-  background: var(--white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  padding: .35rem 0 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 .project-detail-block h2 {
   margin: 0 0 .7rem;
@@ -1080,14 +1085,8 @@ body {
 }
 .project-detail-block p + p { margin-top: .75rem; }
 .project-faq {
-  margin: 0 0 1rem;
+  margin: 0;
 }
-.project-faq:last-child { margin-bottom: 0; }
-.project-faq h3 {
-  margin: 0 0 .35rem;
-  font: 650 1.02rem/1.35 var(--font-display);
-}
-.project-faq p { margin: 0; }
 
 @media (max-width: 900px) {
   .project-feat-grid { grid-template-columns: 1fr; }
@@ -1187,14 +1186,87 @@ html.mh-dark .post-hero {
   background: #1c2430;
 }
 html.mh-dark .project-stage__info,
-html.mh-dark .project-feat,
 html.mh-dark .project-detail-block {
-  background: var(--color-surface, #111827);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
+html.mh-dark .project-feat,
 html.mh-dark .project-stat,
+html.mh-dark .concept-metric,
+html.mh-dark .h-glance__fact,
+html.mh-dark .hire-li-stat,
+html.mh-dark .code-gh-stat {
+  background: var(--color-surface);
+  border: 0;
+  box-shadow: none;
+}
 html.mh-dark .project-stage__shot,
 html.mh-dark .project-stage__shot img {
-  background: #111827;
+  background: transparent;
+}
+
+/* ── 3.6.8 — White space instead of silver frames / gradients ── */
+.pf-section--alt,
+.h-band--tint,
+.h-skills.h-band--tint,
+.h-receive.h-band--tint,
+.h-glance.h-band--tint,
+.h-journal.h-band--tint,
+.h-section.h-band--tint {
+  background: #fff;
+  border: 0;
+  box-shadow: none;
+}
+.concept-hero-shot,
+.concept-spec-banner,
+.project-page .pf-product-gallery__stage {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.concept-hero-shot {
+  border-radius: 0;
+}
+.concept-hero-shot__bar,
+.concept-hero-shot figcaption {
+  border: 0;
+  background: transparent;
+}
+.project-page .pf-product-gallery__stage {
+  border-radius: 0;
+  background: transparent;
+}
+.project-stat-grid {
+  gap: .85rem;
+}
+.project-feat-grid {
+  gap: .85rem;
+}
+
+/* Glance / GitHub / hire stat cells: same solid grey tile as .project-feat. */
+.concept-metric,
+.h-glance__fact,
+.hire-li-stat,
+.code-gh-stat {
+  margin: 0;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.concept-metrics,
+.h-glance__facts,
+.hire-li-stats,
+.code-gh-stats {
+  gap: .85rem;
+  background: transparent;
+  border: 0;
+}
+.h-glance__facts {
+  overflow: visible;
 }
 
 /* Pills hug their labels in flex heroes and project cards. */
@@ -1211,4 +1283,814 @@ html.mh-dark .project-stage__shot img {
   width: fit-content;
   max-width: 100%;
   flex: 0 0 auto;
+}
+
+/* ── 3.6.9 — Content list markers (checkboxes, numbered badges) ── */
+:is(.post-prose, .editor-styles-wrapper, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.mh-toc):not(.side-toc):not(.comment-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.project-stat-grid):not(.wp-block-navigation):not(.wp-block-social-links):not(.wp-block-latest-posts):not(.wp-block-categories):not(.wp-block-archives):not(.footer-nav):not(.soc-list):not(.mh-popout-menu) {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) :is(ul, ol) {
+  margin-block: .4em 0;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.comment-list) > li {
+  position: relative;
+  display: block;
+  margin: 0 0 .45em;
+  padding-inline-start: 1.85em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
+  content: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list) > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .28em;
+  width: 1.05em;
+  height: 1.05em;
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 4px;
+  background-color: var(--color-navy);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .72em .72em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  top: .7em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="disc"], ul[style*="disc"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="circle"], ul[style*="circle"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border-radius: 50%;
+  background: transparent;
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="square"], ul[style*="square"]) > li::before {
+  width: .42em;
+  height: .42em;
+  top: .55em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) {
+  counter-reset: mh-ol;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol {
+  counter-reset: mh-ol-b;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol {
+  counter-reset: mh-ol-c;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li {
+  counter-increment: mh-ol;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li {
+  counter-increment: mh-ol-b;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol > li {
+  counter-increment: mh-ol-c;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  content: counter(mh-ol);
+  position: absolute;
+  inset-inline-start: 0;
+  top: .12em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45em;
+  height: 1.45em;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: #fff;
+  font: 650 .68em/1 var(--font-display);
+  text-align: center;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li::before {
+  content: counter(mh-ol-b, lower-alpha);
+  background: transparent;
+  color: var(--color-navy);
+  border: 1.5px solid var(--color-navy);
+  font-size: .62em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol > li::before {
+  content: counter(mh-ol-c, lower-roman);
+  width: auto;
+  min-width: 1.45em;
+  height: auto;
+  padding: .15em .2em;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-navy);
+  font-size: .78em;
+  font-weight: 650;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="A"], ol[style*="upper-alpha"]) > li::before {
+  content: counter(mh-ol, upper-alpha);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="a"], ol[style*="lower-alpha"]) > li::before {
+  content: counter(mh-ol, lower-alpha);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="I"], ol[style*="upper-roman"]) > li::before {
+  content: counter(mh-ol, upper-roman);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="i"], ol[style*="lower-roman"]) > li::before {
+  content: counter(mh-ol, lower-roman);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="1"], ol[style*="decimal"]) > li::before {
+  content: counter(mh-ol, decimal);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid):not(.concept-faq-item) {
+  margin: 0 0 1.45em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid) dt {
+  font-weight: 650;
+  color: var(--color-text);
+  margin: 0 0 .2em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid) dd {
+  margin: 0 0 .85em;
+  padding-inline-start: .85rem;
+  border-inline-start: 3px solid var(--blue-200);
+  color: var(--color-text-secondary);
+}
+
+:is(.post-prose, .entry-content) :is(ul.contains-task-list, .wp-block-list:has(> .task-list-item)) {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .entry-content) :is(.task-list-item, li:has(> input[type="checkbox"])) {
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .entry-content) :is(.contains-task-list > li, .task-list-item)::before,
+:is(.post-prose, .entry-content) li:has(> input[type="checkbox"])::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+:is(.post-prose, .entry-content) :is(.task-list-item, li) > input[type="checkbox"] {
+  appearance: auto;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 .45em 0 0;
+  accent-color: var(--color-navy);
+  vertical-align: -0.15em;
+}
+
+.project-feat-grid > .project-feat,
+.concept-list > li {
+  position: relative;
+  padding-inline-start: 1.85em;
+}
+
+.project-feat-grid > .project-feat::before,
+.concept-list > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .28em;
+  width: 1.05em;
+  height: 1.05em;
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 4px;
+  background-color: var(--color-navy);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .72em .72em;
+}
+
+:is(.mh-toc, .mh-toc--inline, .side-toc, .comment-list, .post-sidebar) :is(ul, ol) > li {
+  padding-inline-start: 0;
+}
+:is(.mh-toc, .mh-toc--inline, .side-toc, .comment-list, .post-sidebar) li::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list) > li::before,
+html.mh-dark .project-feat-grid > .project-feat::before,
+html.mh-dark .concept-list > li::before {
+  border-color: var(--blue-300);
+  background-color: var(--blue-600);
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  background: var(--blue-600);
+  color: #fff;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li::before {
+  background: transparent;
+  color: var(--blue-200);
+  border-color: var(--blue-300);
+}
+
+/* ── FAQ grey tiles (native details/summary) ── */
+.faq-list {
+  display: grid;
+  gap: .85rem;
+}
+.faq-list details,
+.faq-list .project-faq,
+.post-prose .faq-list details,
+.h-faq__item {
+  margin: 0;
+  padding: 0;
+  background: var(--gray-50);
+  border: 0 !important;
+  border-radius: var(--radius);
+  box-shadow: none !important;
+  overflow: hidden;
+  transition: none;
+}
+.faq-list details:hover,
+.faq-list details[open],
+.post-prose .faq-list details:hover,
+.post-prose .faq-list details[open],
+.h-faq__item:hover,
+.h-faq__item[open] {
+  background: var(--gray-50);
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.faq-list summary,
+.h-faq__q {
+  font: 600 .97rem/1.45 var(--font-display);
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .85rem 1rem;
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+.faq-list summary::-webkit-details-marker,
+.faq-list summary::marker,
+.h-faq__q::-webkit-details-marker,
+.h-faq__q::marker {
+  display: none;
+  content: none;
+}
+.faq-list summary:focus-visible,
+.h-faq__q:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+.faq-list summary::after,
+.h-faq__q::after {
+  content: "" !important;
+  margin-left: auto;
+  flex-shrink: 0;
+  width: .5rem;
+  height: .5rem;
+  border: 0;
+  border-right: 2px solid var(--gray-600);
+  border-bottom: 2px solid var(--gray-600);
+  border-radius: 0;
+  background: transparent !important;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  transform: rotate(45deg);
+  transform-origin: 50% 45%;
+  transition: transform .15s ease;
+}
+.faq-list details[open] > summary::after,
+.h-faq__item[open] > .h-faq__q::after {
+  content: "" !important;
+  transform: rotate(225deg);
+  border-color: var(--gray-700);
+  background: transparent !important;
+}
+.faq-list details p,
+.h-faq__a {
+  margin: 0;
+  padding: 0 1rem 1rem;
+  padding-right: 2.25rem;
+  font-size: .95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  border-top: 0;
+}
+html.mh-dark .faq-list details,
+html.mh-dark .faq-list .project-faq,
+html.mh-dark .h-faq__item,
+html.mh-dark .faq-list details:hover,
+html.mh-dark .faq-list details[open],
+html.mh-dark .h-faq__item:hover,
+html.mh-dark .h-faq__item[open],
+html.mh-dark .post-prose .faq-list details {
+  background: var(--color-surface);
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html.mh-dark .faq-list summary::after,
+html.mh-dark .h-faq__q::after {
+  border-right-color: var(--gray-400);
+  border-bottom-color: var(--gray-400);
+}
+
+/* ── Project architecture notes: list rows with hairline dividers ── */
+.project-arch-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.project-arch-list > li {
+  margin: 0;
+  padding-block: .85rem;
+  color: var(--gray-700);
+  line-height: 1.7;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.project-arch-list > li:first-child {
+  padding-top: .15rem;
+}
+.project-arch-list > li:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+html.mh-dark .project-arch-list > li {
+  color: var(--gray-300);
+  background: transparent;
+  border-bottom-color: var(--color-border);
+  box-shadow: none;
+}
+
+/* ── 3.6.12 — GitHub stats + project type details ── */
+.project-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .65rem;
+  margin: 0 0 1.25rem;
+}
+.project-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 4.35rem;
+  margin: 0;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.project-stat dt {
+  margin: 0 0 .4rem;
+  font: 700 .68rem/1.2 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+.project-stat dd {
+  margin: 0;
+  font: 400 clamp(1.05rem, 1.7vw, 1.28rem)/1.15 var(--font-display);
+  letter-spacing: -.02em;
+  color: var(--gray-800);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  overflow-wrap: anywhere;
+}
+.project-spec-block {
+  margin: 0 0 1.15rem;
+  padding: .15rem 1.1rem;
+  background: var(--gray-50);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.project-spec-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+}
+.project-spec-list > li,
+.project-spec-block .project-langs {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) minmax(0, 1fr);
+  column-gap: 1.1rem;
+  row-gap: .2rem;
+  align-items: baseline;
+  position: static;
+  margin: 0;
+  padding: .78rem 0;
+  padding-inline-start: 0;
+  font-size: .95rem;
+  line-height: 1.45;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.project-spec-list > li::before {
+  content: none !important;
+  display: none;
+}
+.project-spec-list > li:not(:last-child),
+.project-spec-block > .project-spec-list:not(:last-child) > li:last-child,
+.project-spec-block .project-langs {
+  border-bottom: 1px solid var(--color-border);
+}
+.project-spec-block .project-langs:last-child {
+  border-bottom: 0;
+}
+.project-spec-block .project-spec-label {
+  display: block;
+  margin: 0;
+  font: 700 .9rem/1.45 var(--font-display);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gray-800);
+}
+.project-spec-block .project-spec-value {
+  min-width: 0;
+  font: 400 .95rem/1.5 var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gray-800);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.project-spec-list a.project-spec-value {
+  color: var(--blue-600);
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: .15em;
+}
+
+@media (max-width: 720px) {
+  .project-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .project-spec-list > li,
+  .project-spec-block .project-langs {
+    grid-template-columns: 1fr;
+    row-gap: .18rem;
+  }
+}
+
+html.mh-dark .project-spec-block {
+  background: var(--color-surface);
+}
+html.mh-dark .project-stat dd,
+html.mh-dark .project-spec-value {
+  color: var(--gray-100);
+}
+html.mh-dark .project-spec-label {
+  color: var(--gray-100);
+}
+html.mh-dark .project-spec-list a.project-spec-value {
+  color: var(--blue-300);
+}
+html.mh-dark .project-spec-list > li:not(:last-child),
+html.mh-dark .project-spec-block > .project-spec-list:not(:last-child) > li:last-child,
+html.mh-dark .project-spec-block .project-langs {
+  border-bottom-color: var(--color-border);
+}
+
+/* ── 3.6.13 — Headings above project info blocks ── */
+.project-info-section {
+  margin: 0 0 1.35rem;
+}
+.project-info-section .display-title.is-section {
+  margin: 0 0 .55rem;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  letter-spacing: -.03em;
+}
+.project-info-section .project-stat-grid,
+.project-info-section .project-spec-block {
+  margin-bottom: 0;
+}
+.project-info-section .pill-row {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* ── 3.6.14 — Round blue content checkboxes, first-line aligned (last-win) ── */
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-arch-list):not(.project-feat-grid):not(.faq-list)
+  > li {
+  --mh-check: 1.2rem;
+  display: block;
+  padding-inline-start: calc(var(--mh-check) + .55rem);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-arch-list):not(.project-feat-grid)
+  > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: .18em;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--color-spark, #1a6bb5);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  top: 0;
+  margin-block-start: calc(1lh / 2 - 1px);
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-spark, #1a6bb5);
+  background-image: none;
+}
+
+:is(.project-features, .concept-section, .concept-story)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat,
+:is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li {
+  --mh-check: 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  column-gap: .55rem;
+  padding-inline-start: 1rem;
+}
+
+:is(.project-features)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat {
+  padding: .85rem 1rem;
+}
+
+:is(.project-features, .concept-section, .concept-story)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat::before,
+:is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li::before {
+  content: "";
+  position: static;
+  inset: auto;
+  top: auto;
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: .18em;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-arch-list)
+  > li::before,
+html.mh-dark :is(.project-features)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat::before,
+html.mh-dark :is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li::before {
+  border-color: var(--blue-400);
+  background-color: var(--blue-400);
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--blue-400);
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul ul > li::before {
+  background: var(--blue-400);
+  background-image: none;
+  border: 0;
+}
+
+.project-spec-list > li::before {
+  content: none !important;
+  display: none;
+}
+
+/* Architecture notes: same round checks as content lists, hairlines, no grey tiles */
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid),
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  background: transparent;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  --mh-check: 1.2rem;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  column-gap: .55rem;
+  padding-inline-start: 0;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li::before,
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  content: "";
+  display: block;
+  position: static;
+  inset: auto;
+  top: auto;
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: .18em;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--color-spark, #1a6bb5);
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  flex: 0 0 .72em;
+  margin-block-start: calc(1lh / 2 - 1px);
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-spark, #1a6bb5);
+  background-image: none;
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid),
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  background: transparent;
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li::before {
+  border-color: var(--blue-400);
+  background-color: var(--blue-400);
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--blue-400);
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul ul > li::before {
+  background: var(--blue-400);
+  background-image: none;
+  border: 0;
 }

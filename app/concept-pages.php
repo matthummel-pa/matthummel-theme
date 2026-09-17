@@ -597,6 +597,38 @@ function mh_project_prose_paragraphs(string $text): array
 }
 
 /**
+ * Split architecture notes into list items without inventing copy.
+ *
+ * Prefers one item per blank-line paragraph (then single newlines).
+ * If the source is still one blob, splits on sentence endings.
+ *
+ * @return list<string>
+ */
+function mh_project_prose_list_items(string $text): array
+{
+    $chunks = [];
+    foreach (mh_project_prose_paragraphs($text) as $para) {
+        $lines = preg_split('/\R+/u', $para) ?: [];
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+            $chunks[] = $line;
+        }
+    }
+
+    if (count($chunks) !== 1) {
+        return $chunks;
+    }
+
+    $sentences = preg_split('/(?<=[.!?])\s+(?=\S)/u', $chunks[0]) ?: [];
+    $sentences = array_values(array_filter(array_map('trim', $sentences)));
+
+    return count($sentences) > 1 ? $sentences : $chunks;
+}
+
+/**
  * Category (and slug) defaults for buyer documentation.
  *
  * @return array{audience: string, architecture: string, handoff: string, faq: list<array{q: string, a: string}>}

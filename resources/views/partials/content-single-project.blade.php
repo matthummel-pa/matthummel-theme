@@ -171,59 +171,75 @@
       @endif
 
       @if ($ghStats !== [])
-        <dl class="project-stat-grid">
-          @foreach ($ghStats as $stat)
-            <div class="project-stat">
-              <dt>{{ $stat['label'] }}</dt>
-              <dd>{{ $stat['value'] }}</dd>
-            </div>
-          @endforeach
-        </dl>
+        <section class="project-info-section" aria-labelledby="project-build-notes">
+          <h2 id="project-build-notes" class="display-title is-section">{{ __('Build notes', 'sage') }}</h2>
+          <dl class="project-stat-grid">
+            @foreach ($ghStats as $stat)
+              <div class="project-stat">
+                <dt>{{ $stat['label'] }}</dt>
+                <dd>{{ $stat['value'] }}</dd>
+              </div>
+            @endforeach
+          </dl>
+        </section>
       @endif
 
-      @if ($specs !== [])
-        <ul class="project-spec-list">
-          @foreach ($specs as $spec)
-            <li>
-              <span>{{ $spec[0] }}</span>
-              @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
-                <a href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
-              @else
-                <strong>{{ $spec[1] ?? '' }}</strong>
-              @endif
-            </li>
-          @endforeach
-        </ul>
+      @if ($specs !== [] || $gh['languages'] !== [] || $gh['compatible'] !== '')
+        <section class="project-info-section" aria-labelledby="project-theme-details">
+          <h2 id="project-theme-details" class="display-title is-section">{{ __('Theme details', 'sage') }}</h2>
+          <div class="project-spec-block">
+            @if ($specs !== [])
+              <ul class="project-spec-list">
+                @foreach ($specs as $spec)
+                  <li>
+                    <span class="project-spec-label">{{ $spec[0] }}</span>
+                    @if (is_string($spec[1] ?? null) && preg_match('#^https?://#', (string) $spec[1]) === 1)
+                      <a class="project-spec-value" href="{{ esc_url($spec[1]) }}" rel="noopener" target="_blank">{{ $spec[1] }}</a>
+                    @else
+                      <span class="project-spec-value">{{ $spec[1] ?? '' }}</span>
+                    @endif
+                  </li>
+                @endforeach
+              </ul>
+            @endif
+
+            @if ($gh['languages'] !== [])
+              <p class="project-langs">
+                <span class="project-spec-label">{{ __('Languages', 'sage') }}</span>
+                <span class="project-spec-value">{{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}</span>
+              </p>
+            @endif
+
+            @if ($gh['compatible'] !== '')
+              <p class="project-langs">
+                <span class="project-spec-label">{{ __('Compatible', 'sage') }}</span>
+                <span class="project-spec-value">{{ $gh['compatible'] }}</span>
+              </p>
+            @endif
+          </div>
+        </section>
       @endif
 
       @if (! empty($tech))
-        <p class="pill-row">
-          @foreach ($tech as $t)
-            <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
-          @endforeach
-        </p>
+        <section class="project-info-section" aria-labelledby="project-runs-on">
+          <h2 id="project-runs-on" class="display-title is-section">{{ __('Runs on', 'sage') }}</h2>
+          <p class="pill-row">
+            @foreach ($tech as $t)
+              <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+            @endforeach
+          </p>
+        </section>
       @endif
 
       @if ($gh['topics'] !== [])
-        <p class="pill-row">
-          @foreach ($gh['topics'] as $topic)
-            <span class="pill">{{ $topic }}</span>
-          @endforeach
-        </p>
-      @endif
-
-      @if ($gh['languages'] !== [])
-        <p class="project-langs">
-          <span>{{ __('Languages', 'sage') }}</span>
-          {{ implode(' · ', array_slice($gh['languages'], 0, 6)) }}
-        </p>
-      @endif
-
-      @if ($gh['compatible'] !== '')
-        <p class="project-langs">
-          <span>{{ __('Compatible', 'sage') }}</span>
-          {{ $gh['compatible'] }}
-        </p>
+        <section class="project-info-section" aria-labelledby="project-theme-tags">
+          <h2 id="project-theme-tags" class="display-title is-section">{{ __('Theme tags', 'sage') }}</h2>
+          <p class="pill-row">
+            @foreach ($gh['topics'] as $topic)
+              <span class="pill">{{ $topic }}</span>
+            @endforeach
+          </p>
+        </section>
       @endif
 
       <div class="project-stage__links">
@@ -296,9 +312,11 @@
     @if ($architecture !== '')
       <section class="project-detail-block" aria-labelledby="project-architecture">
         <h2 id="project-architecture">{{ __('Architecture', 'sage') }}</h2>
-        @foreach (\App\mh_project_prose_paragraphs($architecture) as $para)
-          <p>{{ $para }}</p>
-        @endforeach
+        <ul class="project-arch-list">
+          @foreach (\App\mh_project_prose_list_items($architecture) as $item)
+            <li>{{ $item }}</li>
+          @endforeach
+        </ul>
       </section>
     @endif
 
@@ -317,10 +335,10 @@
         <div class="faq-list">
           @foreach ($faq as $item)
             @if ((string) ($item['q'] ?? $item[0] ?? '') !== '' && (string) ($item['a'] ?? $item[1] ?? '') !== '')
-              <div class="project-faq">
-                <h3>{{ $item['q'] ?? $item[0] }}</h3>
+              <details class="project-faq">
+                <summary>{{ $item['q'] ?? $item[0] }}</summary>
                 <p>{{ $item['a'] ?? $item[1] }}</p>
-              </div>
+              </details>
             @endif
           @endforeach
         </div>

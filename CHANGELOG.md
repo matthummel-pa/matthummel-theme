@@ -1,5 +1,47 @@
 # Changelog
 
+## 3.6.14 — Round blue list checkboxes
+
+- Content and project-feature `ul` markers are round blue circles (`--color-spark` / `--blue-400` in dark), slightly larger, and aligned to the first line of text.
+- Architecture notes (`.project-arch-list`) use the same round checks and keep hairline dividers, with no grey row fill.
+
+## 3.6.13 — Project info headings
+
+- Project singles label the info column: **Build notes**, **Theme details**, **Runs on**, and **Theme tags**. Each heading only renders when that block has content.
+
+## 3.6.12 — Project GitHub stats and type details
+
+- GitHub facts on project singles use a tighter 4-column grey tile grid, small uppercase labels, and aligned tabular numbers.
+- Stat labels (`dt`: Stars, Forks, Language, and the rest) are bold. Values (`dd`) stay regular weight.
+- Type / spec rows (and Languages / Compatible) sit in one grey tile with a hairline between rows. Labels are bold; values stay regular and wrap. Live demo URLs stay links. Pills still hug their labels.
+
+## 3.6.11 — FAQ toggles
+
+- Project Questions use native `<details>` / `<summary>` (closed by default) on grey tiles, same fill as feature tiles.
+- Listing FAQs (Projects, Services, shop archive) and About FAQ keep their first item open. Grey fill, no silver hover shadow; chevron on the summary.
+
+## 3.6.11 — Project architecture list
+
+- Architecture on project singles is a list of notes with a hairline between rows, not a paragraph dump.
+- Split uses existing paragraphs, then newlines, then sentence ends when the source is one blob. Copy is unchanged.
+
+## 3.6.10 — Content list markers
+
+- Journal, About, project, and other content lists use checkbox icons on `ul` and circular numbered badges on `ol`. Nested lists, `type` / `list-style-type`, definition lists, and Gutenberg task lists have matching styles.
+- Chrome lists stay as they were (nav, TOC, comments, tool grids, ship pipe, process/service cards).
+- Glance and stat grid tiles keep the 3.6.9 grey fill. Still no silver frame.
+
+## 3.6.9 — Grey heroes and feature tiles
+
+- Heroes (home, page headers, post heroes) use a solid grey band again. No radial blobs or bottom rule.
+- Project “What is in this sample” items sit on grey tiles. Still no silver border or shadow.
+- Project “At a glance” metrics, GitHub facts, recruiter glance facts, hire stats, and Code GitHub stats use the same solid grey fill (`--gray-50` / `--color-surface`). Architecture and handoff prose stay unboxed.
+
+## 3.6.8 — Whitespace content sections
+
+- Project facts, architecture, and metrics no longer sit in silver-bordered cards. Spacing separates them on white.
+- Alt bands stay white. Screenshots keep the photo; chrome shadows and gradients are off.
+
 ## 3.6.7 — Project details under screenshots
 
 - Single-project GitHub facts, stack pills, features, story, architecture, handoff, and FAQ stack in the left column under the screenshot gallery. The right-hand details column is gone.

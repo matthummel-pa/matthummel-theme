@@ -2,6 +2,52 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.14 list checkboxes)
+
+- Content `ul` and `.project-feat` markers are `1.2rem` circles (`border-radius: 50%`) filled with `--color-spark` (`#1a6bb5`), white check. Dark mode uses `--blue-400` on `--color-surface`.
+- Align to the first line (`1lh` offset or flex `align-items: flex-start` on feature tiles). Nested `ul ul` stays an open circle; `ul ul ul` stays a dash.
+- `.project-arch-list` uses the same circles and first-line alignment, with `border-bottom` hairlines and `background: transparent` (not `.project-feat` grey tiles). Nested architecture rows match circle/dash.
+- Do not put these markers on spec lists, GitHub stats, FAQs, or nav.
+
+## Editor’s notes (3.6.13 project info headings)
+
+- Info-column blocks on `/projects/{slug}/` sit in `.project-info-section` with `h2.display-title.is-section`. Copy is UI chrome (`Build notes`, `Theme details`, `Runs on`, `Theme tags`) — not page fields. Skip the heading when the block is empty.
+
+## Editor’s notes (3.6.12 project stats)
+
+- `/projects/{slug}/` GitHub facts stay `.project-stat-grid` / `.project-stat` grey tiles (`--gray-50` / `--color-surface`). Last-win layout is in `studio.css` (4 columns, then 2 on phones). Do not wrap the aside in a silver card.
+- Labels (`.project-stat dt`) are `font-weight: 700`. Values (`.project-stat dd`) are `400`. Do not bold the number under the label.
+- Spec rows live in `.project-spec-block` (one grey tile, not a 4-col grid). Labels (`.project-spec-label`) are `font-weight: 700`. Values (`.project-spec-value`) are `400`. Hairlines between rows. Do not wrap values in `<strong>`. Do not stretch `.pill` chips.
+
+## Editor’s notes (3.6.11 FAQ toggles)
+
+- Project Questions are `<details class="project-faq">` inside `.faq-list`. Do not restore always-open `<h3>` / `<p>` pairs.
+- Grey tile: `background: var(--gray-50)` (dark: `--color-surface`), `border: 0`, `box-shadow: none`. Override lives in `studio.css` so `portfolio.css` hover shadows stay off.
+- Chevron is `summary::after`. Keep native details (no JS accordion).
+
+## Editor’s notes (3.6.11 architecture list)
+
+- Architecture on `/projects/{slug}/` is `.project-arch-list` (`ul` / `li`), split by `mh_project_prose_list_items()`. Do not dump it as paragraphs again.
+- Dividers are `border-bottom` hairlines on `li:not(:last-child)`. Round spark checkboxes match content lists. Rows stay `background: transparent` — not grey tiles. Do not wrap the block in a silver card or add `box-shadow`.
+
+## Editor’s notes (3.6.10 list markers)
+
+- Content `ul` / `ol` markers live in `studio.css` (front) and `journal-blocks.css` (editor). Do not restore disc/decimal `::marker` on `.post-prose .wp-block-list`.
+- Do not put checkbox `::before` on chrome lists (`.mh-tool-grid`, `.mh-ship-pipe`, TOC, comments, process/svc cards).
+- Project sample items use `.project-feat::before` checkboxes; keep the 2-col grid.
+- Glance/stat grid tiles (`.concept-metric`, `.project-stat`, `.h-glance__fact`) use grey fill. Still no silver frame.
+
+## Editor’s notes (3.6.9 grey heroes / features)
+
+- Heroes use `--color-hero` (`--gray-50` in light, `#172233` in `html.mh-dark`). Do not force `#fff` on `.h-hero` / `.page-header`.
+- `.project-feat` keeps a grey fill. Do not add silver `border` / `box-shadow`.
+- Info tiles (`.concept-metric`, `.project-stat`, `.h-glance__fact`, `.hire-li-stat`, `.code-gh-stat`) match that fill. Do not grey `.project-detail-block` story copy.
+
+## Editor’s notes (3.6.8 whitespace)
+
+- Content sections use padding/gap, not `border` + `box-shadow`. Do not wrap architecture / GitHub facts in a card again.
+- `.pf-section--alt` stays white. Do not restore `page-header::before` gradients.
+
 ## Editor’s notes (3.6.7 project column)
 
 - Project singles are one column: gallery, then details, then story. Do not restore the 2-col `project-stage` sidebar.
