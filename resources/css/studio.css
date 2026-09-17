@@ -1925,8 +1925,12 @@ html.mh-dark .project-spec-block .project-langs {
   background-image: none;
 }
 
-.project-feat-grid > .project-feat,
-.concept-list > li {
+:is(.project-features, .concept-section, .concept-story)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat,
+:is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li {
   --mh-check: 1.2rem;
   display: flex;
   align-items: flex-start;
@@ -1934,12 +1938,18 @@ html.mh-dark .project-spec-block .project-langs {
   padding-inline-start: 1rem;
 }
 
-.project-feat-grid > .project-feat {
+:is(.project-features)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat {
   padding: .85rem 1rem;
 }
 
-.project-feat-grid > .project-feat::before,
-.concept-list > li::before {
+:is(.project-features, .concept-section, .concept-story)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat::before,
+:is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li::before {
   content: "";
   position: static;
   inset: auto;
@@ -1960,9 +1970,14 @@ html.mh-dark .project-spec-block .project-langs {
 }
 
 html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ul:not(.mh-tool-grid):not(.contains-task-list):not(.project-spec-list):not(.project-arch-list) > li::before,
-html.mh-dark .project-feat-grid > .project-feat::before,
-html.mh-dark .concept-list > li::before {
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-arch-list)
+  > li::before,
+html.mh-dark :is(.project-features)
+  ul.project-feat-grid:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li.project-feat::before,
+html.mh-dark :is(.concept-section, .concept-story, .entry-content)
+  ul.concept-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  > li::before {
   border-color: var(--blue-400);
   background-color: var(--blue-400);
 }
