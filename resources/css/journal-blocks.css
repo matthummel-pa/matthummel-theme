@@ -31,49 +31,213 @@
   color: var(--color-text);
 }
 
-/* ── Gutenberg List blocks (restore markers after Tailwind preflight) ── */
-.post-prose :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe),
-.editor-styles-wrapper :is(ul, ol).wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) {
+/* ── 3.6.9 Content list markers (editor canvas) ── */
+:is(.post-prose, .editor-styles-wrapper) :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.mh-toc):not(.side-toc):not(.comment-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.project-stat-grid):not(.wp-block-navigation):not(.wp-block-social-links):not(.wp-block-latest-posts):not(.wp-block-categories):not(.wp-block-archives) {
+  list-style: none;
   margin: 0 0 1.45em;
-  padding-inline-start: 1.35em;
-  list-style-position: outside;
+  padding-inline-start: 0;
 }
 
-.post-prose ul.wp-block-list:not(.mh-tool-grid),
-.editor-styles-wrapper ul.wp-block-list:not(.mh-tool-grid) {
-  list-style-type: disc;
+:is(.post-prose, .editor-styles-wrapper) :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) :is(ul, ol) {
+  margin-block: .4em 0;
 }
 
-.post-prose ol.wp-block-list:not(.mh-ship-pipe),
-.editor-styles-wrapper ol.wp-block-list:not(.mh-ship-pipe) {
-  list-style-type: decimal;
+:is(.post-prose, .editor-styles-wrapper) :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list) > li {
+  position: relative;
+  display: block;
+  margin: 0 0 .45em;
+  padding-inline-start: 1.85em;
 }
 
-.post-prose ul.wp-block-list ul,
-.editor-styles-wrapper ul.wp-block-list ul {
-  list-style-type: circle;
-  margin-top: .35em;
-  margin-bottom: 0;
+:is(.post-prose, .editor-styles-wrapper) :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
+  content: none;
 }
 
-.post-prose ol.wp-block-list ol,
-.editor-styles-wrapper ol.wp-block-list ol {
-  list-style-type: lower-alpha;
-  margin-top: .35em;
-  margin-bottom: 0;
+:is(.post-prose, .editor-styles-wrapper) ul:not(.mh-tool-grid):not(.contains-task-list) > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .28em;
+  width: 1.05em;
+  height: 1.05em;
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-navy, #0d2e57);
+  border-radius: 4px;
+  background-color: var(--color-navy, #0d2e57);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .72em .72em;
 }
 
-.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li,
-.editor-styles-wrapper .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li {
-  display: list-item;
-  margin: 0 0 .4em;
-  padding-inline-start: .15em;
+:is(.post-prose, .editor-styles-wrapper) ul ul > li::before {
+  background-color: transparent;
+  background-image: none;
 }
 
-.post-prose .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker,
-.editor-styles-wrapper .wp-block-list:not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
-  color: var(--color-text-muted, #6b7280);
-  font-weight: 600;
+:is(.post-prose, .editor-styles-wrapper) ul ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  top: .7em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy, #0d2e57);
+  background-image: none;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ul[type="disc"], ul[style*="disc"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-navy, #0d2e57);
+  background-image: none;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ul[type="circle"], ul[style*="circle"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border-radius: 50%;
+  background: transparent;
+  background-image: none;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ul[type="square"], ul[style*="square"]) > li::before {
+  width: .42em;
+  height: .42em;
+  top: .55em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy, #0d2e57);
+  background-image: none;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) {
+  counter-reset: mh-ol;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol {
+  counter-reset: mh-ol-b;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol ol {
+  counter-reset: mh-ol-c;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) > li {
+  counter-increment: mh-ol;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol > li {
+  counter-increment: mh-ol-b;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol ol > li {
+  counter-increment: mh-ol-c;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  content: counter(mh-ol);
+  position: absolute;
+  inset-inline-start: 0;
+  top: .12em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45em;
+  height: 1.45em;
+  border-radius: 50%;
+  background: var(--color-navy, #0d2e57);
+  color: #fff;
+  font: 650 .68em/1 var(--font-display, Inter, system-ui, sans-serif);
+  text-align: center;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol > li::before {
+  content: counter(mh-ol-b, lower-alpha);
+  background: transparent;
+  color: var(--color-navy, #0d2e57);
+  border: 1.5px solid var(--color-navy, #0d2e57);
+  font-size: .62em;
+}
+
+:is(.post-prose, .editor-styles-wrapper) ol ol ol > li::before {
+  content: counter(mh-ol-c, lower-roman);
+  width: auto;
+  min-width: 1.45em;
+  height: auto;
+  padding: .15em .2em;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-navy, #0d2e57);
+  font-size: .78em;
+  font-weight: 650;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ol[type="A"], ol[style*="upper-alpha"]) > li::before {
+  content: counter(mh-ol, upper-alpha);
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ol[type="a"], ol[style*="lower-alpha"]) > li::before {
+  content: counter(mh-ol, lower-alpha);
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ol[type="I"], ol[style*="upper-roman"]) > li::before {
+  content: counter(mh-ol, upper-roman);
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ol[type="i"], ol[style*="lower-roman"]) > li::before {
+  content: counter(mh-ol, lower-roman);
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ol[type="1"], ol[style*="decimal"]) > li::before {
+  content: counter(mh-ol, decimal);
+}
+
+:is(.post-prose, .editor-styles-wrapper) dl:not(.project-stat-grid):not(.concept-faq-item) {
+  margin: 0 0 1.45em;
+}
+
+:is(.post-prose, .editor-styles-wrapper) dl:not(.project-stat-grid) dt {
+  font-weight: 650;
+  color: var(--color-text, #0b1220);
+  margin: 0 0 .2em;
+}
+
+:is(.post-prose, .editor-styles-wrapper) dl:not(.project-stat-grid) dd {
+  margin: 0 0 .85em;
+  padding-inline-start: .85rem;
+  border-inline-start: 3px solid var(--blue-200, #93c5fd);
+  color: var(--color-text-secondary, #243041);
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(ul.contains-task-list, .wp-block-list:has(> .task-list-item)) {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(.task-list-item, li:has(> input[type="checkbox"])) {
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(.contains-task-list > li, .task-list-item)::before,
+:is(.post-prose, .editor-styles-wrapper) li:has(> input[type="checkbox"])::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+:is(.post-prose, .editor-styles-wrapper) :is(.task-list-item, li) > input[type="checkbox"] {
+  appearance: auto;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 .45em 0 0;
+  accent-color: var(--color-navy, #0d2e57);
+  vertical-align: -0.15em;
 }
 
 /* ── Tool comparison figure ── */

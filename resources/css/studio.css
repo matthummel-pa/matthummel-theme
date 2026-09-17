@@ -1263,3 +1263,298 @@ html.mh-dark .project-stage__shot img {
   max-width: 100%;
   flex: 0 0 auto;
 }
+
+/* ── 3.6.9 — Content list markers (checkboxes, numbered badges) ── */
+:is(.post-prose, .editor-styles-wrapper, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.mh-toc):not(.side-toc):not(.comment-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.project-stat-grid):not(.wp-block-navigation):not(.wp-block-social-links):not(.wp-block-latest-posts):not(.wp-block-categories):not(.wp-block-archives):not(.footer-nav):not(.soc-list):not(.mh-popout-menu) {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) :is(ul, ol) {
+  margin-block: .4em 0;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.comment-list) > li {
+  position: relative;
+  display: block;
+  margin: 0 0 .45em;
+  padding-inline-start: 1.85em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul, ol):not(.mh-tool-grid):not(.mh-ship-pipe) > li::marker {
+  content: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list) > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .28em;
+  width: 1.05em;
+  height: 1.05em;
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 4px;
+  background-color: var(--color-navy);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .72em .72em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  top: .7em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="disc"], ul[style*="disc"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="circle"], ul[style*="circle"]) > li::before {
+  width: .45em;
+  height: .45em;
+  top: .55em;
+  border-radius: 50%;
+  background: transparent;
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ul[type="square"], ul[style*="square"]) > li::before {
+  width: .42em;
+  height: .42em;
+  top: .55em;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-navy);
+  background-image: none;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) {
+  counter-reset: mh-ol;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol {
+  counter-reset: mh-ol-b;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol {
+  counter-reset: mh-ol-c;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li {
+  counter-increment: mh-ol;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li {
+  counter-increment: mh-ol-b;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol > li {
+  counter-increment: mh-ol-c;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  content: counter(mh-ol);
+  position: absolute;
+  inset-inline-start: 0;
+  top: .12em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45em;
+  height: 1.45em;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: #fff;
+  font: 650 .68em/1 var(--font-display);
+  text-align: center;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li::before {
+  content: counter(mh-ol-b, lower-alpha);
+  background: transparent;
+  color: var(--color-navy);
+  border: 1.5px solid var(--color-navy);
+  font-size: .62em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol ol > li::before {
+  content: counter(mh-ol-c, lower-roman);
+  width: auto;
+  min-width: 1.45em;
+  height: auto;
+  padding: .15em .2em;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-navy);
+  font-size: .78em;
+  font-weight: 650;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="A"], ol[style*="upper-alpha"]) > li::before {
+  content: counter(mh-ol, upper-alpha);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="a"], ol[style*="lower-alpha"]) > li::before {
+  content: counter(mh-ol, lower-alpha);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="I"], ol[style*="upper-roman"]) > li::before {
+  content: counter(mh-ol, upper-roman);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="i"], ol[style*="lower-roman"]) > li::before {
+  content: counter(mh-ol, lower-roman);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  :is(ol[type="1"], ol[style*="decimal"]) > li::before {
+  content: counter(mh-ol, decimal);
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid):not(.concept-faq-item) {
+  margin: 0 0 1.45em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid) dt {
+  font-weight: 650;
+  color: var(--color-text);
+  margin: 0 0 .2em;
+}
+
+:is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .entry-content)
+  dl:not(.project-stat-grid) dd {
+  margin: 0 0 .85em;
+  padding-inline-start: .85rem;
+  border-inline-start: 3px solid var(--blue-200);
+  color: var(--color-text-secondary);
+}
+
+:is(.post-prose, .entry-content) :is(ul.contains-task-list, .wp-block-list:has(> .task-list-item)) {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .entry-content) :is(.task-list-item, li:has(> input[type="checkbox"])) {
+  padding-inline-start: 0;
+}
+
+:is(.post-prose, .entry-content) :is(.contains-task-list > li, .task-list-item)::before,
+:is(.post-prose, .entry-content) li:has(> input[type="checkbox"])::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+:is(.post-prose, .entry-content) :is(.task-list-item, li) > input[type="checkbox"] {
+  appearance: auto;
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 .45em 0 0;
+  accent-color: var(--color-navy);
+  vertical-align: -0.15em;
+}
+
+.project-feat-grid > .project-feat,
+.concept-list > li {
+  position: relative;
+  padding-inline-start: 1.85em;
+}
+
+.project-feat-grid > .project-feat::before,
+.concept-list > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .28em;
+  width: 1.05em;
+  height: 1.05em;
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-navy);
+  border-radius: 4px;
+  background-color: var(--color-navy);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .72em .72em;
+}
+
+:is(.mh-toc, .mh-toc--inline, .side-toc, .comment-list, .post-sidebar) :is(ul, ol) > li {
+  padding-inline-start: 0;
+}
+:is(.mh-toc, .mh-toc--inline, .side-toc, .comment-list, .post-sidebar) li::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul:not(.mh-tool-grid):not(.contains-task-list) > li::before,
+html.mh-dark .project-feat-grid > .project-feat::before,
+html.mh-dark .concept-list > li::before {
+  border-color: var(--blue-300);
+  background-color: var(--blue-600);
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ul ul > li::before {
+  background-color: transparent;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  background: var(--blue-600);
+  color: #fff;
+}
+
+html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
+  ol ol > li::before {
+  background: transparent;
+  color: var(--blue-200);
+  border-color: var(--blue-300);
+}

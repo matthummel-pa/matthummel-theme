@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.10 list markers)
+
+- Content `ul` / `ol` markers live in `studio.css` (front) and `journal-blocks.css` (editor). Do not restore disc/decimal `::marker` on `.post-prose .wp-block-list`.
+- Do not put checkbox `::before` on chrome lists (`.mh-tool-grid`, `.mh-ship-pipe`, TOC, comments, process/svc cards).
+- Project sample items use `.project-feat::before` checkboxes; keep the 2-col grid.
+
 ## Editor’s notes (3.6.9 grey heroes / features)
 
 - Heroes use `--color-hero` (`--gray-50` in light, `#172233` in `html.mh-dark`). Do not force `#fff` on `.h-hero` / `.page-header`.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.10 — Content list markers
+
+- Journal, About, project, and other content lists use checkbox icons on `ul` and circular numbered badges on `ol`. Nested lists, `type` / `list-style-type`, definition lists, and Gutenberg task lists have matching styles.
+- Chrome lists stay as they were (nav, TOC, comments, tool grids, ship pipe, process/service cards).
+
 ## 3.6.9 — Grey heroes and feature tiles
 
 - Heroes (home, page headers, post heroes) use a solid grey band again. No radial blobs or bottom rule.
