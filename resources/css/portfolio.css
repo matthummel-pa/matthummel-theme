@@ -118,11 +118,12 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-display, Inter, system-ui, sans-serif);
   color: var(--color-text);
   font-weight: 900;
-  line-height: 0.98;
   letter-spacing: var(--type-display-track);
   text-wrap: balance;
   margin: 0 0 .65em;
 }
+h1 { line-height: 0.98; }
+h2, h3, h4, h5 { line-height: 1.2; }
 h3, h4 { letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
 
 /* Mid-flow headings (not eyebrow → title pairs in page chrome). */
@@ -860,11 +861,17 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   flex-wrap: wrap;
   gap: .4rem;
   margin: 0 0 1.1rem;
+  width: fit-content;
+  max-width: 100%;
+  align-self: flex-start;
 }
 .h-badge {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   font: 500 .78rem/1 var(--font-display);
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -872,6 +879,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   padding: .3rem .65rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
+  white-space: nowrap;
 }
 .h-badge--open {
   color: #166534;
@@ -937,12 +945,17 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   display: inline-flex;
   align-items: center;
   gap: .5rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
+  align-self: flex-start;
   margin: 0 0 .65rem;
   font: 700 .73rem/1 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--color-accent);
   opacity: .9;
+  white-space: nowrap;
 }
 .h-hero__kicker-dot {
   display: inline-block;
@@ -1725,7 +1738,13 @@ html.mh-dark .h-hero-work__foot {
 .page-header-inner { position: relative; z-index: 1; }
 .page-header .display-title { color: var(--color-text); }
 .page-header .display-title.is-hero { font-size: clamp(1.85rem, 4.2vw, 2.65rem); max-width: 18ch; letter-spacing: -0.045em; line-height: 1.08; }
-.page-header .eyebrow { color: var(--color-accent); }
+.page-header .eyebrow {
+  color: var(--color-accent);
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
 .page-header .lead { color: var(--color-text-secondary); max-width: 40rem; margin-bottom: 0; }
 .page-header .lead a { color: var(--color-accent); }
 .page-header .lead a:hover { color: var(--color-accent-hover); text-decoration: underline; }
@@ -2412,6 +2431,9 @@ html.mh-dark .h-hero-work__foot {
   display: inline-flex;
   align-items: center;
   gap: .3rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   background: var(--gray-50);
   color: var(--gray-600);
   border: 1px solid var(--gray-200);
@@ -2419,11 +2441,12 @@ html.mh-dark .h-hero-work__foot {
   padding: .22rem .65rem;
   font: 600 .7rem/1.2 var(--font-display);
   letter-spacing: .02em;
+  white-space: nowrap;
 }
-.pill-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .75rem; }
+.pill-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .75rem; align-items: flex-start; }
 
 /* ─── FILTERS ─────────────────────────────────────────────────────────────── */
-.filter-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+.filter-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; align-items: flex-start; }
 .filter-pill {
   text-decoration: none;
   border: 1px solid var(--color-border);
@@ -2434,7 +2457,11 @@ html.mh-dark .h-hero-work__foot {
   min-height: 36px;
   display: inline-flex;
   align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   font: 600 .82rem/1 var(--font-display);
+  white-space: nowrap;
   transition: background .12s, color .12s, border-color .12s;
 }
 .filter-pill.is-active,
@@ -7587,11 +7614,32 @@ html.mh-dark .svc-audience-card {
   background: var(--white);
 }
 .concept-layout { padding-bottom: clamp(2rem, 5vw, 3.5rem); }
+.concept-story {
+  display: flex;
+  flex-direction: column;
+  gap: 1.85rem;
+  margin: 0;
+}
+.concept-story__block { margin: 0; }
+.concept-story__block h2 {
+  font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.25 var(--font-display);
+  letter-spacing: -0.03em;
+  margin: 0 0 .55rem;
+}
+.concept-story__block p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  font-size: 1.02rem;
+}
 .concept-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .85rem;
-  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+  margin: 0;
+}
+.project-stage .concept-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .concept-metric {
   padding: 1rem 1.1rem;
@@ -8235,6 +8283,9 @@ html.mh-dark .journal-topic-card {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
 }
 .h-badge .mh-ico { flex-shrink: 0; }
 
@@ -8725,6 +8776,10 @@ html.mh-dark .journal-topic-card {
 .spec-badge {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
+  align-self: flex-start;
   margin: 0 0 .45rem;
   padding: .2rem .55rem;
   border-radius: 999px;
@@ -8734,6 +8789,7 @@ html.mh-dark .journal-topic-card {
   font: 700 .68rem/1 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .spec-badge--on-dark {
   border-color: rgba(255,255,255,.28);
@@ -9385,6 +9441,9 @@ html.mh-dark .journal-topic-card {
 .h-work-cat-badge {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   font: 600 .72rem/1 var(--font-display);
   letter-spacing: .07em;
   text-transform: uppercase;
@@ -9513,6 +9572,9 @@ html.mh-dark .journal-topic-card {
   display: inline-flex;
   align-items: center;
   gap: .3rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   font: 600 .7rem/1.2 var(--font-display);
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -9522,6 +9584,7 @@ html.mh-dark .journal-topic-card {
   border-radius: 999px;
   padding: .2rem .6rem;
   backdrop-filter: blur(4px);
+  white-space: nowrap;
 }
 
 /* ── 3-col card grid ── */
@@ -16740,6 +16803,9 @@ html.mh-dark .h-section.h-band--tint {
 .h-case__concept {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
   padding: .2rem .55rem;
   border-radius: 999px;
   border: 1px solid var(--color-border);
@@ -16748,6 +16814,7 @@ html.mh-dark .h-section.h-band--tint {
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
+  white-space: nowrap;
 }
 .h-case__title {
   margin: 0 0 .75rem;

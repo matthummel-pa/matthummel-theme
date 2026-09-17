@@ -240,34 +240,32 @@
         @endif
       </div>
     </aside>
-  </div>
 
-  @if ($features !== [])
-    <section class="container wide page-block project-features" aria-labelledby="project-features">
-      <h2 id="project-features" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
-      <ul class="project-feat-grid">
-        @foreach ($features as $item)
-          <li class="project-feat">{{ $item }}</li>
-        @endforeach
-      </ul>
-    </section>
-  @endif
+    @if ($features !== [])
+      <section class="project-features" aria-labelledby="project-features">
+        <h2 id="project-features" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
+        <ul class="project-feat-grid">
+          @foreach ($features as $item)
+            <li class="project-feat">{{ $item }}</li>
+          @endforeach
+        </ul>
+      </section>
+    @endif
 
-  @if ($metrics !== [])
-    <section class="container wide page-block" aria-labelledby="project-metrics">
-      <h2 id="project-metrics" class="display-title is-section">{{ __('At a glance', 'sage') }}</h2>
-      <div class="concept-metrics">
-        @foreach ($metrics as $metric)
-          <div class="concept-metric">
-            <strong>{{ $metric[0] ?? '' }}</strong>
-            <span>{{ $metric[1] ?? '' }}</span>
-          </div>
-        @endforeach
-      </div>
-    </section>
-  @endif
+    @if ($metrics !== [])
+      <section class="project-metrics" aria-labelledby="project-metrics">
+        <h2 id="project-metrics" class="display-title is-section">{{ __('At a glance', 'sage') }}</h2>
+        <div class="concept-metrics">
+          @foreach ($metrics as $metric)
+            <div class="concept-metric">
+              <strong>{{ $metric[0] ?? '' }}</strong>
+              <span>{{ $metric[1] ?? '' }}</span>
+            </div>
+          @endforeach
+        </div>
+      </section>
+    @endif
 
-  <div class="container wide page-block concept-layout">
     <div class="concept-story">
       @if ($audience !== '')
         <section class="concept-story__block">
