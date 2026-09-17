@@ -1857,3 +1857,21 @@ html.mh-dark .project-spec-block > .project-spec-list:not(:last-child) > li:last
 html.mh-dark .project-spec-block .project-langs {
   border-bottom-color: var(--color-border);
 }
+
+/* ── 3.6.13 — Headings above project info blocks ── */
+.project-info-section {
+  margin: 0 0 1.35rem;
+}
+.project-info-section .display-title.is-section {
+  margin: 0 0 .55rem;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  letter-spacing: -.03em;
+}
+.project-info-section .project-stat-grid,
+.project-info-section .project-spec-block {
+  margin-bottom: 0;
+}
+.project-info-section .pill-row {
+  margin-top: 0;
+  margin-bottom: 0;
+}

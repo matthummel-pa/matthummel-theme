@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.13 project info headings)
+
+- Info-column blocks on `/projects/{slug}/` sit in `.project-info-section` with `h2.display-title.is-section`. Copy is UI chrome (`Build notes`, `Theme details`, `Runs on`, `Theme tags`) — not page fields. Skip the heading when the block is empty.
+
 ## Editor’s notes (3.6.12 project stats)
 
 - `/projects/{slug}/` GitHub facts stay `.project-stat-grid` / `.project-stat` grey tiles (`--gray-50` / `--color-surface`). Last-win layout is in `studio.css` (4 columns, then 2 on phones). Do not wrap the aside in a silver card.

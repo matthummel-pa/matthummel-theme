@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.13 — Project info headings
+
+- Project singles label the info column: **Build notes**, **Theme details**, **Runs on**, and **Theme tags**. Each heading only renders when that block has content.
+
 ## 3.6.12 — Project GitHub stats and type details
 
 - GitHub facts on project singles use a tighter 4-column grey tile grid, small uppercase labels, and aligned tabular numbers.
