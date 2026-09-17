@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.14 — Round blue list checkboxes
+
+- Content and project-feature `ul` markers are round blue circles (`--color-spark` / `--blue-400` in dark), slightly larger, and aligned to the first line of text.
+
 ## 3.6.13 — Project info headings
 
 - Project singles label the info column: **Build notes**, **Theme details**, **Runs on**, and **Theme tags**. Each heading only renders when that block has content.

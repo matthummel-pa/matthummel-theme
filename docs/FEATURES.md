@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.14 list checkboxes)
+
+- Content `ul` and `.project-feat` markers are `1.2rem` circles (`border-radius: 50%`) filled with `--color-spark` (`#1a6bb5`), white check. Dark mode uses `--blue-400` on `--color-surface`.
+- Align to the first line (`1lh` offset or flex `align-items: flex-start` on feature tiles). Nested `ul ul` stays an open circle; `ul ul ul` stays a dash.
+- Do not put these markers on spec lists, architecture notes, GitHub stats, FAQs, or nav.
+
 ## Editor’s notes (3.6.13 project info headings)
 
 - Info-column blocks on `/projects/{slug}/` sit in `.project-info-section` with `h2.display-title.is-section`. Copy is UI chrome (`Build notes`, `Theme details`, `Runs on`, `Theme tags`) — not page fields. Skip the heading when the block is empty.
