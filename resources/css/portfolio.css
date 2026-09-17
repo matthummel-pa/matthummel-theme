@@ -7618,9 +7618,9 @@ html.mh-dark .svc-audience-card {
   display: flex;
   flex-direction: column;
   gap: 1.85rem;
-  margin: 0 0 2rem;
+  margin: 0;
 }
-.concept-story__block { margin: 0; max-width: 42rem; }
+.concept-story__block { margin: 0; }
 .concept-story__block h2 {
   font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.25 var(--font-display);
   letter-spacing: -0.03em;
@@ -7636,7 +7636,10 @@ html.mh-dark .svc-audience-card {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .85rem;
-  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+  margin: 0;
+}
+.project-stage .concept-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .concept-metric {
   padding: 1rem 1.1rem;

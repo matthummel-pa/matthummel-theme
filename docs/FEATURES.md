@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.7 project column)
+
+- Project singles are one column: gallery, then details, then story. Do not restore the 2-col `project-stage` sidebar.
+
 ## Editor’s notes (3.6.6 project story type)
 
 - `.concept-story` is a column with `gap`. Do not flatten those blocks into sibling `p + h2` without keeping the gap.

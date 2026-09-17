@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.7 — Project details under screenshots
+
+- Single-project GitHub facts, stack pills, features, story, architecture, handoff, and FAQ stack in the left column under the screenshot gallery. The right-hand details column is gone.
+
 ## 3.6.6 — Project story heading space
 
 - Project “Who it is for” blocks sit in separate sections, so the global `p + h2` gap never ran. Stacks now use a 1.85rem gap, and each heading keeps space before its paragraph.

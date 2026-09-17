@@ -923,11 +923,13 @@ body {
 }
 
 .project-stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 22rem);
-  gap: clamp(1.25rem, 3vw, 2rem);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.35rem, 3vw, 2rem);
+  align-items: stretch;
+  max-width: 54rem;
   padding-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding-bottom: clamp(2rem, 5vw, 3.5rem);
 }
 .project-stage__gallery {
   grid-area: auto;
@@ -1038,11 +1040,15 @@ body {
   gap: .65rem 1rem;
   margin-top: 1rem;
 }
+.project-features .display-title.is-section,
+.project-metrics .display-title.is-section {
+  margin-bottom: .75rem;
+}
 .project-feat-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: .85rem;
-  margin: 1rem 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -1057,7 +1063,7 @@ body {
   color: var(--gray-800);
 }
 .project-detail-block {
-  margin: 0 0 1.75rem;
+  margin: 0;
   padding: 1.15rem 1.2rem;
   background: var(--white);
   border: 1px solid var(--color-border);
@@ -1084,7 +1090,6 @@ body {
 .project-faq p { margin: 0; }
 
 @media (max-width: 900px) {
-  .project-stage { grid-template-columns: 1fr; }
   .project-feat-grid { grid-template-columns: 1fr; }
   .project-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
