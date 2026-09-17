@@ -296,9 +296,11 @@
     @if ($architecture !== '')
       <section class="project-detail-block" aria-labelledby="project-architecture">
         <h2 id="project-architecture">{{ __('Architecture', 'sage') }}</h2>
-        @foreach (\App\mh_project_prose_paragraphs($architecture) as $para)
-          <p>{{ $para }}</p>
-        @endforeach
+        <ul class="project-arch-list">
+          @foreach (\App\mh_project_prose_list_items($architecture) as $item)
+            <li>{{ $item }}</li>
+          @endforeach
+        </ul>
       </section>
     @endif
 

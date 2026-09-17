@@ -8,6 +8,11 @@ What the 3.x Sage theme does, and where it lives.
 - Grey tile: `background: var(--gray-50)` (dark: `--color-surface`), `border: 0`, `box-shadow: none`. Override lives in `studio.css` so `portfolio.css` hover shadows stay off.
 - Chevron is `summary::after`. Keep native details (no JS accordion).
 
+## Editor’s notes (3.6.11 architecture list)
+
+- Architecture on `/projects/{slug}/` is `.project-arch-list` (`ul` / `li`), split by `mh_project_prose_list_items()`. Do not dump it as paragraphs again.
+- Dividers are `border-bottom` hairlines on `li:not(:last-child)`. Do not wrap the block in a silver card or add `box-shadow`.
+
 ## Editor’s notes (3.6.10 list markers)
 
 - Content `ul` / `ol` markers live in `studio.css` (front) and `journal-blocks.css` (editor). Do not restore disc/decimal `::marker` on `.post-prose .wp-block-list`.

@@ -1688,3 +1688,35 @@ html.mh-dark .h-faq__q::after {
   border-right-color: var(--gray-400);
   border-bottom-color: var(--gray-400);
 }
+
+/* ── Project architecture notes: list rows with hairline dividers ── */
+.project-arch-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.project-arch-list > li {
+  margin: 0;
+  padding-block: .85rem;
+  color: var(--gray-700);
+  line-height: 1.7;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.project-arch-list > li:first-child {
+  padding-top: .15rem;
+}
+.project-arch-list > li:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+html.mh-dark .project-arch-list > li {
+  color: var(--gray-300);
+  background: transparent;
+  border-bottom-color: var(--color-border);
+  box-shadow: none;
+}

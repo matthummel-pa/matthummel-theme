@@ -5,6 +5,11 @@
 - Project Questions use native `<details>` / `<summary>` (closed by default) on grey tiles, same fill as feature tiles.
 - Listing FAQs (Projects, Services, shop archive) and About FAQ keep their first item open. Grey fill, no silver hover shadow; chevron on the summary.
 
+## 3.6.11 — Project architecture list
+
+- Architecture on project singles is a list of notes with a hairline between rows, not a paragraph dump.
+- Split uses existing paragraphs, then newlines, then sentence ends when the source is one blob. Copy is unchanged.
+
 ## 3.6.10 — Content list markers
 
 - Journal, About, project, and other content lists use checkbox icons on `ul` and circular numbered badges on `ol`. Nested lists, `type` / `list-style-type`, definition lists, and Gutenberg task lists have matching styles.
