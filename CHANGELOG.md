@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.5 — Pill width hugs labels
+
+- Hero kickers, page-header eyebrows, project spec badges, tech pills, and filter pills size to their text instead of stretching across a flex column.
+
 ## 3.6.4 — Paragraph and heading spacing
 
 - Global type rhythm: more space before mid-flow headings, less after, so headings sit with the copy they introduce.

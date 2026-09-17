@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.5 pill width)
+
+- Hero and project pills use `width: fit-content` so flex-column parents do not stretch the chip. Do not set those chips to `width: 100%` or `align-items: stretch` without an explicit exception.
+
 ## Editor’s notes (3.6.4 type rhythm)
 
 - Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Do not put large `margin-top` on every heading — first-child / eyebrow → title pairs stay tight.
