@@ -4,7 +4,8 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.12 project stats)
 
-- `/projects/{slug}/` GitHub facts stay `.project-stat-grid` / `.project-stat` grey tiles (`--gray-50` / `--color-surface`). Last-win layout is in `studio.css` (4 columns, then 2, then 1). Do not wrap the aside in a silver card.
+- `/projects/{slug}/` GitHub facts stay `.project-stat-grid` / `.project-stat` grey tiles (`--gray-50` / `--color-surface`). Last-win layout is in `studio.css` (4 columns, then 2 on phones). Do not wrap the aside in a silver card.
+- Labels (`.project-stat dt`) are `font-weight: 700`. Values (`.project-stat dd`) are `400`. Do not bold the number under the label.
 - Spec rows live in `.project-spec-block` / `.project-spec-list`. Hairlines match `.project-arch-list`. Do not stretch `.pill` chips.
 
 ## Editor’s notes (3.6.11 FAQ toggles)

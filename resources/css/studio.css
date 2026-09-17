@@ -1743,14 +1743,14 @@ html.mh-dark .project-arch-list > li {
 }
 .project-stat dt {
   margin: 0 0 .4rem;
-  font: 600 .68rem/1.2 var(--font-display);
+  font: 700 .68rem/1.2 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--gray-500);
 }
 .project-stat dd {
   margin: 0;
-  font: 700 clamp(1.05rem, 1.7vw, 1.28rem)/1.15 var(--font-display);
+  font: 400 clamp(1.05rem, 1.7vw, 1.28rem)/1.15 var(--font-display);
   letter-spacing: -.02em;
   color: var(--gray-800);
   font-variant-numeric: tabular-nums;
