@@ -58,6 +58,22 @@ cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
 Site: `http://localhost:8080`. Admin: `http://localhost:8080/wp-admin`
 (user `admin`, password `password`).
 
+### Local WordPress isolation (one install per product)
+
+`~/wp-site` and port **8080** are **matthummel only**. Do not activate Acreline (or any other product theme) on this WordPress.
+
+Each product gets its own site directory, theme symlink (folder name = that repo’s Vite `base`), and port:
+
+| Product | Site dir | Theme folder | Port |
+| --- | --- | --- | --- |
+| matthummel | `~/wp-site` | `matthummel` | **8080** |
+| Acreline / wp-acreline | `~/wp-acreline-site` | usually `acreline` | **8081** |
+| Next new WP project | `~/wp-<slug>-site` | match Vite `base` | **8082+** (next free) |
+
+Run both at once in separate tmux sessions (`wp server --host=0.0.0.0 --port=<port>`). Do not `pkill -f`. Local admin is `admin` / `password` unless already set. SQLite drop-in still goes in **before** `wp core install` (gotcha below). Do not mix `theme-latest` zips between sites.
+
+User skill: `sage-docs` (Cursor user skills store).
+
 Gotchas:
 
 - After editing Blade templates, clear compiled views:

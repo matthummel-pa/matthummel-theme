@@ -48,6 +48,10 @@ Examples from the [theme templates docs](https://roots.io/sage/docs/theme-templa
 
 Do not add Kadence, theme-options admin, or extra `app/*.php` modules unless Matt asks. Portfolio helpers stay in `app/portfolio.php`, `app/contact.php`, `app/Github.php`.
 
+## Local installs
+
+One Cloud/local WordPress per product. This theme: `~/wp-site`, folder `matthummel`, port **8080**. Acreline: `~/wp-acreline-site`, port **8081**. Next project: `~/wp-<slug>-site` and **8082+**. Never activate another product theme on the matthummel WP. See `AGENTS.md` (Local WordPress isolation) and user skill `sage-docs`.
+
 ## Assets
 
 - Edit `vite.config.js` `base` if the WordPress theme folder name changes. Live folder is `matthummel`.
