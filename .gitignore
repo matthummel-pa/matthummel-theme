@@ -4,6 +4,9 @@
 !.cursor/rules/**
 !.cursor/skills/
 !.cursor/skills/**
+!.cursor/docs.json
+!.cursor/mcp.json
+!.cursor/environment.json
 
 # GitHub Actions stay in git (un-ignore workflows and scripts)
 .github/*
