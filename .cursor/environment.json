@@ -1,0 +1,13 @@
+{
+  "name": "matthummel WordPress (Cloud)",
+  "ports": [
+    {
+      "name": "matthummel WordPress",
+      "port": 8080
+    },
+    {
+      "name": "Acreline WordPress",
+      "port": 8081
+    }
+  ]
+}

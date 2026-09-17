@@ -56,7 +56,14 @@ cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
 ```
 
 Site: `http://localhost:8080`. Admin: `http://localhost:8080/wp-admin`
-(user `admin`, password `password`).
+(user `admin`, password `password`). Acreline, when present, is
+`~/wp-acreline-site` on port **8081**. Bind `wp server` to `0.0.0.0`, not
+`127.0.0.1` only.
+
+Cloud Simple Browser is isolated from VM localhost. Declaring
+`.cursor/environment.json` `ports` (8080 / 8081) is what lets Cursor
+forward them. After that file is on the branch, Save the Cloud environment
+(or Ports panel) so the tunnel exists; this VM cannot inject it by itself.
 
 Gotchas:
 
