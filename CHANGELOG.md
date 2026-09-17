@@ -3,6 +3,7 @@
 ## 3.6.14 — Round blue list checkboxes
 
 - Content and project-feature `ul` markers are round blue circles (`--color-spark` / `--blue-400` in dark), slightly larger, and aligned to the first line of text.
+- Architecture notes (`.project-arch-list`) use the same round checks and keep hairline dividers, with no grey row fill.
 
 ## 3.6.13 — Project info headings
 

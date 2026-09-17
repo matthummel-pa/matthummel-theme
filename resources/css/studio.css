@@ -1790,8 +1790,7 @@ html.mh-dark .project-arch-list > li {
   border-radius: 0;
   box-shadow: none;
 }
-.project-spec-list > li::before,
-.project-arch-list > li::before {
+.project-spec-list > li::before {
   content: none !important;
   display: none;
 }
@@ -1996,8 +1995,102 @@ html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-secti
   border: 0;
 }
 
-.project-spec-list > li::before,
-.project-arch-list > li::before {
+.project-spec-list > li::before {
   content: none !important;
   display: none;
+}
+
+/* Architecture notes: same round checks as content lists, hairlines, no grey tiles */
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid),
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  background: transparent;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  --mh-check: 1.2rem;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  column-gap: .55rem;
+  padding-inline-start: 0;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li::before,
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  content: "";
+  display: block;
+  position: static;
+  inset: auto;
+  top: auto;
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: .18em;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--color-spark, #1a6bb5);
+}
+:is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul ul > li::before {
+  width: .72em;
+  height: 2px;
+  flex: 0 0 .72em;
+  margin-block-start: calc(1lh / 2 - 1px);
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-spark, #1a6bb5);
+  background-image: none;
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid),
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li {
+  background: transparent;
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list):not(.project-spec-list):not(.project-feat-grid)
+  > li::before {
+  border-color: var(--blue-400);
+  background-color: var(--blue-400);
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul > li::before {
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--blue-400);
+}
+html.mh-dark :is(.project-detail-block)
+  ul.project-arch-list:not(.mh-tool-grid):not(.contains-task-list):not(.svc-list):not(.value-grid):not(.now-list):not(.process-list):not(.comment-list)
+  ul ul > li::before {
+  background: var(--blue-400);
+  background-image: none;
+  border: 0;
 }

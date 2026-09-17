@@ -6,7 +6,8 @@ What the 3.x Sage theme does, and where it lives.
 
 - Content `ul` and `.project-feat` markers are `1.2rem` circles (`border-radius: 50%`) filled with `--color-spark` (`#1a6bb5`), white check. Dark mode uses `--blue-400` on `--color-surface`.
 - Align to the first line (`1lh` offset or flex `align-items: flex-start` on feature tiles). Nested `ul ul` stays an open circle; `ul ul ul` stays a dash.
-- Do not put these markers on spec lists, architecture notes, GitHub stats, FAQs, or nav.
+- `.project-arch-list` uses the same circles and first-line alignment, with `border-bottom` hairlines and `background: transparent` (not `.project-feat` grey tiles). Nested architecture rows match circle/dash.
+- Do not put these markers on spec lists, GitHub stats, FAQs, or nav.
 
 ## Editor’s notes (3.6.13 project info headings)
 
@@ -27,7 +28,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.6.11 architecture list)
 
 - Architecture on `/projects/{slug}/` is `.project-arch-list` (`ul` / `li`), split by `mh_project_prose_list_items()`. Do not dump it as paragraphs again.
-- Dividers are `border-bottom` hairlines on `li:not(:last-child)`. Do not wrap the block in a silver card or add `box-shadow`.
+- Dividers are `border-bottom` hairlines on `li:not(:last-child)`. Round spark checkboxes match content lists. Rows stay `background: transparent` — not grey tiles. Do not wrap the block in a silver card or add `box-shadow`.
 
 ## Editor’s notes (3.6.10 list markers)
 
