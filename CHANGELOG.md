@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.6 — Project story heading space
+
+- Project “Who it is for” blocks sit in separate sections, so the global `p + h2` gap never ran. Stacks now use a 1.85rem gap, and each heading keeps space before its paragraph.
+- Body `h2`–`h5` use line-height 1.2 so labels are not crushed into the copy. Display `h1` stays tight.
+
 ## 3.6.5 — Pill width hugs labels
 
 - Hero kickers, page-header eyebrows, project spec badges, tech pills, and filter pills size to their text instead of stretching across a flex column.

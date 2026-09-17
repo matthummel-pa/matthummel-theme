@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.6 project story type)
+
+- `.concept-story` is a column with `gap`. Do not flatten those blocks into sibling `p + h2` without keeping the gap.
+- Content headings use line-height 1.2. Keep 0.98 on `h1` / `.display-title` only.
+
 ## Editor’s notes (3.6.5 pill width)
 
 - Hero and project pills use `width: fit-content` so flex-column parents do not stretch the chip. Do not set those chips to `width: 100%` or `align-items: stretch` without an explicit exception.
