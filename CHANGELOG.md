@@ -1,9 +1,14 @@
 # Changelog
 
+## 3.6.9 — Grey heroes and feature tiles
+
+- Heroes (home, page headers, post heroes) use a solid grey band again. No radial blobs or bottom rule.
+- Project “What is in this sample” items sit on grey tiles. Still no silver border or shadow.
+
 ## 3.6.8 — Whitespace content sections
 
-- Project facts, features, architecture, and metrics no longer sit in silver-bordered cards. Spacing separates them on white.
-- Page heroes and alt bands are white (no grey fill, no bottom rule, no radial blobs). Screenshots keep the photo; chrome shadows and gradients are off.
+- Project facts, architecture, and metrics no longer sit in silver-bordered cards. Spacing separates them on white.
+- Alt bands stay white. Screenshots keep the photo; chrome shadows and gradients are off.
 
 ## 3.6.7 — Project details under screenshots
 

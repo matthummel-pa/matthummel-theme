@@ -39,7 +39,7 @@
 
   --color-canvas: #ffffff;
   --color-bg: #ffffff;
-  --color-hero: #ffffff;
+  --color-hero: var(--gray-50);
   --color-surface: var(--gray-50);
   --color-border: var(--gray-200);
   --color-border-light: var(--gray-100);
@@ -590,7 +590,7 @@ body {
 .h-hero,
 .h-hero--simple {
   min-height: 0;
-  background: #fff;
+  background: var(--color-hero);
   padding-block: clamp(3.25rem, 8vh, 5.5rem);
 }
 .h-hero::before,
@@ -613,7 +613,7 @@ body {
   display: none;
 }
 .h-hero--accent {
-  background: #fff;
+  background: var(--color-hero);
 }
 .h-hero--simple .h-hero__inner {
   display: block;
@@ -873,7 +873,7 @@ body {
 /* ── 3.6.2 — Page heroes, project gallery, solid availability ── */
 .page-header,
 .post-hero {
-  background: #fff;
+  background: var(--color-hero);
   border-bottom: 0;
 }
 .page-header::before,
@@ -1058,10 +1058,10 @@ body {
 }
 .project-feat {
   margin: 0;
-  padding: 0 0 1rem;
-  background: transparent;
+  padding: .85rem 1rem;
+  background: var(--gray-50);
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius);
   box-shadow: none;
   font-size: .95rem;
   line-height: 1.5;
@@ -1193,9 +1193,13 @@ html.mh-dark .post-hero {
   background: #1c2430;
 }
 html.mh-dark .project-stage__info,
-html.mh-dark .project-feat,
 html.mh-dark .project-detail-block {
   background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+html.mh-dark .project-feat {
+  background: var(--color-surface);
   border: 0;
   box-shadow: none;
 }

@@ -2,10 +2,15 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.9 grey heroes / features)
+
+- Heroes use `--color-hero` (`--gray-50` in light, `#172233` in `html.mh-dark`). Do not force `#fff` on `.h-hero` / `.page-header`.
+- `.project-feat` keeps a grey fill. Do not add silver `border` / `box-shadow`.
+
 ## Editor’s notes (3.6.8 whitespace)
 
 - Content sections use padding/gap, not `border` + `box-shadow`. Do not wrap architecture / GitHub facts in a card again.
-- Heroes and `.pf-section--alt` stay white. Do not restore `#eceff1` bands or `page-header::before` gradients.
+- `.pf-section--alt` stays white. Do not restore `page-header::before` gradients.
 
 ## Editor’s notes (3.6.7 project column)
 
