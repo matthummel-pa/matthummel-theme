@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.24 — Footer social under Open for work
+
+- Social icons sit under the Open for work pill in the footer brand column, not in the bottom bar.
+- Open for work hover stays white on a darker green (`#14532d`). It does not pick up the site-wide blue hover.
+- Footer bottom is copyright, legal, and stack only.
+
 ## 3.6.23 — Shared On this page nav
 
 - Every multi-section page uses the same sticky **On this page** row (`partials/page-nav.blade.php`): label, hug-content pills, overflow arrows. Home, About, Work, Hire, Services, Code, Contact, Now, Journal, posts, projects, shop, products, legal, thank-you, search, archives, and cart/account.

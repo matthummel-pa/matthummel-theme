@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.24 footer social / green hover)
+
+- Footer social lives in `.footer-brand-social` under Open for work. Do not put `.soc-list` back in `.footer-bottom`.
+- Open for work hover is white on `#14532d`, never `--blue-400`. Keep it excluded from the last-win `a:hover` blue rule in `studio.css`.
+
 ## Editor’s notes (3.6.23 shared On this page)
 
 - Sticky jumper chrome is only `partials/page-nav.blade.php` (`.h-page-nav` + `page-nav-track` + `initSectionNav()`). Do not add a second TOC pattern (sidebar details, `.pf-product-toc`, About `<details>`).
@@ -29,7 +34,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.19 footer social / hover)
 
-- Footer social lives in `.footer-bottom-social`. Icon-only `.soc-link` has no circle and no hover background.
+- Footer social lives in `.footer-brand-social` (under Open for work). Icon-only `.soc-link` has no circle and no hover fill.
 - Follow / RSS is the last footer column (`footer-follow`), not the brand column.
 - Hover for `.btn` and `a` must change `color` (and keep `:focus-visible`). Do not restore filled social circles.
 
