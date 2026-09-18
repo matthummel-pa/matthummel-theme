@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.21 visible hover)
+
+- `--color-accent-hover` is `--blue-400` (`#4f8fd4`), not `--blue-700`. Do not set link/button hover back to navy (`#0a2446` / `#0d2e57`) — it fails as a perceivable state change.
+- Footer and site-wide `a:hover` / `.btn:hover` last-win lives at the end of `studio.css`. Exclude `.header-avail` / `.footer-avail` so Open for work stays green.
+
 ## Editor’s notes (3.6.20 on this page arrows)
 
 - Overflow on `.h-page-nav` / `.pf-product-toc` is driven by `partials/page-nav-track.blade.php` + `initPageNavTrack()` in `section-nav.js`. Do not restore a visible scrollbar or the About mobile `<details>` dropdown unless Matt asks.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.21 — Visible link and button hover
+
+- Hover and `:focus-visible` use bright blue (`--blue-400`, `#4f8fd4`) instead of a second navy. Navy-to-navy was not a real color change on footer links, Sign up / Copy RSS, or most text links.
+- Footer nav, legal links, stack links, social icons, and `.btn` all pick up the same hover. Availability pills stay green.
+
 ## 3.6.20 — On this page arrows
 
 - The sticky **On this page** row uses prev/next arrow buttons when the pills overflow. The native scrollbar is hidden. Swipe still works.

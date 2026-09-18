@@ -2401,3 +2401,76 @@ html.mh-dark a:hover:not(.btn):not(.soc-link),
 html.mh-dark a:focus-visible:not(.btn):not(.soc-link) {
   color: var(--blue-400);
 }
+
+/* ── 3.6.21 Visible hover (navy → navy was not perceivable) ─────────────── */
+:root {
+  --color-accent-hover: var(--blue-400);
+}
+a:hover:not(.btn):not(.header-avail):not(.footer-avail),
+a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail) {
+  color: var(--blue-400);
+}
+.site-footer a:hover:not(.btn),
+.site-footer a:focus-visible:not(.btn),
+.footer-nav a:hover,
+.footer-nav a:focus-visible,
+.footer-legal-links a:hover,
+.footer-legal-links a:focus-visible,
+.footer-stack a:hover,
+.footer-stack a:focus-visible,
+.footer-quick-links a:hover,
+.footer-quick-links a:focus-visible,
+.footer-brand-link:hover,
+.footer-brand-link:focus-visible,
+.footer-follow__note a:hover,
+.footer-follow__note a:focus-visible,
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible,
+.soc-link:hover,
+.soc-link:focus-visible {
+  color: var(--blue-400);
+  background: transparent;
+}
+.btn:hover:not(:disabled):not(.btn-ghost):not(.btn-on-dark),
+.btn:focus-visible:not(.btn-ghost):not(.btn-on-dark),
+.site-footer .btn:hover:not(:disabled),
+.site-footer .btn:focus-visible {
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: #fff;
+}
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  background: var(--blue-50);
+  color: var(--blue-400);
+  border-color: var(--blue-400);
+}
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  color: var(--blue-200);
+  border-color: var(--blue-200);
+}
+.header-avail:hover,
+.header-avail:focus-visible,
+.footer-avail:hover,
+.footer-avail:focus-visible {
+  background: #166534;
+  color: #fff;
+}
+.header-nav-list a:hover,
+.header-nav-list a:focus-visible {
+  color: var(--blue-400);
+}
+.header-nav-list .current-menu-item > a:hover,
+.header-nav-list a[aria-current="page"]:hover,
+.header-nav-list .current-menu-item > a:focus-visible,
+.header-nav-list a[aria-current="page"]:focus-visible {
+  background: var(--blue-400);
+  color: #fff;
+}
+html.mh-dark a:hover:not(.btn):not(.header-avail):not(.footer-avail),
+html.mh-dark a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail),
+html.mh-dark .site-footer a:hover:not(.btn),
+html.mh-dark .site-footer .soc-link:hover {
+  color: var(--blue-300);
+}
