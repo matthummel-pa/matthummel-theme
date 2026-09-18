@@ -39,7 +39,8 @@ export async function copyText(text) {
 }
 
 async function copyRss(button) {
-  const nearby = button.closest('.write-subscribe, .footer-follow, .journal-subscribe')?.querySelector('.write-rss-url')?.textContent?.trim();
+  const rssNode = button.closest('.write-subscribe, .footer-follow, .journal-subscribe')?.querySelector('.write-rss-url');
+  const nearby = (rssNode instanceof HTMLInputElement ? rssNode.value : rssNode?.textContent)?.trim();
   const url = button.getAttribute('data-rss') || nearby;
   if (!url) {
     return;

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.19 — Footer social, RSS, hover
+
+- Social icons sit in the bottom footer bar. No circle border or hover fill — the icon color changes on hover and focus.
+- The Follow / Copy RSS field sits in the old Elsewhere column. The URL field is a readonly input with a stronger border and a visible focus ring.
+- Buttons and text links change color on hover and `:focus-visible` (not motion-only).
+
 ## 3.6.18 — Split heroes, footer follow, RSS
 
 - Marketing page heroes (Projects, Journal, Hire, and the rest that already passed `split`) render the right-hand snapshot panel again. Glow/orbs stay off. The 2×2 hero stats grid is gone — chrome, title, and a link only.
