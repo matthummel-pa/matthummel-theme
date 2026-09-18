@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.33 — On this page bar padding
+
+- Desktop **On this page** row uses `1rem` top and bottom padding so pills sit with more air under the hero. Mobile stays `.7rem`.
+
 ## 3.6.32 — Full-width hero copy panel
 
 - The white hero panel spans the main content column (`container.wide` / `--page-max`), not a 42rem card.

@@ -2509,6 +2509,11 @@ html.mh-dark .h-hero-work__foot {
   padding-block: .7rem;
   min-width: 0;
 }
+@media (min-width: 901px) {
+  .h-page-nav__inner {
+    padding-block: 1rem;
+  }
+}
 .h-page-nav__label {
   margin: 0;
   font: 700 .72rem/1 var(--font-display);
@@ -13099,13 +13104,18 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   flex-wrap: nowrap;
   align-items: center;
   gap: .65rem 1rem;
-  padding: .75rem 0;
+  padding: .7rem 0;
   margin: 0;
   border-block: 1px solid var(--color-border);
   background: color-mix(in srgb, #fff 88%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   min-width: 0;
+}
+@media (min-width: 901px) {
+  .pf-product-toc {
+    padding-block: 1rem;
+  }
 }
 .admin-bar .pf-product-toc {
   top: calc(var(--header-h, 4.5rem) + 32px);
