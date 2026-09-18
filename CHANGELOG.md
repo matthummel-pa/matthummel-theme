@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.15 — Tight kicker to heading
+
+- Eyebrows / section labels sit closer to the heading they introduce (home **Projects** / **Selected projects.**, page heroes, About). Gap is `.28rem` instead of `1rem`–`1.35rem`. Intro copy under the heading is unchanged.
+
 ## 3.6.14 — Round blue list checkboxes
 
 - Content and project-feature `ul` markers are round blue circles (`--color-spark` / `--blue-400` in dark), slightly larger, and aligned to the first line of text.

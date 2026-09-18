@@ -2094,3 +2094,34 @@ html.mh-dark :is(.project-detail-block)
   background-image: none;
   border: 0;
 }
+
+/* ── 3.6.15 — Tight kicker → heading (Projects / Selected projects, heroes) ── */
+.eyebrow,
+.h-section-label,
+.h-section__label,
+.h-about-who__label,
+.h-hero__kicker,
+.now-block__eyebrow,
+.pf-product-hero__eyebrow,
+.pf-section-head .eyebrow,
+.about-hero__copy .eyebrow,
+.about-story__copy > .eyebrow,
+.legal-prose > .eyebrow,
+.a11y-prose > .eyebrow,
+.code-gh-block__copy .eyebrow,
+.pf-story-col .eyebrow,
+.pf-purchase-copy .eyebrow,
+.pf-faq-aside .eyebrow,
+.pf-hire-nudge__copy .eyebrow {
+  margin-bottom: .28rem;
+}
+
+.about-hero__copy .display-title.is-hero {
+  margin-top: 0;
+}
+
+.eyebrow + :where(h1, h2, h3, h4),
+.h-section-label + :where(h1, h2, h3),
+.h-hero__kicker + :where(h1, .h-hero__name) {
+  margin-top: 0;
+}
