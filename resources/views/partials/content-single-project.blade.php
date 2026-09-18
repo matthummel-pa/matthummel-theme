@@ -56,8 +56,10 @@
     <p class="project-hero-crumb">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
     </p>
-    @include('partials.project-type-row', ['p' => $card])
-    <h1 class="display-title is-hero">{{ $title }}</h1>
+    <div class="project-hero-head">
+      @include('partials.project-type-row', ['p' => $card])
+      <h1 class="display-title is-hero">{{ $title }}</h1>
+    </div>
     @if (! empty($case['notice']))
       <p class="concept-spec-banner" role="note">{{ $case['notice'] }}</p>
     @endif
@@ -179,7 +181,7 @@
         @endif
         <p class="project-stage__note" role="note">
           <span class="project-stage__note-kicker">{{ __('Note', 'sage') }}</span>
-          <span>{{ __('Sample project. Not a client site.', 'sage') }}</span>
+          <span class="project-stage__note-text">{{ __('Sample project. Not a client site.', 'sage') }}</span>
         </p>
       @endif
     </div>

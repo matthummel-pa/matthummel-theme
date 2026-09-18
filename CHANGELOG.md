@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.26 — Project header pills, note, journal cats
+
+- Project heroes group type + industry/place pills with the title. Combined `Themes · Real estate` strings split; type-plural cats (`Themes` next to `Theme`) stay hidden.
+- Theme details no longer repeat Type/Place as plain text. Those live only in the header pills.
+- Sample-project note under screenshots is a blue-tinted callout with a **Note** pill.
+- Journal cards put unique category pills on the date/meta row (Uncategorized skipped).
+
 ## 3.6.25 — Project type pills and sample note
 
 - Project headers use a Projects crumb, then type + category + place pills, then the title. Plain-text `Themes · Real estate` is gone.

@@ -370,6 +370,67 @@ function mh_spec_badge_label(array $project = []): string
     return __('Demo', 'sage');
 }
 
+/**
+ * Whether a catalog category is only the product type (Theme / Themes).
+ */
+function mh_project_label_is_type_duplicate(string $type, string $cat): bool
+{
+    $typeNorm = strtolower(trim($type));
+    $catNorm = strtolower(trim($cat));
+    if ($typeNorm === '' || $catNorm === '') {
+        return false;
+    }
+    if ($catNorm === $typeNorm || $catNorm === $typeNorm.'s') {
+        return true;
+    }
+    $typeStem = rtrim($typeNorm, 's');
+    $catStem = rtrim($catNorm, 's');
+
+    return $typeStem !== '' && $typeStem === $catStem;
+}
+
+/**
+ * Type, industry, and place labels for the shared pill row.
+ *
+ * Splits leftover combined strings such as "Themes · Real estate" and skips
+ * category text that only repeats the type badge.
+ *
+ * @param  array<string, mixed>  $project
+ * @return array{type: string, cat: string, place: string}
+ */
+function mh_project_type_row_labels(array $project = []): array
+{
+    $type = mh_spec_badge_label($project);
+    $cat = trim((string) ($project['cat'] ?? ''));
+    $place = trim((string) ($project['place'] ?? ''));
+
+    if ($cat !== '' && preg_match('/[·|]/u', $cat) === 1) {
+        $parts = preg_split('/\s*[·|]\s*/u', $cat) ?: [];
+        $parts = array_values(array_filter(array_map('trim', $parts), static fn ($part) => $part !== ''));
+        if ($parts !== []) {
+            $cat = (string) $parts[0];
+            $rest = implode(' · ', array_slice($parts, 1));
+            if ($place === '' && $rest !== '') {
+                $place = $rest;
+            }
+        }
+    }
+
+    if ($type !== '' && $cat !== '' && mh_project_label_is_type_duplicate($type, $cat)) {
+        $cat = '';
+    }
+
+    if ($cat !== '' && $place !== '' && strcasecmp($cat, $place) === 0) {
+        $cat = '';
+    }
+
+    return [
+        'type' => $type,
+        'cat' => $cat,
+        'place' => $place,
+    ];
+}
+
 /** Featured repos plus recent public GitHub work (forks and the profile repo skipped). */
 function mh_home_github_repos(int $limit = 6): array
 {

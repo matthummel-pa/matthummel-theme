@@ -1,16 +1,9 @@
-{{-- Type pill next to category / place pills. No plain-text cat line. --}}
+{{-- Type pill next to industry / place. No plain-text cat · place line. --}}
 @php
-  $project = $p ?? [];
-  $typeLabel = \App\mh_spec_badge_label($project);
-  $catLabel = trim((string) ($project['cat'] ?? $cat ?? ''));
-  $placeLabel = trim((string) ($project['place'] ?? $place ?? ''));
-  if ($typeLabel !== '' && $catLabel !== '') {
-    $typeNorm = strtolower($typeLabel);
-    $catNorm = strtolower($catLabel);
-    if ($catNorm === $typeNorm || $catNorm === $typeNorm.'s' || rtrim($catNorm, 's') === rtrim($typeNorm, 's')) {
-      $catLabel = '';
-    }
-  }
+  $row = \App\mh_project_type_row_labels($p ?? []);
+  $typeLabel = (string) ($row['type'] ?? '');
+  $catLabel = (string) ($row['cat'] ?? '');
+  $placeLabel = (string) ($row['place'] ?? '');
 @endphp
 @if ($typeLabel !== '' || $catLabel !== '' || $placeLabel !== '')
   <p class="project-type-row">
