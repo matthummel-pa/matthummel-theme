@@ -92,21 +92,11 @@
     </a>
   </div>
   @slot('aside')
-    @php
-      $postCount = (int) wp_count_posts('post')->publish;
-      $catCount = count(get_categories(['hide_empty' => true]));
-    @endphp
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/blog',
       'icon' => 'pen',
       'title' => __('Writing', 'sage'),
       'meta' => __('Code-friendly notes', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n($postCount), 'label' => __('Published posts', 'sage')],
-        ['value' => number_format_i18n(max(1, $catCount)), 'label' => __('Topics', 'sage')],
-        ['value' => 'RSS', 'label' => __('Calm follow', 'sage')],
-        ['value' => __('Open', 'sage'), 'label' => __('Fork the code', 'sage')],
-      ],
       'link' => [
         'label' => __('RSS feed', 'sage'),
         'href' => $rssUrl,
@@ -163,26 +153,7 @@
     </div>
   @endif
 
-  {{-- Subscribe / RSS --}}
-  <div class="journal-subscribe">
-    <div class="journal-subscribe__copy">
-      <h2>{{ \App\field('write_subscribe_h2', __('Get new posts by RSS.', 'sage'), $writeId) }}</h2>
-      <p>{{ \App\field('write_subscribe_lede', __('No email list. Paste the feed URL into Feedly, NetNewsWire, or any reader you already use — posts land there as they publish.', 'sage'), $writeId) }}</p>
-    </div>
-    <div class="journal-subscribe__rss">
-      <a class="journal-rss-btn" href="{{ esc_url($rssUrl) }}" rel="alternate" type="application/rss+xml" aria-label="{{ __('Subscribe to RSS feed', 'sage') }}">
-        {!! \App\mh_svg_icon('rss', 20) !!}
-        <span>
-          <strong>{{ __('RSS feed', 'sage') }}</strong>
-          <small>{{ esc_url($rssUrl) }}</small>
-        </span>
-      </a>
-      <p class="journal-subscribe__note">
-        {!! \App\mh_svg_icon('book-open', 13) !!}
-        {{ __('Works in Feedly, NetNewsWire, Reeder, Inoreader, and any Atom-compatible reader.', 'sage') }}
-      </p>
-    </div>
-  </div>
+  @include('partials.write-subscribe', compact('writeId'))
 
   {{-- DEV.to mirror --}}
   @if ($devto)

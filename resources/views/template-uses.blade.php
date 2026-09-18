@@ -101,12 +101,6 @@
       'icon' => 'code',
       'title' => __('Daily stack', 'sage'),
       'meta' => __('Sage · PHP · Tailwind', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($sections)), 'label' => __('Categories', 'sage')],
-        ['value' => number_format_i18n($toolCount), 'label' => __('Tools listed', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Primary platform', 'sage')],
-        ['value' => 'Vite', 'label' => __('Asset pipeline', 'sage')],
-      ],
       'link' => [
         'label' => __('Hire me', 'sage'),
         'href' => home_url('/hire/'),

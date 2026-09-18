@@ -34,12 +34,6 @@
       'status' => \App\mh_is_hireable($gh)
         ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
         : null,
-      'stats' => [
-        ['value' => __('Studio', 'sage'), 'label' => __('Concept sites', 'sage')],
-        ['value' => __('Journal', 'sage'), 'label' => __('Writing', 'sage')],
-        ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-      ],
       'link' => [
         'label' => __('See the work', 'sage'),
         'href' => \App\mh_work_listing_url(),

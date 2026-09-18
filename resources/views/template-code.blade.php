@@ -65,25 +65,6 @@
       'status' => \App\mh_is_hireable($profile)
         ? ['label' => \App\mh_availability_label($profile, __('Open', 'sage')), 'gh' => $profile]
         : null,
-      'stats' => array_values(array_filter([
-        ! empty($profile['public_repos'])
-          ? ['value' => number_format_i18n((int) $profile['public_repos']), 'label' => __('Public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
-          : null,
-        $followerCount > 0
-          ? ['value' => number_format_i18n($followerCount), 'label' => __('Followers', 'sage'), 'href' => $ghUrl.'?tab=followers', 'external' => true]
-          : null,
-        $starTotal > 0
-          ? ['value' => number_format_i18n($starTotal), 'label' => __('Stars earned', 'sage'), 'href' => '#gh-community']
-          : null,
-        count($ghBadges) > 0
-          ? ['value' => number_format_i18n(count($ghBadges)), 'label' => __('Badges earned', 'sage'), 'href' => '#gh-community']
-          : null,
-        $yearTotal > 0
-          ? ['value' => number_format_i18n($yearTotal), 'label' => __('Contributions (year)', 'sage')]
-          : null,
-        ['value' => number_format_i18n(count($repos)), 'label' => __('Featured repos', 'sage')],
-        ['value' => number_format_i18n(count($practiceGroups)), 'label' => __('Practice areas', 'sage')],
-      ])),
       'link' => [
         'label' => __('Open GitHub profile', 'sage'),
         'href' => $ghUrl,

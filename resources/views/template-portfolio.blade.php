@@ -43,12 +43,6 @@
       'icon'   => 'github',
       'title'  => __('Public repos', 'sage'),
       'meta'   => __('WordPress, PHP, React, TypeScript', 'sage'),
-      'stats'  => [
-        ['value' => $totalRepos > 0 ? number_format_i18n($totalRepos) : count($featured) + count($live), 'label' => __('Public repos', 'sage')],
-        ['value' => $followers > 0 ? number_format_i18n($followers) : '—', 'label' => __('Followers', 'sage')],
-        ['value' => $ghStars > 0 ? number_format_i18n($ghStars) : '—', 'label' => __('Stars earned', 'sage')],
-        ['value' => 'PHP · JS', 'label' => __('Primary languages', 'sage')],
-      ],
       'link' => ['label' => __('Open GitHub', 'sage'), 'href' => $ghUrl],
     ])
   @endslot

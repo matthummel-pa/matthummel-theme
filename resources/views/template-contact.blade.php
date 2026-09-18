@@ -41,12 +41,6 @@
       'status' => \App\mh_is_hireable($gh)
         ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
         : null,
-      'stats' => [
-        ['value' => '1–2 days', 'label' => __('Typical reply', 'sage')],
-        ['value' => __('Eastern', 'sage'), 'label' => __('Time zone', 'sage')],
-        ['value' => __('Form', 'sage'), 'label' => __('Primary channel', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-      ],
       'link' => [
         'label' => __('See hire details', 'sage'),
         'href' => home_url('/hire/'),

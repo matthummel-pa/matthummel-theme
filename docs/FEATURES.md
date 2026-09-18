@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.18 split heroes / RSS)
+
+- `partials/page-hero.blade.php` must honor `$split` and `$aside`. Templates already pass those; do not drop the aside slot again.
+- `partials/hero-panel.blade.php` is chrome + title/meta + optional status/link. Do not put a 2×2 stats grid back in the hero.
+- Footer Follow copy is chrome (`No email list…`). Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
+
 ## Editor’s notes (3.6.17 kicker gap)
 
 - Kicker → heading is `margin-top: 12px` in `studio.css`. Do not restore `-0.22em` flush or the `1.85em` mid-flow `p + h2` on `.h-section-label`.
