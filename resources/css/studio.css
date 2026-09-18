@@ -2147,7 +2147,7 @@ p.h-section-label + h2.h-glance__title,
 .h-hero-illu__card {
   border: 0 !important;
   box-shadow: none !important;
-  background: var(--gray-50);
+  background: var(--white);
 }
 .h-hero-illu__chrome {
   background: transparent;
@@ -2172,7 +2172,7 @@ p.h-section-label + h2.h-glance__title,
   margin: 0;
   padding: .75rem .85rem;
   min-height: 0;
-  background: var(--white);
+  background: var(--gray-50);
   border: 0;
   border-radius: var(--radius);
   box-shadow: none;
@@ -2223,6 +2223,8 @@ p.h-section-label + h2.h-glance__title,
   min-width: 0;
   padding: .45rem .6rem;
   font-size: .75rem;
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 .footer-follow .btn {
   flex: 0 0 auto;
@@ -2235,5 +2237,5 @@ html.mh-dark .journal-subscribe {
 }
 html.mh-dark .h-hero-illu__stat,
 html.mh-dark .write-rss-url {
-  background: var(--color-bg);
+  background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
 }
