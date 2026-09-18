@@ -92,21 +92,11 @@
     </a>
   </div>
   @slot('aside')
-    @php
-      $postCount = (int) wp_count_posts('post')->publish;
-      $catCount = count(get_categories(['hide_empty' => true]));
-    @endphp
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/blog',
       'icon' => 'pen',
       'title' => __('Writing', 'sage'),
       'meta' => __('Code-friendly notes', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n($postCount), 'label' => __('Published posts', 'sage')],
-        ['value' => number_format_i18n(max(1, $catCount)), 'label' => __('Topics', 'sage')],
-        ['value' => 'RSS', 'label' => __('Calm follow', 'sage')],
-        ['value' => __('Open', 'sage'), 'label' => __('Fork the code', 'sage')],
-      ],
       'link' => [
         'label' => __('RSS feed', 'sage'),
         'href' => $rssUrl,

@@ -111,12 +111,6 @@
       'icon'   => 'briefcase',
       'title'  => __('Studio concepts', 'sage'),
       'meta'   => __('Demos · stack · hire', 'sage'),
-      'stats'  => [
-        ['value' => number_format_i18n($productCount), 'label' => __('Concepts', 'sage')],
-        ['value' => number_format_i18n($themeCount), 'label' => __('Themes', 'sage')],
-        ['value' => number_format_i18n($pluginCount), 'label' => __('Plugins', 'sage')],
-        ['value' => 'GitHub', 'label' => __('Source public', 'sage')],
-      ],
       'link' => [
         'label' => __('Browse GitHub', 'sage'),
         'href'  => home_url('/code/'),

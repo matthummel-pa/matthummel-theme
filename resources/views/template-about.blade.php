@@ -43,14 +43,9 @@
   @slot('aside')
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/about',
-      'stats' => array_values(array_filter([
-        ['value' => $yearsBuilding.'+', 'label' => __('years in-house web', 'sage')],
-        ! empty($gh['public_repos'])
-          ? ['value' => number_format_i18n((int) $gh['public_repos']), 'label' => __('public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
-          : null,
-        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress specialist', 'sage')],
-        ['value' => __('EST', 'sage'), 'label' => __('Remote / on-site', 'sage')],
-      ])),
+      'icon' => 'user',
+      'title' => __('Matt Hummel', 'sage'),
+      'meta' => __('WordPress · full stack', 'sage'),
       'link' => [
         'label' => __('View GitHub', 'sage'),
         'href' => $ghUrl,

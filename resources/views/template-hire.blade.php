@@ -78,12 +78,6 @@
       'status' => (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
         ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
         : null,
-      'stats' => [
-        ['value' => number_format_i18n($roleCount), 'label' => __('Roles on resume', 'sage')],
-        ['value' => number_format_i18n(count($skills)), 'label' => __('Skills listed', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress focus', 'sage')],
-      ],
       'link' => [
         'label' => __('View LinkedIn', 'sage'),
         'href' => $liUrl,

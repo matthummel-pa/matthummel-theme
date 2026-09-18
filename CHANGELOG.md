@@ -2,7 +2,7 @@
 
 ## 3.6.18 — Split heroes, footer follow, RSS
 
-- Marketing page heroes (Projects, Journal, Hire, and the rest that already passed `split`) render the right-hand snapshot panel again. Stats sit in grey tiles. Glow/orbs stay off.
+- Marketing page heroes (Projects, Journal, Hire, and the rest that already passed `split`) render the right-hand snapshot panel again. Glow/orbs stay off. The 2×2 hero stats grid is gone — chrome, title, and a link only.
 - Footer brand column adds a Follow / Copy RSS strip. No email list.
 - Journal uses the same RSS subscribe block as topic archives (copy URL + open feed) on a grey tile, no silver frame.
 

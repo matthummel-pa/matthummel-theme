@@ -27,12 +27,6 @@
       'icon' => 'wordpress',
       'title' => __('HTML documentation', 'sage'),
       'meta' => __('Open in browser · same as pack', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($products)), 'label' => __('Products', 'sage')],
-        ['value' => __('HTML', 'sage'), 'label' => __('Viewable guides', 'sage')],
-        ['value' => __('GitHub', 'sage'), 'label' => __('Source docs', 'sage')],
-        ['value' => __('GPL', 'sage'), 'label' => __('Theme license', 'sage')],
-      ],
       'link' => [
         'label' => __('Open Acreline hub', 'sage'),
         'href' => \App\mh_product_html_docs_hub_url('acreline'),

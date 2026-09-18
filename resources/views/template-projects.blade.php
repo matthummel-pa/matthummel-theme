@@ -51,12 +51,6 @@
       'icon' => 'briefcase',
       'title' => __('Sample work', 'sage'),
       'meta' => __('Live demos and public code', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n($total), 'label' => __('Projects', 'sage')],
-        ['value' => __('Live', 'sage'), 'label' => __('Clickable demos', 'sage')],
-        ['value' => 'GitHub', 'label' => __('Public code', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Themes and plugins', 'sage')],
-      ],
       'link' => [
         'label' => \App\mh_projects_listing_default('hero_cta_primary'),
         'href' => home_url('/contact/'),

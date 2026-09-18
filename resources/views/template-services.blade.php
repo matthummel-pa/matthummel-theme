@@ -45,12 +45,6 @@
       'icon' => 'briefcase',
       'title' => __('What I take on', 'sage'),
       'meta' => __('Shops · agencies · roles', 'sage'),
-      'stats' => [
-        ['value' => __('WordPress', 'sage'), 'label' => __('Specialty', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-        ['value' => __('Written', 'sage'), 'label' => __('Scope first', 'sage')],
-        ['value' => __('1 day', 'sage'), 'label' => __('Typical reply', 'sage')],
-      ],
       'link' => [
         'label' => __('Hire page', 'sage'),
         'href' => home_url('/hire/'),

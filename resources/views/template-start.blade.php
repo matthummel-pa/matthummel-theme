@@ -53,12 +53,6 @@
       'icon' => 'briefcase',
       'title' => __('Discovery brief', 'sage'),
       'meta' => __('Four steps · one form', 'sage'),
-      'stats' => [
-        ['value' => '4', 'label' => __('Short steps', 'sage')],
-        ['value' => __('Scope', 'sage'), 'label' => __('Before any build', 'sage')],
-        ['value' => '1', 'label' => __('Business day reply', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('Or on-site', 'sage')],
-      ],
       'link' => [
         'label' => __('Prefer a short note?', 'sage'),
         'href' => home_url('/contact/'),

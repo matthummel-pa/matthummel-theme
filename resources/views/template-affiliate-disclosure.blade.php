@@ -15,12 +15,6 @@
         'icon' => 'globe',
         'title' => __('Honest labels', 'sage'),
         'meta' => __('Portfolio first', 'sage'),
-        'stats' => [
-          ['value' => __('Uses', 'sage'), 'label' => __('Tool recommendations', 'sage')],
-          ['value' => __('Resources', 'sage'), 'label' => __('Starters & themes', 'sage')],
-          ['value' => __('Marked', 'sage'), 'label' => __('Affiliate links', 'sage')],
-          ['value' => __('Hire', 'sage'), 'label' => __('Primary offer', 'sage')],
-        ],
         'link' => [
           'label' => __('See resources', 'sage'),
           'href' => home_url('/resources/'),

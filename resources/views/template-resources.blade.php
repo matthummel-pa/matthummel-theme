@@ -37,12 +37,6 @@
       'icon' => 'globe',
       'title' => __('Resource catalog', 'sage'),
       'meta' => __('Starters · themes · tools', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($sections)), 'label' => __('Sections', 'sage')],
-        ['value' => number_format_i18n($resourceCount), 'label' => __('Listed items', 'sage')],
-        ['value' => __('Open code', 'sage'), 'label' => __('Free starters', 'sage')],
-        ['value' => $hasAffiliate ? __('Disclosed', 'sage') : __('None', 'sage'), 'label' => __('Affiliate links', 'sage')],
-      ],
       'link' => [
         'label' => __('View code', 'sage'),
         'href' => home_url('/code/'),
