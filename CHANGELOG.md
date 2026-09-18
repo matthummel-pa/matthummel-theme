@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.28 — Footer copyright centered on mobile
+
+- The bottom footer bar (copyright, legal links, Built with) stacks and centers on small screens. Desktop still spreads left / center / right.
+
 ## 3.6.27 — Heading scale above body copy
 
 - `h2`–`h6` use a stepped type scale (`--type-h2` through `--type-h6`) so section titles no longer match paragraph size.

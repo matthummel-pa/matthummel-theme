@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.28 footer bottom on mobile)
+
+- Last-win in `studio.css`: `.footer-bottom` is a column with `align-items: center` under 860px. Do not leave `justify-content: space-between` on that breakpoint.
+
 ## Editor’s notes (3.6.27 heading scale)
 
 - Body stays `--type-body`. Content headings use `--type-h2` … `--type-h6` in `portfolio.css` (`:root`) plus last-win in `studio.css`. Do not set content `h2` back to `clamp(1.15rem, 2vw, 1.35rem)`.
