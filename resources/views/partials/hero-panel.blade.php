@@ -24,7 +24,7 @@
     @if ($image !== '')
       <img
         class="h-hero-illu__photo{{ $imageClass !== '' ? ' '.$imageClass : '' }}"
-        src="{{ esc_url($image) }}"
+        src="{!! esc_url($image) !!}"
         alt="{{ esc_attr($imageAlt) }}"
         width="480"
         height="360"
