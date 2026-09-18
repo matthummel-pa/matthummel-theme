@@ -2578,7 +2578,22 @@ html.mh-dark .site-footer .soc-link:hover {
   min-height: 40px;
 }
 .footer-bottom {
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .65rem 1.75rem;
+}
+.footer-bottom .footer-copy {
+  flex: 0 0 auto;
+}
+.footer-bottom .footer-legal-links {
+  flex: 1 1 12rem;
+  justify-content: center;
+}
+.footer-bottom .footer-stack {
+  flex: 0 1 20rem;
+  text-align: right;
 }
 @media (max-width: 860px) {
   .footer-inner .footer-brand-col {
