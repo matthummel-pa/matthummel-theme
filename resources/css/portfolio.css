@@ -126,8 +126,8 @@ h1 { line-height: 0.98; }
 h2, h3, h4, h5 { line-height: 1.2; }
 h3, h4 { letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
 
-/* Mid-flow headings (not eyebrow → title pairs in page chrome). */
-:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
+/* Mid-flow headings (not kicker → title pairs in page chrome). */
+:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.h-section-label):not(.h-section__label):not(.h-hero__kicker):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
 :where(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-image, .wp-block-code, .wp-block-preformatted) + :where(h2, h3, h4) {
   margin-top: 1.85em;
 }

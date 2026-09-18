@@ -4,8 +4,9 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.15 kicker → heading)
 
-- Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. `.h-section-label + .h-section__title` uses `margin-top: -0.22em` so **Projects** hugs **Selected projects.** Do not restore the 3.5.7 `1.35rem` kicker gap.
-- Keep heading → lede spacing (`.lead`, `.h-work-intro`). This pass is only kicker → title. Do not tighten `.h-about-who__label` (that label sits above a list, not a heading).
+- Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. Large section titles pull up `-0.22em`.
+- Mid-flow `p + h2` (`1.85em`) must exclude `.h-section-label` / `.h-hero__kicker` / `.eyebrow` or **Projects** / **Selected projects.** gets a full heading gap. Do not restore that on kickers.
+- Keep heading → lede spacing (`.lead`, `.h-work-intro`). Do not tighten `.h-about-who__label` (list, not a heading).
 
 ## Editor’s notes (3.6.14 list checkboxes)
 
