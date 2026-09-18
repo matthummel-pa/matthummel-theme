@@ -2185,6 +2185,7 @@ p.h-section-label + h2.h-glance__title,
 .footer-follow {
   margin-top: 0;
   max-width: none;
+  align-self: start;
 }
 .footer-follow .footer-nav-label {
   margin-bottom: .45rem;
@@ -2202,14 +2203,21 @@ p.h-section-label + h2.h-glance__title,
   align-items: stretch;
 }
 .footer-follow .write-rss-url {
+  flex: none;
   width: 100%;
-  min-height: 3.4rem;
+  min-height: 2.75rem;
+  max-height: 4.75rem;
+  height: 4.75rem;
   resize: none;
   padding: .55rem .7rem;
   font-size: .78rem;
   line-height: 1.4;
   overflow-wrap: anywhere;
-  word-break: break-all;
+  word-break: normal;
+  overflow-y: auto;
+  border: 2px solid var(--gray-500);
+  background: var(--white);
+  color: var(--color-text);
 }
 .footer-follow .btn {
   width: fit-content;
