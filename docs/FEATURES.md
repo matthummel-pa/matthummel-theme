@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.34 page hero padding)
+
+- `.page-header--photo` padding-block is `clamp(3.75rem, 9vh, 6rem) 6.25rem`. Home `.h-hero--viewport` is `clamp(5.25rem, 11vh, 7.25rem) 6.25rem`. Bottom stays above the wave (`clamp(3.4rem, 8vw, 5.75rem)`). Do not drop back to `4.5rem` bottom.
+
 ## Editor’s notes (3.6.33 On this page padding)
 
 - `.h-page-nav__inner` is `.7rem` padding-block by default, `1rem` from `901px` up. Do not match the header’s `1rem` on small screens — the jumper is sticky there and should stay compact.

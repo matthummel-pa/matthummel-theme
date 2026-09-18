@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.34 — Page hero vertical padding
+
+- Photo page heroes use more top and bottom padding so the white copy panel sits farther from the header and the wave. Home viewport heroes match.
+
 ## 3.6.33 — On this page bar padding
 
 - Desktop **On this page** row uses `1rem` top and bottom padding so pills sit with more air under the hero. Mobile stays `.7rem`.
