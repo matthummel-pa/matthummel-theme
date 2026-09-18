@@ -203,7 +203,7 @@ img { max-width: 100%; display: block; }
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin: 0 0 .28rem;
+  margin: 0;
 }
 .eyebrow--on-dark { color: #93c5fd; }
 
@@ -949,7 +949,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   max-width: 100%;
   flex: 0 0 auto;
   align-self: flex-start;
-  margin: 0 0 .28rem;
+  margin: 0;
   font: 700 .73rem/1 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -1496,7 +1496,7 @@ html.mh-dark .h-hero-work__foot {
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin: 0 0 .28rem;
+  margin: 0;
 }
 .h-section-label::before {
   content: "";
@@ -15197,7 +15197,7 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
 .h-hero__kicker {
   font: 800 .82rem/1 var(--font-display);
   letter-spacing: .14em;
-  margin-bottom: .28rem;
+  margin-bottom: 0;
 }
 .h-hero__actions { gap: 1rem 1.5rem; }
 .h-hero__trust { margin-top: 1.75rem; gap: .65rem 1.75rem; }

@@ -2095,11 +2095,11 @@ html.mh-dark :is(.project-detail-block)
   border: 0;
 }
 
-/* ── 3.6.15 — Tight kicker → heading (Projects / Selected projects, heroes) ── */
+/* ── 3.6.15 — Tight kicker → heading (Projects / Selected projects, and the rest) ── */
 .eyebrow,
+.page-header .eyebrow,
 .h-section-label,
 .h-section__label,
-.h-about-who__label,
 .h-hero__kicker,
 .now-block__eyebrow,
 .pf-product-hero__eyebrow,
@@ -2113,15 +2113,36 @@ html.mh-dark :is(.project-detail-block)
 .pf-purchase-copy .eyebrow,
 .pf-faq-aside .eyebrow,
 .pf-hire-nudge__copy .eyebrow {
-  margin-bottom: .28rem;
+  margin-bottom: 0;
+}
+
+.h-section-label,
+.h-section__label {
+  align-items: flex-end;
+  line-height: 1;
 }
 
 .about-hero__copy .display-title.is-hero {
   margin-top: 0;
 }
 
+/* Pull display titles up into leftover font leading so the kicker hugs the cap-height. */
 .eyebrow + :where(h1, h2, h3, h4),
+.eyebrow + .display-title,
+.h-hero__kicker + :where(h1, .h-hero__name),
 .h-section-label + :where(h1, h2, h3),
-.h-hero__kicker + :where(h1, .h-hero__name) {
+.h-section-label + .h-section__title,
+.h-section-label + .h-glance__title {
   margin-top: 0;
+}
+
+.h-section-label + .h-section__title {
+  margin-top: -0.22em;
+}
+
+.h-section-label + .h-glance__title,
+.eyebrow + .display-title.is-hero,
+.eyebrow + .display-title.is-section,
+.h-hero__kicker + .h-hero__name {
+  margin-top: -0.08em;
 }

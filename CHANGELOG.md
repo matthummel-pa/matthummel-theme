@@ -2,7 +2,7 @@
 
 ## 3.6.15 — Tight kicker to heading
 
-- Eyebrows / section labels sit closer to the heading they introduce (home **Projects** / **Selected projects.**, page heroes, About). Gap is `.28rem` instead of `1rem`–`1.35rem`. Intro copy under the heading is unchanged.
+- Eyebrows / section labels hug the heading they introduce (home **Projects** / **Selected projects.**, Journal, Services, glance, page heroes, About). Kicker `margin-bottom` is `0`; large section titles pull up `-0.22em` to eat font leading. Intro copy under the heading is unchanged.
 
 ## 3.6.14 — Round blue list checkboxes
 
