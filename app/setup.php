@@ -161,3 +161,47 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+/**
+ * Local hostnames that may override home/siteurl. Never includes production.
+ *
+ * @return list<string>
+ */
+function mh_local_dev_hosts(): array
+{
+    return [
+        'matthummel-theme.local',
+        'localhost',
+        '127.0.0.1',
+    ];
+}
+
+/**
+ * Public URL for this request when it is a local-dev host, otherwise null.
+ */
+function mh_local_dev_public_url(): ?string
+{
+    $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+    if ($host === '') {
+        return null;
+    }
+
+    $name = explode(':', $host, 2)[0];
+    if (! in_array($name, mh_local_dev_hosts(), true)) {
+        return null;
+    }
+
+    $https = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || ((string) ($_SERVER['SERVER_PORT'] ?? '') === '443');
+    $scheme = $https ? 'https' : 'http';
+
+    return $scheme.'://'.$host;
+}
+
+add_filter('option_home', function ($value) {
+    return mh_local_dev_public_url() ?? $value;
+});
+
+add_filter('option_siteurl', function ($value) {
+    return mh_local_dev_public_url() ?? $value;
+});

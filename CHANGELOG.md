@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.16 — Local hostname
+
+- Local WordPress accepts `matthummel-theme.local` as well as `localhost` / `127.0.0.1` (home/siteurl follow the request host). Production hosts are unchanged.
+
 ## 3.6.15 — Tight kicker to heading
 
 - Eyebrows / section labels hug the heading they introduce (home **Projects** / **Selected projects.**, Journal, Services, glance, page heroes). Kickers are excluded from the mid-flow `p + h2` `1.85em` gap. Intro copy under the heading is unchanged.

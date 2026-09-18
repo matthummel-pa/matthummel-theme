@@ -55,9 +55,13 @@ cd ~/wp-site && wp theme activate matthummel
 cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
 ```
 
-Site: `http://localhost:8080`. Admin: `http://localhost:8080/wp-admin`
-(user `admin`, password `password`). Acreline, when present, is
-`~/wp-acreline-site` on port **8081**. Bind `wp server` to `0.0.0.0`, not
+Preferred local URL: `http://matthummel-theme.local:8080` (add
+`127.0.0.1 matthummel-theme.local` to `/etc/hosts` on the machine that
+resolves the name). `http://localhost:8080` and `http://127.0.0.1:8080`
+still work. Cloud Simple Browser uses the forwarded port (`127.0.0.1:8080`)
+unless that hostname is in the client hosts file. PHP `wp server` is HTTP,
+not Herd HTTPS on `:443`. Admin: `admin` / `password`. Acreline, when present,
+is `~/wp-acreline-site` on port **8081**. Bind `wp server` to `0.0.0.0`, not
 `127.0.0.1` only.
 
 Cloud Simple Browser is isolated from VM localhost. Declaring

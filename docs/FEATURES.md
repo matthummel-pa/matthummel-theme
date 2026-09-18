@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.16 local hostname)
+
+- `mh_local_dev_hosts()` in `app/setup.php` is `matthummel-theme.local`, `localhost`, `127.0.0.1` only. Do not add `matthummel.com`. `option_home` / `option_siteurl` follow `HTTP_HOST` for those names so Cloud `:8080` and `.local` both work.
+- Preferred local URL: `http://matthummel-theme.local:8080` plus a hosts line. PHP `wp server` is not Herd HTTPS on 443.
+
 ## Editor’s notes (3.6.15 kicker → heading)
 
 - Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. Large section titles pull up `-0.22em`.
@@ -69,7 +74,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.4 type rhythm)
 
-- Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Do not put large `margin-top` on every heading — first-child / eyebrow → title pairs stay tight.
+- Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Exclude `.eyebrow`, `.h-section-label`, and `.h-hero__kicker` from that rule. Do not put large `margin-top` on every heading.
 - Canonical journal spacing lives in the later `.post-prose` block in `portfolio.css` (not the short layout shell earlier in the file).
 - Keep `.eyebrow + h2` tight on legal/a11y shells.
 
