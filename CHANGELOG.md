@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.6.22 — Footer Get updates, simple heroes
+
+- Footer brand column drops Say hello / GitHub / RSS chips and the logo mark. Open for work is a short green pill, same as the header.
+- **Get updates** is a first-party email signup (Sign up). Addresses live in `{prefix}mh_newsletter`. wp-admin **Get updates** lists them and exports CSV. No newsletter plugin.
+- Marketing page heroes stay copy + CTAs. The Mac-window snapshot panel is off.
+- On this page still uses arrow buttons when pills overflow, and sticks to the top of the viewport on mobile.
+- Hover and focus stay bright blue (`--blue-400`).
+
+## 3.6.21 — Visible link and button hover
+
+- Hover and `:focus-visible` use bright blue (`--blue-400`, `#4f8fd4`) instead of a second navy. Navy-to-navy was not a real color change on footer links, Sign up / Copy RSS, or most text links.
+- Footer nav, legal links, stack links, social icons, and `.btn` all pick up the same hover. Availability pills stay green.
+
+## 3.6.20 — On this page arrows
+
+- The sticky **On this page** row uses prev/next arrow buttons when the pills overflow. The native scrollbar is hidden. Swipe still works.
+- About no longer switches to a dropdown on small screens. The same arrow + pill row is used on About and product pages.
+- Arrows hide when everything fits, and disable at the start or end of the row.
+
 ## 3.6.19 — Footer social, RSS, hover
 
 - Social icons sit in the bottom footer bar. No circle border or hover fill — the icon color changes on hover and focus.

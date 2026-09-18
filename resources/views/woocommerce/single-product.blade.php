@@ -254,11 +254,12 @@
     @if (count($sectionNav) > 1)
       <nav class="pf-product-toc" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
         <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
-        <div class="pf-product-toc__pills" role="list">
-          @foreach ($sectionNav as [$id, $label])
-            <a class="pf-product-toc__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-          @endforeach
-        </div>
+        @include('partials.page-nav-track', [
+          'pills' => $sectionNav,
+          'pillClass' => 'pf-product-toc__pill',
+          'listClass' => 'pf-product-toc__pills',
+          'scrollerId' => 'product-on-this-page-pills',
+        ])
       </nav>
     @endif
 

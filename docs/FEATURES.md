@@ -2,6 +2,25 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.22 footer signup / simple heroes)
+
+- Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
+- Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
+- Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
+- `partials/page-hero.blade.php` does not render `$split` / `$aside`. Do not restore the Mac-window `hero-panel` unless Matt asks.
+- Keep On this page arrows (`page-nav-track` + `initPageNavTrack()`). Do not restore a visible scrollbar or the About mobile `<details>` dropdown.
+- Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`.
+
+## Editor’s notes (3.6.21 visible hover)
+
+- `--color-accent-hover` is `--blue-400` (`#4f8fd4`), not `--blue-700`. Do not set link/button hover back to navy (`#0a2446` / `#0d2e57`) — it fails as a perceivable state change.
+- Footer and site-wide `a:hover` / `.btn:hover` last-win lives at the end of `studio.css`. Exclude `.header-avail` / `.footer-avail` so Open for work stays green.
+
+## Editor’s notes (3.6.20 on this page arrows)
+
+- Overflow on `.h-page-nav` / `.pf-product-toc` is driven by `partials/page-nav-track.blade.php` + `initPageNavTrack()` in `section-nav.js`. Do not restore a visible scrollbar or the About mobile `<details>` dropdown unless Matt asks.
+- Arrow buttons stay `hidden` when the row fits. Disabled at the start/end when it overflows.
+
 ## Editor’s notes (3.6.19 footer social / hover)
 
 - Footer social lives in `.footer-bottom-social`. Icon-only `.soc-link` has no circle and no hover background.
@@ -10,9 +29,9 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.18 split heroes / RSS)
 
-- `partials/page-hero.blade.php` must honor `$split` and `$aside`. Templates already pass those; do not drop the aside slot again.
+- `partials/page-hero.blade.php` no longer renders `$split` / `$aside` (Mac-window snapshot is off as of 3.6.22).
 - `partials/hero-panel.blade.php` is chrome + title/meta + optional status/link. Do not put a 2×2 stats grid back in the hero.
-- Footer Follow copy is chrome (`No email list…`). Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
+- Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
 
 ## Editor’s notes (3.6.17 kicker gap)
 

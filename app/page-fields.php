@@ -434,6 +434,9 @@ function mh_home_fields(): array
         ],
         __('Footer (site-wide)', 'sage') => [
             ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack and WordPress developer. Selected projects, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
+            ['footer_signup_label', __('Signup heading', 'sage'), 'text', __('Get updates', 'sage')],
+            ['footer_signup_lede', __('Signup sentence', 'sage'), 'textarea', __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage')],
+            ['footer_signup_button', __('Signup button', 'sage'), 'text', __('Sign up', 'sage')],
         ],
     ];
 }
@@ -1748,7 +1751,7 @@ function field_group_hint(string $label): string
     $hints = [
         __('How I got here', 'sage') => __('One editor for the story. Press Enter for a new paragraph.', 'sage'),
         __('Hero', 'sage') => __('Top of the home page. Layout (width, alignment, CTA toggles) lives in Appearance → Customize → Home hero.', 'sage'),
-        __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
+        __('Footer (site-wide)', 'sage') => __('Footer sentence plus Get updates copy. Edited on Home so every page stays in sync.', 'sage'),
         __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
         __('Example sites', 'sage') => __('Each row is one project. Empty the list to restore the built-in set.', 'sage'),
         __('Snippets', 'sage') => __('Copy-paste examples shown on Home. Empty the list to restore the built-in set.', 'sage'),
