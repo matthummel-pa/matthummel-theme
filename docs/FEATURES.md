@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.19 footer social / hover)
+
+- Footer social lives in `.footer-bottom-social`. Icon-only `.soc-link` has no circle and no hover background.
+- Follow / RSS is the last footer column (`footer-follow`), not the brand column.
+- Hover for `.btn` and `a` must change `color` (and keep `:focus-visible`). Do not restore filled social circles.
+
 ## Editor’s notes (3.6.18 split heroes / RSS)
 
 - `partials/page-hero.blade.php` must honor `$split` and `$aside`. Templates already pass those; do not drop the aside slot again.

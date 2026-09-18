@@ -2163,15 +2163,33 @@ p.h-section-label + h2.h-glance__title,
   box-shadow: none;
 }
 .write-rss-url {
-  border: 0;
+  border: 1.5px solid var(--gray-400);
   background: var(--white);
+  color: var(--color-text);
+  font: 500 .82rem/1.4 var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+.write-rss-url:hover {
+  border-color: var(--gray-500);
+}
+.write-rss-url:focus,
+.write-rss-url:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-color: var(--blue-700);
+  color: var(--color-text);
+  background: var(--white);
+}
+.footer-follow .write-rss-url:focus,
+.footer-follow .write-rss-url:focus-visible {
+  border-color: var(--blue-700);
 }
 .footer-brand-link .footer-brand::after {
   display: none;
 }
 .footer-follow {
-  margin-top: 1rem;
-  max-width: 22rem;
+  margin-top: 0;
+  max-width: none;
+  align-self: start;
 }
 .footer-follow .footer-nav-label {
   margin-bottom: .45rem;
@@ -2184,20 +2202,28 @@ p.h-section-label + h2.h-glance__title,
 }
 .footer-follow__row {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: .45rem;
-  align-items: center;
+  align-items: stretch;
 }
 .footer-follow .write-rss-url {
-  flex: 1 1 10rem;
-  min-width: 0;
-  padding: .45rem .6rem;
-  font-size: .75rem;
+  flex: none;
+  width: 100%;
+  min-height: 2.75rem;
+  max-height: 4.75rem;
+  height: 4.75rem;
+  resize: none;
+  padding: .55rem .7rem;
+  font-size: .78rem;
+  line-height: 1.4;
   overflow-wrap: anywhere;
-  word-break: break-all;
+  word-break: normal;
+  overflow-y: auto;
+  border: 2px solid var(--gray-500);
+  background: var(--white);
+  color: var(--color-text);
 }
 .footer-follow .btn {
-  flex: 0 0 auto;
   width: fit-content;
 }
 html.mh-dark .h-hero-illu__card,
@@ -2206,5 +2232,165 @@ html.mh-dark .journal-subscribe {
   background: var(--color-surface);
 }
 html.mh-dark .write-rss-url {
-  background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
+  background: var(--color-bg);
+  border-color: var(--gray-500);
+  color: var(--color-text);
+}
+html.mh-dark .write-rss-url:focus,
+html.mh-dark .write-rss-url:focus-visible {
+  border-color: var(--blue-400);
+  background: var(--color-bg);
+}
+
+/* ── 3.6.19 Footer social + hover/focus ──────────────────────────────────── */
+.soc-link {
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  padding: 0;
+  min-width: 40px;
+  min-height: 40px;
+}
+.soc-link:hover,
+.soc-link:focus-visible {
+  background: transparent;
+  color: var(--blue-700);
+  border-color: transparent;
+  transform: none;
+}
+.soc-list--compact .soc-link:hover,
+.soc-list--compact .soc-link:focus-visible {
+  background: transparent;
+  color: var(--blue-700);
+}
+.soc-list--labeled .soc-link,
+.soc-list--cards .soc-link {
+  padding: 0 .85rem;
+  border: 1px solid var(--color-border);
+}
+.soc-list--cards .soc-link {
+  padding: .85rem 1rem;
+  background: var(--gray-50);
+}
+.soc-list--labeled .soc-link:hover,
+.soc-list--labeled .soc-link:focus-visible,
+.soc-list--cards .soc-link:hover,
+.soc-list--cards .soc-link:focus-visible {
+  background: var(--blue-50);
+  color: var(--blue-800);
+  border-color: var(--blue-200);
+}
+.site-footer .soc-link {
+  color: var(--color-text-secondary);
+  border: 0;
+  background: transparent;
+}
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible {
+  background: transparent;
+  color: var(--blue-700);
+  border-color: transparent;
+  transform: none;
+}
+.footer-bottom {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: .75rem 1.25rem;
+}
+.footer-bottom-social .soc-list {
+  justify-content: center;
+}
+.footer-brand-link {
+  color: var(--color-text);
+}
+.footer-brand-link:hover,
+.footer-brand-link:focus-visible {
+  color: var(--blue-700);
+}
+.footer-nav a:hover,
+.footer-nav a:focus-visible,
+.footer-legal-links a:hover,
+.footer-legal-links a:focus-visible,
+.footer-stack a:hover,
+.footer-stack a:focus-visible,
+.footer-quick-links a:hover,
+.footer-quick-links a:focus-visible {
+  color: var(--blue-700);
+}
+.footer-quick-links a:hover,
+.footer-quick-links a:focus-visible {
+  background: var(--blue-50);
+  border-color: var(--blue-200);
+}
+@media (max-width: 860px) {
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .footer-bottom .footer-stack { text-align: center; }
+}
+
+a:hover:not(.btn):not(.soc-link),
+a:focus-visible:not(.btn):not(.soc-link) {
+  color: var(--color-accent-hover);
+}
+.btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
+.btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
+  background: var(--blue-700);
+  border-color: var(--blue-800);
+  color: #fff;
+}
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  background: var(--blue-50);
+  color: var(--blue-800);
+  border-color: var(--blue-400);
+}
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  background: color-mix(in srgb, #fff 16%, transparent);
+  color: var(--blue-100);
+  border-color: #fff;
+}
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible {
+  background: var(--blue-100);
+  color: var(--gray-900);
+  border-color: var(--blue-100);
+}
+.btn-hire:hover,
+.btn-hire:focus-visible {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #fff;
+}
+.cta-band .btn-ghost:hover,
+.cta-band .btn-ghost:focus-visible,
+.post-cta__actions .btn-ghost:hover,
+.post-cta__actions .btn-ghost:focus-visible,
+.work-card--featured .btn-ghost:hover,
+.work-card--featured .btn-ghost:focus-visible {
+  color: #bfdbfe;
+  background: color-mix(in srgb, #fff 16%, transparent);
+}
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+  color: var(--blue-700);
+  border-color: var(--blue-300);
+  background: var(--blue-50);
+}
+html.mh-dark .soc-link:hover,
+html.mh-dark .soc-link:focus-visible,
+html.mh-dark .site-footer .soc-link:hover,
+html.mh-dark .site-footer .soc-link:focus-visible,
+html.mh-dark .soc-list--compact .soc-link:hover,
+html.mh-dark .soc-list--compact .soc-link:focus-visible {
+  color: var(--blue-400);
+  background: transparent;
+}
+html.mh-dark a:hover:not(.btn):not(.soc-link),
+html.mh-dark a:focus-visible:not(.btn):not(.soc-link) {
+  color: var(--blue-400);
 }
