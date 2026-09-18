@@ -24,9 +24,9 @@
       @endif
     </p>
     @if ($cats && ! is_wp_error($cats))
-      <p class="post-cats">
+      <p class="post-cats project-type-row">
         @foreach ($cats as $cat)
-          <a class="post-cat" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
+          <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
         @endforeach
       </p>
     @endif

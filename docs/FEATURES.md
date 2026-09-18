@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.25 project type pills)
+
+- Shared chrome is `partials/project-type-row.blade.php`. Do not put a second plain-text `pf-meta` cat line on project heroes or work cards.
+- Skip category when it is the type label or its plural (`Theme` / `Themes`). Keep industry cats (`Tours`) and place pills.
+- Screenshot disclaimer is `.project-stage__note`, not a muted caption.
+
 ## Editor’s notes (3.6.24 footer social / green hover)
 
 - Footer social lives in `.footer-brand-social` under Open for work. Do not put `.soc-list` back in `.footer-bottom`.

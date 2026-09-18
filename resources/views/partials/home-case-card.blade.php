@@ -7,7 +7,6 @@
   }
   $desktop = $shots[0] ?? '';
   $mobile = $shots[1] ?? ($shots[0] ?? '');
-  $isConcept = ! empty($p['is_concept']) || empty($p['product_id']);
   $details = esc_url($p['url'] ?? \App\mh_concept_page_url((string) ($p['slug'] ?? '')));
   $challenge = trim((string) ($p['challenge'] ?? ''));
   $approach = trim((string) ($p['approach'] ?? ''));
@@ -57,17 +56,7 @@
 
   <div class="h-case__body">
     <div class="h-case__meta">
-      @if ($isConcept)
-        <span class="h-case__concept">{{ __('Concept', 'sage') }}</span>
-      @else
-        @include('partials.spec-badge', ['p' => $p])
-      @endif
-      @if (! empty($p['cat']))
-        <span class="h-work-cat-badge h-work-cat-badge--sm">{{ $p['cat'] }}</span>
-      @endif
-      @if (! empty($p['place']))
-        <span class="h-work-place h-work-place--sm">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</span>
-      @endif
+      @include('partials.project-type-row', ['p' => $p])
     </div>
 
     <h3 class="h-case__title">
