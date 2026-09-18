@@ -26,12 +26,6 @@
   <p class="lead">
     {{ \App\field('cnt_lede', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')) }}
   </p>
-  @if (\App\mh_is_hireable($gh))
-    <p class="hire-avail">
-      @include('partials.avail-mark', ['gh' => $gh])
-      {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-    </p>
-  @endif
   @slot('aside')
     @include('partials.hero-panel', [
       'chrome' => 'matthummel.com/contact',

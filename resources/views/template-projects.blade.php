@@ -27,6 +27,16 @@
     : sprintf(_n('%d project', '%d projects', $shownCount, 'sage'), $shownCount);
   $howSteps = \App\mh_work_page_how();
   $workFaqs = \App\mh_work_page_faq();
+  $heroShot = '';
+  if ($all !== []) {
+    $first = $all[0];
+    $heroShot = ! empty($first['image'])
+      ? (string) $first['image']
+      : \App\mh_studio_project_image_url($first);
+    if ($heroShot === '' && ! empty($first['post_id'])) {
+      $heroShot = \App\mh_project_card_image_url((int) $first['post_id']);
+    }
+  }
 @endphp
 
 @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Project snapshot', 'sage')])
@@ -51,6 +61,8 @@
       'icon' => 'briefcase',
       'title' => __('Sample work', 'sage'),
       'meta' => __('Live demos and public code', 'sage'),
+      'image' => $heroShot,
+      'imageAlt' => '',
       'link' => [
         'label' => \App\mh_projects_listing_default('hero_cta_primary'),
         'href' => home_url('/contact/'),

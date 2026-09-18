@@ -54,12 +54,6 @@
     <p class="sec-intro range-note">{{ \App\field('hire_range', \App\mh_adjacent_range_copy()) }}</p>
     <p class="sec-intro">{{ \App\field('hire_price_line', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')) }}</p>
   </div>
-  @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
-    <p class="hire-avail">
-      @include('partials.avail-mark', ['gh' => $gh])
-      {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — {{ \App\mh_reply_sla('phrase') }}
-    </p>
-  @endif
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello

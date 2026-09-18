@@ -7,6 +7,16 @@
   $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
   $rssUrl   = home_url('/feed/');
 
+  $latestJournal = get_posts([
+    'post_type'      => 'post',
+    'posts_per_page' => 1,
+    'post_status'    => 'publish',
+    'no_found_rows'  => true,
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+  ]);
+  $journalShot = $latestJournal !== [] ? \App\mh_post_card_image((int) $latestJournal[0]->ID) : '';
+
   $journalTopics = [
     [
       'icon'  => 'wordpress',
@@ -97,6 +107,8 @@
       'icon' => 'pen',
       'title' => __('Writing', 'sage'),
       'meta' => __('Code-friendly notes', 'sage'),
+      'image' => $journalShot,
+      'imageAlt' => '',
       'link' => [
         'label' => __('RSS feed', 'sage'),
         'href' => $rssUrl,

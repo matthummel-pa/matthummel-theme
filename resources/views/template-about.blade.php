@@ -26,12 +26,6 @@
     <p class="lead about-hero__lede">
         {{ \App\field('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')) }}
     </p>
-    @if ($isHireable)
-      <p class="hire-avail about-hero__avail">
-        @include('partials.avail-mark', ['gh' => $gh])
-        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-      </p>
-    @endif
     <div class="page-header-split__actions about-hero__actions">
       <a class="btn" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!}
@@ -46,6 +40,9 @@
       'icon' => 'user',
       'title' => __('Matt Hummel', 'sage'),
       'meta' => __('WordPress · full stack', 'sage'),
+      'image' => \App\mh_profile_photo_url(480),
+      'imageAlt' => __('Matt Hummel', 'sage'),
+      'imageClass' => 'h-hero-illu__photo--square',
       'link' => [
         'label' => __('View GitHub', 'sage'),
         'href' => $ghUrl,
