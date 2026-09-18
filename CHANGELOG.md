@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.20 — On this page arrows
+
+- The sticky **On this page** row uses prev/next arrow buttons when the pills overflow. The native scrollbar is hidden. Swipe still works.
+- About no longer switches to a dropdown on small screens. The same arrow + pill row is used on About and product pages.
+- Arrows hide when everything fits, and disable at the start or end of the row.
+
 ## 3.6.19 — Footer social, RSS, hover
 
 - Social icons sit in the bottom footer bar. No circle border or hover fill — the icon color changes on hover and focus.
