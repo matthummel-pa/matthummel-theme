@@ -2914,60 +2914,62 @@ html.mh-dark .project-hero-crumb {
 }
 
 /* ── 3.6.29 Current nav hover contrast + split hero photos ─────────────── */
-.header-nav-list a:hover,
-.header-nav-list a:focus-visible {
-  background: var(--blue-50);
-  color: var(--blue-800);
+/* Global a:hover:not(.btn):not(.header-avail):not(.footer-avail) is (0,4,1)
+   and beats .header-nav-list .current-menu-item > a:hover (0,3,2). */
+.site-header .header-nav-list a:hover,
+.site-header .header-nav-list a:focus-visible {
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
 }
-.header-nav-list .current-menu-item > a,
-.header-nav-list .current_page_item > a,
-.header-nav-list .current-menu-parent > a,
-.header-nav-list a[aria-current="page"] {
-  background: var(--blue-700);
-  color: #fff;
+.site-header .header-nav-list .current-menu-item > a,
+.site-header .header-nav-list .current_page_item > a,
+.site-header .header-nav-list .current-menu-parent > a,
+.site-header .header-nav-list a[aria-current="page"] {
+  background: var(--blue-700) !important;
+  color: #fff !important;
 }
-.header-nav-list .current-menu-item > a:hover,
-.header-nav-list .current_page_item > a:hover,
-.header-nav-list .current-menu-parent > a:hover,
-.header-nav-list a[aria-current="page"]:hover,
-.header-nav-list .current-menu-item > a:focus-visible,
-.header-nav-list .current_page_item > a:focus-visible,
-.header-nav-list .current-menu-parent > a:focus-visible,
-.header-nav-list a[aria-current="page"]:focus-visible {
-  background: var(--blue-800);
-  color: #fff;
+.site-header .header-nav-list .current-menu-item > a:hover,
+.site-header .header-nav-list .current_page_item > a:hover,
+.site-header .header-nav-list .current-menu-parent > a:hover,
+.site-header .header-nav-list a[aria-current="page"]:hover,
+.site-header .header-nav-list .current-menu-item > a:focus-visible,
+.site-header .header-nav-list .current_page_item > a:focus-visible,
+.site-header .header-nav-list .current-menu-parent > a:focus-visible,
+.site-header .header-nav-list a[aria-current="page"]:focus-visible {
+  background: var(--blue-900) !important;
+  color: #fff !important;
 }
-.filter-pill.is-active,
-.filter-pill.is-active:hover,
-.filter-pill.is-active:focus-visible {
-  background: var(--blue-700);
-  color: #fff;
-  border-color: var(--blue-700);
+a.filter-pill.is-active,
+a.filter-pill.is-active:hover,
+a.filter-pill.is-active:focus-visible {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  border-color: var(--blue-700) !important;
 }
-.h-page-nav__pill.is-active,
-.h-page-nav__pill[aria-current="true"],
-.h-page-nav__pill.is-active:hover,
-.h-page-nav__pill[aria-current="true"]:hover,
-.h-page-nav__pill.is-active:focus-visible,
-.h-page-nav__pill[aria-current="true"]:focus-visible {
-  background: var(--blue-700);
-  color: #fff;
-  border-color: var(--blue-700);
+a.h-page-nav__pill.is-active,
+a.h-page-nav__pill[aria-current="true"],
+a.h-page-nav__pill.is-active:hover,
+a.h-page-nav__pill[aria-current="true"]:hover,
+a.h-page-nav__pill.is-active:focus-visible,
+a.h-page-nav__pill[aria-current="true"]:focus-visible {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  border-color: var(--blue-700) !important;
 }
-html.mh-dark .header-nav-list a:hover,
-html.mh-dark .header-nav-list a:focus-visible {
-  background: var(--blue-800);
-  color: #fff;
+html.mh-dark .site-header .header-nav-list a:hover,
+html.mh-dark .site-header .header-nav-list a:focus-visible {
+  background: var(--blue-800) !important;
+  color: #fff !important;
 }
-html.mh-dark .header-nav-list .current-menu-item > a,
-html.mh-dark .header-nav-list .current_page_item > a,
-html.mh-dark .header-nav-list a[aria-current="page"],
-html.mh-dark .header-nav-list .current-menu-item > a:hover,
-html.mh-dark .header-nav-list .current_page_item > a:hover,
-html.mh-dark .header-nav-list a[aria-current="page"]:hover,
-html.mh-dark .header-nav-list .current-menu-item > a:focus-visible,
-html.mh-dark .header-nav-list .current_page_item > a:focus-visible,
-html.mh-dark .header-nav-list a[aria-current="page"]:focus-visible {
-  background: var(--blue-600);
-  color: #fff;
+html.mh-dark .site-header .header-nav-list .current-menu-item > a,
+html.mh-dark .site-header .header-nav-list .current_page_item > a,
+html.mh-dark .site-header .header-nav-list a[aria-current="page"],
+html.mh-dark .site-header .header-nav-list .current-menu-item > a:hover,
+html.mh-dark .site-header .header-nav-list .current_page_item > a:hover,
+html.mh-dark .site-header .header-nav-list a[aria-current="page"]:hover,
+html.mh-dark .site-header .header-nav-list .current-menu-item > a:focus-visible,
+html.mh-dark .site-header .header-nav-list .current_page_item > a:focus-visible,
+html.mh-dark .site-header .header-nav-list a[aria-current="page"]:focus-visible {
+  background: var(--blue-700) !important;
+  color: #fff !important;
 }
