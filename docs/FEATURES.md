@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.17 kicker gap)
+
+- Kicker → heading is `margin-top: 12px` in `studio.css`. Do not restore `-0.22em` flush or the `1.85em` mid-flow `p + h2` on `.h-section-label`.
+
 ## Editor’s notes (3.6.16 local hostname)
 
 - `mh_local_dev_hosts()` in `app/setup.php` is `matthummel-theme.local`, `localhost`, `127.0.0.1` only. Do not add `matthummel.com`. `option_home` / `option_siteurl` follow `HTTP_HOST` for those names so Cloud `:8080` and `.local` both work.
@@ -9,7 +13,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.15 kicker → heading)
 
-- Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. Large section titles pull up `-0.22em`.
+- Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. Headings after those kickers use `margin-top: 12px` (not `-0.22em`).
 - Mid-flow `p + h2` (`1.85em`) must exclude `.h-section-label` / `.h-hero__kicker` / `.eyebrow` or **Projects** / **Selected projects.** gets a full heading gap. Do not restore that on kickers.
 - Keep heading → lede spacing (`.lead`, `.h-work-intro`). Do not tighten `.h-about-who__label` (list, not a heading).
 
