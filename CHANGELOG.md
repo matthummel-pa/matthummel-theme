@@ -2,9 +2,12 @@
 
 ## 3.6.20 — Footer signup, Get updates admin
 
-- Footer brand column drops Say hello / GitHub / RSS chips. Open for work is a short pill, same green as the header.
+- Footer brand column drops Say hello / GitHub / RSS chips. Open for work is a short pill, same green as the header. No logo mark next to the name.
 - **Get updates** is a standard email signup (Sign up). Addresses live in `{prefix}mh_newsletter`.
 - wp-admin **Get updates** lists signups and exports CSV. No newsletter plugin.
+- Marketing page heroes stay copy + CTAs only. The Mac-window snapshot panel is off.
+- On this page sticks to the top of the viewport on mobile (header is not sticky under 900px).
+- Text links, pills, and buttons change color on hover and focus.
 
 ## 3.6.19 — Footer social, RSS, hover
 

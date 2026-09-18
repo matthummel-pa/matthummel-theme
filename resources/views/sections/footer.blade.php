@@ -15,14 +15,6 @@
     {{-- Brand + blurb --}}
     <div class="footer-brand-col">
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
-        <img
-          class="brand-mark brand-mark--footer"
-          src="{{ esc_url(\App\mh_logo_uri('mark')) }}"
-          alt=""
-          width="36"
-          height="36"
-          decoding="async"
-        >
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
       <p class="footer-blurb">{{ $footerBlurb }}</p>

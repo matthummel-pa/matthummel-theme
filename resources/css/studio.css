@@ -510,6 +510,16 @@ body {
   border-bottom: 1px solid var(--color-border);
   background: color-mix(in srgb, var(--color-canvas) 90%, #fff);
 }
+@media (max-width: 900px) {
+  .h-page-nav,
+  .pf-product-toc {
+    top: 0;
+  }
+  .admin-bar .h-page-nav,
+  .admin-bar .pf-product-toc {
+    top: 46px;
+  }
+}
 
 .h-page-nav__pill {
   border-radius: 999px;
@@ -2140,9 +2150,9 @@ p.h-section-label + h2.h-glance__title,
 }
 
 /* ── 3.6.18 — Split heroes, footer follow, RSS subscribe ── */
-.page-header-split__aside {
-  display: block;
-  max-width: none;
+.page-header-split__aside,
+.h-hero-illu {
+  display: none !important;
 }
 .h-hero-illu__card {
   border: 0 !important;
@@ -2387,6 +2397,16 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
   .footer-bottom .footer-stack { text-align: center; }
 }
 
+.h-text-arrow:hover,
+.h-text-arrow:focus-visible,
+.h-page-nav__pill:hover,
+.h-page-nav__pill:focus-visible {
+  color: var(--blue-800);
+}
+.footer-brand-link:hover,
+.footer-brand-link:focus-visible {
+  color: var(--blue-700);
+}
 a:hover:not(.btn):not(.soc-link),
 a:focus-visible:not(.btn):not(.soc-link) {
   color: var(--color-accent-hover);

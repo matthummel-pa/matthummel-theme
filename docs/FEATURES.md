@@ -7,6 +7,8 @@ What the 3.x Sage theme does, and where it lives.
 - Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
 - Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
 - Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
+- `partials/page-hero.blade.php` does not render `$split` / `$aside`. Do not restore the Mac-window `hero-panel` unless Matt asks.
+- Mobile `.h-page-nav` / `.pf-product-toc` use `top: 0` because `.site-header` is static under 900px. Do not restore `top: var(--header-h)` on that breakpoint.
 
 ## Editor’s notes (3.6.19 footer social / hover)
 
