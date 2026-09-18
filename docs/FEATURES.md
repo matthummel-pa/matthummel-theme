@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.33 On this page padding)
+
+- `.h-page-nav__inner` is `.7rem` padding-block by default, `1rem` from `901px` up. Do not match the header’s `1rem` on small screens — the jumper is sticky there and should stay compact.
+
 ## Editor’s notes (3.6.31 featured-image heroes)
 
 - `partials/page-hero.blade.php` is a full-bleed photo hero: featured image, white wash, white copy panel, wavy bottom. Do not restore `$split` / `$aside` snapshot cards.
