@@ -1,5 +1,6 @@
 @php
   $hero = \App\mh_home_hero();
+  $heroImage = \App\mh_hero_background_url();
   $posts = \App\mh_home_journal_posts(3);
   $work = \App\mh_home_featured_projects(3);
   $allWork = \App\mh_work_page_items();
@@ -25,45 +26,62 @@
   ];
 @endphp
 
-{{-- 1. Simplified hero — copy only, no project gallery --}}
+{{-- 1. Full-viewport featured-image hero — copy in a white panel, wave into the next band --}}
 <section
-  class="h-hero h-hero--simple{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}"
+  class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}"
   aria-labelledby="h-hero-name"
 >
+  @if ($heroImage !== '')
+    <div class="h-hero__media" aria-hidden="true">
+      <img
+        class="h-hero__bg"
+        src="{!! esc_url($heroImage) !!}"
+        alt=""
+        width="1600"
+        height="900"
+        decoding="async"
+        fetchpriority="high"
+      >
+      <div class="h-hero__wash"></div>
+    </div>
+  @endif
   <div class="container wide h-hero__inner">
-    <div class="h-hero__copy">
-      @if ($hero['eyebrow'] !== '')
-        <p class="h-hero__kicker">{{ $hero['eyebrow'] }}</p>
-      @endif
+    <div class="h-hero__panel">
+      <div class="h-hero__copy">
+        @if ($hero['eyebrow'] !== '')
+          <p class="h-hero__kicker">{{ $hero['eyebrow'] }}</p>
+        @endif
 
-      <h1 id="h-hero-name" class="h-hero__name">{{ $hero['h1'] }}</h1>
+        <h1 id="h-hero-name" class="h-hero__name">{{ $hero['h1'] }}</h1>
 
-      @if ($hero['role'] !== '')
-        <p class="h-hero__role">{{ $hero['role'] }}</p>
-      @endif
+        @if ($hero['role'] !== '')
+          <p class="h-hero__role">{{ $hero['role'] }}</p>
+        @endif
 
-      @if ($hero['subcopy'] !== '')
-        <p class="h-hero__lede">{{ $hero['subcopy'] }}</p>
-      @endif
+        @if ($hero['subcopy'] !== '')
+          <p class="h-hero__lede">{{ $hero['subcopy'] }}</p>
+        @endif
 
-      @if ($hero['show_primary'] || $hero['show_secondary'])
-        <div class="h-hero__actions">
-          @if ($hero['show_primary'] && $hero['cta_primary'] !== '')
-            <a class="btn h-hero__cta" href="{{ esc_url($hero['cta_primary_url']) }}">
-              {!! \App\mh_svg_icon('mail', 17) !!}
-              {{ $hero['cta_primary'] }}
-            </a>
-          @endif
-          @if ($hero['show_secondary'] && $hero['cta_secondary'] !== '')
-            <a class="h-text-arrow" href="{{ esc_url($hero['cta_secondary_url']) }}">
-              {{ $hero['cta_secondary'] }}
-              <span aria-hidden="true">→</span>
-            </a>
-          @endif
-        </div>
-      @endif
+        @if ($hero['show_primary'] || $hero['show_secondary'])
+          <div class="h-hero__actions">
+            @if ($hero['show_primary'] && $hero['cta_primary'] !== '')
+              <a class="btn h-hero__cta" href="{{ esc_url($hero['cta_primary_url']) }}">
+                {!! \App\mh_svg_icon('mail', 17) !!}
+                {{ $hero['cta_primary'] }}
+              </a>
+            @endif
+            @if ($hero['show_secondary'] && $hero['cta_secondary'] !== '')
+              <a class="h-text-arrow" href="{{ esc_url($hero['cta_secondary_url']) }}">
+                {{ $hero['cta_secondary'] }}
+                <span aria-hidden="true">→</span>
+              </a>
+            @endif
+          </div>
+        @endif
+      </div>
     </div>
   </div>
+  @include('partials.hero-wave')
 </section>
 
 @include('partials.page-nav', [

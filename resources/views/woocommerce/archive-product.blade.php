@@ -86,7 +86,7 @@
 <script type="application/ld+json">{!! $collectionJsonLd !!}</script>
 
 {{-- HERO --}}
-@component('partials.page-hero', ['extra' => 'page-header--shop', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'page-header--shop'])
   @include('partials.woocommerce-crumb', ['items' => $crumbItems])
   <p class="eyebrow">{{ \App\field('work_kicker', __('Work', 'sage'), $shopPostId) }}</p>
   @if (apply_filters('woocommerce_show_page_title', true))
@@ -105,18 +105,6 @@
       {{ __('Browse concepts', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/projects',
-      'icon'   => 'briefcase',
-      'title'  => __('Studio concepts', 'sage'),
-      'meta'   => __('Demos · stack · hire', 'sage'),
-      'link' => [
-        'label' => __('Browse GitHub', 'sage'),
-        'href'  => home_url('/code/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

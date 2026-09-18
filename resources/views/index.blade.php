@@ -85,7 +85,7 @@
 <script type="application/ld+json">{!! wp_json_encode($blogLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
 {{-- HERO --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Journal snapshot', 'sage')])
+@component('partials.page-hero', ['image' => $journalShot])
   <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
@@ -101,21 +101,6 @@
       {{ __('Browse posts', 'sage') }} <span aria-hidden="true">↓</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/blog',
-      'icon' => 'pen',
-      'title' => __('Writing', 'sage'),
-      'meta' => __('Code-friendly notes', 'sage'),
-      'image' => $journalShot,
-      'imageAlt' => '',
-      'link' => [
-        'label' => __('RSS feed', 'sage'),
-        'href' => $rssUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

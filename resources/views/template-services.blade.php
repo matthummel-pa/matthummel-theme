@@ -23,7 +23,7 @@
 <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 @endif
 
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('How I work', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('svc_kicker', __('How I work', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('svc_h1', __('Services', 'sage')) }}
@@ -39,18 +39,6 @@
       {{ __('Browse projects', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/services',
-      'icon' => 'briefcase',
-      'title' => __('What I take on', 'sage'),
-      'meta' => __('Shops · agencies · roles', 'sage'),
-      'link' => [
-        'label' => __('Hire page', 'sage'),
-        'href' => home_url('/hire/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

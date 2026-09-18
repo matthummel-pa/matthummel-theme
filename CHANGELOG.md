@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.31 — Featured-image heroes with white panel and wave
+
+- Heroes use the page featured image as a full-bleed background (profile or project shot if there is no thumbnail).
+- Right-column snapshot cards are gone. Copy sits in a white panel over a white see-through wash so text stays readable.
+- Home hero fills the viewport below the header. Other pages keep the same inner content width.
+- A white wavy edge blends the hero into the section underneath.
+
 ## 3.6.30 — No availability pill in marketing heroes
 
 - About, Hire, Code, and Contact heroes no longer show the green Open for work pill in the copy column. Header and footer pills stay. Snapshot panels can still show a status chip.

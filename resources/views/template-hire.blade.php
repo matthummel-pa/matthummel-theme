@@ -44,7 +44,7 @@
 @section('content')
 
 {{-- ── HERO ────────────────────────────────────────────── --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Hire snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('hire_kicker', __('Hire me', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('hire_h1', __('Hire a WordPress developer.', 'sage')) }}
@@ -63,22 +63,6 @@
       <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/hire',
-      'icon' => 'briefcase',
-      'title' => __('Good fit for', 'sage'),
-      'meta' => __('Shops · agencies · developers', 'sage'),
-      'status' => (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
-        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
-        : null,
-      'link' => [
-        'label' => __('View LinkedIn', 'sage'),
-        'href' => $liUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

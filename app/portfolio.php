@@ -4101,6 +4101,44 @@ function mh_profile_photo_url(int $size = 160): string
     return $email !== '' ? (string) get_avatar_url($email, ['size' => $size]) : '';
 }
 
+/**
+ * Full-bleed hero photo: page/post featured image, then an optional fallback, then the profile photo.
+ */
+function mh_hero_background_url(?int $post_id = null, string $fallback = ''): string
+{
+    if ($post_id === null || $post_id < 1) {
+        $post_id = (int) get_queried_object_id();
+    }
+
+    if (is_home() && ! is_front_page()) {
+        $posts_page = (int) get_option('page_for_posts');
+        if ($posts_page > 0) {
+            $post_id = $posts_page;
+        }
+    }
+
+    if (is_front_page()) {
+        $front = (int) get_option('page_on_front');
+        if ($front > 0) {
+            $post_id = $front;
+        }
+    }
+
+    if ($post_id > 0 && has_post_thumbnail($post_id)) {
+        $src = get_the_post_thumbnail_url($post_id, 'full');
+        if (is_string($src) && $src !== '') {
+            return $src;
+        }
+    }
+
+    $fallback = trim($fallback);
+    if ($fallback !== '') {
+        return $fallback;
+    }
+
+    return mh_profile_photo_url(1200);
+}
+
 add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     $wp->add_section('mh_identity', [
         'title' => __('Profile photo', 'sage'),

@@ -34,7 +34,7 @@
   ];
 @endphp
 
-@component('partials.page-hero', ['extra' => 'start-hero', 'split' => true, 'asideLabel' => __('Brief snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'start-hero'])
   <p class="eyebrow">{{ \App\field('start_kicker', __('Project brief', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('start_h1', __('Prepare for our first meeting.', 'sage')) }}
@@ -47,18 +47,6 @@
     <li>{{ __('We agree a written scope before build', 'sage') }}</li>
     <li>{{ __('You own hosting, files, and logins at handoff', 'sage') }}</li>
   </ul>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/start',
-      'icon' => 'briefcase',
-      'title' => __('Discovery brief', 'sage'),
-      'meta' => __('Four steps · one form', 'sage'),
-      'link' => [
-        'label' => __('Prefer a short note?', 'sage'),
-        'href' => home_url('/contact/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

@@ -17,7 +17,7 @@
 @section('content')
 
 {{-- HERO (above the fold: name, headline, short lede, CTAs, facts panel) --}}
-@component('partials.page-hero', ['extra' => 'about-hero', 'split' => true, 'asideLabel' => __('Quick facts', 'sage')])
+@component('partials.page-hero', ['extra' => 'about-hero', 'image' => \App\mh_profile_photo_url(1200), 'imageAlt' => __('Matt Hummel', 'sage')])
   <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
     <h1 class="display-title is-hero">
@@ -34,22 +34,6 @@
       <a class="h-text-arrow" href="#story">{{ __('Read my story', 'sage') }} <span aria-hidden="true">→</span></a>
     </div>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/about',
-      'icon' => 'user',
-      'title' => __('Matt Hummel', 'sage'),
-      'meta' => __('WordPress · full stack', 'sage'),
-      'image' => \App\mh_profile_photo_url(480),
-      'imageAlt' => __('Matt Hummel', 'sage'),
-      'imageClass' => 'h-hero-illu__photo--square',
-      'link' => [
-        'label' => __('View GitHub', 'sage'),
-        'href' => $ghUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @php

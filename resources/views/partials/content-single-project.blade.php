@@ -52,7 +52,7 @@
 @endphp
 
 <article {!! post_class('concept-page project-page') !!}>
-  @component('partials.page-hero', ['extra' => 'page-header--project'])
+  @component('partials.page-hero', ['extra' => 'page-header--project', 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
     <p class="project-hero-crumb">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
     </p>

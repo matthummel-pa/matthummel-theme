@@ -33,7 +33,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('code_h1', __('Code and repos.', 'sage')) }}
@@ -50,22 +50,6 @@
       {{ __('Hire me', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'github.com/'.$login,
-      'icon' => 'github',
-      'title' => $login,
-      'meta' => __('Live profile signals', 'sage'),
-      'status' => \App\mh_is_hireable($profile)
-        ? ['label' => \App\mh_availability_label($profile, __('Open', 'sage')), 'gh' => $profile]
-        : null,
-      'link' => [
-        'label' => __('Open GitHub profile', 'sage'),
-        'href' => $ghUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [
