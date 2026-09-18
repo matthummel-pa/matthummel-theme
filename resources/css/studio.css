@@ -620,8 +620,6 @@ body {
 .about-hero::before,
 .h-hero-illu__glow,
 .h-hero-illu__orb,
-.page-header .h-hero-illu__profile,
-.h-hero-illu__photo,
 .mh-shop .page-header--shop::before,
 .mh-shop .page-header--product::before,
 .mh-shop .page-header--woo::before,
@@ -2160,10 +2158,23 @@ p.h-section-label + h2.h-glance__title,
   margin-top: 12px;
 }
 
-/* ── 3.6.18 — Split heroes, footer follow, RSS subscribe ── */
+/* ── 3.6.18 / 3.6.29 — Split heroes, snapshot photos, RSS subscribe ── */
 .page-header-split__aside,
 .h-hero-illu {
-  display: none !important;
+  display: block;
+}
+.h-hero-illu__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  background: var(--gray-50);
+}
+.h-hero-illu__photo--square {
+  aspect-ratio: 1 / 1;
+  object-position: center;
 }
 .h-hero-illu__card {
   border: 0 !important;
@@ -2900,4 +2911,63 @@ html.mh-dark .project-hero-crumb {
     justify-content: center;
     text-align: center;
   }
+}
+
+/* ── 3.6.29 Current nav hover contrast + split hero photos ─────────────── */
+.header-nav-list a:hover,
+.header-nav-list a:focus-visible {
+  background: var(--blue-50);
+  color: var(--blue-800);
+}
+.header-nav-list .current-menu-item > a,
+.header-nav-list .current_page_item > a,
+.header-nav-list .current-menu-parent > a,
+.header-nav-list a[aria-current="page"] {
+  background: var(--blue-700);
+  color: #fff;
+}
+.header-nav-list .current-menu-item > a:hover,
+.header-nav-list .current_page_item > a:hover,
+.header-nav-list .current-menu-parent > a:hover,
+.header-nav-list a[aria-current="page"]:hover,
+.header-nav-list .current-menu-item > a:focus-visible,
+.header-nav-list .current_page_item > a:focus-visible,
+.header-nav-list .current-menu-parent > a:focus-visible,
+.header-nav-list a[aria-current="page"]:focus-visible {
+  background: var(--blue-800);
+  color: #fff;
+}
+.filter-pill.is-active,
+.filter-pill.is-active:hover,
+.filter-pill.is-active:focus-visible {
+  background: var(--blue-700);
+  color: #fff;
+  border-color: var(--blue-700);
+}
+.h-page-nav__pill.is-active,
+.h-page-nav__pill[aria-current="true"],
+.h-page-nav__pill.is-active:hover,
+.h-page-nav__pill[aria-current="true"]:hover,
+.h-page-nav__pill.is-active:focus-visible,
+.h-page-nav__pill[aria-current="true"]:focus-visible {
+  background: var(--blue-700);
+  color: #fff;
+  border-color: var(--blue-700);
+}
+html.mh-dark .header-nav-list a:hover,
+html.mh-dark .header-nav-list a:focus-visible {
+  background: var(--blue-800);
+  color: #fff;
+}
+html.mh-dark .header-nav-list .current-menu-item > a,
+html.mh-dark .header-nav-list .current_page_item > a,
+html.mh-dark .header-nav-list a[aria-current="page"],
+html.mh-dark .header-nav-list .current-menu-item > a:hover,
+html.mh-dark .header-nav-list .current_page_item > a:hover,
+html.mh-dark .header-nav-list a[aria-current="page"]:hover,
+html.mh-dark .header-nav-list .current-menu-item > a:focus-visible,
+html.mh-dark .header-nav-list .current_page_item > a:focus-visible,
+html.mh-dark .header-nav-list a[aria-current="page"]:focus-visible {
+  background: var(--blue-600);
+  color: #fff;
 }

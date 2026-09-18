@@ -3,6 +3,9 @@
   $icon = (string) ($icon ?? 'code');
   $title = (string) ($title ?? '');
   $meta = (string) ($meta ?? '');
+  $image = trim((string) ($image ?? ''));
+  $imageAlt = trim((string) ($imageAlt ?? ''));
+  $imageClass = trim((string) ($imageClass ?? ''));
   $link = is_array($link ?? null) ? $link : null;
   $status = is_array($status ?? null) ? $status : null;
   $hasHead = $title !== '' || $meta !== '' || $status !== null;
@@ -16,6 +19,18 @@
         <span class="h-hero-illu__dot"></span>
         <span class="h-hero-illu__url">{{ $chrome }}</span>
       </div>
+    @endif
+
+    @if ($image !== '')
+      <img
+        class="h-hero-illu__photo{{ $imageClass !== '' ? ' '.$imageClass : '' }}"
+        src="{{ esc_url($image) }}"
+        alt="{{ esc_attr($imageAlt) }}"
+        width="480"
+        height="360"
+        decoding="async"
+        fetchpriority="high"
+      >
     @endif
 
     @if ($hasHead)

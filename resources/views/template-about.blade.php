@@ -46,6 +46,9 @@
       'icon' => 'user',
       'title' => __('Matt Hummel', 'sage'),
       'meta' => __('WordPress · full stack', 'sage'),
+      'image' => \App\mh_profile_photo_url(480),
+      'imageAlt' => __('Matt Hummel', 'sage'),
+      'imageClass' => 'h-hero-illu__photo--square',
       'link' => [
         'label' => __('View GitHub', 'sage'),
         'href' => $ghUrl,

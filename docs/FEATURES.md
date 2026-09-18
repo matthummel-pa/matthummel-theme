@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.29 split hero photos / current nav hover)
+
+- `partials/page-hero.blade.php` renders `$split` / `$aside` again. Do not hide `.page-header-split__aside` or `.h-hero-illu`. Glow/orbs stay off.
+- Snapshot photos use `.h-hero-illu__photo` in `partials/hero-panel.blade.php`. About is square (`--square`); work/journal shots are 16×10. Empty `alt` when the card title already names the image.
+- Current header nav hover is white on `--blue-800`, not `--blue-400` on navy. Last-win lives at the end of `studio.css`. Same for `.filter-pill.is-active` and `.h-page-nav__pill.is-active`.
+
 ## Editor’s notes (3.6.28 footer bottom on mobile)
 
 - Last-win in `studio.css`: `.footer-bottom` is a column with `align-items: center` under 860px. Do not leave `justify-content: space-between` on that breakpoint.
@@ -39,7 +45,7 @@ What the 3.x Sage theme does, and where it lives.
 - Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
 - Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
 - Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
-- `partials/page-hero.blade.php` does not render `$split` / `$aside`. Do not restore the Mac-window `hero-panel` unless Matt asks.
+- `partials/page-hero.blade.php` renders `$split` / `$aside` again (3.6.29). Keep glow/orbs off.
 - Keep On this page arrows (`page-nav-track` + `initPageNavTrack()`). Do not restore a visible scrollbar or the About mobile `<details>` dropdown.
 - Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`.
 
@@ -61,8 +67,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.18 split heroes / RSS)
 
-- `partials/page-hero.blade.php` no longer renders `$split` / `$aside` (Mac-window snapshot is off as of 3.6.22).
-- `partials/hero-panel.blade.php` is chrome + title/meta + optional status/link. Do not put a 2×2 stats grid back in the hero.
+- `partials/page-hero.blade.php` renders `$split` / `$aside` (restored in 3.6.29). Snapshot photos are optional on `hero-panel`. Do not put a 2×2 stats grid back.
 - Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
 
 ## Editor’s notes (3.6.17 kicker gap)
@@ -351,7 +356,7 @@ What the 3.x Sage theme does, and where it lives.
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
 | Home | Two-column hero; recruiter glance (employers + Power Platform + adjacent-work sentence → `/hire/`); section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
-| Marketing pages | Split hero: copy left, window-card panel right (stats/snapshot per page) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
+| Marketing pages | Split hero: copy left, snapshot panel right (optional photo) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
 | About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |

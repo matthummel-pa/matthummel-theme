@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.29 — Hero snapshot photos + current nav hover
+
+- Marketing split heroes render the right-hand snapshot panel again (About, Projects, Journal, and the other pages that already pass `split`). Glow/orbs stay off.
+- Snapshot cards can show a photo: About uses the profile photo, Projects uses the first work screenshot, Journal uses the latest post image.
+- Current header nav items keep white text on a darker navy pill on hover and focus. Site-wide bright-blue link hover no longer paints the current item unreadable. Active filter pills and On this page pills match.
+
 ## 3.6.28 — Footer copyright centered on mobile
 
 - The bottom footer bar (copyright, legal links, Built with) stacks and centers on small screens. Desktop still spreads left / center / right.
