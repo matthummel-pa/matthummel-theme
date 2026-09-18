@@ -11,7 +11,7 @@
 
 @section('content')
 
-@component('partials.page-hero', ['extra' => 'page-header--support', 'split' => true, 'asideLabel' => __('Docs snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'page-header--support'])
   <p class="eyebrow">{{ \App\field('support_kicker', __('Support', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('support_h1', __('Theme & plugin documentation.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('support_lede', __('HTML guides for the themes and plugins I publish. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
@@ -21,19 +21,6 @@
       {{ __('See the work', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/support',
-      'icon' => 'wordpress',
-      'title' => __('HTML documentation', 'sage'),
-      'meta' => __('Open in browser · same as pack', 'sage'),
-      'link' => [
-        'label' => __('Open Acreline hub', 'sage'),
-        'href' => \App\mh_product_html_docs_hub_url('acreline'),
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @php

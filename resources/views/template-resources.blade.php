@@ -21,7 +21,7 @@
 
 @section('content')
 
-@component('partials.page-hero', ['extra' => 'page-header--resources', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'page-header--resources'])
   <p class="eyebrow">{{ \App\field('resources_kicker', __('Resources', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('resources_h1', __('Free starters, themes, and tools.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
@@ -31,18 +31,6 @@
       {{ __('View code', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/resources',
-      'icon' => 'globe',
-      'title' => __('Resource catalog', 'sage'),
-      'meta' => __('Starters · themes · tools', 'sage'),
-      'link' => [
-        'label' => __('View code', 'sage'),
-        'href' => home_url('/code/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @php

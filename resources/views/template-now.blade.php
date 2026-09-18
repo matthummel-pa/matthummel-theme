@@ -13,7 +13,7 @@
 @section('content')
 
 {{-- ── HERO ─────────────────────────────────────────────── --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Current snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('now_kicker', __('Now', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('now_h1', __('What I\'m doing right now.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('now_lede', __('A snapshot of where my time and attention are going — studio projects, open work, and writing.', 'sage')) }}</p>
@@ -25,21 +25,6 @@
       Full background <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/now',
-      'icon' => 'clock',
-      'title' => __('Updated', 'sage'),
-      'meta' => $updated,
-      'status' => \App\mh_is_hireable($gh)
-        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
-        : null,
-      'link' => [
-        'label' => __('See the work', 'sage'),
-        'href' => \App\mh_work_listing_url(),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @php

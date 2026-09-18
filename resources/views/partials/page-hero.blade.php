@@ -2,22 +2,29 @@
   $tag = $tag ?? 'header';
   $extra = trim((string) ($extra ?? ''));
   $inner = trim((string) ($innerClass ?? ''));
-  $split = ! empty($split);
-  $asideLabel = trim((string) ($asideLabel ?? ''));
+  $fallback = trim((string) ($image ?? ''));
+  $heroImage = \App\mh_hero_background_url(null, $fallback);
+  $heroAlt = trim((string) ($imageAlt ?? ''));
+  $viewport = ! empty($viewport);
 @endphp
-<{{ $tag }} class="page-header{{ $split ? ' page-header--split' : '' }}{{ $extra !== '' ? ' '.$extra : '' }}">
-  <div class="container wide page-header-inner{{ $inner !== '' ? ' '.$inner : '' }}{{ $split ? ' page-header-inner--split' : '' }}">
-    @if ($split)
-      <div class="page-header-split__copy">
-        {{ $slot }}
-      </div>
-      @if (! empty($aside))
-        <aside class="page-header-split__aside" @if ($asideLabel !== '') aria-label="{{ $asideLabel }}" @endif>
-          {{ $aside }}
-        </aside>
-      @endif
-    @else
+<{{ $tag }} class="page-header page-header--photo{{ $viewport ? ' page-header--viewport' : '' }}{{ $extra !== '' ? ' '.$extra : '' }}">
+  @if ($heroImage !== '')
+    <div class="page-header__media" aria-hidden="true">
+      <img
+        class="page-header__photo"
+        src="{!! esc_url($heroImage) !!}"
+        alt="{{ $heroAlt }}"
+        width="1600"
+        height="900"
+        decoding="async"
+      >
+      <div class="page-header__wash"></div>
+    </div>
+  @endif
+  <div class="container wide page-header-inner{{ $inner !== '' ? ' '.$inner : '' }}">
+    <div class="page-header__panel">
       {{ $slot }}
-    @endif
+    </div>
   </div>
+  @include('partials.hero-wave')
 </{{ $tag }}>

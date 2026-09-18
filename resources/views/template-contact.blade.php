@@ -18,7 +18,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero', ['extra' => 'contact-hero', 'split' => true, 'asideLabel' => __('Contact details', 'sage')])
+@component('partials.page-hero', ['extra' => 'contact-hero'])
   <p class="eyebrow">{{ \App\field('cnt_kicker', __('Contact', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}
@@ -26,21 +26,6 @@
   <p class="lead">
     {{ \App\field('cnt_lede', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')) }}
   </p>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/contact',
-      'icon' => 'mail',
-      'title' => __('Direct to inbox', 'sage'),
-      'meta' => __('No ticket queue', 'sage'),
-      'status' => \App\mh_is_hireable($gh)
-        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
-        : null,
-      'link' => [
-        'label' => __('See hire details', 'sage'),
-        'href' => home_url('/hire/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

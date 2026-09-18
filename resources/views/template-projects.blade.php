@@ -39,7 +39,7 @@
   }
 @endphp
 
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Project snapshot', 'sage')])
+@component('partials.page-hero', ['image' => $heroShot])
   <p class="eyebrow">{{ \App\field('work_kicker', \App\mh_projects_listing_default('kicker')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('work_h1', \App\mh_projects_listing_default('h1')) }}
@@ -55,20 +55,6 @@
       {{ \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')) }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/projects',
-      'icon' => 'briefcase',
-      'title' => __('Sample work', 'sage'),
-      'meta' => __('Live demos and public code', 'sage'),
-      'image' => $heroShot,
-      'imageAlt' => '',
-      'link' => [
-        'label' => \App\mh_projects_listing_default('hero_cta_primary'),
-        'href' => home_url('/contact/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @if (! $isEmpty)

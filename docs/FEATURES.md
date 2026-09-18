@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.31 featured-image heroes)
+
+- `partials/page-hero.blade.php` is a full-bleed photo hero: featured image, white wash, white copy panel, wavy bottom. Do not restore `$split` / `$aside` snapshot cards.
+- Home uses `.h-hero--photo.h-hero--viewport` (`min-height: calc(100dvh - header)`). Other marketing heroes share `.page-header__panel` at `42rem`.
+- Photo URL is `mh_hero_background_url()`: work featured image if it is not a headshot, else a page-matched studio screenshot (`mh_hero_scene_url()`). Never GitHub avatars, Gravatar, or `matt-hummel.jpg`.
+
 ## Editor’s notes (3.6.30 no hero availability pill)
 
 - Marketing page heroes (About, Hire, Code, Contact) do not print `.hire-avail` in the copy column. Do not put the Open for work pill back under the lede. Header, footer, Hire snapshot status, and the About availability section stay.
@@ -71,7 +77,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.18 split heroes / RSS)
 
-- `partials/page-hero.blade.php` renders `$split` / `$aside` (restored in 3.6.29). Snapshot photos are optional on `hero-panel`. Do not put a 2×2 stats grid back.
+- `partials/page-hero.blade.php` is a featured-image hero (3.6.31). Do not restore `$split` / `$aside` snapshot cards.
 - Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
 
 ## Editor’s notes (3.6.17 kicker gap)
@@ -359,8 +365,8 @@ What the 3.x Sage theme does, and where it lives.
 | Marketplace files | `screenshot.png`, `readme.txt`, `CREDITS.md` for Theme Check / Appearance. **Do not** upload this theme to WordPress.org or ThemeForest — see `docs/MARKETPLACE.md` | `docs/MARKETPLACE.md` |
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Two-column hero; recruiter glance (employers + Power Platform + adjacent-work sentence → `/hire/`); section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
-| Marketing pages | Split hero: copy left, snapshot panel right (optional photo) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
+| Home | Full-viewport featured-image hero (white copy panel + wave); recruiter glance; section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
+| Marketing pages | Featured-image hero, white copy panel, wavy blend via `partials/page-hero.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php`, `mh_hero_background_url()` |
 | About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |

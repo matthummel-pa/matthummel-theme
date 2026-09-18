@@ -21,7 +21,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('portfolio_kicker', __('Portfolio', 'sage'), $postId) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('portfolio_h1', __('WordPress and full-stack code on GitHub.', 'sage'), $postId) }}
@@ -37,15 +37,6 @@
       {{ __('GitHub profile', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'github.com/'.$ghLogin,
-      'icon'   => 'github',
-      'title'  => __('Public repos', 'sage'),
-      'meta'   => __('WordPress, PHP, React, TypeScript', 'sage'),
-      'link' => ['label' => __('Open GitHub', 'sage'), 'href' => $ghUrl],
-    ])
-  @endslot
 @endcomponent
 
 @include('partials.page-nav', [

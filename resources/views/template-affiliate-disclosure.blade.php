@@ -5,22 +5,10 @@
 @extends('layouts.app')
 
 @section('content')
-  @component('partials.page-hero', ['split' => true, 'asideLabel' => __('Disclosure snapshot', 'sage')])
+    @component('partials.page-hero')
     <p class="eyebrow">{{ __('Transparency', 'sage') }}</p>
     <h1 class="display-title is-hero">{{ __('Affiliate disclosure', 'sage') }}</h1>
     <p class="lead">{{ __('How recommendations and compensated links work on this site — Journal, Uses, Resources, and elsewhere.', 'sage') }}</p>
-    @slot('aside')
-      @include('partials.hero-panel', [
-        'chrome' => 'matthummel.com/disclosure',
-        'icon' => 'globe',
-        'title' => __('Honest labels', 'sage'),
-        'meta' => __('Portfolio first', 'sage'),
-        'link' => [
-          'label' => __('See resources', 'sage'),
-          'href' => home_url('/resources/'),
-        ],
-      ])
-    @endslot
   @endcomponent
 
   @include('partials.page-nav', [
