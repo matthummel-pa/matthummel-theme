@@ -47,7 +47,7 @@
   --color-text-secondary: var(--gray-700);
   --color-text-muted: var(--gray-600);
   --color-accent: var(--blue-600);
-  --color-accent-hover: var(--blue-700);
+  --color-accent-hover: var(--blue-400);
   --color-accent-bright: #4f8fd4;
   --color-spark: #1a6bb5;
   --color-spark-soft: #d6e8f8;
@@ -120,9 +120,10 @@ body {
   border-radius: var(--radius);
 }
 
-.header-nav-list a:hover {
+.header-nav-list a:hover,
+.header-nav-list a:focus-visible {
   background: var(--blue-50);
-  color: var(--blue-700);
+  color: var(--blue-400);
 }
 
 .header-nav-list .current-menu-item > a,
@@ -147,9 +148,9 @@ body {
 }
 
 .btn:hover {
-  background: var(--blue-700);
-  border-color: var(--blue-700);
-  color: #fff;
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
   transform: translateY(-1px);
   box-shadow: var(--studio-shadow-sm);
 }
@@ -185,8 +186,9 @@ body {
 }
 
 .btn-hire:hover {
-  background: var(--blue-700);
-  border-color: var(--blue-700);
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
 }
 
 /* ── Hero: solid paper (no atmosphere / mesh / gradients) ─────────────────── */
@@ -2278,8 +2280,9 @@ p.h-section-label + h2.h-glance__title,
 }
 .site-footer .header-avail.footer-avail:hover,
 .site-footer .header-avail.footer-avail:focus-visible {
-  background: #166534;
-  color: #fff;
+  background: #4ade80;
+  border-color: #4ade80;
+  color: #052e16;
 }
 .site-footer .header-avail.footer-avail .header-avail__label {
   display: inline;
@@ -2319,14 +2322,14 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .soc-link:hover,
 .soc-link:focus-visible {
   background: transparent;
-  color: var(--blue-700);
+  color: var(--blue-400);
   border-color: transparent;
   transform: none;
 }
 .soc-list--compact .soc-link:hover,
 .soc-list--compact .soc-link:focus-visible {
   background: transparent;
-  color: var(--blue-700);
+  color: var(--blue-400);
 }
 .soc-list--labeled .soc-link,
 .soc-list--cards .soc-link {
@@ -2353,7 +2356,7 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .site-footer .soc-link:hover,
 .site-footer .soc-link:focus-visible {
   background: transparent;
-  color: var(--blue-700);
+  color: var(--blue-400);
   border-color: transparent;
   transform: none;
 }
@@ -2371,7 +2374,7 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 }
 .footer-brand-link:hover,
 .footer-brand-link:focus-visible {
-  color: var(--blue-700);
+  color: var(--blue-400);
 }
 .footer-nav a:hover,
 .footer-nav a:focus-visible,
@@ -2380,8 +2383,10 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .footer-stack a:hover,
 .footer-stack a:focus-visible,
 .footer-quick-links a:hover,
-.footer-quick-links a:focus-visible {
-  color: var(--blue-700);
+.footer-quick-links a:focus-visible,
+.footer-follow__note a:hover,
+.footer-follow__note a:focus-visible {
+  color: var(--blue-400);
 }
 .footer-quick-links a:hover,
 .footer-quick-links a:focus-visible {
@@ -2401,21 +2406,17 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .h-text-arrow:focus-visible,
 .h-page-nav__pill:hover,
 .h-page-nav__pill:focus-visible {
-  color: var(--blue-800);
+  color: var(--blue-400);
 }
-.footer-brand-link:hover,
-.footer-brand-link:focus-visible {
-  color: var(--blue-700);
-}
-a:hover:not(.btn):not(.soc-link),
-a:focus-visible:not(.btn):not(.soc-link) {
-  color: var(--color-accent-hover);
+a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+  color: var(--blue-400);
 }
 .btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
 .btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
-  background: var(--blue-700);
-  border-color: var(--blue-800);
-  color: #fff;
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
 }
 .btn-outline:hover,
 .btn-outline:focus-visible {
@@ -2437,9 +2438,9 @@ a:focus-visible:not(.btn):not(.soc-link) {
 }
 .btn-hire:hover,
 .btn-hire:focus-visible {
-  background: var(--blue-700);
-  border-color: var(--blue-700);
-  color: #fff;
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
 }
 .cta-band .btn-ghost:hover,
 .cta-band .btn-ghost:focus-visible,
@@ -2462,10 +2463,16 @@ html.mh-dark .site-footer .soc-link:hover,
 html.mh-dark .site-footer .soc-link:focus-visible,
 html.mh-dark .soc-list--compact .soc-link:hover,
 html.mh-dark .soc-list--compact .soc-link:focus-visible {
-  color: var(--blue-400);
+  color: var(--blue-200);
   background: transparent;
 }
-html.mh-dark a:hover:not(.btn):not(.soc-link),
-html.mh-dark a:focus-visible:not(.btn):not(.soc-link) {
-  color: var(--blue-400);
+html.mh-dark a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+html.mh-dark a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+  color: var(--blue-200);
+}
+html.mh-dark .btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
+html.mh-dark .btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
 }

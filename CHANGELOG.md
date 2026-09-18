@@ -7,7 +7,7 @@
 - wp-admin **Get updates** lists signups and exports CSV. No newsletter plugin.
 - Marketing page heroes stay copy + CTAs only. The Mac-window snapshot panel is off.
 - On this page sticks to the top of the viewport on mobile (header is not sticky under 900px).
-- Text links, pills, and buttons change color on hover and focus.
+- Text links, pills, and buttons change color on hover and focus. Hover uses bright `--blue-400` (`#4f8fd4`) so it is not a navy-on-navy shift.
 
 ## 3.6.19 — Footer social, RSS, hover
 
