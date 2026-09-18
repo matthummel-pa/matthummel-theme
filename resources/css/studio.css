@@ -2987,24 +2987,27 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"]:focus-visible 
 .h-hero.h-hero--photo.h-hero--accent {
   background: var(--color-navy, #0f1c2e);
 }
-.h-hero.h-hero--viewport {
+.h-hero.h-hero--viewport,
+.page-header.page-header--viewport {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: calc(100svh - 4.75rem);
   min-height: calc(100dvh - 4.75rem);
-  padding-block: clamp(4.25rem, 9vh, 6rem) 4.75rem;
+  padding-block: clamp(5.25rem, 11vh, 7.25rem) 6.25rem;
 }
-.admin-bar .h-hero.h-hero--viewport {
+.admin-bar .h-hero.h-hero--viewport,
+.admin-bar .page-header.page-header--viewport {
   min-height: calc(100dvh - 4.75rem - 32px);
 }
 @media screen and (max-width: 782px) {
-  .admin-bar .h-hero.h-hero--viewport {
+  .admin-bar .h-hero.h-hero--viewport,
+  .admin-bar .page-header.page-header--viewport {
     min-height: calc(100dvh - 4.75rem - 46px);
   }
 }
 .page-header.page-header--photo {
-  padding-block: clamp(2.5rem, 6.5vh, 4.25rem) 4.5rem;
+  padding-block: clamp(3.75rem, 9vh, 6rem) 6.25rem;
 }
 .h-hero__media,
 .page-header__media {
