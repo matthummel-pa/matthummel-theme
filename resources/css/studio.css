@@ -2197,21 +2197,21 @@ p.h-section-label + h2.h-glance__title,
 }
 .footer-follow__row {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: .45rem;
-  align-items: center;
+  align-items: stretch;
 }
 .footer-follow .write-rss-url {
-  flex: 1 1 10rem;
-  min-width: 0;
-  min-height: 44px;
+  width: 100%;
+  min-height: 3.4rem;
+  resize: none;
   padding: .55rem .7rem;
   font-size: .78rem;
+  line-height: 1.4;
   overflow-wrap: anywhere;
   word-break: break-all;
 }
 .footer-follow .btn {
-  flex: 0 0 auto;
   width: fit-content;
 }
 html.mh-dark .h-hero-illu__card,

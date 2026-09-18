@@ -68,14 +68,13 @@
       <p class="footer-follow__lede">{{ __('No email list. Copy the RSS URL into the reader you already use.', 'sage') }}</p>
       <div class="footer-follow__row">
         <label class="visually-hidden" for="footer-rss-url">{{ __('RSS feed URL', 'sage') }}</label>
-        <input
+        <textarea
           id="footer-rss-url"
           class="write-rss-url"
-          type="url"
           readonly
-          value="{{ esc_url($footerRss) }}"
+          rows="2"
           title="{{ esc_attr($footerRss) }}"
-        >
+        >{{ esc_url($footerRss) }}</textarea>
         <button type="button" class="btn" data-copy-rss data-rss="{{ esc_url($footerRss) }}" aria-live="polite">{{ __('Copy RSS', 'sage') }}</button>
       </div>
     </div>
