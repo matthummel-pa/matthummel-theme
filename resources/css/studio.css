@@ -3041,8 +3041,8 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"]:focus-visible 
 }
 .h-hero__panel,
 .page-header__panel {
-  width: min(100%, 42rem);
-  max-width: 42rem;
+  width: 100%;
+  max-width: none;
   padding: clamp(1.2rem, 2.5vw, 1.9rem) clamp(1.2rem, 2.6vw, 2.05rem);
   background: #fff;
   color: var(--color-text, #0f1c2e);

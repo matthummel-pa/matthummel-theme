@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.32 — Full-width hero copy panel
+
+- The white hero panel spans the main content column (`container.wide` / `--page-max`), not a 42rem card.
+
 ## 3.6.31 — Featured-image heroes with white panel and wave
 
 - Heroes use a **work** screenshot as the background. Headshots, GitHub avatars, and Gravatar never appear in the hero.
