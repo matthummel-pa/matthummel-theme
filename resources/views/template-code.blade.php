@@ -41,12 +41,6 @@
   <p class="lead">
     {!! \App\field_html('code_lede', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')) !!}
   </p>
-  @if (\App\mh_is_hireable($profile))
-    <p class="hire-avail" style="margin-top:.85rem">
-      @include('partials.avail-mark', ['gh' => $profile])
-      {{ \App\mh_availability_label($profile, __('Open for new work', 'sage')) }}
-    </p>
-  @endif
   <div class="page-header-split__actions">
     <a class="btn" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
       {!! \App\mh_svg_icon('github', 16) !!} {{ __('View GitHub', 'sage') }}

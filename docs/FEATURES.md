@@ -2,6 +2,10 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.30 no hero availability pill)
+
+- Marketing page heroes (About, Hire, Code, Contact) do not print `.hire-avail` in the copy column. Do not put the Open for work pill back under the lede. Header, footer, Hire snapshot status, and the About availability section stay.
+
 ## Editor’s notes (3.6.29 split hero photos / current nav hover)
 
 - `partials/page-hero.blade.php` renders `$split` / `$aside` again. Do not hide `.page-header-split__aside` or `.h-hero-illu`. Glow/orbs stay off.

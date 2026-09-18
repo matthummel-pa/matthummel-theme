@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.30 — No availability pill in marketing heroes
+
+- About, Hire, Code, and Contact heroes no longer show the green Open for work pill in the copy column. Header and footer pills stay. Snapshot panels can still show a status chip.
+
 ## 3.6.29 — Hero snapshot photos + current nav hover
 
 - Marketing split heroes render the right-hand snapshot panel again (About, Projects, Journal, and the other pages that already pass `split`). Glow/orbs stay off.
