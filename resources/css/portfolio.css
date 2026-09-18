@@ -126,8 +126,8 @@ h1 { line-height: 0.98; }
 h2, h3, h4, h5 { line-height: 1.2; }
 h3, h4 { letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
 
-/* Mid-flow headings (not eyebrow → title pairs in page chrome). */
-:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
+/* Mid-flow headings (not kicker → title pairs in page chrome). */
+:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.h-section-label):not(.h-section__label):not(.h-hero__kicker):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
 :where(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-image, .wp-block-code, .wp-block-preformatted) + :where(h2, h3, h4) {
   margin-top: 1.85em;
 }
@@ -203,7 +203,7 @@ img { max-width: 100%; display: block; }
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin: 0 0 1rem;
+  margin: 0;
 }
 .eyebrow--on-dark { color: #93c5fd; }
 
@@ -949,7 +949,7 @@ body.mh-popout-open .mh-popout-overlay { opacity: 1; pointer-events: auto; }
   max-width: 100%;
   flex: 0 0 auto;
   align-self: flex-start;
-  margin: 0 0 .65rem;
+  margin: 0;
   font: 700 .73rem/1 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -1496,7 +1496,7 @@ html.mh-dark .h-hero-work__foot {
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin: 0 0 .7rem;
+  margin: 0;
 }
 .h-section-label::before {
   content: "";
@@ -6126,7 +6126,7 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 }
 .about-hero__copy .display-title.is-hero {
   max-width: 14ch;
-  margin-top: .35rem;
+  margin-top: 0;
 }
 .about-hero__lede {
   max-width: 34rem;
@@ -15197,7 +15197,7 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
 .h-hero__kicker {
   font: 800 .82rem/1 var(--font-display);
   letter-spacing: .14em;
-  margin-bottom: 1.35rem;
+  margin-bottom: 0;
 }
 .h-hero__actions { gap: 1rem 1.5rem; }
 .h-hero__trust { margin-top: 1.75rem; gap: .65rem 1.75rem; }

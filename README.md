@@ -138,7 +138,7 @@ wp rewrite structure '/%postname%/'
 wp server --host=0.0.0.0 --port=8080
 ```
 
-Site: `http://localhost:8080` · Admin: `admin` / `password`
+Site: `http://matthummel-theme.local:8080` (or `http://localhost:8080`) · Admin: `admin` / `password`
 
 | Command | Purpose |
 | --- | --- |
