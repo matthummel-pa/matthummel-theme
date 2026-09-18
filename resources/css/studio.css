@@ -879,9 +879,7 @@ body {
 .post-hero::before,
 .about-hero::before,
 .h-hero-illu__glow,
-.h-hero-illu__orb,
-.h-hero-illu__stats,
-.page-header-split__aside {
+.h-hero-illu__orb {
   display: none !important;
 }
 .about-hero__copy .display-title.is-hero {
@@ -2139,4 +2137,103 @@ p.h-section-label + h2.h-glance__title,
 .eyebrow + .display-title.is-section,
 .h-hero__kicker + .h-hero__name {
   margin-top: 12px;
+}
+
+/* ── 3.6.18 — Split heroes, footer follow, RSS subscribe ── */
+.page-header-split__aside {
+  display: block;
+  max-width: none;
+}
+.h-hero-illu__card {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: var(--gray-50);
+}
+.h-hero-illu__chrome {
+  background: transparent;
+  border-bottom: 1px solid var(--color-border);
+}
+.h-hero-illu__card::before {
+  display: none;
+}
+.h-hero-illu__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .65rem;
+  margin: 0 .85rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  overflow: visible;
+}
+.h-hero-illu__stat,
+.h-hero-illu__stat:nth-child(n) {
+  margin: 0;
+  padding: .75rem .85rem;
+  min-height: 0;
+  background: var(--white);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: none;
+  animation: none;
+}
+.h-hero-illu__stat dt {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+}
+.h-hero-illu__stat dd {
+  font-weight: 400;
+}
+.write-subscribe,
+.journal-subscribe {
+  background: var(--gray-50);
+  border: 0;
+  box-shadow: none;
+}
+.write-rss-url {
+  border: 0;
+  background: var(--white);
+}
+.footer-brand-link .footer-brand::after {
+  display: none;
+}
+.footer-follow {
+  margin-top: 1rem;
+  max-width: 22rem;
+}
+.footer-follow .footer-nav-label {
+  margin-bottom: .45rem;
+}
+.footer-follow__lede {
+  margin: 0 0 .65rem;
+  font-size: .88rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.footer-follow__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+}
+.footer-follow .write-rss-url {
+  flex: 1 1 10rem;
+  min-width: 0;
+  padding: .45rem .6rem;
+  font-size: .75rem;
+}
+.footer-follow .btn {
+  flex: 0 0 auto;
+  width: fit-content;
+}
+html.mh-dark .h-hero-illu__card,
+html.mh-dark .write-subscribe,
+html.mh-dark .journal-subscribe {
+  background: var(--color-surface);
+}
+html.mh-dark .h-hero-illu__stat,
+html.mh-dark .write-rss-url {
+  background: var(--color-bg);
 }
