@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.22 — Footer Get updates, simple heroes
+
+- Footer brand column drops Say hello / GitHub / RSS chips and the logo mark. Open for work is a short green pill, same as the header.
+- **Get updates** is a first-party email signup (Sign up). Addresses live in `{prefix}mh_newsletter`. wp-admin **Get updates** lists them and exports CSV. No newsletter plugin.
+- Marketing page heroes stay copy + CTAs. The Mac-window snapshot panel is off.
+- On this page still uses arrow buttons when pills overflow, and sticks to the top of the viewport on mobile.
+- Hover and focus stay bright blue (`--blue-400`).
+
 ## 3.6.21 — Visible link and button hover
 
 - Hover and `:focus-visible` use bright blue (`--blue-400`, `#4f8fd4`) instead of a second navy. Navy-to-navy was not a real color change on footer links, Sign up / Copy RSS, or most text links.
