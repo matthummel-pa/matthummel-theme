@@ -13077,7 +13077,10 @@ html.mh-dark .entry-content > .mh-archive-note strong {
   display: none;
 }
 
-/* ── Sticky section pills (inside gallery content box) ── */
+/* ── Product pages use shared .h-page-nav; leftover .pf-product-toc aliases ── */
+.pf-product-layout .h-page-nav {
+  margin-inline: 0;
+}
 .pf-product-toc {
   position: sticky;
   top: var(--header-h, 4.5rem);

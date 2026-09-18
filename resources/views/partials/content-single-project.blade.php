@@ -105,7 +105,39 @@
     </div>
   @endcomponent
 
-  <div class="container wide page-block project-stage">
+@php
+  $projectPills = [];
+  if ($slides !== []) {
+    $projectPills[] = ['screenshots', __('Screenshots', 'sage')];
+  }
+  if ($ghStats !== []) {
+    $projectPills[] = ['project-build-notes', __('Build notes', 'sage')];
+  }
+  if ($specs !== [] || $gh['languages'] !== [] || $gh['compatible'] !== '') {
+    $projectPills[] = ['project-theme-details', __('Theme details', 'sage')];
+  }
+  if (! empty($tech)) {
+    $projectPills[] = ['project-runs-on', __('Runs on', 'sage')];
+  }
+  if ($gh['topics'] !== []) {
+    $projectPills[] = ['project-theme-tags', __('Tags', 'sage')];
+  }
+  if ($features !== []) {
+    $projectPills[] = ['project-features', __('What’s included', 'sage')];
+  }
+  if ($architecture !== '') {
+    $projectPills[] = ['project-architecture', __('Architecture', 'sage')];
+  }
+  if ($handoff !== '') {
+    $projectPills[] = ['project-handoff', __('Handoff', 'sage')];
+  }
+  if ($faq !== []) {
+    $projectPills[] = ['project-faq', __('Questions', 'sage')];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $projectPills])
+
+  <div class="container wide page-block project-stage" id="screenshots">
     <div class="project-stage__gallery pf-product-gallery" data-product-gallery>
       @if ($slides !== [])
         <figure

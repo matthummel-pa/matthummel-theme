@@ -53,7 +53,15 @@
   @endslot
 @endcomponent
 
-<section class="pf-section" aria-labelledby="svc-build-heading">
+@include('partials.page-nav', [
+  'pills' => [
+    ['build', __('What I build', 'sage')],
+    ['process', __('Process', 'sage')],
+    ['faq', __('FAQ', 'sage')],
+  ],
+])
+
+<section class="pf-section" id="build" aria-labelledby="svc-build-heading">
   <div class="container wide">
     <p class="eyebrow">{{ __('Work', 'sage') }}</p>
     <h2 id="svc-build-heading" class="display-title is-section">
@@ -75,7 +83,7 @@
   </div>
 </section>
 
-<section class="pf-section pf-section--alt" aria-labelledby="svc-process-heading">
+<section class="pf-section pf-section--alt" id="process" aria-labelledby="svc-process-heading">
   <div class="container wide">
     <p class="eyebrow">{{ __('Process', 'sage') }}</p>
     <h2 id="svc-process-heading" class="display-title is-section">

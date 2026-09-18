@@ -66,6 +66,15 @@
   </div>
 </section>
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['work', __('Projects', 'sage')],
+    ['journal', __('Journal', 'sage')],
+    ['do', __('Services', 'sage')],
+    ['close', __('Say hello', 'sage')],
+  ],
+])
+
 {{-- 2. Featured Projects CPT --}}
 <section class="h-section h-band" id="work" aria-labelledby="h-work-heading">
   <div class="container wide">
@@ -191,7 +200,7 @@
 </section>
 
 {{-- Quiet close — not a sales band --}}
-<section class="h-close" aria-labelledby="h-cta-heading">
+<section class="h-close" id="close" aria-labelledby="h-cta-heading">
   <div class="container wide h-close__inner">
     <div class="h-close__copy">
       <h2 id="h-cta-heading" class="h-section__title">

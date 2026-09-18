@@ -74,6 +74,15 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['practice', __('Practice', 'sage')],
+    ['github', __('GitHub', 'sage')],
+    ['skills', __('Skills', 'sage')],
+    ['docs', __('Docs', 'sage')],
+  ],
+])
+
 {{-- PRACTICE --}}
 <section class="pf-section code-practice-sec" id="practice" aria-labelledby="code-practice-heading">
   <div class="container wide">

@@ -119,6 +119,15 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['shop-products', __('Catalog', 'sage')],
+    ['shop-context-heading', __('What they show', 'sage')],
+    ['shop-how-heading', __('How it works', 'sage')],
+    ['shop-faq', __('FAQ', 'sage')],
+  ],
+])
+
 {{-- PRODUCT LOOP — appears first so buyers reach products immediately --}}
 <div id="shop-products" class="container wide woo-catalog-shell page-block" data-work-hub>
   @php

@@ -17,6 +17,20 @@
   <p class="lead">What data this site collects, how it is used, and what your rights are. Plain language — no legalese.</p>
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['priv-overview-heading', __('Overview', 'sage')],
+    ['priv-who-heading', __('Who I am', 'sage')],
+    ['priv-data-heading', __('What I collect', 'sage')],
+    ['priv-no-collect-heading', __('What I skip', 'sage')],
+    ['priv-cookies-heading', __('Cookies', 'sage')],
+    ['priv-sharing-heading', __('Who sees it', 'sage')],
+    ['priv-optout-heading', __('Opt out', 'sage')],
+    ['priv-rights-heading', __('Your rights', 'sage')],
+    ['priv-contact-heading', __('Questions', 'sage')],
+  ],
+])
+
 {{-- ── OVERVIEW ─────────────────────────────────────────── --}}
 <section class="pf-section" aria-labelledby="priv-overview-heading">
   <div class="container wide">

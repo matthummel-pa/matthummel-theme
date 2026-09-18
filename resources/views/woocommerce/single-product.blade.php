@@ -252,15 +252,7 @@
     </div>
 
     @if (count($sectionNav) > 1)
-      <nav class="pf-product-toc" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
-        <p class="pf-product-toc__label">{{ __('On this page', 'sage') }}</p>
-        @include('partials.page-nav-track', [
-          'pills' => $sectionNav,
-          'pillClass' => 'pf-product-toc__pill',
-          'listClass' => 'pf-product-toc__pills',
-          'scrollerId' => 'product-on-this-page-pills',
-        ])
-      </nav>
+      @include('partials.page-nav', ['pills' => $sectionNav, 'scrollerId' => 'product-on-this-page-pills', 'nested' => true])
     @endif
 
     {{-- Article body — same box / width as screenshots --}}

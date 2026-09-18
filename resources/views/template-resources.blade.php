@@ -45,6 +45,16 @@
   @endslot
 @endcomponent
 
+@php
+  $resourcePills = [
+    ['resources-intro-heading', __('Overview', 'sage')],
+  ];
+  foreach ($sections as $section) {
+    $resourcePills[] = ['resources-'.\Illuminate\Support\Str::slug($section['title']), $section['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $resourcePills])
+
 @if ($hasAffiliate)
   <div class="container wide">
     <aside class="affiliate-note" role="note" aria-label="{{ __('Affiliate disclosure', 'sage') }}">

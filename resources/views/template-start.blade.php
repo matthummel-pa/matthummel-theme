@@ -61,6 +61,15 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['df-step1-legend', __('You', 'sage')],
+    ['df-step2-legend', __('Project', 'sage')],
+    ['df-step3-legend', __('Goals', 'sage')],
+    ['df-step4-legend', __('Send', 'sage')],
+  ],
+])
+
 <section class="start-main" aria-labelledby="start-form-heading">
   <div class="container narrow">
 

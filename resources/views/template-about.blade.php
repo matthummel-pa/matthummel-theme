@@ -70,17 +70,7 @@
   $aboutNav[] = ['faq', __('FAQ', 'sage')];
   $aboutNav[] = ['elsewhere', __('Elsewhere', 'sage')];
 @endphp
-<nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
-  <div class="container wide h-page-nav__inner">
-    <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
-    @include('partials.page-nav-track', [
-      'pills' => $aboutNav,
-      'pillClass' => 'h-page-nav__pill',
-      'listClass' => 'h-page-nav__pills',
-      'scrollerId' => 'on-this-page-pills',
-    ])
-  </div>
-</nav>
+@include('partials.page-nav', ['pills' => $aboutNav])
 
 {{-- STORY --}}
 <section class="pf-section about-story-sec" id="story" aria-labelledby="about-story-heading">

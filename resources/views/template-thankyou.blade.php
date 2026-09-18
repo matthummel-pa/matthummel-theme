@@ -11,7 +11,7 @@
 @section('content')
 
 {{-- ── CONFIRMATION ──────────────────────────────────── --}}
-<section class="ty-hero">
+<section class="ty-hero" id="received">
   <div class="container wide ty-hero-inner">
 
     <div class="ty-confirm" role="status">
@@ -60,6 +60,17 @@
 
   </div>
 </section>
+
+@php
+  $tyPills = [
+    ['received', __('Received', 'sage')],
+    ['ty-browse-heading', __('While you wait', 'sage')],
+  ];
+  if (! empty($featured)) {
+      $tyPills[] = ['ty-work-heading', __('Recent work', 'sage')];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $tyPills])
 
 {{-- ── WHILE YOU WAIT ────────────────────────────────── --}}
 <section class="pf-section pf-section--alt" aria-labelledby="ty-browse-heading">

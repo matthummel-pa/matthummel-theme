@@ -135,26 +135,28 @@
     </div>
   </header>
 
+  @php
+    $postPills = [];
+    foreach ($toc as $item) {
+      if ((int) ($item['level'] ?? 0) !== 2) {
+          continue;
+      }
+      $postPills[] = [$item['id'], $item['text']];
+    }
+    if ($postPills === []) {
+      foreach ($toc as $item) {
+        $postPills[] = [$item['id'], $item['text']];
+      }
+    }
+  @endphp
+  @include('partials.page-nav', ['pills' => $postPills])
+
   {{-- ── CONTENT LAYOUT ──────────────────────────────────── --}}
   <div class="container wide post-shell">
     <div class="post-layout">
 
       {{-- Main column --}}
       <div class="post-main">
-
-        {{-- Mobile TOC --}}
-        @if ($toc)
-          <details class="mh-toc mh-toc--inline" open>
-            <summary class="mh-toc-title">On this page</summary>
-            <ol>
-              @foreach ($toc as $item)
-                <li class="side-toc-h{{ $item['level'] }}">
-                  <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
-                </li>
-              @endforeach
-            </ol>
-          </details>
-        @endif
 
         {{-- Article body --}}
         @if ($hasAffiliateLinks)

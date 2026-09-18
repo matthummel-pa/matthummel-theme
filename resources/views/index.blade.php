@@ -106,8 +106,15 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['topics', __('Topics', 'sage')],
+    ['journal-posts', __('Posts', 'sage')],
+  ],
+])
+
 {{-- ── What I write about — topic coverage grid ───────────────────── --}}
-<section class="journal-topics-section" aria-labelledby="journal-topics-heading">
+<section class="journal-topics-section" id="topics" aria-labelledby="journal-topics-heading">
   <div class="container wide">
     <div class="journal-topics-head">
       <h2 id="journal-topics-heading" class="journal-topics__title">{{ __('What I write about', 'sage') }}</h2>
