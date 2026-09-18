@@ -18,16 +18,21 @@
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
       <p class="footer-blurb">{{ $footerBlurb }}</p>
-      @if (\App\mh_is_hireable($gh))
-        <a
-          class="header-avail footer-avail"
-          href="{{ home_url('/now/') }}"
-          aria-label="{{ sprintf(__('%s — see what I\'m doing now', 'sage'), \App\mh_availability_label($gh, __('Open for work', 'sage'))) }}"
-        >
-          @include('partials.avail-mark', ['gh' => $gh])
-          <span class="header-avail__label">{{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}</span>
-        </a>
-      @endif
+      <div class="footer-brand-meta">
+        @if (\App\mh_is_hireable($gh))
+          <a
+            class="header-avail footer-avail"
+            href="{{ home_url('/now/') }}"
+            aria-label="{{ sprintf(__('%s — see what I\'m doing now', 'sage'), \App\mh_availability_label($gh, __('Open for work', 'sage'))) }}"
+          >
+            @include('partials.avail-mark', ['gh' => $gh])
+            <span class="header-avail__label">{{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}</span>
+          </a>
+        @endif
+        <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
+          @include('partials.social', ['compact' => true])
+        </nav>
+      </div>
     </div>
 
     {{-- Work --}}
@@ -98,9 +103,6 @@
 
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
-    <div class="footer-bottom-social">
-      @include('partials.social')
-    </div>
     @php
       $bottomMenuItems = has_nav_menu('footer_bottom_navigation')
         ? wp_get_nav_menu_items(get_nav_menu_locations()['footer_bottom_navigation'] ?? 0) ?: []
