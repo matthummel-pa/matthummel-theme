@@ -69,26 +69,16 @@
   $aboutNav[] = ['approach', __('How I work', 'sage')];
   $aboutNav[] = ['faq', __('FAQ', 'sage')];
   $aboutNav[] = ['elsewhere', __('Elsewhere', 'sage')];
-  $aboutNavFirst = $aboutNav[0][1] ?? __('Story', 'sage');
 @endphp
 <nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
   <div class="container wide h-page-nav__inner">
     <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
-    <details class="h-page-nav__mobile">
-      <summary class="h-page-nav__mobile-summary">
-        <span data-section-nav-current>{{ $aboutNavFirst }}</span>
-      </summary>
-      <div class="h-page-nav__mobile-list" role="list">
-        @foreach ($aboutNav as [$id, $label])
-          <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-        @endforeach
-      </div>
-    </details>
-    <div class="h-page-nav__pills" role="list">
-      @foreach ($aboutNav as [$id, $label])
-        <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-      @endforeach
-    </div>
+    @include('partials.page-nav-track', [
+      'pills' => $aboutNav,
+      'pillClass' => 'h-page-nav__pill',
+      'listClass' => 'h-page-nav__pills',
+      'scrollerId' => 'on-this-page-pills',
+    ])
   </div>
 </nav>
 

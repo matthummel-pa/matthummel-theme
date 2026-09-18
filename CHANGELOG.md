@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.21 — On this page arrows
+
+- The sticky **On this page** row uses prev/next arrow buttons when the pills overflow. The native scrollbar is hidden. Swipe still works.
+- About no longer switches to a dropdown on small screens. The same arrow + pill row is used on About and product pages.
+- Arrows hide when everything fits, and disable at the start or end of the row.
+
 ## 3.6.20 — Footer signup, Get updates admin
 
 - Footer brand column drops Say hello / GitHub / RSS chips. Open for work is a short pill, same green as the header. No logo mark next to the name.

@@ -2,6 +2,11 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.21 on this page arrows)
+
+- Overflow on `.h-page-nav` / `.pf-product-toc` is driven by `partials/page-nav-track.blade.php` + `initPageNavTrack()` in `section-nav.js`. Do not restore a visible scrollbar or the About mobile `<details>` dropdown unless Matt asks.
+- Arrow buttons stay `hidden` when the row fits. Disabled at the start/end when it overflows.
+
 ## Editor’s notes (3.6.20 footer signup)
 
 - Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.

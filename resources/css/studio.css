@@ -538,6 +538,13 @@ body {
   color: var(--blue-800);
 }
 
+.h-page-nav__arrow:hover:not(:disabled),
+.h-page-nav__arrow:focus-visible:not(:disabled) {
+  color: var(--blue-400);
+  border-color: var(--blue-400);
+  background: var(--blue-50);
+}
+
 .search-form input[type="search"],
 .contact-form input,
 .contact-form textarea,
