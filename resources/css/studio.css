@@ -1093,7 +1093,7 @@ body {
 }
 .project-detail-block h2 {
   margin: 0 0 .7rem;
-  font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.2 var(--font-display);
+  font: 800 var(--type-h2)/1.2 var(--font-display);
 }
 .project-detail-block p {
   margin: 0;
@@ -1882,7 +1882,7 @@ html.mh-dark .project-spec-block .project-langs {
 }
 .project-info-section .display-title.is-section {
   margin: 0 0 .55rem;
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-size: var(--type-h2);
   letter-spacing: -.03em;
 }
 .project-info-section .project-stat-grid,
@@ -2832,4 +2832,50 @@ html.mh-dark .project-hero-crumb .concept-crumb {
 html.mh-dark .project-hero-repo,
 html.mh-dark .project-hero-crumb {
   color: var(--gray-400);
+}
+
+/* ── 3.6.27 Heading scale (last-win over paragraph-sized h2–h6) ─────────── */
+.about-story h2,
+.about-story h3,
+.concept-story h2,
+.concept-story h3,
+.concept-section h2,
+.concept-section h3,
+.project-detail-block h2,
+.project-detail-block h3,
+.project-features .display-title.is-section,
+.project-metrics .display-title.is-section,
+.project-info-section .display-title.is-section,
+.legal-prose h2,
+.legal-prose h3,
+.a11y-prose h2,
+.a11y-prose h3,
+.post-prose h2,
+.entry-content h2 {
+  font-size: var(--type-h2);
+  line-height: 1.18;
+}
+.about-story h3,
+.concept-story h3,
+.concept-section h3,
+.project-detail-block h3,
+.legal-prose h3,
+.a11y-prose h3,
+.post-prose h3,
+.entry-content h3 {
+  font-size: var(--type-h3);
+  line-height: 1.22;
+}
+.post-prose h4,
+.entry-content h4,
+.legal-prose h4 {
+  font-size: var(--type-h4);
+}
+.post-prose h5,
+.entry-content h5 {
+  font-size: var(--type-h5);
+}
+.post-prose h6,
+.entry-content h6 {
+  font-size: var(--type-h6);
 }

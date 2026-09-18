@@ -20,6 +20,11 @@
   --type-body: clamp(1.1875rem, 0.45vw + 1.12rem, 1.375rem);
   --type-body-leading: 1.72;
   --type-lead: clamp(1.3rem, 2.5vw, 1.65rem);
+  --type-h2: clamp(1.75rem, 3.2vw, 2.2rem);
+  --type-h3: clamp(1.5rem, 2.5vw, 1.85rem);
+  --type-h4: clamp(1.32rem, 2vw, 1.58rem);
+  --type-h5: clamp(1.22rem, 1.6vw, 1.42rem);
+  --type-h6: clamp(1.2rem, 1.45vw, 1.4rem);
   --type-display-track: -0.068em;
   --type-hero-track: -0.075em;
 
@@ -114,7 +119,7 @@ body {
 p { margin: 0 0 1.15em; text-wrap: pretty; }
 p:last-child { margin-bottom: 0; }
 
-h1, h2, h3, h4, h5 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display, Inter, system-ui, sans-serif);
   color: var(--color-text);
   font-weight: 900;
@@ -123,12 +128,15 @@ h1, h2, h3, h4, h5 {
   margin: 0 0 .65em;
 }
 h1 { line-height: 0.98; }
-h2, h3, h4, h5 { line-height: 1.2; }
-h3, h4 { letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
+h2 { font-size: var(--type-h2); line-height: 1.18; }
+h3 { font-size: var(--type-h3); line-height: 1.22; letter-spacing: -0.04em; margin-bottom: .55em; font-weight: 800; }
+h4 { font-size: var(--type-h4); line-height: 1.25; letter-spacing: -0.035em; margin-bottom: .55em; font-weight: 800; }
+h5 { font-size: var(--type-h5); line-height: 1.28; font-weight: 800; }
+h6 { font-size: var(--type-h6); line-height: 1.3; font-weight: 750; letter-spacing: -0.02em; }
 
 /* Mid-flow headings (not kicker → title pairs in page chrome). */
-:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.h-section-label):not(.h-section__label):not(.h-hero__kicker):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4):not(.display-title),
-:where(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-image, .wp-block-code, .wp-block-preformatted) + :where(h2, h3, h4) {
+:where(p, ul, ol, blockquote, pre, figure, table, dl):not(.eyebrow):not(.h-section-label):not(.h-section__label):not(.h-hero__kicker):not(.legal-meta):not(.sec-intro):not(.lead) + :where(h2, h3, h4, h5, h6):not(.display-title),
+:where(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-image, .wp-block-code, .wp-block-preformatted) + :where(h2, h3, h4, h5, h6) {
   margin-top: 1.85em;
 }
 
@@ -188,9 +196,9 @@ img { max-width: 100%; display: block; }
   margin-bottom: .85rem;
 }
 .display-title.is-section {
-  font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+  font-size: var(--type-h2);
   letter-spacing: -0.04em;
-  line-height: 1.2;
+  line-height: 1.18;
   margin-bottom: .85rem;
 }
 
@@ -7689,8 +7697,8 @@ html.mh-dark .svc-audience-card {
 }
 .concept-story__block { margin: 0; }
 .concept-story__block h2 {
-  font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.25 var(--font-display);
-  letter-spacing: -0.03em;
+  font: 800 var(--type-h2)/1.2 var(--font-display);
+  letter-spacing: -0.04em;
   margin: 0 0 .55rem;
 }
 .concept-story__block p {
@@ -7734,8 +7742,8 @@ html.mh-dark .svc-audience-card {
 }
 .concept-section { margin: 0 0 1.9rem; }
 .concept-section h2 {
-  font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.2 var(--font-display);
-  letter-spacing: -0.03em;
+  font: 800 var(--type-h2)/1.2 var(--font-display);
+  letter-spacing: -0.04em;
   margin: 0 0 .65rem;
 }
 .concept-section p {
@@ -11221,9 +11229,11 @@ html.mh-dark .journal-topic-card {
 .post-prose > :where(h2, h3, h4):first-child {
   margin-top: 0;
 }
-.post-prose h2 { font-size: clamp(1.4rem, 2.2vw, 1.65rem); }
-.post-prose h3 { font-size: clamp(1.2rem, 1.6vw, 1.35rem); letter-spacing: -0.035em; }
-.post-prose h4 { font-size: 1.05rem; letter-spacing: -0.03em; }
+.post-prose h2 { font-size: var(--type-h2); }
+.post-prose h3 { font-size: var(--type-h3); letter-spacing: -0.035em; }
+.post-prose h4 { font-size: var(--type-h4); letter-spacing: -0.03em; }
+.post-prose h5 { font-size: var(--type-h5); }
+.post-prose h6 { font-size: var(--type-h6); }
 .post-prose a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .post-prose a:hover { color: var(--color-accent-hover); }
 .post-prose strong { color: var(--color-text); }
@@ -12126,7 +12136,7 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 }
 .legal-prose > .eyebrow { margin-bottom: .55rem; }
 .legal-prose > h2 {
-  font: 800 clamp(1.35rem, 2.4vw, 1.75rem)/1.15 var(--font-display);
+  font: 800 var(--type-h2)/1.15 var(--font-display);
   margin-top: 0;
   margin-bottom: 1rem;
 }

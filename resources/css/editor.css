@@ -38,15 +38,29 @@
 }
 
 .editor-styles-wrapper h2.wp-block-heading {
-  font-size: clamp(1.4rem, 2.2vw, 1.65rem);
+  font-size: clamp(1.75rem, 3.2vw, 2.2rem);
   margin: 1.85em 0 .55em;
   line-height: 1.15;
 }
 
 .editor-styles-wrapper h3.wp-block-heading {
-  font-size: clamp(1.2rem, 1.6vw, 1.35rem);
+  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
   margin: 1.65em 0 .5em;
   line-height: 1.2;
+}
+
+.editor-styles-wrapper h4.wp-block-heading {
+  font-size: clamp(1.32rem, 2vw, 1.58rem);
+  margin: 1.45em 0 .45em;
+  line-height: 1.25;
+}
+
+.editor-styles-wrapper h5.wp-block-heading {
+  font-size: clamp(1.22rem, 1.6vw, 1.42rem);
+}
+
+.editor-styles-wrapper h6.wp-block-heading {
+  font-size: clamp(1.2rem, 1.45vw, 1.4rem);
 }
 
 .editor-styles-wrapper .wp-block-heading:first-child {

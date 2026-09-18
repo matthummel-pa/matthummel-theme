@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.27 — Heading scale above body copy
+
+- `h2`–`h6` use a stepped type scale (`--type-h2` through `--type-h6`) so section titles no longer match paragraph size.
+- Project story / architecture / theme-details headings, journal `.post-prose`, and legal `h2` use the same scale. Card titles keep their own sizes.
+
 ## 3.6.26 — Project header pills, note, journal cats
 
 - Project heroes group type + industry/place pills with the title. Combined `Themes · Real estate` strings split; type-plural cats (`Themes` next to `Theme`) stay hidden.
