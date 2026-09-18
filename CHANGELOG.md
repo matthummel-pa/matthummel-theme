@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.17 — Kicker to heading gap
+
+- About 12px (`margin-top: 12px`) between section kickers and the heading. Still not the old `1.85em` mid-flow gap. Intro copy under the heading is unchanged.
+
 ## 3.6.16 — Local hostname
 
 - Local WordPress accepts `matthummel-theme.local` as well as `localhost` / `127.0.0.1` (home/siteurl follow the request host). Production hosts are unchanged.
