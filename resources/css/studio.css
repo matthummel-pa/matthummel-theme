@@ -2879,3 +2879,25 @@ html.mh-dark .project-hero-crumb {
 .entry-content h6 {
   font-size: var(--type-h6);
 }
+
+/* ── 3.6.28 Footer copyright centered on small screens ───────────────────── */
+@media (max-width: 860px) {
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: .55rem;
+  }
+  .footer-bottom .footer-copy,
+  .footer-bottom .footer-legal-links,
+  .footer-bottom .footer-stack {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 36rem;
+    justify-content: center;
+    text-align: center;
+  }
+}
