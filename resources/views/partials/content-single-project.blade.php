@@ -9,8 +9,6 @@
   $gh = \App\mh_project_github_facts($postId, $card);
   $slides = \App\mh_project_page_slides($postId, $card);
   $title = (string) ($card['title'] ?? get_the_title());
-  $cat = (string) ($card['cat'] ?? '');
-  $place = (string) ($card['place'] ?? '');
   $tech = $card['tech'] ?? [];
   $demo = (string) ($story['demo'] !== '' ? $story['demo'] : ($card['demo'] ?? ''));
   if ($demo === '' && $gh['homepage'] !== '') {
@@ -24,7 +22,6 @@
   if ($summary === '' && $gh['desc'] !== '') {
     $summary = (string) $gh['desc'];
   }
-  $eyebrow = \App\mh_project_display_eyebrow((string) ($story['eyebrow'] ?? ''));
   $deliverables = is_array($story['deliverables'] ?? null) ? $story['deliverables'] : [];
   $benefits = is_array($story['benefits'] ?? null) ? $story['benefits'] : [];
   $features = $deliverables !== [] ? $deliverables : $benefits;
@@ -55,34 +52,23 @@
 @endphp
 
 <article {!! post_class('concept-page project-page') !!}>
-  @component('partials.page-hero')
-    <p class="eyebrow">
+  @component('partials.page-hero', ['extra' => 'page-header--project'])
+    <p class="project-hero-crumb">
       <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
-      <span aria-hidden="true"> / </span>
-      {{ $eyebrow }}
     </p>
-    <h1 class="display-title is-hero">{{ $title }}</h1>
+    <div class="project-hero-head">
+      @include('partials.project-type-row', ['p' => $card])
+      <h1 class="display-title is-hero">{{ $title }}</h1>
+    </div>
     @if (! empty($case['notice']))
       <p class="concept-spec-banner" role="note">{{ $case['notice'] }}</p>
     @endif
     @if ($summary !== '')
       <p class="lead">{{ $summary }}</p>
     @endif
-    <p class="pf-meta" style="margin-top:.85rem">
-      @if ($cat !== '')
-        <span>{{ $cat }}</span>
-      @endif
-      @if ($cat !== '' && $place !== '')
-        <span aria-hidden="true"> · </span>
-      @endif
-      @if ($place !== '')
-        <span>{!! \App\mh_svg_icon('map', 14) !!} {{ $place }}</span>
-      @endif
-      @if ($gh['repo'] !== '')
-        <span aria-hidden="true"> · </span>
-        <span>{{ $gh['owner'] }}/{{ $gh['repo'] }}</span>
-      @endif
-    </p>
+    @if ($gh['repo'] !== '')
+      <p class="project-hero-repo">{{ $gh['owner'] }}/{{ $gh['repo'] }}</p>
+    @endif
     <div class="concept-hero-actions">
       @if ($demo !== '')
         <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
@@ -193,7 +179,10 @@
             @endforeach
           </div>
         @endif
-        <p class="project-stage__caption">{{ __('Sample project. Not a client site.', 'sage') }}</p>
+        <p class="project-stage__note" role="note">
+          <span class="project-stage__note-kicker">{{ __('Note', 'sage') }}</span>
+          <span class="project-stage__note-text">{{ __('Sample project. Not a client site.', 'sage') }}</span>
+        </p>
       @endif
     </div>
 

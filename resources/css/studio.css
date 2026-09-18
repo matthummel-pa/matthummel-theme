@@ -1093,7 +1093,7 @@ body {
 }
 .project-detail-block h2 {
   margin: 0 0 .7rem;
-  font: 750 clamp(1.15rem, 2vw, 1.35rem)/1.2 var(--font-display);
+  font: 800 var(--type-h2)/1.2 var(--font-display);
 }
 .project-detail-block p {
   margin: 0;
@@ -1296,7 +1296,9 @@ html.mh-dark .project-stage__shot img {
 .spec-badge,
 .filter-pill,
 .h-case__concept,
-.h-work-cat-badge {
+.h-work-cat-badge,
+.project-cat-pill,
+.project-place-pill {
   width: fit-content;
   max-width: 100%;
   flex: 0 0 auto;
@@ -1880,7 +1882,7 @@ html.mh-dark .project-spec-block .project-langs {
 }
 .project-info-section .display-title.is-section {
   margin: 0 0 .55rem;
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-size: var(--type-h2);
   letter-spacing: -.03em;
 }
 .project-info-section .project-stat-grid,
@@ -2639,4 +2641,241 @@ html.mh-dark .site-footer a.footer-avail:hover {
   color: #fff;
   background: #166534;
   border-color: #166534;
+}
+
+/* ── 3.6.26 Project header pills, note, journal cats ─────────────────────── */
+.page-header--project .page-header-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.project-hero-crumb {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 .7rem;
+  font: 650 .78rem/1.2 var(--font-display);
+  letter-spacing: .04em;
+  color: var(--gray-600);
+}
+.project-hero-crumb .concept-crumb {
+  color: var(--blue-700);
+  text-decoration: none;
+}
+.project-hero-crumb .concept-crumb:hover,
+.project-hero-crumb .concept-crumb:focus-visible {
+  color: var(--blue-400);
+  text-decoration: underline;
+}
+.project-hero-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .45rem;
+  width: 100%;
+}
+.project-hero-head .project-type-row {
+  margin: 0;
+}
+.project-hero-head .display-title.is-hero {
+  margin: 0;
+}
+.project-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: .55rem 0 0;
+}
+.page-header .project-type-row {
+  margin-top: 0;
+}
+.project-type-row .spec-badge {
+  margin: 0;
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #fff;
+}
+.project-cat-pill,
+.project-place-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;
+  padding: .22rem .6rem;
+  border-radius: 999px;
+  border: 1px solid var(--blue-100);
+  background: var(--white);
+  color: var(--blue-800);
+  font: 650 .68rem/1 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.project-place-pill {
+  background: var(--gray-50);
+  border-color: var(--color-border);
+  color: var(--gray-700);
+  letter-spacing: .01em;
+  text-transform: none;
+}
+.project-type-row + :where(h1, h2, h3, .display-title) {
+  margin-top: 12px;
+}
+.project-hero-repo {
+  margin: .55rem 0 0;
+  font: 600 .82rem/1.4 var(--font-mono, var(--font-display));
+  color: var(--gray-600);
+}
+.project-stage__gh-desc {
+  padding: .95rem 1.1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius);
+}
+.project-stage__note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .4rem .75rem;
+  margin: 1rem 0 0;
+  padding: .95rem 1.1rem;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-left: 4px solid var(--blue-400);
+  border-radius: var(--radius);
+  font-size: .92rem;
+  line-height: 1.5;
+  color: var(--gray-800);
+}
+.project-stage__note-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: .18rem .45rem;
+  border-radius: 999px;
+  background: var(--blue-600);
+  color: #fff;
+  font: 700 .65rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.project-stage__note-text {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-weight: 600;
+}
+.post-card .post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem .5rem;
+}
+.post-card .post-cats.project-type-row {
+  display: inline-flex;
+  margin: 0;
+}
+.post-card .post-cat.project-cat-pill {
+  min-height: 0;
+  text-decoration: none;
+  border-radius: 999px;
+}
+.post-card .post-cat.project-cat-pill:hover,
+.post-card .post-cat.project-cat-pill:focus-visible,
+.h-journal__cat.project-cat-pill:hover,
+.h-journal__cat.project-cat-pill:focus-visible {
+  background: var(--blue-600);
+  color: #fff;
+  border-color: var(--blue-600);
+}
+.work-card--featured .project-type-row .spec-badge,
+.work-card--featured .project-cat-pill,
+.work-card--featured .project-place-pill {
+  border-color: rgba(255, 255, 255, .28);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+}
+html.mh-dark .project-type-row .spec-badge {
+  background: var(--blue-400);
+  border-color: var(--blue-400);
+  color: var(--gray-900);
+}
+html.mh-dark .project-cat-pill {
+  background: var(--gray-900, #0f172a);
+  border-color: var(--blue-800);
+  color: var(--blue-200);
+}
+html.mh-dark .project-place-pill {
+  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+  border-color: var(--color-border);
+  color: var(--gray-300);
+}
+html.mh-dark .project-stage__note,
+html.mh-dark .project-stage__gh-desc {
+  background: color-mix(in srgb, var(--gray-800) 55%, transparent);
+  color: var(--gray-200);
+}
+html.mh-dark .project-stage__note {
+  border-color: var(--blue-800);
+  border-left-color: var(--blue-400);
+}
+html.mh-dark .project-stage__note-kicker {
+  background: var(--blue-400);
+  color: var(--gray-900);
+}
+html.mh-dark .project-hero-crumb .concept-crumb {
+  color: var(--blue-300);
+}
+html.mh-dark .project-hero-repo,
+html.mh-dark .project-hero-crumb {
+  color: var(--gray-400);
+}
+
+/* ── 3.6.27 Heading scale (last-win over paragraph-sized h2–h6) ─────────── */
+.about-story h2,
+.about-story h3,
+.concept-story h2,
+.concept-story h3,
+.concept-section h2,
+.concept-section h3,
+.project-detail-block h2,
+.project-detail-block h3,
+.project-features .display-title.is-section,
+.project-metrics .display-title.is-section,
+.project-info-section .display-title.is-section,
+.legal-prose h2,
+.legal-prose h3,
+.a11y-prose h2,
+.a11y-prose h3,
+.post-prose h2,
+.entry-content h2 {
+  font-size: var(--type-h2);
+  line-height: 1.18;
+}
+.about-story h3,
+.concept-story h3,
+.concept-section h3,
+.project-detail-block h3,
+.legal-prose h3,
+.a11y-prose h3,
+.post-prose h3,
+.entry-content h3 {
+  font-size: var(--type-h3);
+  line-height: 1.22;
+}
+.post-prose h4,
+.entry-content h4,
+.legal-prose h4 {
+  font-size: var(--type-h4);
+}
+.post-prose h5,
+.entry-content h5 {
+  font-size: var(--type-h5);
+}
+.post-prose h6,
+.entry-content h6 {
+  font-size: var(--type-h6);
 }

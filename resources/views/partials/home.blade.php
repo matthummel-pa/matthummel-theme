@@ -150,7 +150,7 @@
             <div class="h-journal-item__body">
               <div class="h-journal-item__meta">
                 @if ($post['cat'])
-                  <a class="h-journal__cat" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
+                  <a class="h-journal__cat project-cat-pill" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
                 @endif
                 <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" itemprop="datePublished">{{ $post['date'] }}</time>
                 @if (! empty($post['minutes']))

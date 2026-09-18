@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.6.27 — Heading scale above body copy
+
+- `h2`–`h6` use a stepped type scale (`--type-h2` through `--type-h6`) so section titles no longer match paragraph size.
+- Project story / architecture / theme-details headings, journal `.post-prose`, and legal `h2` use the same scale. Card titles keep their own sizes.
+
+## 3.6.26 — Project header pills, note, journal cats
+
+- Project heroes group type + industry/place pills with the title. Combined `Themes · Real estate` strings split; type-plural cats (`Themes` next to `Theme`) stay hidden.
+- Theme details no longer repeat Type/Place as plain text. Those live only in the header pills.
+- Sample-project note under screenshots is a blue-tinted callout with a **Note** pill.
+- Journal cards put unique category pills on the date/meta row (Uncategorized skipped).
+
+## 3.6.25 — Project type pills and sample note
+
+- Project headers use a Projects crumb, then type + category + place pills, then the title. Plain-text `Themes · Real estate` is gone.
+- Type sits next to the category pill. Catalog cats that only pluralize the type (`Themes` next to `Theme`) are skipped so the row is not duplicated.
+- Work, home, and thank-you cards share the same pill row. Journal category chips use the same hug-content pills.
+- The sample-project line under screenshots is a gray note with a **Note** kicker.
+
 ## 3.6.24 — Footer social under Open for work
 
 - Social icons sit under the Open for work pill in the footer brand column, not in the bottom bar.

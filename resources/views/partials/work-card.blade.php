@@ -44,13 +44,10 @@
     </a>
   @endif
   <div class="work-body">
-    @include('partials.spec-badge', ['p' => $p])
     @if ($featured)
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
-    <p class="pf-meta">
-      {{ $p['cat'] }} · {{ $p['place'] }}
-    </p>
+    @include('partials.project-type-row', ['p' => $p])
     <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
     <p>{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))

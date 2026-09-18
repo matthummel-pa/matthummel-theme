@@ -530,7 +530,6 @@ function mh_project_buyer_docs(int $post_id, array $card): array
     $cat = (string) ($card['cat'] ?? '');
     $slug = (string) ($card['slug'] ?? '');
     $title = (string) ($card['title'] ?? '');
-    $place = (string) ($card['place'] ?? '');
     $tech = $card['tech'] ?? [];
     if (! is_array($tech)) {
         $tech = [];
@@ -548,12 +547,6 @@ function mh_project_buyer_docs(int $post_id, array $card): array
     }
 
     $specs = [];
-    if ($cat !== '') {
-        $specs[] = [__('Type', 'sage'), $cat];
-    }
-    if ($place !== '') {
-        $specs[] = [__('Place', 'sage'), $place];
-    }
     $specs[] = [__('CMS', 'sage'), 'WordPress'];
     $theme = 'Custom WordPress theme';
     foreach ($tech as $item) {

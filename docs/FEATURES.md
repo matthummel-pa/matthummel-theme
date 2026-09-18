@@ -2,6 +2,23 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.27 heading scale)
+
+- Body stays `--type-body`. Content headings use `--type-h2` … `--type-h6` in `portfolio.css` (`:root`) plus last-win in `studio.css`. Do not set content `h2` back to `clamp(1.15rem, 2vw, 1.35rem)`.
+- Card titles (work cards, who-cards, glance) keep their own `font-size`.
+
+## Editor’s notes (3.6.26 project header / journal cats)
+
+- Pill labels come from `mh_project_type_row_labels()`. Do not print Type/Place again in `mh_project_buyer_docs()` specs.
+- Combined cat strings (`Themes · Real estate`) split; type-plural cats stay off the row. Place stays a separate pill.
+- Journal cards: unique cats on the meta row. Skip `uncategorized`. Do not render a second cat line under the date.
+
+## Editor’s notes (3.6.25 project type pills)
+
+- Shared chrome is `partials/project-type-row.blade.php`. Do not put a second plain-text `pf-meta` cat line on project heroes or work cards.
+- Skip category when it is the type label or its plural (`Theme` / `Themes`). Keep industry cats (`Tours`) and place pills.
+- Screenshot disclaimer is `.project-stage__note`, not a muted caption.
+
 ## Editor’s notes (3.6.24 footer social / green hover)
 
 - Footer social lives in `.footer-brand-social` under Open for work. Do not put `.soc-list` back in `.footer-bottom`.
