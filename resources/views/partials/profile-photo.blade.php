@@ -8,7 +8,7 @@
 @if ($url)
   <img
     class="{{ $class }}"
-    src="{{ esc_url($url) }}"
+    src="{!! esc_url($url) !!}"
     width="{{ $size }}"
     height="{{ $size }}"
     decoding="async"
