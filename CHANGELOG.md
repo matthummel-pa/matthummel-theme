@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.20 — Footer signup, Get updates admin
+
+- Footer brand column drops Say hello / GitHub / RSS chips. Open for work is a short pill, same green as the header.
+- **Get updates** is a standard email signup (Sign up). Addresses live in `{prefix}mh_newsletter`.
+- wp-admin **Get updates** lists signups and exports CSV. No newsletter plugin.
+
 ## 3.6.19 — Footer social, RSS, hover
 
 - Social icons sit in the bottom footer bar. No circle border or hover fill — the icon color changes on hover and focus.
