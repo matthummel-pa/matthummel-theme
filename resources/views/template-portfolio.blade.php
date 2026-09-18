@@ -48,6 +48,15 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => array_values(array_filter([
+    ['portfolio-intro-heading', __('Overview', 'sage')],
+    $portfolioConcepts !== [] ? ['portfolio-concepts-heading', __('Concepts', 'sage')] : null,
+    $featured !== [] ? ['portfolio-featured-heading', __('Featured', 'sage')] : null,
+    $live !== [] ? ['portfolio-live-heading', __('Updated', 'sage')] : null,
+  ])),
+])
+
 {{-- INTRO --}}
 <section class="pf-section" aria-labelledby="portfolio-intro-heading">
   <div class="container wide">

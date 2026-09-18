@@ -49,8 +49,16 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['write', __('Write', 'sage')],
+    ['tips', __('What helps', 'sage')],
+    ['next', __('What happens next', 'sage')],
+  ],
+])
+
 {{-- FORM + ASIDE --}}
-<section class="contact-main" aria-labelledby="contact-form-heading">
+<section class="contact-main" id="write" aria-labelledby="contact-form-heading">
   <div class="container wide contact-split">
 
     <div class="contact-form-panel">
@@ -179,7 +187,7 @@
 </section>
 
 {{-- WHAT TO SEND --}}
-<section class="pf-section pf-section--alt" aria-labelledby="contact-tips-heading">
+<section class="pf-section pf-section--alt" id="tips" aria-labelledby="contact-tips-heading">
   <div class="container wide">
     <div class="sec-head">
       <div>
@@ -200,7 +208,7 @@
 </section>
 
 {{-- WHAT HAPPENS NEXT --}}
-<section class="pf-section" aria-labelledby="contact-expect-heading">
+<section class="pf-section" id="next" aria-labelledby="contact-expect-heading">
   <div class="container wide">
     <div class="sec-head">
       <div>

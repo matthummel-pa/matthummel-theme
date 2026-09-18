@@ -59,6 +59,16 @@
   @endslot
 @endcomponent
 
+@if (! $isEmpty)
+  @include('partials.page-nav', [
+    'pills' => [
+      ['gallery', __('Projects', 'sage')],
+      ['how', __('How it works', 'sage')],
+      ['work-faq', __('FAQ', 'sage')],
+    ],
+  ])
+@endif
+
 @if ($isEmpty)
   <div class="container wide page-block">
     <div class="work-empty" role="status">
@@ -87,7 +97,7 @@
     'secondaryHref' => home_url('/hire/'),
   ])
 @else
-  <div class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
+  <div id="gallery" class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
     <h2 id="work-gallery-heading" class="display-title is-section">{{ \App\mh_projects_listing_default('gallery_h2') }}</h2>
     <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', \App\mh_projects_listing_default('fit_intro')) }}</p>
 
@@ -154,7 +164,7 @@
     </div>
   </div>
 
-  <section class="pf-section work-guide" aria-labelledby="work-how-heading">
+  <section class="pf-section work-guide" id="how" aria-labelledby="work-how-heading">
     <div class="container wide">
       <p class="eyebrow">{{ __('Three steps', 'sage') }}</p>
       <h2 id="work-how-heading" class="display-title is-section">

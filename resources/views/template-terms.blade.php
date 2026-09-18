@@ -18,6 +18,18 @@
   <p class="lead">The terms that apply when you use this site or copy its code and content. Plain language.</p>
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['terms-overview-heading', __('Overview', 'sage')],
+    ['terms-ip-heading', __('IP', 'sage')],
+    ['terms-use-heading', __('Acceptable use', 'sage')],
+    ['terms-disclaimer-heading', __('No warranty', 'sage')],
+    ['terms-liability-heading', __('Liability', 'sage')],
+    ['terms-law-heading', __('Governing law', 'sage')],
+    ['terms-contact-heading', __('Questions', 'sage')],
+  ],
+])
+
 {{-- ── OVERVIEW ─────────────────────────────────────────── --}}
 <section class="pf-section" aria-labelledby="terms-overview-heading">
   <div class="container wide">

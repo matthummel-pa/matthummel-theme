@@ -155,8 +155,33 @@
   </div>
 </div>
 
+@php
+  $wooPills = [];
+  if ($isCart) {
+      $wooPills[] = ['woo-page-main', __('Cart', 'sage')];
+      if ($cartCount === 0 && $startHere !== []) {
+          $wooPills[] = ['woo-start-here', __('Easy start', 'sage')];
+      } elseif ($hasDesk) {
+          $wooPills[] = ['woo-desk-help-h', __('Help', 'sage')];
+      }
+  } elseif ($isCheckout) {
+      $wooPills[] = ['woo-page-main', __('Payment', 'sage')];
+      if ($hasDesk) {
+          $wooPills[] = ['woo-desk-next-h', __('Next', 'sage')];
+      }
+  } elseif ($isAccount) {
+      $wooPills[] = ['woo-page-main', __('Account', 'sage')];
+      if ($isLoggedIn) {
+          $wooPills[] = ['woo-account-jump-h', __('Shortcuts', 'sage')];
+      } else {
+          $wooPills[] = ['woo-login-next-h', __('Next', 'sage')];
+      }
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $wooPills])
+
 {{-- Main WC content --}}
-<div class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}{{ $hasDesk ? ' woocommerce-wrap--desk' : '' }}">
+<div id="woo-page-main" class="container wide page-block woocommerce-wrap{{ $isCheckout ? ' woocommerce-wrap--checkout' : '' }}{{ $isAccount ? ' woocommerce-wrap--account' : '' }}{{ $isCart ? ' woocommerce-wrap--cart' : '' }}{{ $hasDesk ? ' woocommerce-wrap--desk' : '' }}">
 
   @if ($shortcode !== '')
     {!! do_shortcode($shortcode) !!}
@@ -177,7 +202,7 @@
 
     @if ($isCart && $cartCount === 0)
       @if ($startHere !== [])
-        <div class="woo-start-here" aria-label="{{ __('Start here', 'sage') }}">
+        <div id="woo-start-here" class="woo-start-here" aria-label="{{ __('Start here', 'sage') }}">
           <p class="woo-start-here__label">{{ __('Easy start', 'sage') }}</p>
           <div class="woo-start-here__grid">
             @foreach ($startHere as $pick)

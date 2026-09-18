@@ -23,18 +23,26 @@
     @endslot
   @endcomponent
 
+  @include('partials.page-nav', [
+    'pills' => [
+      ['aff-where', __('Where they appear', 'sage')],
+      ['aff-choose', __('How I choose', 'sage')],
+      ['aff-label', __('How they’re labeled', 'sage')],
+    ],
+  ])
+
   <article class="container narrow legal-page legal-page--boost" aria-labelledby="affiliate-page-heading">
     <h2 id="affiliate-page-heading" class="visually-hidden">{{ __('Affiliate disclosure details', 'sage') }}</h2>
     <div class="post-prose">
       <p>Some pages on this site include affiliate links. If you follow one of those links and make a purchase, I may earn a commission at no additional cost to you.</p>
 
-      <h2>Where affiliate links appear</h2>
+      <h2 id="aff-where">Where affiliate links appear</h2>
       <p>Compensated links may show up in Journal posts, on <a href="{{ home_url('/uses/') }}">Uses</a>, on <a href="{{ home_url('/resources/') }}">Resources</a>, and in related tool lists. This site stays a hireable portfolio first — themes for sale and tool recommendations are secondary.</p>
 
-      <h2>How I choose what to recommend</h2>
+      <h2 id="aff-choose">How I choose what to recommend</h2>
       <p>Payment does not determine whether a product is included or how it is evaluated. I aim to recommend tools that fit the specific use case described, and I will state when an evaluation is based on research rather than firsthand use.</p>
 
-      <h2>How affiliate content is labeled</h2>
+      <h2 id="aff-label">How affiliate content is labeled</h2>
       <p>Pages with compensated links include a clear disclosure near the top. Individual compensated links are marked with an Affiliate label and use a sponsored <code>rel</code> attribute in the markup.</p>
 
       <h2>Prices, features, and results</h2>

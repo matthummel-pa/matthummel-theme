@@ -110,6 +110,16 @@
 @endcomponent
 
 @php
+  $usesPills = [
+    ['uses-intro-heading', __('Overview', 'sage')],
+  ];
+  foreach ($sections as $s) {
+    $usesPills[] = ['uses-'.\Illuminate\Support\Str::slug($s['title']), $s['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $usesPills])
+
+@php
   $hasAffiliate = false;
   foreach ($sections as $s) {
     foreach ($s['items'] as $row) {

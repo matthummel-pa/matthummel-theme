@@ -87,6 +87,17 @@
   @endslot
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['linkedin', __('LinkedIn', 'sage')],
+    ['skills', __('Skills', 'sage')],
+    ['need', __('To start', 'sage')],
+    ['process', __('Process', 'sage')],
+    ['handoff', __('Handoff', 'sage')],
+    ['contact-cta', __('Say hello', 'sage')],
+  ],
+])
+
 {{-- ── LINKEDIN PROFILE ────────────────────────────────── --}}
 <section class="pf-section pf-section--alt" id="linkedin" aria-labelledby="hire-li-heading">
   <div class="container wide">
@@ -213,7 +224,7 @@
 </section>
 
 {{-- ── WHAT I NEED FROM YOU ──────────────────────────── --}}
-<section class="pf-section" aria-labelledby="hire-need-heading">
+<section class="pf-section" id="need" aria-labelledby="hire-need-heading">
   <div class="container wide">
     <div class="hire-need-layout">
       <div class="hire-need-copy">

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.23 — Shared On this page nav
+
+- Every multi-section page uses the same sticky **On this page** row (`partials/page-nav.blade.php`): label, hug-content pills, overflow arrows. Home, About, Work, Hire, Services, Code, Contact, Now, Journal, posts, projects, shop, products, legal, thank-you, search, archives, and cart/account.
+- Pages that only had a sidebar card or no jumper now get the sticky scroller. The journal post sidebar no longer duplicates a second On this page list.
+- Cart / checkout / My account keep desk tools; the account card is labeled **Next steps** so it does not collide with the sticky row.
+
 ## 3.6.22 — Footer Get updates, simple heroes
 
 - Footer brand column drops Say hello / GitHub / RSS chips and the logo mark. Open for work is a short green pill, same as the header.

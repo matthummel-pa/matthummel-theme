@@ -42,6 +42,20 @@
   @endslot
 @endcomponent
 
+@php
+  $nowPills = [
+    ['studio', __('Studio', 'sage')],
+  ];
+  if (\App\mh_is_hireable($gh)) {
+    $nowPills[] = ['availability', __('Open for work', 'sage')];
+  }
+  $nowPills[] = ['writing', __('Writing', 'sage')];
+  $nowPills[] = ['ai', __('How I work', 'sage')];
+  $nowPills[] = ['life', __('Life', 'sage')];
+  $nowPills[] = ['list', __('Short list', 'sage')];
+@endphp
+@include('partials.page-nav', ['pills' => $nowPills])
+
 {{-- ── MAIN CONTENT + SIDEBAR ─────────────────────────── --}}
 <section class="pf-section" aria-label="Current focus">
   <div class="container wide now-layout">
@@ -49,7 +63,7 @@
     <div class="now-main">
 
       {{-- Studio work --}}
-      <article class="now-block">
+      <article class="now-block" id="studio">
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('briefcase', 18) !!}</div>
           <div>
@@ -66,9 +80,7 @@
 
       {{-- Open for work (GitHub hireable) --}}
       @if (\App\mh_is_hireable($gh))
-      <article class="now-block">
-        <div class="now-block__head">
-          <div class="now-block__icon">{!! \App\mh_svg_icon('users', 18) !!}</div>
+      <article class="now-block" id="availability">
           <div>
             <p class="now-block__eyebrow">Availability</p>
             <h2 class="now-block__title">{{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}</h2>
@@ -84,9 +96,7 @@
       @endif
 
       {{-- Writing --}}
-      <article class="now-block">
-        <div class="now-block__head">
-          <div class="now-block__icon">{!! \App\mh_svg_icon('pen', 18) !!}</div>
+      <article class="now-block" id="writing">
           <div>
             <p class="now-block__eyebrow">Writing</p>
             <h2 class="now-block__title">Notes from real builds</h2>
@@ -98,9 +108,7 @@
       </article>
 
       {{-- AI and tooling --}}
-      <article class="now-block">
-        <div class="now-block__head">
-          <div class="now-block__icon">{!! \App\mh_svg_icon('cursor-ai', 18) !!}</div>
+      <article class="now-block" id="ai">
           <div>
             <p class="now-block__eyebrow">How I work</p>
             <h2 class="now-block__title">Building with AI, reviewing every line</h2>
@@ -112,9 +120,7 @@
       </article>
 
       {{-- Life --}}
-      <article class="now-block">
-        <div class="now-block__head">
-          <div class="now-block__icon">{!! \App\mh_svg_icon('map', 18) !!}</div>
+      <article class="now-block" id="life">
           <div>
             <p class="now-block__eyebrow">Life</p>
             <h2 class="now-block__title">Family and focus</h2>
@@ -124,7 +130,7 @@
       </article>
 
       {{-- The short list --}}
-      <article class="now-block now-block--list">
+      <article class="now-block now-block--list" id="list">
         <div class="now-block__head">
           <div class="now-block__icon">{!! \App\mh_svg_icon('check', 18) !!}</div>
           <div>

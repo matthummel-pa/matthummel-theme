@@ -15,22 +15,6 @@
     </details>
   @endif
 
-  {{-- Table of contents (desktop) --}}
-  @if ($toc)
-    <details class="side-card side-card--toc side-card--fold">
-      <summary class="side-card-title">On this page</summary>
-      <nav aria-label="Table of contents">
-        <ol class="side-toc">
-          @foreach ($toc as $item)
-            <li class="side-toc-h{{ $item['level'] }}">
-              <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
-            </li>
-          @endforeach
-        </ol>
-      </nav>
-    </details>
-  @endif
-
   {{-- About the author --}}
   @php
     $gh = \App\Github::fetchUser(\App\mh_github_login());

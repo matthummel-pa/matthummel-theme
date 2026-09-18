@@ -36,6 +36,16 @@
   @endslot
 @endcomponent
 
+@php
+  $supportPills = [
+    ['support-intro-heading', __('How it works', 'sage')],
+  ];
+  foreach ($products as $product) {
+    $supportPills[] = [$product['slug'], $product['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $supportPills])
+
 <section class="pf-section work-guide" aria-labelledby="support-intro-heading">
   <div class="container wide">
     <h2 id="support-intro-heading" class="display-title is-section">

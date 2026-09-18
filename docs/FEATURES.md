@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.23 shared On this page)
+
+- Sticky jumper chrome is only `partials/page-nav.blade.php` (`.h-page-nav` + `page-nav-track` + `initSectionNav()`). Do not add a second TOC pattern (sidebar details, `.pf-product-toc`, About `<details>`).
+- Add the include after the hero when a page has two or more in-page sections. Pass `nested => true` only inside an existing column (product gallery).
+- Account desk “Next steps” is not the jumper. 404 stays without a row (one block).
+
 ## Editor’s notes (3.6.22 footer signup / simple heroes)
 
 - Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
@@ -204,7 +210,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.21 About section nav)
 
-- About page sticky pills are `.h-page-nav` with `data-section-nav` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
+- About page sticky pills use `partials/page-nav.blade.php` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
 
 ## Editor’s notes (3.5.20 shop-first marketing)
 
@@ -222,7 +228,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.17 home section pills)
 
-- Home “On this page” is sticky with scrollspy pills, same pattern as product pages (`section-nav.js`).
+- Home “On this page” is sticky with scrollspy pills via `partials/page-nav.blade.php` (`section-nav.js`).
 
 ## Editor’s notes (3.5.16 product gallery column)
 
