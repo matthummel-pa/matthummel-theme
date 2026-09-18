@@ -8,7 +8,7 @@ What the 3.x Sage theme does, and where it lives.
 - Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
 - Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
 - `partials/page-hero.blade.php` does not render `$split` / `$aside`. Do not restore the Mac-window `hero-panel` unless Matt asks.
-- Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`. Navy-to-navy looked like no hover.
+- Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`. Navy-to-navy looked like no hover. Footer text links underline on hover/focus. `.btn:hover` uses a solid fill (`background-image: none`), not the old dark gradient.
 
 ## Editor’s notes (3.6.19 footer social / hover)
 

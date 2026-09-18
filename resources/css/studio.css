@@ -147,8 +147,10 @@ body {
   font-weight: 700;
 }
 
-.btn:hover {
+.btn:hover,
+.btn:focus-visible {
   background: var(--blue-400);
+  background-image: none;
   border-color: var(--blue-400);
   color: var(--gray-900);
   transform: translateY(-1px);
@@ -2387,6 +2389,8 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .footer-follow__note a:hover,
 .footer-follow__note a:focus-visible {
   color: var(--blue-400);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .footer-quick-links a:hover,
 .footer-quick-links a:focus-visible {
@@ -2408,13 +2412,38 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
 .h-page-nav__pill:focus-visible {
   color: var(--blue-400);
 }
+
+/* Last-win interactive states: color must change, plus underline on text links. */
 a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
-a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+a:visited:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+a:visited:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
   color: var(--blue-400);
 }
+.site-footer a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+.site-footer a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+.site-footer a:visited:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
+.site-footer a:visited:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+  color: var(--blue-400);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible,
+.site-footer .soc-link:hover .mh-ico,
+.site-footer .soc-link:hover svg,
+.site-footer .soc-link:focus-visible .mh-ico,
+.site-footer .soc-link:focus-visible svg {
+  color: var(--blue-400);
+  fill: currentColor;
+  text-decoration: none;
+}
 .btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
-.btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
+.btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
+button.btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
+button.btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
   background: var(--blue-400);
+  background-image: none;
   border-color: var(--blue-400);
   color: var(--gray-900);
 }
@@ -2439,6 +2468,7 @@ a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
 .btn-hire:hover,
 .btn-hire:focus-visible {
   background: var(--blue-400);
+  background-image: none;
   border-color: var(--blue-400);
   color: var(--gray-900);
 }
@@ -2473,6 +2503,7 @@ html.mh-dark a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.fo
 html.mh-dark .btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
 html.mh-dark .btn:focus-visible:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark) {
   background: var(--blue-400);
+  background-image: none;
   border-color: var(--blue-400);
   color: var(--gray-900);
 }
