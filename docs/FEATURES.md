@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `partials/page-hero.blade.php` renders `$split` / `$aside` again. Do not hide `.page-header-split__aside` or `.h-hero-illu`. Glow/orbs stay off.
 - Snapshot photos use `.h-hero-illu__photo` in `partials/hero-panel.blade.php`. About is square (`--square`); work/journal shots are 16×10. Empty `alt` when the card title already names the image.
-- Current header nav hover is white on `--blue-800`, not `--blue-400` on navy. Last-win lives at the end of `studio.css`. Same for `.filter-pill.is-active` and `.h-page-nav__pill.is-active`.
+- Current header nav hover is white on `--blue-800`, not `--blue-400` on navy. Last-win lives at the end of `studio.css`. Same for `.filter-pill.is-active` and `.h-page-nav__pill.is-active`. Exclude those from the 3.6.21 site-wide blue hover.
 
 ## Editor’s notes (3.6.28 footer bottom on mobile)
 
