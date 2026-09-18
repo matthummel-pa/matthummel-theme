@@ -6,7 +6,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `partials/page-hero.blade.php` is a full-bleed photo hero: featured image, white wash, white copy panel, wavy bottom. Do not restore `$split` / `$aside` snapshot cards.
 - Home uses `.h-hero--photo.h-hero--viewport` (`min-height: calc(100dvh - header)`). Other marketing heroes share `.page-header__panel` at `42rem`.
-- Photo URL is `mh_hero_background_url()` (thumbnail → optional fallback → profile photo). Last-win CSS lives at the end of `studio.css` so 3.6.1 grey / no-image rules do not win.
+- Photo URL is `mh_hero_background_url()`: work featured image if it is not a headshot, else a page-matched studio screenshot (`mh_hero_scene_url()`). Never GitHub avatars, Gravatar, or `matt-hummel.jpg`.
 
 ## Editor’s notes (3.6.30 no hero availability pill)
 

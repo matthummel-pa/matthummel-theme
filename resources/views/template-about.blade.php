@@ -17,7 +17,7 @@
 @section('content')
 
 {{-- HERO (above the fold: name, headline, short lede, CTAs, facts panel) --}}
-@component('partials.page-hero', ['extra' => 'about-hero', 'image' => \App\mh_profile_photo_url(1200), 'imageAlt' => __('Matt Hummel', 'sage')])
+@component('partials.page-hero', ['extra' => 'about-hero'])
   <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
     <h1 class="display-title is-hero">

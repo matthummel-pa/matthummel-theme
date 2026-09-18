@@ -4102,7 +4102,141 @@ function mh_profile_photo_url(int $size = 160): string
 }
 
 /**
- * Full-bleed hero photo: page/post featured image, then an optional fallback, then the profile photo.
+ * True when a URL is a headshot, GitHub avatar, or Gravatar — not a work screenshot.
+ */
+function mh_is_profile_hero_url(string $url): bool
+{
+    $hay = strtolower($url);
+    if ($hay === '') {
+        return true;
+    }
+
+    foreach (['matt-hummel', 'avatars.githubusercontent.com', 'secure.gravatar.com', 'gravatar.com'] as $needle) {
+        if (str_contains($hay, $needle)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function mh_theme_image_uri(string $rel): string
+{
+    $rel = ltrim($rel, '/');
+    if ($rel === '') {
+        return '';
+    }
+    if (preg_match('#^https?://#i', $rel)) {
+        return mh_is_profile_hero_url($rel) ? '' : $rel;
+    }
+
+    $path = 'resources/images/'.$rel;
+    if (is_readable(get_theme_file_path($path))) {
+        return get_theme_file_uri($path);
+    }
+
+    return mh_studio_project_image_url(['image' => $rel]);
+}
+
+/**
+ * First public work/product screenshot that is not a portrait.
+ */
+function mh_first_work_hero_url(): string
+{
+    foreach (mh_work_page_items() as $item) {
+        $url = mh_studio_project_image_url($item);
+        if ($url !== '' && ! mh_is_profile_hero_url($url)) {
+            return $url;
+        }
+    }
+
+    return mh_theme_image_uri('work/hallowed-ground.jpg');
+}
+
+/**
+ * Bundled screenshot that matches the page: WordPress products and sample sites, never a headshot.
+ */
+function mh_hero_scene_url(?int $post_id = null): string
+{
+    $template = '';
+    if ($post_id !== null && $post_id > 0) {
+        $template = (string) get_page_template_slug($post_id);
+    }
+
+    if (is_singular('project')) {
+        $id = (int) get_queried_object_id();
+        $url = $id > 0 ? mh_project_card_image_url($id) : '';
+
+        return $url !== '' && ! mh_is_profile_hero_url($url) ? $url : mh_first_work_hero_url();
+    }
+
+    if (function_exists('is_product') && is_product()) {
+        $id = (int) get_queried_object_id();
+        if ($id > 0 && has_post_thumbnail($id)) {
+            $src = get_the_post_thumbnail_url($id, 'full');
+            if (is_string($src) && $src !== '' && ! mh_is_profile_hero_url($src)) {
+                return $src;
+            }
+        }
+
+        return mh_theme_image_uri('products/acreline/featured.webp');
+    }
+
+    if (is_home() && ! is_front_page()) {
+        $latest = get_posts([
+            'post_type' => 'post',
+            'posts_per_page' => 1,
+            'post_status' => 'publish',
+            'no_found_rows' => true,
+        ]);
+        if ($latest !== []) {
+            $img = mh_post_card_image((int) $latest[0]->ID);
+            if ($img !== '' && ! mh_is_profile_hero_url($img)) {
+                return $img;
+            }
+        }
+
+        return mh_theme_image_uri('work/first-shot.jpg');
+    }
+
+    $scenes = [
+        'template-home.blade.php' => 'products/acreline/01-homepage.webp',
+        'template-about.blade.php' => 'work/keystone-homes.jpg',
+        'template-projects.blade.php' => 'products/walkridge/01-homepage.webp',
+        'template-hire.blade.php' => 'work/ridgeline-realty.jpg',
+        'template-code.blade.php' => 'products/acreline/02-listings.webp',
+        'template-contact.blade.php' => 'products/acreline/05-contact.webp',
+        'template-services.blade.php' => 'work/cupola-field.jpg',
+        'template-now.blade.php' => 'products/acreline/featured.webp',
+        'template-uses.blade.php' => 'products/tocflow/featured.webp',
+        'template-resources.blade.php' => 'products/walkridge/featured.webp',
+        'template-support.blade.php' => 'products/acreline/07-book.webp',
+        'template-start.blade.php' => 'work/willoughby.jpg',
+        'template-portfolio.blade.php' => 'products/acreline/01-homepage.webp',
+        'template-changelog.blade.php' => 'products/walkridge/featured.webp',
+        'template-privacy.blade.php' => 'work/herr-ridge.jpg',
+        'template-terms.blade.php' => 'work/herr-ridge.jpg',
+        'template-accessibility.blade.php' => 'work/herr-ridge.jpg',
+        'template-affiliate-disclosure.blade.php' => 'products/walkridge/featured.webp',
+    ];
+
+    if (is_front_page() || $template === 'template-home.blade.php') {
+        return mh_theme_image_uri($scenes['template-home.blade.php']);
+    }
+
+    if (function_exists('is_shop') && is_shop()) {
+        return mh_theme_image_uri('products/walkridge/01-homepage.webp');
+    }
+
+    if ($template !== '' && isset($scenes[$template])) {
+        return mh_theme_image_uri($scenes[$template]);
+    }
+
+    return mh_first_work_hero_url();
+}
+
+/**
+ * Full-bleed hero photo: work featured image when it is not a portrait, then a page-matched studio screenshot.
  */
 function mh_hero_background_url(?int $post_id = null, string $fallback = ''): string
 {
@@ -4124,19 +4258,29 @@ function mh_hero_background_url(?int $post_id = null, string $fallback = ''): st
         }
     }
 
+    $candidates = [];
+
     if ($post_id > 0 && has_post_thumbnail($post_id)) {
         $src = get_the_post_thumbnail_url($post_id, 'full');
         if (is_string($src) && $src !== '') {
-            return $src;
+            $candidates[] = $src;
         }
     }
 
     $fallback = trim($fallback);
     if ($fallback !== '') {
-        return $fallback;
+        $candidates[] = $fallback;
     }
 
-    return mh_profile_photo_url(1200);
+    $candidates[] = mh_hero_scene_url($post_id > 0 ? $post_id : null);
+
+    foreach ($candidates as $url) {
+        if ($url !== '' && ! mh_is_profile_hero_url($url)) {
+            return $url;
+        }
+    }
+
+    return mh_first_work_hero_url();
 }
 
 add_action('customize_register', function (\WP_Customize_Manager $wp): void {
