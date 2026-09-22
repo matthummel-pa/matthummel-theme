@@ -147,9 +147,9 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Sage', 'Tailwind'],
         ],
         [
-            'name' => 'tocflow',
-            'desc' => 'WordPress plugin that builds a table of contents from heading blocks. PHP, Gutenberg, and a small public API.',
-            'url' => 'https://github.com/matthummel-pa/tocflow',
+            'name' => 'tocguide',
+            'desc' => 'WordPress plugin that builds a table of contents from heading blocks, with an optional Reading Guide. PHP, Gutenberg, and a small public API.',
+            'url' => 'https://github.com/matthummel-pa/tocguide',
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
@@ -1881,7 +1881,7 @@ function mh_register_project_post_type(): void
         'capability_type' => 'post',
         'map_meta_cap' => true,
         'hierarchical' => false,
-        'supports' => ['title', 'thumbnail', 'page-attributes'],
+        'supports' => ['title', 'thumbnail', 'page-attributes', 'comments'],
         'has_archive' => false,
         'rewrite' => [
             'slug' => function_exists(__NAMESPACE__.'\\mh_concept_rewrite_slug')
@@ -4208,7 +4208,7 @@ function mh_hero_scene_url(?int $post_id = null): string
         'template-contact.blade.php' => 'products/acreline/05-contact.webp',
         'template-services.blade.php' => 'work/cupola-field.jpg',
         'template-now.blade.php' => 'products/acreline/featured.webp',
-        'template-uses.blade.php' => 'products/tocflow/featured.webp',
+        'template-uses.blade.php' => 'products/tocguide/featured.webp',
         'template-resources.blade.php' => 'products/walkridge/featured.webp',
         'template-support.blade.php' => 'products/acreline/07-book.webp',
         'template-start.blade.php' => 'work/willoughby.jpg',

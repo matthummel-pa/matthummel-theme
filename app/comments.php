@@ -105,6 +105,15 @@ add_filter('comment_form_defaults', function (array $defaults): array {
         esc_html__('Email me if someone replies to this comment.', 'sage')
     );
 
+    if (function_exists(__NAMESPACE__.'\\mh_project_post_type') && is_singular(mh_project_post_type())) {
+        $defaults['title_reply'] = __('Leave feedback', 'sage');
+        $defaults['label_submit'] = __('Post feedback', 'sage');
+        $defaults['comment_notes_before'] = sprintf(
+            '<p class="comment-notes" id="comment-notes">%s</p>',
+            esc_html__('What would you change? ASCII, code, and plain punctuation are welcome. Email stays private.', 'sage')
+        );
+    }
+
     return $defaults;
 });
 
@@ -398,3 +407,108 @@ function mh_comment_list_item($comment, array $args, int $depth): void
       </article>
     <?php
 }
+
+/**
+ * Cookie + meta keys for visitor like / star on project pages.
+ *
+ * @return array{like: bool, star: bool, likes: int, stars: int}
+ */
+function mh_project_reaction_state(int $postId): array
+{
+    $flags = mh_project_reaction_flags($postId);
+
+    return [
+        'like' => $flags['like'],
+        'star' => $flags['star'],
+        'likes' => max(0, (int) get_post_meta($postId, '_mh_visitor_likes', true)),
+        'stars' => max(0, (int) get_post_meta($postId, '_mh_visitor_stars', true)),
+    ];
+}
+
+/**
+ * @return array{like: bool, star: bool}
+ */
+function mh_project_reaction_flags(int $postId): array
+{
+    $raw = (string) ($_COOKIE[mh_project_reaction_cookie($postId)] ?? '');
+
+    return [
+        'like' => str_contains($raw, 'l'),
+        'star' => str_contains($raw, 's'),
+    ];
+}
+
+function mh_project_reaction_cookie(int $postId): string
+{
+    return 'mh_pr_'.$postId;
+}
+
+function mh_project_reaction_set_cookie(int $postId, array $flags): void
+{
+    $value = ($flags['like'] ?? false ? 'l' : '').($flags['star'] ?? false ? 's' : '');
+    $name = mh_project_reaction_cookie($postId);
+    $options = [
+        'expires' => time() + YEAR_IN_SECONDS,
+        'path' => defined('COOKIEPATH') && COOKIEPATH !== '' ? COOKIEPATH : '/',
+        'domain' => defined('COOKIE_DOMAIN') && COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
+        'secure' => is_ssl(),
+        'httponly' => false,
+        'samesite' => 'Lax',
+    ];
+    setcookie($name, $value, $options);
+    $_COOKIE[$name] = $value;
+}
+
+function mh_project_reaction_ajax(): void
+{
+    check_ajax_referer('mh_project_react', 'nonce');
+
+    $postId = isset($_POST['post_id']) ? (int) wp_unslash($_POST['post_id']) : 0;
+    $kind = isset($_POST['kind']) ? sanitize_key(wp_unslash($_POST['kind'])) : '';
+    if ($postId <= 0 || ! in_array($kind, ['like', 'star'], true)) {
+        wp_send_json_error(['message' => __('That reaction is not valid.', 'sage')], 400);
+    }
+
+    $post = get_post($postId);
+    if (! $post instanceof \WP_Post
+        || $post->post_status !== 'publish'
+        || $post->post_type !== mh_project_post_type()) {
+        wp_send_json_error(['message' => __('That project is not open for reactions.', 'sage')], 404);
+    }
+
+    $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    $rateKey = 'mh_pr_ip_'.md5($ip);
+    $hits = (int) get_transient($rateKey);
+    if ($hits >= 40) {
+        wp_send_json_error(['message' => __('Slow down a moment, then try again.', 'sage')], 429);
+    }
+    set_transient($rateKey, $hits + 1, HOUR_IN_SECONDS);
+
+    $metaKey = $kind === 'star' ? '_mh_visitor_stars' : '_mh_visitor_likes';
+    $flags = mh_project_reaction_flags($postId);
+    $pressed = ! empty($flags[$kind]);
+    $count = max(0, (int) get_post_meta($postId, $metaKey, true));
+
+    if ($pressed) {
+        $count = max(0, $count - 1);
+        $flags[$kind] = false;
+    } else {
+        $count++;
+        $flags[$kind] = true;
+    }
+
+    update_post_meta($postId, $metaKey, $count);
+    mh_project_reaction_set_cookie($postId, $flags);
+
+    wp_send_json_success([
+        'kind' => $kind,
+        'count' => $count,
+        'pressed' => $flags[$kind],
+        'likes' => max(0, (int) get_post_meta($postId, '_mh_visitor_likes', true)),
+        'stars' => max(0, (int) get_post_meta($postId, '_mh_visitor_stars', true)),
+    ]);
+}
+
+add_action('wp_ajax_mh_project_react', __NAMESPACE__.'\\mh_project_reaction_ajax');
+add_action('wp_ajax_nopriv_mh_project_react', __NAMESPACE__.'\\mh_project_reaction_ajax');
+

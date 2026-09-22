@@ -877,6 +877,7 @@ function mh_redirect_legacy_concept_urls(): void
         'hallowed-ground' => 'walkridge',
         'hallowed-ground-battlefield-tours' => 'walkridge',
         'wordpress-tour-theme-walkridge' => 'walkridge',
+        'tocflow' => 'tocguide',
     ];
     if ($rest !== '' && isset($aliases[$rest])) {
         $rest = $aliases[$rest];
@@ -1055,6 +1056,9 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
     if ($slug === 'acreline') {
         $slugCandidates = ['acreline', 'wordpress-theme-real-estate-agents', 'real-estate-wordpress-theme-acreline'];
     }
+    if ($slug === 'tocguide') {
+        $slugCandidates = ['tocguide', 'tocflow'];
+    }
 
     foreach ($slugCandidates as $candidate) {
         $posts = get_posts([
@@ -1098,6 +1102,7 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
             'post_status' => 'publish',
             'post_title' => $title,
             'post_name' => $slug,
+            'comment_status' => 'open',
         ], true);
         if (is_wp_error($inserted)) {
             return 0;
@@ -1116,6 +1121,11 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
             $update['post_name'] = 'acreline';
             $update['post_status'] = 'publish';
         }
+        if ($slug === 'tocguide') {
+            $update['post_name'] = 'tocguide';
+            $update['post_status'] = 'publish';
+        }
+        $update['comment_status'] = 'open';
         wp_update_post($update);
     }
 
@@ -1345,6 +1355,20 @@ function mh_apply_product_catalog_v7(): void
 }
 
 /**
+ * One-time: TOCguide rename + Acreline 1.5.9 / WalkRidge 1.7.2 catalog refresh.
+ */
+function mh_apply_product_catalog_v9(): void
+{
+    if (get_option('mh_product_catalog_v9') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v9', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1400,8 +1424,25 @@ function mh_redirect_acreline_legacy_paths(): void
         'shop/hallowed-ground',
     ];
 
+    $legacyTocguidePaths = [
+        'projects/tocflow',
+        'product/tocflow',
+        'shop/tocflow',
+        'products/tocflow',
+    ];
+
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
         $target = home_url('/projects/walkridge/');
+        wp_safe_redirect($target, 301);
+        exit;
+    }
+
+    if (in_array($requestPath, $legacyTocguidePaths, true)) {
+        $target = home_url('/projects/tocguide/');
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
         wp_safe_redirect($target, 301);
         exit;
     }
@@ -1426,6 +1467,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

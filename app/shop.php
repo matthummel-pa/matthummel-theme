@@ -351,6 +351,7 @@ function mh_product_catalog_data(int $product_id): array
         'wordpress-tour-theme-walkridge' => 'walkridge',
         'walkridge-tour-wordpress-theme' => 'walkridge',
         'acreline-real-estate-wordpress-theme' => 'acreline',
+        'tocflow' => 'tocguide',
     ];
 
     $resolve = static function (string $slug) use ($catalog, $aliases): array {
@@ -832,7 +833,7 @@ function mh_wc_products_for_work(): array
  */
 function mh_home_case_study_cards(array $cards, int $limit = 3): array
 {
-    $want = ['acreline', 'walkridge', 'tocflow'];
+    $want = ['acreline', 'walkridge', 'tocguide', 'tocflow'];
     $bySlug = [];
     foreach ($cards as $card) {
         $slug = sanitize_title((string) ($card['slug'] ?? ''));
@@ -1558,7 +1559,11 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
     // Checking SKU first self-heals stale meta pointers (e.g. if a resync
     // previously created a stub duplicate and stored its ID in the meta).
     if ($slug !== '' && function_exists('wc_get_product_id_by_sku')) {
-        foreach (['theme-'.$slug, 'plugin-'.$slug] as $trySku) {
+        $skus = ['theme-'.$slug, 'plugin-'.$slug];
+        if ($slug === 'tocguide') {
+            $skus[] = 'plugin-tocflow';
+        }
+        foreach ($skus as $trySku) {
             $bySku = (int) wc_get_product_id_by_sku($trySku);
             if ($bySku > 0 && get_post_status($bySku) !== 'trash') {
                 return $bySku;
@@ -1591,6 +1596,12 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
             'acreline',
             'wordpress-theme-real-estate-agents',
             'real-estate-wordpress-theme-acreline',
+        ])));
+    }
+    if ($slug === 'tocguide') {
+        $slugCandidates = array_values(array_unique(array_merge($slugCandidates, [
+            'tocguide',
+            'tocflow',
         ])));
     }
 

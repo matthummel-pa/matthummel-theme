@@ -3,7 +3,7 @@
     "title": "Acreline",
     "cat": "Themes",
     "place": "Real estate",
-    "blurb": "A WordPress theme for real estate shops. Listings, a map, agents, and showing requests — they can edit it themselves.",
+    "blurb": "A WordPress theme for real estate agents. Listings, a map, agents, and showing requests — they can edit it themselves.",
     "tech": [
       "Sage",
       "WordPress",
@@ -15,12 +15,12 @@
     "live": true,
     "price": "79",
     "eyebrow": "Sample theme · Real estate",
-    "summary": "Acreline is a WordPress theme for real estate shops. It has listings, a map, agent pages, and showing requests. I built it so a shop can set it up in WordPress without a page builder.",
-    "challenge": "Real estate shops need listings, a map, and agent pages that match their land. Most ready-made themes hide the parcels and add tools offices do not use.",
-    "approach": "I built a setup wizard for name, colors, and sample listings. Marketing pages use normal WordPress blocks. Brokers edit listings and agents in wp-admin. No page builder.",
-    "result": "A shop can install the theme, run the wizard, and start listing properties. Hire me to brand it or load real inventory.",
-    "audience": "Real estate shops and agencies that need listings, a map, and showing requests. Also hiring managers who want to see a full theme I shipped.",
-    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Setup wizard under Appearance → Acreline Setup. Twenty-one server-rendered Core Gutenberg blocks for marketing pages (Block Generator + Migrate to Blocks). Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO. Rank Math and Yoast both score well out of the box — listings include open-graph meta and structured post types for agency directories.",
+    "summary": "Acreline is a WordPress theme for solo agents and small teams. Featured homes, agent bios, and showing requests sit on Gutenberg marketing pages. I built it so an office can set it up in WordPress without a page builder.",
+    "challenge": "Real estate agents need listings, a map, and showing requests that look like their office — not a luxury MLS portal. Most ready-made themes hide the houses behind tools agents will not use.",
+    "approach": "I built a setup wizard for name, colors, and sample listings, plus Appearance → Acreline Settings for listing, agent, and booking extras. Marketing pages use normal WordPress blocks. Brokers edit listings and agents in wp-admin. No page builder.",
+    "result": "An agent can install the theme, run the wizard, and start listing properties. Hire me to brand it or load real inventory.",
+    "audience": "Solo real estate agents and small teams that need listings, a map, and showing requests. Also hiring managers who want to see a full theme I shipped.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Setup wizard under Appearance → Acreline Setup. Gutenberg marketing blocks (Block Generator + Migrate to Blocks) plus Appearance → Acreline Settings for listing, agent, booking, and display toggles. Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Compliance slots for Fair Housing, MLS/IDX disclaimers, and showing-form consent. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
     "handoff": "You get the theme zip and a short guide. Run the setup wizard, then edit pages in WordPress. Hire me to load your listings or set the brand.",
     "benefits": [
       "Ship a real estate listing site without starting from a luxury realtor kit",
@@ -43,6 +43,8 @@
       "Customizer identity + eight color styles",
       "Block Generator + Migrate to Blocks",
       "Child theme + Acreline Core plugin",
+      "Appearance → Acreline Settings (listing, agent, booking, display toggles)",
+      "Fair Housing / MLS disclaimer slots and showing-form consent",
       "HTML documentation hub",
       "Mobile-first, accessible build"
     ],
@@ -186,7 +188,7 @@
     ],
     "demo": "https://acreline.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-acreline",
-    "version": "1.5.4",
+    "version": "1.5.9",
     "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
@@ -225,7 +227,7 @@
     "support": "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/support.html",
     "topics": "wordpress-theme, real-estate, listings, sage, gutenberg, acreline",
     "languages": "PHP, Blade, CSS, JavaScript",
-    "brand_tagline": "Real estate · listings · Gutenberg",
+    "brand_tagline": "Homes · neighborhoods · local agents",
     "brand_palette": "Ink|#141210\nForest|#1f6b4a\nForest dark|#155539\nPaper|#f5f4f1",
     "image": "products/acreline/featured.webp",
     "screenshots": [
@@ -267,7 +269,7 @@
     "title": "WalkRidge",
     "cat": "Themes",
     "place": "Tour sites",
-    "blurb": "A WordPress theme for tour companies. Visitors browse tours, meet guides, and book in WooCommerce.",
+    "blurb": "A WordPress theme for licensed-guide tour shops. Visitors browse tours, meet guides, and book in WooCommerce.",
     "tech": [
       "Sage",
       "WordPress",
@@ -280,13 +282,13 @@
     "live": true,
     "price": "59",
     "eyebrow": "Sample theme · Tour shops",
-    "summary": "WalkRidge is a WordPress theme for licensed tour shops. Visitors browse tours, meet guides, and book online. Operators change brand, phone, and hours in the Customizer — no code.",
+    "summary": "WalkRidge is a WordPress theme for licensed-guide tour shops. Visitors browse tours, meet guides, and book online. Operators change brand, phone, and hours in Theme Settings — no code.",
     "challenge": "Tour shops need schedules, guide bios, and checkout in one place. Most options are a bare store or a heavy travel kit they will not use.",
-    "approach": "I built marketing pages with WordPress blocks and booking through WooCommerce. Brand, phone, hours, and the header button live in Customize. Operators never touch code.",
-    "result": "A tour shop can show the work, introduce the guides, and take bookings. Hire me to brand it or set up the shop.",
+    "approach": "I built marketing pages with WordPress blocks and booking through WooCommerce. Brand, phone, hours, and the header button live in Appearance → Theme Settings. Operators never touch code.",
+    "result": "A tour shop can show the work, introduce the guides, and take bookings. The live concept is at walkridge.matthummel.com. Hire me to brand it or set up the shop.",
     "audience": "Tour shops and agencies that need tours, guides, and checkout in one site. Also hiring managers who want to see a WooCommerce theme I shipped.",
-    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Ten server-rendered Core Gutenberg blocks for marketing pages (Block Generator for custom layouts). WooCommerce optional — marketing site, contact form, and blog run without it. Customizer Identity for brand, phone, email, address, hours, header CTA, social URLs. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
-    "handoff": "You get the theme zip and a short guide. Set the brand in Customize, then add tours in WooCommerce. Hire me to load your tours or change the layout.",
+    "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Gutenberg blocks for Home, Tours, Guides, Area, Contact, and Refund Policy (Block Generator for custom layouts). WooCommerce optional — marketing site, contact form, and blog run without it. Appearance → Theme Settings for brand, phone, email, address, hours, header CTA, social URLs. Light is the default; dark is a visitor toggle. WCAG 2.2 contrast and 44px targets on chrome. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
+    "handoff": "You get the theme zip and a short guide. Set the brand in Theme Settings, then add tours in WooCommerce. Hire me to load your tours or change the layout.",
     "benefits": [
       "WooCommerce shop for bookable tour products — no separate booking system required",
       "Ten Gutenberg blocks with editor previews for marketing pages",
@@ -295,6 +297,7 @@
       "Optional companion plugins: Walkridge Bookings and Walkridge Field Map (sold separately)",
       "Child theme included for safe agency customization",
       "WooCommerce is optional — the marketing site runs without it",
+      "WCAG 2.2 contrast on light (default) and dark, with 44px targets",
       "100% GPL-compatible theme code — white-label or customize freely"
     ],
     "deliverables": [
@@ -394,10 +397,10 @@
         "Yes. Buy the pack for self-serve, or get help and I brand it, load your tour inventory, and hand off wp-admin editing to your team."
       ]
     ],
-    "demo": "",
+    "demo": "https://walkridge.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-walkridge",
-    "version": "1.2.0",
-    "compatible": "WordPress 6.6+, PHP 8.3+",
+    "version": "1.7.2",
+    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 6.8)",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
@@ -468,11 +471,11 @@
     ],
     "is_product": true
   },
-  "tocflow": {
-    "title": "TOCflow",
+  "tocguide": {
+    "title": "TOCguide",
     "cat": "Plugins",
     "place": "Table of contents",
-    "blurb": "A free WordPress plugin that builds a table of contents from post headings.",
+    "blurb": "A free WordPress plugin that builds a table of contents from post headings — plus an optional Reading Guide.",
     "tech": [
       "WordPress",
       "Gutenberg",
@@ -482,34 +485,45 @@
     "for_sale": true,
     "live": true,
     "price": "0",
+    "is_free": true,
+    "is_product": true,
     "eyebrow": "Sample plugin · Long posts",
-    "summary": "TOCflow is a small WordPress plugin. It builds a table of contents from the headings in a post. Publishers get a clean jump list without heavy scripts.",
+    "summary": "TOCguide is a WordPress plugin that builds a table of contents from the headings in a post. The outline is in the first HTML. An optional Reading Guide adds section previews, read time, and study tools — no accounts, no tracking.",
     "challenge": "Long posts need a jump list. Many plugins add extra blocks or hide the outline from search engines and screen readers.",
-    "approach": "I built a light plugin that reads headings and prints the list in the first page load. It stays simple. No big JavaScript kit.",
+    "approach": "I built a light plugin that reads headings and prints the list on the first page load. Reading Guide, citations, and study tools stay opt-in. Nothing phones home.",
     "result": "A publisher can add a table of contents that is easy to read and easy to find. The plugin is free. Hire me if you want it tailored.",
     "audience": "Writers, shops, and agencies that publish long posts. Also hiring managers who want to see a small plugin I shipped.",
-    "architecture": "PHP block render callback, small editor script, optional ItemList JSON-LD. No React runtime on the front end for the list itself.",
-    "handoff": "Download the zip, turn the plugin on, and add the block. Settings are under Settings → TOCflow. Source is on GitHub if you want to fork it.",
+    "architecture": "PHP block render callback (`tocguide/table-of-contents`), small editor script, optional ItemList JSON-LD. Reading Guide and study tools compute from post content or localStorage. No React runtime on the front end for the list itself. Independent slug: tocguide.",
+    "handoff": "Download the zip, turn the plugin on, and add the block. Settings are under Settings → TOCguide. Source is on GitHub if you want to fork it.",
     "benefits": [
       "Zero config — insert the block; the outline builds itself",
       "Server-rendered HTML for SEO and screen readers",
       "Accurate anchors with aria-current while you read",
       "Numbered or bulleted lists, five style presets",
-      "Shortcode for classic content",
-      "Free forever — GPLv2 or later"
+      "Optional Reading Guide: previews, density bars, read time",
+      "Optional study tools: progress bar, bookmark, private notes",
+      "Academic citations (APA, MLA, Chicago, Harvard, plain link)",
+      "[tocguide] shortcode for classic content and builders",
+      "Free forever — GPLv2 or later, no tracking"
     ],
     "deliverables": [
       "Gutenberg Table of Contents block",
-      "[tocflow] shortcode",
+      "[tocguide] shortcode",
       "Live editor preview",
       "Sticky + scroll-spy options",
+      "Reading Guide + study tools (opt-in)",
       "Optional ItemList JSON-LD",
-      "Settings + Docs screens"
+      "Settings → TOCguide (design, a11y, auto-insert)",
+      "Docs + support HTML"
     ],
     "metrics": [
       [
         "Free",
         "download"
+      ],
+      [
+        "1.5.0",
+        "TOCguide identity"
       ],
       [
         "Server",
@@ -522,61 +536,86 @@
     ],
     "faq": [
       [
-        "Is TOCflow really free?",
+        "Is TOCguide really free?",
         "Yes. $0 checkout captures your email for update notices if you want them, or download from GitHub Releases. No freemium lock."
       ],
       [
+        "Is TOCguide the same plugin as TOCflow?",
+        "Yes. TOCguide is the current name and slug (WordPress.org guideline 17). Re-insert the block and save Settings → TOCguide if you used an earlier zip."
+      ],
+      [
         "Does it work with classic editor posts?",
-        "Yes — use the [tocflow] shortcode. Heading anchors still inject on the front end."
+        "Yes — use the [tocguide] shortcode. Heading anchors still inject on the front end."
       ],
       [
         "Will it slow my site?",
-        "The list is in the first HTML response. Front-end JS is optional for sticky/scroll-spy and respects prefers-reduced-motion."
+        "The list is in the first HTML response. Front-end JS is optional for sticky, scroll-spy, and study tools, and it respects prefers-reduced-motion."
+      ],
+      [
+        "Does it track readers?",
+        "No. No accounts, no analytics, no remote APIs. Study tools that use localStorage stay on the visitor's device."
       ],
       [
         "Can you customize it for my theme?",
         "Yes. Get help for sticky-header offsets, style presets that match your brand, or a private fork."
       ]
     ],
-    "demo": "https://matthummel-pa.github.io/tocflow/",
-    "github": "https://github.com/matthummel-pa/tocflow",
-    "version": "1.3.3",
-    "compatible": "WordPress 6.4+, PHP 7.4+",
+    "demo": "https://matthummel-pa.github.io/tocguide/",
+    "github": "https://github.com/matthummel-pa/tocguide",
+    "version": "1.5.0",
+    "compatible": "WordPress 6.4+, PHP 7.4+ (tested up to 7.1)",
     "license": "GPLv2 or later",
     "download": {
-      "github_repo": "matthummel-pa/tocflow",
+      "github_repo": "matthummel-pa/tocguide",
       "release": "latest",
-      "asset": "tocflow.zip",
-      "label": "tocflow.zip"
+      "asset": "tocguide.zip",
+      "label": "tocguide.zip"
     },
     "files_included": [
-      "tocflow.zip",
+      "tocguide.zip",
       "readme.txt",
       "languages/"
     ],
     "docs": [
       [
         "Docs site",
-        "https://matthummel-pa.github.io/tocflow/"
+        "https://matthummel-pa.github.io/tocguide/"
       ],
       [
         "Support",
-        "https://github.com/matthummel-pa/tocflow/blob/main/SUPPORT.md"
+        "https://matthummel-pa.github.io/tocguide/support.html"
       ],
       [
         "GitHub Releases",
-        "https://github.com/matthummel-pa/tocflow/releases"
+        "https://github.com/matthummel-pa/tocguide/releases"
       ]
     ],
-    "support": "https://github.com/matthummel-pa/tocflow/blob/main/SUPPORT.md",
-    "topics": "wordpress-plugin, table-of-contents, gutenberg, seo, accessibility",
+    "support": "https://matthummel-pa.github.io/tocguide/support.html",
+    "topics": "wordpress-plugin, table-of-contents, gutenberg, seo, accessibility, reading-guide",
     "languages": "PHP, JavaScript, CSS",
-    "brand_tagline": "One block. An accessible outline from your headings.",
-    "image": "products/tocflow/featured.webp",
+    "brand_tagline": "The table of contents that reads with your reader.",
+    "brand_palette": "Ink|#1b1f24\nForest|#275c3e\nPaper|#f7f9fc",
+    "image": "products/tocguide/featured.webp",
     "screenshots": [
       [
-        "products/tocflow/featured.webp",
-        "TOCflow docs — block overview"
+        "products/tocguide/featured.webp",
+        "TOCguide block — outline from post headings"
+      ],
+      [
+        "products/tocguide/02-block.webp",
+        "Table of Contents block in the editor"
+      ],
+      [
+        "products/tocguide/03-guide.webp",
+        "Reading Guide with section previews and read time"
+      ],
+      [
+        "products/tocguide/04-settings.webp",
+        "Settings → TOCguide design and accessibility"
+      ],
+      [
+        "products/tocguide/05-study.webp",
+        "Study tools — progress, bookmark, and notes"
       ]
     ],
     "ad_keywords": [
@@ -584,7 +623,9 @@
       "Gutenberg TOC block",
       "accessible table of contents",
       "SEO friendly TOC WordPress",
-      "free WordPress TOC plugin"
+      "free WordPress TOC plugin",
+      "reading guide WordPress"
     ]
   }
 }
+
