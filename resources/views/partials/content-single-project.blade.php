@@ -39,13 +39,19 @@
   $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
   $heroImage = (string) ($slides[0]['src'] ?? '');
   $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
+  $releaseLabel = (string) $gh['version'];
+  if ($gh['release'] !== '' && function_exists('\\App\\mh_project_is_semverish') && \App\mh_project_is_semverish($gh['release'])) {
+    $releaseLabel = (string) $gh['release'];
+  } elseif ($releaseLabel === '' && $gh['release'] !== '') {
+    $releaseLabel = (string) $gh['release'];
+  }
   $ghStats = array_values(array_filter([
     ['value' => number_format_i18n((int) $gh['stars']), 'label' => __('Stars', 'sage'), 'show' => $gh['has_repo']],
     ['value' => number_format_i18n((int) $gh['forks']), 'label' => __('Forks', 'sage'), 'show' => $gh['has_repo']],
     ['value' => number_format_i18n((int) $gh['watchers']), 'label' => __('Watchers', 'sage'), 'show' => $gh['has_repo'] && (int) $gh['watchers'] > 0],
     ['value' => $gh['lang'], 'label' => __('Language', 'sage'), 'show' => $gh['lang'] !== ''],
     ['value' => $gh['license'], 'label' => __('License', 'sage'), 'show' => $gh['license'] !== ''],
-    ['value' => $gh['release'] !== '' ? $gh['release'] : $gh['version'], 'label' => __('Release', 'sage'), 'show' => $gh['release'] !== '' || $gh['version'] !== ''],
+    ['value' => $releaseLabel, 'label' => __('Release', 'sage'), 'show' => $releaseLabel !== ''],
     ['value' => $gh['pushed_label'], 'label' => __('Updated', 'sage'), 'show' => $gh['pushed_label'] !== ''],
     ['value' => number_format_i18n((int) $gh['issues']), 'label' => __('Open issues', 'sage'), 'show' => $gh['has_repo']],
   ], static fn ($row) => ! empty($row['show']) && $row['value'] !== ''));
