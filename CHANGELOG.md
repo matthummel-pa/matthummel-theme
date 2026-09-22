@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.36 — Project screenshot URLs survive host changes
+
+- Store catalog screenshots as theme-relative paths (`products/tocguide/featured.webp`), not baked `localhost` URLs.
+- Render rewrites any stored `/themes/{folder}/resources/images/` URL through `get_theme_file_uri()`.
+- Ask / notes / like-star jump targets clear the sticky header (`scroll-margin-top`).
+- Catalog bump `mh_product_catalog_v10`.
+
 ## 3.6.35 — Project pages: TOCguide data, like/star, comments, contact
 
 - Catalog: **Acreline 1.5.9**, **WalkRidge 1.7.2** (live demo), **TOCguide 1.5.0** (renamed from TOCflow). `/projects/tocflow/` 301s to `/projects/tocguide/`.

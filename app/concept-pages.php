@@ -364,10 +364,10 @@ function mh_project_page_slides(int $post_id, array $card): array
         if ($src === '') {
             return;
         }
-        if (preg_match('#^(https?:)?//#', $src) !== 1) {
-            $src = function_exists(__NAMESPACE__.'\\mh_product_media_url')
-                ? mh_product_media_url($src)
-                : get_theme_file_uri('resources/images/'.$src);
+        if (function_exists(__NAMESPACE__.'\\mh_product_media_url')) {
+            $src = mh_product_media_url($src);
+        } elseif (preg_match('#^(https?:)?//#', $src) !== 1) {
+            $src = get_theme_file_uri('resources/images/'.$src);
         }
         if ($src === '') {
             return;
@@ -929,6 +929,9 @@ function mh_product_image_url(string $rel): string
     if ($rel === '') {
         return '';
     }
+    if (function_exists(__NAMESPACE__.'\\mh_product_media_url')) {
+        return mh_product_media_url($rel);
+    }
     if (preg_match('#^https?://#i', $rel)) {
         return esc_url_raw($rel);
     }
@@ -1002,12 +1005,20 @@ function mh_product_screenshots_meta_text(array $pairs): string
         if (! is_array($pair) || count($pair) < 1) {
             continue;
         }
-        $url = mh_product_image_url((string) ($pair[0] ?? ''));
+        $src = trim((string) ($pair[0] ?? ''));
         $caption = trim((string) ($pair[1] ?? ''));
-        if ($url === '') {
+        $rel = function_exists(__NAMESPACE__.'\\mh_product_theme_image_rel')
+            ? mh_product_theme_image_rel($src)
+            : '';
+        if ($rel !== '') {
+            $src = $rel;
+        } elseif (preg_match('#^https?://#i', $src) === 1) {
+            $src = esc_url_raw($src);
+        }
+        if ($src === '') {
             continue;
         }
-        $lines[] = $caption !== '' ? $url.'|'.$caption : $url;
+        $lines[] = $caption !== '' ? $src.'|'.$caption : $src;
     }
 
     return implode("\n", $lines);
@@ -1369,6 +1380,20 @@ function mh_apply_product_catalog_v9(): void
 }
 
 /**
+ * One-time: store screenshot meta as theme-relative paths (no baked host).
+ */
+function mh_apply_product_catalog_v10(): void
+{
+    if (get_option('mh_product_catalog_v10') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v10', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1468,6 +1493,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

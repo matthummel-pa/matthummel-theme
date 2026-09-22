@@ -3245,6 +3245,20 @@ html.mh-dark .hero-wave {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+#screenshots,
+#project-feedback,
+#comments,
+#project-ask {
+  scroll-margin-top: 5.5rem;
+}
+@media (max-width: 900px) {
+  #screenshots,
+  #project-feedback,
+  #comments,
+  #project-ask {
+    scroll-margin-top: 1rem;
+  }
+}
 .project-talk {
   padding-block: clamp(2.5rem, 6vw, 4.25rem);
 }

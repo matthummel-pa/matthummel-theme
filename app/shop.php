@@ -1391,6 +1391,38 @@ function mh_render_product_add_to_cart(int $product_id): void
     }
 }
 
+/**
+ * Theme-relative path under resources/images/ when $src is a catalog path
+ * or a baked theme URL (any host/port). Empty for truly external URLs.
+ */
+function mh_product_theme_image_rel(string $src): string
+{
+    $src = trim($src);
+    if ($src === '') {
+        return '';
+    }
+
+    $rel = '';
+    if (preg_match('#^(https?:)?//#i', $src) === 1) {
+        $path = rawurldecode((string) (parse_url($src, PHP_URL_PATH) ?? ''));
+        if (preg_match('#/themes/[^/]+/resources/images/(.+)$#', $path, $m) === 1) {
+            $rel = $m[1];
+        }
+    } else {
+        $rel = ltrim($src, '/');
+        if (str_starts_with($rel, 'resources/images/')) {
+            $rel = substr($rel, strlen('resources/images/'));
+        }
+    }
+
+    $rel = ltrim(str_replace('\\', '/', $rel), '/');
+    if ($rel === '' || str_contains($rel, '..')) {
+        return '';
+    }
+
+    return $rel;
+}
+
 /** Turn a catalog path or absolute URL into a public image URL. */
 function mh_product_media_url(string $src): string
 {
@@ -1398,11 +1430,17 @@ function mh_product_media_url(string $src): string
     if ($src === '') {
         return '';
     }
-    if (preg_match('#^(https?:)?//#', $src) === 1) {
+
+    $rel = mh_product_theme_image_rel($src);
+    if ($rel !== '') {
+        return get_theme_file_uri('resources/images/'.$rel);
+    }
+
+    if (preg_match('#^(https?:)?//#i', $src) === 1) {
         return $src;
     }
 
-    return get_theme_file_uri('resources/images/'.$src);
+    return get_theme_file_uri('resources/images/'.ltrim($src, '/'));
 }
 
 /**

@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.36 screenshot URLs)
+
+- `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
+- `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
+- Catalog bump is `mh_product_catalog_v10`.
+
 ## Editor’s notes (3.6.35 project feedback)
 
 - Project singles (`partials/content-single-project.blade.php`) include like/star (`partials/project-react.blade.php` + `mh_project_react` AJAX), `comments_template()`, and compact `partials/contact-form.blade.php`. Do not add a form plugin.

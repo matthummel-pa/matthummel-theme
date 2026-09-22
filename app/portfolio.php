@@ -1523,6 +1523,15 @@ function mh_studio_project_image_url(array $project): string
     if ($img === '') {
         return '';
     }
+    if (function_exists(__NAMESPACE__.'\\mh_product_media_url') && (
+        preg_match('#^https?://#i', $img) === 1
+        || str_contains($img, '/')
+    )) {
+        $resolved = mh_product_media_url($img);
+        if ($resolved !== '') {
+            return $resolved;
+        }
+    }
     if (preg_match('#^https?://#i', $img)) {
         return $img;
     }
