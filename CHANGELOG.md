@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.35 — Project pages: TOCguide data, like/star, comments, contact
+
+- Catalog: **Acreline 1.5.9**, **WalkRidge 1.7.2** (live demo), **TOCguide 1.5.0** (renamed from TOCflow). `/projects/tocflow/` 301s to `/projects/tocguide/`.
+- Project pages: screenshot lightbox + live caption, brand palette swatches, like/star visitor counts, public notes, and the same `mh_contact` form as Contact (compact, prefilled).
+- Visitor like/star is cookie + post meta (`_mh_visitor_likes` / `_mh_visitor_stars`), not GitHub stars.
+
 ## 3.6.34 — Page hero vertical padding
 
 - Photo page heroes use more top and bottom padding so the white copy panel sits farther from the header and the wave. Home viewport heroes match.
