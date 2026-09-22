@@ -511,4 +511,3 @@ function mh_project_reaction_ajax(): void
 
 add_action('wp_ajax_mh_project_react', __NAMESPACE__.'\\mh_project_reaction_ajax');
 add_action('wp_ajax_nopriv_mh_project_react', __NAMESPACE__.'\\mh_project_reaction_ajax');
-
