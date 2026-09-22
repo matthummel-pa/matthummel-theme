@@ -27,19 +27,9 @@
     : sprintf(_n('%d project', '%d projects', $shownCount, 'sage'), $shownCount);
   $howSteps = \App\mh_work_page_how();
   $workFaqs = \App\mh_work_page_faq();
-  $heroShot = '';
-  if ($all !== []) {
-    $first = $all[0];
-    $heroShot = ! empty($first['image'])
-      ? (string) $first['image']
-      : \App\mh_studio_project_image_url($first);
-    if ($heroShot === '' && ! empty($first['post_id'])) {
-      $heroShot = \App\mh_project_card_image_url((int) $first['post_id']);
-    }
-  }
 @endphp
 
-@component('partials.page-hero', ['image' => $heroShot])
+@component('partials.page-hero', ['useScene' => true])
   <p class="eyebrow">{{ \App\field('work_kicker', \App\mh_projects_listing_default('kicker')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('work_h1', \App\mh_projects_listing_default('h1')) }}
@@ -146,11 +136,10 @@
       </div>
     @else
       <div class="work-grid" data-work-grid>
-        @foreach ($shown as $i => $p)
+        @foreach ($shown as $p)
           @include('partials.work-card', [
             'p' => $p,
             'pageUrl' => $pageUrl,
-            'featured' => $cat === '' && $i === 0 && $shownCount >= 3,
           ])
         @endforeach
       </div>

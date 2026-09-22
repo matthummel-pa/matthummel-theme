@@ -28,6 +28,28 @@ add_filter('wpseo_metadesc', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 add_filter('rank_math/frontend/description', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 add_filter('aioseo_description', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 
+add_filter('rank_math/frontend/disable_breadcrumb', function ($disable) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return true;
+    }
+
+    return $disable;
+});
+add_filter('rank_math/frontend/breadcrumb/items', function ($crumbs) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return [];
+    }
+
+    return $crumbs;
+});
+add_filter('wpseo_breadcrumb_output', function ($html) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return '';
+    }
+
+    return $html;
+});
+
 add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
 
 /**

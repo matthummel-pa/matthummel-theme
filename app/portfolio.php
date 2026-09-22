@@ -1608,14 +1608,21 @@ function mh_project_cpt_has_posts(): bool
 /**
  * Resolve the public Work / project screenshot URL for a project.
  *
- * Featured image wins when set (so Media Library / Generate featured image
- * updates show on /projects/ and /projects/{slug}/). Falls back to `_mh_project_image`
- * (bundled JPEG filename or absolute URL).
+ * Catalog `_mh_project_image` (bundled WebP under resources/images/products/)
+ * wins so grid cards and project pages show the updated screenshots. Featured
+ * image is the fallback when no bundled file is set.
  */
 function mh_project_card_image_url(int $post_id): string
 {
     if ($post_id < 1) {
         return '';
+    }
+
+    $bundled = mh_studio_project_image_url([
+        'image' => (string) get_post_meta($post_id, '_mh_project_image', true),
+    ]);
+    if ($bundled !== '') {
+        return $bundled;
     }
 
     if (has_post_thumbnail($post_id)) {
@@ -1628,9 +1635,20 @@ function mh_project_card_image_url(int $post_id): string
         }
     }
 
-    return mh_studio_project_image_url([
-        'image' => (string) get_post_meta($post_id, '_mh_project_image', true),
-    ]);
+    return '';
+}
+
+/** Whether the current request is a Projects listing or a project CPT single. */
+function mh_is_project_surface(): bool
+{
+    if (function_exists('is_singular') && is_singular(mh_project_post_type())) {
+        return true;
+    }
+    if (function_exists('is_post_type_archive') && is_post_type_archive(mh_project_post_type())) {
+        return true;
+    }
+
+    return (string) get_page_template_slug() === 'template-projects.blade.php';
 }
 
 /**
@@ -2242,7 +2260,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: products/acreline/featured.webp. Featured image always wins on the Projects grid and project page.', 'sage')
+        __('Catalog screenshot shown on the Projects grid and project page. Example: products/acreline/featured.webp. Featured image is used only when this field is empty.', 'sage')
     );
     echo '</tbody></table>';
 

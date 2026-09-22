@@ -984,7 +984,7 @@ function mh_wc_product_admin_meta_box(\WP_Post $post): void
     $fieldRow(__('Place', 'sage'), 'mh_project_place', $place, $ph('place') ?: 'Real estate agencies · Land & farms');
     $fieldRow(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, $ph('blurb'), 'textarea');
     $fieldRow(__('Tech (comma-separated)', 'sage'), 'mh_project_tech', $tech, $ph('tech') ?: 'Sage, WordPress, Tailwind');
-    $fieldRow(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('Fallback when no featured image. Path: products/acreline/featured.webp or full URL.', 'sage'));
+    $fieldRow(__('Screenshot file or URL', 'sage'), 'mh_project_image', $image, __('Catalog screenshot on the Projects grid. Path: products/acreline/featured.webp or full URL. Featured image is fallback only.', 'sage'));
     echo '</tbody></table>';
 
     echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Pricing', 'sage').'</h3>';

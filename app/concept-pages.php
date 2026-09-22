@@ -348,7 +348,7 @@ function mh_project_case_study(int $post_id, array $card, array $story): array
 }
 
 /**
- * Screenshot slides for a project page: featured image, stored shots, catalog.
+ * Screenshot slides for a project page: stored shots, catalog, then featured image.
  *
  * @param  array<string, mixed>  $card
  * @return list<array{src: string, alt: string}>
@@ -385,13 +385,6 @@ function mh_project_page_slides(int $post_id, array $card): array
         $slides[] = ['src' => $src, 'alt' => $alt];
     };
 
-    if ($post_id > 0 && has_post_thumbnail($post_id)) {
-        $thumbId = (int) get_post_thumbnail_id($post_id);
-        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
-        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
-        $add($src, $alt);
-    }
-
     foreach (mh_project_screenshot_pairs($post_id) as $pair) {
         $add((string) ($pair[0] ?? ''), (string) ($pair[1] ?? ''));
     }
@@ -405,9 +398,14 @@ function mh_project_page_slides(int $post_id, array $card): array
         foreach ($shots as $shot) {
             $add((string) ($shot[0] ?? ''), (string) ($shot[1] ?? ''));
         }
-        if ($slides === []) {
-            $add((string) ($entry['image'] ?? ''), '');
-        }
+        $add((string) ($entry['image'] ?? ''), '');
+    }
+
+    if ($slides === [] && $post_id > 0 && has_post_thumbnail($post_id)) {
+        $thumbId = (int) get_post_thumbnail_id($post_id);
+        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
+        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
+        $add($src, $alt);
     }
 
     return $slides;

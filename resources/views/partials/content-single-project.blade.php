@@ -68,9 +68,6 @@
 
 <article {!! post_class('concept-page project-page') !!}>
   @component('partials.page-hero', ['extra' => 'page-header--project', 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
-    <p class="project-hero-crumb">
-      <a class="concept-crumb" href="{{ esc_url($projectsUrl) }}">{{ __('Projects', 'sage') }}</a>
-    </p>
     <div class="project-hero-head">
       @include('partials.project-type-row', ['p' => $card])
       <h1 class="display-title is-hero">{{ $title }}</h1>
@@ -350,10 +347,7 @@
         <h2 id="project-features" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
         <ul class="project-feat-grid">
           @foreach ($features as $item)
-            <li class="project-feat">
-              <span class="project-feat__icon" aria-hidden="true">{!! \App\mh_svg_icon('check', 16) !!}</span>
-              <span>{{ $item }}</span>
-            </li>
+            <li class="project-feat">{{ $item }}</li>
           @endforeach
         </ul>
       </section>
