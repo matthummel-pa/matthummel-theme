@@ -3,7 +3,13 @@
   $extra = trim((string) ($extra ?? ''));
   $inner = trim((string) ($innerClass ?? ''));
   $fallback = trim((string) ($image ?? ''));
-  $heroImage = \App\mh_hero_background_url(null, $fallback);
+  $useScene = ! empty($useScene);
+  $heroImage = $useScene
+    ? \App\mh_hero_scene_url((int) get_the_ID())
+    : \App\mh_hero_background_url(null, $fallback);
+  if ($heroImage === '' && $fallback !== '') {
+    $heroImage = $fallback;
+  }
   $heroAlt = trim((string) ($imageAlt ?? ''));
   $viewport = ! empty($viewport);
 @endphp

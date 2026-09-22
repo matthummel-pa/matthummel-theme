@@ -2,6 +2,15 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.37 projects listing)
+
+- Do not pass `featured` on `partials/work-card.blade.php` from `template-projects.blade.php`. Every live project, including TOCguide, is a same-size grid card.
+- The Projects listing hero uses `useScene` so it does not pull the first project screenshot. Project singles still pass catalog slides into `page-hero`.
+- `mh_project_card_image_url()` prefers `_mh_project_image` (catalog WebP). Featured image is fallback only.
+- `mh_project_page_slides()` leads with stored / catalog screenshots. WP thumbnail is last-resort.
+- Feature list items are plain `li.project-feat` text. The blue check is CSS `::before` only (`studio.css` 3.6.37 last-win). Do not add `.project-feat__icon` back.
+- Hide Rank Math / Yoast crumbs on project CPT and the Projects template (`mh_is_project_surface()`).
+
 ## Editor’s notes (3.6.36 screenshot URLs)
 
 - `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.

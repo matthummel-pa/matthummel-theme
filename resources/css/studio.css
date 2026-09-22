@@ -1336,9 +1336,9 @@ html.mh-dark .project-stage__shot img {
   width: 1.05em;
   height: 1.05em;
   box-sizing: border-box;
-  border: 1.5px solid var(--color-navy);
-  border-radius: 4px;
-  background-color: var(--color-navy);
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
@@ -1358,7 +1358,7 @@ html.mh-dark .project-stage__shot img {
   top: .7em;
   border: 0;
   border-radius: 1px;
-  background: var(--color-navy);
+  background: var(--color-spark, #1a6bb5);
   background-image: none;
 }
 
@@ -1369,7 +1369,7 @@ html.mh-dark .project-stage__shot img {
   top: .55em;
   border: 0;
   border-radius: 50%;
-  background: var(--color-navy);
+  background: var(--color-spark, #1a6bb5);
   background-image: none;
 }
 
@@ -1390,7 +1390,7 @@ html.mh-dark .project-stage__shot img {
   top: .55em;
   border: 0;
   border-radius: 1px;
-  background: var(--color-navy);
+  background: var(--color-spark, #1a6bb5);
   background-image: none;
 }
 
@@ -1436,7 +1436,7 @@ html.mh-dark .project-stage__shot img {
   width: 1.45em;
   height: 1.45em;
   border-radius: 50%;
-  background: var(--color-navy);
+  background: var(--color-spark, #1a6bb5);
   color: #fff;
   font: 650 .68em/1 var(--font-display);
   text-align: center;
@@ -1446,8 +1446,8 @@ html.mh-dark .project-stage__shot img {
   ol ol > li::before {
   content: counter(mh-ol-b, lower-alpha);
   background: transparent;
-  color: var(--color-navy);
-  border: 1.5px solid var(--color-navy);
+  color: var(--color-spark, #1a6bb5);
+  border: 1.5px solid var(--color-spark, #1a6bb5);
   font-size: .62em;
 }
 
@@ -1461,7 +1461,7 @@ html.mh-dark .project-stage__shot img {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--color-navy);
+  color: var(--color-spark, #1a6bb5);
   font-size: .78em;
   font-weight: 650;
 }
@@ -1533,7 +1533,7 @@ html.mh-dark .project-stage__shot img {
   width: 1.05em;
   height: 1.05em;
   margin: 0 .45em 0 0;
-  accent-color: var(--color-navy);
+  accent-color: var(--color-spark, #1a6bb5);
   vertical-align: -0.15em;
 }
 
@@ -1552,9 +1552,9 @@ html.mh-dark .project-stage__shot img {
   width: 1.05em;
   height: 1.05em;
   box-sizing: border-box;
-  border: 1.5px solid var(--color-navy);
-  border-radius: 4px;
-  background-color: var(--color-navy);
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
@@ -3304,5 +3304,45 @@ html.mh-dark .project-react__btn {
 }
 html.mh-dark .project-hero-tagline {
   color: var(--gray-700);
+}
+
+/* ── 3.6.37 — One blue check on project lists; hide project crumbs ── */
+.project-hero-crumb,
+body.single-project .rank-math-breadcrumb,
+body.single-project .yoast-breadcrumb,
+body.single-project nav.rank-math-breadcrumb,
+.project-page .rank-math-breadcrumb,
+.page-template-template-projects .rank-math-breadcrumb {
+  display: none !important;
+}
+.project-feat__icon {
+  display: none !important;
+}
+.project-feat-grid > .project-feat {
+  display: flex;
+  align-items: flex-start;
+  column-gap: .55rem;
+  padding: .85rem 1rem;
+}
+.project-feat-grid > .project-feat::before {
+  content: "";
+  position: static;
+  inset: auto;
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+html.mh-dark .project-feat-grid > .project-feat::before {
+  border-color: var(--blue-400);
+  background-color: var(--blue-400);
 }
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.37 — Projects grid, blue checks, catalog shots
+
+- Project singles drop the Projects crumb (and Rank Math / Yoast breadcrumbs on project surfaces).
+- Feature lists use one blue check, not a navy marker plus an SVG check.
+- Work cards and project galleries prefer catalog screenshots (`products/{slug}/*.webp`) over Media Library featured images.
+- The Projects listing no longer features the first card full-width above the grid. TOCguide sits in the same card grid as Acreline and WalkRidge.
+- The listing hero uses the page scene shot, not a stretched first-project screenshot.
+
 ## 3.6.36 — Project screenshot URLs survive host changes
 
 - Store catalog screenshots as theme-relative paths (`products/tocguide/featured.webp`), not baked `localhost` URLs.
