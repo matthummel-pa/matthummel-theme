@@ -526,7 +526,7 @@ function mh_cart_sidebar_addons(int $limit = 3): array
 
     $candidates = mh_cart_is_services_only()
         ? ['acreline', 'acreline-site-care', 'acreline-setup-launch']
-        : ['acreline-express-install', 'acreline-setup-launch', 'acreline-site-care', 'tocflow'];
+        : ['acreline-express-install', 'acreline-setup-launch', 'acreline-site-care', 'tocguide'];
 
     $out = [];
     foreach ($candidates as $slug) {

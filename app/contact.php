@@ -308,6 +308,30 @@ function mh_crm_deliver(array $payload, string $mailSubject, string $mailBody, s
     return (bool) wp_mail($to, '[matthummel.com] '.$mailSubject, $mailBody, $headers);
 }
 
+/**
+ * Same-site return URL for contact errors (project pages embed the form).
+ */
+function mh_contact_return_url(string $fallback): string
+{
+    $raw = isset($_POST['mh_return']) ? wp_unslash($_POST['mh_return']) : '';
+    if (! is_string($raw) || $raw === '') {
+        return $fallback;
+    }
+
+    $url = esc_url_raw($raw);
+    if ($url === '') {
+        return $fallback;
+    }
+
+    $homeHost = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+    $urlHost = strtolower((string) wp_parse_url($url, PHP_URL_HOST));
+    if ($homeHost === '' || $urlHost !== $homeHost) {
+        return $fallback;
+    }
+
+    return remove_query_arg('contact', $url);
+}
+
 /** Handle the contact form submission (template-contact.blade.php). */
 add_action('init', function () {
     $postedAction = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : '';
@@ -318,16 +342,21 @@ add_action('init', function () {
     $contact = get_page_by_path('contact');
     $back = $contact instanceof \WP_Post ? get_permalink($contact) : home_url('/contact/');
     $back = remove_query_arg('contact', $back);
+    $back = mh_contact_return_url($back);
 
     // On success, redirect to /thank-you/ for analytics conversion tracking.
     $thankyouPage = get_page_by_path('thank-you');
     $thankyouUrl = $thankyouPage instanceof \WP_Post ? get_permalink($thankyouPage) : home_url('/thank-you/');
 
-    $redirect = function ($status) use ($back, $thankyouUrl) {
+    $errorHash = str_contains((string) wp_parse_url($back, PHP_URL_PATH), '/projects/')
+        ? '#project-contact-status'
+        : '#contact-status';
+
+    $redirect = function ($status) use ($back, $thankyouUrl, $errorHash) {
         if ($status === 'ok') {
             wp_safe_redirect($thankyouUrl);
         } else {
-            wp_safe_redirect(add_query_arg('contact', $status, $back).'#contact-status');
+            wp_safe_redirect(add_query_arg('contact', $status, $back).$errorHash);
         }
         exit;
     };
@@ -387,6 +416,10 @@ add_action('init', function () {
     if ($who !== '') {
         $body .= "\nWho: {$who}";
     }
+    $projectSlug = isset($_POST['mh_project']) ? sanitize_title(wp_unslash($_POST['mh_project'])) : '';
+    if ($projectSlug !== '') {
+        $body .= "\nProject: ".$projectSlug;
+    }
     $body .= "\n\n{$message}";
 
     mh_crm_deliver(
@@ -399,6 +432,7 @@ add_action('init', function () {
             'subject' => $subject,
             'message' => $message,
             'page' => $back,
+            'project' => $projectSlug,
         ],
         $mailSubject,
         $body,

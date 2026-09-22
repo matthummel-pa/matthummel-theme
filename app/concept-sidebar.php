@@ -133,7 +133,7 @@ function mh_project_screenshot_pairs(int $post_id): array
         $flat = array_values(array_filter(array_map('trim', explode('|', $parts[0]))));
         $pairs = [];
         for ($i = 0; $i + 1 < count($flat); $i += 2) {
-            if (str_starts_with($flat[$i], 'http')) {
+            if (mh_project_screenshot_src_is_valid($flat[$i])) {
                 $pairs[] = [$flat[$i], $flat[$i + 1]];
             }
         }
@@ -149,13 +149,27 @@ function mh_project_screenshot_pairs(int $post_id): array
             $url = $line;
             $caption = '';
         }
-        if ($url === '' || ! str_starts_with($url, 'http')) {
+        if ($url === '' || ! mh_project_screenshot_src_is_valid($url)) {
             continue;
         }
         $pairs[] = [$url, $caption];
     }
 
     return $pairs;
+}
+
+/** Theme-relative screenshot path or http(s) URL. */
+function mh_project_screenshot_src_is_valid(string $src): bool
+{
+    $src = trim($src);
+    if ($src === '') {
+        return false;
+    }
+    if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://')) {
+        return true;
+    }
+
+    return preg_match('#\.(webp|png|jpe?g|gif|svg)(\?.*)?$#i', $src) === 1;
 }
 
 /**

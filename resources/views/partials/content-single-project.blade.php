@@ -39,16 +39,31 @@
   $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
   $heroImage = (string) ($slides[0]['src'] ?? '');
   $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
+  $releaseLabel = (string) $gh['version'];
+  if ($gh['release'] !== '' && function_exists('\\App\\mh_project_is_semverish') && \App\mh_project_is_semverish($gh['release'])) {
+    $releaseLabel = (string) $gh['release'];
+  } elseif ($releaseLabel === '' && $gh['release'] !== '') {
+    $releaseLabel = (string) $gh['release'];
+  }
   $ghStats = array_values(array_filter([
     ['value' => number_format_i18n((int) $gh['stars']), 'label' => __('Stars', 'sage'), 'show' => $gh['has_repo']],
     ['value' => number_format_i18n((int) $gh['forks']), 'label' => __('Forks', 'sage'), 'show' => $gh['has_repo']],
     ['value' => number_format_i18n((int) $gh['watchers']), 'label' => __('Watchers', 'sage'), 'show' => $gh['has_repo'] && (int) $gh['watchers'] > 0],
     ['value' => $gh['lang'], 'label' => __('Language', 'sage'), 'show' => $gh['lang'] !== ''],
     ['value' => $gh['license'], 'label' => __('License', 'sage'), 'show' => $gh['license'] !== ''],
-    ['value' => $gh['release'] !== '' ? $gh['release'] : $gh['version'], 'label' => __('Release', 'sage'), 'show' => $gh['release'] !== '' || $gh['version'] !== ''],
+    ['value' => $releaseLabel, 'label' => __('Release', 'sage'), 'show' => $releaseLabel !== ''],
     ['value' => $gh['pushed_label'], 'label' => __('Updated', 'sage'), 'show' => $gh['pushed_label'] !== ''],
     ['value' => number_format_i18n((int) $gh['issues']), 'label' => __('Open issues', 'sage'), 'show' => $gh['has_repo']],
   ], static fn ($row) => ! empty($row['show']) && $row['value'] !== ''));
+  $palette = function_exists('\\App\\mh_project_brand_palette_pairs')
+    ? \App\mh_project_brand_palette_pairs($postId)
+    : [];
+  $tagline = trim((string) get_post_meta($postId, '_mh_project_brand_tagline', true));
+  $projectSlug = (string) ($card['slug'] ?? get_post_field('post_name', $postId));
+  $permalink = (string) get_permalink($postId);
+  $buyUrl = (string) ($card['buy_url'] ?? '');
+  $buyLabel = (string) ($card['buy_label'] ?? '');
+  $priceLabel = (string) ($card['price_label'] ?? '');
 @endphp
 
 <article {!! post_class('concept-page project-page') !!}>
@@ -60,6 +75,9 @@
       @include('partials.project-type-row', ['p' => $card])
       <h1 class="display-title is-hero">{{ $title }}</h1>
     </div>
+    @if ($tagline !== '')
+      <p class="project-hero-tagline">{{ $tagline }}</p>
+    @endif
     @if (! empty($case['notice']))
       <p class="concept-spec-banner" role="note">{{ $case['notice'] }}</p>
     @endif
@@ -76,15 +94,24 @@
           {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
         </a>
       @endif
-      <a class="{{ $demo !== '' ? 'btn btn-outline' : 'btn' }}" href="{{ esc_url($helloUrl) }}">
+      @if ($buyUrl !== '')
+        <a class="{{ $demo !== '' ? 'btn btn-outline' : 'btn' }}" href="{{ esc_url($buyUrl) }}">
+          {!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!}
+          {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}
+        </a>
+      @endif
+      <a class="{{ $demo !== '' || $buyUrl !== '' ? 'btn btn-outline' : 'btn' }}" href="#project-ask">
         {!! \App\mh_svg_icon('mail', 16) !!}
-        {{ __('Say hello', 'sage') }}
+        {{ __('Ask about this', 'sage') }}
       </a>
       @if ($github !== '' && str_starts_with($github, 'http'))
         <a class="h-text-arrow" href="{{ esc_url($github) }}" rel="noopener" target="_blank">
           {{ __('View code', 'sage') }} <span aria-hidden="true">↗</span>
         </a>
       @endif
+      <button type="button" class="h-text-arrow post-copy-link" data-copy="{{ esc_url($permalink) }}">
+        <span>{{ __('Copy link', 'sage') }}</span>
+      </button>
       <a class="h-text-arrow" href="{{ esc_url($projectsUrl) }}">
         {{ __('All projects', 'sage') }} →
       </a>
@@ -101,6 +128,9 @@
   }
   if ($specs !== [] || $gh['languages'] !== [] || $gh['compatible'] !== '') {
     $projectPills[] = ['project-theme-details', __('Theme details', 'sage')];
+  }
+  if ($palette !== []) {
+    $projectPills[] = ['project-palette', __('Palette', 'sage')];
   }
   if (! empty($tech)) {
     $projectPills[] = ['project-runs-on', __('Runs on', 'sage')];
@@ -120,6 +150,9 @@
   if ($faq !== []) {
     $projectPills[] = ['project-faq', __('Questions', 'sage')];
   }
+  $projectPills[] = ['project-feedback', __('Like / star', 'sage')];
+  $projectPills[] = ['comments', __('Notes', 'sage')];
+  $projectPills[] = ['project-ask', __('Ask a question', 'sage')];
 @endphp
 @include('partials.page-nav', ['pills' => $projectPills])
 
@@ -134,19 +167,29 @@
             aria-labelledby="pf-gallery-tab-0"
           @endif
         >
-          <img
-            src="{{ esc_url($heroImage) }}"
-            alt="{{ esc_attr($heroImageAlt) }}"
-            width="960"
-            height="600"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="skip-lazy"
-            data-no-lazy="1"
-            data-gallery-main
+          <button
+            type="button"
+            class="pf-product-gallery__main"
+            id="pf-gallery-main"
+            data-gallery-open
+            data-gallery-index="0"
+            aria-label="{{ esc_attr(sprintf(__('Open screenshot: %s', 'sage'), $heroImageAlt)) }}"
           >
+            <img
+              src="{{ esc_url($heroImage) }}"
+              alt="{{ esc_attr($heroImageAlt) }}"
+              width="960"
+              height="600"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="skip-lazy"
+              data-no-lazy="1"
+              data-gallery-main
+            >
+          </button>
         </figure>
+        <p class="project-stage__caption" data-gallery-caption>{{ $heroImageAlt }}</p>
         @if (count($slides) > 1)
           <div class="pf-product-gallery__thumbs" role="tablist" aria-label="{{ __('Project screenshots', 'sage') }}">
             @foreach ($slides as $i => $slide)
@@ -184,6 +227,10 @@
           <span class="project-stage__note-text">{{ __('Sample project. Not a client site.', 'sage') }}</span>
         </p>
       @endif
+    </div>
+
+    <div class="project-stage__react" id="project-feedback">
+      @include('partials.project-react', ['postId' => $postId, 'github' => $github])
     </div>
 
     <aside class="project-stage__info" aria-label="{{ __('Project details', 'sage') }}">
@@ -241,6 +288,21 @@
         </section>
       @endif
 
+      @if ($palette !== [])
+        <section class="project-info-section" aria-labelledby="project-palette">
+          <h2 id="project-palette" class="display-title is-section">{{ __('Palette', 'sage') }}</h2>
+          <ul class="concept-brand-palette">
+            @foreach ($palette as $swatch)
+              <li>
+                <span class="concept-brand-swatch" style="--swatch: {{ esc_attr($swatch[1]) }}"></span>
+                <span>{{ $swatch[0] }}</span>
+                <code>{{ $swatch[1] }}</code>
+              </li>
+            @endforeach
+          </ul>
+        </section>
+      @endif
+
       @if (! empty($tech))
         <section class="project-info-section" aria-labelledby="project-runs-on">
           <h2 id="project-runs-on" class="display-title is-section">{{ __('Runs on', 'sage') }}</h2>
@@ -275,6 +337,11 @@
             {{ __('Latest release', 'sage') }} ↗
           </a>
         @endif
+        @if ($helloUrl !== '')
+          <a class="h-text-arrow" href="{{ esc_url($helloUrl) }}">
+            {{ __('Say hello', 'sage') }} →
+          </a>
+        @endif
       </div>
     </aside>
 
@@ -283,7 +350,10 @@
         <h2 id="project-features" class="display-title is-section">{{ __('What is in this sample', 'sage') }}</h2>
         <ul class="project-feat-grid">
           @foreach ($features as $item)
-            <li class="project-feat">{{ $item }}</li>
+            <li class="project-feat">
+              <span class="project-feat__icon" aria-hidden="true">{!! \App\mh_svg_icon('check', 16) !!}</span>
+              <span>{{ $item }}</span>
+            </li>
           @endforeach
         </ul>
       </section>
@@ -367,8 +437,35 @@
     @endif
   </div>
 
+  <section class="pf-section pf-section--alt project-talk" aria-labelledby="project-talk-heading">
+    <div class="container wide">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">{{ __('Visitor feedback', 'sage') }}</p>
+          <h2 id="project-talk-heading" class="display-title is-section">{{ __('What would you change?', 'sage') }}</h2>
+          <p class="sec-intro">{{ __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
+        </div>
+      </div>
+      <div class="project-talk__grid">
+        <div class="project-talk__notes">
+          @php comments_template(); @endphp
+        </div>
+        <div class="project-talk__ask" id="project-ask">
+          <h2 class="display-title is-section">{{ __('Ask about this project', 'sage') }}</h2>
+          <p class="sec-intro">{{ __('Name, email, and a few sentences. This goes straight to my inbox.', 'sage') }}</p>
+          @include('partials.contact-form', [
+            'compact' => true,
+            'projectSlug' => $projectSlug,
+            'projectTitle' => $title,
+            'actionUrl' => $permalink,
+          ])
+        </div>
+      </div>
+    </div>
+  </section>
+
   @if ($related !== [])
-    <section class="pf-section pf-section--alt" aria-labelledby="related-projects">
+    <section class="pf-section" aria-labelledby="related-projects">
       <div class="container wide">
         <h2 id="related-projects" class="display-title is-section">{{ __('More projects', 'sage') }}</h2>
         <div class="work-grid">
@@ -384,8 +481,37 @@
     'kicker' => __('Work with me', 'sage'),
     'title' => sprintf(__('Like %s?', 'sage'), $title),
     'text' => __('Tell me what you would change, or write about a role. I usually reply in a day.', 'sage'),
-    'label' => __('Say hello', 'sage'),
+    'label' => __('Ask about this', 'sage'),
+    'href' => '#project-ask',
     'secondary' => __('Hire me', 'sage'),
     'secondaryHref' => home_url('/hire/'),
   ])
 </article>
+
+@if ($slides !== [])
+  <script type="application/json" id="pf-gallery-data">{!! json_encode(
+    $slides,
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
+  ) !!}</script>
+  <dialog class="pf-lightbox" data-product-lightbox aria-modal="true" aria-labelledby="pf-lightbox-caption">
+    <div class="pf-lightbox__frame">
+      <button type="button" class="pf-lightbox__close" data-lightbox-close aria-label="{{ __('Close screenshot', 'sage') }}">
+        <span aria-hidden="true">×</span>
+      </button>
+      @if (count($slides) > 1)
+        <button type="button" class="pf-lightbox__nav pf-lightbox__nav--prev" data-lightbox-prev aria-label="{{ __('Previous screenshot', 'sage') }}">
+          <span aria-hidden="true">‹</span>
+        </button>
+      @endif
+      <figure class="pf-lightbox__figure">
+        <img src="" alt="" width="1600" height="1000" data-lightbox-image>
+        <figcaption class="pf-lightbox__caption" id="pf-lightbox-caption" data-lightbox-caption></figcaption>
+      </figure>
+      @if (count($slides) > 1)
+        <button type="button" class="pf-lightbox__nav pf-lightbox__nav--next" data-lightbox-next aria-label="{{ __('Next screenshot', 'sage') }}">
+          <span aria-hidden="true">›</span>
+        </button>
+      @endif
+    </div>
+  </dialog>
+@endif

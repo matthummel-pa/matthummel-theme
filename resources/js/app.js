@@ -10,6 +10,7 @@ import { initDiscoveryForm } from './discovery-form.js';
 import { initShopFilter } from './shop-filter.js';
 import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
+import { initProjectFeedback } from './project-feedback.js';
 import { initSectionNav } from './section-nav.js';
 import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
@@ -134,7 +135,7 @@ function initTocSpy() {
 }
 
 function initContactStatus() {
-  const status = document.querySelector('#contact-status');
+  const status = document.querySelector('#project-contact-status, #contact-status');
   if (status instanceof HTMLElement) {
     status.focus({ preventScroll: false });
   }
@@ -514,6 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShopFilter();
   initStickyBar();
   initProductGallery();
+  initProjectFeedback();
   initSectionNav();
   initReceiveWalkthrough();
   initStudioCart();

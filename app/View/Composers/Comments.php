@@ -5,6 +5,7 @@ namespace App\View\Composers;
 use Roots\Acorn\View\Composer;
 
 use function App\mh_post_title;
+use function App\mh_project_post_type;
 
 class Comments extends Composer
 {
@@ -22,11 +23,22 @@ class Comments extends Composer
      */
     public function title(): string
     {
+        $count = get_comments_number();
+        $name = mh_post_title();
+        if (function_exists('\\App\\mh_project_post_type') && get_post_type() === mh_project_post_type()) {
+            return sprintf(
+                /* translators: %1$s is replaced with the number of notes and %2$s with the project title */
+                _nx('%1$s note on "%2$s"', '%1$s notes on "%2$s"', $count, 'comments title', 'sage'),
+                number_format_i18n((int) $count),
+                $name
+            );
+        }
+
         return sprintf(
             /* translators: %1$s is replaced with the number of comments and %2$s with the post title */
-            _nx('%1$s comment on "%2$s"', '%1$s comments on "%2$s"', get_comments_number(), 'comments title', 'sage'),
-            number_format_i18n((int) get_comments_number()),
-            mh_post_title()
+            _nx('%1$s comment on "%2$s"', '%1$s comments on "%2$s"', $count, 'comments title', 'sage'),
+            number_format_i18n((int) $count),
+            $name
         );
     }
 

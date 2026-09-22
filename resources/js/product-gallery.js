@@ -13,6 +13,8 @@ export function initProductGallery() {
   if (!slides.length) return
 
   const mainImg = root?.querySelector('[data-gallery-main]')
+  const caption = root?.querySelector('[data-gallery-caption]')
+  const openBtn = root?.querySelector('[data-gallery-open]')
   const panel = root?.querySelector('#pf-gallery-panel')
   const thumbs = [...(root?.querySelectorAll('.pf-product-gallery__thumb') || [])]
   let index = 0
@@ -25,6 +27,16 @@ export function initProductGallery() {
     if (mainImg) {
       mainImg.src = slide.src
       mainImg.alt = slide.alt
+    }
+    if (caption) {
+      caption.textContent = slide.alt
+    }
+    if (openBtn) {
+      openBtn.setAttribute('data-gallery-index', String(index))
+      const label = slide.alt
+        ? `Open screenshot: ${slide.alt}`
+        : 'Open screenshot'
+      openBtn.setAttribute('aria-label', label)
     }
 
     thumbs.forEach((thumb, i) => {

@@ -5,16 +5,7 @@
 
 @section('content')
 @php
-  $mhStatus = isset($_GET['contact']) ? sanitize_key(wp_unslash($_GET['contact'])) : '';
-  $mhError  = $mhStatus === 'error';
-  $mhOk     = $mhStatus === 'success';
-  $oldName    = \App\mh_contact_old('name');
-  $oldEmail   = \App\mh_contact_old('email');
-  $oldWho     = \App\mh_contact_prefill('who');
-  $oldSubject = \App\mh_contact_prefill('subject');
-  $oldMessage = \App\mh_contact_prefill('message');
-  $invalid    = \App\mh_contact_old_errors();
-  $gh         = \App\Github::fetchUser(\App\mh_github_login());
+  $gh = \App\Github::fetchUser(\App\mh_github_login());
 @endphp
 
 {{-- HERO --}}
@@ -48,69 +39,12 @@
         {{ \App\field('cnt_form_intro', __('Name, email, and a few sentences are enough. No pitch deck required. This form goes straight to my inbox.', 'sage')) }}
       </p>
 
-      @if ($mhOk)
-        <p class="form-success" id="contact-status" role="status" tabindex="-1">
-          {!! \App\mh_svg_icon('check', 18) !!}
-          {{ \App\field('cnt_success', __('Thanks — I got it and will write back soon.', 'sage')) }}
-        </p>
-      @elseif ($mhError)
-        <p class="form-error" id="contact-status" role="alert" tabindex="-1">
-          {{ \App\field('cnt_error', __('Something went wrong. Check the required fields and try again.', 'sage')) }}
-        </p>
-      @endif
-
-      <form class="contact-form{{ $mhError ? ' is-error' : '' }}" id="contact-form" method="post" action="{{ esc_url(get_permalink()) }}" novalidate>
-        @php(wp_nonce_field('mh_contact', 'mh_contact_nonce'))
-        <input type="hidden" name="action" value="mh_contact">
-        <p class="hp visually-hidden">
-          <label for="cf-company">Company (leave empty)</label>
-          <input id="cf-company" type="text" name="mh_hp" value="" tabindex="-1" autocomplete="off">
-        </p>
-
-        <div class="contact-form__row">
-          <div class="field">
-            <label for="cf-name">Name <span class="field-req" aria-hidden="true">*</span></label>
-            <input id="cf-name" type="text" name="mh_name" autocomplete="name" required aria-required="true" placeholder="Your name" value="{{ $oldName }}"@if (in_array('name', $invalid, true)) aria-invalid="true" aria-describedby="contact-status"@endif>
-          </div>
-          <div class="field">
-            <label for="cf-email">Email <span class="field-req" aria-hidden="true">*</span></label>
-            <input id="cf-email" type="email" name="mh_email" autocomplete="email" inputmode="email" required aria-required="true" placeholder="you@example.com" aria-describedby="cf-email-hint{{ in_array('email', $invalid, true) ? ' contact-status' : '' }}" value="{{ $oldEmail }}"@if (in_array('email', $invalid, true)) aria-invalid="true"@endif>
-            <p class="field-hint" id="cf-email-hint">I only use this to reply. No newsletter.</p>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="cf-who">{{ \App\field('cnt_who_label', __('Who you are', 'sage')) }} <span class="field-opt">(optional — helps me reply in the right shape)</span></label>
-          <select id="cf-who" name="mh_who" autocomplete="off">
-            <option value=""@if ($oldWho === '') selected @endif>Choose one</option>
-            <option value="developer"@if ($oldWho === 'developer') selected @endif>A developer</option>
-            <option value="recruiter"@if ($oldWho === 'recruiter') selected @endif>A recruiter or hiring manager</option>
-            <option value="business"@if ($oldWho === 'business') selected @endif>A shop or small business</option>
-            <option value="agency"@if ($oldWho === 'agency') selected @endif>A marketing or design agency</option>
-            <option value="learning"@if ($oldWho === 'learning') selected @endif>Someone learning web development</option>
-            <option value="other"@if ($oldWho === 'other') selected @endif>Something else</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="cf-subject">Subject <span class="field-opt">(optional)</span></label>
-          <input id="cf-subject" type="text" name="mh_subject" autocomplete="off" placeholder="e.g. WordPress platform or web application" value="{{ $oldSubject }}">
-        </div>
-
-        <div class="field">
-          <label for="cf-message">Message <span class="field-req" aria-hidden="true">*</span></label>
-          <textarea id="cf-message" name="mh_message" rows="7" required aria-required="true" placeholder="Tell me what you're working on or what you need. A few sentences is plenty." aria-describedby="cf-message-hint{{ in_array('message', $invalid, true) ? ' contact-status' : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
-          <p class="field-hint" id="cf-message-hint">{{ \App\field('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage')) }}</p>
-        </div>
-
-        <div class="contact-form__actions">
-          <button class="btn" type="submit">
-            {!! \App\mh_svg_icon('mail', 16) !!}
-            {{ \App\field('cnt_submit', __('Send note', 'sage')) }}
-          </button>
-          <p class="field-hint">{{ \App\field('cnt_reply_note', \App\mh_reply_sla()) }}</p>
-        </div>
-      </form>
+      @include('partials.contact-form', [
+        'compact' => false,
+        'formId' => 'contact-form',
+        'statusId' => 'contact-status',
+        'actionUrl' => get_permalink(),
+      ])
     </div>
 
     {{-- Aside --}}

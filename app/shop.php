@@ -351,6 +351,7 @@ function mh_product_catalog_data(int $product_id): array
         'wordpress-tour-theme-walkridge' => 'walkridge',
         'walkridge-tour-wordpress-theme' => 'walkridge',
         'acreline-real-estate-wordpress-theme' => 'acreline',
+        'tocflow' => 'tocguide',
     ];
 
     $resolve = static function (string $slug) use ($catalog, $aliases): array {
@@ -832,7 +833,7 @@ function mh_wc_products_for_work(): array
  */
 function mh_home_case_study_cards(array $cards, int $limit = 3): array
 {
-    $want = ['acreline', 'walkridge', 'tocflow'];
+    $want = ['acreline', 'walkridge', 'tocguide', 'tocflow'];
     $bySlug = [];
     foreach ($cards as $card) {
         $slug = sanitize_title((string) ($card['slug'] ?? ''));
@@ -1390,6 +1391,38 @@ function mh_render_product_add_to_cart(int $product_id): void
     }
 }
 
+/**
+ * Theme-relative path under resources/images/ when $src is a catalog path
+ * or a baked theme URL (any host/port). Empty for truly external URLs.
+ */
+function mh_product_theme_image_rel(string $src): string
+{
+    $src = trim($src);
+    if ($src === '') {
+        return '';
+    }
+
+    $rel = '';
+    if (preg_match('#^(https?:)?//#i', $src) === 1) {
+        $path = rawurldecode((string) (parse_url($src, PHP_URL_PATH) ?? ''));
+        if (preg_match('#/themes/[^/]+/resources/images/(.+)$#', $path, $m) === 1) {
+            $rel = $m[1];
+        }
+    } else {
+        $rel = ltrim($src, '/');
+        if (str_starts_with($rel, 'resources/images/')) {
+            $rel = substr($rel, strlen('resources/images/'));
+        }
+    }
+
+    $rel = ltrim(str_replace('\\', '/', $rel), '/');
+    if ($rel === '' || str_contains($rel, '..')) {
+        return '';
+    }
+
+    return $rel;
+}
+
 /** Turn a catalog path or absolute URL into a public image URL. */
 function mh_product_media_url(string $src): string
 {
@@ -1397,11 +1430,17 @@ function mh_product_media_url(string $src): string
     if ($src === '') {
         return '';
     }
-    if (preg_match('#^(https?:)?//#', $src) === 1) {
+
+    $rel = mh_product_theme_image_rel($src);
+    if ($rel !== '') {
+        return get_theme_file_uri('resources/images/'.$rel);
+    }
+
+    if (preg_match('#^(https?:)?//#i', $src) === 1) {
         return $src;
     }
 
-    return get_theme_file_uri('resources/images/'.$src);
+    return get_theme_file_uri('resources/images/'.ltrim($src, '/'));
 }
 
 /**
@@ -1558,7 +1597,11 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
     // Checking SKU first self-heals stale meta pointers (e.g. if a resync
     // previously created a stub duplicate and stored its ID in the meta).
     if ($slug !== '' && function_exists('wc_get_product_id_by_sku')) {
-        foreach (['theme-'.$slug, 'plugin-'.$slug] as $trySku) {
+        $skus = ['theme-'.$slug, 'plugin-'.$slug];
+        if ($slug === 'tocguide') {
+            $skus[] = 'plugin-tocflow';
+        }
+        foreach ($skus as $trySku) {
             $bySku = (int) wc_get_product_id_by_sku($trySku);
             if ($bySku > 0 && get_post_status($bySku) !== 'trash') {
                 return $bySku;
@@ -1591,6 +1634,12 @@ function mh_find_product_id_for_project(int $project_id, string $slug): int
             'acreline',
             'wordpress-theme-real-estate-agents',
             'real-estate-wordpress-theme-acreline',
+        ])));
+    }
+    if ($slug === 'tocguide') {
+        $slugCandidates = array_values(array_unique(array_merge($slugCandidates, [
+            'tocguide',
+            'tocflow',
         ])));
     }
 

@@ -2,6 +2,19 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.36 screenshot URLs)
+
+- `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
+- `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
+- Catalog bump is `mh_product_catalog_v10`.
+
+## Editor’s notes (3.6.35 project feedback)
+
+- Project singles (`partials/content-single-project.blade.php`) include like/star (`partials/project-react.blade.php` + `mh_project_react` AJAX), `comments_template()`, and compact `partials/contact-form.blade.php`. Do not add a form plugin.
+- Visitor counts are `_mh_visitor_likes` / `_mh_visitor_stars`. GitHub `_mh_project_stars` stays separate.
+- TOCguide is the catalog key and project slug. Keep `tocflow` aliases, SKU `plugin-tocflow`, and the 301 from `/projects/tocflow/`.
+- Catalog bump is `mh_product_catalog_v9` (force upsert). Contact page reuses the shared form partial.
+
 ## Editor’s notes (3.6.34 page hero padding)
 
 - `.page-header--photo` padding-block is `clamp(3.75rem, 9vh, 6rem) 6.25rem`. Home `.h-hero--viewport` is `clamp(5.25rem, 11vh, 7.25rem) 6.25rem`. Bottom stays above the wave (`clamp(3.4rem, 8vw, 5.75rem)`). Do not drop back to `4.5rem` bottom.
@@ -380,7 +393,7 @@ What the 3.x Sage theme does, and where it lives.
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
-| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT** | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT**; singles have screenshot lightbox, palette, like/star, visitor notes, compact contact | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `partials/project-react.blade.php`, `partials/contact-form.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `resources/js/project-feedback.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
@@ -388,14 +401,14 @@ What the 3.x Sage theme does, and where it lives.
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Hero search, newest/oldest sort, Grid/List (`data-post-list` on `.post-list`), topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` as Gutenberg block markup; single-post hero shows featured image beside title/meta; **Tool Blocks** (`matthummel/tool-grid` + `tool-card` with icon/mark/labels) plus `ship-pipe` / `ship-step` | `index.blade.php`, `archive.blade.php`, `partials/content-single.blade.php`, `resources/js/blocks/`, `app/blocks.php`, `resources/css/journal-blocks.css`, `resources/css/editor.css`, `docs/posts/` |
 | Single post | Reading progress bar, hero/bottom share (Bluesky, LinkedIn, Facebook, Reddit, copy link), “What changed” collapsible separator (closed by default), inline TOC, desktop sidebar, tags, author bio, post-end CTA (WordPress/full-stack or Power Platform), prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php`, `app/social-share.php`, `mh_enhance_what_changed()` |
-| Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback) | `template-contact.blade.php`, `app/contact.php` |
+| Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback); same form compact on project pages | `template-contact.blade.php`, `partials/contact-form.blade.php`, `app/contact.php` |
 | Search titles / meta | Rank Math title/description win when set (skill-first WordPress wording, no city stuffing); theme page fields and `mh_seo_landing_defaults()` are fallbacks; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc`, Rank Math |
 | Rank Math page scores | Field-driven pages sync analysis HTML into `post_content` (not shown on the front) and feed fields via the Rank Math Content Analysis API so marketing scores can reach ~80+ | `app/rank-math-fields.php`, `resources/js/admin-rank-math-fields.js` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
 | Site header | Sticky on all viewports; wordmark; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
 | Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
 | Project brief | `/start/` stepped discovery form for agencies/shops; CTA on Home + Services process; POST `mh_discovery` → n8n CRM webhook (`wp_mail` fallback) | `template-start.blade.php`, `partials/discovery-cta.blade.php`, `app/contact.php` |
-| Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
+| Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed; project CPT uses Leave feedback + visitor like/star | `app/comments.php`, `partials/comments.blade.php`, `partials/project-react.blade.php` |
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
