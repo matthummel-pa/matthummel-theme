@@ -90,6 +90,19 @@
   font-weight: 400;
 }
 
+.mhn-legacy {
+  max-width: 44rem;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: #eef3f9;
+  border-left: 4px solid #0d2e57;
+  color: #0b1220;
+}
+
+.mhn-legacy p {
+  margin: 0;
+}
+
 .mhn-dash-links {
   display: flex;
   flex-wrap: wrap;

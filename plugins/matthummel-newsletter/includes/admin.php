@@ -277,7 +277,7 @@ function page_dashboard(): void
         $data['prior']
     )).'</p>';
     if ($data['legacy'] > 0) {
-        echo '<div class="notice notice-info"><p>'.esc_html(sprintf(
+        echo '<div class="mhn-legacy"><p>'.esc_html(sprintf(
             /* translators: %d: legacy single opt-in addresses */
             __('%d addresses came from the old footer list (single opt-in). They stay subscribed and are not asked to confirm again. Everyone new confirms by email first.', 'matthummel-newsletter'),
             $data['legacy']
@@ -307,7 +307,7 @@ function page_dashboard(): void
         echo '<a class="button button-primary" href="'.esc_url($create).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a>';
         echo '</div>';
     } else {
-        echo '<p class="description">'.esc_html__('Delivered and failed counts show after a send starts. Open and click rates stay off.', 'matthummel-newsletter').'</p>';
+        echo '<p class="description">'.esc_html__('Delivered and failed counts show after a send starts.', 'matthummel-newsletter').'</p>';
         echo admin_issues_table($data['issues']);
     }
     echo '</section>';
