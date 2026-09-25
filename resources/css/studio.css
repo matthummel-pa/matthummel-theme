@@ -3346,3 +3346,24 @@ html.mh-dark .project-feat-grid > .project-feat::before {
   background-color: var(--blue-400);
 }
 
+/* ── 3.6.38 Get updates page ─────────────────────────────────────────────── */
+.updates-wrap {
+  max-width: 40rem;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+.updates-wrap .mhn-form .btn {
+  background: var(--color-navy, #0d2e57);
+  color: #fff;
+}
+.updates-wrap .mhn-field input[type="email"],
+.updates-wrap .mhn-field input[type="text"] {
+  border-color: var(--gray-500, #8ea0b5);
+  border-radius: var(--radius, 4px);
+  font-family: var(--font-body, "IBM Plex Sans", Inter, system-ui, sans-serif);
+}
+html.mh-dark .updates-wrap .mhn-field input[type="email"],
+html.mh-dark .updates-wrap .mhn-field input[type="text"] {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+

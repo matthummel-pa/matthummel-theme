@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.38 — Get updates page
+
+- Get updates has its own page, with email and an optional first name.
+- The footer signup still keeps your address on this site. New signups confirm by email before they are on the list when the site newsletter is on.
+- If that newsletter is off, the footer signup works as before.
+
 ## 3.6.37 — Projects grid, blue checks, catalog shots
 
 - Project singles drop the Projects crumb (and Rank Math / Yoast breadcrumbs on project surfaces).

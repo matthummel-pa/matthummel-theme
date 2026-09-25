@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.38 Get updates)
+
+- Newsletter behavior lives in `plugins/matthummel-newsletter/`. Do not add Mailchimp, HubSpot, or another ESP.
+- Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
+- Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
+- Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
+
 ## Editor’s notes (3.6.37 projects listing)
 
 - Do not pass `featured` on `partials/work-card.blade.php` from `template-projects.blade.php`. Every live project, including TOCguide, is a same-size grid card.

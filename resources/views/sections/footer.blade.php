@@ -68,10 +68,18 @@
         __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage'),
         $footerHomeId > 0 ? $footerHomeId : null
       ) }}</p>
+      @if (function_exists('mhn_render_footer_form'))
+        {!! mhn_render_footer_form() !!}
+        <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
+      @else
       @if ($signupStatus === 'ok')
         <p class="footer-follow__status" role="status">{{ __('You are on the list. Thanks.', 'sage') }}</p>
+      @elseif ($signupStatus === 'confirm')
+        <p class="footer-follow__status" role="status">{{ __('Check your email to confirm.', 'sage') }}</p>
       @elseif ($signupStatus === 'dup')
         <p class="footer-follow__status" role="status">{{ __('That address is already signed up.', 'sage') }}</p>
+      @elseif ($signupStatus === 'wait')
+        <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Please wait a while, then try again.', 'sage') }}</p>
       @elseif ($signupStatus === 'error')
         <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Use a valid email, then try again.', 'sage') }}</p>
       @endif
@@ -97,6 +105,7 @@
         </div>
         <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
       </form>
+      @endif
     </div>
 
   </div>
