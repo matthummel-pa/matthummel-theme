@@ -1,23 +1,20 @@
 name: Pack newsletter plugin
 
-# Artifact only. This does not publish the theme-latest release.
+# Plugin zip only. The theme release stays in deploy.yml (theme-latest).
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - 'plugins/matthummel-newsletter/**'
       - '.github/scripts/pack-plugin.sh'
+      - '.github/scripts/pack-theme.sh'
       - '.github/workflows/plugin-newsletter.yml'
   push:
     branches:
       - main
-    paths:
-      - 'plugins/matthummel-newsletter/**'
-      - '.github/scripts/pack-plugin.sh'
-      - '.github/workflows/plugin-newsletter.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   pack:
@@ -26,6 +23,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Theme pack excludes plugins
+        run: grep -q -- "--exclude='plugins'" .github/scripts/pack-theme.sh
 
       - name: Pack plugin
         run: bash .github/scripts/pack-plugin.sh "$GITHUB_WORKSPACE/matthummel-newsletter.zip"
@@ -36,3 +36,19 @@ jobs:
           name: matthummel-newsletter
           path: matthummel-newsletter.zip
           if-no-files-found: error
+
+      - name: Publish GitHub Release (matthummel-newsletter-latest)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: matthummel-newsletter-latest
+          name: Latest newsletter plugin
+          make_latest: false
+          fail_on_unmatched_files: true
+          target_commitish: ${{ github.sha }}
+          files: matthummel-newsletter.zip
+          body: |
+            Self-hosted newsletter plugin for matthummel.com.
+            Commit: ${{ github.sha }}
+            This is not the theme zip. Install from wp-admin → Plugins → Add New → Upload Plugin.
+            Activation copies the old footer list and does not send email.

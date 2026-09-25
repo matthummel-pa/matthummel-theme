@@ -66,12 +66,34 @@ $copied = Newsletter\migrate_legacy();
 $legacyRow = Newsletter\find_by_email('legacy@example.com');
 mhn_check($legacyRow !== null && $legacyRow['status'] === 'subscribed', 'legacy row is subscribed');
 mhn_check($legacyRow !== null && $legacyRow['opt_in'] === 'legacy_single', 'legacy row is marked single opt-in');
-mhn_check(Newsletter\migrate_legacy() === 0 || $copied >= 0, 'legacy migration does not duplicate');
-mhn_check(Newsletter\find_by_email('legacy@example.com') !== null, 'legacy address exists once');
+mhn_check($copied >= 1, 'legacy migration copies a new row');
+mhn_check(Newsletter\migrate_legacy() === 0, 'legacy migration does not duplicate');
+$legacyCount = (int) $wpdb->get_var($wpdb->prepare(
+    'SELECT COUNT(*) FROM '.Newsletter\subscribers_table().' WHERE email = %s',
+    'legacy@example.com'
+));
+mhn_check($legacyCount === 1, 'legacy address exists once');
+$legacyStill = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$legacy} WHERE email = %s", 'legacy@example.com'));
+mhn_check((int) $legacyStill === 1, 'legacy source row is kept');
 
 $updates = get_page_by_path('get-updates');
 $prefs = get_page_by_path('email-preferences');
 mhn_check($updates instanceof WP_Post && has_shortcode($updates->post_content, 'mhn_updates'), 'get-updates page exists');
+$probe = Newsletter\ensure_page('mhn-activation-probe', 'Probe', 'Leave this body', '');
+wp_update_post([
+    'ID' => $probe,
+    'post_title' => 'Custom title keep me',
+    'post_content' => 'Custom body that must stay',
+]);
+Newsletter\ensure_page('mhn-activation-probe', 'Probe', 'Leave this body', '');
+$beforeActivateMail = count($GLOBALS['mhn_outbox']);
+Newsletter\activate();
+Newsletter\activate();
+$kept = get_post($probe);
+mhn_check($kept instanceof WP_Post && $kept->post_title === 'Custom title keep me', 'activation does not replace an existing page title');
+mhn_check($kept instanceof WP_Post && $kept->post_content === 'Custom body that must stay', 'activation does not replace existing page content');
+mhn_check(count($GLOBALS['mhn_outbox']) === $beforeActivateMail, 'activation does not send email');
+wp_delete_post($probe, true);
 mhn_check($prefs instanceof WP_Post && has_shortcode($prefs->post_content, 'mhn_preferences'), 'preferences page exists');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send is off');
 mhn_check(Newsletter\settings()['track_opens'] === 0 && Newsletter\settings()['track_clicks'] === 0, 'tracking is off');

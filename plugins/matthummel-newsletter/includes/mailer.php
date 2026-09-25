@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MattHummel\Newsletter;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 if (! defined('ABSPATH')) {
     exit;
 }
@@ -14,7 +16,7 @@ if (! defined('ABSPATH')) {
  */
 function send_mail(string $to, string $subject, string $html, string $text, array $extraHeaders = [], ?array $subscriber = null): bool
 {
-    if (! is_email($to)) {
+    if (! empty($GLOBALS['mhn_activating']) || ! is_email($to)) {
         return false;
     }
 
@@ -54,7 +56,7 @@ function mail_error(): string
 }
 
 /**
- * @param  \PHPMailer\PHPMailer\PHPMailer|object  $phpmailer
+ * @param  PHPMailer|object  $phpmailer
  */
 function on_phpmailer(object $phpmailer): void
 {

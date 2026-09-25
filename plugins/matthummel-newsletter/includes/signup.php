@@ -146,16 +146,19 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
         $first = $firstIndex === null ? '' : sanitize_text_field((string) ($row[$firstIndex] ?? ''));
         if (! is_email($email)) {
             $counts['invalid']++;
+
             continue;
         }
 
         $existing = find_by_email($email);
         if ($existing && $existing['status'] === 'unsubscribed' && ! $allowUnsub) {
             $counts['skipped']++;
+
             continue;
         }
         if ($existing && $existing['status'] === 'subscribed' && $mode === 'consented') {
             $counts['skipped']++;
+
             continue;
         }
 
@@ -181,17 +184,20 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
                 ]);
             }
             $counts['imported']++;
+
             continue;
         }
 
         if ($existing && $existing['status'] === 'subscribed') {
             $counts['skipped']++;
+
             continue;
         }
 
         $held = hold_pending($email, $first, $existing);
         if ($held < 1) {
             $counts['invalid']++;
+
             continue;
         }
         if ($sendConfirm) {

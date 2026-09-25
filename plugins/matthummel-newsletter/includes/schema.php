@@ -10,12 +10,18 @@ if (! defined('ABSPATH')) {
 
 function activate(): void
 {
-    install_tables();
-    migrate_legacy();
-    ensure_pages();
-    schedule_cron();
-    update_option('mhn_version', MHN_VERSION);
-    flush_rewrite_rules();
+    $GLOBALS['mhn_activating'] = true;
+
+    try {
+        install_tables();
+        migrate_legacy();
+        ensure_pages();
+        schedule_cron();
+        update_option('mhn_version', MHN_VERSION);
+        flush_rewrite_rules();
+    } finally {
+        $GLOBALS['mhn_activating'] = false;
+    }
 }
 
 function deactivate(): void
@@ -85,11 +91,17 @@ function maybe_upgrade(): void
         return;
     }
 
-    install_tables();
-    migrate_legacy();
-    ensure_pages();
-    schedule_cron();
-    update_option('mhn_version', MHN_VERSION);
+    $GLOBALS['mhn_activating'] = true;
+
+    try {
+        install_tables();
+        migrate_legacy();
+        ensure_pages();
+        schedule_cron();
+        update_option('mhn_version', MHN_VERSION);
+    } finally {
+        $GLOBALS['mhn_activating'] = false;
+    }
 }
 
 function install_tables(): void
@@ -164,7 +176,7 @@ function migrate_legacy(): int
             $created = current_time('mysql');
         }
 
-        insert_subscriber([
+        $id = insert_subscriber([
             'email' => $email,
             'first_name' => '',
             'status' => 'subscribed',
@@ -173,7 +185,9 @@ function migrate_legacy(): int
             'created_at' => $created,
             'confirmed_at' => $created,
         ]);
-        $copied++;
+        if ($id > 0) {
+            $copied++;
+        }
     }
 
     return $copied;
