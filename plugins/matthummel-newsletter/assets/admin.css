@@ -1,13 +1,72 @@
+.mhn-admin {
+  color: #0b1220;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.mhn-admin .button.button-primary {
+  min-height: 44px;
+  padding: 0 16px;
+  line-height: 42px;
+  background: #0d2e57;
+  border-color: #0d2e57;
+  color: #fff;
+}
+
+.mhn-admin .button.button-primary:hover,
+.mhn-admin .button.button-primary:focus {
+  background: #0b1220;
+  border-color: #0b1220;
+  color: #fff;
+  outline: 2px solid #fff;
+  box-shadow: 0 0 0 4px #0d2e57;
+}
+
+.mhn-admin a:focus,
+.mhn-admin button:focus,
+.mhn-admin input:focus,
+.mhn-admin .button:focus {
+  outline: 2px solid #0d2e57;
+  outline-offset: 2px;
+}
+
+.mhn-dash-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 12px 0 8px;
+}
+
+.mhn-dash-head h1 {
+  margin-bottom: 4px;
+  padding: 0;
+  color: #0b1220;
+}
+
+.mhn-dash-head p {
+  margin: 0;
+  max-width: 40rem;
+  color: #50575e;
+}
+
+.mhn-audience h2,
+.mhn-recent h2 {
+  margin: 20px 0 8px;
+  color: #0b1220;
+  font-size: 18px;
+}
+
 .mhn-admin-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 16px 0;
-  padding: 0;
-  list-style: none;
+  margin: 0 0 12px;
 }
 
-.mhn-admin-stats li {
+.mhn-stat {
+  display: flex;
+  flex-direction: column;
   min-width: 140px;
   margin: 0;
   padding: 12px 14px;
@@ -16,14 +75,125 @@
   border-radius: 4px;
 }
 
-.mhn-admin-stats strong {
-  display: block;
+.mhn-stat dd {
+  order: -1;
+  margin: 0;
+  color: #0b1220;
   font-size: 28px;
+  font-weight: 600;
   line-height: 1.1;
 }
 
-.mhn-admin-stats span {
+.mhn-stat dt {
+  margin: 4px 0 0;
   color: #50575e;
+  font-weight: 400;
+}
+
+.mhn-dash-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 4px 0 8px;
+}
+
+.mhn-dash-links a,
+.mhn-quiet-link,
+.mhn-wizard-back a,
+.mhn-issues-admin a,
+.mhn-row-actions .button-link {
+  color: #0d2e57;
+  text-underline-offset: 3px;
+}
+
+.mhn-empty {
+  margin: 8px 0 16px;
+  padding: 24px 20px;
+  background: #eef3f9;
+  border: 1px dashed #c3c4c7;
+  border-radius: 4px;
+}
+
+.mhn-empty h3 {
+  margin: 0 0 8px;
+  color: #0b1220;
+}
+
+.mhn-empty p {
+  max-width: 36rem;
+  margin: 0 0 12px;
+}
+
+.mhn-recent {
+  overflow-x: auto;
+}
+
+.mhn-issues-admin th,
+.mhn-issues-admin td,
+.mhn-sub-table td {
+  vertical-align: middle;
+}
+
+.mhn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #0b1220;
+  font-weight: 600;
+}
+
+.mhn-badge .dashicons {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 1;
+  color: #0d2e57;
+}
+
+.mhn-muted {
+  color: #50575e;
+}
+
+.mhn-sub-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin: 12px 0 16px;
+}
+
+.mhn-sub-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.mhn-sub-search input[type="search"] {
+  min-width: 220px;
+}
+
+.mhn-sub-meta {
+  margin: 0;
+}
+
+.mhn-sub-table input[type="text"] {
+  width: 9rem;
+  max-width: 100%;
+}
+
+.mhn-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.mhn-row-actions form {
+  display: inline;
+  margin: 0;
 }
 
 .mhn-wizard-steps {
@@ -45,14 +215,45 @@
   color: #50575e;
 }
 
-.mhn-wizard-steps li.is-current {
-  border-color: #0d2e57;
-  color: #0d2e57;
+.mhn-wizard-kicker {
+  margin: 0 0 8px;
+  color: #0b1220;
   font-weight: 600;
+}
+
+.mhn-wizard-back {
+  margin: 8px 0 0;
+}
+
+.mhn-wizard-steps li.is-current {
+  background: #0d2e57;
+  border-color: #0d2e57;
+  color: #fff;
+  font-weight: 600;
+}
+
+.mhn-wizard-steps li.is-current a:focus {
+  outline-color: #fff;
 }
 
 .mhn-wizard-steps li.is-done {
   border-color: #0d2e57;
+  color: #0b1220;
+}
+
+.mhn-step-state {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mhn-wizard-steps li.is-done .mhn-step-state {
+  color: #0d2e57;
+}
+
+.mhn-quiet-link {
+  margin-left: 8px;
 }
 
 .mhn-wizard-steps a {

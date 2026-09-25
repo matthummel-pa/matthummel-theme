@@ -64,3 +64,4 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 * Click and open links cannot unsubscribe. Confirmation email for the same address is limited.
 * Import and export a CSV of addresses you already have permission to email.
 * Sent archive keeps a private copy of each finished send. A sent issue is read-only. Duplicate it to start a new draft. Archive hides an old issue from the main list and keeps the copy.
+* Get updates shows audience counts, one Create newsletter button, and recent issues with status, sent time, and real delivered or failed counts. Open and click rates are not shown.

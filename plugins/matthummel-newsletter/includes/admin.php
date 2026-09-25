@@ -127,7 +127,7 @@ function admin_assets(string $hook): void
  *     legacy: int,
  *     recent: int,
  *     prior: int,
- *     issues: list<array{id: int, title: string, status: string, sent: int, failed: int, when: string}>
+ *     issues: list<array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at: string, scheduled: string}>
  * }
  */
 function dashboard_data(): array
@@ -149,7 +149,7 @@ function dashboard_data(): array
 }
 
 /**
- * @return list<array{id: int, title: string, status: string, sent: int, failed: int, when: string}>
+ * @return list<array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at: string, scheduled: string}>
  */
 function recent_issue_rows(): array
 {
@@ -177,6 +177,8 @@ function recent_issue_rows(): array
             'sent' => (int) get_post_meta($post->ID, '_mhn_sent_count', true),
             'failed' => (int) get_post_meta($post->ID, '_mhn_fail_count', true),
             'when' => $post->post_modified,
+            'sent_at' => (string) get_post_meta($post->ID, '_mhn_sent_at', true),
+            'scheduled' => (string) get_post_meta($post->ID, '_mhn_scheduled_local', true),
         ];
     }
 
@@ -184,7 +186,7 @@ function recent_issue_rows(): array
 }
 
 /**
- * @param  list<array{id: int, title: string, status: string, sent: int, failed: int, when: string}>  $issues
+ * @param  list<array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at?: string, scheduled?: string}>  $issues
  */
 function issues_table(array $issues, bool $admin): string
 {
@@ -243,18 +245,35 @@ function page_dashboard(): void
 {
     guard_admin();
     $data = dashboard_data();
+    $create = wizard_url();
+
     echo '<div class="wrap mhn-admin">';
+    echo '<header class="mhn-dash-head">';
+    echo '<div>';
     echo '<h1>'.esc_html__('Get updates', 'matthummel-newsletter').'</h1>';
     echo '<p>'.esc_html__('Addresses stay in this WordPress database. Mail goes out through wp_mail.', 'matthummel-newsletter').'</p>';
-    echo '<ul class="mhn-admin-stats">';
-    echo '<li><strong>'.esc_html((string) $data['subscribed']).'</strong><span>'.esc_html__('Subscribed', 'matthummel-newsletter').'</span></li>';
-    echo '<li><strong>'.esc_html((string) $data['pending']).'</strong><span>'.esc_html__('Pending', 'matthummel-newsletter').'</span></li>';
-    echo '<li><strong>'.esc_html((string) $data['unsubscribed']).'</strong><span>'.esc_html__('Unsubscribed', 'matthummel-newsletter').'</span></li>';
-    echo '<li><strong>'.esc_html((string) $data['recent']).'</strong><span>'.esc_html__('New, 30 days', 'matthummel-newsletter').'</span></li>';
-    echo '</ul>';
-    echo '<p>'.esc_html(sprintf(
-        /* translators: %d: subscribers in the previous 30 days */
-        __('The 30 days before that: %d.', 'matthummel-newsletter'),
+    echo '</div>';
+    echo '<a class="button button-primary" href="'.esc_url($create).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a>';
+    echo '</header>';
+
+    echo '<section class="mhn-audience" aria-labelledby="mhn-audience-heading">';
+    echo '<h2 id="mhn-audience-heading">'.esc_html__('Audience', 'matthummel-newsletter').'</h2>';
+    echo '<dl class="mhn-admin-stats">';
+    foreach ([
+        'subscribed' => __('Subscribed', 'matthummel-newsletter'),
+        'pending' => __('Pending', 'matthummel-newsletter'),
+        'unsubscribed' => __('Unsubscribed', 'matthummel-newsletter'),
+    ] as $key => $label) {
+        echo '<div class="mhn-stat">';
+        echo '<dt>'.esc_html($label).'</dt>';
+        echo '<dd>'.esc_html((string) $data[$key]).'</dd>';
+        echo '</div>';
+    }
+    echo '</dl>';
+    echo '<p class="description">'.esc_html(sprintf(
+        /* translators: 1: new subscribers in 30 days, 2: previous 30 days */
+        __('%1$d new in the last 30 days. %2$d in the 30 days before that.', 'matthummel-newsletter'),
+        $data['recent'],
         $data['prior']
     )).'</p>';
     if ($data['legacy'] > 0) {
@@ -264,16 +283,182 @@ function page_dashboard(): void
             $data['legacy']
         )).'</p></div>';
     }
-    echo '<p>';
-    echo '<a class="button button-primary" href="'.esc_url(wizard_url()).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a> ';
-    echo '<a class="button" href="'.esc_url(admin_url('post-new.php?post_type=newsletter_issue')).'">'.esc_html__('Block editor', 'matthummel-newsletter').'</a> ';
-    echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-import')).'">'.esc_html__('Import CSV', 'matthummel-newsletter').'</a> ';
-    echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Settings', 'matthummel-newsletter').'</a> ';
-    echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-archive')).'">'.esc_html__('Sent archive', 'matthummel-newsletter').'</a> ';
-    echo '<a class="button" href="'.esc_url(page_url('get-updates')).'">'.esc_html__('View page', 'matthummel-newsletter').'</a>';
-    echo '</p>';
-    echo issues_table($data['issues'], true);
+    echo '</section>';
+
+    echo '<nav class="mhn-dash-links" aria-label="'.esc_attr__('Newsletter tools', 'matthummel-newsletter').'">';
+    foreach ([
+        admin_url('admin.php?page=mhn-subscribers') => __('Subscribers', 'matthummel-newsletter'),
+        admin_url('admin.php?page=mhn-import') => __('Import', 'matthummel-newsletter'),
+        admin_url('admin.php?page=mhn-archive') => __('Sent archive', 'matthummel-newsletter'),
+        admin_url('admin.php?page=mhn-settings') => __('Settings', 'matthummel-newsletter'),
+        admin_url('post-new.php?post_type=newsletter_issue') => __('Block editor', 'matthummel-newsletter'),
+        page_url('get-updates') => __('View page', 'matthummel-newsletter'),
+    ] as $url => $label) {
+        echo '<a href="'.esc_url($url).'">'.esc_html($label).'</a>';
+    }
+    echo '</nav>';
+
+    echo '<section class="mhn-recent" aria-labelledby="mhn-recent-heading">';
+    echo '<h2 id="mhn-recent-heading">'.esc_html__('Recent newsletters', 'matthummel-newsletter').'</h2>';
+    if ($data['issues'] === []) {
+        echo '<div class="mhn-empty">';
+        echo '<h3>'.esc_html__('No newsletters yet', 'matthummel-newsletter').'</h3>';
+        echo '<p>'.esc_html__('Create one when you are ready. It stays a draft until you send it.', 'matthummel-newsletter').'</p>';
+        echo '<a class="button button-primary" href="'.esc_url($create).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a>';
+        echo '</div>';
+    } else {
+        echo '<p class="description">'.esc_html__('Delivered and failed counts show after a send starts. Open and click rates stay off.', 'matthummel-newsletter').'</p>';
+        echo admin_issues_table($data['issues']);
+    }
+    echo '</section>';
     echo '</div>';
+}
+
+/**
+ * @param  array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at: string, scheduled: string}  $issue
+ */
+function issue_has_delivery(array $issue): bool
+{
+    return in_array($issue['status'], ['sent', 'sending', 'failed'], true)
+        || $issue['sent'] > 0
+        || $issue['failed'] > 0;
+}
+
+/**
+ * @param  array{status: string, sent_at: string, scheduled: string}  $issue
+ */
+function issue_time_label(array $issue): string
+{
+    if (in_array($issue['status'], ['sent', 'failed'], true) && $issue['sent_at'] !== '') {
+        return admin_datetime($issue['sent_at']);
+    }
+    if ($issue['status'] === 'sending') {
+        return $issue['sent_at'] !== ''
+            ? admin_datetime($issue['sent_at'])
+            : __('Still sending', 'matthummel-newsletter');
+    }
+    if ($issue['status'] === 'scheduled' && $issue['scheduled'] !== '') {
+        return sprintf(
+            /* translators: %s: scheduled local date and time */
+            __('Scheduled for %s', 'matthummel-newsletter'),
+            admin_datetime($issue['scheduled'])
+        );
+    }
+
+    return __('Not sent', 'matthummel-newsletter');
+}
+
+function admin_datetime(string $mysql): string
+{
+    $mysql = trim($mysql);
+    if ($mysql === '' || str_starts_with($mysql, '0000-00-00')) {
+        return '';
+    }
+
+    $format = trim((string) get_option('date_format').' '.(string) get_option('time_format'));
+    $formatted = mysql2date($format !== '' ? $format : 'Y-m-d H:i', $mysql);
+
+    return is_string($formatted) && $formatted !== '' ? $formatted : $mysql;
+}
+
+function subscriber_status_label(string $status): string
+{
+    return match ($status) {
+        'subscribed' => __('Subscribed', 'matthummel-newsletter'),
+        'pending' => __('Pending', 'matthummel-newsletter'),
+        'unsubscribed' => __('Unsubscribed', 'matthummel-newsletter'),
+        default => $status,
+    };
+}
+
+function admin_status_badge(string $label, string $slug): string
+{
+    $icon = match ($slug) {
+        'scheduled' => 'dashicons-clock',
+        'sending' => 'dashicons-update',
+        'sent', 'subscribed' => 'dashicons-yes',
+        'failed' => 'dashicons-warning',
+        'pending' => 'dashicons-email-alt',
+        'unsubscribed' => 'dashicons-dismiss',
+        default => 'dashicons-edit',
+    };
+
+    return '<span class="mhn-badge"><span class="dashicons '.esc_attr($icon).'" aria-hidden="true"></span> '.esc_html($label).'</span>';
+}
+
+function admin_count_cell(bool $show, int $count): string
+{
+    if (! $show) {
+        return '<span class="mhn-muted"><span aria-hidden="true">—</span><span class="screen-reader-text">'.esc_html__('Not sent yet', 'matthummel-newsletter').'</span></span>';
+    }
+
+    return esc_html((string) $count);
+}
+
+/**
+ * @param  list<array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at: string, scheduled: string}>  $issues
+ */
+function admin_issues_table(array $issues): string
+{
+    $html = '<table class="widefat striped mhn-issues-admin"><thead><tr>';
+    foreach ([
+        __('Issue', 'matthummel-newsletter'),
+        __('Status', 'matthummel-newsletter'),
+        __('Sent time', 'matthummel-newsletter'),
+        __('Delivered', 'matthummel-newsletter'),
+        __('Failed', 'matthummel-newsletter'),
+        __('Actions', 'matthummel-newsletter'),
+    ] as $heading) {
+        $html .= '<th scope="col">'.esc_html($heading).'</th>';
+    }
+    $html .= '</tr></thead><tbody>';
+
+    foreach ($issues as $issue) {
+        $showCounts = issue_has_delivery($issue);
+        $html .= '<tr>';
+        $html .= '<th scope="row"><a href="'.esc_url(wizard_url($issue['id'])).'">'.esc_html($issue['title']).'</a></th>';
+        $html .= '<td>'.admin_status_badge(status_label($issue['status']), $issue['status']).'</td>';
+        $html .= '<td>'.esc_html(issue_time_label($issue)).'</td>';
+        $html .= '<td>'.admin_count_cell($showCounts, $issue['sent']).'</td>';
+        $html .= '<td>'.admin_count_cell($showCounts, $issue['failed']).'</td>';
+        $html .= '<td class="mhn-row-actions">'.admin_issue_actions($issue).'</td>';
+        $html .= '</tr>';
+    }
+
+    $html .= '</tbody></table>';
+
+    return $html;
+}
+
+/**
+ * @param  array{id: int, status: string}  $issue
+ */
+function admin_issue_actions(array $issue): string
+{
+    $edit = get_edit_post_link($issue['id'], 'raw');
+    $test = wp_nonce_url(admin_url('admin-post.php?action=mhn_send_test&issue='.$issue['id']), 'mhn_send_test_'.$issue['id']);
+    $continue = in_array($issue['status'], ['sent', 'sending'], true)
+        ? __('View', 'matthummel-newsletter')
+        : __('Continue', 'matthummel-newsletter');
+    $html = '<a href="'.esc_url(wizard_url($issue['id'])).'">'.esc_html($continue).'</a>';
+
+    if ($issue['status'] === 'sent') {
+        $html .= '<a href="'.esc_url(duplicate_issue_url($issue['id'])).'">'.esc_html__('Duplicate as new draft', 'matthummel-newsletter').'</a>';
+        $saved = latest_sent_snapshot($issue['id']);
+        if ($saved !== null) {
+            $html .= '<a href="'.esc_url(sent_archive_admin_url((int) $saved['id'])).'">'.esc_html__('Saved copy', 'matthummel-newsletter').'</a>';
+        }
+
+        return $html;
+    }
+
+    if (is_string($edit) && $edit !== '') {
+        $html .= '<a href="'.esc_url($edit).'">'.esc_html__('Editor', 'matthummel-newsletter').'</a>';
+    }
+    $html .= '<a href="'.esc_url($test).'">'.esc_html__('Send test', 'matthummel-newsletter').'</a>';
+    $html .= '<a href="'.esc_url(wizard_url($issue['id'], 5)).'">'.esc_html__('Send', 'matthummel-newsletter').'</a>';
+
+    return $html;
 }
 
 function page_subscribers(): void
@@ -301,7 +486,7 @@ function page_subscribers(): void
     $pages = max(1, (int) ceil($total / $perPage));
     $export = wp_nonce_url(admin_url('admin-post.php?action=mhn_export'), 'mhn_export');
 
-    echo '<div class="wrap"><h1>'.esc_html__('Subscribers', 'matthummel-newsletter').'</h1>';
+    echo '<div class="wrap mhn-admin mhn-subscribers"><h1>'.esc_html__('Subscribers', 'matthummel-newsletter').'</h1>';
     if (isset($_GET['deleted'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Removed.', 'matthummel-newsletter').'</p></div>';
     }
@@ -311,17 +496,21 @@ function page_subscribers(): void
     if (isset($_GET['named'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Name saved.', 'matthummel-newsletter').'</p></div>';
     }
-    echo '<p><a class="button button-primary" href="'.esc_url($export).'">'.esc_html__('Export CSV', 'matthummel-newsletter').'</a> ';
+    echo '<div class="mhn-sub-toolbar">';
+    echo '<form class="mhn-sub-search" method="get">';
+    echo '<input type="hidden" name="page" value="mhn-subscribers">';
+    echo '<label class="screen-reader-text" for="mhn-search">'.esc_html__('Search subscribers', 'matthummel-newsletter').'</label>';
+    echo '<input type="search" id="mhn-search" name="s" value="'.esc_attr($search).'" placeholder="'.esc_attr__('Search by name or email', 'matthummel-newsletter').'">';
+    echo '<button class="button" type="submit">'.esc_html__('Search', 'matthummel-newsletter').'</button>';
+    echo '</form>';
+    echo '<p class="mhn-sub-meta"><a class="button" href="'.esc_url($export).'">'.esc_html__('Export CSV', 'matthummel-newsletter').'</a> ';
     echo '<span class="description">'.esc_html(sprintf(
         /* translators: %d: subscriber count */
         __('%d addresses.', 'matthummel-newsletter'),
         $total
     )).'</span></p>';
-    echo '<form method="get"><input type="hidden" name="page" value="mhn-subscribers"><p class="search-box">';
-    echo '<label class="screen-reader-text" for="mhn-search">'.esc_html__('Search', 'matthummel-newsletter').'</label>';
-    echo '<input type="search" id="mhn-search" name="s" value="'.esc_attr($search).'">';
-    echo '<button class="button" type="submit">'.esc_html__('Search', 'matthummel-newsletter').'</button></p></form>';
-    echo '<table class="widefat striped"><thead><tr>';
+    echo '</div>';
+    echo '<table class="widefat striped mhn-sub-table"><thead><tr>';
     foreach ([__('Email', 'matthummel-newsletter'), __('First name', 'matthummel-newsletter'), __('Last name', 'matthummel-newsletter'), __('Status', 'matthummel-newsletter'), __('Opt-in', 'matthummel-newsletter'), __('Signed up', 'matthummel-newsletter'), __('Actions', 'matthummel-newsletter')] as $heading) {
         echo '<th>'.esc_html($heading).'</th>';
     }
@@ -342,15 +531,16 @@ function page_subscribers(): void
             echo '<td><label class="screen-reader-text" for="mhn-last-'.esc_attr((string) $id).'">'.esc_html__('Last name', 'matthummel-newsletter').'</label>';
             echo '<input form="'.esc_attr($formId).'" id="mhn-last-'.esc_attr((string) $id).'" name="mhn_lname" type="text" autocomplete="family-name" maxlength="80" value="'.esc_attr((string) ($row['last_name'] ?? '')).'"> ';
             echo '<button class="button" type="submit" form="'.esc_attr($formId).'">'.esc_html__('Save', 'matthummel-newsletter').'</button></td>';
-            echo '<td>'.esc_html((string) ($row['status'] ?? '')).'</td>';
+            $signedUp = admin_datetime((string) ($row['created_at'] ?? ''));
+            echo '<td>'.admin_status_badge(subscriber_status_label((string) ($row['status'] ?? '')), (string) ($row['status'] ?? '')).'</td>';
             echo '<td>'.esc_html(opt_in_label((string) ($row['opt_in'] ?? ''))).'</td>';
-            echo '<td>'.esc_html((string) ($row['created_at'] ?? '')).'</td>';
-            echo '<td>';
-            echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" style="display:inline">';
+            echo '<td>'.esc_html($signedUp !== '' ? $signedUp : (string) ($row['created_at'] ?? '')).'</td>';
+            echo '<td class="mhn-row-actions">';
+            echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
             wp_nonce_field('mhn_subscriber_unsub');
             echo '<input type="hidden" name="action" value="mhn_subscriber_unsub"><input type="hidden" name="id" value="'.esc_attr((string) $id).'">';
-            echo '<button class="button-link" type="submit">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</button></form> · ';
-            echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" style="display:inline" onsubmit="return confirm(\''.esc_js(__('Delete this address? They can sign up again.', 'matthummel-newsletter')).'\');">';
+            echo '<button class="button-link" type="submit">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</button></form>';
+            echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" onsubmit="return confirm(\''.esc_js(__('Delete this address? They can sign up again.', 'matthummel-newsletter')).'\');">';
             wp_nonce_field('mhn_subscriber_delete');
             echo '<input type="hidden" name="action" value="mhn_subscriber_delete"><input type="hidden" name="id" value="'.esc_attr((string) $id).'">';
             echo '<button class="button-link" type="submit">'.esc_html__('Delete', 'matthummel-newsletter').'</button></form>';
