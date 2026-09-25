@@ -270,8 +270,8 @@ function page_subscribers(): void
     $params = [];
     if ($search !== '') {
         $like = '%'.$wpdb->esc_like($search).'%';
-        $where = 'WHERE email LIKE %s OR first_name LIKE %s';
-        $params = [$like, $like];
+        $where = 'WHERE email LIKE %s OR first_name LIKE %s OR last_name LIKE %s';
+        $params = [$like, $like, $like];
     }
 
     $countSql = "SELECT COUNT(*) FROM {$table} {$where}";
@@ -288,6 +288,9 @@ function page_subscribers(): void
     if (isset($_GET['unsub'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Unsubscribed.', 'matthummel-newsletter').'</p></div>';
     }
+    if (isset($_GET['named'])) {
+        echo '<div class="notice notice-success"><p>'.esc_html__('Name saved.', 'matthummel-newsletter').'</p></div>';
+    }
     echo '<p><a class="button button-primary" href="'.esc_url($export).'">'.esc_html__('Export CSV', 'matthummel-newsletter').'</a> ';
     echo '<span class="description">'.esc_html(sprintf(
         /* translators: %d: subscriber count */
@@ -299,18 +302,26 @@ function page_subscribers(): void
     echo '<input type="search" id="mhn-search" name="s" value="'.esc_attr($search).'">';
     echo '<button class="button" type="submit">'.esc_html__('Search', 'matthummel-newsletter').'</button></p></form>';
     echo '<table class="widefat striped"><thead><tr>';
-    foreach ([__('Email', 'matthummel-newsletter'), __('Name', 'matthummel-newsletter'), __('Status', 'matthummel-newsletter'), __('Opt-in', 'matthummel-newsletter'), __('Signed up', 'matthummel-newsletter'), __('Actions', 'matthummel-newsletter')] as $heading) {
+    foreach ([__('Email', 'matthummel-newsletter'), __('First name', 'matthummel-newsletter'), __('Last name', 'matthummel-newsletter'), __('Status', 'matthummel-newsletter'), __('Opt-in', 'matthummel-newsletter'), __('Signed up', 'matthummel-newsletter'), __('Actions', 'matthummel-newsletter')] as $heading) {
         echo '<th>'.esc_html($heading).'</th>';
     }
     echo '</tr></thead><tbody>';
     if (! is_array($rows) || $rows === []) {
-        echo '<tr><td colspan="6">'.esc_html__('No subscribers yet.', 'matthummel-newsletter').'</td></tr>';
+        echo '<tr><td colspan="7">'.esc_html__('No subscribers yet.', 'matthummel-newsletter').'</td></tr>';
     } else {
         foreach ($rows as $row) {
             $id = (int) ($row['id'] ?? 0);
             echo '<tr>';
+            $formId = 'mhn-name-'.$id;
             echo '<td>'.esc_html((string) ($row['email'] ?? '')).'</td>';
-            echo '<td>'.esc_html((string) ($row['first_name'] ?? '')).'</td>';
+            echo '<td><form id="'.esc_attr($formId).'" method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
+            wp_nonce_field('mhn_subscriber_names');
+            echo '<input type="hidden" name="action" value="mhn_subscriber_names"><input type="hidden" name="id" value="'.esc_attr((string) $id).'"></form>';
+            echo '<label class="screen-reader-text" for="mhn-first-'.esc_attr((string) $id).'">'.esc_html__('First name', 'matthummel-newsletter').'</label>';
+            echo '<input form="'.esc_attr($formId).'" id="mhn-first-'.esc_attr((string) $id).'" name="mhn_fname" type="text" autocomplete="given-name" maxlength="80" value="'.esc_attr((string) ($row['first_name'] ?? '')).'"></td>';
+            echo '<td><label class="screen-reader-text" for="mhn-last-'.esc_attr((string) $id).'">'.esc_html__('Last name', 'matthummel-newsletter').'</label>';
+            echo '<input form="'.esc_attr($formId).'" id="mhn-last-'.esc_attr((string) $id).'" name="mhn_lname" type="text" autocomplete="family-name" maxlength="80" value="'.esc_attr((string) ($row['last_name'] ?? '')).'"> ';
+            echo '<button class="button" type="submit" form="'.esc_attr($formId).'">'.esc_html__('Save', 'matthummel-newsletter').'</button></td>';
             echo '<td>'.esc_html((string) ($row['status'] ?? '')).'</td>';
             echo '<td>'.esc_html(opt_in_label((string) ($row['opt_in'] ?? ''))).'</td>';
             echo '<td>'.esc_html((string) ($row['created_at'] ?? '')).'</td>';
@@ -369,7 +380,7 @@ function page_import(): void
             absint($_GET['invalid'] ?? 0)
         )).'</p></div>';
     }
-    echo '<p>'.esc_html__('Columns: email, and optional first_name. Addresses stay on this site.', 'matthummel-newsletter').'</p>';
+    echo '<p>'.esc_html__('Columns: email, and optional first_name and last_name. Addresses stay on this site.', 'matthummel-newsletter').'</p>';
     echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'" enctype="multipart/form-data">';
     echo '<input type="hidden" name="action" value="mhn_import">';
     wp_nonce_field('mhn_import');
@@ -523,7 +534,8 @@ function handle_export(): void
     check_admin_referer('mhn_export');
     global $wpdb;
 
-    $rows = $wpdb->get_results('SELECT email, first_name, status, opt_in, created_at, confirmed_at FROM '.subscribers_table().' ORDER BY id DESC', ARRAY_A);
+    $columns = export_columns();
+    $rows = $wpdb->get_results('SELECT '.implode(', ', $columns).' FROM '.subscribers_table().' ORDER BY id DESC', ARRAY_A);
     nocache_headers();
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=get-updates-'.gmdate('Y-m-d').'.csv');
@@ -531,15 +543,44 @@ function handle_export(): void
     if ($out === false) {
         wp_die(esc_html__('Could not write the export.', 'matthummel-newsletter'));
     }
-    fputcsv($out, ['email', 'first_name', 'status', 'opt_in', 'created_at', 'confirmed_at']);
+    fputcsv($out, $columns);
     foreach (is_array($rows) ? $rows : [] as $row) {
         $line = [];
-        foreach (['email', 'first_name', 'status', 'opt_in', 'created_at', 'confirmed_at'] as $key) {
+        foreach ($columns as $key) {
             $line[] = csv_cell((string) ($row[$key] ?? ''));
         }
         fputcsv($out, $line);
     }
     fclose($out);
+    exit;
+}
+
+/**
+ * @return list<string>
+ */
+function export_columns(): array
+{
+    return ['email', 'first_name', 'last_name', 'status', 'opt_in', 'created_at', 'confirmed_at'];
+}
+
+function handle_subscriber_names(): void
+{
+    guard_admin();
+    check_admin_referer('mhn_subscriber_names');
+    $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+    if (find($id)) {
+        update_subscriber($id, [
+            'first_name' => clean_name(posted_text('mhn_fname')),
+            'last_name' => clean_name(posted_text('mhn_lname')),
+        ]);
+    }
+
+    $search = isset($_POST['s']) ? sanitize_text_field(wp_unslash($_POST['s'])) : '';
+    wp_safe_redirect(add_query_arg([
+        'page' => 'mhn-subscribers',
+        'named' => '1',
+        's' => $search !== '' ? $search : false,
+    ], admin_url('admin.php')));
     exit;
 }
 

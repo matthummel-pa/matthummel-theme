@@ -171,6 +171,7 @@ require dirname(__DIR__).'/includes/blocks.php';
 require dirname(__DIR__).'/includes/render.php';
 require dirname(__DIR__).'/includes/a11y.php';
 
+use function MattHummel\Newsletter\apply_person_tags;
 use function MattHummel\Newsletter\audit_confirm_flow;
 use function MattHummel\Newsletter\audit_html;
 use function MattHummel\Newsletter\audit_plugin_sources;
@@ -226,6 +227,20 @@ if ($sources['errors'] === []) {
     foreach ($sources['errors'] as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
+}
+
+$present = apply_person_tags('Hi {first_name} {last_name} ({full_name})', [
+    'first_name' => 'Ada',
+    'last_name' => 'Lovelace',
+], true);
+$missing = apply_person_tags('Hi {first_name|there},', ['first_name' => ''], true);
+$escaped = apply_person_tags('{first_name}', ['first_name' => '<script>'], true);
+$plainName = apply_person_tags('{first_name}', ['first_name' => '<script>'], false);
+if ($present === 'Hi Ada Lovelace (Ada Lovelace)' && $missing === 'Hi there,' && $escaped === '&lt;script&gt;' && $plainName === '<script>') {
+    fwrite(STDOUT, "pass  merge tags\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  merge tags\n");
 }
 
 $confirmFlow = audit_confirm_flow();

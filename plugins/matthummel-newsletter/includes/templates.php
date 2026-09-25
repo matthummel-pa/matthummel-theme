@@ -111,8 +111,7 @@ function pattern_content(string $slug): string
     }
 
     $parts = [];
-    $note = '<p>'.esc_html__('A short note from me.', 'matthummel-newsletter').'</p>';
-    $noteBlocks = rich_text_blocks($note);
+    $noteBlocks = rich_text_blocks(default_note_html());
     if ($noteBlocks !== '') {
         $parts[] = $noteBlocks;
     }
@@ -202,7 +201,7 @@ function template_content(int $issueId, array $template): string
     if ($template['max_posts'] > 0) {
         $cards = $template['max_posts'] > 1;
         foreach (published_issue_posts($issueId) as $post) {
-            $parts[] = post_blocks($post, $cards);
+            $parts[] = post_blocks($post, $cards, $issueId);
         }
     }
 
@@ -308,11 +307,20 @@ function sanitize_rich_text(string $html): string
     return trim($clean);
 }
 
-function post_blocks(\WP_Post $post, bool $card): string
+function default_note_html(): string
+{
+    return '<p>'.esc_html(sprintf(
+        /* translators: %s is the first-name merge tag. Leave the braces in place. */
+        __('Hi %s,', 'matthummel-newsletter'),
+        '{first_name|there}'
+    )).'</p>';
+}
+
+function post_blocks(\WP_Post $post, bool $card, int $issueId = 0): string
 {
     $parts = [];
     $title = html_entity_decode(get_the_title($post), ENT_QUOTES);
-    $image = image_block((int) get_post_thumbnail_id($post), '', $title);
+    $image = featured_image_block($post, $card, $issueId, $title);
     if ($image !== '') {
         $parts[] = $image;
     }
@@ -355,14 +363,45 @@ function placeholder_post_blocks(bool $card, int $index): string
     return "<!-- wp:group -->\n<div class=\"wp-block-group\">\n{$body}\n</div>\n<!-- /wp:group -->";
 }
 
-function image_block(int $attachmentId, string $preferredAlt, string $fallbackAlt = ''): string
+function featured_image_block(\WP_Post $post, bool $card, int $issueId, string $title): string
+{
+    if ($issueId > 0 && (string) get_post_meta($issueId, '_mhn_feature_show', true) === '0') {
+        return '';
+    }
+
+    $attachmentId = (int) get_post_thumbnail_id($post);
+    if (! $card && $issueId > 0) {
+        $replace = (int) get_post_meta($issueId, '_mhn_feature_image_id', true);
+        if ($replace > 0 && wp_attachment_is_image($replace)) {
+            $attachmentId = $replace;
+        }
+    }
+
+    $url = get_permalink($post);
+    $href = is_string($url) ? $url : '';
+
+    return image_block($attachmentId, '', $title, [
+        'max_width' => $card ? 280 : 600,
+        'href' => $href,
+        'size' => $card ? 'medium' : 'large',
+    ]);
+}
+
+/**
+ * @param  array{max_width?: int, href?: string, size?: string}  $options
+ */
+function image_block(int $attachmentId, string $preferredAlt, string $fallbackAlt = '', array $options = []): string
 {
     if ($attachmentId < 1) {
         return '';
     }
 
-    $src = wp_get_attachment_image_url($attachmentId, 'large');
-    if (! is_string($src) || $src === '') {
+    $size = ($options['size'] ?? '') === 'medium' ? 'medium' : 'large';
+    $image = wp_get_attachment_image_src($attachmentId, $size);
+    if (! is_array($image)) {
+        $image = wp_get_attachment_image_src($attachmentId, 'full');
+    }
+    if (! is_array($image) || (string) $image[0] === '') {
         return '';
     }
 
@@ -373,17 +412,30 @@ function image_block(int $attachmentId, string $preferredAlt, string $fallbackAl
     if ($alt === '') {
         $alt = trim($fallbackAlt);
     }
-    $payload = wp_json_encode([
-        'id' => $attachmentId,
-        'sizeSlug' => 'large',
-        'url' => $src,
-        'alt' => $alt,
-    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    $payload = is_string($payload) ? $payload : '{}';
 
-    return '<!-- wp:image '.$payload.' -->'
-        .'<figure class="wp-block-image size-large"><img src="'.esc_url($src).'" alt="'.esc_attr($alt).'"/></figure>'
-        .'<!-- /wp:image -->';
+    $maxWidth = (int) ($options['max_width'] ?? 600);
+    if ($maxWidth < 1 || $maxWidth > 600) {
+        $maxWidth = 600;
+    }
+    $href = trim((string) ($options['href'] ?? ''));
+    $payload = [
+        'id' => $attachmentId,
+        'sizeSlug' => $size,
+        'url' => (string) $image[0],
+        'alt' => $alt,
+        'maxWidth' => $maxWidth,
+    ];
+    if ($href !== '') {
+        $payload['href'] = $href;
+    }
+    $encoded = wp_json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $encoded = is_string($encoded) ? $encoded : '{}';
+    $img = '<img src="'.esc_url((string) $image[0]).'" alt="'.esc_attr($alt).'"/>';
+    $figure = $href !== ''
+        ? '<figure class="wp-block-image"><a href="'.esc_url($href).'">'.$img.'</a></figure>'
+        : '<figure class="wp-block-image">'.$img.'</figure>';
+
+    return '<!-- wp:image '.$encoded.' -->'.$figure.'<!-- /wp:image -->';
 }
 
 function heading_block(string $text, int $level): string

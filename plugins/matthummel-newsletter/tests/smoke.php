@@ -37,6 +37,47 @@ function mhn_check(bool $ok, string $label): void
     }
 }
 
+function mhn_png(string $alt, int $width, int $height): int
+{
+    if (! function_exists('imagecreatetruecolor') || ! function_exists('imagepng')) {
+        return 0;
+    }
+
+    $image = imagecreatetruecolor($width, $height);
+    if ($image === false) {
+        return 0;
+    }
+    $navy = imagecolorallocate($image, 13, 46, 87);
+    imagefilledrectangle($image, 0, 0, $width, $height, $navy);
+    ob_start();
+    imagepng($image);
+    $bytes = ob_get_clean();
+    imagedestroy($image);
+    if (! is_string($bytes) || $bytes === '') {
+        return 0;
+    }
+
+    $upload = wp_upload_bits('mhn-smoke-'.wp_generate_password(6, false).'.png', null, $bytes);
+    if (! empty($upload['error']) || ! is_string($upload['file'] ?? null)) {
+        return 0;
+    }
+
+    $id = wp_insert_attachment([
+        'post_mime_type' => 'image/png',
+        'post_title' => 'Smoke featured',
+        'post_status' => 'inherit',
+    ], $upload['file']);
+    if (! is_numeric($id) || (int) $id < 1) {
+        return 0;
+    }
+
+    require_once ABSPATH.'wp-admin/includes/image.php';
+    wp_update_attachment_metadata((int) $id, wp_generate_attachment_metadata((int) $id, $upload['file']));
+    update_post_meta((int) $id, '_wp_attachment_image_alt', $alt);
+
+    return (int) $id;
+}
+
 wp_set_current_user(1);
 update_option('admin_email', 'owner@example.com');
 wp_update_user(['ID' => 1, 'user_email' => 'owner@example.com']);
@@ -196,6 +237,37 @@ mhn_check(str_contains($html, 'dir="ltr"') || str_contains($html, 'dir="rtl"'), 
 mhn_check(substr_count(strtolower($html), '<h1') === 1, 'email has one h1');
 mhn_check(str_contains($html, 'aria-hidden="true"'), 'preheader filler is hidden from screen readers');
 mhn_check(str_contains($html, 'Read more: Smoke note'), 'read more button names the post');
+mhn_check(str_contains($html, 'Hi Ada,'), 'greeting uses the first name when it is set');
+mhn_check(substr_count($html, 'class="mhn-img"') === 0, 'a post without a featured image omits the image');
+$fallbackMessage = Newsletter\issue_message($issueId, [
+    'id' => '8',
+    'email' => 'empty@example.com',
+    'first_name' => '',
+    'last_name' => '',
+    'status' => 'subscribed',
+], false);
+mhn_check(str_contains($fallbackMessage['html'], 'Hi there,'), 'a missing first name uses the greeting fallback');
+mhn_check(str_contains($fallbackMessage['text'], 'Hi there,'), 'plain text uses the same fallback');
+mhn_check(! str_contains($fallbackMessage['html'], '{first_name'), 'the greeting tag is replaced before send');
+$namedMerge = Newsletter\apply_merge('{first_name} {last_name} {full_name}', [
+    'id' => '1',
+    'email' => 'ada@example.com',
+    'first_name' => 'Ada',
+    'last_name' => 'Lovelace',
+], 0, true);
+mhn_check($namedMerge === 'Ada Lovelace Ada Lovelace', 'merge tags fill first, last, and full name');
+$escapedMerge = Newsletter\apply_merge('{first_name}', [
+    'id' => '1',
+    'email' => 'ada@example.com',
+    'first_name' => '<b>Ada</b>',
+], 0, true);
+$plainMerge = Newsletter\apply_merge('{first_name}', [
+    'id' => '1',
+    'email' => 'ada@example.com',
+    'first_name' => '<b>Ada</b>',
+], 0, false);
+mhn_check($escapedMerge === '&lt;b&gt;Ada&lt;/b&gt;' && ! str_contains($escapedMerge, '<b>'), 'merge tags escape HTML');
+mhn_check($plainMerge === '<b>Ada</b>', 'plain text keeps the name');
 $audit = Newsletter\audit_issue($issueId);
 mhn_check($audit['errors'] === [], 'rendered issue passes the accessibility check: '.implode('; ', $audit['errors']));
 
@@ -274,7 +346,7 @@ mhn_check(in_array('blog-update', $templateSlugs, true), 'blog update template i
 mhn_check(in_array('blog-digest', $templateSlugs, true), 'blog digest template is registered');
 mhn_check(in_array('custom', $templateSlugs, true), 'custom message template is registered');
 mhn_check((string) get_post_meta($issueId, '_mhn_template', true) === 'blog-update', 'auto draft uses the blog update template');
-mhn_check((string) get_post_meta($issueId, '_mhn_note', true) === '', 'auto draft note starts empty');
+mhn_check(str_contains((string) get_post_meta($issueId, '_mhn_note', true), '{first_name|there}'), 'auto draft note starts with the greeting');
 mhn_check((string) get_post_meta($issueId, '_mhn_ps', true) === '', 'auto draft P.S. starts empty');
 $patterns = WP_Block_Patterns_Registry::get_instance();
 mhn_check($patterns->is_registered('mhn/blog-update') && $patterns->is_registered('mhn/blog-digest') && $patterns->is_registered('mhn/custom'), 'templates are block patterns');
@@ -333,6 +405,11 @@ $postB = wp_insert_post([
     'post_title' => 'Digest two',
     'post_content' => 'Second digest post body for the card.',
 ]);
+$digestBanner = mhn_png('Navy banner for the smoke note', 1200, 630);
+mhn_check($digestBanner > 0, 'smoke can make a featured image');
+if ($digestBanner > 0) {
+    set_post_thumbnail((int) $postA, $digestBanner);
+}
 $digest = Newsletter\wizard_save([
     'mhn_action' => 'stay',
     'mhn_step' => '2',
@@ -352,6 +429,9 @@ mhn_check(str_contains($digestHtml, 'Digest one') && str_contains($digestHtml, '
 mhn_check(str_contains($digestHtml, 'A note above the posts.'), 'digest keeps the note');
 mhn_check(str_contains($digestHtml, 'A line under the posts.'), 'digest keeps the P.S.');
 mhn_check(str_contains($digestHtml, 'mhn-group'), 'digest posts render as cards');
+mhn_check(str_contains($digestHtml, 'Navy banner for the smoke note'), 'digest thumbnail uses the attachment alt');
+mhn_check(str_contains($digestHtml, 'max-width:280px'), 'digest thumbnail stays within 600px');
+mhn_check(substr_count($digestHtml, 'class="mhn-img"') === 1, 'digest omits a post that has no featured image');
 
 $refused = Newsletter\wizard_save([
     'mhn_action' => 'send',
@@ -489,6 +569,105 @@ mhn_check(count($GLOBALS['mhn_outbox']) === $beforeCooldown + 1, 'the cooldown d
 mhn_check(isset($cooldownToken[1]) && Newsletter\confirm_subscriber($cooldownToken[1]) === 'ok', 'the cooldown does not replace the confirmation link');
 $otherCode = Newsletter\subscribe_address('cooldown-b@example.com', 'Bo', 'page');
 mhn_check($otherCode === 'confirm', 'a different address can still confirm');
+
+mhn_check((string) get_option('mhn_db_version') === '2', 'schema version is 2');
+mhn_check(Newsletter\subscriber_column_exists('last_name'), 'last_name column exists');
+Newsletter\ensure_subscriber_columns();
+mhn_check(Newsletter\subscriber_column_exists('last_name'), 'schema upgrade is idempotent');
+mhn_check(strlen(Newsletter\clean_name(str_repeat('A', 120))) === 80, 'names are capped at 80 characters');
+mhn_check(in_array('last_name', Newsletter\export_columns(), true), 'csv export includes last name');
+mhn_check(
+    Newsletter\email_image_url('http://matthummel.com/wp-content/uploads/note.jpg') === 'https://matthummel.com/wp-content/uploads/note.jpg',
+    'a production image URL is absolute https'
+);
+
+$nameId = Newsletter\insert_subscriber([
+    'email' => 'confirm-name@example.com',
+    'first_name' => 'Pat',
+    'last_name' => 'Lee',
+    'status' => 'pending',
+    'opt_in' => 'double',
+    'source' => 'test',
+]);
+$nameToken = Newsletter\store_confirm_token($nameId);
+$nameForm = Newsletter\confirm_form_html($nameToken);
+mhn_check(str_contains($nameForm, 'autocomplete="given-name"'), 'confirm page labels the first name for autocomplete');
+mhn_check(str_contains($nameForm, 'autocomplete="family-name"'), 'confirm page labels the last name for autocomplete');
+mhn_check(str_contains($nameForm, 'value="Pat"') && str_contains($nameForm, 'value="Lee"'), 'confirm page prefills saved names');
+$ignoredName = Newsletter\confirm_post_status($nameToken, 'not-a-nonce', 'No', 'Save');
+$unchangedName = Newsletter\find($nameId);
+mhn_check($ignoredName === 'error' && $unchangedName !== null && $unchangedName['first_name'] === 'Pat' && $unchangedName['status'] === 'pending', 'a bad nonce does not save names');
+$savedName = Newsletter\confirm_post_status($nameToken, wp_create_nonce('mhn_confirm_subscription'), 'Ada', 'Lovelace');
+$namedRow = Newsletter\find($nameId);
+mhn_check($savedName === 'ok' && $namedRow !== null && $namedRow['first_name'] === 'Ada' && $namedRow['last_name'] === 'Lovelace' && $namedRow['status'] === 'subscribed', 'confirm saves optional names');
+$blankId = Newsletter\insert_subscriber([
+    'email' => 'confirm-blank@example.com',
+    'first_name' => '',
+    'last_name' => '',
+    'status' => 'pending',
+    'opt_in' => 'double',
+    'source' => 'test',
+]);
+$blankToken = Newsletter\store_confirm_token($blankId);
+$blankSaved = Newsletter\confirm_post_status($blankToken, wp_create_nonce('mhn_confirm_subscription'), '', '');
+$blankRow = Newsletter\find($blankId);
+mhn_check($blankSaved === 'ok' && $blankRow !== null && $blankRow['status'] === 'subscribed' && $blankRow['first_name'] === '' && $blankRow['last_name'] === '', 'a missing name does not block confirmation');
+
+$csvNames = tempnam(sys_get_temp_dir(), 'mhn');
+file_put_contents((string) $csvNames, "email,first_name,last_name\nnames-import@example.com,Grace,Hopper\n");
+$importedNames = Newsletter\import_rows((string) $csvNames, 'consented', false, false);
+$importedName = Newsletter\find_by_email('names-import@example.com');
+mhn_check($importedNames['imported'] === 1 && $importedName !== null && $importedName['first_name'] === 'Grace' && $importedName['last_name'] === 'Hopper', 'csv import stores first and last name');
+
+$photoPost = wp_insert_post([
+    'post_type' => 'post',
+    'post_status' => 'publish',
+    'post_title' => 'Photo note',
+    'post_content' => 'A note that has a featured image.',
+]);
+$photoBanner = mhn_png('Navy banner for the photo note', 1200, 630);
+mhn_check($photoBanner > 0 && is_numeric($photoPost), 'photo post can take a featured image');
+if ($photoBanner > 0 && is_numeric($photoPost)) {
+    set_post_thumbnail((int) $photoPost, $photoBanner);
+    $beforePhoto = count($GLOBALS['mhn_outbox']);
+    $photoIssue = Newsletter\create_from_post(get_post((int) $photoPost));
+    Newsletter\compile_issue($photoIssue);
+    $photoHtml = Newsletter\issue_message($photoIssue, [
+        'id' => '0',
+        'email' => 'you@example.com',
+        'first_name' => '',
+        'last_name' => '',
+        'status' => 'preview',
+    ], true)['html'];
+    $photoLink = get_permalink((int) $photoPost);
+    mhn_check(count($GLOBALS['mhn_outbox']) === $beforePhoto, 'a featured image draft does not send mail');
+    mhn_check(str_contains($photoHtml, 'Navy banner for the photo note'), 'blog update uses the attachment alt');
+    mhn_check(str_contains($photoHtml, 'Hi Ada,'), 'blog update preview uses a sample first name');
+    mhn_check(preg_match('/<img class="mhn-img" src="https?:\/\/[^"]+"[^>]*width="600"[^>]*height="[1-9][0-9]*"[^>]*max-width:600px/', $photoHtml) === 1, 'featured image is absolute, 600px max, and has dimensions');
+    mhn_check(is_string($photoLink) && preg_match('/<a [^>]*href="'.preg_quote(esc_url($photoLink), '/').'"[^>]*>\s*<img class="mhn-img"/', $photoHtml) === 1, 'featured image links to the post');
+    update_post_meta($photoIssue, '_mhn_feature_show', '0');
+    Newsletter\compile_issue($photoIssue);
+    $hiddenHtml = Newsletter\issue_message($photoIssue, null, true)['html'];
+    mhn_check(substr_count($hiddenHtml, 'class="mhn-img"') === 0, 'the wizard can hide the featured image');
+    $replacement = mhn_png('Replacement banner for this send', 800, 400);
+    update_post_meta($photoIssue, '_mhn_feature_show', '1');
+    update_post_meta($photoIssue, '_mhn_feature_image_id', (string) $replacement);
+    Newsletter\compile_issue($photoIssue);
+    $replacedHtml = Newsletter\issue_message($photoIssue, null, true)['html'];
+    mhn_check(str_contains($replacedHtml, 'Replacement banner for this send') && ! str_contains($replacedHtml, 'Navy banner for the photo note'), 'the wizard can replace the featured image for one send');
+}
+$plainPost = wp_insert_post([
+    'post_type' => 'post',
+    'post_status' => 'publish',
+    'post_title' => 'No photo note',
+    'post_content' => 'A note without a featured image.',
+]);
+if (is_numeric($plainPost)) {
+    $plainIssue = Newsletter\create_from_post(get_post((int) $plainPost));
+    $plainHtml = Newsletter\issue_message($plainIssue, null, true)['html'];
+    mhn_check(substr_count($plainHtml, 'class="mhn-img"') === 0, 'automatic blog update omits a missing featured image');
+    mhn_check(Newsletter\settings()['auto_send'] === 0, 'automatic sending stays off while images are compiled');
+}
 
 delete_option('mhn_settings');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send stays off after the security checks');

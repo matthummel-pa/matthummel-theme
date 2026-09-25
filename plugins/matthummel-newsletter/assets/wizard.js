@@ -21,11 +21,28 @@ function bindCounts() {
 }
 
 function bindMedia(form) {
-  const button = document.getElementById('mhn-pick-image')
-  const clear = document.getElementById('mhn-clear-image')
-  const input = form.querySelector('[name="mhn_image_id"]')
-  const altInput = form.querySelector('[name="mhn_image_alt"]')
-  const preview = document.getElementById('mhn-image-preview')
+  bindPicker(form, {
+    buttonId: 'mhn-pick-image',
+    clearId: 'mhn-clear-image',
+    inputName: 'mhn_image_id',
+    altName: 'mhn_image_alt',
+    previewId: 'mhn-image-preview',
+  })
+  bindPicker(form, {
+    buttonId: 'mhn-pick-feature',
+    clearId: 'mhn-clear-feature',
+    inputName: 'mhn_feature_image_id',
+    altName: '',
+    previewId: 'mhn-feature-preview',
+  })
+}
+
+function bindPicker(form, picker) {
+  const button = document.getElementById(picker.buttonId)
+  const clear = document.getElementById(picker.clearId)
+  const input = form.querySelector('[name="' + picker.inputName + '"]')
+  const altInput = picker.altName ? form.querySelector('[name="' + picker.altName + '"]') : null
+  const preview = document.getElementById(picker.previewId)
   if (!button || !input || !window.wp || !wp.media) return
 
   let frame

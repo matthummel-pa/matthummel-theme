@@ -201,6 +201,9 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
     if (strlen($html) > 102400) {
         $errors[] = 'HTML is over 100KB, so Gmail may clip it.';
     }
+    if (preg_match('/\{(?:first_name|last_name|full_name)(?:\|[^{}]*)?\}/', $html) === 1) {
+        $errors[] = 'A name merge tag is still in the email. Use {first_name}, {last_name}, {full_name}, or a fallback such as {first_name|there}.';
+    }
 
     $contentImages = preg_match_all('/<img\b[^>]*mhn-img/i', $html);
     $visible = trim(strip_tags($html));

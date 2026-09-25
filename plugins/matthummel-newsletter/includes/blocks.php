@@ -93,11 +93,20 @@ function render_image(array $block, string $altFallback): string
     $src = isset($attrs['url']) ? (string) $attrs['url'] : '';
     $alt = isset($attrs['alt']) ? (string) $attrs['alt'] : '';
     $id = isset($attrs['id']) ? (int) $attrs['id'] : 0;
-    $width = 520;
+    $href = isset($attrs['href']) ? (string) $attrs['href'] : '';
+    $maxWidth = isset($attrs['maxWidth']) ? (int) $attrs['maxWidth'] : 600;
+    if ($maxWidth < 1 || $maxWidth > 600) {
+        $maxWidth = 600;
+    }
+    $width = $maxWidth;
     $height = 0;
 
     if ($id > 0) {
-        $image = wp_get_attachment_image_src($id, 'large');
+        $size = isset($attrs['sizeSlug']) && $attrs['sizeSlug'] === 'medium' ? 'medium' : 'large';
+        $image = wp_get_attachment_image_src($id, $size);
+        if (! is_array($image)) {
+            $image = wp_get_attachment_image_src($id, 'large');
+        }
         if (is_array($image)) {
             $src = (string) $image[0];
             $width = (int) $image[1];
@@ -115,26 +124,32 @@ function render_image(array $block, string $altFallback): string
         }
     }
 
-    $src = absolute_url($src);
+    $src = email_image_url($src);
     if ($src === '' || str_contains($src, '*|')) {
         return '';
     }
 
     unset($altFallback);
 
-    if ($width > 520 && $width > 0) {
-        $height = $height > 0 ? (int) round($height * (520 / $width)) : 0;
-        $width = 520;
+    if ($width > $maxWidth && $width > 0) {
+        $height = $height > 0 ? (int) round($height * ($maxWidth / $width)) : 0;
+        $width = $maxWidth;
     }
     if ($width < 1) {
-        $width = 520;
+        $width = $maxWidth;
+    }
+    if ($height < 1) {
+        $height = $width;
     }
 
-    $heightAttr = $height > 0 ? ' height="'.esc_attr((string) $height).'"' : '';
-
     $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+    $img = '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'" height="'.esc_attr((string) $height).'" style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;color:#141c28;background-color:#eef3f9;font-family:'.$font.';font-size:16px;line-height:1.5;">';
+    $href = email_image_url($href);
+    if ($href === '' || ! preg_match('#^https?://#i', $href)) {
+        return $img;
+    }
 
-    return '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'"'.$heightAttr.' style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;color:#141c28;background-color:#eef3f9;font-family:'.$font.';font-size:16px;line-height:1.5;">';
+    return '<a href="'.esc_url($href).'" style="color:#0d2e57;text-decoration:underline;">'.$img.'</a>';
 }
 
 /**
@@ -430,6 +445,28 @@ function email_kses(string $html): string
         'li' => [],
         'blockquote' => [],
     ]);
+}
+
+function email_image_url(string $url): string
+{
+    $url = absolute_url($url);
+    if ($url === '' || preg_match('#^http://#i', $url) !== 1) {
+        return $url;
+    }
+
+    $host = wp_parse_url($url, PHP_URL_HOST);
+    $host = is_string($host) ? strtolower($host) : '';
+    $site = wp_parse_url(home_url(), PHP_URL_HOST);
+    $site = is_string($site) ? strtolower($site) : '';
+    $production = $host === 'matthummel.com' || $host === 'www.matthummel.com';
+    $secureSite = function_exists('is_ssl') && is_ssl() && $host !== '' && $host === $site;
+    if (! $production && ! $secureSite) {
+        return $url;
+    }
+
+    $secure = preg_replace('#^http://#i', 'https://', $url);
+
+    return is_string($secure) ? $secure : $url;
 }
 
 function absolute_url(string $url): string

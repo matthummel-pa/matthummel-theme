@@ -34,16 +34,27 @@ function issue_message(int $issueId, ?array $subscriber, bool $preview = false):
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }
 
-    $html = email_document($subject, $preheader, $body, $includeRecent, $sourceId);
     $sample = $subscriber ?? [
         'id' => '0',
         'email' => 'you@example.com',
         'first_name' => '',
+        'last_name' => '',
         'status' => 'preview',
     ];
+    if ($preview && (int) ($sample['id'] ?? 0) < 1) {
+        if (trim((string) ($sample['first_name'] ?? '')) === '') {
+            $sample['first_name'] = 'Ada';
+        }
+        if (trim((string) ($sample['last_name'] ?? '')) === '') {
+            $sample['last_name'] = 'Lovelace';
+        }
+    }
 
-    $html = apply_merge($html, $sample, $issueId, true);
-    $text = apply_merge(plain_text($html), $sample, $issueId, false);
+    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId);
+    $html = apply_merge($document, $sample, $issueId, true);
+    $text = apply_merge(plain_text($document), $sample, $issueId, false);
+    $subject = apply_merge($subject, $sample, $issueId, false);
+    $subject = trim(str_replace(["\r", "\n"], ' ', $subject));
 
     if (! $preview && $subscriber && (int) ($subscriber['id'] ?? 0) > 0) {
         $html = apply_tracking($html, $subscriber, $issueId);
@@ -204,6 +215,7 @@ function recent_posts_html(int $excludePostId, string $font): string
  */
 function apply_merge(string $value, array $subscriber, int $issueId, bool $html): string
 {
+    $value = apply_person_tags($value, $subscriber, $html);
     $first = trim((string) ($subscriber['first_name'] ?? ''));
     if ($first === '') {
         $first = __('there', 'matthummel-newsletter');
@@ -226,6 +238,38 @@ function apply_merge(string $value, array $subscriber, int $issueId, bool $html)
     ];
 
     return strtr($value, $map);
+}
+
+/**
+ * Replace {first_name}, {last_name}, and {full_name}. A bar adds a fallback: {first_name|there}.
+ *
+ * @param  array<string, string>  $subscriber
+ */
+function apply_person_tags(string $value, array $subscriber, bool $html): string
+{
+    $first = trim((string) ($subscriber['first_name'] ?? ''));
+    $last = trim((string) ($subscriber['last_name'] ?? ''));
+    $full = trim($first.' '.$last);
+    $values = [
+        'first_name' => $first,
+        'last_name' => $last,
+        'full_name' => $full,
+    ];
+
+    $replaced = preg_replace_callback(
+        '/\{(first_name|last_name|full_name)(?:\|([^{}|]*))?\}/',
+        static function (array $match) use ($values, $html): string {
+            $current = $values[$match[1]] ?? '';
+            if ($current === '') {
+                $current = (string) ($match[2] ?? '');
+            }
+
+            return $html ? esc_html($current) : $current;
+        },
+        $value
+    );
+
+    return is_string($replaced) ? $replaced : $value;
 }
 
 /**

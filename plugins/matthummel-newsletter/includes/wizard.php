@@ -145,7 +145,7 @@ function create_wizard_issue(string $slug): int
     update_post_meta($issueId, '_mhn_template', $slug);
     update_post_meta($issueId, '_mhn_status', 'draft');
     update_post_meta($issueId, '_mhn_wizard_step', '1');
-    update_post_meta($issueId, '_mhn_note', '');
+    update_post_meta($issueId, '_mhn_note', default_note_html());
     update_post_meta($issueId, '_mhn_ps', '');
     update_post_meta($issueId, '_mhn_post_ids', implode(',', default_post_ids($slug)));
     update_post_meta($issueId, '_mhn_include_recent', '0');
@@ -172,8 +172,10 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
             update_post_meta($issueId, '_mhn_subject', '');
             update_post_meta($issueId, '_mhn_preheader', '');
             update_post_meta($issueId, '_mhn_subject_auto', '1');
-            update_post_meta($issueId, '_mhn_note', '');
+            update_post_meta($issueId, '_mhn_note', default_note_html());
             update_post_meta($issueId, '_mhn_ps', '');
+            update_post_meta($issueId, '_mhn_feature_show', '1');
+            update_post_meta($issueId, '_mhn_feature_image_id', '0');
             update_post_meta($issueId, '_mhn_button_label', '');
             update_post_meta($issueId, '_mhn_button_url', '');
             update_post_meta($issueId, '_mhn_image_id', '0');
@@ -215,6 +217,15 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         }
         if (isset($input['mhn_image_alt'])) {
             update_post_meta($issueId, '_mhn_image_alt', sanitize_text_field((string) $input['mhn_image_alt']));
+        }
+        if (isset($input['mhn_feature_show'])) {
+            $show = sanitize_text_field((string) $input['mhn_feature_show']) === '1' ? '1' : '0';
+            update_post_meta($issueId, '_mhn_feature_show', $show);
+        }
+        if (isset($input['mhn_feature_image_id'])) {
+            $featureId = absint($input['mhn_feature_image_id']);
+            $featureId = $featureId > 0 && wp_attachment_is_image($featureId) ? $featureId : 0;
+            update_post_meta($issueId, '_mhn_feature_image_id', (string) $featureId);
         }
         compile_issue($issueId);
         fill_subject_defaults($issueId);
@@ -521,10 +532,12 @@ function render_step_content(int $issueId, string $slug): void
     echo '<h3>'.esc_html($template['max_posts'] > 0
         ? __('Your note', 'matthummel-newsletter')
         : __('Message', 'matthummel-newsletter')).'</h3>';
+    render_merge_hint();
     render_rich_field('mhn_note', 'mhn_note', (string) get_post_meta($issueId, '_mhn_note', true));
 
     if ($template['max_posts'] > 0) {
         render_post_picker($issueId, $template);
+        render_featured_controls($issueId, $template['max_posts'] === 1);
     }
 
     if ($template['has_button']) {
@@ -618,6 +631,48 @@ function wizard_post_choices(array $selected, string $find): array
     }
 
     return $choices;
+}
+
+function render_merge_hint(): void
+{
+    echo '<p class="description">'.esc_html__('Merge tags: {first_name}, {last_name}, {full_name}. A fallback goes after a bar, like {first_name|there}. The preview uses sample names.', 'matthummel-newsletter').'</p>';
+}
+
+function render_featured_controls(int $issueId, bool $canReplace): void
+{
+    $show = (string) get_post_meta($issueId, '_mhn_feature_show', true) !== '0';
+    $posts = published_issue_posts($issueId);
+    $post = $posts[0] ?? null;
+    echo '<h3>'.esc_html__('Featured image', 'matthummel-newsletter').'</h3>';
+    echo '<input type="hidden" name="mhn_feature_show" value="0">';
+    echo '<p><label><input type="checkbox" name="mhn_feature_show" value="1" '.checked($show, true, false).'> '.esc_html__('Show the featured image', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="description">'.esc_html__('The image sits near the top and links to the post. It stays within 600 pixels wide. A digest uses a smaller thumbnail. Alt text comes from the image, or the post title when the image has none. Leave this off and that send has no image.', 'matthummel-newsletter').'</p>';
+    if ($post instanceof \WP_Post) {
+        $thumb = (int) get_post_thumbnail_id($post);
+        $src = $thumb > 0 ? wp_get_attachment_image_url($thumb, 'medium') : '';
+        if (is_string($src) && $src !== '') {
+            $alt = (string) get_post_meta($thumb, '_wp_attachment_image_alt', true);
+            if ($alt === '') {
+                $alt = html_entity_decode(get_the_title($post), ENT_QUOTES);
+            }
+            echo '<p><img src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="240" height="160" style="width:240px;height:auto;"></p>';
+        }
+    }
+    if (! $canReplace) {
+        return;
+    }
+
+    $imageId = (int) get_post_meta($issueId, '_mhn_feature_image_id', true);
+    $src = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : '';
+    echo '<p class="description">'.esc_html__('Replace it for this send only, or leave the field empty to use the post image.', 'matthummel-newsletter').'</p>';
+    echo '<input type="hidden" name="mhn_feature_image_id" value="'.esc_attr((string) $imageId).'">';
+    echo '<p id="mhn-feature-preview">';
+    if (is_string($src) && $src !== '') {
+        echo '<img src="'.esc_url($src).'" alt="" width="240" height="160" style="width:240px;height:auto;">';
+    }
+    echo '</p>';
+    echo '<p><button type="button" class="button" id="mhn-pick-feature">'.esc_html__('Replace image', 'matthummel-newsletter').'</button> ';
+    echo '<button type="button" class="button" id="mhn-clear-feature">'.esc_html__('Use the post image', 'matthummel-newsletter').'</button></p>';
 }
 
 function render_image_picker(int $issueId): void

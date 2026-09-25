@@ -119,7 +119,7 @@ function create_from_post(\WP_Post $post): int
     $issueId = (int) $id;
     update_post_meta($issueId, '_mhn_template', 'blog-update');
     update_post_meta($issueId, '_mhn_post_ids', (string) $post->ID);
-    update_post_meta($issueId, '_mhn_note', '');
+    update_post_meta($issueId, '_mhn_note', default_note_html());
     update_post_meta($issueId, '_mhn_ps', '');
     update_post_meta($issueId, '_mhn_wizard_step', '2');
     update_post_meta($issueId, '_mhn_subject_auto', '1');
@@ -229,7 +229,7 @@ function render_meta_box(\WP_Post $post): void
         <label><input type="checkbox" name="mhn_include_recent" value="1" <?php checked($include); ?>>
             <?php echo esc_html__('Add recent posts', 'matthummel-newsletter'); ?></label>
     </p>
-    <p class="description"><?php echo esc_html__('Use two or three columns. They stack on phones. Merge tags: *|FNAME|* *|EMAIL|* *|UNSUB|* *|PREFERENCES|* *|ARCHIVE|* *|CURRENT_YEAR|*', 'matthummel-newsletter'); ?></p>
+    <p class="description"><?php echo esc_html__('Use two or three columns. They stack on phones. Merge tags: {first_name} {last_name} {full_name} {first_name|there} *|EMAIL|* *|UNSUB|* *|PREFERENCES|* *|ARCHIVE|* *|CURRENT_YEAR|*', 'matthummel-newsletter'); ?></p>
     <p>
         <a class="button" href="<?php echo esc_url($preview); ?>" target="_blank" rel="noopener"><?php echo esc_html__('Preview', 'matthummel-newsletter'); ?></a>
         <a class="button" href="<?php echo esc_url($test); ?>"><?php echo esc_html(sprintf(

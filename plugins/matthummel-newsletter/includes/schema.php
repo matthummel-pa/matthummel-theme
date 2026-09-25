@@ -59,6 +59,7 @@ function boot(): void
     add_action('admin_post_mhn_subscriber_delete', __NAMESPACE__.'\\handle_delete');
     add_action('admin_post_mhn_subscriber_unsub', __NAMESPACE__.'\\handle_admin_unsub');
     add_action('admin_post_mhn_import', __NAMESPACE__.'\\handle_import');
+    add_action('admin_post_mhn_subscriber_names', __NAMESPACE__.'\\handle_subscriber_names');
     add_action('admin_post_mhn_settings', __NAMESPACE__.'\\handle_settings');
     add_action('admin_post_mhn_send_test', __NAMESPACE__.'\\handle_send_test');
     add_action('admin_post_mhn_send', __NAMESPACE__.'\\handle_send');
@@ -89,7 +90,7 @@ function load_textdomain(): void
 function maybe_upgrade(): void
 {
     $installed = (string) get_option('mhn_version', '');
-    if ($installed === MHN_VERSION && get_option('mhn_db_version') === '1') {
+    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '2') {
         return;
     }
 
@@ -118,6 +119,7 @@ function install_tables(): void
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         email varchar(190) NOT NULL DEFAULT '',
         first_name varchar(100) NOT NULL DEFAULT '',
+        last_name varchar(100) NOT NULL DEFAULT '',
         status varchar(20) NOT NULL DEFAULT 'pending',
         opt_in varchar(20) NOT NULL DEFAULT 'double',
         confirm_hash varchar(64) NOT NULL DEFAULT '',
@@ -146,7 +148,40 @@ function install_tables(): void
     require_once ABSPATH.'wp-admin/includes/upgrade.php';
     dbDelta($subscribersSql);
     dbDelta($eventsSql);
-    update_option('mhn_db_version', '1');
+    ensure_subscriber_columns();
+    update_option('mhn_db_version', '2');
+}
+
+/**
+ * Add subscriber columns that shipped after the first install.
+ * Safe to run more than once. Plugin version stays 1.0.0; this uses mhn_db_version.
+ */
+function ensure_subscriber_columns(): void
+{
+    if (subscriber_column_exists('last_name')) {
+        return;
+    }
+
+    global $wpdb;
+
+    $wpdb->query('ALTER TABLE '.subscribers_table().' ADD last_name varchar(100) NOT NULL DEFAULT \'\'');
+}
+
+function subscriber_column_exists(string $column): bool
+{
+    global $wpdb;
+
+    if (! preg_match('/^[a-z_]+$/', $column)) {
+        return false;
+    }
+
+    $suppressed = $wpdb->suppress_errors(true);
+    $wpdb->get_var('SELECT '.$column.' FROM '.subscribers_table().' LIMIT 1');
+    $missing = (string) $wpdb->last_error !== '';
+    $wpdb->last_error = '';
+    $wpdb->suppress_errors($suppressed);
+
+    return ! $missing;
 }
 
 /**

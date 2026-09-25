@@ -50,10 +50,11 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 == Changelog ==
 
 = 1.0.0 =
-* Sign up, confirm by email, and unsubscribe without an account. The confirmation link opens a page. The address is added only after the button is pressed.
+* Sign up, confirm by email, and unsubscribe without an account. The confirmation link opens a page. The address is added only after the button is pressed. First name and last name are optional on that page.
 * Create a newsletter one step at a time, or edit the same draft in the block editor.
-* Choose a blog update, a blog digest, or a custom message. Each template has a note from you.
-* Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
+* Choose a blog update, a blog digest, or a custom message. Each template starts with “Hi {first_name|there},”.
+* A blog update includes the post’s featured image, linked to the post. A digest uses a thumbnail. You can hide or replace that image for one send.
+* Publishing a post saves a blog update draft. Automatic sending stays off until you turn it on.
 * Issues use one heading, real link text, alt text, and a plain-text part. Sending is blocked when an image has no alt text.
 * Click and open links cannot unsubscribe. Confirmation email for the same address is limited.
 * Import and export a CSV of addresses you already have permission to email.

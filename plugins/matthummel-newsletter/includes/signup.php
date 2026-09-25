@@ -151,7 +151,7 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
     $map = csv_map($header);
     $firstRow = $map['is_header'] ? null : $header;
     if (! $map['is_header']) {
-        $map = ['email' => 0, 'first' => null, 'is_header' => false];
+        $map = ['email' => 0, 'first' => null, 'last' => null, 'is_header' => false];
     }
 
     $rows = $firstRow ? [$firstRow] : [];
@@ -166,7 +166,9 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
         }
         $email = strtolower(sanitize_email((string) ($row[$map['email']] ?? '')));
         $firstIndex = $map['first'];
+        $lastIndex = $map['last'];
         $first = $firstIndex === null ? '' : sanitize_text_field((string) ($row[$firstIndex] ?? ''));
+        $last = $lastIndex === null ? '' : sanitize_text_field((string) ($row[$lastIndex] ?? ''));
         if (! is_email($email)) {
             $counts['invalid']++;
 
@@ -188,7 +190,8 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
         if ($mode === 'consented') {
             if ($existing) {
                 update_subscriber((int) $existing['id'], [
-                    'first_name' => $first !== '' ? mb_substr($first, 0, 80) : $existing['first_name'],
+                    'first_name' => $first !== '' ? clean_name($first) : $existing['first_name'],
+                    'last_name' => $last !== '' ? clean_name($last) : ($existing['last_name'] ?? ''),
                     'status' => 'subscribed',
                     'opt_in' => 'import',
                     'source' => 'import',
@@ -199,7 +202,8 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
             } else {
                 insert_subscriber([
                     'email' => $email,
-                    'first_name' => mb_substr($first, 0, 80),
+                    'first_name' => clean_name($first),
+                    'last_name' => clean_name($last),
                     'status' => 'subscribed',
                     'opt_in' => 'import',
                     'source' => 'import',
@@ -217,7 +221,7 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
             continue;
         }
 
-        $held = hold_pending($email, $first, $existing);
+        $held = hold_pending($email, $first, $last, $existing);
         if ($held < 1) {
             $counts['invalid']++;
 
@@ -241,12 +245,14 @@ function import_rows(string $path, string $mode, bool $sendConfirm, bool $allowU
  *
  * @param  array<string, string>|null  $existing
  */
-function hold_pending(string $email, string $first, ?array $existing): int
+function hold_pending(string $email, string $first, string $last, ?array $existing): int
 {
-    $first = mb_substr($first, 0, 80);
+    $first = clean_name($first);
+    $last = clean_name($last);
     if ($existing) {
         update_subscriber((int) $existing['id'], [
             'first_name' => $first !== '' ? $first : $existing['first_name'],
+            'last_name' => $last !== '' ? $last : ($existing['last_name'] ?? ''),
             'status' => 'pending',
             'opt_in' => 'double',
             'source' => 'import',
@@ -260,6 +266,7 @@ function hold_pending(string $email, string $first, ?array $existing): int
     $id = insert_subscriber([
         'email' => $email,
         'first_name' => $first,
+        'last_name' => $last,
         'status' => 'pending',
         'opt_in' => 'double',
         'source' => 'import',
@@ -274,7 +281,7 @@ function hold_pending(string $email, string $first, ?array $existing): int
 
 /**
  * @param  list<string>|array<int, string|null>  $header
- * @return array{email: int, first: int|null, is_header: bool}
+ * @return array{email: int, first: int|null, last: int|null, is_header: bool}
  */
 function csv_map(array $header): array
 {
@@ -286,16 +293,24 @@ function csv_map(array $header): array
         'fname' => 'first',
         'first' => 'first',
         'name' => 'first',
+        'last_name' => 'last',
+        'lastname' => 'last',
+        'lname' => 'last',
+        'surname' => 'last',
+        'last' => 'last',
     ];
-    $map = ['email' => 0, 'first' => null, 'is_header' => false];
+    $map = ['email' => 0, 'first' => null, 'last' => null, 'is_header' => false];
     foreach ($header as $index => $label) {
         $key = strtolower(trim((string) $label));
         if (! isset($known[$key])) {
             continue;
         }
         $map['is_header'] = true;
-        if ($known[$key] === 'email') {
+        $slot = $known[$key];
+        if ($slot === 'email') {
             $map['email'] = (int) $index;
+        } elseif ($slot === 'last') {
+            $map['last'] = (int) $index;
         } else {
             $map['first'] = (int) $index;
         }

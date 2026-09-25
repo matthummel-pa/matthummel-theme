@@ -68,7 +68,8 @@ function insert_subscriber(array $data): int
         subscribers_table(),
         [
             'email' => strtolower($data['email'] ?? ''),
-            'first_name' => $data['first_name'] ?? '',
+            'first_name' => clean_name((string) ($data['first_name'] ?? '')),
+            'last_name' => clean_name((string) ($data['last_name'] ?? '')),
             'status' => $data['status'] ?? 'pending',
             'opt_in' => $data['opt_in'] ?? 'double',
             'confirm_hash' => $data['confirm_hash'] ?? '',
@@ -77,10 +78,15 @@ function insert_subscriber(array $data): int
             'confirmed_at' => $data['confirmed_at'] ?? '',
             'unsubscribed_at' => $data['unsubscribed_at'] ?? '',
         ],
-        ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
+        ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
     );
 
     return $ok ? (int) $wpdb->insert_id : 0;
+}
+
+function clean_name(string $value): string
+{
+    return mb_substr(sanitize_text_field($value), 0, 80);
 }
 
 /**
