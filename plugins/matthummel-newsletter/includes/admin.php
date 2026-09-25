@@ -29,6 +29,14 @@ function admin_menu(): void
     );
     add_submenu_page(
         'mhn-newsletter',
+        __('Create newsletter', 'matthummel-newsletter'),
+        __('Create newsletter', 'matthummel-newsletter'),
+        'manage_options',
+        'mhn-wizard',
+        __NAMESPACE__.'\\page_wizard'
+    );
+    add_submenu_page(
+        'mhn-newsletter',
         __('Subscribers', 'matthummel-newsletter'),
         __('Subscribers', 'matthummel-newsletter'),
         'manage_options',
@@ -84,6 +92,23 @@ function admin_assets(string $hook): void
         [],
         MHN_VERSION
     );
+
+    if (! str_contains($hook, 'mhn-wizard')) {
+        return;
+    }
+
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'mhn-wizard',
+        plugins_url('assets/wizard.js', MHN_FILE),
+        [],
+        MHN_VERSION,
+        true
+    );
+    wp_localize_script('mhn-wizard', 'mhnWizard', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'saved' => __('Draft saved.', 'matthummel-newsletter'),
+    ]);
 }
 
 /**
@@ -166,17 +191,20 @@ function issues_table(array $issues, bool $admin): string
     foreach ($issues as $issue) {
         $edit = get_edit_post_link($issue['id'], 'raw');
         $test = wp_nonce_url(admin_url('admin-post.php?action=mhn_send_test&issue='.$issue['id']), 'mhn_send_test_'.$issue['id']);
-        $deliver = admin_url('admin.php?page=mhn-deliver&issue='.$issue['id']);
         $html .= '<tr>';
         $html .= '<td>'.esc_html($issue['title']).'</td>';
         $html .= '<td>'.esc_html(status_label($issue['status'])).'</td>';
         $html .= '<td>'.esc_html((string) $issue['sent']).'</td>';
+        $continue = in_array($issue['status'], ['sent', 'sending'], true)
+            ? __('View', 'matthummel-newsletter')
+            : __('Continue', 'matthummel-newsletter');
         $html .= '<td>';
+        $html .= '<a href="'.esc_url(wizard_url($issue['id'])).'">'.esc_html($continue).'</a> · ';
         if (is_string($edit) && $edit !== '') {
-            $html .= '<a href="'.esc_url($edit).'">'.esc_html__('Edit', 'matthummel-newsletter').'</a> · ';
+            $html .= '<a href="'.esc_url($edit).'">'.esc_html__('Editor', 'matthummel-newsletter').'</a> · ';
         }
         $html .= '<a href="'.esc_url($test).'">'.esc_html__('Send test', 'matthummel-newsletter').'</a> · ';
-        $html .= '<a href="'.esc_url($deliver).'">'.esc_html__('Send', 'matthummel-newsletter').'</a>';
+        $html .= '<a href="'.esc_url(wizard_url($issue['id'], 5)).'">'.esc_html__('Send', 'matthummel-newsletter').'</a>';
         $html .= '</td></tr>';
     }
 
@@ -218,7 +246,8 @@ function page_dashboard(): void
         )).'</p></div>';
     }
     echo '<p>';
-    echo '<a class="button button-primary" href="'.esc_url(admin_url('post-new.php?post_type=newsletter_issue')).'">'.esc_html__('Compose', 'matthummel-newsletter').'</a> ';
+    echo '<a class="button button-primary" href="'.esc_url(wizard_url()).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a> ';
+    echo '<a class="button" href="'.esc_url(admin_url('post-new.php?post_type=newsletter_issue')).'">'.esc_html__('Block editor', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-import')).'">'.esc_html__('Import CSV', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Settings', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(page_url('get-updates')).'">'.esc_html__('View page', 'matthummel-newsletter').'</a>';

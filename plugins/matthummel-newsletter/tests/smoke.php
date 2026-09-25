@@ -14,6 +14,21 @@ if (! defined('ABSPATH') || ! defined('MHN_VERSION')) {
 
 $GLOBALS['mhn_fail'] = 0;
 
+function mhn_add_extra_template(array $templates): array
+{
+    $templates['extra'] = [
+        'label' => 'Extra',
+        'summary' => 'Added later.',
+        'min_posts' => 0,
+        'max_posts' => 0,
+        'has_image' => false,
+        'has_button' => false,
+        'has_ps' => false,
+    ];
+
+    return $templates;
+}
+
 function mhn_check(bool $ok, string $label): void
 {
     echo ($ok ? 'OK   ' : 'FAIL ').$label.PHP_EOL;
@@ -224,6 +239,103 @@ $quiet = Newsletter\import_rows((string) $csvPending, 'pending', false, false);
 $quietRow = Newsletter\find_by_email('pending-quiet@example.com');
 mhn_check($quiet['pending'] === 1 && $quietRow !== null && $quietRow['status'] === 'pending', 'pending import does not subscribe');
 mhn_check(count($GLOBALS['mhn_outbox']) === $beforeImport, 'pending import does not send mail');
+
+$templateSlugs = array_keys(Newsletter\email_templates());
+mhn_check(in_array('blog-update', $templateSlugs, true), 'blog update template is registered');
+mhn_check(in_array('blog-digest', $templateSlugs, true), 'blog digest template is registered');
+mhn_check(in_array('custom', $templateSlugs, true), 'custom message template is registered');
+mhn_check((string) get_post_meta($issueId, '_mhn_template', true) === 'blog-update', 'auto draft uses the blog update template');
+mhn_check((string) get_post_meta($issueId, '_mhn_note', true) === '', 'auto draft note starts empty');
+mhn_check((string) get_post_meta($issueId, '_mhn_ps', true) === '', 'auto draft P.S. starts empty');
+$patterns = WP_Block_Patterns_Registry::get_instance();
+mhn_check($patterns->is_registered('mhn/blog-update') && $patterns->is_registered('mhn/blog-digest') && $patterns->is_registered('mhn/custom'), 'templates are block patterns');
+
+$rich = Newsletter\render_blocks(Newsletter\rich_text_blocks('<p>Hello <strong>there</strong></p><ul><li>One item</li></ul>'), 'Alt');
+mhn_check(str_contains($rich, '<strong>there</strong>'), 'rich text keeps bold');
+mhn_check(str_contains($rich, 'One item'), 'rich text keeps a list');
+
+$beforeWizard = count($GLOBALS['mhn_outbox']);
+$draft = Newsletter\wizard_save([
+    'mhn_action' => 'next',
+    'mhn_step' => '1',
+    'mhn_template' => 'custom',
+    'mhn_issue' => '0',
+]);
+mhn_check($draft['id'] > 0 && $draft['step'] === 2, 'wizard creates a draft on the content step');
+mhn_check(count($GLOBALS['mhn_outbox']) === $beforeWizard, 'wizard save does not send mail');
+$emptyNote = Newsletter\wizard_save([
+    'mhn_action' => 'next',
+    'mhn_step' => '2',
+    'mhn_issue' => (string) $draft['id'],
+    'mhn_template' => 'custom',
+    'mhn_note' => '<p></p>',
+]);
+mhn_check($emptyNote['error'] === 'message' && $emptyNote['step'] === 2, 'custom message requires a note');
+$withNote = Newsletter\wizard_save([
+    'mhn_action' => 'next',
+    'mhn_step' => '2',
+    'mhn_issue' => (string) $draft['id'],
+    'mhn_template' => 'custom',
+    'mhn_note' => '<p>Hello <strong>there</strong></p><ul><li>One item</li></ul>',
+    'mhn_button_label' => 'Read the note',
+    'mhn_button_url' => 'https://matthummel.com/notes/',
+]);
+mhn_check($withNote['error'] === '' && $withNote['step'] === 3, 'custom message step continues');
+$customHtml = Newsletter\issue_message((int) $draft['id'], [
+    'id' => '0',
+    'email' => 'you@example.com',
+    'first_name' => '',
+    'status' => 'preview',
+], true)['html'];
+mhn_check(str_contains($customHtml, '<strong>there</strong>'), 'custom message renders bold');
+mhn_check(str_contains($customHtml, 'One item'), 'custom message renders a list');
+mhn_check(str_contains($customHtml, 'v:roundrect'), 'custom message button is bulletproof');
+mhn_check(count($GLOBALS['mhn_outbox']) === $beforeWizard, 'building a draft does not send mail');
+
+$postA = wp_insert_post([
+    'post_type' => 'post',
+    'post_status' => 'publish',
+    'post_title' => 'Digest one',
+    'post_content' => 'First digest post body for the card.',
+]);
+$postB = wp_insert_post([
+    'post_type' => 'post',
+    'post_status' => 'publish',
+    'post_title' => 'Digest two',
+    'post_content' => 'Second digest post body for the card.',
+]);
+$digest = Newsletter\wizard_save([
+    'mhn_action' => 'stay',
+    'mhn_step' => '2',
+    'mhn_template' => 'blog-digest',
+    'mhn_issue' => '0',
+    'mhn_note' => '<p>A note above the posts.</p>',
+    'mhn_ps' => '<p>A line under the posts.</p>',
+    'mhn_posts' => [(string) $postA, (string) $postB],
+]);
+$digestHtml = Newsletter\issue_message((int) $digest['id'], [
+    'id' => '0',
+    'email' => 'you@example.com',
+    'first_name' => '',
+    'status' => 'preview',
+], true)['html'];
+mhn_check(str_contains($digestHtml, 'Digest one') && str_contains($digestHtml, 'Digest two'), 'digest lists the selected posts');
+mhn_check(str_contains($digestHtml, 'A note above the posts.'), 'digest keeps the note');
+mhn_check(str_contains($digestHtml, 'A line under the posts.'), 'digest keeps the P.S.');
+mhn_check(str_contains($digestHtml, 'mhn-group'), 'digest posts render as cards');
+
+$refused = Newsletter\wizard_save([
+    'mhn_action' => 'send',
+    'mhn_step' => '5',
+    'mhn_issue' => (string) $draft['id'],
+]);
+mhn_check(in_array($refused['error'], ['confirm', 'empty'], true), 'send without confirm does not go out');
+mhn_check(Newsletter\issue_status((int) $draft['id']) === 'draft', 'refused send stays a draft');
+mhn_check(count($GLOBALS['mhn_outbox']) === $beforeWizard, 'refused send adds no mail');
+
+add_filter('mhn_email_templates', 'mhn_add_extra_template');
+mhn_check(isset(Newsletter\email_templates()['extra']), 'templates can be extended');
+remove_all_filters('mhn_email_templates');
 
 $batch = Newsletter\find_by_email('batch@example.com');
 if ($batch) {

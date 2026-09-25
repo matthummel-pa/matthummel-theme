@@ -8,6 +8,9 @@ What the 3.x Sage theme does, and where it lives.
 - Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
 - Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
 - Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
+- **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
+- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each have a note field. Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` seed the editor.
+- Publishing a post drafts a blog update with an empty note and P.S. It does not send. Owner steps: `docs/NEWSLETTER.md`.
 
 ## Editor’s notes (3.6.37 projects listing)
 

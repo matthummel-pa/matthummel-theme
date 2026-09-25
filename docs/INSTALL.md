@@ -112,3 +112,5 @@ bash .github/scripts/pack-plugin.sh
 In wp-admin, upload `matthummel-newsletter.zip` via Plugins → Add New → Upload. Activate it. That creates the Get updates and Email preferences pages if they are missing, and copies any existing footer signups onto the list. Activation does not send email. Running it again does not add a second copy of those addresses.
 
 Leave automatic sending off until the From address is a mailbox on your domain and SPF, DKIM, and DMARC are in place. Sending uses `wp_mail`, so an SMTP plugin on the site is used when one is installed.
+
+To write and send an issue, follow `docs/NEWSLETTER.md`. In wp-admin that path is **Get updates → Create newsletter**.

@@ -17,8 +17,10 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Double opt-in for new signups.
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
+* Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
+* Templates: blog update, blog digest, and a custom message. Each one has a note from you.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
-* Publishing a post saves a draft issue. Automatic sending stays off until you turn it on.
+* Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
 * Import a CSV of addresses you already have permission to email.
 
 Addresses copied from the original footer list are marked as legacy single opt-in. They stay subscribed and are not asked to confirm again.
@@ -49,6 +51,7 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 
 = 1.0.0 =
 * Sign up, confirm by email, and unsubscribe without an account.
-* Write an issue in the editor and send it from this site.
-* Publishing a post saves a draft issue. Automatic sending stays off until you turn it on.
+* Create a newsletter one step at a time, or edit the same draft in the block editor.
+* Choose a blog update, a blog digest, or a custom message. Each template has a note from you.
+* Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
 * Import and export a CSV of addresses you already have permission to email.

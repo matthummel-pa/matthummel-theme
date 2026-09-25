@@ -25,3 +25,122 @@
 .mhn-admin-stats span {
   color: #50575e;
 }
+
+.mhn-wizard-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.mhn-wizard-steps li {
+  flex: 1 1 120px;
+  margin: 0;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  color: #50575e;
+}
+
+.mhn-wizard-steps li.is-current {
+  border-color: #0d2e57;
+  color: #0d2e57;
+  font-weight: 600;
+}
+
+.mhn-wizard-steps li.is-done {
+  border-color: #0d2e57;
+}
+
+.mhn-wizard-steps a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mhn-templates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 12px 0 20px;
+}
+
+.mhn-template {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+}
+
+.mhn-template:has(input:checked) {
+  border-color: #0d2e57;
+  box-shadow: inset 0 0 0 1px #0d2e57;
+}
+
+.mhn-template span {
+  color: #50575e;
+}
+
+.mhn-posts label,
+.mhn-find {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.mhn-wizard-actions {
+  margin-top: 20px;
+}
+
+.mhn-save-status {
+  margin-left: 8px;
+  color: #50575e;
+}
+
+.mhn-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  margin: 12px 0 20px;
+}
+
+.mhn-preview-frame {
+  margin: 0;
+  padding: 12px;
+  background: #eef3f9;
+  border: 1px solid #c3c4c7;
+}
+
+.mhn-preview-frame figcaption {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.mhn-preview-frame iframe {
+  display: block;
+  border: 0;
+  background: #fff;
+  height: 720px;
+}
+
+.mhn-preview-frame.is-desktop iframe {
+  width: 680px;
+}
+
+.mhn-preview-frame.is-mobile iframe {
+  width: 390px;
+}
+
+.mhn-recipient-count {
+  font-size: 16px;
+}
+
+.mhn-recipient-count strong {
+  font-size: 32px;
+  line-height: 1;
+}

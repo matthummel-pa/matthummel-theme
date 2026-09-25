@@ -102,6 +102,27 @@ function update_subscriber(int $id, array $data): void
     $wpdb->update(subscribers_table(), $data, ['id' => $id], $formats, ['%d']);
 }
 
+function subscribed_recipient_count(): int
+{
+    $list = apply_filters('mhn_send_allowlist', null);
+    if ($list === null) {
+        return count_status('subscribed');
+    }
+    if (! is_array($list)) {
+        return 0;
+    }
+
+    $count = 0;
+    foreach ($list as $email) {
+        $row = find_by_email((string) $email);
+        if ($row !== null && ($row['status'] ?? '') === 'subscribed') {
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
 function count_status(string $status): int
 {
     global $wpdb;

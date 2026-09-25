@@ -31,11 +31,13 @@ require_once MHN_DIR.'/includes/subscribers.php';
 require_once MHN_DIR.'/includes/blocks.php';
 require_once MHN_DIR.'/includes/render.php';
 require_once MHN_DIR.'/includes/mailer.php';
+require_once MHN_DIR.'/includes/templates.php';
 require_once MHN_DIR.'/includes/issues.php';
 require_once MHN_DIR.'/includes/campaign.php';
 require_once MHN_DIR.'/includes/signup.php';
 require_once MHN_DIR.'/includes/public.php';
 require_once MHN_DIR.'/includes/admin.php';
+require_once MHN_DIR.'/includes/wizard.php';
 require_once MHN_DIR.'/includes/api.php';
 
 register_activation_hook(MHN_FILE, 'MattHummel\\Newsletter\\activate');

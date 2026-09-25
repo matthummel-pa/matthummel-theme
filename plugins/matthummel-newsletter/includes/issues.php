@@ -73,51 +73,6 @@ function allowed_blocks(bool|array $allowed, \WP_Block_Editor_Context $context):
     ];
 }
 
-function register_patterns(): void
-{
-    if (! function_exists('register_block_pattern')) {
-        return;
-    }
-
-    register_block_pattern_category('mhn', [
-        'label' => __('Newsletter', 'matthummel-newsletter'),
-    ]);
-
-    $home = esc_url(home_url('/'));
-    register_block_pattern('mhn/announcement', [
-        'title' => __('Announcement', 'matthummel-newsletter'),
-        'description' => __('A short note and one button.', 'matthummel-newsletter'),
-        'categories' => ['mhn'],
-        'postTypes' => ['newsletter_issue'],
-        'content' => '<!-- wp:heading --><h2 class="wp-block-heading">'.esc_html__('A short announcement', 'matthummel-newsletter').'</h2><!-- /wp:heading -->'
-            .'<!-- wp:paragraph --><p>'.esc_html__('One or two sentences on what changed.', 'matthummel-newsletter').'</p><!-- /wp:paragraph -->'
-            .'<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="'.$home.'">'.esc_html__('Read more', 'matthummel-newsletter').'</a></div><!-- /wp:button --></div><!-- /wp:buttons -->',
-    ]);
-
-    register_block_pattern('mhn/digest', [
-        'title' => __('Digest', 'matthummel-newsletter'),
-        'description' => __('A heading and a short list.', 'matthummel-newsletter'),
-        'categories' => ['mhn'],
-        'postTypes' => ['newsletter_issue'],
-        'content' => '<!-- wp:heading --><h2 class="wp-block-heading">'.esc_html__('This week', 'matthummel-newsletter').'</h2><!-- /wp:heading -->'
-            .'<!-- wp:paragraph --><p>'.esc_html__('Three things worth a look.', 'matthummel-newsletter').'</p><!-- /wp:paragraph -->'
-            .'<!-- wp:list --><ul class="wp-block-list"><!-- wp:list-item --><li>'.esc_html__('First note', 'matthummel-newsletter').'</li><!-- /wp:list-item -->'
-            .'<!-- wp:list-item --><li>'.esc_html__('Second note', 'matthummel-newsletter').'</li><!-- /wp:list-item -->'
-            .'<!-- wp:list-item --><li>'.esc_html__('Third note', 'matthummel-newsletter').'</li><!-- /wp:list-item --></ul><!-- /wp:list -->',
-    ]);
-
-    register_block_pattern('mhn/single-feature', [
-        'title' => __('Single feature', 'matthummel-newsletter'),
-        'description' => __('One story, a quote, and a button.', 'matthummel-newsletter'),
-        'categories' => ['mhn'],
-        'postTypes' => ['newsletter_issue'],
-        'content' => '<!-- wp:heading --><h2 class="wp-block-heading">'.esc_html__('One thing I shipped', 'matthummel-newsletter').'</h2><!-- /wp:heading -->'
-            .'<!-- wp:paragraph --><p>'.esc_html__('What it is, who it is for, and where to read the rest.', 'matthummel-newsletter').'</p><!-- /wp:paragraph -->'
-            .'<!-- wp:quote --><blockquote class="wp-block-quote"><p>'.esc_html__('A sentence worth keeping.', 'matthummel-newsletter').'</p></blockquote><!-- /wp:quote -->'
-            .'<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="'.$home.'">'.esc_html__('Read more', 'matthummel-newsletter').'</a></div><!-- /wp:button --></div><!-- /wp:buttons -->',
-    ]);
-}
-
 function on_transition(string $new, string $old, \WP_Post $post): void
 {
     if ($post->post_type !== 'post' || $new !== 'publish' || $old === 'publish') {
@@ -148,16 +103,13 @@ function create_from_post(\WP_Post $post): int
         return (int) $existing[0];
     }
 
-    $excerpt = has_excerpt($post)
-        ? wp_strip_all_tags(get_the_excerpt($post))
-        : wp_trim_words(wp_strip_all_tags($post->post_content), 40);
     $title = html_entity_decode(get_the_title($post), ENT_QUOTES);
 
     $id = wp_insert_post([
         'post_type' => 'newsletter_issue',
         'post_status' => 'draft',
         'post_title' => $title,
-        'post_content' => post_issue_blocks($post, $excerpt),
+        'post_content' => '',
     ], true);
 
     if (is_wp_error($id) || ! $id) {
@@ -165,13 +117,19 @@ function create_from_post(\WP_Post $post): int
     }
 
     $issueId = (int) $id;
-    update_post_meta($issueId, '_mhn_subject', $title);
-    update_post_meta($issueId, '_mhn_preheader', mb_substr(trim($excerpt), 0, 140));
+    update_post_meta($issueId, '_mhn_template', 'blog-update');
+    update_post_meta($issueId, '_mhn_post_ids', (string) $post->ID);
+    update_post_meta($issueId, '_mhn_note', '');
+    update_post_meta($issueId, '_mhn_ps', '');
+    update_post_meta($issueId, '_mhn_wizard_step', '2');
+    update_post_meta($issueId, '_mhn_subject_auto', '1');
     update_post_meta($issueId, '_mhn_status', 'draft');
     update_post_meta($issueId, '_mhn_source_post', (string) $post->ID);
-    update_post_meta($issueId, '_mhn_include_recent', '1');
+    update_post_meta($issueId, '_mhn_include_recent', '0');
     update_post_meta($issueId, '_mhn_sent_count', '0');
     update_post_meta($issueId, '_mhn_fail_count', '0');
+    compile_issue($issueId);
+    fill_subject_defaults($issueId);
 
     if (settings()['auto_send'] === 1) {
         start_campaign($issueId);
@@ -180,41 +138,16 @@ function create_from_post(\WP_Post $post): int
     return $issueId;
 }
 
-function post_issue_blocks(\WP_Post $post, string $excerpt): string
-{
-    $parts = [];
-    $thumb = (int) get_post_thumbnail_id($post);
-    if ($thumb > 0) {
-        $src = wp_get_attachment_image_url($thumb, 'large');
-        $alt = (string) get_post_meta($thumb, '_wp_attachment_image_alt', true);
-        if ($alt === '') {
-            $alt = html_entity_decode(get_the_title($post), ENT_QUOTES);
-        }
-        if (is_string($src) && $src !== '') {
-            $parts[] = '<!-- wp:image {"id":'.$thumb.',"sizeSlug":"large"} -->'
-                .'<figure class="wp-block-image size-large"><img src="'.esc_url($src).'" alt="'.esc_attr($alt).'"/></figure>'
-                .'<!-- /wp:image -->';
-        }
-    }
-
-    $title = html_entity_decode(get_the_title($post), ENT_QUOTES);
-    $parts[] = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">".esc_html($title)."</h2>\n<!-- /wp:heading -->";
-    $parts[] = "<!-- wp:paragraph -->\n<p>".esc_html($excerpt)."</p>\n<!-- /wp:paragraph -->";
-    $url = get_permalink($post);
-    $href = is_string($url) ? $url : home_url('/');
-    $parts[] = "<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button -->\n"
-        .'<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="'.esc_url($href).'">'
-        .esc_html__('Read more', 'matthummel-newsletter').'</a></div>'
-        ."\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->";
-
-    return implode("\n\n", $parts);
-}
-
 function issue_status(int $issueId): string
 {
     $status = (string) get_post_meta($issueId, '_mhn_status', true);
 
     return $status !== '' ? $status : 'draft';
+}
+
+function issue_is_locked(int $issueId): bool
+{
+    return in_array(issue_status($issueId), ['sending', 'sent'], true);
 }
 
 function set_issue_status(int $issueId, string $status): void
@@ -252,6 +185,7 @@ function render_meta_box(\WP_Post $post): void
     }
 
     wp_nonce_field('mhn_issue_meta', 'mhn_issue_nonce');
+    echo '<p><a href="'.esc_url(wizard_url($post->ID)).'">'.esc_html__('Continue in the step-by-step wizard', 'matthummel-newsletter').'</a></p>';
     $subject = (string) get_post_meta($post->ID, '_mhn_subject', true);
     $preheader = (string) get_post_meta($post->ID, '_mhn_preheader', true);
     $include = (string) get_post_meta($post->ID, '_mhn_include_recent', true) === '1';
@@ -326,6 +260,7 @@ function save_meta(int $postId, \WP_Post $post): void
 
     update_post_meta($postId, '_mhn_subject', sanitize_text_field(wp_unslash($_POST['mhn_subject'] ?? '')));
     update_post_meta($postId, '_mhn_preheader', sanitize_text_field(wp_unslash($_POST['mhn_preheader'] ?? '')));
+    update_post_meta($postId, '_mhn_subject_auto', '0');
     update_post_meta($postId, '_mhn_include_recent', empty($_POST['mhn_include_recent']) ? '0' : '1');
 
     $local = isset($_POST['mhn_schedule_local']) ? sanitize_text_field(wp_unslash($_POST['mhn_schedule_local'])) : '';
