@@ -118,6 +118,7 @@ function create_from_post(\WP_Post $post): int
 
     $issueId = (int) $id;
     update_post_meta($issueId, '_mhn_template', 'blog-update');
+    update_post_meta($issueId, '_mhn_layout', 'standard');
     update_post_meta($issueId, '_mhn_post_ids', (string) $post->ID);
     update_post_meta($issueId, '_mhn_note', default_note_html());
     update_post_meta($issueId, '_mhn_ps', '');

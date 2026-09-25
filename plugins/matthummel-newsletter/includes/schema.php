@@ -53,6 +53,7 @@ function boot(): void
     add_action('admin_enqueue_scripts', __NAMESPACE__.'\\admin_assets');
     add_action('wp_ajax_mhn_wizard_autosave', __NAMESPACE__.'\\ajax_wizard_autosave');
     add_action('admin_post_mhn_wizard_preview', __NAMESPACE__.'\\handle_wizard_preview');
+    add_action('admin_post_mhn_layout_preview', __NAMESPACE__.'\\handle_layout_preview');
     add_action('admin_post_mhn_signup', __NAMESPACE__.'\\handle_signup');
     add_action('admin_post_nopriv_mhn_signup', __NAMESPACE__.'\\handle_signup');
     add_action('admin_post_mhn_export', __NAMESPACE__.'\\handle_export');

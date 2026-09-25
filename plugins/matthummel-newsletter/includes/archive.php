@@ -41,6 +41,8 @@ function issue_archive_message(int $issueId): array
     $content = $post instanceof \WP_Post ? (string) $post->post_content : '';
     $altFallback = $post instanceof \WP_Post ? $post->post_title : $subject;
     $body = render_blocks($content, $altFallback);
+    $body = apply_layout(issue_layout_id($issueId), $body);
+    $subject = layout_subject($issueId, $subject);
     $includeRecent = (string) get_post_meta($issueId, '_mhn_include_recent', true) === '1';
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
     if ($preheader === '') {
@@ -349,6 +351,7 @@ function duplicate_issue(int $issueId): int
     $copyId = (int) $copyId;
     $keys = [
         '_mhn_template',
+        '_mhn_layout',
         '_mhn_note',
         '_mhn_ps',
         '_mhn_post_ids',

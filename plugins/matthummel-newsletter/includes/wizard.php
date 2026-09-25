@@ -52,7 +52,8 @@ function wizard_save(array $input): array
 
             return $result;
         }
-        $id = create_wizard_issue($slug);
+        $layoutId = normalize_layout_id((string) ($input['mhn_layout'] ?? ''));
+        $id = create_wizard_issue($slug, $layoutId);
     }
     if ($id < 1) {
         $result['error'] = 'save';
@@ -124,7 +125,7 @@ function wizard_save(array $input): array
     return $result;
 }
 
-function create_wizard_issue(string $slug): int
+function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
 {
     $template = email_template($slug);
     if ($template === null) {
@@ -142,7 +143,10 @@ function create_wizard_issue(string $slug): int
     }
 
     $issueId = (int) $id;
+    $layoutId = normalize_layout_id($layoutId);
     update_post_meta($issueId, '_mhn_template', $slug);
+    update_post_meta($issueId, '_mhn_layout', $layoutId);
+    remember_layout($layoutId);
     update_post_meta($issueId, '_mhn_status', 'draft');
     update_post_meta($issueId, '_mhn_wizard_step', '1');
     update_post_meta($issueId, '_mhn_note', default_note_html());
@@ -163,6 +167,24 @@ function create_wizard_issue(string $slug): int
  */
 function apply_wizard_fields(int $issueId, array $input, int $step): void
 {
+    $postedLayout = sanitize_key((string) ($input['mhn_layout'] ?? ''));
+    if ($postedLayout !== '' && isset(layouts()[$postedLayout])) {
+        $previousLayout = (string) get_post_meta($issueId, '_mhn_layout', true);
+        if ($previousLayout === '') {
+            $previousLayout = 'standard';
+        }
+        if ($previousLayout !== $postedLayout) {
+            update_post_meta($issueId, '_mhn_layout', $postedLayout);
+            remember_layout($postedLayout);
+            if ($postedLayout === 'welcome' || $previousLayout === 'welcome') {
+                update_post_meta($issueId, '_mhn_subject_auto', '1');
+                fill_subject_defaults($issueId);
+            }
+        } else {
+            remember_layout($postedLayout);
+        }
+    }
+
     $postedTemplate = sanitize_key((string) ($input['mhn_template'] ?? ''));
     if ($postedTemplate !== '' && email_template($postedTemplate) !== null) {
         $previous = (string) get_post_meta($issueId, '_mhn_template', true);
@@ -274,6 +296,9 @@ function wizard_blocks_next(int $issueId, int $step): string
     $template = email_template((string) get_post_meta($issueId, '_mhn_template', true));
     if ($step === 1 && $template === null) {
         return 'template';
+    }
+    if ($step === 2 && issue_layout_id($issueId) === 'welcome') {
+        return '';
     }
     if ($step === 2 && $template !== null) {
         $count = count(published_issue_posts($issueId));
@@ -399,6 +424,7 @@ function render_wizard_page(): void
     if (email_template($templateSlug) === null) {
         $templateSlug = 'blog-update';
     }
+    $layoutId = $issueId > 0 ? issue_layout_id($issueId) : dashboard_layout_id();
 
     echo '<div class="wrap mhn-admin mhn-wizard">';
     echo '<header class="mhn-dash-head"><div>';
@@ -418,11 +444,12 @@ function render_wizard_page(): void
     echo '<input type="hidden" name="mhn_step" value="'.esc_attr((string) $step).'">';
     if ($step !== 1) {
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
+        echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
     }
 
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
-        1 => render_step_template($templateSlug),
+        1 => render_step_template($templateSlug, $layoutId),
         2 => render_step_content($issueId, $templateSlug),
         3 => render_step_subject($issueId),
         4 => render_step_preview($issueId),
@@ -521,9 +548,10 @@ function render_wizard_progress(int $issueId, int $step): void
     echo '</ol>';
 }
 
-function render_step_template(string $current): void
+function render_step_template(string $current, string $layout): void
 {
-    echo '<h2>'.esc_html__('Choose a template', 'matthummel-newsletter').'</h2>';
+    render_layout_picker($layout);
+    echo '<h2>'.esc_html__('Choose what to include', 'matthummel-newsletter').'</h2>';
     echo '<div class="mhn-templates">';
     foreach (email_templates() as $slug => $template) {
         $id = 'mhn-template-'.$slug;
@@ -536,8 +564,36 @@ function render_step_template(string $current): void
     echo '</div>';
 }
 
+function render_layout_picker(string $current): void
+{
+    echo '<h2>'.esc_html__('Choose a layout', 'matthummel-newsletter').'</h2>';
+    echo '<p>'.esc_html__('One layout for this letter. Standard is the usual one. Welcome does not send on its own.', 'matthummel-newsletter').'</p>';
+    echo '<div class="mhn-layouts" role="radiogroup" aria-label="'.esc_attr__('Layouts', 'matthummel-newsletter').'">';
+    foreach (layouts() as $id => $layout) {
+        $inputId = 'mhn-layout-'.$id;
+        echo '<label class="mhn-layout" for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="mhn_layout" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($current, $id, false).'>';
+        echo '<strong>'.esc_html($layout['label']).'</strong>';
+        echo '<span>'.esc_html($layout['summary']).'</span>';
+        echo '<span class="mhn-layout-preview">';
+        echo '<iframe title="'.esc_attr(sprintf(
+            /* translators: %s: layout name */
+            __('%s preview', 'matthummel-newsletter'),
+            $layout['label']
+        )).'" sandbox="" tabindex="-1" src="'.esc_url(layout_preview_admin_url($id)).'"></iframe>';
+        echo '</span></label>';
+    }
+    echo '</div>';
+}
+
 function render_step_content(int $issueId, string $slug): void
 {
+    if (issue_layout_id($issueId) === 'welcome') {
+        render_welcome_step();
+
+        return;
+    }
+
     $template = email_template($slug);
     if ($template === null) {
         echo '<p>'.esc_html__('Choose a template first.', 'matthummel-newsletter').'</p>';
@@ -654,6 +710,16 @@ function wizard_post_choices(array $selected, string $find): array
     }
 
     return $choices;
+}
+
+function render_welcome_step(): void
+{
+    $copy = layout_copy();
+    echo '<h2>'.esc_html__('Welcome', 'matthummel-newsletter').'</h2>';
+    echo '<p>'.esc_html__('This letter uses the welcome subject and body from Settings. Choosing it does not email anyone.', 'matthummel-newsletter').'</p>';
+    echo '<p><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong><br>'.esc_html($copy['welcome_subject']).'</p>';
+    echo '<div class="mhn-welcome-copy">'.nl2br(esc_html($copy['welcome_body'])).'</div>';
+    echo '<p><a href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Edit reusable copy', 'matthummel-newsletter').'</a></p>';
 }
 
 function render_merge_hint(): void
