@@ -42,7 +42,7 @@ function start_campaign(int $issueId, bool $resetCounts = true): bool
     }
 
     $status = issue_status($issueId);
-    if (in_array($status, ['sending', 'sent'], true)) {
+    if (in_array($status, ['sending', 'sent'], true) || issue_send_blocked($issueId)) {
         return false;
     }
 
@@ -76,7 +76,7 @@ function schedule_issue(int $issueId, string $gmt): bool
     if (! $post instanceof \WP_Post || $post->post_type !== 'newsletter_issue') {
         return false;
     }
-    if ($gmt === '' || issue_status($issueId) === 'sending') {
+    if ($gmt === '' || issue_status($issueId) === 'sending' || issue_send_blocked($issueId)) {
         return false;
     }
 

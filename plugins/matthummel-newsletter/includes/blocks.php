@@ -55,11 +55,11 @@ function render_paragraph(array $block): string
 
     $styled = preg_replace(
         '/<p(\s|>)/',
-        '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;"$1',
+        '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;"$1',
         $html
     );
 
-    return is_string($styled) ? $styled : $html;
+    return decorate_links(is_string($styled) ? $styled : $html);
 }
 
 /**
@@ -69,15 +69,19 @@ function render_heading(array $block): string
 {
     $attrs = is_array($block['attrs'] ?? null) ? $block['attrs'] : [];
     $level = (int) ($attrs['level'] ?? 2);
-    $level = max(2, min(3, $level));
+    $level = max(1, min(3, $level));
     $text = trim(wp_strip_all_tags((string) ($block['innerHTML'] ?? '')));
     if ($text === '') {
         return '';
     }
 
-    $size = $level === 2 ? 22 : 18;
+    $size = match ($level) {
+        1 => 28,
+        2 => 22,
+        default => 18,
+    };
 
-    return '<h'.$level.' class="mhn-text" style="margin:0 0 12px;font-size:'.$size.'px;line-height:1.3;font-weight:700;color:#0d2e57;">'.esc_html($text).'</h'.$level.'>';
+    return '<h'.$level.' class="mhn-text" style="margin:0 0 12px;font-size:'.$size.'px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($text).'</h'.$level.'>';
 }
 
 /**
@@ -116,9 +120,7 @@ function render_image(array $block, string $altFallback): string
         return '';
     }
 
-    if ($alt === '') {
-        $alt = $altFallback;
-    }
+    unset($altFallback);
 
     if ($width > 520 && $width > 0) {
         $height = $height > 0 ? (int) round($height * (520 / $width)) : 0;
@@ -130,7 +132,9 @@ function render_image(array $block, string $altFallback): string
 
     $heightAttr = $height > 0 ? ' height="'.esc_attr((string) $height).'"' : '';
 
-    return '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'"'.$heightAttr.' style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;">';
+    $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+
+    return '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'"'.$heightAttr.' style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;color:#141c28;background-color:#eef3f9;font-family:'.$font.';font-size:16px;line-height:1.5;">';
 }
 
 /**
@@ -201,10 +205,7 @@ function render_one_button(array $block): string
     if ($label === '') {
         $label = trim(wp_strip_all_tags($html));
     }
-    if ($label === '') {
-        $label = __('Read more', 'matthummel-newsletter');
-    }
-    if ($url === '') {
+    if ($label === '' || $url === '') {
         return '';
     }
 
@@ -219,7 +220,7 @@ function button_from_html(string $html): string
 
     $label = trim(wp_strip_all_tags($match[2]));
     if ($label === '') {
-        $label = __('Read more', 'matthummel-newsletter');
+        return '';
     }
 
     return bulletproof_button($label, absolute_url(html_entity_decode($match[1], ENT_QUOTES)));
@@ -232,13 +233,13 @@ function bulletproof_button(string $label, string $url): string
     $font = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;";
 
     return '<!--[if mso]>'
-        .'<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="'.$href.'" style="height:46px;v-text-anchor:middle;width:220px;" arcsize="8%" strokecolor="#0d2e57" fillcolor="#0d2e57">'
+        .'<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="'.$href.'" style="height:48px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="#0d2e57" fillcolor="#0d2e57">'
         .'<w:anchorlock/>'
         .'<center style="color:#ffffff;'.$font.'font-size:16px;font-weight:bold;">'.$safeLabel.'</center>'
         .'</v:roundrect>'
         .'<![endif]-->'
         .'<!--[if !mso]><!-->'
-        .'<a class="mhn-btn" href="'.$href.'" style="background-color:#0d2e57;border-radius:4px;color:#ffffff;display:inline-block;'.$font.'font-size:16px;font-weight:700;line-height:46px;text-align:center;text-decoration:none;width:220px;-webkit-text-size-adjust:none;">'.$safeLabel.'</a>'
+        .'<a class="mhn-btn" href="'.$href.'" style="background-color:#0d2e57;border-radius:4px;color:#ffffff;display:inline-block;'.$font.'font-size:16px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;padding:14px 22px;min-height:44px;max-width:100%;box-sizing:border-box;-webkit-text-size-adjust:none;">'.$safeLabel.'</a>'
         .'<!--<![endif]-->';
 }
 
@@ -334,7 +335,7 @@ function render_list(array $block): string
         return email_kses((string) ($block['innerHTML'] ?? ''));
     }
 
-    return '<'.$tag.' class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#141c28;">'.$items.'</'.$tag.'>';
+    return decorate_links('<'.$tag.' class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'.$items.'</'.$tag.'>');
 }
 
 /**
@@ -358,7 +359,7 @@ function render_quote(array $block): string
         return '';
     }
 
-    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr><td class="mhn-text" style="border-left:3px solid #0d2e57;padding:4px 0 4px 16px;font-size:16px;line-height:1.6;color:#243041;font-style:italic;">'.$text.'</td></tr></table>';
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr><td class="mhn-text" style="border-left:3px solid #0d2e57;padding:4px 0 4px 16px;font-size:16px;line-height:1.6;color:#243041;font-style:italic;text-align:left;">'.decorate_links($text).'</td></tr></table>';
 }
 
 function render_separator(): string
@@ -396,7 +397,21 @@ function render_fallback(array $block, string $altFallback): string
         return $html;
     }
 
-    return email_kses((string) ($block['innerHTML'] ?? ''));
+    return decorate_links(email_kses((string) ($block['innerHTML'] ?? '')));
+}
+
+function decorate_links(string $html): string
+{
+    $styled = preg_replace_callback('/<a\b([^>]*)>/i', static function (array $match): string {
+        $attrs = $match[1];
+        if (stripos($attrs, 'text-decoration') !== false) {
+            return $match[0];
+        }
+
+        return '<a style="color:#0d2e57;text-decoration:underline;"'.$attrs.'>';
+    }, $html);
+
+    return is_string($styled) ? $styled : $html;
 }
 
 function email_kses(string $html): string

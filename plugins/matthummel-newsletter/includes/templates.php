@@ -142,7 +142,7 @@ function pattern_content(string $slug): string
     }
 
     if ($template['has_button']) {
-        $parts[] = button_block(__('Read more', 'matthummel-newsletter'), home_url('/'));
+        $parts[] = button_block(__('Read the latest note', 'matthummel-newsletter'), home_url('/'));
     }
 
     if ($template['has_ps']) {
@@ -185,7 +185,10 @@ function template_content(int $issueId, array $template): string
     $parts = [];
 
     if ($template['has_image']) {
-        $image = image_block((int) get_post_meta($issueId, '_mhn_image_id', true), '');
+        $image = image_block(
+            (int) get_post_meta($issueId, '_mhn_image_id', true),
+            (string) get_post_meta($issueId, '_mhn_image_alt', true)
+        );
         if ($image !== '') {
             $parts[] = $image;
         }
@@ -309,11 +312,11 @@ function post_blocks(\WP_Post $post, bool $card): string
 {
     $parts = [];
     $title = html_entity_decode(get_the_title($post), ENT_QUOTES);
-    $image = image_block((int) get_post_thumbnail_id($post), $title);
+    $image = image_block((int) get_post_thumbnail_id($post), '', $title);
     if ($image !== '') {
         $parts[] = $image;
     }
-    $heading = heading_block($title, $card ? 3 : 2);
+    $heading = heading_block($title, $card ? 2 : 1);
     if ($heading !== '') {
         $parts[] = $heading;
     }
@@ -322,7 +325,7 @@ function post_blocks(\WP_Post $post, bool $card): string
         $parts[] = $excerpt;
     }
     $url = get_permalink($post);
-    $button = button_block(__('Read more', 'matthummel-newsletter'), is_string($url) ? $url : home_url('/'));
+    $button = button_block(read_more_label($title), is_string($url) ? $url : home_url('/'));
     if ($button !== '') {
         $parts[] = $button;
     }
@@ -337,13 +340,14 @@ function post_blocks(\WP_Post $post, bool $card): string
 
 function placeholder_post_blocks(bool $card, int $index): string
 {
-    $body = heading_block(sprintf(
+    $title = sprintf(
         /* translators: %d: placeholder number */
         __('Post title %d', 'matthummel-newsletter'),
         $index
-    ), $card ? 3 : 2);
+    );
+    $body = heading_block($title, $card ? 2 : 1);
     $body .= "\n\n".paragraph_block(__('A sentence or two from the post.', 'matthummel-newsletter'));
-    $body .= "\n\n".button_block(__('Read more', 'matthummel-newsletter'), home_url('/'));
+    $body .= "\n\n".button_block(read_more_label($title), home_url('/'));
     if (! $card) {
         return $body;
     }
@@ -351,7 +355,7 @@ function placeholder_post_blocks(bool $card, int $index): string
     return "<!-- wp:group -->\n<div class=\"wp-block-group\">\n{$body}\n</div>\n<!-- /wp:group -->";
 }
 
-function image_block(int $attachmentId, string $altFallback): string
+function image_block(int $attachmentId, string $preferredAlt, string $fallbackAlt = ''): string
 {
     if ($attachmentId < 1) {
         return '';
@@ -362,12 +366,22 @@ function image_block(int $attachmentId, string $altFallback): string
         return '';
     }
 
-    $alt = (string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true);
+    $alt = trim($preferredAlt);
     if ($alt === '') {
-        $alt = $altFallback;
+        $alt = (string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true);
     }
+    if ($alt === '') {
+        $alt = trim($fallbackAlt);
+    }
+    $payload = wp_json_encode([
+        'id' => $attachmentId,
+        'sizeSlug' => 'large',
+        'url' => $src,
+        'alt' => $alt,
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $payload = is_string($payload) ? $payload : '{}';
 
-    return '<!-- wp:image {"id":'.$attachmentId.',"sizeSlug":"large"} -->'
+    return '<!-- wp:image '.$payload.' -->'
         .'<figure class="wp-block-image size-large"><img src="'.esc_url($src).'" alt="'.esc_attr($alt).'"/></figure>'
         .'<!-- /wp:image -->';
 }
@@ -379,9 +393,9 @@ function heading_block(string $text, int $level): string
         return '';
     }
 
-    $level = $level === 3 ? 3 : 2;
+    $level = max(1, min(3, $level));
     $tag = 'h'.$level;
-    $attrs = $level === 3 ? ' {"level":3}' : '';
+    $attrs = $level === 2 ? '' : ' {"level":'.$level.'}';
 
     return "<!-- wp:heading{$attrs} -->\n<{$tag} class=\"wp-block-heading\">".esc_html($text)."</{$tag}>\n<!-- /wp:heading -->";
 }
@@ -394,6 +408,20 @@ function paragraph_block(string $text): string
     }
 
     return "<!-- wp:paragraph -->\n<p>".esc_html($text)."</p>\n<!-- /wp:paragraph -->";
+}
+
+function read_more_label(string $title): string
+{
+    $title = trim(wp_strip_all_tags($title));
+    if ($title === '') {
+        return __('Read the latest note', 'matthummel-newsletter');
+    }
+
+    return sprintf(
+        /* translators: %s: post title */
+        __('Read more: %s', 'matthummel-newsletter'),
+        $title
+    );
 }
 
 function button_block(string $label, string $url): string

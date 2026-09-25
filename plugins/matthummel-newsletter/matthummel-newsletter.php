@@ -30,6 +30,7 @@ require_once MHN_DIR.'/includes/schema.php';
 require_once MHN_DIR.'/includes/subscribers.php';
 require_once MHN_DIR.'/includes/blocks.php';
 require_once MHN_DIR.'/includes/render.php';
+require_once MHN_DIR.'/includes/a11y.php';
 require_once MHN_DIR.'/includes/mailer.php';
 require_once MHN_DIR.'/includes/templates.php';
 require_once MHN_DIR.'/includes/issues.php';

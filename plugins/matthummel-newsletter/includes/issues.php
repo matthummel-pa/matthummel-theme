@@ -186,6 +186,7 @@ function render_meta_box(\WP_Post $post): void
 
     wp_nonce_field('mhn_issue_meta', 'mhn_issue_nonce');
     echo '<p><a href="'.esc_url(wizard_url($post->ID)).'">'.esc_html__('Continue in the step-by-step wizard', 'matthummel-newsletter').'</a></p>';
+    render_issue_audit($post->ID);
     $subject = (string) get_post_meta($post->ID, '_mhn_subject', true);
     $preheader = (string) get_post_meta($post->ID, '_mhn_preheader', true);
     $include = (string) get_post_meta($post->ID, '_mhn_include_recent', true) === '1';

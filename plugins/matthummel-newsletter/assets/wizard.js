@@ -24,6 +24,7 @@ function bindMedia(form) {
   const button = document.getElementById('mhn-pick-image')
   const clear = document.getElementById('mhn-clear-image')
   const input = form.querySelector('[name="mhn_image_id"]')
+  const altInput = form.querySelector('[name="mhn_image_alt"]')
   const preview = document.getElementById('mhn-image-preview')
   if (!button || !input || !window.wp || !wp.media) return
 
@@ -39,6 +40,9 @@ function bindMedia(form) {
       frame.on('select', () => {
         const attachment = frame.state().get('selection').first().toJSON()
         input.value = String(attachment.id || '')
+        if (altInput && 'value' in altInput && altInput.value.trim() === '' && attachment.alt) {
+          altInput.value = attachment.alt
+        }
         if (preview) {
           preview.replaceChildren()
           if (attachment.url) {
@@ -59,6 +63,7 @@ function bindMedia(form) {
   clear.addEventListener('click', (event) => {
     event.preventDefault()
     input.value = '0'
+    if (altInput && 'value' in altInput) altInput.value = ''
     if (preview) preview.replaceChildren()
     input.dispatchEvent(new Event('change', { bubbles: true }))
   })

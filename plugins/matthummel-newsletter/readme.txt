@@ -54,4 +54,5 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 * Create a newsletter one step at a time, or edit the same draft in the block editor.
 * Choose a blog update, a blog digest, or a custom message. Each template has a note from you.
 * Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
+* Issues use one heading, real link text, alt text, and a plain-text part. Sending is blocked when an image has no alt text.
 * Import and export a CSV of addresses you already have permission to email.

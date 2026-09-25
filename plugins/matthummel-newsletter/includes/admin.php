@@ -393,6 +393,10 @@ function page_settings(): void
     if (isset($_GET['saved'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Saved.', 'matthummel-newsletter').'</p></div>';
     }
+    $domainWarning = from_domain_warning();
+    if ($domainWarning !== '') {
+        echo '<div class="notice notice-warning"><p>'.esc_html($domainWarning).'</p></div>';
+    }
     echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
     echo '<input type="hidden" name="action" value="mhn_settings">';
     wp_nonce_field('mhn_settings');
@@ -462,6 +466,7 @@ function page_deliver(): void
 
     echo '<div class="wrap"><h1>'.esc_html(get_the_title($post)).'</h1>';
     echo '<p>'.esc_html(status_label(issue_status($issueId))).'</p>';
+    render_issue_audit($issueId);
     if (isset($_GET['tested'])) {
         $ok = ($_GET['tested'] ?? '') === '1';
         echo '<div class="notice '.($ok ? 'notice-success' : 'notice-error').'"><p>'.esc_html($ok
@@ -640,6 +645,9 @@ function handle_send(): void
     if (in_array(issue_status($issueId), ['sent', 'sending'], true)) {
         wp_die(esc_html__('This issue is already sent or still sending.', 'matthummel-newsletter'));
     }
+    if (issue_send_blocked($issueId)) {
+        wp_die(esc_html(implode(' ', audit_issue($issueId)['errors'])));
+    }
     start_campaign($issueId);
     wp_safe_redirect(admin_url('admin.php?page=mhn-deliver&issue='.$issueId.'&queued=1'));
     exit;
@@ -653,6 +661,9 @@ function handle_schedule(): void
     $local = isset($_POST['mhn_schedule_local']) ? sanitize_text_field(wp_unslash($_POST['mhn_schedule_local'])) : '';
     if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/', $local) !== 1) {
         wp_die(esc_html__('Choose a date and time.', 'matthummel-newsletter'));
+    }
+    if (issue_send_blocked($issueId)) {
+        wp_die(esc_html(implode(' ', audit_issue($issueId)['errors'])));
     }
     $mysql = str_replace('T', ' ', substr($local, 0, 16)).':00';
     update_post_meta($issueId, '_mhn_scheduled_local', $mysql);

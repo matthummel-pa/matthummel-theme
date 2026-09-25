@@ -68,11 +68,15 @@ function email_document(string $subject, string $preheader, string $body, bool $
         $logo = '<img src="'.esc_url($icon).'" width="40" height="40" alt="" style="display:block;border:0;border-radius:4px;margin:0 12px 0 0;">';
     }
 
-    $pad = str_repeat('&nbsp;&zwnj;', 24);
+    $pad = '<span aria-hidden="true">'.str_repeat('&nbsp;&zwnj;', 24).'</span>';
     $recent = $includeRecent ? recent_posts_html($excludePostId, $font) : '';
     $address = nl2br(esc_html($settings['address']));
     $site = wp_parse_url(home_url(), PHP_URL_HOST);
     $site = is_string($site) && $site !== '' ? $site : 'matthummel.com';
+    $lang = get_bloginfo('language');
+    $lang = is_string($lang) && $lang !== '' ? $lang : 'en';
+    $dir = is_rtl() ? 'rtl' : 'ltr';
+    $body = ensure_heading($body, $subject);
 
     $styles = '<style>'
         .':root{color-scheme:light dark;supported-color-schemes:light dark;}'
@@ -81,23 +85,30 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'a{color:#0d2e57;}'
         .'.mhn-preheader{display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;overflow:hidden;mso-hide:all;}'
         .'@media only screen and (max-width:620px){'
-        .'.mhn-shell{width:100%!important;}'
-        .'.mhn-px{padding-left:20px!important;padding-right:20px!important;}'
+        .'.mhn-shell{width:100%!important;max-width:100%!important;}'
+        .'.mhn-px{padding-left:16px!important;padding-right:16px!important;}'
         .'.mhn-col{display:block!important;width:100%!important;max-width:100%!important;}'
-        .'.mhn-btn{width:100%!important;}'
-        .'.mhn-img{width:100%!important;height:auto!important;}'
+        .'.mhn-btn{display:block!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;}'
+        .'.mhn-img{width:100%!important;max-width:100%!important;height:auto!important;}'
         .'}'
         .'@media (prefers-color-scheme:dark){'
         .'.mhn-page,.mhn-page-td{background:#0b1220!important;}'
         .'.mhn-card{background:#162033!important;}'
-        .'.mhn-text,.mhn-text p,.mhn-text li,.mhn-text h2,.mhn-text h3{color:#f7f9fc!important;}'
+        .'.mhn-text,.mhn-text p,.mhn-text li,.mhn-text h1,.mhn-text h2,.mhn-text h3{color:#f7f9fc!important;}'
+        .'.mhn-text a:not(.mhn-btn){color:#d6e4ff!important;text-decoration:underline!important;}'
+        .'a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
         .'.mhn-muted,.mhn-muted p,.mhn-footer,.mhn-footer p,.mhn-footer a{color:#b7c3d4!important;}'
-        .'.mhn-header{background:#0d2e57!important;}'
+        .'.mhn-header,.mhn-header a{background:#0d2e57!important;color:#ffffff!important;}'
         .'.mhn-rule{border-color:#2a3b52!important;}'
         .'.mhn-group{background:#0f1b2d!important;}'
         .'}'
+        .'[data-ogsc] .mhn-page,[data-ogsc] .mhn-page-td{background:#0b1220!important;}'
         .'[data-ogsc] .mhn-card{background:#162033!important;}'
-        .'[data-ogsc] .mhn-text,[data-ogsc] .mhn-text p{color:#f7f9fc!important;}'
+        .'[data-ogsc] .mhn-text,[data-ogsc] .mhn-text p,[data-ogsc] .mhn-text li,[data-ogsc] .mhn-text h1,[data-ogsc] .mhn-text h2,[data-ogsc] .mhn-text h3{color:#f7f9fc!important;}'
+        .'[data-ogsc] .mhn-text a:not(.mhn-btn){color:#d6e4ff!important;}'
+        .'[data-ogsc] a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
+        .'[data-ogsc] .mhn-footer,[data-ogsc] .mhn-footer p,[data-ogsc] .mhn-footer a{color:#b7c3d4!important;}'
+        .'[data-ogsc] .mhn-group{background:#0f1b2d!important;}'
         .'</style>';
 
     $header = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
@@ -105,24 +116,24 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
         .($logo !== '' ? '<td style="vertical-align:middle;">'.$logo.'</td>' : '')
         .'<td style="vertical-align:middle;">'
-        .'<a href="'.esc_url($home).'" style="color:#ffffff;font-family:'.$font.';font-size:18px;font-weight:700;text-decoration:none;">'.esc_html($name).'</a>'
+        .'<a href="'.esc_url($home).'" style="color:#ffffff;font-family:'.$font.';font-size:18px;font-weight:700;text-decoration:underline;">'.esc_html($name).'</a>'
         .'</td></tr></table></td></tr></table>';
 
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-footer mhn-muted mhn-px" style="padding:8px 40px 28px;font-family:'.$font.';font-size:13px;line-height:1.5;color:#3a4554;">'
-        .'<p style="margin:0 0 8px;">'.esc_html(sprintf(
+        .'<td class="mhn-footer mhn-muted mhn-px" style="padding:8px 40px 28px;font-family:'.$font.';font-size:16px;line-height:1.5;color:#3a4554;text-align:left;">'
+        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;">'.esc_html(sprintf(
             /* translators: %s: site host */
             __('You got this because you signed up at %s. I keep your address on this site.', 'matthummel-newsletter'),
             $site
         )).'</p>'
-        .'<p style="margin:0 0 8px;"><a href="*|UNSUB|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</a>'
+        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;"><a href="*|UNSUB|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</a>'
         .' · <a href="*|PREFERENCES|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('Manage preferences', 'matthummel-newsletter').'</a>'
         .' · <a href="*|ARCHIVE|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('View in browser', 'matthummel-newsletter').'</a></p>'
-        .'<p style="margin:0 0 8px;">'.$address.'</p>'
-        .'<p style="margin:0;">© *|CURRENT_YEAR|* '.esc_html($name).'</p>'
+        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;">'.$address.'</p>'
+        .'<p style="margin:0;font-size:16px;line-height:1.5;text-align:left;">© *|CURRENT_YEAR|* '.esc_html($name).'</p>'
         .'</td></tr></table>';
 
-    return '<!DOCTYPE html><html lang="'.esc_attr(get_bloginfo('language') ?: 'en').'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
+    return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
         .'<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         .'<meta http-equiv="X-UA-Compatible" content="IE=edge">'
         .'<meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">'
@@ -136,11 +147,11 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<table role="presentation" class="mhn-page" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef3f9;">'
         .'<tr><td class="mhn-page-td" align="center" style="padding:24px 12px;background-color:#eef3f9;">'
         .'<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->'
-        .'<table role="presentation" class="mhn-shell" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background-color:#ffffff;">'
+        .'<table role="presentation" class="mhn-shell" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;">'
         .'<tr><td class="mhn-card" style="background-color:#ffffff;">'
         .$header
         .'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-text mhn-px" style="padding:28px 40px 8px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;">'
+        .'<td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:28px 40px 8px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'
         .$body
         .'</td></tr></table>'
         .$recent
@@ -182,7 +193,7 @@ function recent_posts_html(int $excludePostId, string $font): string
     }
 
     return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-text mhn-px" style="padding:8px 40px 12px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;">'
+        .'<td class="mhn-text mhn-px" style="padding:8px 40px 12px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'
         .'<h2 class="mhn-text" style="margin:0 0 12px;font-size:18px;line-height:1.3;color:#0d2e57;">'.esc_html__('Recent writing', 'matthummel-newsletter').'</h2>'
         .'<ul style="margin:0 0 8px;padding-left:20px;">'.$items.'</ul>'
         .'</td></tr></table>';
@@ -250,8 +261,23 @@ function apply_tracking(string $html, array $subscriber, int $issueId): string
     return $html;
 }
 
+function ensure_heading(string $body, string $subject): string
+{
+    if (preg_match('/<h1\b/i', $body) === 1) {
+        return $body;
+    }
+
+    $subject = trim(wp_strip_all_tags($subject));
+    if ($subject === '') {
+        return $body;
+    }
+
+    return '<h1 class="mhn-text" style="margin:0 0 12px;font-size:28px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($subject).'</h1>'.$body;
+}
+
 function plain_text(string $html): string
 {
+    $html = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $html) ?? $html;
     $text = preg_replace('/<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)<\/a>/is', '$2 ($1)', $html) ?? $html;
     $text = preg_replace('/<(br|\/p|\/h\d|\/li|\/tr)\b[^>]*>/i', "\n", $text) ?? $text;
     $text = wp_strip_all_tags($text);

@@ -169,6 +169,13 @@ mhn_check(str_contains($html, 'Gettysburg, PA'), 'footer includes the mailing ad
 mhn_check(! str_contains($html, 'mhn_open'), 'open tracking is absent by default');
 mhn_check(str_contains($message['text'], 'Smoke note'), 'plain text includes the title');
 mhn_check(str_contains($message['text'], 'Unsubscribe'), 'plain text includes unsubscribe');
+mhn_check(str_contains($html, 'lang="'), 'email sets a language');
+mhn_check(str_contains($html, 'dir="ltr"') || str_contains($html, 'dir="rtl"'), 'email sets a direction');
+mhn_check(substr_count(strtolower($html), '<h1') === 1, 'email has one h1');
+mhn_check(str_contains($html, 'aria-hidden="true"'), 'preheader filler is hidden from screen readers');
+mhn_check(str_contains($html, 'Read more: Smoke note'), 'read more button names the post');
+$audit = Newsletter\audit_issue($issueId);
+mhn_check($audit['errors'] === [], 'rendered issue passes the accessibility check: '.implode('; ', $audit['errors']));
 
 $columnId = wp_insert_post([
     'post_type' => 'newsletter_issue',

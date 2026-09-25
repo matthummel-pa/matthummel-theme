@@ -24,3 +24,16 @@ The draft saves as you go. You can close the tab and come back. On the dashboard
 Publishing a post saves a **Blog update** draft. The note and the P.S. are empty, ready for you to write. It does not email anyone. Open it with **Continue**, add your note, preview it, and send it yourself.
 
 Automatic sending stays off unless you turn it on under **Get updates → Settings**. Leave it off until the From address is a mailbox on your domain and SPF, DKIM, and DMARC are in place.
+
+## Writing an accessible newsletter
+
+The template already sets the type size, the colors, and the footer. You still choose the words.
+
+- Write a subject and a preview line. Keep the subject near 50 characters. Over 60, the wizard warns you, because inboxes cut it off.
+- Describe every image in the alt text field. If the picture is only decoration, leave it out. The email should still make sense with images turned off.
+- Name the link. Use “Read more: ” plus the post title, or a phrase that says where the link goes. “Click here” and a bare “Read more” are flagged before you send.
+- The button is real text, not a picture of text. Do not paste a screenshot of a sentence in place of the note.
+- Send a test and look at it on your phone. The layout stacks into one column.
+- Every issue includes your mailing address, a line about why the person got it, and an unsubscribe link. One-click unsubscribe is on the message as well. Tracking stays off unless you turn it on in settings.
+
+New signups confirm by email before they are on the list. The From address should be a mailbox on this site’s domain.

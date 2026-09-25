@@ -85,6 +85,8 @@ function wizard_save(array $input): array
         $step = 5;
         if (issue_is_locked($id)) {
             $result['error'] = 'locked';
+        } elseif (issue_send_blocked($id)) {
+            $result['error'] = 'a11y';
         } elseif (subscribed_recipient_count() < 1) {
             $result['error'] = 'empty';
         } elseif (empty($input['mhn_confirm_send'])) {
@@ -99,6 +101,8 @@ function wizard_save(array $input): array
         $local = sanitize_text_field((string) ($input['mhn_schedule_local'] ?? ''));
         if (issue_is_locked($id)) {
             $result['error'] = 'locked';
+        } elseif (issue_send_blocked($id)) {
+            $result['error'] = 'a11y';
         } elseif (subscribed_recipient_count() < 1) {
             $result['error'] = 'empty';
         } elseif (empty($input['mhn_confirm_schedule']) || preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/', $local) !== 1) {
@@ -173,6 +177,7 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
             update_post_meta($issueId, '_mhn_button_label', '');
             update_post_meta($issueId, '_mhn_button_url', '');
             update_post_meta($issueId, '_mhn_image_id', '0');
+            update_post_meta($issueId, '_mhn_image_alt', '');
             compile_issue($issueId);
             fill_subject_defaults($issueId);
         }
@@ -207,6 +212,9 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         }
         if (isset($input['mhn_button_url'])) {
             update_post_meta($issueId, '_mhn_button_url', esc_url_raw((string) $input['mhn_button_url']));
+        }
+        if (isset($input['mhn_image_alt'])) {
+            update_post_meta($issueId, '_mhn_image_alt', sanitize_text_field((string) $input['mhn_image_alt']));
         }
         compile_issue($issueId);
         fill_subject_defaults($issueId);
@@ -444,6 +452,7 @@ function wizard_error_message(string $code): string
         'range' => __('A digest needs 2 to 6 posts.', 'matthummel-newsletter'),
         'message' => __('Write the message before you continue.', 'matthummel-newsletter'),
         'subject' => __('Add a subject line.', 'matthummel-newsletter'),
+        'a11y' => __('Fix the email issues on this step before sending. Images need alt text, and the subject has to be filled in.', 'matthummel-newsletter'),
         'confirm' => __('Check the box before this goes out.', 'matthummel-newsletter'),
         'schedule' => __('Choose a date and time, then check the schedule box.', 'matthummel-newsletter'),
         'empty' => __('Nobody is subscribed yet, so this would not deliver any mail.', 'matthummel-newsletter'),
@@ -615,8 +624,12 @@ function render_image_picker(int $issueId): void
 {
     $imageId = (int) get_post_meta($issueId, '_mhn_image_id', true);
     $src = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : '';
+    $alt = (string) get_post_meta($issueId, '_mhn_image_alt', true);
     echo '<h3>'.esc_html__('Image (optional)', 'matthummel-newsletter').'</h3>';
     echo '<input type="hidden" name="mhn_image_id" value="'.esc_attr((string) $imageId).'">';
+    echo '<p><label for="mhn-image-alt"><strong>'.esc_html__('Alt text', 'matthummel-newsletter').'</strong></label><br>';
+    echo '<input class="large-text" type="text" id="mhn-image-alt" name="mhn_image_alt" value="'.esc_attr($alt).'">';
+    echo '<span class="description">'.esc_html__('Required before sending if you include an image. Describe it in a few words. Leave the image off if it is only decoration.', 'matthummel-newsletter').'</span></p>';
     echo '<p id="mhn-image-preview">';
     if (is_string($src) && $src !== '') {
         echo '<img src="'.esc_url($src).'" alt="" width="240" height="160" style="width:240px;height:auto;">';
@@ -657,7 +670,8 @@ function render_step_subject(int $issueId): void
     echo '<p>'.esc_html__('These start from the note and the posts. Change them if you want a different inbox line.', 'matthummel-newsletter').'</p>';
     echo '<p><label for="mhn-subject"><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong></label><br>';
     echo '<input class="large-text" type="text" id="mhn-subject" name="mhn_subject" maxlength="120" data-mhn-count="mhn-subject-count" value="'.esc_attr($subject).'"></p>';
-    echo '<p class="description"><span id="mhn-subject-count">'.esc_html((string) mb_strlen($subject)).'</span> '.esc_html__('characters. Aim for about 50 so inboxes do not cut the subject off.', 'matthummel-newsletter').'</p>';
+    echo '<p class="description"><span id="mhn-subject-count">'.esc_html((string) mb_strlen($subject)).'</span> '.esc_html__('characters. Aim for about 50. Over 60, inboxes may cut the subject off.', 'matthummel-newsletter').'</p>';
+    render_issue_audit($issueId);
     echo '<p><label for="mhn-preheader"><strong>'.esc_html__('Preview text', 'matthummel-newsletter').'</strong></label><br>';
     echo '<input class="large-text" type="text" id="mhn-preheader" name="mhn_preheader" maxlength="140" data-mhn-count="mhn-preheader-count" value="'.esc_attr($preheader).'"></p>';
     echo '<p class="description"><span id="mhn-preheader-count">'.esc_html((string) mb_strlen($preheader)).'</span> '.esc_html__('characters. Aim for about 90. This is the line under the subject in the inbox.', 'matthummel-newsletter').'</p>';
@@ -671,6 +685,7 @@ function render_step_preview(int $issueId): void
         : '';
 
     echo '<h2>'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
+    render_issue_audit($issueId);
     echo '<p>'.esc_html__('This is the same email that will send. Check it wide and narrow, then send a test to yourself.', 'matthummel-newsletter').'</p>';
     if ($src === '') {
         echo '<p>'.esc_html__('Save the draft first.', 'matthummel-newsletter').'</p>';
@@ -701,6 +716,7 @@ function render_step_send(int $issueId): void
     $zone = wp_timezone_string();
 
     echo '<h2>'.esc_html__('Send or schedule', 'matthummel-newsletter').'</h2>';
+    render_issue_audit($issueId);
     echo '<p class="mhn-recipient-count"><strong>'.esc_html((string) $count).'</strong> ';
     echo esc_html(_n('subscribed address will get this.', 'subscribed addresses will get this.', $count, 'matthummel-newsletter')).'</p>';
     echo '<p>'.esc_html__('Nothing is sent until you check a box below and choose Send now or Schedule.', 'matthummel-newsletter').'</p>';
