@@ -57,6 +57,7 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 = 1.1.0 =
 * Choose Standard, Welcome, Plain, or Feature when you create a letter. The dashboard shows a preview. Intro, sign-off, and the welcome letter are edited under Settings → Reusable copy. Nothing sends until you send it.
+* The wizard preview is an email frame. Desktop and Mobile change the width. Edits update the frame without reloading the page. Preview links do not leave the page.
 
 = 1.0.1 =
 * Get updates admin screens use navy and white cards. Sending, tracking, and automatic send are unchanged.

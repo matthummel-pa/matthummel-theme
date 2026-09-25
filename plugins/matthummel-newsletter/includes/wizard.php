@@ -447,6 +447,8 @@ function render_wizard_page(): void
         echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
     }
 
+    echo '<div class="mhn-wizard-split">';
+    echo '<div class="mhn-wizard-main">';
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
         1 => render_step_template($templateSlug, $layoutId),
@@ -458,7 +460,9 @@ function render_wizard_page(): void
     echo '</div>';
 
     render_wizard_nav($issueId, $step);
-    echo '</form></div>';
+    echo '</div>';
+    render_email_emulator(emulator_view($issueId, $layoutId), true, false);
+    echo '</div></form></div>';
 }
 
 function render_wizard_notices(int $issueId): void
@@ -824,25 +828,16 @@ function render_step_subject(int $issueId): void
 function render_step_preview(int $issueId): void
 {
     $me = wp_get_current_user();
-    $src = $issueId > 0
-        ? wp_nonce_url(admin_url('admin-post.php?action=mhn_wizard_preview&issue='.$issueId), 'mhn_preview_'.$issueId)
-        : '';
 
     echo '<h2>'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
     render_issue_audit($issueId);
-    echo '<p>'.esc_html__('This is the same email that will send. Check it wide and narrow, then send a test to yourself.', 'matthummel-newsletter').'</p>';
-    if ($src === '') {
+    echo '<p>'.esc_html__('The email preview updates as you edit. Switch Desktop and Mobile there, then send a test to yourself. Preview links stay on this page.', 'matthummel-newsletter').'</p>';
+    if ($issueId < 1) {
         echo '<p>'.esc_html__('Save the draft first.', 'matthummel-newsletter').'</p>';
 
         return;
     }
 
-    echo '<div class="mhn-previews">';
-    echo '<figure class="mhn-preview-frame is-desktop"><figcaption>'.esc_html__('Desktop', 'matthummel-newsletter').'</figcaption>';
-    echo '<iframe title="'.esc_attr__('Desktop preview', 'matthummel-newsletter').'" sandbox="allow-same-origin" src="'.esc_url($src).'"></iframe></figure>';
-    echo '<figure class="mhn-preview-frame is-mobile"><figcaption>'.esc_html__('Phone', 'matthummel-newsletter').'</figcaption>';
-    echo '<iframe title="'.esc_attr__('Phone preview', 'matthummel-newsletter').'" sandbox="allow-same-origin" src="'.esc_url($src).'"></iframe></figure>';
-    echo '</div>';
     echo '<p><button type="submit" class="button" name="mhn_action" value="test">'.esc_html(sprintf(
         /* translators: %s: current user email */
         __('Send a test to %s', 'matthummel-newsletter'),

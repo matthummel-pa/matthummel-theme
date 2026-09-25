@@ -272,6 +272,170 @@ function sample_feature_image(): string
 function placeholder_preview_links(string $html): string
 {
     $rewritten = preg_replace('/\shref=(["\']).*?\1/i', ' href="#"', $html);
+    $rewritten = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', is_string($rewritten) ? $rewritten : $html);
 
     return is_string($rewritten) ? $rewritten : $html;
+}
+
+/**
+ * Inbox chrome plus a safe letter. Empty names resolve {first_name|there} to there.
+ * Nothing is mailed and the tracker is not called.
+ *
+ * @param  array<string, mixed>  $input
+ * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
+ */
+function emulator_preview_message(array $input): array
+{
+    $issueId = function_exists('wizard_issue_id') ? wizard_issue_id((int) ($input['mhn_issue'] ?? 0)) : 0;
+    $layoutId = normalize_layout_id((string) ($input['mhn_layout'] ?? ($issueId > 0 ? issue_layout_id($issueId) : 'standard')));
+    $subject = mb_substr(sanitize_text_field((string) ($input['mhn_subject'] ?? '')), 0, 120);
+    $note = null;
+    if (array_key_exists('mhn_note', $input)) {
+        $raw = (string) $input['mhn_note'];
+        if (strlen($raw) > 20000) {
+            $raw = substr($raw, 0, 20000);
+        }
+        $note = sanitize_rich_text($raw);
+    }
+
+    return emulator_view($issueId, $layoutId, $subject, $note);
+}
+
+/**
+ * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
+ */
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null): array
+{
+    $settings = settings();
+    $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
+    $subject = emulator_subject($issueId, $layoutId, $subject);
+    $preheader = emulator_preheader();
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader);
+
+    return [
+        'from_name' => $settings['from_name'],
+        'from_email' => $settings['from_email'],
+        'subject' => $subject,
+        'preheader' => $preheader,
+        'html' => $html,
+        'layout' => $layoutId,
+    ];
+}
+
+function emulator_subject(int $issueId, string $layoutId, string $posted): string
+{
+    $posted = trim($posted);
+    if ($posted !== '') {
+        return $posted;
+    }
+    if ($layoutId === 'welcome') {
+        if ($issueId > 0 && (string) get_post_meta($issueId, '_mhn_subject_auto', true) === '0') {
+            $saved = trim((string) get_post_meta($issueId, '_mhn_subject', true));
+            if ($saved !== '') {
+                return $saved;
+            }
+        }
+        $welcome = trim(layout_copy()['welcome_subject']);
+        if ($welcome !== '') {
+            return $welcome;
+        }
+    }
+    if ($layoutId !== 'welcome' && $issueId > 0 && issue_layout_id($issueId) === 'welcome') {
+        $suggested = trim(suggest_subject($issueId));
+        if ($suggested !== '' && $suggested !== layout_copy()['welcome_subject']) {
+            return $suggested;
+        }
+    }
+    if ($issueId > 0) {
+        $saved = trim((string) get_post_meta($issueId, '_mhn_subject', true));
+        if ($saved !== '') {
+            return $saved;
+        }
+    }
+
+    return __('A note from the workshop', 'matthummel-newsletter');
+}
+
+function emulator_preheader(): string
+{
+    $intro = trim(layout_copy()['intro']);
+    if ($intro !== '') {
+        return mb_substr($intro, 0, 140);
+    }
+
+    return mb_substr(trim(wp_strip_all_tags(layout_copy()['welcome_body'])), 0, 140);
+}
+
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader): string
+{
+    $rendered = '';
+    if ($layoutId !== 'welcome') {
+        $blocks = emulator_blocks($issueId, $note);
+        $rendered = $blocks !== '' ? render_blocks($blocks, $subject) : sample_issue_body();
+    }
+    $body = apply_layout($layoutId, $rendered);
+    if ($preheader === '') {
+        $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
+    }
+    $html = email_document($subject, $preheader, $body, false, 0);
+    $html = apply_merge($html, [
+        'id' => '0',
+        'email' => 'you@example.com',
+        'first_name' => '',
+        'last_name' => '',
+        'status' => 'preview',
+    ], 0, true);
+
+    return placeholder_preview_links($html);
+}
+
+function emulator_blocks(int $issueId, ?string $note): string
+{
+    if ($issueId < 1) {
+        return '';
+    }
+
+    $slug = (string) get_post_meta($issueId, '_mhn_template', true);
+    $template = email_template($slug);
+    if ($note !== null && $template !== null) {
+        return template_content($issueId, $template, $note);
+    }
+
+    $post = get_post($issueId);
+
+    return $post instanceof \WP_Post ? (string) $post->post_content : '';
+}
+
+/**
+ * @param  array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}  $view
+ */
+function render_email_emulator(array $view, bool $live, bool $compact): void
+{
+    $class = 'mhn-emulator'.($compact ? ' is-compact' : '');
+    echo '<section class="'.esc_attr($class).'" data-mhn-emulator'.($live ? ' data-mhn-live="1"' : '').' aria-label="'.esc_attr__('Email preview', 'matthummel-newsletter').'">';
+    echo '<div class="mhn-emulator-toolbar">';
+    echo '<h2>'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
+    echo '<div class="mhn-device" role="group" aria-label="'.esc_attr__('Preview width', 'matthummel-newsletter').'">';
+    echo '<button type="button" data-mhn-device="desktop" aria-pressed="true">'.esc_html__('Desktop', 'matthummel-newsletter').'</button>';
+    echo '<button type="button" data-mhn-device="mobile" aria-pressed="false">'.esc_html__('Mobile', 'matthummel-newsletter').'</button>';
+    echo '</div></div>';
+    echo '<div class="mhn-emulator-chrome">';
+    echo '<p class="mhn-emulator-from"><span data-mhn-from-name>'.esc_html($view['from_name']).'</span> ';
+    echo '&lt;<span class="mhn-emulator-email" data-mhn-from-email>'.esc_html($view['from_email']).'</span>&gt;</p>';
+    echo '<p class="mhn-emulator-subject" data-mhn-subject-line>'.esc_html($view['subject']).'</p>';
+    echo '<p class="mhn-emulator-preheader" data-mhn-preheader-line>'.esc_html($view['preheader']).'</p>';
+    echo '</div>';
+    echo '<div class="mhn-emulator-stage is-desktop" data-mhn-stage>';
+    echo '<iframe data-mhn-emulator-frame title="'.esc_attr__('Email preview', 'matthummel-newsletter').'" sandbox="" srcdoc="'.esc_attr($view['html']).'"></iframe>';
+    echo '</div></section>';
+}
+
+function ajax_emulator_preview(): void
+{
+    if (! current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'forbidden'], 403);
+    }
+    check_ajax_referer('mhn_emulator', 'nonce');
+    $message = emulator_preview_message(wp_unslash($_POST));
+    wp_send_json_success($message);
 }

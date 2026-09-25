@@ -79,6 +79,11 @@ function esc_html__(string $text, string $domain = 'default'): string
     return esc_html(__($text, $domain));
 }
 
+function esc_attr__(string $text, string $domain = 'default'): string
+{
+    return esc_attr(__($text, $domain));
+}
+
 function esc_html(string $text): string
 {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');

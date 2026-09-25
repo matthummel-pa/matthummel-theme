@@ -178,8 +178,9 @@ function compile_issue(int $issueId): void
 
 /**
  * @param  array{label: string, summary: string, min_posts: int, max_posts: int, has_image: bool, has_button: bool, has_ps: bool}  $template
+ * @param  string|null  $noteHtml  Preview override. Null reads the saved note.
  */
-function template_content(int $issueId, array $template): string
+function template_content(int $issueId, array $template, ?string $noteHtml = null): string
 {
     $parts = [];
 
@@ -193,7 +194,8 @@ function template_content(int $issueId, array $template): string
         }
     }
 
-    $note = rich_text_blocks((string) get_post_meta($issueId, '_mhn_note', true));
+    $noteSource = $noteHtml ?? (string) get_post_meta($issueId, '_mhn_note', true);
+    $note = rich_text_blocks($noteSource);
     if ($note !== '') {
         $parts[] = $note;
     }

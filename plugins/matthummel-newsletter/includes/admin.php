@@ -101,7 +101,31 @@ function admin_assets(string $hook): void
         MHN_VERSION
     );
 
-    if (! str_contains($hook, 'mhn-wizard')) {
+    $onWizard = str_contains($hook, 'mhn-wizard');
+    $onDashboard = str_contains($hook, 'mhn-newsletter');
+    if ($onWizard || $onDashboard) {
+        wp_enqueue_script(
+            'mhn-emulator',
+            plugins_url('assets/emulator.js', MHN_FILE),
+            [],
+            MHN_VERSION,
+            true
+        );
+    }
+    if ($onWizard) {
+        $config = settings();
+        wp_localize_script('mhn-emulator', 'mhnEmulator', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'action' => 'mhn_emulator_preview',
+            'nonce' => wp_create_nonce('mhn_emulator'),
+            'intro' => $config['intro'],
+            'fromName' => $config['from_name'],
+            'fromEmail' => $config['from_email'],
+            'welcomeSubject' => $config['welcome_subject'],
+        ]);
+    }
+
+    if (! $onWizard) {
         return;
     }
 
@@ -322,20 +346,7 @@ function page_dashboard(): void
  */
 function render_dashboard_preview(): void
 {
-    $layoutId = dashboard_layout_id();
-    $layouts = layouts();
-    $layout = $layouts[$layoutId] ?? $layouts['standard'];
-    $src = layout_preview_admin_url($layoutId);
-
-    echo '<section class="mhn-card mhn-dash-preview" aria-labelledby="mhn-preview-heading">';
-    echo '<h2 id="mhn-preview-heading">'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
-    echo '<p class="mhn-card-lead">'.esc_html($layout['label']).'. '.esc_html($layout['summary']).'</p>';
-    echo '<iframe class="mhn-email-frame" title="'.esc_attr(sprintf(
-        /* translators: %s: layout name */
-        __('%s preview', 'matthummel-newsletter'),
-        $layout['label']
-    )).'" sandbox="" src="'.esc_url($src).'"></iframe>';
-    echo '</section>';
+    render_email_emulator(emulator_view(0, dashboard_layout_id()), false, true);
 }
 
 function issue_has_delivery(array $issue): bool
