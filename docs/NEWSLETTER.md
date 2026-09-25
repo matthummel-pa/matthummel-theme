@@ -37,3 +37,17 @@ The template already sets the type size, the colors, and the footer. You still c
 - Every issue includes your mailing address, a line about why the person got it, and an unsubscribe link. One-click unsubscribe is on the message as well. Tracking stays off unless you turn it on in settings. When it is on, click and open links are separate from the unsubscribe link.
 
 New signups confirm by email before they are on the list. The link in that email opens a confirm page with optional first name and last name fields. The address is added only when they press the button. A missing name does not block that. A scanner that only opens the link does not confirm them. They can change the name later on the preferences page. The From address should be a mailbox on this site’s domain.
+
+## Sent archive
+
+When a send finishes, WordPress keeps a private copy under **Get updates → Sent archive**. That copy is the letter as sent: subject, preview text, From name and address, template, start and finish times, who sent it, and the recipient, delivered, and failed counts. The list name is Subscribed, or Allowlist when a send is limited to a test list. Merge tags stay as placeholders. Subscriber addresses are not in the copy.
+
+The list can be sorted by date, subject, or template. You can search, filter by template and date, and page through it. Open a row to read the saved letter. Download one issue as HTML or EML, or download a CSV of the archive details.
+
+A sent issue is read-only. Use **Duplicate as new draft** when you want to send a revision. **Archive** hides an old issue from the issues list and from the default archive list. The copy stays. Choose **Archived** in the filter to see it again. Nothing in the archive is deleted on its own. **Delete** asks you to confirm, and only an administrator can do it.
+
+There is no public archive page.
+
+## Later
+
+A public web archive, a page of sent issues that anyone could open, is not built. If it is added later, that setting stays off until you turn it on.

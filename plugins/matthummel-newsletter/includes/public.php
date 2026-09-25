@@ -575,7 +575,8 @@ function public_dashboard(): string
     $html .= '<a class="btn" href="'.esc_url(wizard_url()).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a> ';
     $html .= '<a class="btn" href="'.esc_url(admin_url('post-new.php?post_type=newsletter_issue')).'">'.esc_html__('Block editor', 'matthummel-newsletter').'</a> ';
     $html .= '<a class="btn" href="'.esc_url(admin_url('admin.php?page=mhn-import')).'">'.esc_html__('Import', 'matthummel-newsletter').'</a> ';
-    $html .= '<a class="btn" href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Settings', 'matthummel-newsletter').'</a>';
+    $html .= '<a class="btn" href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Settings', 'matthummel-newsletter').'</a> ';
+    $html .= '<a class="btn" href="'.esc_url(admin_url('admin.php?page=mhn-archive')).'">'.esc_html__('Sent archive', 'matthummel-newsletter').'</a>';
     $html .= '</p>';
     $html .= issues_table($data['issues'], false);
     $html .= '</section>';

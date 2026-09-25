@@ -65,6 +65,17 @@ function boot(): void
     add_action('admin_post_mhn_send', __NAMESPACE__.'\\handle_send');
     add_action('admin_post_mhn_schedule', __NAMESPACE__.'\\handle_schedule');
     add_action('admin_post_mhn_retry', __NAMESPACE__.'\\handle_retry');
+    add_action('admin_post_mhn_archive_html', __NAMESPACE__.'\\handle_archive_html');
+    add_action('admin_post_mhn_archive_eml', __NAMESPACE__.'\\handle_archive_eml');
+    add_action('admin_post_mhn_archive_csv', __NAMESPACE__.'\\handle_archive_csv');
+    add_action('admin_post_mhn_archive_frame', __NAMESPACE__.'\\handle_archive_frame');
+    add_action('admin_post_mhn_archive_delete', __NAMESPACE__.'\\handle_archive_delete');
+    add_action('admin_post_mhn_archive_state', __NAMESPACE__.'\\handle_archive_state');
+    add_action('admin_post_mhn_duplicate_issue', __NAMESPACE__.'\\handle_duplicate_issue');
+    add_filter('wp_insert_post_data', __NAMESPACE__.'\\protect_sent_issue', 10, 2);
+    add_action('pre_get_posts', __NAMESPACE__.'\\filter_issue_admin_list');
+    add_filter('views_edit-newsletter_issue', __NAMESPACE__.'\\issue_admin_views');
+    add_action('admin_notices', __NAMESPACE__.'\\sent_issue_notice');
     add_action('wp_enqueue_scripts', __NAMESPACE__.'\\public_assets');
     add_shortcode('mhn_updates', __NAMESPACE__.'\\shortcode_updates');
     add_shortcode('mhn_preferences', __NAMESPACE__.'\\shortcode_preferences');
@@ -90,7 +101,7 @@ function load_textdomain(): void
 function maybe_upgrade(): void
 {
     $installed = (string) get_option('mhn_version', '');
-    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '2') {
+    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '3') {
         return;
     }
 
@@ -114,6 +125,7 @@ function install_tables(): void
     $charset = $wpdb->get_charset_collate();
     $subscribers = subscribers_table();
     $events = events_table();
+    $archive = archive_table();
 
     $subscribersSql = "CREATE TABLE {$subscribers} (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -145,11 +157,38 @@ function install_tables(): void
         KEY subscriber_event (subscriber_id, event)
     ) {$charset};";
 
+    $archiveSql = "CREATE TABLE {$archive} (
+        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        issue_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        subject longtext NOT NULL,
+        preheader longtext NOT NULL,
+        from_name varchar(191) NOT NULL DEFAULT '',
+        from_email varchar(191) NOT NULL DEFAULT '',
+        template varchar(40) NOT NULL DEFAULT '',
+        started_at varchar(19) NOT NULL DEFAULT '',
+        finished_at varchar(19) NOT NULL DEFAULT '',
+        sender_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        recipients int(10) unsigned NOT NULL DEFAULT 0,
+        delivered int(10) unsigned NOT NULL DEFAULT 0,
+        failed int(10) unsigned NOT NULL DEFAULT 0,
+        list_label varchar(80) NOT NULL DEFAULT '',
+        plugin_version varchar(20) NOT NULL DEFAULT '',
+        html longtext NOT NULL,
+        body_text longtext NOT NULL,
+        created_at varchar(19) NOT NULL DEFAULT '',
+        PRIMARY KEY  (id),
+        KEY issue_id (issue_id),
+        KEY finished_at (finished_at),
+        KEY template (template)
+    ) {$charset};";
+
     require_once ABSPATH.'wp-admin/includes/upgrade.php';
     dbDelta($subscribersSql);
     dbDelta($eventsSql);
+    dbDelta($archiveSql);
     ensure_subscriber_columns();
-    update_option('mhn_db_version', '2');
+    ensure_archive_table();
+    update_option('mhn_db_version', '3');
 }
 
 /**
@@ -165,6 +204,59 @@ function ensure_subscriber_columns(): void
     global $wpdb;
 
     $wpdb->query('ALTER TABLE '.subscribers_table().' ADD last_name varchar(100) NOT NULL DEFAULT \'\'');
+}
+
+/**
+ * Create the sent-archive table when dbDelta did not.
+ * Safe to run more than once. Rows are inserted later and are not rewritten here.
+ */
+function ensure_archive_table(): void
+{
+    if (archive_table_exists()) {
+        return;
+    }
+
+    global $wpdb;
+
+    $charset = $wpdb->get_charset_collate();
+    $table = archive_table();
+    $wpdb->query("CREATE TABLE {$table} (
+        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        issue_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        subject longtext NOT NULL,
+        preheader longtext NOT NULL,
+        from_name varchar(191) NOT NULL DEFAULT '',
+        from_email varchar(191) NOT NULL DEFAULT '',
+        template varchar(40) NOT NULL DEFAULT '',
+        started_at varchar(19) NOT NULL DEFAULT '',
+        finished_at varchar(19) NOT NULL DEFAULT '',
+        sender_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        recipients int(10) unsigned NOT NULL DEFAULT 0,
+        delivered int(10) unsigned NOT NULL DEFAULT 0,
+        failed int(10) unsigned NOT NULL DEFAULT 0,
+        list_label varchar(80) NOT NULL DEFAULT '',
+        plugin_version varchar(20) NOT NULL DEFAULT '',
+        html longtext NOT NULL,
+        body_text longtext NOT NULL,
+        created_at varchar(19) NOT NULL DEFAULT '',
+        PRIMARY KEY  (id),
+        KEY issue_id (issue_id),
+        KEY finished_at (finished_at),
+        KEY template (template)
+    ) {$charset}");
+}
+
+function archive_table_exists(): bool
+{
+    global $wpdb;
+
+    $suppressed = $wpdb->suppress_errors(true);
+    $wpdb->get_var('SELECT id FROM '.archive_table().' LIMIT 1');
+    $missing = (string) $wpdb->last_error !== '';
+    $wpdb->last_error = '';
+    $wpdb->suppress_errors($suppressed);
+
+    return ! $missing;
 }
 
 function subscriber_column_exists(string $column): bool

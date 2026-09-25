@@ -402,6 +402,9 @@ function render_wizard_page(): void
 
     echo '<div class="wrap mhn-admin mhn-wizard">';
     echo '<h1>'.esc_html__('Create newsletter', 'matthummel-newsletter').'</h1>';
+    if ($issueId > 0) {
+        render_sent_lock_notice($issueId);
+    }
     echo '<p>'.esc_html__('Five steps. The draft saves as you go, so you can leave and come back.', 'matthummel-newsletter').'</p>';
     render_wizard_notices($issueId);
     render_wizard_progress($issueId, $step);

@@ -14,6 +14,7 @@ global $wpdb;
 
 $wpdb->query('DROP TABLE IF EXISTS '.$wpdb->prefix.'mhn_subscribers');
 $wpdb->query('DROP TABLE IF EXISTS '.$wpdb->prefix.'mhn_events');
+$wpdb->query('DROP TABLE IF EXISTS '.$wpdb->prefix.'mhn_archive');
 
 delete_option('mhn_settings');
 delete_option('mhn_db_version');

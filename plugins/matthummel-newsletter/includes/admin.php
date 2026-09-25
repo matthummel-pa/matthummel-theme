@@ -69,6 +69,14 @@ function admin_menu(): void
     );
     add_submenu_page(
         'mhn-newsletter',
+        __('Sent archive', 'matthummel-newsletter'),
+        __('Sent archive', 'matthummel-newsletter'),
+        'manage_options',
+        'mhn-archive',
+        __NAMESPACE__.'\\page_sent_archive'
+    );
+    add_submenu_page(
+        'mhn-newsletter',
         __('Delivery', 'matthummel-newsletter'),
         __('Delivery', 'matthummel-newsletter'),
         'manage_options',
@@ -148,7 +156,7 @@ function recent_issue_rows(): array
     $posts = get_posts([
         'post_type' => 'newsletter_issue',
         'post_status' => 'any',
-        'posts_per_page' => 8,
+        'posts_per_page' => 20,
         'orderby' => 'modified',
         'order' => 'DESC',
         'no_found_rows' => true,
@@ -156,8 +164,11 @@ function recent_issue_rows(): array
 
     $rows = [];
     foreach (is_array($posts) ? $posts : [] as $post) {
-        if (! $post instanceof \WP_Post) {
+        if (! $post instanceof \WP_Post || issue_is_archived($post->ID)) {
             continue;
+        }
+        if (count($rows) >= 8) {
+            break;
         }
         $rows[] = [
             'id' => $post->ID,
@@ -199,12 +210,20 @@ function issues_table(array $issues, bool $admin): string
             ? __('View', 'matthummel-newsletter')
             : __('Continue', 'matthummel-newsletter');
         $html .= '<td>';
-        $html .= '<a href="'.esc_url(wizard_url($issue['id'])).'">'.esc_html($continue).'</a> · ';
-        if (is_string($edit) && $edit !== '') {
-            $html .= '<a href="'.esc_url($edit).'">'.esc_html__('Editor', 'matthummel-newsletter').'</a> · ';
+        $html .= '<a href="'.esc_url(wizard_url($issue['id'])).'">'.esc_html($continue).'</a>';
+        if ($issue['status'] === 'sent') {
+            $html .= ' · <a href="'.esc_url(duplicate_issue_url($issue['id'])).'">'.esc_html__('Duplicate as new draft', 'matthummel-newsletter').'</a>';
+            $saved = latest_sent_snapshot($issue['id']);
+            if ($saved !== null) {
+                $html .= ' · <a href="'.esc_url(sent_archive_admin_url((int) $saved['id'])).'">'.esc_html__('Saved copy', 'matthummel-newsletter').'</a>';
+            }
+        } else {
+            if (is_string($edit) && $edit !== '') {
+                $html .= ' · <a href="'.esc_url($edit).'">'.esc_html__('Editor', 'matthummel-newsletter').'</a>';
+            }
+            $html .= ' · <a href="'.esc_url($test).'">'.esc_html__('Send test', 'matthummel-newsletter').'</a>';
+            $html .= ' · <a href="'.esc_url(wizard_url($issue['id'], 5)).'">'.esc_html__('Send', 'matthummel-newsletter').'</a>';
         }
-        $html .= '<a href="'.esc_url($test).'">'.esc_html__('Send test', 'matthummel-newsletter').'</a> · ';
-        $html .= '<a href="'.esc_url(wizard_url($issue['id'], 5)).'">'.esc_html__('Send', 'matthummel-newsletter').'</a>';
         $html .= '</td></tr>';
     }
 
@@ -250,6 +269,7 @@ function page_dashboard(): void
     echo '<a class="button" href="'.esc_url(admin_url('post-new.php?post_type=newsletter_issue')).'">'.esc_html__('Block editor', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-import')).'">'.esc_html__('Import CSV', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Settings', 'matthummel-newsletter').'</a> ';
+    echo '<a class="button" href="'.esc_url(admin_url('admin.php?page=mhn-archive')).'">'.esc_html__('Sent archive', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(page_url('get-updates')).'">'.esc_html__('View page', 'matthummel-newsletter').'</a>';
     echo '</p>';
     echo issues_table($data['issues'], true);

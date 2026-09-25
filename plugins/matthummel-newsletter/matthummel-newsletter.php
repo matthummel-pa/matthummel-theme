@@ -34,6 +34,7 @@ require_once MHN_DIR.'/includes/a11y.php';
 require_once MHN_DIR.'/includes/mailer.php';
 require_once MHN_DIR.'/includes/templates.php';
 require_once MHN_DIR.'/includes/issues.php';
+require_once MHN_DIR.'/includes/archive.php';
 require_once MHN_DIR.'/includes/campaign.php';
 require_once MHN_DIR.'/includes/signup.php';
 require_once MHN_DIR.'/includes/public.php';

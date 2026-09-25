@@ -319,6 +319,79 @@ $batchHeaders = is_array($batchMail['headers'] ?? null) ? implode("\n", $batchMa
 mhn_check(str_contains($batchHeaders, 'List-Unsubscribe:'), 'campaign sets List-Unsubscribe');
 mhn_check(str_contains($batchHeaders, 'List-Unsubscribe-Post: List-Unsubscribe=One-Click'), 'campaign sets one-click unsubscribe');
 mhn_check(Newsletter\issue_status($issueId) === 'sent', 'campaign finishes as sent');
+$snap = Newsletter\latest_sent_snapshot($issueId);
+mhn_check($snap !== null, 'snapshot is created on send');
+if (is_array($snap)) {
+    $beforeHtml = $snap['html'];
+    $beforeSubject = $snap['subject'];
+    $beforeText = $snap['body_text'];
+    $batchHtml = is_array($batchMail) ? (string) ($batchMail['message'] ?? '') : '';
+    mhn_check(str_contains($beforeHtml, '{first_name|there}'), 'snapshot keeps the name tag as a placeholder');
+    mhn_check(str_contains($beforeHtml, '*|UNSUB|*'), 'snapshot keeps the unsubscribe placeholder');
+    mhn_check(! str_contains($beforeHtml, 'batch@example.com') && ! str_contains($beforeText, 'batch@example.com'), 'snapshot does not store the subscriber address');
+    mhn_check($batchHtml !== '' && str_contains($batchHtml, 'Hi Batch,') && ! str_contains($beforeHtml, 'Hi Batch,'), 'the sent letter is personalized and the snapshot is not');
+    mhn_check($snap['template'] === 'blog-update' && $snap['plugin_version'] === '1.0.0', 'snapshot stores the template and plugin version');
+    mhn_check((int) $snap['sender_id'] === 1 && (int) $snap['delivered'] >= 1, 'snapshot stores the sender and delivered count');
+    mhn_check($snap['list_label'] === 'Allowlist' && $snap['from_email'] !== 'batch@example.com', 'snapshot stores the list name, not a subscriber address');
+    $originalContent = (string) get_post_field('post_content', $issueId);
+    update_post_meta($issueId, '_mhn_subject', 'Edited after send');
+    wp_update_post([
+        'ID' => $issueId,
+        'post_content' => '<!-- wp:paragraph --><p>Changed after send</p><!-- /wp:paragraph -->',
+    ]);
+    mhn_check((string) get_post_field('post_content', $issueId) === $originalContent, 'a sent issue cannot be edited');
+    $again = Newsletter\sent_snapshot((int) $snap['id']);
+    mhn_check(
+        is_array($again) && $again['html'] === $beforeHtml && $again['subject'] === $beforeSubject && $again['body_text'] === $beforeText,
+        'snapshot stays unchanged after the issue is edited'
+    );
+    $adminHtml = Newsletter\sent_archive_html((int) $snap['id']);
+    $adminEml = Newsletter\sent_archive_eml((int) $snap['id']);
+    $adminCsv = Newsletter\sent_archive_csv();
+    mhn_check(is_string($adminHtml) && $adminHtml === $beforeHtml, 'html export works for admins');
+    mhn_check(is_string($adminEml) && str_contains($adminEml, $beforeHtml) && str_contains($adminEml, 'undisclosed-recipients:;') && ! str_contains($adminEml, 'batch@example.com'), 'eml export works for admins');
+    mhn_check(is_string($adminCsv) && str_contains($adminCsv, $beforeSubject) && ! str_contains($adminCsv, 'batch@example.com') && ! str_contains($adminCsv, '<!DOCTYPE'), 'csv export is metadata only');
+    Newsletter\set_issue_archived($issueId, true);
+    $hidden = Newsletter\sent_archive_query([
+        'show' => 'active',
+        'search' => $beforeSubject,
+        'per_page' => 100,
+    ]);
+    $hiddenIds = array_map(static fn (array $row): int => (int) $row['id'], $hidden['rows']);
+    mhn_check(! in_array((int) $snap['id'], $hiddenIds, true), 'archive state hides the saved copy from the main list');
+    $kept = Newsletter\sent_archive_query([
+        'show' => 'archived',
+        'search' => $beforeSubject,
+        'per_page' => 100,
+    ]);
+    $keptIds = array_map(static fn (array $row): int => (int) $row['id'], $kept['rows']);
+    mhn_check(in_array((int) $snap['id'], $keptIds, true) && Newsletter\sent_snapshot((int) $snap['id']) !== null, 'an archived issue is kept');
+    Newsletter\set_issue_archived($issueId, false);
+    $copyId = Newsletter\duplicate_issue($issueId);
+    mhn_check($copyId > 0 && Newsletter\issue_status($copyId) === 'draft' && Newsletter\latest_sent_snapshot($copyId) === null, 'duplicate as new draft has no saved copy');
+    $reader = get_user_by('login', 'mhn-archive-reader');
+    if (! $reader instanceof WP_User) {
+        $created = wp_insert_user([
+            'user_login' => 'mhn-archive-reader',
+            'user_email' => 'mhn-archive-reader@example.com',
+            'user_pass' => wp_generate_password(24, true, true),
+            'role' => 'subscriber',
+        ]);
+        $readerId = is_wp_error($created) ? 0 : (int) $created;
+    } else {
+        $reader->set_role('subscriber');
+        $readerId = (int) $reader->ID;
+    }
+    mhn_check($readerId > 0, 'a non-admin user exists for the export check');
+    wp_set_current_user($readerId);
+    $deniedHtml = Newsletter\sent_archive_html((int) $snap['id']);
+    $deniedEml = Newsletter\sent_archive_eml((int) $snap['id']);
+    $deniedCsv = Newsletter\sent_archive_csv();
+    $deniedDelete = Newsletter\delete_sent_snapshot((int) $snap['id']);
+    mhn_check(is_wp_error($deniedHtml) && is_wp_error($deniedEml) && is_wp_error($deniedCsv), 'export is denied for non-admins');
+    mhn_check($deniedDelete === false && Newsletter\sent_snapshot((int) $snap['id']) !== null, 'a non-admin cannot delete a saved copy');
+    wp_set_current_user(1);
+}
 
 foreach ($GLOBALS['mhn_outbox'] as $entry) {
     $to = (string) ($entry['to'] ?? '');
@@ -570,7 +643,7 @@ mhn_check(isset($cooldownToken[1]) && Newsletter\confirm_subscriber($cooldownTok
 $otherCode = Newsletter\subscribe_address('cooldown-b@example.com', 'Bo', 'page');
 mhn_check($otherCode === 'confirm', 'a different address can still confirm');
 
-mhn_check((string) get_option('mhn_db_version') === '2', 'schema version is 2');
+mhn_check((string) get_option('mhn_db_version') === '3', 'schema version is 3');
 mhn_check(Newsletter\subscriber_column_exists('last_name'), 'last_name column exists');
 Newsletter\ensure_subscriber_columns();
 mhn_check(Newsletter\subscriber_column_exists('last_name'), 'schema upgrade is idempotent');

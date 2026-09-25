@@ -144,3 +144,40 @@
   font-size: 32px;
   line-height: 1;
 }
+
+.mhn-archive-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.mhn-archive-actions form {
+  display: inline;
+}
+
+.mhn-archive-meta {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 4px 12px;
+  max-width: 40rem;
+  margin: 16px 0;
+}
+
+.mhn-archive-meta dt {
+  margin: 0;
+  font-weight: 600;
+}
+
+.mhn-archive-meta dd {
+  margin: 0;
+}
+
+.mhn-archive-frame {
+  width: 100%;
+  height: 720px;
+  margin-top: 16px;
+  border: 1px solid #c3c4c7;
+  background: #fff;
+}

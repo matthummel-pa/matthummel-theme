@@ -22,6 +22,13 @@ function events_table(): string
     return $wpdb->prefix.'mhn_events';
 }
 
+function archive_table(): string
+{
+    global $wpdb;
+
+    return $wpdb->prefix.'mhn_archive';
+}
+
 /**
  * Saved settings merged over defaults. Auto-send and tracking stay off until turned on.
  *

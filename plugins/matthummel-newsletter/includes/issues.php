@@ -184,7 +184,6 @@ function render_meta_box(\WP_Post $post): void
         return;
     }
 
-    wp_nonce_field('mhn_issue_meta', 'mhn_issue_nonce');
     echo '<p><a href="'.esc_url(wizard_url($post->ID)).'">'.esc_html__('Continue in the step-by-step wizard', 'matthummel-newsletter').'</a></p>';
     render_issue_audit($post->ID);
     $subject = (string) get_post_meta($post->ID, '_mhn_subject', true);
@@ -196,6 +195,17 @@ function render_meta_box(\WP_Post $post): void
     $sent = (int) get_post_meta($post->ID, '_mhn_sent_count', true);
     $failed = (int) get_post_meta($post->ID, '_mhn_fail_count', true);
     $preview = archive_url($post->ID, ['id' => '0', 'email' => 'you@example.com', 'first_name' => '']);
+    if (issue_is_locked($post->ID)) {
+        render_sent_lock_notice($post->ID);
+        echo '<p><strong>'.esc_html(status_label($status)).'</strong></p>';
+        echo '<p><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong><br>'.esc_html($subject !== '' ? $subject : __('(none)', 'matthummel-newsletter')).'</p>';
+        echo '<p><strong>'.esc_html__('Preheader', 'matthummel-newsletter').'</strong><br>'.esc_html($preheader !== '' ? $preheader : __('(none)', 'matthummel-newsletter')).'</p>';
+        echo '<p><a class="button" href="'.esc_url($preview).'" target="_blank" rel="noopener">'.esc_html__('Preview', 'matthummel-newsletter').'</a></p>';
+
+        return;
+    }
+
+    wp_nonce_field('mhn_issue_meta', 'mhn_issue_nonce');
     $test = wp_nonce_url(
         admin_url('admin-post.php?action=mhn_send_test&issue='.$post->ID),
         'mhn_send_test_'.$post->ID
@@ -258,6 +268,9 @@ function save_meta(int $postId, \WP_Post $post): void
     if ($nonce === '' || ! wp_verify_nonce($nonce, 'mhn_issue_meta')) {
         return;
     }
+    if (issue_is_locked($postId)) {
+        return;
+    }
 
     update_post_meta($postId, '_mhn_subject', sanitize_text_field(wp_unslash($_POST['mhn_subject'] ?? '')));
     update_post_meta($postId, '_mhn_preheader', sanitize_text_field(wp_unslash($_POST['mhn_preheader'] ?? '')));
@@ -274,4 +287,102 @@ function save_meta(int $postId, \WP_Post $post): void
     if ((string) get_post_meta($postId, '_mhn_status', true) === '') {
         update_post_meta($postId, '_mhn_status', 'draft');
     }
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ * @param  array<string, mixed>  $postarr
+ * @return array<string, mixed>
+ */
+function protect_sent_issue(array $data, array $postarr): array
+{
+    if ((string) ($data['post_type'] ?? '') !== 'newsletter_issue') {
+        return $data;
+    }
+
+    $id = (int) ($postarr['ID'] ?? 0);
+    if ($id < 1 || ! issue_is_locked($id)) {
+        return $data;
+    }
+
+    $existing = get_post($id);
+    if (! $existing instanceof \WP_Post) {
+        return $data;
+    }
+
+    $data['post_content'] = $existing->post_content;
+    $data['post_title'] = $existing->post_title;
+    $data['post_excerpt'] = $existing->post_excerpt;
+
+    return $data;
+}
+
+function sent_issue_notice(): void
+{
+    if (! current_user_can('manage_options') || ! function_exists('get_current_screen')) {
+        return;
+    }
+
+    $screen = get_current_screen();
+    if ($screen === null || $screen->base !== 'post' || $screen->post_type !== 'newsletter_issue') {
+        return;
+    }
+
+    $postId = isset($_GET['post']) ? absint(wp_unslash($_GET['post'])) : 0;
+    if ($postId < 1) {
+        return;
+    }
+
+    render_sent_lock_notice($postId);
+}
+
+function filter_issue_admin_list(\WP_Query $query): void
+{
+    global $pagenow;
+
+    if (! is_admin() || ! $query->is_main_query() || $pagenow !== 'edit.php') {
+        return;
+    }
+    if ($query->get('post_type') !== 'newsletter_issue') {
+        return;
+    }
+
+    $showArchived = isset($_GET['mhn_archived']) && (string) wp_unslash($_GET['mhn_archived']) === '1';
+    $meta = [
+        'relation' => 'AND',
+    ];
+    if ($showArchived) {
+        $meta[] = [
+            'key' => '_mhn_archived',
+            'value' => '1',
+        ];
+    } else {
+        $meta[] = [
+            'relation' => 'OR',
+            [
+                'key' => '_mhn_archived',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key' => '_mhn_archived',
+                'value' => '1',
+                'compare' => '!=',
+            ],
+        ];
+    }
+    $query->set('meta_query', $meta);
+}
+
+/**
+ * @param  array<string, string>  $views
+ * @return array<string, string>
+ */
+function issue_admin_views(array $views): array
+{
+    $url = admin_url('edit.php?post_type=newsletter_issue&mhn_archived=1');
+    $current = isset($_GET['mhn_archived']) && (string) wp_unslash($_GET['mhn_archived']) === '1';
+    $class = $current ? ' class="current"' : '';
+    $views['mhn_archived'] = '<a href="'.esc_url($url).'"'.$class.'>'.esc_html__('Archived', 'matthummel-newsletter').'</a>';
+
+    return $views;
 }

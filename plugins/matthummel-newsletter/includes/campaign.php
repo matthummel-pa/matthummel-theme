@@ -51,6 +51,10 @@ function start_campaign(int $issueId, bool $resetCounts = true): bool
         update_post_meta($issueId, '_mhn_sent_count', '0');
         update_post_meta($issueId, '_mhn_fail_count', '0');
     }
+    update_post_meta($issueId, '_mhn_send_started_at', current_time('mysql'));
+    update_post_meta($issueId, '_mhn_sender_id', (string) get_current_user_id());
+    update_post_meta($issueId, '_mhn_recipient_count', (string) subscribed_recipient_count());
+    update_post_meta($issueId, '_mhn_list_label', audience_label());
     queue_batch($issueId, 0);
 
     return true;
@@ -189,6 +193,7 @@ function finish_campaign(int $issueId): void
     update_post_meta($issueId, '_mhn_fail_count', (string) $failed);
     update_post_meta($issueId, '_mhn_sent_at', current_time('mysql'));
     set_issue_status($issueId, $sent === 0 && $failed > 0 ? 'failed' : 'sent');
+    store_sent_snapshot($issueId);
 }
 
 function claim_batch(int $issueId): bool

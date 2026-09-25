@@ -22,6 +22,7 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Draft an issue in the block editor, preview it, and send a test to yourself.
 * Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
 * Import a CSV of addresses you already have permission to email.
+* Keep a private copy of each finished send under Get updates → Sent archive.
 
 Addresses copied from the original footer list are marked as legacy single opt-in. They stay subscribed and are not asked to confirm again.
 
@@ -47,6 +48,10 @@ Those addresses are copied in as subscribed. They signed up before double opt-in
 
 No. It saves a draft issue for review. Automatic sending is a setting, and it is off.
 
+= Where is a sent issue kept? =
+
+Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
+
 == Changelog ==
 
 = 1.0.0 =
@@ -58,3 +63,4 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 * Issues use one heading, real link text, alt text, and a plain-text part. Sending is blocked when an image has no alt text.
 * Click and open links cannot unsubscribe. Confirmation email for the same address is limited.
 * Import and export a CSV of addresses you already have permission to email.
+* Sent archive keeps a private copy of each finished send. A sent issue is read-only. Duplicate it to start a new draft. Archive hides an old issue from the main list and keeps the copy.
