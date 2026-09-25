@@ -12,6 +12,7 @@ What the 3.x Sage theme does, and where it lives.
 - Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each have a note field. Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` seed the editor.
 - Publishing a post drafts a blog update with an empty note and P.S. It does not send. Owner steps: `docs/NEWSLETTER.md`.
 - Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text.
+- Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
 
 ## Editor’s notes (3.6.37 projects listing)
 

@@ -45,6 +45,10 @@ function subscribe_address(string $email, string $first, string $source): string
         return 'dup';
     }
 
+    if (confirm_on_cooldown($email)) {
+        return 'wait';
+    }
+
     if ($existing) {
         update_subscriber((int) $existing['id'], [
             'first_name' => $first !== '' ? $first : $existing['first_name'],
@@ -74,16 +78,21 @@ function subscribe_address(string $email, string $first, string $source): string
         return 'error';
     }
 
+    mark_confirm_cooldown($email);
+
     return send_confirm_mail($row, $raw) ? 'confirm' : 'mail';
 }
 
 function redirect_signup(string $status): void
 {
-    $back = wp_get_referer();
+    $fallback = page_url('get-updates');
+    $referer = wp_get_referer();
+    $back = is_string($referer) && $referer !== '' ? wp_validate_redirect($referer, $fallback) : $fallback;
     if (! is_string($back) || $back === '') {
-        $back = page_url('get-updates');
+        $back = $fallback;
     }
     $back = remove_query_arg('signup', $back);
+    send_privacy_headers();
     wp_safe_redirect(add_query_arg('signup', $status, $back).'#signup');
     exit;
 }
@@ -91,9 +100,23 @@ function redirect_signup(string $status): void
 function rate_key(): string
 {
     $ip = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : '';
-    $ua = isset($_SERVER['HTTP_USER_AGENT']) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
 
-    return 'mhn_rl_'.md5($ip.'|'.$ua);
+    return 'mhn_rl_'.md5($ip);
+}
+
+function confirm_cooldown_key(string $email): string
+{
+    return 'mhn_confirm_cd_'.md5(strtolower($email));
+}
+
+function confirm_on_cooldown(string $email): bool
+{
+    return get_transient(confirm_cooldown_key($email)) !== false;
+}
+
+function mark_confirm_cooldown(string $email): void
+{
+    set_transient(confirm_cooldown_key($email), 1, 30 * MINUTE_IN_SECONDS);
 }
 
 function rate_limited(): bool

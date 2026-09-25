@@ -48,11 +48,14 @@ foreach ([
     'batch@example.com',
     'import-ok@example.com',
     'pending-quiet@example.com',
+    'cooldown@example.com',
+    'cooldown-b@example.com',
 ] as $sampleEmail) {
     $sample = Newsletter\find_by_email($sampleEmail);
     if ($sample) {
         Newsletter\delete_subscriber((int) $sample['id']);
     }
+    delete_transient(Newsletter\confirm_cooldown_key($sampleEmail));
 }
 
 $GLOBALS['mhn_outbox'] = [];
@@ -350,6 +353,127 @@ if ($batch) {
     $after = Newsletter\find((int) $batch['id']);
     mhn_check($after !== null && $after['status'] === 'unsubscribed', 'unsubscribed status is stored');
 }
+
+if ($confirmed && $issueId > 0) {
+    $manage = Newsletter\subscriber_token($confirmed, 'manage');
+    $legit = 'https://matthummel.com/notes/';
+    $evil = 'https://evil.example/phish';
+    $config = Newsletter\settings();
+    Newsletter\update_settings([
+        'from_name' => $config['from_name'],
+        'from_email' => $config['from_email'],
+        'reply_to' => $config['reply_to'],
+        'address' => $config['address'],
+        'auto_draft' => $config['auto_draft'],
+        'auto_send' => 0,
+        'track_opens' => 1,
+        'track_clicks' => 1,
+        'batch_size' => $config['batch_size'],
+    ]);
+
+    $click = Newsletter\click_url($issueId, $confirmed, $legit);
+    $open = Newsletter\open_url($issueId, $confirmed);
+    $archive = Newsletter\archive_url($issueId, $confirmed);
+    $clickQuery = [];
+    $openQuery = [];
+    $archiveQuery = [];
+    parse_str((string) parse_url($click, PHP_URL_QUERY), $clickQuery);
+    parse_str((string) parse_url($open, PHP_URL_QUERY), $openQuery);
+    parse_str((string) parse_url($archive, PHP_URL_QUERY), $archiveQuery);
+    $clickToken = (string) ($clickQuery['mhn_st'] ?? '');
+    $openToken = (string) ($openQuery['mhn_st'] ?? '');
+    $viewToken = (string) ($archiveQuery['mhn_st'] ?? '');
+
+    mhn_check($clickToken !== '' && $clickToken !== $manage, 'click url does not carry the manage token');
+    mhn_check($openToken !== '' && $openToken !== $manage, 'open url does not carry the manage token');
+    mhn_check($viewToken !== '' && $viewToken !== $manage, 'preview url does not carry the manage token');
+    mhn_check(Newsletter\tracking_token_matches($confirmed, $issueId, 'click', $legit, $clickToken), 'click url is signed for that destination');
+    mhn_check(! Newsletter\token_matches($confirmed, $clickToken), 'a click token cannot unsubscribe');
+    mhn_check(! Newsletter\token_matches($confirmed, $openToken), 'an open token cannot unsubscribe');
+    mhn_check(! Newsletter\token_matches($confirmed, $viewToken), 'a preview token cannot unsubscribe');
+
+    $signed = Newsletter\safe_click_target($issueId, (int) $confirmed['id'], $clickToken, (string) ($clickQuery['mhn_u'] ?? ''));
+    mhn_check($signed['tracked'] === true && $signed['url'] === $legit, 'a signed click is honored when tracking is on');
+    $stolen = Newsletter\safe_click_target($issueId, (int) $confirmed['id'], $manage, base64_encode($evil));
+    mhn_check($stolen['tracked'] === false && $stolen['url'] === home_url('/'), 'a manage token cannot redirect off site');
+    $rewritten = Newsletter\safe_click_target($issueId, (int) $confirmed['id'], $clickToken, base64_encode($evil));
+    mhn_check($rewritten['tracked'] === false && $rewritten['url'] === home_url('/'), 'a rewritten destination is refused');
+    $otherIssue = (int) $columnId > 0 ? (int) $columnId : $issueId + 1;
+    $wrongIssue = Newsletter\safe_click_target($otherIssue, (int) $confirmed['id'], $clickToken, (string) ($clickQuery['mhn_u'] ?? ''));
+    mhn_check($wrongIssue['tracked'] === false, 'a click token does not work for another issue');
+    $postToken = Newsletter\tracking_token($confirmed, (int) $postId, 'click', $legit);
+    $notIssue = Newsletter\safe_click_target((int) $postId, (int) $confirmed['id'], $postToken, base64_encode($legit));
+    mhn_check($notIssue['tracked'] === false, 'click signatures only work for a newsletter issue');
+    mhn_check(Newsletter\open_should_count($issueId, (int) $confirmed['id'], $openToken), 'a signed open is counted when tracking is on');
+    mhn_check(! Newsletter\open_should_count($issueId, (int) $confirmed['id'], $manage), 'a manage token does not count as an open');
+    $previewRow = Newsletter\subscriber_for_preview($issueId, (int) $confirmed['id'], $viewToken);
+    mhn_check($previewRow !== null && (int) $previewRow['id'] === (int) $confirmed['id'], 'a preview token personalizes that issue');
+    mhn_check(Newsletter\subscriber_for_preview($issueId, (int) $confirmed['id'], $manage) === null, 'a manage token does not personalize the preview');
+
+    $trackedHtml = Newsletter\issue_message($issueId, $confirmed, false)['html'];
+    preg_match_all('/mhn_(?:click|open)=[^"\']+/', $trackedHtml, $trackedHrefs);
+    mhn_check(($trackedHrefs[0] ?? []) !== [], 'tracking rewrites links when it is on');
+    $trackedLeak = false;
+    foreach ($trackedHrefs[0] as $href) {
+        if (str_contains(rawurldecode($href), $manage)) {
+            $trackedLeak = true;
+        }
+    }
+    mhn_check(! $trackedLeak, 'tracked links do not include the manage token');
+    mhn_check(str_contains($trackedHtml, $manage), 'unsubscribe still uses the manage token');
+
+    delete_option('mhn_settings');
+    $ignored = Newsletter\safe_click_target($issueId, (int) $confirmed['id'], $clickToken, (string) ($clickQuery['mhn_u'] ?? ''));
+    mhn_check($ignored['tracked'] === false && $ignored['url'] === home_url('/'), 'clicks are ignored when tracking is off');
+    mhn_check(! Newsletter\open_should_count($issueId, (int) $confirmed['id'], $openToken), 'opens are ignored when tracking is off');
+} else {
+    mhn_check(false, 'security checks need a subscriber and an issue');
+}
+
+mhn_check(! Newsletter\click_target_is_allowed("https://example.com/\r\nLocation: https://evil.example"), 'click targets cannot break the redirect header');
+mhn_check(! Newsletter\click_target_is_allowed('https://user@example.com/'), 'click targets cannot include user info');
+mhn_check(! Newsletter\click_target_is_allowed('javascript:alert(1)'), 'click targets must be http or https');
+mhn_check(Newsletter\click_target_is_allowed('https://matthummel.com/notes/'), 'an https link is a valid click target');
+
+$previousAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+$previousAgent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+$_SERVER['REMOTE_ADDR'] = '203.0.113.50';
+$_SERVER['HTTP_USER_AGENT'] = 'AgentOne';
+$rateA = Newsletter\rate_key();
+$_SERVER['HTTP_USER_AGENT'] = 'AgentTwo';
+$rateB = Newsletter\rate_key();
+$_SERVER['REMOTE_ADDR'] = '203.0.113.51';
+$rateC = Newsletter\rate_key();
+mhn_check($rateA === $rateB, 'signup rate limit ignores the user agent');
+mhn_check($rateA !== $rateC, 'signup rate limit still changes with the IP');
+delete_transient($rateA);
+delete_transient($rateC);
+if ($previousAddr === null) {
+    unset($_SERVER['REMOTE_ADDR']);
+} else {
+    $_SERVER['REMOTE_ADDR'] = $previousAddr;
+}
+if ($previousAgent === null) {
+    unset($_SERVER['HTTP_USER_AGENT']);
+} else {
+    $_SERVER['HTTP_USER_AGENT'] = $previousAgent;
+}
+
+$beforeCooldown = count($GLOBALS['mhn_outbox']);
+$cooldownCode = Newsletter\subscribe_address('cooldown@example.com', 'Co', 'page');
+mhn_check($cooldownCode === 'confirm', 'first confirmation for an address is sent');
+$cooldownMail = $GLOBALS['mhn_outbox'][$beforeCooldown] ?? [];
+preg_match('/mhn_confirm=([a-f0-9]{32})/', (string) ($cooldownMail['message'] ?? ''), $cooldownToken);
+$repeatCode = Newsletter\subscribe_address('cooldown@example.com', 'Co', 'page');
+mhn_check($repeatCode === 'wait', 'the same address cannot request another confirmation immediately');
+mhn_check(count($GLOBALS['mhn_outbox']) === $beforeCooldown + 1, 'the cooldown does not send a second confirmation');
+mhn_check(isset($cooldownToken[1]) && Newsletter\confirm_subscriber($cooldownToken[1]) === 'ok', 'the cooldown does not replace the confirmation link');
+$otherCode = Newsletter\subscribe_address('cooldown-b@example.com', 'Bo', 'page');
+mhn_check($otherCode === 'confirm', 'a different address can still confirm');
+
+delete_option('mhn_settings');
+mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send stays off after the security checks');
+mhn_check(Newsletter\settings()['track_opens'] === 0 && Newsletter\settings()['track_clicks'] === 0, 'tracking stays off after the security checks');
 
 if ($GLOBALS['mhn_fail'] > 0) {
     echo $GLOBALS['mhn_fail']." failed\n";

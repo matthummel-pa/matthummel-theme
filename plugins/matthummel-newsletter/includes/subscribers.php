@@ -203,7 +203,62 @@ function token_matches(array $subscriber, string $token): bool
 {
     $expected = subscriber_token($subscriber, 'manage');
 
-    return $token !== '' && hash_equals($expected, $token);
+    return $token !== '' && strlen($token) === 64 && hash_equals($expected, $token);
+}
+
+/**
+ * Click and open links use this token. It cannot unsubscribe or open preferences.
+ *
+ * @param  array<string, string>  $subscriber
+ */
+function tracking_token(array $subscriber, int $issueId, string $purpose, string $target = ''): string
+{
+    $payload = implode('|', [
+        'track',
+        $purpose,
+        $issueId,
+        (int) $subscriber['id'],
+        strtolower((string) $subscriber['email']),
+        $target,
+    ]);
+
+    return hash_hmac('sha256', $payload, wp_salt('mhn-track'));
+}
+
+/**
+ * @param  array<string, string>  $subscriber
+ */
+function tracking_token_matches(array $subscriber, int $issueId, string $purpose, string $target, string $token): bool
+{
+    if ($token === '' || strlen($token) !== 64) {
+        return false;
+    }
+
+    return hash_equals(tracking_token($subscriber, $issueId, $purpose, $target), $token);
+}
+
+/**
+ * Personalizes the browser preview. It cannot unsubscribe or open preferences.
+ *
+ * @param  array<string, string>  $subscriber
+ */
+function view_token(array $subscriber, int $issueId): string
+{
+    $payload = 'view|'.$issueId.'|'.(int) $subscriber['id'].'|'.strtolower((string) $subscriber['email']);
+
+    return hash_hmac('sha256', $payload, wp_salt('mhn-view'));
+}
+
+/**
+ * @param  array<string, string>  $subscriber
+ */
+function view_token_matches(array $subscriber, int $issueId, string $token): bool
+{
+    if ($token === '' || strlen($token) !== 64) {
+        return false;
+    }
+
+    return hash_equals(view_token($subscriber, $issueId), $token);
 }
 
 function store_confirm_token(int $id): string

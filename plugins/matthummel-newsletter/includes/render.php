@@ -239,7 +239,7 @@ function apply_tracking(string $html, array $subscriber, int $issueId): string
             '/href=(["\'])(https?:\/\/[^"\']+)\1/i',
             static function (array $match) use ($subscriber, $issueId): string {
                 $url = html_entity_decode($match[2], ENT_QUOTES);
-                if (preg_match('/[?&]mhn_(?:unsub|token|confirm|view|prefs)=/', $url) === 1) {
+                if (preg_match('/[?&]mhn_(?:unsub|token|confirm|view|prefs|click|open|st)=/', $url) === 1) {
                     return $match[0];
                 }
                 $tracked = click_url($issueId, $subscriber, $url);
@@ -329,7 +329,7 @@ function archive_url(int $issueId, array $subscriber): string
     ];
     if ((int) ($subscriber['id'] ?? 0) > 0) {
         $args['mhn_sid'] = (int) $subscriber['id'];
-        $args['mhn_st'] = subscriber_token($subscriber, 'manage');
+        $args['mhn_st'] = view_token($subscriber, $issueId);
     }
 
     return add_query_arg($args, home_url('/'));
@@ -343,7 +343,7 @@ function open_url(int $issueId, array $subscriber): string
     return add_query_arg([
         'mhn_open' => $issueId,
         'mhn_sid' => (int) $subscriber['id'],
-        'mhn_st' => subscriber_token($subscriber, 'manage'),
+        'mhn_st' => tracking_token($subscriber, $issueId, 'open'),
     ], home_url('/'));
 }
 
@@ -355,7 +355,7 @@ function click_url(int $issueId, array $subscriber, string $target): string
     return add_query_arg([
         'mhn_click' => $issueId,
         'mhn_sid' => (int) $subscriber['id'],
-        'mhn_st' => subscriber_token($subscriber, 'manage'),
+        'mhn_st' => tracking_token($subscriber, $issueId, 'click', $target),
         'mhn_u' => base64_encode($target),
     ], home_url('/'));
 }

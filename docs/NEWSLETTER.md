@@ -34,6 +34,6 @@ The template already sets the type size, the colors, and the footer. You still c
 - Name the link. Use “Read more: ” plus the post title, or a phrase that says where the link goes. “Click here” and a bare “Read more” are flagged before you send.
 - The button is real text, not a picture of text. Do not paste a screenshot of a sentence in place of the note.
 - Send a test and look at it on your phone. The layout stacks into one column.
-- Every issue includes your mailing address, a line about why the person got it, and an unsubscribe link. One-click unsubscribe is on the message as well. Tracking stays off unless you turn it on in settings.
+- Every issue includes your mailing address, a line about why the person got it, and an unsubscribe link. One-click unsubscribe is on the message as well. Tracking stays off unless you turn it on in settings. When it is on, click and open links are separate from the unsubscribe link.
 
 New signups confirm by email before they are on the list. The From address should be a mailbox on this site’s domain.

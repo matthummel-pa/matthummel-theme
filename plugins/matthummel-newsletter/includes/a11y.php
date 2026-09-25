@@ -276,6 +276,21 @@ function is_vague_link(string $label): bool
 /**
  * @return array{errors: list<string>, warnings: list<string>}
  */
+function source_function_body(string $source, string $name): string
+{
+    $start = strpos($source, 'function '.$name.'(');
+    if ($start === false) {
+        return '';
+    }
+
+    $next = strpos($source, "\nfunction ", $start + strlen($name));
+    if ($next === false) {
+        return substr($source, $start);
+    }
+
+    return substr($source, $start, $next - $start);
+}
+
 function audit_plugin_sources(): array
 {
     $root = dirname(__DIR__);
@@ -284,6 +299,7 @@ function audit_plugin_sources(): array
     $public = (string) file_get_contents($root.'/includes/public.php');
     $options = (string) file_get_contents($root.'/includes/options.php');
     $signup = (string) file_get_contents($root.'/includes/signup.php');
+    $render = (string) file_get_contents($root.'/includes/render.php');
 
     if (! str_contains($mailer, 'List-Unsubscribe-Post: List-Unsubscribe=One-Click') || ! str_contains($mailer, 'List-Unsubscribe:')) {
         $errors[] = 'Campaign mail needs List-Unsubscribe and List-Unsubscribe-Post headers.';
@@ -291,11 +307,61 @@ function audit_plugin_sources(): array
     if (! str_contains($public, 'List-Unsubscribe=One-Click') || ! str_contains($public, 'unsubscribe(')) {
         $errors[] = 'One-click unsubscribe must update the list in the same request.';
     }
+    if (! str_contains(source_function_body($public, 'handle_unsub_request'), 'token_matches(')) {
+        $errors[] = 'One-click unsubscribe must keep using the manage token.';
+    }
     if (! str_contains($options, "'track_opens' => 0") || ! str_contains($options, "'track_clicks' => 0")) {
         $errors[] = 'Open and click tracking must stay off by default.';
     }
+    if (! str_contains($options, "'auto_send' => 0")) {
+        $errors[] = 'Automatic sending must stay off by default.';
+    }
     if (! str_contains($signup, "'opt_in' => 'double'")) {
         $errors[] = 'New signups need double opt-in.';
+    }
+
+    foreach (['click_url', 'open_url'] as $name) {
+        $body = source_function_body($render, $name);
+        if (! str_contains($body, 'tracking_token(') || str_contains($body, 'subscriber_token(')) {
+            $errors[] = $name.' must use a tracking token, not the manage token.';
+        }
+    }
+
+    $archive = source_function_body($render, 'archive_url');
+    if (! str_contains($archive, 'view_token(') || str_contains($archive, 'subscriber_token(')) {
+        $errors[] = 'Browser preview must not carry the manage token.';
+    }
+
+    $click = source_function_body($public, 'safe_click_target');
+    if (! str_contains($click, 'track_clicks') || ! str_contains($click, 'home_url') || ! str_contains($click, 'tracking_token_matches(')) {
+        $errors[] = 'Click redirects must stay on this site unless tracking is on and the link is signed.';
+    }
+    $handler = source_function_body($public, 'handle_click');
+    if (! str_contains($handler, 'safe_click_target(') || str_contains($handler, 'token_matches(')) {
+        $errors[] = 'The click handler must use the signed target only.';
+    }
+    if (str_contains(source_function_body($public, 'handle_open'), 'token_matches(')) {
+        $errors[] = 'Open tracking must not accept the manage token.';
+    }
+    if (str_contains(source_function_body($public, 'handle_view'), 'token_matches(')) {
+        $errors[] = 'Browser preview must not accept the manage token.';
+    }
+    if (! str_contains($public, 'Referrer-Policy: no-referrer')) {
+        $errors[] = 'Public redirects need Referrer-Policy: no-referrer.';
+    }
+
+    $rate = source_function_body($signup, 'rate_key');
+    if ($rate === '' || str_contains($rate, 'HTTP_USER_AGENT')) {
+        $errors[] = 'Signup rate limit must not include the user agent.';
+    }
+    $subscribe = source_function_body($signup, 'subscribe_address');
+    $cooldownAt = strpos($subscribe, 'confirm_on_cooldown(');
+    $tokenAt = strpos($subscribe, 'store_confirm_token(');
+    if ($cooldownAt === false || $tokenAt === false || $cooldownAt > $tokenAt || ! str_contains($signup, 'mhn_confirm_cd_')) {
+        $errors[] = 'Confirmation mail needs a per-address cooldown before a new link is stored.';
+    }
+    if (! str_contains(source_function_body($signup, 'redirect_signup'), 'wp_validate_redirect(')) {
+        $errors[] = 'Signup must only redirect back to this site.';
     }
 
     return ['errors' => $errors, 'warnings' => []];

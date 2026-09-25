@@ -103,8 +103,37 @@ function subscriber_from_token(string $token, int $id): ?array
     return $row && token_matches($row, $token) ? $row : null;
 }
 
+function request_has_subscriber_secret(): bool
+{
+    foreach (['mhn_confirm', 'mhn_unsub', 'mhn_token', 'mhn_open', 'mhn_click', 'mhn_view', 'mhn_st', 'mhn_sid'] as $key) {
+        if (isset($_GET[$key]) || isset($_POST[$key])) {
+            return true;
+        }
+    }
+
+    return function_exists('is_page') && is_page('email-preferences');
+}
+
+function send_privacy_headers(): void
+{
+    if (! headers_sent()) {
+        header('Referrer-Policy: no-referrer');
+        header('X-Robots-Tag: noindex, nofollow');
+    }
+    nocache_headers();
+}
+
+function maybe_send_privacy_headers(): void
+{
+    if (request_has_subscriber_secret()) {
+        send_privacy_headers();
+    }
+}
+
 function on_template_redirect(): void
 {
+    maybe_send_privacy_headers();
+
     if (isset($_GET['mhn_confirm'])) {
         $raw = sanitize_text_field(wp_unslash($_GET['mhn_confirm']));
         $status = confirm_subscriber($raw);
@@ -163,19 +192,118 @@ function handle_unsub_request(): void
     exit;
 }
 
+function open_should_count(int $issueId, int $subscriberId, string $token): bool
+{
+    if (settings()['track_opens'] !== 1 || $issueId < 1 || $subscriberId < 1) {
+        return false;
+    }
+
+    $post = get_post($issueId);
+    if (! $post instanceof \WP_Post || $post->post_type !== 'newsletter_issue') {
+        return false;
+    }
+
+    $row = find($subscriberId);
+    if (! $row) {
+        return false;
+    }
+
+    return tracking_token_matches($row, $issueId, 'open', '', $token);
+}
+
+/**
+ * @return array<string, string>|null
+ */
+function subscriber_for_preview(int $issueId, int $subscriberId, string $token): ?array
+{
+    if ($subscriberId < 1 || $token === '') {
+        return null;
+    }
+
+    $row = find($subscriberId);
+    if (! $row || ! view_token_matches($row, $issueId, $token)) {
+        return null;
+    }
+
+    return $row;
+}
+
+function decode_click_target(string $encoded): string
+{
+    $encoded = strtr(trim($encoded), ' ', '+');
+    if ($encoded === '' || preg_match('/^[A-Za-z0-9+\/=]+$/', $encoded) !== 1) {
+        return '';
+    }
+
+    $target = base64_decode($encoded, true);
+
+    return is_string($target) ? $target : '';
+}
+
+function click_target_is_allowed(string $target): bool
+{
+    if ($target === '' || preg_match('/[\s\\\\]/', $target) === 1) {
+        return false;
+    }
+
+    $parts = wp_parse_url($target);
+    if (! is_array($parts)) {
+        return false;
+    }
+
+    $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+    if (! in_array($scheme, ['http', 'https'], true)) {
+        return false;
+    }
+
+    if (($parts['user'] ?? '') !== '' || ($parts['pass'] ?? '') !== '') {
+        return false;
+    }
+
+    return (string) ($parts['host'] ?? '') !== '';
+}
+
+/**
+ * Honor a click only when tracking is on and the link was signed for this issue.
+ *
+ * @return array{url: string, tracked: bool}
+ */
+function safe_click_target(int $issueId, int $subscriberId, string $token, string $encoded): array
+{
+    $home = ['url' => home_url('/'), 'tracked' => false];
+    if (settings()['track_clicks'] !== 1 || $issueId < 1 || $subscriberId < 1 || $token === '') {
+        return $home;
+    }
+
+    $post = get_post($issueId);
+    if (! $post instanceof \WP_Post || $post->post_type !== 'newsletter_issue') {
+        return $home;
+    }
+
+    $target = decode_click_target($encoded);
+    if ($target === '' || ! click_target_is_allowed($target)) {
+        return $home;
+    }
+
+    $row = find($subscriberId);
+    if (! $row || ! tracking_token_matches($row, $issueId, 'click', $target, $token)) {
+        return $home;
+    }
+
+    return ['url' => $target, 'tracked' => true];
+}
+
 function handle_open(): void
 {
     $issueId = absint($_GET['mhn_open'] ?? 0);
     $subscriberId = absint($_GET['mhn_sid'] ?? 0);
     $token = isset($_GET['mhn_st']) ? sanitize_text_field(wp_unslash($_GET['mhn_st'])) : '';
-    $row = find($subscriberId);
-    if (settings()['track_opens'] === 1 && $row && token_matches($row, $token)) {
+    if (open_should_count($issueId, $subscriberId, $token)) {
         log_event($issueId, $subscriberId, 'open', '');
     }
 
-    nocache_headers();
+    send_privacy_headers();
     header('Content-Type: image/gif');
-    header('X-Robots-Tag: noindex, nofollow');
     echo base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     exit;
 }
@@ -186,21 +314,14 @@ function handle_click(): void
     $subscriberId = absint($_GET['mhn_sid'] ?? 0);
     $token = isset($_GET['mhn_st']) ? sanitize_text_field(wp_unslash($_GET['mhn_st'])) : '';
     $encoded = isset($_GET['mhn_u']) ? (string) wp_unslash($_GET['mhn_u']) : '';
-    $target = base64_decode($encoded, true);
-    $row = find($subscriberId);
-    if (! $row || ! token_matches($row, $token) || ! is_string($target) || preg_match('#^https?://#i', $target) !== 1) {
-        wp_safe_redirect(home_url('/'));
-        exit;
-    }
-
-    if (settings()['track_clicks'] === 1) {
-        $host = wp_parse_url($target, PHP_URL_HOST);
+    $click = safe_click_target($issueId, $subscriberId, $token, $encoded);
+    if ($click['tracked']) {
+        $host = wp_parse_url($click['url'], PHP_URL_HOST);
         log_event($issueId, $subscriberId, 'click', is_string($host) ? $host : '');
     }
 
-    nocache_headers();
-    header('X-Robots-Tag: noindex, nofollow');
-    wp_redirect($target);
+    send_privacy_headers();
+    wp_redirect($click['url']);
     exit;
 }
 
@@ -208,26 +329,20 @@ function handle_view(): void
 {
     $issueId = absint($_GET['mhn_view'] ?? 0);
     $key = isset($_GET['k']) ? sanitize_text_field(wp_unslash($_GET['k'])) : '';
-    $allowed = ($key !== '' && hash_equals(preview_key($issueId), $key)) || current_user_can('manage_options');
+    $expectedKey = preview_key($issueId);
+    $allowed = ($key !== '' && strlen($key) === strlen($expectedKey) && hash_equals($expectedKey, $key)) || current_user_can('manage_options');
     $post = get_post($issueId);
     if (! $allowed || ! $post instanceof \WP_Post || $post->post_type !== 'newsletter_issue') {
         wp_die(esc_html__('That preview is not available.', 'matthummel-newsletter'), 404);
     }
 
-    $subscriber = null;
     $subscriberId = absint($_GET['mhn_sid'] ?? 0);
     $token = isset($_GET['mhn_st']) ? sanitize_text_field(wp_unslash($_GET['mhn_st'])) : '';
-    if ($subscriberId > 0 && $token !== '') {
-        $row = find($subscriberId);
-        if ($row && token_matches($row, $token)) {
-            $subscriber = $row;
-        }
-    }
+    $subscriber = subscriber_for_preview($issueId, $subscriberId, $token);
 
     $message = issue_message($issueId, $subscriber, true);
-    nocache_headers();
+    send_privacy_headers();
     header('Content-Type: text/html; charset=utf-8');
-    header('X-Robots-Tag: noindex, nofollow');
     echo $message['html'];
     exit;
 }
@@ -339,6 +454,7 @@ function public_dashboard(): string
     return $html;
 }
 
+add_action('send_headers', __NAMESPACE__.'\\maybe_send_privacy_headers');
 add_action('admin_post_mhn_preferences_save', __NAMESPACE__.'\\handle_preferences_save');
 add_action('admin_post_nopriv_mhn_preferences_save', __NAMESPACE__.'\\handle_preferences_save');
 add_action('admin_post_mhn_preferences_unsub', __NAMESPACE__.'\\handle_preferences_unsub');
@@ -350,12 +466,14 @@ function handle_preferences_save(): void
     $nonce = isset($_POST['mhn_preferences_nonce']) ? wp_unslash($_POST['mhn_preferences_nonce']) : '';
     $row = subscriber_from_token($token, absint($_POST['mhn_sid'] ?? 0));
     if (! $row || ! is_string($nonce) || ! wp_verify_nonce($nonce, 'mhn_preferences')) {
+        send_privacy_headers();
         wp_safe_redirect(page_url('email-preferences'));
         exit;
     }
 
     $first = isset($_POST['mhn_fname']) ? mb_substr(sanitize_text_field(wp_unslash($_POST['mhn_fname'])), 0, 80) : '';
     update_subscriber((int) $row['id'], ['first_name' => $first]);
+    send_privacy_headers();
     wp_safe_redirect(add_query_arg([
         'mhn_sid' => (int) $row['id'],
         'mhn_token' => $token,
@@ -370,11 +488,13 @@ function handle_preferences_unsub(): void
     $nonce = isset($_POST['mhn_preferences_unsub_nonce']) ? wp_unslash($_POST['mhn_preferences_unsub_nonce']) : '';
     $row = subscriber_from_token($token, absint($_POST['mhn_sid'] ?? 0));
     if (! $row || ! is_string($nonce) || ! wp_verify_nonce($nonce, 'mhn_preferences_unsub')) {
+        send_privacy_headers();
         wp_safe_redirect(page_url('email-preferences'));
         exit;
     }
 
     unsubscribe((int) $row['id']);
+    send_privacy_headers();
     wp_safe_redirect(add_query_arg([
         'mhn_sid' => (int) $row['id'],
         'mhn_token' => $token,
