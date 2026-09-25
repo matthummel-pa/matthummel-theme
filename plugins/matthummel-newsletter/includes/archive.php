@@ -722,15 +722,18 @@ function page_sent_archive(): void
 function render_archive_delete(int $snapshotId): void
 {
     $row = sent_snapshot($snapshotId);
-    echo '<div class="wrap mhn-admin">';
+    echo '<div class="wrap mhn-admin mhn-narrow">';
+    echo '<header class="mhn-dash-head"><div>';
     echo '<h1>'.esc_html__('Delete saved copy', 'matthummel-newsletter').'</h1>';
+    echo '</div></header>';
     if ($row === null) {
-        echo '<p>'.esc_html__('That saved copy is not here.', 'matthummel-newsletter').'</p></div>';
+        echo '<p class="mhn-settings-note">'.esc_html__('That saved copy is not here.', 'matthummel-newsletter').'</p></div>';
 
         return;
     }
 
-    echo '<p>'.esc_html(sprintf(
+    echo '<section class="mhn-card">';
+    echo '<p class="mhn-card-lead">'.esc_html(sprintf(
         /* translators: 1: subject, 2: finished timestamp */
         __('Delete the saved copy of “%1$s” from %2$s. The subscriber list stays. This cannot be undone.', 'matthummel-newsletter'),
         $row['subject'],
@@ -740,27 +743,29 @@ function render_archive_delete(int $snapshotId): void
     echo '<input type="hidden" name="action" value="mhn_archive_delete">';
     echo '<input type="hidden" name="snapshot" value="'.esc_attr((string) $snapshotId).'">';
     wp_nonce_field('mhn_archive_delete_'.$snapshotId);
-    echo '<p><label><input type="checkbox" name="mhn_confirm_delete" value="1"> '.esc_html__('I understand this removes the saved copy.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="mhn_confirm_delete" value="1"> '.esc_html__('I understand this removes the saved copy.', 'matthummel-newsletter').'</label></p>';
     submit_button(__('Delete saved copy', 'matthummel-newsletter'), 'delete');
     echo '</form>';
     echo '<p><a href="'.esc_url(sent_archive_admin_url($snapshotId)).'">'.esc_html__('Back', 'matthummel-newsletter').'</a></p>';
-    echo '</div>';
+    echo '</section></div>';
 }
 
 function render_archive_view(int $snapshotId): void
 {
     $row = sent_snapshot($snapshotId);
     echo '<div class="wrap mhn-admin">';
+    echo '<header class="mhn-dash-head"><div>';
+    echo '<p class="mhn-wizard-back"><a href="'.esc_url(sent_archive_admin_url()).'">'.esc_html__('Back to Sent archive', 'matthummel-newsletter').'</a></p>';
     echo '<h1>'.esc_html__('Saved copy', 'matthummel-newsletter').'</h1>';
-    echo '<p><a href="'.esc_url(sent_archive_admin_url()).'">'.esc_html__('Back to Sent archive', 'matthummel-newsletter').'</a></p>';
+    echo '</div></header>';
     if ($row === null) {
-        echo '<p>'.esc_html__('That saved copy is not here.', 'matthummel-newsletter').'</p></div>';
+        echo '<p class="mhn-settings-note">'.esc_html__('That saved copy is not here.', 'matthummel-newsletter').'</p></div>';
 
         return;
     }
 
     $issueId = (int) $row['issue_id'];
-    echo '<dl class="mhn-archive-meta">';
+    echo '<section class="mhn-card"><dl class="mhn-archive-meta">';
     $fields = [
         __('Subject', 'matthummel-newsletter') => $row['subject'],
         __('Preheader', 'matthummel-newsletter') => $row['preheader'],
@@ -779,14 +784,14 @@ function render_archive_view(int $snapshotId): void
         echo '<dt>'.esc_html($label).'</dt><dd>'.esc_html($value).'</dd>';
     }
     echo '</dl>';
-    echo '<p>';
+    echo '<p class="mhn-archive-actions">';
     echo '<a class="button" href="'.esc_url(archive_action_url($snapshotId, 'mhn_archive_html')).'">'.esc_html__('Download HTML', 'matthummel-newsletter').'</a> ';
     echo '<a class="button" href="'.esc_url(archive_action_url($snapshotId, 'mhn_archive_eml')).'">'.esc_html__('Download EML', 'matthummel-newsletter').'</a> ';
     if ($issueId > 0 && issue_status($issueId) === 'sent') {
         echo '<a class="button" href="'.esc_url(duplicate_issue_url($issueId)).'">'.esc_html__('Duplicate as new draft', 'matthummel-newsletter').'</a> ';
     }
     echo '<a class="button" href="'.esc_url(sent_archive_admin_url($snapshotId).'&mhn_confirm=delete').'">'.esc_html__('Delete', 'matthummel-newsletter').'</a>';
-    echo '</p>';
+    echo '</p></section>';
     $frame = archive_action_url($snapshotId, 'mhn_archive_frame');
     echo '<iframe class="mhn-archive-frame" title="'.esc_attr__('Saved newsletter', 'matthummel-newsletter').'" sandbox="" src="'.esc_url($frame).'"></iframe>';
     echo '</div>';
@@ -822,14 +827,17 @@ function render_archive_list(): void
         'page' => $page,
     ]);
 
-    echo '<div class="wrap mhn-admin">';
+    echo '<div class="wrap mhn-admin mhn-archive">';
+    echo '<header class="mhn-dash-head"><div>';
     echo '<h1>'.esc_html__('Sent archive', 'matthummel-newsletter').'</h1>';
     echo '<p>'.esc_html__('Private record of each finished send. Merge tags stay as placeholders. Subscriber addresses are not stored here.', 'matthummel-newsletter').'</p>';
+    echo '</div></header>';
+    echo '<hr class="wp-header-end">';
     if (isset($_GET['deleted'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Saved copy deleted.', 'matthummel-newsletter').'</p></div>';
     }
 
-    echo '<form method="get" class="mhn-archive-filters">';
+    echo '<section class="mhn-card"><form method="get" class="mhn-archive-filters">';
     echo '<input type="hidden" name="page" value="mhn-archive">';
     echo '<input type="hidden" name="orderby" value="'.esc_attr($orderby).'">';
     echo '<input type="hidden" name="order" value="'.esc_attr(strtolower($order)).'">';
@@ -856,7 +864,8 @@ function render_archive_list(): void
     echo '</form>';
 
     $csv = wp_nonce_url(admin_url('admin-post.php?action=mhn_archive_csv'), 'mhn_archive_csv');
-    echo '<p><a class="button" href="'.esc_url($csv).'">'.esc_html__('Download CSV', 'matthummel-newsletter').'</a></p>';
+    echo '<p><a class="button" href="'.esc_url($csv).'">'.esc_html__('Download CSV', 'matthummel-newsletter').'</a></p></section>';
+    echo '<section class="mhn-card mhn-table-card">';
 
     $query = [
         's' => $search,
@@ -865,7 +874,7 @@ function render_archive_list(): void
         'to' => $to,
         'show' => $show,
     ];
-    echo '<table class="widefat striped"><thead><tr>';
+    echo '<table class="widefat striped mhn-issues-admin"><thead><tr>';
     echo '<th>'.archive_sort_link('finished_at', __('Date', 'matthummel-newsletter'), $orderby, $order, $query).'</th>';
     echo '<th>'.archive_sort_link('subject', __('Subject', 'matthummel-newsletter'), $orderby, $order, $query).'</th>';
     echo '<th>'.archive_sort_link('template', __('Template', 'matthummel-newsletter'), $orderby, $order, $query).'</th>';
@@ -928,7 +937,7 @@ function render_archive_list(): void
         echo '</div></div>';
     }
 
-    echo '</div>';
+    echo '</section></div>';
 }
 
 /**
