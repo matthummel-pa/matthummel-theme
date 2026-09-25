@@ -184,6 +184,7 @@ function render_meta_box(\WP_Post $post): void
         return;
     }
 
+    echo '<div class="mhn-admin mhn-metabox">';
     echo '<p><a href="'.esc_url(wizard_url($post->ID)).'">'.esc_html__('Continue in the step-by-step wizard', 'matthummel-newsletter').'</a></p>';
     render_issue_audit($post->ID);
     $subject = (string) get_post_meta($post->ID, '_mhn_subject', true);
@@ -201,6 +202,7 @@ function render_meta_box(\WP_Post $post): void
         echo '<p><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong><br>'.esc_html($subject !== '' ? $subject : __('(none)', 'matthummel-newsletter')).'</p>';
         echo '<p><strong>'.esc_html__('Preheader', 'matthummel-newsletter').'</strong><br>'.esc_html($preheader !== '' ? $preheader : __('(none)', 'matthummel-newsletter')).'</p>';
         echo '<p><a class="button" href="'.esc_url($preview).'" target="_blank" rel="noopener">'.esc_html__('Preview', 'matthummel-newsletter').'</a></p>';
+        echo '</div>';
 
         return;
     }
@@ -250,6 +252,7 @@ function render_meta_box(\WP_Post $post): void
     </p>
     <p><a href="<?php echo esc_url($deliver); ?>"><?php echo esc_html__('Schedule or send', 'matthummel-newsletter'); ?></a></p>
     <?php
+    echo '</div>';
 }
 
 function save_meta(int $postId, \WP_Post $post): void

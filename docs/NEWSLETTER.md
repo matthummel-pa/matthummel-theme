@@ -2,9 +2,9 @@
 
 This is the letter that goes out from the site. Addresses stay here. Mail goes out through WordPress, not a separate newsletter service.
 
-Open **Get updates** in wp-admin, then **Create newsletter**. The same button is on the Get updates page when you are logged in as an administrator.
+Open **Get updates** in wp-admin. That screen is the audience home: subscribed, pending, and unsubscribed counts, then recent newsletters with status, sent time, and delivered or failed counts after a send starts. **Create newsletter** is the main button. Subscribers, Import, Sent archive, and Settings are links on that screen and in the menu. The same create button is on the public Get updates page when you are logged in as an administrator. The dashboard does not show open or click rates.
 
-The draft saves as you go. You can close the tab and come back. On the dashboard, **Continue** opens the step you left.
+The draft saves as you go. You can close the tab and come back. On the dashboard, **Continue** opens the step you left. The wizard labels the current step in words, not only by color.
 
 ## The five steps
 

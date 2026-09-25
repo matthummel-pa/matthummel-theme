@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,9 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 == Changelog ==
 
+= 1.0.1 =
+* Get updates admin screens use navy and white cards. Sending, tracking, and automatic send are unchanged.
+
 = 1.0.0 =
 * Sign up, confirm by email, and unsubscribe without an account. The confirmation link opens a page. The address is added only after the button is pressed. First name and last name are optional on that page.
 * Create a newsletter one step at a time, or edit the same draft in the block editor.
@@ -64,3 +67,4 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 * Click and open links cannot unsubscribe. Confirmation email for the same address is limited.
 * Import and export a CSV of addresses you already have permission to email.
 * Sent archive keeps a private copy of each finished send. A sent issue is read-only. Duplicate it to start a new draft. Archive hides an old issue from the main list and keeps the copy.
+* Get updates shows audience counts, one Create newsletter button, and recent issues with status, sent time, and real delivered or failed counts. Open and click rates are not shown.

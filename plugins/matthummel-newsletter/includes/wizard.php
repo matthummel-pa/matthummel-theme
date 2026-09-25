@@ -401,11 +401,15 @@ function render_wizard_page(): void
     }
 
     echo '<div class="wrap mhn-admin mhn-wizard">';
+    echo '<header class="mhn-dash-head"><div>';
+    echo '<p class="mhn-wizard-back"><a href="'.esc_url(admin_url('admin.php?page=mhn-newsletter')).'">'.esc_html__('Get updates', 'matthummel-newsletter').'</a></p>';
     echo '<h1>'.esc_html__('Create newsletter', 'matthummel-newsletter').'</h1>';
+    echo '<p>'.esc_html__('Five steps. The draft saves as you go, so you can leave and come back.', 'matthummel-newsletter').'</p>';
+    echo '</div></header>';
+    echo '<hr class="wp-header-end">';
     if ($issueId > 0) {
         render_sent_lock_notice($issueId);
     }
-    echo '<p>'.esc_html__('Five steps. The draft saves as you go, so you can leave and come back.', 'matthummel-newsletter').'</p>';
     render_wizard_notices($issueId);
     render_wizard_progress($issueId, $step);
     echo '<form id="mhn-wizard" method="post" action="'.esc_url(wizard_url()).'">';
@@ -416,6 +420,7 @@ function render_wizard_page(): void
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
     }
 
+    echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
         1 => render_step_template($templateSlug),
         2 => render_step_content($issueId, $templateSlug),
@@ -423,6 +428,7 @@ function render_wizard_page(): void
         4 => render_step_preview($issueId),
         default => render_step_send($issueId),
     };
+    echo '</div>';
 
     render_wizard_nav($issueId, $step);
     echo '</form></div>';
@@ -487,14 +493,28 @@ function render_wizard_progress(int $issueId, int $step): void
     ];
     $reached = $issueId > 0 ? max($step, (int) get_post_meta($issueId, '_mhn_wizard_step', true)) : 1;
 
+    echo '<p class="mhn-wizard-kicker">'.esc_html(sprintf(
+        /* translators: 1: current step number, 2: step name */
+        __('Step %1$d of 5: %2$s', 'matthummel-newsletter'),
+        $step,
+        $labels[$step]
+    )).'</p>';
     echo '<ol class="mhn-wizard-steps">';
     foreach ($labels as $number => $label) {
         $class = $number === $step ? 'is-current' : ($number < $reached ? 'is-done' : '');
         echo '<li class="'.esc_attr($class).'"'.($number === $step ? ' aria-current="step"' : '').'>';
-        if ($issueId > 0 && $number !== $step && $number <= $reached) {
-            echo '<a href="'.esc_url(wizard_url($issueId, $number)).'">'.esc_html((string) $number.'. '.$label).'</a>';
+        $body = '<span class="mhn-step-label">'.esc_html((string) $number.'. '.$label).'</span>';
+        if ($number === $step) {
+            $body .= '<span class="mhn-step-state">'.esc_html__('Current', 'matthummel-newsletter').'</span>';
+        } elseif ($number < $reached) {
+            $body .= '<span class="mhn-step-state">'.esc_html__('Done', 'matthummel-newsletter').'</span>';
         } else {
-            echo esc_html((string) $number.'. '.$label);
+            $body .= '<span class="screen-reader-text">'.esc_html__('Not started', 'matthummel-newsletter').'</span>';
+        }
+        if ($issueId > 0 && $number !== $step && $number <= $reached) {
+            echo '<a href="'.esc_url(wizard_url($issueId, $number)).'">'.$body.'</a>';
+        } else {
+            echo $body;
         }
         echo '</li>';
     }
@@ -648,7 +668,7 @@ function render_featured_controls(int $issueId, bool $canReplace): void
     $post = $posts[0] ?? null;
     echo '<h3>'.esc_html__('Featured image', 'matthummel-newsletter').'</h3>';
     echo '<input type="hidden" name="mhn_feature_show" value="0">';
-    echo '<p><label><input type="checkbox" name="mhn_feature_show" value="1" '.checked($show, true, false).'> '.esc_html__('Show the featured image', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="mhn_feature_show" value="1" '.checked($show, true, false).'> '.esc_html__('Show the featured image', 'matthummel-newsletter').'</label></p>';
     echo '<p class="description">'.esc_html__('The image sits near the top and links to the post. It stays within 600 pixels wide. A digest uses a smaller thumbnail. Alt text comes from the image, or the post title when the image has none. Leave this off and that send has no image.', 'matthummel-newsletter').'</p>';
     if ($post instanceof \WP_Post) {
         $thumb = (int) get_post_thumbnail_id($post);
@@ -789,7 +809,7 @@ function render_step_send(int $issueId): void
         return;
     }
 
-    echo '<p><label><input type="checkbox" name="mhn_confirm_send" value="1"> '.esc_html(sprintf(
+    echo '<p class="mhn-check"><label><input type="checkbox" name="mhn_confirm_send" value="1"> '.esc_html(sprintf(
         /* translators: %d: recipient count */
         __('Send now to %d subscribed addresses.', 'matthummel-newsletter'),
         $count
@@ -803,7 +823,7 @@ function render_step_send(int $issueId): void
         __('Site time (%s).', 'matthummel-newsletter'),
         $zone !== '' ? $zone : 'UTC'
     )).'</span></p>';
-    echo '<p><label><input type="checkbox" name="mhn_confirm_schedule" value="1"> '.esc_html(sprintf(
+    echo '<p class="mhn-check"><label><input type="checkbox" name="mhn_confirm_schedule" value="1"> '.esc_html(sprintf(
         /* translators: %d: recipient count */
         __('Schedule this send to %d subscribed addresses.', 'matthummel-newsletter'),
         $count
@@ -823,7 +843,7 @@ function render_wizard_nav(int $issueId, int $step): void
     if ($issueId > 0) {
         $edit = get_edit_post_link($issueId, 'raw');
         if (is_string($edit) && $edit !== '') {
-            echo '<a class="button" href="'.esc_url($edit).'">'.esc_html__('Open the block editor', 'matthummel-newsletter').'</a> ';
+            echo '<a class="mhn-quiet-link" href="'.esc_url($edit).'">'.esc_html__('Open the block editor', 'matthummel-newsletter').'</a> ';
         }
     }
     echo '<span id="mhn-save-status" class="mhn-save-status" aria-live="polite"></span>';
