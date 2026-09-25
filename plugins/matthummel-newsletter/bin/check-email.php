@@ -171,6 +171,7 @@ require dirname(__DIR__).'/includes/blocks.php';
 require dirname(__DIR__).'/includes/render.php';
 require dirname(__DIR__).'/includes/a11y.php';
 
+use function MattHummel\Newsletter\audit_confirm_flow;
 use function MattHummel\Newsletter\audit_html;
 use function MattHummel\Newsletter\audit_plugin_sources;
 use function MattHummel\Newsletter\email_document;
@@ -223,6 +224,17 @@ if ($sources['errors'] === []) {
     $failed = true;
     fwrite(STDERR, "fail  headers and defaults\n");
     foreach ($sources['errors'] as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$confirmFlow = audit_confirm_flow();
+if ($confirmFlow === []) {
+    fwrite(STDOUT, "pass  confirm link\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  confirm link\n");
+    foreach ($confirmFlow as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }

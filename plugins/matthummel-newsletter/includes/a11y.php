@@ -368,6 +368,51 @@ function audit_plugin_sources(): array
 }
 
 /**
+ * The confirm link must render a page. Only a nonce-protected POST may subscribe.
+ *
+ * @return list<string>
+ */
+function audit_confirm_flow(): array
+{
+    $root = dirname(__DIR__);
+    $public = (string) file_get_contents($root.'/includes/public.php');
+    $mailer = (string) file_get_contents($root.'/includes/mailer.php');
+    $errors = [];
+    $get = source_function_body($public, 'on_template_redirect');
+    if ($get === '' || str_contains($get, 'confirm_subscriber(')) {
+        $errors[] = 'A GET on the confirm link must not confirm the subscription.';
+    }
+    $form = source_function_body($public, 'confirm_form_html');
+    if (! str_contains($form, 'Confirm your subscription') || ! str_contains($form, '<button') || ! str_contains($form, 'wp_nonce_field(')) {
+        $errors[] = 'The confirm page needs a heading, a button, and a nonce.';
+    }
+    if (! str_contains($public, 'focus-visible')) {
+        $errors[] = 'The confirm button needs a visible focus style.';
+    }
+    $post = source_function_body($public, 'confirm_post_status');
+    $nonceAt = strpos($post, 'wp_verify_nonce(');
+    $confirmAt = strpos($post, 'confirm_subscriber(');
+    if ($nonceAt === false || $confirmAt === false || $nonceAt > $confirmAt) {
+        $errors[] = 'Confirmation must check the nonce before it confirms.';
+    }
+    $headers = source_function_body($public, 'confirm_page_headers');
+    if (! str_contains($headers, 'DONOTCACHEPAGE') || ! str_contains($headers, 'send_privacy_headers(')) {
+        $errors[] = 'The confirm page must send no-store headers and DONOTCACHEPAGE.';
+    }
+    if (! str_contains(source_function_body($public, 'send_privacy_headers'), 'nocache_headers()') || ! str_contains($public, 'Referrer-Policy: no-referrer')) {
+        $errors[] = 'The confirm page must send Referrer-Policy and nocache headers.';
+    }
+    if (str_contains($mailer, 'One click confirms')) {
+        $errors[] = 'The confirmation email must not say the link alone confirms.';
+    }
+    if (! str_contains(source_function_body($public, 'confirm_result_html'), 'role="status"')) {
+        $errors[] = 'The confirm POST needs a success state.';
+    }
+
+    return $errors;
+}
+
+/**
  * @return array{errors: list<string>, warnings: list<string>}
  */
 function audit_issue(int $issueId): array

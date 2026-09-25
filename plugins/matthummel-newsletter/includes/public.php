@@ -135,10 +135,7 @@ function on_template_redirect(): void
     maybe_send_privacy_headers();
 
     if (isset($_GET['mhn_confirm'])) {
-        $raw = sanitize_text_field(wp_unslash($_GET['mhn_confirm']));
-        $status = confirm_subscriber($raw);
-        wp_safe_redirect(add_query_arg('signup', $status, page_url('get-updates')));
-        exit;
+        render_confirm_get(sanitize_text_field(wp_unslash((string) $_GET['mhn_confirm'])));
     }
 
     if (isset($_GET['mhn_unsub'], $_GET['mhn_token'])) {
@@ -156,6 +153,105 @@ function on_template_redirect(): void
     if (isset($_GET['mhn_view'])) {
         handle_view();
     }
+}
+
+function confirm_page_headers(): void
+{
+    if (! defined('DONOTCACHEPAGE')) {
+        define('DONOTCACHEPAGE', true);
+    }
+    send_privacy_headers();
+}
+
+function confirm_page_css(): string
+{
+    return 'body{margin:0;background:#fff;color:#141c28;font:16px/1.5 "IBM Plex Sans",Inter,system-ui,sans-serif}'
+        .'.mhn-confirm{max-width:36rem;margin:0 auto;padding:2rem 1.25rem}'
+        .'h1{font-size:1.75rem;line-height:1.3;margin:0 0 .75rem}'
+        .'p{margin:0 0 1rem}'
+        .'.mhn-confirm-btn{display:inline-block;min-height:44px;padding:.55rem 1rem;border:0;border-radius:4px;background:#0d2e57;color:#fff;font-size:1rem;font-weight:650;line-height:1.4;cursor:pointer;text-decoration:none}'
+        .'.mhn-confirm-btn:focus-visible{outline:3px solid #0d2e57;outline-offset:3px}'
+        .'.mhn-status{color:#166534}'
+        .'.mhn-status-error{color:#b42318}'
+        .'@media (prefers-color-scheme:dark){body{background:#162033;color:#f7f9fc}.mhn-confirm-btn{background:#d6e4ff;color:#0d2e57}.mhn-confirm-btn:focus-visible{outline-color:#d6e4ff}.mhn-status{color:#b7e4c7}.mhn-status-error{color:#ffb4a8}}';
+}
+
+function confirm_document(string $title, string $body): string
+{
+    $lang = get_bloginfo('language');
+    $lang = is_string($lang) && $lang !== '' ? $lang : 'en';
+    $dir = is_rtl() ? 'rtl' : 'ltr';
+
+    return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'">'
+        .'<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+        .'<meta name="robots" content="noindex, nofollow"><title>'.esc_html($title).'</title>'
+        .'<style>'.confirm_page_css().'</style></head><body>'.$body.'</body></html>';
+}
+
+function confirm_form_html(string $token): string
+{
+    $html = '<main class="mhn-confirm">';
+    $html .= '<h1>'.esc_html__('Confirm your subscription', 'matthummel-newsletter').'</h1>';
+    $html .= '<p>'.esc_html__('Press the button and I will add this address. Opening this page does not confirm it.', 'matthummel-newsletter').'</p>';
+    $html .= '<form class="mhn-form" method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
+    $html .= '<input type="hidden" name="action" value="mhn_confirm">';
+    $html .= '<input type="hidden" name="mhn_confirm" value="'.esc_attr($token).'">';
+    $html .= wp_nonce_field('mhn_confirm_subscription', 'mhn_confirm_nonce', true, false);
+    $html .= '<button type="submit" class="mhn-confirm-btn">'.esc_html__('Confirm your subscription', 'matthummel-newsletter').'</button>';
+    $html .= '</form></main>';
+
+    return $html;
+}
+
+function confirm_result_html(string $status): string
+{
+    if ($status === 'ok') {
+        return '<main class="mhn-confirm"><h1>'.esc_html__('You are on the list', 'matthummel-newsletter').'</h1>'
+            .'<p class="mhn-status" role="status">'.esc_html__('Thanks. I will send a note when I publish.', 'matthummel-newsletter').'</p>'
+            .'<p><a class="mhn-confirm-btn" href="'.esc_url(home_url('/')).'">'.esc_html__('Back to the site', 'matthummel-newsletter').'</a></p></main>';
+    }
+
+    return '<main class="mhn-confirm"><h1>'.esc_html__('This link did not confirm', 'matthummel-newsletter').'</h1>'
+        .'<p class="mhn-status mhn-status-error" role="alert">'.esc_html__('Use the button on the link from the email. If you already confirmed, you are on the list.', 'matthummel-newsletter').'</p></main>';
+}
+
+/**
+ * Confirm only when the POST includes the token and a valid nonce.
+ */
+function confirm_post_status(string $token, string $nonce): string
+{
+    if ($nonce === '' || wp_verify_nonce($nonce, 'mhn_confirm_subscription') === false) {
+        return 'error';
+    }
+
+    return confirm_subscriber($token) === 'ok' ? 'ok' : 'error';
+}
+
+function render_confirm_get(string $token): void
+{
+    confirm_page_headers();
+    status_header(200);
+    header('Content-Type: text/html; charset=utf-8');
+    echo confirm_document(
+        __('Confirm your subscription', 'matthummel-newsletter'),
+        confirm_form_html($token)
+    );
+    exit;
+}
+
+function handle_confirm_post(): void
+{
+    $token = isset($_POST['mhn_confirm']) ? sanitize_text_field(wp_unslash($_POST['mhn_confirm'])) : '';
+    $nonce = isset($_POST['mhn_confirm_nonce']) ? wp_unslash($_POST['mhn_confirm_nonce']) : '';
+    $status = confirm_post_status($token, is_string($nonce) ? $nonce : '');
+    confirm_page_headers();
+    status_header($status === 'ok' ? 200 : 400);
+    header('Content-Type: text/html; charset=utf-8');
+    $title = $status === 'ok'
+        ? __('You are on the list', 'matthummel-newsletter')
+        : __('This link did not confirm', 'matthummel-newsletter');
+    echo confirm_document($title, confirm_result_html($status));
+    exit;
 }
 
 function handle_unsub_request(): void
@@ -455,6 +551,8 @@ function public_dashboard(): string
 }
 
 add_action('send_headers', __NAMESPACE__.'\\maybe_send_privacy_headers');
+add_action('admin_post_mhn_confirm', __NAMESPACE__.'\\handle_confirm_post');
+add_action('admin_post_nopriv_mhn_confirm', __NAMESPACE__.'\\handle_confirm_post');
 add_action('admin_post_mhn_preferences_save', __NAMESPACE__.'\\handle_preferences_save');
 add_action('admin_post_nopriv_mhn_preferences_save', __NAMESPACE__.'\\handle_preferences_save');
 add_action('admin_post_mhn_preferences_unsub', __NAMESPACE__.'\\handle_preferences_unsub');

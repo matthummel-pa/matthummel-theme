@@ -50,7 +50,7 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 == Changelog ==
 
 = 1.0.0 =
-* Sign up, confirm by email, and unsubscribe without an account.
+* Sign up, confirm by email, and unsubscribe without an account. The confirmation link opens a page. The address is added only after the button is pressed.
 * Create a newsletter one step at a time, or edit the same draft in the block editor.
 * Choose a blog update, a blog digest, or a custom message. Each template has a note from you.
 * Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.

@@ -127,10 +127,29 @@ mhn_check(! str_contains($confirmHeaders, 'List-Unsubscribe'), 'confirmation has
 
 $pending = Newsletter\find_by_email('new@example.com');
 mhn_check($pending !== null && $pending['status'] === 'pending', 'new address stays pending');
-preg_match('/mhn_confirm=([a-f0-9]{32})/', (string) ($confirm['message'] ?? ''), $tokenMatch);
+$confirmMessage = (string) ($confirm['message'] ?? '');
+mhn_check(! str_contains($confirmMessage, 'One click confirms'), 'confirmation email does not confirm on open');
+preg_match('/mhn_confirm=([a-f0-9]{32})/', $confirmMessage, $tokenMatch);
 mhn_check(isset($tokenMatch[1]), 'confirmation link is in the message');
 if (isset($tokenMatch[1])) {
-    mhn_check(Newsletter\confirm_subscriber($tokenMatch[1]) === 'ok', 'confirmation link subscribes');
+    $confirmPage = Newsletter\confirm_form_html($tokenMatch[1]);
+    mhn_check(str_contains($confirmPage, '<h1>Confirm your subscription</h1>'), 'confirm page has a real heading');
+    mhn_check(str_contains($confirmPage, '<button'), 'confirm page has a real button');
+    mhn_check(str_contains($confirmPage, 'name="mhn_confirm_nonce"'), 'confirm page includes a nonce');
+    mhn_check(str_contains(Newsletter\confirm_page_css(), 'focus-visible'), 'confirm button has a visible focus style');
+    $stillPending = Newsletter\find_by_email('new@example.com');
+    mhn_check($stillPending !== null && $stillPending['status'] === 'pending', 'opening the confirm page leaves the address pending');
+    $badNonce = Newsletter\confirm_post_status($tokenMatch[1], 'not-a-nonce');
+    $afterBadNonce = Newsletter\find_by_email('new@example.com');
+    mhn_check($badNonce === 'error' && $afterBadNonce !== null && $afterBadNonce['status'] === 'pending', 'a bad nonce does not confirm');
+    $badToken = Newsletter\confirm_post_status(str_repeat('a', 32), wp_create_nonce('mhn_confirm_subscription'));
+    $afterBadToken = Newsletter\find_by_email('new@example.com');
+    mhn_check($badToken === 'error' && $afterBadToken !== null && $afterBadToken['status'] === 'pending', 'a bad token does not confirm');
+    $good = Newsletter\confirm_post_status($tokenMatch[1], wp_create_nonce('mhn_confirm_subscription'));
+    mhn_check($good === 'ok', 'a valid nonce and token confirm the address');
+    mhn_check(str_contains(Newsletter\confirm_result_html('ok'), 'role="status"'), 'confirm success state is announced');
+    $used = Newsletter\confirm_post_status($tokenMatch[1], wp_create_nonce('mhn_confirm_subscription'));
+    mhn_check($used === 'error', 'the confirm token works once');
 }
 $confirmed = Newsletter\find_by_email('new@example.com');
 mhn_check($confirmed !== null && $confirmed['status'] === 'subscribed', 'confirmed address is subscribed');

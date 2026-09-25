@@ -97,13 +97,13 @@ function send_confirm_mail(array $subscriber, string $rawToken): bool
     $name = settings()['from_name'];
     $url = confirm_url($rawToken);
     $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-    $button = bulletproof_button(__('Confirm signup', 'matthummel-newsletter'), $url);
+    $button = bulletproof_button(__('Confirm your subscription', 'matthummel-newsletter'), $url);
     $body = '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;">'
-        .esc_html__('Confirm this address and I will send occasional notes when I publish. If you did not ask for this, ignore the email.', 'matthummel-newsletter')
+        .esc_html__('Open this link and press Confirm your subscription. I add the address only after that. If you did not ask for this, ignore the email.', 'matthummel-newsletter')
         .'</p>'.$button;
     $html = email_document(
         __('Confirm your signup', 'matthummel-newsletter'),
-        __('One click confirms your address.', 'matthummel-newsletter'),
+        __('Open the link, then press the button.', 'matthummel-newsletter'),
         $body,
         false,
         0
