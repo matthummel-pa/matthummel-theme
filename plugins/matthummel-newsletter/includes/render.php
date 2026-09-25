@@ -27,7 +27,7 @@ function issue_message(int $issueId, ?array $subscriber, bool $preview = false):
     $content = $post instanceof \WP_Post ? (string) $post->post_content : '';
     $altFallback = $post instanceof \WP_Post ? $post->post_title : $subject;
     $body = render_blocks($content, $altFallback);
-    $body = apply_layout(issue_layout_id($issueId), $body);
+    $body = apply_issue_layout($issueId, $body);
     $subject = layout_subject($issueId, $subject);
     $includeRecent = (string) get_post_meta($issueId, '_mhn_include_recent', true) === '1';
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);

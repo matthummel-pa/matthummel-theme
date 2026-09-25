@@ -1,7 +1,34 @@
 function initEmulator() {
+  initEditorMode()
   document.querySelectorAll('[data-mhn-emulator]').forEach((root) => {
     bindEmulator(root)
   })
+}
+
+function initEditorMode() {
+  const form = document.getElementById('mhn-wizard')
+  if (!form) return
+
+  const hidden = form.querySelector('[name="mhn_editor"]')
+  form.querySelectorAll('[data-mhn-editor]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const mode = button.getAttribute('data-mhn-editor') === 'advanced' ? 'advanced' : 'simple'
+      if (hidden && 'value' in hidden) hidden.value = mode
+      setEditorMode(form, mode)
+      if (hidden) hidden.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+  })
+}
+
+function setEditorMode(form, mode) {
+  form.querySelectorAll('[data-mhn-editor]').forEach((button) => {
+    const pressed = button.getAttribute('data-mhn-editor') === mode
+    button.setAttribute('aria-pressed', pressed ? 'true' : 'false')
+  })
+  const simple = form.querySelector('[data-mhn-simple]')
+  const advanced = form.querySelector('[data-mhn-advanced]')
+  if (simple) simple.hidden = mode === 'advanced'
+  if (advanced) advanced.hidden = mode !== 'advanced'
 }
 
 function bindEmulator(root) {
@@ -77,20 +104,33 @@ function paintEmulatorChrome(root, form) {
   const subject = form.querySelector('[name="mhn_subject"]')
   const layout = form.querySelector('[name="mhn_layout"]:checked')
   const typed = subject && 'value' in subject ? String(subject.value).trim() : ''
+  const heading = advancedField(form, 'mhn_block_heading')
 
   if (subjectLine && typed !== '') {
     subjectLine.textContent = typed
+  } else if (subjectLine && heading !== '') {
+    subjectLine.textContent = heading
   } else if (subjectLine && layout && layout.value === 'welcome' && mhnEmulator.welcomeSubject) {
     subjectLine.textContent = mhnEmulator.welcomeSubject
   }
 
   const preheader = root.querySelector('[data-mhn-preheader-line]')
-  if (preheader && mhnEmulator.intro) preheader.textContent = mhnEmulator.intro
+  const intro = advancedField(form, 'mhn_block_intro')
+  if (preheader && intro !== '') preheader.textContent = intro
+  else if (preheader && mhnEmulator.intro) preheader.textContent = mhnEmulator.intro
 
   const fromName = root.querySelector('[data-mhn-from-name]')
   const fromEmail = root.querySelector('[data-mhn-from-email]')
   if (fromName && mhnEmulator.fromName) fromName.textContent = mhnEmulator.fromName
   if (fromEmail && mhnEmulator.fromEmail) fromEmail.textContent = mhnEmulator.fromEmail
+}
+
+function advancedField(form, name) {
+  const mode = form.querySelector('[name="mhn_editor"]')
+  if (!mode || mode.value !== 'advanced') return ''
+
+  const field = form.querySelector('[name="' + name + '"]')
+  return field && 'value' in field ? String(field.value).trim() : ''
 }
 
 function refreshEmulator(root, form) {
@@ -118,12 +158,13 @@ function applyEmulatorPayload(root, data) {
   const frame = root.querySelector('[data-mhn-emulator-frame]')
   if (frame && typeof data.html === 'string') frame.setAttribute('srcdoc', data.html)
 
-  const typingSubject = document.activeElement && document.activeElement.name === 'mhn_subject'
+  const typingSubject = document.activeElement && (document.activeElement.name === 'mhn_subject' || document.activeElement.name === 'mhn_block_heading')
+  const typingIntro = document.activeElement && document.activeElement.name === 'mhn_block_intro'
   const subjectLine = root.querySelector('[data-mhn-subject-line]')
   if (subjectLine && data.subject && !typingSubject) subjectLine.textContent = data.subject
 
   const preheader = root.querySelector('[data-mhn-preheader-line]')
-  if (preheader && data.preheader) preheader.textContent = data.preheader
+  if (preheader && data.preheader && !typingIntro) preheader.textContent = data.preheader
 }
 
 document.addEventListener('DOMContentLoaded', initEmulator)

@@ -92,6 +92,210 @@ function layout_subject(int $issueId, string $subject): string
     return $welcome !== '' ? $welcome : $subject;
 }
 
+/**
+ * @return array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}
+ */
+function empty_editor_blocks(): array
+{
+    return [
+        'intro' => '',
+        'heading' => '',
+        'body' => '',
+        'button_label' => '',
+        'button_url' => '',
+        'signoff' => '',
+    ];
+}
+
+function normalize_editor_mode(string $mode): string
+{
+    return $mode === 'advanced' ? 'advanced' : 'simple';
+}
+
+function issue_editor_mode(int $issueId): string
+{
+    if ($issueId < 1 || ! function_exists('get_post_meta')) {
+        return 'simple';
+    }
+
+    return normalize_editor_mode((string) get_post_meta($issueId, '_mhn_editor', true));
+}
+
+/**
+ * @param  array<string, mixed>  $input
+ */
+function advanced_fields_posted(array $input): bool
+{
+    foreach (['mhn_block_intro', 'mhn_block_heading', 'mhn_block_body', 'mhn_block_button_label', 'mhn_block_button_url', 'mhn_block_signoff'] as $key) {
+        if (array_key_exists($key, $input)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @param  array<string, mixed>  $input
+ * @return array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}
+ */
+function sanitize_editor_blocks(array $input): array
+{
+    $body = (string) ($input['mhn_block_body'] ?? $input['body'] ?? '');
+    if (strlen($body) > 20000) {
+        $body = substr($body, 0, 20000);
+    }
+    $url = function_exists('esc_url_raw') ? esc_url_raw((string) ($input['mhn_block_button_url'] ?? $input['button_url'] ?? '')) : trim((string) ($input['mhn_block_button_url'] ?? $input['button_url'] ?? ''));
+
+    return [
+        'intro' => mb_substr(sanitize_text_field((string) ($input['mhn_block_intro'] ?? $input['intro'] ?? '')), 0, 200),
+        'heading' => mb_substr(sanitize_text_field((string) ($input['mhn_block_heading'] ?? $input['heading'] ?? '')), 0, 200),
+        'body' => function_exists('sanitize_rich_text') ? sanitize_rich_text($body) : trim(wp_strip_all_tags($body)),
+        'button_label' => mb_substr(sanitize_text_field((string) ($input['mhn_block_button_label'] ?? $input['button_label'] ?? '')), 0, 120),
+        'button_url' => is_string($url) ? $url : '',
+        'signoff' => mb_substr(sanitize_text_field((string) ($input['mhn_block_signoff'] ?? $input['signoff'] ?? '')), 0, 200),
+    ];
+}
+
+/**
+ * @return array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}
+ */
+function issue_blocks(int $issueId): array
+{
+    $saved = ($issueId > 0 && function_exists('get_post_meta')) ? get_post_meta($issueId, '_mhn_blocks', true) : [];
+
+    return sanitize_editor_blocks(is_array($saved) ? $saved : []);
+}
+
+/**
+ * @return array{intro: string, heading: string, body: string, signoff: string}
+ */
+function advanced_block_defaults(string $layoutId): array
+{
+    $copy = layout_copy();
+    if (normalize_layout_id($layoutId) === 'welcome') {
+        return [
+            'intro' => $copy['intro'],
+            'heading' => $copy['welcome_subject'],
+            'body' => $copy['welcome_body'],
+            'signoff' => $copy['signoff'],
+        ];
+    }
+
+    return [
+        'intro' => $copy['intro'],
+        'heading' => '',
+        'body' => '',
+        'signoff' => $copy['signoff'],
+    ];
+}
+
+function apply_issue_layout(int $issueId, string $body): string
+{
+    $layoutId = $issueId > 0 ? issue_layout_id($issueId) : 'standard';
+    if (issue_editor_mode($issueId) !== 'advanced') {
+        return apply_layout($layoutId, $body);
+    }
+
+    return compose_advanced_letter(issue_blocks($issueId), $layoutId, $body, settings()['from_name']);
+}
+
+/**
+ * @param  array<string, mixed>  $blocks
+ */
+function compose_advanced_letter(array $blocks, string $layoutId, string $issueHtml, string $fromName): string
+{
+    $layoutId = normalize_layout_id($layoutId);
+    $defaults = advanced_block_defaults($layoutId);
+    $intro = trim((string) ($blocks['intro'] ?? ''));
+    $heading = trim((string) ($blocks['heading'] ?? ''));
+    $body = trim((string) ($blocks['body'] ?? ''));
+    $signoff = trim((string) ($blocks['signoff'] ?? ''));
+    $intro = $intro !== '' ? $intro : $defaults['intro'];
+    $heading = $heading !== '' ? $heading : $defaults['heading'];
+    $signoff = $signoff !== '' ? $signoff : $defaults['signoff'];
+
+    $image = '';
+    if ($layoutId === 'feature' || $layoutId === 'standard') {
+        $image = extract_layout_image($issueHtml);
+    }
+    if ($body !== '') {
+        $bodyHtml = advanced_copy_html($body);
+    } elseif ($defaults['body'] !== '') {
+        $bodyHtml = advanced_copy_html($defaults['body']);
+    } else {
+        $bodyHtml = $image !== '' ? str_replace($image, '', $issueHtml) : $issueHtml;
+        if ($heading !== '') {
+            $stripped = preg_replace('/<h1\b[^>]*>.*?<\/h1>/is', '', $bodyHtml, 1);
+            if (is_string($stripped)) {
+                $bodyHtml = $stripped;
+            }
+        }
+    }
+
+    $button = '';
+    $label = trim((string) ($blocks['button_label'] ?? ''));
+    $url = trim((string) ($blocks['button_url'] ?? ''));
+    if ($label !== '' && $url !== '') {
+        $button = bulletproof_button($label, $url);
+    }
+
+    $headingHtml = advanced_heading_html($heading);
+    $introHtml = layout_text_html($intro);
+    $signoffHtml = layout_signoff_html($signoff, $fromName);
+    if ($layoutId === 'feature') {
+        return $image.$headingHtml.$introHtml.$bodyHtml.$button.$signoffHtml;
+    }
+    if ($layoutId === 'plain' || $layoutId === 'welcome') {
+        return $introHtml.$headingHtml.$bodyHtml.$button.$signoffHtml;
+    }
+
+    return $introHtml.$headingHtml.$image.$bodyHtml.$button.$signoffHtml;
+}
+
+function extract_layout_image(string $html): string
+{
+    $pattern = '/<a\b[^>]*>\s*<img\b[^>]*\bmhn-img\b[^>]*>\s*<\/a>|<img\b[^>]*\bmhn-img\b[^>]*>/i';
+    if (preg_match($pattern, $html, $match) !== 1) {
+        return '';
+    }
+
+    return $match[0];
+}
+
+function advanced_heading_html(string $heading): string
+{
+    $heading = trim(wp_strip_all_tags($heading));
+    if ($heading === '') {
+        return '';
+    }
+
+    return '<h1 class="mhn-text" style="margin:0 0 12px;font-size:28px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($heading).'</h1>';
+}
+
+function advanced_copy_html(string $text): string
+{
+    $text = trim($text);
+    if ($text === '') {
+        return '';
+    }
+    if (! str_contains($text, '<')) {
+        return layout_text_html($text);
+    }
+
+    $clean = email_kses($text);
+    if (! str_contains($clean, '<p')) {
+        $clean = '<p>'.$clean.'</p>';
+    }
+    $styled = preg_replace(
+        '/<p(\s|>)/',
+        '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;"$1',
+        $clean
+    );
+
+    return decorate_links(is_string($styled) ? $styled : $clean);
+}
+
 function apply_layout(string $layoutId, string $body): string
 {
     $layoutId = normalize_layout_id($layoutId);
@@ -295,22 +499,42 @@ function emulator_preview_message(array $input): array
         if (strlen($raw) > 20000) {
             $raw = substr($raw, 0, 20000);
         }
-        $note = sanitize_rich_text($raw);
+        $note = function_exists('sanitize_rich_text') ? sanitize_rich_text($raw) : trim(wp_strip_all_tags($raw));
+    }
+    $editor = array_key_exists('mhn_editor', $input)
+        ? normalize_editor_mode((string) $input['mhn_editor'])
+        : issue_editor_mode($issueId);
+    $blocks = null;
+    if ($editor === 'advanced') {
+        $blocks = advanced_fields_posted($input) ? sanitize_editor_blocks($input) : issue_blocks($issueId);
     }
 
-    return emulator_view($issueId, $layoutId, $subject, $note);
+    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks);
 }
 
 /**
+ * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
  */
-function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null): array
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null): array
 {
     $settings = settings();
     $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
+    $editor = $editor !== '' ? normalize_editor_mode($editor) : issue_editor_mode($issueId);
     $subject = emulator_subject($issueId, $layoutId, $subject);
-    $preheader = emulator_preheader();
-    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader);
+    $intro = '';
+    if ($editor === 'advanced') {
+        $blocks ??= issue_blocks($issueId);
+        $intro = trim((string) ($blocks['intro'] ?? ''));
+        if ($subject === __('A note from the workshop', 'matthummel-newsletter')) {
+            $heading = trim((string) ($blocks['heading'] ?? ''));
+            if ($heading !== '') {
+                $subject = $heading;
+            }
+        }
+    }
+    $preheader = emulator_preheader($intro);
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks);
 
     return [
         'from_name' => $settings['from_name'],
@@ -356,9 +580,12 @@ function emulator_subject(int $issueId, string $layoutId, string $posted): strin
     return __('A note from the workshop', 'matthummel-newsletter');
 }
 
-function emulator_preheader(): string
+function emulator_preheader(string $introOverride = ''): string
 {
-    $intro = trim(layout_copy()['intro']);
+    $intro = trim($introOverride);
+    if ($intro === '') {
+        $intro = trim(layout_copy()['intro']);
+    }
     if ($intro !== '') {
         return mb_substr($intro, 0, 140);
     }
@@ -366,14 +593,21 @@ function emulator_preheader(): string
     return mb_substr(trim(wp_strip_all_tags(layout_copy()['welcome_body'])), 0, 140);
 }
 
-function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader): string
+/**
+ * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
+ */
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null): string
 {
     $rendered = '';
-    if ($layoutId !== 'welcome') {
-        $blocks = emulator_blocks($issueId, $note);
-        $rendered = $blocks !== '' ? render_blocks($blocks, $subject) : sample_issue_body();
+    if ($layoutId !== 'welcome' || $editor === 'advanced') {
+        $compiled = emulator_blocks($issueId, $note);
+        $rendered = $compiled !== '' ? render_blocks($compiled, $subject) : sample_issue_body();
     }
-    $body = apply_layout($layoutId, $rendered);
+    if ($editor === 'advanced') {
+        $body = compose_advanced_letter($blocks ?? empty_editor_blocks(), $layoutId, $rendered, settings()['from_name']);
+    } else {
+        $body = apply_layout($layoutId, $rendered);
+    }
     if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }

@@ -156,6 +156,8 @@ function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
     update_post_meta($issueId, '_mhn_sent_count', '0');
     update_post_meta($issueId, '_mhn_fail_count', '0');
     update_post_meta($issueId, '_mhn_subject_auto', '1');
+    update_post_meta($issueId, '_mhn_editor', 'simple');
+    update_post_meta($issueId, '_mhn_blocks', empty_editor_blocks());
     compile_issue($issueId);
     fill_subject_defaults($issueId);
 
@@ -167,6 +169,13 @@ function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
  */
 function apply_wizard_fields(int $issueId, array $input, int $step): void
 {
+    if (isset($input['mhn_editor'])) {
+        update_post_meta($issueId, '_mhn_editor', normalize_editor_mode((string) $input['mhn_editor']));
+    }
+    if (normalize_editor_mode((string) ($input['mhn_editor'] ?? issue_editor_mode($issueId))) === 'advanced' && advanced_fields_posted($input)) {
+        update_post_meta($issueId, '_mhn_blocks', sanitize_editor_blocks($input));
+    }
+
     $postedLayout = sanitize_key((string) ($input['mhn_layout'] ?? ''));
     if ($postedLayout !== '' && isset(layouts()[$postedLayout])) {
         $previousLayout = (string) get_post_meta($issueId, '_mhn_layout', true);
@@ -442,6 +451,7 @@ function render_wizard_page(): void
     wp_nonce_field('mhn_wizard', 'mhn_wizard_nonce');
     echo '<input type="hidden" name="mhn_issue" value="'.esc_attr((string) $issueId).'">';
     echo '<input type="hidden" name="mhn_step" value="'.esc_attr((string) $step).'">';
+    echo '<input type="hidden" name="mhn_editor" value="'.esc_attr(issue_editor_mode($issueId)).'">';
     if ($step !== 1) {
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
         echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
@@ -449,6 +459,7 @@ function render_wizard_page(): void
 
     echo '<div class="mhn-wizard-split">';
     echo '<div class="mhn-wizard-main">';
+    render_editor_switch(issue_editor_mode($issueId));
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
         1 => render_step_template($templateSlug, $layoutId),
@@ -552,6 +563,45 @@ function render_wizard_progress(int $issueId, int $step): void
     echo '</ol>';
 }
 
+function render_editor_switch(string $mode): void
+{
+    $mode = normalize_editor_mode($mode);
+    echo '<div class="mhn-editor-switch" role="group" aria-label="'.esc_attr__('Editor', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Editor', 'matthummel-newsletter').'</span>';
+    echo '<button type="button" data-mhn-editor="simple" aria-pressed="'.($mode === 'simple' ? 'true' : 'false').'">'.esc_html__('Simple', 'matthummel-newsletter').'</button>';
+    echo '<button type="button" data-mhn-editor="advanced" aria-pressed="'.($mode === 'advanced' ? 'true' : 'false').'">'.esc_html__('Advanced', 'matthummel-newsletter').'</button>';
+    echo '</div>';
+}
+
+function render_advanced_editor(int $issueId): void
+{
+    $layoutId = issue_layout_id($issueId);
+    $saved = issue_blocks($issueId);
+    $defaults = advanced_block_defaults($layoutId);
+    echo '<h2>'.esc_html__('Advanced', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-advanced-note">'.esc_html__('Each block is one field. Leave intro or sign-off blank to keep the reusable line. The featured image follows the layout: Feature puts it on top, and Plain leaves it out.', 'matthummel-newsletter').'</p>';
+    echo '<ol class="mhn-blocks">';
+    render_advanced_field('mhn-block-intro', 'mhn_block_intro', __('Intro', 'matthummel-newsletter'), $saved['intro'], $defaults['intro'], false);
+    render_advanced_field('mhn-block-heading', 'mhn_block_heading', __('Heading', 'matthummel-newsletter'), $saved['heading'], $defaults['heading'], false);
+    render_advanced_field('mhn-block-body', 'mhn_block_body', __('Body', 'matthummel-newsletter'), $saved['body'], $defaults['body'], true);
+    render_advanced_field('mhn-block-button-label', 'mhn_block_button_label', __('Button label', 'matthummel-newsletter'), $saved['button_label'], '', false);
+    render_advanced_field('mhn-block-button-url', 'mhn_block_button_url', __('Button URL', 'matthummel-newsletter'), $saved['button_url'], 'https://', false);
+    render_advanced_field('mhn-block-signoff', 'mhn_block_signoff', __('Sign-off', 'matthummel-newsletter'), $saved['signoff'], $defaults['signoff'], false);
+    echo '</ol>';
+}
+
+function render_advanced_field(string $id, string $name, string $label, string $value, string $placeholder, bool $multiline): void
+{
+    echo '<li><label for="'.esc_attr($id).'">'.esc_html($label).'</label>';
+    if ($multiline) {
+        echo '<textarea class="large-text" rows="6" id="'.esc_attr($id).'" name="'.esc_attr($name).'" placeholder="'.esc_attr($placeholder).'">'.esc_textarea($value).'</textarea>';
+    } else {
+        $type = $name === 'mhn_block_button_url' ? 'url' : 'text';
+        echo '<input class="large-text" type="'.esc_attr($type).'" id="'.esc_attr($id).'" name="'.esc_attr($name).'" value="'.esc_attr($value).'" placeholder="'.esc_attr($placeholder).'">';
+    }
+    echo '</li>';
+}
+
 function render_step_template(string $current, string $layout): void
 {
     render_layout_picker($layout);
@@ -591,6 +641,17 @@ function render_layout_picker(string $current): void
 }
 
 function render_step_content(int $issueId, string $slug): void
+{
+    $advanced = issue_editor_mode($issueId) === 'advanced';
+    echo '<div data-mhn-simple'.($advanced ? ' hidden' : '').'>';
+    render_simple_content($issueId, $slug);
+    echo '</div>';
+    echo '<div data-mhn-advanced'.($advanced ? '' : ' hidden').'>';
+    render_advanced_editor($issueId);
+    echo '</div>';
+}
+
+function render_simple_content(int $issueId, string $slug): void
 {
     if (issue_layout_id($issueId) === 'welcome') {
         render_welcome_step();

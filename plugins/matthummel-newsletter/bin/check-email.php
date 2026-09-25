@@ -237,10 +237,13 @@ require dirname(__DIR__).'/includes/render.php';
 require dirname(__DIR__).'/includes/layouts.php';
 require dirname(__DIR__).'/includes/a11y.php';
 
+use function MattHummel\Newsletter\apply_layout;
+use function MattHummel\Newsletter\apply_merge;
 use function MattHummel\Newsletter\apply_person_tags;
 use function MattHummel\Newsletter\audit_confirm_flow;
 use function MattHummel\Newsletter\audit_html;
 use function MattHummel\Newsletter\audit_plugin_sources;
+use function MattHummel\Newsletter\compose_advanced_letter;
 use function MattHummel\Newsletter\email_document;
 use function MattHummel\Newsletter\layout_preview_html;
 use function MattHummel\Newsletter\layouts;
@@ -370,6 +373,73 @@ foreach (array_keys(layouts()) as $layoutId) {
     $failed = true;
     fwrite(STDERR, "fail  layout {$layoutId}\n");
     foreach ($problems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$samplePerson = [
+    'id' => '0',
+    'email' => 'you@example.com',
+    'first_name' => '',
+    'last_name' => '',
+    'status' => 'preview',
+];
+$issuePieces = render_blocks($image."\n\n".$note, 'A desk by a window');
+$simpleLetter = apply_layout('standard', $issuePieces);
+$simpleDoc = apply_merge(email_document('Notes from the workshop', 'Here is what I have been building.', $simpleLetter, false, 0), $samplePerson, 0, true);
+$simpleProblems = [];
+if (! str_contains($simpleDoc, 'Here is what I have been building.') || str_contains($simpleDoc, 'Shop notes') || str_contains($simpleDoc, 'Read the note')) {
+    $simpleProblems[] = 'A simple letter picked up advanced blocks.';
+}
+if ($simpleProblems === []) {
+    fwrite(STDOUT, "pass  simple editor\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  simple editor\n");
+    foreach ($simpleProblems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$advancedBlocks = [
+    'intro' => 'A custom intro for this issue.',
+    'heading' => 'Shop notes',
+    'body' => "The body of this issue.\n\nHi {first_name|there},",
+    'button_label' => 'Read the note',
+    'button_url' => 'https://matthummel.com/notes/',
+    'signoff' => 'See you,',
+];
+$advancedInner = compose_advanced_letter($advancedBlocks, 'feature', $issuePieces, 'Matt Hummel');
+$advancedDoc = apply_merge(email_document('Shop notes', 'A custom intro for this issue.', $advancedInner, false, 0), $samplePerson, 0, true);
+$advancedAudit = audit_html($advancedDoc, plain_text($advancedDoc), 'Gettysburg, PA');
+$advancedProblems = $advancedAudit['errors'];
+foreach (['A custom intro for this issue.', 'Shop notes', 'Read the note', 'See you,', 'Hi there,'] as $needle) {
+    if (! str_contains($advancedDoc, $needle)) {
+        $advancedProblems[] = 'Advanced letter is missing '.$needle;
+    }
+}
+$advancedVisible = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $advancedDoc) ?? $advancedDoc;
+$advancedImage = strpos($advancedVisible, 'class="mhn-img"');
+$advancedHeading = strpos($advancedVisible, '<h1');
+if ($advancedImage === false || $advancedHeading === false || $advancedImage > $advancedHeading) {
+    $advancedProblems[] = 'Feature layout did not put the image above the heading.';
+}
+if (str_contains($advancedDoc, 'mhn_open') || str_contains($advancedDoc, 'mhn_click')) {
+    $advancedProblems[] = 'Advanced letter called the tracker.';
+}
+$plainAdvanced = compose_advanced_letter($advancedBlocks, 'plain', $issuePieces, 'Matt Hummel');
+if (str_contains($plainAdvanced, 'class="mhn-img"')) {
+    $advancedProblems[] = 'Plain advanced letter still has a featured image.';
+}
+if (! str_contains($plainAdvanced, 'Read the note')) {
+    $advancedProblems[] = 'Plain advanced letter dropped the button.';
+}
+if ($advancedProblems === []) {
+    fwrite(STDOUT, "pass  advanced editor\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  advanced editor\n");
+    foreach ($advancedProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }
