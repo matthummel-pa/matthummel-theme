@@ -610,7 +610,12 @@ function page_settings(): void
 {
     guard_admin();
     $config = settings();
-    echo '<div class="wrap"><h1>'.esc_html__('Newsletter settings', 'matthummel-newsletter').'</h1>';
+    echo '<div class="wrap mhn-admin mhn-settings">';
+    echo '<header class="mhn-dash-head"><div>';
+    echo '<h1>'.esc_html__('Newsletter settings', 'matthummel-newsletter').'</h1>';
+    echo '<p>'.esc_html__('Who the letter is from, and what happens when you publish.', 'matthummel-newsletter').'</p>';
+    echo '</div></header>';
+    echo '<hr class="wp-header-end">';
     if (isset($_GET['saved'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Saved.', 'matthummel-newsletter').'</p></div>';
     }
@@ -621,23 +626,38 @@ function page_settings(): void
     echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
     echo '<input type="hidden" name="action" value="mhn_settings">';
     wp_nonce_field('mhn_settings');
-    echo '<table class="form-table"><tbody>';
-    echo '<tr><th><label for="mhn-from-name">'.esc_html__('From name', 'matthummel-newsletter').'</label></th><td><input class="regular-text" id="mhn-from-name" name="from_name" value="'.esc_attr($config['from_name']).'"></td></tr>';
-    echo '<tr><th><label for="mhn-from-email">'.esc_html__('From email', 'matthummel-newsletter').'</label></th><td><input class="regular-text" type="email" id="mhn-from-email" name="from_email" value="'.esc_attr($config['from_email']).'"><p class="description">'.esc_html__('Use an address on your domain so SPF, DKIM, and DMARC can align.', 'matthummel-newsletter').'</p></td></tr>';
-    echo '<tr><th><label for="mhn-reply">'.esc_html__('Reply-to', 'matthummel-newsletter').'</label></th><td><input class="regular-text" type="email" id="mhn-reply" name="reply_to" value="'.esc_attr($config['reply_to']).'"></td></tr>';
-    echo '<tr><th><label for="mhn-address">'.esc_html__('Mailing address', 'matthummel-newsletter').'</label></th><td><textarea class="large-text" rows="3" id="mhn-address" name="address">'.esc_textarea($config['address']).'</textarea><p class="description">'.esc_html__('Shown in every issue. A street address is the usual postal requirement. The default is Gettysburg, PA.', 'matthummel-newsletter').'</p></td></tr>';
-    echo '<tr><th>'.esc_html__('Publishing', 'matthummel-newsletter').'</th><td>';
-    echo '<label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label><br>';
-    echo '<label><input type="checkbox" name="auto_send" value="1" '.checked($config['auto_send'], 1, false).'> '.esc_html__('Also send that issue automatically. Off unless you check this.', 'matthummel-newsletter').'</label>';
-    echo '</td></tr>';
-    echo '<tr><th>'.esc_html__('Tracking', 'matthummel-newsletter').'</th><td>';
-    echo '<label><input type="checkbox" name="track_opens" value="1" '.checked($config['track_opens'], 1, false).'> '.esc_html__('Count opens (a tiny image on this site). Off by default.', 'matthummel-newsletter').'</label><br>';
-    echo '<label><input type="checkbox" name="track_clicks" value="1" '.checked($config['track_clicks'], 1, false).'> '.esc_html__('Count clicks through this site. Off by default.', 'matthummel-newsletter').'</label>';
-    echo '</td></tr>';
-    echo '<tr><th><label for="mhn-batch">'.esc_html__('Batch size', 'matthummel-newsletter').'</label></th><td><input type="number" min="5" max="100" id="mhn-batch" name="batch_size" value="'.esc_attr((string) $config['batch_size']).'"></td></tr>';
-    echo '</tbody></table>';
-    echo '<p class="description">'.esc_html__('Sending uses wp_mail, so an SMTP plugin on this site is picked up automatically. Publish SPF, DKIM, and DMARC for the From domain before a real send.', 'matthummel-newsletter').'</p>';
-    submit_button(__('Save settings', 'matthummel-newsletter'));
+
+    echo '<section class="mhn-card"><h2>'.esc_html__('Sender', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('Use an address on your domain so SPF, DKIM, and DMARC can align.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-from-name">'.esc_html__('From name', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-from-name" name="from_name" value="'.esc_attr($config['from_name']).'"></p>';
+    echo '<p><label for="mhn-from-email">'.esc_html__('From email', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" type="email" id="mhn-from-email" name="from_email" value="'.esc_attr($config['from_email']).'"></p>';
+    echo '<p><label for="mhn-reply">'.esc_html__('Reply-to', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" type="email" id="mhn-reply" name="reply_to" value="'.esc_attr($config['reply_to']).'"></p>';
+    echo '</section>';
+
+    echo '<section class="mhn-card"><h2>'.esc_html__('Postal line', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('Shown in every issue. A street address is the usual postal requirement. The default is Gettysburg, PA.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-address">'.esc_html__('Mailing address', 'matthummel-newsletter').'</label>';
+    echo '<textarea class="large-text" rows="3" id="mhn-address" name="address">'.esc_textarea($config['address']).'</textarea></p>';
+    echo '</section>';
+
+    echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="auto_send" value="1" '.checked($config['auto_send'], 1, false).'> '.esc_html__('Also send that issue automatically. Off unless you check this.', 'matthummel-newsletter').'</label></p>';
+    echo '<p><label for="mhn-batch">'.esc_html__('Batch size', 'matthummel-newsletter').'</label>';
+    echo '<input type="number" min="5" max="100" id="mhn-batch" name="batch_size" value="'.esc_attr((string) $config['batch_size']).'"></p>';
+    echo '</section>';
+
+    echo '<section class="mhn-card"><h2>'.esc_html__('Tracking', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('Both stay off until you check them. Opens use a tiny image on this site. Clicks go through this site.', 'matthummel-newsletter').'</p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="track_opens" value="1" '.checked($config['track_opens'], 1, false).'> '.esc_html__('Count opens.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="track_clicks" value="1" '.checked($config['track_clicks'], 1, false).'> '.esc_html__('Count clicks.', 'matthummel-newsletter').'</label></p>';
+    echo '</section>';
+
+    echo '<p class="mhn-settings-note">'.esc_html__('Sending uses wp_mail, so an SMTP plugin on this site is picked up automatically. Publish SPF, DKIM, and DMARC for the From domain before a real send.', 'matthummel-newsletter').'</p>';
+    echo '<p class="mhn-settings-save"><button class="button button-primary" type="submit">'.esc_html__('Save settings', 'matthummel-newsletter').'</button></p>';
     echo '</form></div>';
 }
 

@@ -395,3 +395,77 @@
   border: 1px solid #c3c4c7;
   background: #fff;
 }
+
+.mhn-settings {
+  max-width: 46rem;
+}
+
+.mhn-settings .mhn-dash-head h1 {
+  color: #0d2e57;
+}
+
+.mhn-card {
+  margin: 0 0 16px;
+  padding: 16px 18px 8px;
+  background: #fff;
+  border: 1px solid #dceaf8;
+  border-top: 4px solid #0d2e57;
+  border-radius: 4px;
+}
+
+.mhn-card h2 {
+  margin: 0 0 6px;
+  color: #0d2e57;
+  font-size: 18px;
+}
+
+.mhn-card-lead {
+  margin: 0 0 12px;
+  max-width: 40rem;
+  color: #50575e;
+}
+
+.mhn-card p {
+  margin: 0 0 12px;
+}
+
+.mhn-card label {
+  display: block;
+  margin: 0 0 4px;
+  color: #0b1220;
+  font-weight: 600;
+}
+
+.mhn-check label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.mhn-card input.regular-text,
+.mhn-card textarea,
+.mhn-card input[type="number"] {
+  width: 100%;
+  max-width: 28rem;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+}
+
+.mhn-card input[type="number"] {
+  max-width: 6rem;
+}
+
+.mhn-settings-note {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  max-width: 40rem;
+  background: #eef3f9;
+  border-left: 4px solid #0d2e57;
+  color: #0b1220;
+}
+
+.mhn-settings-save {
+  margin: 0 0 24px;
+}
