@@ -1,0 +1,54 @@
+=== Matt Hummel Newsletter ===
+Contributors: matthummel
+Tags: newsletter, email
+Requires at least: 6.6
+Tested up to: 7.1
+Requires PHP: 8.3
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Self-hosted newsletter. Subscribers and issues stay in WordPress. Mail goes out through wp_mail.
+
+== Description ==
+
+A personal newsletter for matthummel.com. Addresses, issues, and the send log live in this WordPress database. Nothing is sent to Mailchimp, HubSpot, or another marketing service.
+
+* Double opt-in for new signups.
+* Unsubscribe and preferences links that work without an account.
+* One-click unsubscribe header on each issue.
+* Draft an issue in the block editor, preview it, and send a test to yourself.
+* Publishing a post saves a draft issue. Automatic sending stays off until you turn it on.
+* Import a CSV of addresses you already have permission to email.
+
+Addresses copied from the original footer list are marked as legacy single opt-in. They stay subscribed and are not asked to confirm again.
+
+== Installation ==
+
+1. Run `bash .github/scripts/pack-plugin.sh` from the theme repo, or download the plugin zip from the workflow artifact.
+2. In wp-admin, go to Plugins → Add New → Upload Plugin and install `matthummel-newsletter.zip`.
+3. Activate the plugin. It adds Get updates and Email preferences if those pages are missing.
+4. Set the From address and mailing address under Get updates → Settings.
+5. Publish SPF, DKIM, and DMARC for the From domain before a real send. Install an SMTP plugin if the host does not deliver `wp_mail` on its own.
+
+== Frequently Asked Questions ==
+
+= Where do addresses go? =
+
+They stay in this WordPress database. The plugin does not call a third-party newsletter service.
+
+= What happens to the old footer list? =
+
+Those addresses are copied in as subscribed. They signed up before double opt-in, so they are not sent another confirmation.
+
+= Does publishing a post email everyone? =
+
+No. It saves a draft issue for review. Automatic sending is a setting, and it is off.
+
+== Changelog ==
+
+= 1.0.0 =
+* Sign up, confirm by email, and unsubscribe without an account.
+* Write an issue in the editor and send it from this site.
+* Publishing a post saves a draft issue. Automatic sending stays off until you turn it on.
+* Import and export a CSV of addresses you already have permission to email.

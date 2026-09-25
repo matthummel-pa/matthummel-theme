@@ -1,0 +1,38 @@
+name: Pack newsletter plugin
+
+# Artifact only. This does not publish the theme-latest release.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'plugins/matthummel-newsletter/**'
+      - '.github/scripts/pack-plugin.sh'
+      - '.github/workflows/plugin-newsletter.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'plugins/matthummel-newsletter/**'
+      - '.github/scripts/pack-plugin.sh'
+      - '.github/workflows/plugin-newsletter.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    name: Build plugin zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pack plugin
+        run: bash .github/scripts/pack-plugin.sh "$GITHUB_WORKSPACE/matthummel-newsletter.zip"
+
+      - name: Upload plugin zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: matthummel-newsletter
+          path: matthummel-newsletter.zip
+          if-no-files-found: error

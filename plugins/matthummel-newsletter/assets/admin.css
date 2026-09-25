@@ -1,0 +1,27 @@
+.mhn-admin-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mhn-admin-stats li {
+  min-width: 140px;
+  margin: 0;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+}
+
+.mhn-admin-stats strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.mhn-admin-stats span {
+  color: #50575e;
+}

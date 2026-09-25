@@ -19,7 +19,9 @@ tar -C "$root" \
   --exclude='docs' \
   --exclude='.env' \
   --exclude='.env.*' \
+  --exclude='plugins' \
   --exclude='matthummel.zip' \
+  --exclude='matthummel-newsletter.zip' \
   -cf - . | tar -C "$stage/matthummel" -xf -
 
 if [[ ! -f "$stage/matthummel/style.css" ]]; then
