@@ -35,13 +35,17 @@ add_action('init', function () {
 }, 99);
 
 add_filter('should_load_remote_block_patterns', '__return_false');
-add_filter('block_editor_settings_all', function ($settings) {
-    $settings['__experimentalBlockPatterns'] = [];
-    $settings['__experimentalBlockPatternCategories'] = [];
+add_filter('block_editor_settings_all', function ($settings, $context = null) {
+    $post = is_object($context) ? ($context->post ?? null) : null;
+    $isIssue = $post instanceof \WP_Post && $post->post_type === 'newsletter_issue';
+    if (! $isIssue) {
+        $settings['__experimentalBlockPatterns'] = [];
+        $settings['__experimentalBlockPatternCategories'] = [];
+    }
     $settings['enableOpenverseMediaCategory'] = false;
 
     return $settings;
-});
+}, 10, 2);
 
 /** Skip core block stylesheet on custom-field pages (faster, no FSE leftovers). */
 add_action('wp_enqueue_scripts', function () {

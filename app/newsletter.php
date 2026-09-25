@@ -19,6 +19,14 @@ function mh_newsletter_table(): string
 }
 
 /**
+ * The newsletter plugin owns signup, storage, and the admin screen when it is active.
+ */
+function mh_newsletter_handed_off(): bool
+{
+    return defined('MHN_VERSION');
+}
+
+/**
  * Create or upgrade the subscribers table.
  *
  * @since 3.6.20
@@ -43,6 +51,9 @@ function mh_newsletter_install(): void
 }
 
 add_action('after_setup_theme', function (): void {
+    if (mh_newsletter_handed_off()) {
+        return;
+    }
     if (get_option('mh_newsletter_db_version') !== '1') {
         mh_newsletter_install();
     }
@@ -112,6 +123,10 @@ function mh_newsletter_add(string $email): string
 }
 
 add_action('init', function (): void {
+    if (mh_newsletter_handed_off()) {
+        return;
+    }
+
     $postedAction = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : '';
     if ($postedAction !== 'mh_newsletter') {
         return;
@@ -142,6 +157,10 @@ add_action('init', function (): void {
 });
 
 add_action('admin_menu', function (): void {
+    if (mh_newsletter_handed_off()) {
+        return;
+    }
+
     add_menu_page(
         __('Get updates', 'sage'),
         __('Get updates', 'sage'),
@@ -154,6 +173,9 @@ add_action('admin_menu', function (): void {
 });
 
 add_action('admin_post_mh_newsletter_export', function (): void {
+    if (mh_newsletter_handed_off()) {
+        return;
+    }
     if (! current_user_can('manage_options')) {
         wp_die(esc_html__('Sorry, you are not allowed to do that.', 'sage'), 403);
     }
@@ -183,6 +205,9 @@ add_action('admin_post_mh_newsletter_export', function (): void {
 });
 
 add_action('admin_post_mh_newsletter_delete', function (): void {
+    if (mh_newsletter_handed_off()) {
+        return;
+    }
     if (! current_user_can('manage_options')) {
         wp_die(esc_html__('Sorry, you are not allowed to do that.', 'sage'), 403);
     }

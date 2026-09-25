@@ -2,6 +2,21 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.38 Get updates)
+
+- Newsletter behavior lives in `plugins/matthummel-newsletter/`. Do not add Mailchimp, HubSpot, or another ESP.
+- Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
+- Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
+- Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
+- **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
+- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each have a note field. Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` seed the editor.
+- Publishing a post drafts a blog update. The note starts with `Hi {first_name|there},` and the P.S. stays empty. It does not send. Owner steps: `docs/NEWSLETTER.md`.
+- The confirm page collects optional first and last name (`sanitize_text_field`, 80 characters). Columns ship through `mhn_db_version` 2 (`ensure_subscriber_columns()`), so plugin 1.0.0 can add `last_name` without a version bump. Merge tags `{first_name}`, `{last_name}`, and `{full_name}` escape HTML and accept a fallback (`{first_name|there}`). The wizard preview uses sample names Ada Lovelace.
+- Blog update inserts the featured image near the top, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image block. `_mhn_feature_show` hides it for one send. `_mhn_feature_image_id` replaces it on a blog update. The same compile path is what an automatic send would use.
+- Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text. A leftover name merge tag is an error.
+- Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
+- A finished send inserts one row in `wp_mhn_archive` (`mhn_db_version` 3). The row stores the unmerged HTML and plain text, subject, preheader, From, template, start and finish times, sender id, counts, list label, and plugin version. Later edits do not update that row. Sent issues are read-only; **Duplicate as new draft** copies the issue into a new draft. **Sent archive** (`admin.php?page=mhn-archive`) lists, filters, and pages those rows, and shows one in a sandboxed iframe. HTML, EML, and metadata CSV exports require `manage_options` and a nonce. `_mhn_archived` hides an issue from the main lists and keeps the row. Delete is a confirmed administrator action. There is no public archive page. A public web archive setting is noted for later and stays off; it is not built.
+
 ## Editor’s notes (3.6.37 projects listing)
 
 - Do not pass `featured` on `partials/work-card.blade.php` from `template-projects.blade.php`. Every live project, including TOCguide, is a same-size grid card.

@@ -610,6 +610,13 @@ function page_field_map(): array
                 ['start_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
             ],
         ],
+        'template-get-updates.blade.php' => [
+            __('Intro', 'sage') => [
+                ['upd_kicker', __('Kicker', 'sage'), 'text', __('Get updates', 'sage')],
+                ['upd_h1', __('Heading', 'sage'), 'text', __('Notes when I publish.', 'sage')],
+                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. I keep your address on this site. No newsletter service.', 'sage')],
+            ],
+        ],
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
@@ -1832,7 +1839,7 @@ function render_page_fields_box(\WP_Post $post): void
     $map = page_field_map();
 
     if (empty($map[$key])) {
-        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Projects, Services, Code, Contact, Now, Portfolio, or Journal to edit theme fields here.', 'sage').'</p>';
+        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Projects, Services, Code, Contact, Get updates, Now, Portfolio, or Journal to edit theme fields here.', 'sage').'</p>';
 
         return;
     }

@@ -95,7 +95,12 @@ function mh_effective_field_map_key(int $post_id): string
  */
 function mh_page_skips_seo_analysis_body(int $post_id): bool
 {
-    return mh_effective_field_map_key($post_id) === 'template-services.blade.php';
+    $key = mh_effective_field_map_key($post_id);
+
+    return in_array($key, [
+        'template-services.blade.php',
+        'template-get-updates.blade.php',
+    ], true);
 }
 
 /**

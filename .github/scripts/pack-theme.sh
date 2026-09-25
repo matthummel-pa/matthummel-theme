@@ -19,7 +19,9 @@ tar -C "$root" \
   --exclude='docs' \
   --exclude='.env' \
   --exclude='.env.*' \
+  --exclude='plugins' \
   --exclude='matthummel.zip' \
+  --exclude='matthummel-newsletter.zip' \
   -cf - . | tar -C "$stage/matthummel" -xf -
 
 if [[ ! -f "$stage/matthummel/style.css" ]]; then
@@ -36,5 +38,13 @@ if [[ ! -f "$stage/matthummel/vendor/autoload.php" ]]; then
 fi
 
 rm -f "$stage/matthummel/public/hot"
+if [[ -d "$stage/matthummel/plugins" ]]; then
+  echo "plugins/ leaked into the theme pack" >&2
+  exit 1
+fi
 (cd "$stage" && zip -rq "$out" matthummel)
+if unzip -l "$out" | grep -E 'matthummel/plugins/|matthummel-newsletter/' >/dev/null; then
+  echo "plugins/ leaked into the theme zip" >&2
+  exit 1
+fi
 echo "Wrote $out ($(du -h "$out" | awk '{print $1}'))"

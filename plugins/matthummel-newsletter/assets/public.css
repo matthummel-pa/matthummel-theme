@@ -1,0 +1,123 @@
+.mhn-signup {
+  max-width: 36rem;
+}
+
+.mhn-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.mhn-field label {
+  display: block;
+  font-weight: 650;
+  margin-bottom: 0.35rem;
+}
+
+.mhn-field label span {
+  font-weight: 450;
+}
+
+.mhn-field input[type="email"],
+.mhn-field input[type="text"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  border: 2px solid #8ea0b5;
+  border-radius: 4px;
+  background: #fff;
+  color: #141c28;
+  font: 1rem/1.4 "IBM Plex Sans", Inter, system-ui, sans-serif;
+}
+
+.mhn-field input:focus {
+  outline: 2px solid #0d2e57;
+  outline-offset: 2px;
+  border-color: #0d2e57;
+}
+
+.mhn-form .btn {
+  width: fit-content;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  background: #0d2e57;
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.mhn-form .btn-ghost {
+  background: transparent;
+  color: #0d2e57;
+  border: 2px solid #0d2e57;
+}
+
+.mhn-hint,
+.mhn-note,
+.mhn-status {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.mhn-status {
+  color: #166534;
+}
+
+.mhn-status-error,
+.mhn-error {
+  color: #b42318;
+}
+
+.mhn-hp {
+  position: absolute;
+  left: -9999px;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.mhn-stats,
+.mhn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  padding: 0;
+  margin: 0 0 1rem;
+  list-style: none;
+}
+
+.mhn-issues {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mhn-issues th,
+.mhn-issues td {
+  text-align: left;
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px solid #cfd9e6;
+}
+
+.mhn-unsub {
+  margin-top: 1.25rem;
+}
+
+html.mh-dark .mhn-field input[type="email"],
+html.mh-dark .mhn-field input[type="text"] {
+  background: #0b1220;
+  color: #f7f9fc;
+  border-color: #8ea0b5;
+}
+
+.mhn-signup-compact .mhn-hint,
+.mhn-signup-compact .mhn-status {
+  margin-bottom: 0.55rem;
+}
+
+.footer-follow .mhn-signup-compact .btn {
+  width: fit-content;
+}
