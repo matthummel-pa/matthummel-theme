@@ -52,7 +52,7 @@ function issue_message(int $issueId, ?array $subscriber, bool $preview = false):
         }
     }
 
-    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId);
+    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId, issue_layout_id($issueId));
     $html = apply_merge($document, $sample, $issueId, true);
     $text = apply_merge(plain_text($document), $sample, $issueId, false);
     $subject = apply_merge($subject, $sample, $issueId, false);
@@ -69,16 +69,41 @@ function issue_message(int $issueId, ?array $subscriber, bool $preview = false):
     ];
 }
 
-function email_document(string $subject, string $preheader, string $body, bool $includeRecent, int $excludePostId): string
+function email_font_stack(): string
+{
+    return "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+}
+
+function body_paragraph_style(): string
+{
+    return 'margin:0 0 16px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;';
+}
+
+/**
+ * The only title in the letter. Plain uses a little more space under it.
+ */
+function letter_title_html(string $text, bool $plain = false): string
+{
+    $text = trim(wp_strip_all_tags($text));
+    if ($text === '') {
+        return '';
+    }
+
+    $margin = $plain ? '0 0 22px' : '0 0 16px';
+    $tracking = $plain ? 'letter-spacing:-0.02em;' : '';
+
+    return '<h1 class="mhn-text" style="margin:'.$margin.';font-family:'.email_font_stack().';font-size:28px;line-height:1.2;font-weight:700;'.$tracking.'color:#0d2e57;text-align:left;">'.esc_html($text).'</h1>';
+}
+
+function email_document(string $subject, string $preheader, string $body, bool $includeRecent, int $excludePostId, string $layoutId = ''): string
 {
     $settings = settings();
     $name = $settings['from_name'] !== '' ? $settings['from_name'] : (string) get_bloginfo('name');
-    $home = home_url('/');
-    $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-    $icon = get_site_icon_url(96);
-    $logo = '';
-    if (is_string($icon) && $icon !== '') {
-        $logo = '<img src="'.esc_url($icon).'" width="40" height="40" alt="" style="display:block;border:0;border-radius:4px;margin:0 12px 0 0;">';
+    $font = email_font_stack();
+    $layoutKey = sanitize_key($layoutId);
+    $knownLayout = isset(layouts()[$layoutKey]);
+    if (! $knownLayout) {
+        $layoutKey = '';
     }
 
     $pad = '<span aria-hidden="true">'.str_repeat('&nbsp;&zwnj;', 24).'</span>';
@@ -89,7 +114,11 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $lang = get_bloginfo('language');
     $lang = is_string($lang) && $lang !== '' ? $lang : 'en';
     $dir = is_rtl() ? 'rtl' : 'ltr';
-    $body = ensure_heading($body, $subject);
+    $hero = take_letter_hero($body);
+    if ($layoutKey === '' && $hero !== '') {
+        $layoutKey = 'feature';
+    }
+    $body = ensure_heading($body, $subject, $layoutKey === 'plain');
 
     $styles = '<style>'
         .':root{color-scheme:light dark;supported-color-schemes:light dark;}'
@@ -108,11 +137,14 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'.mhn-page,.mhn-page-td{background:#0b1220!important;}'
         .'.mhn-card{background:#162033!important;}'
         .'.mhn-text,.mhn-text p,.mhn-text li,.mhn-text h1,.mhn-text h2,.mhn-text h3{color:#f7f9fc!important;}'
+        .'.mhn-text p.mhn-eyebrow,.mhn-eyebrow,.mhn-kicker{color:#b7c3d4!important;}'
         .'.mhn-text a:not(.mhn-btn){color:#d6e4ff!important;text-decoration:underline!important;}'
         .'a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
-        .'.mhn-muted,.mhn-muted p,.mhn-footer,.mhn-footer p,.mhn-footer a{color:#b7c3d4!important;}'
-        .'.mhn-header,.mhn-header a{background:#0d2e57!important;color:#ffffff!important;}'
-        .'.mhn-rule{border-color:#2a3b52!important;}'
+        .'.mhn-muted,.mhn-footer,.mhn-footer p,.mhn-footer a{color:#b7c3d4!important;}'
+        .'.mhn-brand{color:#f7f9fc!important;}'
+        .'.mhn-frame{background:#2a3b52!important;}'
+        .'.mhn-stripe{background:#0d2e57!important;}'
+        .'.mhn-rule,.mhn-hairline div,.mhn-footer{border-color:#2a3b52!important;}'
         .'.mhn-group{background:#0f1b2d!important;}'
         .'}'
         .'[data-ogsc] .mhn-page,[data-ogsc] .mhn-page-td{background:#0b1220!important;}'
@@ -120,30 +152,48 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'[data-ogsc] .mhn-text,[data-ogsc] .mhn-text p,[data-ogsc] .mhn-text li,[data-ogsc] .mhn-text h1,[data-ogsc] .mhn-text h2,[data-ogsc] .mhn-text h3{color:#f7f9fc!important;}'
         .'[data-ogsc] .mhn-text a:not(.mhn-btn){color:#d6e4ff!important;}'
         .'[data-ogsc] a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
-        .'[data-ogsc] .mhn-footer,[data-ogsc] .mhn-footer p,[data-ogsc] .mhn-footer a{color:#b7c3d4!important;}'
+        .'[data-ogsc] .mhn-footer,[data-ogsc] .mhn-footer p,[data-ogsc] .mhn-footer a,[data-ogsc] .mhn-kicker{color:#b7c3d4!important;}'
+        .'[data-ogsc] .mhn-brand{color:#f7f9fc!important;}'
         .'[data-ogsc] .mhn-group{background:#0f1b2d!important;}'
         .'</style>';
 
-    $header = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-header mhn-px" style="background-color:#0d2e57;padding:22px 40px;">'
-        .'<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .($logo !== '' ? '<td style="vertical-align:middle;">'.$logo.'</td>' : '')
-        .'<td style="vertical-align:middle;">'
-        .'<a href="'.esc_url($home).'" style="color:#ffffff;font-family:'.$font.';font-size:18px;font-weight:700;text-decoration:underline;">'.esc_html($name).'</a>'
-        .'</td></tr></table></td></tr></table>';
+    $kicker = letter_kicker($layoutKey, $site);
+    $centered = $layoutKey === 'welcome';
+    $padTop = match (true) {
+        $hero !== '' => '24px',
+        $layoutKey === 'plain' => '32px',
+        $layoutKey === 'welcome' => '12px',
+        default => '22px',
+    };
+    $padSide = $layoutKey === 'plain' || $layoutKey === 'welcome' ? '36px' : '32px';
+    if ($hero !== '') {
+        $heroRow = '<tr><td class="mhn-hero-cell" style="padding:0;background-color:#eef3f9;line-height:0;font-size:0;">'.$hero.'</td></tr>';
+        $masthead = '';
+        $hairline = '';
+        if ($layoutKey !== 'post') {
+            $byline = letter_byline($name, $kicker, $font);
+            $bylineCount = 0;
+            $withTitle = preg_replace('/<\/h1>/i', '</h1>'.$byline, $body, 1, $bylineCount);
+            $body = is_string($withTitle) && $bylineCount === 1 ? $withTitle : $byline.$body;
+        }
+    } else {
+        $heroRow = '';
+        $masthead = letter_masthead($name, $kicker, $centered, $font);
+        $hairline = $layoutKey === 'welcome' ? '' : letter_hairline();
+    }
 
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-footer mhn-muted mhn-px" style="padding:8px 40px 28px;font-family:'.$font.';font-size:16px;line-height:1.5;color:#3a4554;text-align:left;">'
-        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;">'.esc_html(sprintf(
+        .'<td class="mhn-footer mhn-muted mhn-px" style="padding:18px 32px 28px;border-top:1px solid #dceaf8;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'
+        .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.esc_html(sprintf(
             /* translators: %s: site host */
             __('You got this because you signed up at %s. I keep your address on this site.', 'matthummel-newsletter'),
             $site
         )).'</p>'
-        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;"><a href="*|UNSUB|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</a>'
-        .' · <a href="*|PREFERENCES|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('Manage preferences', 'matthummel-newsletter').'</a>'
-        .' · <a href="*|ARCHIVE|*" style="color:#0d2e57;text-decoration:underline;">'.esc_html__('View in browser', 'matthummel-newsletter').'</a></p>'
-        .'<p style="margin:0 0 8px;font-size:16px;line-height:1.5;text-align:left;">'.$address.'</p>'
-        .'<p style="margin:0;font-size:16px;line-height:1.5;text-align:left;">© *|CURRENT_YEAR|* '.esc_html($name).'</p>'
+        .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;"><a href="*|UNSUB|*" style="color:#50575e;text-decoration:underline;">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</a>'
+        .' · <a href="*|PREFERENCES|*" style="color:#50575e;text-decoration:underline;">'.esc_html__('Manage preferences', 'matthummel-newsletter').'</a>'
+        .' · <a href="*|ARCHIVE|*" style="color:#50575e;text-decoration:underline;">'.esc_html__('View in browser', 'matthummel-newsletter').'</a></p>'
+        .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.$address.'</p>'
+        .'<p style="margin:0;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">© *|CURRENT_YEAR|* '.esc_html($name).'</p>'
         .'</td></tr></table>';
 
     return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
@@ -158,20 +208,71 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<div class="mhn-preheader" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">'
         .esc_html($preheader).$pad.'</div>'
         .'<table role="presentation" class="mhn-page" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef3f9;">'
-        .'<tr><td class="mhn-page-td" align="center" style="padding:24px 12px;background-color:#eef3f9;">'
+        .'<tr><td class="mhn-page-td" align="center" style="padding:32px 16px;background-color:#eef3f9;">'
         .'<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->'
-        .'<table role="presentation" class="mhn-shell" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;">'
-        .'<tr><td class="mhn-card" style="background-color:#ffffff;">'
-        .$header
-        .'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:28px 40px 8px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'
+        .'<table role="presentation" class="mhn-shell mhn-frame" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#dceaf8;border-radius:4px;">'
+        .'<tr><td style="padding:1px;background-color:#dceaf8;border-radius:4px;">'
+        .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#ffffff;border-collapse:separate;border-radius:4px;">'
+        .'<tr><td class="mhn-stripe" style="height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:4px 4px 0 0;">&nbsp;</td></tr>'
+        .$masthead
+        .$hairline
+        .$heroRow
+        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' 8px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'
         .$body
-        .'</td></tr></table>'
-        .$recent
-        .$footer
-        .'</td></tr></table>'
+        .'</td></tr>'
+        .($recent !== '' ? '<tr><td>'.$recent.'</td></tr>' : '')
+        .'<tr><td>'.$footer.'</td></tr>'
+        .'</table></td></tr></table>'
         .'<!--[if mso]></td></tr></table><![endif]-->'
         .'</td></tr></table></body></html>';
+}
+
+function letter_kicker(string $layoutKey, string $site): string
+{
+    if ($layoutKey !== '' && isset(layouts()[$layoutKey])) {
+        return (string) layouts()[$layoutKey]['label'];
+    }
+
+    return $site;
+}
+
+function letter_byline(string $name, string $kicker, string $font): string
+{
+    return '<p class="mhn-kicker mhn-muted" style="margin:0 0 18px;font-family:'.$font.';font-size:13px;line-height:1.4;color:#50575e;text-align:left;">'
+        .'<span class="mhn-brand" style="font-size:16px;line-height:1.4;font-weight:700;color:#0d2e57;">'.esc_html($name).'</span>'
+        .' · '.esc_html($kicker)
+        .'</p>';
+}
+
+function letter_masthead(string $name, string $kicker, bool $centered, string $font): string
+{
+    $align = $centered ? 'center' : 'left';
+
+    return '<tr><td class="mhn-masthead mhn-px" align="'.$align.'" style="padding:26px 32px 14px;font-family:'.$font.';text-align:'.$align.';">'
+        .'<div class="mhn-brand" style="font-size:18px;line-height:1.2;font-weight:700;color:#0d2e57;">'.esc_html($name).'</div>'
+        .'<div class="mhn-kicker mhn-muted" style="margin-top:6px;font-size:13px;line-height:1.4;color:#50575e;">'.esc_html($kicker).'</div>'
+        .'</td></tr>';
+}
+
+function letter_hairline(): string
+{
+    return '<tr><td class="mhn-hairline mhn-px" style="padding:0 32px;font-size:0;line-height:0;">'
+        .'<div style="border-top:1px solid #8aa0bd;font-size:0;line-height:0;">&nbsp;</div>'
+        .'</td></tr>';
+}
+
+/**
+ * Pull a full-bleed feature image out of the letter so the title can sit under it.
+ */
+function take_letter_hero(string &$body): string
+{
+    if (preg_match('/<div class="mhn-hero\b[^>]*>.*?<\/div>/is', $body, $match) !== 1) {
+        return '';
+    }
+
+    $body = str_replace($match[0], '', $body);
+
+    return $match[0];
 }
 
 function recent_posts_html(int $excludePostId, string $font): string
@@ -206,7 +307,7 @@ function recent_posts_html(int $excludePostId, string $font): string
     }
 
     return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-text mhn-px" style="padding:8px 40px 12px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'
+        .'<td class="mhn-text mhn-px" style="padding:8px 32px 12px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'
         .'<h2 class="mhn-text" style="margin:0 0 12px;font-size:18px;line-height:1.3;color:#0d2e57;">'.esc_html__('Recent writing', 'matthummel-newsletter').'</h2>'
         .'<ul style="margin:0 0 8px;padding-left:20px;">'.$items.'</ul>'
         .'</td></tr></table>';
@@ -307,18 +408,29 @@ function apply_tracking(string $html, array $subscriber, int $issueId): string
     return $html;
 }
 
-function ensure_heading(string $body, string $subject): string
+function ensure_heading(string $body, string $subject, bool $plain = false): string
 {
     if (preg_match('/<h1\b/i', $body) === 1) {
         return $body;
     }
 
-    $subject = trim(wp_strip_all_tags($subject));
-    if ($subject === '') {
+    $heading = letter_title_html($subject, $plain);
+    if ($heading === '') {
         return $body;
     }
 
-    return '<h1 class="mhn-text" style="margin:0 0 12px;font-size:28px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($subject).'</h1>'.$body;
+    $withEyebrow = preg_replace(
+        '/^(<p class="mhn-eyebrow\b.*?<\/p>|<table\b[^>]*\bmhn-eyebrow-block\b.*?<\/table>)/is',
+        '$1'.$heading,
+        ltrim($body),
+        1,
+        $count
+    );
+    if (is_string($withEyebrow) && $count === 1) {
+        return $withEyebrow;
+    }
+
+    return $heading.$body;
 }
 
 function plain_text(string $html): string

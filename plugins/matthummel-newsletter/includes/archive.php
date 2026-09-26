@@ -50,7 +50,7 @@ function issue_archive_message(int $issueId): array
     }
 
     $subject = trim(str_replace(["\r", "\n"], ' ', $subject));
-    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId);
+    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId, issue_layout_id($issueId));
 
     return [
         'subject' => $subject,

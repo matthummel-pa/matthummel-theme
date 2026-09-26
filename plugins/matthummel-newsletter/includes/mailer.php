@@ -98,7 +98,7 @@ function send_confirm_mail(array $subscriber, string $rawToken): bool
     $url = confirm_url($rawToken);
     $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
     $button = bulletproof_button(__('Confirm your subscription', 'matthummel-newsletter'), $url);
-    $body = '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;">'
+    $body = '<p style="'.body_paragraph_style().'">'
         .esc_html__('Open this link and press Confirm your subscription. I add the address only after that. If you did not ask for this, ignore the email.', 'matthummel-newsletter')
         .'</p>'.$button;
     $html = email_document(

@@ -243,7 +243,10 @@ use function MattHummel\Newsletter\apply_person_tags;
 use function MattHummel\Newsletter\audit_confirm_flow;
 use function MattHummel\Newsletter\audit_html;
 use function MattHummel\Newsletter\audit_plugin_sources;
+use function MattHummel\Newsletter\blog_post_headings_from_html;
+use function MattHummel\Newsletter\blog_post_lead_from_text;
 use function MattHummel\Newsletter\compose_advanced_letter;
+use function MattHummel\Newsletter\compose_blog_post_letter;
 use function MattHummel\Newsletter\email_document;
 use function MattHummel\Newsletter\layout_preview_html;
 use function MattHummel\Newsletter\layouts;
@@ -341,6 +344,19 @@ foreach (array_keys(layouts()) as $layoutId) {
         if (str_contains($html, 'Here is what I have been building.')) {
             $problems[] = 'Welcome preview includes the standard intro.';
         }
+    } elseif ($layoutId === 'post') {
+        if (! str_contains($html, 'Here is what I have been building.') || ! str_contains($html, 'Talk soon,')) {
+            $problems[] = 'Blog post preview is missing the reusable intro or sign-off.';
+        }
+        foreach (['In this note', 'WordPress', 'Projects', 'Read the post'] as $needle) {
+            if (! str_contains($html, $needle)) {
+                $problems[] = 'Blog post preview is missing '.$needle;
+            }
+        }
+        $titleAt = strpos($visible, '<h1');
+        if ($imageAt === false || $titleAt === false || $imageAt > $titleAt) {
+            $problems[] = 'Blog post preview does not put the image above the title.';
+        }
     } else {
         if (! str_contains($html, 'Here is what I have been building.') || ! str_contains($html, 'Talk soon,')) {
             $problems[] = 'Letter preview is missing the reusable intro or sign-off.';
@@ -356,8 +372,9 @@ foreach (array_keys(layouts()) as $layoutId) {
     if ($layoutId === 'plain' && $imageAt !== false) {
         $problems[] = 'Plain preview still has a featured image.';
     }
-    if ($layoutId === 'feature' && ($imageAt === false || $introAt === false || $imageAt > $introAt)) {
-        $problems[] = 'Feature preview does not put the image above the intro.';
+    $titleAt = strpos($visible, '<h1');
+    if ($layoutId === 'feature' && ($imageAt === false || $titleAt === false || $imageAt > $titleAt)) {
+        $problems[] = 'Feature preview does not put the image above the title.';
     }
     if ($layoutId === 'standard' && ($imageAt === false || $introAt === false || $introAt > $imageAt)) {
         $problems[] = 'Standard preview does not lead with the intro.';
@@ -440,6 +457,72 @@ if ($advancedProblems === []) {
     $failed = true;
     fwrite(STDERR, "fail  advanced editor\n");
     foreach ($advancedProblems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$postImage = '<img class="mhn-img" src="https://matthummel.com/photo.jpg" alt="A desk by a window" width="600" height="220" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0;">';
+$postHeadings = blog_post_headings_from_html(
+    '<h2>First heading</h2><p>Skip me</p><h3></h3><h3>Second <strong>heading</strong></h3><h2>Third</h2><h2>Fourth</h2><h2>Fifth</h2><h2>Sixth</h2><h2>Seventh</h2><h2>Eighth</h2><h2>Ninth</h2>'
+);
+$postSource = [
+    'title' => 'Shop notes',
+    'excerpt' => 'Hi {first_name|there}, the excerpt lead.',
+    'headings' => $postHeadings,
+    'categories' => ['WordPress', 'Projects'],
+    'image' => $postImage,
+    'permalink' => 'https://matthummel.com/notes/shop/',
+    'excerpt_html' => false,
+    'button_label' => '',
+];
+$postInner = compose_blog_post_letter($postSource, 'Here is what I have been building.', 'Talk soon,', 'Matt Hummel');
+$postDoc = apply_merge(email_document('Shop notes', 'Here is what I have been building.', $postInner, false, 0, 'post'), $samplePerson, 0, true);
+$postProblems = audit_html($postDoc, plain_text($postDoc), 'Gettysburg, PA')['errors'];
+$postVisible = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $postDoc) ?? $postDoc;
+$postImageAt = strpos($postVisible, 'class="mhn-img"');
+$postTitleAt = strpos($postVisible, '<h1');
+if ($postImageAt === false || $postTitleAt === false || $postImageAt > $postTitleAt) {
+    $postProblems[] = 'Blog post letter did not put the image above the title.';
+}
+foreach (['Hi there,', 'the excerpt lead.', 'In this note', 'First heading', 'Second heading', 'WordPress', 'Projects', 'Read the post', 'Talk soon,'] as $needle) {
+    if (! str_contains($postDoc, $needle)) {
+        $postProblems[] = 'Blog post letter is missing '.$needle;
+    }
+}
+if (str_contains($postDoc, 'Ninth') || str_contains($postDoc, '<h3')) {
+    $postProblems[] = 'Blog post letter kept an empty heading or a ninth item.';
+}
+if (substr_count($postVisible, '<li') !== 8) {
+    $postProblems[] = 'Blog post letter did not cap headings at 8.';
+}
+if (! str_contains($postDoc, 'WordPress · Projects') && ! str_contains($postDoc, 'WordPress &middot; Projects')) {
+    $postProblems[] = 'Blog post categories are not a middot line.';
+}
+if (str_contains($postDoc, 'mhn_open') || str_contains($postDoc, 'mhn_click')) {
+    $postProblems[] = 'Blog post letter called the tracker.';
+}
+$plainLead = blog_post_lead_from_text('', implode(' ', array_fill(0, 50, 'word')));
+$manualLead = blog_post_lead_from_text('Manual excerpt', 'ignored content');
+if ($manualLead !== 'Manual excerpt' || substr_count($plainLead, 'word') !== 40 || ! str_ends_with($plainLead, '…')) {
+    $postProblems[] = 'Excerpt fallback did not keep a manual excerpt or trim to 40 words.';
+}
+$missingImage = compose_blog_post_letter([
+    'title' => 'No image',
+    'excerpt' => 'Just the lead.',
+    'headings' => [],
+    'categories' => [],
+    'image' => '',
+    'permalink' => '',
+], 'Here is what I have been building.', 'Talk soon,', 'Matt Hummel');
+if (str_contains($missingImage, 'mhn-img') || str_contains($missingImage, 'Read the post') || str_contains($missingImage, 'In this note')) {
+    $postProblems[] = 'A letter with no image, headings, or link still rendered those blocks.';
+}
+if ($postProblems === []) {
+    fwrite(STDOUT, "pass  blog post layout\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  blog post layout\n");
+    foreach ($postProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }

@@ -25,6 +25,9 @@ function email_palette(): array
         'quote' => '#243041',
         'group' => '#f7f9fc',
         'rule' => '#cfd9e6',
+        'soft' => '#dceaf8',
+        'quiet' => '#50575e',
+        'hairline' => '#8aa0bd',
         'dark_page' => '#0b1220',
         'dark_card' => '#162033',
         'dark_ink' => '#f7f9fc',
@@ -44,6 +47,7 @@ function contrast_pairs(): array
         ['ink', 'paper', 4.5],
         ['navy', 'paper', 4.5],
         ['muted', 'paper', 4.5],
+        ['quiet', 'paper', 4.5],
         ['quote', 'paper', 4.5],
         ['ink', 'group', 4.5],
         ['navy', 'group', 4.5],
@@ -189,8 +193,9 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
     if (stripos($html, 'font-size:16px') === false) {
         $errors[] = 'Body text needs a 16px font size.';
     }
-    if (stripos($html, 'font-size:13px') !== false) {
-        $errors[] = 'Footer text is below 16px.';
+    $readable = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $html) ?? $html;
+    if (preg_match('/font-size:\s*(?:[1-9]|1[0-2])px/i', $readable) === 1) {
+        $errors[] = 'Text is smaller than 13px.';
     }
     if (preg_match('/<p\b[^>]*text-align:\s*(center|justify)/i', $html) === 1) {
         $errors[] = 'Paragraphs should be left-aligned.';
