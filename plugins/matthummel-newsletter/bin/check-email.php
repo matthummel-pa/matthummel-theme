@@ -422,8 +422,14 @@ foreach (array_keys(layouts()) as $layoutId) {
     if ($layoutId === 'standard' && ! str_contains($markup, 'mhn-standard-figure')) {
         $problems[] = 'Standard preview is missing the image under the title.';
     }
-    if ($layoutId === 'feature' && ! str_contains($markup, 'mhn-feature-stripe')) {
-        $problems[] = 'Feature preview is missing the stripe above the image.';
+    if ($layoutId === 'feature' && ! str_contains($markup, 'mhn-inset-figure')) {
+        $problems[] = 'Feature preview is missing the inset image.';
+    }
+    if (str_contains($html, 'prefers-color-scheme:dark') || str_contains($html, 'prefers-color-scheme: dark') || str_contains($html, '#162033')) {
+        $problems[] = 'Preview still paints a dark or navy letter.';
+    }
+    if ($layoutId === 'welcome' && ! str_contains($markup, 'background-color:#ffffff')) {
+        $problems[] = 'Welcome preview is missing the white card.';
     }
     if ($layoutId === 'post' && (! str_contains($markup, 'mhn-post-cats') || ! str_contains($markup, 'mhn-post-note'))) {
         $problems[] = 'Blog post preview is missing the category line or the heading list.';

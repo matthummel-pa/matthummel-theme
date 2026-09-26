@@ -31,11 +31,11 @@ function layouts(): array
         ],
         'feature' => [
             'label' => __('Feature', 'matthummel-newsletter'),
-            'summary' => __('A navy stripe, the image full width, then the title and the body.', 'matthummel-newsletter'),
+            'summary' => __('A white card. The image sits inset, and the title sits directly under it.', 'matthummel-newsletter'),
         ],
         'post' => [
             'label' => __('Blog post', 'matthummel-newsletter'),
-            'summary' => __('A post announcement: image, category, title, excerpt, headings, and Read the post.', 'matthummel-newsletter'),
+            'summary' => __('A white card: inset image, category chip, title, excerpt, headings, and Read the post.', 'matthummel-newsletter'),
         ],
     ];
 }
@@ -666,7 +666,7 @@ function post_copy_row(string $html): string
         return '';
     }
 
-    return '<table role="presentation" class="mhn-post-copy" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="mhn-px" style="padding:8px 32px 0;">'.$html.'</td></tr></table>';
+    return '<table role="presentation" class="mhn-post-copy" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0;">'.$html.'</td></tr></table>';
 }
 
 /**
@@ -688,9 +688,9 @@ function blog_post_categories_html(array $names): string
 
     $line = implode(' · ', array_map(static fn (string $name): string => esc_html($name), $clean));
 
-    return '<table role="presentation" class="mhn-post-cats" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-kicker mhn-muted" style="padding:12px 32px;background-color:#dceaf8;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#50575e;text-align:left;">'.$line.'</td>'
-        .'</tr></table>';
+    return '<p class="mhn-post-cats" style="margin:0 0 14px;text-align:left;">'
+        .'<span class="mhn-chip" style="display:inline-block;padding:4px 10px;background-color:#dceaf8;border-radius:4px;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#0d2e57;">'.$line.'</span>'
+        .'</p>';
 }
 
 /**
@@ -715,8 +715,8 @@ function blog_post_headings_html(array $headings): string
         return '';
     }
 
-    return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 0;"><tr>'
-        .'<td style="padding:16px 32px;background-color:#eef3f9;">'
+    return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 16px;"><tr>'
+        .'<td style="padding:16px 20px;background-color:#eef3f9;">'
         .'<h2 class="mhn-text" style="margin:0 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
         .esc_html__('In this note', 'matthummel-newsletter').'</h2>'
         .'<ul class="mhn-text" style="margin:0;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>'
@@ -1061,7 +1061,7 @@ function layout_eyebrow_html(string $text, string $layoutId): string
     $font = email_font_stack();
     if ($layoutId === 'plain') {
         return '<table role="presentation" class="mhn-eyebrow-block" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;"><tr>'
-            .'<td class="mhn-eyebrow" style="border-left:4px solid #0d2e57;padding:4px 0 4px 16px;font-family:'.$font.';font-size:18px;line-height:1.45;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</td>'
+            .'<td class="mhn-eyebrow" style="border-left:3px solid #0d2e57;padding:2px 0 2px 16px;font-family:'.$font.';font-size:18px;line-height:1.45;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</td>'
             .'</tr></table>';
     }
     if ($layoutId === 'welcome') {
@@ -1147,7 +1147,7 @@ function present_standard_image(string $image): string
 
     $image = str_replace('margin:0 0 16px', 'margin:0', $image);
 
-    return '<table role="presentation" class="mhn-standard-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;"><tr><td style="padding:8px;background-color:#eef3f9;">'.$image.'</td></tr></table>';
+    return '<table role="presentation" class="mhn-standard-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 24px;"><tr><td style="padding:0;background-color:#ffffff;border:1px solid #dceaf8;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
 }
 
 function present_feature_image(string $image): string
@@ -1159,7 +1159,7 @@ function present_feature_image(string $image): string
 
     $image = str_replace('margin:0 0 16px', 'margin:0', $image);
 
-    return '<div class="mhn-hero" style="margin:0;padding:0;line-height:0;font-size:0;">'.$image.'</div>';
+    return '<table role="presentation" class="mhn-inset-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;"><tr><td style="padding:0;background-color:#ffffff;border:1px solid #dceaf8;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
 }
 
 function take_letter_heading(string &$body, bool $plain, string $layoutId = ''): string
@@ -1257,7 +1257,7 @@ function sample_feature_image(): string
         return '';
     }
 
-    return '<img class="mhn-img" src="'.$safe.'" alt="'.esc_attr(__('A wide navy panel', 'matthummel-newsletter')).'" width="600" height="220" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0 0 16px;background-color:#eef3f9;">';
+    return '<img class="mhn-img" src="'.$safe.'" alt="'.esc_attr(__('A wide workshop still', 'matthummel-newsletter')).'" width="600" height="220" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0;background-color:#eef3f9;">';
 }
 
 function placeholder_preview_links(string $html): string

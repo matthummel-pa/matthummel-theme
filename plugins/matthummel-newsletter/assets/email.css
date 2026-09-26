@@ -1,7 +1,8 @@
-/* Letter design. Inlined into the message from this file. Admin chrome stays in admin.css. */
+/* Letter design. Inlined into the message from this file. Admin chrome stays in admin.css.
+   Letters stay light. Navy is a short accent. The card and the type do not follow the operating system. */
 :root {
-  color-scheme: light dark;
-  supported-color-schemes: light dark;
+  color-scheme: light only;
+  supported-color-schemes: light only;
 }
 
 body,
@@ -27,6 +28,7 @@ a {
 .mhn-letter {
   margin: 0;
   padding: 0;
+  color-scheme: light only;
 }
 
 .mhn-preheader {
@@ -53,8 +55,11 @@ a {
   background-color: #dceaf8;
 }
 
-.mhn-letter[data-mhn-style="card"] .mhn-card {
+.mhn-letter[data-mhn-style="card"] .mhn-card,
+.mhn-letter .mhn-card,
+.mhn-letter .mhn-text {
   background-color: #ffffff;
+  color: #0b1220;
 }
 
 .mhn-letter[data-mhn-style="card"] .mhn-stripe {
@@ -74,7 +79,9 @@ a {
   background-color: #eef3f9;
 }
 
-.mhn-letter[data-mhn-style="banner"] .mhn-card {
+.mhn-letter[data-mhn-style="banner"] .mhn-card,
+.mhn-letter[data-mhn-style="banner"] .mhn-text,
+.mhn-letter[data-mhn-style="banner"] .mhn-footer {
   background-color: #ffffff;
 }
 
@@ -105,7 +112,9 @@ a {
   color: #0b1220;
 }
 
-.mhn-letter[data-mhn-style="paper"] .mhn-rule div {
+.mhn-letter[data-mhn-style="paper"] .mhn-rule div,
+.mhn-letter[data-mhn-layout="standard"] .mhn-rule div,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-rule div {
   border-top: 2px solid #0d2e57;
 }
 
@@ -140,8 +149,18 @@ a {
   color: #50575e;
 }
 
-.mhn-letter[data-mhn-layout="standard"] .mhn-standard-figure td {
-  background-color: #eef3f9;
+.mhn-letter[data-mhn-layout="standard"] .mhn-standard-figure td,
+.mhn-letter[data-mhn-layout="feature"] .mhn-inset-figure td,
+.mhn-letter[data-mhn-layout="post"] .mhn-inset-figure td {
+  background-color: #ffffff;
+  border: 1px solid #dceaf8;
+}
+
+.mhn-letter[data-mhn-layout="welcome"] .mhn-card,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-text,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-text p {
+  background-color: #ffffff;
+  color: #0b1220;
 }
 
 .mhn-letter[data-mhn-layout="welcome"] .mhn-masthead,
@@ -152,6 +171,10 @@ a {
 .mhn-letter[data-mhn-layout="welcome"] .mhn-text h1,
 .mhn-letter[data-mhn-layout="welcome"] .mhn-signoff-name {
   text-align: center;
+}
+
+.mhn-letter[data-mhn-layout="welcome"] h1.mhn-title {
+  color: #0d2e57;
 }
 
 .mhn-letter[data-mhn-layout="plain"],
@@ -168,32 +191,27 @@ a {
 }
 
 .mhn-letter[data-mhn-layout="plain"] .mhn-eyebrow {
-  border-left: 4px solid #0d2e57;
+  border-left: 3px solid #0d2e57;
 }
 
 .mhn-letter[data-mhn-layout="plain"] a.mhn-text-link {
   background: none;
-  min-height: 44px;
+  min-height:44px;
 }
 
-.mhn-letter[data-mhn-layout="feature"] .mhn-feature-stripe,
-.mhn-letter[data-mhn-layout="feature"] .mhn-stripe {
-  background-color: #0d2e57;
-  height: 4px;
-}
-
-.mhn-letter[data-mhn-layout="feature"] .mhn-hero-cell,
-.mhn-letter[data-mhn-layout="post"] .mhn-hero-cell {
-  padding: 0;
-  line-height: 0;
-}
-
-.mhn-letter[data-mhn-layout="post"] .mhn-post-cats td {
+.mhn-letter[data-mhn-layout="post"] .mhn-chip {
   background-color: #dceaf8;
+  color: #0d2e57;
 }
 
 .mhn-letter[data-mhn-layout="post"] .mhn-post-note td {
   background-color: #eef3f9;
+}
+
+.mhn-footer,
+.mhn-footer p,
+.mhn-footer a {
+  color: #50575e;
 }
 
 @media only screen and (max-width: 620px) {
@@ -226,139 +244,4 @@ a {
     max-width: 100% !important;
     height: auto !important;
   }
-}
-
-@media (prefers-color-scheme:dark) {
-  .mhn-page,
-  .mhn-page-td {
-    background: #0b1220 !important;
-  }
-
-  .mhn-card {
-    background: #162033 !important;
-  }
-
-  .mhn-text,
-  .mhn-text p,
-  .mhn-text li,
-  .mhn-text h1,
-  .mhn-text h2,
-  .mhn-text h3 {
-    color: #f7f9fc !important;
-  }
-
-  .mhn-text p.mhn-eyebrow,
-  .mhn-eyebrow,
-  .mhn-kicker {
-    color: #b7c3d4 !important;
-  }
-
-  .mhn-text a:not(.mhn-btn) {
-    color: #d6e4ff !important;
-    text-decoration: underline !important;
-  }
-
-  a.mhn-btn {
-    color: #ffffff !important;
-    background-color: #0d2e57 !important;
-  }
-
-  .mhn-letter[data-mhn-button="outline"] a.mhn-btn {
-    color: #f7f9fc !important;
-    background-color: transparent !important;
-    border-color: #f7f9fc !important;
-  }
-
-  .mhn-muted,
-  .mhn-footer,
-  .mhn-footer p,
-  .mhn-footer a {
-    color: #b7c3d4 !important;
-  }
-
-  .mhn-brand {
-    color: #f7f9fc !important;
-  }
-
-  .mhn-letter[data-mhn-style="banner"] .mhn-masthead {
-    background-color: #0d2e57 !important;
-  }
-
-  .mhn-letter[data-mhn-style="banner"] .mhn-brand,
-  .mhn-letter[data-mhn-style="banner"] .mhn-masthead .mhn-kicker {
-    color: #ffffff !important;
-  }
-
-  .mhn-frame {
-    background: #2a3b52 !important;
-  }
-
-  .mhn-letter[data-mhn-style="paper"] .mhn-frame {
-    background: #0b1220 !important;
-  }
-
-  .mhn-stripe {
-    background: #0d2e57 !important;
-  }
-
-  .mhn-rule,
-  .mhn-hairline div,
-  .mhn-footer {
-    border-color: #2a3b52 !important;
-  }
-
-  .mhn-letter[data-mhn-style="paper"] .mhn-rule div {
-    border-top-color: #d6e4ff !important;
-  }
-
-  .mhn-group {
-    background: #0f1b2d !important;
-  }
-}
-
-[data-ogsc] .mhn-page,
-[data-ogsc] .mhn-page-td {
-  background: #0b1220 !important;
-}
-
-[data-ogsc] .mhn-card {
-  background: #162033 !important;
-}
-
-[data-ogsc] .mhn-text,
-[data-ogsc] .mhn-text p,
-[data-ogsc] .mhn-text li,
-[data-ogsc] .mhn-text h1,
-[data-ogsc] .mhn-text h2,
-[data-ogsc] .mhn-text h3 {
-  color: #f7f9fc !important;
-}
-
-[data-ogsc] .mhn-text a:not(.mhn-btn) {
-  color: #d6e4ff !important;
-}
-
-[data-ogsc] a.mhn-btn {
-  color: #ffffff !important;
-  background-color: #0d2e57 !important;
-}
-
-[data-ogsc] .mhn-letter[data-mhn-button="outline"] a.mhn-btn {
-  color: #f7f9fc !important;
-  background-color: transparent !important;
-}
-
-[data-ogsc] .mhn-footer,
-[data-ogsc] .mhn-footer p,
-[data-ogsc] .mhn-footer a,
-[data-ogsc] .mhn-kicker {
-  color: #b7c3d4 !important;
-}
-
-[data-ogsc] .mhn-brand {
-  color: #f7f9fc !important;
-}
-
-[data-ogsc] .mhn-group {
-  background: #0f1b2d !important;
 }

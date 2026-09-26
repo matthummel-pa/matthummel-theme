@@ -137,6 +137,7 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
             $chrome[$key] = str_replace('text-align:left', 'text-align:center', (string) $chrome[$key]);
         }
         $chrome['masthead_style'] = (string) preg_replace('/padding:[^;]+;/', 'padding:36px 48px 18px;', (string) $chrome['masthead_style']);
+        $chrome['show_stripe'] = false;
     }
 
     if ($layoutKey === 'plain') {
@@ -154,15 +155,14 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
         }
     }
 
-    if ($layoutKey === 'feature') {
-        $chrome['show_stripe'] = false;
-        $chrome['show_rule'] = false;
-        $chrome['hero'] = 'padding:0;background-color:#eef3f9;line-height:0;font-size:0;';
+    if ($layoutKey === 'standard') {
+        $chrome['brand'] = str_replace('font-size:18px', 'font-size:15px', (string) $chrome['brand']);
     }
 
-    if ($layoutKey === 'post') {
+    if ($layoutKey === 'feature' || $layoutKey === 'post') {
+        $chrome['show_stripe'] = $layoutKey === 'post' && ($chrome['show_stripe'] ?? false);
         $chrome['show_rule'] = false;
-        $chrome['hero'] = 'padding:0;background-color:#eef3f9;line-height:0;font-size:0;';
+        $chrome['hero'] = 'padding:32px 32px 0;background-color:#ffffff;line-height:0;font-size:0;';
     }
 
     return $chrome;
@@ -201,19 +201,22 @@ function email_document(string $subject, string $preheader, string $body, bool $
 
     $kicker = letter_kicker($layoutKey, $site);
     $padTop = match ($layoutKey) {
-        'feature' => '8px',
-        'post' => '0',
-        'plain' => '4px',
-        'welcome' => '40px',
-        default => '22px',
+        'feature' => '32px',
+        'post' => '32px',
+        'plain' => '8px',
+        'welcome' => '48px',
+        default => '32px',
     };
     $padSide = match ($layoutKey) {
         'welcome' => '48px',
-        'plain' => '4px',
-        'post' => '0',
+        'plain' => '8px',
         default => '32px',
     };
-    $padBottom = $layoutKey === 'welcome' ? '32px' : '8px';
+    $padBottom = match ($layoutKey) {
+        'welcome' => '40px',
+        'plain' => '12px',
+        default => '28px',
+    };
     $bodyAlign = $layoutKey === 'welcome' ? 'center' : 'left';
     $lineHeight = $layoutKey === 'welcome' ? '1.7' : '1.6';
     $heroRow = $hero !== ''
@@ -222,13 +225,10 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $stripe = $chrome['show_stripe']
         ? '<tr><td class="mhn-stripe" style="'.$chrome['stripe'].'">&nbsp;</td></tr>'
         : '';
-    $featureStripe = $layoutKey === 'feature'
-        ? '<tr><td class="mhn-stripe mhn-feature-stripe" style="height:4px;line-height:4px;font-size:0;background-color:#0d2e57;">&nbsp;</td></tr>'
-        : '';
     $masthead = letter_masthead($name, $kicker, $chrome);
     $hairline = $chrome['show_rule'] ? letter_rule($chrome) : '';
     $headRows = match ($layoutKey) {
-        'feature' => $masthead.$featureStripe.$heroRow,
+        'feature' => $masthead.$heroRow,
         'post' => $stripe.$masthead.$heroRow,
         'plain' => $masthead,
         'welcome' => $stripe.$masthead.$hairline,
@@ -260,7 +260,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
     return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
         .'<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         .'<meta http-equiv="X-UA-Compatible" content="IE=edge">'
-        .'<meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">'
+        .'<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light only">'
         .'<title>'.esc_html($subject).'</title>'
         .'<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->'
         .$styles
@@ -275,7 +275,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<tr><td style="'.$chrome['frame_td'].'">'
         .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['card'].'">'
         .$headRows
-        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';font-family:'.$font.';font-size:16px;line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
+        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';background-color:#ffffff;font-family:'.$font.';font-size:16px;line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
         .$body
         .'</td></tr>'
         .($recent !== '' ? '<tr><td>'.$recent.'</td></tr>' : '')

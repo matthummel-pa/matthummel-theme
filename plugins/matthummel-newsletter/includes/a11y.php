@@ -129,8 +129,11 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
     if (preg_match('/<title>\s*[^<]+<\/title>/i', $html) !== 1) {
         $errors[] = 'The email needs a title.';
     }
-    if (stripos($html, 'name="color-scheme"') === false || stripos($html, 'prefers-color-scheme:dark') === false) {
-        $errors[] = 'Dark mode needs a color-scheme meta tag and a prefers-color-scheme rule.';
+    if (stripos($html, 'name="color-scheme"') === false || stripos($html, 'content="light only"') === false) {
+        $errors[] = 'The letter needs a light-only color-scheme meta tag.';
+    }
+    if (stripos($html, 'prefers-color-scheme:dark') !== false || stripos($html, 'prefers-color-scheme: dark') !== false) {
+        $errors[] = 'The letter must stay light. Remove the dark color-scheme rule.';
     }
 
     if (preg_match_all('/<table\b[^>]*>/i', $html, $tables) > 0) {
