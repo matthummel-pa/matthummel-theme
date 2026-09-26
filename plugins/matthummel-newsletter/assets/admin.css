@@ -922,6 +922,22 @@
   margin: 0 0 12px;
 }
 
+.mhn-system-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.mhn-system-list li {
+  margin: 0 0 8px;
+}
+
+.mhn-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 12px;
+}
+
 .mhn-choice {
   display: flex;
   flex-wrap: wrap;

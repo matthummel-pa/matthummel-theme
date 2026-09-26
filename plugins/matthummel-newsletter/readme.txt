@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has a focused variant and a detailed variant. The page is light grey. The letter is a white rounded card with a soft gradient. Standard leads with a muted intro, a large title, and the image under the title. Detailed Standard uses that intro as a dek under the title. Welcome is short and centered. Detailed Welcome adds a short list. Plain keeps a navy rule beside the intro. Detailed Plain adds the date. Feature insets the image, then the title. Detailed Feature puts the intro under the image as a caption. Blog post is an announcement. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Letter style (Card, Banner, or Paper), masthead, button, and font (Sans, Serif, or Humanist) are edited under Settings. Banner is only a navy masthead band. A header image and text social links are optional. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
+* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has Focused, Detailed, and Digest variants. New letters start on Detailed. The page is light grey. The letter is a white rounded card with a soft gradient. Focused is one idea and one action. Detailed Standard uses the intro as a dek under the title. Detailed Welcome adds a short list. Detailed Plain adds the date. Detailed Feature puts the intro under the image as a caption. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Digest leads with why it matters, then a short list, and one link. Letter style (Card, Banner, or Paper), masthead, button, font (Sans, Serif, Humanist, or Editorial), and size (Regular or Roomy) are edited under Settings. Banner is only a navy masthead band. A header image can come from the media library, and text social links start with the public Site, GitHub, LinkedIn, and Bluesky profiles. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
 * Blog post letters can leave out the image, excerpt, headings, categories, or button. Newsletter rules can skip a post that was already sent and limit the post picker to chosen categories. The postal address and unsubscribe link stay on every letter. Preview text starts as the reusable intro.
 * Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
@@ -55,6 +55,12 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.7.0 =
+* New letters start on the Detailed variant. Digest is the scanning variant: why it matters, a short list, and one link.
+* Font adds Editorial (serif titles, sans body). Size is Regular (16px) or Roomy (18px).
+* Header images can be chosen from the media library. Social links add Bluesky and start with the public Site, GitHub, LinkedIn, and Bluesky profiles.
+* The preview labels are HTML email and Plain text. Plain text is the unstyled letter, and it is the plain part of the message.
 
 = 1.6.0 =
 * Letters sit on a light grey page. The content is a white rounded card with a soft gradient. Navy stays a short accent.

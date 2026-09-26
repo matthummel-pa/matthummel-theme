@@ -100,9 +100,24 @@ function email_font_stack(?string $font = null): string
     return $choices[$key]['stack'];
 }
 
+function email_title_stack(?string $font = null): string
+{
+    $choices = letter_font_choices();
+    $key = $font ?? current_letter_look()['font'];
+    if (! isset($choices[$key])) {
+        $key = 'sans';
+    }
+
+    $title = $choices[$key]['title'] ?? '';
+
+    return is_string($title) && $title !== '' ? $title : $choices[$key]['stack'];
+}
+
 function body_paragraph_style(): string
 {
-    return 'margin:0 0 16px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;';
+    $type = letter_type_spec();
+
+    return 'margin:0 0 16px;font-family:'.email_font_stack().';font-size:'.$type['body'].';line-height:'.$type['line'].';color:#0b1220;text-align:left;';
 }
 
 /**
@@ -125,7 +140,7 @@ function letter_title_html(string $text, bool $plain = false, string $layoutId =
         default => ['32px', '0 0 18px', 'letter-spacing:-0.02em;'],
     };
 
-    return '<h1 class="mhn-text mhn-title" style="margin:'.$margin.';font-family:'.email_font_stack().';font-size:'.$size.';line-height:1.2;font-weight:700;'.$extra.'color:#0d2e57;text-align:'.$align.';">'.esc_html($text).'</h1>';
+    return '<h1 class="mhn-text mhn-title" style="margin:'.$margin.';font-family:'.email_title_stack().';font-size:'.$size.';line-height:1.2;font-weight:700;'.$extra.'color:#0d2e57;text-align:'.$align.';">'.esc_html($text).'</h1>';
 }
 
 /**
@@ -181,8 +196,10 @@ function email_document(string $subject, string $preheader, string $body, bool $
     if (! $knownLayout) {
         $layoutKey = '';
     }
-    $chrome = layout_letter_chrome($layoutKey, letter_chrome($look ?? current_letter_look()));
+    $resolvedLook = normalize_letter_look($look ?? current_letter_look());
+    $chrome = layout_letter_chrome($layoutKey, letter_chrome($resolvedLook));
     $font = (string) $chrome['font'];
+    $type = letter_type_spec($resolvedLook);
 
     $pad = '<span aria-hidden="true">'.str_repeat('&nbsp;&zwnj;', 24).'</span>';
     $recent = $includeRecent ? recent_posts_html($excludePostId, $font) : '';
@@ -218,7 +235,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
         default => '28px',
     };
     $bodyAlign = $layoutKey === 'welcome' ? 'center' : 'left';
-    $lineHeight = $layoutKey === 'welcome' ? '1.7' : '1.6';
+    $lineHeight = $layoutKey === 'welcome' ? '1.7' : $type['line'];
     $heroRow = $hero !== ''
         ? '<tr><td class="mhn-hero-cell" style="'.$chrome['hero'].'">'.$hero.'</td></tr>'
         : '';
@@ -258,7 +275,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $styleKey = $chrome['style'];
     $mastheadKey = $layoutKey === 'welcome' ? 'center' : $chrome['masthead'];
     $layoutClass = $layoutKey !== '' ? ' mhn-layout-'.esc_attr($layoutKey) : '';
-    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($mastheadKey).'" data-mhn-button="'.esc_attr($chrome['button']).'" data-mhn-font="'.esc_attr((string) $chrome['font_key']).'" data-mhn-variant="'.esc_attr((string) $chrome['variant']).'"';
+    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($mastheadKey).'" data-mhn-button="'.esc_attr($chrome['button']).'" data-mhn-font="'.esc_attr((string) $chrome['font_key']).'" data-mhn-size="'.esc_attr($resolvedLook['size']).'" data-mhn-variant="'.esc_attr((string) $chrome['variant']).'"';
     if ($layoutKey !== '') {
         $letterAttrs .= ' data-mhn-layout="'.esc_attr($layoutKey).'"';
     }
@@ -282,7 +299,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['card'].'">'
         .$headerImage
         .$headRows
-        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';background-color:#ffffff;font-family:'.$font.';font-size:16px;line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
+        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';background-color:#ffffff;font-family:'.$font.';font-size:'.$type['body'].';line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
         .$body
         .'</td></tr>'
         .($recent !== '' ? '<tr><td>'.$recent.'</td></tr>' : '')
@@ -299,7 +316,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
  */
 function letter_header_image_html(array $settings): string
 {
-    $url = sanitize_https_url((string) ($settings['header_image'] ?? ''));
+    $url = sanitize_letter_asset_url((string) ($settings['header_image'] ?? ''));
     if ($url === '') {
         return '';
     }
@@ -321,13 +338,7 @@ function letter_header_image_html(array $settings): string
  */
 function letter_social_html(array $settings): string
 {
-    $links = [
-        'social_site' => __('Site', 'matthummel-newsletter'),
-        'social_github' => 'GitHub',
-        'social_linkedin' => 'LinkedIn',
-        'social_youtube' => 'YouTube',
-        'social_instagram' => 'Instagram',
-    ];
+    $links = letter_social_fields();
     $parts = [];
     foreach ($links as $key => $label) {
         $url = sanitize_https_url((string) ($settings[$key] ?? ''));

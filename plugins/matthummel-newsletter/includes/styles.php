@@ -73,6 +73,32 @@ function letter_font_choices(): array
             'label' => __('Humanist', 'matthummel-newsletter'),
             'stack' => "'Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif",
         ],
+        'editorial' => [
+            'label' => __('Editorial', 'matthummel-newsletter'),
+            'stack' => "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif",
+            'title' => "Georgia,'Iowan Old Style','Palatino Linotype',Palatino,'Times New Roman',Times,serif",
+        ],
+    ];
+}
+
+/**
+ * Body size stays at 16px or larger. Smaller type fails the send check.
+ *
+ * @return array<string, array{label: string, body: string, line: string}>
+ */
+function letter_size_choices(): array
+{
+    return [
+        'regular' => [
+            'label' => __('Regular', 'matthummel-newsletter'),
+            'body' => '16px',
+            'line' => '1.6',
+        ],
+        'roomy' => [
+            'label' => __('Roomy', 'matthummel-newsletter'),
+            'body' => '18px',
+            'line' => '1.7',
+        ],
     ];
 }
 
@@ -86,11 +112,15 @@ function letter_variant_choices(): array
     return [
         'focused' => [
             'label' => __('Focused', 'matthummel-newsletter'),
-            'summary' => __('One idea, a short intro, and one action.', 'matthummel-newsletter'),
+            'summary' => __('One idea and one action. The short stack for every layout.', 'matthummel-newsletter'),
         ],
         'detailed' => [
             'label' => __('Detailed', 'matthummel-newsletter'),
-            'summary' => __('Essay dek, welcome list, letter date, image caption, or a why-I-wrote-this note.', 'matthummel-newsletter'),
+            'summary' => __('The essay. A dek, a welcome list, a date, an image caption, or a why-I-wrote-this note.', 'matthummel-newsletter'),
+        ],
+        'digest' => [
+            'label' => __('Digest', 'matthummel-newsletter'),
+            'summary' => __('Why it matters, then a short list, then one link. Built for scanning.', 'matthummel-newsletter'),
         ],
     ];
 }
@@ -116,7 +146,38 @@ function sanitize_https_url(string $value): string
 }
 
 /**
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ * https anywhere. http only when the host is this site, so a local library image can be saved.
+ */
+function sanitize_letter_asset_url(string $value): string
+{
+    $https = sanitize_https_url($value);
+    if ($https !== '') {
+        return $https;
+    }
+
+    $value = trim($value);
+    if ($value === '') {
+        return '';
+    }
+
+    $value = function_exists('esc_url_raw') ? esc_url_raw($value) : $value;
+    if (! is_string($value) || $value === '') {
+        return '';
+    }
+
+    $scheme = function_exists('wp_parse_url') ? wp_parse_url($value, PHP_URL_SCHEME) : parse_url($value, PHP_URL_SCHEME);
+    $host = function_exists('wp_parse_url') ? wp_parse_url($value, PHP_URL_HOST) : parse_url($value, PHP_URL_HOST);
+    $home = function_exists('home_url') ? home_url() : '';
+    $homeHost = function_exists('wp_parse_url') ? wp_parse_url((string) $home, PHP_URL_HOST) : parse_url((string) $home, PHP_URL_HOST);
+    if ($scheme !== 'http' || ! is_string($host) || ! is_string($homeHost) || strcasecmp($host, $homeHost) !== 0) {
+        return '';
+    }
+
+    return $value;
+}
+
+/**
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}
  */
 function letter_look_defaults(): array
 {
@@ -125,7 +186,8 @@ function letter_look_defaults(): array
         'masthead' => 'left',
         'button' => 'solid',
         'font' => 'sans',
-        'variant' => 'focused',
+        'size' => 'regular',
+        'variant' => 'detailed',
     ];
 }
 
@@ -133,8 +195,8 @@ function letter_look_defaults(): array
  * Missing keys keep the fallback. An unknown key does too.
  *
  * @param  array<string, mixed>  $input
- * @param  array{style: string, masthead: string, button: string, font: string, variant: string}|null  $fallback
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ * @param  array{style: string, masthead: string, button: string, font: string, size: string, variant: string}|null  $fallback
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}
  */
 function normalize_letter_look(array $input, ?array $fallback = null): array
 {
@@ -143,6 +205,7 @@ function normalize_letter_look(array $input, ?array $fallback = null): array
     $masthead = array_key_exists('masthead', $input) ? sanitize_key((string) $input['masthead']) : $fallback['masthead'];
     $button = array_key_exists('button', $input) ? sanitize_key((string) $input['button']) : $fallback['button'];
     $font = array_key_exists('font', $input) ? sanitize_key((string) $input['font']) : $fallback['font'];
+    $size = array_key_exists('size', $input) ? sanitize_key((string) $input['size']) : $fallback['size'];
     $variant = array_key_exists('variant', $input) ? sanitize_key((string) $input['variant']) : $fallback['variant'];
 
     return [
@@ -150,6 +213,7 @@ function normalize_letter_look(array $input, ?array $fallback = null): array
         'masthead' => isset(letter_masthead_choices()[$masthead]) ? $masthead : $fallback['masthead'],
         'button' => isset(letter_button_choices()[$button]) ? $button : $fallback['button'],
         'font' => isset(letter_font_choices()[$font]) ? $font : $fallback['font'],
+        'size' => isset(letter_size_choices()[$size]) ? $size : $fallback['size'],
         'variant' => isset(letter_variant_choices()[$variant]) ? $variant : $fallback['variant'],
     ];
 }
@@ -169,7 +233,7 @@ function choice_from_input(array $input, string $key, array $allowed, string $cu
 }
 
 /**
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}
  */
 function settings_letter_look(): array
 {
@@ -180,6 +244,7 @@ function settings_letter_look(): array
         'masthead' => $config['letter_masthead'],
         'button' => $config['letter_button'],
         'font' => $config['letter_font'],
+        'size' => $config['letter_size'],
         'variant' => $config['letter_variant'],
     ]);
 }
@@ -187,7 +252,7 @@ function settings_letter_look(): array
 /**
  * Empty issue meta uses the saved settings.
  *
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}
  */
 function issue_letter_look(int $issueId): array
 {
@@ -202,7 +267,7 @@ function issue_letter_look(int $issueId): array
     }
 
     $input = [];
-    foreach (['style', 'masthead', 'button', 'font', 'variant'] as $key) {
+    foreach (['style', 'masthead', 'button', 'font', 'size', 'variant'] as $key) {
         if (array_key_exists($key, $saved)) {
             $input[$key] = (string) $saved[$key];
         }
@@ -213,7 +278,7 @@ function issue_letter_look(int $issueId): array
 
 /**
  * @param  array<string, mixed>  $input
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}|null
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}|null
  */
 function letter_look_from_request(array $input, int $issueId): ?array
 {
@@ -221,6 +286,7 @@ function letter_look_from_request(array $input, int $issueId): ?array
         || array_key_exists('mhn_letter_masthead', $input)
         || array_key_exists('mhn_letter_button', $input)
         || array_key_exists('mhn_letter_font', $input)
+        || array_key_exists('mhn_letter_size', $input)
         || array_key_exists('mhn_letter_variant', $input);
     if (! $posted) {
         return null;
@@ -233,6 +299,7 @@ function letter_look_from_request(array $input, int $issueId): ?array
         'masthead' => 'mhn_letter_masthead',
         'button' => 'mhn_letter_button',
         'font' => 'mhn_letter_font',
+        'size' => 'mhn_letter_size',
         'variant' => 'mhn_letter_variant',
     ];
     foreach ($map as $key => $field) {
@@ -264,7 +331,7 @@ function save_issue_letter_style(int $issueId, array $input): void
 }
 
 /**
- * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ * @return array{style: string, masthead: string, button: string, font: string, size: string, variant: string}
  */
 function current_letter_look(): array
 {
@@ -277,7 +344,7 @@ function current_letter_look(): array
 }
 
 /**
- * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, size?: string, variant?: string}  $look
  */
 function push_letter_look(array $look): void
 {
@@ -292,6 +359,23 @@ function push_letter_look(array $look): void
 function letter_is_detailed(): bool
 {
     return current_letter_look()['variant'] === 'detailed';
+}
+
+function letter_is_digest(): bool
+{
+    return current_letter_look()['variant'] === 'digest';
+}
+
+/**
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, size?: string, variant?: string}|null  $look
+ * @return array{label: string, body: string, line: string}
+ */
+function letter_type_spec(?array $look = null): array
+{
+    $look = normalize_letter_look($look ?? current_letter_look());
+    $choices = letter_size_choices();
+
+    return $choices[$look['size']] ?? $choices['regular'];
 }
 
 function pop_letter_look(): void
@@ -335,7 +419,7 @@ function email_css(): string
 /**
  * Inline shell styles. Email clients that drop the style block still keep these.
  *
- * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, size?: string, variant?: string}  $look
  * @return array{
  *     style: string,
  *     masthead: string,
@@ -364,6 +448,7 @@ function letter_chrome(array $look): array
 {
     $look = normalize_letter_look($look);
     $font = email_font_stack($look['font']);
+    $titleFont = email_title_stack($look['font']);
     $align = $look['masthead'] === 'center' ? 'center' : 'left';
     $page = '#eceff1';
     $brandColor = match ($look['style']) {
@@ -393,7 +478,7 @@ function letter_chrome(array $look): array
         'card' => $card,
         'stripe' => 'height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:16px 16px 0 0;',
         'masthead_style' => 'padding:'.$mastPad.';background-color:'.$mastBg.';font-family:'.$font.';text-align:'.$align.';'.$mastRadius,
-        'brand' => 'font-size:15px;line-height:1.3;font-weight:700;letter-spacing:0.01em;color:'.$brandColor.';text-align:'.$align.';',
+        'brand' => 'font-family:'.$titleFont.';font-size:15px;line-height:1.3;font-weight:700;letter-spacing:0.01em;color:'.$brandColor.';text-align:'.$align.';',
         'kicker' => 'margin-top:6px;font-size:13px;line-height:1.4;color:'.$kickerColor.';text-align:'.$align.';',
         'rule' => $rule,
         'show_stripe' => $look['style'] === 'card',
@@ -404,7 +489,7 @@ function letter_chrome(array $look): array
 }
 
 /**
- * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}|null  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, size?: string, variant?: string}|null  $look
  * @return array{class: string, fill: string, stroke: string, text: string, anchor: string}
  */
 function letter_button_palette(?array $look = null): array

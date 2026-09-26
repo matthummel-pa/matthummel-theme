@@ -164,6 +164,16 @@ a {
   font-family: "Trebuchet MS", "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
+.mhn-letter[data-mhn-font="editorial"] h1.mhn-title,
+.mhn-letter[data-mhn-font="editorial"] .mhn-brand {
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", Times, serif;
+}
+
+.mhn-letter[data-mhn-size="roomy"] .mhn-text {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
 .mhn-letter[data-mhn-layout="welcome"] .mhn-card,
 .mhn-letter[data-mhn-layout="welcome"] .mhn-text,
 .mhn-letter[data-mhn-layout="welcome"] .mhn-text p {
