@@ -279,7 +279,7 @@ function letter_chrome(array $look): array
     $rule = match ($look['style']) {
         'banner' => '',
         'paper' => 'border-top:2px solid #0d2e57;',
-        default => 'border-top:1px solid #8aa0bd;',
+        default => 'border-top:2px solid #0d2e57;',
     };
     $heroBg = $look['style'] === 'paper' ? '#ffffff' : '#eef3f9';
 
@@ -296,7 +296,7 @@ function letter_chrome(array $look): array
         'card' => 'width:100%;background-color:#ffffff;border-collapse:separate;border-radius:4px;',
         'stripe' => 'height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:4px 4px 0 0;',
         'masthead_style' => 'padding:'.$mastPad.';background-color:'.$mastBg.';font-family:'.$font.';text-align:'.$align.';'.$mastRadius,
-        'brand' => 'font-size:18px;line-height:1.2;font-weight:700;color:'.$brandColor.';text-align:'.$align.';',
+        'brand' => 'font-size:15px;line-height:1.3;font-weight:700;letter-spacing:0.01em;color:'.$brandColor.';text-align:'.$align.';',
         'kicker' => 'margin-top:6px;font-size:13px;line-height:1.4;color:'.$kickerColor.';text-align:'.$align.';',
         'rule' => $rule,
         'show_stripe' => $look['style'] === 'card',

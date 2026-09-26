@@ -681,7 +681,7 @@ function render_layout_picker(string $current): void
             /* translators: %s: layout name */
             __('%s preview', 'matthummel-newsletter'),
             $layout['label']
-        )).'" sandbox="" tabindex="-1" src="'.esc_url(layout_preview_admin_url($id)).'"></iframe>';
+        )).'" sandbox="" tabindex="-1" srcdoc="'.esc_attr(layout_preview_html($id)).'"></iframe>';
         echo '</span></label>';
     }
     echo '</div>';

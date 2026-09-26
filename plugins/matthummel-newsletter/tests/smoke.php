@@ -289,7 +289,7 @@ $columnHtml = Newsletter\issue_message((int) $columnId, [
 mhn_check(str_contains($columnHtml, 'mhn-col'), 'columns render as email columns');
 mhn_check(str_contains($columnHtml, 'Left Ada'), 'merge tag replaces the first name');
 mhn_check(str_contains($columnHtml, 'max-width:620px') || str_contains($columnHtml, 'max-width:620px'), 'mobile media query is present');
-mhn_check(str_contains($columnHtml, '@media (prefers-color-scheme: dark)') || str_contains($columnHtml, 'prefers-color-scheme:dark'), 'dark mode query is present');
+mhn_check(! str_contains($columnHtml, 'prefers-color-scheme:dark') && str_contains($columnHtml, 'content="light only"'), 'letter stays light');
 
 $context = new WP_Block_Editor_Context(['post' => get_post($issueId)]);
 $allowed = Newsletter\allowed_blocks(true, $context);

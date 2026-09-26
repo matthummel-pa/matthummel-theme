@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one is a different arrangement. Standard is a muted intro, a large title, and the image under the title. Welcome is short and centered. Plain is a white page with a navy rule. Feature puts the image under a navy stripe. Blog post is an announcement with the category, excerpt, headings, and Read the post. Letter style (Card, Banner, or Paper), masthead alignment, and the button treatment are edited under Settings. The letter CSS ships in the plugin and is part of the message.
+* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one is a light letter. Standard is a white card, a short navy rule, a muted intro, a large title, and the image under the title. Welcome is short, centered, and white. Plain is a white page with a navy rule. Feature insets the image, then the title. Blog post is an announcement with an inset image, a category chip, the excerpt, headings, and Read the post. Letter style (Card, Banner, or Paper), masthead alignment, and the button treatment are edited under Settings. Banner is only a navy masthead band. The letter CSS ships in the plugin and is part of the message.
 * Blog post letters can leave out the image, excerpt, headings, categories, or button. Newsletter rules can skip a post that was already sent and limit the post picker to chosen categories. The postal address and unsubscribe link stay on every letter. Preview text starts as the reusable intro.
 * Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
@@ -55,6 +55,9 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.5.0 =
+* The five letters are light and editorial. Navy is a short accent. Welcome stays a white card, including when the operating system is dark.
 
 = 1.4.0 =
 * Standard, Welcome, Plain, Feature, and Blog post each use a different arrangement. The letter CSS is still in the preview and in the sent message.
