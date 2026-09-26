@@ -35,6 +35,7 @@ function bindEmulator(root) {
   if (!root) return
 
   bindEmulatorDevices(root)
+  bindEmulatorFormat(root)
   if (root.getAttribute('data-mhn-live') === '1') bindEmulatorLive(root)
 }
 
@@ -47,6 +48,29 @@ function bindEmulatorDevices(root) {
       const device = button.getAttribute('data-mhn-device') === 'mobile' ? 'mobile' : 'desktop'
       setEmulatorDevice(root, device)
     })
+  })
+}
+
+function bindEmulatorFormat(root) {
+  const buttons = root.querySelectorAll('[data-mhn-format]')
+  if (buttons.length === 0) return
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const format = button.getAttribute('data-mhn-format') === 'plain' ? 'plain' : 'html'
+      setEmulatorFormat(root, format)
+    })
+  })
+}
+
+function setEmulatorFormat(root, format) {
+  const frame = root.querySelector('[data-mhn-emulator-frame]')
+  const plain = root.querySelector('[data-mhn-plain]')
+  if (frame) frame.hidden = format === 'plain'
+  if (plain) plain.hidden = format !== 'plain'
+  root.querySelectorAll('[data-mhn-format]').forEach((button) => {
+    const pressed = button.getAttribute('data-mhn-format') === format
+    button.setAttribute('aria-pressed', pressed ? 'true' : 'false')
   })
 }
 
@@ -177,6 +201,9 @@ function refreshEmulator(root, form) {
 function applyEmulatorPayload(root, data) {
   const frame = root.querySelector('[data-mhn-emulator-frame]')
   if (frame && typeof data.html === 'string') frame.setAttribute('srcdoc', data.html)
+
+  const plain = root.querySelector('[data-mhn-plain]')
+  if (plain && typeof data.text === 'string') plain.textContent = data.text
 
   const typingSubject = document.activeElement && (document.activeElement.name === 'mhn_subject' || document.activeElement.name === 'mhn_block_heading')
   const typingIntro = document.activeElement && (document.activeElement.name === 'mhn_block_intro' || document.activeElement.name === 'mhn_preheader')

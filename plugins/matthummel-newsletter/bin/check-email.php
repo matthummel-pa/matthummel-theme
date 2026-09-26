@@ -114,6 +114,23 @@ function wp_strip_all_tags(string $text, bool $remove_breaks = false): string
 /**
  * @param  array<string, array<string, bool>>  $allowed
  */
+function sanitize_text_field(string $text): string
+{
+    return trim(wp_strip_all_tags($text));
+}
+
+function esc_url_raw(string $url): string
+{
+    return trim($url);
+}
+
+function _n(string $single, string $plural, int $number, string $domain = 'default'): string
+{
+    unset($domain);
+
+    return $number === 1 ? $single : $plural;
+}
+
 function sanitize_key(string $key): string
 {
     $key = strtolower($key);
@@ -249,6 +266,7 @@ use function MattHummel\Newsletter\blog_post_lead_from_text;
 use function MattHummel\Newsletter\compose_advanced_letter;
 use function MattHummel\Newsletter\compose_blog_post_letter;
 use function MattHummel\Newsletter\email_document;
+use function MattHummel\Newsletter\emulator_view;
 use function MattHummel\Newsletter\layout_preview_html;
 use function MattHummel\Newsletter\layouts;
 use function MattHummel\Newsletter\letter_button;
@@ -256,6 +274,7 @@ use function MattHummel\Newsletter\plain_text;
 use function MattHummel\Newsletter\pop_letter_look;
 use function MattHummel\Newsletter\push_letter_look;
 use function MattHummel\Newsletter\render_blocks;
+use function MattHummel\Newsletter\social_link_defaults;
 
 if (defined('MHN_LIB_ONLY')) {
     return;
@@ -416,8 +435,8 @@ foreach (array_keys(layouts()) as $layoutId) {
     if ($layoutId === 'plain' && (str_contains($markup, 'class="mhn-stripe"') || str_contains($markup, 'mhn-btn'))) {
         $problems[] = 'Plain preview still has a stripe or a button chip.';
     }
-    if ($layoutId === 'plain' && ! str_contains($markup, 'mhn-eyebrow-block')) {
-        $problems[] = 'Plain preview is missing the navy rule.';
+    if ($layoutId === 'plain' && ! str_contains($markup, 'mhn-eyebrow-block') && ! str_contains($markup, 'mhn-dateline')) {
+        $problems[] = 'Plain preview is missing the date or the navy rule.';
     }
     if ($layoutId === 'standard' && ! str_contains($markup, 'mhn-standard-figure')) {
         $problems[] = 'Standard preview is missing the image under the title.';
@@ -427,6 +446,9 @@ foreach (array_keys(layouts()) as $layoutId) {
     }
     if (str_contains($html, 'prefers-color-scheme:dark') || str_contains($html, 'prefers-color-scheme: dark') || str_contains($html, '#162033')) {
         $problems[] = 'Preview still paints a dark or navy letter.';
+    }
+    if (! str_contains($html, 'background-color:#eceff1') || ! str_contains($html, 'border-radius:16px')) {
+        $problems[] = 'Preview is missing the light grey page or the rounded white card.';
     }
     if ($layoutId === 'welcome' && ! str_contains($markup, 'background-color:#ffffff')) {
         $problems[] = 'Welcome preview is missing the white card.';
@@ -442,6 +464,94 @@ foreach (array_keys(layouts()) as $layoutId) {
     $failed = true;
     fwrite(STDERR, "fail  layout {$layoutId}\n");
     foreach ($problems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$variantProblems = [];
+$detailedLook = [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'solid',
+    'font' => 'serif',
+    'variant' => 'detailed',
+];
+$essay = layout_preview_html('standard', $detailedLook);
+$essayBody = preg_replace('/<style\b.*?<\/style>/is', '', $essay);
+$essayBody = is_string($essayBody) ? $essayBody : $essay;
+if (! str_contains($essayBody, 'mhn-dek') || ! str_contains($essay, 'Georgia')) {
+    $variantProblems[] = 'Detailed Standard is missing the dek or the serif stack.';
+}
+if (str_contains($essayBody, 'mhn-eyebrow')) {
+    $variantProblems[] = 'Detailed Standard still uses the short intro line.';
+}
+$expect = layout_preview_html('welcome', $detailedLook);
+if (! str_contains($expect, 'mhn-points') || ! str_contains($expect, 'I write when I ship something worth reading.')) {
+    $variantProblems[] = 'Detailed Welcome is missing the expectation list.';
+}
+$letter = layout_preview_html('plain', $detailedLook);
+if (! str_contains($letter, 'mhn-dateline') || str_contains($letter, 'mhn-eyebrow-block')) {
+    $variantProblems[] = 'Detailed Plain is missing the date or still uses the rule intro.';
+}
+$caption = layout_preview_html('feature', $detailedLook);
+if (! str_contains($caption, 'mhn-caption')) {
+    $variantProblems[] = 'Detailed Feature is missing the image caption.';
+}
+$field = layout_preview_html('post', $detailedLook);
+if (! str_contains($field, 'Why I wrote this') || ! str_contains($field, 'mhn-dateline')) {
+    $variantProblems[] = 'Detailed Blog post is missing the date or the why-I-wrote-this note.';
+}
+$plainView = emulator_view(0, 'standard', 'A note from the workshop', null, 'simple', null, -1, false, $detailedLook);
+if (! isset($plainView['text']) || ! str_contains($plainView['text'], 'Talk soon') || str_contains($plainView['text'], '<table')) {
+    $variantProblems[] = 'Plain email view is missing the letter text or still contains a table.';
+}
+$focusedLook = [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'solid',
+    'font' => 'sans',
+    'size' => 'regular',
+    'variant' => 'focused',
+];
+$focused = layout_preview_html('standard', $focusedLook);
+if (! str_contains($focused, 'mhn-eyebrow') || str_contains($focused, 'mhn-dek')) {
+    $variantProblems[] = 'Focused Standard lost the short intro or picked up the essay dek.';
+}
+$digestLook = [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'solid',
+    'font' => 'editorial',
+    'size' => 'roomy',
+    'variant' => 'digest',
+];
+$digest = layout_preview_html('standard', $digestLook);
+if (! str_contains($digest, 'Why it matters') || ! str_contains($digest, 'mhn-digest') || ! str_contains($digest, 'Georgia')) {
+    $variantProblems[] = 'Digest Standard is missing the why-it-matters line, the list, or the editorial title face.';
+}
+$digestWelcome = layout_preview_html('welcome', $digestLook);
+$pointsAt = strpos($digestWelcome, 'I write when I ship something worth reading.');
+$thanksAt = strpos($digestWelcome, 'Thanks for signing up.');
+if ($pointsAt === false || $thanksAt === false || $pointsAt > $thanksAt) {
+    $variantProblems[] = 'Digest Welcome does not put the list before the letter.';
+}
+$digestPlain = layout_preview_html('plain', $digestLook);
+if (! str_contains($digestPlain, 'mhn-dateline') || ! str_contains($digestPlain, 'mhn-digest') || str_contains($digestPlain, 'class="mhn-img"')) {
+    $variantProblems[] = 'Digest Plain is missing the date or the list, or it still has an image.';
+}
+$social = social_link_defaults();
+if (! str_contains($social['social_github'], 'github.com/matthummel-pa') || ! str_contains($social['social_bluesky'], 'bsky.app')) {
+    $variantProblems[] = 'Social defaults are missing GitHub or Bluesky.';
+}
+if (! str_contains($digest, 'GitHub') || ! str_contains($digest, 'Bluesky')) {
+    $variantProblems[] = 'The letter footer is missing the default social links.';
+}
+if ($variantProblems === []) {
+    fwrite(STDOUT, "pass  layout variants\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  layout variants\n");
+    foreach ($variantProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }

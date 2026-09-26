@@ -261,17 +261,8 @@ function compose_advanced_letter(array $blocks, string $layoutId, string $issueH
     $headingHtml = letter_title_html($heading, $layoutId === 'plain', $layoutId);
     $introHtml = layout_eyebrow_html($intro, $layoutId);
     $signoffHtml = layout_signoff_html($signoff, $fromName, $layoutId === 'welcome' ? 'center' : 'left');
-    if ($layoutId === 'feature') {
-        return present_feature_image($image).$headingHtml.$introHtml.$bodyHtml.$button.$signoffHtml;
-    }
-    if ($layoutId === 'plain' || $layoutId === 'welcome') {
-        return $introHtml.$headingHtml.$bodyHtml.$button.$signoffHtml;
-    }
-    if ($layoutId === 'standard') {
-        return $introHtml.$headingHtml.present_standard_image($image).$bodyHtml.$button.$signoffHtml;
-    }
 
-    return $introHtml.$headingHtml.$image.$bodyHtml.$button.$signoffHtml;
+    return arrange_layout_variant($layoutId, $intro, $image, $headingHtml, $introHtml, $bodyHtml.$button, $signoffHtml);
 }
 
 function extract_layout_image(string $html): string
@@ -351,10 +342,11 @@ function sample_blog_post_source(): array
 {
     return [
         'title' => __('A note from the workshop', 'matthummel-newsletter'),
-        'excerpt' => __('A short note about the work I shipped this week.', 'matthummel-newsletter'),
+        'excerpt' => __('A short note about the work I shipped this week. The useful part is what you can edit later without opening the theme.', 'matthummel-newsletter'),
         'headings' => [
             __('Why the form stays quiet', 'matthummel-newsletter'),
             __('What I shipped', 'matthummel-newsletter'),
+            __('What you can edit', 'matthummel-newsletter'),
         ],
         'categories' => [
             __('WordPress', 'matthummel-newsletter'),
@@ -656,8 +648,32 @@ function compose_blog_post_letter(array $source, string $intro, string $signoff,
     }
     $introHtml = layout_eyebrow_html($intro, 'post');
     $signoffHtml = layout_signoff_html($signoff, $fromName);
+    if (letter_is_digest()) {
+        return $image.$categories.post_copy_row($title.$lead).$headings.post_copy_row($button.$signoffHtml);
+    }
+    $meta = '';
+    $why = '';
+    if (letter_is_detailed()) {
+        $minutes = (int) ($source['reading_minutes'] ?? 0);
+        if ($minutes < 1) {
+            $words = preg_split('/\s+/u', trim(wp_strip_all_tags($excerpt))) ?: [];
+            $words = array_values(array_filter($words, static fn (string $word): bool => $word !== ''));
+            $minutes = $words === [] ? 0 : max(1, (int) ceil(count($words) / 200));
+        }
+        $bits = [letter_today_label()];
+        if ($minutes > 0) {
+            $bits[] = sprintf(
+                /* translators: %d: minutes */
+                _n('%d min read', '%d min read', $minutes, 'matthummel-newsletter'),
+                $minutes
+            );
+        }
+        $meta = letter_meta_html($bits);
+        $why = letter_callout_html(__('Why I wrote this', 'matthummel-newsletter'), $intro);
+        $introHtml = '';
+    }
 
-    return $image.$categories.post_copy_row($title.$lead).$headings.post_copy_row($button.$introHtml.$signoffHtml);
+    return $image.$categories.$meta.post_copy_row($title.$lead).$headings.post_copy_row($button.$why.$introHtml.$signoffHtml);
 }
 
 function post_copy_row(string $html): string
@@ -716,7 +732,7 @@ function blog_post_headings_html(array $headings): string
     }
 
     return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 16px;"><tr>'
-        .'<td style="padding:16px 20px;background-color:#eef3f9;">'
+        .'<td style="padding:16px 20px;background-color:#f4f6f8;border-radius:12px;">'
         .'<h2 class="mhn-text" style="margin:0 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
         .esc_html__('In this note', 'matthummel-newsletter').'</h2>'
         .'<ul class="mhn-text" style="margin:0;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>'
@@ -908,8 +924,10 @@ function apply_layout(string $layoutId, string $body): string
         if ($html === '') {
             $html = layout_text_html(layout_copy_defaults()['welcome_body'], false, 'center');
         }
+        $points = current_letter_look()['variant'] === 'focused' ? '' : letter_points_html(settings()['welcome_points']);
+        $stack = letter_is_digest() ? $points.$html : $html.$points;
 
-        return strip_layout_images($html);
+        return strip_layout_images($stack);
     }
 
     if ($layoutId === 'plain') {
@@ -923,24 +941,200 @@ function apply_layout(string $layoutId, string $body): string
             $body = remove_layout_image($body);
         }
     }
-    if ($layoutId === 'feature') {
-        $image = present_feature_image($image);
-    }
-    if ($layoutId === 'standard') {
-        $image = present_standard_image($image);
-    }
 
     $heading = take_letter_heading($body, $layoutId === 'plain', $layoutId);
-    $intro = layout_eyebrow_html($copy['intro'], $layoutId);
+    $introHtml = layout_eyebrow_html($copy['intro'], $layoutId);
     $signoff = layout_signoff_html($copy['signoff'], $copy['from_name']);
+
+    return arrange_layout_variant($layoutId, $copy['intro'], $image, $heading, $introHtml, $body, $signoff);
+}
+
+/**
+ * Focused keeps the short stack. Detailed swaps in the extra block for that layout.
+ */
+function arrange_layout_variant(string $layoutId, string $intro, string $image, string $heading, string $introHtml, string $body, string $signoff): string
+{
+    $layoutId = normalize_layout_id($layoutId);
+    $variant = current_letter_look()['variant'];
     if ($layoutId === 'feature') {
-        return $image.$heading.$intro.$body.$signoff;
+        $figure = present_feature_image($image);
+        if ($variant === 'digest') {
+            return $figure.$heading.letter_callout_html(__('Why it matters', 'matthummel-newsletter'), $intro).letter_digest_html($body).$signoff;
+        }
+        if ($variant === 'detailed') {
+            return $figure.letter_caption_html($intro).$heading.$body.$signoff;
+        }
+
+        return $figure.$heading.$introHtml.$body.$signoff;
     }
     if ($layoutId === 'plain') {
-        return $intro.$heading.$body.$signoff;
+        if ($variant === 'digest') {
+            return letter_meta_html([letter_today_label()]).$heading.letter_digest_html($body).$signoff;
+        }
+        if ($variant === 'detailed') {
+            return letter_meta_html([letter_today_label()]).letter_dek_html($intro).$heading.$body.$signoff;
+        }
+
+        return $introHtml.$heading.$body.$signoff;
+    }
+    if ($layoutId === 'welcome') {
+        $points = $variant === 'focused' ? '' : letter_points_html(settings()['welcome_points']);
+        if ($variant === 'digest') {
+            return $heading.$points.$body.$signoff;
+        }
+
+        return $introHtml.$heading.$body.$points.$signoff;
+    }
+    if ($layoutId === 'standard') {
+        $figure = present_standard_image($image);
+        if ($variant === 'digest') {
+            return $heading.letter_callout_html(__('Why it matters', 'matthummel-newsletter'), $intro).$figure.letter_digest_html($body).$signoff;
+        }
+        if ($variant === 'detailed') {
+            return $heading.letter_dek_html($intro).$figure.$body.$signoff;
+        }
+
+        return $introHtml.$heading.$figure.$body.$signoff;
     }
 
-    return $intro.$heading.$image.$body.$signoff;
+    return $introHtml.$heading.$body.$signoff;
+}
+
+function letter_today_label(): string
+{
+    if (function_exists('wp_date')) {
+        return wp_date('F j, Y');
+    }
+
+    return date('F j, Y');
+}
+
+/**
+ * @param  list<string>  $bits
+ */
+function letter_meta_html(array $bits): string
+{
+    $clean = [];
+    foreach ($bits as $bit) {
+        $bit = trim(wp_strip_all_tags($bit));
+        if ($bit !== '') {
+            $clean[] = esc_html($bit);
+        }
+    }
+    if ($clean === []) {
+        return '';
+    }
+
+    return '<p class="mhn-dateline" style="margin:0 0 14px;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;letter-spacing:0.02em;color:#50575e;text-align:left;">'.implode(' · ', $clean).'</p>';
+}
+
+function letter_dek_html(string $text): string
+{
+    $text = trim(wp_strip_all_tags($text));
+    if ($text === '') {
+        return '';
+    }
+
+    return '<p class="mhn-dek" style="margin:0 0 18px;font-family:'.email_font_stack().';font-size:18px;line-height:1.45;color:#3c434a;text-align:left;">'.esc_html($text).'</p>';
+}
+
+function letter_caption_html(string $text): string
+{
+    $text = trim(wp_strip_all_tags($text));
+    if ($text === '') {
+        return '';
+    }
+
+    return '<p class="mhn-caption" style="margin:10px 0 16px;font-family:'.email_font_stack().';font-size:13px;line-height:1.45;color:#50575e;text-align:left;">'.esc_html($text).'</p>';
+}
+
+/**
+ * Turns the letter paragraphs into a short list and keeps the greeting and the one link.
+ */
+function letter_digest_html(string $body): string
+{
+    $action = '';
+    if (preg_match('/<!--\[if mso\]>|<a\b[^>]*\bmhn-btn\b|<p\b[^>]*\bmhn-plain-link\b/i', $body, $match, PREG_OFFSET_CAPTURE) === 1) {
+        $splitAt = (int) $match[0][1];
+        $action = substr($body, $splitAt);
+        $body = substr($body, 0, $splitAt);
+    }
+
+    $greeting = '';
+    $items = [];
+    if (preg_match_all('/<p\b[^>]*>(.*?)<\/p>/is', $body, $matches) > 0) {
+        foreach ($matches[1] as $inner) {
+            $text = trim(html_entity_decode(wp_strip_all_tags((string) $inner), ENT_QUOTES));
+            if ($text === '') {
+                continue;
+            }
+            if ($greeting === '' && preg_match('/^Hi\b/u', $text) === 1) {
+                $greeting = '<p class="mhn-text" style="'.body_paragraph_style().'">'.esc_html($text).'</p>';
+
+                continue;
+            }
+            $items[] = $text;
+            if (count($items) >= 4) {
+                break;
+            }
+        }
+    }
+    if (count($items) < 2) {
+        return $body.$action;
+    }
+
+    $listItems = '';
+    foreach ($items as $item) {
+        $listItems .= '<li style="margin:0 0 8px;">'.esc_html($item).'</li>';
+    }
+
+    $list = '<table role="presentation" class="mhn-digest" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 18px;"><tr>'
+        .'<td style="padding:4px 8px 4px 0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
+        .'<ul style="margin:0;padding-left:20px;">'.$listItems.'</ul>'
+        .'</td></tr></table>';
+
+    return $greeting.$list.$action;
+}
+
+function letter_callout_html(string $label, string $text): string
+{
+    $text = trim(wp_strip_all_tags($text));
+    $label = trim(wp_strip_all_tags($label));
+    if ($text === '' || $label === '') {
+        return '';
+    }
+
+    $font = email_font_stack();
+
+    return '<table role="presentation" class="mhn-callout" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 18px;"><tr>'
+        .'<td style="border-left:3px solid #0d2e57;background-color:#f4f6f8;border-radius:0 12px 12px 0;padding:14px 16px;font-family:'.$font.';text-align:left;">'
+        .'<p style="margin:0 0 6px;font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#50575e;">'.esc_html($label).'</p>'
+        .'<p style="margin:0;font-size:16px;line-height:1.6;color:#0b1220;">'.esc_html($text).'</p>'
+        .'</td></tr></table>';
+}
+
+function letter_points_html(string $text): string
+{
+    $lines = [];
+    foreach (preg_split("/\n+/", str_replace(["\r\n", "\r"], "\n", $text)) ?: [] as $line) {
+        $line = trim(wp_strip_all_tags((string) $line));
+        if ($line !== '') {
+            $lines[] = $line;
+        }
+    }
+    if ($lines === []) {
+        return '';
+    }
+
+    $items = '';
+    foreach ($lines as $line) {
+        $items .= '<li style="margin:0 0 8px;text-align:left;">'.esc_html($line).'</li>';
+    }
+
+    return '<table role="presentation" class="mhn-points" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 18px;"><tr>'
+        .'<td style="padding:4px 8px 4px 0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
+        .'<ul style="margin:0;padding-left:20px;">'.$items.'</ul>'
+        .'</td></tr></table>';
 }
 
 /**
@@ -1232,6 +1426,9 @@ function sample_issue_body(): string
     $title = __('A note from the workshop', 'matthummel-newsletter');
     $greeting = layout_text_html('Hi {first_name|there},');
     $excerpt = layout_text_html(__('A short note about the work I shipped this week.', 'matthummel-newsletter'));
+    $follow = layout_text_html(__('The form stays on this site. I can edit the copy without opening the theme.', 'matthummel-newsletter'));
+    $reason = layout_text_html(__('That matters because the next change is a sentence in the editor, not a deploy.', 'matthummel-newsletter'));
+    $close = layout_text_html(__('If you want the same setup, the button below opens the note.', 'matthummel-newsletter'));
     $heading = letter_title_html($title);
     $button = bulletproof_button(
         sprintf(
@@ -1242,7 +1439,7 @@ function sample_issue_body(): string
         'https://matthummel.com/notes/'
     );
 
-    return $greeting.sample_feature_image().$heading.$excerpt.$button;
+    return $greeting.sample_feature_image().$heading.$excerpt.$follow.$reason.$close.$button;
 }
 
 function sample_feature_image(): string
@@ -1273,7 +1470,7 @@ function placeholder_preview_links(string $html): string
  * Nothing is mailed and the tracker is not called.
  *
  * @param  array<string, mixed>  $input
- * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
+ * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, text: string, layout: string}
  */
 function emulator_preview_message(array $input): array
 {
@@ -1310,7 +1507,7 @@ function emulator_preview_message(array $input): array
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  * @param  array{style?: string, masthead?: string, button?: string}|null  $look
  * @param  array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null  $sections
- * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
+ * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, text: string, layout: string}
  */
 function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?string $postedPreheader = null, ?array $sections = null): array
 {
@@ -1351,6 +1548,7 @@ function emulator_view(int $issueId, string $layoutId, string $subject = '', ?st
         'subject' => $subject,
         'preheader' => $preheader,
         'html' => $html,
+        'text' => plain_text($html),
         'layout' => $layoutId,
     ];
 }
@@ -1482,18 +1680,24 @@ function emulator_blocks(int $issueId, ?string $note): string
 }
 
 /**
- * @param  array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}  $view
+ * @param  array{from_name: string, from_email: string, subject: string, preheader: string, html: string, text?: string, layout: string}  $view
  */
 function render_email_emulator(array $view, bool $live, bool $compact): void
 {
     $class = 'mhn-emulator'.($compact ? ' is-compact' : '');
+    $text = (string) ($view['text'] ?? plain_text((string) $view['html']));
     echo '<section class="'.esc_attr($class).'" data-mhn-emulator'.($live ? ' data-mhn-live="1"' : '').' aria-label="'.esc_attr__('Email preview', 'matthummel-newsletter').'">';
     echo '<div class="mhn-emulator-toolbar">';
     echo '<h2>'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
+    echo '<div class="mhn-emulator-switches">';
+    echo '<div class="mhn-device" role="group" aria-label="'.esc_attr__('Preview format', 'matthummel-newsletter').'">';
+    echo '<button type="button" data-mhn-format="html" aria-pressed="true">'.esc_html__('HTML email', 'matthummel-newsletter').'</button>';
+    echo '<button type="button" data-mhn-format="plain" aria-pressed="false" title="'.esc_attr__('The same letter with the styling removed. This is also the plain part of the message.', 'matthummel-newsletter').'">'.esc_html__('Plain text', 'matthummel-newsletter').'</button>';
+    echo '</div>';
     echo '<div class="mhn-device" role="group" aria-label="'.esc_attr__('Preview width', 'matthummel-newsletter').'">';
     echo '<button type="button" data-mhn-device="desktop" aria-pressed="true">'.esc_html__('Desktop', 'matthummel-newsletter').'</button>';
     echo '<button type="button" data-mhn-device="mobile" aria-pressed="false">'.esc_html__('Mobile', 'matthummel-newsletter').'</button>';
-    echo '</div></div>';
+    echo '</div></div></div>';
     echo '<div class="mhn-emulator-chrome">';
     echo '<p class="mhn-emulator-from"><span data-mhn-from-name>'.esc_html($view['from_name']).'</span> ';
     echo '&lt;<span class="mhn-emulator-email" data-mhn-from-email>'.esc_html($view['from_email']).'</span>&gt;</p>';
@@ -1501,7 +1705,8 @@ function render_email_emulator(array $view, bool $live, bool $compact): void
     echo '<p class="mhn-emulator-preheader" data-mhn-preheader-line>'.esc_html($view['preheader']).'</p>';
     echo '</div>';
     echo '<div class="mhn-emulator-stage is-desktop" data-mhn-stage>';
-    echo '<iframe data-mhn-emulator-frame title="'.esc_attr__('Email preview', 'matthummel-newsletter').'" sandbox="" srcdoc="'.esc_attr($view['html']).'"></iframe>';
+    echo '<iframe data-mhn-emulator-frame title="'.esc_attr__('HTML email preview', 'matthummel-newsletter').'" sandbox="" srcdoc="'.esc_attr($view['html']).'"></iframe>';
+    echo '<pre class="mhn-emulator-plain" data-mhn-plain hidden>'.esc_html($text).'</pre>';
     echo '</div></section>';
 }
 

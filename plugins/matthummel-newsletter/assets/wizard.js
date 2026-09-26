@@ -154,4 +154,53 @@ function currentIssueId(form) {
   return hidden ? Number(hidden.value) : 0
 }
 
-document.addEventListener('DOMContentLoaded', initWizard)
+function initHeaderPicker() {
+  const input = document.getElementById('mhn-header-image')
+  const alt = document.getElementById('mhn-header-alt')
+  const button = document.getElementById('mhn-pick-header')
+  const clear = document.getElementById('mhn-clear-header')
+  const logo = document.getElementById('mhn-use-logo')
+  if (!input) return
+
+  if (button && window.wp && wp.media) {
+    let frame
+    button.addEventListener('click', (event) => {
+      event.preventDefault()
+      if (!frame) {
+        frame = wp.media({
+          title: button.getAttribute('data-title') || 'Header image',
+          multiple: false,
+          library: { type: 'image' },
+        })
+        frame.on('select', () => {
+          const attachment = frame.state().get('selection').first().toJSON()
+          if (attachment.url) input.value = attachment.url
+          if (alt && 'value' in alt && alt.value.trim() === '' && attachment.alt) {
+            alt.value = attachment.alt
+          }
+        })
+      }
+      frame.open()
+    })
+  }
+
+  if (clear) {
+    clear.addEventListener('click', (event) => {
+      event.preventDefault()
+      input.value = ''
+    })
+  }
+
+  if (logo) {
+    logo.addEventListener('click', (event) => {
+      event.preventDefault()
+      const url = logo.getAttribute('data-logo-url') || ''
+      if (url) input.value = url
+    })
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initWizard()
+  initHeaderPicker()
+})

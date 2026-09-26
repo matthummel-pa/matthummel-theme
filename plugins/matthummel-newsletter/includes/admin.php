@@ -125,7 +125,8 @@ function admin_assets(string $hook): void
         ]);
     }
 
-    if (! $onWizard) {
+    $onSettings = str_contains($hook, 'mhn-settings');
+    if (! $onWizard && ! $onSettings) {
         return;
     }
 
@@ -137,6 +138,9 @@ function admin_assets(string $hook): void
         MHN_VERSION,
         true
     );
+    if (! $onWizard) {
+        return;
+    }
     wp_localize_script('mhn-wizard', 'mhnWizard', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'saved' => __('Draft saved.', 'matthummel-newsletter'),
@@ -659,6 +663,9 @@ function render_letter_style_card(array $config): void
         'style' => $config['letter_style'],
         'masthead' => $config['letter_masthead'],
         'button' => $config['letter_button'],
+        'font' => $config['letter_font'] ?? 'sans',
+        'size' => $config['letter_size'] ?? 'regular',
+        'variant' => $config['letter_variant'] ?? 'detailed',
     ]);
 
     echo '<section class="mhn-card" aria-labelledby="mhn-letter-style-heading">';
@@ -691,6 +698,35 @@ function render_letter_style_card(array $config): void
         echo '</label></p>';
     }
     echo '<p class="description">'.esc_html__('Solid is a navy fill. Outline is a navy border. The button stays hidden until it has a label and a URL.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Font', 'matthummel-newsletter').'</legend>';
+    foreach (letter_font_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-font-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_font" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['font'], $id, false).'> ';
+        echo esc_html($choice['label']);
+        echo '</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Sans, Georgia, Trebuchet, or Editorial. Editorial uses a serif title and a sans body. These faces are already on phones and desktops, so the letter does not wait on a webfont.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Size', 'matthummel-newsletter').'</legend>';
+    foreach (letter_size_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-size-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_size" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['size'], $id, false).'> ';
+        echo esc_html($choice['label']);
+        echo '</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Regular is 16px. Roomy is 18px. Body type does not go smaller than 16px.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Variant', 'matthummel-newsletter').'</legend>';
+    foreach (letter_variant_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-variant-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_variant" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['variant'], $id, false).'> ';
+        echo '<strong>'.esc_html($choice['label']).'</strong> '.esc_html($choice['summary']);
+        echo '</label></p>';
+    }
     echo '</fieldset></section>';
 }
 
@@ -718,7 +754,83 @@ function render_letter_style_compact(array $look): void
     foreach (letter_button_choices() as $id => $label) {
         echo '<label><input type="radio" name="mhn_letter_button" value="'.esc_attr($id).'" '.checked($look['button'], $id, false).'> '.esc_html($label).'</label>';
     }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Font', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Font', 'matthummel-newsletter').'</span>';
+    foreach (letter_font_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_font" value="'.esc_attr($id).'" '.checked($look['font'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Size', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Size', 'matthummel-newsletter').'</span>';
+    foreach (letter_size_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_size" value="'.esc_attr($id).'" '.checked($look['size'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Variant', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Variant', 'matthummel-newsletter').'</span>';
+    foreach (letter_variant_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_variant" value="'.esc_attr($id).'" '.checked($look['variant'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
     echo '</div></div>';
+}
+
+/**
+ * @param  array{header_image: string, header_alt: string, social_site: string, social_github: string, social_linkedin: string, social_bluesky: string, social_youtube: string, social_instagram: string}  $config
+ */
+function render_letter_brand_card(array $config): void
+{
+    $logo = site_logo_url();
+    echo '<section class="mhn-card" aria-labelledby="mhn-letter-brand-heading">';
+    echo '<h2 id="mhn-letter-brand-heading">'.esc_html__('Header and social', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('A header image sits above the name. Social links are words in the footer, because icon images are often blocked. Clear a field to leave that link out.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-header-image">'.esc_html__('Header image', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" type="url" id="mhn-header-image" name="header_image" value="'.esc_attr($config['header_image']).'" placeholder="https://"></p>';
+    echo '<p class="mhn-header-actions">';
+    echo '<button type="button" class="button" id="mhn-pick-header" data-title="'.esc_attr__('Header image', 'matthummel-newsletter').'">'.esc_html__('Choose from the library', 'matthummel-newsletter').'</button> ';
+    if ($logo !== '') {
+        echo '<button type="button" class="button" id="mhn-use-logo" data-logo-url="'.esc_attr($logo).'">'.esc_html__('Use the site logo', 'matthummel-newsletter').'</button> ';
+    }
+    echo '<button type="button" class="button" id="mhn-clear-header">'.esc_html__('Remove', 'matthummel-newsletter').'</button>';
+    echo '</p>';
+    echo '<p><label for="mhn-header-alt">'.esc_html__('Header image description', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-header-alt" name="header_alt" value="'.esc_attr($config['header_alt']).'" placeholder="'.esc_attr__('Matt Hummel', 'matthummel-newsletter').'"></p>';
+    echo '<p class="description">'.esc_html__('Use a wide image, about 600 pixels across. Describe it if it carries meaning. If you leave the description blank, the letter uses Matt Hummel. The letter still makes sense if the image is blocked.', 'matthummel-newsletter').'</p>';
+    foreach (letter_social_fields() as $key => $label) {
+        $inputId = 'mhn-'.$key;
+        echo '<p><label for="'.esc_attr($inputId).'">'.esc_html($label).'</label>';
+        echo '<input class="regular-text" type="url" id="'.esc_attr($inputId).'" name="'.esc_attr($key).'" value="'.esc_attr((string) ($config[$key] ?? '')).'" placeholder="https://"></p>';
+    }
+    echo '</section>';
+}
+
+function site_logo_url(): string
+{
+    if (! function_exists('get_theme_mod') || ! function_exists('wp_get_attachment_image_url')) {
+        return '';
+    }
+
+    $id = (int) get_theme_mod('custom_logo');
+    if ($id < 1) {
+        return '';
+    }
+
+    return sanitize_letter_asset_url((string) wp_get_attachment_image_url($id, 'full'));
+}
+
+function render_letter_system_card(): void
+{
+    echo '<section class="mhn-card" aria-labelledby="mhn-letter-system-heading">';
+    echo '<h2 id="mhn-letter-system-heading">'.esc_html__('How a letter is built', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('This is the design system for your letters. It stays on this site.', 'matthummel-newsletter').'</p>';
+    echo '<ul class="mhn-system-list">';
+    echo '<li>'.esc_html__('The page is light grey. The letter is a white card with rounded corners and a soft gradient, so the words sit apart from the page.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('Each layout has three variants. Focused is one idea and one action. Detailed is the essay. Digest is a why-it-matters line, a short list, and one link.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('Card, Banner, and Paper change the shell. Standard, Welcome, Plain, Feature, and Blog post change the arrangement.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('One button. A second action belongs in the words, not in a second button.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('Preview text is the inbox line under the subject. Aim for about 90 characters. It stays hidden inside the letter.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('HTML email is the designed letter. Plain text is the same words with no styling, and it is the part some inboxes show.', 'matthummel-newsletter').'</li>';
+    echo '</ul></section>';
 }
 
 /**
@@ -801,9 +913,14 @@ function page_settings(): void
     echo '<input class="regular-text" id="mhn-welcome-subject" name="welcome_subject" value="'.esc_attr($config['welcome_subject']).'"></p>';
     echo '<p><label for="mhn-welcome-body">'.esc_html__('Welcome body', 'matthummel-newsletter').'</label>';
     echo '<textarea class="large-text" rows="8" id="mhn-welcome-body" name="welcome_body">'.esc_textarea($config['welcome_body']).'</textarea></p>';
+    echo '<p><label for="mhn-welcome-points">'.esc_html__('Welcome list', 'matthummel-newsletter').'</label>';
+    echo '<textarea class="large-text" rows="4" id="mhn-welcome-points" name="welcome_points">'.esc_textarea($config['welcome_points']).'</textarea></p>';
+    echo '<p class="description">'.esc_html__('One expectation per line. Detailed and Digest Welcome show this list. Focused leaves it out. Digest puts the list first.', 'matthummel-newsletter').'</p>';
     echo '</section>';
 
+    render_letter_system_card();
     render_letter_style_card($config);
+    render_letter_brand_card($config);
     render_newsletter_rules_card($config);
 
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
