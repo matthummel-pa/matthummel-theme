@@ -170,10 +170,12 @@ function email_document(string $subject, string $preheader, string $body, bool $
         $heroRow = '<tr><td class="mhn-hero-cell" style="padding:0;background-color:#eef3f9;line-height:0;font-size:0;">'.$hero.'</td></tr>';
         $masthead = '';
         $hairline = '';
-        $byline = letter_byline($name, $kicker, $font);
-        $bylineCount = 0;
-        $withTitle = preg_replace('/<\/h1>/i', '</h1>'.$byline, $body, 1, $bylineCount);
-        $body = is_string($withTitle) && $bylineCount === 1 ? $withTitle : $byline.$body;
+        if ($layoutKey !== 'post') {
+            $byline = letter_byline($name, $kicker, $font);
+            $bylineCount = 0;
+            $withTitle = preg_replace('/<\/h1>/i', '</h1>'.$byline, $body, 1, $bylineCount);
+            $body = is_string($withTitle) && $bylineCount === 1 ? $withTitle : $byline.$body;
+        }
     } else {
         $heroRow = '';
         $masthead = letter_masthead($name, $kicker, $centered, $font);

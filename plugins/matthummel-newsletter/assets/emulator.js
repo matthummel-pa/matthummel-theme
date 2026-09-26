@@ -80,7 +80,24 @@ function bindEmulatorLive(root) {
 
   form.addEventListener('input', onEdit)
   form.addEventListener('change', onEdit)
+  bindBlogPostPicker(form)
   bindEmulatorEditor(queue)
+}
+
+function bindBlogPostPicker(form) {
+  const picker = form.querySelector('[data-mhn-post-picker]')
+  if (!picker) return
+
+  const sync = () => {
+    const chosen = form.querySelector('[name="mhn_layout"]:checked')
+    const hidden = form.querySelector('[name="mhn_layout"]')
+    const layout = chosen || hidden
+    const isPost = layout && 'value' in layout && layout.value === 'post'
+    picker.hidden = !isPost
+  }
+
+  sync()
+  form.addEventListener('change', sync)
 }
 
 function bindEmulatorEditor(queue) {

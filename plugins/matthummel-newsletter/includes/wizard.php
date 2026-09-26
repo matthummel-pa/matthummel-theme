@@ -194,6 +194,8 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         }
     }
 
+    save_blog_post_choice($issueId, $input);
+
     $postedTemplate = sanitize_key((string) ($input['mhn_template'] ?? ''));
     if ($postedTemplate !== '' && email_template($postedTemplate) !== null) {
         $previous = (string) get_post_meta($issueId, '_mhn_template', true);
@@ -280,6 +282,29 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
 /**
  * @param  array<mixed>  $rawIds
  */
+/**
+ * @param  array<string, mixed>  $input
+ */
+function save_blog_post_choice(int $issueId, array $input): void
+{
+    if (! array_key_exists('mhn_source_post', $input)) {
+        return;
+    }
+    if (issue_layout_id($issueId) !== 'post') {
+        return;
+    }
+
+    $id = absint($input['mhn_source_post']);
+    $post = $id > 0 ? get_post($id) : null;
+    $valid = $post instanceof \WP_Post
+        && $post->post_status === 'publish'
+        && in_array($post->post_type, blog_letter_post_types(), true);
+    update_post_meta($issueId, '_mhn_source_post', $valid ? (string) $id : '0');
+    if ($valid && (string) get_post_meta($issueId, '_mhn_subject_auto', true) !== '0') {
+        fill_subject_defaults($issueId);
+    }
+}
+
 function save_wizard_posts(int $issueId, array $rawIds): void
 {
     $template = email_template((string) get_post_meta($issueId, '_mhn_template', true));
@@ -306,7 +331,13 @@ function wizard_blocks_next(int $issueId, int $step): string
     if ($step === 1 && $template === null) {
         return 'template';
     }
+    if ($step === 1 && issue_layout_id($issueId) === 'post' && (int) get_post_meta($issueId, '_mhn_source_post', true) < 1) {
+        return 'posts';
+    }
     if ($step === 2 && issue_layout_id($issueId) === 'welcome') {
+        return '';
+    }
+    if ($step === 2 && issue_layout_id($issueId) === 'post') {
         return '';
     }
     if ($step === 2 && $template !== null) {
@@ -455,6 +486,9 @@ function render_wizard_page(): void
     if ($step !== 1) {
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
         echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
+    }
+    if ($step > 2 && $layoutId === 'post') {
+        echo '<input type="hidden" name="mhn_source_post" value="'.esc_attr((string) (int) get_post_meta($issueId, '_mhn_source_post', true)).'">';
     }
 
     echo '<div class="mhn-wizard-split">';
@@ -605,6 +639,8 @@ function render_advanced_field(string $id, string $name, string $label, string $
 function render_step_template(string $current, string $layout): void
 {
     render_layout_picker($layout);
+    $issueId = isset($_GET['issue']) ? absint(wp_unslash($_GET['issue'])) : 0;
+    render_blog_post_picker($issueId, $layout);
     echo '<h2>'.esc_html__('Choose what to include', 'matthummel-newsletter').'</h2>';
     echo '<div class="mhn-templates">';
     foreach (email_templates() as $slug => $template) {
@@ -655,6 +691,11 @@ function render_simple_content(int $issueId, string $slug): void
 {
     if (issue_layout_id($issueId) === 'welcome') {
         render_welcome_step();
+
+        return;
+    }
+    if (issue_layout_id($issueId) === 'post') {
+        render_blog_post_step($issueId);
 
         return;
     }
@@ -775,6 +816,86 @@ function wizard_post_choices(array $selected, string $find): array
     }
 
     return $choices;
+}
+
+function render_blog_post_step(int $issueId): void
+{
+    echo '<h2>'.esc_html__('Blog post', 'matthummel-newsletter').'</h2>';
+    echo '<p>'.esc_html__('Pick a published post. The image, excerpt, headings, and categories come from that post. A note here replaces the excerpt. The title stays the post title until you change the subject.', 'matthummel-newsletter').'</p>';
+    render_blog_post_picker($issueId, 'post');
+    echo '<h3>'.esc_html__('Your note', 'matthummel-newsletter').'</h3>';
+    render_merge_hint();
+    render_rich_field('mhn_note', 'mhn_note', (string) get_post_meta($issueId, '_mhn_note', true));
+}
+
+function render_blog_post_picker(int $issueId, string $layoutId): void
+{
+    if (function_exists('current_user_can') && ! current_user_can('manage_options')) {
+        return;
+    }
+
+    $selected = $issueId > 0 ? (int) get_post_meta($issueId, '_mhn_source_post', true) : 0;
+    $open = $layoutId === 'post';
+    echo '<div class="mhn-post-picker" data-mhn-post-picker'.($open ? '' : ' hidden').'>';
+    echo '<label for="mhn-source-post">'.esc_html__('Post', 'matthummel-newsletter').'</label>';
+    echo '<select id="mhn-source-post" name="mhn_source_post">';
+    echo '<option value="">'.esc_html__('Choose a post', 'matthummel-newsletter').'</option>';
+    foreach (blog_post_choices($selected) as $choice) {
+        $post = $choice['post'];
+        echo '<option value="'.esc_attr((string) $post->ID).'"'.selected($selected, $post->ID, false).'>'.esc_html($choice['label']).'</option>';
+    }
+    echo '</select>';
+    echo '<p class="description">'.esc_html__('Published posts and projects. Drafts stay off this list.', 'matthummel-newsletter').'</p>';
+    echo '</div>';
+}
+
+/**
+ * @return list<array{post: \WP_Post, label: string}>
+ */
+function blog_post_choices(int $selectedId): array
+{
+    if (! function_exists('get_posts')) {
+        return [];
+    }
+
+    $posts = get_posts([
+        'post_type' => blog_letter_post_types(),
+        'post_status' => 'publish',
+        'posts_per_page' => 40,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'no_found_rows' => true,
+        'ignore_sticky_posts' => true,
+    ]);
+    $choices = [];
+    $seen = [];
+    foreach (is_array($posts) ? $posts : [] as $post) {
+        if ($post instanceof \WP_Post) {
+            $choices[] = $post;
+            $seen[$post->ID] = true;
+        }
+    }
+    if ($selectedId > 0 && ! isset($seen[$selectedId])) {
+        $selected = get_post($selectedId);
+        if ($selected instanceof \WP_Post && $selected->post_status === 'publish' && in_array($selected->post_type, blog_letter_post_types(), true)) {
+            array_unshift($choices, $selected);
+        }
+    }
+
+    $ready = [];
+    foreach ($choices as $post) {
+        $title = function_exists('get_the_title')
+            ? html_entity_decode(get_the_title($post), ENT_QUOTES)
+            : $post->post_title;
+        $date = function_exists('get_the_date') ? (string) get_the_date('M j, Y', $post) : '';
+        $label = $date !== '' ? $title.' · '.$date : $title;
+        if ($post->post_type === 'project') {
+            $label .= ' · '.__('Project', 'matthummel-newsletter');
+        }
+        $ready[] = ['post' => $post, 'label' => $label];
+    }
+
+    return $ready;
 }
 
 function render_welcome_step(): void

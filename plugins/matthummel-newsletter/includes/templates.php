@@ -570,6 +570,13 @@ function default_post_ids(string $slug): array
 
 function suggest_subject(int $issueId): string
 {
+    if (issue_layout_id($issueId) === 'post') {
+        $imported = blog_post_imported_title($issueId, -1);
+        if ($imported !== '') {
+            return $imported;
+        }
+    }
+
     $slug = (string) get_post_meta($issueId, '_mhn_template', true);
     $posts = published_issue_posts($issueId);
     if ($slug === 'blog-update' && isset($posts[0])) {
@@ -600,6 +607,17 @@ function suggest_subject(int $issueId): string
 
 function suggest_preheader(int $issueId): string
 {
+    if (issue_layout_id($issueId) === 'post') {
+        $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
+        $post = $sourceId > 0 ? get_post($sourceId) : null;
+        if ($post instanceof \WP_Post && $post->post_status === 'publish') {
+            $lead = blog_post_lead_from_text((string) $post->post_excerpt, (string) $post->post_content);
+            if ($lead !== '') {
+                return mb_substr($lead, 0, 140);
+            }
+        }
+    }
+
     $note = trim(wp_strip_all_tags((string) get_post_meta($issueId, '_mhn_note', true)));
     if ($note !== '') {
         return mb_substr($note, 0, 140);

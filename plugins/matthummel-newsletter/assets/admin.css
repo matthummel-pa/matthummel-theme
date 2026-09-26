@@ -484,9 +484,26 @@
 
 .mhn-layouts {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   gap: 12px;
   margin: 12px 0 20px;
+}
+
+.mhn-post-picker {
+  margin: 0 0 16px;
+}
+
+.mhn-post-picker label {
+  display: block;
+  margin: 0 0 4px;
+  color: #0b1220;
+  font-weight: 600;
+}
+
+.mhn-post-picker select {
+  width: 100%;
+  max-width: 36rem;
+  min-height: 44px;
 }
 
 .mhn-layout {

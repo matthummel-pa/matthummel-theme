@@ -33,6 +33,10 @@ function layouts(): array
             'label' => __('Feature', 'matthummel-newsletter'),
             'summary' => __('The featured image on top, then the title and the body.', 'matthummel-newsletter'),
         ],
+        'post' => [
+            'label' => __('Blog post', 'matthummel-newsletter'),
+            'summary' => __('One post you wrote: image, excerpt, headings, and categories.', 'matthummel-newsletter'),
+        ],
     ];
 }
 
@@ -193,6 +197,11 @@ function advanced_block_defaults(string $layoutId): array
 function apply_issue_layout(int $issueId, string $body): string
 {
     $layoutId = $issueId > 0 ? issue_layout_id($issueId) : 'standard';
+    if ($layoutId === 'post') {
+        $blocks = issue_editor_mode($issueId) === 'advanced' ? issue_blocks($issueId) : null;
+
+        return blog_post_issue_letter($issueId, $blocks, null, false, -1);
+    }
     if (issue_editor_mode($issueId) !== 'advanced') {
         return apply_layout($layoutId, $body);
     }
@@ -291,10 +300,382 @@ function advanced_copy_html(string $text): string
     return decorate_links(is_string($styled) ? $styled : $clean);
 }
 
+/**
+ * Post types a Blog post letter can import. Projects are the theme CPT when it is registered.
+ *
+ * @return list<string>
+ */
+function blog_letter_post_types(): array
+{
+    $types = ['post'];
+    if (function_exists('post_type_exists') && post_type_exists('project')) {
+        $types[] = 'project';
+    }
+
+    return $types;
+}
+
+/**
+ * @return array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html: bool, button_label: string}
+ */
+function empty_blog_post_source(): array
+{
+    return [
+        'title' => '',
+        'excerpt' => '',
+        'headings' => [],
+        'categories' => [],
+        'image' => '',
+        'permalink' => '',
+        'excerpt_html' => false,
+        'button_label' => '',
+    ];
+}
+
+/**
+ * @return array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html: bool, button_label: string}
+ */
+function sample_blog_post_source(): array
+{
+    return [
+        'title' => __('A note from the workshop', 'matthummel-newsletter'),
+        'excerpt' => __('A short note about the work I shipped this week.', 'matthummel-newsletter'),
+        'headings' => [
+            __('Why the form stays quiet', 'matthummel-newsletter'),
+            __('What I shipped', 'matthummel-newsletter'),
+        ],
+        'categories' => [
+            __('WordPress', 'matthummel-newsletter'),
+            __('Projects', 'matthummel-newsletter'),
+        ],
+        'image' => sample_feature_image(),
+        'permalink' => 'https://matthummel.com/notes/',
+        'excerpt_html' => false,
+        'button_label' => '',
+    ];
+}
+
+/**
+ * Plain lead. A manual excerpt wins. Otherwise the first 40 words of the content.
+ */
+function blog_post_lead_from_text(string $excerpt, string $content): string
+{
+    $excerpt = trim(wp_strip_all_tags($excerpt));
+    if ($excerpt !== '') {
+        return $excerpt;
+    }
+
+    $plain = trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags($content)) ?? '');
+    if ($plain === '') {
+        return '';
+    }
+
+    $words = preg_split('/\s+/u', $plain) ?: [];
+    if (count($words) <= 40) {
+        return $plain;
+    }
+
+    return implode(' ', array_slice($words, 0, 40)).'…';
+}
+
+/**
+ * h2 and h3 text, in order. Empty headings are skipped. Capped at 8.
+ *
+ * @return list<string>
+ */
+function blog_post_headings_from_html(string $html): array
+{
+    $found = [];
+    if (preg_match_all('/<h([23])\b[^>]*>(.*?)<\/h\1>/is', $html, $matches, PREG_SET_ORDER) < 1) {
+        return [];
+    }
+
+    foreach ($matches as $match) {
+        $text = trim(wp_strip_all_tags((string) ($match[2] ?? '')));
+        $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+        $text = trim(preg_replace('/\s+/u', ' ', $text) ?? $text);
+        if ($text === '') {
+            continue;
+        }
+        $found[] = $text;
+        if (count($found) >= 8) {
+            break;
+        }
+    }
+
+    return $found;
+}
+
+function note_replaces_excerpt(?string $note): bool
+{
+    if ($note === null) {
+        return false;
+    }
+
+    $plain = trim(wp_strip_all_tags($note));
+    if ($plain === '') {
+        return false;
+    }
+
+    $default = function_exists('default_note_html') ? trim(wp_strip_all_tags(default_note_html())) : '';
+    if ($default !== '' && $plain === $default) {
+        return false;
+    }
+
+    return $plain !== 'Hi {first_name|there},';
+}
+
+/**
+ * @param  array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html?: bool, button_label?: string}  $source
+ */
+function compose_blog_post_letter(array $source, string $intro, string $signoff, string $fromName): string
+{
+    $title = letter_title_html((string) ($source['title'] ?? ''));
+    $categories = blog_post_categories_html(is_array($source['categories'] ?? null) ? $source['categories'] : []);
+    $image = present_feature_image((string) ($source['image'] ?? ''));
+    $excerpt = (string) ($source['excerpt'] ?? '');
+    $lead = ! empty($source['excerpt_html']) ? advanced_copy_html($excerpt) : layout_text_html($excerpt);
+    $headings = blog_post_headings_html(is_array($source['headings'] ?? null) ? $source['headings'] : []);
+    $label = trim((string) ($source['button_label'] ?? ''));
+    if ($label === '') {
+        $label = __('Read the post', 'matthummel-newsletter');
+    }
+    $button = letter_button($label, (string) ($source['permalink'] ?? ''));
+    $introHtml = layout_eyebrow_html($intro, 'post');
+    $signoffHtml = layout_signoff_html($signoff, $fromName);
+
+    return $image.$title.$categories.$introHtml.$lead.$headings.$button.$signoffHtml;
+}
+
+/**
+ * @param  list<string>  $names
+ */
+function blog_post_categories_html(array $names): string
+{
+    $clean = [];
+    foreach ($names as $name) {
+        $name = trim(wp_strip_all_tags((string) $name));
+        if ($name === '' || in_array($name, $clean, true)) {
+            continue;
+        }
+        $clean[] = $name;
+    }
+    if ($clean === []) {
+        return '';
+    }
+
+    $line = implode(' · ', array_map(static fn (string $name): string => esc_html($name), $clean));
+
+    return '<p class="mhn-kicker mhn-muted" style="margin:0 0 16px;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;color:#50575e;text-align:left;">'.$line.'</p>';
+}
+
+/**
+ * @param  list<string>  $headings
+ */
+function blog_post_headings_html(array $headings): string
+{
+    $items = '';
+    $count = 0;
+    foreach ($headings as $heading) {
+        $heading = trim(wp_strip_all_tags((string) $heading));
+        if ($heading === '') {
+            continue;
+        }
+        $items .= '<li style="margin:0 0 8px;">'.esc_html($heading).'</li>';
+        $count++;
+        if ($count >= 8) {
+            break;
+        }
+    }
+    if ($items === '') {
+        return '';
+    }
+
+    return '<h2 class="mhn-text" style="margin:8px 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
+        .esc_html__('In this note', 'matthummel-newsletter').'</h2>'
+        .'<ul class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>';
+}
+
+/**
+ * @return array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html: bool, button_label: string}
+ */
+function blog_post_source_from_post(\WP_Post $post): array
+{
+    $source = empty_blog_post_source();
+    $source['title'] = function_exists('get_the_title')
+        ? html_entity_decode(get_the_title($post), ENT_QUOTES)
+        : $post->post_title;
+    $content = (string) $post->post_content;
+    $excerpt = blog_post_lead_from_text((string) $post->post_excerpt, $content);
+    if ($excerpt === '' && $post->post_type === 'project' && function_exists('get_post_meta')) {
+        $excerpt = blog_post_lead_from_text((string) get_post_meta($post->ID, '_mh_project_blurb', true), '');
+    }
+    $source['excerpt'] = $excerpt;
+    $source['headings'] = blog_post_headings_from_html($content);
+    $source['categories'] = blog_post_category_names($post);
+    $source['image'] = blog_post_image_html($post);
+    $permalink = function_exists('get_permalink') ? get_permalink($post) : '';
+    $source['permalink'] = is_string($permalink) ? $permalink : '';
+
+    return $source;
+}
+
+/**
+ * @return list<string>
+ */
+function blog_post_category_names(\WP_Post $post): array
+{
+    $names = [];
+    if (function_exists('get_object_taxonomies') && function_exists('get_the_terms')) {
+        $taxes = get_object_taxonomies($post->post_type, 'names');
+        $taxes = is_array($taxes) ? $taxes : [];
+        if (! in_array('category', $taxes, true) && $post->post_type === 'post') {
+            $taxes[] = 'category';
+        }
+        foreach ($taxes as $taxonomy) {
+            if (! is_string($taxonomy) || in_array($taxonomy, ['post_tag', 'post_format'], true)) {
+                continue;
+            }
+            $terms = get_the_terms($post, $taxonomy);
+            if (! is_array($terms)) {
+                continue;
+            }
+            foreach ($terms as $term) {
+                if (! $term instanceof \WP_Term) {
+                    continue;
+                }
+                $name = trim((string) $term->name);
+                if ($name === '' || $term->slug === 'uncategorized' || in_array($name, $names, true)) {
+                    continue;
+                }
+                $names[] = $name;
+            }
+        }
+    }
+
+    if ($names === [] && $post->post_type === 'project' && function_exists('get_post_meta')) {
+        $label = trim((string) get_post_meta($post->ID, '_mh_project_cat', true));
+        if ($label !== '') {
+            $names[] = $label;
+        }
+    }
+
+    return $names;
+}
+
+function blog_post_image_html(\WP_Post $post): string
+{
+    if (! function_exists('get_post_thumbnail_id') || ! function_exists('wp_get_attachment_image_src')) {
+        return '';
+    }
+
+    $attachmentId = (int) get_post_thumbnail_id($post);
+    if ($attachmentId < 1) {
+        return '';
+    }
+
+    $image = wp_get_attachment_image_src($attachmentId, 'large');
+    if (! is_array($image) || (string) ($image[0] ?? '') === '') {
+        $image = wp_get_attachment_image_src($attachmentId, 'full');
+    }
+    if (! is_array($image) || (string) ($image[0] ?? '') === '') {
+        return '';
+    }
+
+    $alt = function_exists('get_post_meta') ? trim((string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true)) : '';
+    if ($alt === '') {
+        $alt = function_exists('get_the_title') ? html_entity_decode(get_the_title($post), ENT_QUOTES) : $post->post_title;
+    }
+
+    $width = (int) ($image[1] ?? 600);
+    $height = (int) ($image[2] ?? 0);
+    if ($width > 600 && $width > 0) {
+        $height = $height > 0 ? (int) round($height * (600 / $width)) : 0;
+        $width = 600;
+    }
+    if ($width < 1) {
+        $width = 600;
+    }
+    if ($height < 1) {
+        $height = (int) round($width * 0.56);
+    }
+
+    return '<img class="mhn-img" src="'.esc_url((string) $image[0]).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'" height="'.esc_attr((string) $height).'" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0;background-color:#eef3f9;">';
+}
+
+/**
+ * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
+ */
+function blog_post_issue_letter(int $issueId, ?array $blocks, ?string $note, bool $sampleIfMissing, int $sourceOverride, string $title = '', bool $titleIsCustom = false): string
+{
+    $copy = layout_copy();
+    $sourceId = $sourceOverride >= 0
+        ? $sourceOverride
+        : ($issueId > 0 && function_exists('get_post_meta') ? (int) get_post_meta($issueId, '_mhn_source_post', true) : 0);
+    $source = null;
+    if ($sourceId > 0 && function_exists('get_post')) {
+        $post = get_post($sourceId);
+        if ($post instanceof \WP_Post && $post->post_status === 'publish' && in_array($post->post_type, blog_letter_post_types(), true)) {
+            $source = blog_post_source_from_post($post);
+        }
+    }
+    if ($source === null) {
+        $source = $sampleIfMissing ? sample_blog_post_source() : empty_blog_post_source();
+    }
+
+    $intro = $copy['intro'];
+    $signoff = $copy['signoff'];
+    if ($blocks !== null) {
+        $customIntro = trim((string) ($blocks['intro'] ?? ''));
+        $customSignoff = trim((string) ($blocks['signoff'] ?? ''));
+        $intro = $customIntro !== '' ? $customIntro : $intro;
+        $signoff = $customSignoff !== '' ? $customSignoff : $signoff;
+        $heading = trim((string) ($blocks['heading'] ?? ''));
+        if ($heading !== '') {
+            $source['title'] = $heading;
+        }
+        $body = trim((string) ($blocks['body'] ?? ''));
+        if ($body !== '') {
+            $source['excerpt'] = $body;
+            $source['excerpt_html'] = str_contains($body, '<');
+        }
+        $label = trim((string) ($blocks['button_label'] ?? ''));
+        $url = trim((string) ($blocks['button_url'] ?? ''));
+        if ($label !== '' && $url !== '') {
+            $source['button_label'] = $label;
+            $source['permalink'] = $url;
+        }
+    } else {
+        if ($note === null && $issueId > 0 && function_exists('get_post_meta')) {
+            $note = (string) get_post_meta($issueId, '_mhn_note', true);
+        }
+        if (note_replaces_excerpt($note)) {
+            $source['excerpt'] = trim(wp_strip_all_tags((string) $note));
+            $source['excerpt_html'] = false;
+        }
+        if ($issueId > 0 && function_exists('get_post_meta') && (string) get_post_meta($issueId, '_mhn_subject_auto', true) === '0') {
+            $savedTitle = trim((string) get_post_meta($issueId, '_mhn_subject', true));
+            if ($savedTitle !== '') {
+                $source['title'] = $savedTitle;
+            }
+        }
+    }
+    if ($titleIsCustom && trim($title) !== '') {
+        $source['title'] = trim($title);
+    } elseif ($source['title'] === '' && trim($title) !== '') {
+        $source['title'] = trim($title);
+    }
+
+    return compose_blog_post_letter($source, $intro, $signoff, $copy['from_name']);
+}
+
 function apply_layout(string $layoutId, string $body): string
 {
     $layoutId = normalize_layout_id($layoutId);
     $copy = layout_copy();
+    if ($layoutId === 'post') {
+        return compose_blog_post_letter(sample_blog_post_source(), $copy['intro'], $copy['signoff'], $copy['from_name']);
+    }
     if ($layoutId === 'welcome') {
         $html = layout_text_html($copy['welcome_body'], true);
         if ($html === '') {
@@ -602,15 +983,17 @@ function emulator_preview_message(array $input): array
     if ($editor === 'advanced') {
         $blocks = advanced_fields_posted($input) ? sanitize_editor_blocks($input) : issue_blocks($issueId);
     }
+    $sourcePostId = array_key_exists('mhn_source_post', $input) ? absint($input['mhn_source_post']) : -1;
+    $titleIsCustom = trim((string) ($input['mhn_subject'] ?? '')) !== '';
 
-    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks);
+    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom);
 }
 
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
  */
-function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null): array
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false): array
 {
     $settings = settings();
     $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
@@ -627,8 +1010,21 @@ function emulator_view(int $issueId, string $layoutId, string $subject = '', ?st
             }
         }
     }
+    if ($layoutId === 'post' && ! $titleIsCustom) {
+        $savedCustom = $issueId > 0 && function_exists('get_post_meta') && (string) get_post_meta($issueId, '_mhn_subject_auto', true) === '0';
+        $savedTitle = $savedCustom ? trim((string) get_post_meta($issueId, '_mhn_subject', true)) : '';
+        if ($savedTitle !== '') {
+            $subject = $savedTitle;
+            $titleIsCustom = true;
+        } else {
+            $imported = blog_post_imported_title($issueId, $sourcePostId);
+            if ($imported !== '') {
+                $subject = $imported;
+            }
+        }
+    }
     $preheader = emulator_preheader($intro);
-    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks);
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom);
 
     return [
         'from_name' => $settings['from_name'],
@@ -690,17 +1086,41 @@ function emulator_preheader(string $introOverride = ''): string
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  */
-function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null): string
+function blog_post_imported_title(int $issueId, int $sourcePostId): string
 {
-    $rendered = '';
-    if ($layoutId !== 'welcome' || $editor === 'advanced') {
-        $compiled = emulator_blocks($issueId, $note);
-        $rendered = $compiled !== '' ? render_blocks($compiled, $subject) : sample_issue_body();
+    $id = $sourcePostId >= 0
+        ? $sourcePostId
+        : ($issueId > 0 && function_exists('get_post_meta') ? (int) get_post_meta($issueId, '_mhn_source_post', true) : 0);
+    if ($id < 1 || ! function_exists('get_post')) {
+        return '';
     }
-    if ($editor === 'advanced') {
-        $body = compose_advanced_letter($blocks ?? empty_editor_blocks(), $layoutId, $rendered, settings()['from_name']);
+
+    $post = get_post($id);
+    if (! $post instanceof \WP_Post || $post->post_status !== 'publish' || ! in_array($post->post_type, blog_letter_post_types(), true)) {
+        return '';
+    }
+
+    return function_exists('get_the_title')
+        ? html_entity_decode(get_the_title($post), ENT_QUOTES)
+        : $post->post_title;
+}
+
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false): string
+{
+    if ($layoutId === 'post') {
+        $advanced = $editor === 'advanced' ? ($blocks ?? empty_editor_blocks()) : null;
+        $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom);
     } else {
-        $body = apply_layout($layoutId, $rendered);
+        $rendered = '';
+        if ($layoutId !== 'welcome' || $editor === 'advanced') {
+            $compiled = emulator_blocks($issueId, $note);
+            $rendered = $compiled !== '' ? render_blocks($compiled, $subject) : sample_issue_body();
+        }
+        if ($editor === 'advanced') {
+            $body = compose_advanced_letter($blocks ?? empty_editor_blocks(), $layoutId, $rendered, settings()['from_name']);
+        } else {
+            $body = apply_layout($layoutId, $rendered);
+        }
     }
     if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);

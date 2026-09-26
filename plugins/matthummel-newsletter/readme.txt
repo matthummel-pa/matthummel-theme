@@ -57,6 +57,7 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 = 1.2.0 =
 * The four letters now share a navy-and-white email shell.
+* Blog post layout imports a published post’s image, excerpt, headings, and categories. Projects are included when that post type is on the site.
 
 = 1.1.0 =
 * Choose Standard, Welcome, Plain, or Feature when you create a letter. The dashboard shows a preview. Intro, sign-off, and the welcome letter are edited under Settings → Reusable copy. Nothing sends until you send it.
