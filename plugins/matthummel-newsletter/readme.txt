@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,8 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Templates: blog update, blog digest, and a custom message. Each one has a note from you.
+* Layouts: Standard, Welcome, Plain, and Feature. Standard reuses an intro and a sign-off. Welcome is a short letter with its own subject and body. Plain leaves out the featured image. Feature puts that image on top.
+* Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
 * Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
 * Import a CSV of addresses you already have permission to email.
@@ -53,6 +54,11 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.1.0 =
+* Choose Standard, Welcome, Plain, or Feature when you create a letter. The dashboard shows a preview. Intro, sign-off, and the welcome letter are edited under Settings → Reusable copy. Nothing sends until you send it.
+* The wizard preview is an email frame. Desktop and Mobile change the width. Edits update the frame without reloading the page. Preview links do not leave the page.
+* Simple is the default editor. Advanced edits intro, heading, body, an optional button, and sign-off for that issue. The same preview updates as you type.
 
 = 1.0.1 =
 * Get updates admin screens use navy and white cards. Sending, tracking, and automatic send are unchanged.

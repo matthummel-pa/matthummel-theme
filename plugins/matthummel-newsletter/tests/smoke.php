@@ -330,7 +330,7 @@ if (is_array($snap)) {
     mhn_check(str_contains($beforeHtml, '*|UNSUB|*'), 'snapshot keeps the unsubscribe placeholder');
     mhn_check(! str_contains($beforeHtml, 'batch@example.com') && ! str_contains($beforeText, 'batch@example.com'), 'snapshot does not store the subscriber address');
     mhn_check($batchHtml !== '' && str_contains($batchHtml, 'Hi Batch,') && ! str_contains($beforeHtml, 'Hi Batch,'), 'the sent letter is personalized and the snapshot is not');
-    mhn_check($snap['template'] === 'blog-update' && $snap['plugin_version'] === '1.0.0', 'snapshot stores the template and plugin version');
+    mhn_check($snap['template'] === 'blog-update' && $snap['plugin_version'] === MHN_VERSION, 'snapshot stores the template and plugin version');
     mhn_check((int) $snap['sender_id'] === 1 && (int) $snap['delivered'] >= 1, 'snapshot stores the sender and delivered count');
     mhn_check($snap['list_label'] === 'Allowlist' && $snap['from_email'] !== 'batch@example.com', 'snapshot stores the list name, not a subscriber address');
     $originalContent = (string) get_post_field('post_content', $issueId);

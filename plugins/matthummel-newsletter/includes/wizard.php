@@ -52,7 +52,8 @@ function wizard_save(array $input): array
 
             return $result;
         }
-        $id = create_wizard_issue($slug);
+        $layoutId = normalize_layout_id((string) ($input['mhn_layout'] ?? ''));
+        $id = create_wizard_issue($slug, $layoutId);
     }
     if ($id < 1) {
         $result['error'] = 'save';
@@ -124,7 +125,7 @@ function wizard_save(array $input): array
     return $result;
 }
 
-function create_wizard_issue(string $slug): int
+function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
 {
     $template = email_template($slug);
     if ($template === null) {
@@ -142,7 +143,10 @@ function create_wizard_issue(string $slug): int
     }
 
     $issueId = (int) $id;
+    $layoutId = normalize_layout_id($layoutId);
     update_post_meta($issueId, '_mhn_template', $slug);
+    update_post_meta($issueId, '_mhn_layout', $layoutId);
+    remember_layout($layoutId);
     update_post_meta($issueId, '_mhn_status', 'draft');
     update_post_meta($issueId, '_mhn_wizard_step', '1');
     update_post_meta($issueId, '_mhn_note', default_note_html());
@@ -152,6 +156,8 @@ function create_wizard_issue(string $slug): int
     update_post_meta($issueId, '_mhn_sent_count', '0');
     update_post_meta($issueId, '_mhn_fail_count', '0');
     update_post_meta($issueId, '_mhn_subject_auto', '1');
+    update_post_meta($issueId, '_mhn_editor', 'simple');
+    update_post_meta($issueId, '_mhn_blocks', empty_editor_blocks());
     compile_issue($issueId);
     fill_subject_defaults($issueId);
 
@@ -163,6 +169,31 @@ function create_wizard_issue(string $slug): int
  */
 function apply_wizard_fields(int $issueId, array $input, int $step): void
 {
+    if (isset($input['mhn_editor'])) {
+        update_post_meta($issueId, '_mhn_editor', normalize_editor_mode((string) $input['mhn_editor']));
+    }
+    if (normalize_editor_mode((string) ($input['mhn_editor'] ?? issue_editor_mode($issueId))) === 'advanced' && advanced_fields_posted($input)) {
+        update_post_meta($issueId, '_mhn_blocks', sanitize_editor_blocks($input));
+    }
+
+    $postedLayout = sanitize_key((string) ($input['mhn_layout'] ?? ''));
+    if ($postedLayout !== '' && isset(layouts()[$postedLayout])) {
+        $previousLayout = (string) get_post_meta($issueId, '_mhn_layout', true);
+        if ($previousLayout === '') {
+            $previousLayout = 'standard';
+        }
+        if ($previousLayout !== $postedLayout) {
+            update_post_meta($issueId, '_mhn_layout', $postedLayout);
+            remember_layout($postedLayout);
+            if ($postedLayout === 'welcome' || $previousLayout === 'welcome') {
+                update_post_meta($issueId, '_mhn_subject_auto', '1');
+                fill_subject_defaults($issueId);
+            }
+        } else {
+            remember_layout($postedLayout);
+        }
+    }
+
     $postedTemplate = sanitize_key((string) ($input['mhn_template'] ?? ''));
     if ($postedTemplate !== '' && email_template($postedTemplate) !== null) {
         $previous = (string) get_post_meta($issueId, '_mhn_template', true);
@@ -274,6 +305,9 @@ function wizard_blocks_next(int $issueId, int $step): string
     $template = email_template((string) get_post_meta($issueId, '_mhn_template', true));
     if ($step === 1 && $template === null) {
         return 'template';
+    }
+    if ($step === 2 && issue_layout_id($issueId) === 'welcome') {
+        return '';
     }
     if ($step === 2 && $template !== null) {
         $count = count(published_issue_posts($issueId));
@@ -399,6 +433,7 @@ function render_wizard_page(): void
     if (email_template($templateSlug) === null) {
         $templateSlug = 'blog-update';
     }
+    $layoutId = $issueId > 0 ? issue_layout_id($issueId) : dashboard_layout_id();
 
     echo '<div class="wrap mhn-admin mhn-wizard">';
     echo '<header class="mhn-dash-head"><div>';
@@ -416,13 +451,18 @@ function render_wizard_page(): void
     wp_nonce_field('mhn_wizard', 'mhn_wizard_nonce');
     echo '<input type="hidden" name="mhn_issue" value="'.esc_attr((string) $issueId).'">';
     echo '<input type="hidden" name="mhn_step" value="'.esc_attr((string) $step).'">';
+    echo '<input type="hidden" name="mhn_editor" value="'.esc_attr(issue_editor_mode($issueId)).'">';
     if ($step !== 1) {
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
+        echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
     }
 
+    echo '<div class="mhn-wizard-split">';
+    echo '<div class="mhn-wizard-main">';
+    render_editor_switch(issue_editor_mode($issueId));
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
-        1 => render_step_template($templateSlug),
+        1 => render_step_template($templateSlug, $layoutId),
         2 => render_step_content($issueId, $templateSlug),
         3 => render_step_subject($issueId),
         4 => render_step_preview($issueId),
@@ -431,7 +471,9 @@ function render_wizard_page(): void
     echo '</div>';
 
     render_wizard_nav($issueId, $step);
-    echo '</form></div>';
+    echo '</div>';
+    render_email_emulator(emulator_view($issueId, $layoutId), true, false);
+    echo '</div></form></div>';
 }
 
 function render_wizard_notices(int $issueId): void
@@ -521,9 +563,49 @@ function render_wizard_progress(int $issueId, int $step): void
     echo '</ol>';
 }
 
-function render_step_template(string $current): void
+function render_editor_switch(string $mode): void
 {
-    echo '<h2>'.esc_html__('Choose a template', 'matthummel-newsletter').'</h2>';
+    $mode = normalize_editor_mode($mode);
+    echo '<div class="mhn-editor-switch" role="group" aria-label="'.esc_attr__('Editor', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Editor', 'matthummel-newsletter').'</span>';
+    echo '<button type="button" data-mhn-editor="simple" aria-pressed="'.($mode === 'simple' ? 'true' : 'false').'">'.esc_html__('Simple', 'matthummel-newsletter').'</button>';
+    echo '<button type="button" data-mhn-editor="advanced" aria-pressed="'.($mode === 'advanced' ? 'true' : 'false').'">'.esc_html__('Advanced', 'matthummel-newsletter').'</button>';
+    echo '</div>';
+}
+
+function render_advanced_editor(int $issueId): void
+{
+    $layoutId = issue_layout_id($issueId);
+    $saved = issue_blocks($issueId);
+    $defaults = advanced_block_defaults($layoutId);
+    echo '<h2>'.esc_html__('Advanced', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-advanced-note">'.esc_html__('Each block is one field. Leave intro or sign-off blank to keep the reusable line. The featured image follows the layout: Feature puts it on top, and Plain leaves it out.', 'matthummel-newsletter').'</p>';
+    echo '<ol class="mhn-blocks">';
+    render_advanced_field('mhn-block-intro', 'mhn_block_intro', __('Intro', 'matthummel-newsletter'), $saved['intro'], $defaults['intro'], false);
+    render_advanced_field('mhn-block-heading', 'mhn_block_heading', __('Heading', 'matthummel-newsletter'), $saved['heading'], $defaults['heading'], false);
+    render_advanced_field('mhn-block-body', 'mhn_block_body', __('Body', 'matthummel-newsletter'), $saved['body'], $defaults['body'], true);
+    render_advanced_field('mhn-block-button-label', 'mhn_block_button_label', __('Button label', 'matthummel-newsletter'), $saved['button_label'], '', false);
+    render_advanced_field('mhn-block-button-url', 'mhn_block_button_url', __('Button URL', 'matthummel-newsletter'), $saved['button_url'], 'https://', false);
+    render_advanced_field('mhn-block-signoff', 'mhn_block_signoff', __('Sign-off', 'matthummel-newsletter'), $saved['signoff'], $defaults['signoff'], false);
+    echo '</ol>';
+}
+
+function render_advanced_field(string $id, string $name, string $label, string $value, string $placeholder, bool $multiline): void
+{
+    echo '<li><label for="'.esc_attr($id).'">'.esc_html($label).'</label>';
+    if ($multiline) {
+        echo '<textarea class="large-text" rows="6" id="'.esc_attr($id).'" name="'.esc_attr($name).'" placeholder="'.esc_attr($placeholder).'">'.esc_textarea($value).'</textarea>';
+    } else {
+        $type = $name === 'mhn_block_button_url' ? 'url' : 'text';
+        echo '<input class="large-text" type="'.esc_attr($type).'" id="'.esc_attr($id).'" name="'.esc_attr($name).'" value="'.esc_attr($value).'" placeholder="'.esc_attr($placeholder).'">';
+    }
+    echo '</li>';
+}
+
+function render_step_template(string $current, string $layout): void
+{
+    render_layout_picker($layout);
+    echo '<h2>'.esc_html__('Choose what to include', 'matthummel-newsletter').'</h2>';
     echo '<div class="mhn-templates">';
     foreach (email_templates() as $slug => $template) {
         $id = 'mhn-template-'.$slug;
@@ -536,8 +618,47 @@ function render_step_template(string $current): void
     echo '</div>';
 }
 
+function render_layout_picker(string $current): void
+{
+    echo '<h2>'.esc_html__('Choose a layout', 'matthummel-newsletter').'</h2>';
+    echo '<p>'.esc_html__('One layout for this letter. Standard is the usual one. Welcome does not send on its own.', 'matthummel-newsletter').'</p>';
+    echo '<div class="mhn-layouts" role="radiogroup" aria-label="'.esc_attr__('Layouts', 'matthummel-newsletter').'">';
+    foreach (layouts() as $id => $layout) {
+        $inputId = 'mhn-layout-'.$id;
+        echo '<label class="mhn-layout" for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="mhn_layout" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($current, $id, false).'>';
+        echo '<strong>'.esc_html($layout['label']).'</strong>';
+        echo '<span>'.esc_html($layout['summary']).'</span>';
+        echo '<span class="mhn-layout-preview">';
+        echo '<iframe title="'.esc_attr(sprintf(
+            /* translators: %s: layout name */
+            __('%s preview', 'matthummel-newsletter'),
+            $layout['label']
+        )).'" sandbox="" tabindex="-1" src="'.esc_url(layout_preview_admin_url($id)).'"></iframe>';
+        echo '</span></label>';
+    }
+    echo '</div>';
+}
+
 function render_step_content(int $issueId, string $slug): void
 {
+    $advanced = issue_editor_mode($issueId) === 'advanced';
+    echo '<div data-mhn-simple'.($advanced ? ' hidden' : '').'>';
+    render_simple_content($issueId, $slug);
+    echo '</div>';
+    echo '<div data-mhn-advanced'.($advanced ? '' : ' hidden').'>';
+    render_advanced_editor($issueId);
+    echo '</div>';
+}
+
+function render_simple_content(int $issueId, string $slug): void
+{
+    if (issue_layout_id($issueId) === 'welcome') {
+        render_welcome_step();
+
+        return;
+    }
+
     $template = email_template($slug);
     if ($template === null) {
         echo '<p>'.esc_html__('Choose a template first.', 'matthummel-newsletter').'</p>';
@@ -656,6 +777,16 @@ function wizard_post_choices(array $selected, string $find): array
     return $choices;
 }
 
+function render_welcome_step(): void
+{
+    $copy = layout_copy();
+    echo '<h2>'.esc_html__('Welcome', 'matthummel-newsletter').'</h2>';
+    echo '<p>'.esc_html__('This letter uses the welcome subject and body from Settings. Choosing it does not email anyone.', 'matthummel-newsletter').'</p>';
+    echo '<p><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong><br>'.esc_html($copy['welcome_subject']).'</p>';
+    echo '<div class="mhn-welcome-copy">'.nl2br(esc_html($copy['welcome_body'])).'</div>';
+    echo '<p><a href="'.esc_url(admin_url('admin.php?page=mhn-settings')).'">'.esc_html__('Edit reusable copy', 'matthummel-newsletter').'</a></p>';
+}
+
 function render_merge_hint(): void
 {
     echo '<p class="description">'.esc_html__('Merge tags: {first_name}, {last_name}, {full_name}. A fallback goes after a bar, like {first_name|there}. The preview uses sample names.', 'matthummel-newsletter').'</p>';
@@ -758,25 +889,16 @@ function render_step_subject(int $issueId): void
 function render_step_preview(int $issueId): void
 {
     $me = wp_get_current_user();
-    $src = $issueId > 0
-        ? wp_nonce_url(admin_url('admin-post.php?action=mhn_wizard_preview&issue='.$issueId), 'mhn_preview_'.$issueId)
-        : '';
 
     echo '<h2>'.esc_html__('Preview', 'matthummel-newsletter').'</h2>';
     render_issue_audit($issueId);
-    echo '<p>'.esc_html__('This is the same email that will send. Check it wide and narrow, then send a test to yourself.', 'matthummel-newsletter').'</p>';
-    if ($src === '') {
+    echo '<p>'.esc_html__('The email preview updates as you edit. Switch Desktop and Mobile there, then send a test to yourself. Preview links stay on this page.', 'matthummel-newsletter').'</p>';
+    if ($issueId < 1) {
         echo '<p>'.esc_html__('Save the draft first.', 'matthummel-newsletter').'</p>';
 
         return;
     }
 
-    echo '<div class="mhn-previews">';
-    echo '<figure class="mhn-preview-frame is-desktop"><figcaption>'.esc_html__('Desktop', 'matthummel-newsletter').'</figcaption>';
-    echo '<iframe title="'.esc_attr__('Desktop preview', 'matthummel-newsletter').'" sandbox="allow-same-origin" src="'.esc_url($src).'"></iframe></figure>';
-    echo '<figure class="mhn-preview-frame is-mobile"><figcaption>'.esc_html__('Phone', 'matthummel-newsletter').'</figcaption>';
-    echo '<iframe title="'.esc_attr__('Phone preview', 'matthummel-newsletter').'" sandbox="allow-same-origin" src="'.esc_url($src).'"></iframe></figure>';
-    echo '</div>';
     echo '<p><button type="submit" class="button" name="mhn_action" value="test">'.esc_html(sprintf(
         /* translators: %s: current user email */
         __('Send a test to %s', 'matthummel-newsletter'),

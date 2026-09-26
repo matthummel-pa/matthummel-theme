@@ -19,6 +19,8 @@ The draft saves as you go. You can close the tab and come back. On the dashboard
 
 **Open the block editor** is on every step after the draft exists. That editor and this wizard are the same draft. Use the wizard for the normal path. Use the editor when you want to move blocks around yourself.
 
+The first step also picks a layout: **Standard**, **Welcome**, **Plain**, or **Feature**. Standard is the usual letter. Its intro and sign-off are edited once under **Get updates → Settings → Reusable copy**, then reused. Plain is that letter with no featured image. Feature puts the featured image on top, then the title and the body. Welcome is a short letter for a new subscriber, with its own subject and body in that same card. Picking Welcome does not email the list. The dashboard shows that letter in a small email preview. In the wizard, **Preview** is an email frame: from, subject, and the intro as the preheader. Desktop is about 600 pixels wide and Mobile is about 375. It updates as you change the layout, subject, or note. It does not send mail. **Advanced** is the other editor on that same screen. It lists intro, heading, body, an optional button, and sign-off. Empty intro and sign-off keep the reusable lines. Simple stays the usual path.
+
 ## When you publish a post
 
 Publishing a post saves a **Blog update** draft. The note starts with `Hi {first_name|there},` and the P.S. is empty. The featured image is included when the post has one. It does not email anyone. Open it with **Continue**, edit the note, preview it, and send it yourself. If you later turn on automatic sending, that same draft is what goes out, image included.

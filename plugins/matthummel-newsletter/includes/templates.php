@@ -178,8 +178,9 @@ function compile_issue(int $issueId): void
 
 /**
  * @param  array{label: string, summary: string, min_posts: int, max_posts: int, has_image: bool, has_button: bool, has_ps: bool}  $template
+ * @param  string|null  $noteHtml  Preview override. Null reads the saved note.
  */
-function template_content(int $issueId, array $template): string
+function template_content(int $issueId, array $template, ?string $noteHtml = null): string
 {
     $parts = [];
 
@@ -193,7 +194,8 @@ function template_content(int $issueId, array $template): string
         }
     }
 
-    $note = rich_text_blocks((string) get_post_meta($issueId, '_mhn_note', true));
+    $noteSource = $noteHtml ?? (string) get_post_meta($issueId, '_mhn_note', true);
+    $note = rich_text_blocks($noteSource);
     if ($note !== '') {
         $parts[] = $note;
     }
@@ -622,6 +624,22 @@ function suggest_preheader(int $issueId): string
 
 function fill_subject_defaults(int $issueId): void
 {
+    if (issue_layout_id($issueId) === 'welcome' && (string) get_post_meta($issueId, '_mhn_subject_auto', true) !== '0') {
+        $subject = layout_copy()['welcome_subject'];
+        $preheader = mb_substr(trim(wp_strip_all_tags(layout_copy()['welcome_body'])), 0, 140);
+        update_post_meta($issueId, '_mhn_subject', $subject);
+        update_post_meta($issueId, '_mhn_preheader', $preheader);
+        update_post_meta($issueId, '_mhn_subject_auto', '1');
+        if ($subject !== '') {
+            wp_update_post([
+                'ID' => $issueId,
+                'post_title' => $subject,
+            ]);
+        }
+
+        return;
+    }
+
     if ((string) get_post_meta($issueId, '_mhn_subject_auto', true) === '0') {
         $subject = trim((string) get_post_meta($issueId, '_mhn_subject', true));
         if ($subject !== '') {

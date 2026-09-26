@@ -101,7 +101,31 @@ function admin_assets(string $hook): void
         MHN_VERSION
     );
 
-    if (! str_contains($hook, 'mhn-wizard')) {
+    $onWizard = str_contains($hook, 'mhn-wizard');
+    $onDashboard = str_contains($hook, 'mhn-newsletter');
+    if ($onWizard || $onDashboard) {
+        wp_enqueue_script(
+            'mhn-emulator',
+            plugins_url('assets/emulator.js', MHN_FILE),
+            [],
+            MHN_VERSION,
+            true
+        );
+    }
+    if ($onWizard) {
+        $config = settings();
+        wp_localize_script('mhn-emulator', 'mhnEmulator', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'action' => 'mhn_emulator_preview',
+            'nonce' => wp_create_nonce('mhn_emulator'),
+            'intro' => $config['intro'],
+            'fromName' => $config['from_name'],
+            'fromEmail' => $config['from_email'],
+            'welcomeSubject' => $config['welcome_subject'],
+        ]);
+    }
+
+    if (! $onWizard) {
         return;
     }
 
@@ -256,6 +280,7 @@ function page_dashboard(): void
     echo '<a class="button button-primary" href="'.esc_url($create).'">'.esc_html__('Create newsletter', 'matthummel-newsletter').'</a>';
     echo '</header>';
 
+    echo '<div class="mhn-dash-grid">';
     echo '<section class="mhn-card mhn-audience" aria-labelledby="mhn-audience-heading">';
     echo '<h2 id="mhn-audience-heading">'.esc_html__('Audience', 'matthummel-newsletter').'</h2>';
     echo '<dl class="mhn-admin-stats">';
@@ -284,6 +309,8 @@ function page_dashboard(): void
         )).'</p></div>';
     }
     echo '</section>';
+    render_dashboard_preview();
+    echo '</div>';
 
     echo '<nav class="mhn-dash-links" aria-label="'.esc_attr__('Newsletter tools', 'matthummel-newsletter').'">';
     foreach ([
@@ -317,6 +344,11 @@ function page_dashboard(): void
 /**
  * @param  array{id: int, title: string, status: string, sent: int, failed: int, when: string, sent_at: string, scheduled: string}  $issue
  */
+function render_dashboard_preview(): void
+{
+    render_email_emulator(emulator_view(0, dashboard_layout_id()), false, true);
+}
+
 function issue_has_delivery(array $issue): bool
 {
     return in_array($issue['status'], ['sent', 'sending', 'failed'], true)
@@ -655,6 +687,18 @@ function page_settings(): void
     echo '<textarea class="large-text" rows="3" id="mhn-address" name="address">'.esc_textarea($config['address']).'</textarea></p>';
     echo '</section>';
 
+    echo '<section class="mhn-card" aria-labelledby="mhn-copy-heading"><h2 id="mhn-copy-heading">'.esc_html__('Reusable copy', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('Standard uses the intro and the sign-off on every issue. Welcome uses its own subject and body. Edit them here once.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-intro">'.esc_html__('Intro', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-intro" name="intro" value="'.esc_attr($config['intro']).'"></p>';
+    echo '<p><label for="mhn-signoff">'.esc_html__('Sign-off', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-signoff" name="signoff" value="'.esc_attr($config['signoff']).'"></p>';
+    echo '<p><label for="mhn-welcome-subject">'.esc_html__('Welcome subject', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-welcome-subject" name="welcome_subject" value="'.esc_attr($config['welcome_subject']).'"></p>';
+    echo '<p><label for="mhn-welcome-body">'.esc_html__('Welcome body', 'matthummel-newsletter').'</label>';
+    echo '<textarea class="large-text" rows="8" id="mhn-welcome-body" name="welcome_body">'.esc_textarea($config['welcome_body']).'</textarea></p>';
+    echo '</section>';
+
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
     echo '<p class="mhn-check"><label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label></p>';
     echo '<p class="mhn-check"><label><input type="checkbox" name="auto_send" value="1" '.checked($config['auto_send'], 1, false).'> '.esc_html__('Also send that issue automatically. Off unless you check this.', 'matthummel-newsletter').'</label></p>';
@@ -914,6 +958,10 @@ function handle_settings(): void
         'track_opens' => $_POST['track_opens'] ?? '',
         'track_clicks' => $_POST['track_clicks'] ?? '',
         'batch_size' => $_POST['batch_size'] ?? 25,
+        'intro' => wp_unslash($_POST['intro'] ?? ''),
+        'signoff' => wp_unslash($_POST['signoff'] ?? ''),
+        'welcome_subject' => wp_unslash($_POST['welcome_subject'] ?? ''),
+        'welcome_body' => wp_unslash($_POST['welcome_body'] ?? ''),
     ]);
     wp_safe_redirect(admin_url('admin.php?page=mhn-settings&saved=1'));
     exit;
