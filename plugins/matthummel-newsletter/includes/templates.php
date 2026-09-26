@@ -607,34 +607,16 @@ function suggest_subject(int $issueId): string
 
 function suggest_preheader(int $issueId): string
 {
-    if (issue_layout_id($issueId) === 'post') {
-        $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
-        $post = $sourceId > 0 ? get_post($sourceId) : null;
-        if ($post instanceof \WP_Post && $post->post_status === 'publish') {
-            $lead = blog_post_lead_from_text((string) $post->post_excerpt, (string) $post->post_content);
-            if ($lead !== '') {
-                return mb_substr($lead, 0, 140);
-            }
+    if ($issueId > 0 && issue_layout_id($issueId) === 'welcome') {
+        $welcome = trim(wp_strip_all_tags(layout_copy()['welcome_body']));
+        if ($welcome !== '') {
+            return mb_substr($welcome, 0, 140);
         }
     }
 
-    $note = trim(wp_strip_all_tags((string) get_post_meta($issueId, '_mhn_note', true)));
-    if ($note !== '') {
-        return mb_substr($note, 0, 140);
-    }
-
-    $posts = published_issue_posts($issueId);
-    $slug = (string) get_post_meta($issueId, '_mhn_template', true);
-    if ($slug === 'blog-digest' && count($posts) > 1) {
-        $titles = [];
-        foreach ($posts as $post) {
-            $titles[] = html_entity_decode(get_the_title($post), ENT_QUOTES);
-        }
-
-        return mb_substr(implode(', ', $titles), 0, 140);
-    }
-    if (isset($posts[0])) {
-        return mb_substr(post_plain_excerpt($posts[0]), 0, 140);
+    $intro = trim(layout_copy()['intro']);
+    if ($intro !== '') {
+        return mb_substr($intro, 0, 140);
     }
 
     return '';

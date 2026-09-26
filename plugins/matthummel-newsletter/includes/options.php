@@ -48,7 +48,9 @@ function archive_table(): string
  *     welcome_body: string,
  *     letter_style: string,
  *     letter_masthead: string,
- *     letter_button: string
+ *     letter_button: string,
+ *     skip_sent_post: int,
+ *     rule_categories: list<string>
  * }
  */
 function settings(): array
@@ -77,6 +79,8 @@ function settings(): array
         'letter_style' => 'card',
         'letter_masthead' => 'left',
         'letter_button' => 'solid',
+        'skip_sent_post' => 1,
+        'rule_categories' => [],
     ];
 
     $merged = array_merge($defaults, $saved);
@@ -102,6 +106,8 @@ function settings(): array
         'letter_style' => choice_from_input(['letter_style' => $merged['letter_style'] ?? ''], 'letter_style', letter_style_choices(), 'card'),
         'letter_masthead' => choice_from_input(['letter_masthead' => $merged['letter_masthead'] ?? ''], 'letter_masthead', letter_masthead_choices(), 'left'),
         'letter_button' => choice_from_input(['letter_button' => $merged['letter_button'] ?? ''], 'letter_button', letter_button_choices(), 'solid'),
+        'skip_sent_post' => (int) $merged['skip_sent_post'] === 1 ? 1 : 0,
+        'rule_categories' => sanitize_rule_categories($merged['rule_categories'] ?? []),
     ];
 }
 
@@ -150,7 +156,100 @@ function update_settings(array $input): void
         'letter_style' => choice_from_input($input, 'letter_style', letter_style_choices(), $current['letter_style']),
         'letter_masthead' => choice_from_input($input, 'letter_masthead', letter_masthead_choices(), $current['letter_masthead']),
         'letter_button' => choice_from_input($input, 'letter_button', letter_button_choices(), $current['letter_button']),
+        'skip_sent_post' => array_key_exists('skip_sent_post', $input) ? (empty($input['skip_sent_post']) ? 0 : 1) : $current['skip_sent_post'],
+        'rule_categories' => array_key_exists('mhn_rules_present', $input)
+            ? sanitize_rule_categories($input['rule_categories'] ?? [])
+            : $current['rule_categories'],
     ]);
+}
+
+/**
+ * @return array<string, string>
+ */
+function rule_category_choices(): array
+{
+    $choices = [];
+    if (function_exists('get_categories')) {
+        $terms = get_categories([
+            'hide_empty' => false,
+            'taxonomy' => 'category',
+        ]);
+        foreach (is_array($terms) ? $terms : [] as $term) {
+            if (! $term instanceof \WP_Term || $term->slug === 'uncategorized') {
+                continue;
+            }
+            $choices['category:'.$term->term_id] = $term->name;
+        }
+    }
+
+    foreach (project_category_labels() as $label) {
+        $token = project_label_token($label);
+        if ($token === '' || isset($choices[$token])) {
+            continue;
+        }
+        $choices[$token] = $label;
+    }
+
+    return $choices;
+}
+
+/**
+ * @return list<string>
+ */
+function project_category_labels(): array
+{
+    if (! function_exists('get_posts') || ! function_exists('get_post_meta')) {
+        return [];
+    }
+    if (function_exists('post_type_exists') && ! post_type_exists('project')) {
+        return [];
+    }
+
+    $posts = get_posts([
+        'post_type' => 'project',
+        'post_status' => 'publish',
+        'posts_per_page' => 100,
+        'no_found_rows' => true,
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'fields' => 'ids',
+    ]);
+    $labels = [];
+    foreach (is_array($posts) ? $posts : [] as $id) {
+        $label = trim((string) get_post_meta((int) $id, '_mh_project_cat', true));
+        if ($label === '' || in_array($label, $labels, true)) {
+            continue;
+        }
+        $labels[] = $label;
+    }
+    sort($labels);
+
+    return $labels;
+}
+
+/**
+ * @return list<string>
+ */
+function sanitize_rule_categories(mixed $input): array
+{
+    if (! is_array($input)) {
+        return [];
+    }
+
+    $choices = function_exists('get_categories') ? rule_category_choices() : [];
+    $clean = [];
+    foreach ($input as $value) {
+        $value = sanitize_text_field((string) $value);
+        if (preg_match('/^(?:category:[1-9]\d*|project:[a-z0-9\-]+)$/', $value) !== 1) {
+            continue;
+        }
+        if ($choices !== [] && ! isset($choices[$value])) {
+            continue;
+        }
+        $clean[] = $value;
+    }
+
+    return array_values(array_unique($clean));
 }
 
 require_once __DIR__.'/styles.php';

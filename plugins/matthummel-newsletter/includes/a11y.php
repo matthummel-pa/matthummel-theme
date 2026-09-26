@@ -197,7 +197,8 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
     if (preg_match('/font-size:\s*(?:[1-9]|1[0-2])px/i', $readable) === 1) {
         $errors[] = 'Text is smaller than 13px.';
     }
-    if (preg_match('/<p\b[^>]*text-align:\s*(center|justify)/i', $html) === 1) {
+    $centeredWelcome = str_contains($html, 'data-mhn-layout="welcome"');
+    if (! $centeredWelcome && preg_match('/<p\b[^>]*text-align:\s*(center|justify)/i', $html) === 1) {
         $errors[] = 'Paragraphs should be left-aligned.';
     }
     if (stripos($html, 'min-height:44px') === false) {

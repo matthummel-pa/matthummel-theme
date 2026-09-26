@@ -132,8 +132,11 @@ function paintEmulatorChrome(root, form) {
   }
 
   const preheader = root.querySelector('[data-mhn-preheader-line]')
+  const preheaderField = form.querySelector('[name="mhn_preheader"]')
+  const typedPreheader = preheaderField && 'value' in preheaderField ? String(preheaderField.value).trim() : ''
   const intro = advancedField(form, 'mhn_block_intro')
-  if (preheader && intro !== '') preheader.textContent = intro
+  if (preheader && typedPreheader !== '') preheader.textContent = typedPreheader
+  else if (preheader && intro !== '') preheader.textContent = intro
   else if (preheader && mhnEmulator.intro) preheader.textContent = mhnEmulator.intro
 
   const fromName = root.querySelector('[data-mhn-from-name]')
@@ -176,7 +179,7 @@ function applyEmulatorPayload(root, data) {
   if (frame && typeof data.html === 'string') frame.setAttribute('srcdoc', data.html)
 
   const typingSubject = document.activeElement && (document.activeElement.name === 'mhn_subject' || document.activeElement.name === 'mhn_block_heading')
-  const typingIntro = document.activeElement && document.activeElement.name === 'mhn_block_intro'
+  const typingIntro = document.activeElement && (document.activeElement.name === 'mhn_block_intro' || document.activeElement.name === 'mhn_preheader')
   const subjectLine = root.querySelector('[data-mhn-subject-line]')
   if (subjectLine && data.subject && !typingSubject) subjectLine.textContent = data.subject
 

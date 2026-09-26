@@ -19,23 +19,23 @@ function layouts(): array
     return [
         'standard' => [
             'label' => __('Standard', 'matthummel-newsletter'),
-            'summary' => __('The usual letter, with your intro, the issue, and your sign-off.', 'matthummel-newsletter'),
+            'summary' => __('A muted intro, a large title, then the letter. The image sits under the title when there is one.', 'matthummel-newsletter'),
         ],
         'welcome' => [
             'label' => __('Welcome', 'matthummel-newsletter'),
-            'summary' => __('A short letter for someone who just joined the list.', 'matthummel-newsletter'),
+            'summary' => __('A short centered letter for someone who just joined. No image and no heading list.', 'matthummel-newsletter'),
         ],
         'plain' => [
             'label' => __('Plain', 'matthummel-newsletter'),
-            'summary' => __('The same letter as text only, with no featured image.', 'matthummel-newsletter'),
+            'summary' => __('White page, a navy rule beside the intro, and a text link when you add a URL.', 'matthummel-newsletter'),
         ],
         'feature' => [
             'label' => __('Feature', 'matthummel-newsletter'),
-            'summary' => __('The featured image on top, then the title and the body.', 'matthummel-newsletter'),
+            'summary' => __('A navy stripe, the image full width, then the title and the body.', 'matthummel-newsletter'),
         ],
         'post' => [
             'label' => __('Blog post', 'matthummel-newsletter'),
-            'summary' => __('One post you wrote: image, excerpt, headings, and categories.', 'matthummel-newsletter'),
+            'summary' => __('A post announcement: image, category, title, excerpt, headings, and Read the post.', 'matthummel-newsletter'),
         ],
     ];
 }
@@ -241,22 +241,34 @@ function compose_advanced_letter(array $blocks, string $layoutId, string $issueH
             }
         }
     }
+    if ($layoutId === 'plain' || $layoutId === 'welcome') {
+        $bodyHtml = strip_layout_images($bodyHtml);
+    }
+    if ($layoutId === 'plain') {
+        $bodyHtml = soften_plain_buttons($bodyHtml);
+    }
+    if ($layoutId === 'welcome') {
+        $bodyHtml = str_replace('text-align:left', 'text-align:center', $bodyHtml);
+    }
 
     $button = '';
     $label = trim((string) ($blocks['button_label'] ?? ''));
     $url = trim((string) ($blocks['button_url'] ?? ''));
     if ($label !== '' && $url !== '') {
-        $button = letter_button($label, $url);
+        $button = letter_button($label, $url, $layoutId);
     }
 
-    $headingHtml = letter_title_html($heading, $layoutId === 'plain');
+    $headingHtml = letter_title_html($heading, $layoutId === 'plain', $layoutId);
     $introHtml = layout_eyebrow_html($intro, $layoutId);
-    $signoffHtml = layout_signoff_html($signoff, $fromName);
+    $signoffHtml = layout_signoff_html($signoff, $fromName, $layoutId === 'welcome' ? 'center' : 'left');
     if ($layoutId === 'feature') {
         return present_feature_image($image).$headingHtml.$introHtml.$bodyHtml.$button.$signoffHtml;
     }
     if ($layoutId === 'plain' || $layoutId === 'welcome') {
         return $introHtml.$headingHtml.$bodyHtml.$button.$signoffHtml;
+    }
+    if ($layoutId === 'standard') {
+        return $introHtml.$headingHtml.present_standard_image($image).$bodyHtml.$button.$signoffHtml;
     }
 
     return $introHtml.$headingHtml.$image.$bodyHtml.$button.$signoffHtml;
@@ -426,25 +438,235 @@ function note_replaces_excerpt(?string $note): bool
 }
 
 /**
- * @param  array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html?: bool, button_label?: string}  $source
+ * @return list<string>
  */
-function compose_blog_post_letter(array $source, string $intro, string $signoff, string $fromName): string
+function section_keys(): array
 {
-    $title = letter_title_html((string) ($source['title'] ?? ''));
-    $categories = blog_post_categories_html(is_array($source['categories'] ?? null) ? $source['categories'] : []);
-    $image = present_feature_image((string) ($source['image'] ?? ''));
-    $excerpt = (string) ($source['excerpt'] ?? '');
-    $lead = ! empty($source['excerpt_html']) ? advanced_copy_html($excerpt) : layout_text_html($excerpt);
-    $headings = blog_post_headings_html(is_array($source['headings'] ?? null) ? $source['headings'] : []);
-    $label = trim((string) ($source['button_label'] ?? ''));
-    if ($label === '') {
-        $label = __('Read the post', 'matthummel-newsletter');
+    return ['image', 'excerpt', 'headings', 'categories', 'button'];
+}
+
+/**
+ * @return array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}
+ */
+function default_sections(): array
+{
+    return [
+        'image' => true,
+        'excerpt' => true,
+        'headings' => true,
+        'categories' => true,
+        'button' => true,
+    ];
+}
+
+/**
+ * @param  array<string, mixed>|null  $input
+ * @return array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}
+ */
+function normalize_sections(?array $input): array
+{
+    $out = default_sections();
+    if ($input === null) {
+        return $out;
     }
-    $button = letter_button($label, (string) ($source['permalink'] ?? ''));
+
+    foreach (section_keys() as $key) {
+        if (! array_key_exists($key, $input)) {
+            continue;
+        }
+        $out[$key] = filter_var($input[$key], FILTER_VALIDATE_BOOLEAN);
+    }
+
+    return $out;
+}
+
+/**
+ * @return array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}
+ */
+function issue_sections(int $issueId): array
+{
+    if ($issueId < 1 || ! function_exists('get_post_meta')) {
+        return default_sections();
+    }
+
+    $saved = get_post_meta($issueId, '_mhn_sections', true);
+    if (! is_array($saved) || $saved === []) {
+        return default_sections();
+    }
+
+    return normalize_sections($saved);
+}
+
+/**
+ * @param  array<string, mixed>  $input
+ * @return array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null
+ */
+function sections_from_request(array $input): ?array
+{
+    if (! array_key_exists('mhn_sections_present', $input)) {
+        return null;
+    }
+
+    $picked = $input['mhn_sections'] ?? [];
+    if (! is_array($picked)) {
+        $picked = [];
+    }
+
+    $chosen = [];
+    foreach ($picked as $value) {
+        $key = sanitize_key((string) $value);
+        if (in_array($key, section_keys(), true)) {
+            $chosen[] = $key;
+        }
+    }
+
+    $out = [];
+    foreach (section_keys() as $key) {
+        $out[$key] = in_array($key, $chosen, true);
+    }
+
+    return $out;
+}
+
+/**
+ * A Blog post letter does not go out when this post is already on a sent archive row.
+ *
+ * @param  list<int>  $sentSourceIds
+ */
+function blog_post_already_sent(int $sourcePostId, array $sentSourceIds, bool $ruleEnabled, string $layoutId): bool
+{
+    if (! $ruleEnabled || $layoutId !== 'post' || $sourcePostId < 1) {
+        return false;
+    }
+
+    foreach ($sentSourceIds as $id) {
+        if ((int) $id === $sourcePostId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function issue_skips_sent_post(int $issueId): bool
+{
+    if ($issueId < 1 || ! function_exists('get_post_meta')) {
+        return false;
+    }
+
+    $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
+    $sent = function_exists(__NAMESPACE__.'\\sent_source_post_ids') ? sent_source_post_ids($issueId) : [];
+
+    return blog_post_already_sent($sourceId, $sent, (int) settings()['skip_sent_post'] === 1, issue_layout_id($issueId));
+}
+
+/**
+ * Empty rules mean every post. A checked token must match the post.
+ *
+ * @param  list<string>  $postTokens
+ * @param  list<string>  $selected
+ */
+function letter_in_rule_categories(array $postTokens, array $selected): bool
+{
+    if ($selected === []) {
+        return true;
+    }
+
+    foreach ($postTokens as $token) {
+        if (in_array((string) $token, $selected, true)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function project_label_token(string $label): string
+{
+    $label = function_exists('sanitize_text_field') ? trim(sanitize_text_field($label)) : trim($label);
+    if ($label === '') {
+        return '';
+    }
+
+    if (function_exists('sanitize_title')) {
+        $key = sanitize_title($label);
+    } else {
+        $key = strtolower((string) preg_replace('/[^a-z0-9]+/i', '-', $label));
+        $key = trim($key, '-');
+    }
+
+    return $key === '' ? '' : 'project:'.$key;
+}
+
+/**
+ * @return list<string>
+ */
+function post_rule_tokens(\WP_Post $post): array
+{
+    $tokens = [];
+    if (function_exists('get_the_terms')) {
+        $terms = get_the_terms($post, 'category');
+        if (is_array($terms)) {
+            foreach ($terms as $term) {
+                if (! $term instanceof \WP_Term || $term->slug === 'uncategorized') {
+                    continue;
+                }
+                $tokens[] = 'category:'.$term->term_id;
+            }
+        }
+    }
+
+    if ($post->post_type === 'project' && function_exists('get_post_meta')) {
+        $token = project_label_token((string) get_post_meta($post->ID, '_mh_project_cat', true));
+        if ($token !== '') {
+            $tokens[] = $token;
+        }
+    }
+
+    return $tokens;
+}
+
+/**
+ * @param  array{title: string, excerpt: string, headings: list<string>, categories: list<string>, image: string, permalink: string, excerpt_html?: bool, button_label?: string}  $source
+ * @param  array<string, bool>|null  $sections
+ */
+function compose_blog_post_letter(array $source, string $intro, string $signoff, string $fromName, ?array $sections = null): string
+{
+    $sections = normalize_sections($sections);
+    $title = letter_title_html((string) ($source['title'] ?? ''), false, 'post');
+    $categories = $sections['categories']
+        ? blog_post_categories_html(is_array($source['categories'] ?? null) ? $source['categories'] : [])
+        : '';
+    $image = $sections['image'] ? present_feature_image((string) ($source['image'] ?? '')) : '';
+    $excerpt = (string) ($source['excerpt'] ?? '');
+    $lead = '';
+    if ($sections['excerpt']) {
+        $lead = ! empty($source['excerpt_html']) ? advanced_copy_html($excerpt) : layout_text_html($excerpt);
+    }
+    $headings = $sections['headings']
+        ? blog_post_headings_html(is_array($source['headings'] ?? null) ? $source['headings'] : [])
+        : '';
+    $button = '';
+    if ($sections['button']) {
+        $label = trim((string) ($source['button_label'] ?? ''));
+        if ($label === '') {
+            $label = __('Read the post', 'matthummel-newsletter');
+        }
+        $button = letter_button($label, (string) ($source['permalink'] ?? ''), 'post');
+    }
     $introHtml = layout_eyebrow_html($intro, 'post');
     $signoffHtml = layout_signoff_html($signoff, $fromName);
 
-    return $image.$title.$categories.$introHtml.$lead.$headings.$button.$signoffHtml;
+    return $image.$categories.post_copy_row($title.$lead).$headings.post_copy_row($button.$introHtml.$signoffHtml);
+}
+
+function post_copy_row(string $html): string
+{
+    if (trim($html) === '') {
+        return '';
+    }
+
+    return '<table role="presentation" class="mhn-post-copy" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="mhn-px" style="padding:8px 32px 0;">'.$html.'</td></tr></table>';
 }
 
 /**
@@ -466,7 +688,9 @@ function blog_post_categories_html(array $names): string
 
     $line = implode(' · ', array_map(static fn (string $name): string => esc_html($name), $clean));
 
-    return '<p class="mhn-kicker mhn-muted" style="margin:0 0 16px;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;color:#50575e;text-align:left;">'.$line.'</p>';
+    return '<table role="presentation" class="mhn-post-cats" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
+        .'<td class="mhn-kicker mhn-muted" style="padding:12px 32px;background-color:#dceaf8;font-family:'.email_font_stack().';font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#50575e;text-align:left;">'.$line.'</td>'
+        .'</tr></table>';
 }
 
 /**
@@ -491,9 +715,12 @@ function blog_post_headings_html(array $headings): string
         return '';
     }
 
-    return '<h2 class="mhn-text" style="margin:8px 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
+    return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 0;"><tr>'
+        .'<td style="padding:16px 32px;background-color:#eef3f9;">'
+        .'<h2 class="mhn-text" style="margin:0 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
         .esc_html__('In this note', 'matthummel-newsletter').'</h2>'
-        .'<ul class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>';
+        .'<ul class="mhn-text" style="margin:0;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>'
+        .'</td></tr></table>';
 }
 
 /**
@@ -606,7 +833,7 @@ function blog_post_image_html(\WP_Post $post): string
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  */
-function blog_post_issue_letter(int $issueId, ?array $blocks, ?string $note, bool $sampleIfMissing, int $sourceOverride, string $title = '', bool $titleIsCustom = false): string
+function blog_post_issue_letter(int $issueId, ?array $blocks, ?string $note, bool $sampleIfMissing, int $sourceOverride, string $title = '', bool $titleIsCustom = false, ?array $sections = null): string
 {
     $copy = layout_copy();
     $sourceId = $sourceOverride >= 0
@@ -666,7 +893,7 @@ function blog_post_issue_letter(int $issueId, ?array $blocks, ?string $note, boo
         $source['title'] = trim($title);
     }
 
-    return compose_blog_post_letter($source, $intro, $signoff, $copy['from_name']);
+    return compose_blog_post_letter($source, $intro, $signoff, $copy['from_name'], $sections ?? issue_sections($issueId));
 }
 
 function apply_layout(string $layoutId, string $body): string
@@ -677,35 +904,43 @@ function apply_layout(string $layoutId, string $body): string
         return compose_blog_post_letter(sample_blog_post_source(), $copy['intro'], $copy['signoff'], $copy['from_name']);
     }
     if ($layoutId === 'welcome') {
-        $html = layout_text_html($copy['welcome_body'], true);
+        $html = layout_text_html($copy['welcome_body'], false, 'center');
         if ($html === '') {
-            $html = layout_text_html(layout_copy_defaults()['welcome_body'], true);
+            $html = layout_text_html(layout_copy_defaults()['welcome_body'], false, 'center');
         }
 
-        return $html;
+        return strip_layout_images($html);
     }
 
     if ($layoutId === 'plain') {
-        $body = strip_layout_images($body);
+        $body = soften_plain_buttons(strip_layout_images($body));
     }
 
     $image = '';
-    if ($layoutId === 'feature') {
+    if ($layoutId === 'feature' || $layoutId === 'standard') {
         $image = extract_layout_image($body);
         if ($image !== '') {
             $body = remove_layout_image($body);
         }
+    }
+    if ($layoutId === 'feature') {
         $image = present_feature_image($image);
     }
+    if ($layoutId === 'standard') {
+        $image = present_standard_image($image);
+    }
 
-    $heading = take_letter_heading($body, $layoutId === 'plain');
+    $heading = take_letter_heading($body, $layoutId === 'plain', $layoutId);
     $intro = layout_eyebrow_html($copy['intro'], $layoutId);
     $signoff = layout_signoff_html($copy['signoff'], $copy['from_name']);
     if ($layoutId === 'feature') {
         return $image.$heading.$intro.$body.$signoff;
     }
+    if ($layoutId === 'plain') {
+        return $intro.$heading.$body.$signoff;
+    }
 
-    return $intro.$heading.$body.$signoff;
+    return $intro.$heading.$image.$body.$signoff;
 }
 
 /**
@@ -762,15 +997,18 @@ function handle_layout_preview(): void
     exit;
 }
 
-function layout_text_html(string $text, bool $compact = false): string
+function layout_text_html(string $text, bool $compact = false, string $align = 'left'): string
 {
     $text = trim(str_replace(["\r\n", "\r"], "\n", $text));
     if ($text === '') {
         return '';
     }
 
+    $align = $align === 'center' ? 'center' : 'left';
     $style = body_paragraph_style();
-    if ($compact) {
+    if ($align === 'center') {
+        $style = 'margin:0 0 20px;font-size:17px;line-height:1.7;color:#0b1220;text-align:center;';
+    } elseif ($compact) {
         $style = 'margin:0 0 12px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;';
     }
 
@@ -827,21 +1065,89 @@ function layout_eyebrow_html(string $text, string $layoutId): string
             .'</tr></table>';
     }
     if ($layoutId === 'welcome') {
-        return '<p class="mhn-eyebrow" style="margin:0 0 8px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</p>';
+        return '<p class="mhn-eyebrow" style="margin:0 0 12px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:center;">'.$inner.'</p>';
+    }
+    if ($layoutId === 'standard') {
+        return '<p class="mhn-eyebrow mhn-kicker" style="margin:0 0 10px;font-family:'.$font.';font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#50575e;text-align:left;">'.$inner.'</p>';
+    }
+    if ($layoutId === 'post') {
+        return '<p class="mhn-eyebrow" style="margin:16px 0 8px;font-family:'.$font.';font-size:15px;line-height:1.5;color:#50575e;text-align:left;">'.$inner.'</p>';
     }
 
     return '<p class="mhn-eyebrow" style="margin:0 0 8px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</p>';
 }
 
-function letter_button(string $label, string $url): string
+function letter_button(string $label, string $url, string $layoutId = ''): string
 {
     if (trim($label) === '' || trim($url) === '') {
         return '';
+    }
+    if ($layoutId === 'plain') {
+        return plain_text_link($label, $url);
+    }
+
+    if ($layoutId === 'welcome') {
+        return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:8px auto 20px;"><tr><td>'
+            .bulletproof_button($label, $url)
+            .'</td></tr></table>';
     }
 
     return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px;"><tr><td>'
         .bulletproof_button($label, $url)
         .'</td></tr></table>';
+}
+
+function plain_text_link(string $label, string $url): string
+{
+    if (trim($label) === '' || trim($url) === '') {
+        return '';
+    }
+
+    $button = function_exists('current_letter_look') ? current_letter_look()['button'] : 'solid';
+    $font = email_font_stack();
+    $style = $button === 'outline'
+        ? 'color:#0d2e57;font-weight:700;text-decoration:none;border-bottom:2px solid #0d2e57;font-family:'.$font.';font-size:16px;line-height:1.4;'
+        : 'color:#0d2e57;font-weight:700;text-decoration:underline;font-family:'.$font.';font-size:16px;line-height:1.4;';
+
+    return '<p class="mhn-plain-link" style="margin:8px 0 20px;text-align:left;"><a class="mhn-text-link" href="'.href_attr($url).'" style="'.$style.'">'.esc_html($label).'</a></p>';
+}
+
+function soften_plain_buttons(string $html): string
+{
+    $stripped = preg_replace('/<!--\[if mso\]>.*?<!\[endif\]-->/is', '', $html);
+    $html = is_string($stripped) ? $stripped : $html;
+    $stripped = preg_replace('/<!--\[if !mso\]><!-->/i', '', $html);
+    $html = is_string($stripped) ? $stripped : $html;
+    $stripped = preg_replace('/<!--<!\[endif\]-->/i', '', $html);
+    $html = is_string($stripped) ? $stripped : $html;
+    $replaced = preg_replace_callback(
+        '/<a\b[^>]*class=(["\'])[^"\']*\bmhn-btn\b[^"\']*\1[^>]*>.*?<\/a>/is',
+        static function (array $match): string {
+            $tag = $match[0];
+            $href = '';
+            if (preg_match('/href=(["\'])(.*?)\1/i', $tag, $hrefMatch) === 1) {
+                $href = html_entity_decode($hrefMatch[2], ENT_QUOTES);
+            }
+            $label = trim(wp_strip_all_tags($tag));
+
+            return plain_text_link($label, $href);
+        },
+        $html
+    );
+
+    return is_string($replaced) ? $replaced : $html;
+}
+
+function present_standard_image(string $image): string
+{
+    $image = trim($image);
+    if ($image === '') {
+        return '';
+    }
+
+    $image = str_replace('margin:0 0 16px', 'margin:0', $image);
+
+    return '<table role="presentation" class="mhn-standard-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;"><tr><td style="padding:8px;background-color:#eef3f9;">'.$image.'</td></tr></table>';
 }
 
 function present_feature_image(string $image): string
@@ -856,7 +1162,7 @@ function present_feature_image(string $image): string
     return '<div class="mhn-hero" style="margin:0;padding:0;line-height:0;font-size:0;">'.$image.'</div>';
 }
 
-function take_letter_heading(string &$body, bool $plain): string
+function take_letter_heading(string &$body, bool $plain, string $layoutId = ''): string
 {
     if (preg_match('/<h1\b[^>]*>.*?<\/h1>/is', $body, $match) !== 1) {
         return '';
@@ -865,7 +1171,7 @@ function take_letter_heading(string &$body, bool $plain): string
     $body = str_replace($match[0], '', $body);
     $text = trim(wp_strip_all_tags($match[0]));
 
-    return letter_title_html($text, $plain);
+    return letter_title_html($text, $plain, $layoutId !== '' ? $layoutId : ($plain ? 'plain' : 'standard'));
 }
 
 function remove_layout_image(string $html): string
@@ -876,13 +1182,14 @@ function remove_layout_image(string $html): string
     return is_string($replaced) ? $replaced : $html;
 }
 
-function layout_signoff_html(string $signoff, string $fromName): string
+function layout_signoff_html(string $signoff, string $fromName, string $align = 'left'): string
 {
-    $html = layout_text_html($signoff);
+    $align = $align === 'center' ? 'center' : 'left';
+    $html = layout_text_html($signoff, false, $align);
     $fromName = trim($fromName);
     $name = '';
     if ($fromName !== '') {
-        $name = '<p class="mhn-signoff-name" style="margin:0 0 8px;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($fromName).'</p>';
+        $name = '<p class="mhn-signoff-name" style="margin:0 0 8px;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;font-weight:700;color:#0d2e57;text-align:'.$align.';">'.esc_html($fromName).'</p>';
     }
     if ($html === '' && $name === '') {
         return '';
@@ -991,16 +1298,21 @@ function emulator_preview_message(array $input): array
     $sourcePostId = array_key_exists('mhn_source_post', $input) ? absint($input['mhn_source_post']) : -1;
     $titleIsCustom = trim((string) ($input['mhn_subject'] ?? '')) !== '';
     $look = letter_look_from_request($input, $issueId);
+    $postedPreheader = null;
+    if (array_key_exists('mhn_preheader', $input)) {
+        $postedPreheader = mb_substr(sanitize_text_field((string) $input['mhn_preheader']), 0, 140);
+    }
 
-    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom, $look);
+    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $postedPreheader, sections_from_request($input));
 }
 
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  * @param  array{style?: string, masthead?: string, button?: string}|null  $look
+ * @param  array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null  $sections
  * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
  */
-function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null): array
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?string $postedPreheader = null, ?array $sections = null): array
 {
     $settings = settings();
     $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
@@ -1030,8 +1342,8 @@ function emulator_view(int $issueId, string $layoutId, string $subject = '', ?st
             }
         }
     }
-    $preheader = emulator_preheader($intro);
-    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom, $look);
+    $preheader = $postedPreheader !== null && $postedPreheader !== '' ? $postedPreheader : emulator_preheader($intro);
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $sections);
 
     return [
         'from_name' => $settings['from_name'],
@@ -1115,14 +1427,15 @@ function blog_post_imported_title(int $issueId, int $sourcePostId): string
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
  * @param  array{style?: string, masthead?: string, button?: string}|null  $look
+ * @param  array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null  $sections
  */
-function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null): string
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?array $sections = null): string
 {
     $look = $look === null ? issue_letter_look($issueId) : normalize_letter_look($look);
     push_letter_look($look);
     if ($layoutId === 'post') {
         $advanced = $editor === 'advanced' ? ($blocks ?? empty_editor_blocks()) : null;
-        $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom);
+        $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom, $sections);
     } else {
         $rendered = '';
         if ($layoutId !== 'welcome' || $editor === 'advanced') {

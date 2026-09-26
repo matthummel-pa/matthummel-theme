@@ -243,6 +243,7 @@ use function MattHummel\Newsletter\apply_person_tags;
 use function MattHummel\Newsletter\audit_confirm_flow;
 use function MattHummel\Newsletter\audit_html;
 use function MattHummel\Newsletter\audit_plugin_sources;
+use function MattHummel\Newsletter\blog_post_already_sent;
 use function MattHummel\Newsletter\blog_post_headings_from_html;
 use function MattHummel\Newsletter\blog_post_lead_from_text;
 use function MattHummel\Newsletter\compose_advanced_letter;
@@ -324,8 +325,10 @@ if ($present === 'Hi Ada Lovelace (Ada Lovelace)' && $missing === 'Hi there,' &&
     fwrite(STDERR, "fail  merge tags\n");
 }
 
+$layoutMarks = [];
 foreach (array_keys(layouts()) as $layoutId) {
     $html = layout_preview_html($layoutId);
+    $layoutMarks[$layoutId] = $html;
     $audit = audit_html($html, plain_text($html), 'Gettysburg, PA');
     $problems = $audit['errors'];
     $hrefs = [];
@@ -342,6 +345,8 @@ foreach (array_keys(layouts()) as $layoutId) {
     }
     $visible = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $html);
     $visible = is_string($visible) ? $visible : $html;
+    $markup = preg_replace('/<style\b.*?<\/style>/is', '', $visible);
+    $markup = is_string($markup) ? $markup : $visible;
     $imageAt = strpos($visible, 'class="mhn-img"');
     $introAt = strpos($visible, 'Here is what I have been building.');
     $titleAt = strpos($visible, '<h1');
@@ -353,6 +358,12 @@ foreach (array_keys(layouts()) as $layoutId) {
     }
     if (! str_contains($html, 'data-mhn-style="card"')) {
         $problems[] = 'Preview document is missing the default card style.';
+    }
+    if (! str_contains($html, 'data-mhn-layout="'.$layoutId.'"') || ! str_contains($html, 'mhn-layout-'.$layoutId)) {
+        $problems[] = 'Preview document is missing the layout marker.';
+    }
+    if (! str_contains($styleBlock, 'data-mhn-layout="'.$layoutId.'"') && ! str_contains($styleBlock, 'mhn-layout')) {
+        $problems[] = 'The style block does not carry the layout rules.';
     }
     if ($layoutId === 'welcome') {
         if (! str_contains($html, 'You are on the list') || ! str_contains($html, 'I keep the address on this site')) {
@@ -392,6 +403,30 @@ foreach (array_keys(layouts()) as $layoutId) {
     }
     if ($badHref) {
         $problems[] = 'A preview href was not #.';
+    }
+    if ($layoutId === 'welcome' && ! str_contains($markup, 'text-align:center')) {
+        $problems[] = 'Welcome preview is not centered.';
+    }
+    if ($layoutId === 'welcome' && ($imageAt !== false || str_contains($markup, 'In this note'))) {
+        $problems[] = 'Welcome preview still has an image or a heading list.';
+    }
+    if ($layoutId === 'welcome' && ! str_contains($html, 'data-mhn-masthead="center"')) {
+        $problems[] = 'Welcome masthead did not stay centered.';
+    }
+    if ($layoutId === 'plain' && (str_contains($markup, 'class="mhn-stripe"') || str_contains($markup, 'mhn-btn'))) {
+        $problems[] = 'Plain preview still has a stripe or a button chip.';
+    }
+    if ($layoutId === 'plain' && ! str_contains($markup, 'mhn-eyebrow-block')) {
+        $problems[] = 'Plain preview is missing the navy rule.';
+    }
+    if ($layoutId === 'standard' && ! str_contains($markup, 'mhn-standard-figure')) {
+        $problems[] = 'Standard preview is missing the image under the title.';
+    }
+    if ($layoutId === 'feature' && ! str_contains($markup, 'mhn-feature-stripe')) {
+        $problems[] = 'Feature preview is missing the stripe above the image.';
+    }
+    if ($layoutId === 'post' && (! str_contains($markup, 'mhn-post-cats') || ! str_contains($markup, 'mhn-post-note'))) {
+        $problems[] = 'Blog post preview is missing the category line or the heading list.';
     }
     if ($problems === []) {
         fwrite(STDOUT, "pass  layout {$layoutId}\n");
@@ -528,6 +563,19 @@ $missingImage = compose_blog_post_letter([
 if (str_contains($missingImage, 'mhn-img') || str_contains($missingImage, 'Read the post') || str_contains($missingImage, 'In this note')) {
     $postProblems[] = 'A letter with no image, headings, or link still rendered those blocks.';
 }
+$hiddenHeadings = compose_blog_post_letter($postSource, 'Here is what I have been building.', 'Talk soon,', 'Matt Hummel', [
+    'image' => true,
+    'excerpt' => true,
+    'headings' => false,
+    'categories' => true,
+    'button' => true,
+]);
+if (str_contains($hiddenHeadings, 'In this note') || str_contains($hiddenHeadings, 'First heading')) {
+    $postProblems[] = 'Blog post letter still showed headings after that section was turned off.';
+}
+if (! str_contains($hiddenHeadings, 'Read the post') || ! str_contains($hiddenHeadings, 'WordPress')) {
+    $postProblems[] = 'Hiding headings also dropped the button or the categories.';
+}
 if ($postProblems === []) {
     fwrite(STDOUT, "pass  blog post layout\n");
 } else {
@@ -601,6 +649,26 @@ if ($styleProblems === []) {
     foreach ($styleProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
+}
+
+$distinct = array_unique($layoutMarks);
+if (count($layoutMarks) === 5 && count($distinct) === 5) {
+    fwrite(STDOUT, "pass  layouts are distinct\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  layouts are distinct\n");
+}
+
+$skipOn = blog_post_already_sent(12, [4, 12], true, 'post');
+$skipOff = blog_post_already_sent(12, [12], false, 'post');
+$skipOther = blog_post_already_sent(12, [12], true, 'standard');
+$skipMiss = blog_post_already_sent(9, [12], true, 'post');
+$skipEmpty = blog_post_already_sent(0, [12], true, 'post');
+if ($skipOn && ! $skipOff && ! $skipOther && ! $skipMiss && ! $skipEmpty) {
+    fwrite(STDOUT, "pass  skip already sent\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  skip already sent\n");
 }
 
 $confirmFlow = audit_confirm_flow();

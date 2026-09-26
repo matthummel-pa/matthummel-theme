@@ -103,7 +103,7 @@ function load_textdomain(): void
 function maybe_upgrade(): void
 {
     $installed = (string) get_option('mhn_version', '');
-    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '3') {
+    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '4') {
         return;
     }
 
@@ -162,6 +162,7 @@ function install_tables(): void
     $archiveSql = "CREATE TABLE {$archive} (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         issue_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        source_post bigint(20) unsigned NOT NULL DEFAULT 0,
         subject longtext NOT NULL,
         preheader longtext NOT NULL,
         from_name varchar(191) NOT NULL DEFAULT '',
@@ -180,6 +181,7 @@ function install_tables(): void
         created_at varchar(19) NOT NULL DEFAULT '',
         PRIMARY KEY  (id),
         KEY issue_id (issue_id),
+        KEY source_post (source_post),
         KEY finished_at (finished_at),
         KEY template (template)
     ) {$charset};";
@@ -190,7 +192,8 @@ function install_tables(): void
     dbDelta($archiveSql);
     ensure_subscriber_columns();
     ensure_archive_table();
-    update_option('mhn_db_version', '3');
+    ensure_archive_source_column();
+    update_option('mhn_db_version', '4');
 }
 
 /**
@@ -225,6 +228,7 @@ function ensure_archive_table(): void
     $wpdb->query("CREATE TABLE {$table} (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         issue_id bigint(20) unsigned NOT NULL DEFAULT 0,
+        source_post bigint(20) unsigned NOT NULL DEFAULT 0,
         subject longtext NOT NULL,
         preheader longtext NOT NULL,
         from_name varchar(191) NOT NULL DEFAULT '',
@@ -243,9 +247,26 @@ function ensure_archive_table(): void
         created_at varchar(19) NOT NULL DEFAULT '',
         PRIMARY KEY  (id),
         KEY issue_id (issue_id),
+        KEY source_post (source_post),
         KEY finished_at (finished_at),
         KEY template (template)
     ) {$charset}");
+}
+
+/**
+ * Store the source post on sent rows so a Blog post letter can skip a repeat.
+ * Safe to run more than once.
+ */
+function ensure_archive_source_column(): void
+{
+    if (! archive_table_exists() || archive_has_source_column()) {
+        return;
+    }
+
+    global $wpdb;
+
+    $wpdb->query('ALTER TABLE '.archive_table().' ADD source_post bigint(20) unsigned NOT NULL DEFAULT 0');
+    $wpdb->query('ALTER TABLE '.archive_table().' ADD KEY source_post (source_post)');
 }
 
 function archive_table_exists(): bool

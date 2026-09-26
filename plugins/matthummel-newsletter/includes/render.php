@@ -50,6 +50,9 @@ function issue_message_body(int $issueId, ?array $subscriber, bool $preview, arr
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
 
     if ($preheader === '') {
+        $preheader = suggest_preheader($issueId);
+    }
+    if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }
 
@@ -97,19 +100,72 @@ function body_paragraph_style(): string
 }
 
 /**
- * The only title in the letter. Plain uses a little more space under it.
+ * The only title in the letter. Size and alignment follow the layout.
  */
-function letter_title_html(string $text, bool $plain = false): string
+function letter_title_html(string $text, bool $plain = false, string $layoutId = ''): string
 {
     $text = trim(wp_strip_all_tags($text));
     if ($text === '') {
         return '';
     }
 
-    $margin = $plain ? '0 0 22px' : '0 0 16px';
-    $tracking = $plain ? 'letter-spacing:-0.02em;' : '';
+    $layoutId = $layoutId !== '' ? sanitize_key($layoutId) : ($plain ? 'plain' : 'standard');
+    $align = $layoutId === 'welcome' ? 'center' : 'left';
+    [$size, $margin, $extra] = match ($layoutId) {
+        'welcome' => ['26px', '0 0 22px', ''],
+        'plain' => ['22px', '0 0 22px', 'letter-spacing:-0.02em;'],
+        'feature' => ['30px', '0 0 14px', ''],
+        'post' => ['26px', '8px 0 12px', ''],
+        default => ['32px', '0 0 18px', 'letter-spacing:-0.02em;'],
+    };
 
-    return '<h1 class="mhn-text" style="margin:'.$margin.';font-family:'.email_font_stack().';font-size:28px;line-height:1.2;font-weight:700;'.$tracking.'color:#0d2e57;text-align:left;">'.esc_html($text).'</h1>';
+    return '<h1 class="mhn-text mhn-title" style="margin:'.$margin.';font-family:'.email_font_stack().';font-size:'.$size.';line-height:1.2;font-weight:700;'.$extra.'color:#0d2e57;text-align:'.$align.';">'.esc_html($text).'</h1>';
+}
+
+/**
+ * Layout tweaks on top of Card, Banner, or Paper. They do not replace that shell.
+ *
+ * @param  array<string, mixed>  $chrome
+ * @return array<string, mixed>
+ */
+function layout_letter_chrome(string $layoutKey, array $chrome): array
+{
+    if ($layoutKey === 'welcome') {
+        $chrome['align'] = 'center';
+        $chrome['masthead'] = 'center';
+        foreach (['masthead_style', 'brand', 'kicker'] as $key) {
+            $chrome[$key] = str_replace('text-align:left', 'text-align:center', (string) $chrome[$key]);
+        }
+        $chrome['masthead_style'] = (string) preg_replace('/padding:[^;]+;/', 'padding:36px 48px 18px;', (string) $chrome['masthead_style']);
+    }
+
+    if ($layoutKey === 'plain') {
+        $font = (string) ($chrome['font'] ?? email_font_stack());
+        $align = (string) ($chrome['align'] ?? 'left');
+        $chrome['show_stripe'] = false;
+        $chrome['show_rule'] = false;
+        $chrome['page'] = 'margin:0;padding:0;background-color:#ffffff;';
+        $chrome['page_td'] = 'padding:28px 16px;background-color:#ffffff;';
+        $chrome['frame'] = 'width:100%;max-width:600px;background-color:#ffffff;border-radius:0;';
+        $chrome['frame_td'] = 'padding:0;background-color:#ffffff;';
+        $chrome['card'] = 'width:100%;background-color:#ffffff;border-collapse:collapse;';
+        if (($chrome['style'] ?? '') !== 'banner') {
+            $chrome['masthead_style'] = 'padding:4px 4px 12px;background-color:#ffffff;font-family:'.$font.';text-align:'.$align.';';
+        }
+    }
+
+    if ($layoutKey === 'feature') {
+        $chrome['show_stripe'] = false;
+        $chrome['show_rule'] = false;
+        $chrome['hero'] = 'padding:0;background-color:#eef3f9;line-height:0;font-size:0;';
+    }
+
+    if ($layoutKey === 'post') {
+        $chrome['show_rule'] = false;
+        $chrome['hero'] = 'padding:0;background-color:#eef3f9;line-height:0;font-size:0;';
+    }
+
+    return $chrome;
 }
 
 /**
@@ -120,12 +176,12 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $settings = settings();
     $name = $settings['from_name'] !== '' ? $settings['from_name'] : (string) get_bloginfo('name');
     $font = email_font_stack();
-    $chrome = letter_chrome($look ?? current_letter_look());
     $layoutKey = sanitize_key($layoutId);
     $knownLayout = isset(layouts()[$layoutKey]);
     if (! $knownLayout) {
         $layoutKey = '';
     }
+    $chrome = layout_letter_chrome($layoutKey, letter_chrome($look ?? current_letter_look()));
 
     $pad = '<span aria-hidden="true">'.str_repeat('&nbsp;&zwnj;', 24).'</span>';
     $recent = $includeRecent ? recent_posts_html($excludePostId, $font) : '';
@@ -139,26 +195,45 @@ function email_document(string $subject, string $preheader, string $body, bool $
     if ($layoutKey === '' && $hero !== '') {
         $layoutKey = 'feature';
     }
-    $body = ensure_heading($body, $subject, $layoutKey === 'plain');
+    $body = ensure_heading($body, $subject, $layoutKey === 'plain', $layoutKey);
 
     $styles = '<style>'.email_css().'</style>';
 
     $kicker = letter_kicker($layoutKey, $site);
-    $padTop = match (true) {
-        $hero !== '' => '24px',
-        $layoutKey === 'plain' => '32px',
-        $layoutKey === 'welcome' => '12px',
+    $padTop = match ($layoutKey) {
+        'feature' => '8px',
+        'post' => '0',
+        'plain' => '4px',
+        'welcome' => '40px',
         default => '22px',
     };
-    $padSide = $layoutKey === 'plain' || $layoutKey === 'welcome' ? '36px' : '32px';
+    $padSide = match ($layoutKey) {
+        'welcome' => '48px',
+        'plain' => '4px',
+        'post' => '0',
+        default => '32px',
+    };
+    $padBottom = $layoutKey === 'welcome' ? '32px' : '8px';
+    $bodyAlign = $layoutKey === 'welcome' ? 'center' : 'left';
+    $lineHeight = $layoutKey === 'welcome' ? '1.7' : '1.6';
     $heroRow = $hero !== ''
         ? '<tr><td class="mhn-hero-cell" style="'.$chrome['hero'].'">'.$hero.'</td></tr>'
         : '';
     $stripe = $chrome['show_stripe']
         ? '<tr><td class="mhn-stripe" style="'.$chrome['stripe'].'">&nbsp;</td></tr>'
         : '';
+    $featureStripe = $layoutKey === 'feature'
+        ? '<tr><td class="mhn-stripe mhn-feature-stripe" style="height:4px;line-height:4px;font-size:0;background-color:#0d2e57;">&nbsp;</td></tr>'
+        : '';
     $masthead = letter_masthead($name, $kicker, $chrome);
     $hairline = $chrome['show_rule'] ? letter_rule($chrome) : '';
+    $headRows = match ($layoutKey) {
+        'feature' => $masthead.$featureStripe.$heroRow,
+        'post' => $stripe.$masthead.$heroRow,
+        'plain' => $masthead,
+        'welcome' => $stripe.$masthead.$hairline,
+        default => $stripe.$masthead.$hairline,
+    };
 
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
         .'<td class="mhn-footer mhn-muted mhn-px" style="'.$chrome['footer'].'">'
@@ -175,7 +250,12 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'</td></tr></table>';
 
     $styleKey = $chrome['style'];
-    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($chrome['masthead']).'" data-mhn-button="'.esc_attr($chrome['button']).'"';
+    $mastheadKey = $layoutKey === 'welcome' ? 'center' : $chrome['masthead'];
+    $layoutClass = $layoutKey !== '' ? ' mhn-layout-'.esc_attr($layoutKey) : '';
+    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($mastheadKey).'" data-mhn-button="'.esc_attr($chrome['button']).'"';
+    if ($layoutKey !== '') {
+        $letterAttrs .= ' data-mhn-layout="'.esc_attr($layoutKey).'"';
+    }
 
     return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
         .'<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -185,7 +265,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->'
         .$styles
         .'</head>'
-        .'<body class="mhn-page mhn-letter mhn-style-'.esc_attr($styleKey).'"'.$letterAttrs.' style="'.$chrome['page'].'">'
+        .'<body class="mhn-page mhn-letter mhn-style-'.esc_attr($styleKey).$layoutClass.'"'.$letterAttrs.' style="'.$chrome['page'].'">'
         .'<div class="mhn-preheader" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">'
         .esc_html($preheader).$pad.'</div>'
         .'<table role="presentation" class="mhn-page" width="100%" cellpadding="0" cellspacing="0" border="0"'.$letterAttrs.' style="'.$chrome['page'].'">'
@@ -194,11 +274,8 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<table role="presentation" class="mhn-shell mhn-frame" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['frame'].'">'
         .'<tr><td style="'.$chrome['frame_td'].'">'
         .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['card'].'">'
-        .$stripe
-        .$masthead
-        .$hairline
-        .$heroRow
-        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' 8px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'
+        .$headRows
+        .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';font-family:'.$font.';font-size:16px;line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
         .$body
         .'</td></tr>'
         .($recent !== '' ? '<tr><td>'.$recent.'</td></tr>' : '')
@@ -404,13 +481,13 @@ function apply_tracking(string $html, array $subscriber, int $issueId): string
     return $html;
 }
 
-function ensure_heading(string $body, string $subject, bool $plain = false): string
+function ensure_heading(string $body, string $subject, bool $plain = false, string $layoutId = ''): string
 {
     if (preg_match('/<h1\b/i', $body) === 1) {
         return $body;
     }
 
-    $heading = letter_title_html($subject, $plain);
+    $heading = letter_title_html($subject, $plain, $layoutId !== '' ? $layoutId : ($plain ? 'plain' : ''));
     if ($heading === '') {
         return $body;
     }
