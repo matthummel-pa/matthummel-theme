@@ -352,6 +352,7 @@ function duplicate_issue(int $issueId): int
     $keys = [
         '_mhn_template',
         '_mhn_layout',
+        '_mhn_letter_style',
         '_mhn_editor',
         '_mhn_blocks',
         '_mhn_note',

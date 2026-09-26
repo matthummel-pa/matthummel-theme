@@ -14,6 +14,23 @@ if (! defined('ABSPATH')) {
  */
 function issue_message(int $issueId, ?array $subscriber, bool $preview = false): array
 {
+    $look = issue_letter_look($issueId);
+    push_letter_look($look);
+
+    try {
+        return issue_message_body($issueId, $subscriber, $preview, $look);
+    } finally {
+        pop_letter_look();
+    }
+}
+
+/**
+ * @param  array<string, string>|null  $subscriber
+ * @param  array{style: string, masthead: string, button: string}  $look
+ * @return array{subject: string, html: string, text: string}
+ */
+function issue_message_body(int $issueId, ?array $subscriber, bool $preview, array $look): array
+{
     $post = get_post($issueId);
     $subject = trim((string) get_post_meta($issueId, '_mhn_subject', true));
     if ($subject === '' && $post instanceof \WP_Post) {
@@ -52,7 +69,7 @@ function issue_message(int $issueId, ?array $subscriber, bool $preview = false):
         }
     }
 
-    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId, issue_layout_id($issueId));
+    $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId, issue_layout_id($issueId), $look);
     $html = apply_merge($document, $sample, $issueId, true);
     $text = apply_merge(plain_text($document), $sample, $issueId, false);
     $subject = apply_merge($subject, $sample, $issueId, false);
@@ -95,11 +112,15 @@ function letter_title_html(string $text, bool $plain = false): string
     return '<h1 class="mhn-text" style="margin:'.$margin.';font-family:'.email_font_stack().';font-size:28px;line-height:1.2;font-weight:700;'.$tracking.'color:#0d2e57;text-align:left;">'.esc_html($text).'</h1>';
 }
 
-function email_document(string $subject, string $preheader, string $body, bool $includeRecent, int $excludePostId, string $layoutId = ''): string
+/**
+ * @param  array{style?: string, masthead?: string, button?: string}|null  $look
+ */
+function email_document(string $subject, string $preheader, string $body, bool $includeRecent, int $excludePostId, string $layoutId = '', ?array $look = null): string
 {
     $settings = settings();
     $name = $settings['from_name'] !== '' ? $settings['from_name'] : (string) get_bloginfo('name');
     $font = email_font_stack();
+    $chrome = letter_chrome($look ?? current_letter_look());
     $layoutKey = sanitize_key($layoutId);
     $knownLayout = isset(layouts()[$layoutKey]);
     if (! $knownLayout) {
@@ -120,45 +141,9 @@ function email_document(string $subject, string $preheader, string $body, bool $
     }
     $body = ensure_heading($body, $subject, $layoutKey === 'plain');
 
-    $styles = '<style>'
-        .':root{color-scheme:light dark;supported-color-schemes:light dark;}'
-        .'body,table,td{margin:0;padding:0;}'
-        .'img{border:0;height:auto;line-height:100%;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;}'
-        .'a{color:#0d2e57;}'
-        .'.mhn-preheader{display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;overflow:hidden;mso-hide:all;}'
-        .'@media only screen and (max-width:620px){'
-        .'.mhn-shell{width:100%!important;max-width:100%!important;}'
-        .'.mhn-px{padding-left:16px!important;padding-right:16px!important;}'
-        .'.mhn-col{display:block!important;width:100%!important;max-width:100%!important;}'
-        .'.mhn-btn{display:block!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;min-height:44px;}'
-        .'.mhn-img{width:100%!important;max-width:100%!important;height:auto!important;}'
-        .'}'
-        .'@media (prefers-color-scheme:dark){'
-        .'.mhn-page,.mhn-page-td{background:#0b1220!important;}'
-        .'.mhn-card{background:#162033!important;}'
-        .'.mhn-text,.mhn-text p,.mhn-text li,.mhn-text h1,.mhn-text h2,.mhn-text h3{color:#f7f9fc!important;}'
-        .'.mhn-text p.mhn-eyebrow,.mhn-eyebrow,.mhn-kicker{color:#b7c3d4!important;}'
-        .'.mhn-text a:not(.mhn-btn){color:#d6e4ff!important;text-decoration:underline!important;}'
-        .'a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
-        .'.mhn-muted,.mhn-footer,.mhn-footer p,.mhn-footer a{color:#b7c3d4!important;}'
-        .'.mhn-brand{color:#f7f9fc!important;}'
-        .'.mhn-frame{background:#2a3b52!important;}'
-        .'.mhn-stripe{background:#0d2e57!important;}'
-        .'.mhn-rule,.mhn-hairline div,.mhn-footer{border-color:#2a3b52!important;}'
-        .'.mhn-group{background:#0f1b2d!important;}'
-        .'}'
-        .'[data-ogsc] .mhn-page,[data-ogsc] .mhn-page-td{background:#0b1220!important;}'
-        .'[data-ogsc] .mhn-card{background:#162033!important;}'
-        .'[data-ogsc] .mhn-text,[data-ogsc] .mhn-text p,[data-ogsc] .mhn-text li,[data-ogsc] .mhn-text h1,[data-ogsc] .mhn-text h2,[data-ogsc] .mhn-text h3{color:#f7f9fc!important;}'
-        .'[data-ogsc] .mhn-text a:not(.mhn-btn){color:#d6e4ff!important;}'
-        .'[data-ogsc] a.mhn-btn{color:#ffffff!important;background-color:#0d2e57!important;}'
-        .'[data-ogsc] .mhn-footer,[data-ogsc] .mhn-footer p,[data-ogsc] .mhn-footer a,[data-ogsc] .mhn-kicker{color:#b7c3d4!important;}'
-        .'[data-ogsc] .mhn-brand{color:#f7f9fc!important;}'
-        .'[data-ogsc] .mhn-group{background:#0f1b2d!important;}'
-        .'</style>';
+    $styles = '<style>'.email_css().'</style>';
 
     $kicker = letter_kicker($layoutKey, $site);
-    $centered = $layoutKey === 'welcome';
     $padTop = match (true) {
         $hero !== '' => '24px',
         $layoutKey === 'plain' => '32px',
@@ -166,24 +151,17 @@ function email_document(string $subject, string $preheader, string $body, bool $
         default => '22px',
     };
     $padSide = $layoutKey === 'plain' || $layoutKey === 'welcome' ? '36px' : '32px';
-    if ($hero !== '') {
-        $heroRow = '<tr><td class="mhn-hero-cell" style="padding:0;background-color:#eef3f9;line-height:0;font-size:0;">'.$hero.'</td></tr>';
-        $masthead = '';
-        $hairline = '';
-        if ($layoutKey !== 'post') {
-            $byline = letter_byline($name, $kicker, $font);
-            $bylineCount = 0;
-            $withTitle = preg_replace('/<\/h1>/i', '</h1>'.$byline, $body, 1, $bylineCount);
-            $body = is_string($withTitle) && $bylineCount === 1 ? $withTitle : $byline.$body;
-        }
-    } else {
-        $heroRow = '';
-        $masthead = letter_masthead($name, $kicker, $centered, $font);
-        $hairline = $layoutKey === 'welcome' ? '' : letter_hairline();
-    }
+    $heroRow = $hero !== ''
+        ? '<tr><td class="mhn-hero-cell" style="'.$chrome['hero'].'">'.$hero.'</td></tr>'
+        : '';
+    $stripe = $chrome['show_stripe']
+        ? '<tr><td class="mhn-stripe" style="'.$chrome['stripe'].'">&nbsp;</td></tr>'
+        : '';
+    $masthead = letter_masthead($name, $kicker, $chrome);
+    $hairline = $chrome['show_rule'] ? letter_rule($chrome) : '';
 
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-footer mhn-muted mhn-px" style="padding:18px 32px 28px;border-top:1px solid #dceaf8;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'
+        .'<td class="mhn-footer mhn-muted mhn-px" style="'.$chrome['footer'].'">'
         .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.esc_html(sprintf(
             /* translators: %s: site host */
             __('You got this because you signed up at %s. I keep your address on this site.', 'matthummel-newsletter'),
@@ -196,6 +174,9 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<p style="margin:0;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">© *|CURRENT_YEAR|* '.esc_html($name).'</p>'
         .'</td></tr></table>';
 
+    $styleKey = $chrome['style'];
+    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($chrome['masthead']).'" data-mhn-button="'.esc_attr($chrome['button']).'"';
+
     return '<!DOCTYPE html><html lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">'
         .'<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         .'<meta http-equiv="X-UA-Compatible" content="IE=edge">'
@@ -204,16 +185,16 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->'
         .$styles
         .'</head>'
-        .'<body class="mhn-page" style="margin:0;padding:0;background-color:#eef3f9;">'
+        .'<body class="mhn-page mhn-letter mhn-style-'.esc_attr($styleKey).'"'.$letterAttrs.' style="'.$chrome['page'].'">'
         .'<div class="mhn-preheader" style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">'
         .esc_html($preheader).$pad.'</div>'
-        .'<table role="presentation" class="mhn-page" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef3f9;">'
-        .'<tr><td class="mhn-page-td" align="center" style="padding:32px 16px;background-color:#eef3f9;">'
+        .'<table role="presentation" class="mhn-page" width="100%" cellpadding="0" cellspacing="0" border="0"'.$letterAttrs.' style="'.$chrome['page'].'">'
+        .'<tr><td class="mhn-page-td" align="center" style="'.$chrome['page_td'].'">'
         .'<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->'
-        .'<table role="presentation" class="mhn-shell mhn-frame" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#dceaf8;border-radius:4px;">'
-        .'<tr><td style="padding:1px;background-color:#dceaf8;border-radius:4px;">'
-        .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#ffffff;border-collapse:separate;border-radius:4px;">'
-        .'<tr><td class="mhn-stripe" style="height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:4px 4px 0 0;">&nbsp;</td></tr>'
+        .'<table role="presentation" class="mhn-shell mhn-frame" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['frame'].'">'
+        .'<tr><td style="'.$chrome['frame_td'].'">'
+        .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['card'].'">'
+        .$stripe
         .$masthead
         .$hairline
         .$heroRow
@@ -244,21 +225,36 @@ function letter_byline(string $name, string $kicker, string $font): string
         .'</p>';
 }
 
-function letter_masthead(string $name, string $kicker, bool $centered, string $font): string
+/**
+ * @param  array{align: string, masthead_style: string, brand: string, kicker: string}  $chrome
+ */
+function letter_masthead(string $name, string $kicker, array $chrome): string
 {
-    $align = $centered ? 'center' : 'left';
+    $align = $chrome['align'] === 'center' ? 'center' : 'left';
 
-    return '<tr><td class="mhn-masthead mhn-px" align="'.$align.'" style="padding:26px 32px 14px;font-family:'.$font.';text-align:'.$align.';">'
-        .'<div class="mhn-brand" style="font-size:18px;line-height:1.2;font-weight:700;color:#0d2e57;">'.esc_html($name).'</div>'
-        .'<div class="mhn-kicker mhn-muted" style="margin-top:6px;font-size:13px;line-height:1.4;color:#50575e;">'.esc_html($kicker).'</div>'
+    return '<tr><td class="mhn-masthead mhn-px" align="'.$align.'" style="'.$chrome['masthead_style'].'">'
+        .'<div class="mhn-brand" style="'.$chrome['brand'].'">'.esc_html($name).'</div>'
+        .'<div class="mhn-kicker mhn-muted" style="'.$chrome['kicker'].'">'.esc_html($kicker).'</div>'
+        .'</td></tr>';
+}
+
+/**
+ * @param  array{rule: string}  $chrome
+ */
+function letter_rule(array $chrome): string
+{
+    if ($chrome['rule'] === '') {
+        return '';
+    }
+
+    return '<tr><td class="mhn-hairline mhn-rule mhn-px" style="padding:0 32px;font-size:0;line-height:0;">'
+        .'<div style="'.$chrome['rule'].'font-size:0;line-height:0;">&nbsp;</div>'
         .'</td></tr>';
 }
 
 function letter_hairline(): string
 {
-    return '<tr><td class="mhn-hairline mhn-px" style="padding:0 32px;font-size:0;line-height:0;">'
-        .'<div style="border-top:1px solid #8aa0bd;font-size:0;line-height:0;">&nbsp;</div>'
-        .'</td></tr>';
+    return letter_rule(letter_chrome(['style' => 'card']));
 }
 
 /**

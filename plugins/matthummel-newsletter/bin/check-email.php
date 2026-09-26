@@ -250,7 +250,10 @@ use function MattHummel\Newsletter\compose_blog_post_letter;
 use function MattHummel\Newsletter\email_document;
 use function MattHummel\Newsletter\layout_preview_html;
 use function MattHummel\Newsletter\layouts;
+use function MattHummel\Newsletter\letter_button;
 use function MattHummel\Newsletter\plain_text;
+use function MattHummel\Newsletter\pop_letter_look;
+use function MattHummel\Newsletter\push_letter_look;
 use function MattHummel\Newsletter\render_blocks;
 
 if (defined('MHN_LIB_ONLY')) {
@@ -337,6 +340,20 @@ foreach (array_keys(layouts()) as $layoutId) {
     if (str_contains($html, 'mhn_open') || str_contains($html, 'mhn_click') || str_contains($html, 'mhn_unsub')) {
         $problems[] = 'Preview still points at the tracker or an unsubscribe endpoint.';
     }
+    $visible = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $html);
+    $visible = is_string($visible) ? $visible : $html;
+    $imageAt = strpos($visible, 'class="mhn-img"');
+    $introAt = strpos($visible, 'Here is what I have been building.');
+    $titleAt = strpos($visible, '<h1');
+    $styleStart = strpos($html, '<style>');
+    $styleEnd = $styleStart === false ? false : strpos($html, '</style>', $styleStart);
+    $styleBlock = is_int($styleStart) && is_int($styleEnd) ? substr($html, $styleStart, $styleEnd - $styleStart) : '';
+    if ($styleBlock === '' || ! str_contains($styleBlock, '.mhn-letter')) {
+        $problems[] = 'Preview document is missing the plugin letter stylesheet.';
+    }
+    if (! str_contains($html, 'data-mhn-style="card"')) {
+        $problems[] = 'Preview document is missing the default card style.';
+    }
     if ($layoutId === 'welcome') {
         if (! str_contains($html, 'You are on the list') || ! str_contains($html, 'I keep the address on this site')) {
             $problems[] = 'Welcome preview is missing its copy.';
@@ -353,7 +370,6 @@ foreach (array_keys(layouts()) as $layoutId) {
                 $problems[] = 'Blog post preview is missing '.$needle;
             }
         }
-        $titleAt = strpos($visible, '<h1');
         if ($imageAt === false || $titleAt === false || $imageAt > $titleAt) {
             $problems[] = 'Blog post preview does not put the image above the title.';
         }
@@ -365,14 +381,9 @@ foreach (array_keys(layouts()) as $layoutId) {
             $problems[] = 'Letter preview did not merge {first_name|there} to there.';
         }
     }
-    $visible = preg_replace('/<div class="mhn-preheader\b.*?<\/div>/is', '', $html);
-    $visible = is_string($visible) ? $visible : $html;
-    $imageAt = strpos($visible, 'class="mhn-img"');
-    $introAt = strpos($visible, 'Here is what I have been building.');
     if ($layoutId === 'plain' && $imageAt !== false) {
         $problems[] = 'Plain preview still has a featured image.';
     }
-    $titleAt = strpos($visible, '<h1');
     if ($layoutId === 'feature' && ($imageAt === false || $titleAt === false || $imageAt > $titleAt)) {
         $problems[] = 'Feature preview does not put the image above the title.';
     }
@@ -523,6 +534,71 @@ if ($postProblems === []) {
     $failed = true;
     fwrite(STDERR, "fail  blog post layout\n");
     foreach ($postProblems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$styleProblems = [];
+$shell = '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">A short note.</p>';
+foreach (['card', 'banner', 'paper'] as $styleId) {
+    $styled = email_document('Notes from the workshop', 'A short preview of this issue.', $shell, false, 0, 'standard', [
+        'style' => $styleId,
+        'masthead' => 'left',
+        'button' => 'solid',
+    ]);
+    if (! str_contains($styled, 'data-mhn-style="'.$styleId.'"') || ! str_contains($styled, 'mhn-style-'.$styleId)) {
+        $styleProblems[] = ucfirst($styleId).' is missing from the letter HTML.';
+    }
+    if (! str_contains($styled, '<style>') || ! str_contains($styled, '.mhn-letter')) {
+        $styleProblems[] = ucfirst($styleId).' letter is missing the style block.';
+    }
+    $hasStripe = str_contains($styled, 'class="mhn-stripe"');
+    if ($styleId === 'card' && ! $hasStripe) {
+        $styleProblems[] = 'Card is missing the navy stripe.';
+    }
+    if ($styleId !== 'card' && $hasStripe) {
+        $styleProblems[] = ucfirst($styleId).' still draws the card stripe.';
+    }
+}
+$banner = email_document('Notes from the workshop', 'A short preview of this issue.', $shell, false, 0, 'standard', [
+    'style' => 'banner',
+    'masthead' => 'center',
+    'button' => 'solid',
+]);
+if (! str_contains($banner, 'background-color:#0d2e57') || ! str_contains($banner, 'data-mhn-masthead="center"')) {
+    $styleProblems[] = 'Banner is missing the navy masthead.';
+}
+push_letter_look(['style' => 'card', 'masthead' => 'left', 'button' => 'outline']);
+$outlineInner = letter_button('Read the note', 'https://matthummel.com/notes/');
+$outline = email_document('Notes from the workshop', 'A short preview of this issue.', $shell.$outlineInner, false, 0, 'standard', [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'outline',
+]);
+pop_letter_look();
+push_letter_look(['style' => 'card', 'masthead' => 'left', 'button' => 'solid']);
+$solidInner = letter_button('Read the note', 'https://matthummel.com/notes/');
+$solid = email_document('Notes from the workshop', 'A short preview of this issue.', $shell.$solidInner, false, 0, 'standard', [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'solid',
+]);
+pop_letter_look();
+if (! str_contains($outline, 'mhn-btn-outline') || ! str_contains($outline, 'border:2px solid #0d2e57') || ! str_contains($outline, 'color:#0d2e57')) {
+    $styleProblems[] = 'Outline button did not change the border and text.';
+}
+if (! str_contains($solid, 'mhn-btn-solid') || ! str_contains($solid, 'background-color:#0d2e57') || ! str_contains($solid, 'color:#ffffff')) {
+    $styleProblems[] = 'Solid button is missing the navy fill.';
+}
+if (str_contains($outline, 'mhn-btn-solid') || str_contains($solid, 'mhn-btn-outline')) {
+    $styleProblems[] = 'Solid and outline buttons rendered as the same control.';
+}
+if ($styleProblems === []) {
+    fwrite(STDOUT, "pass  letter styles\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  letter styles\n");
+    foreach ($styleProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }

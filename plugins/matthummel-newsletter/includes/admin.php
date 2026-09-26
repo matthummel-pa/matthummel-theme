@@ -650,6 +650,77 @@ function page_import(): void
     echo '</form></div>';
 }
 
+/**
+ * @param  array{letter_style: string, letter_masthead: string, letter_button: string}  $config
+ */
+function render_letter_style_card(array $config): void
+{
+    $look = normalize_letter_look([
+        'style' => $config['letter_style'],
+        'masthead' => $config['letter_masthead'],
+        'button' => $config['letter_button'],
+    ]);
+
+    echo '<section class="mhn-card" aria-labelledby="mhn-letter-style-heading">';
+    echo '<h2 id="mhn-letter-style-heading">'.esc_html__('Letter style', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('The shell for every layout. New letters start here. Change one letter from the wizard.', 'matthummel-newsletter').'</p>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Style', 'matthummel-newsletter').'</legend>';
+    foreach (letter_style_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-style-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_style" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['style'], $id, false).'> ';
+        echo '<strong>'.esc_html($choice['label']).'</strong> '.esc_html($choice['summary']);
+        echo '</label></p>';
+    }
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Masthead', 'matthummel-newsletter').'</legend>';
+    foreach (letter_masthead_choices() as $id => $label) {
+        $inputId = 'mhn-letter-masthead-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_masthead" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['masthead'], $id, false).'> ';
+        echo esc_html($label);
+        echo '</label></p>';
+    }
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Button', 'matthummel-newsletter').'</legend>';
+    foreach (letter_button_choices() as $id => $label) {
+        $inputId = 'mhn-letter-button-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_button" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['button'], $id, false).'> ';
+        echo esc_html($label);
+        echo '</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Solid is a navy fill. Outline is a navy border. The button stays hidden until it has a label and a URL.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset></section>';
+}
+
+/**
+ * @param  array{style: string, masthead: string, button: string}  $look
+ */
+function render_letter_style_compact(array $look): void
+{
+    $look = normalize_letter_look($look);
+    echo '<div class="mhn-letter-controls">';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Letter style', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Letter style', 'matthummel-newsletter').'</span>';
+    foreach (letter_style_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_style" value="'.esc_attr($id).'" '.checked($look['style'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Masthead', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Masthead', 'matthummel-newsletter').'</span>';
+    foreach (letter_masthead_choices() as $id => $label) {
+        echo '<label><input type="radio" name="mhn_letter_masthead" value="'.esc_attr($id).'" '.checked($look['masthead'], $id, false).'> '.esc_html($label).'</label>';
+    }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Button', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Button', 'matthummel-newsletter').'</span>';
+    foreach (letter_button_choices() as $id => $label) {
+        echo '<label><input type="radio" name="mhn_letter_button" value="'.esc_attr($id).'" '.checked($look['button'], $id, false).'> '.esc_html($label).'</label>';
+    }
+    echo '</div></div>';
+}
+
 function page_settings(): void
 {
     guard_admin();
@@ -698,6 +769,8 @@ function page_settings(): void
     echo '<p><label for="mhn-welcome-body">'.esc_html__('Welcome body', 'matthummel-newsletter').'</label>';
     echo '<textarea class="large-text" rows="8" id="mhn-welcome-body" name="welcome_body">'.esc_textarea($config['welcome_body']).'</textarea></p>';
     echo '</section>';
+
+    render_letter_style_card($config);
 
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
     echo '<p class="mhn-check"><label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label></p>';
@@ -962,6 +1035,9 @@ function handle_settings(): void
         'signoff' => wp_unslash($_POST['signoff'] ?? ''),
         'welcome_subject' => wp_unslash($_POST['welcome_subject'] ?? ''),
         'welcome_body' => wp_unslash($_POST['welcome_body'] ?? ''),
+        'letter_style' => wp_unslash($_POST['letter_style'] ?? ''),
+        'letter_masthead' => wp_unslash($_POST['letter_masthead'] ?? ''),
+        'letter_button' => wp_unslash($_POST['letter_button'] ?? ''),
     ]);
     wp_safe_redirect(admin_url('admin.php?page=mhn-settings&saved=1'));
     exit;

@@ -1,0 +1,295 @@
+/* Letter design. Inlined into the message from this file. Admin chrome stays in admin.css. */
+:root {
+  color-scheme: light dark;
+  supported-color-schemes: light dark;
+}
+
+body,
+table,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  border: 0;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+  -ms-interpolation-mode: bicubic;
+}
+
+a {
+  color: #0d2e57;
+}
+
+.mhn-letter {
+  margin: 0;
+  padding: 0;
+}
+
+.mhn-preheader {
+  display: none !important;
+  visibility: hidden;
+  opacity: 0;
+  color: transparent;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  mso-hide: all;
+}
+
+.mhn-letter[data-mhn-style="card"] {
+  background-color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-style="card"] .mhn-page,
+.mhn-letter[data-mhn-style="card"] .mhn-page-td {
+  background-color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-style="card"] .mhn-frame {
+  background-color: #dceaf8;
+}
+
+.mhn-letter[data-mhn-style="card"] .mhn-card {
+  background-color: #ffffff;
+}
+
+.mhn-letter[data-mhn-style="card"] .mhn-stripe {
+  background-color: #0d2e57;
+}
+
+.mhn-letter[data-mhn-style="card"] .mhn-brand {
+  color: #0d2e57;
+}
+
+.mhn-letter[data-mhn-style="banner"] {
+  background-color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-style="banner"] .mhn-page,
+.mhn-letter[data-mhn-style="banner"] .mhn-page-td {
+  background-color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-style="banner"] .mhn-card {
+  background-color: #ffffff;
+}
+
+.mhn-letter[data-mhn-style="banner"] .mhn-masthead {
+  background-color: #0d2e57;
+}
+
+.mhn-letter[data-mhn-style="banner"] .mhn-brand {
+  color: #ffffff;
+}
+
+.mhn-letter[data-mhn-style="banner"] .mhn-masthead .mhn-kicker {
+  color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-style="paper"] {
+  background-color: #ffffff;
+}
+
+.mhn-letter[data-mhn-style="paper"] .mhn-page,
+.mhn-letter[data-mhn-style="paper"] .mhn-page-td,
+.mhn-letter[data-mhn-style="paper"] .mhn-frame,
+.mhn-letter[data-mhn-style="paper"] .mhn-card {
+  background-color: #ffffff;
+}
+
+.mhn-letter[data-mhn-style="paper"] .mhn-brand {
+  color: #0b1220;
+}
+
+.mhn-letter[data-mhn-style="paper"] .mhn-rule div {
+  border-top: 2px solid #0d2e57;
+}
+
+.mhn-letter[data-mhn-masthead="center"] .mhn-masthead,
+.mhn-letter[data-mhn-masthead="center"] .mhn-brand,
+.mhn-letter[data-mhn-masthead="center"] .mhn-masthead .mhn-kicker {
+  text-align: center;
+}
+
+.mhn-letter[data-mhn-button="outline"] a.mhn-btn {
+  background-color: #ffffff;
+  border: 2px solid #0d2e57;
+  color: #0d2e57;
+}
+
+.mhn-letter[data-mhn-button="solid"] a.mhn-btn {
+  background-color: #0d2e57;
+  border: 0;
+  color: #ffffff;
+}
+
+@media only screen and (max-width: 620px) {
+  .mhn-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mhn-px {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .mhn-col {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mhn-btn {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-height:44px;
+  }
+
+  .mhn-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+@media (prefers-color-scheme:dark) {
+  .mhn-page,
+  .mhn-page-td {
+    background: #0b1220 !important;
+  }
+
+  .mhn-card {
+    background: #162033 !important;
+  }
+
+  .mhn-text,
+  .mhn-text p,
+  .mhn-text li,
+  .mhn-text h1,
+  .mhn-text h2,
+  .mhn-text h3 {
+    color: #f7f9fc !important;
+  }
+
+  .mhn-text p.mhn-eyebrow,
+  .mhn-eyebrow,
+  .mhn-kicker {
+    color: #b7c3d4 !important;
+  }
+
+  .mhn-text a:not(.mhn-btn) {
+    color: #d6e4ff !important;
+    text-decoration: underline !important;
+  }
+
+  a.mhn-btn {
+    color: #ffffff !important;
+    background-color: #0d2e57 !important;
+  }
+
+  .mhn-letter[data-mhn-button="outline"] a.mhn-btn {
+    color: #f7f9fc !important;
+    background-color: transparent !important;
+    border-color: #f7f9fc !important;
+  }
+
+  .mhn-muted,
+  .mhn-footer,
+  .mhn-footer p,
+  .mhn-footer a {
+    color: #b7c3d4 !important;
+  }
+
+  .mhn-brand {
+    color: #f7f9fc !important;
+  }
+
+  .mhn-letter[data-mhn-style="banner"] .mhn-masthead {
+    background-color: #0d2e57 !important;
+  }
+
+  .mhn-letter[data-mhn-style="banner"] .mhn-brand,
+  .mhn-letter[data-mhn-style="banner"] .mhn-masthead .mhn-kicker {
+    color: #ffffff !important;
+  }
+
+  .mhn-frame {
+    background: #2a3b52 !important;
+  }
+
+  .mhn-letter[data-mhn-style="paper"] .mhn-frame {
+    background: #0b1220 !important;
+  }
+
+  .mhn-stripe {
+    background: #0d2e57 !important;
+  }
+
+  .mhn-rule,
+  .mhn-hairline div,
+  .mhn-footer {
+    border-color: #2a3b52 !important;
+  }
+
+  .mhn-letter[data-mhn-style="paper"] .mhn-rule div {
+    border-top-color: #d6e4ff !important;
+  }
+
+  .mhn-group {
+    background: #0f1b2d !important;
+  }
+}
+
+[data-ogsc] .mhn-page,
+[data-ogsc] .mhn-page-td {
+  background: #0b1220 !important;
+}
+
+[data-ogsc] .mhn-card {
+  background: #162033 !important;
+}
+
+[data-ogsc] .mhn-text,
+[data-ogsc] .mhn-text p,
+[data-ogsc] .mhn-text li,
+[data-ogsc] .mhn-text h1,
+[data-ogsc] .mhn-text h2,
+[data-ogsc] .mhn-text h3 {
+  color: #f7f9fc !important;
+}
+
+[data-ogsc] .mhn-text a:not(.mhn-btn) {
+  color: #d6e4ff !important;
+}
+
+[data-ogsc] a.mhn-btn {
+  color: #ffffff !important;
+  background-color: #0d2e57 !important;
+}
+
+[data-ogsc] .mhn-letter[data-mhn-button="outline"] a.mhn-btn {
+  color: #f7f9fc !important;
+  background-color: transparent !important;
+}
+
+[data-ogsc] .mhn-footer,
+[data-ogsc] .mhn-footer p,
+[data-ogsc] .mhn-footer a,
+[data-ogsc] .mhn-kicker {
+  color: #b7c3d4 !important;
+}
+
+[data-ogsc] .mhn-brand {
+  color: #f7f9fc !important;
+}
+
+[data-ogsc] .mhn-group {
+  background: #0f1b2d !important;
+}

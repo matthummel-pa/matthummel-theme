@@ -879,3 +879,69 @@
 .mhn-metabox .button {
   margin: 0 8px 8px 0;
 }
+
+.mhn-letter-controls {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.mhn-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mhn-choice > span {
+  min-width: 6.5rem;
+  color: #0d2e57;
+  font-weight: 600;
+}
+
+.mhn-choice label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 14px;
+  background: #fff;
+  border: 1px solid #0d2e57;
+  border-radius: 4px;
+  color: #0d2e57;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.mhn-choice label:has(input:checked) {
+  background: #0d2e57;
+  color: #fff;
+}
+
+.mhn-choice label:has(input:focus-visible) {
+  outline: 2px solid #0d2e57;
+  outline-offset: 2px;
+}
+
+.mhn-choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.mhn-letter-options {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.mhn-letter-options legend {
+  margin: 0 0 6px;
+  padding: 0;
+  color: #0b1220;
+  font-weight: 600;
+}

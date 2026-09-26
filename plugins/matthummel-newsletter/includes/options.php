@@ -45,7 +45,10 @@ function archive_table(): string
  *     intro: string,
  *     signoff: string,
  *     welcome_subject: string,
- *     welcome_body: string
+ *     welcome_body: string,
+ *     letter_style: string,
+ *     letter_masthead: string,
+ *     letter_button: string
  * }
  */
 function settings(): array
@@ -71,6 +74,9 @@ function settings(): array
         'signoff' => $copy['signoff'],
         'welcome_subject' => $copy['welcome_subject'],
         'welcome_body' => $copy['welcome_body'],
+        'letter_style' => 'card',
+        'letter_masthead' => 'left',
+        'letter_button' => 'solid',
     ];
 
     $merged = array_merge($defaults, $saved);
@@ -93,6 +99,9 @@ function settings(): array
         'signoff' => $signoff !== '' ? $signoff : $copy['signoff'],
         'welcome_subject' => $welcomeSubject !== '' ? $welcomeSubject : $copy['welcome_subject'],
         'welcome_body' => $welcomeBody !== '' ? $welcomeBody : $copy['welcome_body'],
+        'letter_style' => choice_from_input(['letter_style' => $merged['letter_style'] ?? ''], 'letter_style', letter_style_choices(), 'card'),
+        'letter_masthead' => choice_from_input(['letter_masthead' => $merged['letter_masthead'] ?? ''], 'letter_masthead', letter_masthead_choices(), 'left'),
+        'letter_button' => choice_from_input(['letter_button' => $merged['letter_button'] ?? ''], 'letter_button', letter_button_choices(), 'solid'),
     ];
 }
 
@@ -138,8 +147,13 @@ function update_settings(array $input): void
         'signoff' => posted_copy($input, 'signoff', $current['signoff'], $defaults['signoff'], false),
         'welcome_subject' => posted_copy($input, 'welcome_subject', $current['welcome_subject'], $defaults['welcome_subject'], false),
         'welcome_body' => posted_copy($input, 'welcome_body', $current['welcome_body'], $defaults['welcome_body'], true),
+        'letter_style' => choice_from_input($input, 'letter_style', letter_style_choices(), $current['letter_style']),
+        'letter_masthead' => choice_from_input($input, 'letter_masthead', letter_masthead_choices(), $current['letter_masthead']),
+        'letter_button' => choice_from_input($input, 'letter_button', letter_button_choices(), $current['letter_button']),
     ]);
 }
+
+require_once __DIR__.'/styles.php';
 
 /**
  * @param  array<string, mixed>  $input
