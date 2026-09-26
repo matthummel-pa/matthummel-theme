@@ -23,7 +23,7 @@ function layouts(): array
         ],
         'welcome' => [
             'label' => __('Welcome', 'matthummel-newsletter'),
-            'summary' => __('A short centered letter for someone who just joined. No image and no heading list.', 'matthummel-newsletter'),
+            'summary' => __('A short centered letter for someone who just joined. A default photo sits at the top until you choose another.', 'matthummel-newsletter'),
         ],
         'plain' => [
             'label' => __('Plain', 'matthummel-newsletter'),
@@ -225,8 +225,11 @@ function compose_advanced_letter(array $blocks, string $layoutId, string $issueH
     $signoff = $signoff !== '' ? $signoff : $defaults['signoff'];
 
     $image = '';
-    if ($layoutId === 'feature' || $layoutId === 'standard') {
+    if ($layoutId === 'feature' || $layoutId === 'standard' || $layoutId === 'welcome') {
         $image = extract_layout_image($issueHtml);
+    }
+    if ($layoutId === 'welcome' && $image === '') {
+        $image = sample_feature_image();
     }
     if ($body !== '') {
         $bodyHtml = advanced_copy_html($body);
@@ -731,8 +734,8 @@ function blog_post_headings_html(array $headings): string
         return '';
     }
 
-    return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 16px;"><tr>'
-        .'<td style="padding:16px 20px;background-color:#f4f6f8;border-radius:12px;">'
+    return '<table role="presentation" class="mhn-post-note" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr>'
+        .'<td style="padding:12px 0;background-color:#ffffff;">'
         .'<h2 class="mhn-text" style="margin:0 0 12px;font-family:'.email_font_stack().';font-size:18px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'
         .esc_html__('In this note', 'matthummel-newsletter').'</h2>'
         .'<ul class="mhn-text" style="margin:0;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</ul>'
@@ -908,6 +911,10 @@ function blog_post_issue_letter(int $issueId, ?array $blocks, ?string $note, boo
     } elseif ($source['title'] === '' && trim($title) !== '') {
         $source['title'] = trim($title);
     }
+    $chosen = issue_chosen_image_html($issueId);
+    if ($chosen !== '') {
+        $source['image'] = $chosen;
+    }
 
     return compose_blog_post_letter($source, $intro, $signoff, $copy['from_name'], $sections ?? issue_sections($issueId));
 }
@@ -926,12 +933,16 @@ function apply_layout(string $layoutId, string $body): string
         }
         $points = current_letter_look()['variant'] === 'focused' ? '' : letter_points_html(settings()['welcome_points']);
         $stack = letter_is_digest() ? $points.$html : $html.$points;
+        $image = extract_layout_image($body);
+        if ($image === '') {
+            $image = sample_feature_image();
+        }
 
-        return strip_layout_images($stack);
+        return present_welcome_image($image).$stack;
     }
 
     if ($layoutId === 'plain') {
-        $body = soften_plain_buttons(strip_layout_images($body));
+        $body = soften_plain_buttons($body);
     }
 
     $image = '';
@@ -979,11 +990,12 @@ function arrange_layout_variant(string $layoutId, string $intro, string $image, 
     }
     if ($layoutId === 'welcome') {
         $points = $variant === 'focused' ? '' : letter_points_html(settings()['welcome_points']);
+        $figure = present_welcome_image($image !== '' ? $image : sample_feature_image());
         if ($variant === 'digest') {
-            return $heading.$points.$body.$signoff;
+            return $figure.$heading.$points.$body.$signoff;
         }
 
-        return $introHtml.$heading.$body.$points.$signoff;
+        return $figure.$introHtml.$heading.$body.$points.$signoff;
     }
     if ($layoutId === 'standard') {
         $figure = present_standard_image($image);
@@ -1088,8 +1100,8 @@ function letter_digest_html(string $body): string
         $listItems .= '<li style="margin:0 0 8px;">'.esc_html($item).'</li>';
     }
 
-    $list = '<table role="presentation" class="mhn-digest" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 18px;"><tr>'
-        .'<td style="padding:4px 8px 4px 0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
+    $list = '<table role="presentation" class="mhn-digest" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr>'
+        .'<td style="padding:0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
         .'<ul style="margin:0;padding-left:20px;">'.$listItems.'</ul>'
         .'</td></tr></table>';
 
@@ -1106,8 +1118,8 @@ function letter_callout_html(string $label, string $text): string
 
     $font = email_font_stack();
 
-    return '<table role="presentation" class="mhn-callout" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 18px;"><tr>'
-        .'<td style="border-left:3px solid #0d2e57;background-color:#f4f6f8;border-radius:0 12px 12px 0;padding:14px 16px;font-family:'.$font.';text-align:left;">'
+    return '<table role="presentation" class="mhn-callout" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr>'
+        .'<td style="border-left:3px solid #0d2e57;background-color:#ffffff;padding:12px 0;font-family:'.$font.';text-align:left;">'
         .'<p style="margin:0 0 6px;font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#50575e;">'.esc_html($label).'</p>'
         .'<p style="margin:0;font-size:16px;line-height:1.6;color:#0b1220;">'.esc_html($text).'</p>'
         .'</td></tr></table>';
@@ -1131,8 +1143,8 @@ function letter_points_html(string $text): string
         $items .= '<li style="margin:0 0 8px;text-align:left;">'.esc_html($line).'</li>';
     }
 
-    return '<table role="presentation" class="mhn-points" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 18px;"><tr>'
-        .'<td style="padding:4px 8px 4px 0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
+    return '<table role="presentation" class="mhn-points" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr>'
+        .'<td style="padding:0;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;color:#0b1220;">'
         .'<ul style="margin:0;padding-left:20px;">'.$items.'</ul>'
         .'</td></tr></table>';
 }
@@ -1150,7 +1162,11 @@ function layout_preview_html(string $layoutId, ?array $look = null): string
     push_letter_look($look);
     $copy = layout_copy();
     $subject = $layoutId === 'welcome' ? $copy['welcome_subject'] : __('A note from the workshop', 'matthummel-newsletter');
-    $body = apply_layout($layoutId, sample_issue_body());
+    $sample = sample_issue_body();
+    if ($layoutId === 'plain') {
+        $sample = strip_layout_images($sample);
+    }
+    $body = apply_layout($layoutId, $sample);
     $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     $html = email_document($subject, $preheader, $body, false, 0, $layoutId, $look);
     pop_letter_look();
@@ -1341,7 +1357,7 @@ function present_standard_image(string $image): string
 
     $image = str_replace('margin:0 0 16px', 'margin:0', $image);
 
-    return '<table role="presentation" class="mhn-standard-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 24px;"><tr><td style="padding:0;background-color:#ffffff;border:1px solid #dceaf8;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
+    return '<table role="presentation" class="mhn-standard-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr><td style="padding:0;background-color:#ffffff;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
 }
 
 function present_feature_image(string $image): string
@@ -1353,7 +1369,61 @@ function present_feature_image(string $image): string
 
     $image = str_replace('margin:0 0 16px', 'margin:0', $image);
 
-    return '<table role="presentation" class="mhn-inset-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;"><tr><td style="padding:0;background-color:#ffffff;border:1px solid #dceaf8;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
+    return '<table role="presentation" class="mhn-inset-figure" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;"><tr><td style="padding:0;background-color:#ffffff;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
+}
+
+function present_welcome_image(string $image): string
+{
+    $image = trim($image);
+    if ($image === '') {
+        return '';
+    }
+
+    $image = str_replace('margin:0 0 16px', 'margin:0', $image);
+
+    return '<table role="presentation" class="mhn-welcome-figure" width="100%" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 0 20px;"><tr><td align="center" style="padding:0;background-color:#ffffff;line-height:0;font-size:0;">'.$image.'</td></tr></table>';
+}
+
+function issue_chosen_image_html(int $issueId): string
+{
+    if ($issueId < 1 || ! function_exists('get_post_meta') || ! function_exists('wp_get_attachment_image_src')) {
+        return '';
+    }
+
+    $attachmentId = (int) get_post_meta($issueId, '_mhn_image_id', true);
+    if ($attachmentId < 1) {
+        return '';
+    }
+
+    $alt = trim((string) get_post_meta($issueId, '_mhn_image_alt', true));
+    $image = wp_get_attachment_image_src($attachmentId, 'large');
+    if (! is_array($image) || (string) ($image[0] ?? '') === '') {
+        $image = wp_get_attachment_image_src($attachmentId, 'full');
+    }
+    if (! is_array($image) || (string) ($image[0] ?? '') === '') {
+        return '';
+    }
+    if ($alt === '' && function_exists('get_post_meta')) {
+        $alt = trim((string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true));
+    }
+    if ($alt === '') {
+        $alt = __('Photo', 'matthummel-newsletter');
+    }
+
+    $width = (int) ($image[1] ?? 600);
+    $height = (int) ($image[2] ?? 0);
+    if ($width > 600 && $width > 0) {
+        $height = $height > 0 ? (int) round($height * (600 / $width)) : 0;
+        $width = 600;
+    }
+    if ($width < 1) {
+        $width = 600;
+    }
+    if ($height < 1) {
+        $height = (int) round($width * 0.56);
+    }
+
+    return '<img class="mhn-img" src="'.esc_url((string) $image[0]).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'" height="'.esc_attr((string) $height).'" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0;background-color:#eef3f9;">';
 }
 
 function take_letter_heading(string &$body, bool $plain, string $layoutId = ''): string
@@ -1636,7 +1706,7 @@ function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?
         $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom, $sections);
     } else {
         $rendered = '';
-        if ($layoutId !== 'welcome' || $editor === 'advanced') {
+        if ($layoutId !== 'welcome' || $editor === 'advanced' || $issueId > 0) {
             $compiled = emulator_blocks($issueId, $note);
             $rendered = $compiled !== '' ? render_blocks($compiled, $subject) : sample_issue_body();
         }

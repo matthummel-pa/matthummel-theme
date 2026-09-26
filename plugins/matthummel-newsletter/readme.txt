@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has Focused, Detailed, and Digest variants. New letters start on Detailed. The page is light grey. The letter is a white rounded card with a soft gradient. Focused is one idea and one action. Detailed Standard uses the intro as a dek under the title. Detailed Welcome adds a short list. Detailed Plain adds the date. Detailed Feature puts the intro under the image as a caption. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Digest leads with why it matters, then a short list, and one link. Letter style (Card, Banner, or Paper), masthead, button, font (Sans, Serif, Humanist, or Editorial), and size (Regular or Roomy) are edited under Settings. Banner is only a navy masthead band. A header image can come from the media library, and text social links start with the public Site, GitHub, LinkedIn, and Bluesky profiles. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
+* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has Focused, Detailed, and Digest variants. New letters start on Detailed. The page is light grey, with more grey around the letter. The words sit in one white block with padding on every side. Focused is one idea and one action. Detailed Standard uses the intro as a dek under the title. Detailed Welcome adds a short list. Detailed Plain adds the date. Detailed Feature puts the intro under the image as a caption. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Digest leads with why it matters, then a short list, and one link. Welcome starts with a default photo. Every template can add an image from the media library. Letter style (Card, Banner, or Paper), masthead, button, font (Sans, Serif, Humanist, or Editorial), and size (Regular or Roomy) are edited under Settings. Banner is only a navy masthead band. A header image can come from the media library. Social links are icons plus the network name, and can sit in the footer or at the end of the letter. They start with the public Site, GitHub, LinkedIn, and Bluesky profiles. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
 * Blog post letters can leave out the image, excerpt, headings, categories, or button. Newsletter rules can skip a post that was already sent and limit the post picker to chosen categories. The postal address and unsubscribe link stay on every letter. Preview text starts as the reusable intro.
 * Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
@@ -32,7 +32,7 @@ Addresses copied from the original footer list are marked as legacy single opt-i
 
 1. Run `bash .github/scripts/pack-plugin.sh` from the theme repo, or download the plugin zip from the workflow artifact.
 2. In wp-admin, go to Plugins → Add New → Upload Plugin and install `matthummel-newsletter.zip`.
-3. Activate the plugin. It adds Get updates and Email preferences if those pages are missing.
+3. Activate the plugin. It adds Get updates, Unsubscribe, and Manage preferences if those pages are missing.
 4. Set the From address and mailing address under Get updates → Settings.
 5. Publish SPF, DKIM, and DMARC for the From domain before a real send. Install an SMTP plugin if the host does not deliver `wp_mail` on its own.
 
@@ -55,6 +55,12 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.8.0 =
+* The white letter has even padding on every side, and more of the grey page shows around it. The words, lists, and image sit in one white block.
+* Every template has an Add image button that opens the media library. Welcome starts with a default photo.
+* Unsubscribe and Manage preferences are their own pages. Opening the unsubscribe link asks you to confirm. It does not unsubscribe on its own.
+* Social links use icons plus the network name. They can sit in the footer or at the end of the letter. The address and unsubscribe stay in the footer.
 
 = 1.7.0 =
 * New letters start on the Detailed variant. Digest is the scanning variant: why it matters, a short list, and one link.

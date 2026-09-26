@@ -60,16 +60,18 @@ a {
   background-color: #eceff1;
 }
 
-.mhn-letter .mhn-card,
-.mhn-letter .mhn-text {
+.mhn-letter .mhn-card {
   background-color: #ffffff;
   background-image: linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%);
   color: #0b1220;
+  border: 1px solid #d8dde3;
   border-radius: 16px;
 }
 
-.mhn-letter .mhn-card {
-  border: 1px solid #d8dde3;
+.mhn-letter .mhn-text {
+  background-color: #ffffff;
+  background-image: none;
+  color: #0b1220;
 }
 
 .mhn-letter[data-mhn-style="card"] .mhn-stripe {
@@ -146,10 +148,11 @@ a {
 
 .mhn-letter[data-mhn-layout="standard"] .mhn-standard-figure td,
 .mhn-letter[data-mhn-layout="feature"] .mhn-inset-figure td,
-.mhn-letter[data-mhn-layout="post"] .mhn-inset-figure td {
+.mhn-letter[data-mhn-layout="post"] .mhn-inset-figure td,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-welcome-figure td {
   background-color: #ffffff;
-  border: 1px solid #d8dde3;
-  border-radius: 12px;
+  border: 0;
+  padding: 0;
 }
 
 .mhn-letter[data-mhn-font="serif"] .mhn-text,
@@ -221,7 +224,16 @@ a {
 
 .mhn-letter[data-mhn-layout="post"] .mhn-post-note td,
 .mhn-letter .mhn-callout td {
-  background-color: #f4f6f8;
+  background-color: #ffffff;
+}
+
+.mhn-social-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  margin: 0 6px 0 0;
 }
 
 .mhn-footer,
@@ -236,9 +248,13 @@ a {
     max-width: 100% !important;
   }
 
+  .mhn-page-td {
+    padding: 40px 24px !important;
+  }
+
   .mhn-px {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
   }
 
   .mhn-col {

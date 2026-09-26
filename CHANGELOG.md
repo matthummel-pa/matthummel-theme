@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.39 — Unsubscribe and preferences titles
+
+- The Get updates template titles Unsubscribe and Manage preferences on those pages.
+- Visitor signup copy on Get updates is unchanged.
+
 ## 3.6.38 — Get updates page
 
 - Get updates has its own page, with email and an optional first name.

@@ -776,14 +776,25 @@ function render_letter_style_compact(array $look): void
 }
 
 /**
- * @param  array{header_image: string, header_alt: string, social_site: string, social_github: string, social_linkedin: string, social_bluesky: string, social_youtube: string, social_instagram: string}  $config
+ * @param  array{header_image: string, header_alt: string, social_site: string, social_github: string, social_linkedin: string, social_bluesky: string, social_youtube: string, social_instagram: string, social_placement?: string}  $config
  */
 function render_letter_brand_card(array $config): void
 {
     $logo = site_logo_url();
     echo '<section class="mhn-card" aria-labelledby="mhn-letter-brand-heading">';
     echo '<h2 id="mhn-letter-brand-heading">'.esc_html__('Header and social', 'matthummel-newsletter').'</h2>';
-    echo '<p class="mhn-card-lead">'.esc_html__('A header image sits above the name. Social links are words in the footer, because icon images are often blocked. Clear a field to leave that link out.', 'matthummel-newsletter').'</p>';
+    echo '<p class="mhn-card-lead">'.esc_html__('A header image sits above the name. Each social link is an icon plus the network name, so the name still shows if the image is blocked. Clear a field to leave that link out. The address and unsubscribe stay in the footer.', 'matthummel-newsletter').'</p>';
+    $placement = (string) ($config['social_placement'] ?? 'footer');
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Where the icons sit', 'matthummel-newsletter').'</legend>';
+    foreach (social_placement_choices() as $id => $label) {
+        $inputId = 'mhn-social-placement-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="social_placement" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($placement, $id, false).'> ';
+        echo esc_html($label);
+        echo '</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Footer keeps them under the letter. In the letter puts them at the end of the white block.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
     echo '<p><label for="mhn-header-image">'.esc_html__('Header image', 'matthummel-newsletter').'</label>';
     echo '<input class="regular-text" type="url" id="mhn-header-image" name="header_image" value="'.esc_attr($config['header_image']).'" placeholder="https://"></p>';
     echo '<p class="mhn-header-actions">';
@@ -824,7 +835,7 @@ function render_letter_system_card(): void
     echo '<h2 id="mhn-letter-system-heading">'.esc_html__('How a letter is built', 'matthummel-newsletter').'</h2>';
     echo '<p class="mhn-card-lead">'.esc_html__('This is the design system for your letters. It stays on this site.', 'matthummel-newsletter').'</p>';
     echo '<ul class="mhn-system-list">';
-    echo '<li>'.esc_html__('The page is light grey. The letter is a white card with rounded corners and a soft gradient, so the words sit apart from the page.', 'matthummel-newsletter').'</li>';
+    echo '<li>'.esc_html__('The page is light grey, with more of that grey around the letter. The words sit in one white block, with padding on every side.', 'matthummel-newsletter').'</li>';
     echo '<li>'.esc_html__('Each layout has three variants. Focused is one idea and one action. Detailed is the essay. Digest is a why-it-matters line, a short list, and one link.', 'matthummel-newsletter').'</li>';
     echo '<li>'.esc_html__('Card, Banner, and Paper change the shell. Standard, Welcome, Plain, Feature, and Blog post change the arrangement.', 'matthummel-newsletter').'</li>';
     echo '<li>'.esc_html__('One button. A second action belongs in the words, not in a second button.', 'matthummel-newsletter').'</li>';
@@ -1189,6 +1200,18 @@ function handle_settings(): void
         'letter_style' => wp_unslash($_POST['letter_style'] ?? ''),
         'letter_masthead' => wp_unslash($_POST['letter_masthead'] ?? ''),
         'letter_button' => wp_unslash($_POST['letter_button'] ?? ''),
+        'letter_font' => wp_unslash($_POST['letter_font'] ?? ''),
+        'letter_size' => wp_unslash($_POST['letter_size'] ?? ''),
+        'letter_variant' => wp_unslash($_POST['letter_variant'] ?? ''),
+        'header_image' => wp_unslash($_POST['header_image'] ?? ''),
+        'header_alt' => wp_unslash($_POST['header_alt'] ?? ''),
+        'social_site' => wp_unslash($_POST['social_site'] ?? ''),
+        'social_github' => wp_unslash($_POST['social_github'] ?? ''),
+        'social_linkedin' => wp_unslash($_POST['social_linkedin'] ?? ''),
+        'social_bluesky' => wp_unslash($_POST['social_bluesky'] ?? ''),
+        'social_youtube' => wp_unslash($_POST['social_youtube'] ?? ''),
+        'social_instagram' => wp_unslash($_POST['social_instagram'] ?? ''),
+        'social_placement' => wp_unslash($_POST['social_placement'] ?? ''),
         'skip_sent_post' => $_POST['skip_sent_post'] ?? '',
         'mhn_rules_present' => '1',
         'rule_categories' => wp_unslash($_POST['rule_categories'] ?? []),

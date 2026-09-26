@@ -10,7 +10,7 @@ if (! defined('ABSPATH')) {
 
 function public_assets(): void
 {
-    if (! is_page(['get-updates', 'email-preferences'])) {
+    if (! is_page(['get-updates', 'email-preferences', 'unsubscribe'])) {
         return;
     }
 
@@ -28,7 +28,7 @@ function public_assets(): void
  */
 function robots(array $robots): array
 {
-    if (is_page('email-preferences')) {
+    if (is_page(['email-preferences', 'unsubscribe'])) {
         $robots['noindex'] = true;
         $robots['nofollow'] = true;
     }
@@ -91,6 +91,42 @@ function shortcode_preferences(): string
     return $html;
 }
 
+function shortcode_unsubscribe(): string
+{
+    if (isset($_GET['mhn_test'])) {
+        return '<p class="mhn-note" role="status">'.esc_html__('This was a test send. It did not change a subscription.', 'matthummel-newsletter').'</p>';
+    }
+
+    $token = isset($_GET['mhn_token']) ? sanitize_text_field(wp_unslash($_GET['mhn_token'])) : '';
+    $id = absint($_GET['mhn_unsub'] ?? 0);
+    if ($id < 1) {
+        $id = absint($_GET['mhn_sid'] ?? 0);
+    }
+    $subscriber = subscriber_from_token($token, $id);
+    if (! $subscriber) {
+        return '<p class="mhn-note" role="status">'.esc_html__('Use the link in the email to unsubscribe.', 'matthummel-newsletter').'</p>';
+    }
+    if ($subscriber['status'] === 'unsubscribed') {
+        return '<p class="mhn-status" role="status">'.esc_html__('This address is unsubscribed.', 'matthummel-newsletter').'</p>';
+    }
+
+    $html = '<form class="mhn-form mhn-unsub" method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
+    $html .= '<input type="hidden" name="action" value="mhn_preferences_unsub">';
+    $html .= '<input type="hidden" name="mhn_return" value="unsubscribe">';
+    $html .= '<input type="hidden" name="mhn_sid" value="'.esc_attr((string) $subscriber['id']).'">';
+    $html .= '<input type="hidden" name="mhn_token" value="'.esc_attr($token).'">';
+    $html .= wp_nonce_field('mhn_preferences_unsub', 'mhn_preferences_unsub_nonce', true, false);
+    $html .= '<p>'.esc_html(sprintf(
+        /* translators: %s: email address */
+        __('Unsubscribe %s. This does not happen until you confirm.', 'matthummel-newsletter'),
+        $subscriber['email']
+    )).'</p>';
+    $html .= '<button type="submit" class="btn">'.esc_html__('Unsubscribe', 'matthummel-newsletter').'</button>';
+    $html .= '</form>';
+
+    return $html;
+}
+
 /**
  * @return array<string, string>|null
  */
@@ -113,7 +149,7 @@ function request_has_subscriber_secret(): bool
         }
     }
 
-    return function_exists('is_page') && is_page('email-preferences');
+    return function_exists('is_page') && is_page(['email-preferences', 'unsubscribe']);
 }
 
 function send_privacy_headers(): void
@@ -310,14 +346,18 @@ function handle_unsub_request(): void
     }
 
     if (! $valid || ! $row) {
-        wp_safe_redirect(page_url('email-preferences'));
+        wp_safe_redirect(page_url('unsubscribe'));
         exit;
     }
 
+    if (function_exists('is_page') && is_page('unsubscribe')) {
+        return;
+    }
+
     wp_safe_redirect(add_query_arg([
-        'mhn_sid' => $id,
+        'mhn_unsub' => $id,
         'mhn_token' => $token,
-    ], page_url('email-preferences')));
+    ], page_url('unsubscribe')));
     exit;
 }
 
@@ -620,19 +660,31 @@ function handle_preferences_unsub(): void
 {
     $token = isset($_POST['mhn_token']) ? sanitize_text_field(wp_unslash($_POST['mhn_token'])) : '';
     $nonce = isset($_POST['mhn_preferences_unsub_nonce']) ? wp_unslash($_POST['mhn_preferences_unsub_nonce']) : '';
-    $row = subscriber_from_token($token, absint($_POST['mhn_sid'] ?? 0));
+    $return = isset($_POST['mhn_return']) ? sanitize_key(wp_unslash((string) $_POST['mhn_return'])) : '';
+    $slug = $return === 'unsubscribe' ? 'unsubscribe' : 'email-preferences';
+    $id = absint($_POST['mhn_sid'] ?? 0);
+    if ($id < 1) {
+        $id = absint($_POST['mhn_unsub'] ?? 0);
+    }
+    $row = subscriber_from_token($token, $id);
     if (! $row || ! is_string($nonce) || ! wp_verify_nonce($nonce, 'mhn_preferences_unsub')) {
         send_privacy_headers();
-        wp_safe_redirect(page_url('email-preferences'));
+        wp_safe_redirect(page_url($slug));
         exit;
     }
 
     unsubscribe((int) $row['id']);
     send_privacy_headers();
-    wp_safe_redirect(add_query_arg([
-        'mhn_sid' => (int) $row['id'],
-        'mhn_token' => $token,
-        'mhn_saved' => '1',
-    ], page_url('email-preferences')));
+    $args = $slug === 'unsubscribe'
+        ? [
+            'mhn_unsub' => (int) $row['id'],
+            'mhn_token' => $token,
+        ]
+        : [
+            'mhn_sid' => (int) $row['id'],
+            'mhn_token' => $token,
+            'mhn_saved' => '1',
+        ];
+    wp_safe_redirect(add_query_arg($args, page_url($slug)));
     exit;
 }

@@ -458,7 +458,7 @@ function letter_chrome(array $look): array
     };
     $kickerColor = $look['style'] === 'banner' ? '#e8eef6' : '#50575e';
     $mastBg = $look['style'] === 'banner' ? '#0d2e57' : '#ffffff';
-    $mastPad = $look['style'] === 'banner' ? '28px 32px' : '26px 32px 14px';
+    $mastPad = $look['style'] === 'banner' ? '28px 40px' : '26px 40px 14px';
     $mastRadius = $look['style'] === 'banner' ? 'border-radius:16px 16px 0 0;' : '';
     $rule = $look['style'] === 'banner' ? '' : 'border-top:2px solid #0d2e57;';
     $card = 'width:100%;background-color:#ffffff;background-image:linear-gradient(180deg,#ffffff 0%,#f7f8fa 100%);border:1px solid #d8dde3;border-collapse:separate;border-radius:16px;';
@@ -472,7 +472,7 @@ function letter_chrome(array $look): array
         'align' => $align,
         'font' => $font,
         'page' => 'margin:0;padding:0;background-color:'.$page.';',
-        'page_td' => 'padding:32px 16px;background-color:'.$page.';',
+        'page_td' => 'padding:64px 48px;background-color:'.$page.';',
         'frame' => 'width:100%;max-width:600px;background-color:transparent;border-radius:16px;',
         'frame_td' => 'padding:0;background-color:transparent;border-radius:16px;',
         'card' => $card,
@@ -484,7 +484,7 @@ function letter_chrome(array $look): array
         'show_stripe' => $look['style'] === 'card',
         'show_rule' => $look['style'] !== 'banner',
         'hero' => 'padding:0;background-color:#ffffff;line-height:0;font-size:0;',
-        'footer' => 'padding:18px 32px 28px;border-top:1px solid #e2e6ea;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;background-color:#ffffff;',
+        'footer' => 'padding:20px 40px 32px;border-top:1px solid #e2e6ea;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;background-color:#ffffff;',
     ];
 }
 

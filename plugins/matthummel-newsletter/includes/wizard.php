@@ -689,6 +689,7 @@ function render_layout_picker(string $current): void
 
 function render_step_content(int $issueId, string $slug): void
 {
+    render_image_picker($issueId);
     $advanced = issue_editor_mode($issueId) === 'advanced';
     echo '<div data-mhn-simple'.($advanced ? ' hidden' : '').'>';
     render_simple_content($issueId, $slug);
@@ -720,10 +721,6 @@ function render_simple_content(int $issueId, string $slug): void
 
     echo '<h2>'.esc_html($template['label']).'</h2>';
     echo '<p>'.esc_html__('Every template has a note from you. Bold, italic, links, and lists are fine.', 'matthummel-newsletter').'</p>';
-
-    if ($template['has_image']) {
-        render_image_picker($issueId);
-    }
 
     echo '<h3>'.esc_html($template['max_posts'] > 0
         ? __('Your note', 'matthummel-newsletter')
@@ -992,17 +989,19 @@ function render_image_picker(int $issueId): void
     $imageId = (int) get_post_meta($issueId, '_mhn_image_id', true);
     $src = $imageId > 0 ? wp_get_attachment_image_url($imageId, 'medium') : '';
     $alt = (string) get_post_meta($issueId, '_mhn_image_alt', true);
-    echo '<h3>'.esc_html__('Image (optional)', 'matthummel-newsletter').'</h3>';
+    $chosen = is_string($src) && $src !== '';
+    echo '<h3>'.esc_html__('Image', 'matthummel-newsletter').'</h3>';
+    echo '<p class="description">'.esc_html__('Add an image from the library. A welcome letter uses a default photo until you choose one. On a blog post letter, this replaces the post image.', 'matthummel-newsletter').'</p>';
     echo '<input type="hidden" name="mhn_image_id" value="'.esc_attr((string) $imageId).'">';
     echo '<p><label for="mhn-image-alt"><strong>'.esc_html__('Alt text', 'matthummel-newsletter').'</strong></label><br>';
     echo '<input class="large-text" type="text" id="mhn-image-alt" name="mhn_image_alt" value="'.esc_attr($alt).'">';
     echo '<span class="description">'.esc_html__('Required before sending if you include an image. Describe it in a few words. Leave the image off if it is only decoration.', 'matthummel-newsletter').'</span></p>';
     echo '<p id="mhn-image-preview">';
-    if (is_string($src) && $src !== '') {
+    if ($chosen) {
         echo '<img src="'.esc_url($src).'" alt="" width="240" height="160" style="width:240px;height:auto;">';
     }
     echo '</p>';
-    echo '<p><button type="button" class="button" id="mhn-pick-image">'.esc_html__('Choose image', 'matthummel-newsletter').'</button> ';
+    echo '<p><button type="button" class="button" id="mhn-pick-image">'.esc_html($chosen ? __('Replace image', 'matthummel-newsletter') : __('Add image', 'matthummel-newsletter')).'</button> ';
     echo '<button type="button" class="button" id="mhn-clear-image">'.esc_html__('Remove', 'matthummel-newsletter').'</button></p>';
 }
 

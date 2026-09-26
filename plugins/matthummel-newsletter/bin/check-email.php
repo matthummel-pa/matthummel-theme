@@ -426,8 +426,11 @@ foreach (array_keys(layouts()) as $layoutId) {
     if ($layoutId === 'welcome' && ! str_contains($markup, 'text-align:center')) {
         $problems[] = 'Welcome preview is not centered.';
     }
-    if ($layoutId === 'welcome' && ($imageAt !== false || str_contains($markup, 'In this note'))) {
-        $problems[] = 'Welcome preview still has an image or a heading list.';
+    if ($layoutId === 'welcome' && $imageAt === false) {
+        $problems[] = 'Welcome preview is missing the default image.';
+    }
+    if ($layoutId === 'welcome' && str_contains($markup, 'In this note')) {
+        $problems[] = 'Welcome preview still has a heading list.';
     }
     if ($layoutId === 'welcome' && ! str_contains($html, 'data-mhn-masthead="center"')) {
         $problems[] = 'Welcome masthead did not stay centered.';
@@ -449,6 +452,17 @@ foreach (array_keys(layouts()) as $layoutId) {
     }
     if (! str_contains($html, 'background-color:#eceff1') || ! str_contains($html, 'border-radius:16px')) {
         $problems[] = 'Preview is missing the light grey page or the rounded white card.';
+    }
+    if (! str_contains($html, 'padding:64px 48px')) {
+        $problems[] = 'Preview is missing the wider grey surround.';
+    }
+    if (! str_contains($markup, 'padding:48px 48px 48px')) {
+        $problems[] = 'The white letter is missing even padding on every side.';
+    }
+    $footerAt = strpos($markup, 'class="mhn-footer');
+    $socialAt = strpos($markup, 'class="mhn-social"');
+    if (! is_int($footerAt) || ! is_int($socialAt) || $socialAt < $footerAt || ! str_contains($html, 'class="mhn-social-icon"') || ! str_contains($html, 'GitHub') || ! str_contains($html, 'Bluesky')) {
+        $problems[] = 'Social icons or their names are missing from the footer.';
     }
     if ($layoutId === 'welcome' && ! str_contains($markup, 'background-color:#ffffff')) {
         $problems[] = 'Welcome preview is missing the white card.';
