@@ -721,6 +721,39 @@ function render_letter_style_compact(array $look): void
     echo '</div></div>';
 }
 
+/**
+ * @param  array{skip_sent_post: int, rule_categories: list<string>}  $config
+ */
+function render_newsletter_rules_card(array $config): void
+{
+    $selected = is_array($config['rule_categories'] ?? null) ? $config['rule_categories'] : [];
+    $choices = rule_category_choices();
+
+    echo '<section class="mhn-card" id="mhn-newsletter-rules" aria-labelledby="mhn-rules-heading">';
+    echo '<h2 id="mhn-rules-heading">'.esc_html__('Newsletter rules', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('These apply when you send a letter. They do not send mail on their own.', 'matthummel-newsletter').'</p>';
+    echo '<input type="hidden" name="mhn_rules_present" value="1">';
+    echo '<p class="mhn-check"><label for="mhn-skip-sent-post"><input type="checkbox" id="mhn-skip-sent-post" name="skip_sent_post" value="1" '.checked((int) ($config['skip_sent_post'] ?? 1), 1, false).'> '.esc_html__('Skip a post that was already sent.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="description">'.esc_html__('A Blog post letter does not go out again for a post already in the sent archive. The issue stays in the list.', 'matthummel-newsletter').'</p>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Categories', 'matthummel-newsletter').'</legend>';
+    if ($choices === []) {
+        echo '<p class="description">'.esc_html__('No categories yet. The Blog post picker lists every published post and project until you check some.', 'matthummel-newsletter').'</p>';
+    } else {
+        $size = (string) max(3, min(8, count($choices)));
+        echo '<p><label for="mhn-rule-categories">'.esc_html__('Limit the Blog post picker', 'matthummel-newsletter').'</label>';
+        echo '<select id="mhn-rule-categories" name="rule_categories[]" multiple size="'.esc_attr($size).'">';
+        foreach ($choices as $token => $label) {
+            echo '<option value="'.esc_attr($token).'" '.selected(in_array($token, $selected, true), true, false).'>'.esc_html($label).'</option>';
+        }
+        echo '</select></p>';
+        echo '<p class="description">'.esc_html__('Leave this empty to list every post and project. Check some, and the Blog post picker only shows those.', 'matthummel-newsletter').'</p>';
+    }
+    echo '</fieldset>';
+    echo '<h3>'.esc_html__('Footer rule', 'matthummel-newsletter').'</h3>';
+    echo '<p>'.esc_html__('The postal address and the unsubscribe link stay on every letter.', 'matthummel-newsletter').'</p>';
+    echo '</section>';
+}
+
 function page_settings(): void
 {
     guard_admin();
@@ -771,6 +804,7 @@ function page_settings(): void
     echo '</section>';
 
     render_letter_style_card($config);
+    render_newsletter_rules_card($config);
 
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
     echo '<p class="mhn-check"><label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label></p>';
@@ -1038,6 +1072,9 @@ function handle_settings(): void
         'letter_style' => wp_unslash($_POST['letter_style'] ?? ''),
         'letter_masthead' => wp_unslash($_POST['letter_masthead'] ?? ''),
         'letter_button' => wp_unslash($_POST['letter_button'] ?? ''),
+        'skip_sent_post' => $_POST['skip_sent_post'] ?? '',
+        'mhn_rules_present' => '1',
+        'rule_categories' => wp_unslash($_POST['rule_categories'] ?? []),
     ]);
     wp_safe_redirect(admin_url('admin.php?page=mhn-settings&saved=1'));
     exit;
@@ -1067,6 +1104,9 @@ function handle_send(): void
     if (issue_send_blocked($issueId)) {
         wp_die(esc_html(implode(' ', audit_issue($issueId)['errors'])));
     }
+    if (issue_skips_sent_post($issueId)) {
+        wp_die(esc_html__('This post was already sent. The issue is still here.', 'matthummel-newsletter'));
+    }
     start_campaign($issueId);
     wp_safe_redirect(admin_url('admin.php?page=mhn-deliver&issue='.$issueId.'&queued=1'));
     exit;
@@ -1083,6 +1123,9 @@ function handle_schedule(): void
     }
     if (issue_send_blocked($issueId)) {
         wp_die(esc_html(implode(' ', audit_issue($issueId)['errors'])));
+    }
+    if (issue_skips_sent_post($issueId)) {
+        wp_die(esc_html__('This post was already sent. The issue is still here.', 'matthummel-newsletter'));
     }
     $mysql = str_replace('T', ' ', substr($local, 0, 16)).':00';
     update_post_meta($issueId, '_mhn_scheduled_local', $mysql);

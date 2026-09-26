@@ -88,6 +88,8 @@ function wizard_save(array $input): array
             $result['error'] = 'locked';
         } elseif (issue_send_blocked($id)) {
             $result['error'] = 'a11y';
+        } elseif (issue_skips_sent_post($id)) {
+            $result['error'] = 'sent_post';
         } elseif (subscribed_recipient_count() < 1) {
             $result['error'] = 'empty';
         } elseif (empty($input['mhn_confirm_send'])) {
@@ -104,6 +106,8 @@ function wizard_save(array $input): array
             $result['error'] = 'locked';
         } elseif (issue_send_blocked($id)) {
             $result['error'] = 'a11y';
+        } elseif (issue_skips_sent_post($id)) {
+            $result['error'] = 'sent_post';
         } elseif (subscribed_recipient_count() < 1) {
             $result['error'] = 'empty';
         } elseif (empty($input['mhn_confirm_schedule']) || preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/', $local) !== 1) {
@@ -196,6 +200,10 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
     }
 
     save_blog_post_choice($issueId, $input);
+    $sections = sections_from_request($input);
+    if ($sections !== null && issue_layout_id($issueId) === 'post') {
+        update_post_meta($issueId, '_mhn_sections', $sections);
+    }
 
     $postedTemplate = sanitize_key((string) ($input['mhn_template'] ?? ''));
     if ($postedTemplate !== '' && email_template($postedTemplate) !== null) {
@@ -555,6 +563,7 @@ function wizard_error_message(string $code): string
         'schedule' => __('Choose a date and time, then check the schedule box.', 'matthummel-newsletter'),
         'empty' => __('Nobody is subscribed yet, so this would not deliver any mail.', 'matthummel-newsletter'),
         'locked' => __('This issue is already sent or still sending.', 'matthummel-newsletter'),
+        'sent_post' => __('This post was already sent. The issue is still here.', 'matthummel-newsletter'),
         'save' => __('The draft could not be saved.', 'matthummel-newsletter'),
         default => '',
     };
@@ -824,10 +833,32 @@ function render_blog_post_step(int $issueId): void
 {
     echo '<h2>'.esc_html__('Blog post', 'matthummel-newsletter').'</h2>';
     echo '<p>'.esc_html__('Pick a published post. The image, excerpt, headings, and categories come from that post. A note here replaces the excerpt. The title stays the post title until you change the subject.', 'matthummel-newsletter').'</p>';
+    render_blog_sections($issueId);
     render_blog_post_picker($issueId, 'post');
     echo '<h3>'.esc_html__('Your note', 'matthummel-newsletter').'</h3>';
     render_merge_hint();
     render_rich_field('mhn_note', 'mhn_note', (string) get_post_meta($issueId, '_mhn_note', true));
+}
+
+function render_blog_sections(int $issueId): void
+{
+    $sections = issue_sections($issueId);
+    $labels = [
+        'image' => __('Image', 'matthummel-newsletter'),
+        'excerpt' => __('Excerpt', 'matthummel-newsletter'),
+        'headings' => __('Headings', 'matthummel-newsletter'),
+        'categories' => __('Categories', 'matthummel-newsletter'),
+        'button' => __('Button', 'matthummel-newsletter'),
+    ];
+
+    echo '<fieldset class="mhn-sections"><legend>'.esc_html__('Sections', 'matthummel-newsletter').'</legend>';
+    echo '<input type="hidden" name="mhn_sections_present" value="1">';
+    foreach ($labels as $key => $label) {
+        $id = 'mhn-section-'.$key;
+        echo '<p class="mhn-check"><label for="'.esc_attr($id).'"><input type="checkbox" id="'.esc_attr($id).'" name="mhn_sections[]" value="'.esc_attr($key).'" '.checked(! empty($sections[$key]), true, false).'> '.esc_html($label).'</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Uncheck a section to leave it out of this letter. Other layouts ignore these.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
 }
 
 function render_blog_post_picker(int $issueId, string $layoutId): void
@@ -884,8 +915,12 @@ function blog_post_choices(int $selectedId): array
         }
     }
 
+    $rules = settings()['rule_categories'];
     $ready = [];
     foreach ($choices as $post) {
+        if (! letter_in_rule_categories(post_rule_tokens($post), $rules)) {
+            continue;
+        }
         $title = function_exists('get_the_title')
             ? html_entity_decode(get_the_title($post), ENT_QUOTES)
             : $post->post_title;
@@ -1005,8 +1040,8 @@ function render_step_subject(int $issueId): void
     echo '<p class="description"><span id="mhn-subject-count">'.esc_html((string) mb_strlen($subject)).'</span> '.esc_html__('characters. Aim for about 50. Over 60, inboxes may cut the subject off.', 'matthummel-newsletter').'</p>';
     render_issue_audit($issueId);
     echo '<p><label for="mhn-preheader"><strong>'.esc_html__('Preview text', 'matthummel-newsletter').'</strong></label><br>';
-    echo '<input class="large-text" type="text" id="mhn-preheader" name="mhn_preheader" maxlength="140" data-mhn-count="mhn-preheader-count" value="'.esc_attr($preheader).'"></p>';
-    echo '<p class="description"><span id="mhn-preheader-count">'.esc_html((string) mb_strlen($preheader)).'</span> '.esc_html__('characters. Aim for about 90. This is the line under the subject in the inbox.', 'matthummel-newsletter').'</p>';
+    echo '<input class="large-text" type="text" id="mhn-preheader" name="mhn_preheader" maxlength="140" data-mhn-count="mhn-preheader-count" value="'.esc_attr($preheader).'" placeholder="'.esc_attr(layout_copy()['intro']).'"></p>';
+    echo '<p class="description"><span id="mhn-preheader-count">'.esc_html((string) mb_strlen($preheader)).'</span> '.esc_html__('characters. Aim for about 90. This hidden line is the inbox preview. It starts as your reusable intro.', 'matthummel-newsletter').'</p>';
 }
 
 function render_step_preview(int $issueId): void

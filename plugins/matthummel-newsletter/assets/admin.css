@@ -752,6 +752,15 @@
   max-width: 6rem;
 }
 
+.mhn-card select[multiple] {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 8rem;
+  background: #fff;
+  border: 1px solid #8aa0bd;
+  border-radius: 4px;
+}
+
 .mhn-settings-note {
   margin: 0 0 16px;
   padding: 12px 14px;

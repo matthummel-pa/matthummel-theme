@@ -127,6 +127,75 @@ a {
   color: #ffffff;
 }
 
+.mhn-letter[data-mhn-layout="standard"] h1.mhn-title {
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+
+.mhn-letter[data-mhn-layout="standard"] .mhn-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #50575e;
+}
+
+.mhn-letter[data-mhn-layout="standard"] .mhn-standard-figure td {
+  background-color: #eef3f9;
+}
+
+.mhn-letter[data-mhn-layout="welcome"] .mhn-masthead,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-brand,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-masthead .mhn-kicker,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-text,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-text p,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-text h1,
+.mhn-letter[data-mhn-layout="welcome"] .mhn-signoff-name {
+  text-align: center;
+}
+
+.mhn-letter[data-mhn-layout="plain"],
+.mhn-letter[data-mhn-layout="plain"] .mhn-page,
+.mhn-letter[data-mhn-layout="plain"] .mhn-page-td,
+.mhn-letter[data-mhn-layout="plain"] .mhn-frame,
+.mhn-letter[data-mhn-layout="plain"] .mhn-card {
+  background-color: #ffffff;
+}
+
+.mhn-letter[data-mhn-layout="plain"] .mhn-stripe {
+  display: none;
+  height: 0;
+}
+
+.mhn-letter[data-mhn-layout="plain"] .mhn-eyebrow {
+  border-left: 4px solid #0d2e57;
+}
+
+.mhn-letter[data-mhn-layout="plain"] a.mhn-text-link {
+  background: none;
+  min-height: 44px;
+}
+
+.mhn-letter[data-mhn-layout="feature"] .mhn-feature-stripe,
+.mhn-letter[data-mhn-layout="feature"] .mhn-stripe {
+  background-color: #0d2e57;
+  height: 4px;
+}
+
+.mhn-letter[data-mhn-layout="feature"] .mhn-hero-cell,
+.mhn-letter[data-mhn-layout="post"] .mhn-hero-cell {
+  padding: 0;
+  line-height: 0;
+}
+
+.mhn-letter[data-mhn-layout="post"] .mhn-post-cats td {
+  background-color: #dceaf8;
+}
+
+.mhn-letter[data-mhn-layout="post"] .mhn-post-note td {
+  background-color: #eef3f9;
+}
+
 @media only screen and (max-width: 620px) {
   .mhn-shell {
     width: 100% !important;

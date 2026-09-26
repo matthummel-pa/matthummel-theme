@@ -46,6 +46,9 @@ function issue_archive_message(int $issueId): array
     $includeRecent = (string) get_post_meta($issueId, '_mhn_include_recent', true) === '1';
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
     if ($preheader === '') {
+        $preheader = suggest_preheader($issueId);
+    }
+    if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }
 
@@ -106,6 +109,7 @@ function store_sent_snapshot(int $issueId): int
         archive_table(),
         [
             'issue_id' => $issueId,
+            'source_post' => (int) get_post_meta($issueId, '_mhn_source_post', true),
             'subject' => $message['subject'],
             'preheader' => $message['preheader'],
             'from_name' => $settings['from_name'],
@@ -123,7 +127,7 @@ function store_sent_snapshot(int $issueId): int
             'body_text' => $message['text'],
             'created_at' => $finished,
         ],
-        ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s']
+        ['%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s']
     );
 
     if ($inserted === false) {
@@ -131,6 +135,50 @@ function store_sent_snapshot(int $issueId): int
     }
 
     return (int) $wpdb->insert_id;
+}
+
+/**
+ * Source post ids already stored on a sent archive row.
+ *
+ * @return list<int>
+ */
+function sent_source_post_ids(int $exceptIssueId = 0): array
+{
+    global $wpdb;
+
+    if (! archive_table_exists() || ! archive_has_source_column()) {
+        return [];
+    }
+
+    $sql = 'SELECT DISTINCT source_post FROM '.archive_table().' WHERE source_post > 0';
+    if ($exceptIssueId > 0) {
+        $rows = $wpdb->get_col($wpdb->prepare($sql.' AND issue_id <> %d', $exceptIssueId));
+    } else {
+        $rows = $wpdb->get_col($sql);
+    }
+
+    $ids = [];
+    foreach (is_array($rows) ? $rows : [] as $id) {
+        $id = (int) $id;
+        if ($id > 0) {
+            $ids[] = $id;
+        }
+    }
+
+    return $ids;
+}
+
+function archive_has_source_column(): bool
+{
+    global $wpdb;
+
+    if (! archive_table_exists()) {
+        return false;
+    }
+
+    $columns = $wpdb->get_col('SHOW COLUMNS FROM '.archive_table(), 0);
+
+    return is_array($columns) && in_array('source_post', $columns, true);
 }
 
 /**
@@ -363,6 +411,7 @@ function duplicate_issue(int $issueId): int
         '_mhn_preheader',
         '_mhn_subject_auto',
         '_mhn_source_post',
+        '_mhn_sections',
         '_mhn_feature_show',
         '_mhn_feature_image_id',
         '_mhn_button_label',

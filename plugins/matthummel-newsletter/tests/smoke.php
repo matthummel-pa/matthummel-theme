@@ -643,7 +643,7 @@ mhn_check(isset($cooldownToken[1]) && Newsletter\confirm_subscriber($cooldownTok
 $otherCode = Newsletter\subscribe_address('cooldown-b@example.com', 'Bo', 'page');
 mhn_check($otherCode === 'confirm', 'a different address can still confirm');
 
-mhn_check((string) get_option('mhn_db_version') === '3', 'schema version is 3');
+mhn_check((string) get_option('mhn_db_version') === '4', 'schema version is 4');
 mhn_check(Newsletter\subscriber_column_exists('last_name'), 'last_name column exists');
 Newsletter\ensure_subscriber_columns();
 mhn_check(Newsletter\subscriber_column_exists('last_name'), 'schema upgrade is idempotent');
