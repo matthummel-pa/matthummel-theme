@@ -711,15 +711,20 @@ function apply_layout(string $layoutId, string $body): string
 /**
  * Sample letter for the dashboard and the layout picker.
  * Links are replaced with # so the preview cannot call the tracker.
+ *
+ * @param  array{style?: string, masthead?: string, button?: string}|null  $look
  */
-function layout_preview_html(string $layoutId): string
+function layout_preview_html(string $layoutId, ?array $look = null): string
 {
     $layoutId = normalize_layout_id($layoutId);
+    $look = $look === null ? settings_letter_look() : normalize_letter_look($look);
+    push_letter_look($look);
     $copy = layout_copy();
     $subject = $layoutId === 'welcome' ? $copy['welcome_subject'] : __('A note from the workshop', 'matthummel-newsletter');
     $body = apply_layout($layoutId, sample_issue_body());
     $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
-    $html = email_document($subject, $preheader, $body, false, 0, $layoutId);
+    $html = email_document($subject, $preheader, $body, false, 0, $layoutId, $look);
+    pop_letter_look();
     $html = apply_merge($html, [
         'id' => '0',
         'email' => 'you@example.com',
@@ -985,15 +990,17 @@ function emulator_preview_message(array $input): array
     }
     $sourcePostId = array_key_exists('mhn_source_post', $input) ? absint($input['mhn_source_post']) : -1;
     $titleIsCustom = trim((string) ($input['mhn_subject'] ?? '')) !== '';
+    $look = letter_look_from_request($input, $issueId);
 
-    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom);
+    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom, $look);
 }
 
 /**
  * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
+ * @param  array{style?: string, masthead?: string, button?: string}|null  $look
  * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, layout: string}
  */
-function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false): array
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null): array
 {
     $settings = settings();
     $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
@@ -1024,7 +1031,7 @@ function emulator_view(int $issueId, string $layoutId, string $subject = '', ?st
         }
     }
     $preheader = emulator_preheader($intro);
-    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom);
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom, $look);
 
     return [
         'from_name' => $settings['from_name'],
@@ -1105,8 +1112,14 @@ function blog_post_imported_title(int $issueId, int $sourcePostId): string
         : $post->post_title;
 }
 
-function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false): string
+/**
+ * @param  array{intro: string, heading: string, body: string, button_label: string, button_url: string, signoff: string}|null  $blocks
+ * @param  array{style?: string, masthead?: string, button?: string}|null  $look
+ */
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null): string
 {
+    $look = $look === null ? issue_letter_look($issueId) : normalize_letter_look($look);
+    push_letter_look($look);
     if ($layoutId === 'post') {
         $advanced = $editor === 'advanced' ? ($blocks ?? empty_editor_blocks()) : null;
         $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom);
@@ -1125,7 +1138,7 @@ function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?
     if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }
-    $html = email_document($subject, $preheader, $body, false, 0, $layoutId);
+    $html = email_document($subject, $preheader, $body, false, 0, $layoutId, $look);
     $html = apply_merge($html, [
         'id' => '0',
         'email' => 'you@example.com',
@@ -1133,6 +1146,7 @@ function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?
         'last_name' => '',
         'status' => 'preview',
     ], 0, true);
+    pop_letter_look();
 
     return placeholder_preview_links($html);
 }

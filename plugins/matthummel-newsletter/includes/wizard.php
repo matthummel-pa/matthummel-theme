@@ -169,6 +169,7 @@ function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
  */
 function apply_wizard_fields(int $issueId, array $input, int $step): void
 {
+    save_issue_letter_style($issueId, $input);
     if (isset($input['mhn_editor'])) {
         update_post_meta($issueId, '_mhn_editor', normalize_editor_mode((string) $input['mhn_editor']));
     }
@@ -493,6 +494,7 @@ function render_wizard_page(): void
 
     echo '<div class="mhn-wizard-split">';
     echo '<div class="mhn-wizard-main">';
+    render_letter_style_compact(issue_letter_look($issueId));
     render_editor_switch(issue_editor_mode($issueId));
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {

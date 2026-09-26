@@ -245,16 +245,17 @@ function bulletproof_button(string $label, string $url): string
 {
     $safeLabel = esc_html($label);
     $href = href_attr($url);
+    $palette = letter_button_palette();
     $font = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;";
 
     return '<!--[if mso]>'
-        .'<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="'.$href.'" style="height:48px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="#0d2e57" fillcolor="#0d2e57">'
+        .'<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="'.$href.'" style="height:48px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="'.$palette['stroke'].'" fillcolor="'.$palette['fill'].'">'
         .'<w:anchorlock/>'
-        .'<center style="color:#ffffff;'.$font.'font-size:16px;font-weight:bold;">'.$safeLabel.'</center>'
+        .'<center style="color:'.$palette['text'].';'.$font.'font-size:16px;font-weight:bold;">'.$safeLabel.'</center>'
         .'</v:roundrect>'
         .'<![endif]-->'
         .'<!--[if !mso]><!-->'
-        .'<a class="mhn-btn" href="'.$href.'" style="background-color:#0d2e57;border-radius:4px;color:#ffffff;display:inline-block;'.$font.'font-size:16px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;padding:14px 22px;min-height:44px;max-width:100%;box-sizing:border-box;-webkit-text-size-adjust:none;">'.$safeLabel.'</a>'
+        .'<a class="'.esc_attr($palette['class']).'" href="'.$href.'" style="'.$palette['anchor'].'">'.$safeLabel.'</a>'
         .'<!--<![endif]-->';
 }
 

@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ A personal newsletter for matthummel.com. Addresses, issues, and the send log li
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Layouts: Standard, Welcome, Plain, and Feature. Standard reuses an intro and a sign-off. Welcome is a short letter with its own subject and body. Plain leaves out the featured image. Feature puts that image on top. The four letters now share a navy-and-white email shell.
+* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Standard reuses an intro and a sign-off. Welcome is a short letter with its own subject and body. Plain leaves out the featured image. Feature and Blog post put that image on top. Letter style (Card, Banner, or Paper), masthead alignment, and the button treatment are edited under Settings. The letter CSS ships in the plugin and is part of the message.
 * Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
 * Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
@@ -54,6 +54,10 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.3.0 =
+* The letter design lives in the plugin stylesheet and is inlined on the message, so the preview and the sent letter match.
+* Letter style: Card, Banner, or Paper. Masthead can sit left or center. The button can be solid or outline. Settings is the default. One letter can use another look.
 
 = 1.2.0 =
 * The four letters now share a navy-and-white email shell.
