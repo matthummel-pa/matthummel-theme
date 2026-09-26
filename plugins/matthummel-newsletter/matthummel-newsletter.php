@@ -4,7 +4,7 @@
  * Plugin Name:       Matt Hummel Newsletter
  * Plugin URI:        https://matthummel.com
  * Description:       Self-hosted newsletter. Subscribers, issues, and stats stay in this WordPress database. Mail goes out through wp_mail.
- * Version:           1.7.0
+ * Version:           1.8.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            Matt Hummel
@@ -21,7 +21,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('MHN_VERSION', '1.7.0');
+define('MHN_VERSION', '1.8.0');
 define('MHN_FILE', __FILE__);
 define('MHN_DIR', __DIR__);
 

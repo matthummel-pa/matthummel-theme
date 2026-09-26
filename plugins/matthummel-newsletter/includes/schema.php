@@ -81,6 +81,7 @@ function boot(): void
     add_action('wp_enqueue_scripts', __NAMESPACE__.'\\public_assets');
     add_shortcode('mhn_updates', __NAMESPACE__.'\\shortcode_updates');
     add_shortcode('mhn_preferences', __NAMESPACE__.'\\shortcode_preferences');
+    add_shortcode('mhn_unsubscribe', __NAMESPACE__.'\\shortcode_unsubscribe');
     add_action('template_redirect', __NAMESPACE__.'\\on_template_redirect');
     add_filter('wp_robots', __NAMESPACE__.'\\robots');
     add_action('phpmailer_init', __NAMESPACE__.'\\on_phpmailer');
@@ -355,10 +356,40 @@ function ensure_pages(): void
     );
     ensure_page(
         'email-preferences',
-        __('Email preferences', 'matthummel-newsletter'),
+        __('Manage preferences', 'matthummel-newsletter'),
         '[mhn_preferences]',
         'template-get-updates.blade.php'
     );
+    sync_owned_title(
+        'email-preferences',
+        __('Manage preferences', 'matthummel-newsletter'),
+        '[mhn_preferences]'
+    );
+    ensure_page(
+        'unsubscribe',
+        __('Unsubscribe', 'matthummel-newsletter'),
+        '[mhn_unsubscribe]',
+        'template-get-updates.blade.php'
+    );
+}
+
+function sync_owned_title(string $slug, string $title, string $shortcode): void
+{
+    $page = get_page_by_path($slug);
+    if (! $page instanceof \WP_Post) {
+        return;
+    }
+    if (trim((string) $page->post_content) !== $shortcode) {
+        return;
+    }
+    if ($page->post_title === $title) {
+        return;
+    }
+
+    wp_update_post([
+        'ID' => $page->ID,
+        'post_title' => $title,
+    ]);
 }
 
 function ensure_page(string $slug, string $title, string $shortcode, string $template): int

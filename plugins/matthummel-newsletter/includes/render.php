@@ -157,7 +157,7 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
         foreach (['masthead_style', 'brand', 'kicker'] as $key) {
             $chrome[$key] = str_replace('text-align:left', 'text-align:center', (string) $chrome[$key]);
         }
-        $chrome['masthead_style'] = (string) preg_replace('/padding:[^;]+;/', 'padding:36px 48px 18px;', (string) $chrome['masthead_style']);
+        $chrome['masthead_style'] = (string) preg_replace('/padding:[^;]+;/', 'padding:36px 40px 18px;', (string) $chrome['masthead_style']);
         $chrome['show_stripe'] = false;
     }
 
@@ -167,7 +167,7 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
         $chrome['show_stripe'] = false;
         $chrome['show_rule'] = false;
         if (($chrome['style'] ?? '') !== 'banner') {
-            $chrome['masthead_style'] = 'padding:22px 32px 8px;background-color:#ffffff;font-family:'.$font.';text-align:'.$align.';';
+            $chrome['masthead_style'] = 'padding:22px 40px 8px;background-color:#ffffff;font-family:'.$font.';text-align:'.$align.';';
         }
     }
 
@@ -178,7 +178,7 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
     if ($layoutKey === 'feature' || $layoutKey === 'post') {
         $chrome['show_stripe'] = $layoutKey === 'post' && ($chrome['show_stripe'] ?? false);
         $chrome['show_rule'] = false;
-        $chrome['hero'] = 'padding:32px 32px 0;background-color:#ffffff;line-height:0;font-size:0;';
+        $chrome['hero'] = 'padding:0;background-color:#ffffff;line-height:0;font-size:0;';
     }
 
     return $chrome;
@@ -218,22 +218,9 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $styles = '<style>'.email_css().'</style>';
 
     $kicker = letter_kicker($layoutKey, $site);
-    $padTop = match ($layoutKey) {
-        'feature' => '32px',
-        'post' => '32px',
-        'plain' => '20px',
-        'welcome' => '48px',
-        default => '32px',
-    };
-    $padSide = match ($layoutKey) {
-        'welcome' => '48px',
-        default => '32px',
-    };
-    $padBottom = match ($layoutKey) {
-        'welcome' => '40px',
-        'plain' => '24px',
-        default => '28px',
-    };
+    $padTop = '48px';
+    $padSide = '48px';
+    $padBottom = '48px';
     $bodyAlign = $layoutKey === 'welcome' ? 'center' : 'left';
     $lineHeight = $layoutKey === 'welcome' ? '1.7' : $type['line'];
     $heroRow = $hero !== ''
@@ -257,9 +244,15 @@ function email_document(string $subject, string $preheader, string $body, bool $
         default => $stripe.$masthead.$hairline,
     };
 
+    $socialAlign = $layoutKey === 'welcome' ? 'center' : 'left';
+    $social = letter_social_html($settings, $socialAlign);
+    $socialInContent = ($settings['social_placement'] ?? 'footer') === 'content';
+    $socialBlock = $socialInContent && $social !== ''
+        ? '<div class="mhn-social-block" style="margin-top:8px;">'.$social.'</div>'
+        : '';
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
         .'<td class="mhn-footer mhn-muted mhn-px" style="'.$chrome['footer'].'">'
-        .letter_social_html($settings)
+        .($socialInContent ? '' : $social)
         .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.esc_html(sprintf(
             /* translators: %s: site host */
             __('You got this because you signed up at %s. I keep your address on this site.', 'matthummel-newsletter'),
@@ -301,8 +294,9 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .$headRows
         .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';background-color:#ffffff;font-family:'.$font.';font-size:'.$type['body'].';line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
         .$body
+        .$recent
+        .$socialBlock
         .'</td></tr>'
-        .($recent !== '' ? '<tr><td>'.$recent.'</td></tr>' : '')
         .'<tr><td>'.$footer.'</td></tr>'
         .'</table></td></tr></table>'
         .'<!--[if mso]></td></tr></table><![endif]-->'
@@ -332,26 +326,51 @@ function letter_header_image_html(array $settings): string
 }
 
 /**
- * Text links. Icon fonts do not survive most inboxes.
+ * Icon plus the network name. The name stays visible if the image is blocked.
  *
  * @param  array<string, mixed>  $settings
  */
-function letter_social_html(array $settings): string
+function letter_social_html(array $settings, string $align = 'left'): string
 {
+    $align = $align === 'center' ? 'center' : 'left';
     $links = letter_social_fields();
-    $parts = [];
+    $cells = '';
     foreach ($links as $key => $label) {
         $url = sanitize_https_url((string) ($settings[$key] ?? ''));
         if ($url === '') {
             continue;
         }
-        $parts[] = '<a href="'.esc_url($url).'" style="color:#50575e;text-decoration:underline;">'.esc_html($label).'</a>';
+        $icon = letter_social_icon_html($key);
+        $cells .= '<td class="mhn-social-cell" style="padding:0 16px 8px 0;font-size:13px;line-height:20px;text-align:'.$align.';">'
+            .'<a href="'.esc_url($url).'" style="color:#50575e;text-decoration:underline;font-size:13px;line-height:20px;">'
+            .$icon.esc_html($label).'</a></td>';
     }
-    if ($parts === []) {
+    if ($cells === '') {
         return '';
     }
 
-    return '<p class="mhn-social" style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.implode(' · ', $parts).'</p>';
+    return '<table role="presentation" class="mhn-social" cellpadding="0" cellspacing="0" border="0" align="'.($align === 'center' ? 'center' : 'left').'" style="margin:0 0 8px;">'
+        .'<tr>'.$cells.'</tr></table>';
+}
+
+function letter_social_icon_html(string $key): string
+{
+    $file = match ($key) {
+        'social_site' => 'site.png',
+        'social_github' => 'github.png',
+        'social_linkedin' => 'linkedin.png',
+        'social_bluesky' => 'bluesky.png',
+        'social_youtube' => 'youtube.png',
+        'social_instagram' => 'instagram.png',
+        default => '',
+    };
+    if ($file === '' || ! defined('MHN_FILE') || ! function_exists('plugins_url')) {
+        return '';
+    }
+
+    $src = plugins_url('assets/social/'.$file, MHN_FILE);
+
+    return '<img class="mhn-social-icon" src="'.esc_url($src).'" alt="" width="20" height="20" style="display:inline-block;vertical-align:middle;border:0;margin:0 6px 0 0;width:20px;height:20px;">';
 }
 
 function letter_kicker(string $layoutKey, string $site): string
@@ -393,7 +412,7 @@ function letter_rule(array $chrome): string
         return '';
     }
 
-    return '<tr><td class="mhn-hairline mhn-rule mhn-px" style="padding:0 32px;font-size:0;line-height:0;">'
+    return '<tr><td class="mhn-hairline mhn-rule mhn-px" style="padding:0 48px;font-size:0;line-height:0;">'
         .'<div style="'.$chrome['rule'].'font-size:0;line-height:0;">&nbsp;</div>'
         .'</td></tr>';
 }
@@ -448,11 +467,8 @@ function recent_posts_html(int $excludePostId, string $font): string
         return '';
     }
 
-    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-        .'<td class="mhn-text mhn-px" style="padding:8px 32px 12px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'
-        .'<h2 class="mhn-text" style="margin:0 0 12px;font-size:18px;line-height:1.3;color:#0d2e57;">'.esc_html__('Recent writing', 'matthummel-newsletter').'</h2>'
-        .'<ul style="margin:0 0 8px;padding-left:20px;">'.$items.'</ul>'
-        .'</td></tr></table>';
+    return '<h2 class="mhn-text" style="margin:16px 0 12px;font-family:'.$font.';font-size:18px;line-height:1.3;color:#0d2e57;">'.esc_html__('Recent writing', 'matthummel-newsletter').'</h2>'
+        .'<ul style="margin:0 0 8px;padding-left:20px;font-family:'.$font.';font-size:16px;line-height:1.6;color:#0b1220;">'.$items.'</ul>';
 }
 
 /**
@@ -594,13 +610,13 @@ function plain_text(string $html): string
 function unsub_url(array $subscriber): string
 {
     if ((int) ($subscriber['id'] ?? 0) < 1) {
-        return add_query_arg('mhn_test', '1', page_url('email-preferences'));
+        return add_query_arg('mhn_test', '1', page_url('unsubscribe'));
     }
 
     return add_query_arg([
         'mhn_unsub' => (int) $subscriber['id'],
         'mhn_token' => subscriber_token($subscriber, 'manage'),
-    ], home_url('/'));
+    ], page_url('unsubscribe'));
 }
 
 /**

@@ -153,7 +153,11 @@ mhn_check($kept instanceof WP_Post && $kept->post_title === 'Custom title keep m
 mhn_check($kept instanceof WP_Post && $kept->post_content === 'Custom body that must stay', 'activation does not replace existing page content');
 mhn_check(count($GLOBALS['mhn_outbox']) === $beforeActivateMail, 'activation does not send email');
 wp_delete_post($probe, true);
+$prefs = get_page_by_path('email-preferences');
+$unsubPage = get_page_by_path('unsubscribe');
 mhn_check($prefs instanceof WP_Post && has_shortcode($prefs->post_content, 'mhn_preferences'), 'preferences page exists');
+mhn_check($prefs instanceof WP_Post && $prefs->post_title === 'Manage preferences', 'preferences page title is Manage preferences');
+mhn_check($unsubPage instanceof WP_Post && has_shortcode($unsubPage->post_content, 'mhn_unsubscribe'), 'unsubscribe page exists');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send is off');
 mhn_check(Newsletter\settings()['track_opens'] === 0 && Newsletter\settings()['track_clicks'] === 0, 'tracking is off');
 

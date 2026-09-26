@@ -40,6 +40,17 @@ function letter_social_fields(): array
     ];
 }
 
+/**
+ * @return array<string, string>
+ */
+function social_placement_choices(): array
+{
+    return [
+        'footer' => __('Footer', 'matthummel-newsletter'),
+        'content' => __('In the letter', 'matthummel-newsletter'),
+    ];
+}
+
 function subscribers_table(): string
 {
     global $wpdb;
@@ -93,6 +104,7 @@ function archive_table(): string
  *     social_bluesky: string,
  *     social_youtube: string,
  *     social_instagram: string,
+ *     social_placement: string,
  *     skip_sent_post: int,
  *     rule_categories: list<string>
  * }
@@ -136,6 +148,7 @@ function settings(): array
         'social_bluesky' => $social['social_bluesky'],
         'social_youtube' => $social['social_youtube'],
         'social_instagram' => $social['social_instagram'],
+        'social_placement' => 'footer',
         'skip_sent_post' => 1,
         'rule_categories' => [],
     ];
@@ -181,6 +194,12 @@ function settings(): array
         'social_bluesky' => sanitize_https_url((string) ($merged['social_bluesky'] ?? '')),
         'social_youtube' => sanitize_https_url((string) ($merged['social_youtube'] ?? '')),
         'social_instagram' => sanitize_https_url((string) ($merged['social_instagram'] ?? '')),
+        'social_placement' => choice_from_input(
+            ['social_placement' => $merged['social_placement'] ?? 'footer'],
+            'social_placement',
+            social_placement_choices(),
+            'footer'
+        ),
         'skip_sent_post' => (int) $merged['skip_sent_post'] === 1 ? 1 : 0,
         'rule_categories' => sanitize_rule_categories($merged['rule_categories'] ?? []),
     ];
@@ -244,6 +263,7 @@ function update_settings(array $input): void
         'social_bluesky' => sanitize_https_url((string) ($input['social_bluesky'] ?? $current['social_bluesky'])),
         'social_youtube' => sanitize_https_url((string) ($input['social_youtube'] ?? $current['social_youtube'])),
         'social_instagram' => sanitize_https_url((string) ($input['social_instagram'] ?? $current['social_instagram'])),
+        'social_placement' => choice_from_input($input, 'social_placement', social_placement_choices(), $current['social_placement']),
         'skip_sent_post' => array_key_exists('skip_sent_post', $input) ? (empty($input['skip_sent_post']) ? 0 : 1) : $current['skip_sent_post'],
         'rule_categories' => array_key_exists('mhn_rules_present', $input)
             ? sanitize_rule_categories($input['rule_categories'] ?? [])
