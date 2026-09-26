@@ -356,8 +356,9 @@ foreach (array_keys(layouts()) as $layoutId) {
     if ($layoutId === 'plain' && $imageAt !== false) {
         $problems[] = 'Plain preview still has a featured image.';
     }
-    if ($layoutId === 'feature' && ($imageAt === false || $introAt === false || $imageAt > $introAt)) {
-        $problems[] = 'Feature preview does not put the image above the intro.';
+    $titleAt = strpos($visible, '<h1');
+    if ($layoutId === 'feature' && ($imageAt === false || $titleAt === false || $imageAt > $titleAt)) {
+        $problems[] = 'Feature preview does not put the image above the title.';
     }
     if ($layoutId === 'standard' && ($imageAt === false || $introAt === false || $introAt > $imageAt)) {
         $problems[] = 'Standard preview does not lead with the intro.';

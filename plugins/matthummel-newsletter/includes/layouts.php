@@ -237,14 +237,14 @@ function compose_advanced_letter(array $blocks, string $layoutId, string $issueH
     $label = trim((string) ($blocks['button_label'] ?? ''));
     $url = trim((string) ($blocks['button_url'] ?? ''));
     if ($label !== '' && $url !== '') {
-        $button = bulletproof_button($label, $url);
+        $button = letter_button($label, $url);
     }
 
-    $headingHtml = advanced_heading_html($heading);
-    $introHtml = layout_text_html($intro);
+    $headingHtml = letter_title_html($heading, $layoutId === 'plain');
+    $introHtml = layout_eyebrow_html($intro, $layoutId);
     $signoffHtml = layout_signoff_html($signoff, $fromName);
     if ($layoutId === 'feature') {
-        return $image.$headingHtml.$introHtml.$bodyHtml.$button.$signoffHtml;
+        return present_feature_image($image).$headingHtml.$introHtml.$bodyHtml.$button.$signoffHtml;
     }
     if ($layoutId === 'plain' || $layoutId === 'welcome') {
         return $introHtml.$headingHtml.$bodyHtml.$button.$signoffHtml;
@@ -265,12 +265,7 @@ function extract_layout_image(string $html): string
 
 function advanced_heading_html(string $heading): string
 {
-    $heading = trim(wp_strip_all_tags($heading));
-    if ($heading === '') {
-        return '';
-    }
-
-    return '<h1 class="mhn-text" style="margin:0 0 12px;font-size:28px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($heading).'</h1>';
+    return letter_title_html($heading);
 }
 
 function advanced_copy_html(string $text): string
@@ -289,7 +284,7 @@ function advanced_copy_html(string $text): string
     }
     $styled = preg_replace(
         '/<p(\s|>)/',
-        '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;"$1',
+        '<p style="'.body_paragraph_style().'"$1',
         $clean
     );
 
@@ -301,23 +296,35 @@ function apply_layout(string $layoutId, string $body): string
     $layoutId = normalize_layout_id($layoutId);
     $copy = layout_copy();
     if ($layoutId === 'welcome') {
-        $html = layout_text_html($copy['welcome_body']);
+        $html = layout_text_html($copy['welcome_body'], true);
         if ($html === '') {
-            $html = layout_text_html(layout_copy_defaults()['welcome_body']);
+            $html = layout_text_html(layout_copy_defaults()['welcome_body'], true);
         }
 
         return $html;
     }
 
-    $letter = layout_text_html($copy['intro']).$body.layout_signoff_html($copy['signoff'], $copy['from_name']);
     if ($layoutId === 'plain') {
-        return strip_layout_images($letter);
-    }
-    if ($layoutId === 'feature') {
-        return arrange_feature_body($letter);
+        $body = strip_layout_images($body);
     }
 
-    return $letter;
+    $image = '';
+    if ($layoutId === 'feature') {
+        $image = extract_layout_image($body);
+        if ($image !== '') {
+            $body = remove_layout_image($body);
+        }
+        $image = present_feature_image($image);
+    }
+
+    $heading = take_letter_heading($body, $layoutId === 'plain');
+    $intro = layout_eyebrow_html($copy['intro'], $layoutId);
+    $signoff = layout_signoff_html($copy['signoff'], $copy['from_name']);
+    if ($layoutId === 'feature') {
+        return $image.$heading.$intro.$body.$signoff;
+    }
+
+    return $intro.$heading.$body.$signoff;
 }
 
 /**
@@ -331,7 +338,7 @@ function layout_preview_html(string $layoutId): string
     $subject = $layoutId === 'welcome' ? $copy['welcome_subject'] : __('A note from the workshop', 'matthummel-newsletter');
     $body = apply_layout($layoutId, sample_issue_body());
     $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
-    $html = email_document($subject, $preheader, $body, false, 0);
+    $html = email_document($subject, $preheader, $body, false, 0, $layoutId);
     $html = apply_merge($html, [
         'id' => '0',
         'email' => 'you@example.com',
@@ -369,11 +376,16 @@ function handle_layout_preview(): void
     exit;
 }
 
-function layout_text_html(string $text): string
+function layout_text_html(string $text, bool $compact = false): string
 {
     $text = trim(str_replace(["\r\n", "\r"], "\n", $text));
     if ($text === '') {
         return '';
+    }
+
+    $style = body_paragraph_style();
+    if ($compact) {
+        $style = 'margin:0 0 12px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;';
     }
 
     $html = '';
@@ -394,21 +406,103 @@ function layout_text_html(string $text): string
         if ($lines === []) {
             continue;
         }
-        $html .= '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'.implode('<br>', $lines).'</p>';
+        $html .= '<p style="'.$style.'">'.implode('<br>', $lines).'</p>';
     }
 
     return $html;
+}
+
+/**
+ * Reusable intro as a short line above the title. Plain uses a navy rule instead of a headline.
+ */
+function layout_eyebrow_html(string $text, string $layoutId): string
+{
+    $text = trim(str_replace(["\r\n", "\r"], "\n", $text));
+    if ($text === '') {
+        return '';
+    }
+
+    $lines = [];
+    foreach (preg_split("/\n+/", $text) ?: [] as $line) {
+        $line = trim((string) $line);
+        if ($line !== '') {
+            $lines[] = esc_html($line);
+        }
+    }
+    if ($lines === []) {
+        return '';
+    }
+
+    $inner = implode('<br>', $lines);
+    $font = email_font_stack();
+    if ($layoutId === 'plain') {
+        return '<table role="presentation" class="mhn-eyebrow-block" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;"><tr>'
+            .'<td class="mhn-eyebrow" style="border-left:4px solid #0d2e57;padding:4px 0 4px 16px;font-family:'.$font.';font-size:18px;line-height:1.45;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</td>'
+            .'</tr></table>';
+    }
+    if ($layoutId === 'welcome') {
+        return '<p class="mhn-eyebrow" style="margin:0 0 8px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</p>';
+    }
+
+    return '<p class="mhn-eyebrow" style="margin:0 0 8px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</p>';
+}
+
+function letter_button(string $label, string $url): string
+{
+    if (trim($label) === '' || trim($url) === '') {
+        return '';
+    }
+
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px;"><tr><td>'
+        .bulletproof_button($label, $url)
+        .'</td></tr></table>';
+}
+
+function present_feature_image(string $image): string
+{
+    $image = trim($image);
+    if ($image === '') {
+        return '';
+    }
+
+    $image = str_replace('margin:0 0 16px', 'margin:0', $image);
+
+    return '<div class="mhn-hero" style="margin:0;padding:0;line-height:0;font-size:0;">'.$image.'</div>';
+}
+
+function take_letter_heading(string &$body, bool $plain): string
+{
+    if (preg_match('/<h1\b[^>]*>.*?<\/h1>/is', $body, $match) !== 1) {
+        return '';
+    }
+
+    $body = str_replace($match[0], '', $body);
+    $text = trim(wp_strip_all_tags($match[0]));
+
+    return letter_title_html($text, $plain);
+}
+
+function remove_layout_image(string $html): string
+{
+    $pattern = '/<a\b[^>]*>\s*<img\b[^>]*\bmhn-img\b[^>]*>\s*<\/a>|<img\b[^>]*\bmhn-img\b[^>]*>/i';
+    $replaced = preg_replace($pattern, '', $html, 1);
+
+    return is_string($replaced) ? $replaced : $html;
 }
 
 function layout_signoff_html(string $signoff, string $fromName): string
 {
     $html = layout_text_html($signoff);
     $fromName = trim($fromName);
-    if ($fromName === '') {
-        return $html;
+    $name = '';
+    if ($fromName !== '') {
+        $name = '<p class="mhn-signoff-name" style="margin:0 0 8px;font-family:'.email_font_stack().';font-size:16px;line-height:1.6;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($fromName).'</p>';
+    }
+    if ($html === '' && $name === '') {
+        return '';
     }
 
-    return $html.layout_text_html($fromName);
+    return '<div class="mhn-signoff" style="margin-top:8px;">'.$html.$name.'</div>';
 }
 
 function strip_layout_images(string $html): string
@@ -445,7 +539,7 @@ function sample_issue_body(): string
     $title = __('A note from the workshop', 'matthummel-newsletter');
     $greeting = layout_text_html('Hi {first_name|there},');
     $excerpt = layout_text_html(__('A short note about the work I shipped this week.', 'matthummel-newsletter'));
-    $heading = '<h1 class="mhn-text" style="margin:0 0 12px;font-size:28px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($title).'</h1>';
+    $heading = letter_title_html($title);
     $button = bulletproof_button(
         sprintf(
             /* translators: %s: sample issue title */
@@ -611,7 +705,7 @@ function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?
     if ($preheader === '') {
         $preheader = mb_substr(trim(wp_strip_all_tags($body)), 0, 140);
     }
-    $html = email_document($subject, $preheader, $body, false, 0);
+    $html = email_document($subject, $preheader, $body, false, 0, $layoutId);
     $html = apply_merge($html, [
         'id' => '0',
         'email' => 'you@example.com',

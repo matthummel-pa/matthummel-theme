@@ -55,7 +55,7 @@ function render_paragraph(array $block): string
 
     $styled = preg_replace(
         '/<p(\s|>)/',
-        '<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;"$1',
+        '<p style="'.body_paragraph_style().'"$1',
         $html
     );
 
@@ -75,13 +75,13 @@ function render_heading(array $block): string
         return '';
     }
 
-    $size = match ($level) {
-        1 => 28,
-        2 => 22,
-        default => 18,
-    };
+    if ($level === 1) {
+        return letter_title_html($text);
+    }
 
-    return '<h'.$level.' class="mhn-text" style="margin:0 0 12px;font-size:'.$size.'px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($text).'</h'.$level.'>';
+    $size = $level === 2 ? 22 : 18;
+
+    return '<h'.$level.' class="mhn-text" style="margin:0 0 12px;font-family:'.email_font_stack().';font-size:'.$size.'px;line-height:1.3;font-weight:700;color:#0d2e57;text-align:left;">'.esc_html($text).'</h'.$level.'>';
 }
 
 /**
@@ -143,7 +143,7 @@ function render_image(array $block, string $altFallback): string
     }
 
     $font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-    $img = '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'" height="'.esc_attr((string) $height).'" style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;color:#141c28;background-color:#eef3f9;font-family:'.$font.';font-size:16px;line-height:1.5;">';
+    $img = '<img class="mhn-img" src="'.esc_url($src).'" alt="'.esc_attr($alt).'" width="'.esc_attr((string) $width).'" height="'.esc_attr((string) $height).'" style="display:block;width:100%;max-width:'.$width.'px;height:auto;border:0;margin:0 0 16px;color:#0b1220;background-color:#eef3f9;font-family:'.$font.';font-size:16px;line-height:1.5;">';
     $href = email_image_url($href);
     if ($href === '' || ! preg_match('#^https?://#i', $href)) {
         return $img;
@@ -350,7 +350,7 @@ function render_list(array $block): string
         return email_kses((string) ($block['innerHTML'] ?? ''));
     }
 
-    return decorate_links('<'.$tag.' class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#141c28;text-align:left;">'.$items.'</'.$tag.'>');
+    return decorate_links('<'.$tag.' class="mhn-text" style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.6;color:#0b1220;text-align:left;">'.$items.'</'.$tag.'>');
 }
 
 /**
