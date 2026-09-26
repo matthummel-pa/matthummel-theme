@@ -89,9 +89,15 @@ function issue_message_body(int $issueId, ?array $subscriber, bool $preview, arr
     ];
 }
 
-function email_font_stack(): string
+function email_font_stack(?string $font = null): string
 {
-    return "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+    $choices = letter_font_choices();
+    $key = $font ?? current_letter_look()['font'];
+    if (! isset($choices[$key])) {
+        $key = 'sans';
+    }
+
+    return $choices[$key]['stack'];
 }
 
 function body_paragraph_style(): string
@@ -145,13 +151,8 @@ function layout_letter_chrome(string $layoutKey, array $chrome): array
         $align = (string) ($chrome['align'] ?? 'left');
         $chrome['show_stripe'] = false;
         $chrome['show_rule'] = false;
-        $chrome['page'] = 'margin:0;padding:0;background-color:#ffffff;';
-        $chrome['page_td'] = 'padding:28px 16px;background-color:#ffffff;';
-        $chrome['frame'] = 'width:100%;max-width:600px;background-color:#ffffff;border-radius:0;';
-        $chrome['frame_td'] = 'padding:0;background-color:#ffffff;';
-        $chrome['card'] = 'width:100%;background-color:#ffffff;border-collapse:collapse;';
         if (($chrome['style'] ?? '') !== 'banner') {
-            $chrome['masthead_style'] = 'padding:4px 4px 12px;background-color:#ffffff;font-family:'.$font.';text-align:'.$align.';';
+            $chrome['masthead_style'] = 'padding:22px 32px 8px;background-color:#ffffff;font-family:'.$font.';text-align:'.$align.';';
         }
     }
 
@@ -175,13 +176,13 @@ function email_document(string $subject, string $preheader, string $body, bool $
 {
     $settings = settings();
     $name = $settings['from_name'] !== '' ? $settings['from_name'] : (string) get_bloginfo('name');
-    $font = email_font_stack();
     $layoutKey = sanitize_key($layoutId);
     $knownLayout = isset(layouts()[$layoutKey]);
     if (! $knownLayout) {
         $layoutKey = '';
     }
     $chrome = layout_letter_chrome($layoutKey, letter_chrome($look ?? current_letter_look()));
+    $font = (string) $chrome['font'];
 
     $pad = '<span aria-hidden="true">'.str_repeat('&nbsp;&zwnj;', 24).'</span>';
     $recent = $includeRecent ? recent_posts_html($excludePostId, $font) : '';
@@ -203,18 +204,17 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $padTop = match ($layoutKey) {
         'feature' => '32px',
         'post' => '32px',
-        'plain' => '8px',
+        'plain' => '20px',
         'welcome' => '48px',
         default => '32px',
     };
     $padSide = match ($layoutKey) {
         'welcome' => '48px',
-        'plain' => '8px',
         default => '32px',
     };
     $padBottom = match ($layoutKey) {
         'welcome' => '40px',
-        'plain' => '12px',
+        'plain' => '24px',
         default => '28px',
     };
     $bodyAlign = $layoutKey === 'welcome' ? 'center' : 'left';
@@ -222,6 +222,11 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $heroRow = $hero !== ''
         ? '<tr><td class="mhn-hero-cell" style="'.$chrome['hero'].'">'.$hero.'</td></tr>'
         : '';
+    $headerImage = letter_header_image_html($settings);
+    if ($headerImage !== '') {
+        $chrome['stripe'] = str_replace('border-radius:16px 16px 0 0;', '', (string) $chrome['stripe']);
+        $chrome['masthead_style'] = str_replace('border-radius:16px 16px 0 0;', '', (string) $chrome['masthead_style']);
+    }
     $stripe = $chrome['show_stripe']
         ? '<tr><td class="mhn-stripe" style="'.$chrome['stripe'].'">&nbsp;</td></tr>'
         : '';
@@ -237,6 +242,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
 
     $footer = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
         .'<td class="mhn-footer mhn-muted mhn-px" style="'.$chrome['footer'].'">'
+        .letter_social_html($settings)
         .'<p style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.esc_html(sprintf(
             /* translators: %s: site host */
             __('You got this because you signed up at %s. I keep your address on this site.', 'matthummel-newsletter'),
@@ -252,7 +258,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
     $styleKey = $chrome['style'];
     $mastheadKey = $layoutKey === 'welcome' ? 'center' : $chrome['masthead'];
     $layoutClass = $layoutKey !== '' ? ' mhn-layout-'.esc_attr($layoutKey) : '';
-    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($mastheadKey).'" data-mhn-button="'.esc_attr($chrome['button']).'"';
+    $letterAttrs = ' data-mhn-style="'.esc_attr($styleKey).'" data-mhn-masthead="'.esc_attr($mastheadKey).'" data-mhn-button="'.esc_attr($chrome['button']).'" data-mhn-font="'.esc_attr((string) $chrome['font_key']).'" data-mhn-variant="'.esc_attr((string) $chrome['variant']).'"';
     if ($layoutKey !== '') {
         $letterAttrs .= ' data-mhn-layout="'.esc_attr($layoutKey).'"';
     }
@@ -274,6 +280,7 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'<table role="presentation" class="mhn-shell mhn-frame" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['frame'].'">'
         .'<tr><td style="'.$chrome['frame_td'].'">'
         .'<table role="presentation" class="mhn-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="'.$chrome['card'].'">'
+        .$headerImage
         .$headRows
         .'<tr><td class="mhn-text mhn-px" lang="'.esc_attr($lang).'" dir="'.esc_attr($dir).'" style="padding:'.$padTop.' '.$padSide.' '.$padBottom.';background-color:#ffffff;font-family:'.$font.';font-size:16px;line-height:'.$lineHeight.';color:#0b1220;text-align:'.$bodyAlign.';">'
         .$body
@@ -283,6 +290,57 @@ function email_document(string $subject, string $preheader, string $body, bool $
         .'</table></td></tr></table>'
         .'<!--[if mso]></td></tr></table><![endif]-->'
         .'</td></tr></table></body></html>';
+}
+
+/**
+ * Brand image above the masthead. Omitted when the URL is empty.
+ *
+ * @param  array{header_image?: string, header_alt?: string}  $settings
+ */
+function letter_header_image_html(array $settings): string
+{
+    $url = sanitize_https_url((string) ($settings['header_image'] ?? ''));
+    if ($url === '') {
+        return '';
+    }
+
+    $alt = trim((string) ($settings['header_alt'] ?? ''));
+    if ($alt === '') {
+        $alt = 'Matt Hummel';
+    }
+
+    return '<tr><td class="mhn-header-image" style="padding:0;line-height:0;font-size:0;background-color:#ffffff;border-radius:16px 16px 0 0;">'
+        .'<img class="mhn-img mhn-header-img" src="'.esc_url($url).'" alt="'.esc_attr($alt).'" width="600" height="200" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0;border-radius:16px 16px 0 0;background-color:#eceff1;">'
+        .'</td></tr>';
+}
+
+/**
+ * Text links. Icon fonts do not survive most inboxes.
+ *
+ * @param  array<string, mixed>  $settings
+ */
+function letter_social_html(array $settings): string
+{
+    $links = [
+        'social_site' => __('Site', 'matthummel-newsletter'),
+        'social_github' => 'GitHub',
+        'social_linkedin' => 'LinkedIn',
+        'social_youtube' => 'YouTube',
+        'social_instagram' => 'Instagram',
+    ];
+    $parts = [];
+    foreach ($links as $key => $label) {
+        $url = sanitize_https_url((string) ($settings[$key] ?? ''));
+        if ($url === '') {
+            continue;
+        }
+        $parts[] = '<a href="'.esc_url($url).'" style="color:#50575e;text-decoration:underline;">'.esc_html($label).'</a>';
+    }
+    if ($parts === []) {
+        return '';
+    }
+
+    return '<p class="mhn-social" style="margin:0 0 8px;font-size:13px;line-height:1.5;color:#50575e;text-align:left;">'.implode(' · ', $parts).'</p>';
 }
 
 function letter_kicker(string $layoutKey, string $site): string

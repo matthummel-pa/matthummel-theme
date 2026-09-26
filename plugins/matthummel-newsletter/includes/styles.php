@@ -18,15 +18,15 @@ function letter_style_choices(): array
     return [
         'card' => [
             'label' => __('Card', 'matthummel-newsletter'),
-            'summary' => __('White card, navy stripe, soft blue page.', 'matthummel-newsletter'),
+            'summary' => __('Light grey page, white rounded card, navy stripe.', 'matthummel-newsletter'),
         ],
         'banner' => [
             'label' => __('Banner', 'matthummel-newsletter'),
-            'summary' => __('Navy band, white name, white body, soft blue page.', 'matthummel-newsletter'),
+            'summary' => __('Light grey page, navy masthead, white rounded body.', 'matthummel-newsletter'),
         ],
         'paper' => [
             'label' => __('Paper', 'matthummel-newsletter'),
-            'summary' => __('White page, ink text, one navy rule.', 'matthummel-newsletter'),
+            'summary' => __('Light grey page, white rounded card, one navy rule.', 'matthummel-newsletter'),
         ],
     ];
 }
@@ -54,25 +54,103 @@ function letter_button_choices(): array
 }
 
 /**
- * @param  array<string, mixed>  $input
- * @param  array{style: string, masthead: string, button: string}|null  $fallback
- * @return array{style: string, masthead: string, button: string}
+ * Web-safe stacks. Email clients ignore webfonts that are not installed.
+ *
+ * @return array<string, array{label: string, stack: string}>
  */
-function normalize_letter_look(array $input, ?array $fallback = null): array
+function letter_font_choices(): array
 {
-    $fallback ??= [
+    return [
+        'sans' => [
+            'label' => __('Sans', 'matthummel-newsletter'),
+            'stack' => "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif",
+        ],
+        'serif' => [
+            'label' => __('Serif', 'matthummel-newsletter'),
+            'stack' => "Georgia,'Iowan Old Style','Palatino Linotype',Palatino,'Times New Roman',Times,serif",
+        ],
+        'humanist' => [
+            'label' => __('Humanist', 'matthummel-newsletter'),
+            'stack' => "'Trebuchet MS','Segoe UI',Helvetica,Arial,sans-serif",
+        ],
+    ];
+}
+
+/**
+ * Focused is the short letter. Detailed adds the extra line each layout is built for.
+ *
+ * @return array<string, array{label: string, summary: string}>
+ */
+function letter_variant_choices(): array
+{
+    return [
+        'focused' => [
+            'label' => __('Focused', 'matthummel-newsletter'),
+            'summary' => __('One idea, a short intro, and one action.', 'matthummel-newsletter'),
+        ],
+        'detailed' => [
+            'label' => __('Detailed', 'matthummel-newsletter'),
+            'summary' => __('Essay dek, welcome list, letter date, image caption, or a why-I-wrote-this note.', 'matthummel-newsletter'),
+        ],
+    ];
+}
+
+/**
+ * https only. Empty stays empty.
+ */
+function sanitize_https_url(string $value): string
+{
+    $value = trim($value);
+    if ($value === '') {
+        return '';
+    }
+
+    $value = function_exists('esc_url_raw') ? esc_url_raw($value) : $value;
+    if (! is_string($value) || $value === '') {
+        return '';
+    }
+
+    $scheme = function_exists('wp_parse_url') ? wp_parse_url($value, PHP_URL_SCHEME) : parse_url($value, PHP_URL_SCHEME);
+
+    return $scheme === 'https' ? $value : '';
+}
+
+/**
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ */
+function letter_look_defaults(): array
+{
+    return [
         'style' => 'card',
         'masthead' => 'left',
         'button' => 'solid',
+        'font' => 'sans',
+        'variant' => 'focused',
     ];
-    $style = sanitize_key((string) ($input['style'] ?? ''));
-    $masthead = sanitize_key((string) ($input['masthead'] ?? ''));
-    $button = sanitize_key((string) ($input['button'] ?? ''));
+}
+
+/**
+ * Missing keys keep the fallback. An unknown key does too.
+ *
+ * @param  array<string, mixed>  $input
+ * @param  array{style: string, masthead: string, button: string, font: string, variant: string}|null  $fallback
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}
+ */
+function normalize_letter_look(array $input, ?array $fallback = null): array
+{
+    $fallback ??= letter_look_defaults();
+    $style = array_key_exists('style', $input) ? sanitize_key((string) $input['style']) : $fallback['style'];
+    $masthead = array_key_exists('masthead', $input) ? sanitize_key((string) $input['masthead']) : $fallback['masthead'];
+    $button = array_key_exists('button', $input) ? sanitize_key((string) $input['button']) : $fallback['button'];
+    $font = array_key_exists('font', $input) ? sanitize_key((string) $input['font']) : $fallback['font'];
+    $variant = array_key_exists('variant', $input) ? sanitize_key((string) $input['variant']) : $fallback['variant'];
 
     return [
         'style' => isset(letter_style_choices()[$style]) ? $style : $fallback['style'],
         'masthead' => isset(letter_masthead_choices()[$masthead]) ? $masthead : $fallback['masthead'],
         'button' => isset(letter_button_choices()[$button]) ? $button : $fallback['button'],
+        'font' => isset(letter_font_choices()[$font]) ? $font : $fallback['font'],
+        'variant' => isset(letter_variant_choices()[$variant]) ? $variant : $fallback['variant'],
     ];
 }
 
@@ -91,7 +169,7 @@ function choice_from_input(array $input, string $key, array $allowed, string $cu
 }
 
 /**
- * @return array{style: string, masthead: string, button: string}
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}
  */
 function settings_letter_look(): array
 {
@@ -101,13 +179,15 @@ function settings_letter_look(): array
         'style' => $config['letter_style'],
         'masthead' => $config['letter_masthead'],
         'button' => $config['letter_button'],
+        'font' => $config['letter_font'],
+        'variant' => $config['letter_variant'],
     ]);
 }
 
 /**
  * Empty issue meta uses the saved settings.
  *
- * @return array{style: string, masthead: string, button: string}
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}
  */
 function issue_letter_look(int $issueId): array
 {
@@ -121,33 +201,47 @@ function issue_letter_look(int $issueId): array
         return $base;
     }
 
-    return normalize_letter_look([
-        'style' => (string) ($saved['style'] ?? ''),
-        'masthead' => (string) ($saved['masthead'] ?? ''),
-        'button' => (string) ($saved['button'] ?? ''),
-    ], $base);
+    $input = [];
+    foreach (['style', 'masthead', 'button', 'font', 'variant'] as $key) {
+        if (array_key_exists($key, $saved)) {
+            $input[$key] = (string) $saved[$key];
+        }
+    }
+
+    return normalize_letter_look($input, $base);
 }
 
 /**
  * @param  array<string, mixed>  $input
- * @return array{style: string, masthead: string, button: string}|null
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}|null
  */
 function letter_look_from_request(array $input, int $issueId): ?array
 {
     $posted = array_key_exists('mhn_letter_style', $input)
         || array_key_exists('mhn_letter_masthead', $input)
-        || array_key_exists('mhn_letter_button', $input);
+        || array_key_exists('mhn_letter_button', $input)
+        || array_key_exists('mhn_letter_font', $input)
+        || array_key_exists('mhn_letter_variant', $input);
     if (! $posted) {
         return null;
     }
 
     $base = issue_letter_look($issueId);
+    $look = [];
+    $map = [
+        'style' => 'mhn_letter_style',
+        'masthead' => 'mhn_letter_masthead',
+        'button' => 'mhn_letter_button',
+        'font' => 'mhn_letter_font',
+        'variant' => 'mhn_letter_variant',
+    ];
+    foreach ($map as $key => $field) {
+        if (array_key_exists($field, $input)) {
+            $look[$key] = (string) $input[$field];
+        }
+    }
 
-    return normalize_letter_look([
-        'style' => (string) ($input['mhn_letter_style'] ?? $base['style']),
-        'masthead' => (string) ($input['mhn_letter_masthead'] ?? $base['masthead']),
-        'button' => (string) ($input['mhn_letter_button'] ?? $base['button']),
-    ], $base);
+    return normalize_letter_look($look, $base);
 }
 
 /**
@@ -170,7 +264,7 @@ function save_issue_letter_style(int $issueId, array $input): void
 }
 
 /**
- * @return array{style: string, masthead: string, button: string}
+ * @return array{style: string, masthead: string, button: string, font: string, variant: string}
  */
 function current_letter_look(): array
 {
@@ -183,7 +277,7 @@ function current_letter_look(): array
 }
 
 /**
- * @param  array{style?: string, masthead?: string, button?: string}  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}  $look
  */
 function push_letter_look(array $look): void
 {
@@ -193,6 +287,11 @@ function push_letter_look(array $look): void
 
     $GLOBALS['mhn_letter_look_stack'][] = $GLOBALS['mhn_letter_look'] ?? null;
     $GLOBALS['mhn_letter_look'] = normalize_letter_look($look, current_letter_look());
+}
+
+function letter_is_detailed(): bool
+{
+    return current_letter_look()['variant'] === 'detailed';
 }
 
 function pop_letter_look(): void
@@ -236,11 +335,13 @@ function email_css(): string
 /**
  * Inline shell styles. Email clients that drop the style block still keep these.
  *
- * @param  array{style?: string, masthead?: string, button?: string}  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}  $look
  * @return array{
  *     style: string,
  *     masthead: string,
  *     button: string,
+ *     font_key: string,
+ *     variant: string,
  *     align: string,
  *     font: string,
  *     page: string,
@@ -262,58 +363,54 @@ function email_css(): string
 function letter_chrome(array $look): array
 {
     $look = normalize_letter_look($look);
-    $font = email_font_stack();
+    $font = email_font_stack($look['font']);
     $align = $look['masthead'] === 'center' ? 'center' : 'left';
-    $page = $look['style'] === 'paper' ? '#ffffff' : '#eef3f9';
-    $frame = $look['style'] === 'card' ? '#dceaf8' : '#ffffff';
-    $framePad = $look['style'] === 'card' ? '1px' : '0';
+    $page = '#eceff1';
     $brandColor = match ($look['style']) {
         'banner' => '#ffffff',
         'paper' => '#0b1220',
         default => '#0d2e57',
     };
-    $kickerColor = $look['style'] === 'banner' ? '#eef3f9' : '#50575e';
+    $kickerColor = $look['style'] === 'banner' ? '#e8eef6' : '#50575e';
     $mastBg = $look['style'] === 'banner' ? '#0d2e57' : '#ffffff';
     $mastPad = $look['style'] === 'banner' ? '28px 32px' : '26px 32px 14px';
-    $mastRadius = $look['style'] === 'banner' ? 'border-radius:4px 4px 0 0;' : '';
-    $rule = match ($look['style']) {
-        'banner' => '',
-        'paper' => 'border-top:2px solid #0d2e57;',
-        default => 'border-top:2px solid #0d2e57;',
-    };
-    $heroBg = $look['style'] === 'paper' ? '#ffffff' : '#eef3f9';
+    $mastRadius = $look['style'] === 'banner' ? 'border-radius:16px 16px 0 0;' : '';
+    $rule = $look['style'] === 'banner' ? '' : 'border-top:2px solid #0d2e57;';
+    $card = 'width:100%;background-color:#ffffff;background-image:linear-gradient(180deg,#ffffff 0%,#f7f8fa 100%);border:1px solid #d8dde3;border-collapse:separate;border-radius:16px;';
 
     return [
         'style' => $look['style'],
         'masthead' => $look['masthead'],
         'button' => $look['button'],
+        'font_key' => $look['font'],
+        'variant' => $look['variant'],
         'align' => $align,
         'font' => $font,
         'page' => 'margin:0;padding:0;background-color:'.$page.';',
         'page_td' => 'padding:32px 16px;background-color:'.$page.';',
-        'frame' => 'width:100%;max-width:600px;background-color:'.$frame.';border-radius:4px;',
-        'frame_td' => 'padding:'.$framePad.';background-color:'.$frame.';border-radius:4px;',
-        'card' => 'width:100%;background-color:#ffffff;border-collapse:separate;border-radius:4px;',
-        'stripe' => 'height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:4px 4px 0 0;',
+        'frame' => 'width:100%;max-width:600px;background-color:transparent;border-radius:16px;',
+        'frame_td' => 'padding:0;background-color:transparent;border-radius:16px;',
+        'card' => $card,
+        'stripe' => 'height:4px;line-height:4px;font-size:0;background-color:#0d2e57;border-radius:16px 16px 0 0;',
         'masthead_style' => 'padding:'.$mastPad.';background-color:'.$mastBg.';font-family:'.$font.';text-align:'.$align.';'.$mastRadius,
         'brand' => 'font-size:15px;line-height:1.3;font-weight:700;letter-spacing:0.01em;color:'.$brandColor.';text-align:'.$align.';',
         'kicker' => 'margin-top:6px;font-size:13px;line-height:1.4;color:'.$kickerColor.';text-align:'.$align.';',
         'rule' => $rule,
         'show_stripe' => $look['style'] === 'card',
         'show_rule' => $look['style'] !== 'banner',
-        'hero' => 'padding:0;background-color:'.$heroBg.';line-height:0;font-size:0;',
-        'footer' => 'padding:18px 32px 28px;border-top:1px solid #dceaf8;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;',
+        'hero' => 'padding:0;background-color:#ffffff;line-height:0;font-size:0;',
+        'footer' => 'padding:18px 32px 28px;border-top:1px solid #e2e6ea;font-family:'.$font.';font-size:13px;line-height:1.5;color:#50575e;text-align:left;background-color:#ffffff;',
     ];
 }
 
 /**
- * @param  array{style?: string, masthead?: string, button?: string}|null  $look
+ * @param  array{style?: string, masthead?: string, button?: string, font?: string, variant?: string}|null  $look
  * @return array{class: string, fill: string, stroke: string, text: string, anchor: string}
  */
 function letter_button_palette(?array $look = null): array
 {
     $look = normalize_letter_look($look ?? current_letter_look());
-    $font = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;";
+    $font = 'font-family:'.email_font_stack($look['font']).';';
     $shared = 'display:inline-block;'.$font.'font-size:16px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;min-height:44px;max-width:100%;box-sizing:border-box;-webkit-text-size-adjust:none;';
     if ($look['button'] === 'outline') {
         return [
@@ -321,7 +418,7 @@ function letter_button_palette(?array $look = null): array
             'fill' => '#ffffff',
             'stroke' => '#0d2e57',
             'text' => '#0d2e57',
-            'anchor' => 'background-color:#ffffff;border:2px solid #0d2e57;border-radius:4px;color:#0d2e57;padding:12px 20px;'.$shared,
+            'anchor' => 'background-color:#ffffff;border:2px solid #0d2e57;border-radius:8px;color:#0d2e57;padding:12px 20px;'.$shared,
         ];
     }
 
@@ -330,6 +427,6 @@ function letter_button_palette(?array $look = null): array
         'fill' => '#0d2e57',
         'stroke' => '#0d2e57',
         'text' => '#ffffff',
-        'anchor' => 'background-color:#0d2e57;border:0;border-radius:4px;color:#ffffff;padding:14px 22px;'.$shared,
+        'anchor' => 'background-color:#0d2e57;border:0;border-radius:8px;color:#ffffff;padding:14px 22px;'.$shared,
     ];
 }

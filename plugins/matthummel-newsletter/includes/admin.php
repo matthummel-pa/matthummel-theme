@@ -659,6 +659,8 @@ function render_letter_style_card(array $config): void
         'style' => $config['letter_style'],
         'masthead' => $config['letter_masthead'],
         'button' => $config['letter_button'],
+        'font' => $config['letter_font'] ?? 'sans',
+        'variant' => $config['letter_variant'] ?? 'focused',
     ]);
 
     echo '<section class="mhn-card" aria-labelledby="mhn-letter-style-heading">';
@@ -691,6 +693,25 @@ function render_letter_style_card(array $config): void
         echo '</label></p>';
     }
     echo '<p class="description">'.esc_html__('Solid is a navy fill. Outline is a navy border. The button stays hidden until it has a label and a URL.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Font', 'matthummel-newsletter').'</legend>';
+    foreach (letter_font_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-font-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_font" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['font'], $id, false).'> ';
+        echo esc_html($choice['label']);
+        echo '</label></p>';
+    }
+    echo '<p class="description">'.esc_html__('Sans, Georgia, or Trebuchet. These are already on phones and desktops, so the letter does not wait on a webfont.', 'matthummel-newsletter').'</p>';
+    echo '</fieldset>';
+    echo '<fieldset class="mhn-letter-options"><legend>'.esc_html__('Variant', 'matthummel-newsletter').'</legend>';
+    foreach (letter_variant_choices() as $id => $choice) {
+        $inputId = 'mhn-letter-variant-'.$id;
+        echo '<p class="mhn-check"><label for="'.esc_attr($inputId).'">';
+        echo '<input type="radio" name="letter_variant" id="'.esc_attr($inputId).'" value="'.esc_attr($id).'" '.checked($look['variant'], $id, false).'> ';
+        echo '<strong>'.esc_html($choice['label']).'</strong> '.esc_html($choice['summary']);
+        echo '</label></p>';
+    }
     echo '</fieldset></section>';
 }
 
@@ -718,7 +739,47 @@ function render_letter_style_compact(array $look): void
     foreach (letter_button_choices() as $id => $label) {
         echo '<label><input type="radio" name="mhn_letter_button" value="'.esc_attr($id).'" '.checked($look['button'], $id, false).'> '.esc_html($label).'</label>';
     }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Font', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Font', 'matthummel-newsletter').'</span>';
+    foreach (letter_font_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_font" value="'.esc_attr($id).'" '.checked($look['font'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
+    echo '</div>';
+    echo '<div class="mhn-choice" role="radiogroup" aria-label="'.esc_attr__('Variant', 'matthummel-newsletter').'">';
+    echo '<span>'.esc_html__('Variant', 'matthummel-newsletter').'</span>';
+    foreach (letter_variant_choices() as $id => $choice) {
+        echo '<label><input type="radio" name="mhn_letter_variant" value="'.esc_attr($id).'" '.checked($look['variant'], $id, false).'> '.esc_html($choice['label']).'</label>';
+    }
     echo '</div></div>';
+}
+
+/**
+ * @param  array{header_image: string, header_alt: string, social_site: string, social_github: string, social_linkedin: string, social_youtube: string, social_instagram: string}  $config
+ */
+function render_letter_brand_card(array $config): void
+{
+    echo '<section class="mhn-card" aria-labelledby="mhn-letter-brand-heading">';
+    echo '<h2 id="mhn-letter-brand-heading">'.esc_html__('Header and social', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('A header image sits above the name. Social links are text in the footer. Leave a field empty to leave it out. Use https links.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-header-image">'.esc_html__('Header image URL', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" type="url" id="mhn-header-image" name="header_image" value="'.esc_attr($config['header_image']).'" placeholder="https://"></p>';
+    echo '<p><label for="mhn-header-alt">'.esc_html__('Header image description', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" id="mhn-header-alt" name="header_alt" value="'.esc_attr($config['header_alt']).'" placeholder="'.esc_attr__('Matt Hummel', 'matthummel-newsletter').'"></p>';
+    echo '<p class="description">'.esc_html__('Alt text is required when the image carries meaning. If you leave it blank, the letter uses Matt Hummel.', 'matthummel-newsletter').'</p>';
+    $socials = [
+        'social_site' => __('Site', 'matthummel-newsletter'),
+        'social_github' => 'GitHub',
+        'social_linkedin' => 'LinkedIn',
+        'social_youtube' => 'YouTube',
+        'social_instagram' => 'Instagram',
+    ];
+    foreach ($socials as $key => $label) {
+        $inputId = 'mhn-'.$key;
+        echo '<p><label for="'.esc_attr($inputId).'">'.esc_html($label).'</label>';
+        echo '<input class="regular-text" type="url" id="'.esc_attr($inputId).'" name="'.esc_attr($key).'" value="'.esc_attr((string) ($config[$key] ?? '')).'" placeholder="https://"></p>';
+    }
+    echo '</section>';
 }
 
 /**
@@ -801,9 +862,13 @@ function page_settings(): void
     echo '<input class="regular-text" id="mhn-welcome-subject" name="welcome_subject" value="'.esc_attr($config['welcome_subject']).'"></p>';
     echo '<p><label for="mhn-welcome-body">'.esc_html__('Welcome body', 'matthummel-newsletter').'</label>';
     echo '<textarea class="large-text" rows="8" id="mhn-welcome-body" name="welcome_body">'.esc_textarea($config['welcome_body']).'</textarea></p>';
+    echo '<p><label for="mhn-welcome-points">'.esc_html__('Welcome list', 'matthummel-newsletter').'</label>';
+    echo '<textarea class="large-text" rows="4" id="mhn-welcome-points" name="welcome_points">'.esc_textarea($config['welcome_points']).'</textarea></p>';
+    echo '<p class="description">'.esc_html__('One expectation per line. The detailed Welcome variant shows this list. The focused variant leaves it out.', 'matthummel-newsletter').'</p>';
     echo '</section>';
 
     render_letter_style_card($config);
+    render_letter_brand_card($config);
     render_newsletter_rules_card($config);
 
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';

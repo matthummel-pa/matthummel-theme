@@ -114,6 +114,23 @@ function wp_strip_all_tags(string $text, bool $remove_breaks = false): string
 /**
  * @param  array<string, array<string, bool>>  $allowed
  */
+function sanitize_text_field(string $text): string
+{
+    return trim(wp_strip_all_tags($text));
+}
+
+function esc_url_raw(string $url): string
+{
+    return trim($url);
+}
+
+function _n(string $single, string $plural, int $number, string $domain = 'default'): string
+{
+    unset($domain);
+
+    return $number === 1 ? $single : $plural;
+}
+
 function sanitize_key(string $key): string
 {
     $key = strtolower($key);
@@ -249,6 +266,7 @@ use function MattHummel\Newsletter\blog_post_lead_from_text;
 use function MattHummel\Newsletter\compose_advanced_letter;
 use function MattHummel\Newsletter\compose_blog_post_letter;
 use function MattHummel\Newsletter\email_document;
+use function MattHummel\Newsletter\emulator_view;
 use function MattHummel\Newsletter\layout_preview_html;
 use function MattHummel\Newsletter\layouts;
 use function MattHummel\Newsletter\letter_button;
@@ -428,6 +446,9 @@ foreach (array_keys(layouts()) as $layoutId) {
     if (str_contains($html, 'prefers-color-scheme:dark') || str_contains($html, 'prefers-color-scheme: dark') || str_contains($html, '#162033')) {
         $problems[] = 'Preview still paints a dark or navy letter.';
     }
+    if (! str_contains($html, 'background-color:#eceff1') || ! str_contains($html, 'border-radius:16px')) {
+        $problems[] = 'Preview is missing the light grey page or the rounded white card.';
+    }
     if ($layoutId === 'welcome' && ! str_contains($markup, 'background-color:#ffffff')) {
         $problems[] = 'Welcome preview is missing the white card.';
     }
@@ -442,6 +463,53 @@ foreach (array_keys(layouts()) as $layoutId) {
     $failed = true;
     fwrite(STDERR, "fail  layout {$layoutId}\n");
     foreach ($problems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
+}
+
+$variantProblems = [];
+$detailedLook = [
+    'style' => 'card',
+    'masthead' => 'left',
+    'button' => 'solid',
+    'font' => 'serif',
+    'variant' => 'detailed',
+];
+$essay = layout_preview_html('standard', $detailedLook);
+$essayBody = preg_replace('/<style\b.*?<\/style>/is', '', $essay);
+$essayBody = is_string($essayBody) ? $essayBody : $essay;
+if (! str_contains($essayBody, 'mhn-dek') || ! str_contains($essay, 'Georgia')) {
+    $variantProblems[] = 'Detailed Standard is missing the dek or the serif stack.';
+}
+if (str_contains($essayBody, 'mhn-eyebrow')) {
+    $variantProblems[] = 'Detailed Standard still uses the short intro line.';
+}
+$expect = layout_preview_html('welcome', $detailedLook);
+if (! str_contains($expect, 'mhn-points') || ! str_contains($expect, 'I write when I ship something worth reading.')) {
+    $variantProblems[] = 'Detailed Welcome is missing the expectation list.';
+}
+$letter = layout_preview_html('plain', $detailedLook);
+if (! str_contains($letter, 'mhn-dateline') || str_contains($letter, 'mhn-eyebrow-block')) {
+    $variantProblems[] = 'Detailed Plain is missing the date or still uses the rule intro.';
+}
+$caption = layout_preview_html('feature', $detailedLook);
+if (! str_contains($caption, 'mhn-caption')) {
+    $variantProblems[] = 'Detailed Feature is missing the image caption.';
+}
+$field = layout_preview_html('post', $detailedLook);
+if (! str_contains($field, 'Why I wrote this') || ! str_contains($field, 'mhn-dateline')) {
+    $variantProblems[] = 'Detailed Blog post is missing the date or the why-I-wrote-this note.';
+}
+$plainView = emulator_view(0, 'standard', 'A note from the workshop', null, 'simple', null, -1, false, $detailedLook);
+if (! isset($plainView['text']) || ! str_contains($plainView['text'], 'Talk soon') || str_contains($plainView['text'], '<table')) {
+    $variantProblems[] = 'Plain email view is missing the letter text or still contains a table.';
+}
+if ($variantProblems === []) {
+    fwrite(STDOUT, "pass  layout variants\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  layout variants\n");
+    foreach ($variantProblems as $problem) {
         fwrite(STDERR, "  - {$problem}\n");
     }
 }

@@ -46,9 +46,19 @@ function archive_table(): string
  *     signoff: string,
  *     welcome_subject: string,
  *     welcome_body: string,
+ *     welcome_points: string,
  *     letter_style: string,
  *     letter_masthead: string,
  *     letter_button: string,
+ *     letter_font: string,
+ *     letter_variant: string,
+ *     header_image: string,
+ *     header_alt: string,
+ *     social_site: string,
+ *     social_github: string,
+ *     social_linkedin: string,
+ *     social_youtube: string,
+ *     social_instagram: string,
  *     skip_sent_post: int,
  *     rule_categories: list<string>
  * }
@@ -76,9 +86,19 @@ function settings(): array
         'signoff' => $copy['signoff'],
         'welcome_subject' => $copy['welcome_subject'],
         'welcome_body' => $copy['welcome_body'],
+        'welcome_points' => $copy['welcome_points'],
         'letter_style' => 'card',
         'letter_masthead' => 'left',
         'letter_button' => 'solid',
+        'letter_font' => 'sans',
+        'letter_variant' => 'focused',
+        'header_image' => '',
+        'header_alt' => '',
+        'social_site' => '',
+        'social_github' => '',
+        'social_linkedin' => '',
+        'social_youtube' => '',
+        'social_instagram' => '',
         'skip_sent_post' => 1,
         'rule_categories' => [],
     ];
@@ -88,6 +108,7 @@ function settings(): array
     $signoff = trim((string) $merged['signoff']);
     $welcomeSubject = trim((string) $merged['welcome_subject']);
     $welcomeBody = trim((string) $merged['welcome_body']);
+    $welcomePoints = trim((string) $merged['welcome_points']);
 
     return [
         'from_name' => (string) $merged['from_name'],
@@ -103,9 +124,19 @@ function settings(): array
         'signoff' => $signoff !== '' ? $signoff : $copy['signoff'],
         'welcome_subject' => $welcomeSubject !== '' ? $welcomeSubject : $copy['welcome_subject'],
         'welcome_body' => $welcomeBody !== '' ? $welcomeBody : $copy['welcome_body'],
+        'welcome_points' => $welcomePoints !== '' ? $welcomePoints : $copy['welcome_points'],
         'letter_style' => choice_from_input(['letter_style' => $merged['letter_style'] ?? ''], 'letter_style', letter_style_choices(), 'card'),
         'letter_masthead' => choice_from_input(['letter_masthead' => $merged['letter_masthead'] ?? ''], 'letter_masthead', letter_masthead_choices(), 'left'),
         'letter_button' => choice_from_input(['letter_button' => $merged['letter_button'] ?? ''], 'letter_button', letter_button_choices(), 'solid'),
+        'letter_font' => choice_from_input(['letter_font' => $merged['letter_font'] ?? ''], 'letter_font', letter_font_choices(), 'sans'),
+        'letter_variant' => choice_from_input(['letter_variant' => $merged['letter_variant'] ?? ''], 'letter_variant', letter_variant_choices(), 'focused'),
+        'header_image' => sanitize_https_url((string) ($merged['header_image'] ?? '')),
+        'header_alt' => mb_substr(sanitize_text_field((string) ($merged['header_alt'] ?? '')), 0, 140),
+        'social_site' => sanitize_https_url((string) ($merged['social_site'] ?? '')),
+        'social_github' => sanitize_https_url((string) ($merged['social_github'] ?? '')),
+        'social_linkedin' => sanitize_https_url((string) ($merged['social_linkedin'] ?? '')),
+        'social_youtube' => sanitize_https_url((string) ($merged['social_youtube'] ?? '')),
+        'social_instagram' => sanitize_https_url((string) ($merged['social_instagram'] ?? '')),
         'skip_sent_post' => (int) $merged['skip_sent_post'] === 1 ? 1 : 0,
         'rule_categories' => sanitize_rule_categories($merged['rule_categories'] ?? []),
     ];
@@ -114,7 +145,7 @@ function settings(): array
 /**
  * Reusable letter copy. Empty saved values fall back to these.
  *
- * @return array{intro: string, signoff: string, welcome_subject: string, welcome_body: string}
+ * @return array{intro: string, signoff: string, welcome_subject: string, welcome_body: string, welcome_points: string}
  */
 function layout_copy_defaults(): array
 {
@@ -123,6 +154,7 @@ function layout_copy_defaults(): array
         'signoff' => __('Talk soon,', 'matthummel-newsletter'),
         'welcome_subject' => __('You are on the list', 'matthummel-newsletter'),
         'welcome_body' => __("Thanks for signing up.\n\nNew notes arrive by email. I keep the address on this site. I do not send it to a newsletter service.\n\nYou can unsubscribe any time.", 'matthummel-newsletter'),
+        'welcome_points' => __("I write when I ship something worth reading.\nYour address stays on this site.\nUnsubscribe any time from the footer.", 'matthummel-newsletter'),
     ];
 }
 
@@ -153,9 +185,19 @@ function update_settings(array $input): void
         'signoff' => posted_copy($input, 'signoff', $current['signoff'], $defaults['signoff'], false),
         'welcome_subject' => posted_copy($input, 'welcome_subject', $current['welcome_subject'], $defaults['welcome_subject'], false),
         'welcome_body' => posted_copy($input, 'welcome_body', $current['welcome_body'], $defaults['welcome_body'], true),
+        'welcome_points' => posted_copy($input, 'welcome_points', $current['welcome_points'], $defaults['welcome_points'], true),
         'letter_style' => choice_from_input($input, 'letter_style', letter_style_choices(), $current['letter_style']),
         'letter_masthead' => choice_from_input($input, 'letter_masthead', letter_masthead_choices(), $current['letter_masthead']),
         'letter_button' => choice_from_input($input, 'letter_button', letter_button_choices(), $current['letter_button']),
+        'letter_font' => choice_from_input($input, 'letter_font', letter_font_choices(), $current['letter_font']),
+        'letter_variant' => choice_from_input($input, 'letter_variant', letter_variant_choices(), $current['letter_variant']),
+        'header_image' => sanitize_https_url((string) ($input['header_image'] ?? $current['header_image'])),
+        'header_alt' => mb_substr(sanitize_text_field((string) ($input['header_alt'] ?? $current['header_alt'])), 0, 140),
+        'social_site' => sanitize_https_url((string) ($input['social_site'] ?? $current['social_site'])),
+        'social_github' => sanitize_https_url((string) ($input['social_github'] ?? $current['social_github'])),
+        'social_linkedin' => sanitize_https_url((string) ($input['social_linkedin'] ?? $current['social_linkedin'])),
+        'social_youtube' => sanitize_https_url((string) ($input['social_youtube'] ?? $current['social_youtube'])),
+        'social_instagram' => sanitize_https_url((string) ($input['social_instagram'] ?? $current['social_instagram'])),
         'skip_sent_post' => array_key_exists('skip_sent_post', $input) ? (empty($input['skip_sent_post']) ? 0 : 1) : $current['skip_sent_post'],
         'rule_categories' => array_key_exists('mhn_rules_present', $input)
             ? sanitize_rule_categories($input['rule_categories'] ?? [])
