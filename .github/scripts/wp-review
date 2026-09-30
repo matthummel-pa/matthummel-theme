@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+"""
+wp-review — WordPress/Sage review for the lines you changed.
+
+Runs, against the diff between your branch and the base branch:
+  1. PHPCS (phpcs.xml.dist: WordPress security, DB, i18n, deprecations, PHP compat)
+  2. Blade escape audit ({!! !!} and raw echo in *.blade.php)
+  3. Laravel Pint --test on changed PHP files (if vendor/bin/pint exists)
+
+Only problems on changed lines are reported, so legacy code does not drown out
+what this PR introduced. Use --all to audit the whole repo.
+
+Usage:
+  wp-review                  # compare against origin/main (or origin/master)
+  wp-review --base develop   # compare against another ref
+  wp-review --staged         # only staged changes (pre-commit)
+  wp-review --all            # everything, not just changed lines
+  wp-review --no-pint        # skip Pint
+
+Exit code 1 when any error is found on changed lines. Blade findings are
+warnings unless --strict. In GitHub Actions, findings print as PR annotations.
+"""
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+GHA = os.environ.get("GITHUB_ACTIONS") == "true"
+SKIP_DIRS = ("vendor/", "node_modules/", "public/", "dist", "storage/", "wp-admin/", "wp-includes/")
+
+# {!! ... !!} expressions that are safe by construction. Extend per project in .wp-review-allow
+# (one Python regex per line, matched against the inner expression).
+DEFAULT_SAFE = [
+    r"^\s*wp_kses(_post|_data)?\s*\(",
+    r"^\s*esc_(html|attr|url|js|textarea|xml)(_[a-z]+)?\s*\(",
+    r"^\s*wp_nonce_field\s*\(",
+    r"^\s*wp_json_encode\s*\(",  # JSON-LD inside <script type="application/ld+json">
+    r"^\s*get_search_form\s*\(",
+    r"^\s*paginate_links\s*\(",
+    r"^\s*the_posts_pagination\s*\(",
+    r"^\s*wp_link_pages\s*\(",
+    r"^\s*get_the_post_thumbnail\s*\(",
+    r"^\s*wp_get_attachment_image\s*\(",
+    r"^\s*\$content\s*$",  # Sage: filtered the_content
+    r"^\s*get_the_content\s*\(",
+    r"^\s*apply_filters\s*\(\s*['\"]the_content['\"]",
+    r"^\s*(wp_head|wp_footer|wp_body_open|body_class|language_attributes)\s*\(",
+    r"^\s*\$__env->",  # Blade internals
+]
+
+
+def sh(cmd, check=False, **kw):
+    return subprocess.run(cmd, capture_output=True, text=True, check=check, **kw)
+
+
+def repo_root():
+    r = sh(["git", "rev-parse", "--show-toplevel"])
+    if r.returncode:
+        sys.exit("wp-review: run this inside a git repository.")
+    return Path(r.stdout.strip())
+
+
+def default_base():
+    for ref in ("origin/main", "origin/master", "main", "master"):
+        if sh(["git", "rev-parse", "--verify", "--quiet", ref]).returncode == 0:
+            return ref
+    return "HEAD"
+
+
+def changed_lines(base, staged):
+    """Return {path: set(line numbers)} of added/modified lines."""
+    if staged:
+        cmd = ["git", "diff", "--cached", "-U0", "--no-color", "--diff-filter=AM"]
+    else:
+        mb = sh(["git", "merge-base", base, "HEAD"]).stdout.strip() or base
+        # Committed + uncommitted work since the merge base.
+        cmd = ["git", "diff", "-U0", "--no-color", "--diff-filter=AM", mb]
+    out = sh(cmd).stdout
+    files, cur = {}, None
+    for line in out.splitlines():
+        if line.startswith("+++ "):
+            p = line[4:]
+            cur = None if p == "/dev/null" else p[2:] if p.startswith("b/") else p
+            if cur:
+                files.setdefault(cur, set())
+        elif line.startswith("@@") and cur:
+            m = re.search(r"\+(\d+)(?:,(\d+))?", line)
+            start, count = int(m.group(1)), int(m.group(2) or 1)
+            files[cur].update(range(start, start + count))
+    # Untracked new files count as fully changed.
+    if not staged:
+        for p in sh(["git", "ls-files", "--others", "--exclude-standard"]).stdout.split():
+            files[p] = None  # None = every line
+    return files
+
+
+def all_files():
+    return {p: None for p in sh(["git", "ls-files"]).stdout.split()}
+
+
+def keep(path):
+    return Path(path).exists() and not any(s in path for s in SKIP_DIRS)
+
+
+def in_scope(files, path, line):
+    lines = files.get(path)
+    return lines is None or line in lines
+
+
+class Report:
+    def __init__(self):
+        self.errors = 0
+        self.warnings = 0
+        self.rows = []
+
+    def add(self, level, path, line, msg, source=""):
+        if level == "error":
+            self.errors += 1
+        else:
+            self.warnings += 1
+        self.rows.append((level, path, line, msg, source))
+        if GHA:
+            m = msg.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+            print(f"::{level} file={path},line={line},title={source or 'wp-review'}::{m}")
+
+    def print(self):
+        if GHA:
+            return
+        by_file = {}
+        for r in self.rows:
+            by_file.setdefault(r[1], []).append(r)
+        for path, rows in sorted(by_file.items()):
+            print(f"\n\033[1m{path}\033[0m")
+            for level, _, line, msg, source in sorted(rows, key=lambda r: r[2]):
+                color = "\033[31m" if level == "error" else "\033[33m"
+                src = f" \033[2m[{source}]\033[0m" if source else ""
+                print(f"  {color}{level:7}\033[0m L{line:<5} {msg}{src}")
+
+
+def find_bin(name):
+    local = Path("vendor/bin") / name
+    if local.exists():
+        return str(local)
+    return shutil.which(name)
+
+
+def run_phpcs(files, report):
+    targets = [p for p in files if p.endswith(".php") and not p.endswith(".blade.php") and keep(p)]
+    if not targets:
+        return "no PHP changes"
+    phpcs = find_bin("phpcs")
+    if not phpcs:
+        return "SKIPPED — phpcs not found (run setup/mac-setup.sh or composer require --dev wp-coding-standards/wpcs)"
+    if not Path("phpcs.xml.dist").exists() and not Path("phpcs.xml").exists():
+        return "SKIPPED — no phpcs.xml.dist (run apply-kit.sh)"
+    r = sh([phpcs, "--report=json", "-q", "--no-colors", *targets])
+    try:
+        data = json.loads(r.stdout or "{}")
+    except json.JSONDecodeError:
+        return "phpcs failed: " + (r.stderr or r.stdout)[:400]
+    root = str(Path.cwd()) + "/"
+    for fpath, info in data.get("files", {}).items():
+        rel = fpath.replace(root, "")
+        for m in info["messages"]:
+            if in_scope(files, rel, m["line"]):
+                report.add(m["type"].lower(), rel, m["line"], m["message"], m["source"])
+    return f"{len(targets)} PHP file(s) checked"
+
+
+RAW_RE = re.compile(r"\{!!\s*(.+?)\s*!!\}")
+PHP_ECHO_RE = re.compile(r"@php\b.*\becho\b|<\?php\s+echo\b|<\?=")
+
+
+def load_allow():
+    pats = list(DEFAULT_SAFE)
+    f = Path(".wp-review-allow")
+    if f.exists():
+        pats += [l.strip() for l in f.read_text().splitlines() if l.strip() and not l.startswith("#")]
+    return [re.compile(p) for p in pats]
+
+
+def run_blade(files, report, strict):
+    targets = [p for p in files if p.endswith(".blade.php") and keep(p)]
+    if not targets:
+        return "no Blade changes"
+    allow = load_allow()
+    level = "error" if strict else "warning"
+    for p in targets:
+        for n, line in enumerate(Path(p).read_text(errors="ignore").splitlines(), 1):
+            if not in_scope(files, p, n) or "wp-review-ignore" in line:
+                continue
+            for m in RAW_RE.finditer(line):
+                expr = m.group(1)
+                if any(a.search(expr) for a in allow):
+                    continue
+                report.add(level, p, n,
+                           f"Unescaped Blade output {{!! {expr[:60]} !!}}. Use {{{{ }}}} or wrap in "
+                           "wp_kses_post()/esc_*() at output (escape late). Add to .wp-review-allow if the helper "
+                           "returns safe markup.", "Blade.EscapeOutput")
+            if PHP_ECHO_RE.search(line):
+                report.add(level, p, n, "Raw PHP echo in Blade. Use {{ }} (auto-escaped) or an esc_*() call.",
+                           "Blade.RawEcho")
+    return f"{len(targets)} Blade file(s) checked"
+
+
+def run_pint(files, report):
+    targets = [p for p in files if p.endswith(".php") and not p.endswith(".blade.php") and keep(p)]
+    pint = Path("vendor/bin/pint")
+    if not targets:
+        return "no PHP changes"
+    if not pint.exists():
+        return "SKIPPED — vendor/bin/pint missing (composer install)"
+    r = sh([str(pint), "--test", "--format=json", *targets])
+    try:
+        data = json.loads(r.stdout or "{}")
+    except json.JSONDecodeError:
+        return "pint output unreadable"
+    for f in data.get("files", []):
+        report.add("error", f.get("name", "?").replace(str(Path.cwd()) + "/", ""), 1,
+                   "Pint style: " + ", ".join(f.get("appliedFixers", [])) + " — run vendor/bin/pint", "Pint")
+    return f"{len(targets)} PHP file(s) style-checked"
+
+
+def main():
+    ap = argparse.ArgumentParser(description="WordPress/Sage review on changed lines.")
+    ap.add_argument("--base")
+    ap.add_argument("--staged", action="store_true")
+    ap.add_argument("--all", action="store_true")
+    ap.add_argument("--strict", action="store_true", help="treat Blade findings as errors")
+    ap.add_argument("--no-pint", action="store_true")
+    a = ap.parse_args()
+
+    os.chdir(repo_root())
+    base = a.base or default_base()
+    files = all_files() if a.all else changed_lines(base, a.staged)
+    files = {p: l for p, l in files.items() if keep(p)}
+
+    scope = "whole repo" if a.all else ("staged changes" if a.staged else f"changes vs {base}")
+    print(f"wp-review · {Path.cwd().name} · {scope} · {len(files)} file(s)")
+    rep = Report()
+    results = [("PHPCS (WordPress)", run_phpcs(files, rep)), ("Blade escaping", run_blade(files, rep, a.strict))]
+    if not a.no_pint:
+        results.append(("Pint", run_pint(files, rep)))
+    rep.print()
+    print()
+    for name, res in results:
+        print(f"  {name:18} {res}")
+    print(f"\n  {rep.errors} error(s), {rep.warnings} warning(s)")
+    if GHA and os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as s:
+            s.write(f"### wp-review\n\n**{rep.errors} error(s), {rep.warnings} warning(s)** on changed lines.\n\n")
+            for name, res in results:
+                s.write(f"- {name}: {res}\n")
+    sys.exit(1 if rep.errors else 0)
+
+
+if __name__ == "__main__":
+    main()

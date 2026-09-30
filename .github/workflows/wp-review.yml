@@ -1,0 +1,40 @@
+name: WP Review
+
+# WordPress Handbook checks on the lines a PR changes (wp-dev-kit).
+# Errors on changed lines fail the check; legacy code elsewhere is not reported.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wp-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  wp-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - name: Install WordPress Coding Standards
+        run: |
+          composer global config --no-interaction allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --no-interaction --no-progress "wp-coding-standards/wpcs:^3.0" "phpcompatibility/phpcompatibility-wp:*"
+          echo "$(composer global config bin-dir --absolute --quiet)" >> "$GITHUB_PATH"
+
+      - name: Install theme dependencies (for Pint)
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: wp-review (changed lines)
+        run: python3 .github/scripts/wp-review --base "origin/${{ github.base_ref }}"
