@@ -29,5 +29,5 @@ Refs: https://www.w3.org/WAI/WCAG22/quickref/ · https://www.w3.org/WAI/ARIA/apg
 - Never claim "this is accessible". Say what you tested (pa11y / axe / Lighthouse) and that a manual keyboard + VoiceOver pass is still needed.
 
 ## Before a PR
-- Run `wp-review`, `phpcs`, `vendor/bin/pint --test` and `npm run build`, then ask the `wp-security-reviewer` subagent to review the diff.
+- Run `wp-review`, `phpcs`, `composer analyse` (PHPStan), `vendor/bin/pint --test` and `npm run build`, then ask the `wp-security-reviewer` subagent to review the diff.
 - One tool writes, a different tool reviews (Bugbot / Claude GitHub Action / Codex). Matt approves anything that ships.

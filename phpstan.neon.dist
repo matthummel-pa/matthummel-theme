@@ -1,0 +1,26 @@
+# phpstan/extension-installer loads szepeviktor/phpstan-wordpress automatically.
+# https://phpstan.org/ · https://github.com/szepeviktor/phpstan-wordpress
+parameters:
+    level: 5
+    # WooCommerce stubs are large: a worker needs ~3G (run with --memory-limit=3G).
+    # One process keeps peak memory predictable on an 8 GB Mac; the result cache makes reruns fast.
+    parallel:
+        maximumNumberOfProcesses: 1
+    paths:
+        - app
+        - functions.php
+        - plugins
+        - mu-plugins
+    # WooCommerce + WP-CLI aren't in the WordPress stubs. wp-cli-stubs is on dev-master because its
+    # last tag only supports wordpress-stubs 6.x; composer.lock pins the exact commit.
+    scanFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+        - vendor/php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
+    excludePaths:
+        - vendor (?)
+        - node_modules (?)
+    # Known errors live in the baseline so only new code is checked. Shrink it over time:
+    #   composer analyse -- --generate-baseline
+includes:
+    - phpstan-baseline.neon
