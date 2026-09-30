@@ -22,7 +22,19 @@ tar -C "$root" \
   --exclude='plugins' \
   --exclude='matthummel.zip' \
   --exclude='matthummel-newsletter.zip' \
+  --exclude='.claude' \
+  --exclude='.mcp.json' \
+  --exclude='.wp-env.json' \
+  --exclude='.pa11yci.json' \
+  --exclude='.wp-review-allow' \
+  --exclude='.gitignore' \
+  --exclude='CLAUDE.md' \
+  --exclude='AGENTS.md' \
+  --exclude='phpcs.xml.dist' \
+  --exclude='phpstan*.neon*' \
+  --exclude='lighthouse-report*' \
   -cf - . | tar -C "$stage/matthummel" -xf -
+# Dev/AI tooling above would otherwise be publicly readable under wp-content/themes/matthummel/ on the live site.
 
 if [[ ! -f "$stage/matthummel/style.css" ]]; then
   echo "style.css missing from pack staging" >&2

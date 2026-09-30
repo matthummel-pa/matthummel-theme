@@ -90,3 +90,13 @@ sitemap.xml
 sitemap.xml.gz
 error_log
 debug.log
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# wp-dev-kit files that must be committed
+!.github/review-checklist.md
+!.github/pull_request_template.md
+
+# Local QA reports (Lighthouse)
+lighthouse-report*

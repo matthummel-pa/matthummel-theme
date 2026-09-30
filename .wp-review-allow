@@ -1,0 +1,6 @@
+# One Python regex per line, matched against the expression inside {!! ... !!}.
+# Add theme helpers that already return escaped or kses-filtered markup.
+# Example:
+# ^\s*\\?App\\mh_svg_icon\s*\(
+^\s*\\?(App\\)?mh_svg_icon\s*\(
+^\s*\\?(App\\)?mh_product_fallback_markup\s*\(

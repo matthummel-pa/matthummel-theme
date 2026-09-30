@@ -21,8 +21,11 @@ add_action('init', function () {
 add_action('init', function () {
     remove_theme_support('core-block-patterns');
     if (function_exists('unregister_block_pattern_category')) {
+        $registry = \WP_Block_Pattern_Categories_Registry::get_instance();
         foreach (['featured', 'buttons', 'columns', 'gallery', 'header', 'text', 'query', 'theme', 'uncategorized'] as $cat) {
-            unregister_block_pattern_category($cat);
+            if ($registry->is_registered($cat)) {
+                unregister_block_pattern_category($cat);
+            }
         }
     }
     if (class_exists(\WP_Block_Patterns_Registry::class)) {
