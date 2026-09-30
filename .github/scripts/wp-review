@@ -153,15 +153,25 @@ def run_phpcs(files, report):
     if not targets:
         return "no PHP changes"
     phpcs = find_bin("phpcs")
-    if not phpcs:
-        return "SKIPPED — phpcs not found (run setup/mac-setup.sh or composer require --dev wp-coding-standards/wpcs)"
-    if not Path("phpcs.xml.dist").exists() and not Path("phpcs.xml").exists():
+    has_config = Path("phpcs.xml.dist").exists() or Path("phpcs.xml").exists()
+    if not phpcs or not has_config:
+        why = "phpcs not found" if not phpcs else "no phpcs.xml.dist"
+        # Skipping is fine on a laptop; in CI it would pass PRs that were never linted.
+        if os.environ.get("CI"):
+            report.add("error", "phpcs.xml.dist", 0, why + " in CI", "wp-review.PhpcsMissing")
+            return "FAILED — " + why
+        if not phpcs:
+            return "SKIPPED — phpcs not found (run setup/mac-setup.sh or composer require --dev wp-coding-standards/wpcs)"
         return "SKIPPED — no phpcs.xml.dist (run apply-kit.sh)"
     r = sh([phpcs, "--report=json", "-q", "--no-colors", *targets])
     try:
-        data = json.loads(r.stdout or "{}")
+        data = json.loads(r.stdout)
     except json.JSONDecodeError:
-        report.add("error", "phpcs.xml.dist", 0, "phpcs could not run: " + (r.stderr or r.stdout)[:300], "wp-review.PhpcsFailed")
+        data = None
+    # phpcs 3 exits 0 (clean), 1 (errors) or 2 (fixable errors); 3+ or no JSON report means it never ran.
+    if r.returncode not in (0, 1, 2) or not isinstance(data, dict) or "totals" not in data:
+        detail = (r.stderr or r.stdout or f"exit {r.returncode}, no output")[:300]
+        report.add("error", "phpcs.xml.dist", 0, "phpcs could not run: " + detail, "wp-review.PhpcsFailed")
         return "FAILED — phpcs could not run"
     root = str(Path.cwd()) + "/"
     for fpath, info in data.get("files", {}).items():
