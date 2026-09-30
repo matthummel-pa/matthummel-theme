@@ -161,7 +161,8 @@ def run_phpcs(files, report):
     try:
         data = json.loads(r.stdout or "{}")
     except json.JSONDecodeError:
-        return "phpcs failed: " + (r.stderr or r.stdout)[:400]
+        report.add("error", "phpcs.xml.dist", 0, "phpcs could not run: " + (r.stderr or r.stdout)[:300], "wp-review.PhpcsFailed")
+        return "FAILED — phpcs could not run"
     root = str(Path.cwd()) + "/"
     for fpath, info in data.get("files", {}).items():
         rel = fpath.replace(root, "")

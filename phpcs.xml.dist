@@ -116,8 +116,5 @@
 	<rule ref="Generic.PHP.DisallowShortOpenTag"/>
 
 	<!-- ============ PHP version compatibility ============ -->
-	<rule ref="PHPCompatibilityWP">
-		<!-- Noise from PHPCompatibility 10 dev builds; not a real bug for WP 6.x themes. -->
-		<exclude name="PHPCompatibility.ParameterValues.NewTrimCharactersDefault"/>
-	</rule>
+	<rule ref="PHPCompatibilityWP"/>
 </ruleset>
