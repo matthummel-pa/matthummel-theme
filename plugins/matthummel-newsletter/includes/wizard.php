@@ -1151,12 +1151,9 @@ function ajax_post_blocks(): void
     }
     check_ajax_referer('mhn_wizard', 'mhn_wizard_nonce');
 
-    $raw = isset($_POST['mhn_posts']) && is_array($_POST['mhn_posts']) ? wp_unslash($_POST['mhn_posts']) : [];
-    $cards = isset($_POST['mhn_cards']) && (string) wp_unslash($_POST['mhn_cards']) === '1';
-    $ids = [];
-    foreach ($raw as $id) {
-        $ids[] = absint($id);
-    }
+    $posted = map_deep(wp_unslash($_POST['mhn_posts'] ?? []), 'absint');
+    $ids = is_array($posted) ? $posted : [];
+    $cards = absint(sanitize_text_field(wp_unslash($_POST['mhn_cards'] ?? '0'))) === 1;
 
     wp_send_json_success([
         'html' => posts_region_html($ids, $cards),
