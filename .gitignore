@@ -97,3 +97,6 @@ debug.log
 # wp-dev-kit files that must be committed
 !.github/review-checklist.md
 !.github/pull_request_template.md
+
+# Local QA reports (Lighthouse)
+lighthouse-report*
