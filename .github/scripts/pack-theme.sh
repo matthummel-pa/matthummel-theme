@@ -20,6 +20,9 @@ tar -C "$root" \
   --exclude='.env' \
   --exclude='.env.*' \
   --exclude='plugins' \
+  --exclude='mh-last-fatal.txt' \
+  --exclude='*fatal*.txt' \
+  --exclude='*.log' \
   --exclude='matthummel.zip' \
   --exclude='matthummel-newsletter.zip' \
   --exclude='.claude' \
@@ -52,6 +55,10 @@ fi
 rm -f "$stage/matthummel/public/hot"
 if [[ -d "$stage/matthummel/plugins" ]]; then
   echo "plugins/ leaked into the theme pack" >&2
+  exit 1
+fi
+if find "$stage/matthummel" \( -name '*fatal*.txt' -o -name '*.log' \) | grep -q .; then
+  echo "log or fatal file leaked into the theme pack" >&2
   exit 1
 fi
 (cd "$stage" && zip -rq "$out" matthummel)

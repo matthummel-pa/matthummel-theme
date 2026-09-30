@@ -21,12 +21,6 @@ if (! file_exists($composer = __DIR__.'/vendor/autoload.php')) {
 
 require $composer;
 
-$mhFatalProbe = __DIR__.'/mu-plugins/mh-fatal-probe.php';
-if (is_readable($mhFatalProbe)) {
-    require_once $mhFatalProbe;
-}
-unset($mhFatalProbe);
-
 require_once __DIR__.'/app/Github.php';
 require_once __DIR__.'/app/LinkedIn.php';
 

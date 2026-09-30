@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.40 — Remove the public fatal log
+
+- Stopped writing `mh-last-fatal.txt` into the theme. That file was on the public site and included server paths.
+- Theme packs skip `*fatal*.txt` and `*.log`. PHP errors stay in the host log.
+
 ## 3.6.39 — Unsubscribe and preferences titles
 
 - The Get updates template titles Unsubscribe and Manage preferences on those pages.
