@@ -40,7 +40,10 @@ function deactivate(): void
 
 function boot(): void
 {
-    maybe_upgrade();
+    // WordPress defines WP_POST_REVISIONS and $wp_rewrite after plugins_loaded.
+    // Creating or retitling a page here calls wp_insert_post() too early and
+    // fatals every request, so the upgrade waits until init.
+    add_action('init', __NAMESPACE__.'\\maybe_upgrade', 0);
 
     add_action('init', __NAMESPACE__.'\\load_textdomain');
     add_action('init', __NAMESPACE__.'\\register_type');
