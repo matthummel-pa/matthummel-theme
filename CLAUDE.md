@@ -15,6 +15,7 @@ Cursor and Claude share one set of rules. `AGENTS.md` (above) and `.cursor/rules
 @.cursor/rules/sage-bespoke-2026.mdc
 @.cursor/rules/sage-roots.mdc
 @.cursor/rules/wp-review.mdc
+@.cursor/rules/wordpress.mdc
 
 ## Read before editing matching files
 
