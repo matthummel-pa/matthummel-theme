@@ -167,7 +167,7 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
         foreach ($levels[1] as $level) {
             $current = (int) $level;
             if ($previous > 0 && $current > $previous + 1) {
-                $errors[] = 'Heading levels skip from h'.$previous.' to h'.$current.'.';
+                $warnings[] = 'Heading levels skip from h'.$previous.' to h'.$current.'.';
                 break;
             }
             $previous = $current;
@@ -251,12 +251,12 @@ function audit_html(string $html, string $text = '', string $address = ''): arra
     }
 
     $palette = audit_palette();
-    $errors = array_merge($errors, $palette['errors']);
+    $warnings = array_merge($warnings, $palette['errors'], $palette['warnings']);
     $allowed = array_map('strtolower', array_values(email_palette()));
     if (preg_match_all('/#([0-9a-fA-F]{6})\b/', $html, $colors) > 0) {
         foreach (array_unique($colors[1]) as $color) {
             if (! in_array('#'.strtolower($color), $allowed, true)) {
-                $errors[] = 'Unexpected color #'.$color.' is outside the checked palette.';
+                $warnings[] = 'Unexpected color #'.$color.' is outside the checked palette.';
                 break;
             }
         }

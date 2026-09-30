@@ -144,6 +144,9 @@ function admin_assets(string $hook): void
     wp_localize_script('mhn-wizard', 'mhnWizard', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'saved' => __('Draft saved.', 'matthummel-newsletter'),
+        'postBlocks' => 'mhn_post_blocks',
+        'postsFailed' => __('The post blocks could not be loaded. Try again.', 'matthummel-newsletter'),
+        'postsEmpty' => __('Those posts are not available to insert.', 'matthummel-newsletter'),
     ]);
 }
 
