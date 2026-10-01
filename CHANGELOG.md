@@ -1,5 +1,10 @@
 # Changelog
 
+## Newsletter plugin 1.10.0 — Signup block
+
+- A signup block can sit on any page. It uses the same confirm-by-email signup as the Get updates form.
+- The page form and the block are a card with the email and button on one row. The footer button fills its column.
+
 ## 3.6.40 — Remove the public fatal log
 
 - Stopped writing `mh-last-fatal.txt` into the theme. That file was on the public site and included server paths.

@@ -52,6 +52,8 @@
 			<property name="customAutoEscapedFunctions" type="array">
 				<element value="mh_svg_icon"/>
 				<element value="mh_product_fallback_markup"/>
+				<!-- Core escapes block wrapper attributes before returning them. -->
+				<element value="get_block_wrapper_attributes"/>
 			</property>
 		</properties>
 	</rule>

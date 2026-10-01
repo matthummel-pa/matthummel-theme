@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,7 @@ Self-hosted newsletter. Subscribers and issues stay in WordPress. Mail goes out 
 A personal newsletter for matthummel.com. Addresses, issues, and the send log live in this WordPress database. Nothing is sent to Mailchimp, HubSpot, or another marketing service.
 
 * Double opt-in for new signups.
+* A signup block for any page. It uses the same confirmation email as the Get updates form.
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
@@ -55,6 +56,11 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.10.0 =
+* A Newsletter signup block can sit on any page. The heading, description, and button text are editable.
+* With JavaScript, the block posts to matthummel-newsletter/v1/subscribe. Without it, the form still uses the existing signup handler.
+* The route checks a REST nonce, a honeypot, and its own limit of 5 requests in 10 minutes. It calls the same subscribe function as the page form.
 
 = 1.9.0 =
 * The content step is one editor per template. Blog update, blog digest, and custom message each start with a letter you can edit.

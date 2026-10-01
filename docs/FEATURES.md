@@ -11,7 +11,8 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.6.39 unsubscribe and preferences)
 
 - `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
-- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.9.0). Do not add Mailchimp, HubSpot, or another ESP.
+- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.10.0). Do not add Mailchimp, HubSpot, or another ESP.
+- 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
 
 ## Editor’s notes (3.6.38 Get updates)
 

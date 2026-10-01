@@ -45,6 +45,8 @@ function boot(): void
     add_action('init', __NAMESPACE__.'\\load_textdomain');
     add_action('init', __NAMESPACE__.'\\register_type');
     add_action('init', __NAMESPACE__.'\\register_patterns', 100);
+    add_action('init', __NAMESPACE__.'\\register_signup_block');
+    add_action('rest_api_init', __NAMESPACE__.'\\register_subscribe_route');
     add_filter('allowed_block_types_all', __NAMESPACE__.'\\allowed_blocks', 10, 2);
     add_action('transition_post_status', __NAMESPACE__.'\\on_transition', 10, 3);
     add_action('added_post_meta', __NAMESPACE__.'\\refresh_auto_body_for_thumbnail', 10, 3);
