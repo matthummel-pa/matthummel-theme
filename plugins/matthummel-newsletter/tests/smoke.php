@@ -37,6 +37,39 @@ function mhn_check(bool $ok, string $label): void
     }
 }
 
+function mhn_mail_count(string $email): int
+{
+    $count = 0;
+    foreach ($GLOBALS['mhn_outbox'] as $entry) {
+        if (is_array($entry) && ($entry['to'] ?? '') === $email) {
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
+/**
+ * @param  list<string>  $emails
+ */
+function mhn_keep_only_recipients(int $issueId, array $emails): void
+{
+    global $wpdb;
+
+    $keep = array_map('strtolower', $emails);
+    $rows = $wpdb->get_results('SELECT id, email FROM '.Newsletter\subscribers_table()." WHERE status = 'subscribed'", ARRAY_A);
+    foreach (is_array($rows) ? $rows : [] as $row) {
+        if (! is_array($row)) {
+            continue;
+        }
+        $email = strtolower((string) ($row['email'] ?? ''));
+        if (in_array($email, $keep, true)) {
+            continue;
+        }
+        Newsletter\log_event($issueId, (int) $row['id'], 'skipped', 'test');
+    }
+}
+
 function mhn_png(string $alt, int $width, int $height): int
 {
     if (! function_exists('imagecreatetruecolor') || ! function_exists('imagepng')) {
@@ -91,6 +124,12 @@ foreach ([
     'pending-quiet@example.com',
     'cooldown@example.com',
     'cooldown-b@example.com',
+    'resume-a@example.com',
+    'resume-b@example.com',
+    'resume-c@example.com',
+    'resume-d@example.com',
+    'resume-e@example.com',
+    'resume-f@example.com',
 ] as $sampleEmail) {
     $sample = Newsletter\find_by_email($sampleEmail);
     if ($sample) {
@@ -745,6 +784,135 @@ if (is_numeric($plainPost)) {
     mhn_check(substr_count($plainHtml, 'class="mhn-img"') === 0, 'automatic blog update omits a missing featured image');
     mhn_check(Newsletter\settings()['auto_send'] === 0, 'automatic sending stays off while images are compiled');
 }
+
+$resumeSettings = get_option('mhn_settings', []);
+if (! is_array($resumeSettings)) {
+    $resumeSettings = [];
+}
+$resumeSettings['batch_size'] = 5;
+update_option('mhn_settings', $resumeSettings);
+$resumePeople = [
+    'resume-a@example.com',
+    'resume-b@example.com',
+    'resume-c@example.com',
+    'resume-d@example.com',
+    'resume-e@example.com',
+    'resume-f@example.com',
+];
+$resumeAllow = static function () use ($resumePeople): array {
+    return $resumePeople;
+};
+add_filter('mhn_send_allowlist', $resumeAllow, 100);
+foreach ($resumePeople as $resumeEmail) {
+    Newsletter\insert_subscriber([
+        'email' => $resumeEmail,
+        'first_name' => 'Resume',
+        'status' => 'subscribed',
+        'opt_in' => 'double',
+        'source' => 'test',
+        'confirmed_at' => current_time('mysql'),
+    ]);
+}
+$resumeId = wp_insert_post([
+    'post_type' => 'newsletter_issue',
+    'post_status' => 'draft',
+    'post_title' => 'Resume send',
+    'post_content' => '<!-- wp:paragraph --><p>Here is a note about the build.</p><!-- /wp:paragraph -->',
+]);
+$resumeId = is_numeric($resumeId) ? (int) $resumeId : 0;
+if ($resumeId > 0) {
+    update_post_meta($resumeId, '_mhn_template', 'custom');
+    update_post_meta($resumeId, '_mhn_layout', 'plain');
+    update_post_meta($resumeId, '_mhn_note', '<p>Here is a note about the build.</p>');
+    update_post_meta($resumeId, '_mhn_subject', 'Resume send');
+    update_post_meta($resumeId, '_mhn_preheader', 'The rest of the list still goes out');
+    update_post_meta($resumeId, '_mhn_status', 'draft');
+    update_post_meta($resumeId, '_mhn_include_recent', '0');
+    Newsletter\compile_issue($resumeId);
+    mhn_keep_only_recipients($resumeId, $resumePeople);
+    $resumeAudit = Newsletter\audit_issue($resumeId);
+    mhn_check($resumeAudit['errors'] === [], 'resume issue can be sent: '.implode('; ', $resumeAudit['errors']));
+    mhn_check(Newsletter\start_campaign($resumeId) === true, 'a six-person send can start');
+    wp_clear_scheduled_hook('mhn_send_batch', [$resumeId]);
+    $resumeSent = static function () use ($resumePeople): int {
+        $count = 0;
+        foreach ($resumePeople as $resumeEmail) {
+            $count += mhn_mail_count($resumeEmail);
+        }
+
+        return $count;
+    };
+    $mailsBeforeResume = $resumeSent();
+    Newsletter\send_batch($resumeId);
+    mhn_check($resumeSent() - $mailsBeforeResume === 5, 'one batch sends five addresses when the batch size is 5');
+    mhn_check(Newsletter\issue_status($resumeId) === 'sending', 'a partial send stays sending');
+    mhn_check(wp_next_scheduled('mhn_send_batch', [$resumeId]) !== false, 'the rest of the list is queued after a partial batch');
+    wp_clear_scheduled_hook('mhn_send_batch', [$resumeId]);
+    mhn_check(wp_next_scheduled('mhn_send_batch', [$resumeId]) === false, 'the follow-up can be cleared for the orphan check');
+    Newsletter\cron_tick();
+    mhn_check(wp_next_scheduled('mhn_send_batch', [$resumeId]) !== false, 'the five-minute tick resumes a send that lost its follow-up');
+    Newsletter\send_batch($resumeId);
+    mhn_check($resumeSent() - $mailsBeforeResume === 6, 'the second batch sends the address that was still waiting');
+    mhn_check(Newsletter\issue_status($resumeId) === 'sent', 'the send finishes after the last batch');
+}
+$throwAllow = static function ($result, array $atts) {
+    if (($atts['to'] ?? '') === 'resume-c@example.com') {
+        throw new RuntimeException('smtp refused');
+    }
+
+    return $result;
+};
+add_filter('pre_wp_mail', $throwAllow, 9, 2);
+foreach (['resume-c@example.com', 'resume-d@example.com'] as $throwEmail) {
+    Newsletter\insert_subscriber([
+        'email' => $throwEmail,
+        'first_name' => 'Throw',
+        'status' => 'subscribed',
+        'opt_in' => 'double',
+        'source' => 'test',
+        'confirmed_at' => current_time('mysql'),
+    ]);
+}
+$resumeSettings['batch_size'] = 25;
+update_option('mhn_settings', $resumeSettings);
+$throwId = wp_insert_post([
+    'post_type' => 'newsletter_issue',
+    'post_status' => 'draft',
+    'post_title' => 'Throw send',
+    'post_content' => '<!-- wp:paragraph --><p>Here is a note about the build.</p><!-- /wp:paragraph -->',
+]);
+$throwId = is_numeric($throwId) ? (int) $throwId : 0;
+if ($throwId > 0) {
+    update_post_meta($throwId, '_mhn_template', 'custom');
+    update_post_meta($throwId, '_mhn_layout', 'plain');
+    update_post_meta($throwId, '_mhn_note', '<p>Here is a note about the build.</p>');
+    update_post_meta($throwId, '_mhn_subject', 'Throw send');
+    update_post_meta($throwId, '_mhn_preheader', 'One bad address does not stop the list');
+    update_post_meta($throwId, '_mhn_status', 'draft');
+    update_post_meta($throwId, '_mhn_include_recent', '0');
+    Newsletter\compile_issue($throwId);
+    mhn_keep_only_recipients($throwId, ['resume-c@example.com', 'resume-d@example.com']);
+    $threwOut = false;
+    $dBeforeThrow = mhn_mail_count('resume-d@example.com');
+    try {
+        Newsletter\start_campaign($throwId);
+        wp_clear_scheduled_hook('mhn_send_batch', [$throwId]);
+        Newsletter\send_batch($throwId);
+    } catch (RuntimeException $error) {
+        $threwOut = $error->getMessage() === 'smtp refused';
+    }
+    $throwRow = Newsletter\find_by_email('resume-c@example.com');
+    mhn_check($threwOut === false, 'one refused address does not abort the batch');
+    mhn_check(
+        $throwRow !== null && Newsletter\has_event($throwId, (int) $throwRow['id'], 'failed'),
+        'a refused address is stored as failed'
+    );
+    mhn_check(mhn_mail_count('resume-d@example.com') === $dBeforeThrow + 1, 'the next address still gets the letter');
+    mhn_check(Newsletter\issue_status($throwId) === 'sent', 'a send with one failure still finishes');
+}
+remove_filter('pre_wp_mail', $throwAllow, 9);
+remove_filter('mhn_send_allowlist', $resumeAllow, 100);
+wp_clear_scheduled_hook('mhn_send_batch');
 
 delete_option('mhn_settings');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send stays off after the security checks');
