@@ -167,9 +167,10 @@
           <li>{!! \App\mh_svg_icon('check', 12) !!} {{ __('Agency overflow', 'sage') }}</li>
           <li>{!! \App\mh_svg_icon('check', 12) !!} {{ __('Remote anywhere', 'sage') }}</li>
         </ul>
-        <a class="btn now-sidebar-card__cta" href="{{ esc_url(home_url('/contact/')) }}">
-          {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Say hello', 'sage') }}
+        <a class="btn now-sidebar-card__cta" href="#note">
+          {!! \App\mh_svg_icon('mail', 14) !!} {{ \App\field('now_note_submit', __('Send email', 'sage')) }}
         </a>
+        <a class="now-sidebar-card__link" href="{{ esc_url(\App\mh_github_help_issue_url()) }}" rel="noopener" target="_blank">{{ \App\field('now_note_github', __('Open a GitHub note', 'sage')) }} <span aria-hidden="true">→</span></a>
       </div>
       @endif
 

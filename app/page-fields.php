@@ -557,8 +557,9 @@ function page_field_map(): array
             ],
             __('Note', 'sage') => [
                 ['now_note_h2', __('Heading', 'sage'), 'text', __('Send a note', 'sage')],
-                ['now_note_lede', __('Intro', 'sage'), 'textarea', __('This form emails me. I usually reply within one business day (ET).', 'sage')],
-                ['now_note_submit', __('Submit button', 'sage'), 'text', __('Send note', 'sage')],
+                ['now_note_lede', __('Intro', 'sage'), 'textarea', __('Email reaches my inbox. A GitHub note opens a new issue on this site’s theme repo, so you can paste a link and I can reply there.', 'sage')],
+                ['now_note_submit', __('Submit button', 'sage'), 'text', __('Send email', 'sage')],
+                ['now_note_github', __('GitHub button', 'sage'), 'text', __('Open a GitHub note', 'sage')],
                 ['now_sms', __('SMS number (leave blank to hide Text me)', 'sage'), 'text', ''],
                 ['now_sms_body', __('SMS prefilled message', 'sage'), 'text', __('Hi — I saw the Now page.', 'sage')],
             ],

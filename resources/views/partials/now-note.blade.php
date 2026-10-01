@@ -11,7 +11,14 @@
       <h2 id="now-note-heading" class="now-block__title">{{ \App\field('now_note_h2', __('Send a note', 'sage')) }}</h2>
     </div>
   </div>
-  <p>{{ \App\field('now_note_lede', __('This form emails me. I usually reply within one business day (ET).', 'sage')) }}</p>
+  <p>{{ \App\field('now_note_lede', __('Email reaches my inbox. A GitHub note opens a new issue on this site’s theme repo, so you can paste a link and I can reply there.', 'sage')) }}</p>
+  <p class="now-note__alt">
+    <a class="btn btn-outline" href="{{ esc_url(\App\mh_github_help_issue_url()) }}" rel="noopener" target="_blank">
+      {!! \App\mh_svg_icon('github', 15) !!}
+      {{ \App\field('now_note_github', __('Open a GitHub note', 'sage')) }}
+      <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+    </a>
+  </p>
   <p class="form-error" data-now-note-error hidden tabindex="-1"></p>
   @include('partials.contact-form', [
     'compact' => true,
@@ -19,7 +26,7 @@
     'statusId' => $noteStatus,
     'actionUrl' => get_permalink() ?: home_url('/now/'),
     'presetSubject' => __('Note from the Now page', 'sage'),
-    'submitLabel' => \App\field('now_note_submit', __('Send note', 'sage')),
+    'submitLabel' => \App\field('now_note_submit', __('Send email', 'sage')),
     'compactWhoFallback' => '',
     'messageRows' => 4,
   ])

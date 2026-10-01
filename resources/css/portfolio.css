@@ -1559,6 +1559,7 @@ html.mh-dark .h-hero-work__foot {
 #ai,
 #life,
 #list,
+#note,
 #approach,
 #elsewhere,
 .h-about,
@@ -1586,6 +1587,7 @@ html.mh-dark .h-hero-work__foot {
   #build,
   #availability,
   #activity,
+  #note,
   #studio,
   #writing,
   #ai,
@@ -10998,6 +11000,7 @@ html.mh-dark .journal-topic-card {
   .now-feed__item { grid-template-columns: 1fr; }
 }
 .now-note .contact-form { margin: 0; }
+.now-note__alt { margin: 0 0 1rem; }
 .now-note__sms-note {
   margin-top: 1rem;
   font-size: .88rem;

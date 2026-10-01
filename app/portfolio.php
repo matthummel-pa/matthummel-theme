@@ -226,6 +226,20 @@ function mh_now_sms_href(?int $postId = null): string
 }
 
 /**
+ * GitHub issue URL for a visitor who needs help now.
+ *
+ * Opens a new issue on this theme repo with a short prompt already filled in.
+ */
+function mh_github_help_issue_url(): string
+{
+    $login = rawurlencode(mh_github_login());
+    $title = rawurlencode('Need help now');
+    $body = rawurlencode("What I need help with:\n\n\nLink (if you have one):\n\n");
+
+    return "https://github.com/{$login}/matthummel-theme/issues/new?title={$title}&body={$body}";
+}
+
+/**
  * Recent public posts from DEV.to and Bluesky for the Now page.
  *
  * @return list<array{network: string, title: string, url: string, when: string, text: string}>
