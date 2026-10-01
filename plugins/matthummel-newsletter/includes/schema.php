@@ -463,9 +463,7 @@ function ensure_page(string $slug, string $title, string $shortcode, string $tem
 
     $existing = find_owned_page($slug);
     if ($existing instanceof \WP_Post) {
-        finish_owned_page($existing, $slug, $shortcode, $template);
-
-        return (int) $existing->ID;
+        return reuse_owned_page($existing, $slug, $shortcode, $template);
     }
 
     $lock = 'mhn_lock_page_'.$slug;
@@ -478,9 +476,7 @@ function ensure_page(string $slug, string $title, string $shortcode, string $tem
     try {
         $existing = find_owned_page($slug);
         if ($existing instanceof \WP_Post) {
-            finish_owned_page($existing, $slug, $shortcode, $template);
-
-            return (int) $existing->ID;
+            return reuse_owned_page($existing, $slug, $shortcode, $template);
         }
 
         $id = wp_insert_post([
@@ -507,13 +503,22 @@ function ensure_page(string $slug, string $title, string $shortcode, string $tem
             return $winner instanceof \WP_Post ? (int) $winner->ID : 0;
         }
 
-        remember_owned_page($slug, (int) $post->ID);
-        finish_owned_page($post, $slug, $shortcode, $template);
-
-        return (int) $post->ID;
+        return reuse_owned_page($post, $slug, $shortcode, $template);
     } finally {
         release_named_lock($lock);
     }
+}
+
+function reuse_owned_page(\WP_Post $existing, string $slug, string $shortcode, string $template): int
+{
+    $ownerId = collapse_same_slug($slug);
+    $owner = get_post($ownerId);
+    if (! $owner instanceof \WP_Post) {
+        $owner = $existing;
+    }
+    finish_owned_page($owner, $slug, $shortcode, $template);
+
+    return (int) $owner->ID;
 }
 
 function finish_owned_page(\WP_Post $page, string $slug, string $shortcode, string $template): void
@@ -629,7 +634,9 @@ function remember_owned_page(string $slug, int $id): void
 }
 
 /**
- * add_option is atomic. A stale lock older than two minutes can be taken again.
+ * A plain insert fails when the row exists. add_option() updates that row on
+ * current WordPress, so two requests would both believe they held the lock.
+ * A stale lock older than two minutes can be taken again.
  */
 function acquire_named_lock(string $key): bool
 {
@@ -637,7 +644,7 @@ function acquire_named_lock(string $key): bool
     if ($key === '') {
         return false;
     }
-    if (add_option($key, (string) time(), '', false)) {
+    if (insert_lock_row($key)) {
         return true;
     }
 
@@ -648,7 +655,63 @@ function acquire_named_lock(string $key): bool
 
     delete_option($key);
 
-    return add_option($key, (string) time(), '', false);
+    return insert_lock_row($key);
+}
+
+function insert_lock_row(string $key): bool
+{
+    global $wpdb;
+
+    $suppressed = $wpdb->suppress_errors(true);
+    $inserted = $wpdb->query($wpdb->prepare(
+        "INSERT INTO `{$wpdb->options}` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, %s)",
+        $key,
+        (string) time(),
+        'off'
+    ));
+    $wpdb->suppress_errors($suppressed);
+    if (! $inserted) {
+        $error = $wpdb->last_error;
+        if (is_string($error) && (str_contains($error, 'UNIQUE') || str_contains($error, 'Duplicate'))) {
+            $wpdb->last_error = '';
+        }
+
+        return false;
+    }
+
+    wp_cache_delete($key, 'options');
+
+    return true;
+}
+
+/**
+ * Keep the oldest page with this exact slug and delete the rest.
+ */
+function collapse_same_slug(string $slug): int
+{
+    $found = get_posts([
+        'post_type' => 'page',
+        'name' => $slug,
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+        'posts_per_page' => 20,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'no_found_rows' => true,
+        'suppress_filters' => true,
+    ]);
+
+    $winner = 0;
+    foreach ($found as $page) {
+        if ($winner === 0) {
+            $winner = (int) $page->ID;
+
+            continue;
+        }
+
+        wp_delete_post((int) $page->ID, true);
+    }
+
+    return $winner;
 }
 
 function release_named_lock(string $key): void

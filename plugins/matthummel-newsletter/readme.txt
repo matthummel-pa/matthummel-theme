@@ -59,7 +59,7 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 = 1.11.0 =
 * Required pages are created on activation or in wp-admin, not on every front-end request.
-* An existing page is reused by its stored ID or by slug in any status. A lock stops two requests from creating copies.
+* An existing page is reused by its stored ID or by slug in any status. The lock is an insert that fails if that row exists, because add_option() would update it. The oldest page with that slug is kept.
 * Unsubscribe, email preferences, thank-you, and numbered copies of those slugs stay noindex when Rank Math prints the robots tag.
 * `[mhn_signup source="post"]` uses the same signup handler as the page and footer forms. The post form mentions a free WordPress Handoff Checklist.
 * Settings has an optional checklist link. It is empty until you set an https URL. The welcome letter then adds that button.

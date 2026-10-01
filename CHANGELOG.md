@@ -10,7 +10,7 @@
 ## Newsletter plugin 1.11.0 — One unsubscribe page
 
 - The plugin creates Get updates, Unsubscribe, and Manage preferences on activation or in wp-admin. A front-end page load no longer creates them.
-- It stores each page ID and looks up the slug in any status before inserting. A lock stops overlapping requests from making `/unsubscribe-2/` and the rest.
+- It stores each page ID and looks up the slug in any status before inserting. A lock stops overlapping requests from making `/unsubscribe-2/` and the rest. The lock is an insert that fails when the row exists, because `add_option()` updates an existing row. If two pages still share a slug, the older one is kept.
 - Unsubscribe, email preferences, and thank-you stay `noindex` when Rank Math is active, including numbered copies such as `/unsubscribe-113/`.
 - Single posts can end with `[mhn_signup source="post"]`. It uses the same signup handler, nonce, honeypot, and email and first-name fields. The note mentions a free WordPress Handoff Checklist.
 - Newsletter settings has a checklist link. It stays empty until you paste an https URL. The welcome letter then includes that button.
