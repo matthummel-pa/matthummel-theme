@@ -245,26 +245,43 @@ function replacePostsRegion(source, html) {
   return source.slice(0, start) + html + source.slice(index)
 }
 
+function syncVisualEditors() {
+  const editors = window.tinymce && window.tinymce.editors
+  if (!editors) return
+
+  for (let index = 0; index < editors.length; index += 1) {
+    const editor = editors[index]
+    if (!editor || !editor.initialized || editor.isHidden()) continue
+    editor.save()
+  }
+}
+
 function bindAutosave(form) {
   let timer = 0
   let sending = false
+  let queued = false
+  let chain = Promise.resolve(0)
+  let committing = false
   const status = document.getElementById('mhn-save-status')
 
   function save() {
-    if (sending) return Promise.resolve(currentIssueId(form))
-    if (window.tinymce) window.tinymce.triggerSave()
+    if (sending) {
+      queued = true
+      return chain
+    }
+
+    syncVisualEditors()
     const data = new FormData(form)
     data.set('action', 'mhn_wizard_autosave')
     data.set('mhn_action', 'stay')
     sending = true
-    return fetch(mhnWizard.ajaxUrl, {
+    chain = fetch(mhnWizard.ajaxUrl, {
       method: 'POST',
       body: data,
       credentials: 'same-origin',
     })
       .then((response) => response.json())
       .then((payload) => {
-        sending = false
         const id = payload && payload.success && payload.data ? Number(payload.data.id) : 0
         if (!id) return 0
         const hidden = form.querySelector('[name="mhn_issue"]')
@@ -277,10 +294,15 @@ function bindAutosave(form) {
         }
         return id
       })
-      .catch(() => {
+      .catch(() => 0)
+      .then((id) => {
         sending = false
-        return 0
+        if (!queued) return id
+        queued = false
+        return save()
       })
+
+    return chain
   }
 
   const queue = () => {
@@ -291,6 +313,33 @@ function bindAutosave(form) {
   }
   form.addEventListener('input', queue)
   form.addEventListener('change', queue)
+  form.addEventListener('submit', (event) => {
+    if (committing) {
+      event.preventDefault()
+      return
+    }
+
+    event.preventDefault()
+    committing = true
+    const submitter = event.submitter
+    const flushed = save()
+    let giveUpTimer = 0
+    const giveUp = new Promise((resolve) => {
+      giveUpTimer = window.setTimeout(resolve, 12000)
+    })
+    Promise.race([flushed, giveUp]).finally(() => {
+      window.clearTimeout(giveUpTimer)
+      syncVisualEditors()
+      if (submitter && submitter.name) {
+        const carry = document.createElement('input')
+        carry.type = 'hidden'
+        carry.name = submitter.name
+        carry.value = submitter.value
+        form.append(carry)
+      }
+      form.submit()
+    })
+  })
 
   return save
 }
