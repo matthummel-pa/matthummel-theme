@@ -59,6 +59,10 @@ add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
  */
 function mh_seo_plugin_prints_description(): bool
 {
+    if (defined('MH_SEO_ACTIVE') && MH_SEO_ACTIVE && function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+        return true;
+    }
+
     return defined('WPSEO_VERSION')
         || defined('RANK_MATH_VERSION')
         || defined('AIOSEO_VERSION')
@@ -252,7 +256,7 @@ function mh_seo_term_title(\WP_Term $term): string
         return '';
     }
     if ($meta !== '') {
-        return mh_seo_len($meta) > 60 ? mh_seo_clip($meta, 60) : $meta;
+        return $meta;
     }
 
     $name = trim(wp_specialchars_decode(wp_strip_all_tags($term->name), ENT_QUOTES));
@@ -284,7 +288,7 @@ function mh_seo_term_description(\WP_Term $term): string
         return '';
     }
 
-    return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
+    return $desc;
 }
 
 function mh_seo_document_title(): string
@@ -311,7 +315,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
         $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
         $title = trim(get_the_title($post_id));
@@ -350,7 +354,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
 
         $title = trim(get_the_title());
@@ -378,7 +382,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
     }
 
@@ -387,6 +391,9 @@ function mh_seo_document_title(): string
     $title = $custom !== '' ? $custom : $defaults['title'];
     if ($title === '') {
         return '';
+    }
+    if ($custom !== '') {
+        return $title;
     }
 
     return mh_seo_len($title) > 60 ? mh_seo_clip($title, 60) : $title;
@@ -464,7 +471,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
         $desc = wp_strip_all_tags((string) (get_the_excerpt($post_id) ?: get_the_title($post_id)));
         $desc = wp_trim_words($desc, 28, '');
@@ -510,7 +517,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
 
         $summary = trim((string) get_post_meta($post_id, '_mh_project_summary', true));
@@ -524,7 +531,7 @@ function mh_seo_meta_description(): string
             $summary .= '.';
         }
 
-        return mh_seo_len($summary) > 155 ? mh_seo_clip($summary, 155) : $summary;
+        return $summary;
     }
 
     $term = mh_seo_current_term();
@@ -539,7 +546,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
     }
 
@@ -554,6 +561,9 @@ function mh_seo_meta_description(): string
     }
     if ($desc === '') {
         return '';
+    }
+    if ($custom !== '') {
+        return $desc;
     }
 
     return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
@@ -571,6 +581,9 @@ function mh_seo_meta_description(): string
  */
 function mh_filter_document_title($title)
 {
+    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+        return $title;
+    }
     if (is_admin() || ! is_string($title)) {
         return $title;
     }
@@ -591,6 +604,9 @@ function mh_filter_document_title($title)
  */
 function mh_filter_meta_description($desc)
 {
+    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+        return $desc;
+    }
     if (is_admin() || ! is_string($desc)) {
         return $desc;
     }
@@ -608,6 +624,9 @@ function mh_filter_meta_description($desc)
  */
 function mh_print_meta_description(): void
 {
+    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+        return;
+    }
     if (is_admin() || mh_seo_plugin_prints_description()) {
         return;
     }
