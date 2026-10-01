@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.41 — Pages, links, booking, and the GitHub token
+
+- A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
+
 ## Newsletter plugin 1.11.0 — One unsubscribe page
 
 - The plugin creates Get updates, Unsubscribe, and Manage preferences on activation or in wp-admin. A front-end page load no longer creates them.
