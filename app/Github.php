@@ -9,7 +9,10 @@ namespace App;
  */
 
 /**
- * Resolve the GitHub API token: wp-config constant → Customizer/updater theme mod → filter.
+ * Resolve the GitHub API token.
+ *
+ * Prefer MH_GITHUB_TOKEN from wp-config.php or the environment. The theme mod
+ * mh_gh_token remains a fallback. This function never logs the value.
  *
  * @since 3.1.0
  *
@@ -17,12 +20,37 @@ namespace App;
  */
 function github_token(): string
 {
-    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && MH_GITHUB_TOKEN !== '') {
-        return trim(MH_GITHUB_TOKEN);
+    $fromEnv = github_token_from_environment();
+    if ($fromEnv !== '') {
+        return $fromEnv;
     }
+
     $mod = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
 
     return (string) apply_filters('mh/github_token', $mod);
+}
+
+/**
+ * Constant, then environment. Empty when neither is set.
+ */
+function github_token_from_environment(): string
+{
+    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && trim(MH_GITHUB_TOKEN) !== '') {
+        return trim(MH_GITHUB_TOKEN);
+    }
+
+    $candidates = [
+        getenv('MH_GITHUB_TOKEN'),
+        $_ENV['MH_GITHUB_TOKEN'] ?? null,
+        $_SERVER['MH_GITHUB_TOKEN'] ?? null,
+    ];
+    foreach ($candidates as $value) {
+        if (is_string($value) && trim($value) !== '') {
+            return trim($value);
+        }
+    }
+
+    return '';
 }
 
 /**
