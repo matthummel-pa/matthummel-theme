@@ -19,6 +19,9 @@ $wpdb->query('DROP TABLE IF EXISTS '.$wpdb->prefix.'mhn_archive');
 delete_option('mhn_settings');
 delete_option('mhn_db_version');
 delete_option('mhn_version');
+delete_option('mhn_page_get_updates');
+delete_option('mhn_page_email_preferences');
+delete_option('mhn_page_unsubscribe');
 
 $issueIds = $wpdb->get_col($wpdb->prepare(
     "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s",

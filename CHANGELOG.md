@@ -1,5 +1,10 @@
 # Changelog
 
+## Newsletter plugin 1.10.1 — System pages once
+
+- Get updates, Manage preferences, and Unsubscribe are created when the plugin is activated.
+- A later visit does not add another copy of those pages.
+
 ## Newsletter plugin 1.10.0 — Signup block
 
 - A signup block can sit on any page. It uses the same confirm-by-email signup as the Get updates form.
