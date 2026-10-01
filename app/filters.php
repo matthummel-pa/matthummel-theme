@@ -191,7 +191,100 @@ function mh_seo_current_post_id(): int
         return (int) get_option('page_on_front');
     }
 
-    return (int) get_queried_object_id();
+    // Only singular views and the posts page have a post ID. On term, author,
+    // and other archives get_queried_object_id() returns a term or user ID.
+    if (! is_singular() && ! is_home()) {
+        return 0;
+    }
+
+    $object = get_queried_object();
+
+    return $object instanceof \WP_Post ? (int) $object->ID : 0;
+}
+
+/**
+ * Queried term on category, tag, and custom taxonomy archives.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_current_term(): ?\WP_Term
+{
+    if (! is_category() && ! is_tag() && ! is_tax()) {
+        return null;
+    }
+
+    $term = get_queried_object();
+
+    return $term instanceof \WP_Term ? $term : null;
+}
+
+/**
+ * Rank Math term meta value for a term archive.
+ *
+ * Returns a plain stored value, false when the value still has plugin
+ * variables (let the plugin's processed string through), or an empty
+ * string when nothing is set.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_meta(\WP_Term $term, string $key): string|false
+{
+    $value = trim(wp_strip_all_tags((string) get_term_meta($term->term_id, $key, true)));
+    if ($value === '') {
+        return '';
+    }
+    if (str_contains($value, '%')) {
+        return false;
+    }
+
+    return $value;
+}
+
+/**
+ * Title for a term archive: Rank Math term title, else "Term name | Brand".
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_title(\WP_Term $term): string
+{
+    $meta = mh_seo_term_meta($term, 'rank_math_title');
+    if ($meta === false) {
+        return '';
+    }
+    if ($meta !== '') {
+        return mh_seo_len($meta) > 60 ? mh_seo_clip($meta, 60) : $meta;
+    }
+
+    $name = trim(wp_specialchars_decode(wp_strip_all_tags($term->name), ENT_QUOTES));
+    if ($name === '') {
+        return '';
+    }
+    $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+    $built = $name.' | '.$brand;
+
+    return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+}
+
+/**
+ * Description for a term archive: Rank Math term description, else the term description.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_description(\WP_Term $term): string
+{
+    $meta = mh_seo_term_meta($term, 'rank_math_description');
+    if ($meta === false) {
+        return '';
+    }
+
+    $desc = $meta !== ''
+        ? $meta
+        : trim(wp_specialchars_decode(wp_strip_all_tags($term->description), ENT_QUOTES));
+    if ($desc === '') {
+        return '';
+    }
+
+    return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
 }
 
 function mh_seo_document_title(): string
@@ -271,6 +364,11 @@ function mh_seo_document_title(): string
             : $title.' | '.$brand;
 
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+    }
+
+    $term = mh_seo_current_term();
+    if ($term) {
+        return mh_seo_term_title($term);
     }
 
     $post_id = mh_seo_current_post_id();
@@ -427,6 +525,11 @@ function mh_seo_meta_description(): string
         }
 
         return mh_seo_len($summary) > 155 ? mh_seo_clip($summary, 155) : $summary;
+    }
+
+    $term = mh_seo_current_term();
+    if ($term) {
+        return mh_seo_term_description($term);
     }
 
     $post_id = mh_seo_current_post_id();
