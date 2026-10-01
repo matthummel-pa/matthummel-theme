@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Addresses copied from the original footer list are marked as legacy single opt-i
 
 1. Run `bash .github/scripts/pack-plugin.sh` from the theme repo, or download the plugin zip from the workflow artifact.
 2. In wp-admin, go to Plugins → Add New → Upload Plugin and install `matthummel-newsletter.zip`.
-3. Activate the plugin. It adds Get updates, Unsubscribe, and Manage preferences if those pages are missing.
+3. Activate the plugin. It adds Get updates, Unsubscribe, and Manage preferences once, if those pages are missing. A later visit does not add another copy.
 4. Set the From address and mailing address under Get updates → Settings.
 5. Publish SPF, DKIM, and DMARC for the From domain before a real send. Install an SMTP plugin if the host does not deliver `wp_mail` on its own.
 
@@ -56,6 +56,10 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.10.1 =
+* Get updates, Manage preferences, and Unsubscribe are created when the plugin is activated.
+* Each page ID is stored, and the page is marked so a later request cannot insert a duplicate.
 
 = 1.10.0 =
 * A Newsletter signup block can sit on any page. The heading, description, and button text are editable.

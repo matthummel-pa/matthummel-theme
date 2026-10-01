@@ -167,6 +167,72 @@ $unsubPage = get_page_by_path('unsubscribe');
 mhn_check($prefs instanceof WP_Post && has_shortcode($prefs->post_content, 'mhn_preferences'), 'preferences page exists');
 mhn_check($prefs instanceof WP_Post && $prefs->post_title === 'Manage preferences', 'preferences page title is Manage preferences');
 mhn_check($unsubPage instanceof WP_Post && has_shortcode($unsubPage->post_content, 'mhn_unsubscribe'), 'unsubscribe page exists');
+
+function mhn_slug_family_count(string $slug): int
+{
+    $ids = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'suppress_filters' => true,
+    ]);
+    $count = 0;
+    foreach ($ids as $id) {
+        $name = (string) get_post_field('post_name', (int) $id);
+        if ($name === $slug || str_starts_with($name, $slug.'-')) {
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
+$unsubId = (int) get_option('mhn_page_unsubscribe');
+$updatesId = (int) get_option('mhn_page_get_updates');
+$prefsId = (int) get_option('mhn_page_email_preferences');
+mhn_check($unsubPage instanceof WP_Post && $unsubId === (int) $unsubPage->ID, 'unsubscribe page id is stored');
+mhn_check($unsubPage instanceof WP_Post && get_post_meta($unsubPage->ID, '_mhn_system_page', true) === 'unsubscribe', 'unsubscribe page is flagged');
+mhn_check($updates instanceof WP_Post && $updatesId === (int) $updates->ID, 'get-updates page id is stored');
+mhn_check($updates instanceof WP_Post && get_post_meta($updates->ID, '_mhn_system_page', true) === 'get-updates', 'get-updates page is flagged');
+mhn_check($prefs instanceof WP_Post && $prefsId === (int) $prefs->ID, 'preferences page id is stored');
+mhn_check($prefs instanceof WP_Post && get_post_meta($prefs->ID, '_mhn_system_page', true) === 'email-preferences', 'preferences page is flagged');
+$storedUnsub = get_post($unsubId);
+mhn_check($storedUnsub instanceof WP_Post && $storedUnsub->post_status === 'publish', 'stored unsubscribe page is published');
+
+$unsubCount = mhn_slug_family_count('unsubscribe');
+$updatesCount = mhn_slug_family_count('get-updates');
+$prefsCount = mhn_slug_family_count('email-preferences');
+Newsletter\activate();
+mhn_check(mhn_slug_family_count('unsubscribe') === $unsubCount, 'a second activation does not add an unsubscribe page');
+mhn_check(mhn_slug_family_count('get-updates') === $updatesCount, 'a second activation does not add a get-updates page');
+mhn_check(mhn_slug_family_count('email-preferences') === $prefsCount, 'a second activation does not add a preferences page');
+
+update_option('mhn_version', '0.0.0');
+delete_option('mhn_db_version');
+Newsletter\maybe_upgrade();
+mhn_check(mhn_slug_family_count('unsubscribe') === $unsubCount, 'upgrade does not add an unsubscribe page');
+mhn_check(mhn_slug_family_count('get-updates') === $updatesCount, 'upgrade does not add a get-updates page');
+mhn_check(mhn_slug_family_count('email-preferences') === $prefsCount, 'upgrade does not add a preferences page');
+mhn_check((string) get_option('mhn_db_version') === '4', 'upgrade still sets the schema version');
+
+$held = wp_update_post([
+    'ID' => $unsubId,
+    'post_name' => 'unsubscribe-held',
+]);
+delete_option('mhn_page_unsubscribe');
+$blocked = Newsletter\ensure_page('unsubscribe', 'Unsubscribe', '[mhn_unsubscribe]', 'template-get-updates.blade.php');
+mhn_check(! is_wp_error($held) && (int) $held > 0 && $blocked === 0, 'a missing unsubscribe page is not created off activation');
+mhn_check(mhn_slug_family_count('unsubscribe') === $unsubCount, 'an off-activation check does not insert an unsubscribe slug');
+wp_update_post([
+    'ID' => $unsubId,
+    'post_name' => 'unsubscribe',
+]);
+update_option('mhn_page_unsubscribe', $unsubId, false);
+$GLOBALS['mhn_creating_pages'] = false;
+Newsletter\ensure_pages();
+mhn_check(mhn_slug_family_count('unsubscribe') === $unsubCount, 'ensure_pages outside activation does not insert');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send is off');
 mhn_check(Newsletter\settings()['track_opens'] === 0 && Newsletter\settings()['track_clicks'] === 0, 'tracking is off');
 

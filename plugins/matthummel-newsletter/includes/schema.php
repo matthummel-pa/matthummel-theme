@@ -15,12 +15,14 @@ function activate(): void
     try {
         install_tables();
         migrate_legacy();
+        $GLOBALS['mhn_creating_pages'] = true;
         ensure_pages();
         schedule_cron();
         update_option('mhn_version', MHN_VERSION);
         flush_rewrite_rules();
     } finally {
         $GLOBALS['mhn_activating'] = false;
+        $GLOBALS['mhn_creating_pages'] = false;
     }
 }
 
@@ -109,6 +111,10 @@ function load_textdomain(): void
     );
 }
 
+/**
+ * Bring tables and cron up to date.
+ * System pages are created in activate() only, so a version check on a visit cannot insert another copy.
+ */
 function maybe_upgrade(): void
 {
     $installed = (string) get_option('mhn_version', '');
@@ -121,7 +127,6 @@ function maybe_upgrade(): void
     try {
         install_tables();
         migrate_legacy();
-        ensure_pages();
         schedule_cron();
         update_option('mhn_version', MHN_VERSION);
     } finally {
@@ -354,8 +359,76 @@ function migrate_legacy(): int
     return $copied;
 }
 
+/**
+ * Slugs this plugin may insert. Each one is stored as mhn_page_{slug}.
+ *
+ * @return list<string>
+ */
+function owned_page_slugs(): array
+{
+    return ['get-updates', 'email-preferences', 'unsubscribe'];
+}
+
+function is_owned_page_slug(string $slug): bool
+{
+    return in_array($slug, owned_page_slugs(), true);
+}
+
+function system_page_option_key(string $slug): string
+{
+    return 'mhn_page_'.str_replace('-', '_', $slug);
+}
+
+/**
+ * Published page for a slug. The stored ID wins when that post is still published.
+ */
+function published_system_page(string $slug): ?\WP_Post
+{
+    $storedId = (int) get_option(system_page_option_key($slug), 0);
+    if ($storedId > 0) {
+        $stored = get_post($storedId);
+        if ($stored instanceof \WP_Post && $stored->post_type === 'page' && $stored->post_status === 'publish') {
+            return $stored;
+        }
+    }
+
+    $byPath = get_page_by_path($slug);
+    if ($byPath instanceof \WP_Post && $byPath->post_type === 'page' && $byPath->post_status === 'publish') {
+        return $byPath;
+    }
+
+    return null;
+}
+
+/**
+ * Remember a page this plugin owns. The option is written only for a published page.
+ */
+function remember_system_page(string $slug, int $id): void
+{
+    if ($id < 1 || ! is_owned_page_slug($slug)) {
+        return;
+    }
+
+    $page = get_post($id);
+    if (! $page instanceof \WP_Post || $page->post_type !== 'page') {
+        return;
+    }
+
+    if ((string) get_post_meta($id, '_mhn_system_page', true) !== $slug) {
+        update_post_meta($id, '_mhn_system_page', $slug);
+    }
+
+    if ($page->post_status === 'publish') {
+        update_option(system_page_option_key($slug), $id, false);
+    }
+}
+
 function ensure_pages(): void
 {
+    if (empty($GLOBALS['mhn_creating_pages'])) {
+        return;
+    }
+
     ensure_page(
         'get-updates',
         __('Get updates', 'matthummel-newsletter'),
@@ -383,7 +456,11 @@ function ensure_pages(): void
 
 function sync_owned_title(string $slug, string $title, string $shortcode): void
 {
-    $page = get_page_by_path($slug);
+    $page = published_system_page($slug);
+    if (! $page instanceof \WP_Post) {
+        $byPath = get_page_by_path($slug);
+        $page = $byPath instanceof \WP_Post ? $byPath : null;
+    }
     if (! $page instanceof \WP_Post) {
         return;
     }
@@ -402,11 +479,23 @@ function sync_owned_title(string $slug, string $title, string $shortcode): void
 
 function ensure_page(string $slug, string $title, string $shortcode, string $template): int
 {
-    $existing = get_page_by_path($slug);
+    $existing = published_system_page($slug);
+    if (! $existing instanceof \WP_Post) {
+        $byPath = get_page_by_path($slug);
+        if ($byPath instanceof \WP_Post && $byPath->post_type === 'page') {
+            $existing = $byPath;
+        }
+    }
+
     if ($existing instanceof \WP_Post) {
+        remember_system_page($slug, (int) $existing->ID);
         assign_owned_template($existing, $shortcode, $template);
 
         return (int) $existing->ID;
+    }
+
+    if (is_owned_page_slug($slug) && empty($GLOBALS['mhn_creating_pages'])) {
+        return 0;
     }
 
     $id = wp_insert_post([
@@ -421,11 +510,13 @@ function ensure_page(string $slug, string $title, string $shortcode, string $tem
         return 0;
     }
 
+    $id = (int) $id;
     if ($template !== '' && theme_view_exists($template)) {
-        update_post_meta((int) $id, '_wp_page_template', $template);
+        update_post_meta($id, '_wp_page_template', $template);
     }
+    remember_system_page($slug, $id);
 
-    return (int) $id;
+    return $id;
 }
 
 function theme_view_exists(string $template): bool
@@ -485,7 +576,13 @@ function cron_schedules(array $schedules): array
 
 function page_url(string $slug): string
 {
-    $page = get_page_by_path($slug);
+    $page = published_system_page($slug);
+    if (! $page instanceof \WP_Post) {
+        $byPath = get_page_by_path($slug);
+        if ($byPath instanceof \WP_Post) {
+            $page = $byPath;
+        }
+    }
     if ($page instanceof \WP_Post) {
         $url = get_permalink($page);
         if (is_string($url) && $url !== '') {
