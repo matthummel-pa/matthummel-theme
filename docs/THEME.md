@@ -126,8 +126,8 @@ All tokens are CSS custom properties defined in `resources/css/app.css` using `@
 | `/changelog/` | `template-changelog.blade.php` | Public site update log |
 | `/thank-you/` | `template-thankyou.blade.php` | Post-form conversion page |
 | `/accessibility/` | `template-accessibility.blade.php` | WCAG/508 conformance statement |
-| `/privacy-policy/` | `template-privacy.blade.php` | Privacy policy (GDPR) |
-| `/terms-of-use/` | `template-terms.blade.php` | Terms of use |
+| `/privacy/` | `template-privacy.blade.php` | Privacy policy (GDPR). Footer uses the WordPress privacy policy setting when it is set. |
+| `/terms/` | `template-terms.blade.php` | Terms of use |
 | `/[post-slug]/` | `single.blade.php` | Individual blog posts |
 | `/[category]/` | `archive.blade.php` | Category archives |
 | `/?s=query` | `search.blade.php` | Search results |
@@ -438,7 +438,7 @@ All `$_POST` / `$_GET` access is wrapped in `wp_unslash()` + `sanitize_*()` befo
 
 ## Analytics and tracking
 
-The following tools are active or planned. See `/privacy-policy/` for the full cookie table and opt-out instructions.
+The following tools are active or planned. See `/privacy/` for the full cookie table and opt-out instructions.
 
 | Tool | Status | Purpose |
 |---|---|---|

@@ -3,6 +3,7 @@
 ## 3.6.41 — Pages, links, booking, and the GitHub token
 
 - A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
+- Footer and terms links use the WordPress privacy policy page when it is set, then the Privacy and Terms templates. The old `/privacy-policy/` and `/terms-of-use/` paths are gone.
 
 ## Newsletter plugin 1.11.0 — One unsubscribe page
 

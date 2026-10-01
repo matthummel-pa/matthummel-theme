@@ -6,7 +6,7 @@
 @php
   $updated    = '2026-08-25';
   $contactUrl = home_url('/contact/');
-  $privacyUrl = home_url('/privacy-policy/');
+  $privacyUrl = \App\mh_privacy_policy_url();
   $siteUrl    = 'https://matthummel.com';
 @endphp
 
@@ -165,7 +165,7 @@
     <div class="legal-prose">
       <p class="eyebrow">Questions</p>
       <h2 id="terms-contact-heading">Questions</h2>
-      <p>Questions about these terms or any data matters can be sent via the <a href="{{ $contactUrl }}">contact form</a>. See also the <a href="{{ $privacyUrl }}">privacy policy</a> for how personal data is handled.</p>
+      <p>Questions about these terms or any data matters can be sent via the <a href="{{ $contactUrl }}">contact form</a>. See also the <a href="{{ esc_url($privacyUrl) }}">privacy policy</a> for how personal data is handled.</p>
       <div style="margin-top:1.25rem">
         <a class="btn" href="{{ $contactUrl }}">
           {!! \App\mh_svg_icon('mail', 16) !!} Get in touch

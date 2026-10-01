@@ -205,3 +205,81 @@ add_filter('option_home', function ($value) {
 add_filter('option_siteurl', function ($value) {
     return mh_local_dev_public_url() ?? $value;
 });
+
+/**
+ * Privacy policy URL from the WordPress setting, then the theme template, then /privacy/.
+ */
+function mh_privacy_policy_url(): string
+{
+    if (function_exists('get_privacy_policy_url')) {
+        $fromSetting = get_privacy_policy_url();
+        if (is_string($fromSetting) && $fromSetting !== '') {
+            return $fromSetting;
+        }
+    }
+
+    return mh_published_page_url('template-privacy.blade.php', 'privacy');
+}
+
+/**
+ * Terms URL from the theme template, then /terms/.
+ */
+function mh_terms_url(): string
+{
+    return mh_published_page_url('template-terms.blade.php', 'terms');
+}
+
+/**
+ * Permalink for a published page chosen by template file, then by slug.
+ */
+function mh_published_page_url(string $template, string $slug): string
+{
+    static $cache = [];
+
+    $key = $template.'|'.$slug;
+    if (isset($cache[$key])) {
+        return $cache[$key];
+    }
+
+    $byTemplate = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'no_found_rows' => true,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'suppress_filters' => true,
+        'meta_key' => '_wp_page_template',
+        'meta_value' => $template,
+    ]);
+    $url = mh_permalink_from_posts($byTemplate);
+    if ($url === '') {
+        $page = get_page_by_path(sanitize_title($slug));
+        if ($page instanceof \WP_Post && $page->post_status === 'publish') {
+            $permalink = get_permalink($page);
+            $url = is_string($permalink) ? $permalink : '';
+        }
+    }
+    if ($url === '') {
+        $url = home_url('/'.sanitize_title($slug).'/');
+    }
+
+    $cache[$key] = $url;
+
+    return $url;
+}
+
+/**
+ * @param  list<\WP_Post>|array<int, mixed>  $posts
+ */
+function mh_permalink_from_posts(array $posts): string
+{
+    $page = $posts[0] ?? null;
+    if (! $page instanceof \WP_Post) {
+        return '';
+    }
+
+    $permalink = get_permalink($page);
+
+    return is_string($permalink) ? $permalink : '';
+}
