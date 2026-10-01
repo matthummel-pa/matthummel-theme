@@ -178,7 +178,14 @@ function advancedField(form, name) {
 }
 
 function refreshEmulator(root, form) {
-  if (window.tinymce) window.tinymce.triggerSave()
+  const editors = window.tinymce && window.tinymce.editors
+  if (editors) {
+    for (let index = 0; index < editors.length; index += 1) {
+      const editor = editors[index]
+      if (!editor || !editor.initialized || editor.isHidden()) continue
+      editor.save()
+    }
+  }
 
   const data = new FormData(form)
   data.set('action', mhnEmulator.action)
