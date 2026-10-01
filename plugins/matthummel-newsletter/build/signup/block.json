@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel-newsletter/signup",
+  "title": "Newsletter signup",
+  "category": "widgets",
+  "icon": "email",
+  "description": "Email signup that stays on this site.",
+  "keywords": [
+    "newsletter",
+    "email",
+    "signup"
+  ],
+  "textdomain": "matthummel-newsletter",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Get updates"
+    },
+    "description": {
+      "type": "string",
+      "default": "I keep the address on this site. I do not send it to a newsletter service."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Sign up"
+    }
+  },
+  "supports": {
+    "html": false
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,180 @@
+.mhn-signup-block {
+  position: relative;
+  max-width: 40rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: var(--white, #fff);
+  color: var(--color-text, #0b1220);
+  border: 1px solid var(--color-border, #c5d0de);
+  border-radius: var(--radius-card, 16px);
+  font-family: var(--font-body, "IBM Plex Sans", Inter, system-ui, sans-serif);
+}
+
+.mhn-signup-block__form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.mhn-signup-block__heading {
+  margin: 0;
+  color: var(--color-text, #0b1220);
+  font-family: var(--font-display, Inter, system-ui, sans-serif);
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+.mhn-signup-block__help {
+  margin: 0;
+  color: var(--color-text-secondary, #243041);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.mhn-signup-block__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.65rem;
+}
+
+.mhn-signup-block__field {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.mhn-signup-block__field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-text, #0b1220);
+  font-weight: 650;
+  font-size: 0.92rem;
+}
+
+.mhn-signup-block__field input[type="email"] {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid var(--gray-500, #4f5c6e);
+  border-radius: var(--radius, 12px);
+  background: var(--color-canvas, #f6f8fc);
+  color: var(--color-text, #0b1220);
+  font: 1rem/1.4 var(--font-body, "IBM Plex Sans", Inter, system-ui, sans-serif);
+}
+
+.mhn-signup-block__field input[type="email"]:hover {
+  border-color: var(--gray-700, #243041);
+}
+
+.mhn-signup-block__form button,
+.mhn-signup-block__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 48px;
+  min-width: 7rem;
+  padding: 0.65rem 1.2rem;
+  border: 1.5px solid var(--color-navy, #0d2e57);
+  border-radius: var(--radius, 12px);
+  background: var(--color-navy, #0d2e57);
+  background-image: none;
+  box-shadow: none;
+  color: #fff;
+  font: 700 1rem/1.15 var(--font-display, Inter, system-ui, sans-serif);
+  letter-spacing: -0.02em;
+  cursor: pointer;
+}
+
+.mhn-signup-block__form button:hover,
+.mhn-signup-block__button:hover {
+  background: var(--blue-400, #4f8fd4);
+  border-color: var(--blue-400, #4f8fd4);
+  color: var(--gray-900, #0b1220);
+}
+
+.mhn-signup-block__form button:disabled {
+  cursor: progress;
+  opacity: 0.65;
+}
+
+.mhn-signup-block__form input:focus,
+.mhn-signup-block__form input:focus-visible,
+.mhn-signup-block__form button:focus,
+.mhn-signup-block__form button:focus-visible,
+.mhn-signup-block__form [contenteditable]:focus,
+.mhn-signup-block__form [contenteditable]:focus-visible {
+  outline: 2px solid var(--color-focus, #0d2e57);
+  outline-offset: 2px;
+  border-color: var(--color-focus, #0d2e57);
+}
+
+.mhn-signup-block__status {
+  margin: 0;
+}
+
+.mhn-signup-block__status:empty {
+  min-height: 0;
+  line-height: 0;
+}
+
+.mhn-signup-block__status:not(:empty) {
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: #e8f6ee;
+  color: #166534;
+}
+
+.mhn-signup-block__status.is-error:not(:empty) {
+  background: #fdecec;
+  color: #9f1d14;
+}
+
+.mhn-signup-block__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 560px) {
+  .mhn-signup-block__form button,
+  .mhn-signup-block__button {
+    width: 100%;
+  }
+}
+
+html.mh-dark .mhn-signup-block__form input:focus,
+html.mh-dark .mhn-signup-block__form input:focus-visible,
+html.mh-dark .mhn-signup-block__form button:focus,
+html.mh-dark .mhn-signup-block__form button:focus-visible,
+html.mh-dark .mhn-signup-block__form [contenteditable]:focus,
+html.mh-dark .mhn-signup-block__form [contenteditable]:focus-visible {
+  outline-color: #f7f9fc;
+}
+
+html.mh-dark .mhn-signup-block__field input[type="email"] {
+  background: var(--color-bg, #111a28);
+  color: var(--color-text, #eef3f9);
+  border-color: var(--color-border, #243041);
+}
+
+html.mh-dark .mhn-signup-block__form button,
+html.mh-dark .mhn-signup-block__button {
+  border-color: #93c5fd;
+}
+
+html.mh-dark .mhn-signup-block__status:not(:empty) {
+  background: #123524;
+  color: #b7ebc6;
+}
+
+html.mh-dark .mhn-signup-block__status.is-error:not(:empty) {
+  background: #3b1414;
+  color: #ffb4ab;
+}

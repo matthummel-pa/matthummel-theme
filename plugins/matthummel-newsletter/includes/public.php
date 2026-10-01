@@ -10,10 +10,6 @@ if (! defined('ABSPATH')) {
 
 function public_assets(): void
 {
-    if (! is_page(['get-updates', 'email-preferences', 'unsubscribe'])) {
-        return;
-    }
-
     wp_enqueue_style(
         'mhn-public',
         plugins_url('assets/public.css', MHN_FILE),
@@ -539,25 +535,29 @@ function signup_form(string $source, bool $showName): string
     $emailId = 'mhn-email-'.$source;
     $hintId = 'mhn-email-hint-'.$source;
     $errorId = 'mhn-email-error-'.$source;
-    if ($invalid) {
-        $described = ' aria-invalid="true" aria-describedby="'.esc_attr($errorId).'"';
-    } elseif (! $compact) {
-        $described = ' aria-describedby="'.esc_attr($hintId).'"';
-    } else {
-        $described = '';
+    $describedIds = [];
+    if (! $compact) {
+        $describedIds[] = $hintId;
     }
+    if ($invalid) {
+        $describedIds[] = $errorId;
+    }
+    $described = $describedIds === [] ? '' : ' aria-describedby="'.esc_attr(implode(' ', $describedIds)).'"';
+    $invalidAttr = $invalid ? ' aria-invalid="true"' : '';
     $labelClass = $compact ? ' class="visually-hidden"' : '';
     $inputClass = $compact ? ' class="footer-follow__email"' : '';
+    $html .= '<div class="mhn-compose">';
     $html .= '<div class="mhn-field"><label'.$labelClass.' for="'.esc_attr($emailId).'">'.esc_html__('Email', 'matthummel-newsletter').'</label>';
-    $html .= '<input id="'.esc_attr($emailId).'"'.$inputClass.' name="mhn_email" type="email" required autocomplete="email" placeholder="'.esc_attr__('you@example.com', 'matthummel-newsletter').'"'.$described.'>';
+    $html .= '<input id="'.esc_attr($emailId).'"'.$inputClass.' name="mhn_email" type="email" required autocomplete="email" placeholder="'.esc_attr__('you@example.com', 'matthummel-newsletter').'"'.$invalidAttr.$described.'>';
+    $html .= '</div>';
+    $html .= '<button type="submit" class="btn">'.esc_html__('Sign up', 'matthummel-newsletter').'</button>';
+    $html .= '</div>';
     if (! $compact) {
         $html .= '<p class="mhn-hint" id="'.esc_attr($hintId).'">'.esc_html__('I keep the address on this site. I do not send it to a newsletter service.', 'matthummel-newsletter').'</p>';
     }
     if ($invalid) {
         $html .= '<p class="mhn-error" id="'.esc_attr($errorId).'">'.esc_html__('Use a valid email, then try again.', 'matthummel-newsletter').'</p>';
     }
-    $html .= '</div>';
-    $html .= '<button type="submit" class="btn">'.esc_html__('Sign up', 'matthummel-newsletter').'</button>';
     $html .= '</form></div>';
 
     return $html;
