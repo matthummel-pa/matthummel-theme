@@ -253,6 +253,7 @@ require dirname(__DIR__).'/includes/blocks.php';
 require dirname(__DIR__).'/includes/render.php';
 require dirname(__DIR__).'/includes/layouts.php';
 require dirname(__DIR__).'/includes/a11y.php';
+require dirname(__DIR__).'/includes/editor.php';
 
 use function MattHummel\Newsletter\apply_layout;
 use function MattHummel\Newsletter\apply_merge;
@@ -275,6 +276,7 @@ use function MattHummel\Newsletter\pop_letter_look;
 use function MattHummel\Newsletter\push_letter_look;
 use function MattHummel\Newsletter\render_blocks;
 use function MattHummel\Newsletter\social_link_defaults;
+use function MattHummel\Newsletter\transform_editor_html;
 
 if (defined('MHN_LIB_ONLY')) {
     return;
@@ -824,6 +826,43 @@ foreach ($mustMention as $needle) {
 if ($broken['warnings'] === []) {
     $failed = true;
     fwrite(STDERR, "fail  broken sample did not warn on vague link text\n");
+}
+
+$dirty = '<p>Hi</p><script>alert(1)</script><iframe src="https://evil.example"></iframe><form action="/x"></form>'
+    .'<img src="http://matthummel.com/wp-content/uploads/note.jpg" alt="" width="1200" height="630" style="color:red" class="evil">'
+    .'<h3>Skipped</h3>';
+$clean = transform_editor_html($dirty);
+$editorProblems = [];
+if (stripos($clean, '<script') !== false || stripos($clean, '<iframe') !== false || stripos($clean, '<form') !== false) {
+    $editorProblems[] = 'Editor HTML still includes a script, frame, or form.';
+}
+if (stripos($clean, 'color:red') !== false || str_contains($clean, 'class="evil"')) {
+    $editorProblems[] = 'Editor HTML kept a style or class that email clients drop.';
+}
+if (! str_contains($clean, 'https://matthummel.com/wp-content/uploads/note.jpg')) {
+    $editorProblems[] = 'An http image was not rewritten to https.';
+}
+if (! str_contains($clean, 'width="600"') || ! str_contains($clean, 'max-width:600px') || ! str_contains($clean, 'alt=""')) {
+    $editorProblems[] = 'The image is missing a 600px cap, dimensions, or an alt attribute.';
+}
+$editorDoc = email_document('Notes from the workshop', 'A short preview of this issue.', $clean, false, 0);
+$editorAudit = audit_html($editorDoc, plain_text($editorDoc), 'Gettysburg, PA');
+$editorErrors = strtolower(implode(' ', $editorAudit['errors']));
+$editorWarnings = strtolower(implode(' ', $editorAudit['warnings']));
+if (! str_contains($editorErrors, 'alt')) {
+    $editorProblems[] = 'A missing alt did not block the letter.';
+}
+if (! str_contains($editorWarnings, 'heading') || str_contains($editorErrors, 'heading levels skip')) {
+    $editorProblems[] = 'A skipped heading should warn, not block.';
+}
+if ($editorProblems === []) {
+    fwrite(STDOUT, "pass  editor html\n");
+} else {
+    $failed = true;
+    fwrite(STDERR, "fail  editor html\n");
+    foreach ($editorProblems as $problem) {
+        fwrite(STDERR, "  - {$problem}\n");
+    }
 }
 
 exit($failed ? 1 : 0);

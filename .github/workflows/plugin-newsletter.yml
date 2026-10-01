@@ -27,6 +27,9 @@ jobs:
       - name: Theme pack excludes plugins
         run: grep -q -- "--exclude='plugins'" .github/scripts/pack-theme.sh
 
+      - name: Theme pack excludes fatal logs
+        run: grep -F -q -- "--exclude='*fatal*.txt'" .github/scripts/pack-theme.sh
+
       - name: Pack plugin
         run: bash .github/scripts/pack-plugin.sh "$GITHUB_WORKSPACE/matthummel-newsletter.zip"
 

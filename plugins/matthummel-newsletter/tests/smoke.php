@@ -91,6 +91,9 @@ foreach ([
     'pending-quiet@example.com',
     'cooldown@example.com',
     'cooldown-b@example.com',
+    'confirm-name@example.com',
+    'confirm-blank@example.com',
+    'names-import@example.com',
 ] as $sampleEmail) {
     $sample = Newsletter\find_by_email($sampleEmail);
     if ($sample) {
@@ -110,6 +113,12 @@ add_filter('mhn_send_allowlist', static function () {
     return ['batch@example.com'];
 });
 
+if (! function_exists('App\\mh_newsletter_install')) {
+    $themeNewsletter = dirname(__DIR__, 3).'/app/newsletter.php';
+    if (is_readable($themeNewsletter)) {
+        require_once $themeNewsletter;
+    }
+}
 if (function_exists('App\\mh_newsletter_install')) {
     App\mh_newsletter_install();
 }
@@ -292,7 +301,7 @@ $columnHtml = Newsletter\issue_message((int) $columnId, [
 ], true)['html'];
 mhn_check(str_contains($columnHtml, 'mhn-col'), 'columns render as email columns');
 mhn_check(str_contains($columnHtml, 'Left Ada'), 'merge tag replaces the first name');
-mhn_check(str_contains($columnHtml, 'max-width:620px') || str_contains($columnHtml, 'max-width:620px'), 'mobile media query is present');
+mhn_check(str_contains($columnHtml, '@media only screen and (max-width: 620px)'), 'mobile media query is present');
 mhn_check(! str_contains($columnHtml, 'prefers-color-scheme:dark') && str_contains($columnHtml, 'content="light only"'), 'letter stays light');
 
 $context = new WP_Block_Editor_Context(['post' => get_post($issueId)]);
@@ -425,6 +434,9 @@ mhn_check(in_array('custom', $templateSlugs, true), 'custom message template is 
 mhn_check((string) get_post_meta($issueId, '_mhn_template', true) === 'blog-update', 'auto draft uses the blog update template');
 mhn_check(str_contains((string) get_post_meta($issueId, '_mhn_note', true), '{first_name|there}'), 'auto draft note starts with the greeting');
 mhn_check((string) get_post_meta($issueId, '_mhn_ps', true) === '', 'auto draft P.S. starts empty');
+mhn_check((string) get_post_meta($issueId, '_mhn_body_v', true) === '1', 'auto draft uses the single editor');
+mhn_check(str_contains((string) get_post_meta($issueId, '_mhn_body', true), '{first_name|there}'), 'auto draft letter starts with the greeting');
+mhn_check(str_contains((string) get_post_meta($issueId, '_mhn_body', true), 'Smoke note'), 'auto draft letter includes the post');
 $patterns = WP_Block_Patterns_Registry::get_instance();
 mhn_check($patterns->is_registered('mhn/blog-update') && $patterns->is_registered('mhn/blog-digest') && $patterns->is_registered('mhn/custom'), 'templates are block patterns');
 
@@ -509,6 +521,37 @@ mhn_check(str_contains($digestHtml, 'mhn-group'), 'digest posts render as cards'
 mhn_check(str_contains($digestHtml, 'Navy banner for the smoke note'), 'digest thumbnail uses the attachment alt');
 mhn_check(str_contains($digestHtml, 'max-width:280px'), 'digest thumbnail stays within 600px');
 mhn_check(substr_count($digestHtml, 'class="mhn-img"') === 1, 'digest omits a post that has no featured image');
+$digestBody = (string) get_post_meta((int) $digest['id'], '_mhn_body', true);
+update_post_meta((int) $digest['id'], '_mhn_post_ids', (string) $postB);
+Newsletter\compile_issue((int) $digest['id']);
+mhn_check((string) get_post_meta((int) $digest['id'], '_mhn_body', true) === $digestBody, 'compiling does not rewrite the letter when posts change');
+$keptBody = Newsletter\wizard_save([
+    'mhn_action' => 'stay',
+    'mhn_step' => '2',
+    'mhn_template' => 'blog-digest',
+    'mhn_issue' => (string) $digest['id'],
+    'mhn_body' => $digestBody.'<p>A line I wrote.</p>',
+    'mhn_posts' => [(string) $postB],
+]);
+mhn_check($keptBody['error'] === '', 'a new post selection can be saved');
+mhn_check(str_contains((string) get_post_meta((int) $digest['id'], '_mhn_body', true), 'A line I wrote.'), 'saving a new post selection keeps the letter text');
+$legacyId = wp_insert_post([
+    'post_type' => 'newsletter_issue',
+    'post_status' => 'draft',
+    'post_title' => 'Legacy fields',
+    'post_content' => '',
+]);
+if (is_numeric($legacyId)) {
+    update_post_meta((int) $legacyId, '_mhn_template', 'custom');
+    update_post_meta((int) $legacyId, '_mhn_note', '<p>Old note</p>');
+    update_post_meta((int) $legacyId, '_mhn_ps', '<p>Old P.S.</p>');
+    Newsletter\ensure_issue_body((int) $legacyId);
+    $migrated = (string) get_post_meta((int) $legacyId, '_mhn_body', true);
+    mhn_check(str_contains($migrated, 'Old note') && str_contains($migrated, 'Old P.S.'), 'an old draft folds the note and P.S. into the letter');
+    update_post_meta((int) $legacyId, '_mhn_note', '<p>Changed later</p>');
+    Newsletter\ensure_issue_body((int) $legacyId);
+    mhn_check((string) get_post_meta((int) $legacyId, '_mhn_body', true) === $migrated, 'migration runs once');
+}
 
 $refused = Newsletter\wizard_save([
     'mhn_action' => 'send',
@@ -722,16 +765,24 @@ if ($photoBanner > 0 && is_numeric($photoPost)) {
     mhn_check(str_contains($photoHtml, 'Hi Ada,'), 'blog update preview uses a sample first name');
     mhn_check(preg_match('/<img class="mhn-img" src="https?:\/\/[^"]+"[^>]*width="600"[^>]*height="[1-9][0-9]*"[^>]*max-width:600px/', $photoHtml) === 1, 'featured image is absolute, 600px max, and has dimensions');
     mhn_check(is_string($photoLink) && preg_match('/<a [^>]*href="'.preg_quote(esc_url($photoLink), '/').'"[^>]*>\s*<img class="mhn-img"/', $photoHtml) === 1, 'featured image links to the post');
-    update_post_meta($photoIssue, '_mhn_feature_show', '0');
+    $photoBody = (string) get_post_meta($photoIssue, '_mhn_body', true);
+    $withoutImage = preg_replace('/<img\b[^>]*>/i', '', $photoBody);
+    Newsletter\store_issue_body($photoIssue, is_string($withoutImage) ? $withoutImage : $photoBody);
     Newsletter\compile_issue($photoIssue);
     $hiddenHtml = Newsletter\issue_message($photoIssue, null, true)['html'];
-    mhn_check(substr_count($hiddenHtml, 'class="mhn-img"') === 0, 'the wizard can hide the featured image');
+    mhn_check(substr_count($hiddenHtml, 'class="mhn-img"') === 0, 'the letter can leave the image out');
     $replacement = mhn_png('Replacement banner for this send', 800, 400);
-    update_post_meta($photoIssue, '_mhn_feature_show', '1');
-    update_post_meta($photoIssue, '_mhn_feature_image_id', (string) $replacement);
+    $replacementUrl = $replacement > 0 ? wp_get_attachment_image_url($replacement, 'large') : '';
+    $swapped = preg_replace(
+        '/<img\b[^>]*>/i',
+        '<img src="'.esc_url(is_string($replacementUrl) ? $replacementUrl : '').'" alt="Replacement banner for this send" width="800" height="400">',
+        $photoBody,
+        1
+    );
+    Newsletter\store_issue_body($photoIssue, is_string($swapped) ? $swapped : $photoBody);
     Newsletter\compile_issue($photoIssue);
     $replacedHtml = Newsletter\issue_message($photoIssue, null, true)['html'];
-    mhn_check(str_contains($replacedHtml, 'Replacement banner for this send') && ! str_contains($replacedHtml, 'Navy banner for the photo note'), 'the wizard can replace the featured image for one send');
+    mhn_check(str_contains($replacedHtml, 'Replacement banner for this send') && ! str_contains($replacedHtml, 'Navy banner for the photo note'), 'the letter can use a different image for one send');
 }
 $plainPost = wp_insert_post([
     'post_type' => 'post',

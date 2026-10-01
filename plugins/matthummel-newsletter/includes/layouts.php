@@ -424,7 +424,7 @@ function note_replaces_excerpt(?string $note): bool
         return false;
     }
 
-    $default = function_exists('default_note_html') ? trim(wp_strip_all_tags(default_note_html())) : '';
+    $default = function_exists(__NAMESPACE__.'\\default_note_html') ? trim(wp_strip_all_tags(default_note_html())) : '';
     if ($default !== '' && $plain === $default) {
         return false;
     }
@@ -1569,8 +1569,32 @@ function emulator_preview_message(array $input): array
     if (array_key_exists('mhn_preheader', $input)) {
         $postedPreheader = mb_substr(sanitize_text_field((string) $input['mhn_preheader']), 0, 140);
     }
+    $bodyHtml = emulator_posted_body($input, $issueId, $layoutId, $editor);
 
-    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $postedPreheader, sections_from_request($input));
+    return emulator_view($issueId, $layoutId, $subject, $note, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $postedPreheader, sections_from_request($input), $bodyHtml);
+}
+
+/**
+ * @param  array<string, mixed>  $input
+ */
+function emulator_posted_body(array $input, int $issueId, string $layoutId, string $editor): ?string
+{
+    if ($editor === 'advanced' || $layoutId === 'welcome' || $layoutId === 'post') {
+        return null;
+    }
+    if (array_key_exists('mhn_body', $input)) {
+        $raw = (string) $input['mhn_body'];
+        if (strlen($raw) > 100000) {
+            $raw = substr($raw, 0, 100000);
+        }
+
+        return function_exists(__NAMESPACE__.'\\sanitize_editor_html') ? sanitize_editor_html($raw) : trim(wp_strip_all_tags($raw));
+    }
+    if ($issueId > 0 && function_exists(__NAMESPACE__.'\\letter_uses_body_editor') && letter_uses_body_editor($issueId)) {
+        return issue_body_html($issueId);
+    }
+
+    return null;
 }
 
 /**
@@ -1579,7 +1603,7 @@ function emulator_preview_message(array $input): array
  * @param  array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null  $sections
  * @return array{from_name: string, from_email: string, subject: string, preheader: string, html: string, text: string, layout: string}
  */
-function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?string $postedPreheader = null, ?array $sections = null): array
+function emulator_view(int $issueId, string $layoutId, string $subject = '', ?string $note = null, string $editor = '', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?string $postedPreheader = null, ?array $sections = null, ?string $bodyHtml = null): array
 {
     $settings = settings();
     $layoutId = normalize_layout_id($layoutId !== '' ? $layoutId : ($issueId > 0 ? issue_layout_id($issueId) : 'standard'));
@@ -1610,7 +1634,10 @@ function emulator_view(int $issueId, string $layoutId, string $subject = '', ?st
         }
     }
     $preheader = $postedPreheader !== null && $postedPreheader !== '' ? $postedPreheader : emulator_preheader($intro);
-    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $sections);
+    if ($bodyHtml === null && $editor !== 'advanced' && $layoutId !== 'welcome' && $layoutId !== 'post' && $issueId > 0 && function_exists(__NAMESPACE__.'\\letter_uses_body_editor') && letter_uses_body_editor($issueId)) {
+        $bodyHtml = issue_body_html($issueId);
+    }
+    $html = emulator_letter_html($issueId, $layoutId, $subject, $note, $preheader, $editor, $blocks, $sourcePostId, $titleIsCustom, $look, $sections, $bodyHtml);
 
     return [
         'from_name' => $settings['from_name'],
@@ -1697,13 +1724,15 @@ function blog_post_imported_title(int $issueId, int $sourcePostId): string
  * @param  array{style?: string, masthead?: string, button?: string}|null  $look
  * @param  array{image: bool, excerpt: bool, headings: bool, categories: bool, button: bool}|null  $sections
  */
-function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?array $sections = null): string
+function emulator_letter_html(int $issueId, string $layoutId, string $subject, ?string $note, string $preheader, string $editor = 'simple', ?array $blocks = null, int $sourcePostId = -1, bool $titleIsCustom = false, ?array $look = null, ?array $sections = null, ?string $bodyHtml = null): string
 {
     $look = $look === null ? issue_letter_look($issueId) : normalize_letter_look($look);
     push_letter_look($look);
     if ($layoutId === 'post') {
         $advanced = $editor === 'advanced' ? ($blocks ?? empty_editor_blocks()) : null;
         $body = blog_post_issue_letter($issueId, $advanced, $note, true, $sourcePostId, $subject, $titleIsCustom, $sections);
+    } elseif ($bodyHtml !== null && $editor !== 'advanced' && function_exists(__NAMESPACE__.'\\apply_editor_layout') && function_exists(__NAMESPACE__.'\\transform_editor_html')) {
+        $body = apply_editor_layout($layoutId, transform_editor_html($bodyHtml));
     } else {
         $rendered = '';
         if ($layoutId !== 'welcome' || $editor === 'advanced' || $issueId > 0) {

@@ -997,3 +997,39 @@
   color: #0b1220;
   font-weight: 600;
 }
+
+.mhn-body-editor {
+  margin: 0 0 16px;
+}
+
+.mhn-body-editor .wp-editor-area {
+  min-height: 28rem;
+}
+
+.mhn-post-offer {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: #eef3f9;
+  border: 1px solid #d8dde3;
+  border-radius: 4px;
+}
+
+.mhn-post-offer p {
+  margin: 0 0 12px;
+}
+
+.mhn-post-offer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mhn-post-offer button {
+  min-height: 44px;
+}
+
+.mhn-post-offer button:focus,
+.mhn-post-offer:focus {
+  outline: 2px solid #0d2e57;
+  outline-offset: 2px;
+}

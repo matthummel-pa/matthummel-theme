@@ -155,7 +155,9 @@ function create_wizard_issue(string $slug, string $layoutId = 'standard'): int
     update_post_meta($issueId, '_mhn_wizard_step', '1');
     update_post_meta($issueId, '_mhn_note', default_note_html());
     update_post_meta($issueId, '_mhn_ps', '');
-    update_post_meta($issueId, '_mhn_post_ids', implode(',', default_post_ids($slug)));
+    $postIds = default_post_ids($slug);
+    update_post_meta($issueId, '_mhn_post_ids', implode(',', $postIds));
+    store_issue_body($issueId, starter_body_html($slug, $postIds));
     update_post_meta($issueId, '_mhn_include_recent', '0');
     update_post_meta($issueId, '_mhn_sent_count', '0');
     update_post_meta($issueId, '_mhn_fail_count', '0');
@@ -175,10 +177,7 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
 {
     save_issue_letter_style($issueId, $input);
     if (isset($input['mhn_editor'])) {
-        update_post_meta($issueId, '_mhn_editor', normalize_editor_mode((string) $input['mhn_editor']));
-    }
-    if (normalize_editor_mode((string) ($input['mhn_editor'] ?? issue_editor_mode($issueId))) === 'advanced' && advanced_fields_posted($input)) {
-        update_post_meta($issueId, '_mhn_blocks', sanitize_editor_blocks($input));
+        update_post_meta($issueId, '_mhn_editor', 'simple');
     }
 
     $postedLayout = sanitize_key((string) ($input['mhn_layout'] ?? ''));
@@ -210,12 +209,14 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         $previous = (string) get_post_meta($issueId, '_mhn_template', true);
         if ($previous !== $postedTemplate) {
             update_post_meta($issueId, '_mhn_template', $postedTemplate);
-            update_post_meta($issueId, '_mhn_post_ids', implode(',', default_post_ids($postedTemplate)));
+            $postIds = default_post_ids($postedTemplate);
+            update_post_meta($issueId, '_mhn_post_ids', implode(',', $postIds));
             update_post_meta($issueId, '_mhn_subject', '');
             update_post_meta($issueId, '_mhn_preheader', '');
             update_post_meta($issueId, '_mhn_subject_auto', '1');
             update_post_meta($issueId, '_mhn_note', default_note_html());
             update_post_meta($issueId, '_mhn_ps', '');
+            store_issue_body($issueId, starter_body_html($postedTemplate, $postIds));
             update_post_meta($issueId, '_mhn_feature_show', '1');
             update_post_meta($issueId, '_mhn_feature_image_id', '0');
             update_post_meta($issueId, '_mhn_button_label', '');
@@ -227,7 +228,7 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         }
     }
 
-    $contentPosted = $step === 2 || isset($input['mhn_note']) || isset($input['mhn_posts']) || isset($input['mhn_ps']);
+    $contentPosted = $step === 2 || isset($input['mhn_body']) || isset($input['mhn_note']) || isset($input['mhn_posts']) || isset($input['mhn_ps']);
     if ($contentPosted && $step === 2) {
         if (isset($input['mhn_note'])) {
             update_post_meta($issueId, '_mhn_note', sanitize_rich_text((string) $input['mhn_note']));
@@ -237,9 +238,9 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
         }
         if (isset($input['mhn_posts']) && is_array($input['mhn_posts'])) {
             save_wizard_posts($issueId, $input['mhn_posts']);
-        } elseif ($step === 2 && ! isset($input['mhn_posts'])) {
+        } elseif ($step === 2 && ! isset($input['mhn_posts']) && ! isset($input['mhn_body'])) {
             $template = email_template((string) get_post_meta($issueId, '_mhn_template', true));
-            if ($template !== null && $template['max_posts'] > 0) {
+            if ($template !== null && $template['max_posts'] > 0 && issue_layout_id($issueId) !== 'welcome' && issue_layout_id($issueId) !== 'post') {
                 update_post_meta($issueId, '_mhn_post_ids', '');
             }
         }
@@ -268,6 +269,17 @@ function apply_wizard_fields(int $issueId, array $input, int $step): void
             $featureId = absint($input['mhn_feature_image_id']);
             $featureId = $featureId > 0 && wp_attachment_is_image($featureId) ? $featureId : 0;
             update_post_meta($issueId, '_mhn_feature_image_id', (string) $featureId);
+        }
+        if (isset($input['mhn_body'])) {
+            store_issue_body($issueId, (string) $input['mhn_body']);
+        } elseif (isset($input['mhn_note']) || isset($input['mhn_ps']) || isset($input['mhn_button_label']) || isset($input['mhn_button_url'])) {
+            store_issue_body($issueId, compose_legacy_body(
+                $issueId,
+                isset($input['mhn_note']) ? (string) $input['mhn_note'] : null,
+                isset($input['mhn_ps']) ? (string) $input['mhn_ps'] : null,
+                isset($input['mhn_button_label']) ? (string) $input['mhn_button_label'] : null,
+                isset($input['mhn_button_url']) ? (string) $input['mhn_button_url'] : null
+            ));
         }
         compile_issue($issueId);
         fill_subject_defaults($issueId);
@@ -354,7 +366,7 @@ function wizard_blocks_next(int $issueId, int $step): string
         if ($template['max_posts'] > 0 && ($count < $template['min_posts'] || $count > $template['max_posts'])) {
             return $template['max_posts'] === 1 ? 'posts' : 'range';
         }
-        if ($template['max_posts'] === 0 && trim(wp_strip_all_tags((string) get_post_meta($issueId, '_mhn_note', true))) === '') {
+        if ($template['max_posts'] === 0 && trim(wp_strip_all_tags(issue_body_html($issueId))) === '') {
             return 'message';
         }
     }
@@ -491,7 +503,7 @@ function render_wizard_page(): void
     wp_nonce_field('mhn_wizard', 'mhn_wizard_nonce');
     echo '<input type="hidden" name="mhn_issue" value="'.esc_attr((string) $issueId).'">';
     echo '<input type="hidden" name="mhn_step" value="'.esc_attr((string) $step).'">';
-    echo '<input type="hidden" name="mhn_editor" value="'.esc_attr(issue_editor_mode($issueId)).'">';
+    echo '<input type="hidden" name="mhn_editor" value="simple">';
     if ($step !== 1) {
         echo '<input type="hidden" name="mhn_template" value="'.esc_attr($templateSlug).'">';
         echo '<input type="hidden" name="mhn_layout" value="'.esc_attr($layoutId).'">';
@@ -503,7 +515,6 @@ function render_wizard_page(): void
     echo '<div class="mhn-wizard-split">';
     echo '<div class="mhn-wizard-main">';
     render_letter_style_compact(issue_letter_look($issueId));
-    render_editor_switch(issue_editor_mode($issueId));
     echo '<div class="mhn-card mhn-wizard-panel">';
     match ($step) {
         1 => render_step_template($templateSlug, $layoutId),
@@ -689,29 +700,24 @@ function render_layout_picker(string $current): void
 
 function render_step_content(int $issueId, string $slug): void
 {
-    render_image_picker($issueId);
-    $advanced = issue_editor_mode($issueId) === 'advanced';
-    echo '<div data-mhn-simple'.($advanced ? ' hidden' : '').'>';
-    render_simple_content($issueId, $slug);
-    echo '</div>';
-    echo '<div data-mhn-advanced'.($advanced ? '' : ' hidden').'>';
-    render_advanced_editor($issueId);
-    echo '</div>';
-}
-
-function render_simple_content(int $issueId, string $slug): void
-{
     if (issue_layout_id($issueId) === 'welcome') {
+        render_image_picker($issueId);
         render_welcome_step();
 
         return;
     }
     if (issue_layout_id($issueId) === 'post') {
+        render_image_picker($issueId);
         render_blog_post_step($issueId);
 
         return;
     }
 
+    render_body_editor($issueId, $slug);
+}
+
+function render_body_editor(int $issueId, string $slug): void
+{
     $template = email_template($slug);
     if ($template === null) {
         echo '<p>'.esc_html__('Choose a template first.', 'matthummel-newsletter').'</p>';
@@ -720,33 +726,45 @@ function render_simple_content(int $issueId, string $slug): void
     }
 
     echo '<h2>'.esc_html($template['label']).'</h2>';
-    echo '<p>'.esc_html__('Every template has a note from you. Bold, italic, links, and lists are fine.', 'matthummel-newsletter').'</p>';
-
-    echo '<h3>'.esc_html($template['max_posts'] > 0
-        ? __('Your note', 'matthummel-newsletter')
-        : __('Message', 'matthummel-newsletter')).'</h3>';
-    render_merge_hint();
-    render_rich_field('mhn_note', 'mhn_note', (string) get_post_meta($issueId, '_mhn_note', true));
+    echo '<p>'.esc_html__('Write the letter in the editor. You can change or delete the starter.', 'matthummel-newsletter').'</p>';
 
     if ($template['max_posts'] > 0) {
         render_post_picker($issueId, $template);
-        render_featured_controls($issueId, $template['max_posts'] === 1);
+        render_post_offer();
     }
 
-    if ($template['has_button']) {
-        $label = (string) get_post_meta($issueId, '_mhn_button_label', true);
-        $url = (string) get_post_meta($issueId, '_mhn_button_url', true);
-        echo '<h3>'.esc_html__('Button (optional)', 'matthummel-newsletter').'</h3>';
-        echo '<p><label for="mhn-button-label">'.esc_html__('Label', 'matthummel-newsletter').'</label><br>';
-        echo '<input class="regular-text" id="mhn-button-label" name="mhn_button_label" type="text" value="'.esc_attr($label).'"></p>';
-        echo '<p><label for="mhn-button-url">'.esc_html__('Link', 'matthummel-newsletter').'</label><br>';
-        echo '<input class="regular-text" id="mhn-button-url" name="mhn_button_url" type="url" value="'.esc_attr($url).'" placeholder="https://"></p>';
-    }
+    echo '<h3><label for="mhn_body">'.esc_html__('Letter', 'matthummel-newsletter').'</label></h3>';
+    echo '<p class="description">'.esc_html__('Use Merge tag for a name. Add Media inserts an image. Button inserts a link styled as the email button.', 'matthummel-newsletter').'</p>';
+    echo '<div class="mhn-body-editor">';
+    wp_editor(issue_body_html($issueId), 'mhn_body', [
+        'textarea_name' => 'mhn_body',
+        'media_buttons' => true,
+        'teeny' => false,
+        'textarea_rows' => 18,
+        'quicktags' => true,
+        'tinymce' => [
+            'toolbar1' => 'formatselect,bold,italic,bullist,numlist,blockquote,hr,link,mhn_button,mhn_merge',
+            'toolbar2' => '',
+            'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3',
+            'height' => 460,
+            'wordpress_adv_hidden' => true,
+        ],
+    ]);
+    echo '</div>';
+}
 
-    if ($template['has_ps']) {
-        echo '<h3>'.esc_html__('P.S. (optional)', 'matthummel-newsletter').'</h3>';
-        render_rich_field('mhn_ps', 'mhn_ps', (string) get_post_meta($issueId, '_mhn_ps', true));
-    }
+function render_post_offer(): void
+{
+    echo '<div id="mhn-post-offer" class="mhn-post-offer" hidden role="region" aria-labelledby="mhn-post-offer-title" tabindex="-1">';
+    echo '<p id="mhn-post-offer-title"><strong>'.esc_html__('Posts changed.', 'matthummel-newsletter').'</strong> ';
+    echo esc_html__('Insert the new post blocks, or refresh the ones already in the letter. Your other edits stay until you choose.', 'matthummel-newsletter').'</p>';
+    echo '<p class="mhn-post-offer-actions">';
+    echo '<button type="button" class="button button-primary" id="mhn-posts-insert">'.esc_html__('Insert post blocks', 'matthummel-newsletter').'</button> ';
+    echo '<button type="button" class="button" id="mhn-posts-refresh">'.esc_html__('Refresh post blocks', 'matthummel-newsletter').'</button> ';
+    echo '<button type="button" class="button" id="mhn-posts-keep">'.esc_html__('Keep my edits', 'matthummel-newsletter').'</button>';
+    echo '</p>';
+    echo '<p id="mhn-post-offer-status" class="description" role="status"></p>';
+    echo '</div>';
 }
 
 /**
@@ -776,7 +794,7 @@ function render_post_picker(int $issueId, array $template): void
         return;
     }
 
-    echo '<div class="mhn-posts">';
+    echo '<div class="mhn-posts" data-mhn-saved="'.esc_attr(implode(',', $selected)).'" data-mhn-cards="'.esc_attr($multiple ? '1' : '0').'">';
     foreach ($posts as $post) {
         $id = 'mhn-post-'.$post->ID;
         echo '<label for="'.esc_attr($id).'">';
@@ -829,12 +847,9 @@ function wizard_post_choices(array $selected, string $find): array
 function render_blog_post_step(int $issueId): void
 {
     echo '<h2>'.esc_html__('Blog post', 'matthummel-newsletter').'</h2>';
-    echo '<p>'.esc_html__('Pick a published post. The image, excerpt, headings, and categories come from that post. A note here replaces the excerpt. The title stays the post title until you change the subject.', 'matthummel-newsletter').'</p>';
+    echo '<p>'.esc_html__('Pick a published post. The image, excerpt, headings, and categories come from that post. The title stays the post title until you change the subject.', 'matthummel-newsletter').'</p>';
     render_blog_sections($issueId);
     render_blog_post_picker($issueId, 'post');
-    echo '<h3>'.esc_html__('Your note', 'matthummel-newsletter').'</h3>';
-    render_merge_hint();
-    render_rich_field('mhn_note', 'mhn_note', (string) get_post_meta($issueId, '_mhn_note', true));
 }
 
 function render_blog_sections(int $issueId): void
@@ -1033,7 +1048,7 @@ function render_step_subject(int $issueId): void
     }
 
     echo '<h2>'.esc_html__('Subject and preview text', 'matthummel-newsletter').'</h2>';
-    echo '<p>'.esc_html__('These start from the note and the posts. Change them if you want a different inbox line.', 'matthummel-newsletter').'</p>';
+    echo '<p>'.esc_html__('These start from the letter and the posts. Change them if you want a different inbox line.', 'matthummel-newsletter').'</p>';
     echo '<p><label for="mhn-subject"><strong>'.esc_html__('Subject', 'matthummel-newsletter').'</strong></label><br>';
     echo '<input class="large-text" type="text" id="mhn-subject" name="mhn_subject" maxlength="120" data-mhn-count="mhn-subject-count" value="'.esc_attr($subject).'"></p>';
     echo '<p class="description"><span id="mhn-subject-count">'.esc_html((string) mb_strlen($subject)).'</span> '.esc_html__('characters. Aim for about 50. Over 60, inboxes may cut the subject off.', 'matthummel-newsletter').'</p>';
@@ -1127,4 +1142,66 @@ function render_wizard_nav(int $issueId, int $step): void
     }
     echo '<span id="mhn-save-status" class="mhn-save-status" aria-live="polite"></span>';
     echo '</p>';
+}
+
+function ajax_post_blocks(): void
+{
+    if (! current_user_can('manage_options')) {
+        wp_send_json_error(['message' => __('You cannot edit this letter.', 'matthummel-newsletter')], 403);
+    }
+    check_ajax_referer('mhn_wizard', 'mhn_wizard_nonce');
+
+    $posted = map_deep(wp_unslash($_POST['mhn_posts'] ?? []), 'absint');
+    $ids = is_array($posted) ? $posted : [];
+    $cards = absint(sanitize_text_field(wp_unslash($_POST['mhn_cards'] ?? '0'))) === 1;
+
+    wp_send_json_success([
+        'html' => posts_region_html($ids, $cards),
+    ]);
+}
+
+/**
+ * @param  array<string, string>  $plugins
+ * @return array<string, string>
+ */
+function editor_mce_plugins(array $plugins, string $editorId = ''): array
+{
+    if ($editorId !== 'mhn_body') {
+        return $plugins;
+    }
+
+    $plugins['mhn_letter'] = plugins_url('assets/editor.js', MHN_FILE).'?ver='.rawurlencode(MHN_VERSION);
+
+    return $plugins;
+}
+
+/**
+ * @param  list<string>  $buttons
+ * @return list<string>
+ */
+function editor_mce_buttons(array $buttons, string $editorId = ''): array
+{
+    if ($editorId !== 'mhn_body') {
+        return $buttons;
+    }
+
+    return ['formatselect', 'bold', 'italic', 'bullist', 'numlist', 'blockquote', 'hr', 'link', 'mhn_button', 'mhn_merge'];
+}
+
+/**
+ * @param  array<string, mixed>  $init
+ * @return array<string, mixed>
+ */
+function editor_mce_init(array $init, string $editorId = ''): array
+{
+    if ($editorId !== 'mhn_body') {
+        return $init;
+    }
+
+    $init['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 3=h3';
+    $init['toolbar1'] = 'formatselect,bold,italic,bullist,numlist,blockquote,hr,link,mhn_button,mhn_merge';
+    $init['toolbar2'] = '';
+    $init['wordpress_adv_hidden'] = true;
+
+    return $init;
 }

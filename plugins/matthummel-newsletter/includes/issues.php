@@ -100,6 +100,8 @@ function create_from_post(\WP_Post $post): int
         'meta_value' => (string) $post->ID,
     ]);
     if (is_array($existing) && $existing !== []) {
+        refresh_untouched_auto_body((int) $existing[0], (int) $post->ID);
+
         return (int) $existing[0];
     }
 
@@ -122,6 +124,7 @@ function create_from_post(\WP_Post $post): int
     update_post_meta($issueId, '_mhn_post_ids', (string) $post->ID);
     update_post_meta($issueId, '_mhn_note', default_note_html());
     update_post_meta($issueId, '_mhn_ps', '');
+    store_issue_body($issueId, starter_body_html('blog-update', [(int) $post->ID]));
     update_post_meta($issueId, '_mhn_wizard_step', '2');
     update_post_meta($issueId, '_mhn_subject_auto', '1');
     update_post_meta($issueId, '_mhn_status', 'draft');
@@ -137,6 +140,69 @@ function create_from_post(\WP_Post $post): int
     }
 
     return $issueId;
+}
+
+/**
+ * A featured image often lands after publish. Fill it in only while the letter is still the starter.
+ */
+function refresh_auto_body_for_thumbnail(int $metaId, int $postId, string $key): void
+{
+    unset($metaId);
+    if ($key !== '_thumbnail_id' || $postId < 1) {
+        return;
+    }
+
+    $post = get_post($postId);
+    if (! $post instanceof \WP_Post || $post->post_type !== 'post' || $post->post_status !== 'publish') {
+        return;
+    }
+
+    $existing = get_posts([
+        'post_type' => 'newsletter_issue',
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'meta_key' => '_mhn_source_post',
+        'meta_value' => (string) $postId,
+    ]);
+    if (! is_array($existing) || $existing === []) {
+        return;
+    }
+
+    refresh_untouched_auto_body((int) $existing[0], $postId);
+}
+
+function refresh_untouched_auto_body(int $issueId, int $postId): void
+{
+    if ($issueId < 1 || $postId < 1 || issue_status($issueId) !== 'draft') {
+        return;
+    }
+    if ((string) get_post_meta($issueId, '_mhn_template', true) !== 'blog-update') {
+        return;
+    }
+    if (! function_exists(__NAMESPACE__.'\\starter_body_html') || ! function_exists(__NAMESPACE__.'\\store_issue_body') || ! function_exists(__NAMESPACE__.'\\sanitize_editor_html')) {
+        return;
+    }
+
+    $current = (string) get_post_meta($issueId, '_mhn_body', true);
+    $fresh = sanitize_editor_html(starter_body_html('blog-update', [$postId]));
+    if ($current === '' || $current === $fresh) {
+        return;
+    }
+    if (starter_without_linked_images($current) !== starter_without_linked_images($fresh)) {
+        return;
+    }
+
+    store_issue_body($issueId, $fresh);
+    compile_issue($issueId);
+}
+
+function starter_without_linked_images(string $html): string
+{
+    $stripped = preg_replace('/<a\b[^>]*>\s*<img\b[^>]*>\s*<\/a>/i', '', $html);
+
+    return is_string($stripped) ? $stripped : $html;
 }
 
 function issue_status(int $issueId): string

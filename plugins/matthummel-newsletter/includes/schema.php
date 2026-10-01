@@ -47,12 +47,18 @@ function boot(): void
     add_action('init', __NAMESPACE__.'\\register_patterns', 100);
     add_filter('allowed_block_types_all', __NAMESPACE__.'\\allowed_blocks', 10, 2);
     add_action('transition_post_status', __NAMESPACE__.'\\on_transition', 10, 3);
+    add_action('added_post_meta', __NAMESPACE__.'\\refresh_auto_body_for_thumbnail', 10, 3);
+    add_action('updated_post_meta', __NAMESPACE__.'\\refresh_auto_body_for_thumbnail', 10, 3);
     add_action('add_meta_boxes', __NAMESPACE__.'\\add_meta_box');
     add_action('save_post_newsletter_issue', __NAMESPACE__.'\\save_meta', 10, 2);
     add_action('admin_menu', __NAMESPACE__.'\\admin_menu');
     add_action('admin_enqueue_scripts', __NAMESPACE__.'\\admin_assets');
     add_action('wp_ajax_mhn_wizard_autosave', __NAMESPACE__.'\\ajax_wizard_autosave');
+    add_action('wp_ajax_mhn_post_blocks', __NAMESPACE__.'\\ajax_post_blocks');
     add_action('wp_ajax_mhn_emulator_preview', __NAMESPACE__.'\\ajax_emulator_preview');
+    add_filter('mce_external_plugins', __NAMESPACE__.'\\editor_mce_plugins', 10, 2);
+    add_filter('mce_buttons', __NAMESPACE__.'\\editor_mce_buttons', 10, 2);
+    add_filter('tiny_mce_before_init', __NAMESPACE__.'\\editor_mce_init', 10, 2);
     add_action('admin_post_mhn_wizard_preview', __NAMESPACE__.'\\handle_wizard_preview');
     add_action('admin_post_mhn_layout_preview', __NAMESPACE__.'\\handle_layout_preview');
     add_action('admin_post_mhn_signup', __NAMESPACE__.'\\handle_signup');
