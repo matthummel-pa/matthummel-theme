@@ -32,25 +32,52 @@ function github_token(): string
 
 /**
  * Constant, then environment. Empty when neither is set.
+ *
+ * Environment values are unslashed, sanitized, and limited to the characters
+ * GitHub uses in a personal access token.
  */
 function github_token_from_environment(): string
 {
-    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && trim(MH_GITHUB_TOKEN) !== '') {
-        return trim(MH_GITHUB_TOKEN);
-    }
-
-    $candidates = [
-        getenv('MH_GITHUB_TOKEN'),
-        $_ENV['MH_GITHUB_TOKEN'] ?? null,
-        $_SERVER['MH_GITHUB_TOKEN'] ?? null,
-    ];
-    foreach ($candidates as $value) {
-        if (is_string($value) && trim($value) !== '') {
-            return trim($value);
+    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN)) {
+        $constant = github_token_normalize(MH_GITHUB_TOKEN);
+        if ($constant !== '') {
+            return $constant;
         }
     }
 
-    return '';
+    $fromGetenv = getenv('MH_GITHUB_TOKEN');
+    if (is_string($fromGetenv)) {
+        $fromGetenv = github_token_normalize(sanitize_text_field($fromGetenv));
+        if ($fromGetenv !== '') {
+            return $fromGetenv;
+        }
+    }
+
+    $fromEnv = isset($_ENV['MH_GITHUB_TOKEN']) ? github_token_normalize(sanitize_text_field(wp_unslash($_ENV['MH_GITHUB_TOKEN']))) : '';
+    if ($fromEnv !== '') {
+        return $fromEnv;
+    }
+
+    return isset($_SERVER['MH_GITHUB_TOKEN']) ? github_token_normalize(sanitize_text_field(wp_unslash($_SERVER['MH_GITHUB_TOKEN']))) : '';
+}
+
+/**
+ * Keep a value that is safe to send as a GitHub bearer token.
+ *
+ * The caller sanitizes request and environment input first.
+ */
+function github_token_normalize(string $value): string
+{
+    $value = function_exists('sanitize_text_field') ? sanitize_text_field($value) : trim(wp_strip_all_tags($value));
+    if ($value === '' || strlen($value) > 255) {
+        return '';
+    }
+
+    if (preg_match('/\A[A-Za-z0-9_]+\z/', $value) !== 1) {
+        return '';
+    }
+
+    return $value;
 }
 
 /**
