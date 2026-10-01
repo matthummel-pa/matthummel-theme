@@ -207,6 +207,33 @@ add_filter('option_siteurl', function ($value) {
 });
 
 /**
+ * Optional booking link. Empty hides the button.
+ */
+function mh_booking_url(): string
+{
+    if (! function_exists('get_theme_mod')) {
+        return '';
+    }
+
+    return mh_sanitize_booking_url(get_theme_mod('mh_booking_url', ''));
+}
+
+function mh_sanitize_booking_url(mixed $value): string
+{
+    $value = is_string($value) ? trim(wp_unslash($value)) : '';
+    if ($value === '') {
+        return '';
+    }
+
+    $url = esc_url_raw($value);
+    if ($url === '' || wp_http_validate_url($url) === false) {
+        return '';
+    }
+
+    return $url;
+}
+
+/**
  * Privacy policy URL from the WordPress setting, then the theme template, then /privacy/.
  */
 function mh_privacy_policy_url(): string

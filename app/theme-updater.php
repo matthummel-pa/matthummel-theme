@@ -297,6 +297,22 @@ add_action('admin_menu', function () {
 });
 
 add_action('customize_register', function (\WP_Customize_Manager $wp): void {
+    $wp->add_section('mh_booking', [
+        'title' => __('Booking', 'sage'),
+        'priority' => 32,
+    ]);
+    $wp->add_setting('mh_booking_url', [
+        'default' => '',
+        'type' => 'theme_mod',
+        'sanitize_callback' => __NAMESPACE__.'\\mh_sanitize_booking_url',
+    ]);
+    $wp->add_control('mh_booking_url', [
+        'label' => __('Booking URL', 'sage'),
+        'description' => __('Optional. When this is set, Hire, Contact, and Start show a Book a 15-minute call link. Leave it empty to hide that link.', 'sage'),
+        'section' => 'mh_booking',
+        'type' => 'url',
+    ]);
+
     $wp->add_section('mh_github', [
         'title' => __('GitHub', 'sage'),
         'priority' => 33,

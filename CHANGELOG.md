@@ -4,6 +4,7 @@
 
 - A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
 - Footer and terms links use the WordPress privacy policy page when it is set, then the Privacy and Terms templates. The old `/privacy-policy/` and `/terms-of-use/` paths are gone.
+- Appearance → Customize → Booking stores an optional booking URL (`mh_booking_url`). Hire, Contact, and Start show “Book a 15-minute call” only when that URL is set.
 
 ## Newsletter plugin 1.11.0 — One unsubscribe page
 
