@@ -348,9 +348,12 @@ add_action('init', function () {
     $thankyouPage = get_page_by_path('thank-you');
     $thankyouUrl = $thankyouPage instanceof \WP_Post ? get_permalink($thankyouPage) : home_url('/thank-you/');
 
-    $errorHash = str_contains((string) wp_parse_url($back, PHP_URL_PATH), '/projects/')
-        ? '#project-contact-status'
-        : '#contact-status';
+    $statusId = isset($_POST['mh_status_id']) ? sanitize_html_class((string) wp_unslash($_POST['mh_status_id'])) : '';
+    $errorHash = $statusId !== ''
+        ? '#'.$statusId
+        : (str_contains((string) wp_parse_url($back, PHP_URL_PATH), '/projects/')
+            ? '#project-contact-status'
+            : '#contact-status');
 
     $redirect = function ($status) use ($back, $thankyouUrl, $errorHash) {
         if ($status === 'ok') {

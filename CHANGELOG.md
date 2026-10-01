@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.41 — Now page activity and note
+
+- The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).
+- A Right now band lists public GitHub activity, recent journal posts, and profile links plus public DEV.to and Bluesky posts when those feeds respond.
+- Send a note uses the contact form (email). Text me appears only when an SMS number is saved in the page field or the `mh_now_sms` theme mod, and it opens the visitor’s own phone.
+
 ## Newsletter plugin 1.10.0 — Signup block
 
 - A signup block can sit on any page. It uses the same confirm-by-email signup as the Get updates form.

@@ -545,7 +545,22 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['now_kicker', __('Kicker', 'sage'), 'text', __('Now', 'sage')],
                 ['now_h1', __('Heading', 'sage'), 'text', __('What I’m doing now.', 'sage')],
-                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going, updated August 2026.', 'sage')],
+                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going. GitHub, the journal, and the profiles I keep are below.', 'sage')],
+                ['now_updated', __('Last updated label (blank uses the page edit date)', 'sage'), 'text', ''],
+            ],
+            __('Activity', 'sage') => [
+                ['now_activity_h2', __('Heading', 'sage'), 'text', __('Right now', 'sage')],
+                ['now_activity_intro', __('Intro', 'sage'), 'textarea', __('Public GitHub events, recent journal posts, and posts from DEV.to and Bluesky when those feeds respond.', 'sage')],
+                ['now_gh_empty', __('GitHub empty state', 'sage'), 'textarea', __('GitHub did not return public activity just now. The profile link still works.', 'sage')],
+                ['now_posts_empty', __('Journal empty state', 'sage'), 'textarea', __('No journal posts are published yet.', 'sage')],
+                ['now_social_note', __('Social note', 'sage'), 'textarea', __('These are the profiles I keep. Posts below come from public feeds only.', 'sage')],
+            ],
+            __('Note', 'sage') => [
+                ['now_note_h2', __('Heading', 'sage'), 'text', __('Send a note', 'sage')],
+                ['now_note_lede', __('Intro', 'sage'), 'textarea', __('This form emails me. I usually reply within one business day (ET).', 'sage')],
+                ['now_note_submit', __('Submit button', 'sage'), 'text', __('Send note', 'sage')],
+                ['now_sms', __('SMS number (leave blank to hide Text me)', 'sage'), 'text', ''],
+                ['now_sms_body', __('SMS prefilled message', 'sage'), 'text', __('Hi — I saw the Now page.', 'sage')],
             ],
             __('List', 'sage') => [
                 ['now_items', __('Items', 'sage'), 'lines', [
@@ -559,7 +574,13 @@ function page_field_map(): array
             ],
             __('Studio', 'sage') => [
                 ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish WordPress concepts here — themes and plugins that show how I build. Hire me for a production site or a role.', 'sage')],
-                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Projects page</a>. When you\'re ready for a custom build, say hello.', 'sage')],
+                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.', 'sage')],
+                ['now_work_p1', __('Availability paragraph 1', 'sage'), 'textarea', __('I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')],
+                ['now_work_p2', __('Availability paragraph 2', 'sage'), 'textarea', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')],
+                ['now_write_p1', __('Writing paragraph 1', 'sage'), 'textarea', __('I write short posts on WordPress, PHP, and the tools I actually use on projects. Most posts include code you can paste into a theme or plugin. I write for developers who want something working, not a tutorial that ends at "and so on."', 'sage')],
+                ['now_write_p2', __('Writing paragraph 2', 'sage'), 'textarea', __('Posts go on the journal first. Some get cross-posted to DEV.to. Nothing is paywalled.', 'sage')],
+                ['now_ai_p1', __('How I work paragraph 1', 'sage'), 'textarea', __('I use Cursor AI, Claude, and ChatGPT as part of my development workflow. AI makes the first pass faster — I review everything before it ships. The final code is something I can explain and maintain.', 'sage')],
+                ['now_ai_p2', __('How I work paragraph 2', 'sage'), 'textarea', __('I\'m honest about this because I think it matters: if you hire me, you\'re getting real engineering judgment, not just generated output. This site was planned and built with Cursor AI.', 'sage')],
                 ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
             ],
         ],
