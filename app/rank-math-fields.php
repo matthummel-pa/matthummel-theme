@@ -662,8 +662,11 @@ function mh_sync_all_page_seo_analysis_bodies(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_repair_page_field_label_prefixes', 48);
-add_action('init', __NAMESPACE__.'\\mh_sync_all_page_seo_analysis_bodies', 52);
-add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
+
+// Disabled in 3.6.41: these wrote hidden, keyword-padded HTML into page
+// post_content and a self-computed rank_math_seo_score. Do not re-enable.
+// add_action('init', __NAMESPACE__.'\\mh_sync_all_page_seo_analysis_bodies', 52);
+// add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
 
 /**
  * Drop Content AI test on pages — marketing layouts are not AI drafts.
