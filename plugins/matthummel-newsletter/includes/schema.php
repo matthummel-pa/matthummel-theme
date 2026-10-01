@@ -115,6 +115,14 @@ function load_textdomain(): void
 
 function upgrade_is_due(): bool
 {
+    return upgrade_still_due();
+}
+
+/**
+ * Read the version flags again. The lock holder may have finished the upgrade.
+ */
+function upgrade_still_due(): bool
+{
     $installed = (string) get_option('mhn_version', '');
 
     return $installed !== MHN_VERSION || (string) get_option('mhn_db_version') !== '4';
@@ -141,9 +149,6 @@ function upgrade_context_allowed(): bool
 
 function maybe_upgrade(): void
 {
-    if (! upgrade_is_due()) {
-        return;
-    }
     if (! acquire_named_lock('mhn_upgrade_lock')) {
         return;
     }
@@ -151,7 +156,7 @@ function maybe_upgrade(): void
     $GLOBALS['mhn_activating'] = true;
 
     try {
-        if (! upgrade_is_due()) {
+        if (! upgrade_still_due()) {
             return;
         }
         install_tables();
@@ -578,14 +583,7 @@ function owned_pages_named(string $slug): array
         'suppress_filters' => true,
     ]);
 
-    $pages = [];
-    foreach ($found as $page) {
-        if ($page instanceof \WP_Post) {
-            $pages[] = $page;
-        }
-    }
-
-    return $pages;
+    return array_values($found);
 }
 
 function is_noindex_utility_slug(string $slug): bool

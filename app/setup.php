@@ -240,7 +240,7 @@ function mh_privacy_policy_url(): string
 {
     if (function_exists('get_privacy_policy_url')) {
         $fromSetting = get_privacy_policy_url();
-        if (is_string($fromSetting) && $fromSetting !== '') {
+        if ($fromSetting !== '') {
             return $fromSetting;
         }
     }
@@ -283,8 +283,7 @@ function mh_published_page_url(string $template, string $slug): string
     if ($url === '') {
         $page = get_page_by_path(sanitize_title($slug));
         if ($page instanceof \WP_Post && $page->post_status === 'publish') {
-            $permalink = get_permalink($page);
-            $url = is_string($permalink) ? $permalink : '';
+            $url = get_permalink($page) ?: '';
         }
     }
     if ($url === '') {
@@ -306,7 +305,5 @@ function mh_permalink_from_posts(array $posts): string
         return '';
     }
 
-    $permalink = get_permalink($page);
-
-    return is_string($permalink) ? $permalink : '';
+    return get_permalink($page) ?: '';
 }
