@@ -141,7 +141,7 @@ function updater_dispatch(): array
     $r = updater_repo();
     $token = github_token();
     if ($token === '') {
-        return [false, __('No GitHub token is set. Paste one on this page (or under Appearance → Customize → GitHub) first.', 'sage')];
+        return [false, __('No GitHub token is set. Define MH_GITHUB_TOKEN in wp-config.php, or save one on this page.', 'sage')];
     }
     $url = 'https://api.github.com/repos/'.rawurlencode($r['owner']).'/'.rawurlencode($r['repo'])
         .'/actions/workflows/'.rawurlencode($r['workflow']).'/dispatches';
