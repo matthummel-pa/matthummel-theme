@@ -19,15 +19,56 @@ function public_assets(): void
 }
 
 /**
+ * Utility pages stay out of the index, including numbered copies from the old race.
+ */
+function is_noindex_utility_page(): bool
+{
+    if (! function_exists('is_page') || ! is_page()) {
+        return false;
+    }
+
+    $post = get_queried_object();
+    if (! $post instanceof \WP_Post) {
+        return false;
+    }
+
+    return is_noindex_utility_slug((string) $post->post_name);
+}
+
+/**
+ * Core robots. Values are booleans.
+ *
  * @param  array<string, bool|string>  $robots
  * @return array<string, bool|string>
  */
 function robots(array $robots): array
 {
-    if (is_page(['email-preferences', 'unsubscribe'])) {
-        $robots['noindex'] = true;
-        $robots['nofollow'] = true;
+    if (! is_noindex_utility_page()) {
+        return $robots;
     }
+
+    $robots['noindex'] = true;
+    $robots['nofollow'] = true;
+
+    return $robots;
+}
+
+/**
+ * Rank Math prints its own robots tag and ignores wp_robots.
+ * Its array uses the directive as the value (`index` => `noindex`).
+ *
+ * @param  array<string, string>  $robots
+ * @return array<string, string>
+ */
+function rank_math_robots(array $robots): array
+{
+    if (! is_noindex_utility_page()) {
+        return $robots;
+    }
+
+    unset($robots['index'], $robots['follow'], $robots['noindex'], $robots['nofollow']);
+    $robots['index'] = 'noindex';
+    $robots['follow'] = 'nofollow';
 
     return $robots;
 }
@@ -145,7 +186,16 @@ function request_has_subscriber_secret(): bool
         }
     }
 
-    return function_exists('is_page') && is_page(['email-preferences', 'unsubscribe']);
+    if (! function_exists('is_page') || ! is_page()) {
+        return false;
+    }
+
+    $post = get_queried_object();
+    if (! $post instanceof \WP_Post) {
+        return false;
+    }
+
+    return preg_match('/^(?:email-preferences|unsubscribe)(?:-\d+)?$/', (string) $post->post_name) === 1;
 }
 
 function send_privacy_headers(): void
