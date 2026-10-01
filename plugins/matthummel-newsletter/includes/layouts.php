@@ -938,7 +938,7 @@ function apply_layout(string $layoutId, string $body): string
             $image = sample_feature_image();
         }
 
-        return present_welcome_image($image).$stack;
+        return present_welcome_image($image).$stack.welcome_checklist_html();
     }
 
     if ($layoutId === 'plain') {
@@ -991,11 +991,12 @@ function arrange_layout_variant(string $layoutId, string $intro, string $image, 
     if ($layoutId === 'welcome') {
         $points = $variant === 'focused' ? '' : letter_points_html(settings()['welcome_points']);
         $figure = present_welcome_image($image !== '' ? $image : sample_feature_image());
+        $checklist = welcome_checklist_html();
         if ($variant === 'digest') {
-            return $figure.$heading.$points.$body.$signoff;
+            return $figure.$heading.$points.$body.$checklist.$signoff;
         }
 
-        return $figure.$introHtml.$heading.$body.$points.$signoff;
+        return $figure.$introHtml.$heading.$body.$points.$checklist.$signoff;
     }
     if ($layoutId === 'standard') {
         $figure = present_standard_image($image);
@@ -1285,6 +1286,16 @@ function layout_eyebrow_html(string $text, string $layoutId): string
     }
 
     return '<p class="mhn-eyebrow" style="margin:0 0 8px;font-family:'.$font.';font-size:16px;line-height:1.5;font-weight:600;color:#50575e;text-align:left;">'.$inner.'</p>';
+}
+
+function welcome_checklist_html(): string
+{
+    $url = settings()['checklist_url'];
+    if ($url === '') {
+        return '';
+    }
+
+    return letter_button(__('WordPress Handoff Checklist', 'matthummel-newsletter'), $url, 'welcome');
 }
 
 function letter_button(string $label, string $url, string $layoutId = ''): string

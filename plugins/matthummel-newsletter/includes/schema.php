@@ -92,6 +92,7 @@ function boot(): void
     add_shortcode('mhn_updates', __NAMESPACE__.'\\shortcode_updates');
     add_shortcode('mhn_preferences', __NAMESPACE__.'\\shortcode_preferences');
     add_shortcode('mhn_unsubscribe', __NAMESPACE__.'\\shortcode_unsubscribe');
+    add_shortcode('mhn_signup', __NAMESPACE__.'\\shortcode_signup');
     add_action('template_redirect', __NAMESPACE__.'\\on_template_redirect');
     add_filter('wp_robots', __NAMESPACE__.'\\robots');
     add_filter('rank_math/frontend/robots', __NAMESPACE__.'\\rank_math_robots', 99);

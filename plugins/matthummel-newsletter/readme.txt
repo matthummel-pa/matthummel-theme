@@ -61,6 +61,8 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 * Required pages are created on activation or in wp-admin, not on every front-end request.
 * An existing page is reused by its stored ID or by slug in any status. A lock stops two requests from creating copies.
 * Unsubscribe, email preferences, thank-you, and numbered copies of those slugs stay noindex when Rank Math prints the robots tag.
+* `[mhn_signup source="post"]` uses the same signup handler as the page and footer forms. The post form mentions a free WordPress Handoff Checklist.
+* Settings has an optional checklist link. It is empty until you set an https URL. The welcome letter then adds that button.
 
 = 1.10.0 =
 * A Newsletter signup block can sit on any page. The heading, description, and button text are editable.
