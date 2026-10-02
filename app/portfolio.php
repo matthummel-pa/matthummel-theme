@@ -4961,9 +4961,10 @@ function mh_devto_markdown_to_blocks(string $md): string
  */
 function mh_devto_find_imported_post(int $articleId): int
 {
+    // Trashed imports count as "already imported" so deleting one is not undone by the hourly sync.
     $q = new \WP_Query([
         'post_type' => 'post',
-        'post_status' => ['publish', 'draft', 'pending', 'private'],
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
         'posts_per_page' => 1,
         'fields' => 'ids',
         'no_found_rows' => true,
