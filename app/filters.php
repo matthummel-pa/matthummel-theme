@@ -53,13 +53,22 @@ add_filter('wpseo_breadcrumb_output', function ($html) {
 add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
 
 /**
+ * Whether the MH SEO plugin is printing the title and description for this request.
+ */
+function mh_seo_plugin_manages_head(): bool
+{
+    return defined('MH_SEO_ACTIVE') && MH_SEO_ACTIVE
+        && function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head();
+}
+
+/**
  * Whether a known SEO plugin is active and will print its own meta description.
  *
  * @since 3.1.0
  */
 function mh_seo_plugin_prints_description(): bool
 {
-    if (defined('MH_SEO_ACTIVE') && MH_SEO_ACTIVE && function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+    if (mh_seo_plugin_manages_head()) {
         return true;
     }
 
@@ -531,7 +540,7 @@ function mh_seo_meta_description(): string
             $summary .= '.';
         }
 
-        return $summary;
+        return mh_seo_len($summary) > 155 ? mh_seo_clip($summary, 155) : $summary;
     }
 
     $term = mh_seo_current_term();
@@ -581,7 +590,7 @@ function mh_seo_meta_description(): string
  */
 function mh_filter_document_title($title)
 {
-    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+    if (mh_seo_plugin_manages_head()) {
         return $title;
     }
     if (is_admin() || ! is_string($title)) {
@@ -604,7 +613,7 @@ function mh_filter_document_title($title)
  */
 function mh_filter_meta_description($desc)
 {
-    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+    if (mh_seo_plugin_manages_head()) {
         return $desc;
     }
     if (is_admin() || ! is_string($desc)) {
@@ -624,7 +633,7 @@ function mh_filter_meta_description($desc)
  */
 function mh_print_meta_description(): void
 {
-    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
+    if (mh_seo_plugin_manages_head()) {
         return;
     }
     if (is_admin() || mh_seo_plugin_prints_description()) {
