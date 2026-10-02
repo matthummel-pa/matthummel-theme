@@ -125,6 +125,48 @@ function github_get(string $url): ?array
 
 class Github
 {
+    /** When true, cached reads are skipped so a refresh pulls fresh API data. */
+    protected static bool $fresh = false;
+
+    /** @var array<string, bool> Calls that failed (vs. returned nothing) during this request. */
+    protected static array $failed = [];
+
+    /**
+     * Whether a named call failed at the API level this request (e.g. 'pinned').
+     */
+    public static function failed(string $call): bool
+    {
+        return ! empty(self::$failed[$call]);
+    }
+
+    /**
+     * Skip transient reads (writes still happen) while a forced refresh runs.
+     */
+    public static function fresh(bool $on): void
+    {
+        self::$fresh = $on;
+    }
+
+    /**
+     * Read a cached value unless a forced refresh is running.
+     *
+     * @return mixed False on a miss, like get_transient().
+     */
+    protected static function cached(string $key): mixed
+    {
+        return self::$fresh ? false : get_transient($key);
+    }
+
+    /**
+     * Cache a result. Empty results (API errors, rate limits) get a short TTL
+     * so one failed call does not blank a panel for hours.
+     */
+    protected static function store(string $key, mixed $data, ?int $ttl = null): void
+    {
+        $ttl ??= self::ttl();
+        set_transient($key, $data, empty($data) ? min($ttl, 10 * MINUTE_IN_SECONDS) : $ttl);
+    }
+
     /**
      * Build wp_remote_get/post args with shared headers and timeout.
      *
@@ -159,7 +201,7 @@ class Github
     public static function fetchUser(string $user): array
     {
         $key = 'mh_ghu3_'.md5($user);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return $d;
         }
         $d = [];
@@ -185,7 +227,7 @@ class Github
                 'status_busy' => $status['busy'],
             ];
         }
-        set_transient($key, $d, self::ttl());
+        self::store($key, $d);
 
         return $d;
     }
@@ -207,7 +249,7 @@ class Github
         }
 
         $key = 'mh_ghus1_'.md5($user);
-        if (($cached = get_transient($key)) !== false && is_array($cached)) {
+        if (($cached = self::cached($key)) !== false && is_array($cached)) {
             return array_merge($empty, $cached);
         }
 
@@ -261,7 +303,7 @@ GQL;
             'message' => trim((string) ($status['message'] ?? '')),
             'busy' => ! empty($status['indicatesLimitedAvailability']),
         ];
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -303,7 +345,7 @@ GQL;
     {
         $count = max(1, min(100, $count));
         $key = 'mh_ghfol1_'.md5($user.$count);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -332,7 +374,7 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -352,7 +394,7 @@ GQL;
         $ownerEnc = rawurlencode($owner);
         $repoEnc = rawurlencode($repo);
         $key = 'mh_ghstar1_'.md5($ownerEnc.'/'.$repoEnc.$count);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -382,7 +424,7 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -398,7 +440,7 @@ GQL;
     {
         $count = max(1, min(100, $count));
         $key = 'mh_ghstarred1_'.md5($user.$count);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -431,7 +473,7 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -449,7 +491,7 @@ GQL;
     {
         $count = max(1, min(100, $count));
         $key = 'mh_ghwatch1_'.md5($user.$count);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -483,7 +525,65 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
+
+        return $out;
+    }
+
+    /**
+     * Fetch every public, non-fork repository a user owns (up to 300), newest push first.
+     *
+     * One paginated call feeds star totals, language mix, and the recently pushed list.
+     *
+     * @param  string  $user  GitHub login.
+     * @return list<array{name: string, full: string, desc: string, url: string, homepage: string, lang: string, stars: int, forks: int, topics: list<string>, pushed: string, archived: bool}>
+     */
+    public static function fetchOwnerRepos(string $user): array
+    {
+        $key = 'mh_ghown1_'.md5($user);
+        if (($d = self::cached($key)) !== false && is_array($d)) {
+            return $d;
+        }
+
+        $out = [];
+        for ($page = 1; $page <= 3; $page++) {
+            $r = wp_remote_get(
+                'https://api.github.com/users/'.rawurlencode($user).'/repos?per_page=100&type=owner&sort=pushed&page='.$page,
+                self::args()
+            );
+            if (is_wp_error($r) || wp_remote_retrieve_response_code($r) !== 200) {
+                break;
+            }
+            $batch = (array) json_decode(wp_remote_retrieve_body($r), true);
+            foreach ($batch as $j) {
+                if (! is_array($j) || ! empty($j['fork']) || ! empty($j['private'])) {
+                    continue;
+                }
+                $name = (string) ($j['name'] ?? '');
+                if ($name === '' || strcasecmp($name, $user) === 0 || mh_github_is_hidden_repo($name)) {
+                    continue;
+                }
+                $topics = $j['topics'] ?? [];
+                $out[] = [
+                    'name' => $name,
+                    'full' => (string) ($j['full_name'] ?? $user.'/'.$name),
+                    'desc' => (string) ($j['description'] ?? ''),
+                    'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$user.'/'.$name)),
+                    'homepage' => (string) ($j['homepage'] ?? ''),
+                    'lang' => (string) ($j['language'] ?? ''),
+                    'stars' => (int) ($j['stargazers_count'] ?? 0),
+                    'forks' => (int) ($j['forks_count'] ?? 0),
+                    'topics' => is_array($topics) ? array_values(array_map('strval', $topics)) : [],
+                    'pushed' => (string) ($j['pushed_at'] ?? ''),
+                    'archived' => ! empty($j['archived']),
+                ];
+            }
+            if (count($batch) < 100) {
+                break;
+            }
+        }
+
+        self::store($key, $out);
 
         return $out;
     }
@@ -496,55 +596,17 @@ GQL;
      */
     public static function fetchStarTotals(string $user): array
     {
-        $key = 'mh_ghstartot2_'.md5($user);
-        if (($d = get_transient($key)) !== false && is_array($d)) {
-            return $d;
-        }
-
         $total = 0;
         $repos = [];
-        $page = 1;
-        while ($page <= 3) {
-            $r = wp_remote_get(
-                'https://api.github.com/users/'.rawurlencode($user).'/repos?per_page=100&type=owner&page='.$page,
-                self::args()
-            );
-            if (is_wp_error($r) || wp_remote_retrieve_response_code($r) !== 200) {
-                break;
+        foreach (self::fetchOwnerRepos($user) as $repo) {
+            $total += $repo['stars'];
+            if ($repo['stars'] > 0) {
+                $repos[] = ['name' => $repo['name'], 'stars' => $repo['stars'], 'url' => $repo['url']];
             }
-            $batch = (array) json_decode(wp_remote_retrieve_body($r), true);
-            if ($batch === []) {
-                break;
-            }
-            foreach ($batch as $j) {
-                if (! is_array($j) || ! empty($j['fork'])) {
-                    continue;
-                }
-                $name = (string) ($j['name'] ?? '');
-                if ($name === '' || mh_github_is_hidden_repo($name)) {
-                    continue;
-                }
-                $stars = (int) ($j['stargazers_count'] ?? 0);
-                $total += $stars;
-                if ($stars > 0) {
-                    $repos[] = [
-                        'name' => $name,
-                        'stars' => $stars,
-                        'url' => esc_url_raw((string) ($j['html_url'] ?? 'https://github.com/'.$user.'/'.$name)),
-                    ];
-                }
-            }
-            if (count($batch) < 100) {
-                break;
-            }
-            $page++;
         }
-
         usort($repos, static fn (array $a, array $b): int => $b['stars'] <=> $a['stars']);
-        $out = ['total' => $total, 'repos' => $repos];
-        set_transient($key, $out, self::ttl());
 
-        return $out;
+        return ['total' => $total, 'repos' => $repos];
     }
 
     /**
@@ -560,7 +622,7 @@ GQL;
         $count = max(1, min(30, $count));
         $sort = in_array($sort, ['updated', 'pushed', 'full_name', 'created'], true) ? $sort : 'updated';
         $key = 'mh_ghr5_'.md5($user.$sort.$count);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return $d;
         }
         $out = [];
@@ -596,7 +658,7 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -613,7 +675,7 @@ GQL;
         $owner = rawurlencode($owner);
         $repo = rawurlencode($repo);
         $key = 'mh_ghlang_'.md5($owner.'/'.$repo);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
         $out = [];
@@ -625,7 +687,7 @@ GQL;
                 $out = array_values(array_map('strval', array_keys($j)));
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -640,7 +702,7 @@ GQL;
     public static function fetchRepoMeta(string $owner, string $repo): array
     {
         $key = 'mh_ghmeta3_'.md5($owner.'/'.$repo);
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
         $d = [];
@@ -663,7 +725,7 @@ GQL;
                 'pushed' => (string) ($j['pushed_at'] ?? ''),
             ];
         }
-        set_transient($key, $d, self::ttl());
+        self::store($key, $d);
 
         return $d;
     }
@@ -680,7 +742,7 @@ GQL;
     {
         $count = max(1, min(20, $count));
         $key = 'mh_ghrel_'.md5("{$owner}/{$repo}/{$count}");
-        if (($d = get_transient($key)) !== false) {
+        if (($d = self::cached($key)) !== false) {
             return $d;
         }
         $out = [];
@@ -696,7 +758,7 @@ GQL;
                 ];
             }
         }
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
@@ -712,7 +774,7 @@ GQL;
     {
         $key = 'mh_gh_'.md5($owner.'/'.$repo);
 
-        if (($data = get_transient($key)) !== false) {
+        if (($data = self::cached($key)) !== false) {
             return $data;
         }
 
@@ -744,7 +806,7 @@ GQL;
             $data['intro'] = self::readmeIntro(wp_remote_retrieve_body($rm));
         }
 
-        set_transient($key, $data, self::ttl());
+        self::store($key, $data);
 
         return $data;
     }
@@ -787,8 +849,8 @@ GQL;
     public static function fetchEvents(string $user, int $count = 12): array
     {
         $count = max(1, min(100, $count));
-        $key = 'mh_ghev2_'.md5($user.$count);
-        if (($d = get_transient($key)) !== false) {
+        $key = 'mh_ghev3_'.md5($user.$count);
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -807,7 +869,7 @@ GQL;
                 }
             }
         }
-        set_transient($key, $out, min(HOUR_IN_SECONDS, self::ttl()));
+        self::store($key, $out, min(HOUR_IN_SECONDS, self::ttl()));
 
         return $out;
     }
@@ -820,12 +882,12 @@ GQL;
      */
     public static function fetchContributionCalendar(string $user): array
     {
-        $key = 'mh_ghcal2_'.md5($user);
-        if (($d = get_transient($key)) !== false) {
-            return is_array($d) ? $d : ['total' => 0, 'weeks' => []];
+        $key = 'mh_ghcal3_'.md5($user);
+        $empty = ['total' => 0, 'weeks' => [], 'breakdown' => []];
+        if (($d = self::cached($key)) !== false) {
+            return is_array($d) && isset($d['weeks']) ? $d : $empty;
         }
 
-        $empty = ['total' => 0, 'weeks' => []];
         $data = github_token() !== '' ? self::calendarFromGraphql($user) : null;
         if ($data === null) {
             $data = self::calendarFromHtml($user);
@@ -833,7 +895,8 @@ GQL;
         if ($data === null) {
             $data = $empty;
         }
-        set_transient($key, $data, min(6 * HOUR_IN_SECONDS, self::ttl()));
+        $ttl = min(6 * HOUR_IN_SECONDS, self::ttl());
+        set_transient($key, $data, $data['weeks'] === [] ? 10 * MINUTE_IN_SECONDS : $ttl);
 
         return $data;
     }
@@ -842,8 +905,8 @@ GQL;
      * Format a single raw GitHub event payload into a display-ready array.
      *
      * @param  array<string, mixed>  $j  Raw event object decoded from the GitHub API.
-     * @return array{type: string, repo: string, url: string, text: string, when: string}|null
-     *                                                                                         Null when the event type is unsupported or the repo is missing.
+     * @return array{type: string, repo: string, url: string, label: string, text: string, when: string}|null
+     *                                                                                                        Null when the event type is unsupported or the repo is missing.
      */
     protected static function formatEvent(array $j): ?array
     {
@@ -853,64 +916,83 @@ GQL;
         $payload = is_array($j['payload'] ?? null) ? $j['payload'] : [];
         $when = (string) ($j['created_at'] ?? '');
 
-        $pushCount = max(1, (int) ($payload['size'] ?? count((array) ($payload['commits'] ?? []))));
-        $text = match ($type) {
-            'PushEvent' => sprintf(
-                'Pushed %s to %s',
-                sprintf(_n('%s commit', '%s commits', $pushCount, 'sage'), (string) $pushCount),
-                $repo
-            ),
-            'PullRequestEvent' => sprintf(
-                '%s pull request %s in %s',
-                ucfirst((string) ($payload['action'] ?? 'updated')),
-                ! empty($payload['pull_request']['number']) ? '#'.(int) $payload['pull_request']['number'] : '',
-                $repo
-            ),
-            'IssuesEvent' => sprintf(
-                '%s issue %s in %s',
-                ucfirst((string) ($payload['action'] ?? 'updated')),
-                ! empty($payload['issue']['number']) ? '#'.(int) $payload['issue']['number'] : '',
-                $repo
-            ),
-            'IssueCommentEvent' => sprintf('Commented on an issue in %s', $repo),
-            'PullRequestReviewEvent' => sprintf('Reviewed a pull request in %s', $repo),
-            'CreateEvent' => trim(sprintf(
-                'Created %s %s in %s',
-                (string) ($payload['ref_type'] ?? 'repository'),
-                (string) ($payload['ref'] ?? ''),
-                $repo
-            )),
-            'ReleaseEvent' => sprintf(
-                'Published %s on %s',
-                (string) ($payload['release']['tag_name'] ?? 'a release'),
-                $repo
-            ),
-            'ForkEvent' => sprintf('Forked %s', $repo),
-            'WatchEvent' => sprintf('Starred %s', $repo),
-            'PublicEvent' => sprintf('Made %s public', $repo),
-            default => null,
-        };
+        // GitHub trimmed Events API payloads in 2025: pushes carry before/head
+        // (no commit list) and pull requests carry a number but no html_url.
+        $pushCount = (int) ($payload['size'] ?? count((array) ($payload['commits'] ?? [])));
+        $branch = (string) preg_replace('#^refs/heads/#', '', (string) ($payload['ref'] ?? ''));
+        $prNumber = (int) ($payload['number'] ?? $payload['pull_request']['number'] ?? 0);
+        $prAction = (string) ($payload['action'] ?? 'updated');
+        if ($prAction === 'closed' && ! empty($payload['pull_request']['merged'])) {
+            $prAction = 'merged';
+        }
 
-        if ($text === null || $repo === '') {
+        // Branch create/delete events are agent noise next to the PRs they open.
+        if (in_array($type, ['CreateEvent', 'DeleteEvent'], true) && ($payload['ref_type'] ?? '') === 'branch') {
             return null;
         }
 
-        if ($type === 'PullRequestEvent' && ! empty($payload['pull_request']['html_url'])) {
-            $url = (string) $payload['pull_request']['html_url'];
+        $label = match ($type) {
+            'PushEvent' => $pushCount > 0
+                ? sprintf(
+                    'Pushed %s to %s',
+                    /* translators: %s: number of commits. */
+                    sprintf(_n('%s commit', '%s commits', $pushCount, 'sage'), (string) $pushCount),
+                    $branch !== '' ? $branch : 'a branch'
+                )
+                : sprintf('Pushed to %s', $branch !== '' ? $branch : 'a branch'),
+            'PullRequestEvent' => sprintf('%s pull request %s', ucfirst($prAction), $prNumber > 0 ? '#'.$prNumber : ''),
+            'IssuesEvent' => sprintf(
+                '%s issue %s',
+                ucfirst((string) ($payload['action'] ?? 'updated')),
+                ! empty($payload['issue']['number']) ? '#'.(int) $payload['issue']['number'] : ''
+            ),
+            'IssueCommentEvent' => 'Commented on an issue',
+            'PullRequestReviewEvent' => 'Reviewed a pull request',
+            'CreateEvent' => trim(sprintf(
+                'Created %s %s',
+                (string) ($payload['ref_type'] ?? 'repository'),
+                ($payload['ref_type'] ?? '') === 'repository' ? '' : (string) ($payload['ref'] ?? '')
+            )),
+            'ReleaseEvent' => sprintf('Published %s', (string) ($payload['release']['tag_name'] ?? 'a release')),
+            'ForkEvent' => 'Forked',
+            'WatchEvent' => 'Starred',
+            'PublicEvent' => 'Made public',
+            default => null,
+        };
+
+        if ($label === null || $repo === '') {
+            return null;
+        }
+
+        if ($type === 'PullRequestEvent') {
+            $url = ! empty($payload['pull_request']['html_url'])
+                ? (string) $payload['pull_request']['html_url']
+                : ($prNumber > 0 ? $url.'/pull/'.$prNumber : $url);
         } elseif ($type === 'IssuesEvent' && ! empty($payload['issue']['html_url'])) {
             $url = (string) $payload['issue']['html_url'];
         } elseif ($type === 'ReleaseEvent' && ! empty($payload['release']['html_url'])) {
             $url = (string) $payload['release']['html_url'];
-        } elseif ($type === 'PushEvent' && ! empty($payload['ref'])) {
-            $ref = preg_replace('#^refs/heads/#', '', (string) $payload['ref']);
-            $url = 'https://github.com/'.$repo.'/commits/'.$ref;
+        } elseif ($type === 'PushEvent') {
+            $before = (string) ($payload['before'] ?? '');
+            $head = (string) ($payload['head'] ?? '');
+            if ($before !== '' && $head !== '' && ! preg_match('/^0+$/', $before)) {
+                $url .= '/compare/'.substr($before, 0, 12).'...'.substr($head, 0, 12);
+            } elseif ($branch !== '') {
+                $url .= '/commits/'.$branch;
+            }
         }
+
+        $label = trim((string) preg_replace('/\s+/', ' ', $label));
+        $short = (string) preg_replace('#^[^/]+/#', '', $repo);
 
         return [
             'type' => $type,
             'repo' => $repo,
             'url' => $url,
-            'text' => trim((string) preg_replace('/\s+/', ' ', $text)),
+            'label' => $label,
+            'text' => in_array($type, ['ForkEvent', 'WatchEvent', 'PublicEvent'], true)
+                ? $label.' '.$short
+                : $label.' in '.$short,
             'when' => $when,
         ];
     }
@@ -928,6 +1010,11 @@ GQL;
 query ($login: String!) {
   user(login: $login) {
     contributionsCollection {
+      totalCommitContributions
+      totalPullRequestContributions
+      totalPullRequestReviewContributions
+      totalIssueContributions
+      totalRepositoriesWithContributedCommits
       contributionCalendar {
         totalContributions
         weeks {
@@ -950,7 +1037,8 @@ GQL;
             return null;
         }
         $json = json_decode((string) wp_remote_retrieve_body($res), true);
-        $cal = $json['data']['user']['contributionsCollection']['contributionCalendar'] ?? null;
+        $coll = $json['data']['user']['contributionsCollection'] ?? [];
+        $cal = $coll['contributionCalendar'] ?? null;
         if (! is_array($cal)) {
             return null;
         }
@@ -973,6 +1061,13 @@ GQL;
         return [
             'total' => (int) ($cal['totalContributions'] ?? 0),
             'weeks' => $weeks,
+            'breakdown' => [
+                'commits' => (int) ($coll['totalCommitContributions'] ?? 0),
+                'prs' => (int) ($coll['totalPullRequestContributions'] ?? 0),
+                'reviews' => (int) ($coll['totalPullRequestReviewContributions'] ?? 0),
+                'issues' => (int) ($coll['totalIssueContributions'] ?? 0),
+                'repos' => (int) ($coll['totalRepositoriesWithContributedCommits'] ?? 0),
+            ],
         ];
     }
 
@@ -1000,6 +1095,22 @@ GQL;
             return null;
         }
 
+        // Day cells only carry a 0-4 shade; the real count lives in a <tool-tip for="cell id">.
+        $tips = [];
+        if (preg_match_all('#<tool-tip[^>]*\bfor="([^"]+)"[^>]*>\s*([\d,]+|No) contributions?#i', $html, $tm, PREG_SET_ORDER)) {
+            foreach ($tm as $t) {
+                $tips[$t[1]] = strcasecmp($t[2], 'No') === 0 ? 0 : (int) str_replace(',', '', $t[2]);
+            }
+        }
+        $ids = [];
+        if (preg_match_all('#<td\b[^>]*>#i', $html, $cells)) {
+            foreach ($cells[0] as $cell) {
+                if (preg_match('/data-date="(\d{4}-\d{2}-\d{2})"/', $cell, $dm) && preg_match('/\bid="([^"]+)"/', $cell, $im)) {
+                    $ids[$dm[1]] = $im[1];
+                }
+            }
+        }
+
         $days = [];
         foreach ($matches as $m) {
             $date = $m[1] !== '' ? $m[1] : ($m[4] ?? '');
@@ -1007,10 +1118,11 @@ GQL;
             if ($date === '' || isset($days[$date])) {
                 continue;
             }
+            $count = isset($ids[$date], $tips[$ids[$date]]) ? $tips[$ids[$date]] : null;
             $days[$date] = [
                 'date' => $date,
-                'count' => $level,
-                'level' => max(0, min(4, $level)),
+                'count' => $count ?? $level,
+                'level' => $count !== null ? self::contributionLevel($count) : max(0, min(4, $level)),
             ];
         }
         if ($days === []) {
@@ -1039,9 +1151,15 @@ GQL;
             $weeks[] = $week;
         }
 
+        $total = array_sum(array_column($list, 'count'));
+        if (preg_match('#([\d,]+)\s+contributions?\s+in the last year#i', $html, $tm)) {
+            $total = (int) str_replace(',', '', $tm[1]);
+        }
+
         return [
-            'total' => array_sum(array_column($list, 'count')),
+            'total' => $total,
             'weeks' => $weeks,
+            'breakdown' => [],
         ];
     }
 
@@ -1126,8 +1244,8 @@ GQL;
      */
     public static function fetchPinnedRepos(string $user): array
     {
-        $key = 'mh_ghpinned_v1_'.md5($user);
-        if (($d = get_transient($key)) !== false) {
+        $key = 'mh_ghpinned_v2_'.md5($user);
+        if (($d = self::cached($key)) !== false) {
             return is_array($d) ? $d : [];
         }
 
@@ -1151,9 +1269,15 @@ query($login: String!) {
           url
           stargazerCount
           forkCount
+          isArchived
           primaryLanguage { name color }
+          licenseInfo { spdxId }
           repositoryTopics(first: 8) {
             nodes { topic { name } }
+          }
+          latestRelease { tagName publishedAt url }
+          defaultBranchRef {
+            target { ... on Commit { history { totalCount } } }
           }
           pushedAt
           homepageUrl
@@ -1177,14 +1301,15 @@ GQL;
             ]),
         ]);
 
-        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200) {
-            set_transient($key, $empty, self::ttl());
+        $payload = is_wp_error($res) ? null : json_decode((string) wp_remote_retrieve_body($res), true);
+        if (is_wp_error($res) || (int) wp_remote_retrieve_response_code($res) !== 200 || ! empty($payload['errors']) || ! isset($payload['data']['user'])) {
+            self::$failed['pinned'] = true;
+            set_transient($key, $empty, 10 * MINUTE_IN_SECONDS);
 
             return $empty;
         }
 
-        $payload = json_decode((string) wp_remote_retrieve_body($res), true);
-        $nodes = is_array($payload) ? ($payload['data']['user']['pinnedItems']['nodes'] ?? []) : [];
+        $nodes = $payload['data']['user']['pinnedItems']['nodes'] ?? [];
 
         $out = [];
         foreach ((array) $nodes as $node) {
@@ -1201,6 +1326,7 @@ GQL;
             }
 
             $lang = (string) ($node['primaryLanguage']['name'] ?? '');
+            $license = (string) ($node['licenseInfo']['spdxId'] ?? '');
 
             $out[] = [
                 'name' => (string) $node['name'],
@@ -1209,14 +1335,21 @@ GQL;
                 'url' => (string) ($node['url'] ?? ''),
                 'demo' => (string) ($node['homepageUrl'] ?? ''),
                 'lang' => $lang,
+                'lang_color' => (string) ($node['primaryLanguage']['color'] ?? ''),
                 'stars' => (int) ($node['stargazerCount'] ?? 0),
                 'forks' => (int) ($node['forkCount'] ?? 0),
                 'pushed' => (string) ($node['pushedAt'] ?? ''),
                 'tags' => $topics,
+                'archived' => ! empty($node['isArchived']),
+                'license' => ($license !== '' && $license !== 'NOASSERTION') ? $license : '',
+                'commits' => (int) ($node['defaultBranchRef']['target']['history']['totalCount'] ?? 0),
+                'release' => (string) ($node['latestRelease']['tagName'] ?? ''),
+                'release_url' => (string) ($node['latestRelease']['url'] ?? ''),
+                'release_date' => (string) ($node['latestRelease']['publishedAt'] ?? ''),
             ];
         }
 
-        set_transient($key, $out, self::ttl());
+        self::store($key, $out);
 
         return $out;
     }
