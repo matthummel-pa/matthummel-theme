@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Pages are custom-field layouts only — no Gutenberg canvas, no patterns,
- * no leftover block HTML in post_content.
+ * Named marketing templates are custom-field layouts. Pages on the default
+ * template (and Custom Template) use the classic editor, and page.blade.php
+ * prints that content. The block editor stays off for pages.
  */
 
 namespace App;
@@ -13,7 +14,6 @@ add_filter('use_block_editor_for_post_type', function ($use, $type) {
 }, 10, 2);
 
 add_action('init', function () {
-    remove_post_type_support('page', 'editor');
     remove_post_type_support('page', 'block-templates');
 }, 11);
 

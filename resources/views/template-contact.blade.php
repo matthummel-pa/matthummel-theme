@@ -38,6 +38,7 @@
       <p class="sec-intro">
         {{ \App\field('cnt_form_intro', __('Name, email, and a few sentences are enough. No pitch deck required. This form goes straight to my inbox.', 'sage')) }}
       </p>
+      @include('partials.booking-link')
 
       @include('partials.contact-form', [
         'compact' => false,

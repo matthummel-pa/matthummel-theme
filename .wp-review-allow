@@ -4,3 +4,4 @@
 # ^\s*\\?App\\mh_svg_icon\s*\(
 ^\s*\\?(App\\)?mh_svg_icon\s*\(
 ^\s*\\?(App\\)?mh_product_fallback_markup\s*\(
+^\s*do_shortcode\(\s*'\[mhn_signup source="post"\]'\s*\)\s*$

@@ -9,7 +9,10 @@ namespace App;
  */
 
 /**
- * Resolve the GitHub API token: wp-config constant → Customizer/updater theme mod → filter.
+ * Resolve the GitHub API token.
+ *
+ * Prefer MH_GITHUB_TOKEN from wp-config.php or the environment. The theme mod
+ * mh_gh_token remains a fallback. This function never logs the value.
  *
  * @since 3.1.0
  *
@@ -17,12 +20,64 @@ namespace App;
  */
 function github_token(): string
 {
-    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN) && MH_GITHUB_TOKEN !== '') {
-        return trim(MH_GITHUB_TOKEN);
+    $fromEnv = github_token_from_environment();
+    if ($fromEnv !== '') {
+        return $fromEnv;
     }
+
     $mod = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_gh_token', '')) : '';
 
     return (string) apply_filters('mh/github_token', $mod);
+}
+
+/**
+ * Constant, then environment. Empty when neither is set.
+ *
+ * Environment values are unslashed, sanitized, and limited to the characters
+ * GitHub uses in a personal access token.
+ */
+function github_token_from_environment(): string
+{
+    if (defined('MH_GITHUB_TOKEN') && is_string(MH_GITHUB_TOKEN)) {
+        $constant = github_token_normalize(MH_GITHUB_TOKEN);
+        if ($constant !== '') {
+            return $constant;
+        }
+    }
+
+    $fromGetenv = getenv('MH_GITHUB_TOKEN');
+    if (is_string($fromGetenv)) {
+        $fromGetenv = github_token_normalize(sanitize_text_field($fromGetenv));
+        if ($fromGetenv !== '') {
+            return $fromGetenv;
+        }
+    }
+
+    $fromEnv = isset($_ENV['MH_GITHUB_TOKEN']) ? github_token_normalize(sanitize_text_field(wp_unslash($_ENV['MH_GITHUB_TOKEN']))) : '';
+    if ($fromEnv !== '') {
+        return $fromEnv;
+    }
+
+    return isset($_SERVER['MH_GITHUB_TOKEN']) ? github_token_normalize(sanitize_text_field(wp_unslash($_SERVER['MH_GITHUB_TOKEN']))) : '';
+}
+
+/**
+ * Keep a value that is safe to send as a GitHub bearer token.
+ *
+ * The caller sanitizes request and environment input first.
+ */
+function github_token_normalize(string $value): string
+{
+    $value = function_exists('sanitize_text_field') ? sanitize_text_field($value) : trim(wp_strip_all_tags($value));
+    if ($value === '' || strlen($value) > 255) {
+        return '';
+    }
+
+    if (preg_match('/\A[A-Za-z0-9_]+\z/', $value) !== 1) {
+        return '';
+    }
+
+    return $value;
 }
 
 /**
