@@ -1,5 +1,10 @@
 # Changelog
 
+## Newsletter plugin 1.11.1 — Keep pages that share a utility slug
+
+- A draft, a child page, or a page with its own writing is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.
+- Only an extra top-level page whose content is still that shortcode is removed.
+
 ## 3.6.41 — Pages, links, booking, and the GitHub token
 
 - A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).

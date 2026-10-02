@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.11.1 =
+* A draft, a child page, or a page with its own content is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.
+* Only an extra top-level page whose content is still that shortcode is removed.
 
 = 1.11.0 =
 * Required pages are created on activation or in wp-admin, not on every front-end request.

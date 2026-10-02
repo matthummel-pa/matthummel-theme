@@ -37,6 +37,21 @@ function mhn_check(bool $ok, string $label): void
     }
 }
 
+/**
+ * Let a test insert a second page with a slug WordPress would otherwise rename.
+ *
+ * @param  mixed  $slug
+ */
+function mhn_keep_requested_slug($slug, int $postId, string $status, string $type, int $parent, string $original): string
+{
+    $forced = $GLOBALS['mhn_force_slug'] ?? '';
+    if (is_string($forced) && $forced !== '' && $original === $forced) {
+        return $original;
+    }
+
+    return is_string($slug) ? $slug : $original;
+}
+
 function mhn_png(string $alt, int $width, int $height): int
 {
     if (! function_exists('imagecreatetruecolor') || ! function_exists('imagepng')) {
@@ -189,6 +204,80 @@ mhn_check(! is_wp_error($draftId) && (int) $reused === (int) $draftId, 'ensure_p
 mhn_check((int) $reusedAgain === (int) $draftId, 'ensure_page does not create a second page');
 mhn_check($draftStill instanceof WP_Post && $draftStill->post_status === 'draft', 'a custom draft is not published');
 mhn_check(count($draftCopies) === 1, 'one page exists for the reused slug');
+
+$collapseSlug = 'mhn-collapse-keep';
+delete_option('mhn_page_id_'.$collapseSlug);
+$collapseLive = wp_insert_post([
+    'post_title' => 'Live utility',
+    'post_name' => $collapseSlug,
+    'post_status' => 'publish',
+    'post_type' => 'page',
+    'post_content' => '[mhn_unsubscribe]',
+], true);
+$collapseDraft = wp_insert_post([
+    'post_title' => 'Draft notes',
+    'post_name' => $collapseSlug,
+    'post_status' => 'draft',
+    'post_type' => 'page',
+    'post_content' => 'Notes that must survive',
+], true);
+$collapseChild = wp_insert_post([
+    'post_title' => 'Nested page',
+    'post_name' => $collapseSlug,
+    'post_status' => 'publish',
+    'post_type' => 'page',
+    'post_parent' => (int) $collapseLive,
+    'post_content' => 'Nested page that must survive',
+], true);
+$GLOBALS['mhn_force_slug'] = $collapseSlug;
+add_filter('wp_unique_post_slug', 'mhn_keep_requested_slug', 10, 6);
+$collapseClone = wp_insert_post([
+    'post_title' => 'Shortcode clone',
+    'post_name' => $collapseSlug,
+    'post_status' => 'publish',
+    'post_type' => 'page',
+    'post_content' => '[mhn_unsubscribe]',
+], true);
+remove_filter('wp_unique_post_slug', 'mhn_keep_requested_slug', 10);
+unset($GLOBALS['mhn_force_slug']);
+$collapseOwner = Newsletter\ensure_page($collapseSlug, 'Unsubscribe', '[mhn_unsubscribe]', '');
+mhn_check((int) $collapseOwner === (int) $collapseLive, 'ensure_page keeps the oldest shortcode page');
+$collapseDraftPost = get_post((int) $collapseDraft);
+$collapseChildPost = get_post((int) $collapseChild);
+mhn_check($collapseDraftPost instanceof WP_Post && $collapseDraftPost->post_name === $collapseSlug, 'a custom draft that shares the slug is kept');
+mhn_check($collapseChildPost instanceof WP_Post && $collapseChildPost->post_name === $collapseSlug, 'a child page that shares the slug is kept');
+mhn_check(! get_post((int) $collapseClone) instanceof WP_Post, 'an extra top-level shortcode copy is removed');
+$olderSlug = 'mhn-collapse-older-draft';
+delete_option('mhn_page_id_'.$olderSlug);
+$olderDraft = wp_insert_post([
+    'post_title' => 'Older draft',
+    'post_name' => $olderSlug,
+    'post_status' => 'draft',
+    'post_type' => 'page',
+    'post_content' => 'Older custom draft',
+], true);
+$GLOBALS['mhn_force_slug'] = $olderSlug;
+add_filter('wp_unique_post_slug', 'mhn_keep_requested_slug', 10, 6);
+$newerLive = wp_insert_post([
+    'post_title' => 'Newer live',
+    'post_name' => $olderSlug,
+    'post_status' => 'publish',
+    'post_type' => 'page',
+    'post_content' => '[mhn_unsubscribe]',
+], true);
+remove_filter('wp_unique_post_slug', 'mhn_keep_requested_slug', 10);
+unset($GLOBALS['mhn_force_slug']);
+$olderOwner = Newsletter\ensure_page($olderSlug, 'Unsubscribe', '[mhn_unsubscribe]', '');
+mhn_check((int) $olderOwner === (int) $newerLive, 'ensure_page keeps the published shortcode page when an older draft shares the slug');
+mhn_check(get_post((int) $olderDraft) instanceof WP_Post, 'the older custom draft is kept');
+mhn_check(get_post((int) $newerLive) instanceof WP_Post && get_post((int) $newerLive)->post_status === 'publish', 'the published utility page is not deleted');
+wp_delete_post((int) $collapseLive, true);
+wp_delete_post((int) $collapseDraft, true);
+wp_delete_post((int) $collapseChild, true);
+wp_delete_post((int) $olderDraft, true);
+wp_delete_post((int) $newerLive, true);
+delete_option('mhn_page_id_'.$collapseSlug);
+delete_option('mhn_page_id_'.$olderSlug);
 add_option('mhn_lock_page_mhnlockedslug', (string) time(), '', false);
 $blocked = Newsletter\ensure_page('mhnlockedslug', 'Should not exist', '[mhn_updates]', '');
 $blockedPages = get_posts([

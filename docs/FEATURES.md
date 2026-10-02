@@ -11,8 +11,9 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.6.39 unsubscribe and preferences)
 
 - `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
-- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.0). Do not add Mailchimp, HubSpot, or another ESP.
+- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.1). Do not add Mailchimp, HubSpot, or another ESP.
 - 1.11.0 provisions those pages only on activation or in wp-admin, stores the page IDs, and locks the insert. Unsubscribe, email preferences, and thank-you stay noindex with Rank Math.
+- 1.11.1 leaves a draft, a child page, or a page with its own content in place when the slug matches. Only an extra top-level shortcode copy is removed.
 - `[mhn_signup source="post"]` sits at the end of a single post. The welcome letter can add a checklist button when the checklist link setting is an https URL. It is empty by default.
 - 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
 
