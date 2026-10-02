@@ -8,7 +8,7 @@
  *
  * Optional: dispatch deploy.yml so CI rebuilds that zip.
  *
- * Auth: Appearance → Customize → GitHub token, this screen, or MH_GITHUB_TOKEN.
+ * Auth: MH_GITHUB_TOKEN in wp-config.php or the environment, then the theme setting.
  * Fine-grained PAT on matthummel-theme:
  *   - Contents: Read (install the zip)
  *   - Actions: Read and write (only if you trigger a rebuild)
@@ -141,7 +141,7 @@ function updater_dispatch(): array
     $r = updater_repo();
     $token = github_token();
     if ($token === '') {
-        return [false, __('No GitHub token is set. Paste one on this page (or under Appearance → Customize → GitHub) first.', 'sage')];
+        return [false, __('No GitHub token is set. Define MH_GITHUB_TOKEN in wp-config.php, or save one on this page.', 'sage')];
     }
     $url = 'https://api.github.com/repos/'.rawurlencode($r['owner']).'/'.rawurlencode($r['repo'])
         .'/actions/workflows/'.rawurlencode($r['workflow']).'/dispatches';
@@ -297,6 +297,22 @@ add_action('admin_menu', function () {
 });
 
 add_action('customize_register', function (\WP_Customize_Manager $wp): void {
+    $wp->add_section('mh_booking', [
+        'title' => __('Booking', 'sage'),
+        'priority' => 32,
+    ]);
+    $wp->add_setting('mh_booking_url', [
+        'default' => '',
+        'type' => 'theme_mod',
+        'sanitize_callback' => __NAMESPACE__.'\\mh_sanitize_booking_url',
+    ]);
+    $wp->add_control('mh_booking_url', [
+        'label' => __('Booking URL', 'sage'),
+        'description' => __('Optional. When this is set, Hire, Contact, and Start show a Book a 15-minute call link. Leave it empty to hide that link.', 'sage'),
+        'section' => 'mh_booking',
+        'type' => 'url',
+    ]);
+
     $wp->add_section('mh_github', [
         'title' => __('GitHub', 'sage'),
         'priority' => 33,
@@ -307,7 +323,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_control('mh_gh_token', [
         'label' => __('Access token', 'sage'),
-        'description' => __('Fine-grained PAT for theme updates. Contents: Read. Add Actions read/write only if you trigger rebuilds from this screen.', 'sage'),
+        'description' => __('Fallback only. Prefer defining MH_GITHUB_TOKEN in wp-config.php or the server environment. This field is not shown again after you save.', 'sage'),
         'section' => 'mh_github',
         'type' => 'password',
     ]);
@@ -496,7 +512,7 @@ function render_theme_updater_page(): void
         echo '<ol style="max-width:70ch">';
         echo '<li>'.wp_kses_post(__('Create a <strong>fine-grained personal access token</strong> at GitHub → Settings → Developer settings → Fine-grained tokens, scoped only to <code>matthummel-theme</code>.', 'sage')).'</li>';
         echo '<li>'.wp_kses_post(__('Give it <strong>Contents: Read</strong> to install the zip. Add <strong>Actions: Read and write</strong> only if you want this screen to trigger a rebuild.', 'sage')).'</li>';
-        echo '<li>'.esc_html__('Paste it below and save. You can also set MH_GITHUB_TOKEN in wp-config.php.', 'sage').'</li>';
+        echo '<li>'.esc_html__('Preferred: define MH_GITHUB_TOKEN in wp-config.php, or set that environment variable. The field below is a fallback and is not printed back.', 'sage').'</li>';
         echo '</ol>';
         echo '<form method="post" action="">';
         wp_nonce_field('mh_theme_token', 'mh_updater_save_nonce');
@@ -505,6 +521,11 @@ function render_theme_updater_page(): void
         printf('<p><button type="submit" class="button">%s</button></p>', esc_html__('Save token', 'sage'));
         echo '</form>';
     } else {
+        if (github_token_from_environment() !== '') {
+            echo '<p class="description">'.esc_html__('Using MH_GITHUB_TOKEN from wp-config.php or the server environment.', 'sage').'</p>';
+        } else {
+            echo '<p class="description">'.esc_html__('A token is saved in theme settings. Move it to MH_GITHUB_TOKEN in wp-config.php, then clear the saved copy.', 'sage').'</p>';
+        }
         echo '<form method="post" action="" style="margin-bottom:1.5rem">';
         wp_nonce_field('mh_theme_update', 'mh_updater_nonce');
         echo '<input type="hidden" name="mh_updater_action" value="pull" />';

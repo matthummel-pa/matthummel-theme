@@ -167,7 +167,69 @@ $unsubPage = get_page_by_path('unsubscribe');
 mhn_check($prefs instanceof WP_Post && has_shortcode($prefs->post_content, 'mhn_preferences'), 'preferences page exists');
 mhn_check($prefs instanceof WP_Post && $prefs->post_title === 'Manage preferences', 'preferences page title is Manage preferences');
 mhn_check($unsubPage instanceof WP_Post && has_shortcode($unsubPage->post_content, 'mhn_unsubscribe'), 'unsubscribe page exists');
+$draftId = wp_insert_post([
+    'post_title' => 'Draft already here',
+    'post_name' => 'mhn-draft-reuse',
+    'post_status' => 'draft',
+    'post_type' => 'page',
+    'post_content' => 'Keep this draft',
+], true);
+delete_option('mhn_page_id_mhn-draft-reuse');
+$reused = Newsletter\ensure_page('mhn-draft-reuse', 'Replacement', 'Leave this body', '');
+$reusedAgain = Newsletter\ensure_page('mhn-draft-reuse', 'Replacement', 'Leave this body', '');
+$draftStill = get_post((int) $draftId);
+$draftCopies = get_posts([
+    'post_type' => 'page',
+    'name' => 'mhn-draft-reuse',
+    'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+    'posts_per_page' => 10,
+    'suppress_filters' => true,
+]);
+mhn_check(! is_wp_error($draftId) && (int) $reused === (int) $draftId, 'ensure_page reuses a draft with the same slug');
+mhn_check((int) $reusedAgain === (int) $draftId, 'ensure_page does not create a second page');
+mhn_check($draftStill instanceof WP_Post && $draftStill->post_status === 'draft', 'a custom draft is not published');
+mhn_check(count($draftCopies) === 1, 'one page exists for the reused slug');
+add_option('mhn_lock_page_mhnlockedslug', (string) time(), '', false);
+$blocked = Newsletter\ensure_page('mhnlockedslug', 'Should not exist', '[mhn_updates]', '');
+$blockedPages = get_posts([
+    'post_type' => 'page',
+    'name' => 'mhnlockedslug',
+    'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+    'posts_per_page' => 10,
+    'suppress_filters' => true,
+]);
+mhn_check($blocked === 0 && $blockedPages === [], 'ensure_page does not insert while the slug lock is held');
+delete_option('mhn_lock_page_mhnlockedslug');
+$afterLock = Newsletter\ensure_page('mhnlockedslug', 'After lock', '[mhn_updates]', '');
+$afterLockAgain = Newsletter\ensure_page('mhnlockedslug', 'After lock', '[mhn_updates]', '');
+mhn_check($afterLock > 0 && $afterLockAgain === $afterLock, 'ensure_page creates one page after the lock is released');
+mhn_check(Newsletter\is_noindex_utility_slug('unsubscribe'), 'unsubscribe is a noindex utility slug');
+mhn_check(Newsletter\is_noindex_utility_slug('unsubscribe-113'), 'numbered unsubscribe copies are noindex slugs');
+mhn_check(Newsletter\is_noindex_utility_slug('email-preferences'), 'preferences is a noindex utility slug');
+mhn_check(Newsletter\is_noindex_utility_slug('thank-you'), 'thank-you is a noindex utility slug');
+mhn_check(! Newsletter\is_noindex_utility_slug('get-updates'), 'get updates stays indexable');
+wp_delete_post((int) $draftId, true);
+wp_delete_post($afterLock, true);
+delete_option('mhn_page_id_mhn-draft-reuse');
+delete_option('mhn_page_id_mhnlockedslug');
 mhn_check(Newsletter\settings()['auto_send'] === 0, 'auto-send is off');
+mhn_check(Newsletter\settings()['checklist_url'] === '', 'checklist link is empty by default');
+$postForm = Newsletter\shortcode_signup(['source' => 'post']);
+mhn_check(str_contains($postForm, 'value="post"'), 'post signup sends the post source');
+mhn_check(str_contains($postForm, 'name="mhn_signup_nonce"'), 'post signup includes the nonce');
+mhn_check(str_contains($postForm, 'name="mhn_hp"'), 'post signup includes the honeypot');
+mhn_check(str_contains($postForm, 'name="mhn_email"'), 'post signup includes email');
+mhn_check(str_contains($postForm, 'name="mhn_fname"'), 'post signup includes first name');
+mhn_check(str_contains($postForm, 'WordPress Handoff Checklist'), 'post signup mentions the checklist');
+$welcomePlain = Newsletter\apply_layout('welcome', '');
+mhn_check(! str_contains($welcomePlain, 'WordPress Handoff Checklist'), 'welcome omits the checklist link until it is set');
+$savedSettings = get_option('mhn_settings', []);
+$withChecklist = is_array($savedSettings) ? $savedSettings : [];
+$withChecklist['checklist_url'] = 'https://matthummel.com/wordpress-handoff-checklist/';
+update_option('mhn_settings', $withChecklist);
+$welcomeLinked = Newsletter\apply_layout('welcome', '');
+mhn_check(str_contains($welcomeLinked, 'https://matthummel.com/wordpress-handoff-checklist/'), 'welcome includes the checklist link');
+update_option('mhn_settings', is_array($savedSettings) ? $savedSettings : []);
 mhn_check(Newsletter\settings()['track_opens'] === 0 && Newsletter\settings()['track_clicks'] === 0, 'tracking is off');
 
 $beforeMail = count($GLOBALS['mhn_outbox']);

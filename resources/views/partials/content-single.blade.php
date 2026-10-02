@@ -206,6 +206,13 @@
           {!! \App\field_html('write_share_note', __('More examples on the <a href="/code/">Code</a> page. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
         </p>
 
+        @if (shortcode_exists('mhn_signup'))
+          <aside class="post-signup" aria-labelledby="mhn-signup-post-title">
+            {{-- Shortcode HTML is escaped in the plugin. --}}
+            {!! do_shortcode('[mhn_signup source="post"]') !!}
+          </aside>
+        @endif
+
         {{-- Author bio --}}
         <div class="post-author-bio">
           @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])

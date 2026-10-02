@@ -1,10 +1,25 @@
 # Changelog
 
-## 3.6.41 — Now page activity and note
+## 3.6.42 — Now page activity and note
 
 - The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).
 - A Right now band lists public GitHub activity, recent journal posts, and profile links plus public DEV.to and Bluesky posts when those feeds respond.
 - Send a note emails me through the contact form. Open a GitHub note starts an issue on this theme repo. Text me appears only when an SMS number is saved, and it opens the visitor’s own phone.
+
+## 3.6.41 — Pages, links, booking, and the GitHub token
+
+- A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
+- Footer and terms links use the WordPress privacy policy page when it is set, then the Privacy and Terms templates. The old `/privacy-policy/` and `/terms-of-use/` paths are gone.
+- Appearance → Customize → Booking stores an optional booking URL (`mh_booking_url`). Hire, Contact, and Start show “Book a 15-minute call” only when that URL is set.
+- GitHub requests read `MH_GITHUB_TOKEN` from wp-config.php or the environment before the saved theme setting. The token is not printed.
+
+## Newsletter plugin 1.11.0 — One unsubscribe page
+
+- The plugin creates Get updates, Unsubscribe, and Manage preferences on activation or in wp-admin. A front-end page load no longer creates them.
+- It stores each page ID and looks up the slug in any status before inserting. A lock stops overlapping requests from making `/unsubscribe-2/` and the rest. The lock is an insert that fails when the row exists, because `add_option()` updates an existing row. If two pages still share a slug, the older one is kept.
+- Unsubscribe, email preferences, and thank-you stay `noindex` when Rank Math is active, including numbered copies such as `/unsubscribe-113/`.
+- Single posts can end with `[mhn_signup source="post"]`. It uses the same signup handler, nonce, honeypot, and email and first-name fields. The note mentions a free WordPress Handoff Checklist.
+- Newsletter settings has a checklist link. It stays empty until you paste an https URL. The welcome letter then includes that button.
 
 ## Newsletter plugin 1.10.0 — Signup block
 

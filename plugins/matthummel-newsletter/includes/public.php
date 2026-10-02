@@ -19,17 +19,76 @@ function public_assets(): void
 }
 
 /**
+ * Utility pages stay out of the index, including numbered copies from the old race.
+ */
+function is_noindex_utility_page(): bool
+{
+    if (! function_exists('is_page') || ! is_page()) {
+        return false;
+    }
+
+    $post = get_queried_object();
+    if (! $post instanceof \WP_Post) {
+        return false;
+    }
+
+    return is_noindex_utility_slug((string) $post->post_name);
+}
+
+/**
+ * Core robots. Values are booleans.
+ *
  * @param  array<string, bool|string>  $robots
  * @return array<string, bool|string>
  */
 function robots(array $robots): array
 {
-    if (is_page(['email-preferences', 'unsubscribe'])) {
-        $robots['noindex'] = true;
-        $robots['nofollow'] = true;
+    if (! is_noindex_utility_page()) {
+        return $robots;
     }
 
+    $robots['noindex'] = true;
+    $robots['nofollow'] = true;
+
     return $robots;
+}
+
+/**
+ * Rank Math prints its own robots tag and ignores wp_robots.
+ * Its array uses the directive as the value (`index` => `noindex`).
+ *
+ * @param  array<string, string>  $robots
+ * @return array<string, string>
+ */
+function rank_math_robots(array $robots): array
+{
+    if (! is_noindex_utility_page()) {
+        return $robots;
+    }
+
+    unset($robots['index'], $robots['follow'], $robots['noindex'], $robots['nofollow']);
+    $robots['index'] = 'noindex';
+    $robots['follow'] = 'nofollow';
+
+    return $robots;
+}
+
+/**
+ * [mhn_signup source="post"] uses the same handler as the page and footer forms.
+ *
+ * @param  array<string, string>|string  $atts
+ */
+function shortcode_signup(mixed $atts = []): string
+{
+    $atts = shortcode_atts([
+        'source' => 'page',
+    ], is_array($atts) ? $atts : [], 'mhn_signup');
+    $source = sanitize_key((string) $atts['source']);
+    if (! in_array($source, ['page', 'footer', 'post'], true)) {
+        $source = 'page';
+    }
+
+    return signup_form($source, $source !== 'footer');
 }
 
 function shortcode_updates(): string
@@ -145,7 +204,16 @@ function request_has_subscriber_secret(): bool
         }
     }
 
-    return function_exists('is_page') && is_page(['email-preferences', 'unsubscribe']);
+    if (! function_exists('is_page') || ! is_page()) {
+        return false;
+    }
+
+    $post = get_queried_object();
+    if (! $post instanceof \WP_Post) {
+        return false;
+    }
+
+    return preg_match('/^(?:email-preferences|unsubscribe)(?:-\d+)?$/', (string) $post->post_name) === 1;
 }
 
 function send_privacy_headers(): void
@@ -518,6 +586,9 @@ function signup_form(string $source, bool $showName): string
     $invalid = in_array($status, ['error', 'mail'], true);
     $compact = $source === 'footer';
     $html = '<div class="'.($compact ? 'mhn-signup mhn-signup-compact' : 'mhn-signup').'" id="'.($compact ? 'footer-signup-form' : 'signup').'">';
+    if ($source === 'post') {
+        $html .= '<h2 class="mhn-signup__title" id="mhn-signup-post-title">'.esc_html__('Get the checklist', 'matthummel-newsletter').'</h2>';
+    }
     $html .= signup_notice($status);
     $formClass = $compact ? 'footer-follow__form mhn-form' : 'mhn-form';
     $html .= '<form class="'.esc_attr($formClass).'" method="post" action="'.esc_url(admin_url('admin-post.php')).'" novalidate>';
@@ -528,8 +599,9 @@ function signup_form(string $source, bool $showName): string
     $html .= '<input id="mhn-hp-'.$source.'" type="text" name="mhn_hp" value="" tabindex="-1" autocomplete="off"></p>';
 
     if ($showName) {
-        $html .= '<div class="mhn-field"><label for="mhn-fname">'.esc_html__('First name', 'matthummel-newsletter').' <span>'.esc_html__('(optional)', 'matthummel-newsletter').'</span></label>';
-        $html .= '<input id="mhn-fname" name="mhn_fname" type="text" autocomplete="given-name"></div>';
+        $nameId = 'mhn-fname-'.$source;
+        $html .= '<div class="mhn-field"><label for="'.esc_attr($nameId).'">'.esc_html__('First name', 'matthummel-newsletter').' <span>'.esc_html__('(optional)', 'matthummel-newsletter').'</span></label>';
+        $html .= '<input id="'.esc_attr($nameId).'" name="mhn_fname" type="text" autocomplete="given-name" maxlength="80"></div>';
     }
 
     $emailId = 'mhn-email-'.$source;
@@ -553,7 +625,10 @@ function signup_form(string $source, bool $showName): string
     $html .= '<button type="submit" class="btn">'.esc_html__('Sign up', 'matthummel-newsletter').'</button>';
     $html .= '</div>';
     if (! $compact) {
-        $html .= '<p class="mhn-hint" id="'.esc_attr($hintId).'">'.esc_html__('I keep the address on this site. I do not send it to a newsletter service.', 'matthummel-newsletter').'</p>';
+        $hint = $source === 'post'
+            ? __('Sign up for occasional notes and a free WordPress Handoff Checklist. I keep the address on this site.', 'matthummel-newsletter')
+            : __('I keep the address on this site. I do not send it to a newsletter service.', 'matthummel-newsletter');
+        $html .= '<p class="mhn-hint" id="'.esc_attr($hintId).'">'.esc_html($hint).'</p>';
     }
     if ($invalid) {
         $html .= '<p class="mhn-error" id="'.esc_attr($errorId).'">'.esc_html__('Use a valid email, then try again.', 'matthummel-newsletter').'</p>';

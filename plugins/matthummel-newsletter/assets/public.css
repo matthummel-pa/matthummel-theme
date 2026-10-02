@@ -3,6 +3,19 @@
   max-width: 40rem;
 }
 
+.mhn-signup__title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display, Inter, system-ui, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.post-signup {
+  margin: 2rem 0;
+}
+
 .mhn-signup:not(.mhn-signup-compact) {
   padding: 1.5rem 1.5rem 1.25rem;
   background: var(--white, #fff);

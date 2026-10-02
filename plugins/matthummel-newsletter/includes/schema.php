@@ -40,7 +40,9 @@ function deactivate(): void
 
 function boot(): void
 {
-    maybe_upgrade();
+    if (upgrade_is_due() && upgrade_context_allowed()) {
+        maybe_upgrade();
+    }
 
     add_action('init', __NAMESPACE__.'\\load_textdomain');
     add_action('init', __NAMESPACE__.'\\register_type');
@@ -90,8 +92,10 @@ function boot(): void
     add_shortcode('mhn_updates', __NAMESPACE__.'\\shortcode_updates');
     add_shortcode('mhn_preferences', __NAMESPACE__.'\\shortcode_preferences');
     add_shortcode('mhn_unsubscribe', __NAMESPACE__.'\\shortcode_unsubscribe');
+    add_shortcode('mhn_signup', __NAMESPACE__.'\\shortcode_signup');
     add_action('template_redirect', __NAMESPACE__.'\\on_template_redirect');
     add_filter('wp_robots', __NAMESPACE__.'\\robots');
+    add_filter('rank_math/frontend/robots', __NAMESPACE__.'\\rank_math_robots', 99);
     add_action('phpmailer_init', __NAMESPACE__.'\\on_phpmailer');
     add_filter('wp_mail_from', __NAMESPACE__.'\\filter_from');
     add_filter('wp_mail_from_name', __NAMESPACE__.'\\filter_from_name');
@@ -109,16 +113,52 @@ function load_textdomain(): void
     );
 }
 
-function maybe_upgrade(): void
+function upgrade_is_due(): bool
+{
+    return upgrade_still_due();
+}
+
+/**
+ * Read the version flags again. The lock holder may have finished the upgrade.
+ */
+function upgrade_still_due(): bool
 {
     $installed = (string) get_option('mhn_version', '');
-    if ($installed === MHN_VERSION && (string) get_option('mhn_db_version') === '4') {
+
+    return $installed !== MHN_VERSION || (string) get_option('mhn_db_version') !== '4';
+}
+
+/**
+ * Page creation used to run on the front end until the version flag was saved.
+ * Keep that work on activation and wp-admin so anonymous requests cannot race it.
+ */
+function upgrade_context_allowed(): bool
+{
+    if (! empty($GLOBALS['mhn_activating'])) {
+        return true;
+    }
+    if (wp_doing_ajax() || wp_doing_cron()) {
+        return false;
+    }
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return false;
+    }
+
+    return is_admin();
+}
+
+function maybe_upgrade(): void
+{
+    if (! acquire_named_lock('mhn_upgrade_lock')) {
         return;
     }
 
     $GLOBALS['mhn_activating'] = true;
 
     try {
+        if (! upgrade_still_due()) {
+            return;
+        }
         install_tables();
         migrate_legacy();
         ensure_pages();
@@ -126,6 +166,7 @@ function maybe_upgrade(): void
         update_option('mhn_version', MHN_VERSION);
     } finally {
         $GLOBALS['mhn_activating'] = false;
+        release_named_lock('mhn_upgrade_lock');
     }
 }
 
@@ -356,6 +397,10 @@ function migrate_legacy(): int
 
 function ensure_pages(): void
 {
+    if (! upgrade_context_allowed()) {
+        return;
+    }
+
     ensure_page(
         'get-updates',
         __('Get updates', 'matthummel-newsletter'),
@@ -379,11 +424,16 @@ function ensure_pages(): void
         '[mhn_unsubscribe]',
         'template-get-updates.blade.php'
     );
+
+    $thanks = find_owned_page('thank-you');
+    if ($thanks instanceof \WP_Post) {
+        mark_utility_noindex($thanks);
+    }
 }
 
 function sync_owned_title(string $slug, string $title, string $shortcode): void
 {
-    $page = get_page_by_path($slug);
+    $page = find_owned_page($slug);
     if (! $page instanceof \WP_Post) {
         return;
     }
@@ -400,32 +450,293 @@ function sync_owned_title(string $slug, string $title, string $shortcode): void
     ]);
 }
 
+/**
+ * Reuse a stored page ID, then any page with this slug, before inserting.
+ * A lock stops two requests from both deciding the page is missing.
+ */
 function ensure_page(string $slug, string $title, string $shortcode, string $template): int
 {
-    $existing = get_page_by_path($slug);
-    if ($existing instanceof \WP_Post) {
-        assign_owned_template($existing, $shortcode, $template);
-
-        return (int) $existing->ID;
-    }
-
-    $id = wp_insert_post([
-        'post_title' => $title,
-        'post_name' => $slug,
-        'post_status' => 'publish',
-        'post_type' => 'page',
-        'post_content' => $shortcode,
-    ], true);
-
-    if (is_wp_error($id) || ! $id) {
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
         return 0;
     }
 
-    if ($template !== '' && theme_view_exists($template)) {
-        update_post_meta((int) $id, '_wp_page_template', $template);
+    $existing = find_owned_page($slug);
+    if ($existing instanceof \WP_Post) {
+        return reuse_owned_page($existing, $slug, $shortcode, $template);
     }
 
-    return (int) $id;
+    $lock = 'mhn_lock_page_'.$slug;
+    if (! acquire_named_lock($lock)) {
+        $waited = wait_for_owned_page($slug);
+
+        return $waited instanceof \WP_Post ? (int) $waited->ID : 0;
+    }
+
+    try {
+        $existing = find_owned_page($slug);
+        if ($existing instanceof \WP_Post) {
+            return reuse_owned_page($existing, $slug, $shortcode, $template);
+        }
+
+        $id = wp_insert_post([
+            'post_title' => $title,
+            'post_name' => $slug,
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_content' => $shortcode,
+        ], true);
+
+        if (is_wp_error($id) || ! $id) {
+            return 0;
+        }
+
+        $post = get_post((int) $id);
+        if (! $post instanceof \WP_Post) {
+            return 0;
+        }
+
+        if ($post->post_name !== $slug) {
+            wp_delete_post((int) $post->ID, true);
+            $winner = find_owned_page($slug);
+
+            return $winner instanceof \WP_Post ? (int) $winner->ID : 0;
+        }
+
+        return reuse_owned_page($post, $slug, $shortcode, $template);
+    } finally {
+        release_named_lock($lock);
+    }
+}
+
+function reuse_owned_page(\WP_Post $existing, string $slug, string $shortcode, string $template): int
+{
+    $ownerId = collapse_same_slug($slug);
+    $owner = get_post($ownerId);
+    if (! $owner instanceof \WP_Post) {
+        $owner = $existing;
+    }
+    finish_owned_page($owner, $slug, $shortcode, $template);
+
+    return (int) $owner->ID;
+}
+
+function finish_owned_page(\WP_Post $page, string $slug, string $shortcode, string $template): void
+{
+    if ($page->post_status === 'trash') {
+        wp_untrash_post($page->ID);
+        $restored = get_post($page->ID);
+        if ($restored instanceof \WP_Post) {
+            $page = $restored;
+        }
+    }
+
+    if ($page->post_status !== 'publish' && trim((string) $page->post_content) === $shortcode) {
+        wp_update_post([
+            'ID' => $page->ID,
+            'post_status' => 'publish',
+        ]);
+    }
+
+    assign_owned_template($page, $shortcode, $template);
+    mark_utility_noindex($page);
+    remember_owned_page($slug, (int) $page->ID);
+}
+
+function find_owned_page(string $slug): ?\WP_Post
+{
+    $slug = sanitize_title($slug);
+    if ($slug === '') {
+        return null;
+    }
+
+    $storedId = (int) get_option(page_option_key($slug), 0);
+    if ($storedId > 0) {
+        $stored = get_post($storedId);
+        if ($stored instanceof \WP_Post && $stored->post_type === 'page' && $stored->post_status !== 'auto-draft') {
+            return $stored;
+        }
+    }
+
+    $found = owned_pages_named($slug);
+    if ($found === []) {
+        $found = owned_pages_named($slug.'__trashed');
+    }
+    $page = $found[0] ?? null;
+    if (! $page instanceof \WP_Post) {
+        return null;
+    }
+
+    remember_owned_page($slug, (int) $page->ID);
+
+    return $page;
+}
+
+/**
+ * @return list<\WP_Post>
+ */
+function owned_pages_named(string $slug): array
+{
+    $found = get_posts([
+        'post_type' => 'page',
+        'name' => $slug,
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+        'posts_per_page' => 1,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'no_found_rows' => true,
+        'suppress_filters' => true,
+    ]);
+
+    return array_values($found);
+}
+
+function is_noindex_utility_slug(string $slug): bool
+{
+    $slug = sanitize_title($slug);
+    if (in_array($slug, ['email-preferences', 'unsubscribe', 'thank-you'], true)) {
+        return true;
+    }
+
+    return preg_match('/^(?:email-preferences|unsubscribe|thank-you)-\d+$/', $slug) === 1;
+}
+
+function wait_for_owned_page(string $slug): ?\WP_Post
+{
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $page = find_owned_page($slug);
+        if ($page instanceof \WP_Post) {
+            return $page;
+        }
+        usleep(200000);
+    }
+
+    return null;
+}
+
+function page_option_key(string $slug): string
+{
+    return 'mhn_page_id_'.sanitize_title($slug);
+}
+
+function remember_owned_page(string $slug, int $id): void
+{
+    if ($id < 1) {
+        return;
+    }
+
+    $key = page_option_key($slug);
+    if ((int) get_option($key, 0) === $id) {
+        return;
+    }
+
+    update_option($key, $id, false);
+}
+
+/**
+ * A plain insert fails when the row exists. add_option() updates that row on
+ * current WordPress, so two requests would both believe they held the lock.
+ * A stale lock older than two minutes can be taken again.
+ */
+function acquire_named_lock(string $key): bool
+{
+    $key = sanitize_key($key);
+    if ($key === '') {
+        return false;
+    }
+    if (insert_lock_row($key)) {
+        return true;
+    }
+
+    $started = (int) get_option($key, 0);
+    if ($started > 0 && (time() - $started) < 120) {
+        return false;
+    }
+
+    delete_option($key);
+
+    return insert_lock_row($key);
+}
+
+function insert_lock_row(string $key): bool
+{
+    global $wpdb;
+
+    $suppressed = $wpdb->suppress_errors(true);
+    $inserted = $wpdb->query($wpdb->prepare(
+        "INSERT INTO `{$wpdb->options}` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, %s)",
+        $key,
+        (string) time(),
+        'off'
+    ));
+    $wpdb->suppress_errors($suppressed);
+    if (! $inserted) {
+        $error = $wpdb->last_error;
+        if (is_string($error) && (str_contains($error, 'UNIQUE') || str_contains($error, 'Duplicate'))) {
+            $wpdb->last_error = '';
+        }
+
+        return false;
+    }
+
+    wp_cache_delete($key, 'options');
+
+    return true;
+}
+
+/**
+ * Keep the oldest page with this exact slug and delete the rest.
+ */
+function collapse_same_slug(string $slug): int
+{
+    $found = get_posts([
+        'post_type' => 'page',
+        'name' => $slug,
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+        'posts_per_page' => 20,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'no_found_rows' => true,
+        'suppress_filters' => true,
+    ]);
+
+    $winner = 0;
+    foreach ($found as $page) {
+        if ($winner === 0) {
+            $winner = (int) $page->ID;
+
+            continue;
+        }
+
+        wp_delete_post((int) $page->ID, true);
+    }
+
+    return $winner;
+}
+
+function release_named_lock(string $key): void
+{
+    $key = sanitize_key($key);
+    if ($key === '') {
+        return;
+    }
+
+    delete_option($key);
+}
+
+function mark_utility_noindex(\WP_Post $page): void
+{
+    if (! is_noindex_utility_slug((string) $page->post_name)) {
+        return;
+    }
+
+    $robots = get_post_meta($page->ID, 'rank_math_robots', true);
+    $wanted = ['noindex', 'nofollow'];
+    if ($robots === $wanted) {
+        return;
+    }
+
+    update_post_meta($page->ID, 'rank_math_robots', $wanted);
 }
 
 function theme_view_exists(string $template): bool
@@ -485,13 +796,13 @@ function cron_schedules(array $schedules): array
 
 function page_url(string $slug): string
 {
-    $page = get_page_by_path($slug);
-    if ($page instanceof \WP_Post) {
+    $page = find_owned_page($slug);
+    if ($page instanceof \WP_Post && $page->post_status !== 'trash') {
         $url = get_permalink($page);
         if (is_string($url) && $url !== '') {
             return $url;
         }
     }
 
-    return home_url('/'.$slug.'/');
+    return home_url('/'.sanitize_title($slug).'/');
 }
