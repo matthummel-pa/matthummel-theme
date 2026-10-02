@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.42 — Now page activity and note
+
+- The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).
+- A Right now band lists public GitHub activity, recent journal posts, and profile links plus public DEV.to and Bluesky posts when those feeds respond.
+- Send a note emails me through the contact form. Open a GitHub note starts an issue on this theme repo. Text me appears only when an SMS number is saved, and it opens the visitor’s own phone.
+
 ## 3.6.41 — Pages, links, booking, and the GitHub token
 
 - A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).

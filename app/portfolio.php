@@ -130,6 +130,149 @@ function mh_social_links(): array
     return $links;
 }
 
+/**
+ * Short label for a GitHub public event type on the Now page.
+ */
+function mh_github_event_label(string $type): string
+{
+    return match ($type) {
+        'PushEvent' => __('Push', 'sage'),
+        'PullRequestEvent' => __('Pull request', 'sage'),
+        'PullRequestReviewEvent' => __('Review', 'sage'),
+        'IssuesEvent' => __('Issue', 'sage'),
+        'IssueCommentEvent' => __('Comment', 'sage'),
+        'CreateEvent' => __('Created', 'sage'),
+        'ReleaseEvent' => __('Release', 'sage'),
+        'ForkEvent' => __('Fork', 'sage'),
+        'WatchEvent' => __('Star', 'sage'),
+        'PublicEvent' => __('Public', 'sage'),
+        default => __('Activity', 'sage'),
+    };
+}
+
+/**
+ * Label and machine date for the Now page “last updated” line.
+ *
+ * A filled `now_updated` field wins. Otherwise the Now page’s last edit.
+ *
+ * @return array{label: string, iso: string}
+ */
+function mh_now_updated(?int $postId = null): array
+{
+    $custom = trim(field('now_updated', '', $postId));
+    if ($custom !== '') {
+        return ['label' => $custom, 'iso' => ''];
+    }
+
+    $postId = $postId ?: (int) get_the_ID();
+    $post = $postId > 0 ? get_post($postId) : null;
+    if (! $post instanceof \WP_Post) {
+        $found = get_page_by_path('now');
+        $post = $found instanceof \WP_Post ? $found : null;
+    }
+    if ($post instanceof \WP_Post) {
+        $ts = strtotime($post->post_modified_gmt.' UTC');
+        if ($ts !== false) {
+            return [
+                'label' => date_i18n(get_option('date_format') ?: 'F j, Y', $ts),
+                'iso' => gmdate('c', $ts),
+            ];
+        }
+    }
+
+    return ['label' => date_i18n('F Y'), 'iso' => ''];
+}
+
+/**
+ * Optional SMS number for the Now page. Empty unless a theme mod or page field is set.
+ */
+function mh_now_sms_number(?int $postId = null): string
+{
+    $raw = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_now_sms', '')) : '';
+    if ($raw === '') {
+        $raw = trim(field('now_sms', '', $postId));
+    }
+    $hasPlus = str_starts_with($raw, '+');
+    $digits = preg_replace('/\D+/', '', $raw) ?? '';
+    $len = strlen($digits);
+    if ($len < 10 || $len > 15) {
+        return '';
+    }
+
+    return $hasPlus ? '+'.$digits : $digits;
+}
+
+/**
+ * `sms:` link that opens the visitor’s own messaging app. Empty when no number is set.
+ */
+function mh_now_sms_href(?int $postId = null): string
+{
+    $number = mh_now_sms_number($postId);
+    if ($number === '') {
+        return '';
+    }
+
+    $body = trim(field('now_sms_body', __('Hi — I saw the Now page.', 'sage'), $postId));
+    if ($body === '') {
+        $body = __('Hi — I saw the Now page.', 'sage');
+    }
+    if (function_exists('mb_strlen') && mb_strlen($body) > 160) {
+        $body = mb_substr($body, 0, 157).'...';
+    } elseif (strlen($body) > 160) {
+        $body = substr($body, 0, 157).'...';
+    }
+
+    return 'sms:'.$number.'?body='.rawurlencode($body);
+}
+
+/**
+ * GitHub issue URL for a visitor who needs help now.
+ *
+ * Opens a new issue on this theme repo with a short prompt already filled in.
+ */
+function mh_github_help_issue_url(): string
+{
+    $login = rawurlencode(mh_github_login());
+    $title = rawurlencode('Need help now');
+    $body = rawurlencode("What I need help with:\n\n\nLink (if you have one):\n\n");
+
+    return "https://github.com/{$login}/matthummel-theme/issues/new?title={$title}&body={$body}";
+}
+
+/**
+ * Recent public posts from DEV.to and Bluesky for the Now page.
+ *
+ * @return list<array{network: string, title: string, url: string, when: string, text: string}>
+ */
+function mh_now_social_feed(int $limit = 4): array
+{
+    $limit = max(1, min(6, $limit));
+    $items = [];
+
+    foreach (array_slice(mh_devto_posts($limit), 0, $limit) as $post) {
+        $title = trim((string) ($post['title'] ?? ''));
+        $url = trim((string) ($post['url'] ?? ''));
+        if ($title === '' || $url === '') {
+            continue;
+        }
+        $items[] = [
+            'network' => 'DEV.to',
+            'title' => $title,
+            'url' => $url,
+            'when' => (string) ($post['date'] ?? ''),
+            'text' => (string) ($post['ex'] ?? ''),
+        ];
+    }
+
+    if (function_exists(__NAMESPACE__.'\\mh_bluesky_public_posts')) {
+        foreach (mh_bluesky_public_posts($limit) as $post) {
+            $items[] = $post;
+        }
+    }
+
+    return $items;
+}
+
 /** Featured GitHub codebases to highlight on Code and Home. */
 function mh_featured_repos(): array
 {

@@ -23,6 +23,68 @@ function mh_bluesky_handle(): string
 }
 
 /**
+ * Recent public Bluesky posts (no app password).
+ *
+ * @return list<array{network: string, title: string, url: string, when: string, text: string}>
+ */
+function mh_bluesky_public_posts(int $limit = 4): array
+{
+    $limit = max(1, min(8, $limit));
+    $handle = mh_bluesky_handle();
+    $key = 'mh_bsky_pub_'.md5($handle.(string) $limit);
+    $cached = get_transient($key);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $out = [];
+    $url = add_query_arg([
+        'actor' => $handle,
+        'filter' => 'posts_no_replies',
+        'limit' => $limit,
+    ], 'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed');
+    $res = wp_remote_get($url, [
+        'timeout' => 8,
+        'headers' => [
+            'Accept' => 'application/json',
+            'User-Agent' => 'matthummel-theme',
+        ],
+    ]);
+
+    if (! is_wp_error($res) && (int) wp_remote_retrieve_response_code($res) === 200) {
+        $json = json_decode((string) wp_remote_retrieve_body($res), true);
+        $feed = is_array($json) ? ($json['feed'] ?? []) : [];
+        foreach ((array) $feed as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $post = is_array($row['post'] ?? null) ? $row['post'] : [];
+            $record = is_array($post['record'] ?? null) ? $post['record'] : [];
+            $text = trim((string) ($record['text'] ?? ''));
+            $uri = (string) ($post['uri'] ?? '');
+            $rkey = $uri !== '' ? basename(str_replace('\\', '/', $uri)) : '';
+            if ($text === '' || $rkey === '') {
+                continue;
+            }
+            $out[] = [
+                'network' => 'Bluesky',
+                'title' => wp_trim_words($text, 12, '…'),
+                'url' => 'https://bsky.app/profile/'.rawurlencode($handle).'/post/'.rawurlencode($rkey),
+                'when' => (string) ($post['indexedAt'] ?? ''),
+                'text' => wp_trim_words($text, 28, '…'),
+            ];
+            if (count($out) >= $limit) {
+                break;
+            }
+        }
+    }
+
+    set_transient($key, $out, $out === [] ? 15 * MINUTE_IN_SECONDS : 3 * HOUR_IN_SECONDS);
+
+    return $out;
+}
+
+/**
  * App password from Customizer or wp-config constant.
  */
 function mh_bluesky_app_password(): string

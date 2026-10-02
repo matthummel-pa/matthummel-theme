@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.42 Now page)
+
+- `/now/` keeps the hero, on-this-page pills, focus blocks, sidebar, and closing band.
+- Right now lists real GitHub events and recently updated repos, three journal posts, and profile links. DEV.to and Bluesky rows come from public feeds and disappear when a feed is empty.
+- Send a note posts through `mh_contact` (nonce, honeypot, the same mail path as Contact). Text me is an `sms:` link and stays hidden until `now_sms` or the `mh_now_sms` theme mod has a number. No cell number ships in the theme.
+
 ## Editor’s notes (3.6.40 public fatal log)
 
 - `mh-last-fatal.txt` is no longer in the theme. It was publicly readable and included server paths.
@@ -432,7 +438,7 @@ What the 3.x Sage theme does, and where it lives.
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
+| Now | Focus blocks, real last-updated date, Right now activity (GitHub, journal, social), email note, and a GitHub issue link. Text me is an `sms:` link only when a number is saved | `template-now.blade.php`, `partials/now-activity.blade.php`, `partials/now-note.blade.php`, `resources/js/now-desk.js`, `mh_now_updated()`, `mh_github_help_issue_url()`, `mh_now_sms_href()` |
 | Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT**; singles have screenshot lightbox, palette, like/star, visitor notes, compact contact | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `partials/project-react.blade.php`, `partials/contact-form.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `resources/js/project-feedback.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
