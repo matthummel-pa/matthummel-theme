@@ -21,15 +21,19 @@ add_action('send_headers', function (): void {
  * No CSP here: Site Kit, gtag, and LiteSpeed inline scripts would need a nonce plan first.
  * HSTS stays on this host only; subdomains (demos) are not asserted.
  */
-add_action('send_headers', function (): void {
+add_action('send_headers', function (\WP $wp): void {
     if (headers_sent()) {
         return;
     }
 
     header('X-Content-Type-Options: nosniff');
-    header('X-Frame-Options: SAMEORIGIN');
+    // Post embeds (/slug/embed/) must stay frameable on other sites.
+    if (empty($wp->query_vars['embed'])) {
+        header('X-Frame-Options: SAMEORIGIN');
+    }
     header('Referrer-Policy: strict-origin-when-cross-origin');
-    header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()');
+    // No payment=(): the shop's express checkout (Apple Pay / Google Pay) uses the Payment Request API.
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
     if (is_ssl()) {
         header('Strict-Transport-Security: max-age=31536000');
     }

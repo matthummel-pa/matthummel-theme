@@ -4,8 +4,8 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.46 site audit)
 
-- Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts.
-- Hardening block at the end of `app/filters.php`: `wp_generator` off, `xmlrpc_enabled` false, `/wp/v2/users*` removed from `rest_endpoints` for visitors, numeric `?author=` 301s home. Do not add a login-lockout plugin here; the host rate-limits.
+- Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. `X-Frame-Options` is skipped on `/slug/embed/` so oEmbed keeps working; no `payment=()` because express checkout uses the Payment Request API. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts. These headers do not reach wp-admin, REST, or static files; that would be a root `.htaccess`.
+- Hardening block at the end of `app/filters.php`: `wp_generator` off, `xmlrpc_enabled` false plus pingback methods and the `X-Pingback` header removed, `/wp/v2/users*` removed from `rest_endpoints` for visitors (authenticated clients keep them — auth runs before `rest_endpoints`), any `?author=` value 301s home. Do not add a login-lockout plugin here; the host rate-limits.
 - Term archives: `mh_seo_term_title()` falls back to “{Term} articles and notes | Brand”; `mh_seo_term_description()` falls back to a written sentence, clipped at 155.
 - `partials/page-nav-track.blade.php`: no `role="list"` / `listitem`. The `<nav aria-label="On this page">` is the landmark.
 - `<aside>` is for content outside `<main>`. Inside a page section use a `<div>` (contact aside, code practice aside, GitHub profile card).

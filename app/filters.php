@@ -604,7 +604,7 @@ function mh_filter_document_title($title)
     }
     $custom = mh_seo_document_title();
 
-    return $custom !== '' ? $custom : $title;
+    return $custom !== '' ? esc_html($custom) : $title;
 }
 
 /**
@@ -674,18 +674,19 @@ add_filter('rest_endpoints', function (array $endpoints): array {
     return $endpoints;
 });
 
+// Core strips non-digits from ?author= ("1abc" is author 1), so any value at all is an enumeration probe.
 add_action('template_redirect', function (): void {
-    if (is_admin()) {
-        return;
-    }
-
     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only guard; nothing is written.
     $author = isset($_GET['author']) ? sanitize_text_field(wp_unslash($_GET['author'])) : '';
-    if ($author !== '' && is_numeric($author)) {
+    if ($author !== '') {
         wp_safe_redirect(home_url('/'), 301);
         exit;
     }
 }, 1);
+
+// Pingbacks are the XML-RPC amplification vector; nothing here consumes them.
+add_filter('xmlrpc_methods', fn (array $methods): array => array_diff_key($methods, ['pingback.ping' => 1, 'pingback.extensions.getPingbacks' => 1]));
+add_filter('wp_headers', fn (array $headers): array => array_diff_key($headers, ['X-Pingback' => 1]));
 
 // /journal/ is what the nav calls the blog; catch type-ins and send them to /blog/.
 add_action('template_redirect', function (): void {
