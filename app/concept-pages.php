@@ -571,6 +571,160 @@ function mh_project_buyer_docs(int $post_id, array $card): array
 }
 
 /**
+ * Feature list for the What you get section.
+ *
+ * Deliverables first, then benefits. Drops case/punctuation duplicates and any
+ * item that only restates the start of a longer item (catalog copy repeats).
+ *
+ * @param  array<string, mixed>  $story  from mh_project_concept_narrative()
+ * @return list<string>
+ */
+function mh_project_feature_items(array $story): array
+{
+    $rows = [];
+    foreach (['deliverables', 'benefits'] as $key) {
+        $list = is_array($story[$key] ?? null) ? $story[$key] : [];
+        foreach ($list as $item) {
+            $item = trim((string) $item);
+            $norm = trim((string) preg_replace('/[^a-z0-9]+/', ' ', strtolower($item)));
+            if ($item === '' || $norm === '') {
+                continue;
+            }
+            $rows[] = ['text' => $item, 'norm' => $norm];
+        }
+    }
+
+    $out = [];
+    foreach ($rows as $i => $row) {
+        $isDupe = false;
+        foreach ($rows as $j => $other) {
+            if ($i === $j) {
+                continue;
+            }
+            $same = $other['norm'] === $row['norm'];
+            $isPrefix = strlen($other['norm']) > strlen($row['norm']) && str_starts_with($other['norm'], $row['norm'].' ');
+            if ($isPrefix || ($same && $j < $i)) {
+                $isDupe = true;
+                break;
+            }
+        }
+        if (! $isDupe) {
+            $out[] = $row['text'];
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * Proof facts for the project hero.
+ *
+ * Stored metrics win. Otherwise three facts the page can stand behind:
+ * screenshot count, feature count, and the GitHub license or language.
+ *
+ * @param  list<array{0: string, 1: string}>  $metrics
+ * @param  list<array{src: string, alt: string}>  $slides
+ * @param  list<string>  $features
+ * @param  array<string, mixed>  $gh
+ * @return list<array{0: string, 1: string}>
+ */
+function mh_project_proof_facts(array $metrics, array $slides, array $features, array $gh): array
+{
+    $clean = [];
+    foreach ($metrics as $metric) {
+        $value = trim((string) ($metric[0] ?? ''));
+        $label = trim((string) ($metric[1] ?? ''));
+        if ($value !== '' && $label !== '') {
+            $clean[] = [$value, $label];
+        }
+    }
+    if ($clean !== []) {
+        return array_slice($clean, 0, 4);
+    }
+
+    $facts = [];
+    if (count($slides) > 1) {
+        $facts[] = [number_format_i18n(count($slides)), __('Screenshots', 'sage')];
+    }
+    if (count($features) > 2) {
+        $facts[] = [number_format_i18n(count($features)), __('Features', 'sage')];
+    }
+    $license = trim((string) ($gh['license'] ?? ''));
+    $lang = trim((string) ($gh['lang'] ?? ''));
+    if ($license !== '') {
+        $facts[] = [$license, __('License', 'sage')];
+    } elseif ($lang !== '') {
+        $facts[] = [$lang, __('Language', 'sage')];
+    }
+
+    return array_slice($facts, 0, 3);
+}
+
+/**
+ * Release label for the spec table: a semver tag, else the stored version.
+ *
+ * @param  array<string, mixed>  $gh
+ */
+function mh_project_release_label(array $gh): string
+{
+    $release = trim((string) ($gh['release'] ?? ''));
+    $version = trim((string) ($gh['version'] ?? ''));
+    if ($release !== '' && function_exists(__NAMESPACE__.'\\mh_project_is_semverish') && mh_project_is_semverish($release)) {
+        return $release;
+    }
+
+    return $version !== '' ? $version : $release;
+}
+
+/**
+ * Rows for the Under the hood spec table.
+ *
+ * Type and place already sit in the hero. GitHub counts show only when above zero.
+ *
+ * @param  array<string, mixed>  $card
+ * @param  array<string, mixed>  $gh  from mh_project_github_facts()
+ * @return list<array{label: string, value: string, href: string, pills: list<string>}>
+ */
+function mh_project_spec_rows(array $card, array $gh, string $demo, string $github): array
+{
+    $rows = [];
+    $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
+        if ($value === '' && $pills === []) {
+            return;
+        }
+        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills];
+    };
+
+    $tech = is_array($card['tech'] ?? null) ? array_values(array_filter(array_map('strval', $card['tech']))) : [];
+    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech);
+
+    $languages = is_array($gh['languages'] ?? null) ? array_slice(array_map('strval', $gh['languages']), 0, 6) : [];
+    $add(__('Languages', 'sage'), implode(' · ', $languages));
+    $add(__('Compatible', 'sage'), trim((string) ($gh['compatible'] ?? '')));
+    $add(__('License', 'sage'), trim((string) ($gh['license'] ?? '')));
+    $add(__('Release', 'sage'), mh_project_release_label($gh), (string) ($gh['release_url'] ?? ''));
+    $add(__('Updated', 'sage'), trim((string) ($gh['pushed_label'] ?? '')));
+
+    $stars = (int) ($gh['stars'] ?? 0);
+    if (! empty($gh['has_repo']) && $stars > 0) {
+        $add(__('GitHub stars', 'sage'), number_format_i18n($stars));
+    }
+
+    $topics = is_array($gh['topics'] ?? null) ? array_slice(array_map('strval', $gh['topics']), 0, 8) : [];
+    $add(__('Topics', 'sage'), implode(', ', $topics));
+
+    $repoLabel = (($gh['owner'] ?? '') !== '' && ($gh['repo'] ?? '') !== '') ? $gh['owner'].'/'.$gh['repo'] : '';
+    if ($github !== '' && str_starts_with($github, 'http')) {
+        $add(__('Repository', 'sage'), $repoLabel !== '' ? $repoLabel : $github, $github);
+    }
+    if ($demo !== '') {
+        $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
+    }
+
+    return $rows;
+}
+
+/**
  * Split stored or default prose on blank lines for template paragraphs.
  *
  * @return list<string>

@@ -2,6 +2,16 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.44 project landing page)
+
+- `partials/content-single-project.blade.php` is in landing order: hero, `#screenshots`, `#project-what-you-get`, `#project-story`, `#project-under-hood`, `#project-faq`, `#project-feedback`. Keep that order; do not move specs back above the story.
+- Hero actions are one `.btn` + one `.btn-outline` + `View code`. Copy link sits in the Feedback head. Do not put five actions back in the hero.
+- Hero proof strip is `mh_project_proof_facts()`: stored `_mh_project_m{n}` metrics win; otherwise screenshot count, feature count, and license or language. No invented numbers.
+- Features come from `mh_project_feature_items()` (deliverables then benefits, case and prefix de-duplicated). First ten render, the rest sit in `<details class="project-feat-more">`. Keep them in the DOM.
+- Under the hood is `mh_project_spec_rows()` in `.project-spec-block` (stack pills, languages, compatible, license, release, updated, stars only when > 0, topics, repository, live demo) beside `.project-arch-list`, then handoff and `.project-hood__palette`. `.project-stat-grid` tiles are no longer on this page; the CSS stays for other surfaces.
+- Section chrome is `.project-section` + `.project-section__head` (eyebrow + `h2.display-title.is-section`). Headings are UI chrome (`__()`), not page fields.
+- `partials/work-card.blade.php` shows four tech pills and a `.pill--more` count.
+
 ## Editor’s notes (3.6.42 Now page)
 
 - `/now/` keeps the hero, on-this-page pills, focus blocks, sidebar, and closing band.
