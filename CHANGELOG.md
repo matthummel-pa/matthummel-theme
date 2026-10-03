@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.43 — Cobble & Candle project page
+
+- New project: **Cobble & Candle**, a WordPress block theme for restaurants, taverns and inns, at `/projects/cobbleandcandle/` with 19 screenshots (front end, four styles and admin), benefits, blocks, FAQ and links to the live demo, repo and owner guide. It is not for sale yet, so it has no WooCommerce product or buy button.
+- Catalog entries can set `seo_title` and `seo_description`. They seed the MH SEO title and description once and never overwrite edits made in wp-admin.
+- A catalog project that is not for sale no longer gets a private WooCommerce product, which would have turned its page into a product landing. Existing products keep syncing.
+- Project pages print SoftwareApplication structured data for themes and plugins (with an Offer only when for sale with a price) and FAQPage data for their questions.
+- Catalog bump is `mh_product_catalog_v11`.
+
 ## 3.6.42 — Now page activity and note
 
 - The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).

@@ -52,7 +52,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
 - `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
-- Catalog bump is `mh_product_catalog_v10`.
+- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into MH SEO meta when empty).
 
 ## Editor’s notes (3.6.35 project feedback)
 
