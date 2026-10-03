@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.45 — Feature lists without repeats
+
+- Acreline, WalkRidge, and TOCguide catalog entries no longer say the same thing twice: deliverables list what is in the box, benefits say what that gets you. Catalog bump is `mh_product_catalog_v12`, which re-applies those lists to the live project posts.
+- Project pages treat two lines as one feature when the shorter line's content words are mostly inside the longer one (plurals and filler words ignored), and keep the longer line.
+
 ## 3.6.44 — Project pages read like a landing page
 
 - `/projects/{slug}/` runs in sales order: hero → screenshots → what you get → story → under the hood → questions → feedback. The story (why I built it, what I did, what you can use) is a numbered three-step rail instead of four paragraphs at the end.

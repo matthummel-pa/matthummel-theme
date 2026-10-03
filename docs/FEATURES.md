@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.45 feature lists)
+
+- `product-catalog.json` deliverables = box contents, benefits = outcomes. Do not restate a deliverable in benefits; the shop product page prints both lists separately.
+- `mh_project_feature_items()` drops a line when ≥ 75% of its content tokens (`mh_project_feature_tokens()`: lowercase, stop words out, trailing `s` trimmed, min 3 tokens) sit inside a longer line. Exact repeats keep the earlier one. Tune the threshold there, not in Blade.
+- Catalog bump is `mh_product_catalog_v12` (force re-applies catalog meta, same as v9–v11).
+
 ## Editor’s notes (3.6.44 project landing page)
 
 - `partials/content-single-project.blade.php` is in landing order: hero, `#screenshots`, `#project-what-you-get`, `#project-story`, `#project-under-hood`, `#project-faq`, `#project-feedback`. Keep that order; do not move specs back above the story.
