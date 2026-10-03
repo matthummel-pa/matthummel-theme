@@ -365,6 +365,31 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
         'type' => 'checkbox',
     ]);
 
+    $wp->add_section('mh_facebook', [
+        'title' => __('Facebook Page', 'sage'),
+        'priority' => 36,
+    ]);
+    $wp->add_setting('mh_facebook_page_id', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_facebook_page_id', [
+        'label' => __('Page ID', 'sage'),
+        'description' => __('Numeric ID of the Facebook Page that posts should go to. Or set MH_FACEBOOK_PAGE_ID in wp-config.', 'sage'),
+        'section' => 'mh_facebook',
+        'type' => 'text',
+    ]);
+    $wp->add_setting('mh_facebook_page_token', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp->add_control('mh_facebook_page_token', [
+        'label' => __('Page access token', 'sage'),
+        'description' => __('A long-lived Page token with pages_manage_posts. Or set MH_FACEBOOK_PAGE_TOKEN in wp-config. Without it, the editor opens the Facebook share dialog instead of posting.', 'sage'),
+        'section' => 'mh_facebook',
+        'type' => 'password',
+    ]);
+
     $wp->add_section('mh_bluesky', [
         'title' => __('Bluesky', 'sage'),
         'priority' => 35,

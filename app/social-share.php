@@ -365,6 +365,85 @@ function mh_social_ai_compose(\WP_Post $post, string $network, int $maxChars): ?
     return mh_social_trim(trim($text, " \t\n\r\0\x0B\"'"), $maxChars);
 }
 
+/* ───────────────────────── Facebook Page posting ───────────────────────── */
+
+/** Facebook Page ID from wp-config or the Customizer. */
+function mh_facebook_page_id(): string
+{
+    if (defined('MH_FACEBOOK_PAGE_ID') && (string) MH_FACEBOOK_PAGE_ID !== '') {
+        return (string) MH_FACEBOOK_PAGE_ID;
+    }
+
+    return trim((string) get_theme_mod('mh_facebook_page_id', ''));
+}
+
+/** Facebook Page access token from wp-config or the Customizer. Never printed. */
+function mh_facebook_page_token(): string
+{
+    if (defined('MH_FACEBOOK_PAGE_TOKEN') && (string) MH_FACEBOOK_PAGE_TOKEN !== '') {
+        return (string) MH_FACEBOOK_PAGE_TOKEN;
+    }
+
+    return trim((string) get_theme_mod('mh_facebook_page_token', ''));
+}
+
+/** Whether the editor can post straight to the Page. */
+function mh_facebook_can_post(): bool
+{
+    return mh_facebook_page_id() !== '' && mh_facebook_page_token() !== '';
+}
+
+/**
+ * Publish a link post on the Facebook Page through the Graph API.
+ *
+ * @return array{ok: bool, message: string, id: string, url: string}
+ */
+function mh_facebook_post_to_page(int $postId, string $message): array
+{
+    $post = get_post($postId);
+    if (! $post instanceof \WP_Post || $post->post_status !== 'publish') {
+        return ['ok' => false, 'message' => 'Publish the post first, then share it.', 'id' => '', 'url' => ''];
+    }
+    if (! mh_facebook_can_post()) {
+        return ['ok' => false, 'message' => 'Add the Page ID and token under Appearance → Customize → Facebook Page.', 'id' => '', 'url' => ''];
+    }
+
+    $message = trim($message);
+    if ($message === '') {
+        return ['ok' => false, 'message' => 'Write or generate the Facebook text first.', 'id' => '', 'url' => ''];
+    }
+
+    $res = wp_remote_post('https://graph.facebook.com/v21.0/'.rawurlencode(mh_facebook_page_id()).'/feed', [
+        'timeout' => 20,
+        'body' => [
+            'message' => $message,
+            'link' => (string) get_permalink($post),
+            'access_token' => mh_facebook_page_token(),
+        ],
+    ]);
+    if (is_wp_error($res)) {
+        return ['ok' => false, 'message' => 'Facebook request failed: '.$res->get_error_message(), 'id' => '', 'url' => ''];
+    }
+
+    $body = json_decode((string) wp_remote_retrieve_body($res), true);
+    $id = is_array($body) ? (string) ($body['id'] ?? '') : '';
+    if (wp_remote_retrieve_response_code($res) >= 300 || $id === '') {
+        $detail = is_array($body) ? (string) ($body['error']['message'] ?? '') : '';
+
+        return ['ok' => false, 'message' => 'Facebook said no'.($detail !== '' ? ': '.$detail : '.'), 'id' => '', 'url' => ''];
+    }
+
+    $url = 'https://www.facebook.com/'.rawurlencode($id);
+    update_post_meta($postId, '_mh_social_facebook_text', sanitize_textarea_field($message));
+    update_post_meta($postId, '_mh_facebook_post_id', sanitize_text_field($id));
+    update_post_meta($postId, '_mh_facebook_url', esc_url_raw($url));
+    update_post_meta($postId, '_mh_facebook_shared_at', (string) time());
+
+    return ['ok' => true, 'message' => 'Posted to the Facebook Page.', 'id' => $id, 'url' => $url];
+}
+
+/* ───────────────────────── Editor box ───────────────────────── */
+
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'mh_social_share',
@@ -376,15 +455,75 @@ add_action('add_meta_boxes', function (): void {
     );
 });
 
+/** Small action icons for the social box (currentColor, 16px). */
+function mh_social_icon(string $name): string
+{
+    $paths = [
+        'sparkles' => '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/><path d="M5 2l.6 1.6L7.2 4.2l-1.6.6L5 6.4l-.6-1.6L2.8 4.2l1.6-.6z"/>',
+        'send' => '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
+        'copy' => '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+        'open' => '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/>',
+        'check' => '<path d="M20 6 9 17l-5-5"/>',
+    ];
+    $d = $paths[$name] ?? $paths['open'];
+
+    return '<svg class="mh-social__ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'.$d.'</svg>';
+}
+
+/**
+ * Tags the social box markup helpers may emit (buttons with inline SVG).
+ *
+ * @return array<string, array<string, bool>>
+ */
+function mh_social_allowed_html(): array
+{
+    $svg = ['class' => true, 'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true, 'focusable' => true, 'd' => true, 'x' => true, 'y' => true, 'rx' => true];
+
+    return [
+        'svg' => $svg,
+        'path' => $svg,
+        'rect' => $svg,
+        'span' => ['class' => true],
+        'button' => ['type' => true, 'class' => true, 'disabled' => true, 'title' => true, 'data-mh-act' => true, 'data-network' => true, 'data-url' => true],
+    ];
+}
+
+/**
+ * One icon button for a social card.
+ *
+ * @param  array<string, string>  $data  Extra data attributes (without the data- prefix).
+ */
+function mh_social_button(string $icon, string $label, string $network, string $action, bool $primary = false, bool $disabled = false, array $data = []): string
+{
+    $attrs = '';
+    foreach ($data as $key => $value) {
+        $attrs .= ' data-'.esc_attr($key).'="'.esc_attr($value).'"';
+    }
+
+    return sprintf(
+        '<button type="button" class="button%1$s mh-social__btn" data-mh-act="%2$s" data-network="%3$s"%4$s%5$s title="%6$s">%7$s<span>%6$s</span></button>',
+        $primary ? ' button-primary' : '',
+        esc_attr($action),
+        esc_attr($network),
+        $disabled ? ' disabled' : '',
+        $attrs,
+        esc_attr($label),
+        mh_social_icon($icon)
+    );
+}
+
 function mh_social_share_metabox(\WP_Post $post): void
 {
     wp_nonce_field('mh_social_share', 'mh_social_share_nonce');
 
     $urls = mh_post_share_urls((int) $post->ID);
     $hasBluesky = function_exists(__NAMESPACE__.'\\mh_bluesky_app_password') && mh_bluesky_app_password() !== '';
+    $hasFacebook = mh_facebook_can_post();
     $hasDevto = function_exists(__NAMESPACE__.'\\mh_devto_token') && mh_devto_token() !== '';
     $hasAi = function_exists(__NAMESPACE__.'\\mh_devto_ai_token') && mh_devto_ai_token() !== '';
+    $published = $post->post_status === 'publish';
     $blueskyUrl = (string) get_post_meta($post->ID, '_mh_bluesky_url', true);
+    $facebookUrl = (string) get_post_meta($post->ID, '_mh_facebook_url', true);
     $devtoUrl = (string) get_post_meta($post->ID, '_mh_devto_export_url', true);
     $fbDraft = (string) get_post_meta($post->ID, '_mh_social_facebook_text', true);
     $redditTitle = (string) get_post_meta($post->ID, '_mh_social_reddit_title', true);
@@ -392,96 +531,141 @@ function mh_social_share_metabox(\WP_Post $post): void
     $liDraft = (string) get_post_meta($post->ID, '_mh_social_linkedin_text', true);
     $blueskyCustom = (string) get_post_meta($post->ID, '_mh_bluesky_custom_text', true);
 
-    echo '<div class="mh-social-share" id="mh-social-share">';
-    echo '<p class="description">'.esc_html__('Draft posts for Bluesky, Facebook, Reddit, LinkedIn, and DEV.to. Generate copy, copy it, open a share dialog, or auto-post where credentials exist.', 'sage').'</p>';
+    $cards = [
+        [
+            'network' => 'bluesky',
+            'label' => 'Bluesky',
+            'max' => 300,
+            'connected' => $hasBluesky,
+            'connect_hint' => __('App password: Appearance → Customize → Bluesky', 'sage'),
+            'fields' => [['textarea', 'mh-bluesky-custom', 'mh_bluesky_custom_text', $blueskyCustom, 3, __('Custom text (optional). The link is added on post.', 'sage')]],
+            'post_label' => __('Post to Bluesky', 'sage'),
+            'post_action' => 'post-bluesky',
+            'can_post' => $hasBluesky && $published,
+            'open_url' => $urls['bluesky'],
+            'done_url' => $blueskyUrl,
+            'done_label' => __('View on Bluesky', 'sage'),
+        ],
+        [
+            'network' => 'facebook',
+            'label' => 'Facebook',
+            'max' => MH_SOCIAL_FACEBOOK_MAX,
+            'connected' => $hasFacebook,
+            'connect_hint' => __('Page ID + token: Appearance → Customize → Facebook Page. Until then the share dialog opens.', 'sage'),
+            'fields' => [['textarea', 'mh-social-facebook', 'mh_social_facebook_text', $fbDraft, 4, '']],
+            'post_label' => __('Post to Page', 'sage'),
+            'post_action' => 'post-facebook',
+            'can_post' => $hasFacebook && $published,
+            'open_url' => $urls['facebook'],
+            'done_url' => $facebookUrl,
+            'done_label' => __('View on Facebook', 'sage'),
+        ],
+        [
+            'network' => 'linkedin',
+            'label' => 'LinkedIn',
+            'max' => MH_SOCIAL_LINKEDIN_MAX,
+            'connected' => null,
+            'connect_hint' => '',
+            'fields' => [['textarea', 'mh-social-linkedin', 'mh_social_linkedin_text', $liDraft, 4, '']],
+            'post_label' => '',
+            'post_action' => '',
+            'can_post' => false,
+            'open_url' => $urls['linkedin'],
+            'done_url' => '',
+            'done_label' => '',
+        ],
+        [
+            'network' => 'reddit',
+            'label' => 'Reddit',
+            'max' => MH_SOCIAL_REDDIT_BODY_MAX,
+            'connected' => null,
+            'connect_hint' => '',
+            'fields' => [
+                ['text', 'mh-social-reddit-title', 'mh_social_reddit_title', $redditTitle, 0, __('Title', 'sage')],
+                ['textarea', 'mh-social-reddit-body', 'mh_social_reddit_text', $redditBody, 4, ''],
+            ],
+            'post_label' => '',
+            'post_action' => '',
+            'can_post' => false,
+            'open_url' => $urls['reddit'],
+            'done_url' => '',
+            'done_label' => '',
+        ],
+        [
+            'network' => 'devto',
+            'label' => 'DEV.to',
+            'max' => 0,
+            'connected' => $hasDevto,
+            'connect_hint' => __('API key: Appearance → Customize → DEV.to', 'sage'),
+            'fields' => [],
+            'post_label' => __('Publish to DEV.to', 'sage'),
+            'post_action' => 'post-devto',
+            'can_post' => $hasDevto && $published,
+            'open_url' => '',
+            'done_url' => $devtoUrl,
+            'done_label' => __('View article', 'sage'),
+        ],
+    ];
 
-    echo '<p><label><input type="checkbox" name="mh_social_use_ai" id="mh-social-use-ai" value="1" '.checked($hasAi, true, false).'> ';
-    echo esc_html__('Use OpenAI when generating (same key as Customize → DEV.to)', 'sage').'</label></p>';
-
-    echo '<div class="mh-social-share__actions" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">';
-    foreach ([
-        'bluesky' => __('Generate Bluesky', 'sage'),
-        'facebook' => __('Generate Facebook', 'sage'),
-        'reddit' => __('Generate Reddit', 'sage'),
-        'linkedin' => __('Generate LinkedIn', 'sage'),
-        'devto' => __('DEV.to checklist', 'sage'),
-    ] as $net => $label) {
-        printf(
-            '<button type="button" class="button mh-social-gen" data-network="%1$s">%2$s</button>',
-            esc_attr($net),
-            esc_html($label)
-        );
+    echo '<div class="mh-social" id="mh-social-share" data-permalink="'.esc_url((string) get_permalink($post)).'" data-title="'.esc_attr(html_entity_decode(get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8')).'">';
+    echo '<div class="mh-social__top">';
+    echo '<label class="mh-social__ai"><input type="checkbox" name="mh_social_use_ai" id="mh-social-use-ai" value="1" '.checked($hasAi, true, false).'> ';
+    echo wp_kses(mh_social_icon('sparkles'), mh_social_allowed_html()).' '.esc_html__('Use OpenAI when generating', 'sage').'</label>';
+    if (! $published) {
+        echo '<span class="mh-social__note">'.esc_html__('Posting unlocks once the post is published.', 'sage').'</span>';
     }
     echo '</div>';
 
-    echo '<p style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">';
-    echo '<strong>'.esc_html__('Auto-share / open', 'sage').'</strong> ';
-    printf(
-        '<button type="button" class="button button-primary" id="mh-social-post-bluesky" %1$s>%2$s</button>',
-        disabled(! $hasBluesky, true, false),
-        esc_html__('Post to Bluesky now', 'sage')
-    );
-    printf(
-        '<button type="button" class="button" id="mh-social-post-devto" %1$s>%2$s</button>',
-        disabled(! $hasDevto, true, false),
-        esc_html__('Publish to DEV.to now', 'sage')
-    );
-    foreach (['bluesky' => 'Bluesky', 'linkedin' => 'LinkedIn', 'facebook' => 'Facebook', 'reddit' => 'Reddit'] as $net => $label) {
-        printf(
-            '<a class="button" href="%1$s" target="_blank" rel="noopener" data-share-link="%2$s">%3$s</a>',
-            esc_url($urls[$net] ?? '#'),
-            esc_attr($net),
-            esc_html(sprintf(__('Open %s', 'sage'), $label))
-        );
+    echo '<div class="mh-social__grid">';
+    foreach ($cards as $card) {
+        $net = $card['network'];
+        echo '<section class="mh-social__card mh-social__card--'.esc_attr($net).'" data-card="'.esc_attr($net).'" aria-labelledby="mh-social-h-'.esc_attr($net).'">';
+        echo '<header class="mh-social__head">';
+        echo '<h3 id="mh-social-h-'.esc_attr($net).'" class="mh-social__name">'.wp_kses(mh_svg_icon($net, 16), mh_social_allowed_html()).' '.esc_html($card['label']).'</h3>';
+        if ($card['connected'] === true) {
+            echo '<span class="mh-social__pill is-on">'.wp_kses(mh_social_icon('check'), mh_social_allowed_html()).' '.esc_html__('Connected', 'sage').'</span>';
+        } elseif ($card['connected'] === false) {
+            echo '<span class="mh-social__pill" title="'.esc_attr($card['connect_hint']).'">'.esc_html__('Not connected', 'sage').'</span>';
+        }
+        echo '</header>';
+
+        foreach ($card['fields'] as [$type, $id, $name, $value, $rows, $placeholder]) {
+            if ($type === 'text') {
+                echo '<input type="text" id="'.esc_attr($id).'" name="'.esc_attr($name).'" class="widefat mh-social__field" value="'.esc_attr($value).'" maxlength="300" placeholder="'.esc_attr($placeholder).'" data-mh-text="'.esc_attr($net).'">';
+            } else {
+                echo '<textarea id="'.esc_attr($id).'" name="'.esc_attr($name).'" class="widefat mh-social__field" rows="'.(int) $rows.'" placeholder="'.esc_attr($placeholder).'" data-mh-text="'.esc_attr($net).'" data-max="'.(int) $card['max'].'">'.esc_textarea($value).'</textarea>';
+            }
+        }
+        if ($card['max'] > 0 && $card['fields'] !== []) {
+            echo '<div class="mh-social__meter" data-meter-for="'.esc_attr($net).'" data-max="'.(int) $card['max'].'"><span class="mh-social__meter-track"><span class="mh-social__meter-fill"></span></span><span class="mh-social__meter-num"></span></div>';
+        }
+
+        echo '<div class="mh-social__actions">';
+        echo wp_kses(mh_social_button('sparkles', $net === 'devto' ? __('Checklist', 'sage') : __('Generate', 'sage'), $net, 'generate'), mh_social_allowed_html());
+        if ($card['post_action'] !== '') {
+            echo wp_kses(mh_social_button('send', $card['post_label'], $net, $card['post_action'], true, ! $card['can_post']), mh_social_allowed_html());
+        }
+        if ($card['open_url'] !== '') {
+            echo wp_kses(mh_social_button('open', __('Share dialog', 'sage'), $net, 'open', false, false, ['url' => $card['open_url']]), mh_social_allowed_html());
+        }
+        if ($card['fields'] !== []) {
+            echo wp_kses(mh_social_button('copy', __('Copy', 'sage'), $net, 'copy'), mh_social_allowed_html());
+        }
+        echo '</div>';
+
+        echo '<p class="mh-social__done" data-done-for="'.esc_attr($net).'"'.($card['done_url'] === '' ? ' hidden' : '').'>';
+        echo wp_kses(mh_social_icon('check'), mh_social_allowed_html()).' <a href="'.esc_url($card['done_url'] !== '' ? $card['done_url'] : '#').'" target="_blank" rel="noopener">'.esc_html($card['done_label'] !== '' ? $card['done_label'] : __('View', 'sage')).'</a>';
+        echo '</p>';
+        if ($card['connected'] === false && $card['connect_hint'] !== '') {
+            echo '<p class="description mh-social__hint">'.esc_html($card['connect_hint']).'</p>';
+        }
+        echo '</section>';
     }
-    echo '</p>';
+    echo '</div>';
 
-    if ($blueskyUrl !== '') {
-        printf(
-            '<p><strong>%1$s</strong> <a href="%2$s" target="_blank" rel="noopener">%3$s</a></p>',
-            esc_html__('On Bluesky:', 'sage'),
-            esc_url($blueskyUrl),
-            esc_html__('View post', 'sage')
-        );
-    }
-    if ($devtoUrl !== '') {
-        printf(
-            '<p><strong>%1$s</strong> <a href="%2$s" target="_blank" rel="noopener">%3$s</a></p>',
-            esc_html__('On DEV.to:', 'sage'),
-            esc_url($devtoUrl),
-            esc_html__('View article', 'sage')
-        );
-    }
-    if (! $hasBluesky) {
-        echo '<p class="description">'.esc_html__('Bluesky auto-post needs an app password: Appearance → Customize → Bluesky.', 'sage').'</p>';
-    }
-    if (! $hasDevto) {
-        echo '<p class="description">'.esc_html__('DEV.to publish needs an API key: Appearance → Customize → DEV.to.', 'sage').'</p>';
-    }
-
-    echo '<p><label for="mh-bluesky-custom"><strong>'.esc_html__('Bluesky custom text (optional)', 'sage').'</strong></label></p>';
-    echo '<textarea id="mh-bluesky-custom" name="mh_bluesky_custom_text" class="widefat" rows="3" maxlength="320" placeholder="';
-    echo esc_attr__('Paste a ChatGPT summary — URL is added on post.', 'sage');
-    echo '">'.esc_textarea($blueskyCustom).'</textarea>';
-
-    echo '<p><label for="mh-social-facebook"><strong>'.esc_html__('Facebook draft', 'sage').'</strong></label></p>';
-    echo '<textarea id="mh-social-facebook" name="mh_social_facebook_text" class="widefat" rows="4">'.esc_textarea($fbDraft).'</textarea>';
-
-    echo '<p><label for="mh-social-reddit-title"><strong>'.esc_html__('Reddit title', 'sage').'</strong></label></p>';
-    echo '<input type="text" id="mh-social-reddit-title" name="mh_social_reddit_title" class="widefat" value="'.esc_attr($redditTitle).'" maxlength="300">';
-    echo '<p><label for="mh-social-reddit-body"><strong>'.esc_html__('Reddit body', 'sage').'</strong></label></p>';
-    echo '<textarea id="mh-social-reddit-body" name="mh_social_reddit_text" class="widefat" rows="5">'.esc_textarea($redditBody).'</textarea>';
-
-    echo '<p><label for="mh-social-linkedin"><strong>'.esc_html__('LinkedIn draft', 'sage').'</strong></label></p>';
-    echo '<textarea id="mh-social-linkedin" name="mh_social_linkedin_text" class="widefat" rows="4">'.esc_textarea($liDraft).'</textarea>';
-
-    echo '<p style="display:flex;flex-wrap:wrap;gap:8px">';
-    echo '<button type="button" class="button" id="mh-social-copy">'.esc_html__('Copy active draft', 'sage').'</button>';
-    echo '</p>';
-
-    echo '<p id="mh-social-status" class="description" aria-live="polite"></p>';
-    echo '<label for="mh-social-preview"><strong>'.esc_html__('Preview / tips', 'sage').'</strong></label>';
-    echo '<textarea id="mh-social-preview" class="widefat" rows="10" readonly style="font-family:ui-monospace,monospace;font-size:12px"></textarea>';
+    echo '<p id="mh-social-status" class="mh-social__status" role="status" aria-live="polite"></p>';
+    echo '<details class="mh-social__tips"><summary>'.esc_html__('Preview and tips from the last generate', 'sage').'</summary>';
+    echo '<textarea id="mh-social-preview" class="widefat" rows="8" readonly></textarea></details>';
     echo '</div>';
 }
 
@@ -527,8 +711,35 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
     if (! $screen || $screen->post_type !== 'post') {
         return;
     }
-
-    wp_register_script('mh-social-share', '', ['wp-util'], '1', true);
+    wp_add_inline_style('wp-admin', <<<'CSS'
+.mh-social__top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0 0 12px}
+.mh-social__ai{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.mh-social__note{font-size:12px;color:#646970}
+.mh-social__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.mh-social__card{padding:12px 14px 10px;border:1px solid #dcdcde;border-radius:6px;background:#fff;border-top:3px solid #8c8f94}
+.mh-social__card--bluesky{border-top-color:#1185fe}.mh-social__card--facebook{border-top-color:#1877f2}.mh-social__card--linkedin{border-top-color:#0a66c2}.mh-social__card--reddit{border-top-color:#ff4500}.mh-social__card--devto{border-top-color:#0a0a0a}
+.mh-social__head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.mh-social__name{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:13px}
+.mh-social__name svg{width:16px;height:16px}
+.mh-social__pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;background:#f0f0f1;color:#50575e;border:1px solid #dcdcde}
+.mh-social__pill.is-on{background:#edfaef;border-color:#b8e6bf;color:#1d6b2f}
+.mh-social__field{margin:0 0 6px;font-size:13px}
+.mh-social__meter{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:11px;color:#646970;font-variant-numeric:tabular-nums}
+.mh-social__meter-track{flex:1;height:4px;border-radius:2px;background:#e0e0e0;overflow:hidden}
+.mh-social__meter-fill{display:block;height:100%;width:0;background:#2271b1;transition:width .15s}
+.mh-social__meter.is-over .mh-social__meter-fill{background:#d63638}.mh-social__meter.is-over .mh-social__meter-num{color:#d63638;font-weight:600}
+.mh-social__actions{display:flex;flex-wrap:wrap;gap:6px}
+.mh-social__btn{display:inline-flex!important;align-items:center;gap:6px;padding:0 10px!important;min-height:30px}
+.mh-social__btn .mh-social__ico{flex:none}
+.mh-social__btn.is-busy{opacity:.6;pointer-events:none}
+.mh-social__done{display:flex;align-items:center;gap:6px;margin:8px 0 0;font-size:12px;color:#1d6b2f}
+.mh-social__hint{margin:8px 0 0!important}
+.mh-social__status{margin:12px 0 0;min-height:1.4em;font-size:13px}
+.mh-social__status.is-error{color:#b32d2e}.mh-social__status.is-ok{color:#1d6b2f}
+.mh-social__tips{margin-top:10px}.mh-social__tips summary{cursor:pointer;color:#2271b1}
+.mh-social__tips textarea{margin-top:8px;font:12px/1.5 ui-monospace,Menlo,monospace}
+CSS);
+    wp_register_script('mh-social-share', '', ['wp-util'], '2', true);
     wp_enqueue_script('mh-social-share');
     wp_add_inline_script('mh-social-share', <<<'JS'
 (function () {
@@ -538,141 +749,147 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
   const nonce = document.getElementById('mh_social_share_nonce')
   if (!root || !status || !preview || !nonce || typeof ajaxurl === 'undefined') return
 
-  let activeNetwork = 'bluesky'
-  let lastPayload = null
+  const permalink = root.getAttribute('data-permalink') || ''
+  const postTitle = root.getAttribute('data-title') || ''
 
-  function postId () {
-    const el = document.getElementById('post_ID')
-    return el ? el.value : '0'
+  function postId () { const el = document.getElementById('post_ID'); return el ? el.value : '0' }
+  function useAi () { const el = document.getElementById('mh-social-use-ai'); return !!(el && el.checked) }
+  function field (network, which) {
+    const sel = which === 'title' ? 'input[data-mh-text="' + network + '"]' : 'textarea[data-mh-text="' + network + '"]'
+    return root.querySelector(sel)
   }
-
-  function useAi () {
-    const el = document.getElementById('mh-social-use-ai')
-    return !!(el && el.checked)
+  function textOf (network) {
+    const t = field(network, 'title'); const b = field(network, 'body')
+    return [t && t.value, b && b.value].filter(Boolean).join('\n\n').trim()
   }
-
-  function setStatus (msg, isError) {
+  function setStatus (msg, kind) {
     status.textContent = msg || ''
-    status.style.color = isError ? '#b32d2e' : ''
+    status.className = 'mh-social__status' + (kind ? ' is-' + kind : '')
   }
-
-  function fillFields (data) {
-    if (!data) return
-    if (data.network === 'facebook' && data.body != null) {
-      const el = document.getElementById('mh-social-facebook')
-      if (el) el.value = data.body
-    }
-    if (data.network === 'reddit') {
-      const t = document.getElementById('mh-social-reddit-title')
-      const b = document.getElementById('mh-social-reddit-body')
-      if (t && data.title != null) t.value = data.title
-      if (b && data.body != null) b.value = data.body
-    }
-    if (data.network === 'linkedin' && data.body != null) {
-      const el = document.getElementById('mh-social-linkedin')
-      if (el) el.value = data.body
-    }
-    if (data.network === 'bluesky' && data.body != null) {
-      const el = document.getElementById('mh-bluesky-custom')
-      if (el && !el.value) el.value = data.body
-    }
-    const tips = Array.isArray(data.tips) ? data.tips.map(function (t) { return '• ' + t }).join('\n') : ''
+  function setBusy (btn, on) { if (btn) btn.classList.toggle('is-busy', !!on) }
+  function markDone (network, url) {
+    const p = root.querySelector('[data-done-for="' + network + '"]')
+    if (!p) return
+    const a = p.querySelector('a')
+    if (a && url) a.href = url
+    p.hidden = !url
+  }
+  function meter (network) {
+    const m = root.querySelector('[data-meter-for="' + network + '"]')
+    const b = field(network, 'body')
+    if (!m || !b) return
+    const max = parseInt(m.getAttribute('data-max'), 10) || 0
+    const len = Array.from(b.value).length
+    const fill = m.querySelector('.mh-social__meter-fill')
+    const num = m.querySelector('.mh-social__meter-num')
+    if (fill) fill.style.width = Math.min(100, (len / Math.max(max, 1)) * 100) + '%'
+    if (num) num.textContent = len + ' / ' + max
+    m.classList.toggle('is-over', max > 0 && len > max)
+  }
+  function fill (data) {
+    if (!data || !data.network) return
+    const n = data.network
+    const t = field(n, 'title'); const b = field(n, 'body')
+    if (t && data.title != null) t.value = data.title
+    if (b && data.body != null && (n !== 'bluesky' || !b.value)) b.value = data.body
+    meter(n)
+    const tips = Array.isArray(data.tips) ? data.tips.map(function (x) { return '• ' + x }).join('\n') : ''
     preview.value = (data.text || data.body || '') + (tips ? '\n\n— Tips —\n' + tips : '')
-    if (data.share_url) {
-      const link = root.querySelector('[data-share-link="' + data.network + '"]')
-      if (link) link.href = data.share_url
-    }
   }
-
+  function shareUrl (network) {
+    const text = textOf(network)
+    const u = encodeURIComponent(permalink)
+    if (network === 'facebook') return 'https://www.facebook.com/sharer/sharer.php?u=' + u + (text ? '&quote=' + encodeURIComponent(text) : '')
+    if (network === 'linkedin') return 'https://www.linkedin.com/sharing/share-offsite/?url=' + u
+    if (network === 'reddit') {
+      const t = field('reddit', 'title')
+      return 'https://www.reddit.com/submit?url=' + u + '&title=' + encodeURIComponent((t && t.value) || postTitle)
+    }
+    if (network === 'bluesky') {
+      let body = text || postTitle
+      if (body.indexOf(permalink) === -1) body = (body ? body + '\n\n' : '') + permalink
+      return 'https://bsky.app/intent/compose?text=' + encodeURIComponent(body)
+    }
+    return ''
+  }
   async function call (action, extra) {
-    setStatus('Working…')
     const body = new FormData()
     body.append('action', action)
     body.append('nonce', nonce.value)
     body.append('post_id', postId())
     body.append('use_ai', useAi() ? '1' : '0')
-    const custom = document.getElementById('mh-bluesky-custom')
+    const custom = field('bluesky', 'body')
     if (custom) body.append('custom_text', custom.value)
-    if (extra) {
-      Object.keys(extra).forEach(function (k) { body.append(k, extra[k]) })
-    }
+    Object.keys(extra || {}).forEach(function (k) { body.append(k, extra[k]) })
     try {
       const res = await fetch(ajaxurl, { method: 'POST', body, credentials: 'same-origin' })
       const data = await res.json()
       if (!data || !data.success) {
-        setStatus((data && data.data && data.data.message) || 'Request failed', true)
-        if (data && data.data) fillFields(data.data)
-        return null
+        const d = (data && data.data) || {}
+        if (d.network) fill(d)
+        return { ok: false, message: d.message || 'Request failed', data: d }
       }
-      return data.data
+      return { ok: true, data: data.data }
     } catch (err) {
-      setStatus('Network error', true)
-      return null
+      return { ok: false, message: 'Network error' }
     }
   }
-
-  root.querySelectorAll('.mh-social-gen').forEach(function (btn) {
-    btn.addEventListener('click', async function () {
-      activeNetwork = btn.getAttribute('data-network') || 'bluesky'
-      const data = await call('mh_social_generate', { network: activeNetwork })
-      if (!data) return
-      lastPayload = data
-      fillFields(data)
-      setStatus(data.message || 'Draft ready')
-    })
-  })
-
-  document.getElementById('mh-social-copy')?.addEventListener('click', async function () {
-    const text = preview.value || ''
-    if (!text) {
-      setStatus('Nothing to copy — generate a draft first.', true)
-      return
-    }
-    try {
-      await navigator.clipboard.writeText(text)
-      setStatus('Copied to clipboard')
-    } catch (err) {
-      preview.select()
-      setStatus('Select and copy manually (clipboard blocked)', true)
-    }
-  })
-
-  document.getElementById('mh-social-post-bluesky')?.addEventListener('click', async function () {
-    if (!window.confirm('Post this article to Bluesky now?')) return
-    const data = await call('mh_social_bluesky_share')
-    if (!data) return
-    preview.value = data.text || ''
-    setStatus((data.message || 'Posted') + (data.url ? ' — ' + data.url : ''))
-  })
-
-  document.getElementById('mh-social-post-devto')?.addEventListener('click', async function () {
-    if (!window.confirm('Publish this article to DEV.to now?')) return
-    // Reuse DEV.to AJAX if its nonce exists; otherwise our endpoint.
+  async function devtoPublish () {
     const devNonce = document.getElementById('mh_devto_export_nonce')
-    if (devNonce) {
-      setStatus('Working…')
-      const body = new FormData()
-      body.append('action', 'mh_devto_publish')
-      body.append('nonce', devNonce.value)
-      body.append('post_id', postId())
-      body.append('use_ai', useAi() ? '1' : '0')
-      try {
-        const res = await fetch(ajaxurl, { method: 'POST', body, credentials: 'same-origin' })
-        const data = await res.json()
-        if (!data || !data.success) {
-          setStatus((data && data.data && data.data.message) || 'DEV.to publish failed', true)
-          return
-        }
-        setStatus((data.data.message || 'Published') + (data.data.url ? ' — ' + data.data.url : ''))
-        if (data.data.markdown) preview.value = data.data.markdown
-      } catch (err) {
-        setStatus('Network error', true)
-      }
+    if (!devNonce) return call('mh_social_devto_publish')
+    const body = new FormData()
+    body.append('action', 'mh_devto_publish'); body.append('nonce', devNonce.value)
+    body.append('post_id', postId()); body.append('use_ai', useAi() ? '1' : '0')
+    try {
+      const res = await fetch(ajaxurl, { method: 'POST', body, credentials: 'same-origin' })
+      const data = await res.json()
+      return data && data.success ? { ok: true, data: data.data } : { ok: false, message: (data && data.data && data.data.message) || 'DEV.to publish failed' }
+    } catch (err) { return { ok: false, message: 'Network error' } }
+  }
+
+  root.addEventListener('input', function (e) {
+    const n = e.target && e.target.getAttribute && e.target.getAttribute('data-mh-text')
+    if (n) meter(n)
+  })
+  root.querySelectorAll('[data-meter-for]').forEach(function (m) { meter(m.getAttribute('data-meter-for')) })
+
+  root.addEventListener('click', async function (e) {
+    const btn = e.target.closest('[data-mh-act]')
+    if (!btn || btn.disabled) return
+    const act = btn.getAttribute('data-mh-act')
+    const network = btn.getAttribute('data-network')
+
+    if (act === 'open') {
+      window.open(shareUrl(network) || btn.getAttribute('data-url') || '#', '_blank', 'noopener,width=640,height=560')
       return
     }
-    const data = await call('mh_social_devto_publish')
-    if (!data) return
-    setStatus((data.message || 'Published') + (data.url ? ' — ' + data.url : ''))
+    if (act === 'copy') {
+      const text = textOf(network)
+      if (!text) { setStatus('Nothing to copy yet — generate or type a draft first.', 'error'); return }
+      try { await navigator.clipboard.writeText(text); setStatus('Copied the ' + network + ' draft.', 'ok') } catch (err) { setStatus('Clipboard blocked — select and copy manually.', 'error') }
+      return
+    }
+
+    setBusy(btn, true); setStatus('Working…')
+    let res
+    if (act === 'generate') {
+      res = await call('mh_social_generate', { network })
+      if (res.ok) { fill(res.data); setStatus(res.data.message || 'Draft ready.', 'ok') }
+    } else if (act === 'post-bluesky') {
+      if (!window.confirm('Post this to Bluesky now?')) { setBusy(btn, false); setStatus(''); return }
+      res = await call('mh_social_bluesky_share')
+      if (res.ok) { preview.value = res.data.text || ''; markDone('bluesky', res.data.url); setStatus(res.data.message || 'Posted to Bluesky.', 'ok') }
+    } else if (act === 'post-facebook') {
+      if (!window.confirm('Post this to the Facebook Page now?')) { setBusy(btn, false); setStatus(''); return }
+      res = await call('mh_social_facebook_share', { message: textOf('facebook') })
+      if (res.ok) { markDone('facebook', res.data.url); setStatus(res.data.message || 'Posted to Facebook.', 'ok') }
+    } else if (act === 'post-devto') {
+      if (!window.confirm('Publish this article to DEV.to now?')) { setBusy(btn, false); setStatus(''); return }
+      res = await devtoPublish()
+      if (res.ok) { markDone('devto', res.data.url); if (res.data.markdown) preview.value = res.data.markdown; setStatus(res.data.message || 'Published to DEV.to.', 'ok') }
+    }
+    if (res && !res.ok) setStatus(res.message, 'error')
+    setBusy(btn, false)
   })
 })()
 JS);
@@ -721,6 +938,17 @@ add_action('wp_ajax_mh_social_devto_publish', function (): void {
     $result = mh_devto_export_post($postId, true, $useAi);
     if (! ($result['ok'] ?? false)) {
         wp_send_json_error(['message' => (string) ($result['message'] ?? 'Publish failed')]);
+    }
+    wp_send_json_success($result);
+});
+
+add_action('wp_ajax_mh_social_facebook_share', function (): void {
+    $postId = mh_social_ajax_guard();
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- mh_social_ajax_guard() ran check_ajax_referer() above.
+    $message = sanitize_textarea_field(wp_unslash($_POST['message'] ?? ''));
+    $result = mh_facebook_post_to_page($postId, $message);
+    if (! $result['ok']) {
+        wp_send_json_error(['message' => $result['message']]);
     }
     wp_send_json_success($result);
 });
