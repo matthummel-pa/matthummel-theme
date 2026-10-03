@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.44 — Project pages read like a landing page
+
+- `/projects/{slug}/` runs in sales order: hero → screenshots → what you get → story → under the hood → questions → feedback. The story (why I built it, what I did, what you can use) is a numbered three-step rail instead of four paragraphs at the end.
+- The hero keeps one primary button (Get the pack when for sale, otherwise Live demo), one secondary (Ask about this), and a View code link. The proof strip under the lead shows stored metrics, or screenshot count, feature count, and license. The sample-work notice is one quiet line.
+- On-this-page pills drop from 13 to 6. Build notes, Theme details, Palette, Runs on, and Tags fold into one Under the hood section: a spec table (GitHub zeros hidden) beside the architecture list, then handoff and a compact palette row.
+- Feature lists drop case and prefix duplicates and show ten items with a Show all toggle.
+- Like, star, copy link, comments, and the ask form live together in the Feedback section. The top feedback box is gone.
+- Listing cards show four stack pills and a +N count.
+
 ## 3.6.43 — Cobble & Candle project page
 
 - New project: **Cobble & Candle**, a WordPress block theme for restaurants, taverns and inns, at `/projects/cobbleandcandle/` with 19 screenshots (front end, four styles and admin), benefits, blocks, FAQ and links to the live demo, repo and owner guide. It is not for sale yet, so it has no WooCommerce product or buy button.
