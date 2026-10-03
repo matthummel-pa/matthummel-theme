@@ -371,7 +371,7 @@ add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     ]);
     $wp->add_setting('mh_facebook_page_id', [
         'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => static fn ($value): string => (string) preg_replace('/\D+/', '', (string) $value),
     ]);
     $wp->add_control('mh_facebook_page_id', [
         'label' => __('Page ID', 'sage'),

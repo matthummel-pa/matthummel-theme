@@ -401,28 +401,32 @@ function mh_facebook_can_post(): bool
 function mh_facebook_post_to_page(int $postId, string $message): array
 {
     $post = get_post($postId);
-    if (! $post instanceof \WP_Post || $post->post_status !== 'publish') {
-        return ['ok' => false, 'message' => 'Publish the post first, then share it.', 'id' => '', 'url' => ''];
+    if (! $post instanceof \WP_Post || $post->post_type !== 'post' || $post->post_status !== 'publish' || $post->post_password !== '') {
+        return ['ok' => false, 'message' => __('Publish the post (without a password) first, then share it.', 'sage'), 'id' => '', 'url' => ''];
     }
     if (! mh_facebook_can_post()) {
-        return ['ok' => false, 'message' => 'Add the Page ID and token under Appearance → Customize → Facebook Page.', 'id' => '', 'url' => ''];
+        return ['ok' => false, 'message' => __('Add the Page ID and token under Appearance → Customize → Facebook Page.', 'sage'), 'id' => '', 'url' => ''];
+    }
+    if ((string) get_post_meta($postId, '_mh_facebook_post_id', true) !== '') {
+        return ['ok' => false, 'message' => __('Already posted to the Page. Delete it on Facebook first to post again.', 'sage'), 'id' => '', 'url' => ''];
     }
 
-    $message = trim($message);
+    $message = mb_substr(trim($message), 0, 5000, 'UTF-8');
     if ($message === '') {
-        return ['ok' => false, 'message' => 'Write or generate the Facebook text first.', 'id' => '', 'url' => ''];
+        return ['ok' => false, 'message' => __('Write or generate the Facebook text first.', 'sage'), 'id' => '', 'url' => ''];
     }
 
     $res = wp_remote_post('https://graph.facebook.com/v21.0/'.rawurlencode(mh_facebook_page_id()).'/feed', [
         'timeout' => 20,
+        'headers' => ['Authorization' => 'Bearer '.mh_facebook_page_token()],
         'body' => [
             'message' => $message,
             'link' => (string) get_permalink($post),
-            'access_token' => mh_facebook_page_token(),
         ],
     ]);
     if (is_wp_error($res)) {
-        return ['ok' => false, 'message' => 'Facebook request failed: '.$res->get_error_message(), 'id' => '', 'url' => ''];
+        /* translators: %s: error message from the HTTP request. */
+        return ['ok' => false, 'message' => sprintf(__('Facebook request failed: %s', 'sage'), $res->get_error_message()), 'id' => '', 'url' => ''];
     }
 
     $body = json_decode((string) wp_remote_retrieve_body($res), true);
@@ -430,7 +434,8 @@ function mh_facebook_post_to_page(int $postId, string $message): array
     if (wp_remote_retrieve_response_code($res) >= 300 || $id === '') {
         $detail = is_array($body) ? (string) ($body['error']['message'] ?? '') : '';
 
-        return ['ok' => false, 'message' => 'Facebook said no'.($detail !== '' ? ': '.$detail : '.'), 'id' => '', 'url' => ''];
+        /* translators: %s: error message from Facebook. */
+        return ['ok' => false, 'message' => $detail !== '' ? sprintf(__('Facebook said no: %s', 'sage'), $detail) : __('Facebook said no.', 'sage'), 'id' => '', 'url' => ''];
     }
 
     $url = 'https://www.facebook.com/'.rawurlencode($id);
@@ -439,7 +444,7 @@ function mh_facebook_post_to_page(int $postId, string $message): array
     update_post_meta($postId, '_mh_facebook_url', esc_url_raw($url));
     update_post_meta($postId, '_mh_facebook_shared_at', (string) time());
 
-    return ['ok' => true, 'message' => 'Posted to the Facebook Page.', 'id' => $id, 'url' => $url];
+    return ['ok' => true, 'message' => __('Posted to the Facebook Page.', 'sage'), 'id' => $id, 'url' => $url];
 }
 
 /* ───────────────────────── Editor box ───────────────────────── */
@@ -477,7 +482,7 @@ function mh_social_icon(string $name): string
  */
 function mh_social_allowed_html(): array
 {
-    $svg = ['class' => true, 'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true, 'focusable' => true, 'd' => true, 'x' => true, 'y' => true, 'rx' => true];
+    $svg = ['class' => true, 'data-icon' => true, 'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true, 'focusable' => true, 'd' => true, 'x' => true, 'y' => true, 'rx' => true];
 
     return [
         'svg' => $svg,
@@ -741,6 +746,19 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
 CSS);
     wp_register_script('mh-social-share', '', ['wp-util'], '2', true);
     wp_enqueue_script('mh-social-share');
+    wp_localize_script('mh-social-share', 'mhSocialI18n', [
+        'working' => __('Working…', 'sage'),
+        'draftReady' => __('Draft ready.', 'sage'),
+        'nothingToCopy' => __('Nothing to copy yet — generate or type a draft first.', 'sage'),
+        /* translators: %s: network name. */
+        'copied' => __('Copied the %s draft.', 'sage'),
+        'clipboardBlocked' => __('Clipboard blocked — select and copy manually.', 'sage'),
+        'confirmBluesky' => __('Post this to Bluesky now?', 'sage'),
+        'confirmFacebook' => __('Post this to the Facebook Page now?', 'sage'),
+        'confirmDevto' => __('Publish this article to DEV.to now?', 'sage'),
+        'networkError' => __('Network error', 'sage'),
+        'requestFailed' => __('Request failed', 'sage'),
+    ]);
     wp_add_inline_script('mh-social-share', <<<'JS'
 (function () {
   const root = document.getElementById('mh-social-share')
@@ -749,6 +767,7 @@ CSS);
   const nonce = document.getElementById('mh_social_share_nonce')
   if (!root || !status || !preview || !nonce || typeof ajaxurl === 'undefined') return
 
+  const i18n = window.mhSocialI18n || {}
   const permalink = root.getAttribute('data-permalink') || ''
   const postTitle = root.getAttribute('data-title') || ''
 
@@ -827,11 +846,11 @@ CSS);
       if (!data || !data.success) {
         const d = (data && data.data) || {}
         if (d.network) fill(d)
-        return { ok: false, message: d.message || 'Request failed', data: d }
+        return { ok: false, message: d.message || i18n.requestFailed || 'Request failed', data: d }
       }
       return { ok: true, data: data.data }
     } catch (err) {
-      return { ok: false, message: 'Network error' }
+      return { ok: false, message: i18n.networkError || 'Network error' }
     }
   }
   async function devtoPublish () {
@@ -844,7 +863,7 @@ CSS);
       const res = await fetch(ajaxurl, { method: 'POST', body, credentials: 'same-origin' })
       const data = await res.json()
       return data && data.success ? { ok: true, data: data.data } : { ok: false, message: (data && data.data && data.data.message) || 'DEV.to publish failed' }
-    } catch (err) { return { ok: false, message: 'Network error' } }
+    } catch (err) { return { ok: false, message: i18n.networkError || 'Network error' } }
   }
 
   root.addEventListener('input', function (e) {
@@ -865,26 +884,26 @@ CSS);
     }
     if (act === 'copy') {
       const text = textOf(network)
-      if (!text) { setStatus('Nothing to copy yet — generate or type a draft first.', 'error'); return }
-      try { await navigator.clipboard.writeText(text); setStatus('Copied the ' + network + ' draft.', 'ok') } catch (err) { setStatus('Clipboard blocked — select and copy manually.', 'error') }
+      if (!text) { setStatus(i18n.nothingToCopy || 'Nothing to copy yet.', 'error'); return }
+      try { await navigator.clipboard.writeText(text); setStatus((i18n.copied || 'Copied the %s draft.').replace('%s', network), 'ok') } catch (err) { setStatus(i18n.clipboardBlocked || 'Clipboard blocked.', 'error') }
       return
     }
 
-    setBusy(btn, true); setStatus('Working…')
+    setBusy(btn, true); setStatus(i18n.working || 'Working…')
     let res
     if (act === 'generate') {
       res = await call('mh_social_generate', { network })
-      if (res.ok) { fill(res.data); setStatus(res.data.message || 'Draft ready.', 'ok') }
+      if (res.ok) { fill(res.data); setStatus(res.data.message || i18n.draftReady || 'Draft ready.', 'ok') }
     } else if (act === 'post-bluesky') {
-      if (!window.confirm('Post this to Bluesky now?')) { setBusy(btn, false); setStatus(''); return }
+      if (!window.confirm(i18n.confirmBluesky || 'Post this to Bluesky now?')) { setBusy(btn, false); setStatus(''); return }
       res = await call('mh_social_bluesky_share')
       if (res.ok) { preview.value = res.data.text || ''; markDone('bluesky', res.data.url); setStatus(res.data.message || 'Posted to Bluesky.', 'ok') }
     } else if (act === 'post-facebook') {
-      if (!window.confirm('Post this to the Facebook Page now?')) { setBusy(btn, false); setStatus(''); return }
+      if (!window.confirm(i18n.confirmFacebook || 'Post this to the Facebook Page now?')) { setBusy(btn, false); setStatus(''); return }
       res = await call('mh_social_facebook_share', { message: textOf('facebook') })
       if (res.ok) { markDone('facebook', res.data.url); setStatus(res.data.message || 'Posted to Facebook.', 'ok') }
     } else if (act === 'post-devto') {
-      if (!window.confirm('Publish this article to DEV.to now?')) { setBusy(btn, false); setStatus(''); return }
+      if (!window.confirm(i18n.confirmDevto || 'Publish this article to DEV.to now?')) { setBusy(btn, false); setStatus(''); return }
       res = await devtoPublish()
       if (res.ok) { markDone('devto', res.data.url); if (res.data.markdown) preview.value = res.data.markdown; setStatus(res.data.message || 'Published to DEV.to.', 'ok') }
     }
@@ -931,6 +950,9 @@ add_action('wp_ajax_mh_social_generate', function (): void {
 
 add_action('wp_ajax_mh_social_devto_publish', function (): void {
     $postId = mh_social_ajax_guard();
+    if (! current_user_can('publish_posts')) {
+        wp_send_json_error(['message' => __('Only publishers can publish to DEV.to.', 'sage')], 403);
+    }
     $useAi = ! empty($_POST['use_ai']);
     if (! function_exists(__NAMESPACE__.'\\mh_devto_export_post')) {
         wp_send_json_error(['message' => 'DEV.to export is not available.']);
@@ -944,6 +966,9 @@ add_action('wp_ajax_mh_social_devto_publish', function (): void {
 
 add_action('wp_ajax_mh_social_facebook_share', function (): void {
     $postId = mh_social_ajax_guard();
+    if (! current_user_can('publish_posts')) {
+        wp_send_json_error(['message' => __('Only publishers can post to the Page.', 'sage')], 403);
+    }
     // phpcs:ignore WordPress.Security.NonceVerification.Missing -- mh_social_ajax_guard() ran check_ajax_referer() above.
     $message = sanitize_textarea_field(wp_unslash($_POST['message'] ?? ''));
     $result = mh_facebook_post_to_page($postId, $message);
@@ -955,6 +980,9 @@ add_action('wp_ajax_mh_social_facebook_share', function (): void {
 
 add_action('wp_ajax_mh_social_bluesky_share', function (): void {
     $postId = mh_social_ajax_guard();
+    if (! current_user_can('publish_posts')) {
+        wp_send_json_error(['message' => __('Only publishers can post to Bluesky.', 'sage')], 403);
+    }
     $useAi = ! empty($_POST['use_ai']);
     if (! function_exists(__NAMESPACE__.'\\mh_bluesky_share_post')) {
         wp_send_json_error(['message' => 'Bluesky share is not available.']);
