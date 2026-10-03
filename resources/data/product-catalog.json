@@ -577,7 +577,9 @@
       "property listings WordPress",
       "Gutenberg real estate theme",
       "WordPress listing theme"
-    ]
+    ],
+    "seo_title": "Acreline — WordPress Real Estate Theme | Matt Hummel",
+    "seo_description": "WordPress theme for solo real estate agents and small teams: featured homes, agent bios, and showing requests on Gutenberg pages. No page builder."
   },
   "walkridge": {
     "title": "WalkRidge",
@@ -779,7 +781,9 @@
       "tour guide WordPress theme",
       "WordPress bookable tours theme"
     ],
-    "is_product": true
+    "is_product": true,
+    "seo_title": "WalkRidge — WordPress Theme for Tour Guides | Matt Hummel",
+    "seo_description": "WordPress theme for guides and tour companies: browse tours, meet guides, and book in WooCommerce. Ten Gutenberg blocks and a Customizer identity panel."
   },
   "tocguide": {
     "title": "TOCguide",
@@ -933,7 +937,9 @@
       "SEO friendly TOC WordPress",
       "free WordPress TOC plugin",
       "reading guide WordPress"
-    ]
+    ],
+    "seo_title": "TOCguide — Free Table of Contents Plugin | Matt Hummel",
+    "seo_description": "Free WordPress plugin that builds a table of contents from post headings, with an optional Reading Guide. Server-rendered, accessible, no tracking."
   }
 }
 

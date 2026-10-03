@@ -20,7 +20,7 @@
 
     <div class="code-comm-grid">
       @if (! empty($profile['login']))
-        <aside class="code-comm-profile" aria-label="{{ __('GitHub profile', 'sage') }}">
+        <div class="code-comm-profile">
           @if (! empty($profile['avatar']))
             <img class="code-comm-profile__avatar" src="{{ esc_url($profile['avatar']) }}" width="72" height="72" alt="{{ esc_attr(($profile['name'] ?: $profile['login']).' GitHub avatar') }}" loading="lazy" decoding="async">
           @endif
@@ -44,7 +44,7 @@
             {!! \App\mh_svg_icon('github', 15) !!} {{ __('Follow on GitHub', 'sage') }}
             <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
           </a>
-        </aside>
+        </div>
       @endif
 
       <div class="code-comm-main">

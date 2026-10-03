@@ -224,7 +224,7 @@
             </p>
             <div class="post-author-bio__links">
               <a href="{{ home_url('/about/') }}">About me</a>
-              <a href="{{ home_url('/services/') }}">Work with me</a>
+              <a href="{{ home_url('/hire/') }}">Work with me</a>
               <a href="{{ home_url('/contact/') }}">Say hello</a>
               <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">RSS feed</a>
             </div>

@@ -17,9 +17,9 @@
       <path d="M15 6 9 12l6 6"/>
     </svg>
   </button>
-  <div id="{{ $scrollerId }}" class="{{ $listClass }}" role="list" data-page-nav-scroller>
+  <div id="{{ $scrollerId }}" class="{{ $listClass }}" data-page-nav-scroller>
     @foreach ($pills as [$id, $label])
-      <a class="{{ $pillClass }}" role="listitem" href="#{{ $id }}">{{ $label }}</a>
+      <a class="{{ $pillClass }}" href="#{{ $id }}">{{ $label }}</a>
     @endforeach
   </div>
   <button
