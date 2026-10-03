@@ -1216,7 +1216,18 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 
     mh_seed_project_concept_narrative($postId, $seed, $force);
 
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+    // Search title and description for MH SEO. Seeded once: edits made in wp-admin are never overwritten.
+    foreach (['seo_title' => '_mh_seo_title', 'seo_description' => '_mh_seo_description'] as $field => $metaKey) {
+        $value = trim((string) ($seed[$field] ?? ''));
+        if ($value !== '' && trim((string) get_post_meta($postId, $metaKey, true)) === '') {
+            update_post_meta($postId, $metaKey, sanitize_text_field($value));
+        }
+    }
+
+    // A project that is not for sale yet gets no WooCommerce product (a private one would still turn the
+    // page into a product landing with a buy button). Existing products keep syncing as before.
+    $hasProduct = mh_project_product_id($postId) > 0;
+    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product') && (! empty($seed['for_sale']) || $hasProduct)) {
         mh_sync_project_product($postId);
     }
 
@@ -1392,6 +1403,20 @@ function mh_apply_product_catalog_v10(): void
 }
 
 /**
+ * One-time: add the Cobble & Candle project (not for sale yet) with SEO title/description.
+ */
+function mh_apply_product_catalog_v11(): void
+{
+    if (get_option('mh_product_catalog_v11') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v11', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1492,6 +1517,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

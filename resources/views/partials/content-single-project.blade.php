@@ -431,6 +431,50 @@
     @endif
   </div>
 
+  {{-- Structured data: FAQPage for the questions above, SoftwareApplication for themes and plugins
+       (an Offer only when the project is for sale with a price). --}}
+  @php
+    $ldFaq = array_values(array_filter(array_map(
+      static fn ($item) => ((string) ($item['q'] ?? $item[0] ?? '') !== '' && (string) ($item['a'] ?? $item[1] ?? '') !== '')
+        ? ['@type' => 'Question', 'name' => wp_strip_all_tags((string) ($item['q'] ?? $item[0])), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => wp_strip_all_tags((string) ($item['a'] ?? $item[1]))]]
+        : null,
+      $faq
+    )));
+    $ldType = sanitize_key((string) get_post_meta($postId, '_mh_project_product_type', true));
+    $ldGraph = [];
+    if (in_array($ldType, ['theme', 'plugin'], true)) {
+      $ldPrice = trim((string) get_post_meta($postId, '_mh_project_price', true));
+      $ldApp = array_filter([
+        '@type' => 'SoftwareApplication',
+        '@id' => get_permalink($postId).'#software',
+        'name' => $title,
+        'description' => wp_strip_all_tags($summary),
+        'url' => get_permalink($postId),
+        'image' => $heroImage !== '' ? $heroImage : null,
+        'screenshot' => array_values(array_filter(array_map(static fn ($slide) => (string) ($slide['src'] ?? ''), array_slice($slides, 0, 6)))),
+        'applicationCategory' => $ldType === 'plugin' ? 'BusinessApplication' : 'WebApplication',
+        'applicationSubCategory' => $ldType === 'plugin' ? 'WordPress plugin' : 'WordPress theme',
+        'operatingSystem' => 'WordPress',
+        'softwareVersion' => trim((string) get_post_meta($postId, '_mh_project_version', true)) ?: null,
+        'softwareRequirements' => trim((string) get_post_meta($postId, '_mh_project_compatible', true)) ?: null,
+        'license' => trim((string) get_post_meta($postId, '_mh_project_license', true)) ?: null,
+        'author' => ['@type' => 'Person', 'name' => 'Matt Hummel', 'url' => home_url('/')],
+        'sameAs' => array_values(array_filter([$github, $demo])),
+        'offers' => \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
+          ? ['@type' => 'Offer', 'price' => $ldPrice, 'priceCurrency' => 'USD', 'availability' => 'https://schema.org/InStock', 'url' => get_permalink($postId)]
+          : null,
+      ], static fn ($value) => $value !== null && $value !== '' && $value !== []);
+      $ldGraph[] = $ldApp;
+    }
+    if ($ldFaq !== []) {
+      $ldGraph[] = ['@type' => 'FAQPage', '@id' => get_permalink($postId).'#faq', 'mainEntity' => $ldFaq];
+    }
+    $ldJson = $ldGraph !== [] ? json_encode(['@context' => 'https://schema.org', '@graph' => $ldGraph], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) : '';
+  @endphp
+  @if ($ldJson)
+    <script type="application/ld+json">{!! $ldJson !!}</script>
+  @endif
+
   <section class="pf-section pf-section--alt project-talk" aria-labelledby="project-talk-heading">
     <div class="container wide">
       <div class="sec-head">

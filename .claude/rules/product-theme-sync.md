@@ -31,6 +31,7 @@ Do **not** hardcode buyer copy in Blade. Do **not** invent metrics, IDX claims, 
 | `acreline` | `matthummel-pa/wp-acreline` | https://acreline.matthummel.com/ | Theme pack; Core + child; Gutenberg blocks |
 | `walkridge` | `matthummel-pa/wp-walkridge` | — | Theme pack; needs a GitHub release zip before Woo can attach a download |
 | `tocflow` | `matthummel-pa/tocflow` | GitHub Pages docs | Free plugin |
+| `cobbleandcandle` | `matthummel-pa/wp-cobbleandcandle` | https://cobbleandcandle.matthummel.com/ | Theme + bundled Core plugin; **not for sale yet** (`for_sale: false`, no Woo product). Docs in `docs/guide/`, screenshots in `docs/marketplace/screenshots/` |
 
 Add a new row here when a new sellable product lands in the catalog JSON.
 
