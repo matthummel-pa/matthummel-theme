@@ -2,6 +2,17 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.46 site audit)
+
+- Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts.
+- Hardening block at the end of `app/filters.php`: `wp_generator` off, `xmlrpc_enabled` false, `/wp/v2/users*` removed from `rest_endpoints` for visitors, numeric `?author=` 301s home. Do not add a login-lockout plugin here; the host rate-limits.
+- Term archives: `mh_seo_term_title()` falls back to “{Term} articles and notes | Brand”; `mh_seo_term_description()` falls back to a written sentence, clipped at 155.
+- `partials/page-nav-track.blade.php`: no `role="list"` / `listitem`. The `<nav aria-label="On this page">` is the landmark.
+- `<aside>` is for content outside `<main>`. Inside a page section use a `<div>` (contact aside, code practice aside, GitHub profile card).
+- TOCguide override in `studio.css` (3.6.46) is a stopgap; the size and color fix belongs in the TOCguide plugin.
+- `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
+- Not in the theme: the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, and the `admin` username (Notion: matthummel.com — Site audit notebook).
+
 ## Editor’s notes (3.6.45 feature lists)
 
 - `product-catalog.json` deliverables = box contents, benefits = outcomes. Do not restate a deliverable in benefits; the shop product page prints both lists separately.

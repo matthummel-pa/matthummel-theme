@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.46 — Site audit fixes
+
+- Security headers from the theme: `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. No CSP yet.
+- Visitors can no longer list users through the REST API or `?author=N`; XML-RPC is off; the generator tag no longer carries the WordPress version.
+- Dead `/services/` links (author bio, thank-you page, audience card, SEO link list) point at `/hire/`; `/shop/` and `/portfolio/` in that list point at `/projects/`.
+- Category and tag archives get a written meta description and a fuller title when the term has none.
+- Accessibility: on-this-page pills are plain links inside the nav landmark; the contact, code practice, and GitHub profile asides are plain containers; skill groups on Code are no longer duplicate regions; TOCguide reading-guide text on posts is larger with passing contrast.
+- The theme zip leaves lock files and build configs out of the public theme folder.
+
 ## 3.6.45 — Feature lists without repeats
 
 - Acreline, WalkRidge, and TOCguide catalog entries no longer say the same thing twice: deliverables list what is in the box, benefits say what that gets you. Catalog bump is `mh_product_catalog_v12`, which re-applies those lists to the live project posts.

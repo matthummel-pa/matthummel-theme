@@ -49,7 +49,7 @@
     </div>
 
     {{-- Aside --}}
-    <aside class="contact-aside-v2">
+    <div class="contact-aside-v2">
 
       {{-- Response time card --}}
       <div class="contact-info-card">
@@ -95,7 +95,7 @@
         @include('partials.social', ['labeled' => true, 'cards' => true, 'links' => \App\mh_contact_else_links()])
       </div>
 
-    </aside>
+    </div>
 
   </div>
 </section>

@@ -72,7 +72,6 @@
             <section
               class="code-skills-group"
               id="skill-{{ sanitize_title($group['label']) }}"
-              aria-labelledby="skill-head-{{ sanitize_title($group['label']) }}"
               data-group="{{ esc_attr($group['label']) }}"
             >
               <div class="code-skills-group__head">
@@ -102,7 +101,7 @@
     <div class="code-practice-shell">
       <div class="code-practice-shell__mesh" aria-hidden="true"></div>
       <div class="code-practice-shell__inner code-practice-layout">
-        <aside class="code-practice-aside" aria-label="{{ __('Practice overview', 'sage') }}">
+        <div class="code-practice-aside">
           <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
           <h2 id="code-practice-heading" class="display-title is-section">
             {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
@@ -131,7 +130,7 @@
               {{ __('See the work', 'sage') }}
             </a>
           </div>
-        </aside>
+        </div>
 
         <div class="code-practice-board">
           @foreach ($practiceGroups as $group)

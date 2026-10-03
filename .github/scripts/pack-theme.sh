@@ -36,6 +36,17 @@ tar -C "$root" \
   --exclude='phpcs.xml.dist' \
   --exclude='phpstan*.neon*' \
   --exclude='lighthouse-report*' \
+  --exclude='composer.lock' \
+  --exclude='package.json' \
+  --exclude='package-lock.json' \
+  --exclude='vite.config.js' \
+  --exclude='tailwind.config.js' \
+  --exclude='bud.config.js' \
+  --exclude='jsconfig.json' \
+  --exclude='index.html' \
+  --exclude='.editorconfig' \
+  --exclude='.prettierrc*' \
+  --exclude='.nvmrc' \
   -cf - . | tar -C "$stage/matthummel" -xf -
 # Dev/AI tooling above would otherwise be publicly readable under wp-content/themes/matthummel/ on the live site.
 

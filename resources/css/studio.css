@@ -3730,3 +3730,23 @@ html.mh-dark .pill.pill--more {
 html.mh-dark .project-talk__copy {
   color: var(--gray-300);
 }
+
+/* ── 3.6.46 — TOCguide reading guide on posts: readable size and contrast (plugin ships 8–9px at ~4:1) ── */
+.single .tocguide__total-time,
+.single .tocguide__time,
+.single .tocguide__preview {
+  font-size: .8rem;
+  line-height: 1.4;
+  color: var(--gray-600);
+}
+.single .tocguide__link {
+  color: var(--blue-500);
+}
+html.mh-dark .single .tocguide__total-time,
+html.mh-dark .single .tocguide__time,
+html.mh-dark .single .tocguide__preview {
+  color: var(--gray-300);
+}
+html.mh-dark .single .tocguide__link {
+  color: var(--blue-300);
+}

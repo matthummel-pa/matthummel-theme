@@ -273,7 +273,8 @@ function mh_seo_term_title(\WP_Term $term): string
         return '';
     }
     $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-    $built = $name.' | '.$brand;
+    /* translators: %s: category or tag name. */
+    $built = sprintf(__('%s articles and notes', 'sage'), $name).' | '.$brand;
 
     return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
 }
@@ -294,10 +295,15 @@ function mh_seo_term_description(\WP_Term $term): string
         ? $meta
         : trim(wp_specialchars_decode(wp_strip_all_tags($term->description), ENT_QUOTES));
     if ($desc === '') {
-        return '';
+        $name = trim(wp_specialchars_decode(wp_strip_all_tags($term->name), ENT_QUOTES));
+        if ($name === '') {
+            return '';
+        }
+        /* translators: %s: category or tag name. */
+        $desc = sprintf(__('Posts about %s from Matt Hummel, a WordPress developer in Gettysburg, PA. Code, lessons, and tools from real projects.', 'sage'), $name);
     }
 
-    return $desc;
+    return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
 }
 
 function mh_seo_document_title(): string
@@ -645,3 +651,38 @@ function mh_print_meta_description(): void
     }
     echo '<meta name="description" content="'.esc_attr($desc).'">'."\n";
 }
+
+/*
+|--------------------------------------------------------------------------
+| Hardening (site audit 3.6.46)
+|--------------------------------------------------------------------------
+| No version in the generator tag, no XML-RPC, no user listing for visitors,
+| and no `?author=N` enumeration. Logged-in users keep every REST route.
+*/
+
+remove_action('wp_head', 'wp_generator');
+add_filter('the_generator', '__return_empty_string');
+add_filter('xmlrpc_enabled', '__return_false');
+
+add_filter('rest_endpoints', function (array $endpoints): array {
+    if (is_user_logged_in()) {
+        return $endpoints;
+    }
+
+    unset($endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)'], $endpoints['/wp/v2/users/me']);
+
+    return $endpoints;
+});
+
+add_action('template_redirect', function (): void {
+    if (is_admin()) {
+        return;
+    }
+
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only guard; nothing is written.
+    $author = isset($_GET['author']) ? sanitize_text_field(wp_unslash($_GET['author'])) : '';
+    if ($author !== '' && is_numeric($author)) {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}, 1);
