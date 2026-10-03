@@ -573,8 +573,9 @@ function mh_project_buyer_docs(int $post_id, array $card): array
 /**
  * Feature list for the What you get section.
  *
- * Deliverables first, then benefits. Drops case/punctuation duplicates and any
- * item that only restates the start of a longer item (catalog copy repeats).
+ * Deliverables first, then benefits. Two items count as the same feature when
+ * the shorter one's content words (stop words dropped, plurals trimmed) are
+ * at least three-quarters covered by the longer one. The longer item stays.
  *
  * @param  array<string, mixed>  $story  from mh_project_concept_narrative()
  * @return list<string>
@@ -586,11 +587,11 @@ function mh_project_feature_items(array $story): array
         $list = is_array($story[$key] ?? null) ? $story[$key] : [];
         foreach ($list as $item) {
             $item = trim((string) $item);
-            $norm = trim((string) preg_replace('/[^a-z0-9]+/', ' ', strtolower($item)));
-            if ($item === '' || $norm === '') {
+            $tokens = mh_project_feature_tokens($item);
+            if ($item === '' || $tokens === []) {
                 continue;
             }
-            $rows[] = ['text' => $item, 'norm' => $norm];
+            $rows[] = ['text' => $item, 'tokens' => $tokens];
         }
     }
 
@@ -601,9 +602,12 @@ function mh_project_feature_items(array $story): array
             if ($i === $j) {
                 continue;
             }
-            $same = $other['norm'] === $row['norm'];
-            $isPrefix = strlen($other['norm']) > strlen($row['norm']) && str_starts_with($other['norm'], $row['norm'].' ');
-            if ($isPrefix || ($same && $j < $i)) {
+            $shared = count(array_intersect_key($row['tokens'], $other['tokens']));
+            $mine = count($row['tokens']);
+            $theirs = count($other['tokens']);
+            $covered = $mine >= 3 && $shared / $mine >= 0.75;
+            $otherWins = $theirs > $mine || ($theirs === $mine && $j < $i);
+            if ($covered && $otherWins) {
                 $isDupe = true;
                 break;
             }
@@ -614,6 +618,31 @@ function mh_project_feature_items(array $story): array
     }
 
     return $out;
+}
+
+/**
+ * Content words of a feature line, keyed for array_intersect_key().
+ *
+ * @return array<string, true>
+ */
+function mh_project_feature_tokens(string $text): array
+{
+    static $stop = ['a', 'an', 'and', 'as', 'at', 'by', 'for', 'from', 'in', 'into', 'is', 'it', 'of', 'on', 'or', 'so', 'that', 'the', 'their', 'to', 'with', 'without', 'you', 'your', 'plus', 'more'];
+
+    $norm = strtolower(remove_accents($text));
+    $words = preg_split('/[^a-z0-9]+/', $norm) ?: [];
+    $tokens = [];
+    foreach ($words as $word) {
+        if ($word === '' || in_array($word, $stop, true)) {
+            continue;
+        }
+        if (strlen($word) > 3 && str_ends_with($word, 's')) {
+            $word = substr($word, 0, -1);
+        }
+        $tokens[$word] = true;
+    }
+
+    return $tokens;
 }
 
 /**
@@ -1571,6 +1600,20 @@ function mh_apply_product_catalog_v11(): void
 }
 
 /**
+ * One-time: deliverables and benefits no longer restate each other (Acreline, WalkRidge, TOCguide).
+ */
+function mh_apply_product_catalog_v12(): void
+{
+    if (get_option('mh_product_catalog_v12') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v12', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1672,6 +1715,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
