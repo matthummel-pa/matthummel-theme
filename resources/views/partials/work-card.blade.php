@@ -61,7 +61,8 @@
           <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
         @endforeach
         @if ($techRest > 0)
-          <span class="pill pill--more" title="{{ esc_attr(implode(', ', array_slice($techAll, 4))) }}">+{{ $techRest }}<span class="visually-hidden">{{ sprintf(_n(' more tool: %s', ' more tools: %s', $techRest, 'sage'), implode(', ', array_slice($techAll, 4))) }}</span></span>
+          {{-- translators: %s is a comma-separated list of tool names. --}}
+          <span class="pill pill--more" title="{{ esc_attr(implode(', ', array_slice($techAll, 4))) }}">+{{ $techRest }}<span class="visually-hidden"> {{ sprintf(_n('more tool: %s', 'more tools: %s', $techRest, 'sage'), implode(', ', array_slice($techAll, 4))) }}</span></span>
         @endif
       </p>
     @endif
