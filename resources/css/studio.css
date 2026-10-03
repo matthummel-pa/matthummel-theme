@@ -3750,3 +3750,11 @@ html.mh-dark .single .tocguide__preview {
 html.mh-dark .single .tocguide__link {
   color: var(--blue-300);
 }
+
+/* Cancel-reply link is a span inside the reply heading now (valid HTML); keep it on its own line. */
+.comment-reply-title .comment-cancel-reply {
+  display: block;
+  margin: .35rem 0 0;
+  font: 500 .88rem/1.4 var(--font-display);
+  letter-spacing: 0;
+}

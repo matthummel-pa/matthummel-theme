@@ -686,3 +686,17 @@ add_action('template_redirect', function (): void {
         exit;
     }
 }, 1);
+
+// /journal/ is what the nav calls the blog; catch type-ins and send them to /blog/.
+add_action('template_redirect', function (): void {
+    if (! is_404()) {
+        return;
+    }
+
+    $uri = sanitize_text_field(wp_unslash((string) ($_SERVER['REQUEST_URI'] ?? '')));
+    $path = trim((string) (wp_parse_url($uri, PHP_URL_PATH) ?? ''), '/');
+    if ($path === 'journal') {
+        wp_safe_redirect(home_url('/blog/'), 301);
+        exit;
+    }
+}, 2);

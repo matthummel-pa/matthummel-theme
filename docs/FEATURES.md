@@ -11,7 +11,10 @@ What the 3.x Sage theme does, and where it lives.
 - `<aside>` is for content outside `<main>`. Inside a page section use a `<div>` (contact aside, code practice aside, GitHub profile card).
 - TOCguide override in `studio.css` (3.6.46) is a stopgap; the size and color fix belongs in the TOCguide plugin.
 - `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
-- Not in the theme: the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, and the `admin` username (Notion: matthummel.com — Site audit notebook).
+- `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
+- Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
+- Catalog `seo_title` / `seo_description` exist for all four projects. They seed `_mh_seo_*` once (`mh_product_catalog_v13`); wp-admin edits win.
+- Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)
 

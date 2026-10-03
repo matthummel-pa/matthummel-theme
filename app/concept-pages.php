@@ -1614,6 +1614,20 @@ function mh_apply_product_catalog_v12(): void
 }
 
 /**
+ * One-time: SEO title and description for Acreline, WalkRidge, TOCguide (seeded only where empty).
+ */
+function mh_apply_product_catalog_v13(): void
+{
+    if (get_option('mh_product_catalog_v13') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v13', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1716,6 +1730,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

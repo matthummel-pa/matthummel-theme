@@ -8,6 +8,9 @@
 - Category and tag archives get a written meta description and a fuller title when the term has none.
 - Accessibility: on-this-page pills are plain links inside the nav landmark; the contact, code practice, and GitHub profile asides are plain containers; skill groups on Code are no longer duplicate regions; TOCguide reading-guide text on posts is larger with passing contrast.
 - The theme zip leaves lock files and build configs out of the public theme folder.
+- `/journal/` 301s to `/blog/`. The comment-form cancel link is a `<span>` inside the heading instead of an invalid `<p>`.
+- Footer links the pages nothing else linked to: For agencies, Handoff checklist, Support, Resources, Changelog.
+- Acreline, WalkRidge, and TOCguide get a written search title and description (`mh_product_catalog_v13`, seeded only where the MH SEO fields are empty) instead of a sentence cut off mid-word.
 
 ## 3.6.45 — Feature lists without repeats
 
