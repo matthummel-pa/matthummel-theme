@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-label="matthummel-theme — the Sage 11 WordPress theme behind matthummel.com">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1f3f"/>
+      <stop offset="1" stop-color="#173e70"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" x2="1">
+      <stop offset="0" stop-color="#93c5fd"/>
+      <stop offset="1" stop-color="#0e8a7c"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e5e7eb"/>
+      <stop offset=".42" stop-color="#d1d5db"/>
+      <stop offset="1" stop-color="#93c5fd"/>
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0v24" fill="none" stroke="#ffffff" stroke-opacity=".06"/>
+    </pattern>
+  </defs>
+  <style>
+    .kicker { font: 600 13px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #93c5fd; letter-spacing: .18em; text-transform: uppercase; }
+    .title { font: 800 46px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #ffffff; letter-spacing: -.03em; }
+    .sub { font: 400 18px/1.4 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #cfe0f5; }
+    .chip { fill: rgba(255,255,255,.08); stroke: rgba(255,255,255,.18); }
+    .chipt { font: 600 12px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #e6edf3; letter-spacing: .02em; }
+    .mono { font: 600 12px/1 ui-monospace, Menlo, Consolas, monospace; fill: #93c5fd; }
+  </style>
+  <rect width="1200" height="260" rx="18" fill="url(#bg)"/>
+  <rect width="1200" height="260" rx="18" fill="url(#grid)"/>
+  <g transform="translate(56,58)">
+    <rect width="72" height="72" rx="16" fill="url(#mark)"/>
+    <text x="36" y="48" text-anchor="middle" style="font: 800 30px/1 -apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif; fill: #0b1f3f; letter-spacing: -.04em">MH</text>
+  </g>
+  <text class="kicker" x="156" y="70">matthummel-pa / matthummel-theme</text>
+  <text class="title" x="154" y="118">The theme behind matthummel.com</text>
+  <rect x="156" y="132" width="88" height="4" rx="2" fill="url(#rule)"/>
+  <text class="sub" x="156" y="168">Sage 11 · Acorn 6 · Blade · Tailwind CSS v4 · Vite 8 · PHP 8.3 · WordPress 6.6+</text>
+  <g transform="translate(156,194)">
+    <rect class="chip" width="150" height="30" rx="15"/><text class="chipt" x="14" y="19">No page builder</text>
+    <rect class="chip" x="160" width="190" height="30" rx="15"/><text class="chipt" x="174" y="19">Copy edited in wp-admin</text>
+    <rect class="chip" x="360" width="178" height="30" rx="15"/><text class="chipt" x="374" y="19">CI zip → Update Theme</text>
+    <rect class="chip" x="548" width="148" height="30" rx="15"/><text class="chipt" x="562" y="19">WCAG 2.1 AA target</text>
+  </g>
+  <text class="mono" x="1144" y="236" text-anchor="end">v3.6.47 · MIT</text>
+</svg>
