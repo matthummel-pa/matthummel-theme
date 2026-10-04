@@ -2,6 +2,14 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.47 social share cards)
+
+- `app/social-share.php` renders one `.mh-social__card` per network. Buttons are `mh_social_button()` with `data-mh-act` = `generate` | `post-bluesky` | `post-facebook` | `post-devto` | `open` | `copy`. Add a network by adding a card array, not more ids.
+- Facebook posting: `mh_facebook_post_to_page()` → Graph API `POST /{page}/feed` with `message` + `link`. Credentials are `MH_FACEBOOK_PAGE_ID` / `MH_FACEBOOK_PAGE_TOKEN` in wp-config, else theme mods `mh_facebook_page_id` / `mh_facebook_page_token`. Result meta: `_mh_facebook_post_id`, `_mh_facebook_url`, `_mh_facebook_shared_at`. The token is never printed.
+- Share dialog URLs are built in JS from the current draft (`quote` for Facebook, intent text for Bluesky, title for Reddit), so what you see in the card is what opens.
+- Posting needs `post_status = publish`; drafts can still be generated and copied.
+- Field names and the `save_post_post` map are unchanged (`mh_bluesky_custom_text`, `mh_social_facebook_text`, `mh_social_reddit_title`, `mh_social_reddit_text`, `mh_social_linkedin_text`).
+
 ## Editor’s notes (3.6.46 site audit)
 
 - Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. `X-Frame-Options` is skipped on `/slug/embed/` so oEmbed keeps working; no `payment=()` because express checkout uses the Payment Request API. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts. These headers do not reach wp-admin, REST, or static files; that would be a root `.htaccess`.

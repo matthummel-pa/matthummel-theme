@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.47 — Social share cards
+
+- The Social share & drafts box on posts is a card per network (Bluesky, Facebook, LinkedIn, Reddit, DEV.to). Each card has its draft, a character meter, and icon buttons: Generate (OpenAI when the key is set, rule-based otherwise), Post, Share dialog, Copy.
+- Facebook can post straight to a Page through the Graph API when Appearance → Customize → Facebook Page has the Page ID and a Page token. Without a token the Share dialog opens with the draft pre-filled. The posted URL is saved and shown on the card.
+- Posting buttons stay disabled until the post is published.
+
 ## 3.6.46 — Site audit fixes
 
 - Security headers from the theme: `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. No CSP yet.
