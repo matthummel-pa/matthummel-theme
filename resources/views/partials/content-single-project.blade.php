@@ -447,7 +447,7 @@
     <section class="pf-section" aria-labelledby="related-projects">
       <div class="container wide">
         <h2 id="related-projects" class="display-title is-section">{{ __('More projects', 'sage') }}</h2>
-        <div class="work-grid">
+        <div class="work-grid work-grid--roomy">
           @foreach ($related as $p)
             @include('partials.work-card', ['p' => $p])
           @endforeach
