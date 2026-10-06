@@ -3,7 +3,7 @@
 ## 3.6.48 — Larger project cards
 
 - `/projects/` cards sit in a two-column grid with a taller shot, a larger title, and more padding. List view keeps a wider thumbnail.
-- The projects FAQ is one column. The question list runs under the heading, and Ask me sits beside the heading instead of in a left sidebar.
+- The projects FAQ is one column. The question list runs under the heading, and Ask me sits beside the heading instead of in a left sidebar. The three how-it-works steps sit in one row.
 - A project page hero keeps the copy panel on the left and lets the screenshot show on the right. The gallery frame is larger, thumbnails are bigger, and the page body uses the full content width.
 
 ## 3.6.47 — Social share cards

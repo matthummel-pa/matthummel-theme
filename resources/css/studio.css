@@ -3840,6 +3840,11 @@ html.mh-dark .work-grid--roomy .work-card {
   flex: none;
   margin-bottom: .15rem;
 }
+@media (min-width: 801px) {
+  .work-guide .svc-process {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
 @media (min-width: 960px) {
   .page-header--project .page-header__panel {
