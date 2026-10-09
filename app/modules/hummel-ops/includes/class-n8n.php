@@ -5,6 +5,8 @@ class HOPS_N8n
 {
     const LOG = 'hops_run_log';
 
+    const MAX_DRAFTS = 10;
+
     public static function init()
     {
         add_action('wp_ajax_hops_run_workflow', [__CLASS__, 'ajax_run']);
@@ -24,6 +26,7 @@ class HOPS_N8n
         }
         $wf = $s['workflows'][$index];
 
+        $drafts = isset($_POST['drafts']) ? max(1, min(self::MAX_DRAFTS, (int) $_POST['drafts'])) : 0;
         $payload = isset($_POST['payload']) ? trim(wp_unslash($_POST['payload'])) : '';
         if ($payload !== '') {
             $decoded = json_decode($payload, true);
@@ -37,6 +40,11 @@ class HOPS_N8n
                 'triggered_by' => $user->user_login,
                 'triggered_at' => gmdate('c'),
             ];
+        }
+
+        // A workflow with the counter on receives the number of drafts to write.
+        if (! empty($wf['counter']) && $drafts > 0 && is_array($decoded) && ! isset($decoded['drafts'])) {
+            $decoded['drafts'] = $drafts;
         }
 
         $r = self::send($wf, $decoded);
@@ -130,7 +138,14 @@ class HOPS_N8n
 		<div class="hops-wf hops-card" data-index="<?php echo (int) $i; ?>">
 			<div class="hops-wf-top">
 				<h3><?php echo esc_html($wf['name']); ?></h3>
-				<button type="button" class="button <?php echo $compact ? '' : 'button-primary'; ?> hops-run">Run now</button>
+				<span class="hops-run-ctl">
+					<?php if (! empty($wf['counter'])) { ?>
+						<label class="hops-count"><span>Drafts</span>
+							<input type="number" class="hops-drafts" min="1" max="<?php echo (int) self::MAX_DRAFTS; ?>" step="1" value="1" inputmode="numeric" aria-label="Number of drafts to write from your editorial calendar for <?php echo esc_attr($wf['name']); ?>">
+						</label>
+					<?php } ?>
+					<button type="button" class="button <?php echo $compact ? '' : 'button-primary'; ?> hops-run"><?php echo ! empty($wf['counter']) ? 'Write drafts' : 'Run now'; ?></button>
+				</span>
 			</div>
 			<div class="hops-wf-meta hops-last" aria-live="polite"><?php echo self::last_run_html($wf['name']); // phpcs:ignore WordPress.Security.EscapeOutput?></div>
 			<?php if (! $compact) { ?>

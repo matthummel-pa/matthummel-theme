@@ -243,3 +243,8 @@
 .hops .hops-n.is-ai rect, .hops .hops-key-dot.is-ai { fill: #f4effc; stroke: #5b2e91; background: #f4effc; }
 .hops .hops-nwf-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font-size: 13px; color: var(--hops-muted); }
 .hops .hops-nwf.is-wide { grid-column: 1 / -1; }
+
+/* Draft counter beside a Run button */
+.hops .hops-run-ctl { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hops .hops-count { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--hops-muted); }
+.hops .hops-count input { width: 64px; min-height: 30px; text-align: center; }

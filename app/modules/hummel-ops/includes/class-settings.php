@@ -103,7 +103,7 @@ class HOPS_Settings
                 $name = isset($wf['name']) ? sanitize_text_field($wf['name']) : '';
                 $url = isset($wf['url']) ? esc_url_raw(trim($wf['url'])) : '';
                 if ($name !== '' && $url !== '') {
-                    $out['workflows'][] = ['name' => $name, 'url' => $url];
+                    $out['workflows'][] = ['name' => $name, 'url' => $url, 'counter' => ! empty($wf['counter']) ? 1 : 0];
                 }
             }
         }
@@ -342,15 +342,16 @@ class HOPS_Settings
 		<form method="post" action="options.php">
 			<?php settings_fields('hops_group'); ?>
 
-			<?php self::open_svc('n8n', 'n8n workflows', self::badge($n8n_on, count($s['workflows']).' added', 'None added'), 'One row per workflow. Copy the <strong>Production URL</strong> from the n8n Webhook node and keep the workflow active.'); ?>
+			<?php self::open_svc('n8n', 'n8n workflows', self::badge($n8n_on, count($s['workflows']).' added', 'None added'), 'One row per workflow. Copy the <strong>Production URL</strong> from the n8n Webhook node and keep the workflow active. Tick <strong>Ask how many</strong> to add a counter next to the button; the number is sent to n8n as <code>drafts</code> (for example, how many posts to write from your editorial calendar).'); ?>
 				<div class="hops-table-wrap">
 				<table class="widefat hops-table" id="hops-rows">
-					<thead><tr><th>Button label</th><th>Webhook URL</th><th><span class="screen-reader-text">Remove</span></th></tr></thead>
+					<thead><tr><th>Button label</th><th>Webhook URL</th><th>Draft count</th><th><span class="screen-reader-text">Remove</span></th></tr></thead>
 					<tbody>
 					<?php foreach ($s['workflows'] as $i => $wf) { ?>
 						<tr>
 							<td><input type="text" class="regular-text" aria-label="Button label" name="<?php echo esc_attr(self::OPT); ?>[workflows][<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($wf['name']); ?>"></td>
 							<td><input type="url" class="large-text" aria-label="Webhook URL" name="<?php echo esc_attr(self::OPT); ?>[workflows][<?php echo (int) $i; ?>][url]" value="<?php echo esc_attr($wf['url']); ?>"></td>
+							<td><label><input type="checkbox" name="<?php echo esc_attr(self::OPT); ?>[workflows][<?php echo (int) $i; ?>][counter]" value="1"<?php checked(! empty($wf['counter'])); ?>> Ask how many</label></td>
 							<td><button type="button" class="button hops-remove">Remove</button></td>
 						</tr>
 					<?php } ?>
