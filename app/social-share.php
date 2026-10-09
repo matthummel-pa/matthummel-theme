@@ -911,7 +911,7 @@ function mh_social_ajax_guard(): int
     }
 
     mh_social_ai_requested(sanitize_key((string) ($_POST['provider'] ?? '')));
-    mh_social_ai_requested_model((string) wp_unslash($_POST['model'] ?? ''));
+    mh_social_ai_requested_model(sanitize_text_field(wp_unslash($_POST['model'] ?? '')));
 
     if (isset($_POST['custom_text'])) {
         $custom = sanitize_textarea_field(wp_unslash($_POST['custom_text']));

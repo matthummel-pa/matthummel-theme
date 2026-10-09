@@ -99,7 +99,7 @@ add_action('admin_post_mh_save_social', function (): void {
     check_admin_referer('mh_save_social');
 
     $fields = mh_social_settings_fields();
-    $in = isset($_POST['mh_social']) && is_array($_POST['mh_social']) ? wp_unslash($_POST['mh_social']) : [];
+    $in = isset($_POST['mh_social']) && is_array($_POST['mh_social']) ? map_deep(wp_unslash($_POST['mh_social']), 'sanitize_textarea_field') : [];
 
     foreach (array_keys($fields['secrets']) as $mod) {
         if (! empty($in['clear'][$mod])) {
