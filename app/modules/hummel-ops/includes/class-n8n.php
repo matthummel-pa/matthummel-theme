@@ -45,6 +45,13 @@ class HOPS_N8n
         // A workflow with the counter on receives the number of drafts to write.
         if (! empty($wf['counter']) && $drafts > 0 && is_array($decoded) && ! isset($decoded['drafts'])) {
             $decoded['drafts'] = $drafts;
+            // run_id ties n8n's progress updates back to this run; dry_run plans topics without writing.
+            $decoded['run_id'] = $decoded['run_id'] ?? wp_generate_uuid4();
+            $dry = ! empty($_POST['dry_run']) && $_POST['dry_run'] !== '0';
+            if ($dry) {
+                $decoded['dry_run'] = true;
+            }
+            HOPS_Pipeline::queue($decoded['run_id'], $wf['name'], $drafts, $dry);
         }
 
         $r = self::send($wf, $decoded);
@@ -143,6 +150,7 @@ class HOPS_N8n
 						<label class="hops-count"><span>Drafts</span>
 							<input type="number" class="hops-drafts" min="1" max="<?php echo (int) self::MAX_DRAFTS; ?>" step="1" value="1" inputmode="numeric" aria-label="Number of drafts to write from your editorial calendar for <?php echo esc_attr($wf['name']); ?>">
 						</label>
+						<label class="hops-plan"><input type="checkbox" class="hops-dry"> Plan only (no drafts)</label>
 					<?php } ?>
 					<button type="button" class="button <?php echo $compact ? '' : 'button-primary'; ?> hops-run"><?php echo ! empty($wf['counter']) ? 'Write drafts' : 'Run now'; ?></button>
 				</span>
@@ -190,6 +198,8 @@ class HOPS_N8n
 				} ?>
 				</div>
 			<?php } ?>
+
+			<?php HOPS_Pipeline::panel(); ?>
 
 			<?php HOPS_N8nViz::panels(); ?>
 

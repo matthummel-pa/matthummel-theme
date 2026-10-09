@@ -138,7 +138,8 @@
 			post('hops_run_workflow', {
 				index: card.dataset.index,
 				payload: card.querySelector('.hops-payload').value,
-				drafts: card.querySelector('.hops-drafts') ? card.querySelector('.hops-drafts').value : ''
+				drafts: card.querySelector('.hops-drafts') ? card.querySelector('.hops-drafts').value : '',
+				dry_run: card.querySelector('.hops-dry') && card.querySelector('.hops-dry').checked ? '1' : ''
 			}).then(function (res) {
 				var d = res.data || {};
 				out.hidden = false;

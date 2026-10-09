@@ -22,6 +22,7 @@ require_once HOPS_DIR.'includes/class-settings.php';
 require_once HOPS_DIR.'includes/class-google.php';
 require_once HOPS_DIR.'includes/class-n8n.php';
 require_once HOPS_DIR.'includes/class-n8n-viz.php';
+require_once HOPS_DIR.'includes/class-pipeline.php';
 require_once HOPS_DIR.'includes/class-drive.php';
 require_once HOPS_DIR.'includes/class-todos.php';
 require_once HOPS_DIR.'includes/class-rundown.php';
@@ -34,6 +35,7 @@ $hops_boot = static function () {
     HOPS_Settings::init();
     HOPS_Google::init();
     HOPS_N8n::init();
+    HOPS_Pipeline::init();
     HOPS_Drive::init();
     HOPS_Todos::init();
     HOPS_Rundown::init();
