@@ -156,14 +156,19 @@ class HOPS_Settings
         $guides = [
             'n8n' => [
                 'steps' => [
-                    'In n8n, open the workflow and add a <strong>Webhook</strong> node as the trigger.',
-                    'Set the method to POST, then copy the <strong>Production URL</strong> (not the Test URL).',
-                    'Toggle the workflow to <strong>Active</strong>. A Production URL only answers while the workflow is active.',
-                    'Paste the URL below and name the button. Optional: add a Header Auth credential on the Webhook node and put the same header name and value in the Auth header fields.',
+                    'In n8n, create a workflow and add a <strong>Webhook</strong> node as the trigger. Set HTTP Method to <strong>POST</strong> and Respond to <strong>Immediately</strong> (or When Last Node Finishes to see results in the Run log).',
+                    'Open the node and copy the <strong>Production URL</strong>. The Test URL only answers once, while you click Listen for test event in the editor.',
+                    'Build the rest of the workflow, then switch the <strong>Active</strong> toggle on. A Production URL returns 404 while the workflow is inactive.',
+                    'Click <strong>Add a workflow</strong> below, name the button, paste the Production URL, and save. The button appears on Today.',
+                    'Optional security: in n8n create a <strong>Header Auth</strong> credential (name such as <code>X-Hummel-Key</code>, a long random value) and select it on the Webhook node. Enter the same name and value in the Auth header fields below. Every workflow here then sends that header.',
+                    'Test: press the new button on Today. A 2xx result means n8n accepted it; open <strong>Executions</strong> in n8n to see the data. The default payload is JSON with <code>source</code> (hummel-ops), <code>triggered_by</code>, and <code>triggered_at</code>.',
+                    'Troubleshooting: 404 means the workflow is inactive or you pasted the Test URL. 401 or 403 means the header name or value does not match. A timeout means the workflow runs longer than 45 seconds, so set Respond to Immediately.',
                 ],
                 'links' => [
                     'Webhook node docs' => 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/',
-                    'n8n credentials' => 'https://docs.n8n.io/credentials/',
+                    'Header Auth credential' => 'https://docs.n8n.io/integrations/builtin/credentials/httprequest/',
+                    'Executions' => 'https://docs.n8n.io/workflows/executions/',
+                    'n8n Cloud sign-in' => 'https://app.n8n.cloud/login',
                 ],
             ],
             'google' => [
