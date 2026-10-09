@@ -21,7 +21,7 @@
 @endphp
 
 {{-- HERO --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('GitHub snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('portfolio_kicker', __('Portfolio', 'sage'), $postId) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('portfolio_h1', __('WordPress and full-stack code on GitHub.', 'sage'), $postId) }}
@@ -37,22 +37,16 @@
       {{ __('GitHub profile', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'github.com/'.$ghLogin,
-      'icon'   => 'github',
-      'title'  => __('Public repos', 'sage'),
-      'meta'   => __('WordPress, PHP, React, TypeScript', 'sage'),
-      'stats'  => [
-        ['value' => $totalRepos > 0 ? number_format_i18n($totalRepos) : count($featured) + count($live), 'label' => __('Public repos', 'sage')],
-        ['value' => $followers > 0 ? number_format_i18n($followers) : '—', 'label' => __('Followers', 'sage')],
-        ['value' => $ghStars > 0 ? number_format_i18n($ghStars) : '—', 'label' => __('Stars earned', 'sage')],
-        ['value' => 'PHP · JS', 'label' => __('Primary languages', 'sage')],
-      ],
-      'link' => ['label' => __('Open GitHub', 'sage'), 'href' => $ghUrl],
-    ])
-  @endslot
 @endcomponent
+
+@include('partials.page-nav', [
+  'pills' => array_values(array_filter([
+    ['portfolio-intro-heading', __('Overview', 'sage')],
+    $portfolioConcepts !== [] ? ['portfolio-concepts-heading', __('Concepts', 'sage')] : null,
+    $featured !== [] ? ['portfolio-featured-heading', __('Featured', 'sage')] : null,
+    $live !== [] ? ['portfolio-live-heading', __('Updated', 'sage')] : null,
+  ])),
+])
 
 {{-- INTRO --}}
 <section class="pf-section" aria-labelledby="portfolio-intro-heading">

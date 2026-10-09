@@ -11,7 +11,7 @@
 
   @if (! empty($tools['next']))
     <section class="side-card woo-desk-card" aria-labelledby="woo-account-next-h">
-      <h2 id="woo-account-next-h" class="side-card-title">{{ __('On this page', 'sage') }}</h2>
+      <h2 id="woo-account-next-h" class="side-card-title">{{ __('Next steps', 'sage') }}</h2>
       <ol class="woo-desk-steps">
         @foreach ($tools['next'] as $i => $step)
           <li class="woo-desk-steps__item">

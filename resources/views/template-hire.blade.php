@@ -44,7 +44,7 @@
 @section('content')
 
 {{-- ── HERO ────────────────────────────────────────────── --}}
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Hire snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('hire_kicker', __('Hire me', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('hire_h1', __('Hire a WordPress developer.', 'sage')) }}
@@ -54,44 +54,28 @@
     <p class="sec-intro range-note">{{ \App\field('hire_range', \App\mh_adjacent_range_copy()) }}</p>
     <p class="sec-intro">{{ \App\field('hire_price_line', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')) }}</p>
   </div>
-  @if (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
-    <p class="hire-avail">
-      @include('partials.avail-mark', ['gh' => $gh])
-      {{ \App\mh_availability_label($gh, __('Currently available', 'sage')) }} — {{ \App\mh_reply_sla('phrase') }}
-    </p>
-  @endif
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
+    @include('partials.booking-link')
     <a class="h-text-arrow" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
       LinkedIn <span aria-hidden="true">→</span>
       <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/hire',
-      'icon' => 'briefcase',
-      'title' => __('Good fit for', 'sage'),
-      'meta' => __('Shops · agencies · developers', 'sage'),
-      'status' => (\App\mh_is_hireable($gh) || ! empty($li['open_to_work']))
-        ? ['label' => \App\mh_availability_label($gh, __('Open', 'sage')), 'gh' => $gh]
-        : null,
-      'stats' => [
-        ['value' => number_format_i18n($roleCount), 'label' => __('Roles on resume', 'sage')],
-        ['value' => number_format_i18n(count($skills)), 'label' => __('Skills listed', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress focus', 'sage')],
-      ],
-      'link' => [
-        'label' => __('View LinkedIn', 'sage'),
-        'href' => $liUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@include('partials.page-nav', [
+  'pills' => [
+    ['linkedin', __('LinkedIn', 'sage')],
+    ['skills', __('Skills', 'sage')],
+    ['need', __('To start', 'sage')],
+    ['process', __('Process', 'sage')],
+    ['handoff', __('Handoff', 'sage')],
+    ['contact-cta', __('Say hello', 'sage')],
+  ],
+])
 
 {{-- ── LINKEDIN PROFILE ────────────────────────────────── --}}
 <section class="pf-section pf-section--alt" id="linkedin" aria-labelledby="hire-li-heading">
@@ -219,7 +203,7 @@
 </section>
 
 {{-- ── WHAT I NEED FROM YOU ──────────────────────────── --}}
-<section class="pf-section" aria-labelledby="hire-need-heading">
+<section class="pf-section" id="need" aria-labelledby="hire-need-heading">
   <div class="container wide">
     <div class="hire-need-layout">
       <div class="hire-need-copy">
@@ -240,6 +224,7 @@
         <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.85rem">
           {!! \App\mh_svg_icon('mail', 15) !!} Say hello
         </a>
+        @include('partials.booking-link', ['block' => true])
         <p class="hire-need-cta__note">
           Or <a href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">message on LinkedIn</a>
         </p>
@@ -309,6 +294,7 @@
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
+      @include('partials.booking-link', ['class' => 'btn btn-ghost'])
       <a class="btn btn-ghost" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
         {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>

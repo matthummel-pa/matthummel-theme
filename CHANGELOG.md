@@ -1,5 +1,217 @@
 # Changelog
 
+## 3.6.47 — Social share cards
+
+- The Social share & drafts box on posts is a card per network (Bluesky, Facebook, LinkedIn, Reddit, DEV.to). Each card has its draft, a character meter, and icon buttons: Generate (OpenAI when the key is set, rule-based otherwise), Post, Share dialog, Copy.
+- Facebook can post straight to a Page through the Graph API when Appearance → Customize → Facebook Page has the Page ID and a Page token. Without a token the Share dialog opens with the draft pre-filled. The posted URL is saved and shown on the card.
+- Posting buttons stay disabled until the post is published.
+
+## 3.6.46 — Site audit fixes
+
+- Security headers from the theme: `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. No CSP yet.
+- Visitors can no longer list users through the REST API or `?author=N`; XML-RPC is off; the generator tag no longer carries the WordPress version.
+- Dead `/services/` links (author bio, thank-you page, audience card, SEO link list) point at `/hire/`; `/shop/` and `/portfolio/` in that list point at `/projects/`.
+- Category and tag archives get a written meta description and a fuller title when the term has none.
+- Accessibility: on-this-page pills are plain links inside the nav landmark; the contact, code practice, and GitHub profile asides are plain containers; skill groups on Code are no longer duplicate regions; TOCguide reading-guide text on posts is larger with passing contrast.
+- The theme zip leaves lock files and build configs out of the public theme folder.
+- `/journal/` 301s to `/blog/`. The comment-form cancel link is a `<span>` inside the heading instead of an invalid `<p>`.
+- Footer links the pages nothing else linked to: For agencies, Handoff checklist, Support, Resources, Changelog.
+- Acreline, WalkRidge, and TOCguide get a written search title and description (`mh_product_catalog_v13`, seeded only where the MH SEO fields are empty) instead of a sentence cut off mid-word.
+
+## 3.6.45 — Feature lists without repeats
+
+- Acreline, WalkRidge, and TOCguide catalog entries no longer say the same thing twice: deliverables list what is in the box, benefits say what that gets you. Catalog bump is `mh_product_catalog_v12`, which re-applies those lists to the live project posts.
+- Project pages treat two lines as one feature when the shorter line's content words are mostly inside the longer one (plurals and filler words ignored), and keep the longer line.
+
+## 3.6.44 — Project pages read like a landing page
+
+- `/projects/{slug}/` runs in sales order: hero → screenshots → what you get → story → under the hood → questions → feedback. The story (why I built it, what I did, what you can use) is a numbered three-step rail instead of four paragraphs at the end.
+- The hero keeps one primary button (Get the pack when for sale, otherwise Live demo), one secondary (Ask about this), and a View code link. The proof strip under the lead shows stored metrics, or screenshot count, feature count, and license. The sample-work notice is one quiet line.
+- On-this-page pills drop from 13 to 6. Build notes, Theme details, Palette, Runs on, and Tags fold into one Under the hood section: a spec table (GitHub zeros hidden) beside the architecture list, then handoff and a compact palette row.
+- Feature lists drop case and prefix duplicates and show ten items with a Show all toggle.
+- Like, star, copy link, comments, and the ask form live together in the Feedback section. The top feedback box is gone.
+- Listing cards show four stack pills and a +N count.
+
+## 3.6.43 — Cobble & Candle project page
+
+- New project: **Cobble & Candle**, a WordPress block theme for restaurants, taverns and inns, at `/projects/cobbleandcandle/` with 19 screenshots (front end, four styles and admin), benefits, blocks, FAQ and links to the live demo, repo and owner guide. It is not for sale yet, so it has no WooCommerce product or buy button.
+- Catalog entries can set `seo_title` and `seo_description`. They seed the MH SEO title and description once and never overwrite edits made in wp-admin.
+- A catalog project that is not for sale no longer gets a private WooCommerce product, which would have turned its page into a product landing. Existing products keep syncing.
+- Project pages print SoftwareApplication structured data for themes and plugins (with an Offer only when for sale with a price) and FAQPage data for their questions.
+- Catalog bump is `mh_product_catalog_v11`.
+
+## 3.6.42 — Now page activity and note
+
+- The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).
+- A Right now band lists public GitHub activity, recent journal posts, and profile links plus public DEV.to and Bluesky posts when those feeds respond.
+- Send a note emails me through the contact form. Open a GitHub note starts an issue on this theme repo. Text me appears only when an SMS number is saved, and it opens the visitor’s own phone.
+
+## 3.6.41 — Pages, links, booking, and the GitHub token
+
+- A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
+- Footer and terms links use the WordPress privacy policy page when it is set, then the Privacy and Terms templates. The old `/privacy-policy/` and `/terms-of-use/` paths are gone.
+- Appearance → Customize → Booking stores an optional booking URL (`mh_booking_url`). Hire, Contact, and Start show “Book a 15-minute call” only when that URL is set.
+- GitHub requests read `MH_GITHUB_TOKEN` from wp-config.php or the environment before the saved theme setting. The token is not printed.
+
+## Newsletter plugin 1.11.0 — One unsubscribe page
+
+- The plugin creates Get updates, Unsubscribe, and Manage preferences on activation or in wp-admin. A front-end page load no longer creates them.
+- It stores each page ID and looks up the slug in any status before inserting. A lock stops overlapping requests from making `/unsubscribe-2/` and the rest. The lock is an insert that fails when the row exists, because `add_option()` updates an existing row. If two pages still share a slug, the older one is kept.
+- Unsubscribe, email preferences, and thank-you stay `noindex` when Rank Math is active, including numbered copies such as `/unsubscribe-113/`.
+- Single posts can end with `[mhn_signup source="post"]`. It uses the same signup handler, nonce, honeypot, and email and first-name fields. The note mentions a free WordPress Handoff Checklist.
+- Newsletter settings has a checklist link. It stays empty until you paste an https URL. The welcome letter then includes that button.
+
+## Newsletter plugin 1.10.0 — Signup block
+
+- A signup block can sit on any page. It uses the same confirm-by-email signup as the Get updates form.
+- The page form and the block are a card with the email and button on one row. The footer button fills its column.
+
+## 3.6.40 — Remove the public fatal log
+
+- Stopped writing `mh-last-fatal.txt` into the theme. That file was on the public site and included server paths.
+- Theme packs skip `*fatal*.txt` and `*.log`. PHP errors stay in the host log.
+
+## 3.6.39 — Unsubscribe and preferences titles
+
+- The Get updates template titles Unsubscribe and Manage preferences on those pages.
+- Visitor signup copy on Get updates is unchanged.
+
+## 3.6.38 — Get updates page
+
+- Get updates has its own page, with email and an optional first name.
+- The footer signup still keeps your address on this site. New signups confirm by email before they are on the list when the site newsletter is on.
+- If that newsletter is off, the footer signup works as before.
+
+## 3.6.37 — Projects grid, blue checks, catalog shots
+
+- Project singles drop the Projects crumb (and Rank Math / Yoast breadcrumbs on project surfaces).
+- Feature lists use one blue check, not a navy marker plus an SVG check.
+- Work cards and project galleries prefer catalog screenshots (`products/{slug}/*.webp`) over Media Library featured images.
+- The Projects listing no longer features the first card full-width above the grid. TOCguide sits in the same card grid as Acreline and WalkRidge.
+- The listing hero uses the page scene shot, not a stretched first-project screenshot.
+
+## 3.6.36 — Project screenshot URLs survive host changes
+
+- Store catalog screenshots as theme-relative paths (`products/tocguide/featured.webp`), not baked `localhost` URLs.
+- Render rewrites any stored `/themes/{folder}/resources/images/` URL through `get_theme_file_uri()`.
+- Ask / notes / like-star jump targets clear the sticky header (`scroll-margin-top`).
+- Catalog bump `mh_product_catalog_v10`.
+
+## 3.6.35 — Project pages: TOCguide data, like/star, comments, contact
+
+- Catalog: **Acreline 1.5.9**, **WalkRidge 1.7.2** (live demo), **TOCguide 1.5.0** (renamed from TOCflow). `/projects/tocflow/` 301s to `/projects/tocguide/`.
+- Project pages: screenshot lightbox + live caption, brand palette swatches, like/star visitor counts, public notes, and the same `mh_contact` form as Contact (compact, prefilled).
+- Visitor like/star is cookie + post meta (`_mh_visitor_likes` / `_mh_visitor_stars`), not GitHub stars.
+
+## 3.6.34 — Page hero vertical padding
+
+- Photo page heroes use more top and bottom padding so the white copy panel sits farther from the header and the wave. Home viewport heroes match.
+
+## 3.6.33 — On this page bar padding
+
+- Desktop **On this page** row uses `1rem` top and bottom padding so pills sit with more air under the hero. Mobile stays `.7rem`.
+
+## 3.6.32 — Full-width hero copy panel
+
+- The white hero panel spans the main content column (`container.wide` / `--page-max`), not a 42rem card.
+
+## 3.6.31 — Featured-image heroes with white panel and wave
+
+- Heroes use a **work** screenshot as the background. Headshots, GitHub avatars, and Gravatar never appear in the hero.
+- If the page featured image is a portrait, the theme falls back to a page-matched studio shot (Acreline, WalkRidge, sample sites).
+- Copy sits in a white panel over a white see-through wash so text stays readable.
+- Right-column snapshot cards are gone. Copy sits in a white panel over a white see-through wash so text stays readable.
+- Home hero fills the viewport below the header. Other pages keep the same inner content width.
+- A white wavy edge blends the hero into the section underneath.
+
+## 3.6.30 — No availability pill in marketing heroes
+
+- About, Hire, Code, and Contact heroes no longer show the green Open for work pill in the copy column. Header and footer pills stay. Snapshot panels can still show a status chip.
+
+## 3.6.29 — Hero snapshot photos + current nav hover
+
+- Marketing split heroes render the right-hand snapshot panel again (About, Projects, Journal, and the other pages that already pass `split`). Glow/orbs stay off.
+- Snapshot cards can show a photo: About uses the profile photo, Projects uses the first work screenshot, Journal uses the latest post image.
+- Current header nav items keep white text on a darker navy pill on hover and focus. Site-wide bright-blue link hover no longer paints the current item unreadable. Active filter pills and On this page pills match.
+
+## 3.6.28 — Footer copyright centered on mobile
+
+- The bottom footer bar (copyright, legal links, Built with) stacks and centers on small screens. Desktop still spreads left / center / right.
+
+## 3.6.27 — Heading scale above body copy
+
+- `h2`–`h6` use a stepped type scale (`--type-h2` through `--type-h6`) so section titles no longer match paragraph size.
+- Project story / architecture / theme-details headings, journal `.post-prose`, and legal `h2` use the same scale. Card titles keep their own sizes.
+
+## 3.6.26 — Project header pills, note, journal cats
+
+- Project heroes group type + industry/place pills with the title. Combined `Themes · Real estate` strings split; type-plural cats (`Themes` next to `Theme`) stay hidden.
+- Theme details no longer repeat Type/Place as plain text. Those live only in the header pills.
+- Sample-project note under screenshots is a blue-tinted callout with a **Note** pill.
+- Journal cards put unique category pills on the date/meta row (Uncategorized skipped).
+
+## 3.6.25 — Project type pills and sample note
+
+- Project headers use a Projects crumb, then type + category + place pills, then the title. Plain-text `Themes · Real estate` is gone.
+- Type sits next to the category pill. Catalog cats that only pluralize the type (`Themes` next to `Theme`) are skipped so the row is not duplicated.
+- Work, home, and thank-you cards share the same pill row. Journal category chips use the same hug-content pills.
+- The sample-project line under screenshots is a gray note with a **Note** kicker.
+
+## 3.6.24 — Footer social under Open for work
+
+- Social icons sit under the Open for work pill in the footer brand column, not in the bottom bar.
+- Open for work hover stays white on a darker green (`#14532d`). It does not pick up the site-wide blue hover.
+- Footer bottom is copyright, legal, and stack only.
+
+## 3.6.23 — Shared On this page nav
+
+- Every multi-section page uses the same sticky **On this page** row (`partials/page-nav.blade.php`): label, hug-content pills, overflow arrows. Home, About, Work, Hire, Services, Code, Contact, Now, Journal, posts, projects, shop, products, legal, thank-you, search, archives, and cart/account.
+- Pages that only had a sidebar card or no jumper now get the sticky scroller. The journal post sidebar no longer duplicates a second On this page list.
+- Cart / checkout / My account keep desk tools; the account card is labeled **Next steps** so it does not collide with the sticky row.
+
+## 3.6.22 — Footer Get updates, simple heroes
+
+- Footer brand column drops Say hello / GitHub / RSS chips and the logo mark. Open for work is a short green pill, same as the header.
+- **Get updates** is a first-party email signup (Sign up). Addresses live in `{prefix}mh_newsletter`. wp-admin **Get updates** lists them and exports CSV. No newsletter plugin.
+- Marketing page heroes stay copy + CTAs. The Mac-window snapshot panel is off.
+- On this page still uses arrow buttons when pills overflow, and sticks to the top of the viewport on mobile.
+- Hover and focus stay bright blue (`--blue-400`).
+
+## 3.6.21 — Visible link and button hover
+
+- Hover and `:focus-visible` use bright blue (`--blue-400`, `#4f8fd4`) instead of a second navy. Navy-to-navy was not a real color change on footer links, Sign up / Copy RSS, or most text links.
+- Footer nav, legal links, stack links, social icons, and `.btn` all pick up the same hover. Availability pills stay green.
+
+## 3.6.20 — On this page arrows
+
+- The sticky **On this page** row uses prev/next arrow buttons when the pills overflow. The native scrollbar is hidden. Swipe still works.
+- About no longer switches to a dropdown on small screens. The same arrow + pill row is used on About and product pages.
+- Arrows hide when everything fits, and disable at the start or end of the row.
+
+## 3.6.19 — Footer social, RSS, hover
+
+- Social icons sit in the bottom footer bar. No circle border or hover fill — the icon color changes on hover and focus.
+- The Follow / Copy RSS field sits in the old Elsewhere column. The URL field is a readonly input with a stronger border and a visible focus ring.
+- Buttons and text links change color on hover and `:focus-visible` (not motion-only).
+
+## 3.6.18 — Split heroes, footer follow, RSS
+
+- Marketing page heroes (Projects, Journal, Hire, and the rest that already passed `split`) render the right-hand snapshot panel again. Glow/orbs stay off. The 2×2 hero stats grid is gone — chrome, title, and a link only.
+- Footer brand column adds a Follow / Copy RSS strip. No email list.
+- Journal uses the same RSS subscribe block as topic archives (copy URL + open feed) on a grey tile, no silver frame.
+
+## 3.6.17 — Kicker to heading gap
+
+- About 12px (`margin-top: 12px`) between section kickers and the heading. Still not the old `1.85em` mid-flow gap. Intro copy under the heading is unchanged.
+
+## 3.6.16 — Local hostname
+
+- Local WordPress accepts `matthummel-theme.local` as well as `localhost` / `127.0.0.1` (home/siteurl follow the request host). Production hosts are unchanged.
+
+## 3.6.15 — Tight kicker to heading
+
+- Eyebrows / section labels hug the heading they introduce (home **Projects** / **Selected projects.**, Journal, Services, glance, page heroes). Kickers are excluded from the mid-flow `p + h2` `1.85em` gap. Intro copy under the heading is unchanged.
+
 ## 3.6.14 — Round blue list checkboxes
 
 - Content and project-feature `ul` markers are round blue circles (`--color-spark` / `--blue-400` in dark), slightly larger, and aligned to the first line of text.

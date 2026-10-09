@@ -348,7 +348,7 @@ function mh_project_case_study(int $post_id, array $card, array $story): array
 }
 
 /**
- * Screenshot slides for a project page: featured image, stored shots, catalog.
+ * Screenshot slides for a project page: stored shots, catalog, then featured image.
  *
  * @param  array<string, mixed>  $card
  * @return list<array{src: string, alt: string}>
@@ -364,10 +364,10 @@ function mh_project_page_slides(int $post_id, array $card): array
         if ($src === '') {
             return;
         }
-        if (preg_match('#^(https?:)?//#', $src) !== 1) {
-            $src = function_exists(__NAMESPACE__.'\\mh_product_media_url')
-                ? mh_product_media_url($src)
-                : get_theme_file_uri('resources/images/'.$src);
+        if (function_exists(__NAMESPACE__.'\\mh_product_media_url')) {
+            $src = mh_product_media_url($src);
+        } elseif (preg_match('#^(https?:)?//#', $src) !== 1) {
+            $src = get_theme_file_uri('resources/images/'.$src);
         }
         if ($src === '') {
             return;
@@ -385,13 +385,6 @@ function mh_project_page_slides(int $post_id, array $card): array
         $slides[] = ['src' => $src, 'alt' => $alt];
     };
 
-    if ($post_id > 0 && has_post_thumbnail($post_id)) {
-        $thumbId = (int) get_post_thumbnail_id($post_id);
-        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
-        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
-        $add($src, $alt);
-    }
-
     foreach (mh_project_screenshot_pairs($post_id) as $pair) {
         $add((string) ($pair[0] ?? ''), (string) ($pair[1] ?? ''));
     }
@@ -405,9 +398,14 @@ function mh_project_page_slides(int $post_id, array $card): array
         foreach ($shots as $shot) {
             $add((string) ($shot[0] ?? ''), (string) ($shot[1] ?? ''));
         }
-        if ($slides === []) {
-            $add((string) ($entry['image'] ?? ''), '');
-        }
+        $add((string) ($entry['image'] ?? ''), '');
+    }
+
+    if ($slides === [] && $post_id > 0 && has_post_thumbnail($post_id)) {
+        $thumbId = (int) get_post_thumbnail_id($post_id);
+        $src = (string) wp_get_attachment_image_url($thumbId, 'large');
+        $alt = trim((string) get_post_meta($thumbId, '_wp_attachment_image_alt', true));
+        $add($src, $alt);
     }
 
     return $slides;
@@ -530,7 +528,6 @@ function mh_project_buyer_docs(int $post_id, array $card): array
     $cat = (string) ($card['cat'] ?? '');
     $slug = (string) ($card['slug'] ?? '');
     $title = (string) ($card['title'] ?? '');
-    $place = (string) ($card['place'] ?? '');
     $tech = $card['tech'] ?? [];
     if (! is_array($tech)) {
         $tech = [];
@@ -548,12 +545,6 @@ function mh_project_buyer_docs(int $post_id, array $card): array
     }
 
     $specs = [];
-    if ($cat !== '') {
-        $specs[] = [__('Type', 'sage'), $cat];
-    }
-    if ($place !== '') {
-        $specs[] = [__('Place', 'sage'), $place];
-    }
     $specs[] = [__('CMS', 'sage'), 'WordPress'];
     $theme = 'Custom WordPress theme';
     foreach ($tech as $item) {
@@ -577,6 +568,189 @@ function mh_project_buyer_docs(int $post_id, array $card): array
         'specs' => $specs,
         'faq' => $defaults['faq'],
     ];
+}
+
+/**
+ * Feature list for the What you get section.
+ *
+ * Deliverables first, then benefits. Two items count as the same feature when
+ * the shorter one's content words (stop words dropped, plurals trimmed) are
+ * at least three-quarters covered by the longer one. The longer item stays.
+ *
+ * @param  array<string, mixed>  $story  from mh_project_concept_narrative()
+ * @return list<string>
+ */
+function mh_project_feature_items(array $story): array
+{
+    $rows = [];
+    foreach (['deliverables', 'benefits'] as $key) {
+        $list = is_array($story[$key] ?? null) ? $story[$key] : [];
+        foreach ($list as $item) {
+            $item = trim((string) $item);
+            $tokens = mh_project_feature_tokens($item);
+            if ($item === '' || $tokens === []) {
+                continue;
+            }
+            $rows[] = ['text' => $item, 'tokens' => $tokens];
+        }
+    }
+
+    $out = [];
+    foreach ($rows as $i => $row) {
+        $isDupe = false;
+        foreach ($rows as $j => $other) {
+            if ($i === $j) {
+                continue;
+            }
+            $shared = count(array_intersect_key($row['tokens'], $other['tokens']));
+            $mine = count($row['tokens']);
+            $theirs = count($other['tokens']);
+            $covered = $mine >= 3 && $shared / $mine >= 0.75;
+            $otherWins = $theirs > $mine || ($theirs === $mine && $j < $i);
+            if ($covered && $otherWins) {
+                $isDupe = true;
+                break;
+            }
+        }
+        if (! $isDupe) {
+            $out[] = $row['text'];
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * Content words of a feature line, keyed for array_intersect_key().
+ *
+ * @return array<string, true>
+ */
+function mh_project_feature_tokens(string $text): array
+{
+    static $stop = ['a', 'an', 'and', 'as', 'at', 'by', 'for', 'from', 'in', 'into', 'is', 'it', 'of', 'on', 'or', 'so', 'that', 'the', 'their', 'to', 'with', 'without', 'you', 'your', 'plus', 'more'];
+
+    $norm = strtolower(remove_accents($text));
+    $words = preg_split('/[^a-z0-9]+/', $norm) ?: [];
+    $tokens = [];
+    foreach ($words as $word) {
+        if ($word === '' || in_array($word, $stop, true)) {
+            continue;
+        }
+        if (strlen($word) > 3 && str_ends_with($word, 's')) {
+            $word = substr($word, 0, -1);
+        }
+        $tokens[$word] = true;
+    }
+
+    return $tokens;
+}
+
+/**
+ * Proof facts for the project hero.
+ *
+ * Stored metrics win. Otherwise three facts the page can stand behind:
+ * screenshot count, feature count, and the GitHub license or language.
+ *
+ * @param  list<array{0: string, 1: string}>  $metrics
+ * @param  list<array{src: string, alt: string}>  $slides
+ * @param  list<string>  $features
+ * @param  array<string, mixed>  $gh
+ * @return list<array{0: string, 1: string}>
+ */
+function mh_project_proof_facts(array $metrics, array $slides, array $features, array $gh): array
+{
+    $clean = [];
+    foreach ($metrics as $metric) {
+        $value = trim((string) ($metric[0] ?? ''));
+        $label = trim((string) ($metric[1] ?? ''));
+        if ($value !== '' && $label !== '') {
+            $clean[] = [$value, $label];
+        }
+    }
+    if ($clean !== []) {
+        return array_slice($clean, 0, 4);
+    }
+
+    $facts = [];
+    if (count($slides) > 1) {
+        $facts[] = [number_format_i18n(count($slides)), __('Screenshots', 'sage')];
+    }
+    if (count($features) > 2) {
+        $facts[] = [number_format_i18n(count($features)), __('Features', 'sage')];
+    }
+    $license = trim((string) ($gh['license'] ?? ''));
+    $lang = trim((string) ($gh['lang'] ?? ''));
+    if ($license !== '') {
+        $facts[] = [$license, __('License', 'sage')];
+    } elseif ($lang !== '') {
+        $facts[] = [$lang, __('Language', 'sage')];
+    }
+
+    return array_slice($facts, 0, 3);
+}
+
+/**
+ * Release label for the spec table: a semver tag, else the stored version.
+ *
+ * @param  array<string, mixed>  $gh
+ */
+function mh_project_release_label(array $gh): string
+{
+    $release = trim((string) ($gh['release'] ?? ''));
+    $version = trim((string) ($gh['version'] ?? ''));
+    if ($release !== '' && function_exists(__NAMESPACE__.'\\mh_project_is_semverish') && mh_project_is_semverish($release)) {
+        return $release;
+    }
+
+    return $version !== '' ? $version : $release;
+}
+
+/**
+ * Rows for the Under the hood spec table.
+ *
+ * Type and place already sit in the hero. GitHub counts show only when above zero.
+ *
+ * @param  array<string, mixed>  $card
+ * @param  array<string, mixed>  $gh  from mh_project_github_facts()
+ * @return list<array{label: string, value: string, href: string, pills: list<string>}>
+ */
+function mh_project_spec_rows(array $card, array $gh, string $demo, string $github): array
+{
+    $rows = [];
+    $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
+        if ($value === '' && $pills === []) {
+            return;
+        }
+        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills];
+    };
+
+    $tech = is_array($card['tech'] ?? null) ? array_values(array_filter(array_map('strval', $card['tech']))) : [];
+    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech);
+
+    $languages = is_array($gh['languages'] ?? null) ? array_slice(array_map('strval', $gh['languages']), 0, 6) : [];
+    $add(__('Languages', 'sage'), implode(' · ', $languages));
+    $add(__('Compatible', 'sage'), trim((string) ($gh['compatible'] ?? '')));
+    $add(__('License', 'sage'), trim((string) ($gh['license'] ?? '')));
+    $add(__('Release', 'sage'), mh_project_release_label($gh), (string) ($gh['release_url'] ?? ''));
+    $add(__('Updated', 'sage'), trim((string) ($gh['pushed_label'] ?? '')));
+
+    $stars = (int) ($gh['stars'] ?? 0);
+    if (! empty($gh['has_repo']) && $stars > 0) {
+        $add(__('GitHub stars', 'sage'), number_format_i18n($stars));
+    }
+
+    $topics = is_array($gh['topics'] ?? null) ? array_slice(array_map('strval', $gh['topics']), 0, 8) : [];
+    $add(__('Topics', 'sage'), implode(', ', $topics));
+
+    $repoLabel = (($gh['owner'] ?? '') !== '' && ($gh['repo'] ?? '') !== '') ? $gh['owner'].'/'.$gh['repo'] : '';
+    if ($github !== '' && str_starts_with($github, 'http')) {
+        $add(__('Repository', 'sage'), $repoLabel !== '' ? $repoLabel : $github, $github);
+    }
+    if ($demo !== '') {
+        $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
+    }
+
+    return $rows;
 }
 
 /**
@@ -884,6 +1058,7 @@ function mh_redirect_legacy_concept_urls(): void
         'hallowed-ground' => 'walkridge',
         'hallowed-ground-battlefield-tours' => 'walkridge',
         'wordpress-tour-theme-walkridge' => 'walkridge',
+        'tocflow' => 'tocguide',
     ];
     if ($rest !== '' && isset($aliases[$rest])) {
         $rest = $aliases[$rest];
@@ -934,6 +1109,9 @@ function mh_product_image_url(string $rel): string
     $rel = trim($rel);
     if ($rel === '') {
         return '';
+    }
+    if (function_exists(__NAMESPACE__.'\\mh_product_media_url')) {
+        return mh_product_media_url($rel);
     }
     if (preg_match('#^https?://#i', $rel)) {
         return esc_url_raw($rel);
@@ -1008,12 +1186,20 @@ function mh_product_screenshots_meta_text(array $pairs): string
         if (! is_array($pair) || count($pair) < 1) {
             continue;
         }
-        $url = mh_product_image_url((string) ($pair[0] ?? ''));
+        $src = trim((string) ($pair[0] ?? ''));
         $caption = trim((string) ($pair[1] ?? ''));
-        if ($url === '') {
+        $rel = function_exists(__NAMESPACE__.'\\mh_product_theme_image_rel')
+            ? mh_product_theme_image_rel($src)
+            : '';
+        if ($rel !== '') {
+            $src = $rel;
+        } elseif (preg_match('#^https?://#i', $src) === 1) {
+            $src = esc_url_raw($src);
+        }
+        if ($src === '') {
             continue;
         }
-        $lines[] = $caption !== '' ? $url.'|'.$caption : $url;
+        $lines[] = $caption !== '' ? $src.'|'.$caption : $src;
     }
 
     return implode("\n", $lines);
@@ -1062,6 +1248,9 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
     if ($slug === 'acreline') {
         $slugCandidates = ['acreline', 'wordpress-theme-real-estate-agents', 'real-estate-wordpress-theme-acreline'];
     }
+    if ($slug === 'tocguide') {
+        $slugCandidates = ['tocguide', 'tocflow'];
+    }
 
     foreach ($slugCandidates as $candidate) {
         $posts = get_posts([
@@ -1105,6 +1294,7 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
             'post_status' => 'publish',
             'post_title' => $title,
             'post_name' => $slug,
+            'comment_status' => 'open',
         ], true);
         if (is_wp_error($inserted)) {
             return 0;
@@ -1123,6 +1313,11 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
             $update['post_name'] = 'acreline';
             $update['post_status'] = 'publish';
         }
+        if ($slug === 'tocguide') {
+            $update['post_name'] = 'tocguide';
+            $update['post_status'] = 'publish';
+        }
+        $update['comment_status'] = 'open';
         wp_update_post($update);
     }
 
@@ -1204,7 +1399,18 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 
     mh_seed_project_concept_narrative($postId, $seed, $force);
 
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
+    // Search title and description for MH SEO. Seeded once: edits made in wp-admin are never overwritten.
+    foreach (['seo_title' => '_mh_seo_title', 'seo_description' => '_mh_seo_description'] as $field => $metaKey) {
+        $value = trim((string) ($seed[$field] ?? ''));
+        if ($value !== '' && trim((string) get_post_meta($postId, $metaKey, true)) === '') {
+            update_post_meta($postId, $metaKey, sanitize_text_field($value));
+        }
+    }
+
+    // A project that is not for sale yet gets no WooCommerce product (a private one would still turn the
+    // page into a product landing with a buy button). Existing products keep syncing as before.
+    $hasProduct = mh_project_product_id($postId) > 0;
+    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product') && (! empty($seed['for_sale']) || $hasProduct)) {
         mh_sync_project_product($postId);
     }
 
@@ -1352,6 +1558,76 @@ function mh_apply_product_catalog_v7(): void
 }
 
 /**
+ * One-time: TOCguide rename + Acreline 1.5.9 / WalkRidge 1.7.2 catalog refresh.
+ */
+function mh_apply_product_catalog_v9(): void
+{
+    if (get_option('mh_product_catalog_v9') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v9', true);
+    }
+}
+
+/**
+ * One-time: store screenshot meta as theme-relative paths (no baked host).
+ */
+function mh_apply_product_catalog_v10(): void
+{
+    if (get_option('mh_product_catalog_v10') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v10', true);
+    }
+}
+
+/**
+ * One-time: add the Cobble & Candle project (not for sale yet) with SEO title/description.
+ */
+function mh_apply_product_catalog_v11(): void
+{
+    if (get_option('mh_product_catalog_v11') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v11', true);
+    }
+}
+
+/**
+ * One-time: deliverables and benefits no longer restate each other (Acreline, WalkRidge, TOCguide).
+ */
+function mh_apply_product_catalog_v12(): void
+{
+    if (get_option('mh_product_catalog_v12') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v12', true);
+    }
+}
+
+/**
+ * One-time: SEO title and description for Acreline, WalkRidge, TOCguide (seeded only where empty).
+ */
+function mh_apply_product_catalog_v13(): void
+{
+    if (get_option('mh_product_catalog_v13') || wp_installing()) {
+        return;
+    }
+
+    if (mh_apply_product_catalog(false)) {
+        update_option('mh_product_catalog_v13', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1407,8 +1683,25 @@ function mh_redirect_acreline_legacy_paths(): void
         'shop/hallowed-ground',
     ];
 
+    $legacyTocguidePaths = [
+        'projects/tocflow',
+        'product/tocflow',
+        'shop/tocflow',
+        'products/tocflow',
+    ];
+
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
         $target = home_url('/projects/walkridge/');
+        wp_safe_redirect($target, 301);
+        exit;
+    }
+
+    if (in_array($requestPath, $legacyTocguidePaths, true)) {
+        $target = home_url('/projects/tocguide/');
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
         wp_safe_redirect($target, 301);
         exit;
     }
@@ -1433,6 +1726,11 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v8', 43);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v9', 44);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

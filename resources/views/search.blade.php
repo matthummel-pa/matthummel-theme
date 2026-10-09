@@ -14,15 +14,26 @@
     </div>
   @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['journal-topics', __('Topics', 'sage')],
+    ['journal-posts', __('Results', 'sage')],
+  ],
+])
+
   <div class="container wide page-block write-hub">
     @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl, 'hideSearch' => true])
-    @include('partials.write-topics', compact('writeId', 'writeUrl'))
+    <div id="journal-topics">
+      @include('partials.write-topics', compact('writeId', 'writeUrl'))
+    </div>
     @if (! have_posts())
+      <div id="journal-posts">
       <p class="archive-desc">{{ __('Nothing matched. Try another search, or browse the journal and Code.', 'sage') }}</p>
       <p class="btn-row">
         <a class="btn" href="{{ esc_url($writeUrl) }}">{{ \App\field('write_h1', __('Journal', 'sage'), $writeId) }}</a>
         <a class="btn btn-outline" href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a>
       </p>
+      </div>
     @else
       <div class="write-layout">
         <div class="write-main" id="journal-posts">

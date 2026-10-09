@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Pages are custom-field layouts only — no Gutenberg canvas, no patterns,
- * no leftover block HTML in post_content.
+ * Named marketing templates are custom-field layouts. Pages on the default
+ * template (and Custom Template) use the classic editor, and page.blade.php
+ * prints that content. The block editor stays off for pages.
  */
 
 namespace App;
@@ -13,7 +14,6 @@ add_filter('use_block_editor_for_post_type', function ($use, $type) {
 }, 10, 2);
 
 add_action('init', function () {
-    remove_post_type_support('page', 'editor');
     remove_post_type_support('page', 'block-templates');
 }, 11);
 
@@ -21,8 +21,11 @@ add_action('init', function () {
 add_action('init', function () {
     remove_theme_support('core-block-patterns');
     if (function_exists('unregister_block_pattern_category')) {
+        $registry = \WP_Block_Pattern_Categories_Registry::get_instance();
         foreach (['featured', 'buttons', 'columns', 'gallery', 'header', 'text', 'query', 'theme', 'uncategorized'] as $cat) {
-            unregister_block_pattern_category($cat);
+            if ($registry->is_registered($cat)) {
+                unregister_block_pattern_category($cat);
+            }
         }
     }
     if (class_exists(\WP_Block_Patterns_Registry::class)) {
@@ -35,13 +38,17 @@ add_action('init', function () {
 }, 99);
 
 add_filter('should_load_remote_block_patterns', '__return_false');
-add_filter('block_editor_settings_all', function ($settings) {
-    $settings['__experimentalBlockPatterns'] = [];
-    $settings['__experimentalBlockPatternCategories'] = [];
+add_filter('block_editor_settings_all', function ($settings, $context = null) {
+    $post = is_object($context) ? ($context->post ?? null) : null;
+    $isIssue = $post instanceof \WP_Post && $post->post_type === 'newsletter_issue';
+    if (! $isIssue) {
+        $settings['__experimentalBlockPatterns'] = [];
+        $settings['__experimentalBlockPatternCategories'] = [];
+    }
     $settings['enableOpenverseMediaCategory'] = false;
 
     return $settings;
-});
+}, 10, 2);
 
 /** Skip core block stylesheet on custom-field pages (faster, no FSE leftovers). */
 add_action('wp_enqueue_scripts', function () {
@@ -1326,7 +1333,7 @@ function mh_who_items(): array
             'title' => __('Shops and teams', 'sage'),
             'text' => __('A WordPress site you can edit, a plugin, or another web app that fits the work.', 'sage'),
             'icon' => 'briefcase',
-            'href' => home_url('/services/'),
+            'href' => home_url('/hire/'),
             'cta' => __('See how I can help', 'sage'),
         ],
         [

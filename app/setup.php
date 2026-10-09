@@ -161,3 +161,149 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+/**
+ * Local hostnames that may override home/siteurl. Never includes production.
+ *
+ * @return list<string>
+ */
+function mh_local_dev_hosts(): array
+{
+    return [
+        'matthummel-theme.local',
+        'localhost',
+        '127.0.0.1',
+    ];
+}
+
+/**
+ * Public URL for this request when it is a local-dev host, otherwise null.
+ */
+function mh_local_dev_public_url(): ?string
+{
+    $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+    if ($host === '') {
+        return null;
+    }
+
+    $name = explode(':', $host, 2)[0];
+    if (! in_array($name, mh_local_dev_hosts(), true)) {
+        return null;
+    }
+
+    $https = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || ((string) ($_SERVER['SERVER_PORT'] ?? '') === '443');
+    $scheme = $https ? 'https' : 'http';
+
+    return $scheme.'://'.$host;
+}
+
+add_filter('option_home', function ($value) {
+    return mh_local_dev_public_url() ?? $value;
+});
+
+add_filter('option_siteurl', function ($value) {
+    return mh_local_dev_public_url() ?? $value;
+});
+
+/**
+ * Optional booking link. Empty hides the button.
+ */
+function mh_booking_url(): string
+{
+    if (! function_exists('get_theme_mod')) {
+        return '';
+    }
+
+    return mh_sanitize_booking_url(get_theme_mod('mh_booking_url', ''));
+}
+
+function mh_sanitize_booking_url(mixed $value): string
+{
+    $value = is_string($value) ? trim(wp_unslash($value)) : '';
+    if ($value === '') {
+        return '';
+    }
+
+    $url = esc_url_raw($value);
+    if ($url === '' || wp_http_validate_url($url) === false) {
+        return '';
+    }
+
+    return $url;
+}
+
+/**
+ * Privacy policy URL from the WordPress setting, then the theme template, then /privacy/.
+ */
+function mh_privacy_policy_url(): string
+{
+    if (function_exists('get_privacy_policy_url')) {
+        $fromSetting = get_privacy_policy_url();
+        if ($fromSetting !== '') {
+            return $fromSetting;
+        }
+    }
+
+    return mh_published_page_url('template-privacy.blade.php', 'privacy');
+}
+
+/**
+ * Terms URL from the theme template, then /terms/.
+ */
+function mh_terms_url(): string
+{
+    return mh_published_page_url('template-terms.blade.php', 'terms');
+}
+
+/**
+ * Permalink for a published page chosen by template file, then by slug.
+ */
+function mh_published_page_url(string $template, string $slug): string
+{
+    static $cache = [];
+
+    $key = $template.'|'.$slug;
+    if (isset($cache[$key])) {
+        return $cache[$key];
+    }
+
+    $byTemplate = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'no_found_rows' => true,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'suppress_filters' => true,
+        'meta_key' => '_wp_page_template',
+        'meta_value' => $template,
+    ]);
+    $url = mh_permalink_from_posts($byTemplate);
+    if ($url === '') {
+        $page = get_page_by_path(sanitize_title($slug));
+        if ($page instanceof \WP_Post && $page->post_status === 'publish') {
+            $url = get_permalink($page) ?: '';
+        }
+    }
+    if ($url === '') {
+        $url = home_url('/'.sanitize_title($slug).'/');
+    }
+
+    $cache[$key] = $url;
+
+    return $url;
+}
+
+/**
+ * @param  list<\WP_Post>|array<int, mixed>  $posts
+ */
+function mh_permalink_from_posts(array $posts): string
+{
+    $page = $posts[0] ?? null;
+    if (! $page instanceof \WP_Post) {
+        return '';
+    }
+
+    return get_permalink($page) ?: '';
+}

@@ -34,7 +34,7 @@
   ];
 @endphp
 
-@component('partials.page-hero', ['extra' => 'start-hero', 'split' => true, 'asideLabel' => __('Brief snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'start-hero'])
   <p class="eyebrow">{{ \App\field('start_kicker', __('Project brief', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('start_h1', __('Prepare for our first meeting.', 'sage')) }}
@@ -47,25 +47,16 @@
     <li>{{ __('We agree a written scope before build', 'sage') }}</li>
     <li>{{ __('You own hosting, files, and logins at handoff', 'sage') }}</li>
   </ul>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/start',
-      'icon' => 'briefcase',
-      'title' => __('Discovery brief', 'sage'),
-      'meta' => __('Four steps · one form', 'sage'),
-      'stats' => [
-        ['value' => '4', 'label' => __('Short steps', 'sage')],
-        ['value' => __('Scope', 'sage'), 'label' => __('Before any build', 'sage')],
-        ['value' => '1', 'label' => __('Business day reply', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('Or on-site', 'sage')],
-      ],
-      'link' => [
-        'label' => __('Prefer a short note?', 'sage'),
-        'href' => home_url('/contact/'),
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@include('partials.page-nav', [
+  'pills' => [
+    ['df-step1-legend', __('You', 'sage')],
+    ['df-step2-legend', __('Project', 'sage')],
+    ['df-step3-legend', __('Goals', 'sage')],
+    ['df-step4-legend', __('Send', 'sage')],
+  ],
+])
 
 <section class="start-main" aria-labelledby="start-form-heading">
   <div class="container narrow">
@@ -243,6 +234,7 @@
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('start_submit', __('Send brief', 'sage')) }}
           </button>
+          @include('partials.booking-link')
           <p class="field-hint">{{ \App\field('start_reply_note', \App\mh_reply_sla()) }}</p>
         </div>
       </fieldset>

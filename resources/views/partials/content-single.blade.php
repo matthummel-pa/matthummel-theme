@@ -135,26 +135,28 @@
     </div>
   </header>
 
+  @php
+    $postPills = [];
+    foreach ($toc as $item) {
+      if ((int) ($item['level'] ?? 0) !== 2) {
+          continue;
+      }
+      $postPills[] = [$item['id'], $item['text']];
+    }
+    if ($postPills === []) {
+      foreach ($toc as $item) {
+        $postPills[] = [$item['id'], $item['text']];
+      }
+    }
+  @endphp
+  @include('partials.page-nav', ['pills' => $postPills])
+
   {{-- ── CONTENT LAYOUT ──────────────────────────────────── --}}
   <div class="container wide post-shell">
     <div class="post-layout">
 
       {{-- Main column --}}
       <div class="post-main">
-
-        {{-- Mobile TOC --}}
-        @if ($toc)
-          <details class="mh-toc mh-toc--inline" open>
-            <summary class="mh-toc-title">On this page</summary>
-            <ol>
-              @foreach ($toc as $item)
-                <li class="side-toc-h{{ $item['level'] }}">
-                  <a href="#{{ esc_attr($item['id']) }}">{{ $item['text'] }}</a>
-                </li>
-              @endforeach
-            </ol>
-          </details>
-        @endif
 
         {{-- Article body --}}
         @if ($hasAffiliateLinks)
@@ -204,6 +206,13 @@
           {!! \App\field_html('write_share_note', __('More examples on the <a href="/code/">Code</a> page. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
         </p>
 
+        @if (shortcode_exists('mhn_signup'))
+          <aside class="post-signup" aria-labelledby="mhn-signup-post-title">
+            {{-- Shortcode HTML is escaped in the plugin. --}}
+            {!! do_shortcode('[mhn_signup source="post"]') !!}
+          </aside>
+        @endif
+
         {{-- Author bio --}}
         <div class="post-author-bio">
           @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])
@@ -215,7 +224,7 @@
             </p>
             <div class="post-author-bio__links">
               <a href="{{ home_url('/about/') }}">About me</a>
-              <a href="{{ home_url('/services/') }}">Work with me</a>
+              <a href="{{ home_url('/hire/') }}">Work with me</a>
               <a href="{{ home_url('/contact/') }}">Say hello</a>
               <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">RSS feed</a>
             </div>

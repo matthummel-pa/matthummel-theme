@@ -140,16 +140,6 @@ function mh_xai_token(): string
     return mh_social_token_from(['MH_XAI_API_KEY', 'XAI_API_KEY'], 'mh_xai_token', 'mh/xai_token');
 }
 
-function mh_facebook_page_token(): string
-{
-    return mh_social_token_from(['MH_FACEBOOK_PAGE_TOKEN'], 'mh_fb_page_token', 'mh/facebook_page_token');
-}
-
-function mh_facebook_page_id(): string
-{
-    return trim((string) get_theme_mod('mh_fb_page_id', ''));
-}
-
 /**
  * @return array<string, bool> network/provider slug => has credentials
  */

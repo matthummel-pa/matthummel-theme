@@ -28,7 +28,38 @@ add_filter('wpseo_metadesc', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 add_filter('rank_math/frontend/description', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 add_filter('aioseo_description', __NAMESPACE__.'\\mh_filter_meta_description', 99);
 
+add_filter('rank_math/frontend/disable_breadcrumb', function ($disable) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return true;
+    }
+
+    return $disable;
+});
+add_filter('rank_math/frontend/breadcrumb/items', function ($crumbs) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return [];
+    }
+
+    return $crumbs;
+});
+add_filter('wpseo_breadcrumb_output', function ($html) {
+    if (function_exists(__NAMESPACE__.'\\mh_is_project_surface') && mh_is_project_surface()) {
+        return '';
+    }
+
+    return $html;
+});
+
 add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
+
+/**
+ * Whether the MH SEO plugin is printing the title and description for this request.
+ */
+function mh_seo_plugin_manages_head(): bool
+{
+    return defined('MH_SEO_ACTIVE') && MH_SEO_ACTIVE
+        && function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head();
+}
 
 /**
  * Whether a known SEO plugin is active and will print its own meta description.
@@ -37,6 +68,10 @@ add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
  */
 function mh_seo_plugin_prints_description(): bool
 {
+    if (mh_seo_plugin_manages_head()) {
+        return true;
+    }
+
     return defined('WPSEO_VERSION')
         || defined('RANK_MATH_VERSION')
         || defined('AIOSEO_VERSION')
@@ -169,7 +204,106 @@ function mh_seo_current_post_id(): int
         return (int) get_option('page_on_front');
     }
 
-    return (int) get_queried_object_id();
+    // Only singular views and the posts page have a post ID. On term, author,
+    // and other archives get_queried_object_id() returns a term or user ID.
+    if (! is_singular() && ! is_home()) {
+        return 0;
+    }
+
+    $object = get_queried_object();
+
+    return $object instanceof \WP_Post ? (int) $object->ID : 0;
+}
+
+/**
+ * Queried term on category, tag, and custom taxonomy archives.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_current_term(): ?\WP_Term
+{
+    if (! is_category() && ! is_tag() && ! is_tax()) {
+        return null;
+    }
+
+    $term = get_queried_object();
+
+    return $term instanceof \WP_Term ? $term : null;
+}
+
+/**
+ * Rank Math term meta value for a term archive.
+ *
+ * Returns a plain stored value, false when the value still has plugin
+ * variables (let the plugin's processed string through), or an empty
+ * string when nothing is set.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_meta(\WP_Term $term, string $key): string|false
+{
+    $value = trim(wp_strip_all_tags((string) get_term_meta($term->term_id, $key, true)));
+    if ($value === '') {
+        return '';
+    }
+    if (str_contains($value, '%')) {
+        return false;
+    }
+
+    return $value;
+}
+
+/**
+ * Title for a term archive: Rank Math term title, else "Term name | Brand".
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_title(\WP_Term $term): string
+{
+    $meta = mh_seo_term_meta($term, 'rank_math_title');
+    if ($meta === false) {
+        return '';
+    }
+    if ($meta !== '') {
+        return $meta;
+    }
+
+    $name = trim(wp_specialchars_decode(wp_strip_all_tags($term->name), ENT_QUOTES));
+    if ($name === '') {
+        return '';
+    }
+    $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
+    /* translators: %s: category or tag name. */
+    $built = sprintf(__('%s articles and notes', 'sage'), $name).' | '.$brand;
+
+    return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
+}
+
+/**
+ * Description for a term archive: Rank Math term description, else the term description.
+ *
+ * @since 3.6.41
+ */
+function mh_seo_term_description(\WP_Term $term): string
+{
+    $meta = mh_seo_term_meta($term, 'rank_math_description');
+    if ($meta === false) {
+        return '';
+    }
+
+    $desc = $meta !== ''
+        ? $meta
+        : trim(wp_specialchars_decode(wp_strip_all_tags($term->description), ENT_QUOTES));
+    if ($desc === '') {
+        $name = trim(wp_specialchars_decode(wp_strip_all_tags($term->name), ENT_QUOTES));
+        if ($name === '') {
+            return '';
+        }
+        /* translators: %s: category or tag name. */
+        $desc = sprintf(__('Posts about %s from Matt Hummel, a WordPress developer in Gettysburg, PA. Code, lessons, and tools from real projects.', 'sage'), $name);
+    }
+
+    return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
 }
 
 function mh_seo_document_title(): string
@@ -196,7 +330,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
         $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
         $title = trim(get_the_title($post_id));
@@ -235,7 +369,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
 
         $title = trim(get_the_title());
@@ -251,6 +385,11 @@ function mh_seo_document_title(): string
         return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
     }
 
+    $term = mh_seo_current_term();
+    if ($term) {
+        return mh_seo_term_title($term);
+    }
+
     $post_id = mh_seo_current_post_id();
     if ($post_id) {
         $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
@@ -258,7 +397,7 @@ function mh_seo_document_title(): string
             return '';
         }
         if ($pluginTitle !== '') {
-            return mh_seo_len($pluginTitle) > 60 ? mh_seo_clip($pluginTitle, 60) : $pluginTitle;
+            return $pluginTitle;
         }
     }
 
@@ -267,6 +406,9 @@ function mh_seo_document_title(): string
     $title = $custom !== '' ? $custom : $defaults['title'];
     if ($title === '') {
         return '';
+    }
+    if ($custom !== '') {
+        return $title;
     }
 
     return mh_seo_len($title) > 60 ? mh_seo_clip($title, 60) : $title;
@@ -344,7 +486,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
         $desc = wp_strip_all_tags((string) (get_the_excerpt($post_id) ?: get_the_title($post_id)));
         $desc = wp_trim_words($desc, 28, '');
@@ -390,7 +532,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
 
         $summary = trim((string) get_post_meta($post_id, '_mh_project_summary', true));
@@ -407,6 +549,11 @@ function mh_seo_meta_description(): string
         return mh_seo_len($summary) > 155 ? mh_seo_clip($summary, 155) : $summary;
     }
 
+    $term = mh_seo_current_term();
+    if ($term) {
+        return mh_seo_term_description($term);
+    }
+
     $post_id = mh_seo_current_post_id();
     if ($post_id) {
         $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);
@@ -414,7 +561,7 @@ function mh_seo_meta_description(): string
             return '';
         }
         if ($pluginDesc !== '') {
-            return mh_seo_len($pluginDesc) > 155 ? mh_seo_clip($pluginDesc, 155) : $pluginDesc;
+            return $pluginDesc;
         }
     }
 
@@ -429,6 +576,9 @@ function mh_seo_meta_description(): string
     }
     if ($desc === '') {
         return '';
+    }
+    if ($custom !== '') {
+        return $desc;
     }
 
     return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
@@ -446,12 +596,15 @@ function mh_seo_meta_description(): string
  */
 function mh_filter_document_title($title)
 {
+    if (mh_seo_plugin_manages_head()) {
+        return $title;
+    }
     if (is_admin() || ! is_string($title)) {
         return $title;
     }
     $custom = mh_seo_document_title();
 
-    return $custom !== '' ? $custom : $title;
+    return $custom !== '' ? esc_html($custom) : $title;
 }
 
 /**
@@ -466,6 +619,9 @@ function mh_filter_document_title($title)
  */
 function mh_filter_meta_description($desc)
 {
+    if (mh_seo_plugin_manages_head()) {
+        return $desc;
+    }
     if (is_admin() || ! is_string($desc)) {
         return $desc;
     }
@@ -483,6 +639,9 @@ function mh_filter_meta_description($desc)
  */
 function mh_print_meta_description(): void
 {
+    if (mh_seo_plugin_manages_head()) {
+        return;
+    }
     if (is_admin() || mh_seo_plugin_prints_description()) {
         return;
     }
@@ -492,3 +651,53 @@ function mh_print_meta_description(): void
     }
     echo '<meta name="description" content="'.esc_attr($desc).'">'."\n";
 }
+
+/*
+|--------------------------------------------------------------------------
+| Hardening (site audit 3.6.46)
+|--------------------------------------------------------------------------
+| No version in the generator tag, no XML-RPC, no user listing for visitors,
+| and no `?author=N` enumeration. Logged-in users keep every REST route.
+*/
+
+remove_action('wp_head', 'wp_generator');
+add_filter('the_generator', '__return_empty_string');
+add_filter('xmlrpc_enabled', '__return_false');
+
+add_filter('rest_endpoints', function (array $endpoints): array {
+    if (is_user_logged_in()) {
+        return $endpoints;
+    }
+
+    unset($endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)'], $endpoints['/wp/v2/users/me']);
+
+    return $endpoints;
+});
+
+// Core strips non-digits from ?author= ("1abc" is author 1), so any value at all is an enumeration probe.
+add_action('template_redirect', function (): void {
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only guard; nothing is written.
+    $author = isset($_GET['author']) ? sanitize_text_field(wp_unslash($_GET['author'])) : '';
+    if ($author !== '') {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}, 1);
+
+// Pingbacks are the XML-RPC amplification vector; nothing here consumes them.
+add_filter('xmlrpc_methods', fn (array $methods): array => array_diff_key($methods, ['pingback.ping' => 1, 'pingback.extensions.getPingbacks' => 1]));
+add_filter('wp_headers', fn (array $headers): array => array_diff_key($headers, ['X-Pingback' => 1]));
+
+// /journal/ is what the nav calls the blog; catch type-ins and send them to /blog/.
+add_action('template_redirect', function (): void {
+    if (! is_404()) {
+        return;
+    }
+
+    $uri = sanitize_text_field(wp_unslash((string) ($_SERVER['REQUEST_URI'] ?? '')));
+    $path = trim((string) (wp_parse_url($uri, PHP_URL_PATH) ?? ''), '/');
+    if ($path === 'journal') {
+        wp_safe_redirect(home_url('/blog/'), 301);
+        exit;
+    }
+}, 2);

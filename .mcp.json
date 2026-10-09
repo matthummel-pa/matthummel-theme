@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "wpvibe": {
+      "type": "http",
+      "url": "https://mcp.wpvibe.ai/mcp"
+    },
+    "wordpress-studio": {
+      "command": "studio",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}

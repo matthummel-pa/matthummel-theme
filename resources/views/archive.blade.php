@@ -30,11 +30,23 @@
       </span>
     </nav>
   @endcomponent
+
+  @include('partials.page-nav', [
+    'pills' => [
+      ['journal-topics', __('Topics', 'sage')],
+      ['journal-posts', __('Posts', 'sage')],
+    ],
+  ])
+
   <div class="container wide page-block write-hub">
     @include('partials.write-toolbar', compact('writeId', 'writeUrl'))
-    @include('partials.write-topics', compact('writeId', 'writeUrl'))
+    <div id="journal-topics">
+      @include('partials.write-topics', compact('writeId', 'writeUrl'))
+    </div>
     @if (! have_posts())
-      <p>{{ __('No posts in this topic yet.', 'sage') }}</p>
+      <div id="journal-posts">
+        <p>{{ __('No posts in this topic yet.', 'sage') }}</p>
+      </div>
     @else
       <div class="write-layout">
         <div class="write-main" id="journal-posts">

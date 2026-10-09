@@ -2,6 +2,19 @@
   $thumb = \App\mh_post_card_image(get_the_ID());
   $minutes = \App\mh_reading_minutes(get_the_ID());
   $cats = get_the_category();
+  $journalCats = [];
+  if ($cats && ! is_wp_error($cats)) {
+    $seen = [];
+    foreach ($cats as $cat) {
+      $slug = strtolower((string) $cat->slug);
+      $name = trim((string) $cat->name);
+      if ($name === '' || $slug === 'uncategorized' || isset($seen[$slug])) {
+        continue;
+      }
+      $seen[$slug] = true;
+      $journalCats[] = $cat;
+    }
+  }
   $hasCode = \App\mh_post_has_code(get_the_ID());
 @endphp
 <article @php(post_class(['post-card']))>
@@ -22,14 +35,14 @@
       @if ($hasCode)
         <span class="post-badge">{{ __('Code', 'sage') }}</span>
       @endif
+      @if ($journalCats !== [])
+        <span class="post-cats project-type-row" aria-label="{{ __('Categories', 'sage') }}">
+          @foreach ($journalCats as $cat)
+            <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
+          @endforeach
+        </span>
+      @endif
     </p>
-    @if ($cats && ! is_wp_error($cats))
-      <p class="post-cats">
-        @foreach ($cats as $cat)
-          <a class="post-cat" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
-        @endforeach
-      </p>
-    @endif
 
     <h2 class="post-card-title">{{ $title }}</h2>
 

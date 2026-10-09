@@ -21,7 +21,7 @@
 
 @section('content')
 
-@component('partials.page-hero', ['extra' => 'page-header--resources', 'split' => true, 'asideLabel' => __('Catalog snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'page-header--resources'])
   <p class="eyebrow">{{ \App\field('resources_kicker', __('Resources', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('resources_h1', __('Free starters, themes, and tools.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
@@ -31,25 +31,17 @@
       {{ __('View code', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/resources',
-      'icon' => 'globe',
-      'title' => __('Resource catalog', 'sage'),
-      'meta' => __('Starters · themes · tools', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($sections)), 'label' => __('Sections', 'sage')],
-        ['value' => number_format_i18n($resourceCount), 'label' => __('Listed items', 'sage')],
-        ['value' => __('Open code', 'sage'), 'label' => __('Free starters', 'sage')],
-        ['value' => $hasAffiliate ? __('Disclosed', 'sage') : __('None', 'sage'), 'label' => __('Affiliate links', 'sage')],
-      ],
-      'link' => [
-        'label' => __('View code', 'sage'),
-        'href' => home_url('/code/'),
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@php
+  $resourcePills = [
+    ['resources-intro-heading', __('Overview', 'sage')],
+  ];
+  foreach ($sections as $section) {
+    $resourcePills[] = ['resources-'.\Illuminate\Support\Str::slug($section['title']), $section['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $resourcePills])
 
 @if ($hasAffiliate)
   <div class="container wide">

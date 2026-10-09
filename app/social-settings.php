@@ -18,7 +18,7 @@ const MH_SOCIAL_SETTINGS_PAGE = 'mh-social-settings';
  * Settings the screen manages.
  * Secrets render as password fields and keep their value when left blank.
  *
- * @return array{secrets: array<string, string>, plain: array<string, string>}
+ * @return array{secrets: array<string, string>, toggles: array<string, bool>, plain: array<string, string>}
  */
 function mh_social_settings_fields(): array
 {
@@ -27,17 +27,26 @@ function mh_social_settings_fields(): array
             'mh_anthropic_token' => 'MH_ANTHROPIC_API_KEY',
             'mh_xai_token' => 'MH_XAI_API_KEY',
             'mh_openai_token' => 'MH_OPENAI_API_KEY',
-            'mh_fb_page_token' => 'MH_FACEBOOK_PAGE_TOKEN',
+            'mh_facebook_page_token' => 'MH_FACEBOOK_PAGE_TOKEN',
             'mh_bluesky_app_password' => 'MH_BLUESKY_APP_PASSWORD',
             'mh_devto_token' => 'MH_DEVTO_TOKEN',
             'mh_li_token' => 'MH_LINKEDIN_TOKEN',
+        ],
+        'toggles' => [
+            'mh_bluesky_auto_share' => true,
+            'mh_devto_auto_import' => true,
         ],
         'plain' => [
             'mh_social_ai_default' => '',
             'mh_anthropic_model' => '',
             'mh_xai_model' => '',
             'mh_xai_model_custom' => '',
-            'mh_fb_page_id' => '',
+            'mh_facebook_page_id' => '',
+            'mh_bluesky_pds' => '',
+            'mh_li_headline' => '',
+            'mh_li_about' => '',
+            'mh_li_location' => '',
+            'mh_li_open_to_work' => '',
             'mh_bluesky_handle' => '',
         ],
     ];
@@ -108,9 +117,20 @@ add_action('admin_post_mh_save_social', function (): void {
         if (! array_key_exists($mod, $in)) {
             continue;
         }
-        $value = in_array($mod, ['mh_anthropic_model', 'mh_xai_model', 'mh_xai_model_custom'], true)
-            ? trim((string) preg_replace('/[^A-Za-z0-9._:\/-]/', '', (string) $in[$mod]))
-            : sanitize_text_field((string) $in[$mod]);
+        if ($mod === 'mh_li_about') {
+            $value = sanitize_textarea_field((string) $in[$mod]);
+        } elseif ($mod === 'mh_bluesky_pds') {
+            $value = esc_url_raw((string) $in[$mod]);
+        } elseif ($mod === 'mh_facebook_page_id') {
+            $value = (string) preg_replace('/\D+/', '', (string) $in[$mod]);
+        } elseif (in_array($mod, ['mh_anthropic_model', 'mh_xai_model', 'mh_xai_model_custom'], true)) {
+            $value = trim((string) preg_replace('/[^A-Za-z0-9._:\/-]/', '', (string) $in[$mod]));
+        } else {
+            $value = sanitize_text_field((string) $in[$mod]);
+        }
+        if ($mod === 'mh_li_open_to_work' && ! in_array($value, ['', 'yes', 'no'], true)) {
+            $value = '';
+        }
         if ($mod === 'mh_social_ai_default' && ! array_key_exists($value, mh_social_ai_provider_labels())) {
             $value = 'claude';
         }
@@ -118,6 +138,12 @@ add_action('admin_post_mh_save_social', function (): void {
             remove_theme_mod($mod);
         } else {
             set_theme_mod($mod, $value);
+        }
+    }
+
+    foreach (array_keys($fields['toggles']) as $mod) {
+        if (array_key_exists($mod, $in)) {
+            set_theme_mod($mod, ! empty($in[$mod]));
         }
     }
 
@@ -185,6 +211,30 @@ function mh_social_settings_text_row(string $mod, string $label, string $desc = 
         esc_attr((string) get_theme_mod($mod, '')),
         esc_attr($placeholder)
     );
+    if ($desc !== '') {
+        echo '<p class="description">'.esc_html($desc).'</p>';
+    }
+    echo '</td></tr>';
+}
+
+function mh_social_settings_toggle_row(string $mod, string $label, bool $default, string $desc = ''): void
+{
+    $id = 'mh-social-'.$mod;
+    $on = (bool) get_theme_mod($mod, $default);
+    echo '<tr><th scope="row">'.esc_html($label).'</th><td>';
+    printf('<input type="hidden" name="mh_social[%1$s]" value="0">', esc_attr($mod));
+    printf('<label for="%1$s"><input id="%1$s" type="checkbox" name="mh_social[%2$s]" value="1"%3$s> %4$s</label>', esc_attr($id), esc_attr($mod), checked($on, true, false), esc_html__('On', 'sage'));
+    if ($desc !== '') {
+        echo '<p class="description">'.esc_html($desc).'</p>';
+    }
+    echo '</td></tr>';
+}
+
+function mh_social_settings_textarea_row(string $mod, string $label, string $desc = ''): void
+{
+    $id = 'mh-social-'.$mod;
+    echo '<tr><th scope="row"><label for="'.esc_attr($id).'">'.esc_html($label).'</label></th><td>';
+    printf('<textarea id="%1$s" class="large-text" rows="3" name="mh_social[%2$s]">%3$s</textarea>', esc_attr($id), esc_attr($mod), esc_textarea((string) get_theme_mod($mod, '')));
     if ($desc !== '') {
         echo '<p class="description">'.esc_html($desc).'</p>';
     }
@@ -288,14 +338,16 @@ function mh_social_settings_render(): void
             'rows' => static function (array $links): void {
                 mh_social_settings_text_row('mh_bluesky_handle', __('Handle', 'sage'), '', 'matthummel.bsky.social');
                 mh_social_settings_secret_row('mh_bluesky_app_password', __('App password', 'sage'), 'MH_BLUESKY_APP_PASSWORD', $links);
+                mh_social_settings_toggle_row('mh_bluesky_auto_share', __('Auto-share new journal posts', 'sage'), true, __('Shares a summary and link about 20 seconds after you publish. Skips DEV.to imports.', 'sage'));
+                mh_social_settings_text_row('mh_bluesky_pds', __('PDS URL (optional)', 'sage'), __('Leave blank to auto-resolve. Set it only if you host on a custom PDS.', 'sage'));
             },
         ],
         'facebook' => [
             'title' => __('Facebook', 'sage'),
             'intro' => __('Use the Graph API Explorer to generate a Page access token for your app and Page.', 'sage'),
             'rows' => static function (array $links): void {
-                mh_social_settings_text_row('mh_fb_page_id', __('Page ID', 'sage'));
-                mh_social_settings_secret_row('mh_fb_page_token', __('Page access token', 'sage'), 'MH_FACEBOOK_PAGE_TOKEN', $links);
+                mh_social_settings_text_row('mh_facebook_page_id', __('Page ID', 'sage'));
+                mh_social_settings_secret_row('mh_facebook_page_token', __('Page access token', 'sage'), 'MH_FACEBOOK_PAGE_TOKEN', $links);
             },
         ],
         'devto' => [
@@ -303,6 +355,7 @@ function mh_social_settings_render(): void
             'intro' => __('Settings, Extensions, DEV Community API Keys.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_secret_row('mh_devto_token', __('API key', 'sage'), 'MH_DEVTO_TOKEN', $links);
+                mh_social_settings_toggle_row('mh_devto_auto_import', __('Auto-import new posts', 'sage'), true, __('Hourly check for new DEV.to articles, imported into the Journal under the DEV.to category.', 'sage'));
             },
         ],
         'linkedin' => [
@@ -310,6 +363,10 @@ function mh_social_settings_render(): void
             'intro' => __('Needs a LinkedIn developer app. The token generator issues a token for it.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_secret_row('mh_li_token', __('Access token', 'sage'), 'MH_LINKEDIN_TOKEN', $links);
+                mh_social_settings_text_row('mh_li_headline', __('Headline override', 'sage'));
+                mh_social_settings_textarea_row('mh_li_about', __('About blurb', 'sage'));
+                mh_social_settings_text_row('mh_li_location', __('Location label', 'sage'), '', 'Gettysburg, PA');
+                mh_social_settings_select_row('mh_li_open_to_work', __('Open to work badge', 'sage'), ['' => __('Follow GitHub hireable', 'sage'), 'yes' => __('Force on', 'sage'), 'no' => __('Force off', 'sage')], '');
             },
         ],
     ];

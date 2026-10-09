@@ -11,7 +11,7 @@
 @section('content')
 
 {{-- ── CONFIRMATION ──────────────────────────────────── --}}
-<section class="ty-hero">
+<section class="ty-hero" id="received">
   <div class="container wide ty-hero-inner">
 
     <div class="ty-confirm" role="status">
@@ -61,6 +61,17 @@
   </div>
 </section>
 
+@php
+  $tyPills = [
+    ['received', __('Received', 'sage')],
+    ['ty-browse-heading', __('While you wait', 'sage')],
+  ];
+  if (! empty($featured)) {
+      $tyPills[] = ['ty-work-heading', __('Recent work', 'sage')];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $tyPills])
+
 {{-- ── WHILE YOU WAIT ────────────────────────────────── --}}
 <section class="pf-section pf-section--alt" aria-labelledby="ty-browse-heading">
   <div class="container wide">
@@ -77,11 +88,11 @@
         <span class="ty-browse-card__link">See the work →</span>
       </a>
 
-      <a class="ty-browse-card" href="{{ home_url('/services/') }}">
+      <a class="ty-browse-card" href="{{ home_url('/hire/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('wordpress', 22) !!}</div>
-        <h3 class="ty-browse-card__title">Services</h3>
+        <h3 class="ty-browse-card__title">Hire me</h3>
         <p class="ty-browse-card__body">What I build, how the process works, who I typically work with, and what you get at handoff.</p>
-        <span class="ty-browse-card__link">Read about services →</span>
+        <span class="ty-browse-card__link">See how hiring works →</span>
       </a>
 
       <a class="ty-browse-card" href="{{ home_url('/uses/') }}">
@@ -136,9 +147,8 @@
             <div class="svc-work-card__img svc-work-card__img--placeholder">{!! \App\mh_svg_icon('wordpress', 28) !!}</div>
           @endif
           <div class="svc-work-card__body">
-            <span class="svc-work-card__cat">{{ $p['cat'] }}</span>
+            @include('partials.project-type-row', ['p' => $p])
             <h3 class="svc-work-card__title">{{ $p['title'] }}</h3>
-            <p class="svc-work-card__place">{!! \App\mh_svg_icon('map', 12) !!} {{ $p['place'] }}</p>
           </div>
         </a>
       @endforeach

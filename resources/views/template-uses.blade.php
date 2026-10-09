@@ -83,7 +83,7 @@
 
 @section('content')
 
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Stack snapshot', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('uses_kicker', __('Uses', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('uses_h1', __('What I use.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('uses_lede', __('The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.', 'sage')) }}</p>
@@ -95,25 +95,17 @@
       Hire me <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/uses',
-      'icon' => 'code',
-      'title' => __('Daily stack', 'sage'),
-      'meta' => __('Sage · PHP · Tailwind', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($sections)), 'label' => __('Categories', 'sage')],
-        ['value' => number_format_i18n($toolCount), 'label' => __('Tools listed', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Primary platform', 'sage')],
-        ['value' => 'Vite', 'label' => __('Asset pipeline', 'sage')],
-      ],
-      'link' => [
-        'label' => __('Hire me', 'sage'),
-        'href' => home_url('/hire/'),
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@php
+  $usesPills = [
+    ['uses-intro-heading', __('Overview', 'sage')],
+  ];
+  foreach ($sections as $s) {
+    $usesPills[] = ['uses-'.\Illuminate\Support\Str::slug($s['title']), $s['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $usesPills])
 
 @php
   $hasAffiliate = false;

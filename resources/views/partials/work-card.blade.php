@@ -44,20 +44,26 @@
     </a>
   @endif
   <div class="work-body">
-    @include('partials.spec-badge', ['p' => $p])
     @if ($featured)
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
-    <p class="pf-meta">
-      {{ $p['cat'] }} · {{ $p['place'] }}
-    </p>
+    @include('partials.project-type-row', ['p' => $p])
     <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
     <p>{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))
+      @php
+        $techAll = array_values(array_filter(array_map('strval', (array) $p['tech'])));
+        $techShown = array_slice($techAll, 0, 4);
+        $techRest = count($techAll) - count($techShown);
+      @endphp
       <p class="pill-row">
-        @foreach ($p['tech'] as $t)
+        @foreach ($techShown as $t)
           <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
         @endforeach
+        @if ($techRest > 0)
+          {{-- translators: %s is a comma-separated list of tool names. --}}
+          <span class="pill pill--more" title="{{ esc_attr(implode(', ', array_slice($techAll, 4))) }}">+{{ $techRest }}<span class="visually-hidden"> {{ sprintf(_n('more tool: %s', 'more tools: %s', $techRest, 'sage'), implode(', ', array_slice($techAll, 4))) }}</span></span>
+        @endif
       </p>
     @endif
     <div class="work-actions">

@@ -62,6 +62,17 @@
   </p>
 @endcomponent
 
+@include('partials.page-nav', [
+  'pills' => [
+    ['a11y-commitment-heading', __('Commitment', 'sage')],
+    ['a11y-standards-heading', __('Guidelines', 'sage')],
+    ['a11y-features-heading', __('Features', 'sage')],
+    ['a11y-limits-heading', __('Limits', 'sage')],
+    ['a11y-tech-heading', __('Approach', 'sage')],
+    ['a11y-contact-heading', __('Report an issue', 'sage')],
+  ],
+])
+
 {{-- ── MY COMMITMENT ────────────────────────────────────── --}}
 <section class="pf-section" aria-labelledby="a11y-commitment-heading">
   <div class="container wide">

@@ -29,7 +29,7 @@
   $workFaqs = \App\mh_work_page_faq();
 @endphp
 
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('Project snapshot', 'sage')])
+@component('partials.page-hero', ['useScene' => true])
   <p class="eyebrow">{{ \App\field('work_kicker', \App\mh_projects_listing_default('kicker')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('work_h1', \App\mh_projects_listing_default('h1')) }}
@@ -45,25 +45,17 @@
       {{ \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')) }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/projects',
-      'icon' => 'briefcase',
-      'title' => __('Sample work', 'sage'),
-      'meta' => __('Live demos and public code', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n($total), 'label' => __('Projects', 'sage')],
-        ['value' => __('Live', 'sage'), 'label' => __('Clickable demos', 'sage')],
-        ['value' => 'GitHub', 'label' => __('Public code', 'sage')],
-        ['value' => 'WordPress', 'label' => __('Themes and plugins', 'sage')],
-      ],
-      'link' => [
-        'label' => \App\mh_projects_listing_default('hero_cta_primary'),
-        'href' => home_url('/contact/'),
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@if (! $isEmpty)
+  @include('partials.page-nav', [
+    'pills' => [
+      ['gallery', __('Projects', 'sage')],
+      ['how', __('How it works', 'sage')],
+      ['work-faq', __('FAQ', 'sage')],
+    ],
+  ])
+@endif
 
 @if ($isEmpty)
   <div class="container wide page-block">
@@ -93,7 +85,7 @@
     'secondaryHref' => home_url('/hire/'),
   ])
 @else
-  <div class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
+  <div id="gallery" class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
     <h2 id="work-gallery-heading" class="display-title is-section">{{ \App\mh_projects_listing_default('gallery_h2') }}</h2>
     <p class="lead work-guide__intro">{{ \App\field('work_fit_intro', \App\mh_projects_listing_default('fit_intro')) }}</p>
 
@@ -144,11 +136,10 @@
       </div>
     @else
       <div class="work-grid" data-work-grid>
-        @foreach ($shown as $i => $p)
+        @foreach ($shown as $p)
           @include('partials.work-card', [
             'p' => $p,
             'pageUrl' => $pageUrl,
-            'featured' => $cat === '' && $i === 0 && $shownCount >= 3,
           ])
         @endforeach
       </div>
@@ -160,7 +151,7 @@
     </div>
   </div>
 
-  <section class="pf-section work-guide" aria-labelledby="work-how-heading">
+  <section class="pf-section work-guide" id="how" aria-labelledby="work-how-heading">
     <div class="container wide">
       <p class="eyebrow">{{ __('Three steps', 'sage') }}</p>
       <h2 id="work-how-heading" class="display-title is-section">

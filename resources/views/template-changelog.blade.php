@@ -121,6 +121,14 @@
   <p class="lead">A public record of notable updates to matthummel.com — new pages, design changes, bug fixes, and anything worth knowing about.</p>
 @endcomponent
 
+@php
+  $clPills = [];
+  foreach ($entries as $entry) {
+    $clPills[] = ['cl-'.\Illuminate\Support\Str::slug($entry['version']), $entry['version']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $clPills])
+
 <section class="pf-section" aria-label="Changelog entries">
   <div class="container wide">
     <div class="cl-feed">

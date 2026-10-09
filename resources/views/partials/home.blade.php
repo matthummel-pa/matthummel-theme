@@ -1,5 +1,6 @@
 @php
   $hero = \App\mh_home_hero();
+  $heroImage = \App\mh_hero_background_url();
   $posts = \App\mh_home_journal_posts(3);
   $work = \App\mh_home_featured_projects(3);
   $allWork = \App\mh_work_page_items();
@@ -25,46 +26,72 @@
   ];
 @endphp
 
-{{-- 1. Simplified hero — copy only, no project gallery --}}
+{{-- 1. Full-viewport featured-image hero — copy in a white panel, wave into the next band --}}
 <section
-  class="h-hero h-hero--simple{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}"
+  class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}"
   aria-labelledby="h-hero-name"
 >
+  @if ($heroImage !== '')
+    <div class="h-hero__media" aria-hidden="true">
+      <img
+        class="h-hero__bg"
+        src="{!! esc_url($heroImage) !!}"
+        alt=""
+        width="1600"
+        height="900"
+        decoding="async"
+        fetchpriority="high"
+      >
+      <div class="h-hero__wash"></div>
+    </div>
+  @endif
   <div class="container wide h-hero__inner">
-    <div class="h-hero__copy">
-      @if ($hero['eyebrow'] !== '')
-        <p class="h-hero__kicker">{{ $hero['eyebrow'] }}</p>
-      @endif
+    <div class="h-hero__panel">
+      <div class="h-hero__copy">
+        @if ($hero['eyebrow'] !== '')
+          <p class="h-hero__kicker">{{ $hero['eyebrow'] }}</p>
+        @endif
 
-      <h1 id="h-hero-name" class="h-hero__name">{{ $hero['h1'] }}</h1>
+        <h1 id="h-hero-name" class="h-hero__name">{{ $hero['h1'] }}</h1>
 
-      @if ($hero['role'] !== '')
-        <p class="h-hero__role">{{ $hero['role'] }}</p>
-      @endif
+        @if ($hero['role'] !== '')
+          <p class="h-hero__role">{{ $hero['role'] }}</p>
+        @endif
 
-      @if ($hero['subcopy'] !== '')
-        <p class="h-hero__lede">{{ $hero['subcopy'] }}</p>
-      @endif
+        @if ($hero['subcopy'] !== '')
+          <p class="h-hero__lede">{{ $hero['subcopy'] }}</p>
+        @endif
 
-      @if ($hero['show_primary'] || $hero['show_secondary'])
-        <div class="h-hero__actions">
-          @if ($hero['show_primary'] && $hero['cta_primary'] !== '')
-            <a class="btn h-hero__cta" href="{{ esc_url($hero['cta_primary_url']) }}">
-              {!! \App\mh_svg_icon('mail', 17) !!}
-              {{ $hero['cta_primary'] }}
-            </a>
-          @endif
-          @if ($hero['show_secondary'] && $hero['cta_secondary'] !== '')
-            <a class="h-text-arrow" href="{{ esc_url($hero['cta_secondary_url']) }}">
-              {{ $hero['cta_secondary'] }}
-              <span aria-hidden="true">→</span>
-            </a>
-          @endif
-        </div>
-      @endif
+        @if ($hero['show_primary'] || $hero['show_secondary'])
+          <div class="h-hero__actions">
+            @if ($hero['show_primary'] && $hero['cta_primary'] !== '')
+              <a class="btn h-hero__cta" href="{{ esc_url($hero['cta_primary_url']) }}">
+                {!! \App\mh_svg_icon('mail', 17) !!}
+                {{ $hero['cta_primary'] }}
+              </a>
+            @endif
+            @if ($hero['show_secondary'] && $hero['cta_secondary'] !== '')
+              <a class="h-text-arrow" href="{{ esc_url($hero['cta_secondary_url']) }}">
+                {{ $hero['cta_secondary'] }}
+                <span aria-hidden="true">→</span>
+              </a>
+            @endif
+          </div>
+        @endif
+      </div>
     </div>
   </div>
+  @include('partials.hero-wave')
 </section>
+
+@include('partials.page-nav', [
+  'pills' => [
+    ['work', __('Projects', 'sage')],
+    ['journal', __('Journal', 'sage')],
+    ['do', __('Services', 'sage')],
+    ['close', __('Say hello', 'sage')],
+  ],
+])
 
 {{-- 2. Featured Projects CPT --}}
 <section class="h-section h-band" id="work" aria-labelledby="h-work-heading">
@@ -141,7 +168,7 @@
             <div class="h-journal-item__body">
               <div class="h-journal-item__meta">
                 @if ($post['cat'])
-                  <a class="h-journal__cat" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
+                  <a class="h-journal__cat project-cat-pill" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
                 @endif
                 <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" itemprop="datePublished">{{ $post['date'] }}</time>
                 @if (! empty($post['minutes']))
@@ -191,7 +218,7 @@
 </section>
 
 {{-- Quiet close — not a sales band --}}
-<section class="h-close" aria-labelledby="h-cta-heading">
+<section class="h-close" id="close" aria-labelledby="h-cta-heading">
   <div class="container wide h-close__inner">
     <div class="h-close__copy">
       <h2 id="h-cta-heading" class="h-section__title">

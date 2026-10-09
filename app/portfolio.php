@@ -130,6 +130,149 @@ function mh_social_links(): array
     return $links;
 }
 
+/**
+ * Short label for a GitHub public event type on the Now page.
+ */
+function mh_github_event_label(string $type): string
+{
+    return match ($type) {
+        'PushEvent' => __('Push', 'sage'),
+        'PullRequestEvent' => __('Pull request', 'sage'),
+        'PullRequestReviewEvent' => __('Review', 'sage'),
+        'IssuesEvent' => __('Issue', 'sage'),
+        'IssueCommentEvent' => __('Comment', 'sage'),
+        'CreateEvent' => __('Created', 'sage'),
+        'ReleaseEvent' => __('Release', 'sage'),
+        'ForkEvent' => __('Fork', 'sage'),
+        'WatchEvent' => __('Star', 'sage'),
+        'PublicEvent' => __('Public', 'sage'),
+        default => __('Activity', 'sage'),
+    };
+}
+
+/**
+ * Label and machine date for the Now page “last updated” line.
+ *
+ * A filled `now_updated` field wins. Otherwise the Now page’s last edit.
+ *
+ * @return array{label: string, iso: string}
+ */
+function mh_now_updated(?int $postId = null): array
+{
+    $custom = trim(field('now_updated', '', $postId));
+    if ($custom !== '') {
+        return ['label' => $custom, 'iso' => ''];
+    }
+
+    $postId = $postId ?: (int) get_the_ID();
+    $post = $postId > 0 ? get_post($postId) : null;
+    if (! $post instanceof \WP_Post) {
+        $found = get_page_by_path('now');
+        $post = $found instanceof \WP_Post ? $found : null;
+    }
+    if ($post instanceof \WP_Post) {
+        $ts = strtotime($post->post_modified_gmt.' UTC');
+        if ($ts !== false) {
+            return [
+                'label' => date_i18n(get_option('date_format') ?: 'F j, Y', $ts),
+                'iso' => gmdate('c', $ts),
+            ];
+        }
+    }
+
+    return ['label' => date_i18n('F Y'), 'iso' => ''];
+}
+
+/**
+ * Optional SMS number for the Now page. Empty unless a theme mod or page field is set.
+ */
+function mh_now_sms_number(?int $postId = null): string
+{
+    $raw = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_now_sms', '')) : '';
+    if ($raw === '') {
+        $raw = trim(field('now_sms', '', $postId));
+    }
+    $hasPlus = str_starts_with($raw, '+');
+    $digits = preg_replace('/\D+/', '', $raw) ?? '';
+    $len = strlen($digits);
+    if ($len < 10 || $len > 15) {
+        return '';
+    }
+
+    return $hasPlus ? '+'.$digits : $digits;
+}
+
+/**
+ * `sms:` link that opens the visitor’s own messaging app. Empty when no number is set.
+ */
+function mh_now_sms_href(?int $postId = null): string
+{
+    $number = mh_now_sms_number($postId);
+    if ($number === '') {
+        return '';
+    }
+
+    $body = trim(field('now_sms_body', __('Hi — I saw the Now page.', 'sage'), $postId));
+    if ($body === '') {
+        $body = __('Hi — I saw the Now page.', 'sage');
+    }
+    if (function_exists('mb_strlen') && mb_strlen($body) > 160) {
+        $body = mb_substr($body, 0, 157).'...';
+    } elseif (strlen($body) > 160) {
+        $body = substr($body, 0, 157).'...';
+    }
+
+    return 'sms:'.$number.'?body='.rawurlencode($body);
+}
+
+/**
+ * GitHub issue URL for a visitor who needs help now.
+ *
+ * Opens a new issue on this theme repo with a short prompt already filled in.
+ */
+function mh_github_help_issue_url(): string
+{
+    $login = rawurlencode(mh_github_login());
+    $title = rawurlencode('Need help now');
+    $body = rawurlencode("What I need help with:\n\n\nLink (if you have one):\n\n");
+
+    return "https://github.com/{$login}/matthummel-theme/issues/new?title={$title}&body={$body}";
+}
+
+/**
+ * Recent public posts from DEV.to and Bluesky for the Now page.
+ *
+ * @return list<array{network: string, title: string, url: string, when: string, text: string}>
+ */
+function mh_now_social_feed(int $limit = 4): array
+{
+    $limit = max(1, min(6, $limit));
+    $items = [];
+
+    foreach (array_slice(mh_devto_posts($limit), 0, $limit) as $post) {
+        $title = trim((string) ($post['title'] ?? ''));
+        $url = trim((string) ($post['url'] ?? ''));
+        if ($title === '' || $url === '') {
+            continue;
+        }
+        $items[] = [
+            'network' => 'DEV.to',
+            'title' => $title,
+            'url' => $url,
+            'when' => (string) ($post['date'] ?? ''),
+            'text' => (string) ($post['ex'] ?? ''),
+        ];
+    }
+
+    if (function_exists(__NAMESPACE__.'\\mh_bluesky_public_posts')) {
+        foreach (mh_bluesky_public_posts($limit) as $post) {
+            $items[] = $post;
+        }
+    }
+
+    return $items;
+}
+
 /** Featured GitHub codebases to highlight on Code and Home. */
 function mh_featured_repos(): array
 {
@@ -147,9 +290,9 @@ function mh_featured_repos(): array
             'tags' => ['WordPress', 'Sage', 'Tailwind'],
         ],
         [
-            'name' => 'tocflow',
-            'desc' => 'WordPress plugin that builds a table of contents from heading blocks. PHP, Gutenberg, and a small public API.',
-            'url' => 'https://github.com/matthummel-pa/tocflow',
+            'name' => 'tocguide',
+            'desc' => 'WordPress plugin that builds a table of contents from heading blocks, with an optional Reading Guide. PHP, Gutenberg, and a small public API.',
+            'url' => 'https://github.com/matthummel-pa/tocguide',
             'tags' => ['WordPress', 'Gutenberg', 'PHP'],
         ],
         [
@@ -368,6 +511,67 @@ function mh_spec_badge_label(array $project = []): string
     }
 
     return __('Demo', 'sage');
+}
+
+/**
+ * Whether a catalog category is only the product type (Theme / Themes).
+ */
+function mh_project_label_is_type_duplicate(string $type, string $cat): bool
+{
+    $typeNorm = strtolower(trim($type));
+    $catNorm = strtolower(trim($cat));
+    if ($typeNorm === '' || $catNorm === '') {
+        return false;
+    }
+    if ($catNorm === $typeNorm || $catNorm === $typeNorm.'s') {
+        return true;
+    }
+    $typeStem = rtrim($typeNorm, 's');
+    $catStem = rtrim($catNorm, 's');
+
+    return $typeStem !== '' && $typeStem === $catStem;
+}
+
+/**
+ * Type, industry, and place labels for the shared pill row.
+ *
+ * Splits leftover combined strings such as "Themes · Real estate" and skips
+ * category text that only repeats the type badge.
+ *
+ * @param  array<string, mixed>  $project
+ * @return array{type: string, cat: string, place: string}
+ */
+function mh_project_type_row_labels(array $project = []): array
+{
+    $type = mh_spec_badge_label($project);
+    $cat = trim((string) ($project['cat'] ?? ''));
+    $place = trim((string) ($project['place'] ?? ''));
+
+    if ($cat !== '' && preg_match('/[·|]/u', $cat) === 1) {
+        $parts = preg_split('/\s*[·|]\s*/u', $cat) ?: [];
+        $parts = array_values(array_filter(array_map('trim', $parts), static fn ($part) => $part !== ''));
+        if ($parts !== []) {
+            $cat = (string) $parts[0];
+            $rest = implode(' · ', array_slice($parts, 1));
+            if ($place === '' && $rest !== '') {
+                $place = $rest;
+            }
+        }
+    }
+
+    if ($type !== '' && $cat !== '' && mh_project_label_is_type_duplicate($type, $cat)) {
+        $cat = '';
+    }
+
+    if ($cat !== '' && $place !== '' && strcasecmp($cat, $place) === 0) {
+        $cat = '';
+    }
+
+    return [
+        'type' => $type,
+        'cat' => $cat,
+        'place' => $place,
+    ];
 }
 
 /** Featured repos plus recent public GitHub work (forks and the profile repo skipped). */
@@ -687,51 +891,6 @@ function mh_github_stargazer_row(array $row): ?array
 }
 
 /**
- * Recent stargazers across featured Code page repos (deduped by login).
- *
- * @return list<array{login: string, name: string, avatar: string, url: string, repo: string}>
- */
-function mh_github_stargazers(int $limit = 24, ?int $post_id = null): array
-{
-    $limit = max(1, min(48, $limit));
-    $login = mh_github_login();
-    $key = 'mh_github_stargazers_v1_'.md5($login.(string) $limit);
-    $cached = get_transient($key);
-    if (is_array($cached)) {
-        return array_slice($cached, 0, $limit);
-    }
-
-    $repos = mh_code_page_repos($post_id);
-    $seen = [];
-    $out = [];
-
-    foreach ($repos as $repo) {
-        $name = trim((string) ($repo['name'] ?? ''));
-        if ($name === '' || mh_github_is_hidden_repo($name)) {
-            continue;
-        }
-        foreach (Github::fetchStargazers($login, $name, 20) as $row) {
-            $loginKey = strtolower((string) ($row['login'] ?? ''));
-            if ($loginKey === '' || isset($seen[$loginKey])) {
-                continue;
-            }
-            $seen[$loginKey] = true;
-            $norm = mh_github_stargazer_row($row);
-            if ($norm !== null) {
-                $out[] = $norm;
-            }
-            if (count($out) >= $limit) {
-                break 2;
-            }
-        }
-    }
-
-    set_transient($key, $out, 6 * HOUR_IN_SECONDS);
-
-    return $out;
-}
-
-/**
  * Total stars earned across all public owned repos (not just featured).
  *
  * @return array{total: int, repos: list<array{name: string, stars: int, url: string}>}
@@ -791,122 +950,6 @@ function mh_github_watching(int $limit = 36): array
 }
 
 /**
- * Milestone badges earned from live GitHub stats (no fake achievements).
- *
- * @return list<array{label: string, detail: string, icon: string, class: string}>
- */
-function mh_code_page_github_badges(?int $post_id = null): array
-{
-    $key = 'mh_code_badges_v1_'.md5((string) $post_id);
-    if (($cached = get_transient($key)) !== false && is_array($cached)) {
-        return $cached;
-    }
-
-    $profile = mh_github_profile();
-    $calendar = mh_github_calendar();
-    $starsEarned = mh_github_stars_earned();
-    $starTotal = (int) ($starsEarned['total'] ?? 0);
-    $followers = (int) ($profile['followers'] ?? 0);
-    $repos = (int) ($profile['public_repos'] ?? 0);
-    $contributions = (int) ($calendar['total'] ?? 0);
-    $badges = [];
-
-    if ($repos >= 1) {
-        $badges[] = [
-            'label' => __('Open source', 'sage'),
-            'detail' => sprintf(_n('%s public repo', '%s public repos', $repos, 'sage'), number_format_i18n($repos)),
-            'icon' => 'github',
-            'class' => 'code-gh-badge--oss',
-        ];
-    }
-
-    foreach ([100, 50, 25, 10] as $tier) {
-        if ($starTotal >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ stars earned', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted star count */
-                    __('Across public repos — %s total', 'sage'),
-                    number_format_i18n($starTotal)
-                ),
-                'icon' => 'star',
-                'class' => 'code-gh-badge--stars',
-            ];
-            break;
-        }
-    }
-
-    foreach ([100, 50, 25, 10] as $tier) {
-        if ($followers >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ followers', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted follower count */
-                    __('GitHub community — %s following', 'sage'),
-                    number_format_i18n($followers)
-                ),
-                'icon' => 'users',
-                'class' => 'code-gh-badge--followers',
-            ];
-            break;
-        }
-    }
-
-    foreach ([1000, 500, 100] as $tier) {
-        if ($contributions >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ contributions', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted contribution count */
-                    __('Public commits this year — %s total', 'sage'),
-                    number_format_i18n($contributions)
-                ),
-                'icon' => 'git',
-                'class' => 'code-gh-badge--contrib',
-            ];
-            break;
-        }
-    }
-
-    $activityLabels = [];
-    foreach (mh_code_page_repos($post_id) as $repo) {
-        $name = trim((string) ($repo['name'] ?? ''));
-        if ($name === '') {
-            continue;
-        }
-        $meta = Github::fetchRepoMeta(mh_github_login(), $name);
-        [$badge] = mh_repo_activity_badge(
-            (string) ($meta['pushed'] ?? ''),
-            (int) ($meta['stars'] ?? 0),
-            (int) ($meta['forks'] ?? 0),
-            (string) ($meta['desc'] ?? '')
-        );
-        if ($badge !== '' && ! in_array($badge, $activityLabels, true)) {
-            $activityLabels[] = $badge;
-        }
-    }
-    foreach ($activityLabels as $label) {
-        $class = match ($label) {
-            'Active' => 'badge--active',
-            'Recent' => 'badge--recent',
-            'Maintained' => 'badge--maintained',
-            'Stable' => 'badge--stable',
-            default => 'badge--archived',
-        };
-        $badges[] = [
-            'label' => $label,
-            'detail' => __('Repo activity badge on a featured project', 'sage'),
-            'icon' => 'git',
-            'class' => 'code-gh-badge--activity '.$class,
-        ];
-    }
-
-    set_transient($key, $badges, 6 * HOUR_IN_SECONDS);
-
-    return $badges;
-}
-
-/**
  * Resolve the Code page post ID for field lookups.
  */
 function mh_code_page_id(): int
@@ -943,8 +986,18 @@ function mh_github_calendar(): array
  */
 function mh_github_calendar_recent(int $days = 90): array
 {
+    return mh_github_calendar_clip(mh_github_calendar(), $days);
+}
+
+/**
+ * Clip a contribution calendar to the last N days (newest week columns first).
+ *
+ * @param  array{weeks?: array<int, array<int, array{date: string, count: int, level: int}>>}  $cal
+ * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
+ */
+function mh_github_calendar_clip(array $cal, int $days = 90): array
+{
     $days = max(1, min(366, $days));
-    $cal = mh_github_calendar();
     $cutoff = gmdate('Y-m-d', time() - ($days - 1) * DAY_IN_SECONDS);
 
     $weeks = [];
@@ -1002,11 +1055,22 @@ function mh_github_calendar_recent(int $days = 90): array
  */
 function mh_github_events_recent(int $limit = 10, int $days = 90): array
 {
+    return array_slice(mh_github_events_within(mh_github_events(max($limit * 3, 40)), $days), 0, max(1, $limit));
+}
+
+/**
+ * Events newer than N days, in their original (newest first) order.
+ *
+ * @param  list<array<string, mixed>>  $events
+ * @return list<array<string, mixed>>
+ */
+function mh_github_events_within(array $events, int $days = 90): array
+{
     $days = max(1, min(120, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $out = [];
 
-    foreach (mh_github_events(max($limit * 3, 40)) as $ev) {
+    foreach ($events as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -1016,9 +1080,6 @@ function mh_github_events_recent(int $limit = 10, int $days = 90): array
             continue;
         }
         $out[] = $ev;
-        if (count($out) >= $limit) {
-            break;
-        }
     }
 
     return $out;
@@ -1031,12 +1092,21 @@ function mh_github_events_recent(int $limit = 10, int $days = 90): array
  */
 function mh_github_events_by_day(int $days = 90): array
 {
-    $days = max(1, min(120, $days));
-    $cutoff = time() - $days * DAY_IN_SECONDS;
+    return mh_github_events_group_by_day(mh_github_events_within(mh_github_events(100), $days));
+}
+
+/**
+ * Group events by site-local calendar day (Y-m-d) for contribution tooltips.
+ *
+ * @param  list<array<string, mixed>>  $events
+ * @return array<string, list<array<string, mixed>>>
+ */
+function mh_github_events_group_by_day(array $events): array
+{
     $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
     $byDay = [];
 
-    foreach (mh_github_events(100) as $ev) {
+    foreach ($events as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -1047,9 +1117,6 @@ function mh_github_events_by_day(int $days = 90): array
         try {
             $dt = new \DateTimeImmutable($when);
         } catch (\Exception) {
-            continue;
-        }
-        if ($dt->getTimestamp() < $cutoff) {
             continue;
         }
         $key = $dt->setTimezone($tz)->format('Y-m-d');
@@ -1104,6 +1171,74 @@ function mh_github_day_tip(string $date, int $count, array $dayEvents = []): str
     }
 
     return implode("\n", $lines);
+}
+
+/**
+ * Streaks and highlights from a contribution calendar.
+ *
+ * The current streak counts back from today, or from yesterday when today
+ * has no contributions yet (the day is not over).
+ *
+ * @param  array{weeks?: array<int, array<int, array{date: string, count: int}>>}  $cal
+ * @return array{current: int, longest: int, active_days: int, best_day: array{date: string, count: int}|null, avg_active: float}
+ */
+function mh_github_calendar_streaks(array $cal): array
+{
+    $days = [];
+    foreach ((array) ($cal['weeks'] ?? []) as $week) {
+        foreach ((array) $week as $day) {
+            $date = (string) ($day['date'] ?? '');
+            if ($date !== '') {
+                $days[$date] = (int) ($day['count'] ?? 0);
+            }
+        }
+    }
+    ksort($days);
+
+    $today = wp_date('Y-m-d');
+    $longest = 0;
+    $run = 0;
+    $active = 0;
+    $sum = 0;
+    $best = null;
+    foreach ($days as $date => $count) {
+        if ($date > $today) {
+            break;
+        }
+        if ($count > 0) {
+            $run++;
+            $active++;
+            $sum += $count;
+            $longest = max($longest, $run);
+            if ($best === null || $count > $best['count']) {
+                $best = ['date' => (string) $date, 'count' => $count];
+            }
+        } else {
+            $run = 0;
+        }
+    }
+
+    $current = 0;
+    foreach (array_reverse(array_keys($days)) as $date) {
+        if ($date > $today) {
+            continue;
+        }
+        if ($days[$date] > 0) {
+            $current++;
+        } elseif ($date === $today && $current === 0) {
+            continue;
+        } else {
+            break;
+        }
+    }
+
+    return [
+        'current' => $current,
+        'longest' => $longest,
+        'active_days' => $active,
+        'best_day' => $best,
+        'avg_active' => $active > 0 ? round($sum / $active, 1) : 0.0,
+    ];
 }
 
 function mh_github_live_repos(int $limit = 8): array
@@ -1462,6 +1597,15 @@ function mh_studio_project_image_url(array $project): string
     if ($img === '') {
         return '';
     }
+    if (function_exists(__NAMESPACE__.'\\mh_product_media_url') && (
+        preg_match('#^https?://#i', $img) === 1
+        || str_contains($img, '/')
+    )) {
+        $resolved = mh_product_media_url($img);
+        if ($resolved !== '') {
+            return $resolved;
+        }
+    }
     if (preg_match('#^https?://#i', $img)) {
         return $img;
     }
@@ -1538,14 +1682,21 @@ function mh_project_cpt_has_posts(): bool
 /**
  * Resolve the public Work / project screenshot URL for a project.
  *
- * Featured image wins when set (so Media Library / Generate featured image
- * updates show on /projects/ and /projects/{slug}/). Falls back to `_mh_project_image`
- * (bundled JPEG filename or absolute URL).
+ * Catalog `_mh_project_image` (bundled WebP under resources/images/products/)
+ * wins so grid cards and project pages show the updated screenshots. Featured
+ * image is the fallback when no bundled file is set.
  */
 function mh_project_card_image_url(int $post_id): string
 {
     if ($post_id < 1) {
         return '';
+    }
+
+    $bundled = mh_studio_project_image_url([
+        'image' => (string) get_post_meta($post_id, '_mh_project_image', true),
+    ]);
+    if ($bundled !== '') {
+        return $bundled;
     }
 
     if (has_post_thumbnail($post_id)) {
@@ -1558,9 +1709,20 @@ function mh_project_card_image_url(int $post_id): string
         }
     }
 
-    return mh_studio_project_image_url([
-        'image' => (string) get_post_meta($post_id, '_mh_project_image', true),
-    ]);
+    return '';
+}
+
+/** Whether the current request is a Projects listing or a project CPT single. */
+function mh_is_project_surface(): bool
+{
+    if (function_exists('is_singular') && is_singular(mh_project_post_type())) {
+        return true;
+    }
+    if (function_exists('is_post_type_archive') && is_post_type_archive(mh_project_post_type())) {
+        return true;
+    }
+
+    return (string) get_page_template_slug() === 'template-projects.blade.php';
 }
 
 /**
@@ -1820,7 +1982,7 @@ function mh_register_project_post_type(): void
         'capability_type' => 'post',
         'map_meta_cap' => true,
         'hierarchical' => false,
-        'supports' => ['title', 'thumbnail', 'page-attributes'],
+        'supports' => ['title', 'thumbnail', 'page-attributes', 'comments'],
         'has_archive' => false,
         'rewrite' => [
             'slug' => function_exists(__NAMESPACE__.'\\mh_concept_rewrite_slug')
@@ -2172,7 +2334,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
         $image,
-        __('Fallback only: used when this project has no Featured image. Example: products/acreline/featured.webp. Featured image always wins on the Projects grid and project page.', 'sage')
+        __('Catalog screenshot shown on the Projects grid and project page. Example: products/acreline/featured.webp. Featured image is used only when this field is empty.', 'sage')
     );
     echo '</tbody></table>';
 
@@ -4040,6 +4202,188 @@ function mh_profile_photo_url(int $size = 160): string
     return $email !== '' ? (string) get_avatar_url($email, ['size' => $size]) : '';
 }
 
+/**
+ * True when a URL is a headshot, GitHub avatar, or Gravatar — not a work screenshot.
+ */
+function mh_is_profile_hero_url(string $url): bool
+{
+    $hay = strtolower($url);
+    if ($hay === '') {
+        return true;
+    }
+
+    foreach (['matt-hummel', 'avatars.githubusercontent.com', 'secure.gravatar.com', 'gravatar.com'] as $needle) {
+        if (str_contains($hay, $needle)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function mh_theme_image_uri(string $rel): string
+{
+    $rel = ltrim($rel, '/');
+    if ($rel === '') {
+        return '';
+    }
+    if (preg_match('#^https?://#i', $rel)) {
+        return mh_is_profile_hero_url($rel) ? '' : $rel;
+    }
+
+    $path = 'resources/images/'.$rel;
+    if (is_readable(get_theme_file_path($path))) {
+        return get_theme_file_uri($path);
+    }
+
+    return mh_studio_project_image_url(['image' => $rel]);
+}
+
+/**
+ * First public work/product screenshot that is not a portrait.
+ */
+function mh_first_work_hero_url(): string
+{
+    foreach (mh_work_page_items() as $item) {
+        $url = mh_studio_project_image_url($item);
+        if ($url !== '' && ! mh_is_profile_hero_url($url)) {
+            return $url;
+        }
+    }
+
+    return mh_theme_image_uri('work/hallowed-ground.jpg');
+}
+
+/**
+ * Bundled screenshot that matches the page: WordPress products and sample sites, never a headshot.
+ */
+function mh_hero_scene_url(?int $post_id = null): string
+{
+    $template = '';
+    if ($post_id !== null && $post_id > 0) {
+        $template = (string) get_page_template_slug($post_id);
+    }
+
+    if (is_singular('project')) {
+        $id = (int) get_queried_object_id();
+        $url = $id > 0 ? mh_project_card_image_url($id) : '';
+
+        return $url !== '' && ! mh_is_profile_hero_url($url) ? $url : mh_first_work_hero_url();
+    }
+
+    if (function_exists('is_product') && is_product()) {
+        $id = (int) get_queried_object_id();
+        if ($id > 0 && has_post_thumbnail($id)) {
+            $src = get_the_post_thumbnail_url($id, 'full');
+            if (is_string($src) && $src !== '' && ! mh_is_profile_hero_url($src)) {
+                return $src;
+            }
+        }
+
+        return mh_theme_image_uri('products/acreline/featured.webp');
+    }
+
+    if (is_home() && ! is_front_page()) {
+        $latest = get_posts([
+            'post_type' => 'post',
+            'posts_per_page' => 1,
+            'post_status' => 'publish',
+            'no_found_rows' => true,
+        ]);
+        if ($latest !== []) {
+            $img = mh_post_card_image((int) $latest[0]->ID);
+            if ($img !== '' && ! mh_is_profile_hero_url($img)) {
+                return $img;
+            }
+        }
+
+        return mh_theme_image_uri('work/first-shot.jpg');
+    }
+
+    $scenes = [
+        'template-home.blade.php' => 'products/acreline/01-homepage.webp',
+        'template-about.blade.php' => 'work/keystone-homes.jpg',
+        'template-projects.blade.php' => 'products/walkridge/01-homepage.webp',
+        'template-hire.blade.php' => 'work/ridgeline-realty.jpg',
+        'template-code.blade.php' => 'products/acreline/02-listings.webp',
+        'template-contact.blade.php' => 'products/acreline/05-contact.webp',
+        'template-services.blade.php' => 'work/cupola-field.jpg',
+        'template-now.blade.php' => 'products/acreline/featured.webp',
+        'template-uses.blade.php' => 'products/tocguide/featured.webp',
+        'template-resources.blade.php' => 'products/walkridge/featured.webp',
+        'template-support.blade.php' => 'products/acreline/07-book.webp',
+        'template-start.blade.php' => 'work/willoughby.jpg',
+        'template-portfolio.blade.php' => 'products/acreline/01-homepage.webp',
+        'template-changelog.blade.php' => 'products/walkridge/featured.webp',
+        'template-privacy.blade.php' => 'work/herr-ridge.jpg',
+        'template-terms.blade.php' => 'work/herr-ridge.jpg',
+        'template-accessibility.blade.php' => 'work/herr-ridge.jpg',
+        'template-affiliate-disclosure.blade.php' => 'products/walkridge/featured.webp',
+    ];
+
+    if (is_front_page() || $template === 'template-home.blade.php') {
+        return mh_theme_image_uri($scenes['template-home.blade.php']);
+    }
+
+    if (function_exists('is_shop') && is_shop()) {
+        return mh_theme_image_uri('products/walkridge/01-homepage.webp');
+    }
+
+    if ($template !== '' && isset($scenes[$template])) {
+        return mh_theme_image_uri($scenes[$template]);
+    }
+
+    return mh_first_work_hero_url();
+}
+
+/**
+ * Full-bleed hero photo: work featured image when it is not a portrait, then a page-matched studio screenshot.
+ */
+function mh_hero_background_url(?int $post_id = null, string $fallback = ''): string
+{
+    if ($post_id === null || $post_id < 1) {
+        $post_id = (int) get_queried_object_id();
+    }
+
+    if (is_home() && ! is_front_page()) {
+        $posts_page = (int) get_option('page_for_posts');
+        if ($posts_page > 0) {
+            $post_id = $posts_page;
+        }
+    }
+
+    if (is_front_page()) {
+        $front = (int) get_option('page_on_front');
+        if ($front > 0) {
+            $post_id = $front;
+        }
+    }
+
+    $candidates = [];
+
+    if ($post_id > 0 && has_post_thumbnail($post_id)) {
+        $src = get_the_post_thumbnail_url($post_id, 'full');
+        if (is_string($src) && $src !== '') {
+            $candidates[] = $src;
+        }
+    }
+
+    $fallback = trim($fallback);
+    if ($fallback !== '') {
+        $candidates[] = $fallback;
+    }
+
+    $candidates[] = mh_hero_scene_url($post_id > 0 ? $post_id : null);
+
+    foreach ($candidates as $url) {
+        if ($url !== '' && ! mh_is_profile_hero_url($url)) {
+            return $url;
+        }
+    }
+
+    return mh_first_work_hero_url();
+}
+
 add_action('customize_register', function (\WP_Customize_Manager $wp): void {
     $wp->add_section('mh_identity', [
         'title' => __('Profile photo', 'sage'),
@@ -4617,9 +4961,10 @@ function mh_devto_markdown_to_blocks(string $md): string
  */
 function mh_devto_find_imported_post(int $articleId): int
 {
+    // Trashed imports count as "already imported" so deleting one is not undone by the hourly sync.
     $q = new \WP_Query([
         'post_type' => 'post',
-        'post_status' => ['publish', 'draft', 'pending', 'private'],
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
         'posts_per_page' => 1,
         'fields' => 'ids',
         'no_found_rows' => true,

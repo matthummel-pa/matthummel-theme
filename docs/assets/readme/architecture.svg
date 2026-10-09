@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-label="Architecture: a request flows from WordPress through Acorn into app modules and Blade views with Vite assets; content comes from page fields and post meta; integrations are cached in transients; CI builds a zip that the theme updater installs.">
+  <style>
+    :root { --ink:#0f1c2e; --muted:#5b6b7f; --line:#c5d0de; --box:#ffffff; --tint:#eef3f9; --navy:#173e70; --blue:#1a5cad; --teal:#0e8a7c; }
+    @media (prefers-color-scheme: dark) { :root { --ink:#e6edf3; --muted:#9aa7b8; --line:#30363d; --box:#161b22; --tint:#0d1117; --navy:#93c5fd; --blue:#7fb2ff; --teal:#5eead4; } }
+    .f { font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; }
+    .lane { fill: var(--tint); stroke: var(--line); }
+    .lanet { font: 700 12px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.2; }
+    .box.hi { stroke: var(--navy); stroke-width: 1.6; }
+    .t { font: 700 14px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--ink); }
+    .s { font: 400 12px/1.3 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--muted); }
+    .m { font: 600 11px/1 ui-monospace, Menlo, Consolas, monospace; fill: var(--blue); }
+    .arrow { stroke: var(--navy); stroke-width: 1.6; fill: none; marker-end: url(#a); }
+    .arrow.teal { stroke: var(--teal); marker-end: url(#at); }
+    .note { font: 500 11px/1.3 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--muted); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#173e70"/></marker>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#0e8a7c"/></marker>
+  </defs>
+
+  <!-- Lane 1: request -->
+  <rect class="lane" x="20" y="20" width="1060" height="150" rx="12"/>
+  <text class="lanet" x="36" y="44">Request</text>
+  <g transform="translate(40,60)"><rect class="box" width="150" height="88" rx="10"/><text class="t" x="14" y="28">WordPress</text><text class="s" x="14" y="48">Template hierarchy</text><text class="m" x="14" y="70">functions.php</text></g>
+  <g transform="translate(230,60)"><rect class="box" width="160" height="88" rx="10"/><text class="t" x="14" y="28">Acorn 6</text><text class="s" x="14" y="48">Boots Laravel pieces</text><text class="m" x="14" y="70">Application::configure()</text></g>
+  <g transform="translate(430,60)"><rect class="box hi" width="200" height="88" rx="10"/><text class="t" x="14" y="28">app/*.php · 29 modules</text><text class="s" x="14" y="48">Fields, SEO, forms, shop,</text><text class="s" x="14" y="63">GitHub, updater, CLI…</text><text class="m" x="14" y="80">namespace App</text></g>
+  <g transform="translate(670,60)"><rect class="box hi" width="190" height="88" rx="10"/><text class="t" x="14" y="28">Blade views</text><text class="s" x="14" y="48">22 page templates</text><text class="s" x="14" y="63">50 partials · {{ }} escapes</text><text class="m" x="14" y="80">resources/views/</text></g>
+  <g transform="translate(900,60)"><rect class="box" width="160" height="88" rx="10"/><text class="t" x="14" y="28">Vite 8 assets</text><text class="s" x="14" y="48">Tailwind v4 tokens,</text><text class="s" x="14" y="63">20 small JS modules</text><text class="m" x="14" y="80">public/build/manifest</text></g>
+  <path class="arrow" d="M190 104h38"/><path class="arrow" d="M390 104h38"/><path class="arrow" d="M630 104h38"/><path class="arrow" d="M860 104h38"/>
+
+  <!-- Lane 2: content & integrations -->
+  <rect class="lane" x="20" y="190" width="520" height="160" rx="12"/>
+  <text class="lanet" x="36" y="214">Content</text>
+  <g transform="translate(40,230)"><rect class="box" width="230" height="100" rx="10"/><text class="t" x="14" y="28">Page content (theme)</text><text class="s" x="14" y="48">362 keys, defaults in code,</text><text class="s" x="14" y="63">edited in wp-admin</text><text class="m" x="14" y="84">\App\field('key', 'Default')</text></g>
+  <g transform="translate(290,230)"><rect class="box" width="230" height="100" rx="10"/><text class="t" x="14" y="28">Projects CPT + catalog</text><text class="s" x="14" y="48">Seeded from JSON, versioned,</text><text class="s" x="14" y="63">never overwrites edits</text><text class="m" x="14" y="84">product-catalog.json</text></g>
+
+  <rect class="lane" x="560" y="190" width="520" height="160" rx="12"/>
+  <text class="lanet" x="576" y="214">Integrations (fail soft, cached in transients)</text>
+  <g transform="translate(580,230)"><rect class="box" width="150" height="100" rx="10"/><text class="t" x="14" y="28">GitHub API</text><text class="s" x="14" y="48">Repos, activity,</text><text class="s" x="14" y="63">contribution calendar</text><text class="m" x="14" y="84">App\Github</text></g>
+  <g transform="translate(745,230)"><rect class="box" width="155" height="100" rx="10"/><text class="t" x="14" y="28">Social + publish</text><text class="s" x="14" y="48">Bluesky AT, Facebook</text><text class="s" x="14" y="63">Graph, DEV.to, LinkedIn</text><text class="m" x="14" y="84">social-share.php</text></g>
+  <g transform="translate(915,230)"><rect class="box" width="145" height="100" rx="10"/><text class="t" x="14" y="28">OpenAI · n8n</text><text class="s" x="14" y="48">Drafts, featured images;</text><text class="s" x="14" y="63">CRM webhook for forms</text><text class="m" x="14" y="84">contact.php</text></g>
+  <path class="arrow teal" d="M155 230V148"/><path class="arrow teal" d="M405 230V148"/><path class="arrow teal" d="M655 230V148"/>
+
+  <!-- Lane 3: pipeline -->
+  <rect class="lane" x="20" y="370" width="1060" height="130" rx="12"/>
+  <text class="lanet" x="36" y="394">Ship</text>
+  <g transform="translate(40,410)"><rect class="box" width="170" height="72" rx="10"/><text class="t" x="14" y="26">PR → main</text><text class="s" x="14" y="46">Pint · wp-review (WPCS)</text><text class="s" x="14" y="61">build · security review</text></g>
+  <g transform="translate(250,410)"><rect class="box" width="190" height="72" rx="10"/><text class="t" x="14" y="26">GitHub Actions</text><text class="s" x="14" y="46">composer --no-dev, npm build,</text><text class="s" x="14" y="61">pack-theme.sh → zip</text></g>
+  <g transform="translate(480,410)"><rect class="box" width="190" height="72" rx="10"/><text class="t" x="14" y="26">Release theme-latest</text><text class="s" x="14" y="46">One moving tag, built</text><text class="s" x="14" y="61">artifact, no FTP</text></g>
+  <g transform="translate(710,410)"><rect class="box hi" width="170" height="72" rx="10"/><text class="t" x="14" y="26">Update Theme</text><text class="s" x="14" y="46">Appearance screen or</text><text class="m" x="14" y="63">wp mh theme-update</text></g>
+  <g transform="translate(920,410)"><rect class="box" width="140" height="72" rx="10"/><text class="t" x="14" y="26">matthummel.com</text><text class="s" x="14" y="46">Hostinger · LiteSpeed</text><text class="s" x="14" y="61">purge after install</text></g>
+  <path class="arrow" d="M210 446h38"/><path class="arrow" d="M440 446h38"/><path class="arrow" d="M670 446h38"/><path class="arrow" d="M880 446h38"/>
+</svg>

@@ -2,6 +2,204 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.47 social share cards)
+
+- `app/social-share.php` renders one `.mh-social__card` per network. Buttons are `mh_social_button()` with `data-mh-act` = `generate` | `post-bluesky` | `post-facebook` | `post-devto` | `open` | `copy`. Add a network by adding a card array, not more ids.
+- Facebook posting: `mh_facebook_post_to_page()` → Graph API `POST /{page}/feed` with `message` + `link`. Credentials are `MH_FACEBOOK_PAGE_ID` / `MH_FACEBOOK_PAGE_TOKEN` in wp-config, else theme mods `mh_facebook_page_id` / `mh_facebook_page_token`. Result meta: `_mh_facebook_post_id`, `_mh_facebook_url`, `_mh_facebook_shared_at`. The token is never printed.
+- Share dialog URLs are built in JS from the current draft (`quote` for Facebook, intent text for Bluesky, title for Reddit), so what you see in the card is what opens.
+- Posting needs `post_status = publish`; drafts can still be generated and copied.
+- Field names and the `save_post_post` map are unchanged (`mh_bluesky_custom_text`, `mh_social_facebook_text`, `mh_social_reddit_title`, `mh_social_reddit_text`, `mh_social_linkedin_text`).
+
+## Editor’s notes (3.6.46 site audit)
+
+- Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. `X-Frame-Options` is skipped on `/slug/embed/` so oEmbed keeps working; no `payment=()` because express checkout uses the Payment Request API. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts. These headers do not reach wp-admin, REST, or static files; that would be a root `.htaccess`.
+- Hardening block at the end of `app/filters.php`: `wp_generator` off, `xmlrpc_enabled` false plus pingback methods and the `X-Pingback` header removed, `/wp/v2/users*` removed from `rest_endpoints` for visitors (authenticated clients keep them — auth runs before `rest_endpoints`), any `?author=` value 301s home. Do not add a login-lockout plugin here; the host rate-limits.
+- Term archives: `mh_seo_term_title()` falls back to “{Term} articles and notes | Brand”; `mh_seo_term_description()` falls back to a written sentence, clipped at 155.
+- `partials/page-nav-track.blade.php`: no `role="list"` / `listitem`. The `<nav aria-label="On this page">` is the landmark.
+- `<aside>` is for content outside `<main>`. Inside a page section use a `<div>` (contact aside, code practice aside, GitHub profile card).
+- TOCguide override in `studio.css` (3.6.46) is a stopgap; the size and color fix belongs in the TOCguide plugin.
+- `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
+- `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
+- Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
+- Catalog `seo_title` / `seo_description` exist for all four projects. They seed `_mh_seo_*` once (`mh_product_catalog_v13`); wp-admin edits win.
+- Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
+
+## Editor’s notes (3.6.45 feature lists)
+
+- `product-catalog.json` deliverables = box contents, benefits = outcomes. Do not restate a deliverable in benefits; the shop product page prints both lists separately.
+- `mh_project_feature_items()` drops a line when ≥ 75% of its content tokens (`mh_project_feature_tokens()`: lowercase, stop words out, trailing `s` trimmed, min 3 tokens) sit inside a longer line. Exact repeats keep the earlier one. Tune the threshold there, not in Blade.
+- Catalog bump is `mh_product_catalog_v12` (force re-applies catalog meta, same as v9–v11).
+
+## Editor’s notes (3.6.44 project landing page)
+
+- `partials/content-single-project.blade.php` is in landing order: hero, `#screenshots`, `#project-what-you-get`, `#project-story`, `#project-under-hood`, `#project-faq`, `#project-feedback`. Keep that order; do not move specs back above the story.
+- Hero actions are one `.btn` + one `.btn-outline` + `View code`. Copy link sits in the Feedback head. Do not put five actions back in the hero.
+- Hero proof strip is `mh_project_proof_facts()`: stored `_mh_project_m{n}` metrics win; otherwise screenshot count, feature count, and license or language. No invented numbers.
+- Features come from `mh_project_feature_items()` (deliverables then benefits, case and prefix de-duplicated). First ten render, the rest sit in `<details class="project-feat-more">`. Keep them in the DOM.
+- Under the hood is `mh_project_spec_rows()` in `.project-spec-block` (stack pills, languages, compatible, license, release, updated, stars only when > 0, topics, repository, live demo) beside `.project-arch-list`, then handoff and `.project-hood__palette`. `.project-stat-grid` tiles are no longer on this page; the CSS stays for other surfaces.
+- Section chrome is `.project-section` + `.project-section__head` (eyebrow + `h2.display-title.is-section`). Headings are UI chrome (`__()`), not page fields.
+- `partials/work-card.blade.php` shows four tech pills and a `.pill--more` count.
+
+## Editor’s notes (3.6.42 Now page)
+
+- `/now/` keeps the hero, on-this-page pills, focus blocks, sidebar, and closing band.
+- Right now lists real GitHub events and recently updated repos, three journal posts, and profile links. DEV.to and Bluesky rows come from public feeds and disappear when a feed is empty.
+- Send a note posts through `mh_contact` (nonce, honeypot, the same mail path as Contact). Text me is an `sms:` link and stays hidden until `now_sms` or the `mh_now_sms` theme mod has a number. No cell number ships in the theme.
+
+## Editor’s notes (3.6.40 public fatal log)
+
+- `mh-last-fatal.txt` is no longer in the theme. It was publicly readable and included server paths.
+- The theme does not write that file. PHP errors stay in the host error log.
+- `*fatal*.txt` and `*.log` stay out of git and out of the theme zip.
+
+## Editor’s notes (3.6.39 unsubscribe and preferences)
+
+- `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
+- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.0). Do not add Mailchimp, HubSpot, or another ESP.
+- 1.11.0 provisions those pages only on activation or in wp-admin, stores the page IDs, and locks the insert. Unsubscribe, email preferences, and thank-you stay noindex with Rank Math.
+- `[mhn_signup source="post"]` sits at the end of a single post. The welcome letter can add a checklist button when the checklist link setting is an https URL. It is empty by default.
+- 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
+
+## Editor’s notes (3.6.38 Get updates)
+
+- Newsletter behavior lives in `plugins/matthummel-newsletter/`. Do not add Mailchimp, HubSpot, or another ESP.
+- Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
+- Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
+- Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
+- **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
+- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each use one editor body (`_mhn_body`, `_mhn_body_v`). Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` still seed the block editor.
+- Layouts live in `layouts()` (`includes/layouts.php`): Standard, Welcome, Plain, Feature, Blog post. The choice is post meta `_mhn_layout` (default `standard`). Reusable intro, sign-off, welcome subject, and welcome body are keys on `mhn_settings`. Letter style is `letter_style`, `letter_masthead`, and `letter_button` on that same option (`card` / `left` / `solid` by default). One issue can override them with post meta `_mhn_letter_style`. Welcome is not auto-sent. Dashboard and picker previews use `#` links and do not call the tracker. The wizard email frame (`assets/emulator.js`, `mhn_emulator_preview`) updates from the draft without a reload, including a letter-style change. Desktop is 600px and Mobile is 375px. `_mhn_editor` is `simple` or `advanced`. Advanced block text is the `_mhn_blocks` array. Simple issues ignore that array.
+- Letter CSS is `assets/email.css`. `email_css()` injects it in a `<style>` block, and the same colors are inlined on the shell, because the preview iframe is `sandbox=""` `srcdoc` and many clients drop `<style>`. Do not put the letter design in `admin.css`. Admin CSS and `emulator.js` are enqueued with `MHN_VERSION`.
+- Publishing a post drafts a blog update. The letter starts with `Hi {first_name|there},`, the post, and a Read more button. It does not send. Owner steps: `docs/NEWSLETTER.md`.
+- The confirm page collects optional first and last name (`sanitize_text_field`, 80 characters). Columns ship through `mhn_db_version` 2 (`ensure_subscriber_columns()`), so plugin 1.0.0 can add `last_name` without a version bump. Merge tags `{first_name}`, `{last_name}`, and `{full_name}` escape HTML and accept a fallback (`{first_name|there}`). The wizard preview uses sample names Ada Lovelace.
+- The wizard content step is one `wp_editor()` body. A blog update starter includes the featured image, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image in that block. Changing the selected posts asks before it inserts or refreshes those blocks. An old draft is migrated once from the note, the posts, and the P.S. The same letter is what an automatic send would use.
+- Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text. A leftover name merge tag is an error.
+- Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
+- A finished send inserts one row in `wp_mhn_archive` (`mhn_db_version` 3). The row stores the unmerged HTML and plain text, subject, preheader, From, template, start and finish times, sender id, counts, list label, and plugin version. Later edits do not update that row. Sent issues are read-only; **Duplicate as new draft** copies the issue into a new draft. **Sent archive** (`admin.php?page=mhn-archive`) lists, filters, and pages those rows, and shows one in a sandboxed iframe. HTML, EML, and metadata CSV exports require `manage_options` and a nonce. `_mhn_archived` hides an issue from the main lists and keeps the row. Delete is a confirmed administrator action. There is no public archive page. A public web archive setting is noted for later and stays off; it is not built.
+
+## Editor’s notes (3.6.37 projects listing)
+
+- Do not pass `featured` on `partials/work-card.blade.php` from `template-projects.blade.php`. Every live project, including TOCguide, is a same-size grid card.
+- The Projects listing hero uses `useScene` so it does not pull the first project screenshot. Project singles still pass catalog slides into `page-hero`.
+- `mh_project_card_image_url()` prefers `_mh_project_image` (catalog WebP). Featured image is fallback only.
+- `mh_project_page_slides()` leads with stored / catalog screenshots. WP thumbnail is last-resort.
+- Feature list items are plain `li.project-feat` text. The blue check is CSS `::before` only (`studio.css` 3.6.37 last-win). Do not add `.project-feat__icon` back.
+- Hide Rank Math / Yoast crumbs on project CPT and the Projects template (`mh_is_project_surface()`).
+
+## Editor’s notes (3.6.36 screenshot URLs)
+
+- `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
+- `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
+- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into MH SEO meta when empty).
+
+## Editor’s notes (3.6.35 project feedback)
+
+- Project singles (`partials/content-single-project.blade.php`) include like/star (`partials/project-react.blade.php` + `mh_project_react` AJAX), `comments_template()`, and compact `partials/contact-form.blade.php`. Do not add a form plugin.
+- Visitor counts are `_mh_visitor_likes` / `_mh_visitor_stars`. GitHub `_mh_project_stars` stays separate.
+- TOCguide is the catalog key and project slug. Keep `tocflow` aliases, SKU `plugin-tocflow`, and the 301 from `/projects/tocflow/`.
+- Catalog bump is `mh_product_catalog_v9` (force upsert). Contact page reuses the shared form partial.
+
+## Editor’s notes (3.6.34 page hero padding)
+
+- `.page-header--photo` padding-block is `clamp(3.75rem, 9vh, 6rem) 6.25rem`. Home `.h-hero--viewport` is `clamp(5.25rem, 11vh, 7.25rem) 6.25rem`. Bottom stays above the wave (`clamp(3.4rem, 8vw, 5.75rem)`). Do not drop back to `4.5rem` bottom.
+
+## Editor’s notes (3.6.33 On this page padding)
+
+- `.h-page-nav__inner` is `.7rem` padding-block by default, `1rem` from `901px` up. Do not match the header’s `1rem` on small screens — the jumper is sticky there and should stay compact.
+
+## Editor’s notes (3.6.31 featured-image heroes)
+
+- `partials/page-hero.blade.php` is a full-bleed photo hero: featured image, white wash, white copy panel, wavy bottom. Do not restore `$split` / `$aside` snapshot cards.
+- Home uses `.h-hero--photo.h-hero--viewport` (`min-height: calc(100dvh - header)`). The white `.h-hero__panel` / `.page-header__panel` is full width of `container.wide` (`--page-max`). Do not cap it at `42rem`.
+- Photo URL is `mh_hero_background_url()`: work featured image if it is not a headshot, else a page-matched studio screenshot (`mh_hero_scene_url()`). Never GitHub avatars, Gravatar, or `matt-hummel.jpg`.
+
+## Editor’s notes (3.6.30 no hero availability pill)
+
+- Marketing page heroes (About, Hire, Code, Contact) do not print `.hire-avail` in the copy column. Do not put the Open for work pill back under the lede. Header, footer, Hire snapshot status, and the About availability section stay.
+
+## Editor’s notes (3.6.29 split hero photos / current nav hover)
+
+- `partials/page-hero.blade.php` renders `$split` / `$aside` again. Do not hide `.page-header-split__aside` or `.h-hero-illu`. Glow/orbs stay off.
+- Snapshot photos use `.h-hero-illu__photo` in `partials/hero-panel.blade.php`. About is square (`--square`); work/journal shots are 16×10. Empty `alt` when the card title already names the image.
+- Current header nav hover is white on `--blue-800`, not `--blue-400` on navy. Last-win lives at the end of `studio.css`. Same for `.filter-pill.is-active` and `.h-page-nav__pill.is-active`. Exclude those from the 3.6.21 site-wide blue hover.
+
+## Editor’s notes (3.6.28 footer bottom on mobile)
+
+- Last-win in `studio.css`: `.footer-bottom` is a column with `align-items: center` under 860px. Do not leave `justify-content: space-between` on that breakpoint.
+
+## Editor’s notes (3.6.27 heading scale)
+
+- Body stays `--type-body`. Content headings use `--type-h2` … `--type-h6` in `portfolio.css` (`:root`) plus last-win in `studio.css`. Do not set content `h2` back to `clamp(1.15rem, 2vw, 1.35rem)`.
+- Card titles (work cards, who-cards, glance) keep their own `font-size`.
+
+## Editor’s notes (3.6.26 project header / journal cats)
+
+- Pill labels come from `mh_project_type_row_labels()`. Do not print Type/Place again in `mh_project_buyer_docs()` specs.
+- Combined cat strings (`Themes · Real estate`) split; type-plural cats stay off the row. Place stays a separate pill.
+- Journal cards: unique cats on the meta row. Skip `uncategorized`. Do not render a second cat line under the date.
+
+## Editor’s notes (3.6.25 project type pills)
+
+- Shared chrome is `partials/project-type-row.blade.php`. Do not put a second plain-text `pf-meta` cat line on project heroes or work cards.
+- Skip category when it is the type label or its plural (`Theme` / `Themes`). Keep industry cats (`Tours`) and place pills.
+- Screenshot disclaimer is `.project-stage__note`, not a muted caption.
+
+## Editor’s notes (3.6.24 footer social / green hover)
+
+- Footer social lives in `.footer-brand-social` under Open for work. Do not put `.soc-list` back in `.footer-bottom`.
+- Open for work hover is white on `#14532d`, never `--blue-400`. Keep it excluded from the last-win `a:hover` blue rule in `studio.css`.
+
+## Editor’s notes (3.6.23 shared On this page)
+
+- Sticky jumper chrome is only `partials/page-nav.blade.php` (`.h-page-nav` + `page-nav-track` + `initSectionNav()`). Do not add a second TOC pattern (sidebar details, `.pf-product-toc`, About `<details>`).
+- Add the include after the hero when a page has two or more in-page sections. Pass `nested => true` only inside an existing column (product gallery).
+- Account desk “Next steps” is not the jumper. 404 stays without a row (one block).
+
+## Editor’s notes (3.6.22 footer signup / simple heroes)
+
+- Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
+- Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
+- Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
+- `partials/page-hero.blade.php` renders `$split` / `$aside` again (3.6.29). Keep glow/orbs off.
+- Keep On this page arrows (`page-nav-track` + `initPageNavTrack()`). Do not restore a visible scrollbar or the About mobile `<details>` dropdown.
+- Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`.
+
+## Editor’s notes (3.6.21 visible hover)
+
+- `--color-accent-hover` is `--blue-400` (`#4f8fd4`), not `--blue-700`. Do not set link/button hover back to navy (`#0a2446` / `#0d2e57`) — it fails as a perceivable state change.
+- Footer and site-wide `a:hover` / `.btn:hover` last-win lives at the end of `studio.css`. Exclude `.header-avail` / `.footer-avail` so Open for work stays green.
+
+## Editor’s notes (3.6.20 on this page arrows)
+
+- Overflow on `.h-page-nav` / `.pf-product-toc` is driven by `partials/page-nav-track.blade.php` + `initPageNavTrack()` in `section-nav.js`. Do not restore a visible scrollbar or the About mobile `<details>` dropdown unless Matt asks.
+- Arrow buttons stay `hidden` when the row fits. Disabled at the start/end when it overflows.
+
+## Editor’s notes (3.6.19 footer social / hover)
+
+- Footer social lives in `.footer-brand-social` (under Open for work). Icon-only `.soc-link` has no circle and no hover fill.
+- Follow / RSS is the last footer column (`footer-follow`), not the brand column.
+- Hover for `.btn` and `a` must change `color` (and keep `:focus-visible`). Do not restore filled social circles.
+
+## Editor’s notes (3.6.18 split heroes / RSS)
+
+- `partials/page-hero.blade.php` is a featured-image hero (3.6.31). Do not restore `$split` / `$aside` snapshot cards.
+- Journal subscribe is `\App\field('write_subscribe_*')` via `partials/write-subscribe.blade.php`.
+
+## Editor’s notes (3.6.17 kicker gap)
+
+- Kicker → heading is `margin-top: 12px` in `studio.css`. Do not restore `-0.22em` flush or the `1.85em` mid-flow `p + h2` on `.h-section-label`.
+
+## Editor’s notes (3.6.16 local hostname)
+
+- `mh_local_dev_hosts()` in `app/setup.php` is `matthummel-theme.local`, `localhost`, `127.0.0.1` only. Do not add `matthummel.com`. `option_home` / `option_siteurl` follow `HTTP_HOST` for those names so Cloud `:8080` and `.local` both work.
+- Preferred local URL: `http://matthummel-theme.local:8080` plus a hosts line. PHP `wp server` is not Herd HTTPS on 443.
+
+## Editor’s notes (3.6.15 kicker → heading)
+
+- Last-win in `studio.css`: `.eyebrow`, `.h-section-label`, `.h-hero__kicker` use `margin-bottom: 0`. Headings after those kickers use `margin-top: 12px` (not `-0.22em`).
+- Mid-flow `p + h2` (`1.85em`) must exclude `.h-section-label` / `.h-hero__kicker` / `.eyebrow` or **Projects** / **Selected projects.** gets a full heading gap. Do not restore that on kickers.
+- Keep heading → lede spacing (`.lead`, `.h-work-intro`). Do not tighten `.h-about-who__label` (list, not a heading).
+
 ## Editor’s notes (3.6.14 list checkboxes)
 
 - Content `ul` and `.project-feat` markers are `1.2rem` circles (`border-radius: 50%`) filled with `--color-spark` (`#1a6bb5`), white check. Dark mode uses `--blue-400` on `--color-surface`.
@@ -63,7 +261,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.4 type rhythm)
 
-- Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Do not put large `margin-top` on every heading — first-child / eyebrow → title pairs stay tight.
+- Mid-flow headings use adjacent-sibling top margin (`p + h2`, block classes). Exclude `.eyebrow`, `.h-section-label`, and `.h-hero__kicker` from that rule. Do not put large `margin-top` on every heading.
 - Canonical journal spacing lives in the later `.post-prose` block in `portfolio.css` (not the short layout shell earlier in the file).
 - Keep `.eyebrow + h2` tight on legal/a11y shells.
 
@@ -158,7 +356,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.21 About section nav)
 
-- About page sticky pills are `.h-page-nav` with `data-section-nav` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
+- About page sticky pills use `partials/page-nav.blade.php` (same as Home). Do not restore `.about-jump-band` without matching sticky + scrollspy behavior.
 
 ## Editor’s notes (3.5.20 shop-first marketing)
 
@@ -176,7 +374,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.17 home section pills)
 
-- Home “On this page” is sticky with scrollspy pills, same pattern as product pages (`section-nav.js`).
+- Home “On this page” is sticky with scrollspy pills via `partials/page-nav.blade.php` (`section-nav.js`).
 
 ## Editor’s notes (3.5.16 product gallery column)
 
@@ -272,14 +470,14 @@ What the 3.x Sage theme does, and where it lives.
 | Marketplace files | `screenshot.png`, `readme.txt`, `CREDITS.md` for Theme Check / Appearance. **Do not** upload this theme to WordPress.org or ThemeForest — see `docs/MARKETPLACE.md` | `docs/MARKETPLACE.md` |
 | Vite assets | Hashed files in `public/build/`; deploys keep old hashes so cached HTML does not 404 CSS | `.github/scripts/preserve-vite-assets.py`, `app/cache-headers.php` |
 | Profile photo | Customizer upload → GitHub avatar → bundled headshot → Gravatar | `mh_profile_photo_url()`, `partials/profile-photo.blade.php` |
-| Home | Two-column hero; recruiter glance (employers + Power Platform + adjacent-work sentence → `/hire/`); section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
-| Marketing pages | Split hero: copy left, window-card panel right (stats/snapshot per page) via `partials/hero-panel.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php` |
+| Home | Full-viewport featured-image hero (white copy panel + wave); recruiter glance; section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
+| Marketing pages | Featured-image hero, white copy panel, wavy blend via `partials/page-hero.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php`, `mh_hero_background_url()` |
 | About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
-| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT** | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js` |
+| Now | Focus blocks, real last-updated date, Right now activity (GitHub, journal, social), email note, and a GitHub issue link. Text me is an `sms:` link only when a number is saved | `template-now.blade.php`, `partials/now-activity.blade.php`, `partials/now-note.blade.php`, `resources/js/now-desk.js`, `mh_now_updated()`, `mh_github_help_issue_url()`, `mh_now_sms_href()` |
+| Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT**; singles have screenshot lightbox, palette, like/star, visitor notes, compact contact | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `partials/project-react.blade.php`, `partials/contact-form.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `resources/js/project-feedback.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
 | Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
@@ -287,14 +485,14 @@ What the 3.x Sage theme does, and where it lives.
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Hero search, newest/oldest sort, Grid/List (`data-post-list` on `.post-list`), topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` as Gutenberg block markup; single-post hero shows featured image beside title/meta; **Tool Blocks** (`matthummel/tool-grid` + `tool-card` with icon/mark/labels) plus `ship-pipe` / `ship-step` | `index.blade.php`, `archive.blade.php`, `partials/content-single.blade.php`, `resources/js/blocks/`, `app/blocks.php`, `resources/css/journal-blocks.css`, `resources/css/editor.css`, `docs/posts/` |
 | Single post | Reading progress bar, hero/bottom share (Bluesky, LinkedIn, Facebook, Reddit, copy link), “What changed” collapsible separator (closed by default), inline TOC, desktop sidebar, tags, author bio, post-end CTA (WordPress/full-stack or Power Platform), prev/next, related posts | `single.blade.php`, `partials/content-single.blade.php`, `partials/post-sidebar.blade.php`, `app/social-share.php`, `mh_enhance_what_changed()` |
-| Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback) | `template-contact.blade.php`, `app/contact.php` |
+| Contact | Split form + square elsewhere cards; what to send / what happens next; POST `mh_contact` → n8n CRM webhook (`wp_mail` fallback); same form compact on project pages | `template-contact.blade.php`, `partials/contact-form.blade.php`, `app/contact.php` |
 | Search titles / meta | Rank Math title/description win when set (skill-first WordPress wording, no city stuffing); theme page fields and `mh_seo_landing_defaults()` are fallbacks; optional Page content overrides | `app/filters.php`, `seo_title` / `seo_desc`, Rank Math |
 | Rank Math page scores | Field-driven pages sync analysis HTML into `post_content` (not shown on the front) and feed fields via the Rank Math Content Analysis API so marketing scores can reach ~80+ | `app/rank-math-fields.php`, `resources/js/admin-rank-math-fields.js` |
 | Light mode | Light-only design; `color-scheme: light`; no dark mode toggle | `resources/css/portfolio.css`, `app.css` |
 | Site header | Sticky on all viewports; wordmark; primary nav + availability + Say hello; current page underline | `sections/header.blade.php` |
 | Mobile menu | Slide-over dialog (`#mh-popout`): Home + primary links, scroll lock, focus trap, Escape close, Menu label | `sections/header.blade.php`, `resources/js/app.js` |
 | Project brief | `/start/` stepped discovery form for agencies/shops; CTA on Home + Services process; POST `mh_discovery` → n8n CRM webhook (`wp_mail` fallback) | `template-start.blade.php`, `partials/discovery-cta.blade.php`, `app/contact.php` |
-| Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed | `app/comments.php`, `partials/comments.blade.php` |
+| Comments | ASCII markdown, preview, reply notices; `wptexturize` off so punctuation stays typed; project CPT uses Leave feedback + visitor like/star | `app/comments.php`, `partials/comments.blade.php`, `partials/project-react.blade.php` |
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
@@ -366,7 +564,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |
 | Featured image AI | Post + **Projects** editor **Generate featured image** (DALL·E 3 → Media Library → set thumbnail; Projects also fill Work card screenshot URL); same OpenAI key as DEV.to | `app/featured-image.php` |
 | Bluesky | Auto-share journal posts on publish (AI or pasted summary + link); `wp mh bluesky-share` | `app/bluesky-share.php` |
-| GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
+| GitHub | Transients; `MH_GITHUB_TOKEN` constant or environment, then optional `mh_gh_token`; `hireable` + GraphQL status emoji/message drive availability badges |
 | LinkedIn | Hire page profile card; optional `mh_li_token` / `MH_LINKEDIN_TOKEN` for OpenID `/v2/userinfo`; soft OG scrape + field/GitHub fallbacks; share URL helper |
 
 ## Intentionally not included

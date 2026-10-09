@@ -11,7 +11,7 @@
 
 @section('content')
 
-@component('partials.page-hero', ['extra' => 'page-header--support', 'split' => true, 'asideLabel' => __('Docs snapshot', 'sage')])
+@component('partials.page-hero', ['extra' => 'page-header--support'])
   <p class="eyebrow">{{ \App\field('support_kicker', __('Support', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('support_h1', __('Theme & plugin documentation.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('support_lede', __('HTML guides for the themes and plugins I publish. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
@@ -21,26 +21,17 @@
       {{ __('See the work', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/support',
-      'icon' => 'wordpress',
-      'title' => __('HTML documentation', 'sage'),
-      'meta' => __('Open in browser · same as pack', 'sage'),
-      'stats' => [
-        ['value' => number_format_i18n(count($products)), 'label' => __('Products', 'sage')],
-        ['value' => __('HTML', 'sage'), 'label' => __('Viewable guides', 'sage')],
-        ['value' => __('GitHub', 'sage'), 'label' => __('Source docs', 'sage')],
-        ['value' => __('GPL', 'sage'), 'label' => __('Theme license', 'sage')],
-      ],
-      'link' => [
-        'label' => __('Open Acreline hub', 'sage'),
-        'href' => \App\mh_product_html_docs_hub_url('acreline'),
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
+
+@php
+  $supportPills = [
+    ['support-intro-heading', __('How it works', 'sage')],
+  ];
+  foreach ($products as $product) {
+    $supportPills[] = [$product['slug'], $product['title']];
+  }
+@endphp
+@include('partials.page-nav', ['pills' => $supportPills])
 
 <section class="pf-section work-guide" aria-labelledby="support-intro-heading">
   <div class="container wide">

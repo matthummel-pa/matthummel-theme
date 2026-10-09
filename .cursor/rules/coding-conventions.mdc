@@ -69,7 +69,7 @@ Matt is a marketer who prefers working directly in code. Keep diffs small, copy 
 ## Testing
 
 - PHP: `vendor/bin/pint --test`. JS/CSS: `npm run build` after asset changes.
-- Exercise the local site at `http://localhost:8080` (admin `admin` / `password`) when the change is visitor-facing. Other product themes use their own WP install and port (`AGENTS.md`, skill `sage-docs`).
+- Exercise the local site at `http://matthummel-theme.local:8080` or `http://localhost:8080` (admin `admin` / `password`) when the change is visitor-facing. Other product themes use their own WP install and port (`AGENTS.md`, skill `sage-docs`).
 - Do not delete existing posts or categories in seeds or tests.
 
 ## Comments and docs

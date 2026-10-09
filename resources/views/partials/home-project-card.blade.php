@@ -4,7 +4,6 @@
   $url = esc_url($p['url'] ?? \App\mh_work_listing_url());
   $image = (string) ($p['image'] ?? '');
   $blurb = trim((string) ($p['blurb'] ?? $p['summary'] ?? ''));
-  $cat = (string) ($p['cat'] ?? '');
   $demo = (string) ($p['demo'] ?? '');
 @endphp
 <article class="h-project-card">
@@ -23,9 +22,7 @@
     @endif
   </a>
   <div class="h-project-card__body">
-    @if ($cat !== '')
-      <p class="h-project-card__cat">{{ $cat }}</p>
-    @endif
+    @include('partials.project-type-row', ['p' => $p])
     <h3 class="h-project-card__title">
       <a href="{{ $url }}">{{ $title }}</a>
     </h3>

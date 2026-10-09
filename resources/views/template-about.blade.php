@@ -17,7 +17,7 @@
 @section('content')
 
 {{-- HERO (above the fold: name, headline, short lede, CTAs, facts panel) --}}
-@component('partials.page-hero', ['extra' => 'about-hero', 'split' => true, 'asideLabel' => __('Quick facts', 'sage')])
+@component('partials.page-hero', ['extra' => 'about-hero'])
   <div class="about-hero__copy">
     <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
     <h1 class="display-title is-hero">
@@ -26,12 +26,6 @@
     <p class="lead about-hero__lede">
         {{ \App\field('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')) }}
     </p>
-    @if ($isHireable)
-      <p class="hire-avail about-hero__avail">
-        @include('partials.avail-mark', ['gh' => $gh])
-        {{ \App\mh_availability_label($gh, __('Open for new work', 'sage')) }}
-      </p>
-    @endif
     <div class="page-header-split__actions about-hero__actions">
       <a class="btn" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!}
@@ -40,24 +34,6 @@
       <a class="h-text-arrow" href="#story">{{ __('Read my story', 'sage') }} <span aria-hidden="true">→</span></a>
     </div>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/about',
-      'stats' => array_values(array_filter([
-        ['value' => $yearsBuilding.'+', 'label' => __('years in-house web', 'sage')],
-        ! empty($gh['public_repos'])
-          ? ['value' => number_format_i18n((int) $gh['public_repos']), 'label' => __('public repos', 'sage'), 'href' => $ghUrl.'?tab=repositories', 'external' => true]
-          : null,
-        ['value' => __('Full stack', 'sage'), 'label' => __('WordPress specialist', 'sage')],
-        ['value' => __('EST', 'sage'), 'label' => __('Remote / on-site', 'sage')],
-      ])),
-      'link' => [
-        'label' => __('View GitHub', 'sage'),
-        'href' => $ghUrl,
-        'external' => true,
-      ],
-    ])
-  @endslot
 @endcomponent
 
 @php
@@ -74,28 +50,8 @@
   $aboutNav[] = ['approach', __('How I work', 'sage')];
   $aboutNav[] = ['faq', __('FAQ', 'sage')];
   $aboutNav[] = ['elsewhere', __('Elsewhere', 'sage')];
-  $aboutNavFirst = $aboutNav[0][1] ?? __('Story', 'sage');
 @endphp
-<nav class="h-page-nav" data-section-nav aria-label="{{ __('On this page', 'sage') }}">
-  <div class="container wide h-page-nav__inner">
-    <p class="h-page-nav__label">{{ __('On this page', 'sage') }}</p>
-    <details class="h-page-nav__mobile">
-      <summary class="h-page-nav__mobile-summary">
-        <span data-section-nav-current>{{ $aboutNavFirst }}</span>
-      </summary>
-      <div class="h-page-nav__mobile-list" role="list">
-        @foreach ($aboutNav as [$id, $label])
-          <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-        @endforeach
-      </div>
-    </details>
-    <div class="h-page-nav__pills" role="list">
-      @foreach ($aboutNav as [$id, $label])
-        <a class="h-page-nav__pill" role="listitem" href="#{{ $id }}">{{ $label }}</a>
-      @endforeach
-    </div>
-  </div>
-</nav>
+@include('partials.page-nav', ['pills' => $aboutNav])
 
 {{-- STORY --}}
 <section class="pf-section about-story-sec" id="story" aria-labelledby="about-story-heading">

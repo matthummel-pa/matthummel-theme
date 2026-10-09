@@ -434,6 +434,9 @@ function mh_home_fields(): array
         ],
         __('Footer (site-wide)', 'sage') => [
             ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack and WordPress developer. Selected projects, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
+            ['footer_signup_label', __('Signup heading', 'sage'), 'text', __('Get updates', 'sage')],
+            ['footer_signup_lede', __('Signup sentence', 'sage'), 'textarea', __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage')],
+            ['footer_signup_button', __('Signup button', 'sage'), 'text', __('Sign up', 'sage')],
         ],
     ];
 }
@@ -542,7 +545,23 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['now_kicker', __('Kicker', 'sage'), 'text', __('Now', 'sage')],
                 ['now_h1', __('Heading', 'sage'), 'text', __('What I’m doing now.', 'sage')],
-                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going, updated August 2026.', 'sage')],
+                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going. GitHub, the journal, and the profiles I keep are below.', 'sage')],
+                ['now_updated', __('Last updated label (blank uses the page edit date)', 'sage'), 'text', ''],
+            ],
+            __('Activity', 'sage') => [
+                ['now_activity_h2', __('Heading', 'sage'), 'text', __('Right now', 'sage')],
+                ['now_activity_intro', __('Intro', 'sage'), 'textarea', __('Public GitHub events, recent journal posts, and posts from DEV.to and Bluesky when those feeds respond.', 'sage')],
+                ['now_gh_empty', __('GitHub empty state', 'sage'), 'textarea', __('GitHub did not return public activity just now. The profile link still works.', 'sage')],
+                ['now_posts_empty', __('Journal empty state', 'sage'), 'textarea', __('No journal posts are published yet.', 'sage')],
+                ['now_social_note', __('Social note', 'sage'), 'textarea', __('These are the profiles I keep. Posts below come from public feeds only.', 'sage')],
+            ],
+            __('Note', 'sage') => [
+                ['now_note_h2', __('Heading', 'sage'), 'text', __('Send a note', 'sage')],
+                ['now_note_lede', __('Intro', 'sage'), 'textarea', __('Email reaches my inbox. A GitHub note opens a new issue on this site’s theme repo, so you can paste a link and I can reply there.', 'sage')],
+                ['now_note_submit', __('Submit button', 'sage'), 'text', __('Send email', 'sage')],
+                ['now_note_github', __('GitHub button', 'sage'), 'text', __('Open a GitHub note', 'sage')],
+                ['now_sms', __('SMS number (leave blank to hide Text me)', 'sage'), 'text', ''],
+                ['now_sms_body', __('SMS prefilled message', 'sage'), 'text', __('Hi — I saw the Now page.', 'sage')],
             ],
             __('List', 'sage') => [
                 ['now_items', __('Items', 'sage'), 'lines', [
@@ -556,7 +575,13 @@ function page_field_map(): array
             ],
             __('Studio', 'sage') => [
                 ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish WordPress concepts here — themes and plugins that show how I build. Hire me for a production site or a role.', 'sage')],
-                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Projects page</a>. When you\'re ready for a custom build, say hello.', 'sage')],
+                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.', 'sage')],
+                ['now_work_p1', __('Availability paragraph 1', 'sage'), 'textarea', __('I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')],
+                ['now_work_p2', __('Availability paragraph 2', 'sage'), 'textarea', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')],
+                ['now_write_p1', __('Writing paragraph 1', 'sage'), 'textarea', __('I write short posts on WordPress, PHP, and the tools I actually use on projects. Most posts include code you can paste into a theme or plugin. I write for developers who want something working, not a tutorial that ends at "and so on."', 'sage')],
+                ['now_write_p2', __('Writing paragraph 2', 'sage'), 'textarea', __('Posts go on the journal first. Some get cross-posted to DEV.to. Nothing is paywalled.', 'sage')],
+                ['now_ai_p1', __('How I work paragraph 1', 'sage'), 'textarea', __('I use Cursor AI, Claude, and ChatGPT as part of my development workflow. AI makes the first pass faster — I review everything before it ships. The final code is something I can explain and maintain.', 'sage')],
+                ['now_ai_p2', __('How I work paragraph 2', 'sage'), 'textarea', __('I\'m honest about this because I think it matters: if you hire me, you\'re getting real engineering judgment, not just generated output. This site was planned and built with Cursor AI.', 'sage')],
                 ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
             ],
         ],
@@ -605,6 +630,13 @@ function page_field_map(): array
                 ['start_submit', __('Submit button', 'sage'), 'text', __('Send brief', 'sage')],
                 ['start_reply_note', __('Note under submit', 'sage'), 'text', mh_reply_sla()],
                 ['start_error', __('Error message', 'sage'), 'text', __('Something went wrong. Check the required fields and try again.', 'sage')],
+            ],
+        ],
+        'template-get-updates.blade.php' => [
+            __('Intro', 'sage') => [
+                ['upd_kicker', __('Kicker', 'sage'), 'text', __('Get updates', 'sage')],
+                ['upd_h1', __('Heading', 'sage'), 'text', __('Notes when I publish.', 'sage')],
+                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. I keep your address on this site. No newsletter service.', 'sage')],
             ],
         ],
         'template-contact.blade.php' => [
@@ -662,11 +694,13 @@ function page_field_map(): array
                 ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')],
                 ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 90 days of commits', 'sage')],
                 ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
+                ['code_act_sec_h2', __('Activity section heading', 'sage'), 'text', __('Shipping activity.', 'sage')],
+                ['code_act_sec_intro', __('Activity section intro', 'sage'), 'textarea', __('Every number here is counted by GitHub, not by me: commits, pull requests, and the days I shipped something public.', 'sage')],
                 ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
                 ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
-                ['code_feat_h2', __('Featured heading', 'sage'), 'text', __('Featured WordPress and app repos', 'sage')],
-                ['code_feat_intro', __('Featured intro', 'sage'), 'text', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind this site. Each one is meant to be forked.', 'sage')],
-                ['code_repos', __('Featured repos', 'sage'), 'repeater', $codeRepos, [
+                ['code_pin_h2', __('Pinned repos heading', 'sage'), 'text', __('Pinned on GitHub', 'sage')],
+                ['code_pin_intro', __('Pinned repos intro', 'sage'), 'textarea', __('The repos pinned to my GitHub profile — the ones I point developers to first. Pin or unpin a repo on GitHub and this list follows within the hour.', 'sage')],
+                ['code_repos', __('Fallback featured repos (shown only when nothing is pinned on GitHub)', 'sage'), 'repeater', $codeRepos, [
                     ['name', __('Name', 'sage'), 'text'],
                     ['desc', __('Description', 'sage'), 'textarea'],
                     ['url', __('URL', 'sage'), 'url'],
@@ -674,6 +708,8 @@ function page_field_map(): array
                 ]],
                 ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
                 ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')],
+                ['code_lang_h3', __('Languages heading', 'sage'), 'text', __('Languages on GitHub', 'sage')],
+                ['code_lang_intro', __('Languages intro', 'sage'), 'text', __('Primary language of each public repo, counted live. Small static sites pull HTML up; the themes and plugins are PHP.', 'sage')],
                 ['code_live_all', __('All repos label', 'sage'), 'text', __('Browse all public repos', 'sage')],
                 ['code_comm_h2', __('Community heading', 'sage'), 'text', __('People who follow and star my repos', 'sage')],
                 ['code_comm_intro', __('Community intro', 'sage'), 'textarea', __('Public GitHub followers and stargazers below. Thank you for reading the code, starring a repo, or following along.', 'sage')],
@@ -1748,7 +1784,7 @@ function field_group_hint(string $label): string
     $hints = [
         __('How I got here', 'sage') => __('One editor for the story. Press Enter for a new paragraph.', 'sage'),
         __('Hero', 'sage') => __('Top of the home page. Layout (width, alignment, CTA toggles) lives in Appearance → Customize → Home hero.', 'sage'),
-        __('Footer (site-wide)', 'sage') => __('The sentence in the site footer. Edited on Home so every page stays in sync.', 'sage'),
+        __('Footer (site-wide)', 'sage') => __('Footer sentence plus Get updates copy. Edited on Home so every page stays in sync.', 'sage'),
         __('Who this is for', 'sage') => __('Four cards: developers, learners, shops, agencies. Each can link to a page.', 'sage'),
         __('Example sites', 'sage') => __('Each row is one project. Empty the list to restore the built-in set.', 'sage'),
         __('Snippets', 'sage') => __('Copy-paste examples shown on Home. Empty the list to restore the built-in set.', 'sage'),
@@ -1829,7 +1865,7 @@ function render_page_fields_box(\WP_Post $post): void
     $map = page_field_map();
 
     if (empty($map[$key])) {
-        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Projects, Services, Code, Contact, Now, Portfolio, or Journal to edit theme fields here.', 'sage').'</p>';
+        echo '<p>'.esc_html__('This page uses the default template. Choose Home, About, Projects, Services, Code, Contact, Get updates, Now, Portfolio, or Journal to edit theme fields here.', 'sage').'</p>';
 
         return;
     }

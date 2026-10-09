@@ -23,7 +23,7 @@
 <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 @endif
 
-@component('partials.page-hero', ['split' => true, 'asideLabel' => __('How I work', 'sage')])
+@component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('svc_kicker', __('How I work', 'sage')) }}</p>
   <h1 class="display-title is-hero">
     {{ \App\field('svc_h1', __('Services', 'sage')) }}
@@ -39,27 +39,17 @@
       {{ __('Browse projects', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
-  @slot('aside')
-    @include('partials.hero-panel', [
-      'chrome' => 'matthummel.com/services',
-      'icon' => 'briefcase',
-      'title' => __('What I take on', 'sage'),
-      'meta' => __('Shops · agencies · roles', 'sage'),
-      'stats' => [
-        ['value' => __('WordPress', 'sage'), 'label' => __('Specialty', 'sage')],
-        ['value' => __('Remote', 'sage'), 'label' => __('On-site welcome', 'sage')],
-        ['value' => __('Written', 'sage'), 'label' => __('Scope first', 'sage')],
-        ['value' => __('1 day', 'sage'), 'label' => __('Typical reply', 'sage')],
-      ],
-      'link' => [
-        'label' => __('Hire page', 'sage'),
-        'href' => home_url('/hire/'),
-      ],
-    ])
-  @endslot
 @endcomponent
 
-<section class="pf-section" aria-labelledby="svc-build-heading">
+@include('partials.page-nav', [
+  'pills' => [
+    ['build', __('What I build', 'sage')],
+    ['process', __('Process', 'sage')],
+    ['faq', __('FAQ', 'sage')],
+  ],
+])
+
+<section class="pf-section" id="build" aria-labelledby="svc-build-heading">
   <div class="container wide">
     <p class="eyebrow">{{ __('Work', 'sage') }}</p>
     <h2 id="svc-build-heading" class="display-title is-section">
@@ -81,7 +71,7 @@
   </div>
 </section>
 
-<section class="pf-section pf-section--alt" aria-labelledby="svc-process-heading">
+<section class="pf-section pf-section--alt" id="process" aria-labelledby="svc-process-heading">
   <div class="container wide">
     <p class="eyebrow">{{ __('Process', 'sage') }}</p>
     <h2 id="svc-process-heading" class="display-title is-section">

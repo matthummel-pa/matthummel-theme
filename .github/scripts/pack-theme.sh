@@ -19,8 +19,36 @@ tar -C "$root" \
   --exclude='docs' \
   --exclude='.env' \
   --exclude='.env.*' \
+  --exclude='plugins' \
+  --exclude='mh-last-fatal.txt' \
+  --exclude='*fatal*.txt' \
+  --exclude='*.log' \
   --exclude='matthummel.zip' \
+  --exclude='matthummel-newsletter.zip' \
+  --exclude='.claude' \
+  --exclude='.mcp.json' \
+  --exclude='.wp-env.json' \
+  --exclude='.pa11yci.json' \
+  --exclude='.wp-review-allow' \
+  --exclude='.gitignore' \
+  --exclude='CLAUDE.md' \
+  --exclude='AGENTS.md' \
+  --exclude='phpcs.xml.dist' \
+  --exclude='phpstan*.neon*' \
+  --exclude='lighthouse-report*' \
+  --exclude='composer.lock' \
+  --exclude='package.json' \
+  --exclude='package-lock.json' \
+  --exclude='vite.config.js' \
+  --exclude='tailwind.config.js' \
+  --exclude='bud.config.js' \
+  --exclude='jsconfig.json' \
+  --exclude='index.html' \
+  --exclude='.editorconfig' \
+  --exclude='.prettierrc*' \
+  --exclude='.nvmrc' \
   -cf - . | tar -C "$stage/matthummel" -xf -
+# Dev/AI tooling above would otherwise be publicly readable under wp-content/themes/matthummel/ on the live site.
 
 if [[ ! -f "$stage/matthummel/style.css" ]]; then
   echo "style.css missing from pack staging" >&2
@@ -36,5 +64,17 @@ if [[ ! -f "$stage/matthummel/vendor/autoload.php" ]]; then
 fi
 
 rm -f "$stage/matthummel/public/hot"
+if [[ -d "$stage/matthummel/plugins" ]]; then
+  echo "plugins/ leaked into the theme pack" >&2
+  exit 1
+fi
+if find "$stage/matthummel" \( -name '*fatal*.txt' -o -name '*.log' \) | grep -q .; then
+  echo "log or fatal file leaked into the theme pack" >&2
+  exit 1
+fi
 (cd "$stage" && zip -rq "$out" matthummel)
+if unzip -l "$out" | grep -E 'matthummel/plugins/|matthummel-newsletter/' >/dev/null; then
+  echo "plugins/ leaked into the theme zip" >&2
+  exit 1
+fi
 echo "Wrote $out ($(du -h "$out" | awk '{print $1}'))"
