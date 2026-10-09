@@ -2,7 +2,7 @@
 
 /**
  * Hummel Ops: personal operations hub for wp-admin (daily rundown, tasks, n8n workflows,
- * Google Drive files, WordPress release tracker). Version 2.2.0.
+ * Google Drive files, WordPress release tracker). Version 2.3.0.
  *
  * Bundled with the matthummel theme. If the standalone Hummel Ops plugin is active,
  * it wins and this copy stays out of the way (no duplicate classes).
@@ -13,7 +13,7 @@ if (defined('HOPS_VERSION')) {
     return;
 }
 
-define('HOPS_VERSION', '2.2.0');
+define('HOPS_VERSION', '2.3.0');
 define('HOPS_DIR', trailingslashit(__DIR__));
 define('HOPS_URL', trailingslashit(get_theme_file_uri('app/modules/hummel-ops')));
 
@@ -22,6 +22,7 @@ require_once HOPS_DIR.'includes/class-settings.php';
 require_once HOPS_DIR.'includes/class-google.php';
 require_once HOPS_DIR.'includes/class-n8n.php';
 require_once HOPS_DIR.'includes/class-n8n-viz.php';
+require_once HOPS_DIR.'includes/class-pipeline.php';
 require_once HOPS_DIR.'includes/class-drive.php';
 require_once HOPS_DIR.'includes/class-todos.php';
 require_once HOPS_DIR.'includes/class-rundown.php';
@@ -34,6 +35,7 @@ $hops_boot = static function () {
     HOPS_Settings::init();
     HOPS_Google::init();
     HOPS_N8n::init();
+    HOPS_Pipeline::init();
     HOPS_Drive::init();
     HOPS_Todos::init();
     HOPS_Rundown::init();
