@@ -123,13 +123,22 @@
 		var out = card.querySelector('.hops-result');
 		btn.addEventListener('click', function () {
 			var label = btn.textContent;
+			var cnt = card.querySelector('.hops-drafts');
+			if (cnt) {
+				var n = parseInt(cnt.value, 10);
+				var max = parseInt(cnt.max, 10) || 10;
+				if (!n || n < 1) { n = 1; }
+				if (n > max) { n = max; }
+				cnt.value = n;
+			}
 			btn.disabled = true;
 			btn.textContent = 'Running…';
 			out.hidden = true;
 			out.className = 'hops-result';
 			post('hops_run_workflow', {
 				index: card.dataset.index,
-				payload: card.querySelector('.hops-payload').value
+				payload: card.querySelector('.hops-payload').value,
+				drafts: card.querySelector('.hops-drafts') ? card.querySelector('.hops-drafts').value : ''
 			}).then(function (res) {
 				var d = res.data || {};
 				out.hidden = false;
@@ -158,11 +167,15 @@
 			add.dataset.next = i + 1;
 			var opt = add.dataset.opt;
 			var tr = el('tr');
-			var td1 = el('td'), td2 = el('td'), td3 = el('td');
+			var td1 = el('td'), td2 = el('td'), td3 = el('td'), td4 = el('td');
 			td1.appendChild(el('input', { type: 'text', 'class': 'regular-text', name: opt + '[workflows][' + i + '][name]' }));
 			td2.appendChild(el('input', { type: 'url', 'class': 'large-text', name: opt + '[workflows][' + i + '][url]', placeholder: 'https://n8n.example.com/webhook/...' }));
-			td3.appendChild(el('button', { type: 'button', 'class': 'button hops-remove' }, 'Remove'));
-			tr.append(td1, td2, td3);
+			var lab = el('label');
+			lab.appendChild(el('input', { type: 'checkbox', name: opt + '[workflows][' + i + '][counter]', value: '1' }));
+			lab.appendChild(document.createTextNode(' Ask how many'));
+			td3.appendChild(lab);
+			td4.appendChild(el('button', { type: 'button', 'class': 'button hops-remove' }, 'Remove'));
+			tr.append(td1, td2, td3, td4);
 			rows.appendChild(tr);
 		});
 		rows.addEventListener('click', function (e) {
