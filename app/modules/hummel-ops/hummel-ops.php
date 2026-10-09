@@ -21,6 +21,7 @@ require_once HOPS_DIR.'includes/class-ui.php';
 require_once HOPS_DIR.'includes/class-settings.php';
 require_once HOPS_DIR.'includes/class-google.php';
 require_once HOPS_DIR.'includes/class-n8n.php';
+require_once HOPS_DIR.'includes/class-n8n-viz.php';
 require_once HOPS_DIR.'includes/class-drive.php';
 require_once HOPS_DIR.'includes/class-todos.php';
 require_once HOPS_DIR.'includes/class-rundown.php';

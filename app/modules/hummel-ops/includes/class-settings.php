@@ -5,7 +5,7 @@ class HOPS_Settings
 {
     const OPT = 'hops_settings';
 
-    const SECRETS = ['n8n_header_value', 'google_client_secret', 'notion_token', 'todoist_token', 'trello_key', 'trello_token'];
+    const SECRETS = ['n8n_header_value', 'n8n_api_key', 'google_client_secret', 'notion_token', 'todoist_token', 'trello_key', 'trello_token'];
 
     const TEXT = ['n8n_header_name', 'google_client_id', 'notion_due_prop', 'notion_done_prop', 'notion_done_value', 'trello_board_id'];
 
@@ -29,6 +29,8 @@ class HOPS_Settings
             'workflows' => [],
             'n8n_header_name' => '',
             'n8n_header_value' => '',
+            'n8n_api_url' => '',
+            'n8n_api_key' => '',
             'google_client_id' => '',
             'google_client_secret' => '',
             'notion_token' => '',
@@ -115,6 +117,11 @@ class HOPS_Settings
         $db = isset($in['notion_database_id']) ? str_replace('-', '', (string) $in['notion_database_id']) : '';
         $out['notion_database_id'] = preg_match('/[0-9a-f]{32}/i', $db, $m) ? strtolower($m[0]) : '';
 
+        // Keep only scheme and host of the n8n address. Plain http is allowed for localhost only.
+        $api = wp_parse_url(isset($in['n8n_api_url']) ? esc_url_raw(trim($in['n8n_api_url'])) : '');
+        $ok = ! empty($api['host']) && (($api['scheme'] ?? '') === 'https' || (($api['scheme'] ?? '') === 'http' && in_array($api['host'], ['localhost', '127.0.0.1'], true)));
+        $out['n8n_api_url'] = $ok ? $api['scheme'].'://'.$api['host'].(! empty($api['port']) ? ':'.$api['port'] : '') : '';
+
         $out['todo_default'] = (isset($in['todo_default']) && in_array($in['todo_default'], ['local', 'notion', 'todoist', 'trello'], true)) ? $in['todo_default'] : 'local';
 
         $out['wprel_auto'] = isset($in['wprel_auto']) ? (! empty($in['wprel_auto']) ? 1 : 0) : (int) $old['wprel_auto'];
@@ -128,6 +135,7 @@ class HOPS_Settings
         }
 
         delete_transient('hops_notion_schema');
+        delete_transient(HOPS_N8nViz::CACHE);
 
         return $out;
     }
@@ -162,12 +170,14 @@ class HOPS_Settings
                     'Click <strong>Add a workflow</strong> below, name the button, paste the Production URL, and save. The button appears on Today.',
                     'Optional security: in n8n create a <strong>Header Auth</strong> credential (name such as <code>X-Hummel-Key</code>, a long random value) and select it on the Webhook node. Enter the same name and value in the Auth header fields below. Every workflow here then sends that header.',
                     'Test: press the new button on Today. A 2xx result means n8n accepted it; open <strong>Executions</strong> in n8n to see the data. The default payload is JSON with <code>source</code> (hummel-ops), <code>triggered_by</code>, and <code>triggered_at</code>.',
+                    'Optional, see workflows here: in n8n open <strong>Settings, n8n API</strong>, create a key with read access (<code>workflow:read</code> and <code>execution:read</code>), then enter the key and your n8n address below. The <a href="'.esc_url(HOPS_UI::url('hops-workflows')).'">Workflows</a> screen then shows each workflow as a diagram with its Active state and last run.',
                     'Troubleshooting: 404 means the workflow is inactive or you pasted the Test URL. 401 or 403 means the header name or value does not match. A timeout means the workflow runs longer than 45 seconds, so set Respond to Immediately.',
                 ],
                 'links' => [
                     'Webhook node docs' => 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/',
                     'Header Auth credential' => 'https://docs.n8n.io/integrations/builtin/credentials/httprequest/',
                     'Executions' => 'https://docs.n8n.io/workflows/executions/',
+                    'n8n API keys' => 'https://docs.n8n.io/api/authentication/',
                     'n8n Cloud sign-in' => 'https://app.n8n.cloud/login',
                 ],
             ],
@@ -352,6 +362,8 @@ class HOPS_Settings
 					<?php
                     self::row($s, 'n8n_header_name', 'Auth header name', 'text', 'Optional. Matches a Header Auth credential on your Webhook nodes.', 'X-Hummel-Key');
         self::row($s, 'n8n_header_value', 'Auth header value', 'password');
+        self::row($s, 'n8n_api_url', 'n8n address', 'text', 'Optional. Shows workflow status and diagrams on Workflows. Use the address you open n8n at, without a path.', 'https://your-name.app.n8n.cloud');
+        self::row($s, 'n8n_api_key', 'n8n API key', 'password', 'Optional. Create it in n8n under Settings, n8n API. Read access is enough.');
         ?>
 				</table>
 			<?php self::close_svc(); ?>

@@ -151,12 +151,13 @@ class HOPS_N8n
         if (! current_user_can('manage_options')) {
             return;
         }
+        HOPS_N8nViz::maybe_refresh();
         $s = HOPS_Settings::get();
         $log = get_option(self::LOG, []);
         echo '<div class="wrap hops">';
         HOPS_UI::head(
             'Workflows',
-            'Run your n8n workflows with one click. Each card shows when it last ran and whether it worked.',
+            'Run your n8n workflows with one click, and see how each one is built and whether it is switched on.',
             '<a class="button" href="'.esc_url(HOPS_UI::url('hops-settings', '#hops-sec-n8n')).'">Manage workflows</a>'
         );
         ?>
@@ -174,6 +175,8 @@ class HOPS_N8n
 				} ?>
 				</div>
 			<?php } ?>
+
+			<?php HOPS_N8nViz::panels(); ?>
 
 			<section class="hops-panel hops-wide" id="hops-runs">
 				<div class="hops-panel-head"><h2>Recent runs</h2></div>

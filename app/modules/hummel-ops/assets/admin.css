@@ -217,3 +217,29 @@
 .hops .hops-guide ol{margin:6px 0 8px 20px}
 .hops .hops-guide li{margin:4px 0}
 .hops .hops-guide-links{margin:0}
+
+/* n8n visual guide and workflow diagrams */
+.hops .hops-flow { list-style: none; counter-reset: flow; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 8px 0 12px; padding: 0; }
+.hops .hops-flow li { counter-increment: flow; position: relative; padding: 12px 14px 12px 14px; background: var(--hops-soft); border: 1px solid var(--hops-line); border-radius: var(--hops-radius); display: flex; flex-direction: column; gap: 4px; }
+.hops .hops-flow li::before { content: counter(flow); width: 22px; height: 22px; border-radius: 50%; background: var(--hops-accent); color: #fff; font-weight: 600; font-size: 12px; display: grid; place-items: center; }
+.hops .hops-flow li span { color: var(--hops-muted); font-size: 13px; }
+.hops .hops-key { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 8px 0 0; padding: 0; color: var(--hops-muted); font-size: 13px; }
+.hops .hops-key-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 1px solid var(--hops-line); }
+.hops .hops-nwfs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: var(--hops-gap); margin-top: 12px; }
+.hops .hops-nwf { min-width: 0; }
+.hops .hops-nwf .hops-wf-top { align-items: center; gap: 8px; }
+.hops .hops-diagram { overflow-x: auto; margin: 10px 0; background: var(--hops-soft); border: 1px solid var(--hops-line); border-radius: var(--hops-radius); padding: 6px; }
+.hops .hops-diagram svg { display: block; width: 100%; height: auto; max-height: 280px; color: #50575e; }
+.hops .hops-edge { fill: none; stroke: currentColor; stroke-width: 1.6; }
+.hops .hops-edge.is-aux { stroke-dasharray: 4 3; }
+.hops .hops-n rect { fill: #fff; stroke: #8c8f94; stroke-width: 1.2; }
+.hops .hops-n-kind { font: 600 10px/1 system-ui, sans-serif; fill: #50575e; text-transform: uppercase; letter-spacing: .04em; }
+.hops .hops-n-name { font: 500 13px/1 system-ui, sans-serif; fill: #1d2327; }
+.hops .hops-n.is-off rect { stroke-dasharray: 4 3; opacity: .7; }
+.hops .hops-n.is-trigger rect, .hops .hops-key-dot.is-trigger { fill: #edfaef; stroke: #00630f; background: #edfaef; }
+.hops .hops-n.is-action rect, .hops .hops-key-dot.is-action { fill: #f0f6fc; stroke: #1d4f7c; background: #f0f6fc; }
+.hops .hops-n.is-logic rect, .hops .hops-key-dot.is-logic { fill: #fcf3d9; stroke: #6b4600; background: #fcf3d9; }
+.hops .hops-n.is-data rect, .hops .hops-key-dot.is-data { fill: #eceef0; stroke: #3c434a; background: #eceef0; }
+.hops .hops-n.is-ai rect, .hops .hops-key-dot.is-ai { fill: #f4effc; stroke: #5b2e91; background: #f4effc; }
+.hops .hops-nwf-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font-size: 13px; color: var(--hops-muted); }
+.hops .hops-nwf.is-wide { grid-column: 1 / -1; }
