@@ -163,7 +163,7 @@ function mh_social_settings_pill(bool $on, string $onText = 'Connected', string 
 }
 
 /**
- * @param array<string, string> $links label => url
+ * @param  array<string, string>  $links  label => url
  */
 function mh_social_settings_links(array $links): string
 {
@@ -242,7 +242,7 @@ function mh_social_settings_textarea_row(string $mod, string $label, string $des
 }
 
 /**
- * @param array<string, string> $choices
+ * @param  array<string, string>  $choices
  */
 function mh_social_settings_select_row(string $mod, string $label, array $choices, string $default, string $desc = ''): void
 {
