@@ -152,6 +152,23 @@ add_action('admin_post_mh_save_social', function (): void {
     exit;
 });
 
+/**
+ * Numbered "how to connect" steps. Steps may contain links, code, and strong tags.
+ *
+ * @param  array<int, string>  $steps
+ */
+function mh_social_settings_steps(array $steps): void
+{
+    if (! $steps) {
+        return;
+    }
+    echo '<div style="margin:8px 0 12px;padding:10px 16px;background:#f6f7f7;border:1px solid #dcdcde;border-radius:6px"><strong>'.esc_html__('How to connect', 'sage').'</strong><ol style="margin:6px 0 4px 20px">';
+    foreach ($steps as $step) {
+        echo '<li style="margin:4px 0">'.wp_kses($step, ['a' => ['href' => [], 'target' => [], 'rel' => []], 'code' => [], 'strong' => []]).'</li>';
+    }
+    echo '</ol></div>';
+}
+
 function mh_social_settings_pill(bool $on, string $onText = 'Connected', string $offText = 'Not set up'): string
 {
     return sprintf(
@@ -308,6 +325,12 @@ function mh_social_settings_render(): void
         [],
         true
     );
+    mh_social_settings_steps([
+        __('Pick one provider and open its key page (links below). Add a payment method there if it asks.', 'sage'),
+        __('Create an API key, copy it once, and paste it into that provider\'s field. Leave the others blank.', 'sage'),
+        __('Save. The model list fills in from your account, then choose the default provider and model.', 'sage'),
+        __('In a post, pick Draft with and Model, then Generate. No key? Use Copy brief and paste it into Claude Cowork or Grokbot.', 'sage'),
+    ]);
     echo '<table class="form-table" role="presentation">';
     mh_social_settings_select_row('mh_social_ai_default', __('Default provider', 'sage'), mh_social_ai_provider_labels(), 'claude', __('Used when the post editor does not choose one.', 'sage'));
     mh_social_settings_secret_row('mh_anthropic_token', __('Claude Cowork: Anthropic API key', 'sage'), 'MH_ANTHROPIC_API_KEY', [
@@ -334,6 +357,12 @@ function mh_social_settings_render(): void
     $networks = [
         'bluesky' => [
             'title' => __('Bluesky', 'sage'),
+            'steps' => [
+                '<a href="https://bsky.app/settings/app-passwords" target="_blank" rel="noopener noreferrer">Open Settings, Privacy and security, App passwords</a>.',
+                'Choose <strong>Add App Password</strong>, name it <code>matthummel.com</code>, and copy the password.',
+                'Paste it below with your handle (for example <code>matthummel.bsky.social</code>). Never use your account password.',
+                'Save. Publish a post to see it shared about 20 seconds later.',
+            ],
             'intro' => __('Create an app password, never your account password.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_text_row('mh_bluesky_handle', __('Handle', 'sage'), '', 'matthummel.bsky.social');
@@ -344,6 +373,12 @@ function mh_social_settings_render(): void
         ],
         'facebook' => [
             'title' => __('Facebook', 'sage'),
+            'steps' => [
+                '<a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener noreferrer">Create a Meta app</a> (type: Business) and add your Facebook Page.',
+                'Open the <a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener noreferrer">Graph API Explorer</a>, pick your app, choose <strong>Get Page Access Token</strong>, and grant <code>pages_manage_posts</code> and <code>pages_read_engagement</code>.',
+                'Exchange it for a <a href="https://developers.facebook.com/docs/facebook-login/guides/access-tokens/get-long-lived/" target="_blank" rel="noopener noreferrer">long-lived token</a> so it does not expire in an hour.',
+                'Run <code>me/accounts</code> in the Explorer to read the numeric Page ID. Paste the ID and token below.',
+            ],
             'intro' => __('Use the Graph API Explorer to generate a Page access token for your app and Page.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_text_row('mh_facebook_page_id', __('Page ID', 'sage'));
@@ -352,6 +387,11 @@ function mh_social_settings_render(): void
         ],
         'devto' => [
             'title' => __('DEV.to', 'sage'),
+            'steps' => [
+                '<a href="https://dev.to/settings/extensions" target="_blank" rel="noopener noreferrer">Open Settings, Extensions</a> and find DEV Community API Keys.',
+                'Enter a description such as <code>matthummel.com</code> and choose <strong>Generate API Key</strong>.',
+                'Paste the key below and save. Turn on auto-import to pull in new DEV.to articles each hour.',
+            ],
             'intro' => __('Settings, Extensions, DEV Community API Keys.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_secret_row('mh_devto_token', __('API key', 'sage'), 'MH_DEVTO_TOKEN', $links);
@@ -360,6 +400,11 @@ function mh_social_settings_render(): void
         ],
         'linkedin' => [
             'title' => __('LinkedIn', 'sage'),
+            'steps' => [
+                '<a href="https://www.linkedin.com/developers/apps" target="_blank" rel="noopener noreferrer">Create a LinkedIn app</a> linked to a Company Page, then open its Products tab and add <strong>Sign In with LinkedIn using OpenID Connect</strong>.',
+                'Open the <a href="https://www.linkedin.com/developers/tools/oauth/token-generator" target="_blank" rel="noopener noreferrer">token generator</a>, pick your app, tick <code>openid</code>, <code>profile</code>, and <code>email</code>, and generate a token.',
+                'Paste the access token below. LinkedIn tokens expire, so repeat this when the Hire page stops showing your photo.',
+            ],
             'intro' => __('Needs a LinkedIn developer app. The token generator issues a token for it.', 'sage'),
             'rows' => static function (array $links): void {
                 mh_social_settings_secret_row('mh_li_token', __('Access token', 'sage'), 'MH_LINKEDIN_TOKEN', $links);
@@ -378,6 +423,7 @@ function mh_social_settings_render(): void
             $meta[$slug]['dashboard_label'] => $meta[$slug]['dashboard'],
         ];
         mh_social_settings_open($net['title'], mh_social_settings_pill(! empty($status[$slug])), $net['intro'], $links);
+        mh_social_settings_steps($net['steps'] ?? []);
         echo '<table class="form-table" role="presentation">';
         $net['rows']([]);
         echo '</table>';

@@ -144,6 +144,102 @@ class HOPS_Settings
         if ($intro) {
             echo '<p>'.wp_kses_post($intro).'</p>';
         }
+        echo self::guide($id); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
+    }
+
+    /**
+     * Step-by-step connection guide for one service: steps plus the pages you need.
+     */
+    private static function guide($id)
+    {
+        $redir = admin_url('admin.php?page=hops-drive');
+        $guides = [
+            'n8n' => [
+                'steps' => [
+                    'In n8n, open the workflow and add a <strong>Webhook</strong> node as the trigger.',
+                    'Set the method to POST, then copy the <strong>Production URL</strong> (not the Test URL).',
+                    'Toggle the workflow to <strong>Active</strong>. A Production URL only answers while the workflow is active.',
+                    'Paste the URL below and name the button. Optional: add a Header Auth credential on the Webhook node and put the same header name and value in the Auth header fields.',
+                ],
+                'links' => [
+                    'Webhook node docs' => 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/',
+                    'n8n credentials' => 'https://docs.n8n.io/credentials/',
+                ],
+            ],
+            'google' => [
+                'steps' => [
+                    'In Google Cloud, create or pick a project, then enable the <strong>Drive</strong>, <strong>Calendar</strong>, and <strong>Docs</strong> APIs.',
+                    'Set up the OAuth consent screen (External is fine). Add yourself as a test user.',
+                    'Create credentials, OAuth client ID, type <strong>Web application</strong>. Add the redirect URI <code>'.esc_html($redir).'</code>.',
+                    'Paste the Client ID and Client secret below, save, then connect from <a href="'.esc_url($redir).'">Files</a>.',
+                ],
+                'links' => [
+                    'Create OAuth client' => 'https://console.cloud.google.com/apis/credentials',
+                    'Consent screen' => 'https://console.cloud.google.com/apis/credentials/consent',
+                    'Enable Drive API' => 'https://console.cloud.google.com/apis/library/drive.googleapis.com',
+                    'Enable Calendar API' => 'https://console.cloud.google.com/apis/library/calendar-json.googleapis.com',
+                    'Enable Docs API' => 'https://console.cloud.google.com/apis/library/docs.googleapis.com',
+                ],
+            ],
+            'notion' => [
+                'steps' => [
+                    'Create an <strong>internal integration</strong> and copy its token (it starts with <code>ntn_</code>).',
+                    'Open your tasks database in Notion, choose the <strong>...</strong> menu, Connections, and add the integration. Without this step the database stays hidden.',
+                    'Paste the token and the database URL below. Match the property names to your database.',
+                ],
+                'links' => [
+                    'Your integrations' => 'https://www.notion.so/profile/integrations',
+                    'Integration guide' => 'https://developers.notion.com/docs/create-a-notion-integration',
+                ],
+            ],
+            'todoist' => [
+                'steps' => [
+                    'In Todoist open Settings, Integrations, Developer.',
+                    'Copy the <strong>API token</strong> and paste it below.',
+                ],
+                'links' => [
+                    'Todoist developer settings' => 'https://app.todoist.com/app/settings/integrations/developer',
+                    'API docs' => 'https://developer.todoist.com/api/v1/',
+                ],
+            ],
+            'trello' => [
+                'steps' => [
+                    'Open the Trello Power-Ups admin, create a Power-Up (any name), and generate an <strong>API key</strong>.',
+                    'On the same page choose <strong>Token</strong> to authorize the key, then copy the token.',
+                    'Open your board. Add <code>.json</code> to the board URL and copy the <code>id</code> value, or use the short link from the URL.',
+                ],
+                'links' => [
+                    'Power-Ups admin (API key)' => 'https://trello.com/power-ups/admin',
+                    'REST API guide' => 'https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/',
+                ],
+            ],
+            'wprel' => [
+                'steps' => [
+                    'Turn on the twice-daily check. It needs no key.',
+                    'To get an announcement draft on each release, add an n8n workflow above (Webhook trigger), save, then pick it here.',
+                ],
+                'links' => [
+                    'WordPress release news' => 'https://wordpress.org/news/category/releases/',
+                    'Core release schedule' => 'https://make.wordpress.org/core/',
+                ],
+            ],
+        ];
+        if (empty($guides[$id])) {
+            return '';
+        }
+        $g = $guides[$id];
+        $out = '<div class="hops-guide"><strong>How to connect</strong><ol>';
+        foreach ($g['steps'] as $step) {
+            $out .= '<li>'.wp_kses($step, ['a' => ['href' => []], 'code' => [], 'strong' => []]).'</li>';
+        }
+        $out .= '</ol><p class="hops-guide-links">';
+        $links = [];
+        foreach ($g['links'] as $label => $url) {
+            $links[] = '<a href="'.esc_url($url).'" target="_blank" rel="noopener noreferrer">'.esc_html($label).' ↗</a>';
+        }
+        $out .= implode(' · ', $links).'</p></div>';
+
+        return $out;
     }
 
     private static function close_svc()

@@ -212,3 +212,8 @@
 	.hops .hops-savebar { padding: 10px 14px; }
 	.hops .hops-savebar p { flex-basis: 100%; order: 2; font-size: 13px; }
 }
+
+.hops .hops-guide{margin:12px 0 16px;padding:12px 16px;background:#f6f7f7;border:1px solid #dcdcde;border-radius:6px}
+.hops .hops-guide ol{margin:6px 0 8px 20px}
+.hops .hops-guide li{margin:4px 0}
+.hops .hops-guide-links{margin:0}
