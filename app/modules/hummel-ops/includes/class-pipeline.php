@@ -103,6 +103,19 @@ class HOPS_Pipeline
         update_option(self::OPT, array_slice($runs, 0, self::KEEP, true), false);
     }
 
+    /** Marks a queued run as failed when n8n could not be reached or rejected the request. */
+    public static function fail($run_id, $message)
+    {
+        $runs = self::runs();
+        if (! isset($runs[$run_id])) {
+            return;
+        }
+        $runs[$run_id]['stage'] = 'failed';
+        $runs[$run_id]['message'] = sanitize_text_field($message);
+        $runs[$run_id]['updated'] = time();
+        update_option(self::OPT, $runs, false);
+    }
+
     public static function runs()
     {
         $r = get_option(self::OPT, []);

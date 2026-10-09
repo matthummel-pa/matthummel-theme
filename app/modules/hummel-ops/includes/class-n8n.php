@@ -55,7 +55,11 @@ class HOPS_N8n
         }
 
         $r = self::send($wf, $decoded);
+        $run_id = is_array($decoded) ? ($decoded['run_id'] ?? '') : '';
         if (is_wp_error($r)) {
+            if ($run_id !== '') {
+                HOPS_Pipeline::fail($run_id, 'Could not reach n8n: '.$r->get_error_message());
+            }
             wp_send_json_error(['message' => $r->get_error_message(), 'when' => HOPS_UI::when(time())]);
         }
         $data = $r;
@@ -64,6 +68,9 @@ class HOPS_N8n
             wp_send_json_success($data);
         }
         $data['message'] = 'n8n returned HTTP '.$data['status'];
+        if ($run_id !== '') {
+            HOPS_Pipeline::fail($run_id, $data['message']);
+        }
         wp_send_json_error($data);
     }
 
