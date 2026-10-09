@@ -83,7 +83,8 @@ class HOPS_N8nViz
                     'x' => (float) ($pos[0] ?? 0),
                     'y' => (float) ($pos[1] ?? 0),
                     'off' => ! empty($n['disabled']),
-                    'path' => (string) ($n['parameters']['path'] ?? ''),
+                    // Newer webhook nodes leave the path empty and use their webhookId as the Production URL slug.
+                    'path' => (string) (($n['parameters']['path'] ?? '') !== '' ? $n['parameters']['path'] : ($n['webhookId'] ?? '')),
                 ];
             }
             $id = (string) ($w['id'] ?? '');
@@ -265,7 +266,7 @@ class HOPS_N8nViz
         $linked = self::buttons_for($wf, $buttons);
         $wide = count($wf['nodes']) > 5;
         ?>
-		<article class="hops-card hops-nwf<?php echo $wide ? ' is-wide' : ''; ?>">
+		<article class="hops-nwf<?php echo $wide ? ' is-wide' : ''; ?>">
 			<div class="hops-wf-top">
 				<h3><?php echo esc_html($wf['name']); ?></h3>
 				<?php echo HOPS_UI::pill($wf['active'] ? 'Active' : 'Inactive', $wf['active'] ? 'ok' : 'neutral'); // phpcs:ignore WordPress.Security.EscapeOutput?>
