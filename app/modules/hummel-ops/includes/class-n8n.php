@@ -140,8 +140,8 @@ class HOPS_N8n
 				<h3><?php echo esc_html($wf['name']); ?></h3>
 				<span class="hops-run-ctl">
 					<?php if (! empty($wf['counter'])) { ?>
-						<label class="hops-count"><span>Drafts</span>
-							<input type="number" class="hops-drafts" min="1" max="<?php echo (int) self::MAX_DRAFTS; ?>" step="1" value="1" inputmode="numeric" aria-label="Number of drafts to write from your editorial calendar for <?php echo esc_attr($wf['name']); ?>">
+						<label class="hops-count"><span>Number of editorial posts to create</span>
+							<input type="number" class="hops-drafts" min="1" max="<?php echo (int) self::MAX_DRAFTS; ?>" step="1" value="1" inputmode="numeric" pattern="[0-9]*" required>
 						</label>
 					<?php } ?>
 					<button type="button" class="button <?php echo $compact ? '' : 'button-primary'; ?> hops-run"><?php echo ! empty($wf['counter']) ? 'Write drafts' : 'Run now'; ?></button>

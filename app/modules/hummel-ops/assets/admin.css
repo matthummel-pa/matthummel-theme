@@ -246,5 +246,5 @@
 
 /* Draft counter beside a Run button */
 .hops .hops-run-ctl { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.hops .hops-count { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--hops-muted); }
-.hops .hops-count input { width: 64px; min-height: 30px; text-align: center; }
+.hops .hops-count { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; font-size: 13px; color: var(--hops-muted); }
+.hops .hops-count input { width: 72px; min-height: 30px; text-align: center; }
