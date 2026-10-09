@@ -84,6 +84,7 @@ class HOPS_N8nViz
                     'y' => (float) ($pos[1] ?? 0),
                     'off' => ! empty($n['disabled']),
                     'path' => (string) ($n['parameters']['path'] ?? ''),
+                    'webhookId' => (string) ($n['webhookId'] ?? ''),
                 ];
             }
             $id = (string) ($w['id'] ?? '');
@@ -222,15 +223,16 @@ class HOPS_N8nViz
         return $svg.'</svg>';
     }
 
-    /** Run buttons whose webhook URL ends in one of this workflow's webhook paths. */
+    /** Run buttons whose URL ends in a node path, or its webhook id when that path is empty. */
     private static function buttons_for($wf, $buttons)
     {
         $found = [];
         foreach ($wf['nodes'] as $n) {
-            if ($n['path'] === '') {
+            $slug = $n['path'] !== '' ? $n['path'] : (string) ($n['webhookId'] ?? '');
+            if ($slug === '') {
                 continue;
             }
-            $tail = '/'.ltrim($n['path'], '/');
+            $tail = '/'.ltrim($slug, '/');
             foreach ($buttons as $b) {
                 $p = (string) wp_parse_url($b['url'], PHP_URL_PATH);
                 if ($p !== '' && substr(rtrim($p, '/'), -strlen($tail)) === $tail) {
@@ -265,7 +267,7 @@ class HOPS_N8nViz
         $linked = self::buttons_for($wf, $buttons);
         $wide = count($wf['nodes']) > 5;
         ?>
-		<article class="hops-card hops-nwf<?php echo $wide ? ' is-wide' : ''; ?>">
+		<article class="hops-nwf<?php echo $wide ? ' is-wide' : ''; ?>">
 			<div class="hops-wf-top">
 				<h3><?php echo esc_html($wf['name']); ?></h3>
 				<?php echo HOPS_UI::pill($wf['active'] ? 'Active' : 'Inactive', $wf['active'] ? 'ok' : 'neutral'); // phpcs:ignore WordPress.Security.EscapeOutput?>

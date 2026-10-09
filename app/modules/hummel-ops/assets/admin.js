@@ -121,6 +121,7 @@
 	document.querySelectorAll('.hops-card').forEach(function (card) {
 		var btn = card.querySelector('.hops-run');
 		var out = card.querySelector('.hops-result');
+		if (!btn || !out) { return; }
 		btn.addEventListener('click', function () {
 			var label = btn.textContent;
 			btn.disabled = true;
