@@ -326,3 +326,32 @@
 @media (prefers-reduced-motion: reduce) {
 	#hops-tasks * { transition: none !important; }
 }
+/* Pipeline runs: progress bar per run, small step boxes per post */
+.hops .hops-runs { display: grid; gap: 10px; }
+.hops .hops-run { border: 1px solid var(--hops-line); border-radius: var(--hops-radius); padding: 10px 14px; background: var(--hops-surface); }
+.hops .hops-run.is-ok { background: var(--hops-ok-bg); border-color: #b6e3bd; }
+.hops .hops-run.is-warn { background: var(--hops-surface); color: inherit; }
+.hops .hops-run.is-bad { background: var(--hops-bad-bg); border-color: #e6b8bb; }
+.hops .hops-run-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.hops .hops-run-when { margin-left: auto; font-size: 12.5px; }
+.hops .hops-run-count { font-weight: 600; font-size: 13px; }
+.hops .hops-tick, .hops .hops-stepmark { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; line-height: 1; }
+.hops .hops-tick { width: 20px; height: 20px; border-radius: 50%; background: #1a7f2e; color: #fff; font-size: 12px; }
+.hops .hops-bar { height: 8px; border-radius: 999px; background: #e3e5e8; overflow: hidden; }
+.hops .hops-bar > span { display: block; height: 100%; border-radius: 999px; background: #f0b429; transition: width .4s ease, background-color .4s ease; }
+.hops .hops-bar.is-done > span { background: #1a7f2e; }
+.hops .hops-bar.is-bad > span { background: #c0392b; }
+.hops .hops-bar.is-active > span { background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 100%); background-size: 200% 100%; animation: hops-sheen 1.6s linear infinite; }
+@keyframes hops-sheen { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.hops .hops-run > .hops-note { margin: 6px 0 0; }
+.hops .hops-post { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 6px; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.7); font-size: 13px; line-height: 1.4; }
+.hops .hops-post.is-active { background: var(--hops-warn-bg); }
+.hops .hops-post-title { min-width: 0; overflow-wrap: anywhere; }
+.hops .hops-post-meta { font-size: 12.5px; }
+.hops .hops-post-fix { flex-basis: 100%; margin: 0; font-size: 12.5px; }
+.hops .hops-steps { display: inline-flex; gap: 3px; }
+.hops .hops-step { display: inline-flex; align-items: center; gap: 3px; padding: 0 6px; height: 18px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #e3e5e8; color: var(--hops-muted); }
+.hops .hops-step.is-active { background: #f0b429; color: #3d2a00; }
+.hops .hops-step.is-done { background: #1a7f2e; color: #fff; }
+.hops .hops-stepmark { font-size: 10px; }
+@media (prefers-reduced-motion: reduce) { .hops .hops-bar.is-active > span { animation: none; } }

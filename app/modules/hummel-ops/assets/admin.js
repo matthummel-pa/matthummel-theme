@@ -782,4 +782,23 @@
 	if (wp) { initReleases(wp); }
 	var dr = document.getElementById('hops-drive');
 	if (dr) { initDrive(dr); }
+	// While a pipeline run is in flight, refresh the runs panel every 6 seconds.
+	function watchPipeline() {
+		var panel = document.getElementById('hops-pipeline');
+		if (!panel || panel.getAttribute('data-active') !== '1') { return; }
+		setTimeout(function () {
+			if (document.hidden) { watchPipeline(); return; }
+			fetch(window.location.href, { credentials: 'same-origin' })
+				.then(function (r) { return r.text(); })
+				.then(function (html) {
+					var doc = new DOMParser().parseFromString(html, 'text/html');
+					var fresh = doc.getElementById('hops-pipeline');
+					var cur = document.getElementById('hops-pipeline');
+					if (fresh && cur) { cur.replaceWith(fresh); }
+					watchPipeline();
+				})
+				.catch(function () { watchPipeline(); });
+		}, 6000);
+	}
+	watchPipeline();
 })();
