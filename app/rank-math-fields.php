@@ -459,10 +459,10 @@ function mh_page_seo_analysis_html(int $post_id): string
 
     $links = '<p>'
         .'Internal paths: <a href="/contact/">Say hello</a>, '
-        .'<a href="/shop/">themes and plugins</a>, '
+        .'<a href="/projects/">themes and plugins</a>, '
         .'<a href="/hire/">hire</a>, '
-        .'<a href="/services/">services</a>, '
-        .'<a href="/portfolio/">portfolio</a>. '
+        .'<a href="/hire/">services</a>, '
+        .'<a href="/projects/">portfolio</a>. '
         .'External references: <a href="https://roots.io/sage/">Roots Sage</a>, '
         .'<a href="https://wordpress.org/">WordPress.org</a>, '
         .'<a href="https://github.com/matthummel-pa">GitHub</a>.'

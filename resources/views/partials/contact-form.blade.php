@@ -17,6 +17,24 @@
   $oldSubject = \App\mh_contact_prefill('subject');
   $oldMessage = \App\mh_contact_prefill('message');
   $invalid = \App\mh_contact_old_errors();
+  $presetSubject = (string) ($presetSubject ?? '');
+  $presetMessage = (string) ($presetMessage ?? '');
+  $presetWho = (string) ($presetWho ?? '');
+  $submitLabel = (string) ($submitLabel ?? '');
+  $compactWhoFallback = isset($compactWhoFallback) ? (string) $compactWhoFallback : 'business';
+  $messageRows = (int) ($messageRows ?? ($compact ? 5 : 7));
+  if ($messageRows < 2 || $messageRows > 12) {
+    $messageRows = $compact ? 5 : 7;
+  }
+  if ($oldSubject === '' && $presetSubject !== '') {
+    $oldSubject = $presetSubject;
+  }
+  if ($oldMessage === '' && $presetMessage !== '') {
+    $oldMessage = $presetMessage;
+  }
+  if ($oldWho === '' && $presetWho !== '') {
+    $oldWho = $presetWho;
+  }
   $nameId = $compact ? 'pcf-name' : 'cf-name';
   $emailId = $compact ? 'pcf-email' : 'cf-email';
   $whoId = $compact ? 'pcf-who' : 'cf-who';
@@ -50,7 +68,8 @@
 <form class="contact-form{{ $mhError ? ' is-error' : '' }}{{ $compact ? ' contact-form--compact' : '' }}" id="{{ $formId }}" method="post" action="{{ esc_url($actionUrl) }}" novalidate>
   @php(wp_nonce_field('mh_contact', 'mh_contact_nonce'))
   <input type="hidden" name="action" value="mh_contact">
-  <input type="hidden" name="mh_return" value="{{ esc_url(get_permalink()) }}">
+  <input type="hidden" name="mh_return" value="{{ esc_url(get_permalink() ?: home_url('/')) }}">
+  <input type="hidden" name="mh_status_id" value="{{ esc_attr($statusId) }}">
   @if ($projectSlug !== '')
     <input type="hidden" name="mh_project" value="{{ esc_attr($projectSlug) }}">
   @endif
@@ -90,20 +109,20 @@
       <input id="{{ $subjectId }}" type="text" name="mh_subject" autocomplete="off" placeholder="{{ esc_attr__('e.g. WordPress platform or web application', 'sage') }}" value="{{ $oldSubject }}">
     </div>
   @else
-    <input type="hidden" name="mh_who" value="{{ esc_attr($oldWho !== '' ? $oldWho : 'business') }}">
+    <input type="hidden" name="mh_who" value="{{ esc_attr($oldWho !== '' ? $oldWho : $compactWhoFallback) }}">
     <input type="hidden" name="mh_subject" value="{{ esc_attr($oldSubject) }}">
   @endif
 
   <div class="field">
     <label for="{{ $messageId }}">{{ __('Message', 'sage') }} <span class="field-req" aria-hidden="true">*</span></label>
-    <textarea id="{{ $messageId }}" name="mh_message" rows="{{ $compact ? 5 : 7 }}" required aria-required="true" placeholder="{{ esc_attr__('Tell me what you would change, or what you need. A few sentences is plenty.', 'sage') }}" aria-describedby="{{ $messageId }}-hint{{ in_array('message', $invalid, true) ? ' '.$statusId : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
+    <textarea id="{{ $messageId }}" name="mh_message" rows="{{ (int) $messageRows }}" required aria-required="true" placeholder="{{ esc_attr__('Tell me what you would change, or what you need. A few sentences is plenty.', 'sage') }}" aria-describedby="{{ $messageId }}-hint{{ in_array('message', $invalid, true) ? ' '.$statusId : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
     <p class="field-hint" id="{{ $messageId }}-hint">{{ \App\field('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage')) }}</p>
   </div>
 
   <div class="contact-form__actions">
     <button class="btn" type="submit">
       {!! \App\mh_svg_icon('mail', 16) !!}
-      {{ \App\field('cnt_submit', __('Send note', 'sage')) }}
+      {{ $submitLabel !== '' ? $submitLabel : \App\field('cnt_submit', __('Send note', 'sage')) }}
     </button>
     <p class="field-hint">{{ \App\field('cnt_reply_note', \App\mh_reply_sla()) }}</p>
   </div>

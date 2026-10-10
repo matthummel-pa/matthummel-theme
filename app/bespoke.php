@@ -1333,7 +1333,7 @@ function mh_who_items(): array
             'title' => __('Shops and teams', 'sage'),
             'text' => __('A WordPress site you can edit, a plugin, or another web app that fits the work.', 'sage'),
             'icon' => 'briefcase',
-            'href' => home_url('/services/'),
+            'href' => home_url('/hire/'),
             'cta' => __('See how I can help', 'sage'),
         ],
         [

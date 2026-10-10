@@ -42,6 +42,9 @@
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/agency-white-label-wordpress/') }}">{{ __('For agencies', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/wordpress-handoff-checklist/') }}">{{ __('Handoff checklist', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
       </ul>
     </nav>
 
@@ -53,6 +56,8 @@
         <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>
       </ul>
     </nav>
 

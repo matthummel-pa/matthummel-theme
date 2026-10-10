@@ -35,8 +35,8 @@ add_filter('comment_form_defaults', function (array $defaults): array {
     $defaults['title_reply_to'] = __('Reply to %s', 'sage');
     $defaults['title_reply_before'] = '<h2 id="reply-title" class="comment-reply-title">';
     $defaults['title_reply_after'] = '</h2>';
-    $defaults['cancel_reply_before'] = '<p class="comment-cancel-reply">';
-    $defaults['cancel_reply_after'] = '</p>';
+    $defaults['cancel_reply_before'] = '<span class="comment-cancel-reply">';
+    $defaults['cancel_reply_after'] = '</span>';
     $defaults['cancel_reply_link'] = __('Cancel reply', 'sage');
     $defaults['label_submit'] = __('Post comment', 'sage');
     $defaults['class_form'] = 'comment-form';
