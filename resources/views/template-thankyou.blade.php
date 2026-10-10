@@ -84,7 +84,7 @@
       <a class="ty-browse-card" href="{{ esc_url(\App\mh_work_listing_url()) }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('briefcase', 22) !!}</div>
         <h3 class="ty-browse-card__title">Work</h3>
-        <p class="ty-browse-card__body">Studio concepts — WordPress themes and plugins that show how I build. Hire me to adapt one.</p>
+        <p class="ty-browse-card__body">WordPress themes and plugins that show how I build. Hire me to adapt one.</p>
         <span class="ty-browse-card__link">See the work →</span>
       </a>
 
@@ -95,7 +95,7 @@
         <span class="ty-browse-card__link">See how hiring works →</span>
       </a>
 
-      <a class="ty-browse-card" href="{{ home_url('/uses/') }}">
+      <a class="ty-browse-card" href="{{ home_url('/resources/#uses') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('code', 22) !!}</div>
         <h3 class="ty-browse-card__title">Stack and tools</h3>
         <p class="ty-browse-card__body">The tools I reach for on real projects — with a short note on why each one shows up.</p>

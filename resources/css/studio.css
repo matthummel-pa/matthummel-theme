@@ -3947,3 +3947,16 @@ html.mh-dark .about-aside-card--linkedin {
 .about-need__title { font: 600 var(--type-h3, 1.35rem)/1.2 var(--font-display); margin: 12px 0 .75rem; }
 .about-need__note { margin-top: 1rem; font-size: .92rem; color: var(--color-text-secondary); }
 .hire-need-cta__btn { width: 100%; justify-content: center; margin-top: .85rem; }
+
+/* 3.6.50 — Now section on About: checklist + recent posts card. */
+.about-now { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2.5rem 4rem; align-items: start; }
+@media (max-width: 860px) { .about-now { grid-template-columns: 1fr; gap: 2rem; } }
+.about-now__list { margin-top: 1.5rem; }
+.about-now__life { margin-top: 1.5rem; }
+.about-now__updated { margin-top: 1rem; font-size: .85rem; color: var(--color-text-secondary); }
+.about-now__posts { padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 14px; background: var(--gray-50); }
+html.mh-dark .about-now__posts { background: var(--color-surface); }
+.about-now__posts-title { display: flex; align-items: center; gap: .5rem; font: 600 1.05rem/1.3 var(--font-display); margin: 0 0 1rem; }
+.about-now__posts .now-posts { margin-bottom: 1rem; }
+.about-now__empty { color: var(--color-text-secondary); font-size: .92rem; }
+.uses-stack .uses-head { margin-bottom: 2rem; }

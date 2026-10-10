@@ -38,19 +38,19 @@
     {{-- Header action buttons --}}
     <div class="header-actions">
 
-      {{-- Availability signal (GitHub hireable + status emoji) --}}
+      {{-- One call to action: the green Available now pill while GitHub says hireable, else Say hello. Both go to Contact. --}}
       @php
         $ghAvail = \App\Github::fetchUser(\App\mh_github_login());
-        $availLabel = \App\mh_availability_label($ghAvail, __('Open for work', 'sage'));
+        $isHireable = \App\mh_is_hireable($ghAvail);
       @endphp
-      @if ($availLabel !== '')
+      @if ($isHireable)
         <a
           class="header-avail"
-          href="{{ home_url('/now/') }}"
-          aria-label="{{ sprintf(__('%s — see what I\'m doing now', 'sage'), $availLabel) }}"
+          href="{{ esc_url(home_url('/contact/')) }}"
+          aria-label="{{ __('Available now — say hello', 'sage') }}"
         >
           @include('partials.avail-mark', ['gh' => $ghAvail])
-          <span class="header-avail__label">{{ $availLabel }}</span>
+          <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
         </a>
       @endif
 
@@ -70,8 +70,9 @@
         </button>
       @endif
 
-      {{-- Desktop CTA --}}
-      <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">Say hello</a>
+      @unless ($isHireable)
+        <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'sage') }}</a>
+      @endunless
 
       {{-- Mobile menu toggle --}}
       <button
@@ -161,6 +162,6 @@
   @endif
 
   <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/contact/')) }}">
-    {!! \App\mh_svg_icon('mail', 15) !!} Say hello
+    {!! \App\mh_svg_icon('mail', 15) !!} {{ $isHireable ? __('Available now', 'sage') : __('Say hello', 'sage') }}
   </a>
 </div>

@@ -1382,7 +1382,7 @@ function mh_sync_nav_menus(): void
     }
 
     $bySlug = [];
-    foreach (['home', 'about', 'projects', 'hire', 'services', 'code', 'contact', 'now', 'blog'] as $slug) {
+    foreach (['home', 'about', 'projects', 'services', 'resources', 'contact', 'blog'] as $slug) {
         $page = get_page_by_path($slug);
         if ($page instanceof \WP_Post) {
             $bySlug[$slug] = (int) $page->ID;
@@ -1416,9 +1416,9 @@ function mh_sync_nav_menus(): void
         return $menuId;
     };
 
-    // Logo is Home. Contact is the header button. Hire stays primary; Shop/Uses stay out of the bar.
-    $primaryId = $build('Primary', ['projects', 'hire', 'blog', 'code', 'about']);
-    $footerId = $build('Footer', ['projects', 'hire', 'blog', 'code', 'about', 'now', 'contact']);
+    // Logo is Home. Contact is the header button. Hire, Code, and Now are sections on About; Shop/Uses stay out of the bar.
+    $primaryId = $build('Primary', ['projects', 'blog', 'about', 'resources', 'contact']);
+    $footerId = $build('Footer', ['projects', 'blog', 'about', 'contact']);
 
     $locations = get_theme_mod('nav_menu_locations', []);
     $locations['primary_navigation'] = $primaryId;
@@ -4144,3 +4144,145 @@ add_action('init', function (): void {
 
     update_option('mh_about_absorbs_hire_code_v1', true);
 }, 61);
+
+/**
+ * About absorbs Now (3.6.50): copy the Now page fields onto About once and drop
+ * any studio line from the checklist. wp-admin edits on About win afterwards.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_about_absorbs_now_v1')) {
+        return;
+    }
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    if ($aboutId < 1) {
+        return; // No About page yet; try again on a later request.
+    }
+
+    $nowId = (int) (get_posts([
+        'post_type' => 'page',
+        'post_status' => ['publish', 'draft', 'private', 'pending'],
+        'numberposts' => 1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'template-now.blade.php',
+    ])[0] ?? 0);
+
+    if ($nowId > 0 && $nowId !== $aboutId) {
+        foreach (['now_h1', 'now_lede', 'now_updated', 'now_items', 'now_life_p1', 'now_posts_empty'] as $key) {
+            $existing = get_post_meta($aboutId, 'mh_f_'.$key, true);
+            if ($existing !== '' && $existing !== null && $existing !== []) {
+                continue;
+            }
+            $value = get_post_meta($nowId, 'mh_f_'.$key, true);
+            if ($value === '' || $value === null || $value === []) {
+                continue;
+            }
+            update_post_meta($aboutId, 'mh_f_'.$key, $value);
+        }
+    }
+
+    // The checklist no longer mentions a studio.
+    $items = get_post_meta($aboutId, 'mh_f_now_items', true);
+    if (is_array($items) || (is_string($items) && $items !== '')) {
+        $lines = is_array($items) ? array_map('strval', $items) : preg_split('/\r\n|\r|\n/', $items);
+        $kept = array_values(array_filter($lines, static fn (string $line): bool => stripos($line, 'studio') === false));
+        if (count($kept) !== count($lines)) {
+            update_post_meta($aboutId, 'mh_f_now_items', is_array($items) ? $kept : implode("\n", $kept));
+        }
+    }
+
+    update_option('mh_about_absorbs_now_v1', true);
+}, 62);
+
+/**
+ * Resources and Contact are plain primary-menu items (3.6.50); the header keeps one call to action.
+ * Appends each page once if nothing in the menu points at it. add_option() claims the flag
+ * atomically so two racing first requests cannot both insert.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_primary_menu_resources_contact_v1') || wp_installing()) {
+        return;
+    }
+    $locations = get_theme_mod('nav_menu_locations', []);
+    $menuId = (int) ($locations['primary_navigation'] ?? 0);
+    if ($menuId < 1) {
+        return; // No primary menu yet; try again on a later request.
+    }
+    $pages = [];
+    foreach (['resources', 'contact'] as $slug) {
+        $page = get_page_by_path($slug);
+        if ($page instanceof \WP_Post) {
+            $pages[$slug] = $page;
+        }
+    }
+    if ($pages === []) {
+        return;
+    }
+    if (! add_option('mh_primary_menu_resources_contact_v1', true, '', false)) {
+        return; // Another request already claimed it.
+    }
+
+    $items = wp_get_nav_menu_items($menuId);
+    $items = is_array($items) ? $items : [];
+    $present = [];
+    $position = 0;
+    foreach ($items as $item) {
+        $present[] = strtolower(trim((string) (wp_parse_url((string) $item->url, PHP_URL_PATH) ?? ''), '/'));
+        if (($item->object ?? '') === 'page') {
+            $present[] = 'id:'.(int) $item->object_id; // custom links reuse object_id for their own post ID
+        }
+        $position = max($position, (int) $item->menu_order);
+    }
+    foreach ($pages as $slug => $page) {
+        if (in_array($slug, $present, true) || in_array('id:'.(int) $page->ID, $present, true)) {
+            continue;
+        }
+        $result = wp_update_nav_menu_item($menuId, 0, [
+            'menu-item-title' => get_the_title($page),
+            'menu-item-object' => 'page',
+            'menu-item-object-id' => (int) $page->ID,
+            'menu-item-type' => 'post_type',
+            'menu-item-status' => 'publish',
+            'menu-item-position' => ++$position,
+        ]);
+        if (is_wp_error($result)) {
+            delete_option('mh_primary_menu_resources_contact_v1'); // Release so a later request retries.
+
+            return;
+        }
+    }
+}, 63);
+
+/**
+ * Retire the pages whose content moved onto About and Resources (3.6.49–3.6.50).
+ * Runs after the field copies above; drafts (never deletes) so Rank Math drops them
+ * from the sitemap and the 301s in app/filters.php are the only thing left.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_retire_merged_pages_v1') || wp_installing()) {
+        return;
+    }
+    if (! get_option('mh_about_absorbs_hire_code_v1') || ! get_option('mh_about_absorbs_now_v1')) {
+        return; // Copy the fields first; try again on a later request.
+    }
+
+    $retired = ['template-hire.blade.php', 'template-code.blade.php', 'template-now.blade.php', 'template-uses.blade.php'];
+    $ids = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'numberposts' => 10,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_query' => [[ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one-shot, four pages
+            'key' => '_wp_page_template',
+            'value' => $retired,
+            'compare' => 'IN',
+        ]],
+    ]);
+    foreach ($ids as $id) {
+        wp_update_post(['ID' => (int) $id, 'post_status' => 'draft']);
+    }
+
+    update_option('mh_retire_merged_pages_v1', true);
+}, 64);

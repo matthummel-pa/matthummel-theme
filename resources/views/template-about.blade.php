@@ -24,6 +24,12 @@
   $languages   = $snap['languages'] ?? [];
   $syncedAgo   = ! empty($snap['synced_at']) ? \App\mh_github_ago(gmdate('c', (int) $snap['synced_at'])) : '';
 
+  // Now (folded in from /now/ in 3.6.50).
+  $nowItems    = \App\field_lines('now_items', \App\mh_now_items_defaults());
+  $nowUpdated  = \App\mh_now_updated();
+  $posts       = \App\mh_latest_posts(3);
+  $journal     = get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/');
+
   $needs = [
     __('Who the site or app is for', 'sage'),
     __('What it needs to do', 'sage'),
@@ -58,6 +64,7 @@
 @include('partials.page-nav', [
   'pills' => [
     ['story', __('Story', 'sage')],
+    ['now', __('Now', 'sage')],
     ['build', __('What I build', 'sage')],
     ['hire', __('Hire', 'sage')],
     ['resume', __('Resume', 'sage')],
@@ -87,7 +94,7 @@
               {!! \App\mh_svg_icon('mail', 16) !!}
               {{ \App\field('about_story_cta', __('Say hello', 'sage')) }}
             </a>
-            <a class="about-text-link" href="{{ home_url('/now/') }}">
+            <a class="about-text-link" href="#now">
               {{ \App\field('about_story_now', __('What I\'m doing now', 'sage')) }} →
             </a>
           </div>
@@ -168,6 +175,62 @@
               <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
             </a>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{-- NOW --}}
+<section class="pf-section about-now-sec" id="now" aria-labelledby="about-now-heading">
+  <div class="container wide">
+    <div class="about-shell about-shell--now">
+      <div class="about-shell__mesh" aria-hidden="true"></div>
+      <div class="about-shell__inner about-now">
+        <div class="about-now__copy">
+          <p class="eyebrow">{{ __('Now', 'sage') }}</p>
+          <h2 id="about-now-heading" class="display-title is-section">
+            {{ \App\field('now_h1', __('What I’m doing now.', 'sage')) }}
+          </h2>
+          <p class="sec-intro">{{ \App\field('now_lede', __('A short list of where my time is going.', 'sage')) }}</p>
+          <ul class="now-checklist about-now__list">
+            @foreach ($nowItems as $item)
+              <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $item }}</span></li>
+            @endforeach
+          </ul>
+          <p class="about-now__life">{{ \App\field('now_life_p1', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')) }}</p>
+          <p class="about-now__updated">
+            {{ __('Last updated', 'sage') }}
+            @if ($nowUpdated['iso'] !== '')
+              <time datetime="{{ esc_attr($nowUpdated['iso']) }}">{{ $nowUpdated['label'] }}</time>
+            @else
+              {{ $nowUpdated['label'] }}
+            @endif
+          </p>
+        </div>
+
+        <div class="about-now__posts">
+          <h3 class="about-now__posts-title">{!! \App\mh_svg_icon('pen', 16) !!} {{ \App\field('about_posts_h2', __('Recent posts.', 'sage')) }}</h3>
+          @if ($posts === [])
+            <p class="about-now__empty">{{ \App\field('now_posts_empty', __('No journal posts are published yet.', 'sage')) }}</p>
+          @else
+            <ol class="now-posts">
+              @foreach ($posts as $entry)
+                <li>
+                  <a href="{{ esc_url((string) ($entry['url'] ?? '')) }}">
+                    @if (! empty($entry['date']))
+                      <time datetime="{{ esc_attr((string) ($entry['date_iso'] ?? '')) }}">{{ $entry['date'] }}</time>
+                    @endif
+                    <strong>{{ $entry['title'] }}</strong>
+                    @if (! empty($entry['ex']))
+                      <span>{{ $entry['ex'] }}</span>
+                    @endif
+                  </a>
+                </li>
+              @endforeach
+            </ol>
+          @endif
+          <a class="h-text-arrow" href="{{ esc_url($journal) }}">{{ \App\field('about_posts_all', __('All posts', 'sage')) }} <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
