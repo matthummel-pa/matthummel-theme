@@ -142,9 +142,34 @@ function initHeadingAccent() {
   });
 }
 
+/**
+ * Safety net for the reveal observer: anything already above or inside the
+ * viewport (anchor jumps, back/forward cache, hidden tabs) is shown without
+ * waiting to intersect, and nothing stays hidden longer than a moment.
+ */
+function initRevealFallback() {
+  const show = () => {
+    document.querySelectorAll('[data-reveal]:not(.is-in)').forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top < window.innerHeight * 1.15) {
+        el.classList.add('is-in');
+      }
+    });
+  };
+  window.setTimeout(show, 900);
+  window.addEventListener('hashchange', () => window.setTimeout(show, 250));
+  window.addEventListener('pageshow', () => window.setTimeout(show, 250));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      window.setTimeout(show, 250);
+    }
+  });
+}
+
 export function initBrandUi() {
   initThemeToggle();
   initHeaderScroll();
   initHeadingAccent();
   initSectionReveal();
+  initRevealFallback();
 }
