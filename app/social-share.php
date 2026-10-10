@@ -6,6 +6,10 @@
 
 namespace App;
 
+require_once __DIR__.'/social-ai.php';
+require_once __DIR__.'/social-settings.php';
+require_once __DIR__.'/bundled-plugins.php';
+
 /** Soft caps for draft generators (platform guidance, not hard API limits). */
 const MH_SOCIAL_FACEBOOK_MAX = 400;
 
@@ -139,7 +143,7 @@ function mh_social_draft_bluesky(\WP_Post $post, bool $useAi): array
             'Hard limit is 300 graphemes (characters including emoji).',
             'Put the link on its own line — Bluesky link facets work best that way.',
             'Skip hashtag spam; one clear sentence beats a keyword pile.',
-            'App password lives in Appearance → Customize → Bluesky (never your account password).',
+            'App password lives in Appearance → Social & AI (never your account password).',
         ],
         'share_url' => $urls['bluesky'],
         'message' => (string) ($prepared['message'] ?? ''),
@@ -179,7 +183,7 @@ function mh_social_draft_facebook(\WP_Post $post, string $title, string $excerpt
             'One clear CTA (“questions welcome”) beats emoji decoration.',
         ],
         'share_url' => $urls['facebook'],
-        'message' => $useAi && mh_devto_ai_token() !== '' ? 'Facebook draft ready (AI).' : 'Facebook draft ready.',
+        'message' => $useAi && mh_social_ai_available() ? 'Facebook draft ready (AI).' : 'Facebook draft ready.',
     ];
 }
 
@@ -219,7 +223,7 @@ function mh_social_draft_reddit(\WP_Post $post, string $title, string $excerpt, 
             'Engage in comments — Reddit rewards replies more than drive-by links.',
         ],
         'share_url' => $share,
-        'message' => $useAi && mh_devto_ai_token() !== '' ? 'Reddit draft ready (AI).' : 'Reddit draft ready.',
+        'message' => $useAi && mh_social_ai_available() ? 'Reddit draft ready (AI).' : 'Reddit draft ready.',
     ];
 }
 
@@ -256,7 +260,7 @@ function mh_social_draft_linkedin(\WP_Post $post, string $title, string $excerpt
             'First person, one idea, no fake metrics.',
         ],
         'share_url' => $urls['linkedin'],
-        'message' => $useAi && mh_devto_ai_token() !== '' ? 'LinkedIn draft ready (AI).' : 'LinkedIn draft ready.',
+        'message' => $useAi && mh_social_ai_available() ? 'LinkedIn draft ready (AI).' : 'LinkedIn draft ready.',
     ];
 }
 
@@ -303,7 +307,7 @@ MD;
         'tips' => [
             'Canonical URL back to matthummel.com avoids duplicate-content confusion.',
             'Series + consistent tags help returning readers more than one viral swing.',
-            'API key: Appearance → Customize → DEV.to.',
+            'API key: Appearance → Social & AI.',
         ],
         'share_url' => $exportUrl !== '' ? $exportUrl : 'https://dev.to/new',
         'message' => 'DEV.to checklist ready. Use the DEV.to box to export or publish.',
@@ -315,8 +319,7 @@ MD;
  */
 function mh_social_ai_compose(\WP_Post $post, string $network, int $maxChars): ?string
 {
-    $token = mh_devto_ai_token();
-    if ($token === '') {
+    if (! mh_social_ai_available()) {
         return null;
     }
 
@@ -335,34 +338,12 @@ function mh_social_ai_compose(\WP_Post $post, string $network, int $maxChars): ?
         ."Title: {$title}\n"
         ."Summary: {$excerpt}";
 
-    $res = wp_remote_post('https://api.openai.com/v1/chat/completions', [
-        'timeout' => 30,
-        'headers' => [
-            'Authorization' => 'Bearer '.$token,
-            'Content-Type' => 'application/json',
-            'User-Agent' => 'matthummel.com',
-        ],
-        'body' => wp_json_encode([
-            'model' => apply_filters('mh/social_ai_model', apply_filters('mh/devto_ai_model', 'gpt-4o-mini')),
-            'temperature' => 0.5,
-            'messages' => [
-                ['role' => 'system', 'content' => 'You write social posts for a WordPress developer journal.'],
-                ['role' => 'user', 'content' => $prompt],
-            ],
-        ]),
-    ]);
-
-    if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+    $text = mh_social_ai_complete('You write social posts for a WordPress developer journal.', $prompt, 500);
+    if ($text === null) {
         return null;
     }
 
-    $body = json_decode((string) wp_remote_retrieve_body($res), true);
-    $text = trim((string) ($body['choices'][0]['message']['content'] ?? ''));
-    if ($text === '') {
-        return null;
-    }
-
-    return mh_social_trim(trim($text, " \t\n\r\0\x0B\"'"), $maxChars);
+    return mh_social_trim($text, $maxChars);
 }
 
 /* ───────────────────────── Facebook Page posting ───────────────────────── */
@@ -405,7 +386,7 @@ function mh_facebook_post_to_page(int $postId, string $message): array
         return ['ok' => false, 'message' => __('Publish the post (without a password) first, then share it.', 'sage'), 'id' => '', 'url' => ''];
     }
     if (! mh_facebook_can_post()) {
-        return ['ok' => false, 'message' => __('Add the Page ID and token under Appearance → Customize → Facebook Page.', 'sage'), 'id' => '', 'url' => ''];
+        return ['ok' => false, 'message' => __('Add the Page ID and token under Appearance → Social & AI.', 'sage'), 'id' => '', 'url' => ''];
     }
     if ((string) get_post_meta($postId, '_mh_facebook_post_id', true) !== '') {
         return ['ok' => false, 'message' => __('Already posted to the Page. Delete it on Facebook first to post again.', 'sage'), 'id' => '', 'url' => ''];
@@ -525,7 +506,6 @@ function mh_social_share_metabox(\WP_Post $post): void
     $hasBluesky = function_exists(__NAMESPACE__.'\\mh_bluesky_app_password') && mh_bluesky_app_password() !== '';
     $hasFacebook = mh_facebook_can_post();
     $hasDevto = function_exists(__NAMESPACE__.'\\mh_devto_token') && mh_devto_token() !== '';
-    $hasAi = function_exists(__NAMESPACE__.'\\mh_devto_ai_token') && mh_devto_ai_token() !== '';
     $published = $post->post_status === 'publish';
     $blueskyUrl = (string) get_post_meta($post->ID, '_mh_bluesky_url', true);
     $facebookUrl = (string) get_post_meta($post->ID, '_mh_facebook_url', true);
@@ -542,7 +522,7 @@ function mh_social_share_metabox(\WP_Post $post): void
             'label' => 'Bluesky',
             'max' => 300,
             'connected' => $hasBluesky,
-            'connect_hint' => __('App password: Appearance → Customize → Bluesky', 'sage'),
+            'connect_hint' => __('App password: Appearance → Social & AI', 'sage'),
             'fields' => [['textarea', 'mh-bluesky-custom', 'mh_bluesky_custom_text', $blueskyCustom, 3, __('Custom text (optional). The link is added on post.', 'sage')]],
             'post_label' => __('Post to Bluesky', 'sage'),
             'post_action' => 'post-bluesky',
@@ -556,7 +536,7 @@ function mh_social_share_metabox(\WP_Post $post): void
             'label' => 'Facebook',
             'max' => MH_SOCIAL_FACEBOOK_MAX,
             'connected' => $hasFacebook,
-            'connect_hint' => __('Page ID + token: Appearance → Customize → Facebook Page. Until then the share dialog opens.', 'sage'),
+            'connect_hint' => __('Page ID + token: Appearance → Social & AI. Until then the share dialog opens.', 'sage'),
             'fields' => [['textarea', 'mh-social-facebook', 'mh_social_facebook_text', $fbDraft, 4, '']],
             'post_label' => __('Post to Page', 'sage'),
             'post_action' => 'post-facebook',
@@ -601,7 +581,7 @@ function mh_social_share_metabox(\WP_Post $post): void
             'label' => 'DEV.to',
             'max' => 0,
             'connected' => $hasDevto,
-            'connect_hint' => __('API key: Appearance → Customize → DEV.to', 'sage'),
+            'connect_hint' => __('API key: Appearance → Social & AI', 'sage'),
             'fields' => [],
             'post_label' => __('Publish to DEV.to', 'sage'),
             'post_action' => 'post-devto',
@@ -614,8 +594,7 @@ function mh_social_share_metabox(\WP_Post $post): void
 
     echo '<div class="mh-social" id="mh-social-share" data-permalink="'.esc_url((string) get_permalink($post)).'" data-title="'.esc_attr(html_entity_decode(get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8')).'">';
     echo '<div class="mh-social__top">';
-    echo '<label class="mh-social__ai"><input type="checkbox" name="mh_social_use_ai" id="mh-social-use-ai" value="1" '.checked($hasAi, true, false).'> ';
-    echo wp_kses(mh_social_icon('sparkles'), mh_social_allowed_html()).' '.esc_html__('Use OpenAI when generating', 'sage').'</label>';
+    echo mh_social_ai_controls_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
     if (! $published) {
         echo '<span class="mh-social__note">'.esc_html__('Posting unlocks once the post is published.', 'sage').'</span>';
     }
@@ -671,6 +650,7 @@ function mh_social_share_metabox(\WP_Post $post): void
     echo '<p id="mh-social-status" class="mh-social__status" role="status" aria-live="polite"></p>';
     echo '<details class="mh-social__tips"><summary>'.esc_html__('Preview and tips from the last generate', 'sage').'</summary>';
     echo '<textarea id="mh-social-preview" class="widefat" rows="8" readonly></textarea></details>';
+    echo mh_social_connections_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
     echo '</div>';
 }
 
@@ -781,6 +761,8 @@ CSS);
     const t = field(network, 'title'); const b = field(network, 'body')
     return [t && t.value, b && b.value].filter(Boolean).join('\n\n').trim()
   }
+  function provider () { const el = document.getElementById('mh-social-provider'); return el ? el.value : '' }
+  function model () { const el = document.getElementById('mh-social-model'); return el ? el.value : '' }
   function setStatus (msg, kind) {
     status.textContent = msg || ''
     status.className = 'mh-social__status' + (kind ? ' is-' + kind : '')
@@ -837,6 +819,8 @@ CSS);
     body.append('nonce', nonce.value)
     body.append('post_id', postId())
     body.append('use_ai', useAi() ? '1' : '0')
+    body.append('provider', provider())
+    body.append('model', model())
     const custom = field('bluesky', 'body')
     if (custom) body.append('custom_text', custom.value)
     Object.keys(extra || {}).forEach(function (k) { body.append(k, extra[k]) })
@@ -859,6 +843,7 @@ CSS);
     const body = new FormData()
     body.append('action', 'mh_devto_publish'); body.append('nonce', devNonce.value)
     body.append('post_id', postId()); body.append('use_ai', useAi() ? '1' : '0')
+    body.append('provider', provider()); body.append('model', model())
     try {
       const res = await fetch(ajaxurl, { method: 'POST', body, credentials: 'same-origin' })
       const data = await res.json()
@@ -924,6 +909,9 @@ function mh_social_ajax_guard(): int
     if ($postId <= 0 || ! current_user_can('edit_post', $postId)) {
         wp_send_json_error(['message' => 'Invalid post'], 400);
     }
+
+    mh_social_ai_requested(sanitize_key((string) ($_POST['provider'] ?? '')));
+    mh_social_ai_requested_model(sanitize_text_field(wp_unslash($_POST['model'] ?? '')));
 
     if (isset($_POST['custom_text'])) {
         $custom = sanitize_textarea_field(wp_unslash($_POST['custom_text']));

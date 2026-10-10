@@ -32,6 +32,8 @@
 	<exclude-pattern>*/public/*</exclude-pattern>
 	<exclude-pattern>*.blade.php</exclude-pattern>
 	<exclude-pattern>*/storage/*</exclude-pattern>
+	<!-- Bundled Hummel Ops / MH SEO modules keep their own text domains (hummel-ops, mh-seo). -->
+	<exclude-pattern>*/app/modules/*</exclude-pattern>
 	<exclude-pattern>*/dist*/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>

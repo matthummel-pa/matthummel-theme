@@ -303,7 +303,8 @@ function mh_bluesky_rule_compose(\WP_Post $post): string
  */
 function mh_bluesky_ai_compose(\WP_Post $post): ?string
 {
-    $token = mh_bluesky_ai_token();
+    $useProviders = function_exists(__NAMESPACE__.'\\mh_social_ai_complete') && mh_social_ai_available();
+    $token = $useProviders ? 'provider' : mh_bluesky_ai_token();
     if ($token === '') {
         return null;
     }
@@ -320,6 +321,12 @@ function mh_bluesky_ai_compose(\WP_Post $post): ?string
         ."Return ONLY the post text, no quotes or labels.\n\n"
         ."Title: {$title}\n"
         ."Summary: {$excerpt}";
+
+    if ($useProviders) {
+        $text = mh_social_ai_complete('You write short social posts for a WordPress developer blog.', $prompt, 300);
+
+        return $text === null ? null : mh_bluesky_trim_text($text);
+    }
 
     $res = wp_remote_post('https://api.openai.com/v1/chat/completions', [
         'timeout' => 30,
