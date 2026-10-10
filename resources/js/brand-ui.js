@@ -40,9 +40,10 @@ function initHeaderScroll() {
     return;
   }
   let ticking = false;
-  // Publish the real header height so the sticky On-this-page bar sits flush under it.
+  // Publish the real header height so the sticky On-this-page bar sits exactly
+  // under it. Re-measured whenever the header's box changes (fonts, wrap, zoom).
   const measure = () => {
-    const h = Math.round(header.getBoundingClientRect().height);
+    const h = Math.ceil(header.getBoundingClientRect().height);
     if (h > 0) {
       document.documentElement.style.setProperty('--header-h', `${h}px`);
     }
@@ -53,8 +54,15 @@ function initHeaderScroll() {
   };
   measure();
   update();
-  window.addEventListener('resize', measure, { passive: true });
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(measure).observe(header);
+  } else {
+    window.addEventListener('resize', measure, { passive: true });
+  }
   window.addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(measure);
+  }
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(update);
