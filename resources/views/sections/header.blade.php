@@ -42,10 +42,8 @@
         type="button"
         class="theme-toggle"
         data-theme-toggle
-        aria-pressed="false"
-        aria-label="{{ esc_attr__('Switch to light mode', 'sage') }}"
-        data-label-to-light="{{ esc_attr__('Switch to light mode', 'sage') }}"
-        data-label-to-dark="{{ esc_attr__('Switch to dark mode', 'sage') }}"
+        aria-pressed="true"
+        aria-label="{{ esc_attr__('Dark mode', 'sage') }}"
       >
         <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">{!! \App\mh_svg_icon('sun', 16) !!}</span>
         <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">{!! \App\mh_svg_icon('moon', 16) !!}</span>

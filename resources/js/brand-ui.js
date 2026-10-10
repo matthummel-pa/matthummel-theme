@@ -10,9 +10,8 @@ function isDark() {
 }
 
 function syncToggle(button) {
-  const dark = isDark();
-  button.setAttribute('aria-pressed', dark ? 'false' : 'true');
-  button.setAttribute('aria-label', dark ? button.dataset.labelToLight : button.dataset.labelToDark);
+  // Fixed label ("Dark mode") + aria-pressed, per the ARIA APG toggle-button pattern.
+  button.setAttribute('aria-pressed', isDark() ? 'true' : 'false');
 }
 
 function initThemeToggle() {
