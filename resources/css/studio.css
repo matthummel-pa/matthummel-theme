@@ -6132,9 +6132,9 @@ html:not(.mh-dark) .header-avail:hover .mh-avail__emoji { color: #fff !important
 /* ── "On this page" sub-nav — the single source of truth for its colors (layout
    lives in portfolio.css ~2499 and the header-flush lines above). Light: deep
    violet type on white, violet tint on hover, violet-700→900 fill when active.
-   Dark: violet-900 tint with light type, blue→violet-700 fill when active. Every
-   selector is (0,3,1) or higher and sits last in the cascade, so nothing earlier
-   can win and nothing here needs !important. Retired: the blue (3.6.4x), navy,
+   Dark: violet-900 tint with light type, blue→violet-700 fill when active. The
+   block sits last in the cascade (base lines are (0,1,1)/(0,2,1), states (0,3,1)+),
+   so nothing earlier can win and nothing here needs !important. Retired: the blue (3.6.4x), navy,
    gradient and 3.6.56 generations. ── */
 html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--violet-100); }
 html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .18); }
@@ -6185,8 +6185,8 @@ html.mh-dark .code-skills-group:hover, html.mh-dark .code-skills__tile:hover, ht
 html.mh-dark .h-faq__item[open], html.mh-dark .ty-browse-card:hover, html.mh-dark .resources-card:hover { border-color: var(--lime-300) !important; }
 
 /* Headings inside those cards carry the word gradient (fit-content so the gradient spans the words, not the row) */
-.code-skills-group__title, .resume-card h3, .repo-card h3, .h-fit__col-label, .about-work-type__title,
-.ty-browse-card__title, .resources-card__name, .h-glance__card h3, .about-aside-card h3 {
+.code-skills-group__title, .resume-card h3, .repo-card h3, .about-work-type__title,
+.ty-browse-card__title, .resources-card__name {
   background-image: var(--grad-head-light);
   -webkit-background-clip: text;
   background-clip: text;
@@ -6196,9 +6196,9 @@ html.mh-dark .h-faq__item[open], html.mh-dark .ty-browse-card:hover, html.mh-dar
   max-width: 100%;
 }
 html.mh-dark .code-skills-group__title, html.mh-dark .resume-card h3, html.mh-dark .repo-card h3,
-html.mh-dark .h-fit__col-label, html.mh-dark .about-work-type__title, html.mh-dark .ty-browse-card__title,
-html.mh-dark .resources-card__name, html.mh-dark .h-glance__card h3, html.mh-dark .about-aside-card h3 { background-image: var(--grad-head-dark); }
-.repo-card h3 a, .resources-card__name a, .about-aside-card h3 a { color: inherit; -webkit-text-fill-color: inherit; }
+html.mh-dark .about-work-type__title, html.mh-dark .ty-browse-card__title,
+html.mh-dark .resources-card__name { background-image: var(--grad-head-dark); }
+.repo-card h3 a, .resources-card__name a { color: inherit; -webkit-text-fill-color: inherit; }
 /* FAQ questions keep their chevron row, so the gradient runs over the first ~24rem of the line */
 .h-faq__q, .faq-list summary {
   background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 24rem, var(--violet-700) 100%);
@@ -6214,13 +6214,18 @@ html.mh-dark .h-faq__q, html.mh-dark .faq-list summary {
 
 /* Index and count numbers in lime (lime-700 on light surfaces keeps 4.5:1) */
 html:not(.mh-dark) .about-svc-card__n, html:not(.mh-dark) .repo-card__index, html:not(.mh-dark) .code-skills-group__count,
-html:not(.mh-dark) .h-process__num, html:not(.mh-dark) .code-pulse__stat dd, html:not(.mh-dark) .resources-card__n { color: var(--lime-700); -webkit-text-fill-color: currentColor; }
+html:not(.mh-dark) .h-process__num, html:not(.mh-dark) .code-pulse__stat dd { color: var(--lime-700); -webkit-text-fill-color: currentColor; }
 html.mh-dark .about-svc-card__n, html.mh-dark .repo-card__index, html.mh-dark .code-skills-group__count,
-html.mh-dark .h-process__num, html.mh-dark .code-pulse__stat dd, html.mh-dark .resources-card__n { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+html.mh-dark .h-process__num, html.mh-dark .code-pulse__stat dd { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
 
 /* Accordion chevron in lime */
-.h-faq__q::after, .faq-list summary::after { border-right-color: var(--lime-700); border-bottom-color: var(--lime-700); }
-html.mh-dark .h-faq__q::after, html.mh-dark .faq-list summary::after { border-right-color: var(--lime-300); border-bottom-color: var(--lime-300); }
+.h-faq__q::after, .h-faq__item[open] > .h-faq__q::after,
+.faq-list summary::after, .faq-list details[open] > summary::after { border-right-color: var(--lime-700); border-bottom-color: var(--lime-700); }
+html.mh-dark .h-faq__q::after, html.mh-dark .h-faq__item[open] > .h-faq__q::after,
+html.mh-dark .faq-list summary::after, html.mh-dark .faq-list details[open] > summary::after { border-right-color: var(--lime-300); border-bottom-color: var(--lime-300); }
+/* Earlier FAQ generations zero the border on hover/open; restore it so the lime border holds */
+.h-faq__item:hover, .h-faq__item[open],
+html.mh-dark .h-faq__item:hover, html.mh-dark .h-faq__item[open] { border-width: 1px !important; border-style: solid !important; }
 
 /* ── 3.6.57 · Sidebars (post sidebar, journal + Woo asides) follow the card recipe:
    violet/white (light) or purple-gradient (dark) surface, lime border, lime top
