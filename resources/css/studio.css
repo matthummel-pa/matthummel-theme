@@ -2388,8 +2388,8 @@ html.mh-dark .footer-follow .footer-follow__email:focus-visible {
   .footer-bottom .footer-stack { text-align: center; }
 }
 
-a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
-a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn),
+a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn) {
   color: var(--color-accent-hover);
 }
 .btn:hover:not(.btn-outline):not(.btn-ghost):not(.btn-on-dark),
@@ -2448,8 +2448,8 @@ html.mh-dark .soc-list--compact .soc-link:focus-visible {
   color: var(--blue-400);
   background: transparent;
 }
-html.mh-dark a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail),
-html.mh-dark a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail) {
+html.mh-dark a:hover:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn),
+html.mh-dark a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn) {
   color: var(--blue-400);
 }
 
@@ -2457,8 +2457,8 @@ html.mh-dark a:focus-visible:not(.btn):not(.soc-link):not(.header-avail):not(.fo
 :root {
   --color-accent-hover: var(--blue-400);
 }
-a:hover:not(.btn):not(.header-avail):not(.footer-avail),
-a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail) {
+a:hover:not(.btn):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn),
+a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn) {
   color: var(--blue-400);
 }
 .site-footer a:hover:not(.btn):not(.header-avail):not(.footer-avail),
@@ -2526,8 +2526,8 @@ a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail) {
   background: var(--blue-400);
   color: #fff;
 }
-html.mh-dark a:hover:not(.btn):not(.header-avail):not(.footer-avail),
-html.mh-dark a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail),
+html.mh-dark a:hover:not(.btn):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn),
+html.mh-dark a:focus-visible:not(.btn):not(.header-avail):not(.footer-avail):not(.side-author__btn):not(.side-subscribe__btn),
 html.mh-dark .site-footer a:hover:not(.btn):not(.header-avail):not(.footer-avail),
 html.mh-dark .site-footer .soc-link:hover {
   color: var(--blue-300);
