@@ -13,7 +13,7 @@ if (defined('HOPS_VERSION')) {
     return;
 }
 
-define('HOPS_VERSION', '2.3.0');
+define('HOPS_VERSION', '2.5.0');
 define('HOPS_DIR', trailingslashit(__DIR__));
 define('HOPS_URL', trailingslashit(get_theme_file_uri('app/modules/hummel-ops')));
 
