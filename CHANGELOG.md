@@ -3,7 +3,9 @@
 ## 3.6.51 — Dark blue brand, light/dark switcher, floating header
 
 - The site is dark by default, taking its palette from the MCP Adapter featured image: near-black navy canvas, azure buttons and links, cyan mono eyebrows with a connector dash, green "kind" chips, and a hint of indigo in the glows. A sun/moon switcher in the header flips to a light blue/gray mode; the choice is saved in `localStorage` (`mh-theme`) and applied before paint.
-- Headings are big and bold (900) and two-tone: white → azure/cyan on dark surfaces, navy → azure on light.
+- Headings are big and bold (900). The last two words (three on long headings) carry the accent — blue → cyan → lime on dark, blue → violet on light — via a `<span class="hd-accent">` that `brand-ui.js` wraps at load.
+- Footer column headers are larger: lime on the dark footer, deep purple on the light-mode footer (which is now a light violet-tinted surface instead of navy).
+- Grid cards (projects, posts, services, process, resume, FAQ, stats) sit on a purplish gradient with a violet border and a lime top edge; hover turns the edge cyan and the border lime.
 - The header floats transparent over every hero and gains a blurred background once the page scrolls (`.site-header.is-scrolled`). Heroes, including post heroes, are dark in both modes so the header always reads.
 - Page sections and card grids fade and rise into view on scroll with a short stagger (`data-reveal`); `prefers-reduced-motion` shows everything at once.
 - Hero text sits straight on the hero — no panel box — and heroes end in a 4px blue→cyan→indigo edge. The waves are gone.
