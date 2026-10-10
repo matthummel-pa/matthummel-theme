@@ -6009,8 +6009,7 @@ html.mh-dark .site-header { min-height: 0; }
    and Languages card came out light-gray with light text. ── */
 html.mh-dark .code-sync,
 html.mh-dark .code-recent,
-html.mh-dark .code-langs,
-html.mh-dark .code-breakdown li {
+html.mh-dark .code-langs {
   background: color-mix(in srgb, var(--blue-800) 78%, var(--violet-900) 22%);
   border-color: color-mix(in srgb, var(--violet-400) 45%, transparent);
   color: var(--color-text);
@@ -6031,3 +6030,79 @@ html.mh-dark .code-langs__intro,
 html.mh-dark .code-recent__desc,
 html.mh-dark .code-recent__meta { color: var(--color-text-secondary); }
 html.mh-dark .code-langs__n { color: var(--color-text-muted); }
+
+/* ── 3.6.54 · Dark mode: every lime button hovers to the blue→violet gradient.
+   Some buttons (repo "Live demo", journal tools, search) had later or more
+   specific hover rules in portfolio.css; studio.css is the last-win skin, so
+   these are !important on purpose. ── */
+html.mh-dark .btn:hover,
+html.mh-dark .btn:focus-visible,
+html.mh-dark .btn-outline:hover,
+html.mh-dark .btn-outline:focus-visible,
+html.mh-dark .btn-ghost:hover,
+html.mh-dark .btn-ghost:focus-visible,
+html.mh-dark .repo-card__demo:hover,
+html.mh-dark .repo-card__demo:focus-visible,
+html.mh-dark .code-block__cta:hover,
+html.mh-dark .code-block__cta:focus-visible,
+html.mh-dark .search-form button:hover,
+html.mh-dark .search-form button:focus-visible,
+html.mh-dark .mh-popout-cta:hover,
+html.mh-dark .mh-popout-cta:focus-visible,
+html.mh-dark .header-avail:hover,
+html.mh-dark .header-avail:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%) !important; /* violet-700 keeps white type at 7:1 */
+  border-color: var(--violet-700) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, .22), 0 1px 0 rgba(255, 255, 255, .15) inset, 0 14px 30px -12px rgba(139, 92, 246, .8);
+}
+html.mh-dark .btn:hover svg,
+html.mh-dark .btn:focus-visible svg,
+html.mh-dark .header-avail:hover .header-avail__label,
+html.mh-dark .header-avail:hover .mh-avail__emoji { color: #fff !important; }
+
+/* ── 3.6.54 · Dark mode: text links hover/focus to lime with a lime underline ── */
+html.mh-dark { --color-accent-hover: var(--lime-300); }
+html.mh-dark .prose a:not(.btn):not(.wp-block-button__link):hover,
+html.mh-dark .prose a:not(.btn):not(.wp-block-button__link):focus-visible,
+html.mh-dark .entry-content a:not(.btn):not(.wp-block-button__link):hover,
+html.mh-dark .entry-content a:not(.btn):not(.wp-block-button__link):focus-visible,
+html.mh-dark .write-tool-link:hover,
+html.mh-dark .write-tool-link:focus-visible,
+html.mh-dark main p a:not(.btn):hover,
+html.mh-dark main p a:not(.btn):focus-visible,
+html.mh-dark .about-text-link:hover,
+html.mh-dark .about-text-link:focus-visible,
+html.mh-dark .about-aside-card__link:hover,
+html.mh-dark .about-aside-card__link:focus-visible,
+html.mh-dark .about-story__links a:hover,
+html.mh-dark .about-story__links a:focus-visible,
+html.mh-dark .post-card-more:hover,
+html.mh-dark .post-card-more:focus-visible,
+html.mh-dark .h-text-arrow:hover,
+html.mh-dark .h-text-arrow:focus-visible,
+html.mh-dark .ty-browse-card__link:hover,
+html.mh-dark .ty-browse-card__link:focus-visible,
+html.mh-dark .who-card__cta:hover,
+html.mh-dark .who-card__cta:focus-visible,
+html.mh-dark .post-author-bio__links a:hover,
+html.mh-dark .post-author-bio__links a:focus-visible,
+html.mh-dark .post-nav__link:hover,
+html.mh-dark .post-nav__link:focus-visible,
+html.mh-dark .pf-docs-ext-link:hover,
+html.mh-dark .pf-docs-ext-link:focus-visible,
+html.mh-dark .work-footer-links a:hover,
+html.mh-dark .work-footer-links a:focus-visible,
+html.mh-dark .h-faq__a a:hover,
+html.mh-dark .h-faq__a a:focus-visible,
+html.mh-dark .site-footer .footer-nav a:hover,
+html.mh-dark .site-footer .footer-nav a:focus-visible,
+html.mh-dark .site-footer .footer-legal-links a:hover,
+html.mh-dark .site-footer .footer-legal-links a:focus-visible {
+  color: var(--lime-300) !important;
+  text-decoration-line: underline !important;
+  text-decoration-color: var(--lime-400) !important;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
