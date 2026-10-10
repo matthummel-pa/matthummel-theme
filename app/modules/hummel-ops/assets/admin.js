@@ -194,33 +194,95 @@
 		return pill(fmtDay(due), 'neutral');
 	}
 
-	function taskRow(item, today, onDone) {
+	function priTone(p) {
+		return p === 'Critical' ? 'bad' : (p === 'High' ? 'warn' : (p === 'Medium' ? 'info' : 'neutral'));
+	}
+
+	function inlineErr(li, msg) {
+		var old = li.querySelector('.hops-inline-err');
+		if (old) { old.remove(); }
+		li.appendChild(el('span', { 'class': 'hops-inline-err' }, msg));
+	}
+
+	function updateTask(item, fields, li, rich) {
+		li.classList.add('is-busy');
+		var data = Object.assign({ provider: item.provider, id: item.id }, fields);
+		return post('hops_todo_update', data).then(function (res) {
+			if (res.success) { rich.onChange(); return; }
+			li.classList.remove('is-busy');
+			inlineErr(li, ((res.data && res.data.message) || 'Could not save this change') + '.');
+		}).catch(function () {
+			li.classList.remove('is-busy');
+			inlineErr(li, 'Network error. The change was not saved.');
+		});
+	}
+
+	function rowActions(item, li, rich) {
+		var box = el('span', { 'class': 'hops-actions' });
+		if (item.status === 'done') {
+			var re = el('button', { type: 'button', 'class': 'button button-small' }, 'Reopen');
+			re.addEventListener('click', function () { updateTask(item, { status: 'todo' }, li, rich); });
+			box.appendChild(re);
+			return box;
+		}
+		var go = el('button', { type: 'button', 'class': 'button button-small' }, item.status === 'progress' ? 'Pause' : 'Start');
+		go.addEventListener('click', function () { updateTask(item, { status: item.status === 'progress' ? 'todo' : 'progress' }, li, rich); });
+		box.appendChild(go);
+		var pris = (rich.options[item.provider] && rich.options[item.provider].priority) || [];
+		if (pris.length) {
+			var sel = el('select', { 'class': 'hops-pri-select', 'aria-label': 'Priority for ' + item.title });
+			sel.appendChild(el('option', { value: '' }, 'No priority'));
+			pris.forEach(function (p) {
+				var o = el('option', { value: p }, p);
+				if (p === item.priority) { o.selected = true; }
+				sel.appendChild(o);
+			});
+			sel.addEventListener('change', function () { updateTask(item, { priority: sel.value }, li, rich); });
+			box.appendChild(sel);
+		}
+		return box;
+	}
+
+	function taskRow(item, today, onDone, rich) {
 		var li = el('li', { 'class': 'hops-task', 'data-provider': item.provider });
-		var chk = el('button', { type: 'button', 'class': 'hops-check', 'aria-label': 'Mark done: ' + item.title });
-		chk.addEventListener('click', function () {
-			chk.disabled = true;
-			li.classList.add('is-busy');
-			post('hops_todo_done', { provider: item.provider, id: item.id }).then(function (res) {
-				if (res.success) {
-					li.classList.add('is-done');
-					setTimeout(function () { li.remove(); if (onDone) { onDone(); } }, 300);
-				} else {
+		var isDone = item.status === 'done';
+		li.setAttribute('data-pri', item.priority || '');
+		li.setAttribute('data-status', item.status || 'todo');
+		var chk;
+		if (isDone) {
+			chk = el('span', { 'class': 'hops-tick', 'aria-hidden': 'true' }, '\u2713');
+		} else {
+			chk = el('button', { type: 'button', 'class': 'hops-check', 'aria-label': 'Mark done: ' + item.title });
+			chk.addEventListener('click', function () {
+				chk.disabled = true;
+				li.classList.add('is-busy');
+				post('hops_todo_done', { provider: item.provider, id: item.id }).then(function (res) {
+					if (res.success) {
+						li.classList.add('is-done');
+						setTimeout(function () { li.remove(); if (onDone) { onDone(); } }, 300);
+					} else {
+						chk.disabled = false;
+						li.classList.remove('is-busy');
+						inlineErr(li, ((res.data && res.data.message) || 'Could not complete this task') + '. Try again.');
+					}
+				}).catch(function () {
 					chk.disabled = false;
 					li.classList.remove('is-busy');
-					li.appendChild(el('span', { 'class': 'hops-inline-err' }, ((res.data && res.data.message) || 'Could not complete this task') + '. Try again.'));
-				}
-			}).catch(function () {
-				chk.disabled = false;
-				li.classList.remove('is-busy');
-				li.appendChild(el('span', { 'class': 'hops-inline-err' }, 'Network error. Try again.'));
+					inlineErr(li, 'Network error. Try again.');
+				});
 			});
-		});
+		}
 		var title = el('span', { 'class': 'hops-task-title' });
+		if (isDone) { li.classList.add('is-finished'); }
 		if (item.url) { title.appendChild(link(item.url, item.title)); } else { title.textContent = item.title; }
 		li.append(chk, title);
-		var dl = dueLabel(item.due, today);
+		if (item.status === 'progress') { li.appendChild(pill('In progress', 'warn')); }
+		if (item.priority) { li.appendChild(pill(item.priority, priTone(item.priority))); }
+		if (item.type) { li.appendChild(pill(item.type, 'neutral')); }
+		var dl = isDone ? null : dueLabel(item.due, today);
 		if (dl) { li.appendChild(dl); }
 		li.appendChild(pill(item.provider_label, 'info'));
+		if (rich && item.can_edit) { li.appendChild(rowActions(item, li, rich)); }
 		return li;
 	}
 
@@ -246,14 +308,14 @@
 		}).filter(function (g) { return g.items.length; });
 	}
 
-	function drawGroups(box, groups, today, onDone) {
+	function drawGroups(box, groups, today, onDone, rich) {
 		groups.forEach(function (g) {
 			var sec = el('div', { 'class': 'hops-group' });
 			var h = el('h3', {}, g.title + ' ');
 			h.appendChild(pill(String(g.items.length), g.tone));
 			sec.appendChild(h);
 			var ul = el('ul', { 'class': 'hops-tasklist' });
-			g.items.forEach(function (i) { ul.appendChild(taskRow(i, today, onDone)); });
+			g.items.forEach(function (i) { ul.appendChild(taskRow(i, today, onDone, rich)); });
 			sec.appendChild(ul);
 			box.appendChild(sec);
 		});
@@ -273,51 +335,156 @@
 		var status = root.querySelector('.hops-status');
 		var errBox = root.querySelector('.hops-errors');
 		var form = root.querySelector('.hops-task-form');
-		var chips = root.querySelectorAll('.hops-chip');
-		var filter = '';
-		var cache = { items: [], today: '' };
+		var appChips = root.querySelectorAll('.hops-app');
+		var viewChips = root.querySelectorAll('.hops-view');
+		var qBox = root.querySelector('.hops-q');
+		var fPri = root.querySelector('.hops-f-pri');
+		var fType = root.querySelector('.hops-f-type');
+		var sortSel = root.querySelector('.hops-sort');
+		var typeWrap = root.querySelector('.hops-type-wrap');
+		var app = '';
+		var view = 'open';
+		var cache = { items: [], today: '', options: {}, done: null };
+		var PRI = ['Critical', 'High', 'Medium', 'Low'];
+
+		function stat(name, v) {
+			var n = root.querySelector('[data-stat="' + name + '"]');
+			if (n) { n.textContent = v; }
+		}
+
+		function inView(i, v) {
+			if (v === 'today') { return i.due === cache.today; }
+			if (v === 'overdue') { return !!i.due && i.due < cache.today; }
+			if (v === 'progress') { return i.status === 'progress'; }
+			return true;
+		}
 
 		function counts() {
-			chips.forEach(function (c) {
-				var n = cache.items.filter(function (i) { return !c.dataset.filter || i.provider === c.dataset.filter; }).length;
-				c.querySelector('.n').textContent = n;
+			var t = cache.today;
+			stat('open', cache.items.length);
+			stat('overdue', cache.items.filter(function (i) { return i.due && i.due < t; }).length);
+			stat('today', cache.items.filter(function (i) { return i.due === t; }).length);
+			stat('progress', cache.items.filter(function (i) { return i.status === 'progress'; }).length);
+			appChips.forEach(function (c) {
+				var n = c.querySelector('.n');
+				if (n) { n.textContent = cache.items.filter(function (i) { return i.provider === c.dataset.filter; }).length; }
 			});
+			viewChips.forEach(function (c) {
+				var n = c.querySelector('.n');
+				if (n) { n.textContent = cache.items.filter(function (i) { return inView(i, c.dataset.view); }).length; }
+			});
+		}
+
+		function union(key) {
+			var seen = [];
+			Object.keys(cache.options || {}).forEach(function (p) {
+				((cache.options[p] || {})[key] || []).forEach(function (v) { if (seen.indexOf(v) < 0) { seen.push(v); } });
+			});
+			return seen;
+		}
+
+		function fill(sel, first, values) {
+			var keep = sel.value;
+			sel.textContent = '';
+			sel.appendChild(el('option', { value: '' }, first));
+			values.forEach(function (v) { sel.appendChild(el('option', { value: v }, v)); });
+			sel.value = values.indexOf(keep) >= 0 ? keep : '';
+		}
+
+		function syncPickers() {
+			var o = cache.options[form.provider.value] || {};
+			fill(form.priority, 'None', o.priority || []);
+			form.priority.parentNode.hidden = !(o.priority || []).length;
+			fill(form.type, 'None', o.types || []);
+			typeWrap.hidden = !(o.types || []).length;
+			fill(fPri, 'Any priority', union('priority'));
+			var types = union('types');
+			fill(fType, 'Any type', types);
+			fType.hidden = !types.length;
+		}
+
+		function matches(i) {
+			var q = qBox.value.trim().toLowerCase();
+			if (app && i.provider !== app) { return false; }
+			if (q && (i.title || '').toLowerCase().indexOf(q) < 0) { return false; }
+			if (fPri.value && i.priority !== fPri.value) { return false; }
+			if (fType.value && i.type !== fType.value) { return false; }
+			return true;
+		}
+
+		function groupByPriority(items) {
+			return PRI.concat(['']).map(function (p) {
+				return {
+					title: p || 'No priority',
+					tone: p ? priTone(p) : 'neutral',
+					items: items.filter(function (i) { return (i.priority || '') === p; })
+				};
+			}).filter(function (g) { return g.items.length; });
 		}
 
 		function draw() {
 			groupsBox.textContent = '';
 			counts();
-			var shown = cache.items.filter(function (i) { return !filter || i.provider === filter; });
+			var rich = { options: cache.options, onChange: function () { refresh(true); } };
+			var shown;
+			var groups;
+			if (view === 'done') {
+				if (cache.done === null) { groupsBox.hidden = true; status.textContent = 'Loading finished tasks…'; return; }
+				shown = cache.done.filter(matches);
+				groups = shown.length ? [{ title: 'Recently done', tone: 'ok', items: shown }] : [];
+			} else {
+				shown = cache.items.filter(function (i) { return inView(i, view) && matches(i); });
+				groups = sortSel.value === 'priority' ? groupByPriority(shown) : groupTasks(shown, cache.today, true);
+			}
 			if (!shown.length) {
 				groupsBox.hidden = true;
-				status.textContent = filter ? 'No open tasks in this app.' : 'No open tasks. Add one above to start your list.';
+				status.textContent = cache.items.length || view === 'done'
+					? 'No tasks match these filters.'
+					: 'No open tasks. Add one above to start your list.';
 				return;
 			}
 			status.textContent = '';
 			groupsBox.hidden = false;
-			drawGroups(groupsBox, groupTasks(shown, cache.today, true), cache.today, function () {
-				cache.items = cache.items.filter(function (x) { return x.__gone !== true; });
-				load(true);
-			});
+			drawGroups(groupsBox, groups, cache.today, function () { refresh(true); }, rich);
 		}
 
-		function load(quiet) {
+		function loadDone() {
+			post('hops_todos_done_list').then(function (res) {
+				cache.done = res.success ? res.data.items : [];
+				draw();
+			}).catch(function () { cache.done = []; draw(); });
+		}
+
+		function refresh(quiet) {
 			if (!quiet) { status.textContent = 'Loading tasks…'; }
 			post('hops_todos_list').then(function (res) {
 				if (!res.success) { status.textContent = 'Tasks did not load. Reload the page to try again.'; return; }
-				cache = res.data;
+				cache.items = res.data.items;
+				cache.today = res.data.today;
+				cache.options = res.data.options || {};
 				showErrors(errBox, res.data.errors);
-				draw();
+				syncPickers();
+				if (view === 'done') { cache.done = null; draw(); loadDone(); } else { draw(); }
 			}).catch(function () { status.textContent = 'Network error while loading tasks. Reload the page to try again.'; });
 		}
 
-		chips.forEach(function (c) {
+		function press(list, chip) {
+			list.forEach(function (x) { x.setAttribute('aria-pressed', x === chip ? 'true' : 'false'); });
+		}
+
+		appChips.forEach(function (c) {
+			c.addEventListener('click', function () { app = c.dataset.filter; press(appChips, c); draw(); });
+		});
+		viewChips.forEach(function (c) {
 			c.addEventListener('click', function () {
-				filter = c.dataset.filter;
-				chips.forEach(function (x) { x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); });
-				draw();
+				view = c.dataset.view;
+				press(viewChips, c);
+				if (view === 'done') { cache.done = null; draw(); loadDone(); } else { draw(); }
 			});
 		});
+		[fPri, fType, sortSel].forEach(function (n) { n.addEventListener('change', draw); });
+		qBox.addEventListener('input', draw);
+		form.provider.addEventListener('change', syncPickers);
 
 		form.addEventListener('submit', function (e) {
 			e.preventDefault();
@@ -326,13 +493,17 @@
 			post('hops_todo_add', {
 				title: form.title.value,
 				due: form.due.value,
+				priority: form.priority.value,
+				type: form.type.value,
 				provider: form.provider.value
 			}).then(function (res) {
 				if (res.success) {
 					form.title.value = '';
 					form.due.value = '';
+					form.priority.value = '';
+					form.type.value = '';
 					form.title.focus();
-					load(true);
+					refresh(true);
 				} else {
 					status.textContent = ((res.data && res.data.message) || 'The task was not added') + '.';
 				}
@@ -341,7 +512,7 @@
 			}).finally(function () { btn.disabled = false; });
 		});
 
-		load();
+		refresh();
 	}
 
 	/* ---------- Today ---------- */
