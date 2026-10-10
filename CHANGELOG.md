@@ -1,5 +1,9 @@
 # Changelog
 
+## Newsletter plugin 1.11.4 — Keep pages that share a utility slug
+
+- A draft, a child page, or a page with its own writing is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.
+- Only an extra top-level page whose content is still that shortcode is removed.
 ## 3.6.48 — Larger project cards
 
 - `/projects/` cards sit in a two-column grid with a taller shot, a larger title, and more padding. List view keeps a wider thumbnail.

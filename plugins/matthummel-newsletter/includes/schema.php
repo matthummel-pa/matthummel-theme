@@ -515,7 +515,7 @@ function ensure_page(string $slug, string $title, string $shortcode, string $tem
 
 function reuse_owned_page(\WP_Post $existing, string $slug, string $shortcode, string $template): int
 {
-    $ownerId = collapse_same_slug($slug);
+    $ownerId = collapse_same_slug($slug, $shortcode);
     $owner = get_post($ownerId);
     if (! $owner instanceof \WP_Post) {
         $owner = $existing;
@@ -689,10 +689,12 @@ function insert_lock_row(string $key): bool
 }
 
 /**
- * Keep the oldest page with this exact slug and delete the rest.
+ * Keep one top-level copy of this shortcode and delete only extra copies.
+ * A draft, a child page, or a page with its own content is left alone.
  */
-function collapse_same_slug(string $slug): int
+function collapse_same_slug(string $slug, string $shortcode): int
 {
+    $shortcode = trim($shortcode);
     $found = get_posts([
         'post_type' => 'page',
         'name' => $slug,
@@ -706,6 +708,9 @@ function collapse_same_slug(string $slug): int
 
     $winner = 0;
     foreach ($found as $page) {
+        if (! $page instanceof \WP_Post || ! is_shortcode_clone($page, $shortcode)) {
+            continue;
+        }
         if ($winner === 0) {
             $winner = (int) $page->ID;
 
@@ -715,7 +720,28 @@ function collapse_same_slug(string $slug): int
         wp_delete_post((int) $page->ID, true);
     }
 
-    return $winner;
+    if ($winner > 0) {
+        return $winner;
+    }
+
+    foreach ($found as $page) {
+        if ($page instanceof \WP_Post && (int) $page->post_parent === 0) {
+            return (int) $page->ID;
+        }
+    }
+
+    $first = $found[0] ?? null;
+
+    return $first instanceof \WP_Post ? (int) $first->ID : 0;
+}
+
+function is_shortcode_clone(\WP_Post $page, string $shortcode): bool
+{
+    if ((int) $page->post_parent !== 0 || $shortcode === '') {
+        return false;
+    }
+
+    return trim((string) $page->post_content) === $shortcode;
 }
 
 function release_named_lock(string $key): void

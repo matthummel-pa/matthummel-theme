@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.11.3
+Stable tag: 1.11.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,11 +57,14 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 == Changelog ==
 
+= 1.11.4 =
+* A draft, a child page, or a page with its own content is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.
+* Only an extra top-level page whose content is still that shortcode is removed.
 = 1.11.3 =
 * Next, Back, and Send copy the visual letter into the draft before the form is posted. A second edit during autosave is kept. The Text tab is left as written.
 = 1.11.2 =
 * A send that stops halfway keeps going. The next batch is queued again, and one address that cannot be mailed does not cancel the rest of the list.
-= 1.11.1 =
+= 1.11.4 =
 * Page setup waits until WordPress has finished booting, so an upgrade no longer takes the site down.
 
 = 1.11.0 =
