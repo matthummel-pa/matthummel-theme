@@ -5758,3 +5758,31 @@ html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg,
 html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; }
 .brand:hover .brand-name,
 .brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
+
+/* ── Lime button hover: a notch deeper, darker purple type, soft ring ── */
+.btn:hover,
+.btn:focus-visible,
+.page-header .btn:hover,
+.h-hero .btn:hover,
+.site-footer .btn:hover,
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible,
+html.mh-dark .btn:hover,
+html.mh-dark .btn-on-dark:hover,
+.btn-hire:hover,
+.mh-popout-cta:hover,
+.search-form button:hover,
+.header-avail:hover,
+.header-avail:focus-visible {
+  background: linear-gradient(180deg, var(--lime-400) 0%, var(--lime-500) 100%);
+  border-color: var(--lime-700);
+  color: #3b0764;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, .22), 0 1px 0 rgba(255, 255, 255, .25) inset, 0 14px 30px -12px rgba(132, 204, 22, .8);
+  transform: translateY(-1px);
+}
+.btn:active,
+.btn-on-dark:active,
+.header-avail:active { transform: translateY(0); box-shadow: 0 0 0 3px rgba(163, 230, 53, .22), 0 6px 14px -8px rgba(132, 204, 22, .7); }
+.btn:hover svg,
+.btn-on-dark:hover svg,
+.header-avail:hover .header-avail__label { color: #3b0764; }
