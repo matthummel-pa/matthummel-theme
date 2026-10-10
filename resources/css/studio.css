@@ -508,41 +508,6 @@ body {
   border: 0;
 }
 
-.h-page-nav {
-  border-bottom: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-canvas) 90%, #fff);
-}
-@media (max-width: 900px) {
-  .h-page-nav,
-  .pf-product-toc {
-    top: 0;
-  }
-  .admin-bar .h-page-nav,
-  .admin-bar .pf-product-toc {
-    top: 46px;
-  }
-}
-
-.h-page-nav__pill {
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--white);
-}
-
-.h-page-nav__pill:hover,
-.h-page-nav__pill.is-active {
-  background: var(--blue-50);
-  border-color: var(--blue-200);
-  color: var(--blue-800);
-}
-
-.h-page-nav__arrow:hover:not(:disabled),
-.h-page-nav__arrow:focus-visible:not(:disabled) {
-  color: var(--blue-400);
-  border-color: var(--blue-400);
-  background: var(--blue-50);
-}
-
 .search-form input[type="search"],
 .contact-form input,
 .contact-form textarea,
@@ -2946,16 +2911,7 @@ a.filter-pill.is-active:focus-visible {
   color: #fff !important;
   border-color: var(--blue-700) !important;
 }
-a.h-page-nav__pill.is-active,
-a.h-page-nav__pill[aria-current="true"],
-a.h-page-nav__pill.is-active:hover,
-a.h-page-nav__pill[aria-current="true"]:hover,
-a.h-page-nav__pill.is-active:focus-visible,
-a.h-page-nav__pill[aria-current="true"]:focus-visible {
-  background: var(--blue-700) !important;
-  color: #fff !important;
-  border-color: var(--blue-700) !important;
-}
+
 html.mh-dark .site-header .header-nav-list a:hover,
 html.mh-dark .site-header .header-nav-list a:focus-visible {
   background: var(--blue-800) !important;
@@ -3103,11 +3059,7 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"]:focus-visible 
   height: 100%;
   fill: currentColor;
 }
-.h-hero.h-hero--photo + .h-page-nav,
-.page-header.page-header--photo + .h-page-nav {
-  background: var(--white, #fff);
-  border-top: 0;
-}
+
 .page-header-split__aside,
 .page-header--split .h-hero-illu {
   display: none !important;
@@ -3357,7 +3309,6 @@ html.mh-dark .project-feat-grid > .project-feat::before {
 .footer-follow .mhn-signup-compact .mhn-compose .btn {
   width: 100%;
 }
-
 
 /* ── 3.6.44 — Project landing page (hero proof, sections, story rail, under the hood) ── */
 .project-stage--landing {
@@ -4167,14 +4118,6 @@ html.mh-dark .h-band--tint { background: #0f172a; border-color: #243041; }
 .code-practice-shell,
 .code-docs-shell { background: transparent; }
 
-/* ── On this page pills ───────────────────────────────────────────────── */
-.h-page-nav { background: color-mix(in srgb, #fff 90%, transparent); border-bottom: 1px solid var(--gray-200); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-html.mh-dark .h-page-nav { background: color-mix(in srgb, #0b1220 90%, transparent); border-bottom-color: #243041; }
-.h-page-nav__pill { border: 1px solid var(--gray-200); background: #fff; color: var(--gray-700); font-weight: 600; }
-.h-page-nav__pill:hover { border-color: var(--blue-300); background: var(--blue-50); color: var(--blue-700); }
-.h-page-nav__pill.is-active { background: var(--blue-800); border-color: var(--blue-800); color: #fff; }
-html.mh-dark .h-page-nav__pill { background: #141c28; border-color: #243041; color: #c5d0de; }
-
 /* ── Cards: white, hairline, soft lift ────────────────────────────────── */
 .about-svc-card,
 .repo-card,
@@ -4710,7 +4653,6 @@ html.mh-dark .h-hero__panel {
 .about-services-note a { color: var(--blue-600); text-decoration-color: var(--blue-300); }
 .header-nav-list .current-menu-item > a,
 .header-nav-list a[aria-current="page"] { background: var(--blue-800); }
-.h-page-nav__pill.is-active { background: var(--blue-700); border-color: var(--blue-700); }
 .filter-pill.is-active,
 .filter-pill.is-active:hover { background: var(--blue-700); border-color: var(--blue-700); }
 .about-svc-card__icon,
@@ -4867,11 +4809,6 @@ html.mh-dark .filter-pill { background: #0b1b35; border-color: #1c3358; color: v
 html.mh-dark .filter-pill:hover { background: #0f2140; border-color: var(--blue-500); color: #fff; }
 html.mh-dark .filter-pill.is-active,
 html.mh-dark .filter-pill.is-active:hover { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
-html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .85); border-bottom-color: #1c3358; }
-html.mh-dark .h-page-nav__pill { background: #0b1b35; border-color: #1c3358; color: var(--color-text-secondary); }
-html.mh-dark .h-page-nav__pill:hover { background: #0f2140; border-color: var(--blue-500); color: #fff; }
-html.mh-dark .h-page-nav__pill.is-active { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
-html.mh-dark .h-page-nav__label,
 html.mh-dark .eyebrow,
 html.mh-dark .h-section-label { color: var(--cyan-300); }
 html.mh-dark .lead,
@@ -5154,15 +5091,11 @@ html.mh-dark .h-journal-item:hover,
 html.mh-dark .uses-item:hover,
 html.mh-dark .about-svc-card:hover,
 html.mh-dark .h-process__step:hover { border-color: rgba(167, 139, 250, .6) !important; box-shadow: 0 24px 48px -26px rgba(139, 92, 246, .45); }
-.h-page-nav__pill.is-active,
-html.mh-dark .h-page-nav__pill.is-active,
 .filter-pill.is-active,
 .filter-pill.is-active:hover,
 html.mh-dark .filter-pill.is-active,
 html.mh-dark .filter-pill.is-active:hover { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%); border-color: transparent; color: #fff; }
-.h-page-nav__pill:hover,
 .filter-pill:hover { border-color: var(--violet-400); color: var(--violet-700); background: var(--violet-50); }
-html.mh-dark .h-page-nav__pill:hover,
 html.mh-dark .filter-pill:hover { border-color: var(--violet-400); color: #fff; background: rgba(139, 92, 246, .16); }
 :focus-visible { outline-color: var(--violet-400); }
 .site-footer :focus-visible,
@@ -5623,8 +5556,6 @@ html.mh-dark .h-journal-item { grid-template-columns: 1fr; gap: 0; padding: 0 0 
 html.mh-dark .site-header.is-scrolled { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .25); box-shadow: 0 12px 32px -20px rgba(0, 0, 0, .85); }
 .h-page-nav { top: var(--header-h); margin-top: 0; border-top: 0; }
 .h-page-nav .h-page-nav__inner { padding-top: .55rem; padding-bottom: .55rem; }
-html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .18); }
-html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--violet-100); }
 .page-header,
 .h-hero,
 .post-hero { margin-bottom: 0; }
@@ -5997,7 +5928,6 @@ html:not(.mh-dark) .repo-card__title a::after { background: linear-gradient(90de
   .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after, .repo-card__title a::after { animation: none !important; transition: none; }
 }
 
-
 /* ── Header height is intrinsic; --header-h is only read by body padding, heroes, and the page nav ── */
 .site-header,
 html.mh-dark .site-header { min-height: 0; }
@@ -6199,54 +6129,32 @@ html:not(.mh-dark) .btn:focus-visible svg,
 html:not(.mh-dark) .header-avail:hover .header-avail__label,
 html:not(.mh-dark) .header-avail:hover .mh-avail__emoji { color: #fff !important; }
 
-/* ── 3.6.56 · "On this page" anchor pills: dark-purple scheme. Light: deep violet
-   type on white, violet tint on hover, violet-700→900 fill when active. Dark: a
-   violet-900 tint with light type, blue→violet fill when active. The old
-   `a.h-page-nav__pill.is-active { background: var(--blue-700) !important }`
-   rule is why these carry !important. ── */
+/* ── "On this page" sub-nav — the single source of truth for its colors (layout
+   lives in portfolio.css ~2499 and the header-flush lines above). Light: deep
+   violet type on white, violet tint on hover, violet-700→900 fill when active.
+   Dark: violet-900 tint with light type, blue→violet-700 fill when active. Every
+   selector is (0,3,1) or higher and sits last in the cascade, so nothing earlier
+   can win and nothing here needs !important. Retired: the blue (3.6.4x), navy,
+   gradient and 3.6.56 generations. ── */
+html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--violet-100); }
+html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .18); }
 html:not(.mh-dark) .h-page-nav__label { color: var(--violet-700); }
-html:not(.mh-dark) .h-page-nav__pill {
-  background: #fff;
-  border-color: var(--violet-100);
-  color: var(--violet-900);
-  font-weight: 700;
-}
-html:not(.mh-dark) .h-page-nav__pill:hover,
-html:not(.mh-dark) .h-page-nav__pill:focus-visible {
-  background: var(--violet-50);
-  border-color: var(--violet-400);
-  color: var(--violet-900);
-}
-html:not(.mh-dark) a.h-page-nav__pill.is-active,
-html:not(.mh-dark) a.h-page-nav__pill[aria-current="true"],
-html:not(.mh-dark) a.h-page-nav__pill.is-active:hover,
-html:not(.mh-dark) a.h-page-nav__pill.is-active:focus-visible {
-  background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%) !important;
-  border-color: var(--violet-900) !important;
-  color: #fff !important;
-}
 html.mh-dark .h-page-nav__label { color: var(--violet-300); }
-html.mh-dark .h-page-nav__pill {
-  background: rgba(76, 29, 149, .32);
-  border-color: rgba(167, 139, 250, .38);
-  color: #ede9fe;
-  font-weight: 700;
-}
+html .h-page-nav__pill { border-width: 1px; border-radius: 999px; font-weight: 700; }
+html:not(.mh-dark) .h-page-nav__pill { background: #fff; border-color: var(--violet-100); color: var(--violet-900); }
+html:not(.mh-dark) .h-page-nav__pill:hover,
+html:not(.mh-dark) .h-page-nav__pill:focus-visible { background: var(--violet-50); border-color: var(--violet-400); color: var(--violet-900); }
+html:not(.mh-dark) .h-page-nav__pill.is-active,
+html:not(.mh-dark) .h-page-nav__pill[aria-current="true"],
+html:not(.mh-dark) .h-page-nav__pill.is-active:hover,
+html:not(.mh-dark) .h-page-nav__pill.is-active:focus-visible { background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%); border-color: var(--violet-900); color: #fff; }
+html.mh-dark .h-page-nav__pill { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
 html.mh-dark .h-page-nav__pill:hover,
-html.mh-dark .h-page-nav__pill:focus-visible {
-  background: rgba(109, 40, 217, .5);
-  border-color: var(--violet-400);
-  color: #fff;
-}
-html.mh-dark a.h-page-nav__pill.is-active,
-html.mh-dark a.h-page-nav__pill[aria-current="true"],
-html.mh-dark a.h-page-nav__pill.is-active:hover,
-html.mh-dark a.h-page-nav__pill.is-active:focus-visible {
-  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%) !important; /* violet-700 keeps white type at 7:1 */
-  border-color: transparent !important;
-  color: #fff !important;
-}
-/* Prev/next arrows follow the pills */
+html.mh-dark .h-page-nav__pill:focus-visible { background: rgba(109, 40, 217, .5); border-color: var(--violet-400); color: #fff; }
+html.mh-dark .h-page-nav__pill.is-active,
+html.mh-dark .h-page-nav__pill[aria-current="true"],
+html.mh-dark .h-page-nav__pill.is-active:hover,
+html.mh-dark .h-page-nav__pill.is-active:focus-visible { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); border-color: transparent; color: #fff; } /* violet-700 keeps white type at 7:1 */
 html:not(.mh-dark) .h-page-nav__arrow:hover:not(:disabled),
 html:not(.mh-dark) .h-page-nav__arrow:focus-visible:not(:disabled) { color: var(--violet-900); border-color: var(--violet-400); background: var(--violet-50); }
 html.mh-dark .h-page-nav__arrow { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }

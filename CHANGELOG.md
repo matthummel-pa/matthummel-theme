@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.57 — One block for the "On this page" sub-nav
+
+- `studio.css`: the sub-nav's seven generations of color rules (blue, navy, gradient, 3.6.56) collapse into one block at the end of the file with no `!important`. Rendered result is unchanged in both modes; photo-hero pages now use the same translucent bar as every other page, and a stale ≤900px `top` override for logged-in users is gone.
+
 ## 3.6.56 — Dark header under the admin bar, light-mode button hovers, purple anchor pills
 
 - Logged-in users: the fixed header now sits below the WordPress admin bar (32px / 46px on mobile) in both modes and at every width, so the "On this page" sub-nav is flush beneath it again (dark mode had it under the admin bar; light mode lost the offset below 900px).
