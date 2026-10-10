@@ -3,8 +3,8 @@
 ## 3.6.51 — Blue & gray brand pass
 
 - Deeper navy (`#071a33`–`#0b2a52`), one signal blue (`#1d6fe0`), and cool grays replace the near-black accent and flat paper. Tokens live at the end of `studio.css`; structure and markup are unchanged.
-- Heroes get a navy wash over the photo with a white card and a blue top rule; the wave matches the page canvas.
-- Primary buttons are a navy→blue gradient with a soft shadow; outline buttons are blue-bordered. Cards share one hairline-and-lift treatment with a blue border on hover.
+- Heroes are dark: a navy duotone photo under a translucent navy panel with a blue left accent and soft glow, white headings, light copy, and a straight 4px blue bottom edge. The hero waves are gone.
+- Primary buttons are a navy→blue gradient with a soft shadow; outline buttons are blue-bordered; hero secondary actions are white outline pills. Cards share one hairline-and-lift treatment with a blue border on hover. Chips, filters, resume tags, stats, form fields, blockquotes, and inline code all use the blue system; the home closing band tints toward the navy footer.
 - Footer is navy with light type; the CTA band gets blue light. Headings are navy, body copy slate.
 - The header availability pill shows its label from 900px (it is the only header call to action).
 - Recent-post excerpts on About no longer print a raw `&hellip;`.
