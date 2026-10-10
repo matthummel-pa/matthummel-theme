@@ -4820,7 +4820,7 @@ html.mh-dark .post-prose a,
 html.mh-dark .about-story__body a,
 html.mh-dark .sec-intro a,
 html.mh-dark .about-services-note a,
-html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
+html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
 html.mh-dark .btn-outline { background: transparent; color: var(--blue-300); border-color: rgba(96, 165, 250, .4); }
 html.mh-dark .btn-outline:hover { background: rgba(59, 130, 246, .14); color: #fff; border-color: var(--blue-400); }
 html.mh-dark .contact-form input,
@@ -6279,7 +6279,8 @@ html.mh-dark .side-author__name { background-image: var(--grad-head-dark); }
 html .side-author__avail { background: var(--lime-400); border-color: var(--lime-500); color: var(--violet-900); }
 
 /* Buttons: primary = lime, secondary + RSS = outline; all hover to the purple gradient */
-html .side-author__btn--primary {
+html:not(.mh-dark) .side-author__btn.side-author__btn--primary,
+html.mh-dark .side-author__btn.side-author__btn--primary {
   background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-500) 100%);
   border-color: var(--lime-500);
   color: var(--violet-900);
@@ -6288,12 +6289,16 @@ html:not(.mh-dark) .side-author__btn,
 html:not(.mh-dark) .side-subscribe__btn { background: #fff; border-color: var(--violet-400); color: var(--violet-900); }
 html.mh-dark .side-author__btn,
 html.mh-dark .side-subscribe__btn { background: transparent; border-color: rgba(163, 230, 53, .6); color: var(--lime-300); }
-html .side-author__btn:hover,
-html .side-author__btn:focus-visible,
-html .side-author__btn--primary:hover,
-html .side-author__btn--primary:focus-visible,
-html .side-subscribe__btn:hover,
-html .side-subscribe__btn:focus-visible {
+html:not(.mh-dark) .side-author__btn:hover,
+html:not(.mh-dark) .side-author__btn:focus-visible,
+html:not(.mh-dark) .side-subscribe__btn:hover,
+html:not(.mh-dark) .side-subscribe__btn:focus-visible,
+html.mh-dark .side-author__btn:hover,
+html.mh-dark .side-author__btn:focus-visible,
+html.mh-dark .side-subscribe__btn:hover,
+html.mh-dark .side-subscribe__btn:focus-visible,
+html .side-author__btn.side-author__btn--primary:hover,
+html .side-author__btn.side-author__btn--primary:focus-visible {
   background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
   border-color: var(--violet-700);
   color: #fff;
@@ -6314,3 +6319,9 @@ html.mh-dark .side-toc a:hover,
 html.mh-dark .side-toc a.is-active { color: var(--lime-300); text-decoration: underline; text-decoration-color: var(--lime-400); text-underline-offset: 3px; }
 html:not(.mh-dark) .side-count { color: var(--lime-700); font-weight: 700; }
 html.mh-dark .side-count { color: var(--lime-300); font-weight: 700; }
+
+/* ── 3.6.58 · Open / hovered FAQ items keep the card surface (the older FAQ rules painted a flat surface at (0,3,1)) ── */
+html:not(.mh-dark) .h-faq__item:hover,
+html:not(.mh-dark) .h-faq__item[open] { background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%); }
+html.mh-dark .h-faq__item:hover,
+html.mh-dark .h-faq__item[open] { background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%); }
