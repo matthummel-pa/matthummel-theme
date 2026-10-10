@@ -6221,3 +6221,91 @@ html.mh-dark .h-process__num, html.mh-dark .code-pulse__stat dd, html.mh-dark .r
 /* Accordion chevron in lime */
 .h-faq__q::after, .faq-list summary::after { border-right-color: var(--lime-700); border-bottom-color: var(--lime-700); }
 html.mh-dark .h-faq__q::after, html.mh-dark .faq-list summary::after { border-right-color: var(--lime-300); border-bottom-color: var(--lime-300); }
+
+/* ── 3.6.57 · Sidebars (post sidebar, journal + Woo asides) follow the card recipe:
+   violet/white (light) or purple-gradient (dark) surface, lime border, lime top
+   edge, violet-700 / lime-300 titles, gradient author name, lime buttons. The
+   post-sidebar author card and buttons had their own blue palette in portfolio.css
+   that leaked light surfaces into dark mode. ── */
+.side-card,
+.side-card.side-author,
+.write-aside-card {
+  padding: 1.25rem 1.3rem 1.35rem;
+  border: 1px solid var(--lime-400) !important;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  box-shadow: inset 0 3px 0 0 var(--cyan-400), 0 2px 4px rgba(15, 22, 35, .05), 0 24px 48px -24px rgba(163, 230, 53, .35);
+}
+.side-card.side-card--fold { padding-top: .6rem; padding-bottom: .6rem; }
+html.mh-dark .side-card,
+html.mh-dark .side-card.side-author,
+html.mh-dark .write-aside-card {
+  background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  border-color: rgba(163, 230, 53, .55) !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
+.side-card:hover, .write-aside-card:hover { border-color: var(--lime-500) !important; }
+html.mh-dark .side-card:hover, html.mh-dark .write-aside-card:hover { border-color: var(--lime-300) !important; }
+
+/* Titles / eyebrows: dark purple on light, lime on dark (same as footer headers) */
+html:not(.mh-dark) .side-card-title,
+html:not(.mh-dark) .side-hire .side-card-title,
+html:not(.mh-dark) .side-author__eyebrow,
+html:not(.mh-dark) .write-aside-h,
+html:not(.mh-dark) .mh-toc-title { color: var(--violet-700); }
+html.mh-dark .side-card-title,
+html.mh-dark .side-hire .side-card-title,
+html.mh-dark .side-author__eyebrow,
+html.mh-dark .write-aside-h,
+html.mh-dark .mh-toc-title { color: var(--lime-300); }
+html:not(.mh-dark) .side-card--fold > .side-card-title::after,
+html:not(.mh-dark) .mh-toc-title::after { color: var(--lime-700); }
+html.mh-dark .side-card--fold > .side-card-title::after,
+html.mh-dark .mh-toc-title::after { color: var(--lime-300); }
+.side-author__name {
+  background-image: var(--grad-head-light);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+}
+html.mh-dark .side-author__name { background-image: var(--grad-head-dark); }
+html .side-author__avail { background: var(--lime-400); border-color: var(--lime-500); color: var(--violet-900); }
+
+/* Buttons: primary = lime, secondary + RSS = outline; all hover to the purple gradient */
+html .side-author__btn--primary {
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-500) 100%);
+  border-color: var(--lime-500);
+  color: var(--violet-900);
+}
+html:not(.mh-dark) .side-author__btn,
+html:not(.mh-dark) .side-subscribe__btn { background: #fff; border-color: var(--violet-400); color: var(--violet-900); }
+html.mh-dark .side-author__btn,
+html.mh-dark .side-subscribe__btn { background: transparent; border-color: rgba(163, 230, 53, .6); color: var(--lime-300); }
+html .side-author__btn:hover,
+html .side-author__btn:focus-visible,
+html .side-author__btn--primary:hover,
+html .side-author__btn--primary:focus-visible,
+html .side-subscribe__btn:hover,
+html .side-subscribe__btn:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  border-color: var(--violet-700);
+  color: #fff;
+}
+html .side-author__btn:hover .mh-ico,
+html .side-subscribe__btn:hover .mh-ico { color: #fff; }
+
+/* Lists: links hover violet (light) / lime (dark) with underline; counts in lime */
+html:not(.mh-dark) .side-posts a:hover,
+html:not(.mh-dark) .side-cats a:hover,
+html:not(.mh-dark) .side-toc a:hover { color: var(--violet-900); text-decoration: underline; text-decoration-color: var(--violet-400); text-underline-offset: 3px; }
+html.mh-dark .side-posts a,
+html.mh-dark .side-cats a,
+html.mh-dark .side-toc a { color: var(--color-text); }
+html.mh-dark .side-posts a:hover,
+html.mh-dark .side-cats a:hover,
+html.mh-dark .side-toc a:hover,
+html.mh-dark .side-toc a.is-active { color: var(--lime-300); text-decoration: underline; text-decoration-color: var(--lime-400); text-underline-offset: 3px; }
+html:not(.mh-dark) .side-count { color: var(--lime-700); font-weight: 700; }
+html.mh-dark .side-count { color: var(--lime-300); font-weight: 700; }
