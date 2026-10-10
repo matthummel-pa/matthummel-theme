@@ -381,20 +381,3 @@
   .code-block__cta { width: 100%; justify-content: center; }
   .code-sync { white-space: normal; }
 }
-
-/* Dark mode */
-html.mh-dark .code-pulse,
-html.mh-dark .code-sync,
-html.mh-dark .code-recent,
-html.mh-dark .code-breakdown li,
-html.mh-dark .code-langs,
-html.mh-dark .code-comm-profile,
-html.mh-dark .code-gh-watching__more summary {
-  background: color-mix(in srgb, var(--gray-900, #0f172a) 92%, var(--white));
-  border-color: color-mix(in srgb, var(--white) 12%, transparent);
-}
-html.mh-dark .code-pulse__stat,
-html.mh-dark .code-recent__row { border-color: color-mix(in srgb, var(--white) 8%, transparent); }
-html.mh-dark .code-recent__row:hover { background: color-mix(in srgb, var(--white) 4%, transparent); }
-html.mh-dark .code-avatars__hit:hover,
-html.mh-dark .code-avatars__hit:focus-visible { box-shadow: 0 0 0 2px var(--gray-900, #0f172a), 0 0 0 4px var(--blue-400, #60a5fa); }

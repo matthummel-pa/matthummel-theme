@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.53 — Remove code-page.css dark block
+
+- `code-page.css` no longer carries its own `html.mh-dark` rules. They mixed `--gray-900` / `--white`, which the dark skin remaps, and every rule was either overridden by `studio.css` (3.6.52) or targeted classes that left with the old Code page. No visual change.
+
 ## 3.6.52 — About › Code dark surfaces, reveal fallback
 
 - About › Code: dark-mode surfaces for the GitHub sync pill, pulse strip, Recently pushed list and Languages card. `code-page.css` built them from `--gray-900`, which the dark skin flips light, so they rendered light-gray with light text.
