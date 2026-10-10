@@ -16,7 +16,6 @@ import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 import { initWooDesk } from './woo-desk.js';
-import { initNowDesk } from './now-desk.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -136,7 +135,7 @@ function initTocSpy() {
 }
 
 function initContactStatus() {
-  const status = document.querySelector('#project-contact-status, #contact-status, #now-note-status');
+  const status = document.querySelector('#project-contact-status, #contact-status');
   if (status instanceof HTMLElement) {
     status.focus({ preventScroll: false });
   }
@@ -523,7 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCheckoutInstallNotes();
   initCopyBrief();
   initWooDesk();
-  initNowDesk();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();

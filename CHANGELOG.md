@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.50 — Now joins About; studio copy retired; menus trimmed
+
+- `/now/` is a **Now** section on About (checklist, life note, last-updated date, three recent posts). `/now/` 301s to `/about/#now`. The Now template, activity desk, and note form are gone; Contact keeps the form.
+- No more studio wording anywhere visitors read: Projects intro, thank-you card, project archive, Resources, resume defaults, and the Now checklist. A one-shot (`mh_about_absorbs_now_v1`) copies the Now fields onto About and drops any studio line from the stored checklist.
+- One header call to action: the green **Available now** pill (shown while GitHub says hireable) goes to Contact; the separate Say hello button only appears when not hireable. **Contact** is a plain menu item (added to the primary menu once with Resources, `mh_primary_menu_resources_contact_v1`). The footer pill matches.
+- **Resources** absorbs **Uses**: the stack list is a `#uses` section on Resources (`mh_uses_sections()`), `/uses/` 301s to `/resources/#uses`, and Resources joins the primary menu (one-shot `mh_primary_menu_resources_contact_v1`, which also adds Contact).
+- The old Hire, Code, Now, and Uses pages are set to draft once their fields have been copied (`mh_retire_merged_pages_v1`), so they leave the sitemap; the 301s stand alone.
+- Hire, Code, Now, and Uses leave the menus: items that still point at those URLs are hidden from `wp_nav_menu()` output (`wp_nav_menu_objects`), and the footer lists About and Resources instead. Delete the old items in Appearance → Menus whenever convenient.
+
 ## 3.6.49 — One About page
 
 - About now carries Hire and Code: story, what I build, hire (open for work, arrangements, what I need from you), resume, at a glance, process, fit, how I work, GitHub (stats, pinned repos, recent pushes, languages), stack, FAQ, elsewhere.

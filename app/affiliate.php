@@ -190,7 +190,7 @@ function mh_resources_catalog(): array
         ],
         [
             'title' => __('Themes for sale', 'sage'),
-            'intro' => __('Paid packs from studio projects. Story and screenshots live on Work; checkout is optional Shop.', 'sage'),
+            'intro' => __('Paid packs from my WordPress projects. Story and screenshots live on Projects; checkout is optional Shop.', 'sage'),
             'items' => [
                 [
                     'name' => __('Browse Work', 'sage'),
@@ -221,7 +221,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'SiteGround',
-                    'blurb' => __('Managed WordPress hosting I use for client and studio sites (SSH, PHP 8.3, solid support).', 'sage'),
+                    'blurb' => __('Managed WordPress hosting I use for client and personal sites (SSH, PHP 8.3, solid support).', 'sage'),
                     'url' => 'https://www.siteground.com',
                     'affiliate' => true,
                     'badge' => __('Hosting', 'sage'),
@@ -233,13 +233,83 @@ function mh_resources_catalog(): array
                     'affiliate' => true,
                     'badge' => __('CRM', 'sage'),
                 ],
-                [
-                    'name' => __('Full Uses list', 'sage'),
-                    'blurb' => __('Stack notes for WordPress, deploy, analytics, and design — with the same disclosure rules.', 'sage'),
-                    'url' => home_url('/uses/'),
-                    'affiliate' => false,
-                    'badge' => __('Stack', 'sage'),
-                ],
+            ],
+        ],
+    ];
+}
+
+/**
+ * The stack behind shipped work, grouped for the Resources page (was /uses/ until 3.6.50).
+ *
+ * Each item is [name, description, url|null, affiliate?]. A 4th value of true marks a compensated link.
+ *
+ * @return list<array{title: string, icon: string, items: list<array>}>
+ */
+function mh_uses_sections(): array
+{
+    return [
+        [
+            'title' => __('WordPress development', 'sage'),
+            'icon' => 'wordpress',
+            'items' => [
+                ['Sage 11', __('The Roots starter theme. Blade templates, Tailwind v4, Vite. Every site I build from scratch starts here.', 'sage'), 'https://roots.io/sage/'],
+                ['PHP 8.3', __('The language everything runs on. Typed functions, match expressions, named arguments. Nothing exotic.', 'sage'), null],
+                ['Tailwind v4', __('CSS utility framework. Token-based, no config file needed. Fluid type with clamp(), mobile-first always.', 'sage'), 'https://tailwindcss.com'],
+                ['Vite', __('Asset bundler. Fast, simple config. Handles CSS, JS, and image hashing for cache-busting.', 'sage'), 'https://vitejs.dev'],
+                ['Acorn / Laravel', __('The IoC container that makes Sage feel like a proper application. Service providers, Blade directives, view composers.', 'sage'), 'https://roots.io/acorn/'],
+                ['WP-CLI', __('Command-line tools for WordPress. Database exports, plugin management, custom commands. Most deploys never touch wp-admin.', 'sage'), 'https://wp-cli.org'],
+                ['Composer', __('PHP dependency manager. Every project has a composer.json. No manual library downloads.', 'sage'), 'https://getcomposer.org'],
+                ['Laravel Pint', __('PHP code style fixer. Runs in CI before every deploy. Catches whitespace and formatting issues automatically.', 'sage'), 'https://laravel.com/docs/pint'],
+            ],
+        ],
+        [
+            'title' => __('Editor and tools', 'sage'),
+            'icon' => 'code',
+            'items' => [
+                ['Cursor', __('My primary editor. VS Code-compatible with an AI layer that helps rather than gets in the way. This site was planned and built with it and Claude.', 'sage'), 'https://cursor.com'],
+                ['GitHub', __('Version control and CI/CD trigger. Every project lives in a GitHub repo. Pushes to main kick off builds and deploys automatically.', 'sage'), 'https://github.com'],
+                ['GitHub Actions', __('Automated build and deploy pipeline. Runs Composer, npm, and the release zip on every push. Zero manual uploads.', 'sage'), 'https://github.com/features/actions'],
+                ['TablePlus', __('Database GUI for local MySQL and SQLite. Useful for inspecting WordPress tables without writing raw SQL.', 'sage'), 'https://tableplus.com'],
+                ['iTerm2 / zsh', __('Terminal. Nothing special — zsh with a minimal prompt. SSH into servers, run WP-CLI, tail logs.', 'sage'), null],
+            ],
+        ],
+        [
+            'title' => __('Hosting and deploy', 'sage'),
+            'icon' => 'server',
+            'items' => [
+                ['Hostinger', __('Managed WordPress hosting for this site. LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub theme-latest zip.', 'sage'), 'https://www.hostinger.com'],
+                ['GitHub Releases', __('Theme deployment method for this site. CI builds a zip, publishes it as a release, and wp-admin pulls it over HTTPS. No FTP.', 'sage'), null],
+                ['WordPress Studio / SQLite', __('Local WordPress for development. No MySQL required, no Docker overhead.', 'sage'), null],
+            ],
+        ],
+        [
+            'title' => __('Analytics and marketing', 'sage'),
+            'icon' => 'chart-bar',
+            'items' => [
+                ['Google Analytics 4', __('Site traffic, page performance, and audience data. Linked through Google Tag Manager.', 'sage'), 'https://analytics.google.com'],
+                ['Google Tag Manager', __('Single container for all tracking scripts. One snippet on the page, everything else managed in GTM.', 'sage'), 'https://tagmanager.google.com'],
+                ['HubSpot', __('CRM and contact capture. Picks up form submissions and tracks visitor activity for follow-up.', 'sage'), 'https://www.hubspot.com', true],
+                ['Microsoft Clarity / Bing', __('Bing Webmaster Tools for search performance. Microsoft UET for ad conversion tracking.', 'sage'), 'https://clarity.microsoft.com'],
+            ],
+        ],
+        [
+            'title' => __('Design and typography', 'sage'),
+            'icon' => 'full-stack',
+            'items' => [
+                ['Inter', __('Display and heading font. Clean, reads well at both large and small sizes. The workhorse.', 'sage'), 'https://rsms.me/inter/'],
+                ['IBM Plex Sans', __('Body text font. Slightly warmer than Inter. Works well at the 1.1–1.2rem range.', 'sage'), 'https://www.ibm.com/plex/'],
+                ['IBM Plex Mono', __('Code font. Used in blog post code blocks and the monospace CSS variable.', 'sage'), 'https://www.ibm.com/plex/'],
+                ['Figma', __('Design when a client needs wireframes or component specs before I build. Not a daily tool — I prefer designing in the browser.', 'sage'), 'https://www.figma.com'],
+                ['highlight.js', __('Syntax highlighting for blog post code blocks. Copy button added via a small custom JS module.', 'sage'), 'https://highlightjs.org'],
+            ],
+        ],
+        [
+            'title' => __('Power Platform', 'sage'),
+            'icon' => 'power',
+            'items' => [
+                ['Power Apps', __('Canvas and model-driven apps for Microsoft 365 environments. Used at previous roles and on client work when it is the right tool.', 'sage'), 'https://powerapps.microsoft.com'],
+                ['Power Automate', __('Workflow automation. Approval flows, SharePoint triggers, Teams notifications. Useful when a team already lives in M365.', 'sage'), 'https://powerautomate.microsoft.com'],
+                ['SharePoint', __('Common data source for Power Apps. Lists, document libraries, and permissions.', 'sage'), null],
             ],
         ],
     ];

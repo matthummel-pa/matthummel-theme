@@ -455,7 +455,7 @@ function page_field_map(): array
 
     $placeItems = [
         ['title' => __('matthummel.com', 'sage'), 'text' => __('Hireable portfolio with journal, public code, optional theme sales, and disclosed tool recommendations.', 'sage')],
-        ['title' => __('Projects', 'sage'), 'text' => __('Studio WordPress themes and plugins with demos and stack notes. Hire me to adapt one.', 'sage'), 'url' => '/projects/'],
+        ['title' => __('Projects', 'sage'), 'text' => __('WordPress themes and plugins with demos and stack notes. Hire me to adapt one.', 'sage'), 'url' => '/projects/'],
     ];
 
     $codeRepos = [];
@@ -496,6 +496,14 @@ function page_field_map(): array
                 ['about_story', __('Story', 'sage'), 'wysiwyg', mh_about_story_default()],
                 ['about_story_cta', __('Primary button', 'sage'), 'text', __('Say hello', 'sage')],
                 ['about_story_now', __('Secondary link', 'sage'), 'text', __('What I\'m doing now', 'sage')],
+            ],
+            __('Now', 'sage') => [
+                ['now_h1', __('Heading', 'sage'), 'text', __('What I’m doing now.', 'sage')],
+                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going.', 'sage')],
+                ['now_updated', __('Last updated label (blank uses the page edit date)', 'sage'), 'text', ''],
+                ['now_items', __('Items (one per line)', 'sage'), 'lines', mh_now_items_defaults()],
+                ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
+                ['now_posts_empty', __('Recent posts empty state', 'sage'), 'textarea', __('No journal posts are published yet.', 'sage')],
             ],
             __('What I build', 'sage') => [
                 ['about_services_h2', __('Heading', 'sage'), 'text', __('What I build.', 'sage')],
@@ -579,50 +587,6 @@ function page_field_map(): array
                 ['about_cta_h2', __('Heading', 'sage'), 'text', __('Need a WordPress or full-stack developer?', 'sage')],
                 ['about_cta_lede', __('Intro', 'sage'), 'textarea', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')],
                 ['about_cta_btn', __('Button label', 'sage'), 'text', __('Write a note', 'sage')],
-            ],
-        ],
-        'template-now.blade.php' => [
-            __('Intro', 'sage') => [
-                ['now_kicker', __('Kicker', 'sage'), 'text', __('Now', 'sage')],
-                ['now_h1', __('Heading', 'sage'), 'text', __('What I’m doing now.', 'sage')],
-                ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going. GitHub, the journal, and the profiles I keep are below.', 'sage')],
-                ['now_updated', __('Last updated label (blank uses the page edit date)', 'sage'), 'text', ''],
-            ],
-            __('Activity', 'sage') => [
-                ['now_activity_h2', __('Heading', 'sage'), 'text', __('Right now', 'sage')],
-                ['now_activity_intro', __('Intro', 'sage'), 'textarea', __('Public GitHub events, recent journal posts, and posts from DEV.to and Bluesky when those feeds respond.', 'sage')],
-                ['now_gh_empty', __('GitHub empty state', 'sage'), 'textarea', __('GitHub did not return public activity just now. The profile link still works.', 'sage')],
-                ['now_posts_empty', __('Journal empty state', 'sage'), 'textarea', __('No journal posts are published yet.', 'sage')],
-                ['now_social_note', __('Social note', 'sage'), 'textarea', __('These are the profiles I keep. Posts below come from public feeds only.', 'sage')],
-            ],
-            __('Note', 'sage') => [
-                ['now_note_h2', __('Heading', 'sage'), 'text', __('Send a note', 'sage')],
-                ['now_note_lede', __('Intro', 'sage'), 'textarea', __('Email reaches my inbox. A GitHub note opens a new issue on this site’s theme repo, so you can paste a link and I can reply there.', 'sage')],
-                ['now_note_submit', __('Submit button', 'sage'), 'text', __('Send email', 'sage')],
-                ['now_note_github', __('GitHub button', 'sage'), 'text', __('Open a GitHub note', 'sage')],
-                ['now_sms', __('SMS number (leave blank to hide Text me)', 'sage'), 'text', ''],
-                ['now_sms_body', __('SMS prefilled message', 'sage'), 'text', __('Hi — I saw the Now page.', 'sage')],
-            ],
-            __('List', 'sage') => [
-                ['now_items', __('Items', 'sage'), 'lines', [
-                    __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
-                    __('Shipping WordPress studio projects on the Projects page.', 'sage'),
-                    __('Publishing notes on the journal, DEV.to, Bluesky, and Reddit.', 'sage'),
-                    __('Curating Uses/Resources with clear affiliate disclosure when a link is compensated.', 'sage'),
-                    __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
-                ]],
-                ['now_link', __('Link label', 'sage'), 'text', __('Say hello', 'sage')],
-            ],
-            __('Studio', 'sage') => [
-                ['now_studio_p1', __('Paragraph 1', 'sage'), 'textarea', __('I publish WordPress concepts here — themes and plugins that show how I build. Hire me for a production site or a role.', 'sage')],
-                ['now_studio_p2', __('Paragraph 2 (basic HTML ok)', 'sage'), 'html', __('Browse the <a href="/projects/">Work page</a>. When you\'re ready for a custom build, say hello.', 'sage')],
-                ['now_work_p1', __('Availability paragraph 1', 'sage'), 'textarea', __('I\'m actively looking for full-time roles, contract work, freelance projects, and agency partnerships. My focus is full-stack web development, especially WordPress, PHP, JavaScript, React, and API integrations.', 'sage')],
-                ['now_work_p2', __('Availability paragraph 2', 'sage'), 'textarea', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')],
-                ['now_write_p1', __('Writing paragraph 1', 'sage'), 'textarea', __('I write short posts on WordPress, PHP, and the tools I actually use on projects. Most posts include code you can paste into a theme or plugin. I write for developers who want something working, not a tutorial that ends at "and so on."', 'sage')],
-                ['now_write_p2', __('Writing paragraph 2', 'sage'), 'textarea', __('Posts go on the journal first. Some get cross-posted to DEV.to. Nothing is paywalled.', 'sage')],
-                ['now_ai_p1', __('How I work paragraph 1', 'sage'), 'textarea', __('I use Cursor AI, Claude, and ChatGPT as part of my development workflow. AI makes the first pass faster — I review everything before it ships. The final code is something I can explain and maintain.', 'sage')],
-                ['now_ai_p2', __('How I work paragraph 2', 'sage'), 'textarea', __('I\'m honest about this because I think it matters: if you hire me, you\'re getting real engineering judgment, not just generated output. This site was planned and built with Cursor AI.', 'sage')],
-                ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
             ],
         ],
         'template-services.blade.php' => [
@@ -775,22 +739,17 @@ function page_field_map(): array
                 ]],
             ],
         ],
-        'template-uses.blade.php' => [
-            __('Intro', 'sage') => [
-                ['uses_kicker', __('Kicker', 'sage'), 'text', __('Uses', 'sage')],
-                ['uses_h1', __('Heading', 'sage'), 'text', __('What I use.', 'sage')],
-                ['uses_lede', __('Intro', 'sage'), 'textarea', __('The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.', 'sage')],
-                ['uses_intro_h2', __('Below-hero heading', 'sage'), 'text', __('How to read this page.', 'sage')],
-                ['uses_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('I list what I actually use on shipped WordPress and web work. External links open in a new tab. Affiliate links are labeled and disclosed at the top when present.', 'sage')],
-            ],
-        ],
         'template-resources.blade.php' => [
             __('Intro', 'sage') => [
                 ['resources_kicker', __('Kicker', 'sage'), 'text', __('Resources', 'sage')],
-                ['resources_h1', __('Heading', 'sage'), 'text', __('Free starters, themes, and tools.', 'sage')],
-                ['resources_lede', __('Intro', 'sage'), 'textarea', __('Open code to study, selected projects, and tools I use on real builds. Hire me when you want a full site.', 'sage')],
+                ['resources_h1', __('Heading', 'sage'), 'text', __('Free starters, themes, tools, and the stack I use.', 'sage')],
+                ['resources_lede', __('Intro', 'sage'), 'textarea', __('A quiet catalog for developers and shops: open code to study, tools I use on real projects, and the stack behind every build. Hire me when you want a full site.', 'sage')],
                 ['resources_intro_h2', __('Below-hero heading', 'sage'), 'text', __('What you will find here.', 'sage')],
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
+            ],
+            __('Stack I use', 'sage') => [
+                ['uses_intro_h2', __('Heading', 'sage'), 'text', __('The stack I use.', 'sage')],
+                ['uses_intro_p', __('Intro', 'sage'), 'textarea', __('What I actually use on shipped WordPress and web work — not exhaustive, just what I reach for. External links open in a new tab; affiliate links are labeled.', 'sage')],
             ],
         ],
         'template-portfolio.blade.php' => [

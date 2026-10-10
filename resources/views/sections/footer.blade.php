@@ -22,11 +22,11 @@
         @if (\App\mh_is_hireable($gh))
           <a
             class="header-avail footer-avail"
-            href="{{ home_url('/now/') }}"
-            aria-label="{{ sprintf(__('%s — see what I\'m doing now', 'sage'), \App\mh_availability_label($gh, __('Open for work', 'sage'))) }}"
+            href="{{ esc_url(home_url('/contact/')) }}"
+            aria-label="{{ __('Available now — say hello', 'sage') }}"
           >
             @include('partials.avail-mark', ['gh' => $gh])
-            <span class="header-avail__label">{{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}</span>
+            <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
           </a>
         @endif
         <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
@@ -40,8 +40,6 @@
       <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
       <ul class="footer-nav">
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/about/#hire') }}">{{ __('Hire me', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/about/#code') }}">{{ __('Code', 'sage') }}</a></li>
         <li><a href="{{ home_url('/agency-white-label-wordpress/') }}">{{ __('For agencies', 'sage') }}</a></li>
         <li><a href="{{ home_url('/wordpress-handoff-checklist/') }}">{{ __('Handoff checklist', 'sage') }}</a></li>
         <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
@@ -54,7 +52,6 @@
       <ul class="footer-nav">
         <li><a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a></li>
         <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
         <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
         <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>

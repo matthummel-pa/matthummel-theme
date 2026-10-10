@@ -25,7 +25,7 @@
       <p>Some pages on this site include affiliate links. If you follow one of those links and make a purchase, I may earn a commission at no additional cost to you.</p>
 
       <h2 id="aff-where">Where affiliate links appear</h2>
-      <p>Compensated links may show up in Journal posts, on <a href="{{ home_url('/uses/') }}">Uses</a>, on <a href="{{ home_url('/resources/') }}">Resources</a>, and in related tool lists. This site stays a hireable portfolio first — themes for sale and tool recommendations are secondary.</p>
+      <p>Compensated links may show up in Journal posts, on <a href="{{ home_url('/resources/') }}">Resources</a> (including the stack list), and in related tool lists. This site stays a hireable portfolio first — themes for sale and tool recommendations are secondary.</p>
 
       <h2 id="aff-choose">How I choose what to recommend</h2>
       <p>Payment does not determine whether a product is included or how it is evaluated. I aim to recommend tools that fit the specific use case described, and I will state when an evaluation is based on research rather than firsthand use.</p>

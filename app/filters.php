@@ -120,13 +120,9 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Message Received', 'sage').' | '.$brand,
             'desc' => __('Your note is in my inbox. I reply within one business day (ET).', 'sage'),
         ],
-        'template-uses.blade.php' => [
-            'title' => __('WordPress Developer Tools', 'sage').' | '.$brand,
-            'desc' => __('WordPress developer tools and stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths.', 'sage'),
-        ],
         'template-resources.blade.php' => [
-            'title' => __('WordPress Starters & Free Tools', 'sage').' | '.$brand,
-            'desc' => __('WordPress starters and free tools I share for shops, agencies, and developers learning the craft.', 'sage'),
+            'title' => __('WordPress Starters, Tools & Stack', 'sage').' | '.$brand,
+            'desc' => __('WordPress starters, tools I recommend, and the stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths.', 'sage'),
         ],
         'template-affiliate-disclosure.blade.php' => [
             'title' => __('Affiliate Disclosure', 'sage').' | '.$brand,
@@ -167,10 +163,6 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         'template-about.blade.php' => [
             'title' => __('About, Hire & Code — WordPress Developer', 'sage').' | '.$brand,
             'desc' => __('About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.', 'sage'),
-        ],
-        'template-now.blade.php' => [
-            'title' => __('WordPress Themes I\'m Building', 'sage').' | '.$brand,
-            'desc' => __('WordPress themes and plugins I am building now, plus shipping notes. Updated as work moves.', 'sage'),
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
@@ -694,7 +686,7 @@ add_action('template_redirect', function (): void {
     }
 }, 2);
 
-// Hire and Code live on About since 3.6.49; the old URLs keep working.
+// Hire, Code, and Now (3.6.49–3.6.50) live on About; Uses lives on Resources. The old URLs keep working.
 add_action('template_redirect', function (): void {
     if (is_admin() || is_preview()) {
         return;
@@ -702,13 +694,20 @@ add_action('template_redirect', function (): void {
 
     $uri = sanitize_text_field(wp_unslash((string) ($_SERVER['REQUEST_URI'] ?? '')));
     $path = trim((string) (wp_parse_url($uri, PHP_URL_PATH) ?? ''), '/');
-    if (! in_array($path, ['hire', 'code'], true)) {
+    $targets = [
+        'hire' => ['template-about.blade.php', '/about/'],
+        'code' => ['template-about.blade.php', '/about/'],
+        'now' => ['template-about.blade.php', '/about/'],
+        'uses' => ['template-resources.blade.php', '/resources/'],
+    ];
+    if (! isset($targets[$path])) {
         return;
     }
 
-    $aboutId = mh_page_id_by_template('template-about.blade.php');
-    $about = $aboutId > 0 ? (string) get_permalink($aboutId) : home_url('/about/');
+    [$template, $fallback] = $targets[$path];
+    $pageId = mh_page_id_by_template($template);
+    $base = $pageId > 0 ? (string) get_permalink($pageId) : home_url($fallback);
     $query = (string) (wp_parse_url($uri, PHP_URL_QUERY) ?? '');
-    wp_safe_redirect($about.($query !== '' ? '?'.$query : '').'#'.$path, 301);
+    wp_safe_redirect($base.($query !== '' ? '?'.$query : '').'#'.$path, 301);
     exit;
 }, 3);

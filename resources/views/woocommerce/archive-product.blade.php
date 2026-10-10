@@ -54,7 +54,7 @@
     '@context'        => 'https://schema.org',
     '@type'           => 'CollectionPage',
     'name'            => __('WordPress Themes, Plugins & Web Apps', 'sage'),
-    'description'     => __('Studio WordPress concepts — themes, plugins, and web apps with live demos. Hire me to adapt one.', 'sage'),
+    'description'     => __('WordPress themes, plugins, and web apps with live demos. Hire me to adapt one.', 'sage'),
     'url'             => $shopUrl,
     'hasPart'         => $listItems,
   ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
@@ -95,7 +95,7 @@
     </h1>
   @endif
   <p class="lead">
-    {{ \App\field('work_lede', __('WordPress themes, plugins, and web apps I built as studio concepts. Live demos and stack notes. Hire me to adapt one for a shop, agency, or full-time role.', 'sage'), $shopPostId) }}
+    {{ \App\field('work_lede', __('WordPress themes, plugins, and web apps I built to show how I work. Live demos and stack notes. Hire me to adapt one for a shop, agency, or full-time role.', 'sage'), $shopPostId) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">
@@ -217,7 +217,7 @@
         {{ \App\field('work_empty_h2', __('Concepts are on the way.', 'sage'), $shopPostId) }}
       </h2>
       <p class="work-empty__text">
-        {{ \App\field('work_empty_text', __('I am publishing the first studio concepts here. Write and tell me what kind of shop you run, or what you need built.', 'sage'), $shopPostId) }}
+        {{ \App\field('work_empty_text', __('I am publishing the first projects here. Write and tell me what kind of shop you run, or what you need built.', 'sage'), $shopPostId) }}
       </p>
       <div class="work-empty__actions">
         <a class="btn" href="{{ home_url('/contact/') }}">
@@ -243,8 +243,8 @@
       {{ \App\field('work_context_h2', __('What these concepts show.', 'sage'), $shopPostId) }}
     </h2>
     <div class="work-guide__prose">
-      <p>{{ \App\field('work_context_p1', __('Each card is a studio concept — screenshots, stack notes, and a live demo when one exists. Hire me to adapt one for a shop, agency overflow, or a full-time role.', 'sage'), $shopPostId) }}</p>
-      {!! \App\field_html('work_context_p2', __('These are studio builds, not client sites. Source is on GitHub. If nothing here fits exactly, <a href="/contact/">write and tell me what you need</a>.', 'sage'), $shopPostId) !!}
+      <p>{{ \App\field('work_context_p1', __('Each card is a project I built — screenshots, stack notes, and a live demo when one exists. Hire me to adapt one for a shop, agency overflow, or a full-time role.', 'sage'), $shopPostId) }}</p>
+      {!! \App\field_html('work_context_p2', __('These are my own builds, not client sites. Source is on GitHub. If nothing here fits exactly, <a href="/contact/">write and tell me what you need</a>.', 'sage'), $shopPostId) !!}
     </div>
   </div>
 </section>

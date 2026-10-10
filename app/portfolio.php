@@ -151,9 +151,25 @@ function mh_github_event_label(string $type): string
 }
 
 /**
+ * Default "right now" checklist for the Now section on About.
+ *
+ * @return list<string>
+ */
+function mh_now_items_defaults(): array
+{
+    return [
+        __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
+        __('Writing short posts on WordPress development — code you can paste in.', 'sage'),
+        __('Using Cursor AI and Claude to build faster, reviewing every line before it ships.', 'sage'),
+        __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
+        __('Working Eastern Time, available for remote and local clients.', 'sage'),
+    ];
+}
+
+/**
  * Label and machine date for the Now page “last updated” line.
  *
- * A filled `now_updated` field wins. Otherwise the Now page’s last edit.
+ * A filled `now_updated` field wins. Otherwise the page’s last edit (About since 3.6.50; the old Now page as fallback).
  *
  * @return array{label: string, iso: string}
  */
@@ -297,7 +313,7 @@ function mh_featured_repos(): array
         ],
         [
             'name' => 'ridgesandvalleys',
-            'desc' => 'Sage 11 WordPress theme for the Ridges & Valleys studio site — Blade, Vite, and the same stack as this portfolio.',
+            'desc' => 'Sage 11 WordPress theme behind ridgesandvalleys.com — Blade, Vite, and the same stack as this portfolio.',
             'url' => 'https://github.com/matthummel-pa/ridgesandvalleys',
             'tags' => ['WordPress', 'Sage', 'Vite'],
         ],
@@ -3818,7 +3834,6 @@ function mh_seed_portfolio_pages(): void
         'projects' => ['title' => 'Projects', 'template' => 'template-projects.blade.php'],
         'services' => ['title' => 'Services', 'template' => 'template-services.blade.php'],
         'contact' => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
-        'now' => ['title' => 'Now', 'template' => 'template-now.blade.php'],
     ];
 
     $ids = [];
@@ -4305,8 +4320,6 @@ function mh_hero_scene_url(?int $post_id = null): string
         'template-projects.blade.php' => 'products/walkridge/01-homepage.webp',
         'template-contact.blade.php' => 'products/acreline/05-contact.webp',
         'template-services.blade.php' => 'work/cupola-field.jpg',
-        'template-now.blade.php' => 'products/acreline/featured.webp',
-        'template-uses.blade.php' => 'products/tocguide/featured.webp',
         'template-resources.blade.php' => 'products/walkridge/featured.webp',
         'template-support.blade.php' => 'products/acreline/07-book.webp',
         'template-start.blade.php' => 'work/willoughby.jpg',
@@ -4494,6 +4507,15 @@ add_filter('wp_nav_menu_objects', function (array $items, $args): array {
     }));
 }, 20, 2);
 
+// Hire, Code, and Now are sections on About; Uses is on Resources. Menu items that still point at the old pages stay out of wp_nav_menu() output.
+add_filter('wp_nav_menu_objects', function (array $items): array {
+    return array_values(array_filter($items, static function ($item): bool {
+        $path = strtolower(trim((string) (wp_parse_url((string) ($item->url ?? ''), PHP_URL_PATH) ?? ''), '/'));
+
+        return ! in_array($path, ['hire', 'code', 'now', 'uses'], true);
+    }));
+}, 21);
+
 add_action('init', function (): void {
     if (get_option('mh_projects_portfolio_copy_v1') || wp_installing()) {
         return;
@@ -4621,7 +4643,7 @@ function mh_apply_projects_readable_copy(): void
         $workIntro = (string) get_post_meta($home->ID, 'mh_f_home_work_intro', true);
         $oldWork = [
             '',
-            'Studio WordPress themes and plugins with live demos and stack notes. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
+            'WordPress themes and plugins with live demos and stack notes. Hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
             'Live demos for tours, shops, and inns. Buy a listed pack, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
             'Themes and plugins with live demos for tours, shops, and inns. Buy a pack when it is listed, or hire me to adapt one. Employer work stays private unless a shop asks to be featured.',
             'Public Sage 11 examples for tours, shops, and inns — not a client gallery. Some cards include a theme pack you can buy. Employer work stays private unless a shop asks to be featured.',
@@ -4760,7 +4782,6 @@ function mh_ensure_utility_pages(): void
         'privacy' => ['Privacy', 'template-privacy.blade.php'],
         'terms' => ['Terms', 'template-terms.blade.php'],
         'accessibility' => ['Accessibility', 'template-accessibility.blade.php'],
-        'uses' => ['Uses', 'template-uses.blade.php'],
         'resources' => ['Resources', 'template-resources.blade.php'],
         'support' => ['Support', 'template-support.blade.php'],
         'thank-you' => ['Thank you', 'template-thankyou.blade.php'],

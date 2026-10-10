@@ -116,13 +116,13 @@ All tokens are CSS custom properties defined in `resources/css/app.css` using `@
 | `/` | `template-home.blade.php` | Home / landing |
 | `/about/` | `template-about.blade.php` | Background, story, availability |
 | `/services/` | `template-services.blade.php` | Acreline add-ons, custom WordPress floors, FAQ |
-| `/hire/` | `template-hire.blade.php` | Focused hire-me conversion page |
+| `/hire/` | → `/about/#hire` (301) | Hire section on About since 3.6.49 |
 | `/projects/` | `template-projects.blade.php` | Studio project portfolio |
-| `/code/` | `template-code.blade.php` | GitHub showcase, resume, skills |
+| `/code/` | → `/about/#code` (301) | GitHub, resume, and stack sections on About since 3.6.49 |
 | `/blog/` | `index.blade.php` | Journal / blog listing |
 | `/contact/` | `template-contact.blade.php` | Contact form |
-| `/now/` | `template-now.blade.php` | Now page (nownownow.com pattern) |
-| `/uses/` | `template-uses.blade.php` | Tech stack and tools reference |
+| `/now/` | → `/about/#now` (301) | Now section on About since 3.6.50 |
+| `/uses/` | → `/resources/#uses` (301) | Stack list lives on Resources since 3.6.50 |
 | `/changelog/` | `template-changelog.blade.php` | Public site update log |
 | `/thank-you/` | `template-thankyou.blade.php` | Post-form conversion page |
 | `/accessibility/` | `template-accessibility.blade.php` | WCAG/508 conformance statement |

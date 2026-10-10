@@ -69,7 +69,7 @@
         {{ \App\field('portfolio_products_h2', __('Themes and plugins built from these repos.', 'sage'), $postId) }}
       </h2>
       <p class="lead" style="margin-bottom:2rem">
-        {{ \App\field('portfolio_products_intro', __('Studio concepts that show how I build. Hire me to adapt one for a shop, agency, or role.', 'sage'), $postId) }}
+        {{ \App\field('portfolio_products_intro', __('WordPress themes and plugins that show how I build. Hire me to adapt one for a shop, agency, or role.', 'sage'), $postId) }}
       </p>
       <div class="portfolio-product-grid">
         @foreach ($portfolioConcepts as $p)
