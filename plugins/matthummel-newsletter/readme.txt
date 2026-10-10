@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.11.1
+Stable tag: 1.11.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,8 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 == Changelog ==
 
+= 1.11.2 =
+* A send that stops halfway keeps going. The next batch is queued again, and one address that cannot be mailed does not cancel the rest of the list.
 = 1.11.1 =
 * Page setup waits until WordPress has finished booting, so an upgrade no longer takes the site down.
 

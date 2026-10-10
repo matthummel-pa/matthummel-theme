@@ -92,21 +92,40 @@ function schedule_issue(int $issueId, string $gmt): bool
 
 function queue_batch(int $issueId, int $delay = 0): void
 {
+    if ($issueId < 1 || batch_is_pending($issueId)) {
+        return;
+    }
+
     $timestamp = time() + max(0, $delay);
-    if (function_exists('as_schedule_single_action')) {
-        $already = function_exists('as_next_scheduled_action')
-            ? as_next_scheduled_action('mhn_send_batch', [$issueId], 'matthummel-newsletter')
-            : false;
-        if (! $already) {
-            as_schedule_single_action($timestamp, 'mhn_send_batch', [$issueId], 'matthummel-newsletter');
-        }
+    if (uses_action_scheduler()) {
+        as_schedule_single_action($timestamp, 'mhn_send_batch', [$issueId], 'matthummel-newsletter');
 
         return;
     }
 
-    if (! wp_next_scheduled('mhn_send_batch', [$issueId])) {
-        wp_schedule_single_event($timestamp, 'mhn_send_batch', [$issueId]);
+    wp_schedule_single_event($timestamp, 'mhn_send_batch', [$issueId]);
+}
+
+function uses_action_scheduler(): bool
+{
+    return function_exists('as_schedule_single_action') && function_exists('as_next_scheduled_action');
+}
+
+function batch_is_pending(int $issueId): bool
+{
+    if ($issueId < 1) {
+        return false;
     }
+
+    if (uses_action_scheduler()) {
+        $next = as_next_scheduled_action('mhn_send_batch', [$issueId], 'matthummel-newsletter');
+
+        return is_numeric($next) && (int) $next > 0;
+    }
+
+    $next = wp_next_scheduled('mhn_send_batch', [$issueId]);
+
+    return is_numeric($next) && (int) $next > 0;
 }
 
 function send_batch(int|string|array $issueId = 0): void
@@ -125,6 +144,8 @@ function send_batch(int|string|array $issueId = 0): void
     }
 
     if (! claim_batch($issueId)) {
+        queue_batch($issueId, 60);
+
         return;
     }
 
@@ -137,7 +158,11 @@ function send_batch(int|string|array $issueId = 0): void
         }
 
         foreach ($rows as $subscriber) {
-            deliver_issue($issueId, $subscriber);
+            try {
+                deliver_issue($issueId, $subscriber);
+            } catch (\Throwable $error) {
+                log_event($issueId, (int) ($subscriber['id'] ?? 0), 'failed', $error->getMessage());
+            }
         }
 
         update_post_meta($issueId, '_mhn_sent_count', (string) count_issue_event($issueId, 'sent'));
@@ -145,15 +170,32 @@ function send_batch(int|string|array $issueId = 0): void
 
         if (next_recipients($issueId, 1) === []) {
             finish_campaign($issueId);
-
-            return;
         }
-
-        $delay = (int) apply_filters('mhn_batch_delay', 30);
-        queue_batch($issueId, max(1, $delay));
     } finally {
         release_batch($issueId);
+        resume_sending_batch($issueId);
     }
+}
+
+/**
+ * Keep a half-finished send moving. A timeout or a thrown mail error used to
+ * leave the issue on "sending" with no follow-up, so the rest of the list
+ * never received it and Send stayed blocked.
+ */
+function resume_sending_batch(int $issueId): void
+{
+    if ($issueId < 1 || issue_status($issueId) !== 'sending') {
+        return;
+    }
+
+    if (next_recipients($issueId, 1) === []) {
+        finish_campaign($issueId);
+
+        return;
+    }
+
+    $delay = (int) apply_filters('mhn_batch_delay', 30);
+    queue_batch($issueId, max(1, $delay));
 }
 
 /**
@@ -196,19 +238,39 @@ function finish_campaign(int $issueId): void
     store_sent_snapshot($issueId);
 }
 
+function batch_lock_key(int $issueId): string
+{
+    return 'mhn_lock_'.$issueId;
+}
+
 function claim_batch(int $issueId): bool
 {
-    $key = 'mhn_lock_'.$issueId;
-    if (get_transient($key)) {
+    $key = batch_lock_key($issueId);
+    $now = time();
+    if (add_option($key, (string) $now, '', false)) {
+        return true;
+    }
+
+    $started = (int) get_option($key, 0);
+    if ($started > 0 && ($now - $started) < 10 * MINUTE_IN_SECONDS) {
         return false;
     }
-    set_transient($key, '1', 2 * MINUTE_IN_SECONDS);
 
-    return true;
+    delete_option($key);
+
+    return add_option($key, (string) $now, '', false);
+}
+
+function batch_is_locked(int $issueId): bool
+{
+    $started = (int) get_option(batch_lock_key($issueId), 0);
+
+    return $started > 0 && (time() - $started) < 10 * MINUTE_IN_SECONDS;
 }
 
 function release_batch(int $issueId): void
 {
+    delete_option(batch_lock_key($issueId));
     delete_transient('mhn_lock_'.$issueId);
 }
 
@@ -230,5 +292,32 @@ function cron_tick(): void
         if ($when !== '' && $when <= $now) {
             start_campaign((int) $id);
         }
+    }
+
+    resume_orphaned_sends();
+}
+
+/**
+ * A send left on "sending" with nobody working it gets another batch.
+ */
+function resume_orphaned_sends(): void
+{
+    $ids = get_posts([
+        'post_type' => 'newsletter_issue',
+        'post_status' => 'any',
+        'posts_per_page' => 5,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'meta_key' => '_mhn_status',
+        'meta_value' => 'sending',
+    ]);
+
+    foreach (is_array($ids) ? $ids : [] as $id) {
+        $id = (int) $id;
+        if ($id < 1 || batch_is_locked($id) || batch_is_pending($id)) {
+            continue;
+        }
+
+        resume_sending_batch($id);
     }
 }
