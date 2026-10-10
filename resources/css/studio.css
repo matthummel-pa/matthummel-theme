@@ -5193,3 +5193,76 @@ html.mh-dark .code-pulse__stat dd { background: linear-gradient(180deg, var(--bl
 .code-practice-card__n { color: var(--violet-300); }
 .h-process__num { color: var(--violet-500); }
 html.mh-dark .h-process__num { color: var(--violet-300); }
+
+/* ── Lime buttons with purple type; every open-for-work mark matches ─── */
+:root { --violet-900: #4c1d95; }
+.btn,
+.page-header .btn,
+.h-hero .btn,
+.site-footer .btn,
+.btn-on-dark,
+html.mh-dark .btn,
+html.mh-dark .btn-on-dark {
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  border-color: var(--lime-500);
+  color: var(--violet-900);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset, 0 12px 26px -12px rgba(132, 204, 22, .6);
+}
+.btn:hover,
+.btn:focus-visible,
+.page-header .btn:hover,
+.h-hero .btn:hover,
+.site-footer .btn:hover,
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible,
+html.mh-dark .btn:hover,
+html.mh-dark .btn-on-dark:hover {
+  background: linear-gradient(180deg, #d9f99d 0%, var(--lime-300) 100%);
+  border-color: var(--lime-400);
+  color: var(--violet-900);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .45) inset, 0 14px 30px -12px rgba(132, 204, 22, .75);
+}
+.btn svg,
+.btn-on-dark svg { color: var(--violet-900); fill: currentColor; }
+.btn-outline,
+.btn-ghost { color: inherit; }
+.btn-outline { color: var(--blue-700); }
+html.mh-dark .btn-outline { color: var(--blue-300); }
+.btn-hire { background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%); border-color: var(--lime-500); color: var(--violet-900); }
+.mh-popout-cta { background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%); border-color: var(--lime-500); color: var(--violet-900); }
+
+.header-avail,
+.site-footer .header-avail.footer-avail,
+.header-avail .header-avail__label,
+.site-footer .header-avail.footer-avail .header-avail__label,
+.about-aside-avail,
+.hire-li-open,
+.h-badge--open,
+.now-sidebar-card--status .now-sidebar-card__value,
+html.mh-dark .header-avail,
+html.mh-dark .about-aside-avail,
+html.mh-dark .hire-li-open,
+html.mh-dark .h-badge--open { color: var(--violet-900); }
+.about-aside-avail,
+.hire-li-open,
+.h-badge--open,
+html.mh-dark .about-aside-avail,
+html.mh-dark .hire-li-open,
+html.mh-dark .h-badge--open {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .32rem .75rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  border: 1px solid var(--lime-500);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-size: .72rem;
+}
+.about-aside-avail .h-badge__dot,
+.hire-li-open .h-badge__dot,
+.h-badge--open .h-badge__dot,
+.header-avail .h-badge__dot { background: var(--violet-700); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
+.cta-band .eyebrow--on-dark .h-badge__dot { background: var(--lime-400); }
