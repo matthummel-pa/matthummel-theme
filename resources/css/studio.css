@@ -6159,3 +6159,96 @@ html.mh-dark .work-grid--roomy.is-list .work-shot {
   .post-list--roomy.is-list .post-body,
   .work-grid--roomy.is-list .work-body { padding: 1.35rem 1.4rem 1.5rem; }
 }
+
+/* ── 3.6.56 · Dark mode: keep the fixed header below the WP admin bar. The dark
+   header block sets `top: 0` at (0,2,1), which beat `.admin-bar .site-header`
+   from portfolio.css, so logged-in users saw the header slide under the admin
+   bar and a 32px gap open above the "On this page" sub-nav. `html` prefix so
+   it also beats portfolio's ≤900px `.admin-bar .site-header { top: auto }`. ── */
+html .admin-bar .site-header { top: 32px; }
+@media screen and (max-width: 782px) {
+  html .admin-bar .site-header { top: 46px; }
+}
+
+/* ── 3.6.56 · Light mode: every lime / outline button hovers and focuses to the
+   same blue→violet gradient as dark mode (same !important rationale as 3.6.54). ── */
+html:not(.mh-dark) .btn:hover,
+html:not(.mh-dark) .btn:focus-visible,
+html:not(.mh-dark) .btn-outline:hover,
+html:not(.mh-dark) .btn-outline:focus-visible,
+html:not(.mh-dark) .btn-ghost:hover,
+html:not(.mh-dark) .btn-ghost:focus-visible,
+html:not(.mh-dark) .repo-card__demo:hover,
+html:not(.mh-dark) .repo-card__demo:focus-visible,
+html:not(.mh-dark) .code-block__cta:hover,
+html:not(.mh-dark) .code-block__cta:focus-visible,
+html:not(.mh-dark) .search-form button:hover,
+html:not(.mh-dark) .search-form button:focus-visible,
+html:not(.mh-dark) .mh-popout-cta:hover,
+html:not(.mh-dark) .mh-popout-cta:focus-visible,
+html:not(.mh-dark) .header-avail:hover,
+html:not(.mh-dark) .header-avail:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%) !important;
+  border-color: var(--violet-700) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, .35), 0 1px 0 rgba(255, 255, 255, .15) inset, 0 14px 30px -12px rgba(109, 40, 217, .6);
+}
+html:not(.mh-dark) .btn:hover svg,
+html:not(.mh-dark) .btn:focus-visible svg,
+html:not(.mh-dark) .header-avail:hover .header-avail__label,
+html:not(.mh-dark) .header-avail:hover .mh-avail__emoji { color: #fff !important; }
+
+/* ── 3.6.56 · "On this page" anchor pills: dark-purple scheme. Light: deep violet
+   type on white, violet tint on hover, violet-700→900 fill when active. Dark: a
+   violet-900 tint with light type, blue→violet fill when active. The old
+   `a.h-page-nav__pill.is-active { background: var(--blue-700) !important }`
+   rule is why these carry !important. ── */
+html:not(.mh-dark) .h-page-nav__label { color: var(--violet-700); }
+html:not(.mh-dark) .h-page-nav__pill {
+  background: #fff;
+  border-color: var(--violet-100);
+  color: var(--violet-900);
+  font-weight: 700;
+}
+html:not(.mh-dark) .h-page-nav__pill:hover,
+html:not(.mh-dark) .h-page-nav__pill:focus-visible {
+  background: var(--violet-50);
+  border-color: var(--violet-400);
+  color: var(--violet-900);
+}
+html:not(.mh-dark) a.h-page-nav__pill.is-active,
+html:not(.mh-dark) a.h-page-nav__pill[aria-current="true"],
+html:not(.mh-dark) a.h-page-nav__pill.is-active:hover,
+html:not(.mh-dark) a.h-page-nav__pill.is-active:focus-visible {
+  background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%) !important;
+  border-color: var(--violet-900) !important;
+  color: #fff !important;
+}
+html.mh-dark .h-page-nav__label { color: var(--violet-300); }
+html.mh-dark .h-page-nav__pill {
+  background: rgba(76, 29, 149, .32);
+  border-color: rgba(167, 139, 250, .38);
+  color: #ede9fe;
+  font-weight: 700;
+}
+html.mh-dark .h-page-nav__pill:hover,
+html.mh-dark .h-page-nav__pill:focus-visible {
+  background: rgba(109, 40, 217, .5);
+  border-color: var(--violet-400);
+  color: #fff;
+}
+html.mh-dark a.h-page-nav__pill.is-active,
+html.mh-dark a.h-page-nav__pill[aria-current="true"],
+html.mh-dark a.h-page-nav__pill.is-active:hover,
+html.mh-dark a.h-page-nav__pill.is-active:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%) !important; /* violet-700 keeps white type at 7:1 */
+  border-color: transparent !important;
+  color: #fff !important;
+}
+/* Prev/next arrows follow the pills */
+html:not(.mh-dark) .h-page-nav__arrow:hover:not(:disabled),
+html:not(.mh-dark) .h-page-nav__arrow:focus-visible:not(:disabled) { color: var(--violet-900); border-color: var(--violet-400); background: var(--violet-50); }
+html.mh-dark .h-page-nav__arrow { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
+html.mh-dark .h-page-nav__arrow:hover:not(:disabled),
+html.mh-dark .h-page-nav__arrow:focus-visible:not(:disabled) { background: rgba(109, 40, 217, .5); border-color: var(--violet-400); color: #fff; }
