@@ -40,11 +40,21 @@ function initHeaderScroll() {
     return;
   }
   let ticking = false;
+  // Publish the real header height so the sticky On-this-page bar sits flush under it.
+  const measure = () => {
+    const h = Math.round(header.getBoundingClientRect().height);
+    if (h > 0) {
+      document.documentElement.style.setProperty('--header-h', `${h}px`);
+    }
+  };
   const update = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 24);
+    header.classList.toggle('is-scrolled', window.scrollY > 12);
     ticking = false;
   };
+  measure();
   update();
+  window.addEventListener('resize', measure, { passive: true });
+  window.addEventListener('load', measure);
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(update);
