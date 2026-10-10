@@ -2,6 +2,14 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.51 blue & gray brand pass)
+
+- The brand layer is the last block in `resources/css/studio.css` (tokens on `:root` / `html.mh-dark`, then component overrides). Change colors there, not in `portfolio.css`. Signal blue is `--blue-500` (#1d6fe0); navy is `--blue-800` / `--blue-900`. Do not reintroduce `#0d2e57` as the accent.
+- Heroes: `.page-header` / `.h-hero` carry the navy gradient; the photo is `mix-blend-mode: luminosity` under `.page-header__wash`. Do not restore the white wash or remove the card's blue top rule.
+- One card treatment: the long selector list under "Cards" in the brand block. Add new card classes there instead of writing a second shadow recipe.
+- Footer is navy (`.site-footer` gradient); every footer link color is set in the brand block. Keep `.footer-avail` green.
+- `.header-avail__label` shows from 900px (brand block overrides the 1080px rule in `portfolio.css`).
+
 ## Editor’s notes (3.6.50 Now joins About)
 
 - `/now/` → `/about/#now` (same `template_redirect` as Hire/Code). The Now section reads `now_h1`, `now_lede`, `now_updated`, `now_items`, `now_life_p1`, `now_posts_empty` as About page fields; defaults in `mh_now_items_defaults()`. `mh_now_updated()` uses About's edit date, then the old Now page. Do not recreate `template-now`, `partials/now-activity`, `partials/now-note`, or `resources/js/now-desk.js`.

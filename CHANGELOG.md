@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.51 — Blue & gray brand pass
+
+- Deeper navy (`#071a33`–`#0b2a52`), one signal blue (`#1d6fe0`), and cool grays replace the near-black accent and flat paper. Tokens live at the end of `studio.css`; structure and markup are unchanged.
+- Heroes get a navy wash over the photo with a white card and a blue top rule; the wave matches the page canvas.
+- Primary buttons are a navy→blue gradient with a soft shadow; outline buttons are blue-bordered. Cards share one hairline-and-lift treatment with a blue border on hover.
+- Footer is navy with light type; the CTA band gets blue light. Headings are navy, body copy slate.
+- The header availability pill shows its label from 900px (it is the only header call to action).
+- Recent-post excerpts on About no longer print a raw `&hellip;`.
+
 ## 3.6.50 — Now joins About; studio copy retired; menus trimmed
 
 - `/now/` is a **Now** section on About (checklist, life note, last-updated date, three recent posts). `/now/` 301s to `/about/#now`. The Now template, activity desk, and note form are gone; Contact keeps the form.

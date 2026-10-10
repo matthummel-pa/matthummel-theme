@@ -3960,3 +3960,349 @@ html.mh-dark .about-now__posts { background: var(--color-surface); }
 .about-now__posts .now-posts { margin-bottom: 1rem; }
 .about-now__empty { color: var(--color-text-secondary); font-size: .92rem; }
 .uses-stack .uses-head { margin-bottom: 2rem; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.6.51 — Blue & gray brand pass (last-win)
+   Deeper navy, one signal blue, cool grays. Branded hero wash instead of a
+   washed-out stock photo, navy footer, gradient primary buttons, lifted cards.
+   Structure untouched: selectors only. Dark mode keeps its own surfaces.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --blue-50: #eef4fc;
+  --blue-100: #dbe9fa;
+  --blue-200: #bfd9f7;
+  --blue-300: #8fbdf0;
+  --blue-400: #4f8fd4;
+  --blue-500: #1d6fe0;
+  --blue-600: #1552a0;
+  --blue-700: #0f3a72;
+  --blue-800: #0b2a52;
+  --blue-900: #071a33;
+
+  --gray-50: #f4f7fb;
+  --gray-100: #e8edf4;
+  --gray-200: #d5dde8;
+  --gray-300: #b4c0d0;
+  --gray-400: #8593a6;
+  --gray-500: #5f6d82;
+  --gray-600: #46536a;
+  --gray-700: #2f3a4d;
+  --gray-800: #1b2433;
+  --gray-900: #0f1623;
+
+  --color-canvas: #f4f7fb;
+  --color-bg: #ffffff;
+  --color-hero: var(--blue-800);
+  --color-surface: var(--gray-50);
+  --color-border: var(--gray-200);
+  --color-border-light: var(--gray-100);
+  --color-text: var(--gray-900);
+  --color-text-secondary: var(--gray-700);
+  --color-text-muted: var(--gray-600);
+  --color-accent: var(--blue-600);
+  --color-accent-hover: var(--blue-500);
+  --color-accent-bright: var(--blue-500);
+  --color-spark: var(--blue-500);
+  --color-spark-soft: var(--blue-100);
+  --color-focus: var(--blue-500);
+  --color-navy: var(--blue-800);
+  --color-blue: var(--blue-600);
+  --color-blue-ink: var(--blue-700);
+  --color-blue-soft: var(--blue-50);
+  --color-line: var(--gray-200);
+
+  --radius: 10px;
+  --radius-btn: 10px;
+  --radius-card: 14px;
+  --brand-shadow-card: 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(11, 42, 82, .45);
+  --brand-shadow-card-hover: 0 2px 4px rgba(15, 22, 35, .05), 0 22px 44px -24px rgba(11, 42, 82, .5);
+  --studio-shadow: 0 12px 32px -18px rgba(11, 42, 82, .35);
+  --studio-shadow-sm: 0 6px 16px -10px rgba(11, 42, 82, .3);
+}
+html.mh-dark {
+  --color-canvas: #0b1220;
+  --color-bg: #111a28;
+  --color-hero: #0b2a52;
+  --color-surface: #172233;
+  --color-card: #141c28;
+  --color-border: #243041;
+  --color-line: #243041;
+  --color-text: #eef3f9;
+  --color-text-secondary: #c5d0de;
+  --color-text-muted: #a8b4c4;
+  --white: #141c28;
+  --brand-shadow-card: 0 1px 2px rgba(0, 0, 0, .3), 0 14px 32px -26px rgba(0, 0, 0, .7);
+  --brand-shadow-card-hover: 0 2px 4px rgba(0, 0, 0, .35), 0 22px 44px -24px rgba(0, 0, 0, .8);
+}
+
+body { background: var(--color-canvas); color: var(--color-text); }
+
+/* ── Header: white bar, navy brand, one green CTA ─────────────────────── */
+.site-header {
+  background: color-mix(in srgb, #fff 94%, transparent);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 10px 30px -24px rgba(11, 42, 82, .45);
+}
+html.mh-dark .site-header { background: color-mix(in srgb, #0b1220 92%, transparent); border-bottom-color: #243041; }
+.brand-name { font-weight: 800; letter-spacing: -0.04em; color: var(--blue-800); }
+html.mh-dark .brand-name { color: #fff; }
+.header-nav-list a { color: var(--gray-700); font-weight: 600; border-radius: 8px; }
+.header-nav-list a:hover { background: var(--blue-50); color: var(--blue-700); }
+.header-nav-list .current-menu-item > a,
+.header-nav-list a[aria-current="page"] { background: var(--blue-800); color: #fff; }
+html.mh-dark .header-nav-list a { color: #c5d0de; }
+html.mh-dark .header-nav-list a:hover { background: #172233; color: #fff; }
+.header-avail {
+  padding: .5rem .95rem;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, .14), 0 8px 18px -10px rgba(21, 128, 61, .7);
+  transition: box-shadow .18s ease, background .18s ease, transform .18s ease;
+}
+.header-avail:hover,
+.header-avail:focus-visible { box-shadow: 0 0 0 5px rgba(21, 128, 61, .22), 0 10px 22px -10px rgba(21, 128, 61, .8); transform: translateY(-1px); }
+/* The pill is the only header CTA now: show its label from tablet up (was 1080px). */
+.header-avail__label { display: none; }
+@media (min-width: 900px) { .header-avail__label { display: inline; } }
+
+/* ── Buttons: gradient primary, crisp outline ─────────────────────────── */
+.btn {
+  background: linear-gradient(180deg, var(--blue-600) 0%, var(--blue-700) 100%);
+  color: #fff;
+  border: 1px solid var(--blue-700);
+  border-radius: var(--radius-btn);
+  font-weight: 700;
+  letter-spacing: .005em;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .16) inset, 0 10px 22px -12px rgba(11, 42, 82, .65);
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease, color .16s ease;
+}
+.btn:hover,
+.btn:focus-visible {
+  background: linear-gradient(180deg, var(--blue-500) 0%, var(--blue-600) 100%);
+  border-color: var(--blue-600);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .2) inset, 0 14px 26px -12px rgba(21, 82, 160, .7);
+}
+.btn-outline,
+.btn-outline:hover,
+.btn-outline:focus-visible { background: #fff; color: var(--blue-700); border-color: var(--blue-200); box-shadow: none; transform: none; }
+.btn-outline:hover,
+.btn-outline:focus-visible { background: var(--blue-50); border-color: var(--blue-400); color: var(--blue-800); }
+html.mh-dark .btn-outline { background: #141c28; color: #c5d0de; border-color: #2f3a4d; }
+html.mh-dark .btn-outline:hover { background: #172233; color: #fff; border-color: var(--blue-400); }
+.btn-on-dark,
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible { background: #fff; color: var(--blue-800); border-color: #fff; box-shadow: 0 10px 22px -12px rgba(0, 0, 0, .5); }
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible { background: var(--blue-50); transform: translateY(-1px); }
+.btn-ghost,
+.btn-ghost:hover,
+.btn-ghost:focus-visible { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .45); box-shadow: none; }
+.btn-ghost:hover,
+.btn-ghost:focus-visible { border-color: #fff; background: rgba(255, 255, 255, .08); }
+.btn-hire { background: var(--blue-800); border-color: var(--blue-800); }
+
+/* ── Heroes: navy wash over the photo, white card with a blue rule ────── */
+.page-header,
+.h-hero { background: linear-gradient(135deg, #071a33 0%, #0b2a52 55%, #1552a0 100%); }
+.page-header__wash,
+.h-hero__wash {
+  background:
+    linear-gradient(105deg, rgba(7, 26, 51, .94) 0%, rgba(11, 42, 82, .8) 38%, rgba(21, 82, 160, .42) 100%),
+    linear-gradient(180deg, rgba(7, 26, 51, .35) 0%, rgba(7, 26, 51, .55) 100%);
+}
+.page-header__photo,
+.h-hero__bg img { filter: saturate(.55) contrast(1.05); opacity: .6; mix-blend-mode: luminosity; }
+.page-header__panel,
+.h-hero__panel {
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-top: 4px solid var(--blue-500);
+  border-radius: 18px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 36px 70px -34px rgba(7, 26, 51, .75);
+}
+html.mh-dark .page-header__panel,
+html.mh-dark .h-hero__panel { background: #141c28; border-color: #243041; border-top-color: var(--blue-500); }
+.hero-wave { color: var(--color-canvas); }
+.page-header .eyebrow,
+.h-hero__kicker { background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-100); }
+html.mh-dark .page-header .eyebrow,
+html.mh-dark .h-hero__kicker { background: #172233; color: var(--blue-300); border-color: #243041; }
+
+/* ── Type: navy headings, slate copy ──────────────────────────────────── */
+.display-title,
+.h-section__title,
+.h-hero__name,
+.h-glance__title { color: var(--blue-900); }
+html.mh-dark .display-title,
+html.mh-dark .h-section__title,
+html.mh-dark .h-hero__name,
+html.mh-dark .h-glance__title { color: #fff; }
+.display-title.is-hero { font-size: clamp(2rem, 5vw, 2.9rem); letter-spacing: -0.045em; line-height: 1.05; }
+.display-title.is-section { font-size: clamp(1.55rem, 3.2vw, 2.05rem); letter-spacing: -0.035em; }
+.h-section__title { font-size: clamp(1.7rem, 3.4vw, 2.2rem) !important; letter-spacing: -0.035em; }
+.lead,
+.sec-intro { color: var(--gray-700); }
+html.mh-dark .lead,
+html.mh-dark .sec-intro { color: #c5d0de; }
+.eyebrow,
+.h-section-label { color: var(--blue-600); }
+html.mh-dark .eyebrow,
+html.mh-dark .h-section-label { color: var(--blue-300); }
+.h-text-arrow { color: var(--blue-700); }
+.h-text-arrow:hover,
+.h-text-arrow:focus-visible { color: var(--blue-500); }
+html.mh-dark .h-text-arrow { color: var(--blue-300); }
+
+/* ── Sections: subtle cool alternation ────────────────────────────────── */
+.pf-section--alt,
+.h-band--tint { background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%); border-block: 1px solid var(--gray-100); box-shadow: none; }
+html.mh-dark .pf-section--alt,
+html.mh-dark .h-band--tint { background: #0f172a; border-color: #243041; }
+.about-shell,
+.h-section-shell,
+.code-skills-shell,
+.code-practice-shell,
+.code-docs-shell { background: transparent; }
+
+/* ── On this page pills ───────────────────────────────────────────────── */
+.h-page-nav { background: color-mix(in srgb, #fff 90%, transparent); border-bottom: 1px solid var(--gray-200); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+html.mh-dark .h-page-nav { background: color-mix(in srgb, #0b1220 90%, transparent); border-bottom-color: #243041; }
+.h-page-nav__pill { border: 1px solid var(--gray-200); background: #fff; color: var(--gray-700); font-weight: 600; }
+.h-page-nav__pill:hover { border-color: var(--blue-300); background: var(--blue-50); color: var(--blue-700); }
+.h-page-nav__pill.is-active { background: var(--blue-800); border-color: var(--blue-800); color: #fff; }
+html.mh-dark .h-page-nav__pill { background: #141c28; border-color: #243041; color: #c5d0de; }
+
+/* ── Cards: white, hairline, soft lift ────────────────────────────────── */
+.about-svc-card,
+.repo-card,
+.h-process__step,
+.about-aside-card,
+.h-principle,
+.work-card,
+.post-card,
+.resources-card,
+.uses-item,
+.h-faq__item,
+.h-glance__fact,
+.code-pulse__stat,
+.hire-need-cta,
+.about-now__posts,
+.h-journal-item,
+.resume-card,
+.about-approach__item,
+.about-work-type,
+.code-skills__tile,
+.h-glance__card,
+.cnt-aside,
+.contact-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200) !important;
+  border-radius: var(--radius-card) !important;
+  box-shadow: var(--brand-shadow-card);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.work-card:hover,
+.post-card:hover,
+.repo-card:hover,
+.resources-card:hover,
+.h-journal-item:hover,
+.uses-item:hover,
+.about-svc-card:hover,
+.h-process__step:hover {
+  transform: translateY(-3px);
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--brand-shadow-card-hover);
+}
+html.mh-dark .work-card:hover,
+html.mh-dark .post-card:hover,
+html.mh-dark .repo-card:hover,
+html.mh-dark .resources-card:hover { border-color: var(--blue-400) !important; }
+.h-glance__card { border-left: 4px solid var(--blue-500) !important; }
+.h-faq__item { background: var(--white); }
+.h-faq__item[open] { border-color: var(--blue-300) !important; }
+.about-svc-card__icon,
+.now-block__icon,
+.uses-section__icon,
+.ty-browse-card__icon,
+.about-approach__icon,
+.code-skills-group__mark,
+.about-aside-card__mark {
+  background: linear-gradient(135deg, var(--blue-50) 0%, var(--blue-100) 100%);
+  border: 1px solid var(--blue-200);
+  color: var(--blue-700);
+  border-radius: 12px;
+}
+html.mh-dark .about-svc-card__icon,
+html.mh-dark .about-approach__icon,
+html.mh-dark .about-aside-card__mark { background: #172233; border-color: #243041; color: var(--blue-300); }
+.about-svc-card__n,
+.code-practice-card__n { color: var(--blue-300); }
+.h-process__num { color: var(--blue-500); font-weight: 800; }
+.h-glance__fact { background: var(--gray-50); box-shadow: none; }
+.about-aside-card--linkedin { background: linear-gradient(180deg, #fff 0%, var(--blue-50) 100%); }
+html.mh-dark .about-aside-card--linkedin { background: #141c28; }
+.affiliate-note { border-left-color: var(--blue-500); background: var(--blue-50); border-radius: 10px; }
+html.mh-dark .affiliate-note { background: #172233; }
+
+/* ── Content links ────────────────────────────────────────────────────── */
+.post-prose a,
+.about-story__body a,
+.sec-intro a,
+.about-services-note a { color: var(--blue-600); text-decoration-color: var(--blue-200); text-underline-offset: .18em; }
+.post-prose a:hover,
+.about-story__body a:hover { color: var(--blue-500); text-decoration-color: var(--blue-400); }
+
+/* ── CTA band: navy with blue light ───────────────────────────────────── */
+.cta-band {
+  background:
+    radial-gradient(ellipse 70% 90% at 100% 0%, rgba(29, 111, 224, .55), transparent 55%),
+    radial-gradient(ellipse 55% 70% at 0% 100%, rgba(21, 82, 160, .55), transparent 60%),
+    linear-gradient(135deg, #071a33 0%, #0b2a52 100%);
+  color: #fff;
+}
+.cta-band__note { color: var(--blue-200); }
+.cta-band .display-title { color: #fff; }
+
+/* ── Footer: navy, light type, blue hover ─────────────────────────────── */
+.site-footer { background: linear-gradient(180deg, #0b2a52 0%, #071a33 100%); border-top: 0; color: #c9d9ef; }
+.site-footer .footer-brand,
+.site-footer .brand-name { color: #fff; }
+.site-footer .footer-nav-label { color: var(--blue-300); }
+.site-footer .footer-blurb,
+.site-footer .footer-copy,
+.site-footer .footer-nav a,
+.site-footer .footer-legal-links a,
+.site-footer .footer-follow__lede,
+.site-footer .footer-follow__note,
+.site-footer p { color: #c9d9ef; }
+.site-footer .footer-nav a:hover,
+.site-footer .footer-legal-links a:hover,
+.site-footer .footer-nav a:focus-visible,
+.site-footer .footer-legal-links a:focus-visible { color: #fff; text-decoration: underline; text-decoration-color: var(--blue-300); }
+.site-footer .soc-link { color: #c9d9ef; border-color: rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .05); }
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible { color: #fff; border-color: var(--blue-300); background: rgba(29, 111, 224, .25); }
+.site-footer .footer-follow__email { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .22); color: #fff; border-radius: 10px; }
+.site-footer .footer-follow__email::placeholder { color: #93a9c8; }
+.site-footer .footer-follow__email:focus { border-color: var(--blue-300); box-shadow: 0 0 0 3px rgba(29, 111, 224, .3); outline: none; }
+.site-footer .btn { background: linear-gradient(180deg, var(--blue-500) 0%, var(--blue-600) 100%); border-color: var(--blue-500); }
+.site-footer .btn:hover { background: linear-gradient(180deg, #2f7fe8 0%, var(--blue-500) 100%); }
+.site-footer .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .12); }
+.site-footer .footer-follow__status { color: #fff; }
+html.mh-dark .site-footer { background: linear-gradient(180deg, #0b1220 0%, #060f22 100%); }
+
+/* ── Focus ────────────────────────────────────────────────────────────── */
+:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+.site-footer :focus-visible,
+.cta-band :focus-visible { outline-color: #fff; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .btn, .btn:hover, .work-card:hover, .post-card:hover, .repo-card:hover, .resources-card:hover,
+  .h-journal-item:hover, .uses-item:hover, .about-svc-card:hover, .h-process__step:hover, .header-avail:hover { transform: none; }
+}
+/* Below 900px the pill is emoji/dot only: keep it compact. */
+@media (max-width: 899px) { .header-avail { padding: .45rem .6rem; } }
