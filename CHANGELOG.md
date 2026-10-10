@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.54 — Dark-mode hover polish, code-page.css dead rules
+
+- Dark mode: every lime button — solid, outline, ghost, the repo "Live demo" and "All repos" buttons, the search button — hovers and focuses to the same blue→violet gradient with white type (violet-700 end so white stays above 4.5:1).
+- Dark mode: text links (prose, About story/aside links, "Read more", arrow links, author bio, post nav, footer nav and legal links) hover and focus to lime with a lime underline; `--color-accent-hover` is lime so unstyled links follow.
+- `code-page.css`: removed the light-mode rules for the retired Code-page community, avatars, watching and breakdown blocks (zero references).
+
 ## 3.6.53 — Remove code-page.css dark block
 
 - `code-page.css` no longer carries its own `html.mh-dark` rules. They mixed `--gray-900` / `--white`, which the dark skin remaps, and every rule was either overridden by `studio.css` (3.6.52) or targeted classes that left with the old Code page. No visual change.
