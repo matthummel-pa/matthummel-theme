@@ -64,7 +64,6 @@ function mh_code_gh_refresh(bool $force = true): array
             'featured' => $featured,
             'followers' => Github::fetchFollowers($login, 30),
             'stargazers' => mh_code_gh_fetch_stargazers($login, $featured, 24),
-            'watching' => mh_github_watching(36),
         ];
     } finally {
         Github::fresh(false);
@@ -114,7 +113,6 @@ function mh_code_gh_part_ok(string $key, mixed $value): bool
     return match ($key) {
         'profile' => is_array($value) && ! empty($value['login']),
         'calendar' => is_array($value) && ! empty($value['weeks']),
-        'watching' => is_array($value) && ! empty($value['items']),
         'stargazers' => is_array($value),
         default => is_array($value) && $value !== [],
     };
@@ -156,7 +154,7 @@ function mh_code_gh_snapshot(): array
 }
 
 /**
- * Add the numbers templates need (streaks, language mix, recent pushes, badges).
+ * Add the numbers templates need (streaks, language mix, recent pushes).
  *
  * @param  array<string, mixed>  $snap
  * @return array<string, mixed>
@@ -169,7 +167,6 @@ function mh_code_gh_derive(array $snap): array
     // Re-normalize on read (cheap) so card changes ship without waiting for a refresh.
     $featured = array_map(__NAMESPACE__.'\\mh_code_gh_card', is_array($snap['featured'] ?? null) ? $snap['featured'] : []);
     $events = is_array($snap['events'] ?? null) ? $snap['events'] : [];
-    $watching = is_array($snap['watching'] ?? null) ? $snap['watching'] : ['source' => 'starred', 'items' => []];
 
     $starTotal = 0;
     $starRepos = [];
@@ -220,11 +217,9 @@ function mh_code_gh_derive(array $snap): array
         'followers' => is_array($snap['followers'] ?? null) ? $snap['followers'] : [],
         'follower_count' => (int) ($profile['followers'] ?? 0),
         'stargazers' => is_array($snap['stargazers'] ?? null) ? $snap['stargazers'] : [],
-        'watching' => $watching,
         'synced_at' => (int) ($snap['synced_at'] ?? 0),
         'failed' => is_array($snap['failed'] ?? null) ? $snap['failed'] : [],
     ];
-    $out['badges'] = mh_code_gh_badges($out);
 
     return $out;
 }
@@ -393,91 +388,6 @@ function mh_code_gh_languages(array $repos): array
 
     return $out;
 }
-
-/**
- * Milestone badges from live numbers only (no fake achievements).
- *
- * @param  array<string, mixed>  $d  Derived snapshot.
- * @return list<array{label: string, detail: string, icon: string, class: string}>
- */
-function mh_code_gh_badges(array $d): array
-{
-    $badges = [];
-    $tier = static function (int $value, array $tiers): int {
-        foreach ($tiers as $t) {
-            if ($value >= $t) {
-                return $t;
-            }
-        }
-
-        return 0;
-    };
-
-    if ($d['repo_count'] > 0) {
-        $badges[] = [
-            'label' => __('Open source', 'sage'),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(_n('%s public repo', '%s public repos', $d['repo_count'], 'sage'), number_format_i18n($d['repo_count'])),
-            'icon' => 'github',
-            'class' => 'code-gh-badge--oss',
-        ];
-    }
-    $contrib = (int) ($d['calendar']['total'] ?? 0);
-    if ($t = $tier($contrib, [5000, 2500, 1000, 500, 100])) {
-        $badges[] = [
-            /* translators: %s: a formatted number. */
-            'label' => sprintf(__('%s+ contributions', 'sage'), number_format_i18n($t)),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(__('%s in the last year', 'sage'), number_format_i18n($contrib)),
-            'icon' => 'git',
-            'class' => 'code-gh-badge--contrib',
-        ];
-    }
-    $longest = (int) ($d['streaks']['longest'] ?? 0);
-    if ($t = $tier($longest, [100, 60, 30, 14, 7])) {
-        $badges[] = [
-            /* translators: %s: a formatted number. */
-            'label' => sprintf(__('%s-day streak', 'sage'), number_format_i18n($t)),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(_n('Longest run: %s day in a row', 'Longest run: %s days in a row', $longest, 'sage'), number_format_i18n($longest)),
-            'icon' => 'calendar',
-            'class' => 'code-gh-badge--streak',
-        ];
-    }
-    if ($t = $tier((int) $d['star_total'], [100, 50, 25, 10, 5])) {
-        $badges[] = [
-            /* translators: %s: a formatted number. */
-            'label' => sprintf(__('%s+ stars earned', 'sage'), number_format_i18n($t)),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(__('%s across public repos', 'sage'), number_format_i18n((int) $d['star_total'])),
-            'icon' => 'star',
-            'class' => 'code-gh-badge--stars',
-        ];
-    }
-    if ($t = $tier((int) $d['follower_count'], [500, 100, 50, 25, 10])) {
-        $badges[] = [
-            /* translators: %s: a formatted number. */
-            'label' => sprintf(__('%s+ followers', 'sage'), number_format_i18n($t)),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(__('%s people follow along', 'sage'), number_format_i18n((int) $d['follower_count'])),
-            'icon' => 'users',
-            'class' => 'code-gh-badge--followers',
-        ];
-    }
-    $releases = count(array_filter($d['featured'], static fn (array $r): bool => $r['release'] !== ''));
-    if ($releases > 0) {
-        $badges[] = [
-            'label' => __('Ships releases', 'sage'),
-            /* translators: %s: a formatted number. */
-            'detail' => sprintf(_n('%s featured repo with tagged releases', '%s featured repos with tagged releases', $releases, 'sage'), number_format_i18n($releases)),
-            'icon' => 'download',
-            'class' => 'code-gh-badge--release',
-        ];
-    }
-
-    return $badges;
-}
-
 /* ---------- Scheduling, admin refresh, WP-CLI ---------- */
 
 add_action(MH_CODE_GH_CRON, __NAMESPACE__.'\\mh_code_gh_refresh');

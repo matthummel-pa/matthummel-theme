@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.55 — List-view cards, GitHub sync trims dead data
+
+- Journal and Projects list view: the image column is a fixed 400×400 panel that shows the whole image (`object-fit: contain`) on a quiet surface — violet-tinted navy in dark mode, light gray in light — and the text column gets roomier padding. Below 900px the card stacks with a 16:10 image.
+- GitHub sync no longer fetches the watching list or builds milestone badges; nothing has read them since the Code page merged into About.
+
 ## 3.6.54 — Dark-mode hover polish, code-page.css dead rules
 
 - Dark mode: every lime button — solid, outline, ghost, the repo "Live demo" and "All repos" buttons, the search button — hovers and focuses to the same blue→violet gradient with white type (violet-700 end so white stays above 4.5:1).
