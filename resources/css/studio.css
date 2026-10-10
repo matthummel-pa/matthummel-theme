@@ -5266,3 +5266,230 @@ html.mh-dark .h-badge--open {
 .h-badge--open .h-badge__dot,
 .header-avail .h-badge__dot { background: var(--violet-700); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
 .cta-band .eyebrow--on-dark .h-badge__dot { background: var(--lime-400); }
+
+/* ── Larger headings; accent on the last words; purplish grid cards ──── */
+.display-title.is-hero,
+.h-hero__name { font-size: clamp(3rem, 7.4vw, 5rem); max-width: 15ch; }
+.display-title.is-section,
+.h-section__title { font-size: clamp(2.3rem, 5vw, 3.5rem) !important; }
+.h-glance__title { font-size: clamp(2rem, 4.2vw, 2.9rem); }
+.post-hero .display-title,
+.post-hero h1 { font-size: clamp(2.4rem, 5.6vw, 3.8rem); }
+
+/* Solid base color again; the gradient moves to the last words */
+.display-title.is-section,
+.h-section__title,
+.h-glance__title,
+.about-need__title,
+.about-now__posts-title,
+.page-header--photo .page-header__panel .display-title,
+.page-header .page-header__panel .display-title,
+.page-header .page-header__panel h1,
+.h-hero--photo .h-hero__panel .h-hero__name,
+.h-hero .h-hero__panel .h-hero__name,
+.cta-band .display-title,
+.contact-aside .display-title,
+.post-hero .display-title,
+.post-hero h1,
+html.mh-dark .display-title.is-section,
+html.mh-dark .h-section__title,
+html.mh-dark .h-glance__title {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  width: auto;
+}
+.display-title.is-section,
+.h-section__title,
+.h-glance__title,
+.about-need__title,
+.about-now__posts-title { color: var(--blue-900) !important; }
+html.mh-dark .display-title.is-section,
+html.mh-dark .h-section__title,
+html.mh-dark .h-glance__title,
+html.mh-dark .about-need__title,
+html.mh-dark .about-now__posts-title,
+.page-header .page-header__panel .display-title,
+.page-header .page-header__panel h1,
+.h-hero .h-hero__panel .h-hero__name,
+.cta-band .display-title,
+.contact-aside .display-title,
+.post-hero .display-title,
+.post-hero h1 { color: #fff !important; }
+.hd-accent {
+  background: linear-gradient(90deg, var(--blue-500) 0%, var(--cyan-400) 55%, var(--lime-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html:not(.mh-dark) .display-title.is-section .hd-accent,
+html:not(.mh-dark) .h-section__title .hd-accent,
+html:not(.mh-dark) .h-glance__title .hd-accent,
+html:not(.mh-dark) .about-need__title .hd-accent,
+html:not(.mh-dark) .about-now__posts-title .hd-accent {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.code-pulse__stat dd,
+html.mh-dark .code-pulse__stat dd { background: none; -webkit-background-clip: border-box; background-clip: border-box; -webkit-text-fill-color: currentColor; color: var(--violet-700); }
+html.mh-dark .code-pulse__stat dd { color: var(--lime-300); }
+
+/* Grid cards: purplish body, lime top edge, violet border; lime on hover */
+.about-svc-card,
+.repo-card,
+.h-process__step,
+.about-aside-card,
+.h-principle,
+.work-card,
+.post-card,
+.resources-card,
+.uses-item,
+.h-faq__item,
+.h-glance__fact,
+.code-pulse__stat,
+.hire-need-cta,
+.about-now__posts,
+.h-journal-item,
+.resume-card,
+.about-approach__item,
+.about-work-type,
+.code-skills__tile,
+.h-fit__col,
+.ty-browse-card {
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  border: 1px solid var(--violet-100) !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+}
+html.mh-dark .about-svc-card,
+html.mh-dark .repo-card,
+html.mh-dark .h-process__step,
+html.mh-dark .about-aside-card,
+html.mh-dark .h-principle,
+html.mh-dark .work-card,
+html.mh-dark .post-card,
+html.mh-dark .resources-card,
+html.mh-dark .uses-item,
+html.mh-dark .h-faq__item,
+html.mh-dark .h-glance__fact,
+html.mh-dark .code-pulse__stat,
+html.mh-dark .hire-need-cta,
+html.mh-dark .about-now__posts,
+html.mh-dark .h-journal-item,
+html.mh-dark .resume-card,
+html.mh-dark .about-approach__item,
+html.mh-dark .about-work-type,
+html.mh-dark .code-skills__tile,
+html.mh-dark .h-fit__col,
+html.mh-dark .ty-browse-card {
+  background: linear-gradient(160deg, #1f1b4d 0%, #171a45 45%, #0f1b3d 100%);
+  border: 1px solid rgba(167, 139, 250, .42) !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
+.work-card:hover,
+.post-card:hover,
+.repo-card:hover,
+.resources-card:hover,
+.h-journal-item:hover,
+.uses-item:hover,
+.about-svc-card:hover,
+.h-process__step:hover,
+.ty-browse-card:hover,
+html.mh-dark .work-card:hover,
+html.mh-dark .post-card:hover,
+html.mh-dark .repo-card:hover,
+html.mh-dark .resources-card:hover,
+html.mh-dark .h-journal-item:hover,
+html.mh-dark .uses-item:hover,
+html.mh-dark .about-svc-card:hover,
+html.mh-dark .h-process__step:hover,
+html.mh-dark .ty-browse-card:hover {
+  border-color: var(--lime-400) !important;
+  box-shadow: inset 0 3px 0 0 var(--cyan-400), 0 2px 4px rgba(15, 22, 35, .05), 0 24px 48px -24px rgba(163, 230, 53, .35);
+}
+html.mh-dark .about-aside-card--linkedin,
+html.mh-dark .resume-card.is-current { background: linear-gradient(160deg, #1f1b4d 0%, #171a45 45%, #0f1b3d 100%); }
+.resume-card.is-current,
+html.mh-dark .resume-card.is-current { border-left: 4px solid var(--lime-400) !important; }
+.h-glance__card,
+html.mh-dark .h-glance__card { background: linear-gradient(160deg, #1f1b4d 0%, #0f1b3d 100%); border-left: 4px solid var(--lime-400) !important; color: #fff; }
+html:not(.mh-dark) .h-glance__card { background: linear-gradient(160deg, #f6f3ff 0%, #fff 60%); color: var(--color-text); }
+.work-shot,
+html.mh-dark .work-shot { border-bottom-color: rgba(167, 139, 250, .35); }
+.about-svc-card__icon,
+.now-block__icon,
+.uses-section__icon,
+.ty-browse-card__icon,
+.about-approach__icon,
+.code-skills-group__mark,
+.about-aside-card__mark { background: linear-gradient(135deg, rgba(163, 230, 53, .18), rgba(139, 92, 246, .18)); border-color: rgba(167, 139, 250, .4); color: var(--violet-700); }
+html.mh-dark .about-svc-card__icon,
+html.mh-dark .now-block__icon,
+html.mh-dark .uses-section__icon,
+html.mh-dark .ty-browse-card__icon,
+html.mh-dark .about-approach__icon,
+html.mh-dark .code-skills-group__mark,
+html.mh-dark .about-aside-card__mark { color: var(--lime-300); }
+.h-process__num { color: var(--lime-500); }
+html.mh-dark .h-process__num { color: var(--lime-300); }
+
+/* ── Footer headers: bigger; lime on dark, deep purple on a light footer ── */
+.site-footer .footer-nav-label,
+html.mh-dark .site-footer .footer-nav-label { font: 800 1rem/1.2 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--lime-300); margin-bottom: 1rem; }
+.site-footer .footer-brand,
+html.mh-dark .site-footer .footer-brand { font-size: 1.35rem; font-weight: 900; letter-spacing: -0.04em; }
+html:not(.mh-dark) .site-footer {
+  background:
+    radial-gradient(ellipse 50% 60% at 90% 0%, rgba(139, 92, 246, .12), transparent 60%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, rgba(163, 230, 53, .14), transparent 60%),
+    linear-gradient(180deg, #f6f3ff 0%, #eef1fb 100%);
+  color: var(--gray-700);
+  border-top: 1px solid var(--violet-100);
+}
+html:not(.mh-dark) .site-footer .footer-nav-label { color: var(--violet-900); }
+html:not(.mh-dark) .site-footer .footer-brand,
+html:not(.mh-dark) .site-footer .brand-name { color: var(--blue-900); }
+html:not(.mh-dark) .site-footer .footer-blurb,
+html:not(.mh-dark) .site-footer .footer-copy,
+html:not(.mh-dark) .site-footer .footer-nav a,
+html:not(.mh-dark) .site-footer .footer-legal-links a,
+html:not(.mh-dark) .site-footer .footer-follow__lede,
+html:not(.mh-dark) .site-footer .footer-follow__note,
+html:not(.mh-dark) .site-footer p { color: var(--gray-700); }
+html:not(.mh-dark) .site-footer .footer-nav a:hover,
+html:not(.mh-dark) .site-footer .footer-legal-links a:hover { color: var(--violet-700); text-decoration-color: var(--violet-400); }
+html:not(.mh-dark) .site-footer .soc-link { color: var(--violet-900); border-color: var(--violet-100); background: #fff; }
+html:not(.mh-dark) .site-footer .soc-link:hover { color: var(--violet-700); border-color: var(--violet-400); background: var(--violet-50); }
+html:not(.mh-dark) .site-footer .footer-follow__email { background: #fff; border-color: var(--violet-100); color: var(--color-text); }
+html:not(.mh-dark) .site-footer .footer-follow__email::placeholder { color: var(--gray-500); }
+html:not(.mh-dark) .site-footer .footer-follow__email:focus { border-color: var(--violet-400); box-shadow: 0 0 0 3px rgba(139, 92, 246, .2); }
+html:not(.mh-dark) .site-footer .footer-bottom { border-top: 1px solid var(--violet-100); }
+html:not(.mh-dark) .site-footer .footer-follow__status { color: var(--color-text); }
+html:not(.mh-dark) .site-footer :focus-visible { outline-color: var(--violet-500); }
+/* A touch more purple in the dark cards. */
+html.mh-dark .about-svc-card,
+html.mh-dark .repo-card,
+html.mh-dark .h-process__step,
+html.mh-dark .about-aside-card,
+html.mh-dark .h-principle,
+html.mh-dark .work-card,
+html.mh-dark .post-card,
+html.mh-dark .resources-card,
+html.mh-dark .uses-item,
+html.mh-dark .h-faq__item,
+html.mh-dark .h-glance__fact,
+html.mh-dark .code-pulse__stat,
+html.mh-dark .hire-need-cta,
+html.mh-dark .about-now__posts,
+html.mh-dark .h-journal-item,
+html.mh-dark .resume-card,
+html.mh-dark .about-approach__item,
+html.mh-dark .about-work-type,
+html.mh-dark .code-skills__tile,
+html.mh-dark .h-fit__col,
+html.mh-dark .ty-browse-card,
+html.mh-dark .about-aside-card--linkedin,
+html.mh-dark .resume-card.is-current,
+html.mh-dark .h-glance__card { background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%); border-color: rgba(167, 139, 250, .5) !important; }

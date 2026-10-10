@@ -81,8 +81,48 @@ function initSectionReveal() {
   });
 }
 
+/**
+ * Two-tone headings: wrap the last two words (three when the heading has six or
+ * more) in <span class="hd-accent"> so CSS can color them. Only touches headings
+ * whose last child is a plain text node, so links and icons are left alone.
+ */
+function initHeadingAccent() {
+  const heads = document.querySelectorAll(
+    '.display-title.is-hero, .display-title.is-section, .h-section__title, .h-hero__name, .h-glance__title, .post-hero h1, .cta-band .display-title'
+  );
+  heads.forEach((h) => {
+    if (h.querySelector('.hd-accent')) {
+      return;
+    }
+    const last = h.lastChild;
+    if (!last || last.nodeType !== Node.TEXT_NODE) {
+      return;
+    }
+    const text = last.nodeValue.replace(/\s+/g, ' ');
+    const trimmed = text.replace(/\s+$/, '');
+    const trailing = text.slice(trimmed.length);
+    const words = trimmed.split(' ').filter(Boolean);
+    const total = h.textContent.trim().split(/\s+/).filter(Boolean).length;
+    if (words.length < 2 || total < 3) {
+      return;
+    }
+    const take = total >= 6 ? Math.min(3, words.length) : 2;
+    const head = words.slice(0, words.length - take).join(' ');
+    const tail = words.slice(words.length - take).join(' ');
+    const span = document.createElement('span');
+    span.className = 'hd-accent';
+    span.textContent = tail;
+    last.nodeValue = head ? head + ' ' : '';
+    h.appendChild(span);
+    if (trailing) {
+      h.appendChild(document.createTextNode(trailing));
+    }
+  });
+}
+
 export function initBrandUi() {
   initThemeToggle();
   initHeaderScroll();
+  initHeadingAccent();
   initSectionReveal();
 }
