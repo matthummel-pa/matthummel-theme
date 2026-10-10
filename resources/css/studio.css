@@ -5786,3 +5786,213 @@ html.mh-dark .btn-on-dark:hover,
 .btn:hover svg,
 .btn-on-dark:hover svg,
 .header-avail:hover .header-avail__label { color: #3b0764; }
+
+/* ── Project cards match post cards; purple-gradient button hover; round lime social icons ── */
+
+/* Project cards (the roomy Projects grid beat the card recipe at (0,2,0)) */
+.work-grid .work-card,
+.work-grid--roomy .work-card,
+html:not(.mh-dark) .work-grid .work-card,
+html:not(.mh-dark) .work-grid--roomy .work-card {
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  background-image: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  border: 1px solid var(--violet-100) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+html.mh-dark .work-grid .work-card,
+html.mh-dark .work-grid--roomy .work-card {
+  background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  background-image: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  border: 1px solid rgba(167, 139, 250, .5) !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
+.work-grid .work-card:hover,
+.work-grid--roomy .work-card:hover,
+html.mh-dark .work-grid .work-card:hover,
+html.mh-dark .work-grid--roomy .work-card:hover,
+.post-card:hover,
+html.mh-dark .post-card:hover,
+.work-card:focus-within,
+.post-card:focus-within {
+  transform: translateY(-3px);
+  border-color: var(--lime-400) !important;
+  box-shadow: inset 0 3px 0 0 var(--cyan-400), 0 2px 4px rgba(15, 22, 35, .05), 0 24px 48px -24px rgba(163, 230, 53, .35);
+}
+
+/* Lime buttons: hover to the purple gradient with white type */
+.btn:hover,
+.btn:focus-visible,
+.page-header .btn:hover,
+.h-hero .btn:hover,
+.site-footer .btn:hover,
+.btn-on-dark:hover,
+.btn-on-dark:focus-visible,
+html.mh-dark .btn:hover,
+html.mh-dark .btn-on-dark:hover,
+.btn-hire:hover,
+.mh-popout-cta:hover,
+.search-form button:hover,
+.header-avail:hover,
+.header-avail:focus-visible,
+.site-footer .header-avail.footer-avail:hover {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%);
+  border-color: var(--violet-500);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, .22), 0 1px 0 rgba(255, 255, 255, .15) inset, 0 14px 30px -12px rgba(139, 92, 246, .8);
+  transform: translateY(-1px);
+}
+.btn:hover svg,
+.btn-on-dark:hover svg,
+.btn:focus-visible svg,
+.header-avail:hover .header-avail__label,
+.header-avail:focus-visible .header-avail__label,
+.header-avail:hover .mh-avail__emoji { color: #fff; }
+.btn:active,
+.btn-on-dark:active,
+.header-avail:active { transform: translateY(0); box-shadow: 0 0 0 3px rgba(139, 92, 246, .22), 0 6px 14px -8px rgba(139, 92, 246, .7); }
+.btn-outline:hover,
+.btn-ghost:hover,
+.btn-outline:focus-visible,
+.btn-ghost:focus-visible,
+html.mh-dark .btn-outline:hover,
+html.mh-dark .btn-ghost:hover,
+html:not(.mh-dark) .btn-outline:not(.page-header .btn-outline):not(.cta-band .btn-outline):hover,
+html:not(.mh-dark) .btn-ghost:not(.page-header .btn-ghost):not(.cta-band .btn-ghost):hover {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%);
+  border-color: var(--violet-500);
+  color: #fff;
+}
+
+/* Social icons: round, lime line + lime glyph; purple gradient on hover */
+.soc-list { gap: .75rem; }
+.soc-list li { margin-block: .25rem; }
+.footer-brand-social { margin-top: 1.1rem; }
+.soc-link,
+.site-footer .soc-link,
+html:not(.mh-dark) .site-footer .soc-link,
+html.mh-dark .soc-link {
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--lime-400);
+  background: rgba(163, 230, 53, .06);
+  color: var(--lime-400);
+  box-shadow: 0 6px 16px -12px rgba(132, 204, 22, .6);
+  transition: background .16s ease, border-color .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease;
+}
+html:not(.mh-dark) .soc-link:not(.site-footer .soc-link) { color: var(--lime-700); border-color: var(--lime-500); background: var(--lime-50); }
+html:not(.mh-dark) .site-footer .soc-link { color: var(--lime-700); border-color: var(--lime-500); background: #fff; }
+.soc-link svg { width: 1.1rem; height: 1.1rem; fill: currentColor; }
+.soc-link:hover,
+.soc-link:focus-visible,
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible,
+html:not(.mh-dark) .site-footer .soc-link:hover,
+html:not(.mh-dark) .soc-link:hover,
+html.mh-dark .soc-link:hover {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%);
+  border-color: var(--violet-400);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, .22), 0 12px 24px -12px rgba(139, 92, 246, .8);
+}
+/* Labeled variant (About → Elsewhere): a pill, same colors */
+.soc-list--labeled .soc-link,
+html.mh-dark .soc-list--labeled .soc-link,
+html:not(.mh-dark) .soc-list--labeled .soc-link { width: auto; padding: 0 1.05rem 0 .85rem; gap: .5rem; font-weight: 700; }
+.soc-list--labeled .soc-link__label { color: inherit; }
+
+/* ── Title underline as a pseudo-element (the two-layer background got clipped to the glyphs) ── */
+.work-card h2 a,
+.work-body h2 a,
+.post-card-title a,
+.h-journal-item__title a,
+.h-project-card__title a,
+.resources-card__name a,
+.repo-card__title a,
+html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-body h2 a,
+html:not(.mh-dark) .post-card-title a,
+html:not(.mh-dark) .h-journal-item__title a,
+html:not(.mh-dark) .h-project-card__title a,
+html:not(.mh-dark) .resources-card__name a,
+html:not(.mh-dark) .repo-card__title a {
+  display: inline-block;
+  position: relative;
+  padding-bottom: .12em;
+  background-image: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 55%, var(--lime-300) 100%);
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: none;
+  transition: none;
+}
+html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-body h2 a,
+html:not(.mh-dark) .post-card-title a,
+html:not(.mh-dark) .h-journal-item__title a,
+html:not(.mh-dark) .h-project-card__title a,
+html:not(.mh-dark) .resources-card__name a,
+html:not(.mh-dark) .repo-card__title a { background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); }
+.work-card h2 a::after,
+.work-body h2 a::after,
+.post-card-title a::after,
+.h-journal-item__title a::after,
+.h-project-card__title a::after,
+.resources-card__name a::after,
+.repo-card__title a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--blue-400), var(--cyan-400), var(--lime-300), var(--violet-400), var(--blue-400));
+  background-size: 200% 100%;
+  transition: width .35s cubic-bezier(.2, .7, .2, 1);
+}
+html:not(.mh-dark) .work-card h2 a::after,
+html:not(.mh-dark) .post-card-title a::after,
+html:not(.mh-dark) .h-journal-item__title a::after,
+html:not(.mh-dark) .h-project-card__title a::after,
+html:not(.mh-dark) .resources-card__name a::after,
+html:not(.mh-dark) .repo-card__title a::after { background: linear-gradient(90deg, var(--blue-600), var(--violet-500), var(--lime-500), var(--blue-600)); background-size: 200% 100%; }
+.work-card h2 a:hover::after,
+.work-body h2 a:hover::after,
+.post-card-title a:hover::after,
+.h-journal-item__title a:hover::after,
+.h-project-card__title a:hover::after,
+.resources-card__name a:hover::after,
+.repo-card__title a:hover::after,
+.work-card h2 a:focus-visible::after,
+.post-card-title a:focus-visible::after,
+.h-journal-item__title a:focus-visible::after,
+.h-project-card__title a:focus-visible::after,
+.resources-card__name a:focus-visible::after,
+.repo-card__title a:focus-visible::after,
+.work-card h2 a:active::after,
+.post-card-title a:active::after,
+.work-card:hover h2 a::after,
+.post-card:hover .post-card-title a::after,
+.h-journal-item:hover .h-journal-item__title a::after,
+.h-project-card:hover .h-project-card__title a::after,
+.resources-card:hover .resources-card__name a::after,
+.repo-card:hover .repo-card__title a::after { width: 100%; animation: mh-underline-flow 2.4s linear infinite; }
+.work-card:hover h2 a,
+.post-card:hover .post-card-title a,
+.h-journal-item:hover .h-journal-item__title a,
+.repo-card:hover .repo-card__title a,
+.work-card h2 a:hover,
+.post-card-title a:hover,
+.h-journal-item__title a:hover { background-image: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after, .repo-card__title a::after { animation: none !important; transition: none; }
+}

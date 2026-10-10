@@ -5,7 +5,9 @@
 - The site is dark by default, taking its palette from the MCP Adapter featured image: near-black navy canvas, azure buttons and links, cyan mono eyebrows with a connector dash, green "kind" chips, and a hint of indigo in the glows. A sun/moon switcher in the header flips to a light blue/gray mode; the choice is saved in `localStorage` (`mh-theme`) and applied before paint.
 - Headings are big and bold (900). The last two words (three on long headings) carry the accent — blue → cyan → lime on dark, blue → violet on light — via a `<span class="hd-accent">` that `brand-ui.js` wraps at load.
 - The site title is bold, all caps, in the brand gradient (header and footer).
-- Lime buttons hover a notch deeper with darker purple type, a soft lime ring, and a 1px lift.
+- Lime buttons (and the availability pill, outline buttons) hover to the blue→violet gradient with white type and a soft violet ring.
+- Project cards on the Projects grid use the same purple card, lime top edge, and lime hover border as post cards.
+- Social icons are round lime-bordered circles with lime glyphs and roomier spacing; hover flips them to the purple gradient.
 - Hero copy defaults read like a person: Home opens with “Hi, I’m Matt 👋 — I build WordPress sites your team can run.”; About, Projects, Journal, Contact, and Resources heroes drop the repetition and speak to developers and shops. Stored page copy on the live site was updated to match.
 - Post and project card titles link to their page; on hover, focus, and active they keep the word gradient and grow an animated gradient underline. Header menu items get a blue→violet gradient background on hover/focus and when current.
 - Journal and Projects listings: the toolbar is no longer sticky (it collided with the On-this-page bar) and is styled for dark mode; outline buttons are lime-lined on dark and violet on light; the "+N" pill has its text back; card titles carry the hero gradient; the home journal is a three-column card grid.
