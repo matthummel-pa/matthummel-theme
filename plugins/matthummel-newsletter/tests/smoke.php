@@ -50,6 +50,8 @@ function mhn_keep_requested_slug($slug, int $postId, string $status, string $typ
     }
 
     return is_string($slug) ? $slug : $original;
+}
+
 function mhn_mail_count(string $email): int
 {
     $count = 0;
