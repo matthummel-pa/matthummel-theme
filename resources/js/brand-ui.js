@@ -42,9 +42,13 @@ function initHeaderScroll() {
   let ticking = false;
   // Publish the real header height so the sticky On-this-page bar sits exactly
   // under it. Re-measured whenever the header's box changes (fonts, wrap, zoom).
+  // The header's own height must never depend on --header-h (see studio.css), or this
+  // feeds back on itself. Write only when the value changes.
+  let lastHeaderH = 0;
   const measure = () => {
     const h = Math.ceil(header.getBoundingClientRect().height);
-    if (h > 0) {
+    if (h > 0 && h !== lastHeaderH) {
+      lastHeaderH = h;
       document.documentElement.style.setProperty('--header-h', `${h}px`);
     }
   };
