@@ -6160,3 +6160,64 @@ html:not(.mh-dark) .h-page-nav__arrow:focus-visible:not(:disabled) { color: var(
 html.mh-dark .h-page-nav__arrow { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
 html.mh-dark .h-page-nav__arrow:hover:not(:disabled),
 html.mh-dark .h-page-nav__arrow:focus-visible:not(:disabled) { background: rgba(109, 40, 217, .5); border-color: var(--violet-400); color: #fff; }
+
+/* ── 3.6.57 · Every grid card follows the post-card recipe: lime border, gradient
+   heading, lime index / count numbers, lime accordion chevron. The card recipes
+   above set `border … !important`, so the border lines here must too. ── */
+.about-svc-card, .h-process__step, .about-approach__item, .about-work-type, .h-fit__col,
+.h-glance__fact, .h-glance__card, .code-pulse__stat, .repo-card, .resume-card,
+.code-skills-group, .code-skills__tile, .h-faq__item, .ty-browse-card, .resources-card,
+.about-aside-card { border-color: var(--lime-400) !important; }
+html.mh-dark .about-svc-card, html.mh-dark .h-process__step, html.mh-dark .about-approach__item,
+html.mh-dark .about-work-type, html.mh-dark .h-fit__col, html.mh-dark .h-glance__fact,
+html.mh-dark .h-glance__card, html.mh-dark .code-pulse__stat, html.mh-dark .repo-card,
+html.mh-dark .resume-card, html.mh-dark .code-skills-group, html.mh-dark .code-skills__tile,
+html.mh-dark .h-faq__item, html.mh-dark .ty-browse-card, html.mh-dark .resources-card,
+html.mh-dark .about-aside-card { border-color: rgba(163, 230, 53, .55) !important; }
+.about-svc-card:hover, .h-process__step:hover, .about-approach__item:hover, .about-work-type:hover,
+.h-fit__col:hover, .h-glance__fact:hover, .code-pulse__stat:hover, .repo-card:hover, .resume-card:hover,
+.code-skills-group:hover, .code-skills__tile:hover, .h-faq__item:hover, .h-faq__item[open],
+.ty-browse-card:hover, .resources-card:hover { border-color: var(--lime-500) !important; }
+html.mh-dark .about-svc-card:hover, html.mh-dark .h-process__step:hover, html.mh-dark .about-approach__item:hover,
+html.mh-dark .about-work-type:hover, html.mh-dark .h-fit__col:hover, html.mh-dark .h-glance__fact:hover,
+html.mh-dark .code-pulse__stat:hover, html.mh-dark .repo-card:hover, html.mh-dark .resume-card:hover,
+html.mh-dark .code-skills-group:hover, html.mh-dark .code-skills__tile:hover, html.mh-dark .h-faq__item:hover,
+html.mh-dark .h-faq__item[open], html.mh-dark .ty-browse-card:hover, html.mh-dark .resources-card:hover { border-color: var(--lime-300) !important; }
+
+/* Headings inside those cards carry the word gradient (fit-content so the gradient spans the words, not the row) */
+.code-skills-group__title, .resume-card h3, .repo-card h3, .h-fit__col-label, .about-work-type__title,
+.ty-browse-card__title, .resources-card__name, .h-glance__card h3, .about-aside-card h3 {
+  background-image: var(--grad-head-light);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  max-width: 100%;
+}
+html.mh-dark .code-skills-group__title, html.mh-dark .resume-card h3, html.mh-dark .repo-card h3,
+html.mh-dark .h-fit__col-label, html.mh-dark .about-work-type__title, html.mh-dark .ty-browse-card__title,
+html.mh-dark .resources-card__name, html.mh-dark .h-glance__card h3, html.mh-dark .about-aside-card h3 { background-image: var(--grad-head-dark); }
+.repo-card h3 a, .resources-card__name a, .about-aside-card h3 a { color: inherit; -webkit-text-fill-color: inherit; }
+/* FAQ questions keep their chevron row, so the gradient runs over the first ~24rem of the line */
+.h-faq__q, .faq-list summary {
+  background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 24rem, var(--violet-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.mh-dark .h-faq__q, html.mh-dark .faq-list summary {
+  background-image: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 10rem, var(--lime-300) 24rem, var(--lime-300) 100%);
+}
+.h-faq__item[open] .h-faq__q, html.mh-dark .h-faq__item[open] .h-faq__q { color: transparent; }
+
+/* Index and count numbers in lime (lime-700 on light surfaces keeps 4.5:1) */
+html:not(.mh-dark) .about-svc-card__n, html:not(.mh-dark) .repo-card__index, html:not(.mh-dark) .code-skills-group__count,
+html:not(.mh-dark) .h-process__num, html:not(.mh-dark) .code-pulse__stat dd, html:not(.mh-dark) .resources-card__n { color: var(--lime-700); -webkit-text-fill-color: currentColor; }
+html.mh-dark .about-svc-card__n, html.mh-dark .repo-card__index, html.mh-dark .code-skills-group__count,
+html.mh-dark .h-process__num, html.mh-dark .code-pulse__stat dd, html.mh-dark .resources-card__n { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+
+/* Accordion chevron in lime */
+.h-faq__q::after, .faq-list summary::after { border-right-color: var(--lime-700); border-bottom-color: var(--lime-700); }
+html.mh-dark .h-faq__q::after, html.mh-dark .faq-list summary::after { border-right-color: var(--lime-300); border-bottom-color: var(--lime-300); }

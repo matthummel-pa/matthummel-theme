@@ -1,7 +1,8 @@
 # Changelog
 
-## 3.6.57 — One block for the "On this page" sub-nav
+## 3.6.57 — Grid cards share the post-card recipe; one block for the sub-nav
 
+- Every grid card (services, process steps, approach, work types, fit columns, glance facts, GitHub stats and repo cards, resume, skill groups and tiles, FAQ items, thank-you and resources cards) gets the lime border post cards have, a deeper lime on hover/open, the word gradient on its heading, and lime index / count numbers (lime-700 on light surfaces for contrast). FAQ questions carry the gradient and their chevron is lime.
 - `studio.css`: the sub-nav's seven generations of color rules (blue, navy, gradient, 3.6.56) collapse into one block at the end of the file with no `!important`. Rendered result is unchanged in both modes; photo-hero pages now use the same translucent bar as every other page, and a stale ≤900px `top` override for logged-in users is gone.
 
 ## 3.6.56 — Dark header under the admin bar, light-mode button hovers, purple anchor pills
