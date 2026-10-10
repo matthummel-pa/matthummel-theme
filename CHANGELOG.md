@@ -7,7 +7,7 @@
 - The header floats transparent over every hero and gains a blurred background once the page scrolls (`.site-header.is-scrolled`). Heroes, including post heroes, are dark in both modes so the header always reads.
 - Page sections and card grids fade and rise into view on scroll with a short stagger (`data-reveal`); `prefers-reduced-motion` shows everything at once.
 - Hero text sits straight on the hero — no panel box — and heroes end in a 4px blue→cyan→indigo edge. The waves are gone.
-- Greens are lime (`#a3e635` / `#84cc16`): the Available now pill is lime with near-black text (≥ 7:1), kind chips and current-role marks follow. Violet (`#a78bfa` / `#8b5cf6`) is the quiet second accent: eyebrow dashes, card hover edges, active pills, focus rings, blockquotes, tag chips, and the tail of the heading gradients.
+- Greens are lime (`#a3e635` / `#84cc16`). Primary buttons and every open-for-work mark (header and footer pill, About availability chips, LinkedIn open-to-work) are lime with purple type (`#4c1d95`, ≈ 9:1). Kind chips and current-role marks follow. Violet (`#a78bfa` / `#8b5cf6`) is the quiet second accent: eyebrow dashes, card hover edges, active pills, focus rings, blockquotes, tag chips, and the tail of the heading gradients.
 - Contrast: button text is white on `#2563eb`/`#1d4ed8` (≥ 4.5:1), light-mode links and eyebrows are `#1d5fd6`, dark-mode copy is `#c3d0e6` on `#081527`, chips meet 4.5:1 in both modes.
 
 - Light mode: deeper navy, azure accent, and cool grays replace the near-black accent and flat paper. Tokens live at the end of `studio.css`; markup changes are limited to the header switcher button and an early theme script in `layouts/app.blade.php`.
