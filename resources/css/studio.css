@@ -6120,9 +6120,11 @@ html.mh-dark .site-footer .footer-legal-links a:focus-visible {
   padding: 1rem;
   box-sizing: border-box;
   background: var(--gray-100);
+  border-radius: 0; /* the card clips the corners; the shot's own top radius would notch the divider */
   border-bottom: 0;
   border-right: 1px solid var(--color-border);
 }
+.post-list--roomy.is-list .post-shot-fallback { border-radius: 10px; }
 .post-list--roomy.is-list .post-shot img,
 .work-grid--roomy.is-list .work-shot img {
   width: 100%;
@@ -6136,7 +6138,6 @@ html.mh-dark .site-footer .footer-legal-links a:focus-visible {
 .post-list--roomy.is-list .post-body,
 .work-grid--roomy.is-list .work-body {
   padding: 2rem 2.25rem 2.1rem;
-  justify-content: center;
 }
 html.mh-dark .post-list--roomy.is-list .post-shot,
 html.mh-dark .work-grid--roomy.is-list .work-shot {

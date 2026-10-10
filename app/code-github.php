@@ -388,6 +388,7 @@ function mh_code_gh_languages(array $repos): array
 
     return $out;
 }
+
 /* ---------- Scheduling, admin refresh, WP-CLI ---------- */
 
 add_action(MH_CODE_GH_CRON, __NAMESPACE__.'\\mh_code_gh_refresh');
