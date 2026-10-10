@@ -6023,7 +6023,7 @@ html.mh-dark .code-pulse { background: transparent; border: 0; padding: 0; box-s
 html.mh-dark .code-recent__row { border-color: color-mix(in srgb, var(--violet-400) 22%, transparent); }
 html.mh-dark .code-recent__row:hover { background: color-mix(in srgb, var(--violet-500) 18%, transparent); }
 html.mh-dark .code-recent__row:hover .code-recent__name { color: var(--lime-300); }
-html.mh-dark .code-langs__bar { background: color-mix(in srgb, var(--white) 10%, transparent); }
+html.mh-dark .code-langs__bar { background: color-mix(in srgb, #fff 10%, transparent); }
 html.mh-dark .code-langs__name,
 html.mh-dark .code-recent__name { color: var(--color-text); }
 html.mh-dark .code-langs__pct,

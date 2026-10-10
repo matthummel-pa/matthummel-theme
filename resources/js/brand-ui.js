@@ -158,7 +158,11 @@ function initRevealFallback() {
   };
   window.setTimeout(show, 900);
   window.addEventListener('hashchange', () => window.setTimeout(show, 250));
-  window.addEventListener('pageshow', () => window.setTimeout(show, 250));
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      window.setTimeout(show, 250);
+    }
+  });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       window.setTimeout(show, 250);
