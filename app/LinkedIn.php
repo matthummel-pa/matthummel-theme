@@ -46,7 +46,7 @@ class LinkedIn
      */
     public static function shareUrl(string $pageUrl = ''): string
     {
-        $pageUrl = $pageUrl !== '' ? $pageUrl : home_url('/hire/');
+        $pageUrl = $pageUrl !== '' ? $pageUrl : home_url('/about/');
 
         return 'https://www.linkedin.com/sharing/share-offsite/?url='.rawurlencode($pageUrl);
     }

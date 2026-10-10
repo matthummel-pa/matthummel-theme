@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.49 — One About page
+
+- About now carries Hire and Code: story, what I build, hire (open for work, arrangements, what I need from you), resume, at a glance, process, fit, how I work, GitHub (stats, pinned repos, recent pushes, languages), stack, FAQ, elsewhere.
+- `/hire/` and `/code/` 301 to `/about/#hire` and `/about/#code`. Internal links point at the anchors. The Hire and Code templates are gone; the old pages can be unpublished once the release is installed.
+- No studio card or studio copy on About. A LinkedIn card sits under the GitHub card instead, and the default resume no longer opens with a studio row.
+- Not carried over: the 90-day commit calendar, activity feed, followers, stargazers, badges, repos I watch, the practice list, and the documentation shelf.
+- Hire and Code page fields copy onto About once (`mh_about_absorbs_hire_code_v1`); wp-admin edits on About win afterwards.
+
 ## Newsletter plugin 1.11.4 — Keep pages that share a utility slug
 
 - A draft, a child page, or a page with its own writing is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.

@@ -227,7 +227,7 @@
       <p class="h-close__body">{!! \App\field_html('home_help_p2', sprintf(
         __('Tell me about the role or the site. Background is on <a href="%1$s">About</a>. Repos are on <a href="%2$s">Code</a>.', 'sage'),
         esc_url(home_url('/about/')),
-        esc_url(home_url('/code/'))
+        esc_url(home_url('/about/#code'))
       )) !!}</p>
     </div>
     <a class="btn" href="{{ home_url('/contact/') }}">

@@ -81,7 +81,7 @@
         <p>{{ \App\field('now_work_p2', __('If you\'re hiring a full-stack developer, need WordPress expertise, or want a dependable development partner for overflow work, a short note is enough to start.', 'sage')) }}</p>
         <div class="now-actions">
           <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">{!! \App\mh_svg_icon('mail', 15) !!} {{ __('Say hello', 'sage') }}</a>
-          <a class="h-text-arrow" href="{{ esc_url(home_url('/hire/')) }}">{{ __('See hire details', 'sage') }} <span aria-hidden="true">→</span></a>
+          <a class="h-text-arrow" href="{{ esc_url(home_url('/about/#hire')) }}">{{ __('See hire details', 'sage') }} <span aria-hidden="true">→</span></a>
         </div>
       </article>
       @endif

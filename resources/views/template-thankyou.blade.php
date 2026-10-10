@@ -88,7 +88,7 @@
         <span class="ty-browse-card__link">See the work →</span>
       </a>
 
-      <a class="ty-browse-card" href="{{ home_url('/hire/') }}">
+      <a class="ty-browse-card" href="{{ home_url('/about/#hire') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('wordpress', 22) !!}</div>
         <h3 class="ty-browse-card__title">Hire me</h3>
         <p class="ty-browse-card__body">What I build, how the process works, who I typically work with, and what you get at handoff.</p>
@@ -116,7 +116,7 @@
         <span class="ty-browse-card__link">About me →</span>
       </a>
 
-      <a class="ty-browse-card" href="{{ home_url('/code/') }}">
+      <a class="ty-browse-card" href="{{ home_url('/about/#code') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('github', 22) !!}</div>
         <h3 class="ty-browse-card__title">Code and GitHub</h3>
         <p class="ty-browse-card__body">GitHub profile, featured repos, contribution history, and resume. The technical side of the work.</p>

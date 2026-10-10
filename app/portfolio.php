@@ -399,7 +399,8 @@ function mh_recruiter_glance(): array
     if ($ghYear === '') {
         $ghYear = '2025';
     }
-    $hireUrl = home_url('/hire/');
+    $hireUrl = home_url('/about/#hire');
+    $resumeUrl = home_url('/about/#resume');
 
     return [
         'role' => field('glance_role', __('WordPress / full-stack PHP', 'sage')),
@@ -418,22 +419,22 @@ function mh_recruiter_glance(): array
         'availability' => field('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
         'note' => field(
             'glance_note',
-            __('Most production work lived inside employers, so I am now publishing WordPress concepts and builds on GitHub. Stack details are on About.', 'sage')
+            __('Most production work lived inside employers, so I now publish WordPress themes, plugins, and builds on GitHub. Stack details are below.', 'sage')
         ),
         'employers' => field_html(
             'glance_employers',
             sprintf(
-                /* translators: %s: hire page URL */
+                /* translators: %s: resume section URL */
                 __('Employers on the record: <a href="%s">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage'),
-                esc_url($hireUrl)
+                esc_url($resumeUrl)
             )
         ),
         'power' => field_html(
             'glance_power',
             sprintf(
-                /* translators: %s: hire page URL */
-                __('PowerApps, Power Automate, and InfoPath for federal agencies — details on the <a href="%s">hire page</a>. There is no public demo.', 'sage'),
-                esc_url($hireUrl)
+                /* translators: %s: resume section URL */
+                __('PowerApps, Power Automate, and InfoPath for federal agencies — details in the <a href="%s">resume</a>. There is no public demo.', 'sage'),
+                esc_url($resumeUrl)
             )
         ),
         'range' => field('glance_range', mh_adjacent_range_copy()),
@@ -950,7 +951,7 @@ function mh_github_watching(int $limit = 36): array
 }
 
 /**
- * Resolve the Code page post ID for field lookups.
+ * Page that holds the GitHub / code fields: About since 3.6.49, the retired Code page as fallback.
  */
 function mh_code_page_id(): int
 {
@@ -958,15 +959,14 @@ function mh_code_page_id(): int
     if ($id !== null) {
         return $id;
     }
-    $pages = get_pages([
-        'meta_key' => '_wp_page_template',
-        'meta_value' => 'template-code.blade.php',
-        'number' => 1,
-        'post_status' => 'publish',
-    ]);
-    $id = ($pages && ! is_wp_error($pages)) ? (int) ($pages[0]->ID ?? 0) : 0;
+    foreach (['template-about.blade.php', 'template-code.blade.php'] as $template) {
+        $found = mh_page_id_by_template($template);
+        if ($found > 0) {
+            return $id = $found;
+        }
+    }
 
-    return $id;
+    return $id = 0;
 }
 
 function mh_github_events(int $limit = 10): array
@@ -3021,12 +3021,12 @@ function mh_code_resume_defaults(): array
 {
     return [
         [
-            'role' => 'Founder',
+            'role' => 'WordPress Developer',
             'org' => 'Matt Hummel',
             'period' => 'Current',
-            'type' => 'Studio work · Remote',
+            'type' => 'Freelance · Remote',
             'url' => 'https://matthummel.com',
-            'bullets' => "Publishing concept WordPress sites — live demos, not a client gallery.\nBuilding WordPress sites shops can edit.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
+            'bullets' => "WordPress sites shops can edit, built with Sage 11, Blade, Tailwind, and Vite.\nPublic themes and plugins on GitHub so other developers can read the work.\nOpen to agencies, overflow dev work, and full-time roles. Remote anywhere.",
         ],
         [
             'role' => 'Senior Consultant',
@@ -3817,7 +3817,6 @@ function mh_seed_portfolio_pages(): void
         'about' => ['title' => 'About', 'template' => 'template-about.blade.php'],
         'projects' => ['title' => 'Projects', 'template' => 'template-projects.blade.php'],
         'services' => ['title' => 'Services', 'template' => 'template-services.blade.php'],
-        'code' => ['title' => 'Code', 'template' => 'template-code.blade.php'],
         'contact' => ['title' => 'Contact', 'template' => 'template-contact.blade.php'],
         'now' => ['title' => 'Now', 'template' => 'template-now.blade.php'],
     ];
@@ -4160,7 +4159,7 @@ function mh_home_hero(): array
         'role' => $text('mh_hero_role', 'home_role', mh_home_hero_default('role')),
         'subcopy' => $text('mh_hero_subcopy', 'home_lede', mh_home_hero_default('lede')),
         'cta_primary' => $text('mh_hero_cta_primary', 'home_cta_primary', mh_home_hero_default('cta_primary')),
-        'cta_primary_url' => $href('mh_hero_cta_primary_url', 'home_cta_primary_url', '/hire/'),
+        'cta_primary_url' => $href('mh_hero_cta_primary_url', 'home_cta_primary_url', '/about/#hire'),
         'cta_secondary' => $text('mh_hero_cta_secondary', 'home_cta_secondary', mh_home_hero_default('cta_secondary')),
         'cta_secondary_url' => $href('mh_hero_cta_secondary_url', 'home_cta_secondary_url', '/projects/'),
         'show_primary' => (bool) get_theme_mod('mh_hero_show_primary', true),
@@ -4304,8 +4303,6 @@ function mh_hero_scene_url(?int $post_id = null): string
         'template-home.blade.php' => 'products/acreline/01-homepage.webp',
         'template-about.blade.php' => 'work/keystone-homes.jpg',
         'template-projects.blade.php' => 'products/walkridge/01-homepage.webp',
-        'template-hire.blade.php' => 'work/ridgeline-realty.jpg',
-        'template-code.blade.php' => 'products/acreline/02-listings.webp',
         'template-contact.blade.php' => 'products/acreline/05-contact.webp',
         'template-services.blade.php' => 'work/cupola-field.jpg',
         'template-now.blade.php' => 'products/acreline/featured.webp',
@@ -4752,15 +4749,6 @@ function mh_ensure_theme_page(string $slug, string $title, string $template): in
 
     return (int) $id;
 }
-
-/**
- * Ensure Hire me page exists (idempotent).
- */
-function mh_ensure_hire_page(): void
-{
-    mh_ensure_theme_page('hire', 'Hire me', 'template-hire.blade.php');
-}
-add_action('init', __NAMESPACE__.'\\mh_ensure_hire_page', 35);
 
 /**
  * Ensure Changelog and other utility pages exist (idempotent).

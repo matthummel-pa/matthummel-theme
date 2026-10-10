@@ -40,8 +40,8 @@
       <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
       <ul class="footer-nav">
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/about/#hire') }}">{{ __('Hire me', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/about/#code') }}">{{ __('Code', 'sage') }}</a></li>
         <li><a href="{{ home_url('/agency-white-label-wordpress/') }}">{{ __('For agencies', 'sage') }}</a></li>
         <li><a href="{{ home_url('/wordpress-handoff-checklist/') }}">{{ __('Handoff checklist', 'sage') }}</a></li>
         <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>

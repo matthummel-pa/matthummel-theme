@@ -1319,7 +1319,7 @@ function mh_who_items(): array
             'title' => __('Developers', 'sage'),
             'text' => __('Copy the code. Fork a repo. Ask if a line is unclear.', 'sage'),
             'icon' => 'code',
-            'href' => home_url('/code/'),
+            'href' => home_url('/about/#code'),
             'cta' => __('Browse the code', 'sage'),
         ],
         [
@@ -1333,7 +1333,7 @@ function mh_who_items(): array
             'title' => __('Shops and teams', 'sage'),
             'text' => __('A WordPress site you can edit, a plugin, or another web app that fits the work.', 'sage'),
             'icon' => 'briefcase',
-            'href' => home_url('/hire/'),
+            'href' => home_url('/about/#hire'),
             'cta' => __('See how I can help', 'sage'),
         ],
         [
@@ -4083,3 +4083,64 @@ add_action('init', function (): void {
 
     update_option('mh_minimal_blue_copy_v2', true);
 }, 92);
+
+/**
+ * About absorbs Hire and Code (3.6.49): copy their page fields onto About once,
+ * and retire the studio row that used to open the resume. wp-admin edits win afterwards.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_about_absorbs_hire_code_v1')) {
+        return;
+    }
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    if ($aboutId < 1) {
+        return; // No About page yet; try again on a later request.
+    }
+
+    // Any status: the Hire and Code pages may already be drafted when this first runs.
+    $findAny = static fn (string $template): int => (int) (get_posts([
+        'post_type' => 'page',
+        'post_status' => ['publish', 'draft', 'private', 'pending'],
+        'numberposts' => 1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_key' => '_wp_page_template',
+        'meta_value' => $template,
+    ])[0] ?? 0);
+    $sources = [
+        $findAny('template-hire.blade.php') => ['hire_cv_h2', 'hire_cv_intro', 'hire_cv_jobs'],
+        $findAny('template-code.blade.php') => [
+            'code_gh_h2', 'code_gh_intro', 'code_pin_h2', 'code_pin_intro', 'code_repos',
+            'code_live_h2', 'code_live_intro', 'code_lang_h3', 'code_lang_intro',
+            'code_sk_h2', 'code_sk_intro', 'code_skills',
+        ],
+    ];
+    foreach ($sources as $fromId => $keys) {
+        if ($fromId < 1 || $fromId === $aboutId) {
+            continue;
+        }
+        foreach ($keys as $key) {
+            $existing = get_post_meta($aboutId, 'mh_f_'.$key, true);
+            if ($existing !== '' && $existing !== null && $existing !== []) {
+                continue;
+            }
+            $value = get_post_meta($fromId, 'mh_f_'.$key, true);
+            if ($value === '' || $value === null || $value === []) {
+                continue;
+            }
+            update_post_meta($aboutId, 'mh_f_'.$key, $value);
+        }
+    }
+
+    $jobs = get_post_meta($aboutId, 'mh_f_hire_cv_jobs', true);
+    if (is_array($jobs) && isset($jobs[0]) && is_array($jobs[0])) {
+        $type = trim((string) ($jobs[0]['type'] ?? ''));
+        $org = trim((string) ($jobs[0]['org'] ?? ''));
+        if ($org === 'Matt Hummel' && in_array($type, ['Studio work · Remote', 'Independent Studio', 'Independent studio'], true)) {
+            $jobs[0] = mh_code_resume_defaults()[0];
+            update_post_meta($aboutId, 'mh_f_hire_cv_jobs', array_values($jobs));
+        }
+    }
+
+    update_option('mh_about_absorbs_hire_code_v1', true);
+}, 61);

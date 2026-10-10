@@ -494,16 +494,16 @@ add_action('switch_theme', function (): void {
     wp_clear_scheduled_hook(MH_CODE_GH_CRON_NOW);
 });
 
-/** Keep the Code page in LiteSpeed for an hour, not the site-wide week. */
+/** Keep About (GitHub section) in LiteSpeed for an hour, not the site-wide week. */
 add_action('template_redirect', function (): void {
-    if (is_page() && get_page_template_slug() === 'template-code.blade.php') {
+    if (is_page() && get_page_template_slug() === 'template-about.blade.php') {
         do_action('litespeed_control_set_ttl', HOUR_IN_SECONDS);
     }
 });
 
-/** Admin bar: "Refresh GitHub data" on the Code page. */
+/** Admin bar: "Refresh GitHub data" on About. */
 add_action('admin_bar_menu', function (\WP_Admin_Bar $bar): void {
-    if (! current_user_can('manage_options') || is_admin() || ! is_page() || get_page_template_slug() !== 'template-code.blade.php') {
+    if (! current_user_can('manage_options') || is_admin() || ! is_page() || get_page_template_slug() !== 'template-about.blade.php') {
         return;
     }
     $bar->add_node([
