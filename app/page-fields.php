@@ -266,9 +266,9 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
     $copy = [
         'h1' => __('I build WordPress sites your team can run.', 'sage'),
         'role' => __('Full-stack developer · WordPress themes, plugins, and web apps', 'sage'),
-        'lede' => __('Shops get a site they can edit without calling a developer. Agencies get clean, hand-off-ready builds. I’m open to full-time, contract, and freelance work.', 'sage'),
+        'lede' => __('I build WordPress themes, plugins, and web apps that are easy to edit, easy to hand off, and built to last. Open to full-time, contract, and freelance work.', 'sage'),
         'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress developer for shops and agencies. Themes, plugins, and clear handoffs. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress developer for businesses, agencies, and developers. Themes, plugins, and clear handoffs. Say hello.', 'sage'),
         'kicker' => __('Hi, I’m Matt 👋', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
@@ -489,7 +489,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About me', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('Seventeen years of building for the web.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I started in higher-ed marketing and kept coming back to WordPress because it gives people real ownership of their site. Today I build themes, plugins, and web apps — and write it all down for the next developer.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I started in higher-ed marketing and kept coming back to WordPress because it gives people real ownership of their site. Today I build themes, plugins, and web apps for businesses and agencies — and write it all down for the next developer.', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
@@ -743,7 +743,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['resources_kicker', __('Kicker', 'sage'), 'text', __('Resources', 'sage')],
                 ['resources_h1', __('Heading', 'sage'), 'text', __('Starters, tools, and the stack I use.', 'sage')],
-                ['resources_lede', __('Intro', 'sage'), 'textarea', __('Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and shops alike.', 'sage')],
+                ['resources_lede', __('Intro', 'sage'), 'textarea', __('Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and business owners alike.', 'sage')],
                 ['resources_intro_h2', __('Below-hero heading', 'sage'), 'text', __('What you will find here.', 'sage')],
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
