@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.52 — About › Code dark surfaces, reveal fallback
+
+- About › Code: dark-mode surfaces for the GitHub sync pill, pulse strip, Recently pushed list and Languages card. `code-page.css` built them from `--gray-900`, which the dark skin flips light, so they rendered light-gray with light text.
+- Section reveal: a fallback shows anything already in or above the viewport after 900 ms, and again on hashchange / pageshow / tab visibility, so anchor jumps and back-forward restores never leave sections hidden.
+
 ## 3.6.51 — Dark blue brand, light/dark switcher, floating header
 
 - The site is dark by default, taking its palette from the MCP Adapter featured image: near-black navy canvas, azure buttons and links, cyan mono eyebrows with a connector dash, green "kind" chips, and a hint of indigo in the glows. A sun/moon switcher in the header flips to a light blue/gray mode; the choice is saved in `localStorage` (`mh-theme`) and applied before paint.
