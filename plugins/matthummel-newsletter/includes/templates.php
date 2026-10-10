@@ -18,7 +18,7 @@ function email_templates(): array
     $templates = [
         'blog-update' => [
             'label' => __('Blog update', 'matthummel-newsletter'),
-            'summary' => __('One post, with a note from you above it and an optional P.S. below.', 'matthummel-newsletter'),
+            'summary' => __('One post. The letter starts with a greeting, the image, the title, an excerpt, and a Read more button.', 'matthummel-newsletter'),
             'min_posts' => 1,
             'max_posts' => 1,
             'has_image' => true,
@@ -27,7 +27,7 @@ function email_templates(): array
         ],
         'blog-digest' => [
             'label' => __('Blog digest', 'matthummel-newsletter'),
-            'summary' => __('Two to six posts in a short card list, plus your note and an optional P.S.', 'matthummel-newsletter'),
+            'summary' => __('Two to six posts. Each one starts as a thumbnail, title, excerpt, and link.', 'matthummel-newsletter'),
             'min_posts' => 2,
             'max_posts' => 6,
             'has_image' => true,
@@ -36,7 +36,7 @@ function email_templates(): array
         ],
         'custom' => [
             'label' => __('Custom message', 'matthummel-newsletter'),
-            'summary' => __('A letter or announcement, with an optional image and button.', 'matthummel-newsletter'),
+            'summary' => __('A letter or announcement. It starts with a greeting and a blank paragraph.', 'matthummel-newsletter'),
             'min_posts' => 0,
             'max_posts' => 0,
             'has_image' => true,
@@ -167,7 +167,12 @@ function compile_issue(int $issueId): void
         return;
     }
 
-    $content = template_content($issueId, $template);
+    ensure_issue_body($issueId);
+    $layoutId = issue_layout_id($issueId);
+    $useBody = issue_has_body_editor($issueId) && ! in_array($layoutId, ['welcome', 'post'], true);
+    $content = $useBody
+        ? (string) get_post_meta($issueId, '_mhn_body', true)
+        : template_content($issueId, $template);
     wp_update_post([
         'ID' => $issueId,
         'post_content' => $content,
@@ -591,7 +596,9 @@ function suggest_subject(int $issueId): string
         return $first.' '.__('and more', 'matthummel-newsletter');
     }
 
-    $note = trim(wp_strip_all_tags((string) get_post_meta($issueId, '_mhn_note', true)));
+    $note = trim(wp_strip_all_tags(issue_has_body_editor($issueId)
+        ? (string) get_post_meta($issueId, '_mhn_body', true)
+        : (string) get_post_meta($issueId, '_mhn_note', true)));
     if ($note !== '') {
         $line = preg_split('/\R/u', $note) ?: [];
         $first = trim((string) ($line[0] ?? ''));

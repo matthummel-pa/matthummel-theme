@@ -261,8 +261,9 @@ function mh_devto_rule_rewrite(string $md, \WP_Post $post): string
  */
 function mh_devto_ai_rewrite(string $md, string $title): ?string
 {
+    $viaRouter = function_exists(__NAMESPACE__.'\\mh_social_ai_available') && mh_social_ai_available();
     $token = mh_devto_ai_token();
-    if ($token === '') {
+    if (! $viaRouter && $token === '') {
         return null;
     }
 
@@ -272,6 +273,18 @@ function mh_devto_ai_rewrite(string $md, string $title): ?string
         ."no WordPress admin jargon, no fake metrics.\n"
         ."Return ONLY markdown, no explanation.\n\n"
         ."Title: {$title}\n\n{$md}";
+
+    if ($viaRouter) {
+        $text = mh_social_ai_complete('You convert WordPress journal posts into clean DEV.to markdown.', $prompt, 4000);
+        if ($text === null || $text === '') {
+            return null;
+        }
+        if (preg_match('/^```(?:markdown|md)?\s*([\s\S]*?)\s*```$/i', $text, $mm)) {
+            $text = trim($mm[1]);
+        }
+
+        return $text."\n";
+    }
 
     $res = wp_remote_post('https://api.openai.com/v1/chat/completions', [
         'timeout' => 45,

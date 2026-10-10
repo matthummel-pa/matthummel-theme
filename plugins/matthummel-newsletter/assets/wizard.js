@@ -4,6 +4,7 @@ function initWizard() {
 
   bindCounts()
   bindMedia(form)
+  bindPostOffer(form)
   const save = bindAutosave(form)
   bindStepLinks(save)
 }
@@ -84,6 +85,164 @@ function bindPicker(form, picker) {
     if (preview) preview.replaceChildren()
     input.dispatchEvent(new Event('change', { bubbles: true }))
   })
+}
+
+function bindPostOffer(form) {
+  const offer = document.getElementById('mhn-post-offer')
+  const savedRoot = form.querySelector('[data-mhn-saved]')
+  if (!offer || !savedRoot) return
+
+  const insert = document.getElementById('mhn-posts-insert')
+  const refresh = document.getElementById('mhn-posts-refresh')
+  const keep = document.getElementById('mhn-posts-keep')
+  const status = document.getElementById('mhn-post-offer-status')
+  let dismissed = savedPostKey(savedRoot)
+
+  function showOffer() {
+    const current = selectedPostKey(form)
+    const saved = savedPostKey(savedRoot)
+    const changed = current !== saved && current !== dismissed
+    offer.hidden = !changed
+    if (changed) offer.focus()
+  }
+
+  form.querySelectorAll('[name="mhn_posts[]"]').forEach((input) => {
+    input.addEventListener('change', showOffer)
+  })
+
+  if (insert) {
+    insert.addEventListener('click', () => {
+      applyPostBlocks(form, 'insert', status).then((html) => {
+        if (html === null) return
+        dismissed = selectedPostKey(form)
+        savedRoot.setAttribute('data-mhn-saved', dismissed)
+        offer.hidden = true
+      })
+    })
+  }
+  if (refresh) {
+    refresh.addEventListener('click', () => {
+      applyPostBlocks(form, 'refresh', status).then((html) => {
+        if (html === null) return
+        dismissed = selectedPostKey(form)
+        savedRoot.setAttribute('data-mhn-saved', dismissed)
+        offer.hidden = true
+      })
+    })
+  }
+  if (keep) {
+    keep.addEventListener('click', () => {
+      dismissed = selectedPostKey(form)
+      offer.hidden = true
+      if (status) status.textContent = ''
+      const letter = document.getElementById('mhn_body')
+      if (letter) letter.focus()
+    })
+  }
+}
+
+function selectedPostKey(form) {
+  return selectedPostIds(form).join(',')
+}
+
+function savedPostKey(root) {
+  return String(root.getAttribute('data-mhn-saved') || '')
+}
+
+function selectedPostIds(form) {
+  const ids = []
+  form.querySelectorAll('[name="mhn_posts[]"]').forEach((input) => {
+    if (input.checked) ids.push(String(input.value))
+  })
+  return ids
+}
+
+function applyPostBlocks(form, mode, status) {
+  const data = new FormData()
+  data.set('action', mhnWizard.postBlocks)
+  const nonce = form.querySelector('[name="mhn_wizard_nonce"]')
+  if (nonce && 'value' in nonce) data.set('mhn_wizard_nonce', String(nonce.value))
+  selectedPostIds(form).forEach((id) => data.append('mhn_posts[]', id))
+  const cards = form.querySelector('[data-mhn-cards]')
+  data.set('mhn_cards', cards && cards.getAttribute('data-mhn-cards') === '1' ? '1' : '0')
+
+  return fetch(mhnWizard.ajaxUrl, {
+    method: 'POST',
+    body: data,
+    credentials: 'same-origin',
+  })
+    .then((response) => response.json())
+    .then((payload) => {
+      const html = payload && payload.success && payload.data ? String(payload.data.html || '') : ''
+      if (!payload || !payload.success) {
+        if (status) status.textContent = mhnWizard.postsFailed
+        return null
+      }
+      if (html.trim() === '') {
+        if (status) status.textContent = mhnWizard.postsEmpty
+        return null
+      }
+      writePostRegion(html, mode)
+      if (status) status.textContent = ''
+      const area = document.getElementById('mhn_body')
+      if (area) area.dispatchEvent(new Event('change', { bubbles: true }))
+      return html
+    })
+    .catch(() => {
+      if (status) status.textContent = mhnWizard.postsFailed
+      return null
+    })
+}
+
+function writePostRegion(html, mode) {
+  const editor = window.tinymce && window.tinymce.get('mhn_body')
+  if (editor && !editor.isHidden()) {
+    if (mode === 'refresh') {
+      const node = editor.dom.select('div.mhn-posts')[0]
+      if (node) editor.dom.setOuterHTML(node, html)
+      else editor.insertContent(html)
+    } else {
+      editor.insertContent(html)
+    }
+    editor.save()
+    return
+  }
+
+  const area = document.getElementById('mhn_body')
+  if (!area || !('value' in area)) return
+  if (mode === 'refresh') area.value = replacePostsRegion(String(area.value), html)
+  else area.value = String(area.value) + html
+}
+
+function replacePostsRegion(source, html) {
+  const start = source.indexOf('<div class="mhn-posts"')
+  if (start < 0) return source + html
+
+  let depth = 0
+  let index = start
+  const open = /<div\b[^>]*>/gi
+  const close = /<\/div>/gi
+  open.lastIndex = start
+  const first = open.exec(source)
+  if (!first || first.index !== start) return source + html
+  depth = 1
+  index = first.index + first[0].length
+  while (depth > 0 && index < source.length) {
+    open.lastIndex = index
+    close.lastIndex = index
+    const nextOpen = open.exec(source)
+    const nextClose = close.exec(source)
+    if (!nextClose) return source + html
+    if (nextOpen && nextOpen.index < nextClose.index) {
+      depth += 1
+      index = nextOpen.index + nextOpen[0].length
+      continue
+    }
+    depth -= 1
+    index = nextClose.index + nextClose[0].length
+  }
+
+  return source.slice(0, start) + html + source.slice(index)
 }
 
 function bindAutosave(form) {

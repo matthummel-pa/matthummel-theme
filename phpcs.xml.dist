@@ -32,6 +32,8 @@
 	<exclude-pattern>*/public/*</exclude-pattern>
 	<exclude-pattern>*.blade.php</exclude-pattern>
 	<exclude-pattern>*/storage/*</exclude-pattern>
+	<!-- Bundled Hummel Ops / MH SEO modules keep their own text domains (hummel-ops, mh-seo). -->
+	<exclude-pattern>*/app/modules/*</exclude-pattern>
 	<exclude-pattern>*/dist*/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
@@ -52,6 +54,8 @@
 			<property name="customAutoEscapedFunctions" type="array">
 				<element value="mh_svg_icon"/>
 				<element value="mh_product_fallback_markup"/>
+				<!-- Core escapes block wrapper attributes before returning them. -->
+				<element value="get_block_wrapper_attributes"/>
 			</property>
 		</properties>
 	</rule>

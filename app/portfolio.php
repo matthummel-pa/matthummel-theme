@@ -130,6 +130,149 @@ function mh_social_links(): array
     return $links;
 }
 
+/**
+ * Short label for a GitHub public event type on the Now page.
+ */
+function mh_github_event_label(string $type): string
+{
+    return match ($type) {
+        'PushEvent' => __('Push', 'sage'),
+        'PullRequestEvent' => __('Pull request', 'sage'),
+        'PullRequestReviewEvent' => __('Review', 'sage'),
+        'IssuesEvent' => __('Issue', 'sage'),
+        'IssueCommentEvent' => __('Comment', 'sage'),
+        'CreateEvent' => __('Created', 'sage'),
+        'ReleaseEvent' => __('Release', 'sage'),
+        'ForkEvent' => __('Fork', 'sage'),
+        'WatchEvent' => __('Star', 'sage'),
+        'PublicEvent' => __('Public', 'sage'),
+        default => __('Activity', 'sage'),
+    };
+}
+
+/**
+ * Label and machine date for the Now page “last updated” line.
+ *
+ * A filled `now_updated` field wins. Otherwise the Now page’s last edit.
+ *
+ * @return array{label: string, iso: string}
+ */
+function mh_now_updated(?int $postId = null): array
+{
+    $custom = trim(field('now_updated', '', $postId));
+    if ($custom !== '') {
+        return ['label' => $custom, 'iso' => ''];
+    }
+
+    $postId = $postId ?: (int) get_the_ID();
+    $post = $postId > 0 ? get_post($postId) : null;
+    if (! $post instanceof \WP_Post) {
+        $found = get_page_by_path('now');
+        $post = $found instanceof \WP_Post ? $found : null;
+    }
+    if ($post instanceof \WP_Post) {
+        $ts = strtotime($post->post_modified_gmt.' UTC');
+        if ($ts !== false) {
+            return [
+                'label' => date_i18n(get_option('date_format') ?: 'F j, Y', $ts),
+                'iso' => gmdate('c', $ts),
+            ];
+        }
+    }
+
+    return ['label' => date_i18n('F Y'), 'iso' => ''];
+}
+
+/**
+ * Optional SMS number for the Now page. Empty unless a theme mod or page field is set.
+ */
+function mh_now_sms_number(?int $postId = null): string
+{
+    $raw = function_exists('get_theme_mod') ? trim((string) get_theme_mod('mh_now_sms', '')) : '';
+    if ($raw === '') {
+        $raw = trim(field('now_sms', '', $postId));
+    }
+    $hasPlus = str_starts_with($raw, '+');
+    $digits = preg_replace('/\D+/', '', $raw) ?? '';
+    $len = strlen($digits);
+    if ($len < 10 || $len > 15) {
+        return '';
+    }
+
+    return $hasPlus ? '+'.$digits : $digits;
+}
+
+/**
+ * `sms:` link that opens the visitor’s own messaging app. Empty when no number is set.
+ */
+function mh_now_sms_href(?int $postId = null): string
+{
+    $number = mh_now_sms_number($postId);
+    if ($number === '') {
+        return '';
+    }
+
+    $body = trim(field('now_sms_body', __('Hi — I saw the Now page.', 'sage'), $postId));
+    if ($body === '') {
+        $body = __('Hi — I saw the Now page.', 'sage');
+    }
+    if (function_exists('mb_strlen') && mb_strlen($body) > 160) {
+        $body = mb_substr($body, 0, 157).'...';
+    } elseif (strlen($body) > 160) {
+        $body = substr($body, 0, 157).'...';
+    }
+
+    return 'sms:'.$number.'?body='.rawurlencode($body);
+}
+
+/**
+ * GitHub issue URL for a visitor who needs help now.
+ *
+ * Opens a new issue on this theme repo with a short prompt already filled in.
+ */
+function mh_github_help_issue_url(): string
+{
+    $login = rawurlencode(mh_github_login());
+    $title = rawurlencode('Need help now');
+    $body = rawurlencode("What I need help with:\n\n\nLink (if you have one):\n\n");
+
+    return "https://github.com/{$login}/matthummel-theme/issues/new?title={$title}&body={$body}";
+}
+
+/**
+ * Recent public posts from DEV.to and Bluesky for the Now page.
+ *
+ * @return list<array{network: string, title: string, url: string, when: string, text: string}>
+ */
+function mh_now_social_feed(int $limit = 4): array
+{
+    $limit = max(1, min(6, $limit));
+    $items = [];
+
+    foreach (array_slice(mh_devto_posts($limit), 0, $limit) as $post) {
+        $title = trim((string) ($post['title'] ?? ''));
+        $url = trim((string) ($post['url'] ?? ''));
+        if ($title === '' || $url === '') {
+            continue;
+        }
+        $items[] = [
+            'network' => 'DEV.to',
+            'title' => $title,
+            'url' => $url,
+            'when' => (string) ($post['date'] ?? ''),
+            'text' => (string) ($post['ex'] ?? ''),
+        ];
+    }
+
+    if (function_exists(__NAMESPACE__.'\\mh_bluesky_public_posts')) {
+        foreach (mh_bluesky_public_posts($limit) as $post) {
+            $items[] = $post;
+        }
+    }
+
+    return $items;
+}
+
 /** Featured GitHub codebases to highlight on Code and Home. */
 function mh_featured_repos(): array
 {
@@ -748,51 +891,6 @@ function mh_github_stargazer_row(array $row): ?array
 }
 
 /**
- * Recent stargazers across featured Code page repos (deduped by login).
- *
- * @return list<array{login: string, name: string, avatar: string, url: string, repo: string}>
- */
-function mh_github_stargazers(int $limit = 24, ?int $post_id = null): array
-{
-    $limit = max(1, min(48, $limit));
-    $login = mh_github_login();
-    $key = 'mh_github_stargazers_v1_'.md5($login.(string) $limit);
-    $cached = get_transient($key);
-    if (is_array($cached)) {
-        return array_slice($cached, 0, $limit);
-    }
-
-    $repos = mh_code_page_repos($post_id);
-    $seen = [];
-    $out = [];
-
-    foreach ($repos as $repo) {
-        $name = trim((string) ($repo['name'] ?? ''));
-        if ($name === '' || mh_github_is_hidden_repo($name)) {
-            continue;
-        }
-        foreach (Github::fetchStargazers($login, $name, 20) as $row) {
-            $loginKey = strtolower((string) ($row['login'] ?? ''));
-            if ($loginKey === '' || isset($seen[$loginKey])) {
-                continue;
-            }
-            $seen[$loginKey] = true;
-            $norm = mh_github_stargazer_row($row);
-            if ($norm !== null) {
-                $out[] = $norm;
-            }
-            if (count($out) >= $limit) {
-                break 2;
-            }
-        }
-    }
-
-    set_transient($key, $out, 6 * HOUR_IN_SECONDS);
-
-    return $out;
-}
-
-/**
  * Total stars earned across all public owned repos (not just featured).
  *
  * @return array{total: int, repos: list<array{name: string, stars: int, url: string}>}
@@ -852,122 +950,6 @@ function mh_github_watching(int $limit = 36): array
 }
 
 /**
- * Milestone badges earned from live GitHub stats (no fake achievements).
- *
- * @return list<array{label: string, detail: string, icon: string, class: string}>
- */
-function mh_code_page_github_badges(?int $post_id = null): array
-{
-    $key = 'mh_code_badges_v1_'.md5((string) $post_id);
-    if (($cached = get_transient($key)) !== false && is_array($cached)) {
-        return $cached;
-    }
-
-    $profile = mh_github_profile();
-    $calendar = mh_github_calendar();
-    $starsEarned = mh_github_stars_earned();
-    $starTotal = (int) ($starsEarned['total'] ?? 0);
-    $followers = (int) ($profile['followers'] ?? 0);
-    $repos = (int) ($profile['public_repos'] ?? 0);
-    $contributions = (int) ($calendar['total'] ?? 0);
-    $badges = [];
-
-    if ($repos >= 1) {
-        $badges[] = [
-            'label' => __('Open source', 'sage'),
-            'detail' => sprintf(_n('%s public repo', '%s public repos', $repos, 'sage'), number_format_i18n($repos)),
-            'icon' => 'github',
-            'class' => 'code-gh-badge--oss',
-        ];
-    }
-
-    foreach ([100, 50, 25, 10] as $tier) {
-        if ($starTotal >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ stars earned', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted star count */
-                    __('Across public repos — %s total', 'sage'),
-                    number_format_i18n($starTotal)
-                ),
-                'icon' => 'star',
-                'class' => 'code-gh-badge--stars',
-            ];
-            break;
-        }
-    }
-
-    foreach ([100, 50, 25, 10] as $tier) {
-        if ($followers >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ followers', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted follower count */
-                    __('GitHub community — %s following', 'sage'),
-                    number_format_i18n($followers)
-                ),
-                'icon' => 'users',
-                'class' => 'code-gh-badge--followers',
-            ];
-            break;
-        }
-    }
-
-    foreach ([1000, 500, 100] as $tier) {
-        if ($contributions >= $tier) {
-            $badges[] = [
-                'label' => sprintf(__('%s+ contributions', 'sage'), number_format_i18n($tier)),
-                'detail' => sprintf(
-                    /* translators: %s: formatted contribution count */
-                    __('Public commits this year — %s total', 'sage'),
-                    number_format_i18n($contributions)
-                ),
-                'icon' => 'git',
-                'class' => 'code-gh-badge--contrib',
-            ];
-            break;
-        }
-    }
-
-    $activityLabels = [];
-    foreach (mh_code_page_repos($post_id) as $repo) {
-        $name = trim((string) ($repo['name'] ?? ''));
-        if ($name === '') {
-            continue;
-        }
-        $meta = Github::fetchRepoMeta(mh_github_login(), $name);
-        [$badge] = mh_repo_activity_badge(
-            (string) ($meta['pushed'] ?? ''),
-            (int) ($meta['stars'] ?? 0),
-            (int) ($meta['forks'] ?? 0),
-            (string) ($meta['desc'] ?? '')
-        );
-        if ($badge !== '' && ! in_array($badge, $activityLabels, true)) {
-            $activityLabels[] = $badge;
-        }
-    }
-    foreach ($activityLabels as $label) {
-        $class = match ($label) {
-            'Active' => 'badge--active',
-            'Recent' => 'badge--recent',
-            'Maintained' => 'badge--maintained',
-            'Stable' => 'badge--stable',
-            default => 'badge--archived',
-        };
-        $badges[] = [
-            'label' => $label,
-            'detail' => __('Repo activity badge on a featured project', 'sage'),
-            'icon' => 'git',
-            'class' => 'code-gh-badge--activity '.$class,
-        ];
-    }
-
-    set_transient($key, $badges, 6 * HOUR_IN_SECONDS);
-
-    return $badges;
-}
-
-/**
  * Resolve the Code page post ID for field lookups.
  */
 function mh_code_page_id(): int
@@ -1004,8 +986,18 @@ function mh_github_calendar(): array
  */
 function mh_github_calendar_recent(int $days = 90): array
 {
+    return mh_github_calendar_clip(mh_github_calendar(), $days);
+}
+
+/**
+ * Clip a contribution calendar to the last N days (newest week columns first).
+ *
+ * @param  array{weeks?: array<int, array<int, array{date: string, count: int, level: int}>>}  $cal
+ * @return array{total: int, weeks: array<int, array<int, array{date: string, count: int, level: int}>>, days: int}
+ */
+function mh_github_calendar_clip(array $cal, int $days = 90): array
+{
     $days = max(1, min(366, $days));
-    $cal = mh_github_calendar();
     $cutoff = gmdate('Y-m-d', time() - ($days - 1) * DAY_IN_SECONDS);
 
     $weeks = [];
@@ -1063,11 +1055,22 @@ function mh_github_calendar_recent(int $days = 90): array
  */
 function mh_github_events_recent(int $limit = 10, int $days = 90): array
 {
+    return array_slice(mh_github_events_within(mh_github_events(max($limit * 3, 40)), $days), 0, max(1, $limit));
+}
+
+/**
+ * Events newer than N days, in their original (newest first) order.
+ *
+ * @param  list<array<string, mixed>>  $events
+ * @return list<array<string, mixed>>
+ */
+function mh_github_events_within(array $events, int $days = 90): array
+{
     $days = max(1, min(120, $days));
     $cutoff = time() - $days * DAY_IN_SECONDS;
     $out = [];
 
-    foreach (mh_github_events(max($limit * 3, 40)) as $ev) {
+    foreach ($events as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -1077,9 +1080,6 @@ function mh_github_events_recent(int $limit = 10, int $days = 90): array
             continue;
         }
         $out[] = $ev;
-        if (count($out) >= $limit) {
-            break;
-        }
     }
 
     return $out;
@@ -1092,12 +1092,21 @@ function mh_github_events_recent(int $limit = 10, int $days = 90): array
  */
 function mh_github_events_by_day(int $days = 90): array
 {
-    $days = max(1, min(120, $days));
-    $cutoff = time() - $days * DAY_IN_SECONDS;
+    return mh_github_events_group_by_day(mh_github_events_within(mh_github_events(100), $days));
+}
+
+/**
+ * Group events by site-local calendar day (Y-m-d) for contribution tooltips.
+ *
+ * @param  list<array<string, mixed>>  $events
+ * @return array<string, list<array<string, mixed>>>
+ */
+function mh_github_events_group_by_day(array $events): array
+{
     $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
     $byDay = [];
 
-    foreach (mh_github_events(100) as $ev) {
+    foreach ($events as $ev) {
         if (! is_array($ev)) {
             continue;
         }
@@ -1108,9 +1117,6 @@ function mh_github_events_by_day(int $days = 90): array
         try {
             $dt = new \DateTimeImmutable($when);
         } catch (\Exception) {
-            continue;
-        }
-        if ($dt->getTimestamp() < $cutoff) {
             continue;
         }
         $key = $dt->setTimezone($tz)->format('Y-m-d');
@@ -1165,6 +1171,74 @@ function mh_github_day_tip(string $date, int $count, array $dayEvents = []): str
     }
 
     return implode("\n", $lines);
+}
+
+/**
+ * Streaks and highlights from a contribution calendar.
+ *
+ * The current streak counts back from today, or from yesterday when today
+ * has no contributions yet (the day is not over).
+ *
+ * @param  array{weeks?: array<int, array<int, array{date: string, count: int}>>}  $cal
+ * @return array{current: int, longest: int, active_days: int, best_day: array{date: string, count: int}|null, avg_active: float}
+ */
+function mh_github_calendar_streaks(array $cal): array
+{
+    $days = [];
+    foreach ((array) ($cal['weeks'] ?? []) as $week) {
+        foreach ((array) $week as $day) {
+            $date = (string) ($day['date'] ?? '');
+            if ($date !== '') {
+                $days[$date] = (int) ($day['count'] ?? 0);
+            }
+        }
+    }
+    ksort($days);
+
+    $today = wp_date('Y-m-d');
+    $longest = 0;
+    $run = 0;
+    $active = 0;
+    $sum = 0;
+    $best = null;
+    foreach ($days as $date => $count) {
+        if ($date > $today) {
+            break;
+        }
+        if ($count > 0) {
+            $run++;
+            $active++;
+            $sum += $count;
+            $longest = max($longest, $run);
+            if ($best === null || $count > $best['count']) {
+                $best = ['date' => (string) $date, 'count' => $count];
+            }
+        } else {
+            $run = 0;
+        }
+    }
+
+    $current = 0;
+    foreach (array_reverse(array_keys($days)) as $date) {
+        if ($date > $today) {
+            continue;
+        }
+        if ($days[$date] > 0) {
+            $current++;
+        } elseif ($date === $today && $current === 0) {
+            continue;
+        } else {
+            break;
+        }
+    }
+
+    return [
+        'current' => $current,
+        'longest' => $longest,
+        'active_days' => $active,
+        'best_day' => $best,
+        'avg_active' => $active > 0 ? round($sum / $active, 1) : 0.0,
+    ];
 }
 
 function mh_github_live_repos(int $limit = 8): array
@@ -4887,9 +4961,10 @@ function mh_devto_markdown_to_blocks(string $md): string
  */
 function mh_devto_find_imported_post(int $articleId): int
 {
+    // Trashed imports count as "already imported" so deleting one is not undone by the hourly sync.
     $q = new \WP_Query([
         'post_type' => 'post',
-        'post_status' => ['publish', 'draft', 'pending', 'private'],
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
         'posts_per_page' => 1,
         'fields' => 'ids',
         'no_found_rows' => true,

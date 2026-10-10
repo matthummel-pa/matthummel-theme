@@ -25,7 +25,7 @@ function handle_signup(): void
     $email = isset($_POST['mhn_email']) ? sanitize_email(wp_unslash($_POST['mhn_email'])) : '';
     $first = isset($_POST['mhn_fname']) ? sanitize_text_field(wp_unslash($_POST['mhn_fname'])) : '';
     $source = isset($_POST['mhn_source']) ? sanitize_key(wp_unslash($_POST['mhn_source'])) : 'page';
-    if (! in_array($source, ['page', 'footer'], true)) {
+    if (! in_array($source, ['page', 'footer', 'post'], true)) {
         $source = 'page';
     }
 

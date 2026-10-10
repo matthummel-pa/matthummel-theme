@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.8.1
+Stable tag: 1.11.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,14 +15,15 @@ Self-hosted newsletter. Subscribers and issues stay in WordPress. Mail goes out 
 A personal newsletter for matthummel.com. Addresses, issues, and the send log live in this WordPress database. Nothing is sent to Mailchimp, HubSpot, or another marketing service.
 
 * Double opt-in for new signups.
+* A signup block for any page. It uses the same confirmation email as the Get updates form.
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
-* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has Focused, Detailed, and Digest variants. New letters start on Detailed. The page is light grey, with more grey around the letter. The words sit in one white block with padding on every side. Focused is one idea and one action. Detailed Standard uses the intro as a dek under the title. Detailed Welcome adds a short list. Detailed Plain adds the date. Detailed Feature puts the intro under the image as a caption. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Digest leads with why it matters, then a short list, and one link. Welcome starts with a default photo. Every template can add an image from the media library. Letter style (Card, Banner, or Paper), masthead, button, font (Sans, Serif, Humanist, or Editorial), and size (Regular or Roomy) are edited under Settings. Banner is only a navy masthead band. A header image can come from the media library. Social links are icons plus the network name, and can sit in the footer or at the end of the letter. They start with the public Site, GitHub, LinkedIn, and Bluesky profiles. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
+* Layouts: Standard, Welcome, Plain, Feature, and Blog post. Each one has Focused, Detailed, and Digest variants. New letters start on Detailed. The page is light grey, with more grey around the letter. The words sit in one white block with padding on every side. Focused is one idea and one action. Detailed Standard uses the intro as a dek under the title. Detailed Welcome adds a short list. Detailed Plain adds the date. Detailed Feature puts the intro under the image as a caption. Detailed Blog post adds the date, a reading time, and a why-I-wrote-this note. Digest leads with why it matters, then a short list, and one link. Welcome starts with a default photo. The letter editor can add an image from the media library. Letter style (Card, Banner, or Paper), masthead, button, font (Sans, Serif, Humanist, or Editorial), and size (Regular or Roomy) are edited under Settings. Banner is only a navy masthead band. A header image can come from the media library. Social links are icons plus the network name, and can sit in the footer or at the end of the letter. They start with the public Site, GitHub, LinkedIn, and Bluesky profiles. The preview can show the HTML letter or the plain-text letter. The letter CSS ships in the plugin and is part of the message.
 * Blog post letters can leave out the image, excerpt, headings, categories, or button. Newsletter rules can skip a post that was already sent and limit the post picker to chosen categories. The postal address and unsubscribe link stay on every letter. Preview text starts as the reusable intro.
-* Templates: blog update, blog digest, and a custom message. Each one has a note from you. Reusable copy is edited under Get updates → Settings.
+* Templates: blog update, blog digest, and a custom message. Each one is a single editor. Reusable copy is edited under Get updates → Settings.
 * Draft an issue in the block editor, preview it, and send a test to yourself.
-* Publishing a post saves a blog update draft with a blank note. Automatic sending stays off until you turn it on.
+* Publishing a post saves a blog update draft. The letter starts with a greeting, the post, and a Read more button. Automatic sending stays off until you turn it on.
 * Import a CSV of addresses you already have permission to email.
 * Keep a private copy of each finished send under Get updates → Sent archive.
 
@@ -56,8 +57,29 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 == Changelog ==
 
-= 1.8.1 =
+= 1.11.2 =
 * A send that stops halfway keeps going. The next batch is queued again, and one address that cannot be mailed does not cancel the rest of the list.
+= 1.11.1 =
+* Page setup waits until WordPress has finished booting, so an upgrade no longer takes the site down.
+
+= 1.11.0 =
+* Required pages are created on activation or in wp-admin, not on every front-end request.
+* An existing page is reused by its stored ID or by slug in any status. The lock is an insert that fails if that row exists, because add_option() would update it. The oldest page with that slug is kept.
+* Unsubscribe, email preferences, thank-you, and numbered copies of those slugs stay noindex when Rank Math prints the robots tag.
+* `[mhn_signup source="post"]` uses the same signup handler as the page and footer forms. The post form mentions a free WordPress Handoff Checklist.
+* Settings has an optional checklist link. It is empty until you set an https URL. The welcome letter then adds that button.
+
+= 1.10.0 =
+* A Newsletter signup block can sit on any page. The heading, description, and button text are editable.
+* With JavaScript, the block posts to matthummel-newsletter/v1/subscribe. Without it, the form still uses the existing signup handler.
+* The route checks a REST nonce, a honeypot, and its own limit of 5 requests in 10 minutes. It calls the same subscribe function as the page form.
+
+= 1.9.0 =
+* The content step is one editor per template. Blog update, blog digest, and custom message each start with a letter you can edit.
+* The toolbar is paragraph, Heading 2, Heading 3, bold, italic, lists, a quote, a rule, a link, Button, and Merge tag. Add Media inserts an image.
+* Changing the selected posts asks before it inserts or refreshes those blocks.
+* An older draft is copied once from the note, the posts, and the P.S. into that editor.
+* A missing image description still blocks the send. A skipped heading, a vague link, and a contrast miss still warn.
 
 = 1.8.0 =
 * The white letter has even padding on every side, and more of the grey page shows around it. The words, lists, and image sit in one white block.

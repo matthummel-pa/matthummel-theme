@@ -38,6 +38,7 @@
       <p class="sec-intro">
         {{ \App\field('cnt_form_intro', __('Name, email, and a few sentences are enough. No pitch deck required. This form goes straight to my inbox.', 'sage')) }}
       </p>
+      @include('partials.booking-link')
 
       @include('partials.contact-form', [
         'compact' => false,
@@ -48,7 +49,7 @@
     </div>
 
     {{-- Aside --}}
-    <aside class="contact-aside-v2">
+    <div class="contact-aside-v2">
 
       {{-- Response time card --}}
       <div class="contact-info-card">
@@ -94,7 +95,7 @@
         @include('partials.social', ['labeled' => true, 'cards' => true, 'links' => \App\mh_contact_else_links()])
       </div>
 
-    </aside>
+    </div>
 
   </div>
 </section>

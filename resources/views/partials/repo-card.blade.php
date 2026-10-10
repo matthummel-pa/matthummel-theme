@@ -13,6 +13,10 @@
   $category = \App\mh_code_repo_category($r);
   $slug = \App\mh_code_repo_slug($r);
   $pushed = (string) ($r['pushed'] ?? '');
+  $commits = (int) ($r['commits'] ?? 0);
+  $release = (string) ($r['release'] ?? '');
+  $releaseUrl = (string) ($r['release_url'] ?? '');
+  $releaseDate = (string) ($r['release_date'] ?? '');
 @endphp
 <article class="repo-card repo-card--{{ $variant }}">
   @if ($variant === 'featured' && $index > 0)
@@ -26,7 +30,12 @@
   <div class="repo-card__head">
     <span class="repo-card__mark" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
     <div class="repo-card__title-wrap">
-      <span class="repo-card__kind">{{ $category }}</span>
+      <span class="repo-card__kind">
+        {{ $category }}
+        @if (! empty($r['archived']))
+          <span class="repo-card__archived">{{ __('Archived', 'sage') }}</span>
+        @endif
+      </span>
       <h3>
         @if ($url !== '')
           <a href="{{ esc_url($url) }}" rel="noopener" target="_blank">{{ $title }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
@@ -63,9 +72,24 @@
       @if (! empty($r['forks']))
         <span>{{ sprintf(_n('%s fork', '%s forks', (int) $r['forks'], 'sage'), number_format_i18n((int) $r['forks'])) }}</span>
       @endif
-      @if ($variant === 'featured' && $pushed !== '')
-        <span>{{ sprintf(__('Updated %s', 'sage'), \App\mh_github_ago($pushed)) }}</span>
+      @if ($commits > 0)
+        <span>{{ sprintf(_n('%s commit', '%s commits', $commits, 'sage'), number_format_i18n($commits)) }}</span>
       @endif
+      @if ($variant === 'featured' && $pushed !== '')
+        <span>{{ sprintf(__('Pushed %s', 'sage'), \App\mh_github_ago($pushed)) }}</span>
+      @endif
+    </p>
+  @endif
+  @if ($variant === 'featured' && $release !== '' && $releaseUrl !== '')
+    <p class="repo-card__release">
+      <a href="{{ esc_url($releaseUrl) }}" rel="noopener" target="_blank">
+        {!! \App\mh_svg_icon('download', 13) !!}
+        <span class="repo-card__release-tag">{{ $release }}</span>
+        @if ($releaseDate !== '')
+          <span class="repo-card__release-when">{{ sprintf(__('released %s', 'sage'), \App\mh_github_ago($releaseDate)) }}</span>
+        @endif
+        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+      </a>
     </p>
   @endif
   <div class="repo-card__foot">

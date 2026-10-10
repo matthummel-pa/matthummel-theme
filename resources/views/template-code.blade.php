@@ -5,61 +5,95 @@
 
 @section('content')
 @php
-  $profile  = \App\mh_github_profile();
-  $calendarYear = \App\mh_github_calendar();
-  $calendar = \App\mh_github_calendar_recent(90);
-  $events   = \App\mh_github_events_recent(10, 90);
-  $eventsByDay = \App\mh_github_events_by_day(90);
-  $repos    = \App\mh_code_page_repos();
-  $live     = \App\mh_code_page_live_repos(6);
+  // One stored GitHub snapshot (refreshed hourly by WP-Cron); see app/code-github.php.
+  $gh = \App\mh_code_gh_snapshot();
   $practiceGroups = \App\mh_code_page_practice_grouped();
   $skillGroups = \App\mh_code_page_skills_grouped();
   $docGroups = \App\mh_code_page_resources_grouped();
-  $login    = \App\mh_github_login();
-  $ghUrl    = $profile['url'] ?: 'https://github.com/'.$login;
-  $weeks    = $calendar['weeks'] ?? [];
-  $total    = (int) ($calendar['total'] ?? 0);
-  $yearTotal = (int) ($calendarYear['total'] ?? 0);
-  $ghFollowers = \App\mh_github_followers(20);
-  $ghStargazers = \App\mh_github_stargazers(20);
-  $starsEarned = \App\mh_github_stars_earned();
-  $starTotal = (int) ($starsEarned['total'] ?? 0);
-  $starRepos = $starsEarned['repos'] ?? [];
-  $watching = \App\mh_github_watching(36);
-  $watchingItems = $watching['items'] ?? [];
-  $watchingSource = (string) ($watching['source'] ?? 'starred');
-  $ghBadges = \App\mh_code_page_github_badges();
-  $followerCount = (int) ($profile['followers'] ?? 0);
+  $login = $gh['login'];
+  $ghUrl = $gh['url'];
 @endphp
 
-{{-- HERO --}}
-@component('partials.page-hero')
-  <p class="eyebrow">{{ \App\field('code_kicker', __('Code', 'sage')) }}</p>
-  <h1 class="display-title is-hero">
-    {{ \App\field('code_h1', __('Code and repos.', 'sage')) }}
-  </h1>
-  <p class="lead">
-    {!! \App\field_html('code_lede', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')) !!}
-  </p>
-  <div class="page-header-split__actions">
-    <a class="btn" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-      {!! \App\mh_svg_icon('github', 16) !!} {{ __('View GitHub', 'sage') }}
-      <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-    </a>
-    <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
-      {{ __('Hire me', 'sage') }} <span aria-hidden="true">→</span>
-    </a>
-  </div>
-@endcomponent
+@include('partials.code-gh-top', ['gh' => $gh])
 
-@include('partials.page-nav', [
-  'pills' => [
-    ['practice', __('Practice', 'sage')],
-    ['github', __('GitHub', 'sage')],
-    ['skills', __('Skills', 'sage')],
-    ['docs', __('Docs', 'sage')],
-  ],
-])
+{{-- SKILLS --}}
+<section class="pf-section code-skills-sec" id="skills" aria-labelledby="code-skills-heading">
+  <div class="container wide">
+    <div class="code-skills-shell">
+      <div class="code-skills-shell__mesh" aria-hidden="true"></div>
+      <div class="code-skills-shell__inner">
+        <header class="code-skills-shell__head">
+          <p class="eyebrow">{{ __('Stack', 'sage') }}</p>
+          <h2 id="code-skills-heading" class="display-title is-section">
+            {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
+          </h2>
+          <p class="sec-intro">
+            {{ \App\field('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')) }}
+          </p>
+          @if (count($skillGroups) > 1)
+            <nav class="code-skills-jump" aria-label="{{ __('Skill groups', 'sage') }}">
+              @foreach ($skillGroups as $group)
+                <a href="#skill-{{ sanitize_title($group['label']) }}">
+                  <span class="code-skills-jump__ico" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 13) !!}</span>
+                  {{ $group['label'] }}
+                  <span class="code-skills-jump__n">{{ number_format_i18n(count($group['items'])) }}</span>
+                </a>
+              @endforeach
+            </nav>
+          @endif
+        </header>
+
+        @if ($gh['languages'])
+          <div class="code-langs" aria-labelledby="code-langs-heading">
+            <div class="code-langs__head">
+              <h3 class="code-langs__title" id="code-langs-heading">{!! \App\mh_svg_icon('chart-bar', 16) !!} {{ \App\field('code_lang_h3', __('Languages on GitHub', 'sage')) }}</h3>
+              <p class="code-langs__intro">{{ \App\field('code_lang_intro', __('Primary language of each public repo, counted live. Small static sites pull HTML up; the themes and plugins are PHP.', 'sage')) }}</p>
+            </div>
+            <div class="code-langs__bar" aria-hidden="true">
+              @foreach ($gh['languages'] as $l)
+                <span style="--w: {{ $l['pct'] }}%; --c: {{ esc_attr($l['color']) }}"></span>
+              @endforeach
+            </div>
+            <ul class="code-langs__legend">
+              @foreach ($gh['languages'] as $l)
+                <li>
+                  <span class="repo-lang__dot" style="--lang-color: {{ esc_attr($l['color']) }}" aria-hidden="true"></span>
+                  <span class="code-langs__name">{{ $l['lang'] }}</span>
+                  <span class="code-langs__pct">{{ number_format_i18n($l['pct'], 0) }}%</span>
+                  <span class="code-langs__n">{{ sprintf(_n('%s repo', '%s repos', $l['count'], 'sage'), number_format_i18n($l['count'])) }}</span>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <div class="code-skills-groups">
+          @foreach ($skillGroups as $group)
+            <section
+              class="code-skills-group"
+              id="skill-{{ sanitize_title($group['label']) }}"
+              data-group="{{ esc_attr($group['label']) }}"
+            >
+              <div class="code-skills-group__head">
+                <span class="code-skills-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
+                <h3 class="code-skills-group__title" id="skill-head-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</h3>
+                <span class="code-skills-group__rule" aria-hidden="true"></span>
+                <span class="code-skills-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
+              </div>
+              <ul class="code-skills-grid">
+                @foreach ($group['items'] as $skill)
+                  <li class="code-skills__card" data-group="{{ esc_attr($group['label']) }}">
+                    {!! \App\mh_skill_tile($skill['name'], $skill['hint']) !!}
+                  </li>
+                @endforeach
+              </ul>
+            </section>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {{-- PRACTICE --}}
 <section class="pf-section code-practice-sec" id="practice" aria-labelledby="code-practice-heading">
@@ -67,7 +101,7 @@
     <div class="code-practice-shell">
       <div class="code-practice-shell__mesh" aria-hidden="true"></div>
       <div class="code-practice-shell__inner code-practice-layout">
-        <aside class="code-practice-aside" aria-label="{{ __('Practice overview', 'sage') }}">
+        <div class="code-practice-aside">
           <p class="eyebrow">{{ __('Day to day', 'sage') }}</p>
           <h2 id="code-practice-heading" class="display-title is-section">
             {{ \App\field('code_do_h2', __('What I work on.', 'sage')) }}
@@ -96,7 +130,7 @@
               {{ __('See the work', 'sage') }}
             </a>
           </div>
-        </aside>
+        </div>
 
         <div class="code-practice-board">
           @foreach ($practiceGroups as $group)
@@ -133,517 +167,7 @@
   </div>
 </section>
 
-{{-- GITHUB / OPEN SOURCE --}}
-@php
-  $calMonths = \App\mh_github_calendar_months($weeks);
-  $weekCount = max(1, count($weeks));
-  $calWindow = (int) ($calendar['days'] ?? 90);
-  $dayIndex = 0;
-@endphp
-<section class="pf-section pf-section--alt code-gh" id="github" aria-labelledby="code-gh-heading">
-  <div class="container wide">
-    <div class="code-gh__head">
-      <div>
-        <p class="eyebrow">{{ __('Open source', 'sage') }}</p>
-        <h2 id="code-gh-heading" class="display-title is-section">
-          {{ \App\field('code_gh_h2', __('Open-source full-stack and WordPress code on GitHub.', 'sage')) }}
-        </h2>
-        <p class="sec-intro">
-          {{ \App\field('code_gh_intro', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')) }}
-        </p>
-      </div>
-      <nav class="code-gh__jump" aria-label="{{ __('Jump to GitHub sections', 'sage') }}">
-        @if (! empty($profile['login']))
-          <a href="#gh-profile">{{ __('Profile', 'sage') }}</a>
-        @endif
-        @if ($ghFollowers || $ghStargazers || $ghBadges || $watchingItems)
-          <a href="#gh-community">{{ __('Community', 'sage') }}</a>
-        @endif
-        @if ($watchingItems)
-          <a href="#gh-watching">{{ __('Watching', 'sage') }}</a>
-        @endif
-        @if ($weeks)
-          <a href="#gh-contributions">{{ __('Contributions', 'sage') }}</a>
-        @endif
-        <a href="#gh-featured">{{ __('Featured', 'sage') }}</a>
-        @if ($events)
-          <a href="#gh-activity">{{ __('Activity', 'sage') }}</a>
-        @endif
-        @if ($live)
-          <a href="#gh-updated">{{ __('Updated', 'sage') }}</a>
-        @endif
-      </nav>
-    </div>
-
-    {{-- Profile showcase --}}
-    @if (! empty($profile['login']))
-    <div class="code-gh-profile" id="gh-profile">
-      <div class="code-gh-profile__mesh" aria-hidden="true"></div>
-      <div class="code-gh-profile__main">
-        <div class="code-gh-profile__who">
-          @if (! empty($profile['avatar']))
-            <img class="code-gh-profile__avatar" src="{{ esc_url($profile['avatar']) }}" width="96" height="96" alt="{{ esc_attr(($profile['name'] ?: $profile['login']).' GitHub avatar') }}" loading="lazy" decoding="async">
-          @else
-            <span class="code-gh-profile__avatar code-gh-profile__avatar--fallback" aria-hidden="true">{!! \App\mh_svg_icon('github', 36) !!}</span>
-          @endif
-          <div class="code-gh-profile__copy">
-            <p class="code-gh-profile__name">{{ $profile['name'] ?: $profile['login'] }}</p>
-            <p class="code-gh-profile__meta">
-              <a href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-                {!! \App\mh_svg_icon('github', 14) !!}
-                {{ '@'.$login }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-              </a>
-              @if (! empty($profile['location']))
-                <span>{!! \App\mh_svg_icon('map', 13) !!} {{ $profile['location'] }}</span>
-              @endif
-              @if (! empty($profile['created']))
-                <span>{{ sprintf(__('On GitHub since %s', 'sage'), $profile['created']) }}</span>
-              @endif
-            </p>
-            @if (! empty($profile['bio']))
-              <p class="code-gh-profile__bio">{{ $profile['bio'] }}</p>
-            @endif
-            <p class="code-gh-profile__actions">
-              <a class="btn" href="{{ esc_url($ghUrl) }}" rel="me noopener" target="_blank">
-                {!! \App\mh_svg_icon('github', 15) !!} {{ __('View on GitHub', 'sage') }}
-                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-              </a>
-              <span class="code-gh-live" aria-label="{{ __('Live data from GitHub API', 'sage') }}">
-                <span class="h-badge__dot" aria-hidden="true"></span>
-                {{ __('Live from API', 'sage') }}
-              </span>
-            </p>
-          </div>
-        </div>
-        <dl class="code-gh-stats">
-          <div class="code-gh-stat">
-            <dt>
-              <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('code', 16) !!}</span>
-              {{ number_format_i18n((int) ($profile['public_repos'] ?? 0)) }}
-            </dt>
-            <dd>{{ __('Public repos', 'sage') }}</dd>
-          </div>
-          <div class="code-gh-stat">
-            <dt>
-              <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
-              {{ number_format_i18n((int) ($profile['followers'] ?? 0)) }}
-            </dt>
-            <dd>{{ __('Followers', 'sage') }}</dd>
-          </div>
-          @if ($yearTotal > 0)
-            <div class="code-gh-stat">
-              <dt>
-                <span class="code-gh-stat__ico" aria-hidden="true">{!! \App\mh_svg_icon('git', 16) !!}</span>
-                {{ number_format_i18n($yearTotal) }}
-              </dt>
-              <dd>{{ __('Contributions (yr)', 'sage') }}</dd>
-            </div>
-          @endif
-        </dl>
-      </div>
-    </div>
-    @endif
-
-    {{-- Community: followers, badges, stars earned, watching --}}
-    @if ($ghFollowers || $ghStargazers || $ghBadges || $starTotal > 0 || $watchingItems)
-    <div class="code-gh-community" id="gh-community">
-      <header class="code-gh-community__head">
-        <div>
-          <p class="eyebrow">{{ __('Community', 'sage') }}</p>
-          <h3 class="code-gh-community__title">{{ \App\field('code_comm_h2', __('People who follow and star my repos', 'sage')) }}</h3>
-          <p class="code-gh-community__intro">{{ \App\field('code_comm_intro', __('Public GitHub followers and stargazers below. Thank you for reading the code, starring a repo, or following along.', 'sage')) }}</p>
-        </div>
-        @if ($followerCount > 0 || $starTotal > 0 || count($ghBadges) > 0)
-          <dl class="code-gh-community__stats">
-            @if ($followerCount > 0)
-              <div>
-                <dt>{{ __('Followers', 'sage') }}</dt>
-                <dd>{{ number_format_i18n($followerCount) }}</dd>
-              </div>
-            @endif
-            @if ($starTotal > 0)
-              <div>
-                <dt>{{ __('Stars earned', 'sage') }}</dt>
-                <dd>{{ number_format_i18n($starTotal) }}</dd>
-              </div>
-            @endif
-            @if (count($ghBadges) > 0)
-              <div>
-                <dt>{{ __('Badges', 'sage') }}</dt>
-                <dd>{{ number_format_i18n(count($ghBadges)) }}</dd>
-              </div>
-            @endif
-          </dl>
-        @endif
-      </header>
-
-      <div class="code-gh-community__grid">
-        @if ($ghFollowers)
-        <section class="code-gh-community__panel" aria-labelledby="code-follow-heading">
-          <h4 class="code-gh-community__panel-title" id="code-follow-heading">
-            {!! \App\mh_svg_icon('users', 16) !!}
-            {{ \App\field('code_follow_h3', __('GitHub followers', 'sage')) }}
-          </h4>
-          <p class="code-gh-community__thanks">{{ \App\field('code_follow_thanks', __('Thank you for following on GitHub. I notice every new follower.', 'sage')) }}</p>
-          <ul class="code-gh-people">
-            @foreach ($ghFollowers as $f)
-              <li>
-                <a class="code-gh-person" href="{{ esc_url($f['url']) }}" rel="noopener noreferrer" target="_blank" title="{{ esc_attr($f['name']) }}">
-                  @if ($f['avatar'] !== '')
-                    <img class="code-gh-person__img" src="{{ esc_url($f['avatar']) }}" alt="" width="40" height="40" loading="lazy" decoding="async">
-                  @else
-                    <span class="code-gh-person__img code-gh-person__img--empty" aria-hidden="true">{{ mb_strtoupper(mb_substr($f['name'], 0, 1)) }}</span>
-                  @endif
-                  <span class="code-gh-person__meta">
-                    <span class="code-gh-person__name">{{ $f['name'] }}</span>
-                    <span class="code-gh-person__user">{{ '@'.$f['login'] }}</span>
-                  </span>
-                </a>
-              </li>
-            @endforeach
-          </ul>
-          <a class="code-gh-community__link" href="{{ esc_url($ghUrl.'?tab=followers') }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('github', 14) !!}
-            {{ __('All followers on GitHub', 'sage') }}
-            <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-          </a>
-        </section>
-        @endif
-
-        @if ($ghBadges)
-        <section class="code-gh-community__panel code-gh-community__panel--badges" aria-labelledby="code-badges-heading">
-          <h4 class="code-gh-community__panel-title" id="code-badges-heading">
-            {!! \App\mh_svg_icon('shield', 16) !!}
-            {{ \App\field('code_badges_h3', __('Badges earned', 'sage')) }}
-          </h4>
-          <p class="code-gh-community__thanks">{{ \App\field('code_badges_intro', __('Milestone badges from live GitHub stats — stars, followers, contributions, and repo activity.', 'sage')) }}</p>
-          <ul class="code-gh-badges__grid code-gh-badges__grid--panel">
-            @foreach ($ghBadges as $badge)
-              <li class="code-gh-badge {{ esc_attr($badge['class']) }}">
-                <span class="code-gh-badge__icon" aria-hidden="true">{!! \App\mh_svg_icon($badge['icon'], 18) !!}</span>
-                <span class="code-gh-badge__copy">
-                  <span class="code-gh-badge__label">{{ $badge['label'] }}</span>
-                  <span class="code-gh-badge__detail">{{ $badge['detail'] }}</span>
-                </span>
-              </li>
-            @endforeach
-          </ul>
-        </section>
-        @endif
-      </div>
-
-      @if ($starTotal > 0 || $ghStargazers)
-      <section class="code-gh-stargazers" aria-labelledby="code-star-heading">
-        <div class="code-gh-stargazers__head">
-          <h4 class="code-gh-stargazers__title" id="code-star-heading">
-            {!! \App\mh_svg_icon('star', 16) !!}
-            {{ \App\field('code_star_h3', __('Stars earned', 'sage')) }}
-          </h4>
-          <p class="code-gh-stargazers__thanks">{{ \App\field('code_star_thanks', __('Thank you to everyone who starred a public repo. Stars help other developers find the work.', 'sage')) }}</p>
-          @if ($starTotal > 0)
-            <p class="code-gh-stargazers__stat">
-              <strong>{{ number_format_i18n($starTotal) }}</strong>
-              {{ sprintf(_n('star across public repos', 'stars across public repos', $starTotal, 'sage')) }}
-            </p>
-          @endif
-        </div>
-        @if ($starRepos)
-          <ul class="code-gh-star-repos">
-            @foreach ($starRepos as $sr)
-              <li>
-                <a class="code-gh-star-repo" href="{{ esc_url($sr['url']) }}" rel="noopener" target="_blank">
-                  <span class="code-gh-star-repo__name">{{ $sr['name'] }}</span>
-                  <span class="code-gh-star-repo__n">{!! \App\mh_svg_icon('star', 12) !!} {{ number_format_i18n((int) $sr['stars']) }}</span>
-                  <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-                </a>
-              </li>
-            @endforeach
-          </ul>
-        @endif
-        @if ($ghStargazers)
-          <ul class="code-gh-stargazers__people">
-            @foreach ($ghStargazers as $s)
-              <li>
-                <a class="code-gh-stargazer" href="{{ esc_url($s['url']) }}" rel="noopener noreferrer" target="_blank" title="{{ esc_attr($s['name']) }}">
-                  @if ($s['avatar'] !== '')
-                    <img class="code-gh-stargazer__img" src="{{ esc_url($s['avatar']) }}" alt="" width="36" height="36" loading="lazy" decoding="async">
-                  @else
-                    <span class="code-gh-stargazer__img code-gh-stargazer__img--empty" aria-hidden="true">{{ mb_strtoupper(mb_substr($s['name'], 0, 1)) }}</span>
-                  @endif
-                  <span class="code-gh-stargazer__name">{{ $s['name'] }}</span>
-                </a>
-              </li>
-            @endforeach
-          </ul>
-        @endif
-      </section>
-      @endif
-
-      @if ($watchingItems)
-      <section class="code-gh-watching" id="gh-watching" aria-labelledby="code-watch-heading">
-        <div class="code-gh-watching__head">
-          <h4 class="code-gh-watching__title" id="code-watch-heading">
-            {!! \App\mh_svg_icon('globe', 16) !!}
-            {{ \App\field('code_watch_h3', __('Repos I watch', 'sage')) }}
-          </h4>
-          <p class="code-gh-watching__intro">
-            @if ($watchingSource === 'watching')
-              {{ \App\field('code_watch_intro', __('Public repositories I watch on GitHub.', 'sage')) }}
-            @else
-              {{ \App\field('code_watch_intro_starred', __('Repos I star and follow on GitHub.', 'sage')) }}
-            @endif
-          </p>
-          <p class="code-gh-watching__meta">
-            {{ sprintf(_n('%s repo', '%s repos', count($watchingItems), 'sage'), number_format_i18n(count($watchingItems))) }}
-            ·
-            <a href="{{ esc_url($ghUrl.'?tab=stars') }}" rel="me noopener" target="_blank">
-              {{ __('All starred on GitHub', 'sage') }}
-              <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-            </a>
-          </p>
-        </div>
-        <ul class="code-gh-watching__list">
-          @foreach ($watchingItems as $w)
-            <li>
-              <a class="code-gh-watch-repo" href="{{ esc_url($w['url']) }}" rel="noopener" target="_blank">
-                <span class="code-gh-watch-repo__full">{{ $w['full'] }}</span>
-                @if (($w['lang'] ?? '') !== '')
-                  <span class="code-gh-watch-repo__lang">{{ $w['lang'] }}</span>
-                @endif
-                @if ((int) ($w['stars'] ?? 0) > 0)
-                  <span class="code-gh-watch-repo__stars">{!! \App\mh_svg_icon('star', 11) !!} {{ number_format_i18n((int) $w['stars']) }}</span>
-                @endif
-                <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-              </a>
-            </li>
-          @endforeach
-        </ul>
-      </section>
-      @endif
-    </div>
-    @endif
-
-    {{-- Contributions + activity --}}
-    @if ($weeks || $events)
-    <div class="code-gh-split">
-      @if ($weeks)
-      <div class="code-gh-panel code-gh-cal" id="gh-contributions" style="--gh-weeks: {{ $weekCount }}">
-        <div class="code-gh-panel__head">
-          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('git', 18) !!}</span>
-          <div>
-            <h3 class="code-gh-panel__title">{{ \App\field('code_cal_h2', __('Last 90 days of commits', 'sage')) }}</h3>
-            <p class="code-gh-panel__intro">
-              {{ \App\field('code_cal_intro', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')) }}
-              @if ($total > 0)
-                <strong>{{ sprintf(__('%s contributions in the last %s days.', 'sage'), number_format_i18n($total), number_format_i18n($calWindow)) }}</strong>
-              @endif
-            </p>
-          </div>
-        </div>
-        <div class="gh-cal-scroll" tabindex="0" aria-label="{{ sprintf(__('GitHub contribution calendar for @%s — hover or focus a day for details', 'sage'), $login) }}">
-          @if ($calMonths)
-            <div class="code-gh-cal__months" aria-hidden="true">
-              @foreach ($calMonths as $m)
-                <span style="grid-column: {{ $m['week'] + 1 }}">{{ $m['label'] }}</span>
-              @endforeach
-            </div>
-          @endif
-          <div class="gh-cal">
-            @foreach ($weeks as $week)
-              <div class="gh-week">
-                @foreach ($week as $day)
-                  @php
-                    $level = (int) ($day['level'] ?? 0);
-                    $date  = (string) ($day['date'] ?? '');
-                    $count = (int) ($day['count'] ?? 0);
-                    $dayEvents = $date !== '' ? ($eventsByDay[$date] ?? []) : [];
-                    $tip = $date !== '' ? \App\mh_github_day_tip($date, $count, $dayEvents) : '';
-                    $i = $dayIndex++;
-                  @endphp
-                  @if ($date !== '')
-                    <button
-                      type="button"
-                      class="gh-day"
-                      data-level="{{ $level }}"
-                      style="--i: {{ $i }}"
-                      aria-label="{{ esc_attr($tip) }}"
-                    >
-                      <span class="gh-day__tip" role="tooltip">{{ $tip }}</span>
-                    </button>
-                  @else
-                    <span class="gh-day gh-day--pad" data-level="0" style="--i: {{ $i }}" aria-hidden="true"></span>
-                  @endif
-                @endforeach
-              </div>
-            @endforeach
-          </div>
-        </div>
-        <p class="gh-cal-legend" aria-hidden="true">
-          {{ __('Less', 'sage') }}
-          <span class="gh-day" data-level="0"></span>
-          <span class="gh-day" data-level="1"></span>
-          <span class="gh-day" data-level="2"></span>
-          <span class="gh-day" data-level="3"></span>
-          <span class="gh-day" data-level="4"></span>
-          {{ __('More', 'sage') }}
-        </p>
-      </div>
-      @endif
-
-      @if ($events)
-      <div class="code-gh-panel code-gh-activity" id="gh-activity">
-        <div class="code-gh-panel__head">
-          <span class="code-gh-panel__mark" aria-hidden="true">{!! \App\mh_svg_icon('code', 18) !!}</span>
-          <div>
-            <h3 class="code-gh-panel__title">{{ \App\field('code_act_h2', __('Public activity', 'sage')) }}</h3>
-            <p class="code-gh-panel__intro">{{ \App\field('code_act_intro', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')) }}</p>
-          </div>
-        </div>
-        <ol class="code-gh-feed">
-          @foreach ($events as $ev)
-            @php
-              $evIcon = \App\mh_github_event_icon((string) ($ev['type'] ?? ''));
-              $evType = (string) ($ev['type'] ?? '');
-              $evRepo = (string) ($ev['repo'] ?? '');
-            @endphp
-            <li class="code-gh-feed__item" data-type="{{ esc_attr($evType) }}">
-              <span class="code-gh-feed__icon" aria-hidden="true">{!! \App\mh_svg_icon($evIcon, 14) !!}</span>
-              <div class="code-gh-feed__body">
-                <a class="code-gh-feed__link" href="{{ esc_url($ev['url']) }}" rel="noopener" target="_blank">
-                  {{ $ev['text'] }}
-                  <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-                </a>
-                @if ($evRepo !== '')
-                  <span class="code-gh-feed__repo">{!! \App\mh_svg_icon('github', 12) !!} {{ $evRepo }}</span>
-                @endif
-              </div>
-              @if (! empty($ev['when']))
-                <time datetime="{{ esc_attr($ev['when']) }}">{{ \App\mh_github_ago($ev['when']) }}</time>
-              @endif
-            </li>
-          @endforeach
-        </ol>
-      </div>
-      @endif
-    </div>
-    @endif
-
-    {{-- Featured repos --}}
-    <div class="code-repos-shell code-repos-shell--featured" id="gh-featured">
-      <div class="code-repos-shell__mesh" aria-hidden="true"></div>
-      <div class="code-repos-shell__inner">
-        <header class="code-repos-shell__head">
-          <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
-          <h3 class="code-repos-shell__title">{{ \App\field('code_feat_h2', __('Featured WordPress and app repos', 'sage')) }}</h3>
-          <p class="sec-intro">
-            {{ \App\field('code_feat_intro', __('Three public codebases I point developers to first: a React app, a WordPress plugin, and the Sage theme behind this site. Each one is meant to be forked.', 'sage')) }}
-          </p>
-          <p class="code-repos-shell__meta">
-            {{ sprintf(_n('%s repo', '%s repos', count($repos), 'sage'), number_format_i18n(count($repos))) }}
-            · {{ __('WordPress, plugins, and apps', 'sage') }}
-          </p>
-        </header>
-        <ol class="code-repos-grid code-repos-grid--featured">
-          @foreach ($repos as $i => $r)
-            <li class="code-repos-grid__item">
-              @include('partials.repo-card', ['r' => $r, 'index' => $i + 1, 'variant' => 'featured'])
-            </li>
-          @endforeach
-        </ol>
-      </div>
-    </div>
-
-    {{-- Recently updated --}}
-    @if ($live)
-    <div class="code-repos-shell code-repos-shell--live" id="gh-updated">
-      <div class="code-repos-shell__mesh" aria-hidden="true"></div>
-      <div class="code-repos-shell__inner">
-        <header class="code-repos-shell__head code-repos-shell__head--split">
-          <div class="code-repos-shell__copy">
-            <p class="eyebrow">{{ __('Pulse', 'sage') }}</p>
-            <h3 class="code-repos-shell__title">{{ \App\field('code_live_h2', __('Recently pushed', 'sage')) }}</h3>
-            <p class="sec-intro">
-              {{ \App\field('code_live_intro', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')) }}
-            </p>
-            <p class="code-repos-shell__meta">
-              {{ sprintf(_n('%s update', '%s updates', count($live), 'sage'), number_format_i18n(count($live))) }}
-              · {{ __('Sorted by latest push', 'sage') }}
-            </p>
-          </div>
-          <a class="btn btn-outline code-repos-shell__cta" href="https://github.com/{{ esc_attr($login) }}?tab=repositories" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('github', 14) !!}
-            {{ \App\field('code_live_all', __('Browse all public repos', 'sage')) }}
-            <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-          </a>
-        </header>
-        <ul class="code-repos-grid code-repos-grid--live">
-          @foreach ($live as $r)
-            <li class="code-repos-grid__item">
-              @include('partials.repo-card', ['r' => $r, 'variant' => 'live'])
-            </li>
-          @endforeach
-        </ul>
-      </div>
-    </div>
-    @endif
-  </div>
-</section>
-
-{{-- SKILLS --}}
-<section class="pf-section code-skills-sec" id="skills" aria-labelledby="code-skills-heading">
-  <div class="container wide">
-    <div class="code-skills-shell">
-      <div class="code-skills-shell__mesh" aria-hidden="true"></div>
-      <div class="code-skills-shell__inner">
-        <header class="code-skills-shell__head">
-          <p class="eyebrow">{{ __('Tools', 'sage') }}</p>
-          <h2 id="code-skills-heading" class="display-title is-section">
-            {{ \App\field('code_sk_h2', __('Skills and tools.', 'sage')) }}
-          </h2>
-          <p class="sec-intro">
-            {{ \App\field('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')) }}
-          </p>
-          @if (count($skillGroups) > 1)
-            <nav class="code-skills-jump" aria-label="{{ __('Skill groups', 'sage') }}">
-              @foreach ($skillGroups as $group)
-                <a href="#skill-{{ sanitize_title($group['label']) }}">
-                  <span class="code-skills-jump__ico" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 13) !!}</span>
-                  {{ $group['label'] }}
-                  <span class="code-skills-jump__n">{{ number_format_i18n(count($group['items'])) }}</span>
-                </a>
-              @endforeach
-            </nav>
-          @endif
-        </header>
-
-        <div class="code-skills-groups">
-          @foreach ($skillGroups as $group)
-            <section
-              class="code-skills-group"
-              id="skill-{{ sanitize_title($group['label']) }}"
-              aria-labelledby="skill-head-{{ sanitize_title($group['label']) }}"
-              data-group="{{ esc_attr($group['label']) }}"
-            >
-              <div class="code-skills-group__head">
-                <span class="code-skills-group__mark" aria-hidden="true">{!! \App\mh_svg_icon($group['icon'], 16) !!}</span>
-                <h3 class="code-skills-group__title" id="skill-head-{{ sanitize_title($group['label']) }}">{{ $group['label'] }}</h3>
-                <span class="code-skills-group__rule" aria-hidden="true"></span>
-                <span class="code-skills-group__count">{{ number_format_i18n(count($group['items'])) }}</span>
-              </div>
-              <ul class="code-skills-grid">
-                @foreach ($group['items'] as $skill)
-                  <li class="code-skills__card" data-group="{{ esc_attr($group['label']) }}">
-                    {!! \App\mh_skill_tile($skill['name'], $skill['hint']) !!}
-                  </li>
-                @endforeach
-              </ul>
-            </section>
-          @endforeach
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+@include('partials.code-gh-community', ['gh' => $gh])
 
 {{-- DOCUMENTATION --}}
 <section class="pf-section code-docs-sec" id="docs" aria-labelledby="code-docs-heading">

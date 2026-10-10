@@ -19,6 +19,7 @@
 
 # Sage / Node / Composer
 /node_modules
+plugins/matthummel-newsletter/node_modules/
 /vendor
 /public/*
 !/public/.gitkeep
@@ -86,6 +87,8 @@ wp-config-*.php
 
 # Logs, sitemaps, local Apache (theme Blade .htaccess is committed)
 *.log
+*fatal*.txt
+mh-last-fatal.txt
 sitemap.xml
 sitemap.xml.gz
 error_log

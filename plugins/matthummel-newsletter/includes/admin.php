@@ -144,6 +144,9 @@ function admin_assets(string $hook): void
     wp_localize_script('mhn-wizard', 'mhnWizard', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'saved' => __('Draft saved.', 'matthummel-newsletter'),
+        'postBlocks' => 'mhn_post_blocks',
+        'postsFailed' => __('The post blocks could not be loaded. Try again.', 'matthummel-newsletter'),
+        'postsEmpty' => __('Those posts are not available to insert.', 'matthummel-newsletter'),
     ]);
 }
 
@@ -927,6 +930,9 @@ function page_settings(): void
     echo '<p><label for="mhn-welcome-points">'.esc_html__('Welcome list', 'matthummel-newsletter').'</label>';
     echo '<textarea class="large-text" rows="4" id="mhn-welcome-points" name="welcome_points">'.esc_textarea($config['welcome_points']).'</textarea></p>';
     echo '<p class="description">'.esc_html__('One expectation per line. Detailed and Digest Welcome show this list. Focused leaves it out. Digest puts the list first.', 'matthummel-newsletter').'</p>';
+    echo '<p><label for="mhn-checklist-url">'.esc_html__('Checklist link', 'matthummel-newsletter').'</label>';
+    echo '<input class="regular-text" type="url" id="mhn-checklist-url" name="checklist_url" inputmode="url" placeholder="https://" value="'.esc_attr($config['checklist_url']).'"></p>';
+    echo '<p class="description">'.esc_html__('Optional https link. When it is set, the welcome letter adds a WordPress Handoff Checklist button. Leave it empty to leave the letter as it is.', 'matthummel-newsletter').'</p>';
     echo '</section>';
 
     render_letter_system_card();
@@ -1197,6 +1203,8 @@ function handle_settings(): void
         'signoff' => wp_unslash($_POST['signoff'] ?? ''),
         'welcome_subject' => wp_unslash($_POST['welcome_subject'] ?? ''),
         'welcome_body' => wp_unslash($_POST['welcome_body'] ?? ''),
+        'welcome_points' => isset($_POST['welcome_points']) ? sanitize_textarea_field(wp_unslash($_POST['welcome_points'])) : '',
+        'checklist_url' => isset($_POST['checklist_url']) && is_string($_POST['checklist_url']) ? esc_url_raw(wp_unslash($_POST['checklist_url'])) : '',
         'letter_style' => wp_unslash($_POST['letter_style'] ?? ''),
         'letter_masthead' => wp_unslash($_POST['letter_masthead'] ?? ''),
         'letter_button' => wp_unslash($_POST['letter_button'] ?? ''),

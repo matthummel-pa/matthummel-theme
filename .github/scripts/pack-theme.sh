@@ -20,6 +20,9 @@ tar -C "$root" \
   --exclude='.env' \
   --exclude='.env.*' \
   --exclude='plugins' \
+  --exclude='mh-last-fatal.txt' \
+  --exclude='*fatal*.txt' \
+  --exclude='*.log' \
   --exclude='matthummel.zip' \
   --exclude='matthummel-newsletter.zip' \
   --exclude='.claude' \
@@ -33,6 +36,17 @@ tar -C "$root" \
   --exclude='phpcs.xml.dist' \
   --exclude='phpstan*.neon*' \
   --exclude='lighthouse-report*' \
+  --exclude='composer.lock' \
+  --exclude='package.json' \
+  --exclude='package-lock.json' \
+  --exclude='vite.config.js' \
+  --exclude='tailwind.config.js' \
+  --exclude='bud.config.js' \
+  --exclude='jsconfig.json' \
+  --exclude='index.html' \
+  --exclude='.editorconfig' \
+  --exclude='.prettierrc*' \
+  --exclude='.nvmrc' \
   -cf - . | tar -C "$stage/matthummel" -xf -
 # Dev/AI tooling above would otherwise be publicly readable under wp-content/themes/matthummel/ on the live site.
 
@@ -52,6 +66,10 @@ fi
 rm -f "$stage/matthummel/public/hot"
 if [[ -d "$stage/matthummel/plugins" ]]; then
   echo "plugins/ leaked into the theme pack" >&2
+  exit 1
+fi
+if find "$stage/matthummel" \( -name '*fatal*.txt' -o -name '*.log' \) | grep -q .; then
+  echo "log or fatal file leaked into the theme pack" >&2
   exit 1
 fi
 (cd "$stage" && zip -rq "$out" matthummel)

@@ -58,6 +58,7 @@
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} Say hello
     </a>
+    @include('partials.booking-link')
     <a class="h-text-arrow" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
       LinkedIn <span aria-hidden="true">→</span>
       <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
@@ -223,6 +224,7 @@
         <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center;margin-top:.85rem">
           {!! \App\mh_svg_icon('mail', 15) !!} Say hello
         </a>
+        @include('partials.booking-link', ['block' => true])
         <p class="hire-need-cta__note">
           Or <a href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">message on LinkedIn</a>
         </p>
@@ -292,6 +294,7 @@
       <a class="btn btn-on-dark" href="{{ home_url('/contact/') }}">
         {!! \App\mh_svg_icon('mail', 16) !!} {{ __('Say hello', 'sage') }}
       </a>
+      @include('partials.booking-link', ['class' => 'btn btn-ghost'])
       <a class="btn btn-ghost" href="{{ esc_url($liUrl) }}" rel="noopener" target="_blank">
         {!! \App\mh_svg_icon('linkedin', 14) !!} LinkedIn
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>

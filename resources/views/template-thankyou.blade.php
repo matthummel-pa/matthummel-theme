@@ -88,11 +88,11 @@
         <span class="ty-browse-card__link">See the work →</span>
       </a>
 
-      <a class="ty-browse-card" href="{{ home_url('/services/') }}">
+      <a class="ty-browse-card" href="{{ home_url('/hire/') }}">
         <div class="ty-browse-card__icon">{!! \App\mh_svg_icon('wordpress', 22) !!}</div>
-        <h3 class="ty-browse-card__title">Services</h3>
+        <h3 class="ty-browse-card__title">Hire me</h3>
         <p class="ty-browse-card__body">What I build, how the process works, who I typically work with, and what you get at handoff.</p>
-        <span class="ty-browse-card__link">Read about services →</span>
+        <span class="ty-browse-card__link">See how hiring works →</span>
       </a>
 
       <a class="ty-browse-card" href="{{ home_url('/uses/') }}">
