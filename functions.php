@@ -21,12 +21,6 @@ if (! file_exists($composer = __DIR__.'/vendor/autoload.php')) {
 
 require $composer;
 
-$mhFatalProbe = __DIR__.'/mu-plugins/mh-fatal-probe.php';
-if (is_readable($mhFatalProbe)) {
-    require_once $mhFatalProbe;
-}
-unset($mhFatalProbe);
-
 require_once __DIR__.'/app/Github.php';
 require_once __DIR__.'/app/LinkedIn.php';
 
@@ -147,7 +141,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'newsletter', 'portfolio', 'shop', 'concept-pages', 'support', 'woocommerce', 'icons', 'page-fields', 'rank-math-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'bluesky-share', 'social-share', 'featured-image', 'blocks'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'newsletter', 'portfolio', 'code-github', 'shop', 'concept-pages', 'support', 'woocommerce', 'icons', 'page-fields', 'rank-math-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'seo-score-column', 'seo-social', 'bluesky-share', 'social-share', 'featured-image', 'blocks'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

@@ -135,7 +135,7 @@
         </div>
       </div>
     @else
-      <div class="work-grid" data-work-grid>
+      <div class="work-grid work-grid--roomy" data-work-grid>
         @foreach ($shown as $p)
           @include('partials.work-card', [
             'p' => $p,
@@ -181,20 +181,19 @@
   @endphp
   <script type="application/ld+json">{!! $faqJsonLd !!}</script>
 
-  <section class="pf-section pf-section--alt work-guide" aria-labelledby="work-faq-heading" id="work-faq">
-    <div class="container wide svc-faq-layout">
-      <div class="svc-faq-aside">
-        <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
-        <h2 id="work-faq-heading" class="display-title is-section">
-          {{ \App\field('work_faq_h2', \App\mh_projects_listing_default('faq_h2')) }}
-        </h2>
-        <p class="svc-faq-aside__intro">{{ \App\field('work_faq_intro', \App\mh_projects_listing_default('faq_intro')) }}</p>
-        <div class="svc-faq-aside__cta">
-          <p>{{ __('Still have a question?', 'sage') }}</p>
-          <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
-            {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me', 'sage') }}
-          </a>
+  <section class="pf-section pf-section--alt work-guide work-faq" aria-labelledby="work-faq-heading" id="work-faq">
+    <div class="container wide">
+      <div class="work-faq__head">
+        <div>
+          <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
+          <h2 id="work-faq-heading" class="display-title is-section">
+            {{ \App\field('work_faq_h2', \App\mh_projects_listing_default('faq_h2')) }}
+          </h2>
+          <p class="work-faq__intro">{{ \App\field('work_faq_intro', \App\mh_projects_listing_default('faq_intro')) }}</p>
         </div>
+        <a class="btn btn--sm" href="{{ home_url('/contact/') }}">
+          {!! \App\mh_svg_icon('mail', 14) !!} {{ __('Ask me', 'sage') }}
+        </a>
       </div>
       <div class="faq-list">
         @foreach ($workFaqs as $i => $faq)

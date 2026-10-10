@@ -43,8 +43,7 @@ function issue_message_body(int $issueId, ?array $subscriber, bool $preview, arr
     $preheader = trim((string) get_post_meta($issueId, '_mhn_preheader', true));
     $content = $post instanceof \WP_Post ? (string) $post->post_content : '';
     $altFallback = $post instanceof \WP_Post ? $post->post_title : $subject;
-    $body = render_blocks($content, $altFallback);
-    $body = apply_issue_layout($issueId, $body);
+    $body = issue_rendered_body($issueId, $content, $altFallback);
     $subject = layout_subject($issueId, $subject);
     $includeRecent = (string) get_post_meta($issueId, '_mhn_include_recent', true) === '1';
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
@@ -87,6 +86,23 @@ function issue_message_body(int $issueId, ?array $subscriber, bool $preview, arr
         'html' => $html,
         'text' => $text,
     ];
+}
+
+/**
+ * Letter body before the shell. The single editor is used when the issue has one.
+ */
+function issue_rendered_body(int $issueId, string $content, string $altFallback): string
+{
+    if (function_exists(__NAMESPACE__.'\\ensure_issue_body')) {
+        ensure_issue_body($issueId);
+    }
+    if (function_exists(__NAMESPACE__.'\\letter_uses_body_editor') && letter_uses_body_editor($issueId) && ! editor_diverged($issueId)) {
+        return apply_editor_layout(issue_layout_id($issueId), transform_editor_html(issue_body_html($issueId)));
+    }
+
+    $body = render_blocks($content, $altFallback);
+
+    return apply_issue_layout($issueId, $body);
 }
 
 function email_font_stack(?string $font = null): string

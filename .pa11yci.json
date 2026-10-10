@@ -1,0 +1,21 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runners": [ "axe", "htmlcs" ],
+    "timeout": 60000,
+    "wait": 1000,
+    "chromeLaunchConfig": { "args": [ "--no-sandbox" ] }
+  },
+  "urls": [
+    "http://localhost:8888/",
+    "http://localhost:8888/about/",
+    "http://localhost:8888/projects/",
+    "http://localhost:8888/projects/acreline/",
+    "http://localhost:8888/services/",
+    "http://localhost:8888/contact/",
+    "http://localhost:8888/blog/",
+    "http://localhost:8888/?p=1",
+    "http://localhost:8888/accessibility/",
+    "http://localhost:8888/?s=test"
+  ]
+}

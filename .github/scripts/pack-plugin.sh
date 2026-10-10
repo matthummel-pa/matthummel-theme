@@ -19,6 +19,7 @@ trap 'rm -rf "$stage"' EXIT
 mkdir -p "$stage/matthummel-newsletter"
 tar -C "$src" \
   --exclude='tests' \
+  --exclude='node_modules' \
   --exclude='.DS_Store' \
   -cf - . | tar -C "$stage/matthummel-newsletter" -xf -
 

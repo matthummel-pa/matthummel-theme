@@ -90,6 +90,7 @@ function archive_table(): string
  *     welcome_subject: string,
  *     welcome_body: string,
  *     welcome_points: string,
+ *     checklist_url: string,
  *     letter_style: string,
  *     letter_masthead: string,
  *     letter_button: string,
@@ -134,6 +135,7 @@ function settings(): array
         'welcome_subject' => $copy['welcome_subject'],
         'welcome_body' => $copy['welcome_body'],
         'welcome_points' => $copy['welcome_points'],
+        'checklist_url' => '',
         'letter_style' => 'card',
         'letter_masthead' => 'left',
         'letter_button' => 'solid',
@@ -175,6 +177,7 @@ function settings(): array
         'welcome_subject' => $welcomeSubject !== '' ? $welcomeSubject : $copy['welcome_subject'],
         'welcome_body' => $welcomeBody !== '' ? $welcomeBody : $copy['welcome_body'],
         'welcome_points' => $welcomePoints !== '' ? $welcomePoints : $copy['welcome_points'],
+        'checklist_url' => sanitize_https_url((string) ($merged['checklist_url'] ?? '')),
         'letter_style' => choice_from_input(['letter_style' => $merged['letter_style'] ?? ''], 'letter_style', letter_style_choices(), 'card'),
         'letter_masthead' => choice_from_input(['letter_masthead' => $merged['letter_masthead'] ?? ''], 'letter_masthead', letter_masthead_choices(), 'left'),
         'letter_button' => choice_from_input(['letter_button' => $merged['letter_button'] ?? ''], 'letter_button', letter_button_choices(), 'solid'),
@@ -249,6 +252,7 @@ function update_settings(array $input): void
         'welcome_subject' => posted_copy($input, 'welcome_subject', $current['welcome_subject'], $defaults['welcome_subject'], false),
         'welcome_body' => posted_copy($input, 'welcome_body', $current['welcome_body'], $defaults['welcome_body'], true),
         'welcome_points' => posted_copy($input, 'welcome_points', $current['welcome_points'], $defaults['welcome_points'], true),
+        'checklist_url' => posted_checklist_url($input, $current['checklist_url']),
         'letter_style' => choice_from_input($input, 'letter_style', letter_style_choices(), $current['letter_style']),
         'letter_masthead' => choice_from_input($input, 'letter_masthead', letter_masthead_choices(), $current['letter_masthead']),
         'letter_button' => choice_from_input($input, 'letter_button', letter_button_choices(), $current['letter_button']),
@@ -365,6 +369,20 @@ require_once __DIR__.'/styles.php';
 /**
  * @param  array<string, mixed>  $input
  */
+/**
+ * Empty stays empty. Only an https URL is kept.
+ *
+ * @param  array<string, mixed>  $input
+ */
+function posted_checklist_url(array $input, string $current): string
+{
+    if (! array_key_exists('checklist_url', $input)) {
+        return sanitize_https_url($current);
+    }
+
+    return sanitize_https_url((string) $input['checklist_url']);
+}
+
 function posted_copy(array $input, string $key, string $current, string $fallback, bool $multiline): string
 {
     if (! array_key_exists($key, $input)) {

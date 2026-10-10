@@ -2,10 +2,69 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.48 project grid)
+
+- Listing and related cards use `.work-grid--roomy` (two columns, larger type and shot). Do not put the projects FAQ back in `.svc-faq-layout` / `.svc-faq-aside`. Ask me stays in `.work-faq__head`.
+- Project heroes (`.page-header--project`) keep a left copy panel (`max-width: 38rem` from 960px) so the screenshot reads on the right. Do not stretch that panel to the full container again.
+- `.project-stage--landing` is full container width. Gallery frame and thumbs are scoped to `.project-page` so the shop gallery stays as it is.
+
+## Editor’s notes (3.6.47 social share cards)
+
+- `app/social-share.php` renders one `.mh-social__card` per network. Buttons are `mh_social_button()` with `data-mh-act` = `generate` | `post-bluesky` | `post-facebook` | `post-devto` | `open` | `copy`. Add a network by adding a card array, not more ids.
+- Facebook posting: `mh_facebook_post_to_page()` → Graph API `POST /{page}/feed` with `message` + `link`. Credentials are `MH_FACEBOOK_PAGE_ID` / `MH_FACEBOOK_PAGE_TOKEN` in wp-config, else theme mods `mh_facebook_page_id` / `mh_facebook_page_token`. Result meta: `_mh_facebook_post_id`, `_mh_facebook_url`, `_mh_facebook_shared_at`. The token is never printed.
+- Share dialog URLs are built in JS from the current draft (`quote` for Facebook, intent text for Bluesky, title for Reddit), so what you see in the card is what opens.
+- Posting needs `post_status = publish`; drafts can still be generated and copied.
+- Field names and the `save_post_post` map are unchanged (`mh_bluesky_custom_text`, `mh_social_facebook_text`, `mh_social_reddit_title`, `mh_social_reddit_text`, `mh_social_linkedin_text`).
+
+## Editor’s notes (3.6.46 site audit)
+
+- Security headers live in `app/cache-headers.php` (`send_headers`, priority 2). HSTS is `max-age` only — demo subdomains are not asserted. `X-Frame-Options` is skipped on `/slug/embed/` so oEmbed keeps working; no `payment=()` because express checkout uses the Payment Request API. Add a CSP only with a nonce plan for Site Kit, gtag, and LiteSpeed inline scripts. These headers do not reach wp-admin, REST, or static files; that would be a root `.htaccess`.
+- Hardening block at the end of `app/filters.php`: `wp_generator` off, `xmlrpc_enabled` false plus pingback methods and the `X-Pingback` header removed, `/wp/v2/users*` removed from `rest_endpoints` for visitors (authenticated clients keep them — auth runs before `rest_endpoints`), any `?author=` value 301s home. Do not add a login-lockout plugin here; the host rate-limits.
+- Term archives: `mh_seo_term_title()` falls back to “{Term} articles and notes | Brand”; `mh_seo_term_description()` falls back to a written sentence, clipped at 155.
+- `partials/page-nav-track.blade.php`: no `role="list"` / `listitem`. The `<nav aria-label="On this page">` is the landmark.
+- `<aside>` is for content outside `<main>`. Inside a page section use a `<div>` (contact aside, code practice aside, GitHub profile card).
+- TOCguide override in `studio.css` (3.6.46) is a stopgap; the size and color fix belongs in the TOCguide plugin.
+- `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
+- `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
+- Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
+- Catalog `seo_title` / `seo_description` exist for all four projects. They seed `_mh_seo_*` once (`mh_product_catalog_v13`); wp-admin edits win.
+- Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
+
+## Editor’s notes (3.6.45 feature lists)
+
+- `product-catalog.json` deliverables = box contents, benefits = outcomes. Do not restate a deliverable in benefits; the shop product page prints both lists separately.
+- `mh_project_feature_items()` drops a line when ≥ 75% of its content tokens (`mh_project_feature_tokens()`: lowercase, stop words out, trailing `s` trimmed, min 3 tokens) sit inside a longer line. Exact repeats keep the earlier one. Tune the threshold there, not in Blade.
+- Catalog bump is `mh_product_catalog_v12` (force re-applies catalog meta, same as v9–v11).
+
+## Editor’s notes (3.6.44 project landing page)
+
+- `partials/content-single-project.blade.php` is in landing order: hero, `#screenshots`, `#project-what-you-get`, `#project-story`, `#project-under-hood`, `#project-faq`, `#project-feedback`. Keep that order; do not move specs back above the story.
+- Hero actions are one `.btn` + one `.btn-outline` + `View code`. Copy link sits in the Feedback head. Do not put five actions back in the hero.
+- Hero proof strip is `mh_project_proof_facts()`: stored `_mh_project_m{n}` metrics win; otherwise screenshot count, feature count, and license or language. No invented numbers.
+- Features come from `mh_project_feature_items()` (deliverables then benefits, case and prefix de-duplicated). First ten render, the rest sit in `<details class="project-feat-more">`. Keep them in the DOM.
+- Under the hood is `mh_project_spec_rows()` in `.project-spec-block` (stack pills, languages, compatible, license, release, updated, stars only when > 0, topics, repository, live demo) beside `.project-arch-list`, then handoff and `.project-hood__palette`. `.project-stat-grid` tiles are no longer on this page; the CSS stays for other surfaces.
+- Section chrome is `.project-section` + `.project-section__head` (eyebrow + `h2.display-title.is-section`). Headings are UI chrome (`__()`), not page fields.
+- `partials/work-card.blade.php` shows four tech pills and a `.pill--more` count.
+
+## Editor’s notes (3.6.42 Now page)
+
+- `/now/` keeps the hero, on-this-page pills, focus blocks, sidebar, and closing band.
+- Right now lists real GitHub events and recently updated repos, three journal posts, and profile links. DEV.to and Bluesky rows come from public feeds and disappear when a feed is empty.
+- Send a note posts through `mh_contact` (nonce, honeypot, the same mail path as Contact). Text me is an `sms:` link and stays hidden until `now_sms` or the `mh_now_sms` theme mod has a number. No cell number ships in the theme.
+
+## Editor’s notes (3.6.40 public fatal log)
+
+- `mh-last-fatal.txt` is no longer in the theme. It was publicly readable and included server paths.
+- The theme does not write that file. PHP errors stay in the host error log.
+- `*fatal*.txt` and `*.log` stay out of git and out of the theme zip.
+
 ## Editor’s notes (3.6.39 unsubscribe and preferences)
 
 - `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
-- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.8.0). Do not add Mailchimp, HubSpot, or another ESP.
+- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.0). Do not add Mailchimp, HubSpot, or another ESP.
+- 1.11.0 provisions those pages only on activation or in wp-admin, stores the page IDs, and locks the insert. Unsubscribe, email preferences, and thank-you stay noindex with Rank Math.
+- `[mhn_signup source="post"]` sits at the end of a single post. The welcome letter can add a checklist button when the checklist link setting is an https URL. It is empty by default.
+- 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
 
 ## Editor’s notes (3.6.38 Get updates)
 
@@ -14,12 +73,12 @@ What the 3.x Sage theme does, and where it lives.
 - Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
 - Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
 - **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
-- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each have a note field. Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` seed the editor.
+- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each use one editor body (`_mhn_body`, `_mhn_body_v`). Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` still seed the block editor.
 - Layouts live in `layouts()` (`includes/layouts.php`): Standard, Welcome, Plain, Feature, Blog post. The choice is post meta `_mhn_layout` (default `standard`). Reusable intro, sign-off, welcome subject, and welcome body are keys on `mhn_settings`. Letter style is `letter_style`, `letter_masthead`, and `letter_button` on that same option (`card` / `left` / `solid` by default). One issue can override them with post meta `_mhn_letter_style`. Welcome is not auto-sent. Dashboard and picker previews use `#` links and do not call the tracker. The wizard email frame (`assets/emulator.js`, `mhn_emulator_preview`) updates from the draft without a reload, including a letter-style change. Desktop is 600px and Mobile is 375px. `_mhn_editor` is `simple` or `advanced`. Advanced block text is the `_mhn_blocks` array. Simple issues ignore that array.
 - Letter CSS is `assets/email.css`. `email_css()` injects it in a `<style>` block, and the same colors are inlined on the shell, because the preview iframe is `sandbox=""` `srcdoc` and many clients drop `<style>`. Do not put the letter design in `admin.css`. Admin CSS and `emulator.js` are enqueued with `MHN_VERSION`.
-- Publishing a post drafts a blog update. The note starts with `Hi {first_name|there},` and the P.S. stays empty. It does not send. Owner steps: `docs/NEWSLETTER.md`.
+- Publishing a post drafts a blog update. The letter starts with `Hi {first_name|there},`, the post, and a Read more button. It does not send. Owner steps: `docs/NEWSLETTER.md`.
 - The confirm page collects optional first and last name (`sanitize_text_field`, 80 characters). Columns ship through `mhn_db_version` 2 (`ensure_subscriber_columns()`), so plugin 1.0.0 can add `last_name` without a version bump. Merge tags `{first_name}`, `{last_name}`, and `{full_name}` escape HTML and accept a fallback (`{first_name|there}`). The wizard preview uses sample names Ada Lovelace.
-- Blog update inserts the featured image near the top, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image block. `_mhn_feature_show` hides it for one send. `_mhn_feature_image_id` replaces it on a blog update. The same compile path is what an automatic send would use.
+- The wizard content step is one `wp_editor()` body. A blog update starter includes the featured image, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image in that block. Changing the selected posts asks before it inserts or refreshes those blocks. An old draft is migrated once from the note, the posts, and the P.S. The same letter is what an automatic send would use.
 - Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text. A leftover name merge tag is an error.
 - Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
 - A finished send inserts one row in `wp_mhn_archive` (`mhn_db_version` 3). The row stores the unmerged HTML and plain text, subject, preheader, From, template, start and finish times, sender id, counts, list label, and plugin version. Later edits do not update that row. Sent issues are read-only; **Duplicate as new draft** copies the issue into a new draft. **Sent archive** (`admin.php?page=mhn-archive`) lists, filters, and pages those rows, and shows one in a sandboxed iframe. HTML, EML, and metadata CSV exports require `manage_options` and a nonce. `_mhn_archived` hides an issue from the main lists and keeps the row. Delete is a confirmed administrator action. There is no public archive page. A public web archive setting is noted for later and stays off; it is not built.
@@ -37,7 +96,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
 - `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
-- Catalog bump is `mh_product_catalog_v10`.
+- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into MH SEO meta when empty).
 
 ## Editor’s notes (3.6.35 project feedback)
 
@@ -423,7 +482,7 @@ What the 3.x Sage theme does, and where it lives.
 | SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
-| Now | Dated list of current focus items; studio copy links to the Projects page at `/projects/` | `template-now.blade.php` |
+| Now | Focus blocks, real last-updated date, Right now activity (GitHub, journal, social), email note, and a GitHub issue link. Text me is an `sms:` link only when a number is saved | `template-now.blade.php`, `partials/now-activity.blade.php`, `partials/now-note.blade.php`, `resources/js/now-desk.js`, `mh_now_updated()`, `mh_github_help_issue_url()`, `mh_now_sms_href()` |
 | Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT**; singles have screenshot lightbox, palette, like/star, visitor notes, compact contact | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `partials/project-react.blade.php`, `partials/contact-form.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `resources/js/project-feedback.js` |
 | Uses | Stack reference with Page content fields; affiliate disclosure; external link screen-reader labels | `template-uses.blade.php`, `app/page-fields.php` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
@@ -511,7 +570,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Social share | Post editor drafts (Bluesky / Facebook / Reddit / LinkedIn / DEV.to tips); auto-post Bluesky + DEV.to; frontend share intents | `app/social-share.php`, `app/bluesky-share.php`, Customizer → Bluesky |
 | Featured image AI | Post + **Projects** editor **Generate featured image** (DALL·E 3 → Media Library → set thumbnail; Projects also fill Work card screenshot URL); same OpenAI key as DEV.to | `app/featured-image.php` |
 | Bluesky | Auto-share journal posts on publish (AI or pasted summary + link); `wp mh bluesky-share` | `app/bluesky-share.php` |
-| GitHub | Transients; optional `mh_gh_token` / `MH_GITHUB_TOKEN`; `hireable` + GraphQL status emoji/message drive availability badges |
+| GitHub | Transients; `MH_GITHUB_TOKEN` constant or environment, then optional `mh_gh_token`; `hireable` + GraphQL status emoji/message drive availability badges |
 | LinkedIn | Hire page profile card; optional `mh_li_token` / `MH_LINKEDIN_TOKEN` for OpenID `/v2/userinfo`; soft OG scrape + field/GitHub fallbacks; share URL helper |
 
 ## Intentionally not included

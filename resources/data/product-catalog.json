@@ -1,4 +1,321 @@
 {
+  "cobbleandcandle": {
+    "title": "Cobble & Candle",
+    "cat": "Themes",
+    "place": "Restaurants, taverns & inns",
+    "blurb": "A WordPress block theme for restaurants, taverns and inns: menus with diet filters, live “open now” hours, table and room bookings, events, and a setup wizard. No page builder.",
+    "tech": [
+      "Sage",
+      "WordPress",
+      "Gutenberg",
+      "Full Site Editing",
+      "Alpine.js",
+      "Tailwind"
+    ],
+    "product_type": "theme",
+    "for_sale": false,
+    "live": true,
+    "price": "",
+    "eyebrow": "Theme in progress · Restaurants, taverns & inns",
+    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is not in the shop yet.",
+    "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
+    "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
+    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is not for sale yet; say hello if you want it for your place or want me to set it up.",
+    "audience": "Restaurant, tavern and inn owners who want menus, hours and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs and tests.",
+    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
+    "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
+    "benefits": [
+      "Live “open now” and holiday hours per location, correct on cached pages",
+      "Menus with tabs, section links, diet filters and an allergen key",
+      "Table bookings three ways: native request form with real time slots, OpenTable / Resy, or call-to-book",
+      "Rooms with an availability calendar, weekend pricing, minimum stay and a running total",
+      "Two-way calendar sync with Airbnb, Booking.com and Vrbo",
+      "“Add dinner on your first night” when a guest books a room",
+      "Five-step setup wizard with one-click demo import: no WP-CLI",
+      "Menu import and export from Excel or Google Sheets, with a preview",
+      "Every guest request saved in the dashboard even if email fails",
+      "Status page with health checks, test email, error log and a system report",
+      "Four style directions, including a bright café style",
+      "Restaurant, Menu, Event and HotelRoom structured data for Google",
+      "WCAG 2.2 AA tested, right-to-left support, translation-ready",
+      "No page builder, no ACF, fonts bundled locally"
+    ],
+    "deliverables": [
+      "Cobble & Candle block theme (28 custom blocks, 4 style variations)",
+      "Cobble & Candle Core plugin (bundled, one-click install)",
+      "Room booking engine with iCal import and export",
+      "Setup wizard and demo content",
+      "Menu CSV import / export",
+      "Messages inbox, Status & logs screen",
+      "Owner guide (11 pages), FAQ, developer hook reference",
+      "Screenshot, readme, licences and changelog"
+    ],
+    "blocks": [
+      [
+        "Hero",
+        "home"
+      ],
+      [
+        "Hours strip",
+        "calendar"
+      ],
+      [
+        "Signature dishes",
+        "star"
+      ],
+      [
+        "Menu teaser",
+        "layout-text"
+      ],
+      [
+        "Full menu",
+        "list-steps"
+      ],
+      [
+        "Story",
+        "page"
+      ],
+      [
+        "Timeline",
+        "chart-line"
+      ],
+      [
+        "Values",
+        "lightbulb"
+      ],
+      [
+        "Reviews",
+        "comment"
+      ],
+      [
+        "Upcoming events",
+        "calendar"
+      ],
+      [
+        "Events archive",
+        "grid-4"
+      ],
+      [
+        "Rooms",
+        "building"
+      ],
+      [
+        "Room details",
+        "building"
+      ],
+      [
+        "Gallery grid",
+        "grid-add"
+      ],
+      [
+        "Gallery mosaic",
+        "grid-4"
+      ],
+      [
+        "Private dining",
+        "users"
+      ],
+      [
+        "Reservations",
+        "calendar"
+      ],
+      [
+        "Locations explorer",
+        "pin"
+      ],
+      [
+        "Location details",
+        "pin"
+      ],
+      [
+        "Contact",
+        "mail"
+      ],
+      [
+        "CTA band",
+        "megaphone"
+      ],
+      [
+        "Page hero",
+        "layout-text"
+      ],
+      [
+        "Mobile action bar",
+        "thumbtack"
+      ],
+      [
+        "Not found",
+        "search"
+      ]
+    ],
+    "metrics": [
+      [
+        "28",
+        "custom blocks"
+      ],
+      [
+        "4",
+        "style directions"
+      ],
+      [
+        "WCAG 2.2",
+        "AA tested"
+      ]
+    ],
+    "faq": [
+      [
+        "Is Cobble & Candle a WordPress restaurant theme?",
+        "Yes. It is a WordPress block theme for restaurants, taverns and inns, with menus, live opening hours, table bookings, events, private dining and rooms to stay, built without a page builder."
+      ],
+      [
+        "Can I buy Cobble & Candle?",
+        "Not yet. It is finished and running on the live demo, and I am getting it ready for the shop. Say hello if you want it for your restaurant, bar or inn sooner, or want me to set it up."
+      ],
+      [
+        "Does it handle rooms for a B&B or inn?",
+        "Yes. Rooms have nightly and weekend prices, a minimum stay and an availability calendar. Guests send a booking request, you confirm it from the dashboard, and the guest gets an email. Calendars sync both ways with Airbnb, Booking.com and Vrbo."
+      ],
+      [
+        "Does it take payments?",
+        "No, on purpose. Table and room bookings are requests you confirm, so there is no card handling or refund process to manage. Link your online-ordering system for takeaway."
+      ],
+      [
+        "Will my hours be right for Google?",
+        "Each location publishes Restaurant structured data with opening and holiday hours, address, map coordinates, cuisine and price range. It works alongside Yoast SEO or Rank Math."
+      ],
+      [
+        "Can I import my menu?",
+        "Yes. Food & drink → Import / export takes a CSV from Excel or Google Sheets, shows a preview of what will be added or updated, and never deletes anything."
+      ],
+      [
+        "Is it accessible?",
+        "It is built and tested for WCAG 2.2 AA: keyboard paths, screen-reader labels, contrast in all four styles, 44 px touch targets and reduced motion. It also supports right-to-left languages."
+      ],
+      [
+        "What do I need to run it?",
+        "WordPress 6.6 or newer and PHP 8.3 or newer. Caching plugins such as LiteSpeed Cache and WP Rocket are supported."
+      ]
+    ],
+    "demo": "https://cobbleandcandle.matthummel.com/",
+    "github": "https://github.com/matthummel-pa/wp-cobbleandcandle",
+    "version": "0.1.0",
+    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.1)",
+    "license": "GPLv2 or later",
+    "files_included": [
+      "cobbleandcandle.zip (theme with Cobble & Candle Core bundled)",
+      "Owner guide (docs/guide)",
+      "Licences and credits"
+    ],
+    "docs": [
+      [
+        "Owner guide",
+        "https://github.com/matthummel-pa/wp-cobbleandcandle/tree/main/docs/guide"
+      ],
+      [
+        "Support guide",
+        "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/SUPPORT.md"
+      ],
+      [
+        "Brand kit",
+        "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/BRAND.md"
+      ]
+    ],
+    "support": "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/SUPPORT.md",
+    "topics": "wordpress-theme, restaurant, bar, inn, bed-and-breakfast, booking, block-theme, sage, gutenberg, full-site-editing",
+    "languages": "PHP, Blade, CSS, JavaScript",
+    "brand_tagline": "Restaurant · tavern · inn",
+    "brand_palette": "Lamp-black|#15110D\nSmoke|#201A14\nBrass|#C79A55\nParchment|#F2E6D3\nOxblood|#5C2A22",
+    "image": "products/cobbleandcandle/featured.webp",
+    "screenshots": [
+      [
+        "products/cobbleandcandle/01-homepage.webp",
+        "Home page with live “Closed · opens 5:30pm” status, location switcher and lamplit hero"
+      ],
+      [
+        "products/cobbleandcandle/02-signature-dishes.webp",
+        "Signature dishes with chef’s pick badges, diet tags and prices"
+      ],
+      [
+        "products/cobbleandcandle/03-menu.webp",
+        "Full menu with tabs, section links and dish rows"
+      ],
+      [
+        "products/cobbleandcandle/04-diet-filter.webp",
+        "Menu filtered to vegetarian dishes with a live count"
+      ],
+      [
+        "products/cobbleandcandle/05-reservations.webp",
+        "Table booking with real time slots from the house’s opening hours"
+      ],
+      [
+        "products/cobbleandcandle/06-rooms.webp",
+        "Rooms page with beds, guests, size and nightly prices"
+      ],
+      [
+        "products/cobbleandcandle/07-room-booking.webp",
+        "Room availability calendar with weekend pricing and a running total"
+      ],
+      [
+        "products/cobbleandcandle/08-stay-with-us.webp",
+        "“Stay with us” rooms section on the home page"
+      ],
+      [
+        "products/cobbleandcandle/09-events.webp",
+        "Events page with the next event featured and type filters"
+      ],
+      [
+        "products/cobbleandcandle/10-locations.webp",
+        "Locations explorer with hours, holiday hours and directions"
+      ],
+      [
+        "products/cobbleandcandle/11-gallery.webp",
+        "Gallery with category filters and a keyboard lightbox"
+      ],
+      [
+        "products/cobbleandcandle/12-private-dining.webp",
+        "Private dining rooms and inquiry form"
+      ],
+      [
+        "products/cobbleandcandle/13-setup-wizard.webp",
+        "Setup wizard: choose a style, brand line, currency and clock"
+      ],
+      [
+        "products/cobbleandcandle/14-menu-import.webp",
+        "Menu CSV import preview before anything changes"
+      ],
+      [
+        "products/cobbleandcandle/15-bookings.webp",
+        "Room bookings in the dashboard with dates, guests, totals and status"
+      ],
+      [
+        "products/cobbleandcandle/16-room-editor.webp",
+        "Room editor with rates, amenities and calendar sync fields"
+      ],
+      [
+        "products/cobbleandcandle/17-status-logs.webp",
+        "Status & logs: health checks, test email and error log"
+      ],
+      [
+        "products/cobbleandcandle/18-daylight-style.webp",
+        "The Daylight café style on the home page"
+      ],
+      [
+        "products/cobbleandcandle/19-four-styles.webp",
+        "The four style directions: Lampwright, Ember & Arch, Ashlar & Iron, Daylight"
+      ]
+    ],
+    "ad_keywords": [
+      "WordPress restaurant theme",
+      "WordPress bed and breakfast theme",
+      "WordPress tavern theme",
+      "restaurant website with online booking",
+      "WordPress inn theme with booking calendar",
+      "WordPress block theme for restaurants"
+    ],
+    "is_product": false,
+    "seo_title": "Cobble & Candle — WordPress theme for restaurants, taverns & inns",
+    "seo_description": "WordPress block theme for restaurants, bars and inns: live opening hours, diet-filtered menus, table and room bookings with Airbnb sync, and a setup wizard."
+  },
   "acreline": {
     "title": "Acreline",
     "cat": "Themes",
@@ -24,26 +341,23 @@
     "handoff": "You get the theme zip and a short guide. Run the setup wizard, then edit pages in WordPress. Hire me to load your listings or set the brand.",
     "benefits": [
       "Ship a real estate listing site without starting from a luxury realtor kit",
-      "Built-in setup wizard for identity, colors, and demo content",
-      "21 Gutenberg blocks with true WYSIWYG ServerSideRender previews",
-      "Filters that match type, price, acreage, and area",
-      "Showing requests and agents built into the theme flow",
-      "Customizer identity + eight color styles — brand it in minutes",
-      "Block Generator and Migrate to Blocks for pages without writing PHP",
-      "Child theme + Acreline Core so listings survive a theme switch",
+      "Brokers edit listings and agents in wp-admin — no page builder, no PHP",
+      "Listings and agents live in the Core plugin, so they survive a theme switch",
+      "Brand it in minutes: pick a color style, set the identity, import the demo",
+      "Compliance slots keep Fair Housing and MLS wording where agents expect it",
       "100% GPL-compatible theme code — sell or customize freely"
     ],
     "deliverables": [
-      "Setup wizard (Appearance → Acreline Setup)",
-      "21 Core Gutenberg blocks (hero, listings grid, FAQ, CTA, and more)",
-      "Searchable listings (grid + map)",
-      "Type, price, acreage, and area filters",
-      "Loan and pre-qual tools",
-      "Agents and showing-request bookings",
-      "Customizer identity + eight color styles",
-      "Block Generator + Migrate to Blocks",
-      "Child theme + Acreline Core plugin",
-      "Appearance → Acreline Settings (listing, agent, booking, display toggles)",
+      "Setup wizard: identity, colors, and demo content (Appearance → Acreline Setup)",
+      "21 Gutenberg blocks with live editor previews (hero, listings grid, FAQ, CTA, and more)",
+      "Searchable listings with grid and map views",
+      "Filters for type, price, acreage, and area",
+      "Loan and pre-qual calculators",
+      "Agent profiles and showing-request bookings",
+      "Customizer identity and eight color styles",
+      "Block Generator and Migrate to Blocks for new page layouts",
+      "Child theme and Acreline Core plugin",
+      "Appearance → Acreline Settings: listing, agent, booking, and display toggles",
       "Fair Housing / MLS disclaimer slots and showing-form consent",
       "HTML documentation hub",
       "Mobile-first, accessible build"
@@ -263,7 +577,9 @@
       "property listings WordPress",
       "Gutenberg real estate theme",
       "WordPress listing theme"
-    ]
+    ],
+    "seo_title": "Acreline — WordPress Real Estate Theme | Matt Hummel",
+    "seo_description": "WordPress theme for solo real estate agents and small teams: featured homes, agent bios, and showing requests on Gutenberg pages. No page builder."
   },
   "walkridge": {
     "title": "WalkRidge",
@@ -290,20 +606,16 @@
     "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Gutenberg blocks for Home, Tours, Guides, Area, Contact, and Refund Policy (Block Generator for custom layouts). WooCommerce optional — marketing site, contact form, and blog run without it. Appearance → Theme Settings for brand, phone, email, address, hours, header CTA, social URLs. Light is the default; dark is a visitor toggle. WCAG 2.2 contrast and 44px targets on chrome. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
     "handoff": "You get the theme zip and a short guide. Set the brand in Theme Settings, then add tours in WooCommerce. Hire me to load your tours or change the layout.",
     "benefits": [
-      "WooCommerce shop for bookable tour products — no separate booking system required",
-      "Ten Gutenberg blocks with editor previews for marketing pages",
-      "Customizer Identity: brand, phone, email, address, hours, and header CTA in one panel",
-      "Tools → Walkridge Blocks seeds all page layouts without writing PHP",
-      "Optional companion plugins: Walkridge Bookings and Walkridge Field Map (sold separately)",
-      "Child theme included for safe agency customization",
+      "Sell bookable tours through WooCommerce — no separate booking system required",
       "WooCommerce is optional — the marketing site runs without it",
+      "Seed every page layout from one Tools screen, without writing PHP",
+      "Optional companion plugins: Walkridge Bookings and Walkridge Field Map (sold separately)",
       "WCAG 2.2 contrast on light (default) and dark, with 44px targets",
       "100% GPL-compatible theme code — white-label or customize freely"
     ],
     "deliverables": [
-      "10 Core Gutenberg blocks (hero, tour grid, guide bios, CTA band, and more)",
-      "WooCommerce shop integration (tour products, cart, checkout)",
-      "Bookable tour product structure",
+      "10 Gutenberg blocks with editor previews (hero, tour grid, guide bios, CTA band, and more)",
+      "WooCommerce integration for bookable tour products (cart and checkout)",
       "Customizer Identity panel (brand, phone, email, address, hours, CTA, social)",
       "Block Generator for custom page layouts",
       "Tools → Walkridge Blocks page seeder",
@@ -469,7 +781,9 @@
       "tour guide WordPress theme",
       "WordPress bookable tours theme"
     ],
-    "is_product": true
+    "is_product": true,
+    "seo_title": "WalkRidge — WordPress Theme for Tour Guides | Matt Hummel",
+    "seo_description": "WordPress theme for guides and tour companies: browse tours, meet guides, and book in WooCommerce. Ten Gutenberg blocks and a Customizer identity panel."
   },
   "tocguide": {
     "title": "TOCguide",
@@ -500,21 +814,19 @@
       "Server-rendered HTML for SEO and screen readers",
       "Accurate anchors with aria-current while you read",
       "Numbered or bulleted lists, five style presets",
-      "Optional Reading Guide: previews, density bars, read time",
-      "Optional study tools: progress bar, bookmark, private notes",
-      "Academic citations (APA, MLA, Chicago, Harvard, plain link)",
-      "[tocguide] shortcode for classic content and builders",
+      "Reading Guide adds previews, density bars, and read time",
+      "Study tools add a progress bar, bookmark, and private notes",
       "Free forever — GPLv2 or later, no tracking"
     ],
     "deliverables": [
-      "Gutenberg Table of Contents block",
-      "[tocguide] shortcode",
-      "Live editor preview",
-      "Sticky + scroll-spy options",
-      "Reading Guide + study tools (opt-in)",
+      "Gutenberg Table of Contents block with live editor preview",
+      "[tocguide] shortcode for classic content and page builders",
+      "Sticky and scroll-spy options",
+      "Reading Guide and study tools (opt-in)",
+      "Academic citations (APA, MLA, Chicago, Harvard, plain link)",
       "Optional ItemList JSON-LD",
       "Settings → TOCguide (design, a11y, auto-insert)",
-      "Docs + support HTML"
+      "Docs and support HTML"
     ],
     "metrics": [
       [
@@ -625,7 +937,9 @@
       "SEO friendly TOC WordPress",
       "free WordPress TOC plugin",
       "reading guide WordPress"
-    ]
+    ],
+    "seo_title": "TOCguide — Free Table of Contents Plugin | Matt Hummel",
+    "seo_description": "Free WordPress plugin that builds a table of contents from post headings, with an optional Reading Guide. Server-rendered, accessible, no tracking."
   }
 }
 

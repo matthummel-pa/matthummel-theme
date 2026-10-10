@@ -1,0 +1,28 @@
+---
+description: Peer senior-dev workflow and WordPress Handbook review rules shared by Cursor and Claude (from wp-dev-kit)
+alwaysApply: true
+---
+
+# Peer review workflow (wp-dev-kit)
+
+Matt works with Cursor, Claude, Grok, and ChatGPT on this repo. All agents follow the same rules.
+
+## Before you change code
+
+- Say the plan in 2–5 bullets: files, approach, risks. Ask first if it is larger than ~50 lines or touches live content/data.
+
+## After you change code
+
+- Run `python3 .github/scripts/wp-review` — it reports WordPress Handbook issues (escaping, sanitizing, nonces, `$wpdb->prepare`, i18n, deprecations, Blade `{!! !!}`) on **changed lines only**. Fix every error before calling the task done.
+- Run `vendor/bin/pint` for PHP and `npm run build` when CSS/JS/Blade changed.
+- Tell Matt what you ran, what passed, and anything you could not check.
+
+## Review standard
+
+`.github/review-checklist.md` is the checklist (WordPress Developer Handbook + Sage docs). When reviewing: Blocker → Should fix → Nit, each with `file:line`, why (doc link), and the fix.
+
+Non-negotiables: escape late (`esc_*`, `wp_kses_post`, Blade `{{ }}`), sanitize early (`wp_unslash` + `sanitize_*`), nonce **and** `current_user_can()` on state changes, `permission_callback` on REST routes, `$wpdb->prepare()` for SQL, no secrets in code.
+
+## Teach
+
+When you flag or fix something, give the one-sentence reason and the developer.wordpress.org link. Offer at most one optional idea at the end.

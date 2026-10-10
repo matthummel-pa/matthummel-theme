@@ -63,7 +63,7 @@ Production-ready, accessible, fast interfaces across device sizes — in Blade +
 - **Modern UI:** Build with Blade partials, Tailwind v4, and existing components (`btn`, `work-card`, `who-card`). Do not pull shadcn/ui, Radix, or Aceternity.
 - **Micro-animations:** Prefer CSS/`transition`/`transform` already in `portfolio.css`. Keep motion subtle (hover, focus, menu). No page-transition libraries.
 - **Responsive blueprinting:** Mobile-first Flexbox/Grid. Check small phones, tablets, and ultrawide. Reuse `--page-max` / `--page-gutter`.
-- **Accessibility (a11y):** WCAG 2.1 AA. Keyboard access, visible focus, `aria-*` only when native HTML is not enough (`aria-pressed` on theme toggle, `aria-expanded` on menu). Skip-link stays first in `layouts/app.blade.php`.
+- **Accessibility (a11y):** WCAG 2.2 AA. Keyboard access, visible focus, `aria-*` only when native HTML is not enough (`aria-pressed` on theme toggle, `aria-expanded` on menu). Skip-link stays first in `layouts/app.blade.php`.
 
 ---
 

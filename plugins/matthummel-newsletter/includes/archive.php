@@ -40,8 +40,13 @@ function issue_archive_message(int $issueId): array
     $preheader = trim((string) get_post_meta($issueId, '_mhn_preheader', true));
     $content = $post instanceof \WP_Post ? (string) $post->post_content : '';
     $altFallback = $post instanceof \WP_Post ? $post->post_title : $subject;
-    $body = render_blocks($content, $altFallback);
-    $body = apply_issue_layout($issueId, $body);
+    $look = issue_letter_look($issueId);
+    push_letter_look($look);
+    try {
+        $body = issue_rendered_body($issueId, $content, $altFallback);
+    } finally {
+        pop_letter_look();
+    }
     $subject = layout_subject($issueId, $subject);
     $includeRecent = (string) get_post_meta($issueId, '_mhn_include_recent', true) === '1';
     $sourceId = (int) get_post_meta($issueId, '_mhn_source_post', true);
@@ -405,6 +410,8 @@ function duplicate_issue(int $issueId): int
         '_mhn_blocks',
         '_mhn_note',
         '_mhn_ps',
+        '_mhn_body',
+        '_mhn_body_v',
         '_mhn_post_ids',
         '_mhn_include_recent',
         '_mhn_subject',

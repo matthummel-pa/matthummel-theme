@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!--
+  WordPress security + correctness ruleset for Sage / Acorn themes.
+
+  Laravel Pint owns formatting (PSR-12 style) in Sage projects, so this ruleset
+  deliberately skips WordPress whitespace/naming/file-name sniffs and keeps only
+  the rules from the WordPress Developer Handbook that catch real bugs:
+    - Security: escaping, sanitizing, nonces, safe redirects
+      https://developer.wordpress.org/apis/security/
+    - Database: prepared statements
+      https://developer.wordpress.org/reference/classes/wpdb/prepare/
+    - i18n: correct text domain, translatable strings
+      https://developer.wordpress.org/apis/internationalization/
+    - Deprecated / discouraged WP and PHP functions
+    - PHP version compatibility (PHPCompatibilityWP)
+
+  Blade templates (*.blade.php) are not valid PHP for PHPCS. Use
+  `wp-review` (Blade escape audit) for {!! !!} unescaped output instead.
+-->
+<ruleset name="WP Dev Kit (Sage)">
+	<description>WordPress security, i18n, and compatibility checks for Sage themes. Formatting is handled by Pint.</description>
+
+	<!-- apply-kit.sh fills this with whichever of app/, functions.php, plugins/, mu-plugins/, inc/ exist.
+	     Sage's index.php (echo view(...)->render()) is left out on purpose: Blade escapes {{ }}. -->
+	<file>./app</file>
+	<file>./functions.php</file>
+	<file>./plugins</file>
+	<file>./mu-plugins</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/public/*</exclude-pattern>
+	<exclude-pattern>*.blade.php</exclude-pattern>
+	<exclude-pattern>*/storage/*</exclude-pattern>
+	<!-- Bundled Hummel Ops / MH SEO modules keep their own text domains (hummel-ops, mh-seo). -->
+	<exclude-pattern>*/app/modules/*</exclude-pattern>
+	<exclude-pattern>*/dist*/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+	<arg name="parallel" value="8"/>
+	<arg name="basepath" value="."/>
+
+	<!-- Keep in sync with style.css "Requires at least" / "Requires PHP". -->
+	<config name="minimum_wp_version" value="6.6"/>
+	<config name="testVersion" value="8.3-"/>
+
+	<!-- ============ Security (errors) ============ -->
+	<rule ref="WordPress.Security"/>
+	<rule ref="WordPress.Security.EscapeOutput">
+		<properties>
+			<!-- Theme helpers that already return escaped / kses'd markup. -->
+			<property name="customAutoEscapedFunctions" type="array">
+				<element value="mh_svg_icon"/>
+				<element value="mh_product_fallback_markup"/>
+				<!-- Core escapes block wrapper attributes before returning them. -->
+				<element value="get_block_wrapper_attributes"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- ============ Database ============ -->
+	<rule ref="WordPress.DB.PreparedSQL"/>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders"/>
+	<rule ref="WordPress.DB.RestrictedFunctions"/>
+	<rule ref="WordPress.DB.RestrictedClasses"/>
+	<rule ref="WordPress.DB.DirectDatabaseQuery">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.DB.SlowDBQuery">
+		<type>warning</type>
+	</rule>
+
+	<!-- ============ i18n ============ -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="sage"/>
+				<element value="matthummel-newsletter"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- ============ WordPress APIs & correctness ============ -->
+	<rule ref="WordPress.WP.DeprecatedFunctions"/>
+	<rule ref="WordPress.WP.DeprecatedClasses"/>
+	<rule ref="WordPress.WP.DeprecatedParameters"/>
+	<rule ref="WordPress.WP.DeprecatedParameterValues"/>
+	<rule ref="WordPress.WP.DiscouragedFunctions"/>
+	<rule ref="WordPress.WP.DiscouragedConstants"/>
+	<rule ref="WordPress.WP.EnqueuedResources"/>
+	<rule ref="WordPress.WP.EnqueuedResourceParameters"/>
+	<rule ref="WordPress.WP.GlobalVariablesOverride"/>
+	<rule ref="WordPress.WP.PostsPerPage"/>
+	<rule ref="WordPress.WP.CronInterval"/>
+	<rule ref="WordPress.WP.CapitalPDangit"/>
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.CodeAnalysis.EscapedNotTranslated"/>
+	<rule ref="WordPress.CodeAnalysis.AssignmentInTernaryCondition"/>
+
+	<!-- ============ PHP hygiene ============ -->
+	<rule ref="WordPress.PHP.DontExtract"/>
+	<rule ref="WordPress.PHP.RestrictedPHPFunctions"/>
+	<rule ref="WordPress.PHP.StrictInArray">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.PHP.DevelopmentFunctions">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.PHP.NoSilencedErrors">
+		<type>warning</type>
+	</rule>
+	<rule ref="Generic.PHP.BacktickOperator"/>
+	<rule ref="Generic.PHP.DisallowShortOpenTag"/>
+
+	<!-- ============ PHP version compatibility ============ -->
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

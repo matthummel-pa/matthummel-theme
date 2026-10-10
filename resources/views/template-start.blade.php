@@ -234,6 +234,7 @@
             {!! \App\mh_svg_icon('mail', 16) !!}
             {{ \App\field('start_submit', __('Send brief', 'sage')) }}
           </button>
+          @include('partials.booking-link')
           <p class="field-hint">{{ \App\field('start_reply_note', \App\mh_reply_sla()) }}</p>
         </div>
       </fieldset>
