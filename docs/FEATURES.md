@@ -2,6 +2,12 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.48 project grid)
+
+- Listing and related cards use `.work-grid--roomy` (two columns, larger type and shot). Do not put the projects FAQ back in `.svc-faq-layout` / `.svc-faq-aside`. Ask me stays in `.work-faq__head`.
+- Project heroes (`.page-header--project`) keep a left copy panel (`max-width: 38rem` from 960px) so the screenshot reads on the right. Do not stretch that panel to the full container again.
+- `.project-stage--landing` is full container width. Gallery frame and thumbs are scoped to `.project-page` so the shop gallery stays as it is.
+
 ## Editor’s notes (3.6.47 social share cards)
 
 - `app/social-share.php` renders one `.mh-social__card` per network. Buttons are `mh_social_button()` with `data-mh-act` = `generate` | `post-bluesky` | `post-facebook` | `post-devto` | `open` | `copy`. Add a network by adding a card array, not more ids.

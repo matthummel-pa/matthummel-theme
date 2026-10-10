@@ -6,7 +6,7 @@
   <a href="https://github.com/matthummel-pa/matthummel-theme/actions/workflows/ci.yml"><img src="https://github.com/matthummel-pa/matthummel-theme/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://github.com/matthummel-pa/matthummel-theme/actions/workflows/deploy.yml"><img src="https://github.com/matthummel-pa/matthummel-theme/actions/workflows/deploy.yml/badge.svg" alt="Release build" /></a>
   <a href="https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest"><img src="https://img.shields.io/badge/release-theme--latest-173e70" alt="theme-latest release" /></a>
-  <img src="https://img.shields.io/badge/version-3.6.47-1a5cad" alt="Version 3.6.47" />
+  <img src="https://img.shields.io/badge/version-3.6.48-1a5cad" alt="Version 3.6.48" />
   <img src="https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white" alt="PHP 8.3" />
   <img src="https://img.shields.io/badge/Sage-11.2-525DDC" alt="Sage 11" />
   <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind v4" />
@@ -39,7 +39,7 @@ This README is written for two readers: **developers** who want to run or review
 | **Stack** | Sage 11.2 · Acorn 6 · Blade · Tailwind CSS v4 · Vite 8 · WordPress 6.6+ · Composer · Node 22 |
 | **Size** | 29 PHP modules (~30k lines) · 22 page templates + 50 partials (~14.5k lines of Blade) · 20 JS modules (~2.1k lines) · ~24k lines of CSS |
 | **Admin surface** | 362 editable page-content fields · 35 Customizer settings · 9 WP-CLI commands · 12 AJAX actions · custom Projects post type |
-| **History** | 629 commits on 41 working days · 188 tagged releases (3.0.0 → 3.6.47, Aug 19 → Oct 3, 2026) · every change through a PR |
+| **History** | 629 commits on 41 working days · 188 tagged releases (3.0.0 → 3.6.48, Aug 19 → Oct 6, 2026) · every change through a PR |
 | **Quality gates** | Pint · WordPress Coding Standards on changed lines (`wp-review`) · PHPStan level 5 config · Vite build · security review before merge |
 | **Release** | Merge to `main` → GitHub Actions builds a zip → Release `theme-latest` → **Appearance → Update Theme** installs it |
 | **License** | [MIT](LICENSE.md) |
@@ -164,7 +164,7 @@ Design tokens are CSS custom properties in [`resources/css/app.css`](resources/c
 | 3.5.x | Sep | Shop-first marketing, cart/checkout desk, My Account, downloadable zips, update emails; then "Products become Projects" (3.5.28) and the decluttered portfolio home |
 | 3.6.0 – 3.6.23 | Sep–Oct | Project pages, aligned heroes, shared "On this page" nav, typography scale, footer and hover systems |
 | 3.6.35 – 3.6.42 | Oct | Visitor like/star + comments on projects, newsletter plugin (double opt-in, wizard, archive), Now page with live activity |
-| 3.6.44 – 3.6.47 | Oct 3 | Project pages as landing pages, site audit fixes (headers, enumeration, dead links, a11y), social share cards with Facebook Page posting |
+| 3.6.44 – 3.6.48 | Oct 3–6 | Project pages as landing pages, site audit fixes, social share cards, larger project grid without the FAQ sidebar |
 
 **Working method.** Each change starts with a one-line goal and a short plan, lands as a small PR named after the change, and gets reviewed before merge — by me and by a second tool (a security-review agent for anything touching input, output, or credentials). After every visible change I audit the live page: Lighthouse, axe-core, a crawl of titles/descriptions/links, keyboard pass. Findings become the next PR. The [FEATURES](docs/FEATURES.md) file carries an "editor's note" per release so a future change does not undo a deliberate decision.
 
