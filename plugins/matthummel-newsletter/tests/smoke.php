@@ -57,7 +57,9 @@ function mhn_keep_only_recipients(int $issueId, array $emails): void
     global $wpdb;
 
     $keep = array_map('strtolower', $emails);
-    $rows = $wpdb->get_results('SELECT id, email FROM '.Newsletter\subscribers_table()." WHERE status = 'subscribed'", ARRAY_A);
+    $table = Newsletter\subscribers_table();
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared -- test helper, table name comes from the plugin.
+    $rows = $wpdb->get_results($wpdb->prepare('SELECT id, email FROM %i WHERE status = %s', $table, 'subscribed'), ARRAY_A);
     foreach (is_array($rows) ? $rows : [] as $row) {
         if (! is_array($row)) {
             continue;
