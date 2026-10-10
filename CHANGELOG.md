@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.58 — Sidebar buttons, open FAQ surface
+
+- Sidebar: the primary "Say hello" button is lime with violet type again and the secondary / RSS buttons read lime (dark) or violet (light) — the broad dark-mode link rule was recoloring them blue.
+- FAQ: open and hovered items keep the card surface instead of dropping to a flat panel.
+
 ## 3.6.57 — Grid cards share the post-card recipe; one block for the sub-nav
 
 - Every grid card (services, process steps, approach, work types, fit columns, glance facts, GitHub stats and repo cards, resume, skill groups and tiles, FAQ items, thank-you and resources cards) gets the lime border post cards have, a deeper lime on hover/open, the word gradient on its heading, and lime index / count numbers (lime-700 on light surfaces for contrast). FAQ questions carry the gradient and their chevron is lime.
