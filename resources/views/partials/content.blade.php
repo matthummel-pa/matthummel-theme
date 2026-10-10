@@ -44,7 +44,7 @@
       @endif
     </p>
 
-    <h2 class="post-card-title">{{ $title }}</h2>
+    <h2 class="post-card-title"><a href="{{ esc_url(get_permalink()) }}">{{ $title }}</a></h2>
 
     <div class="post-card-excerpt">
       @php(the_excerpt())

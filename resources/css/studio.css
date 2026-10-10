@@ -5632,3 +5632,129 @@ html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bo
 .pill-row .pill.pill--more,
 html.mh-dark .pill-row .pill.pill--more { background: rgba(139, 92, 246, .16); border-color: rgba(167, 139, 250, .4); color: var(--violet-300); -webkit-text-fill-color: currentColor; }
 html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); border-color: var(--violet-100); color: var(--violet-700); }
+
+/* ── Card titles are links with an animated gradient underline; nav hover gets a gradient ── */
+@keyframes mh-underline-flow { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+.work-card h2 a,
+.work-body h2 a,
+.post-card-title a,
+.h-journal-item__title a,
+.h-project-card__title a,
+.resources-card__name a,
+.repo-card__title a {
+  position: relative;
+  display: inline;
+  padding-bottom: .1em;
+  background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 55%, var(--lime-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  background-image: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 55%, var(--lime-300) 100%), linear-gradient(90deg, var(--blue-400), var(--cyan-400), var(--lime-300), var(--violet-400), var(--blue-400));
+  background-size: 100% 100%, 200% 3px;
+  background-repeat: no-repeat;
+  background-position: 0 0, 0 100%;
+  background-clip: text, padding-box;
+  -webkit-background-clip: text, padding-box;
+  transition: background-size .35s cubic-bezier(.2, .7, .2, 1);
+}
+.work-card h2 a,
+.work-body h2 a,
+.post-card-title a,
+.h-journal-item__title a,
+.h-project-card__title a,
+.resources-card__name a,
+.repo-card__title a { background-size: 100% 100%, 0% 3px; }
+.work-card h2 a:hover,
+.work-body h2 a:hover,
+.post-card-title a:hover,
+.h-journal-item__title a:hover,
+.h-project-card__title a:hover,
+.resources-card__name a:hover,
+.repo-card__title a:hover,
+.work-card h2 a:focus-visible,
+.work-body h2 a:focus-visible,
+.post-card-title a:focus-visible,
+.h-journal-item__title a:focus-visible,
+.h-project-card__title a:focus-visible,
+.resources-card__name a:focus-visible,
+.repo-card__title a:focus-visible,
+.work-card h2 a:active,
+.post-card-title a:active,
+.h-journal-item__title a:active,
+.work-card:hover h2 a,
+.post-card:hover .post-card-title a,
+.h-journal-item:hover .h-journal-item__title a,
+.h-project-card:hover .h-project-card__title a,
+.resources-card:hover .resources-card__name a,
+.repo-card:hover .repo-card__title a {
+  background-size: 100% 100%, 100% 3px;
+  animation: mh-underline-flow 2.4s linear infinite;
+  text-decoration: none;
+  outline-offset: 4px;
+}
+html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-body h2 a,
+html:not(.mh-dark) .post-card-title a,
+html:not(.mh-dark) .h-journal-item__title a,
+html:not(.mh-dark) .h-project-card__title a,
+html:not(.mh-dark) .resources-card__name a,
+html:not(.mh-dark) .repo-card__title a {
+  background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%), linear-gradient(90deg, var(--blue-600), var(--violet-500), var(--lime-500), var(--blue-600));
+}
+.post-card-title { font-weight: 800; letter-spacing: -0.03em; }
+
+/* Header nav: gradient background on hover / focus / current */
+.site-header .header-nav-list a:hover,
+.site-header .header-nav-list a:focus-visible,
+.site-header:not(.is-scrolled) .header-nav-list a:hover,
+.site-header:not(.is-scrolled) .header-nav-list a:focus-visible,
+html.mh-dark .site-header .header-nav-list a:hover,
+html.mh-dark .site-header .header-nav-list a:focus-visible,
+.mh-popout-nav a:hover,
+.mh-popout-nav a:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%);
+  color: #fff;
+  box-shadow: 0 8px 18px -10px rgba(139, 92, 246, .7);
+}
+.site-header .header-nav-list .current-menu-item > a,
+.site-header .header-nav-list a[aria-current="page"],
+.site-header:not(.is-scrolled) .header-nav-list .current-menu-item > a,
+.site-header:not(.is-scrolled) .header-nav-list a[aria-current="page"],
+html.mh-dark .site-header .header-nav-list .current-menu-item > a,
+html.mh-dark .site-header .header-nav-list a[aria-current="page"] {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .35);
+}
+.site-header .header-nav-list .current-menu-item > a:hover,
+.site-header .header-nav-list a[aria-current="page"]:hover { background: linear-gradient(90deg, var(--blue-500) 0%, var(--violet-400) 100%); }
+@media (prefers-reduced-motion: reduce) {
+  .work-card h2 a, .post-card-title a, .h-journal-item__title a, .h-project-card__title a, .resources-card__name a, .repo-card__title a { animation: none !important; transition: none; }
+}
+
+/* ── Site title: bold caps with the brand gradient ─────────────────────── */
+.site-header .brand-name,
+.site-header:not(.is-scrolled) .brand-name,
+html.mh-dark .site-header .brand-name,
+.site-footer .footer-brand,
+.site-footer .brand-name,
+html:not(.mh-dark) .site-footer .footer-brand,
+.mh-popout .brand-name {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.site-header.is-scrolled .brand-name,
+html:not(.mh-dark) .site-footer .footer-brand,
+html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); -webkit-background-clip: text; background-clip: text; }
+html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; }
+.brand:hover .brand-name,
+.brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
