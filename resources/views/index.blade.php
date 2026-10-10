@@ -2,7 +2,6 @@
 
 @section('content')
 @php
-  $devto    = \App\mh_devto_posts(6);
   $writeId  = \App\mh_writing_id();
   $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
   $rssUrl   = home_url('/feed/');
@@ -93,25 +92,60 @@
   <p class="lead">
     {{ \App\field('write_lede', __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage'), $writeId) }}
   </p>
-  <div class="journal-hero-actions">
-    <div class="search-wrap write-hero-search">
-      @include('forms.search', ['placeholder' => \App\field('write_search_ph', __('Search posts', 'sage'), $writeId)])
-    </div>
-    <a class="h-text-arrow" href="#journal-posts">
+  <div class="page-header-split__actions">
+    <a class="btn" href="#journal-posts">
       {{ __('Browse posts', 'sage') }} <span aria-hidden="true">↓</span>
+    </a>
+    <a class="h-text-arrow" href="{{ esc_url($rssUrl) }}">
+      {{ __('Subscribe by RSS', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
 @endcomponent
 
 @include('partials.page-nav', [
   'pills' => [
-    ['topics', __('Topics', 'sage')],
     ['journal-posts', __('Posts', 'sage')],
+    ['topics', __('Topics', 'sage')],
   ],
 ])
 
+{{-- POSTS --}}
+<div id="journal-posts" class="container wide page-block write-hub write-hub--home" aria-labelledby="journal-posts-heading">
+  <h2 id="journal-posts-heading" class="display-title is-section">{{ __('Browse the posts', 'sage') }}</h2>
+  <p class="lead work-guide__intro">{{ __('Search by keyword, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage') }}</p>
+
+  @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl])
+  @include('partials.write-topics', compact('writeId', 'writeUrl'))
+
+  @if (! have_posts())
+    <p>No posts yet.</p>
+  @else
+    <div class="post-list post-list--roomy" data-post-list>
+      @while(have_posts())
+        @php(the_post())
+        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
+      @endwhile
+    </div>
+    <div class="posts-nav">
+      {!! get_the_posts_pagination([
+        'mid_size' => 1,
+        'prev_text' => __('← Older', 'sage'),
+        'next_text' => __('Newer →', 'sage'),
+      ]) !!}
+    </div>
+  @endif
+
+  @include('partials.write-subscribe', compact('writeId'))
+
+  {{-- Elsewhere --}}
+  <div class="journal-elsewhere">
+    <p class="write-follow">{{ \App\field('write_follow', __('More of my writing', 'sage'), $writeId) }}</p>
+    @include('partials.social', ['labeled' => true])
+  </div>
+</div>
+
 {{-- ── What I write about — topic coverage grid ───────────────────── --}}
-<section class="journal-topics-section" id="topics" aria-labelledby="journal-topics-heading">
+<section class="pf-section pf-section--alt journal-topics-section" id="topics" aria-labelledby="journal-topics-heading">
   <div class="container wide">
     <div class="journal-topics-head">
       <h2 id="journal-topics-heading" class="journal-topics__title">{{ __('What I write about', 'sage') }}</h2>
@@ -128,77 +162,6 @@
     </div>
   </div>
 </section>
-
-{{-- POSTS --}}
-<div class="container wide page-block write-hub write-hub--home">
-  @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl, 'hideSearch' => true])
-  @include('partials.write-topics', compact('writeId', 'writeUrl'))
-
-  @if (! have_posts())
-    <p>No posts yet.</p>
-  @else
-    <div class="write-layout">
-      <div class="write-main" id="journal-posts">
-        <div class="post-list" data-post-list>
-          @while(have_posts())
-            @php(the_post())
-            @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-          @endwhile
-        </div>
-        <div class="posts-nav">
-          {!! get_the_posts_pagination([
-            'mid_size' => 1,
-            'prev_text' => __('← Older', 'sage'),
-            'next_text' => __('Newer →', 'sage'),
-          ]) !!}
-        </div>
-      </div>
-      @include('partials.write-aside', ['writeId' => $writeId])
-    </div>
-  @endif
-
-  @include('partials.write-subscribe', compact('writeId'))
-
-  {{-- DEV.to mirror --}}
-  @if ($devto)
-    <div class="journal-devto">
-      <div class="journal-devto__head">
-        <div>
-          <h2 class="journal-devto__heading">
-            {{ \App\field('write_devto_h2', __('Cross-posted to DEV.to', 'sage'), $writeId) }}
-          </h2>
-          <p class="journal-devto__note">{{ __('Selected posts are mirrored to DEV.to for broader reach. Comment threads on both.', 'sage') }}</p>
-        </div>
-        <a class="h-text-arrow" href="https://dev.to/matthummel" rel="noopener" target="_blank">{{ __('Follow on DEV.to', 'sage') }} →</a>
-      </div>
-      <div class="dev-cards">
-        @foreach ($devto as $d)
-          <article class="dev-card">
-            <span class="dev-card__source" aria-label="Source">DEV.to</span>
-            <h3 class="dev-card__title"><a href="{{ esc_url($d['url']) }}" rel="noopener" target="_blank">{{ $d['title'] }}</a></h3>
-            @if (! empty($d['ex']))
-              <p class="dev-card__ex">{{ $d['ex'] }}</p>
-            @endif
-            @if (! empty($d['date']) && strtotime($d['date']))
-              <time class="dev-card__date" datetime="{{ esc_attr(gmdate('c', strtotime($d['date']))) }}">
-                {{ wp_date(get_option('date_format'), strtotime($d['date'])) }}
-              </time>
-            @endif
-            <a class="dev-card__read" href="{{ esc_url($d['url']) }}" rel="noopener" target="_blank">
-              {{ __('Read on DEV.to', 'sage') }} <span aria-hidden="true">→</span>
-            </a>
-          </article>
-        @endforeach
-      </div>
-    </div>
-  @endif
-
-  {{-- Elsewhere --}}
-  <div class="journal-elsewhere">
-    <p class="write-follow">{{ \App\field('write_follow', __('More of my writing', 'sage'), $writeId) }}</p>
-    @include('partials.social', ['labeled' => true])
-  </div>
-</div>
 
 @include('partials.cta-band', [
   'kicker' => __('Get in touch', 'sage'),

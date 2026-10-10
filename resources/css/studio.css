@@ -3893,3 +3893,42 @@ html.mh-dark .project-page .pf-product-gallery__stage {
   background: var(--color-surface, #1c2430);
   box-shadow: none;
 }
+
+/* ── Journal uses the Projects layout: two-up roomy cards, no sidebar ── */
+.post-list--roomy:not(.is-list) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem;
+}
+@media (max-width: 640px) {
+  .post-list--roomy:not(.is-list) { grid-template-columns: 1fr; }
+}
+.post-list--roomy .post-card {
+  border-radius: 16px;
+  background: var(--white);
+  background-image: none;
+  border-color: var(--gray-200);
+}
+.post-list--roomy .post-shot,
+.post-list--roomy .post-shot img {
+  aspect-ratio: 16 / 10;
+  min-height: 0;
+}
+.post-list--roomy .post-body {
+  padding: 1.25rem 1.35rem 1.4rem;
+}
+.post-list--roomy .post-card-title {
+  font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  letter-spacing: -.04em;
+  line-height: 1.2;
+}
+.post-list--roomy .post-card-excerpt p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.post-list--roomy.is-list .post-shot {
+  width: min(22rem, 42%);
+  flex: 0 0 min(22rem, 42%);
+}
+@media (max-width: 640px) {
+  .post-list--roomy.is-list .post-shot { width: 100%; flex: none; }
+}
