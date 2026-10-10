@@ -264,12 +264,12 @@ function mh_seo_field_group(): array
 function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): string
 {
     $copy = [
-        'h1' => __('Matt Hummel', 'sage'),
-        'role' => __('WordPress developer — themes, plugins, and web apps.', 'sage'),
-        'lede' => __('I build WordPress sites shops can edit and agencies can hand off. Open for full-time, contract, or freelance.', 'sage'),
+        'h1' => __('I build WordPress sites your team can run.', 'sage'),
+        'role' => __('Full-stack developer · WordPress themes, plugins, and web apps', 'sage'),
+        'lede' => __('Shops get a site they can edit without calling a developer. Agencies get clean, hand-off-ready builds. I’m open to full-time, contract, and freelance work.', 'sage'),
         'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
         'seo_desc' => __('WordPress developer for shops and agencies. Themes, plugins, and clear handoffs. Say hello.', 'sage'),
-        'kicker' => __('WordPress · plugins · web apps', 'sage'),
+        'kicker' => __('Hi, I’m Matt 👋', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
         'proof_1' => __('17 years in-house web work', 'sage'),
@@ -294,8 +294,8 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
 {
     $copy = [
         'kicker' => __('Projects', 'sage'),
-        'h1' => __('Sample WordPress work.', 'sage'),
-        'lede' => __('I built these themes and plugins so you can see how I work. Open a page, try the live demo, and read a short story. I take full-time, contract, and freelance jobs.', 'sage'),
+        'h1' => __('Things I’ve built, and why.', 'sage'),
+        'lede' => __('Real themes and plugins with live demos and the story behind each one. Open a project, click around, and see how I work before we ever talk.', 'sage'),
         'hero_cta_primary' => __('Say hello', 'sage'),
         'hero_cta_secondary' => __('Hire me', 'sage'),
         'foot' => __('Want the repos? See the <a href="/about/#code">Code section</a>. Live demos open from each project when I have one.', 'sage'),
@@ -487,9 +487,9 @@ function page_field_map(): array
         'template-home.blade.php' => $home,
         'template-about.blade.php' => [
             __('Intro', 'sage') => [
-                ['about_kicker', __('Kicker', 'sage'), 'text', __('Matt Hummel', 'sage')],
-                ['about_h1', __('Heading', 'sage'), 'text', __('WordPress developer for shops and agencies.', 'sage')],
-                ['about_lede', __('Intro', 'sage'), 'textarea', __('I build accessible WordPress sites and web apps from Gettysburg — editable in wp-admin, handoff-ready for agencies, and readable for the next developer.', 'sage')],
+                ['about_kicker', __('Kicker', 'sage'), 'text', __('About me', 'sage')],
+                ['about_h1', __('Heading', 'sage'), 'text', __('Seventeen years of building for the web.', 'sage')],
+                ['about_lede', __('Intro', 'sage'), 'textarea', __('I started in higher-ed marketing and kept coming back to WordPress because it gives people real ownership of their site. Today I build themes, plugins, and web apps — and write it all down for the next developer.', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
@@ -646,8 +646,8 @@ function page_field_map(): array
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
-                ['cnt_h1', __('Heading', 'sage'), 'text', __('Say hello.', 'sage')],
-                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')],
+                ['cnt_h1', __('Heading', 'sage'), 'text', __('Let’s talk about your project.', 'sage')],
+                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Hiring, building, or just stuck on something WordPress? Send a few sentences — I read everything and reply within one business day (ET).', 'sage')],
             ],
             __('Form', 'sage') => [
                 ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
@@ -742,8 +742,8 @@ function page_field_map(): array
         'template-resources.blade.php' => [
             __('Intro', 'sage') => [
                 ['resources_kicker', __('Kicker', 'sage'), 'text', __('Resources', 'sage')],
-                ['resources_h1', __('Heading', 'sage'), 'text', __('Free starters, themes, tools, and the stack I use.', 'sage')],
-                ['resources_lede', __('Intro', 'sage'), 'textarea', __('A quiet catalog for developers and shops: open code to study, tools I use on real projects, and the stack behind every build. Hire me when you want a full site.', 'sage')],
+                ['resources_h1', __('Heading', 'sage'), 'text', __('Starters, tools, and the stack I use.', 'sage')],
+                ['resources_lede', __('Intro', 'sage'), 'textarea', __('Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and shops alike.', 'sage')],
                 ['resources_intro_h2', __('Below-hero heading', 'sage'), 'text', __('What you will find here.', 'sage')],
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
@@ -797,9 +797,9 @@ function page_field_map(): array
         ],
         'index.blade.php' => [
             __('Intro', 'sage') => [
-                ['write_kicker', __('Kicker', 'sage'), 'text', __('WordPress developer journal', 'sage')],
-                ['write_h1', __('Heading', 'sage'), 'text', __('WordPress, PHP, and JavaScript — in practice.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Practical notes from WordPress themes, PHP plugins, and full-stack web work. Most posts ship with a working snippet you can paste and adapt.', 'sage')],
+                ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
+                ['write_h1', __('Heading', 'sage'), 'text', __('Notes from real WordPress work.', 'sage')],
+                ['write_lede', __('Intro', 'sage'), 'textarea', __('Short, practical posts on WordPress, PHP, and JavaScript — most come with code you can paste into your own project.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Cross-posted to DEV.to', 'sage')],
                 ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search WordPress, PHP, Tailwind…', 'sage')],
