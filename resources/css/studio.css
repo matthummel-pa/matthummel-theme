@@ -5043,3 +5043,20 @@ html.mh-dark .h-section-label { color: var(--cyan-300); }
 .resources-card__badge,
 .spec-badge,
 .work-card .eyebrow { color: #0b5e57; }
+
+/* ── Hero text sits straight on the hero: no panel box ────────────────── */
+.page-header__panel,
+.h-hero__panel,
+html.mh-dark .page-header__panel,
+html.mh-dark .h-hero__panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  padding-inline: 0;
+  padding-block: clamp(.5rem, 1.5vw, 1rem);
+}
+.page-header__panel::before,
+.h-hero__panel::before { inset: -30% -10% -40% -14%; opacity: .9; }
