@@ -2,9 +2,9 @@
 
 ## 3.6.56 — Dark header under the admin bar, light-mode button hovers, purple anchor pills
 
-- Dark mode: the fixed header now sits below the WordPress admin bar (32px / 46px on mobile) like it does in light mode, so the "On this page" sub-nav is flush beneath it again for logged-in users.
+- Logged-in users: the fixed header now sits below the WordPress admin bar (32px / 46px on mobile) in both modes and at every width, so the "On this page" sub-nav is flush beneath it again (dark mode had it under the admin bar; light mode lost the offset below 900px).
 - Light mode: every lime and outline button (solid, outline, ghost, repo "Live demo" / "All repos", search, popout CTA, availability pill) hovers and focuses to the blue→violet gradient with white type, matching dark mode.
-- "On this page" anchor pills use a dark-purple scheme: light mode is deep violet type on white, violet tint on hover, violet-700→900 fill when active; dark mode is a violet tint with light type and the blue→violet fill when active.
+- "On this page" anchor pills use a dark-purple scheme: light mode is deep violet type on white, violet tint on hover, violet-700→900 fill when active; dark mode is a violet tint with light type and the blue→violet fill when active. The prev/next arrows follow the same scheme.
 
 ## 3.6.55 — List-view cards, GitHub sync trims dead data
 
