@@ -37,7 +37,7 @@
       <p>Products change. Check the provider’s current pricing, terms, and documentation before purchasing. Any performance result or comparison should be understood in the context of the test described; your results may differ.</p>
 
       <h2>Questions</h2>
-      <p>If you have a question about a recommendation or a relationship mentioned on this site, <a href="{{ home_url('/contact/') }}">send me a note</a>. For work, start on <a href="{{ home_url('/hire/') }}">Hire</a>.</p>
+      <p>If you have a question about a recommendation or a relationship mentioned on this site, <a href="{{ home_url('/contact/') }}">send me a note</a>. For work, start on <a href="{{ home_url('/about/#hire') }}">Hire</a>.</p>
 
       <p><small>Last updated September 1, 2026.</small></p>
     </div>

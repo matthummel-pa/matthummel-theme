@@ -132,10 +132,6 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Affiliate Disclosure', 'sage').' | '.$brand,
             'desc' => __('Affiliate disclosure for links and products I mention. I only share tools I use in real WordPress work.', 'sage'),
         ],
-        'template-hire.blade.php' => [
-            'title' => __('Hire a WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('Hire a WordPress developer for full-time, contract, or freelance work. Themes, plugins, and handoffs shops keep.', 'sage'),
-        ],
         'template-projects.blade.php' => [
             'title' => mh_projects_listing_default('seo_title', $brand),
             'desc' => mh_projects_listing_default('seo_desc'),
@@ -169,12 +165,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => __('WordPress Developer Bio', 'sage').' | '.$brand,
-            'desc' => __('WordPress developer bio: I build sites shops can edit and agencies can hand off. Say hello.', 'sage'),
-        ],
-        'template-code.blade.php' => [
-            'title' => __('WordPress Open Source Code', 'sage').' | '.$brand,
-            'desc' => __('WordPress open source and full-stack code I ship on GitHub. Themes, plugins, and notes developers can reuse.', 'sage'),
+            'title' => __('About, Hire & Code — WordPress Developer', 'sage').' | '.$brand,
+            'desc' => __('About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.', 'sage'),
         ],
         'template-now.blade.php' => [
             'title' => __('WordPress Themes I\'m Building', 'sage').' | '.$brand,
@@ -701,3 +693,22 @@ add_action('template_redirect', function (): void {
         exit;
     }
 }, 2);
+
+// Hire and Code live on About since 3.6.49; the old URLs keep working.
+add_action('template_redirect', function (): void {
+    if (is_admin() || is_preview()) {
+        return;
+    }
+
+    $uri = sanitize_text_field(wp_unslash((string) ($_SERVER['REQUEST_URI'] ?? '')));
+    $path = trim((string) (wp_parse_url($uri, PHP_URL_PATH) ?? ''), '/');
+    if (! in_array($path, ['hire', 'code'], true)) {
+        return;
+    }
+
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    $about = $aboutId > 0 ? (string) get_permalink($aboutId) : home_url('/about/');
+    $query = (string) (wp_parse_url($uri, PHP_URL_QUERY) ?? '');
+    wp_safe_redirect($about.($query !== '' ? '?'.$query : '').'#'.$path, 301);
+    exit;
+}, 3);

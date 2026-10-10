@@ -3932,3 +3932,18 @@ html.mh-dark .project-page .pf-product-gallery__stage {
 @media (max-width: 640px) {
   .post-list--roomy.is-list .post-shot { width: 100%; flex: none; }
 }
+
+/* 3.6.49 — About absorbs Hire and Code. LinkedIn card takes the old studio card tint;
+   "What I need from you" reuses the hire-need layout under the Open for work shell. */
+.about-aside-card--linkedin {
+  background: color-mix(in srgb, var(--blue-50) 70%, white);
+  border-color: color-mix(in srgb, var(--blue-100) 80%, var(--color-border));
+}
+html.mh-dark .about-aside-card--linkedin {
+  background: var(--white);
+  border-color: var(--color-border);
+}
+.about-need { margin-top: 3rem; }
+.about-need__title { font: 600 var(--type-h3, 1.35rem)/1.2 var(--font-display); margin: 12px 0 .75rem; }
+.about-need__note { margin-top: 1rem; font-size: .92rem; color: var(--color-text-secondary); }
+.hire-need-cta__btn { width: 100%; justify-content: center; margin-top: .85rem; }

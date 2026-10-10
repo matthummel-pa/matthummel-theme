@@ -9,7 +9,7 @@
     <ul class="elsewhere error-links">
       <li><a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a></li>
       <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Work', 'sage') }}</a></li>
-      <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
+      <li><a href="{{ home_url('/about/#code') }}">{{ __('Code', 'sage') }}</a></li>
       <li><a href="{{ get_permalink(get_option('page_for_posts')) ?: home_url('/blog/') }}">{{ __('Journal', 'sage') }}</a></li>
       <li><a href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a></li>
     </ul>

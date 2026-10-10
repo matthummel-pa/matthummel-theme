@@ -175,7 +175,7 @@ function mh_resources_catalog(): array
                 [
                     'name' => __('Code & GitHub', 'sage'),
                     'blurb' => __('Public repos, contribution activity, and snippets you can adapt. Proof of how I ship.', 'sage'),
-                    'url' => home_url('/code/'),
+                    'url' => home_url('/about/#code'),
                     'affiliate' => false,
                     'badge' => __('Open source', 'sage'),
                 ],

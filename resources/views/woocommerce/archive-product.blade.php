@@ -232,7 +232,7 @@
   @endphp
 
   <div class="work-footer-links">
-    {!! \App\field_html('work_foot', __('Code and repos: <a href="/code/">Code page</a>. Live demos open from each concept when available.', 'sage'), $shopPostId) !!}
+    {!! \App\field_html('work_foot', __('Code and repos: <a href="/about/#code">Code section</a>. Live demos open from each concept when available.', 'sage'), $shopPostId) !!}
   </div>
 </div>
 

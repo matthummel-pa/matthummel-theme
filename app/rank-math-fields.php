@@ -26,9 +26,7 @@ function mh_page_focus_keyword_defaults(): array
         'template-home.blade.php' => 'WordPress developer',
         'template-about.blade.php' => 'WordPress developer',
         'template-services.blade.php' => 'Acreline services',
-        'template-hire.blade.php' => 'hire a WordPress developer',
         'template-portfolio.blade.php' => 'WordPress developer portfolio',
-        'template-code.blade.php' => 'WordPress open source',
         'template-uses.blade.php' => 'WordPress developer tools',
         'template-contact.blade.php' => 'contact WordPress developer',
         'template-start.blade.php' => 'WordPress project brief',
@@ -460,8 +458,8 @@ function mh_page_seo_analysis_html(int $post_id): string
     $links = '<p>'
         .'Internal paths: <a href="/contact/">Say hello</a>, '
         .'<a href="/projects/">themes and plugins</a>, '
-        .'<a href="/hire/">hire</a>, '
-        .'<a href="/hire/">services</a>, '
+        .'<a href="/about/#hire">hire</a>, '
+        .'<a href="/about/#resume">resume</a>, '
         .'<a href="/projects/">portfolio</a>. '
         .'External references: <a href="https://roots.io/sage/">Roots Sage</a>, '
         .'<a href="https://wordpress.org/">WordPress.org</a>, '

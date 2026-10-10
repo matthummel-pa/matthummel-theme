@@ -41,7 +41,7 @@
     <a class="btn" href="{{ home_url('/contact/') }}">
       {!! \App\mh_svg_icon('mail', 16) !!} {{ \App\field('work_hero_cta_primary', \App\mh_projects_listing_default('hero_cta_primary')) }}
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
+    <a class="h-text-arrow" href="{{ home_url('/about/#hire') }}">
       {{ \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')) }} <span aria-hidden="true">→</span>
     </a>
   </div>
@@ -82,7 +82,7 @@
     'text' => __('Tell me what you run, or the role you are filling. I usually reply within a day.', 'sage'),
     'label' => __('Say hello', 'sage'),
     'secondary' => __('Hire me', 'sage'),
-    'secondaryHref' => home_url('/hire/'),
+    'secondaryHref' => home_url('/about/#hire'),
   ])
 @else
   <div id="gallery" class="container wide page-block write-hub" data-work-hub aria-labelledby="work-gallery-heading">
@@ -212,7 +212,7 @@
     'text' => \App\field('work_band_lede', \App\mh_projects_listing_default('band_lede')),
     'label' => \App\field('work_hero_cta_primary', \App\mh_projects_listing_default('hero_cta_primary')),
     'secondary' => \App\field('work_hero_cta_secondary', \App\mh_projects_listing_default('hero_cta_secondary')),
-    'secondaryHref' => home_url('/hire/'),
+    'secondaryHref' => home_url('/about/#hire'),
   ])
 @endif
 @endsection

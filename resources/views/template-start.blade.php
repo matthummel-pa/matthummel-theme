@@ -258,7 +258,7 @@
   'title' => __('Roles and resume are on Hire.', 'sage'),
   'text' => __('The brief is for project work. Recruiters and hiring managers can start from Hire or the contact form.', 'sage'),
   'label' => __('Hire me', 'sage'),
-  'href' => home_url('/hire/'),
+  'href' => home_url('/about/#hire'),
   'secondary' => __('Contact form', 'sage'),
   'secondaryHref' => home_url('/contact/'),
 ])

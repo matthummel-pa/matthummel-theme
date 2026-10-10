@@ -31,7 +31,7 @@
       <p class="archive-desc">{{ __('Nothing matched. Try another search, or browse the journal and Code.', 'sage') }}</p>
       <p class="btn-row">
         <a class="btn" href="{{ esc_url($writeUrl) }}">{{ \App\field('write_h1', __('Journal', 'sage'), $writeId) }}</a>
-        <a class="btn btn-outline" href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a>
+        <a class="btn btn-outline" href="{{ home_url('/about/#code') }}">{{ __('Code', 'sage') }}</a>
       </p>
       </div>
     @else

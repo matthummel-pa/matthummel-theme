@@ -273,7 +273,7 @@
         <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
         <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
         <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
-        <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the Code page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
+        <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the About page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
         <li><strong>Law enforcement</strong> — data may be disclosed if required by a valid legal process.</li>
       </ul>
     </div>

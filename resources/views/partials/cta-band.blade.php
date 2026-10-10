@@ -5,7 +5,7 @@
   $ctaHref = $href ?? home_url('/contact/');
   $ctaKicker = $kicker ?? __('Get in touch', 'sage');
   $ctaSecondary = $secondary ?? '';
-  $ctaSecondaryHref = $secondaryHref ?? home_url('/hire/');
+  $ctaSecondaryHref = $secondaryHref ?? home_url('/about/#hire');
   $ctaNote = $note ?? \App\mh_reply_sla('note');
 @endphp
 <section class="cta-band" aria-labelledby="cta-heading" data-reveal>

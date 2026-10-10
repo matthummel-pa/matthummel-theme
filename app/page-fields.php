@@ -102,7 +102,7 @@ function mh_about_story_default_paragraphs(): array
         __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage'),
         __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage'),
         __('The Projects page showcases WordPress themes and plugins — Sage 11 builds I can adapt for a shop or a role. Production client and in-house work stays private unless a shop asks to be featured.', 'sage'),
-        __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are on the hire page. There is no public demo.', 'sage'),
+        __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are in the resume below. There is no public demo.', 'sage'),
     ];
 }
 
@@ -298,7 +298,7 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
         'lede' => __('I built these themes and plugins so you can see how I work. Open a page, try the live demo, and read a short story. I take full-time, contract, and freelance jobs.', 'sage'),
         'hero_cta_primary' => __('Say hello', 'sage'),
         'hero_cta_secondary' => __('Hire me', 'sage'),
-        'foot' => __('Want the repos? See the <a href="/code/">Code page</a>. Live demos open from each project when I have one.', 'sage'),
+        'foot' => __('Want the repos? See the <a href="/about/#code">Code section</a>. Live demos open from each project when I have one.', 'sage'),
         'search_ph' => __('Search projects…', 'sage'),
         'cta_view' => __('Open project', 'sage'),
         'cta_buy' => __('Open project', 'sage'),
@@ -344,7 +344,7 @@ function mh_home_fields(): array
             ['home_role', __('Role line', 'sage'), 'text', mh_home_hero_default('role')],
             ['home_lede', __('Intro', 'sage'), 'textarea', mh_home_hero_default('lede')],
             ['home_cta_primary', __('Primary button label', 'sage'), 'text', mh_home_hero_default('cta_primary')],
-            ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/hire/'],
+            ['home_cta_primary_url', __('Primary button path or URL', 'sage'), 'text', '/about/#hire'],
             ['home_cta_secondary', __('Secondary button label', 'sage'), 'text', mh_home_hero_default('cta_secondary')],
             ['home_cta_secondary_url', __('Secondary button path or URL', 'sage'), 'text', '/projects/'],
             ['home_link_writing', __('Journal link label', 'sage'), 'text', __('Journal', 'sage')],
@@ -360,8 +360,8 @@ function mh_home_fields(): array
             ['home_path_lede', __('Pathways intro', 'sage'), 'textarea', __('Pick the door that fits — hiring, building together, or browsing themes and plugins.', 'sage')],
             ['home_path_1_title', __('Pathway 1 title', 'sage'), 'text', __('Hire me', 'sage')],
             ['home_path_1_text', __('Pathway 1 text', 'sage'), 'textarea', __('Roles, contract, or agency overflow. Employers, resume, and how I work.', 'sage')],
-            ['home_path_1_url', __('Pathway 1 path', 'sage'), 'text', '/hire/'],
-            ['home_path_1_cta', __('Pathway 1 CTA', 'sage'), 'text', __('See hire page', 'sage')],
+            ['home_path_1_url', __('Pathway 1 path', 'sage'), 'text', '/about/#hire'],
+            ['home_path_1_cta', __('Pathway 1 CTA', 'sage'), 'text', __('See how to hire me', 'sage')],
             ['home_path_2_title', __('Pathway 2 title', 'sage'), 'text', __('Build with me', 'sage')],
             ['home_path_2_text', __('Pathway 2 text', 'sage'), 'textarea', __('A short brief for shops and agencies. I use it to prepare for the first meeting.', 'sage')],
             ['home_path_2_url', __('Pathway 2 path', 'sage'), 'text', '/start/'],
@@ -402,7 +402,7 @@ function mh_home_fields(): array
         ],
         __('Process section', 'sage') => [
             ['home_process_h2', __('Heading', 'sage'), 'text', __('How a project goes.', 'sage')],
-            ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/hire/">hire conversation</a>.', 'sage')],
+            ['home_process_note', __('Note (HTML ok)', 'sage'), 'html', __('Open for full-time, contract, and project work. A question about a post is welcome — so is a <a href="/about/#hire">hire conversation</a>.', 'sage')],
         ],
         __('About strip extra', 'sage') => [
             ['home_about_p2', __('Second paragraph', 'sage'), 'textarea', __('The gallery is sample work I can show. Client and employer sites stay private. Stack notes are on About.', 'sage')],
@@ -415,8 +415,8 @@ function mh_home_fields(): array
             ['glance_experience', __('Experience line', 'sage'), 'text', ''],
             ['glance_avail', __('Availability', 'sage'), 'text', __('Full-time, contract, freelance, agency overflow', 'sage')],
             ['glance_note', __('Public-work sentence', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing WordPress themes, plugins, and builds on GitHub. Stack details are on About.', 'sage')],
-            ['glance_employers', __('Employers line (HTML)', 'sage'), 'html', __('Employers on the record: <a href="/hire/">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage')],
-            ['glance_power', __('Power Platform line (HTML)', 'sage'), 'html', __('PowerApps, Power Automate, and InfoPath for federal agencies — details on the <a href="/hire/">hire page</a>. There is no public demo.', 'sage')],
+            ['glance_employers', __('Employers line (HTML)', 'sage'), 'html', __('Employers on the record: <a href="/about/#resume">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage')],
+            ['glance_power', __('Power Platform line (HTML)', 'sage'), 'html', __('PowerApps, Power Automate, and InfoPath for federal agencies — details in the <a href="/about/#resume">resume</a>. There is no public demo.', 'sage')],
             ['glance_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
             ['glance_nda', __('NDA note', 'sage'), 'textarea', __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')],
         ],
@@ -509,9 +509,11 @@ function page_field_map(): array
             ],
             __('Open for work', 'sage') => [
                 ['about_work_h2', __('Heading', 'sage'), 'text', __('Open for work.', 'sage')],
-                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Happy to work remote or on-site.', 'sage')],
+                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I\'m looking for full-time roles, contract gigs, and freelance projects. Happy to work remote or on-site.', 'sage')],
                 ['about_work_p2', __('Paragraph 2', 'sage'), 'textarea', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')],
                 ['about_work_cta', __('Button label', 'sage'), 'text', __('Start a conversation', 'sage')],
+                ['about_work_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
+                ['about_work_price', __('Pricing one-liner', 'sage'), 'textarea', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')],
                 ['about_work_types', __('Arrangements', 'sage'), 'repeater', mh_about_work_types_defaults(), [
                     ['title', __('Title', 'sage'), 'text'],
                     ['detail', __('Detail', 'sage'), 'textarea'],
@@ -525,6 +527,44 @@ function page_field_map(): array
                     ['title', __('Title', 'sage'), 'text'],
                     ['body', __('Body', 'sage'), 'textarea'],
                 ]],
+            ],
+            __('To get started', 'sage') => [
+                ['about_need_h3', __('Heading', 'sage'), 'text', __('What I need from you.', 'sage')],
+                ['about_need_intro', __('Intro', 'sage'), 'textarea', __('You don’t need a finished spec. A short description of the problem is enough. Here’s what helps:', 'sage')],
+                ['about_need_note', __('Closing note', 'sage'), 'textarea', __('That’s it. I’ll follow up with clarifying questions or an honest note if I’m not the right fit.', 'sage')],
+            ],
+            __('Resume', 'sage') => [
+                ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
+                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')],
+                ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
+                    ['role', __('Role', 'sage'), 'text'],
+                    ['org', __('Organization', 'sage'), 'text'],
+                    ['period', __('Dates', 'sage'), 'text'],
+                    ['type', __('Type', 'sage'), 'text'],
+                    ['url', __('Organization URL', 'sage'), 'url'],
+                    ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
+                ]],
+            ],
+            __('GitHub', 'sage') => [
+                ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source full-stack and WordPress code on GitHub.', 'sage')],
+                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats below pull live from the GitHub API.', 'sage')],
+                ['code_pin_h2', __('Pinned repos heading', 'sage'), 'text', __('Pinned on GitHub', 'sage')],
+                ['code_pin_intro', __('Pinned repos intro', 'sage'), 'textarea', __('The repos pinned to my GitHub profile — the ones I point developers to first. Pin or unpin a repo on GitHub and this list follows within the hour.', 'sage')],
+                ['code_repos', __('Fallback featured repos (shown only when nothing is pinned on GitHub)', 'sage'), 'repeater', $codeRepos, [
+                    ['name', __('Name', 'sage'), 'text'],
+                    ['desc', __('Description', 'sage'), 'textarea'],
+                    ['url', __('URL', 'sage'), 'url'],
+                    ['tags', __('Tags (comma separated)', 'sage'), 'text'],
+                ]],
+                ['code_live_h2', __('Recent repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
+                ['code_live_intro', __('Recent repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')],
+                ['code_lang_h3', __('Languages heading', 'sage'), 'text', __('Languages on GitHub', 'sage')],
+                ['code_lang_intro', __('Languages intro', 'sage'), 'text', __('Primary language of each public repo, counted live. Small static sites pull HTML up; the themes and plugins are PHP.', 'sage')],
+            ],
+            __('Stack', 'sage') => [
+                ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills and tools.', 'sage')],
+                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Not an exhaustive list — just what shows up in public GitHub.', 'sage')],
+                ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
             ],
             __('Journal', 'sage') => [
                 ['about_posts_h2', __('Heading', 'sage'), 'text', __('Recent posts.', 'sage')],
@@ -678,107 +718,6 @@ function page_field_map(): array
                 ]],
             ],
         ],
-        'template-code.blade.php' => [
-            __('Intro', 'sage') => [
-                ['code_kicker', __('Kicker', 'sage'), 'text', __('Code', 'sage')],
-                ['code_h1', __('Heading', 'sage'), 'text', __('Code and repos.', 'sage')],
-                ['code_lede', __('Intro (basic HTML ok)', 'sage'), 'html', __('Public GitHub work — themes, plugins, and apps you can fork or read. This is where the stack detail lives.', 'sage')],
-            ],
-            __('Practice', 'sage') => [
-                ['code_do_h2', __('Heading', 'sage'), 'text', __('What I work on.', 'sage')],
-                ['code_do_intro', __('Intro', 'sage'), 'textarea', __('I ship across the stack: custom WordPress themes and plugins, PHP, TypeScript, React, APIs, and data-backed applications. The public repos show how I structure code, document decisions, and prepare work for handoff.', 'sage')],
-                ['code_do_items', __('What I do (one per line)', 'sage'), 'lines', mh_code_practice_defaults()],
-            ],
-            __('GitHub', 'sage') => [
-                ['code_gh_h2', __('Section heading', 'sage'), 'text', __('Open-source full-stack and WordPress code on GitHub.', 'sage')],
-                ['code_gh_intro', __('Section intro', 'sage'), 'textarea', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats and activity below pull live from the GitHub API.', 'sage')],
-                ['code_cal_h2', __('Calendar heading', 'sage'), 'text', __('Last 90 days of commits', 'sage')],
-                ['code_cal_intro', __('Calendar intro', 'sage'), 'text', __('Contribution heat map for the last 90 days, newest week first. Hover a day to see what shipped. Darker blue means a busier day on public repos.', 'sage')],
-                ['code_act_sec_h2', __('Activity section heading', 'sage'), 'text', __('Shipping activity.', 'sage')],
-                ['code_act_sec_intro', __('Activity section intro', 'sage'), 'textarea', __('Every number here is counted by GitHub, not by me: commits, pull requests, and the days I shipped something public.', 'sage')],
-                ['code_act_h2', __('Activity heading', 'sage'), 'text', __('Public activity', 'sage')],
-                ['code_act_intro', __('Activity intro', 'sage'), 'text', __('Pushes, releases, and pull requests from the last 90 days — newest first. Open any row to jump into the repo.', 'sage')],
-                ['code_pin_h2', __('Pinned repos heading', 'sage'), 'text', __('Pinned on GitHub', 'sage')],
-                ['code_pin_intro', __('Pinned repos intro', 'sage'), 'textarea', __('The repos pinned to my GitHub profile — the ones I point developers to first. Pin or unpin a repo on GitHub and this list follows within the hour.', 'sage')],
-                ['code_repos', __('Fallback featured repos (shown only when nothing is pinned on GitHub)', 'sage'), 'repeater', $codeRepos, [
-                    ['name', __('Name', 'sage'), 'text'],
-                    ['desc', __('Description', 'sage'), 'textarea'],
-                    ['url', __('URL', 'sage'), 'url'],
-                    ['tags', __('Tags (comma separated)', 'sage'), 'text'],
-                ]],
-                ['code_live_h2', __('Updated repos heading', 'sage'), 'text', __('Recently pushed', 'sage')],
-                ['code_live_intro', __('Updated repos intro', 'sage'), 'text', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')],
-                ['code_lang_h3', __('Languages heading', 'sage'), 'text', __('Languages on GitHub', 'sage')],
-                ['code_lang_intro', __('Languages intro', 'sage'), 'text', __('Primary language of each public repo, counted live. Small static sites pull HTML up; the themes and plugins are PHP.', 'sage')],
-                ['code_live_all', __('All repos label', 'sage'), 'text', __('Browse all public repos', 'sage')],
-                ['code_comm_h2', __('Community heading', 'sage'), 'text', __('People who follow and star my repos', 'sage')],
-                ['code_comm_intro', __('Community intro', 'sage'), 'textarea', __('Public GitHub followers and stargazers below. Thank you for reading the code, starring a repo, or following along.', 'sage')],
-                ['code_follow_h3', __('Followers heading', 'sage'), 'text', __('GitHub followers', 'sage')],
-                ['code_follow_thanks', __('Followers thank-you', 'sage'), 'textarea', __('Thank you for following on GitHub. I notice every new follower.', 'sage')],
-                ['code_star_h3', __('Stars earned heading', 'sage'), 'text', __('Stars earned', 'sage')],
-                ['code_star_thanks', __('Stars thank-you', 'sage'), 'textarea', __('Thank you to everyone who starred a public repo. Stars help other developers find the work.', 'sage')],
-                ['code_badges_h3', __('Badges heading', 'sage'), 'text', __('Badges earned', 'sage')],
-                ['code_badges_intro', __('Badges intro', 'sage'), 'text', __('Milestone badges from live GitHub stats — stars, followers, contributions, and repo activity.', 'sage')],
-                ['code_watch_h3', __('Watching heading', 'sage'), 'text', __('Repos I watch', 'sage')],
-                ['code_watch_intro', __('Watching intro (subscriptions)', 'sage'), 'textarea', __('Public repositories I watch on GitHub.', 'sage')],
-                ['code_watch_intro_starred', __('Watching intro (starred fallback)', 'sage'), 'textarea', __('Repos I star and follow on GitHub.', 'sage')],
-                ['code_github_followers', __('GitHub followers (optional curated list)', 'sage'), 'repeater', [], [
-                    ['username', __('Username', 'sage'), 'text'],
-                    ['name', __('Display name', 'sage'), 'text'],
-                    ['image', __('Avatar URL', 'sage'), 'url'],
-                ]],
-            ],
-            __('Skills', 'sage') => [
-                ['code_sk_h2', __('Heading', 'sage'), 'text', __('Skills and tools.', 'sage')],
-                ['code_sk_intro', __('Intro', 'sage'), 'text', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Jump a shelf — not an exhaustive list, just what shows up in public GitHub.', 'sage')],
-                ['code_skills', __('Skills (one per line)', 'sage'), 'lines', mh_code_skill_defaults()],
-            ],
-            __('Documentation', 'sage') => [
-                ['code_doc_h2', __('Heading', 'sage'), 'text', __('Documentation I keep open.', 'sage')],
-                ['code_doc_intro', __('Intro', 'sage'), 'textarea', __('Official handbooks first, then Roots and the front-end stack behind this site. Jump a shelf, open a card — every link is the official docs.', 'sage')],
-                ['code_docs', __('Links', 'sage'), 'repeater', mh_code_resource_defaults(), [
-                    ['label', __('Label', 'sage'), 'text'],
-                    ['url', __('URL', 'sage'), 'url'],
-                    ['note', __('Note', 'sage'), 'text'],
-                    ['group', __('Group', 'sage'), 'text'],
-                ]],
-            ],
-            __('Call to action', 'sage') => [
-                ['code_cta_kicker', __('Kicker', 'sage'), 'text', __('Work together', 'sage')],
-                ['code_cta_h2', __('Heading', 'sage'), 'text', __('Want to build, collaborate, or compare notes?', 'sage')],
-                ['code_cta_lede', __('Intro', 'sage'), 'textarea', __('Fork a repo, copy a snippet, or write if you want to work together. A question about a line of code is just as welcome as a project.', 'sage')],
-                ['code_cta_btn', __('Button label', 'sage'), 'text', __('Hire me', 'sage')],
-            ],
-        ],
-        'template-hire.blade.php' => [
-            __('Intro', 'sage') => [
-                ['hire_kicker', __('Kicker', 'sage'), 'text', __('Hire me', 'sage')],
-                ['hire_h1', __('Heading', 'sage'), 'text', __('Hire a WordPress developer.', 'sage')],
-                ['hire_lede', __('Intro', 'sage'), 'textarea', __('Open for full-time, contract, freelance, and agency overflow. Seventeen years in-house; public WordPress work on GitHub since 2025. Remote or on-site.', 'sage')],
-                ['hire_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
-                ['hire_price_line', __('Pricing one-liner', 'sage'), 'textarea', __('Theme install from $400. Small sites $3,000–$6,000. Agency overflow by the day or a project floor. Custom quotes on Services.', 'sage')],
-            ],
-            __('LinkedIn', 'sage') => [
-                ['hire_li_h2', __('Section heading', 'sage'), 'text', __('LinkedIn profile.', 'sage')],
-                ['hire_li_intro', __('Intro', 'sage'), 'textarea', __('Roles below match my LinkedIn. Connect there for a quieter inbox, or write here if you already know what you need.', 'sage')],
-            ],
-            __('Resume', 'sage') => [
-                ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
-                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')],
-                ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
-                    ['role', __('Role', 'sage'), 'text'],
-                    ['org', __('Organization', 'sage'), 'text'],
-                    ['period', __('Dates', 'sage'), 'text'],
-                    ['type', __('Type', 'sage'), 'text'],
-                    ['url', __('Organization URL', 'sage'), 'url'],
-                    ['bullets', __('Highlights (one per line)', 'sage'), 'textarea'],
-                ]],
-            ],
-            __('Skills', 'sage') => [
-                ['hire_sk_h2', __('Heading', 'sage'), 'text', __('Skills I bring.', 'sage')],
-                ['hire_sk_intro', __('Intro', 'sage'), 'text', __('Stack I use on shipped WordPress and web work — same tools you will see on GitHub.', 'sage')],
-            ],
-        ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
                 ['work_kicker', __('Kicker', 'sage'), 'text', mh_projects_listing_default('kicker')],
@@ -919,7 +858,7 @@ function page_field_map(): array
                     ['name', __('Display name', 'sage'), 'text'],
                     ['image', __('Avatar URL', 'sage'), 'url'],
                 ]],
-                ['write_share_note', __('Note under each post', 'sage'), 'html', __('Extra copy-paste examples live on the <a href="/code/">Code</a> page. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage')],
+                ['write_share_note', __('Note under each post', 'sage'), 'html', __('Extra copy-paste examples live on the <a href="/about/#code">Code section</a>. You’re welcome to reuse them. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage')],
                 ['write_bio', __('Default author bio', 'sage'), 'textarea', __('I write about WordPress, plugins, and other web apps, often with snippets you can paste in. Developers, shops, and agencies are welcome here.', 'sage')],
             ],
         ],
@@ -1124,31 +1063,31 @@ function mh_code_page_skills_grouped(?int $post_id = null): array
     return $out;
 }
 
+/**
+ * Resume rows. About holds them since 3.6.49; the retired Hire and Code pages
+ * are read as a fallback so nothing goes blank before the one-shot copy runs.
+ */
 function mh_code_page_resume(?int $post_id = null): array
 {
-    if ($post_id === null) {
-        $hireId = mh_page_id_by_template('template-hire.blade.php');
-        if ($hireId > 0) {
-            $hireRows = field_rows('hire_cv_jobs', [], $hireId);
-            if ($hireRows !== []) {
-                return mh_normalize_resume_rows($hireRows);
-            }
+    $candidates = $post_id !== null
+        ? [$post_id]
+        : array_filter([
+            mh_page_id_by_template('template-about.blade.php'),
+            mh_page_id_by_template('template-hire.blade.php'),
+            mh_page_id_by_template('template-code.blade.php'),
+        ]);
+
+    foreach ($candidates as $id) {
+        $rows = field_rows('hire_cv_jobs', [], $id);
+        if ($rows === []) {
+            $rows = field_rows('code_cv_jobs', [], $id);
         }
-        $codeId = mh_page_id_by_template('template-code.blade.php');
-        if ($codeId > 0) {
-            $post_id = $codeId;
+        if ($rows !== []) {
+            return mh_normalize_resume_rows($rows);
         }
     }
 
-    $rows = field_rows('hire_cv_jobs', [], $post_id);
-    if ($rows === []) {
-        $rows = field_rows('code_cv_jobs', [], $post_id);
-    }
-    if ($rows === []) {
-        $rows = mh_code_resume_defaults();
-    }
-
-    return mh_normalize_resume_rows($rows);
+    return mh_normalize_resume_rows(mh_code_resume_defaults());
 }
 
 /**
@@ -1606,7 +1545,7 @@ function mh_work_faq_defaults(): array
         ],
         [
             'title' => __('Where is the code?', 'sage'),
-            'text' => __('Each project links to GitHub when the repo is public. The Code page lists more.', 'sage'),
+            'text' => __('Each project links to GitHub when the repo is public. The Code section on About lists more.', 'sage'),
         ],
     ];
 }

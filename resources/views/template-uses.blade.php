@@ -88,10 +88,10 @@
   <h1 class="display-title is-hero">{{ \App\field('uses_h1', __('What I use.', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('uses_lede', __('The tools, stack, and services that show up on real projects. Not exhaustive — just what I reach for. Hire me if you want this stack on your build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
-    <a class="btn" href="{{ home_url('/code/') }}">
+    <a class="btn" href="{{ home_url('/about/#code') }}">
       {!! \App\mh_svg_icon('github', 15) !!} See the code
     </a>
-    <a class="h-text-arrow" href="{{ home_url('/hire/') }}">
+    <a class="h-text-arrow" href="{{ home_url('/about/#hire') }}">
       Hire me <span aria-hidden="true">→</span>
     </a>
   </div>

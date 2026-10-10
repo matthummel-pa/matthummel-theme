@@ -463,7 +463,7 @@
     'label' => __('Ask about this', 'sage'),
     'href' => $askUrl,
     'secondary' => __('Hire me', 'sage'),
-    'secondaryHref' => home_url('/hire/'),
+    'secondaryHref' => home_url('/about/#hire'),
   ])
 </article>
 

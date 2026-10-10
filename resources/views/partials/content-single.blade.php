@@ -203,7 +203,7 @@
 
         {{-- Snippet / extra code note --}}
         <p class="post-extra-note">
-          {!! \App\field_html('write_share_note', __('More examples on the <a href="/code/">Code</a> page. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
+          {!! \App\field_html('write_share_note', __('More examples on the <a href="/about/#code">Code section</a>. Questions about a snippet? <a href="/contact/">Say hello</a>.', 'sage'), \App\mh_writing_id()) !!}
         </p>
 
         @if (shortcode_exists('mhn_signup'))
@@ -224,7 +224,7 @@
             </p>
             <div class="post-author-bio__links">
               <a href="{{ home_url('/about/') }}">About me</a>
-              <a href="{{ home_url('/hire/') }}">Work with me</a>
+              <a href="{{ home_url('/about/#hire') }}">Work with me</a>
               <a href="{{ home_url('/contact/') }}">Say hello</a>
               <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">RSS feed</a>
             </div>
@@ -261,7 +261,7 @@
               {!! \App\mh_svg_icon('mail', 16) !!}
               {{ __('Say hello', 'sage') }}
             </a>
-            <a class="btn btn-ghost" href="{{ home_url('/hire/') }}">
+            <a class="btn btn-ghost" href="{{ home_url('/about/#hire') }}">
               {{ __('Hire me', 'sage') }}
             </a>
             <p class="post-cta__note">{{ \App\mh_reply_sla('note') }}</p>

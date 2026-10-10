@@ -27,7 +27,7 @@
   <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, and tools I use on real projects. Hire me when you want a full build.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>
-    <a class="h-text-arrow" href="{{ home_url('/code/') }}">
+    <a class="h-text-arrow" href="{{ home_url('/about/#code') }}">
       {{ __('View code', 'sage') }} <span aria-hidden="true">→</span>
     </a>
   </div>
