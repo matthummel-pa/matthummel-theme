@@ -16,6 +16,7 @@ import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 import { initWooDesk } from './woo-desk.js';
+import { initBrandUi } from './brand-ui.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -502,6 +503,7 @@ function initPresenceReveal() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initBrandUi();
   initPopoutMenu();
   initShareButtons();
   initReadingProgress();

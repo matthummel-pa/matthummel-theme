@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.6.51 — Dark blue brand, light/dark switcher, floating header
+
+- The site is dark by default, taking its palette from the MCP Adapter featured image: near-black navy canvas, azure buttons and links, cyan mono eyebrows with a connector dash, green "kind" chips, and a hint of indigo in the glows. A sun/moon switcher in the header flips to a light blue/gray mode; the choice is saved in `localStorage` (`mh-theme`) and applied before paint.
+- Headings are big and bold (900) and two-tone: white → azure/cyan on dark surfaces, navy → azure on light.
+- The header floats transparent over every hero and gains a blurred background once the page scrolls (`.site-header.is-scrolled`). Heroes, including post heroes, are dark in both modes so the header always reads.
+- Page sections and card grids fade and rise into view on scroll with a short stagger (`data-reveal`); `prefers-reduced-motion` shows everything at once.
+- Hero waves are gone; heroes end in a 4px blue→cyan→indigo edge.
+- Contrast: button text is white on `#2563eb`/`#1d4ed8` (≥ 4.5:1), light-mode links and eyebrows are `#1d5fd6`, dark-mode copy is `#c3d0e6` on `#081527`, chips meet 4.5:1 in both modes.
+
+- Light mode: deeper navy, azure accent, and cool grays replace the near-black accent and flat paper. Tokens live at the end of `studio.css`; markup changes are limited to the header switcher button and an early theme script in `layouts/app.blade.php`.
+- Heroes are dark: a navy duotone photo under a translucent navy panel with a blue left accent and soft glow, white headings, light copy, and a straight 4px blue bottom edge. The hero waves are gone.
+- Primary buttons are a navy→blue gradient with a soft shadow; outline buttons are blue-bordered; hero secondary actions are white outline pills. Cards share one hairline-and-lift treatment with a blue border on hover. Chips, filters, resume tags, stats, form fields, blockquotes, and inline code all use the blue system; the home closing band tints toward the navy footer.
+- Footer is navy with light type; the CTA band gets blue light. Headings are navy, body copy slate.
+- The header availability pill shows its label from 900px (it is the only header call to action).
+- Recent-post excerpts on About no longer print a raw `&hellip;`.
+
 ## 3.6.50 — Now joins About; studio copy retired; menus trimmed
 
 - `/now/` is a **Now** section on About (checklist, life note, last-updated date, three recent posts). `/now/` 301s to `/about/#now`. The Now template, activity desk, and note form are gone; Contact keeps the form.

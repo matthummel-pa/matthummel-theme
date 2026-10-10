@@ -38,6 +38,17 @@
     {{-- Header action buttons --}}
     <div class="header-actions">
 
+      <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        aria-pressed="true"
+        aria-label="{{ esc_attr__('Dark mode', 'sage') }}"
+      >
+        <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">{!! \App\mh_svg_icon('sun', 16) !!}</span>
+        <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">{!! \App\mh_svg_icon('moon', 16) !!}</span>
+      </button>
+
       {{-- One call to action: the green Available now pill while GitHub says hireable, else Say hello. Both go to Contact. --}}
       @php
         $ghAvail = \App\Github::fetchUser(\App\mh_github_login());

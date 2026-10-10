@@ -8,6 +8,7 @@
 
 /* Light mode default. Dark visitors still use html.mh-dark. */
 :root { color-scheme: light; }
+html.mh-dark { color-scheme: dark; }
 
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
