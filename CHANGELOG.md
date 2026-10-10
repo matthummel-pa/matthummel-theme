@@ -4,6 +4,8 @@
 
 - The site is dark by default, taking its palette from the MCP Adapter featured image: near-black navy canvas, azure buttons and links, cyan mono eyebrows with a connector dash, green "kind" chips, and a hint of indigo in the glows. A sun/moon switcher in the header flips to a light blue/gray mode; the choice is saved in `localStorage` (`mh-theme`) and applied before paint.
 - Headings are big and bold (900). The last two words (three on long headings) carry the accent — blue → cyan → lime on dark, blue → violet on light — via a `<span class="hd-accent">` that `brand-ui.js` wraps at load.
+- The site title is bold, all caps, in the brand gradient (header and footer).
+- Post and project card titles link to their page; on hover, focus, and active they keep the word gradient and grow an animated gradient underline. Header menu items get a blue→violet gradient background on hover/focus and when current.
 - Journal and Projects listings: the toolbar is no longer sticky (it collided with the On-this-page bar) and is styled for dark mode; outline buttons are lime-lined on dark and violet on light; the "+N" pill has its text back; card titles carry the hero gradient; the home journal is a three-column card grid.
 - Footer column headers are larger: lime on the dark footer, deep purple on the light-mode footer (which is now a light violet-tinted surface instead of navy).
 - Grid cards (projects, posts, services, process, resume, FAQ, stats) sit on a purplish gradient with a violet border and a lime top edge; hover turns the edge cyan and the border lime.
