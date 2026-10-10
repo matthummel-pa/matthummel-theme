@@ -5906,3 +5906,93 @@ html.mh-dark .soc-link:hover {
 html.mh-dark .soc-list--labeled .soc-link,
 html:not(.mh-dark) .soc-list--labeled .soc-link { width: auto; padding: 0 1.05rem 0 .85rem; gap: .5rem; font-weight: 700; }
 .soc-list--labeled .soc-link__label { color: inherit; }
+
+/* ── Title underline as a pseudo-element (the two-layer background got clipped to the glyphs) ── */
+.work-card h2 a,
+.work-body h2 a,
+.post-card-title a,
+.h-journal-item__title a,
+.h-project-card__title a,
+.resources-card__name a,
+.repo-card__title a,
+html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-body h2 a,
+html:not(.mh-dark) .post-card-title a,
+html:not(.mh-dark) .h-journal-item__title a,
+html:not(.mh-dark) .h-project-card__title a,
+html:not(.mh-dark) .resources-card__name a,
+html:not(.mh-dark) .repo-card__title a {
+  display: inline-block;
+  position: relative;
+  padding-bottom: .12em;
+  background-image: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 55%, var(--lime-300) 100%);
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: none;
+  transition: none;
+}
+html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-body h2 a,
+html:not(.mh-dark) .post-card-title a,
+html:not(.mh-dark) .h-journal-item__title a,
+html:not(.mh-dark) .h-project-card__title a,
+html:not(.mh-dark) .resources-card__name a,
+html:not(.mh-dark) .repo-card__title a { background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); }
+.work-card h2 a::after,
+.work-body h2 a::after,
+.post-card-title a::after,
+.h-journal-item__title a::after,
+.h-project-card__title a::after,
+.resources-card__name a::after,
+.repo-card__title a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--blue-400), var(--cyan-400), var(--lime-300), var(--violet-400), var(--blue-400));
+  background-size: 200% 100%;
+  transition: width .35s cubic-bezier(.2, .7, .2, 1);
+}
+html:not(.mh-dark) .work-card h2 a::after,
+html:not(.mh-dark) .post-card-title a::after,
+html:not(.mh-dark) .h-journal-item__title a::after,
+html:not(.mh-dark) .h-project-card__title a::after,
+html:not(.mh-dark) .resources-card__name a::after,
+html:not(.mh-dark) .repo-card__title a::after { background: linear-gradient(90deg, var(--blue-600), var(--violet-500), var(--lime-500), var(--blue-600)); background-size: 200% 100%; }
+.work-card h2 a:hover::after,
+.work-body h2 a:hover::after,
+.post-card-title a:hover::after,
+.h-journal-item__title a:hover::after,
+.h-project-card__title a:hover::after,
+.resources-card__name a:hover::after,
+.repo-card__title a:hover::after,
+.work-card h2 a:focus-visible::after,
+.post-card-title a:focus-visible::after,
+.h-journal-item__title a:focus-visible::after,
+.h-project-card__title a:focus-visible::after,
+.resources-card__name a:focus-visible::after,
+.repo-card__title a:focus-visible::after,
+.work-card h2 a:active::after,
+.post-card-title a:active::after,
+.work-card:hover h2 a::after,
+.post-card:hover .post-card-title a::after,
+.h-journal-item:hover .h-journal-item__title a::after,
+.h-project-card:hover .h-project-card__title a::after,
+.resources-card:hover .resources-card__name a::after,
+.repo-card:hover .repo-card__title a::after { width: 100%; animation: mh-underline-flow 2.4s linear infinite; }
+.work-card:hover h2 a,
+.post-card:hover .post-card-title a,
+.h-journal-item:hover .h-journal-item__title a,
+.repo-card:hover .repo-card__title a,
+.work-card h2 a:hover,
+.post-card-title a:hover,
+.h-journal-item__title a:hover { background-image: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after, .repo-card__title a::after { animation: none !important; transition: none; }
+}
