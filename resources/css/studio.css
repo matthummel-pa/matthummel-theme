@@ -5060,3 +5060,136 @@ html.mh-dark .h-hero__panel {
 }
 .page-header__panel::before,
 .h-hero__panel::before { inset: -30% -10% -40% -14%; opacity: .9; }
+
+/* ── Lime greens + soft violet accents ─────────────────────────────────── */
+:root {
+  --lime-300: #bef264;
+  --lime-400: #a3e635;
+  --lime-500: #84cc16;
+  --lime-700: #4d7c0f;
+  --lime-900: #1a2e05;
+  --lime-50: #f4fbe8;
+  --lime-100: #e3f6c6;
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
+  --violet-500: #8b5cf6;
+  --violet-700: #6d28d9;
+  --violet-50: #f3effd;
+  --violet-100: #e4dcfb;
+  --green-400: var(--lime-400);
+  --green-500: var(--lime-500);
+  --teal-50: var(--lime-50);
+  --teal-100: var(--lime-100);
+  --teal-700: var(--lime-700);
+  --grad-brand: linear-gradient(90deg, var(--blue-500) 0%, var(--cyan-400) 45%, var(--lime-400) 72%, var(--violet-400) 100%);
+  --grad-head-dark: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, var(--blue-400) 54%, var(--cyan-400) 84%, var(--violet-300) 100%);
+  --grad-head-light: linear-gradient(180deg, var(--blue-800) 0%, var(--blue-700) 44%, var(--blue-600) 64%, var(--violet-700) 100%);
+}
+
+/* Availability pill: lime with dark text (≥ 7:1), in header, footer, and mobile */
+.header-avail,
+.site-footer .header-avail.footer-avail,
+.header-avail:hover,
+.header-avail:focus-visible,
+.site-footer .header-avail.footer-avail:hover {
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  border-color: var(--lime-400);
+  color: var(--lime-900);
+  box-shadow: 0 0 0 4px rgba(163, 230, 53, .16), 0 10px 22px -10px rgba(132, 204, 22, .7);
+}
+.header-avail:hover,
+.header-avail:focus-visible { background: linear-gradient(180deg, #d9f99d 0%, var(--lime-300) 100%); box-shadow: 0 0 0 5px rgba(163, 230, 53, .24), 0 12px 26px -10px rgba(132, 204, 22, .8); }
+.header-avail .header-avail__label,
+.site-footer .header-avail.footer-avail .header-avail__label { color: var(--lime-900); }
+.h-badge__dot,
+.header-avail__dot { background: var(--lime-500); box-shadow: 0 0 0 3px rgba(163, 230, 53, .3); }
+.site-footer .header-avail.footer-avail .h-badge__dot { background: var(--lime-700); }
+.hire-li-open,
+.about-aside-avail,
+.h-badge--open,
+.now-sidebar-card--status .now-sidebar-card__value { color: var(--lime-700); }
+html.mh-dark .hire-li-open,
+html.mh-dark .about-aside-avail,
+html.mh-dark .h-badge--open { color: var(--lime-300); }
+.about-work-type__check { background: var(--lime-50); border-color: var(--lime-100); color: var(--lime-700); }
+html.mh-dark .about-work-type__check { background: rgba(163, 230, 53, .12); border-color: rgba(163, 230, 53, .3); color: var(--lime-300); }
+.h-fit__icon--yes { color: var(--lime-500); }
+.now-checklist li svg,
+.h-process__gets li::before { color: var(--lime-500); }
+
+/* Kind chips: lime */
+.repo-card__kind,
+.project-cat-pill,
+.resources-card__badge,
+.spec-badge,
+.work-card .eyebrow { background: var(--lime-50); border-color: var(--lime-100); color: #3f6212; }
+html.mh-dark .repo-card__kind,
+html.mh-dark .project-cat-pill,
+html.mh-dark .resources-card__badge,
+html.mh-dark .spec-badge,
+html.mh-dark .work-card .eyebrow { background: rgba(163, 230, 53, .12); border-color: rgba(163, 230, 53, .3); color: var(--lime-300); }
+.resume-tag.is-now { background: var(--lime-400); border-color: var(--lime-400); color: var(--lime-900); }
+.resume-card.is-current { border-left-color: var(--lime-400) !important; background: linear-gradient(180deg, var(--lime-50) 0%, var(--white) 5rem); }
+html.mh-dark .resume-card.is-current { background: linear-gradient(180deg, rgba(163, 230, 53, .1) 0%, #0b1b35 5rem); }
+
+/* Violet, softly */
+.page-header .page-header__panel .eyebrow::before,
+.h-hero .h-hero__panel .h-hero__kicker::before,
+.h-hero .h-hero__panel .h-badge::before { background: linear-gradient(90deg, var(--cyan-400), var(--violet-400)); }
+.eyebrow:not(.page-header__panel .eyebrow):not(.work-card .eyebrow)::before,
+.h-section-label::before { background: var(--violet-400) !important; }
+.work-card:hover,
+.post-card:hover,
+.repo-card:hover,
+.resources-card:hover,
+.h-journal-item:hover,
+.uses-item:hover,
+.about-svc-card:hover,
+.h-process__step:hover { border-color: var(--violet-400) !important; box-shadow: 0 2px 4px rgba(15, 22, 35, .05), 0 22px 44px -24px rgba(139, 92, 246, .4); }
+html.mh-dark .work-card:hover,
+html.mh-dark .post-card:hover,
+html.mh-dark .repo-card:hover,
+html.mh-dark .resources-card:hover,
+html.mh-dark .h-journal-item:hover,
+html.mh-dark .uses-item:hover,
+html.mh-dark .about-svc-card:hover,
+html.mh-dark .h-process__step:hover { border-color: rgba(167, 139, 250, .6) !important; box-shadow: 0 24px 48px -26px rgba(139, 92, 246, .45); }
+.h-page-nav__pill.is-active,
+html.mh-dark .h-page-nav__pill.is-active,
+.filter-pill.is-active,
+.filter-pill.is-active:hover,
+html.mh-dark .filter-pill.is-active,
+html.mh-dark .filter-pill.is-active:hover { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%); border-color: transparent; color: #fff; }
+.h-page-nav__pill:hover,
+.filter-pill:hover { border-color: var(--violet-400); color: var(--violet-700); background: var(--violet-50); }
+html.mh-dark .h-page-nav__pill:hover,
+html.mh-dark .filter-pill:hover { border-color: var(--violet-400); color: #fff; background: rgba(139, 92, 246, .16); }
+:focus-visible { outline-color: var(--violet-400); }
+.site-footer :focus-visible,
+.cta-band :focus-visible { outline-color: var(--violet-300); }
+.post-prose blockquote,
+html.mh-dark .post-prose blockquote { border-left-color: var(--violet-400); background: var(--violet-50); }
+html.mh-dark .post-prose blockquote { background: rgba(139, 92, 246, .1); }
+.h-glance__card,
+html.mh-dark .h-glance__card { border-left: 4px solid var(--violet-400) !important; }
+.h-faq__item[open],
+html.mh-dark .h-faq__item[open] { border-color: var(--violet-400) !important; }
+.h-journal-item__meta .pill,
+.post-tags a,
+.write-tag-cloud a { background: var(--violet-50); border-color: var(--violet-100); color: var(--violet-700); }
+html.mh-dark .h-journal-item__meta .pill,
+html.mh-dark .post-tags a,
+html.mh-dark .write-tag-cloud a { background: rgba(139, 92, 246, .12); border-color: rgba(167, 139, 250, .35); color: var(--violet-300); }
+.site-footer .soc-link:hover,
+.site-footer .soc-link:focus-visible { border-color: var(--violet-400); background: rgba(139, 92, 246, .22); }
+.site-footer .footer-nav a:hover,
+.site-footer .footer-legal-links a:hover { text-decoration-color: var(--violet-300); }
+.about-shell__head { border-bottom: 1px solid transparent; border-image: linear-gradient(90deg, var(--blue-200), var(--violet-100), transparent) 1; }
+html.mh-dark .about-shell__head { border-image: linear-gradient(90deg, rgba(96, 165, 250, .4), rgba(167, 139, 250, .35), transparent) 1; }
+.code-pulse__stat dd,
+html.mh-dark .code-pulse__stat dd { background: linear-gradient(180deg, var(--blue-400) 0%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
+.code-pulse__stat dd { background: linear-gradient(180deg, var(--blue-700) 0%, var(--violet-700) 100%); -webkit-background-clip: text; background-clip: text; }
+.about-svc-card__n,
+.code-practice-card__n { color: var(--violet-300); }
+.h-process__num { color: var(--violet-500); }
+html.mh-dark .h-process__num { color: var(--violet-300); }
