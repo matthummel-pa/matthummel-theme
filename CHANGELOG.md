@@ -1,5 +1,77 @@
 # Changelog
 
+## 3.6.48 — Larger project cards
+
+- `/projects/` cards sit in a two-column grid with a taller shot, a larger title, and more padding. List view keeps a wider thumbnail.
+- The projects FAQ is one column. The question list runs under the heading, and Ask me sits beside the heading instead of in a left sidebar. The three how-it-works steps sit in one row.
+- A project page hero keeps the copy panel on the left and lets the screenshot show on the right. The gallery frame is larger, thumbnails are bigger, and the page body uses the full content width.
+
+## 3.6.47 — Social share cards
+
+- The Social share & drafts box on posts is a card per network (Bluesky, Facebook, LinkedIn, Reddit, DEV.to). Each card has its draft, a character meter, and icon buttons: Generate (OpenAI when the key is set, rule-based otherwise), Post, Share dialog, Copy.
+- Facebook can post straight to a Page through the Graph API when Appearance → Customize → Facebook Page has the Page ID and a Page token. Without a token the Share dialog opens with the draft pre-filled. The posted URL is saved and shown on the card.
+- Posting buttons stay disabled until the post is published.
+
+## 3.6.46 — Site audit fixes
+
+- Security headers from the theme: `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. No CSP yet.
+- Visitors can no longer list users through the REST API or `?author=N`; XML-RPC is off; the generator tag no longer carries the WordPress version.
+- Dead `/services/` links (author bio, thank-you page, audience card, SEO link list) point at `/hire/`; `/shop/` and `/portfolio/` in that list point at `/projects/`.
+- Category and tag archives get a written meta description and a fuller title when the term has none.
+- Accessibility: on-this-page pills are plain links inside the nav landmark; the contact, code practice, and GitHub profile asides are plain containers; skill groups on Code are no longer duplicate regions; TOCguide reading-guide text on posts is larger with passing contrast.
+- The theme zip leaves lock files and build configs out of the public theme folder.
+- `/journal/` 301s to `/blog/`. The comment-form cancel link is a `<span>` inside the heading instead of an invalid `<p>`.
+- Footer links the pages nothing else linked to: For agencies, Handoff checklist, Support, Resources, Changelog.
+- Acreline, WalkRidge, and TOCguide get a written search title and description (`mh_product_catalog_v13`, seeded only where the MH SEO fields are empty) instead of a sentence cut off mid-word.
+
+## 3.6.45 — Feature lists without repeats
+
+- Acreline, WalkRidge, and TOCguide catalog entries no longer say the same thing twice: deliverables list what is in the box, benefits say what that gets you. Catalog bump is `mh_product_catalog_v12`, which re-applies those lists to the live project posts.
+- Project pages treat two lines as one feature when the shorter line's content words are mostly inside the longer one (plurals and filler words ignored), and keep the longer line.
+
+## 3.6.44 — Project pages read like a landing page
+
+- `/projects/{slug}/` runs in sales order: hero → screenshots → what you get → story → under the hood → questions → feedback. The story (why I built it, what I did, what you can use) is a numbered three-step rail instead of four paragraphs at the end.
+- The hero keeps one primary button (Get the pack when for sale, otherwise Live demo), one secondary (Ask about this), and a View code link. The proof strip under the lead shows stored metrics, or screenshot count, feature count, and license. The sample-work notice is one quiet line.
+- On-this-page pills drop from 13 to 6. Build notes, Theme details, Palette, Runs on, and Tags fold into one Under the hood section: a spec table (GitHub zeros hidden) beside the architecture list, then handoff and a compact palette row.
+- Feature lists drop case and prefix duplicates and show ten items with a Show all toggle.
+- Like, star, copy link, comments, and the ask form live together in the Feedback section. The top feedback box is gone.
+- Listing cards show four stack pills and a +N count.
+
+## 3.6.43 — Cobble & Candle project page
+
+- New project: **Cobble & Candle**, a WordPress block theme for restaurants, taverns and inns, at `/projects/cobbleandcandle/` with 19 screenshots (front end, four styles and admin), benefits, blocks, FAQ and links to the live demo, repo and owner guide. It is not for sale yet, so it has no WooCommerce product or buy button.
+- Catalog entries can set `seo_title` and `seo_description`. They seed the MH SEO title and description once and never overwrite edits made in wp-admin.
+- A catalog project that is not for sale no longer gets a private WooCommerce product, which would have turned its page into a product landing. Existing products keep syncing.
+- Project pages print SoftwareApplication structured data for themes and plugins (with an Offer only when for sale with a price) and FAQPage data for their questions.
+- Catalog bump is `mh_product_catalog_v11`.
+
+## 3.6.42 — Now page activity and note
+
+- The Now page repairs its section headings and shows a real last-updated date (page field, or the page’s edit date).
+- A Right now band lists public GitHub activity, recent journal posts, and profile links plus public DEV.to and Bluesky posts when those feeds respond.
+- Send a note emails me through the contact form. Open a GitHub note starts an issue on this theme repo. Text me appears only when an SMS number is saved, and it opens the visitor’s own phone.
+
+## 3.6.41 — Pages, links, booking, and the GitHub token
+
+- A page without a named theme template shows its title and editor content. The classic editor is available for those pages. Named templates still use Page content (theme).
+- Footer and terms links use the WordPress privacy policy page when it is set, then the Privacy and Terms templates. The old `/privacy-policy/` and `/terms-of-use/` paths are gone.
+- Appearance → Customize → Booking stores an optional booking URL (`mh_booking_url`). Hire, Contact, and Start show “Book a 15-minute call” only when that URL is set.
+- GitHub requests read `MH_GITHUB_TOKEN` from wp-config.php or the environment before the saved theme setting. The token is not printed.
+
+## Newsletter plugin 1.11.0 — One unsubscribe page
+
+- The plugin creates Get updates, Unsubscribe, and Manage preferences on activation or in wp-admin. A front-end page load no longer creates them.
+- It stores each page ID and looks up the slug in any status before inserting. A lock stops overlapping requests from making `/unsubscribe-2/` and the rest. The lock is an insert that fails when the row exists, because `add_option()` updates an existing row. If two pages still share a slug, the older one is kept.
+- Unsubscribe, email preferences, and thank-you stay `noindex` when Rank Math is active, including numbered copies such as `/unsubscribe-113/`.
+- Single posts can end with `[mhn_signup source="post"]`. It uses the same signup handler, nonce, honeypot, and email and first-name fields. The note mentions a free WordPress Handoff Checklist.
+- Newsletter settings has a checklist link. It stays empty until you paste an https URL. The welcome letter then includes that button.
+
+## Newsletter plugin 1.10.0 — Signup block
+
+- A signup block can sit on any page. It uses the same confirm-by-email signup as the Get updates form.
+- The page form and the block are a card with the email and button on one row. The footer button fills its column.
+
 ## 3.6.40 — Remove the public fatal log
 
 - Stopped writing `mh-last-fatal.txt` into the theme. That file was on the public site and included server paths.

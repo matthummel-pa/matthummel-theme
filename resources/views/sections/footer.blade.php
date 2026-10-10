@@ -42,6 +42,9 @@
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ home_url('/hire/') }}">{{ __('Hire me', 'sage') }}</a></li>
         <li><a href="{{ home_url('/code/') }}">{{ __('Code', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/agency-white-label-wordpress/') }}">{{ __('For agencies', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/wordpress-handoff-checklist/') }}">{{ __('Handoff checklist', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
       </ul>
     </nav>
 
@@ -53,13 +56,15 @@
         <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ home_url('/now/') }}">{{ __('Now', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>
       </ul>
     </nav>
 
     {{-- Get updates --}}
     @php
       $signupStatus = isset($_GET['signup']) ? sanitize_key(wp_unslash($_GET['signup'])) : '';
-      $privacyUrl = home_url('/privacy-policy/');
+      $privacyUrl = \App\mh_privacy_policy_url();
     @endphp
     <div class="footer-nav-col footer-follow" id="footer-signup">
       <p class="footer-nav-label">{{ \App\field('footer_signup_label', __('Get updates', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</p>
@@ -126,9 +131,9 @@
       </nav>
     @else
       <nav class="footer-legal-links" aria-label="Legal">
-        <a href="{{ home_url('/privacy-policy/') }}">Privacy</a>
+        <a href="{{ esc_url(\App\mh_privacy_policy_url()) }}">{{ __('Privacy', 'sage') }}</a>
         <span aria-hidden="true">·</span>
-        <a href="{{ home_url('/terms-of-use/') }}">Terms</a>
+        <a href="{{ esc_url(\App\mh_terms_url()) }}">{{ __('Terms', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
         <span aria-hidden="true">·</span>

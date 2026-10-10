@@ -1,0 +1,13 @@
+{
+  "name": "matthummel-newsletter",
+  "private": true,
+  "version": "1.11.3",
+  "description": "Block build for the Matt Hummel Newsletter plugin.",
+  "scripts": {
+    "build": "wp-scripts build --webpack-copy-php",
+    "postbuild": "node ./scripts/point-block-style.js"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.26.0"
+  }
+}

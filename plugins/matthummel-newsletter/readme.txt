@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.9.1
+Stable tag: 1.11.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,7 @@ Self-hosted newsletter. Subscribers and issues stay in WordPress. Mail goes out 
 A personal newsletter for matthummel.com. Addresses, issues, and the send log live in this WordPress database. Nothing is sent to Mailchimp, HubSpot, or another marketing service.
 
 * Double opt-in for new signups.
+* A signup block for any page. It uses the same confirmation email as the Get updates form.
 * Unsubscribe and preferences links that work without an account.
 * One-click unsubscribe header on each issue.
 * Create a newsletter in five steps: template, content, subject, preview, then send or schedule.
@@ -56,8 +57,24 @@ Under Get updates → Sent archive. That copy stays as it was sent. A sent issue
 
 == Changelog ==
 
-= 1.9.1 =
+= 1.11.3 =
 * Next, Back, and Send copy the visual letter into the draft before the form is posted. A second edit during autosave is kept. The Text tab is left as written.
+= 1.11.2 =
+* A send that stops halfway keeps going. The next batch is queued again, and one address that cannot be mailed does not cancel the rest of the list.
+= 1.11.1 =
+* Page setup waits until WordPress has finished booting, so an upgrade no longer takes the site down.
+
+= 1.11.0 =
+* Required pages are created on activation or in wp-admin, not on every front-end request.
+* An existing page is reused by its stored ID or by slug in any status. The lock is an insert that fails if that row exists, because add_option() would update it. The oldest page with that slug is kept.
+* Unsubscribe, email preferences, thank-you, and numbered copies of those slugs stay noindex when Rank Math prints the robots tag.
+* `[mhn_signup source="post"]` uses the same signup handler as the page and footer forms. The post form mentions a free WordPress Handoff Checklist.
+* Settings has an optional checklist link. It is empty until you set an https URL. The welcome letter then adds that button.
+
+= 1.10.0 =
+* A Newsletter signup block can sit on any page. The heading, description, and button text are editable.
+* With JavaScript, the block posts to matthummel-newsletter/v1/subscribe. Without it, the form still uses the existing signup handler.
+* The route checks a REST nonce, a honeypot, and its own limit of 5 requests in 10 minutes. It calls the same subscribe function as the page form.
 
 = 1.9.0 =
 * The content step is one editor per template. Blog update, blog digest, and custom message each start with a letter you can edit.

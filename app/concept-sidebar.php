@@ -190,7 +190,11 @@ function mh_project_brand_palette_pairs(int $post_id): array
         $flat = array_values(array_filter(array_map('trim', explode('|', $parts[0]))));
         $pairs = [];
         for ($i = 0; $i + 1 < count($flat); $i += 2) {
-            $pairs[] = [$flat[$i], $flat[$i + 1]];
+            $hex = sanitize_hex_color($flat[$i + 1]) ?? '';
+            if ($flat[$i] === '' || $hex === '') {
+                continue;
+            }
+            $pairs[] = [$flat[$i], $hex];
         }
 
         return $pairs;
@@ -202,6 +206,7 @@ function mh_project_brand_palette_pairs(int $post_id): array
             continue;
         }
         [$name, $hex] = array_map('trim', explode('|', $line, 2));
+        $hex = sanitize_hex_color($hex) ?? '';
         if ($name === '' || $hex === '') {
             continue;
         }

@@ -459,10 +459,10 @@ function mh_page_seo_analysis_html(int $post_id): string
 
     $links = '<p>'
         .'Internal paths: <a href="/contact/">Say hello</a>, '
-        .'<a href="/shop/">themes and plugins</a>, '
+        .'<a href="/projects/">themes and plugins</a>, '
         .'<a href="/hire/">hire</a>, '
-        .'<a href="/services/">services</a>, '
-        .'<a href="/portfolio/">portfolio</a>. '
+        .'<a href="/hire/">services</a>, '
+        .'<a href="/projects/">portfolio</a>. '
         .'External references: <a href="https://roots.io/sage/">Roots Sage</a>, '
         .'<a href="https://wordpress.org/">WordPress.org</a>, '
         .'<a href="https://github.com/matthummel-pa">GitHub</a>.'
@@ -662,8 +662,11 @@ function mh_sync_all_page_seo_analysis_bodies(): void
 }
 
 add_action('init', __NAMESPACE__.'\\mh_repair_page_field_label_prefixes', 48);
-add_action('init', __NAMESPACE__.'\\mh_sync_all_page_seo_analysis_bodies', 52);
-add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
+
+// Disabled in 3.6.41: these wrote hidden, keyword-padded HTML into page
+// post_content and a self-computed rank_math_seo_score. Do not re-enable.
+// add_action('init', __NAMESPACE__.'\\mh_sync_all_page_seo_analysis_bodies', 52);
+// add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
 
 /**
  * Drop Content AI test on pages — marketing layouts are not AI drafts.
