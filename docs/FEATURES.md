@@ -4,7 +4,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.49 one About page)
 
-- `template-about.blade.php` is About + Hire + Code. Section ids: `story`, `build`, `hire`, `resume`, `glance`, `process`, `fit`, `approach`, `code`, `stack`, `faq`, `elsewhere`. `/hire/` → `/about/#hire` and `/code/` → `/about/#code` live in `app/filters.php` (`template_redirect`, priority 3). Do not recreate `template-hire` / `template-code` or the Hire page seed.
+- `template-about.blade.php` is About + Hire + Code. Nav pills are story, build, hire, resume, process, code, faq, elsewhere (eight, so the track fits a phone); `approach` and `stack` render without a pill. Section ids: `story`, `build`, `hire`, `resume`, `glance`, `process`, `fit`, `approach`, `code`, `stack`, `faq`, `elsewhere`. `/hire/` → `/about/#hire` and `/code/` → `/about/#code` live in `app/filters.php` (`template_redirect`, priority 3). Do not recreate `template-hire` / `template-code` or the Hire page seed.
 - Resume, GitHub, and Stack copy are About page fields (`hire_cv_*`, `code_gh_*`, `code_pin_*`, `code_repos`, `code_live_*`, `code_lang_*`, `code_sk_*`, `code_skills`). `mh_code_page_resume()` and `mh_code_page_id()` read About first, then the retired Hire/Code pages.
 - GitHub data on About is the hourly snapshot (`mh_code_gh_snapshot()`): pulse stats, pinned, recent pushes, languages. Calendar, activity feed, community, watching, practice, and docs are not rendered; the snapshot still stores them.
 - No studio card or studio copy on About. The LinkedIn aside card (`.about-aside-card--linkedin`, `studio.css`) replaced it. FAQ is `partials/about-faq.blade.php`; `about-hire-sections` is glance + process + fit only.
