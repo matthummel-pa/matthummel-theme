@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.57 — Grid cards share the post-card recipe; one block for the sub-nav
+
+- Every grid card (services, process steps, approach, work types, fit columns, glance facts, GitHub stats and repo cards, resume, skill groups and tiles, FAQ items, thank-you and resources cards) gets the lime border post cards have, a deeper lime on hover/open, the word gradient on its heading, and lime index / count numbers (lime-700 on light surfaces for contrast). FAQ questions carry the gradient and their chevron is lime.
+- GitHub language colors: the reds (HTML, Blade, Ruby, SCSS/Sass, C++) are brighter and the two near-black swatches (CSS, Dockerfile) are lifted so every dot and bar segment reads on the navy canvas.
+- Sidebars (post sidebar, journal and Woo asides) follow the same card recipe: violet/white or purple-gradient surface, lime border and top edge, violet-700 / lime-300 titles, gradient author name, lime primary button and outline secondary buttons that hover to the purple gradient, lime topic counts. The author card and its buttons no longer leak light-mode blues into dark mode.
+- `studio.css`: the sub-nav's seven generations of color rules (blue, navy, gradient, 3.6.56) collapse into one block at the end of the file with no `!important`. Rendered result is unchanged in both modes; a stale ≤900px `top` override that put the bar under the fixed header for logged-in users on phones is gone.
+
 ## 3.6.56 — Dark header under the admin bar, light-mode button hovers, purple anchor pills
 
 - Logged-in users: the fixed header now sits below the WordPress admin bar (32px / 46px on mobile) in both modes and at every width, so the "On this page" sub-nav is flush beneath it again (dark mode had it under the admin bar; light mode lost the offset below 900px).

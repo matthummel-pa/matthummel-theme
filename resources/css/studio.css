@@ -508,41 +508,6 @@ body {
   border: 0;
 }
 
-.h-page-nav {
-  border-bottom: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-canvas) 90%, #fff);
-}
-@media (max-width: 900px) {
-  .h-page-nav,
-  .pf-product-toc {
-    top: 0;
-  }
-  .admin-bar .h-page-nav,
-  .admin-bar .pf-product-toc {
-    top: 46px;
-  }
-}
-
-.h-page-nav__pill {
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--white);
-}
-
-.h-page-nav__pill:hover,
-.h-page-nav__pill.is-active {
-  background: var(--blue-50);
-  border-color: var(--blue-200);
-  color: var(--blue-800);
-}
-
-.h-page-nav__arrow:hover:not(:disabled),
-.h-page-nav__arrow:focus-visible:not(:disabled) {
-  color: var(--blue-400);
-  border-color: var(--blue-400);
-  background: var(--blue-50);
-}
-
 .search-form input[type="search"],
 .contact-form input,
 .contact-form textarea,
@@ -2946,16 +2911,7 @@ a.filter-pill.is-active:focus-visible {
   color: #fff !important;
   border-color: var(--blue-700) !important;
 }
-a.h-page-nav__pill.is-active,
-a.h-page-nav__pill[aria-current="true"],
-a.h-page-nav__pill.is-active:hover,
-a.h-page-nav__pill[aria-current="true"]:hover,
-a.h-page-nav__pill.is-active:focus-visible,
-a.h-page-nav__pill[aria-current="true"]:focus-visible {
-  background: var(--blue-700) !important;
-  color: #fff !important;
-  border-color: var(--blue-700) !important;
-}
+
 html.mh-dark .site-header .header-nav-list a:hover,
 html.mh-dark .site-header .header-nav-list a:focus-visible {
   background: var(--blue-800) !important;
@@ -3103,11 +3059,7 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"]:focus-visible 
   height: 100%;
   fill: currentColor;
 }
-.h-hero.h-hero--photo + .h-page-nav,
-.page-header.page-header--photo + .h-page-nav {
-  background: var(--white, #fff);
-  border-top: 0;
-}
+
 .page-header-split__aside,
 .page-header--split .h-hero-illu {
   display: none !important;
@@ -3357,7 +3309,6 @@ html.mh-dark .project-feat-grid > .project-feat::before {
 .footer-follow .mhn-signup-compact .mhn-compose .btn {
   width: 100%;
 }
-
 
 /* ── 3.6.44 — Project landing page (hero proof, sections, story rail, under the hood) ── */
 .project-stage--landing {
@@ -4167,14 +4118,6 @@ html.mh-dark .h-band--tint { background: #0f172a; border-color: #243041; }
 .code-practice-shell,
 .code-docs-shell { background: transparent; }
 
-/* ── On this page pills ───────────────────────────────────────────────── */
-.h-page-nav { background: color-mix(in srgb, #fff 90%, transparent); border-bottom: 1px solid var(--gray-200); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-html.mh-dark .h-page-nav { background: color-mix(in srgb, #0b1220 90%, transparent); border-bottom-color: #243041; }
-.h-page-nav__pill { border: 1px solid var(--gray-200); background: #fff; color: var(--gray-700); font-weight: 600; }
-.h-page-nav__pill:hover { border-color: var(--blue-300); background: var(--blue-50); color: var(--blue-700); }
-.h-page-nav__pill.is-active { background: var(--blue-800); border-color: var(--blue-800); color: #fff; }
-html.mh-dark .h-page-nav__pill { background: #141c28; border-color: #243041; color: #c5d0de; }
-
 /* ── Cards: white, hairline, soft lift ────────────────────────────────── */
 .about-svc-card,
 .repo-card,
@@ -4710,7 +4653,6 @@ html.mh-dark .h-hero__panel {
 .about-services-note a { color: var(--blue-600); text-decoration-color: var(--blue-300); }
 .header-nav-list .current-menu-item > a,
 .header-nav-list a[aria-current="page"] { background: var(--blue-800); }
-.h-page-nav__pill.is-active { background: var(--blue-700); border-color: var(--blue-700); }
 .filter-pill.is-active,
 .filter-pill.is-active:hover { background: var(--blue-700); border-color: var(--blue-700); }
 .about-svc-card__icon,
@@ -4867,11 +4809,6 @@ html.mh-dark .filter-pill { background: #0b1b35; border-color: #1c3358; color: v
 html.mh-dark .filter-pill:hover { background: #0f2140; border-color: var(--blue-500); color: #fff; }
 html.mh-dark .filter-pill.is-active,
 html.mh-dark .filter-pill.is-active:hover { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
-html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .85); border-bottom-color: #1c3358; }
-html.mh-dark .h-page-nav__pill { background: #0b1b35; border-color: #1c3358; color: var(--color-text-secondary); }
-html.mh-dark .h-page-nav__pill:hover { background: #0f2140; border-color: var(--blue-500); color: #fff; }
-html.mh-dark .h-page-nav__pill.is-active { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
-html.mh-dark .h-page-nav__label,
 html.mh-dark .eyebrow,
 html.mh-dark .h-section-label { color: var(--cyan-300); }
 html.mh-dark .lead,
@@ -5154,15 +5091,11 @@ html.mh-dark .h-journal-item:hover,
 html.mh-dark .uses-item:hover,
 html.mh-dark .about-svc-card:hover,
 html.mh-dark .h-process__step:hover { border-color: rgba(167, 139, 250, .6) !important; box-shadow: 0 24px 48px -26px rgba(139, 92, 246, .45); }
-.h-page-nav__pill.is-active,
-html.mh-dark .h-page-nav__pill.is-active,
 .filter-pill.is-active,
 .filter-pill.is-active:hover,
 html.mh-dark .filter-pill.is-active,
 html.mh-dark .filter-pill.is-active:hover { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-500) 100%); border-color: transparent; color: #fff; }
-.h-page-nav__pill:hover,
 .filter-pill:hover { border-color: var(--violet-400); color: var(--violet-700); background: var(--violet-50); }
-html.mh-dark .h-page-nav__pill:hover,
 html.mh-dark .filter-pill:hover { border-color: var(--violet-400); color: #fff; background: rgba(139, 92, 246, .16); }
 :focus-visible { outline-color: var(--violet-400); }
 .site-footer :focus-visible,
@@ -5623,8 +5556,6 @@ html.mh-dark .h-journal-item { grid-template-columns: 1fr; gap: 0; padding: 0 0 
 html.mh-dark .site-header.is-scrolled { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .25); box-shadow: 0 12px 32px -20px rgba(0, 0, 0, .85); }
 .h-page-nav { top: var(--header-h); margin-top: 0; border-top: 0; }
 .h-page-nav .h-page-nav__inner { padding-top: .55rem; padding-bottom: .55rem; }
-html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .18); }
-html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--violet-100); }
 .page-header,
 .h-hero,
 .post-hero { margin-bottom: 0; }
@@ -5997,7 +5928,6 @@ html:not(.mh-dark) .repo-card__title a::after { background: linear-gradient(90de
   .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after, .repo-card__title a::after { animation: none !important; transition: none; }
 }
 
-
 /* ── Header height is intrinsic; --header-h is only read by body padding, heroes, and the page nav ── */
 .site-header,
 html.mh-dark .site-header { min-height: 0; }
@@ -6199,56 +6129,188 @@ html:not(.mh-dark) .btn:focus-visible svg,
 html:not(.mh-dark) .header-avail:hover .header-avail__label,
 html:not(.mh-dark) .header-avail:hover .mh-avail__emoji { color: #fff !important; }
 
-/* ── 3.6.56 · "On this page" anchor pills: dark-purple scheme. Light: deep violet
-   type on white, violet tint on hover, violet-700→900 fill when active. Dark: a
-   violet-900 tint with light type, blue→violet fill when active. The old
-   `a.h-page-nav__pill.is-active { background: var(--blue-700) !important }`
-   rule is why these carry !important. ── */
+/* ── "On this page" sub-nav — the single source of truth for its colors (layout
+   lives in portfolio.css ~2499 and the header-flush lines above). Light: deep
+   violet type on white, violet tint on hover, violet-700→900 fill when active.
+   Dark: violet-900 tint with light type, blue→violet-700 fill when active. The
+   block sits last in the cascade (base lines are (0,1,1)/(0,2,1), states (0,3,1)+),
+   so nothing earlier can win and nothing here needs !important. Retired: the blue (3.6.4x), navy,
+   gradient and 3.6.56 generations. ── */
+html:not(.mh-dark) .h-page-nav { background: rgba(255, 255, 255, .96); border-bottom: 1px solid var(--violet-100); }
+html.mh-dark .h-page-nav { background: rgba(5, 13, 28, .96); border-bottom: 1px solid rgba(167, 139, 250, .18); }
 html:not(.mh-dark) .h-page-nav__label { color: var(--violet-700); }
-html:not(.mh-dark) .h-page-nav__pill {
-  background: #fff;
-  border-color: var(--violet-100);
-  color: var(--violet-900);
-  font-weight: 700;
-}
-html:not(.mh-dark) .h-page-nav__pill:hover,
-html:not(.mh-dark) .h-page-nav__pill:focus-visible {
-  background: var(--violet-50);
-  border-color: var(--violet-400);
-  color: var(--violet-900);
-}
-html:not(.mh-dark) a.h-page-nav__pill.is-active,
-html:not(.mh-dark) a.h-page-nav__pill[aria-current="true"],
-html:not(.mh-dark) a.h-page-nav__pill.is-active:hover,
-html:not(.mh-dark) a.h-page-nav__pill.is-active:focus-visible {
-  background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%) !important;
-  border-color: var(--violet-900) !important;
-  color: #fff !important;
-}
 html.mh-dark .h-page-nav__label { color: var(--violet-300); }
-html.mh-dark .h-page-nav__pill {
-  background: rgba(76, 29, 149, .32);
-  border-color: rgba(167, 139, 250, .38);
-  color: #ede9fe;
-  font-weight: 700;
-}
+html .h-page-nav__pill { border-width: 1px; border-radius: 999px; font-weight: 700; }
+html:not(.mh-dark) .h-page-nav__pill { background: #fff; border-color: var(--violet-100); color: var(--violet-900); }
+html:not(.mh-dark) .h-page-nav__pill:hover,
+html:not(.mh-dark) .h-page-nav__pill:focus-visible { background: var(--violet-50); border-color: var(--violet-400); color: var(--violet-900); }
+html:not(.mh-dark) .h-page-nav__pill.is-active,
+html:not(.mh-dark) .h-page-nav__pill[aria-current="true"],
+html:not(.mh-dark) .h-page-nav__pill.is-active:hover,
+html:not(.mh-dark) .h-page-nav__pill.is-active:focus-visible { background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%); border-color: var(--violet-900); color: #fff; }
+html.mh-dark .h-page-nav__pill { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
 html.mh-dark .h-page-nav__pill:hover,
-html.mh-dark .h-page-nav__pill:focus-visible {
-  background: rgba(109, 40, 217, .5);
-  border-color: var(--violet-400);
-  color: #fff;
-}
-html.mh-dark a.h-page-nav__pill.is-active,
-html.mh-dark a.h-page-nav__pill[aria-current="true"],
-html.mh-dark a.h-page-nav__pill.is-active:hover,
-html.mh-dark a.h-page-nav__pill.is-active:focus-visible {
-  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%) !important; /* violet-700 keeps white type at 7:1 */
-  border-color: transparent !important;
-  color: #fff !important;
-}
-/* Prev/next arrows follow the pills */
+html.mh-dark .h-page-nav__pill:focus-visible { background: rgba(109, 40, 217, .5); border-color: var(--violet-400); color: #fff; }
+html.mh-dark .h-page-nav__pill.is-active,
+html.mh-dark .h-page-nav__pill[aria-current="true"],
+html.mh-dark .h-page-nav__pill.is-active:hover,
+html.mh-dark .h-page-nav__pill.is-active:focus-visible { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); border-color: transparent; color: #fff; } /* violet-700 keeps white type at 7:1 */
 html:not(.mh-dark) .h-page-nav__arrow:hover:not(:disabled),
 html:not(.mh-dark) .h-page-nav__arrow:focus-visible:not(:disabled) { color: var(--violet-900); border-color: var(--violet-400); background: var(--violet-50); }
 html.mh-dark .h-page-nav__arrow { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
 html.mh-dark .h-page-nav__arrow:hover:not(:disabled),
 html.mh-dark .h-page-nav__arrow:focus-visible:not(:disabled) { background: rgba(109, 40, 217, .5); border-color: var(--violet-400); color: #fff; }
+
+/* ── 3.6.57 · Every grid card follows the post-card recipe: lime border, gradient
+   heading, lime index / count numbers, lime accordion chevron. The card recipes
+   above set `border … !important`, so the border lines here must too. ── */
+.about-svc-card, .h-process__step, .about-approach__item, .about-work-type, .h-fit__col,
+.h-glance__fact, .h-glance__card, .code-pulse__stat, .repo-card, .resume-card,
+.code-skills-group, .code-skills__tile, .h-faq__item, .ty-browse-card, .resources-card,
+.about-aside-card { border-color: var(--lime-400) !important; }
+html.mh-dark .about-svc-card, html.mh-dark .h-process__step, html.mh-dark .about-approach__item,
+html.mh-dark .about-work-type, html.mh-dark .h-fit__col, html.mh-dark .h-glance__fact,
+html.mh-dark .h-glance__card, html.mh-dark .code-pulse__stat, html.mh-dark .repo-card,
+html.mh-dark .resume-card, html.mh-dark .code-skills-group, html.mh-dark .code-skills__tile,
+html.mh-dark .h-faq__item, html.mh-dark .ty-browse-card, html.mh-dark .resources-card,
+html.mh-dark .about-aside-card { border-color: rgba(163, 230, 53, .55) !important; }
+.about-svc-card:hover, .h-process__step:hover, .about-approach__item:hover, .about-work-type:hover,
+.h-fit__col:hover, .h-glance__fact:hover, .code-pulse__stat:hover, .repo-card:hover, .resume-card:hover,
+.code-skills-group:hover, .code-skills__tile:hover, .h-faq__item:hover, .h-faq__item[open],
+.ty-browse-card:hover, .resources-card:hover { border-color: var(--lime-500) !important; }
+html.mh-dark .about-svc-card:hover, html.mh-dark .h-process__step:hover, html.mh-dark .about-approach__item:hover,
+html.mh-dark .about-work-type:hover, html.mh-dark .h-fit__col:hover, html.mh-dark .h-glance__fact:hover,
+html.mh-dark .code-pulse__stat:hover, html.mh-dark .repo-card:hover, html.mh-dark .resume-card:hover,
+html.mh-dark .code-skills-group:hover, html.mh-dark .code-skills__tile:hover, html.mh-dark .h-faq__item:hover,
+html.mh-dark .h-faq__item[open], html.mh-dark .ty-browse-card:hover, html.mh-dark .resources-card:hover { border-color: var(--lime-300) !important; }
+
+/* Headings inside those cards carry the word gradient (fit-content so the gradient spans the words, not the row) */
+.code-skills-group__title, .resume-card h3, .repo-card h3, .about-work-type__title,
+.ty-browse-card__title, .resources-card__name {
+  background-image: var(--grad-head-light);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  max-width: 100%;
+}
+html.mh-dark .code-skills-group__title, html.mh-dark .resume-card h3, html.mh-dark .repo-card h3,
+html.mh-dark .about-work-type__title, html.mh-dark .ty-browse-card__title,
+html.mh-dark .resources-card__name { background-image: var(--grad-head-dark); }
+.repo-card h3 a, .resources-card__name a { color: inherit; -webkit-text-fill-color: inherit; }
+/* FAQ questions keep their chevron row, so the gradient runs over the first ~24rem of the line */
+.h-faq__q, .faq-list summary {
+  background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 24rem, var(--violet-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.mh-dark .h-faq__q, html.mh-dark .faq-list summary {
+  background-image: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 10rem, var(--lime-300) 24rem, var(--lime-300) 100%);
+}
+.h-faq__item[open] .h-faq__q, html.mh-dark .h-faq__item[open] .h-faq__q { color: transparent; }
+
+/* Index and count numbers in lime (lime-700 on light surfaces keeps 4.5:1) */
+html:not(.mh-dark) .about-svc-card__n, html:not(.mh-dark) .repo-card__index, html:not(.mh-dark) .code-skills-group__count,
+html:not(.mh-dark) .h-process__num, html:not(.mh-dark) .code-pulse__stat dd { color: var(--lime-700); -webkit-text-fill-color: currentColor; }
+html.mh-dark .about-svc-card__n, html.mh-dark .repo-card__index, html.mh-dark .code-skills-group__count,
+html.mh-dark .h-process__num, html.mh-dark .code-pulse__stat dd { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+
+/* Accordion chevron in lime */
+.h-faq__q::after, .h-faq__item[open] > .h-faq__q::after,
+.faq-list summary::after, .faq-list details[open] > summary::after { border-right-color: var(--lime-700); border-bottom-color: var(--lime-700); }
+html.mh-dark .h-faq__q::after, html.mh-dark .h-faq__item[open] > .h-faq__q::after,
+html.mh-dark .faq-list summary::after, html.mh-dark .faq-list details[open] > summary::after { border-right-color: var(--lime-300); border-bottom-color: var(--lime-300); }
+/* Earlier FAQ generations zero the border on hover/open; restore it so the lime border holds */
+.h-faq__item:hover, .h-faq__item[open],
+html.mh-dark .h-faq__item:hover, html.mh-dark .h-faq__item[open] { border-width: 1px !important; border-style: solid !important; }
+
+/* ── 3.6.57 · Sidebars (post sidebar, journal + Woo asides) follow the card recipe:
+   violet/white (light) or purple-gradient (dark) surface, lime border, lime top
+   edge, violet-700 / lime-300 titles, gradient author name, lime buttons. The
+   post-sidebar author card and buttons had their own blue palette in portfolio.css
+   that leaked light surfaces into dark mode. ── */
+.side-card,
+.side-card.side-author,
+.write-aside-card {
+  padding: 1.25rem 1.3rem 1.35rem;
+  border: 1px solid var(--lime-400) !important;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  box-shadow: inset 0 3px 0 0 var(--cyan-400), 0 2px 4px rgba(15, 22, 35, .05), 0 24px 48px -24px rgba(163, 230, 53, .35);
+}
+.side-card.side-card--fold { padding-top: .6rem; padding-bottom: .6rem; }
+html.mh-dark .side-card,
+html.mh-dark .side-card.side-author,
+html.mh-dark .write-aside-card {
+  background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  border-color: rgba(163, 230, 53, .55) !important;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
+.side-card:hover, .write-aside-card:hover { border-color: var(--lime-500) !important; }
+html.mh-dark .side-card:hover, html.mh-dark .write-aside-card:hover { border-color: var(--lime-300) !important; }
+
+/* Titles / eyebrows: dark purple on light, lime on dark (same as footer headers) */
+html:not(.mh-dark) .side-card-title,
+html:not(.mh-dark) .side-hire .side-card-title,
+html:not(.mh-dark) .side-author__eyebrow,
+html:not(.mh-dark) .write-aside-h,
+html:not(.mh-dark) .mh-toc-title { color: var(--violet-700); }
+html.mh-dark .side-card-title,
+html.mh-dark .side-hire .side-card-title,
+html.mh-dark .side-author__eyebrow,
+html.mh-dark .write-aside-h,
+html.mh-dark .mh-toc-title { color: var(--lime-300); }
+html:not(.mh-dark) .side-card--fold > .side-card-title::after,
+html:not(.mh-dark) .mh-toc-title::after { color: var(--lime-700); }
+html.mh-dark .side-card--fold > .side-card-title::after,
+html.mh-dark .mh-toc-title::after { color: var(--lime-300); }
+.side-author__name {
+  background-image: var(--grad-head-light);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+}
+html.mh-dark .side-author__name { background-image: var(--grad-head-dark); }
+html .side-author__avail { background: var(--lime-400); border-color: var(--lime-500); color: var(--violet-900); }
+
+/* Buttons: primary = lime, secondary + RSS = outline; all hover to the purple gradient */
+html .side-author__btn--primary {
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-500) 100%);
+  border-color: var(--lime-500);
+  color: var(--violet-900);
+}
+html:not(.mh-dark) .side-author__btn,
+html:not(.mh-dark) .side-subscribe__btn { background: #fff; border-color: var(--violet-400); color: var(--violet-900); }
+html.mh-dark .side-author__btn,
+html.mh-dark .side-subscribe__btn { background: transparent; border-color: rgba(163, 230, 53, .6); color: var(--lime-300); }
+html .side-author__btn:hover,
+html .side-author__btn:focus-visible,
+html .side-author__btn--primary:hover,
+html .side-author__btn--primary:focus-visible,
+html .side-subscribe__btn:hover,
+html .side-subscribe__btn:focus-visible {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  border-color: var(--violet-700);
+  color: #fff;
+}
+html .side-author__btn:hover .mh-ico,
+html .side-subscribe__btn:hover .mh-ico { color: #fff; }
+
+/* Lists: links hover violet (light) / lime (dark) with underline; counts in lime */
+html:not(.mh-dark) .side-posts a:hover,
+html:not(.mh-dark) .side-cats a:hover,
+html:not(.mh-dark) .side-toc a:hover { color: var(--violet-900); text-decoration: underline; text-decoration-color: var(--violet-400); text-underline-offset: 3px; }
+html.mh-dark .side-posts a,
+html.mh-dark .side-cats a,
+html.mh-dark .side-toc a { color: var(--color-text); }
+html.mh-dark .side-posts a:hover,
+html.mh-dark .side-cats a:hover,
+html.mh-dark .side-toc a:hover,
+html.mh-dark .side-toc a.is-active { color: var(--lime-300); text-decoration: underline; text-decoration-color: var(--lime-400); text-underline-offset: 3px; }
+html:not(.mh-dark) .side-count { color: var(--lime-700); font-weight: 700; }
+html.mh-dark .side-count { color: var(--lime-300); font-weight: 700; }
