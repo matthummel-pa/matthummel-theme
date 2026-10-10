@@ -2,7 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
-## Editor’s notes (3.6.51 blue & gray brand pass)
+## Editor’s notes (3.6.51 dark brand)
+
+- Dark is the default. `layouts/app.blade.php` has an inline script that adds `html.mh-dark` before paint unless `localStorage['mh-theme'] === 'light'`. `resources/js/brand-ui.js` owns the switcher (`[data-theme-toggle]` in `sections/header.blade.php`), the `.site-header.is-scrolled` class (scrollY > 24), and the extra `data-reveal` marks; it runs before `initPresenceReveal()` so the existing observer picks them up.
+- Dark tokens live under `html.mh-dark` in the last `studio.css` block (canvas `#050d1c`, cards `#0b1b35`, borders `#1c3358`, copy `#c3d0e6`). `--white` is remapped to the card color in dark mode, so anything that must stay white uses the literal `#fff`.
+- Header is `position: fixed`; `body` carries `padding-top: var(--header-h)` (4.5rem) and every hero (`.page-header`, `.h-hero`, `.post-hero`) pulls up by the same amount. A new template that does not start with one of those needs its own top spacing.
+- Two-tone headings are gradient text (`--grad-head-dark` / `--grad-head-light`, `background-clip: text`). Keep `width: fit-content` on them so the gradient spans the words, not the container.
+- Reveal delays go to `data-reveal-delay="6"`. Do not animate `.site-header`, `.h-page-nav`, or anything inside the hero panel.
 
 - The brand layer is the last block in `resources/css/studio.css` (tokens on `:root` / `html.mh-dark`, then component overrides). Change colors there, not in `portfolio.css`. Signal blue is `--blue-500` (#1d6fe0); navy is `--blue-800` / `--blue-900`. Do not reintroduce `#0d2e57` as the accent.
 - Heroes: `.page-header` / `.h-hero` carry the dark navy gradient; the photo is `mix-blend-mode: luminosity` at ~50% under `.page-header__wash` (dot grid + two gradients). The panel is `rgba(7,26,51,.58)` with a 6px blue left border; headings are white and copy `#c9d9ef`, forced with `!important` on `.page-header__panel` / `.h-hero__panel` descendants because `portfolio.css` sets them at (0,3,0). `.hero-wave` is `display: none` and the hero ends in a 4px blue `::after` edge. Do not restore the white panel or the waves.
