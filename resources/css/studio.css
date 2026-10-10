@@ -5996,3 +5996,9 @@ html:not(.mh-dark) .repo-card__title a::after { background: linear-gradient(90de
 @media (prefers-reduced-motion: reduce) {
   .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after, .repo-card__title a::after { animation: none !important; transition: none; }
 }
+
+
+/* ── Header height is intrinsic; --header-h is only read by body padding, heroes, and the page nav ── */
+.site-header,
+html.mh-dark .site-header { min-height: 0; }
+.site-header-inner { min-height: 4.5rem; }
