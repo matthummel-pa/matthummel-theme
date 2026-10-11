@@ -4985,6 +4985,37 @@ function mh_devto_find_imported_post(int $articleId): int
 }
 
 /**
+ * Find the journal post that was exported to DEV.to as the given article id.
+ *
+ * The exporter (app/devto-export.php) stores the DEV.to article id in
+ * `_mh_devto_export_id`. Without this lookup the hourly import treats an
+ * exported post as a new DEV.to article and publishes a second copy of it.
+ *
+ * @since 3.6.59
+ *
+ * @param  int  $articleId  DEV.to article id.
+ * @return int Post ID of the source post, or 0 when the article did not start on this site.
+ */
+function mh_devto_find_exported_post(int $articleId): int
+{
+    if ($articleId <= 0) {
+        return 0;
+    }
+
+    $q = new \WP_Query([
+        'post_type' => 'post',
+        'post_status' => ['publish', 'draft', 'pending', 'private', 'future', 'trash'],
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+        'meta_key' => '_mh_devto_export_id',
+        'meta_value' => (string) $articleId,
+    ]);
+
+    return ! empty($q->posts[0]) ? (int) $q->posts[0] : 0;
+}
+
+/**
  * Fetch published articles for the configured DEV.to username.
  *
  * @return list<array<string, mixed>>
@@ -5065,9 +5096,14 @@ function mh_devto_import_article(array $article, bool $force = false): array
 
     $existingId = mh_devto_find_imported_post($articleId);
     if ($existingId > 0 && ! $force) {
-        wp_set_post_categories($existingId, [$catId], true);
-
+        // Leave categories alone: re-adding DEV.to every hour undid edits made in wp-admin.
         return ['ok' => true, 'post_id' => $existingId, 'action' => 'exists', 'message' => 'Already imported'];
+    }
+
+    // The article was cross-posted from this site, so the original is already in the journal.
+    $sourceId = $existingId > 0 ? 0 : mh_devto_find_exported_post($articleId);
+    if ($sourceId > 0) {
+        return ['ok' => true, 'post_id' => $sourceId, 'action' => 'exists', 'message' => 'Exported from this site'];
     }
 
     $md = (string) ($article['body_markdown'] ?? '');

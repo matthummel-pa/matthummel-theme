@@ -249,6 +249,72 @@ function mh_privacy_policy_url(): string
 }
 
 /**
+ * Permalink for the first published page or post that matches one of the given slugs.
+ *
+ * @since 3.6.59
+ *
+ * @param  list<string>  $slugs  Slugs to try, in order of preference.
+ * @return string Permalink, or an empty string when nothing is published under those slugs.
+ */
+function mh_first_published_url(array $slugs): string
+{
+    foreach ($slugs as $slug) {
+        $slug = sanitize_title((string) $slug);
+        if ($slug === '') {
+            continue;
+        }
+
+        $found = get_page_by_path($slug, OBJECT, ['page', 'post']);
+        if ($found instanceof \WP_Post && $found->post_status === 'publish') {
+            return (string) get_permalink($found);
+        }
+    }
+
+    return '';
+}
+
+/**
+ * Optional links for the footer "Work" column.
+ *
+ * A link is only returned when its target is published, so the footer never
+ * points at a 404 while a page is still being written.
+ *
+ * @since 3.6.59
+ *
+ * @return list<array{label: string, url: string}>
+ */
+function mh_footer_work_links(): array
+{
+    $candidates = [
+        [
+            'label' => __('For agencies', 'sage'),
+            'slugs' => ['agency-white-label-wordpress', 'wordpress-agency-overflow'],
+        ],
+        [
+            'label' => __('Handoff checklist', 'sage'),
+            'slugs' => ['wordpress-handoff-checklist'],
+        ],
+    ];
+
+    $links = [];
+    foreach ($candidates as $candidate) {
+        $url = mh_first_published_url($candidate['slugs']);
+        if ($url !== '') {
+            $links[] = ['label' => $candidate['label'], 'url' => $url];
+        }
+    }
+
+    /**
+     * Filters the optional footer "Work" links.
+     *
+     * @since 3.6.59
+     *
+     * @param  list<array{label: string, url: string}>  $links  Links whose targets are published.
+     */
+    return (array) apply_filters('mh/footer_work_links', $links);
+}
+
+/**
  * Terms URL from the theme template, then /terms/.
  */
 function mh_terms_url(): string

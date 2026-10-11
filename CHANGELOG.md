@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.59 — Footer links that exist, no more duplicate DEV.to imports
+
+- Footer: "For agencies" and "Handoff checklist" only show when their target is published. "For agencies" falls back to the agency overflow post until `/agency-white-label-wordpress/` exists. Both links returned a 404 before.
+- DEV.to import: a post exported from this site to DEV.to is no longer imported back as a second published post. The hourly sync now matches the exporter's `_mh_devto_export_id` as well as `_mh_devto_id`.
+- DEV.to import: the hourly sync stops re-adding the DEV.to category to posts that are already imported, so removing it in wp-admin sticks.
+
 ## 3.6.58 — Sidebar buttons, open FAQ surface
 
 - Sidebar: the primary "Say hello" button is lime with violet type again and the secondary / RSS buttons read lime (dark) or violet (light) — the broad dark-mode link rule was recoloring them blue.
