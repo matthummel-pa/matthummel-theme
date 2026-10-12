@@ -9,3 +9,5 @@
 ^\s*\$ldJson\s*$
 # Rendered inner blocks (WP_Block::render output) in resources/views/blocks/cta-band.blade.php.
 ^\s*\$(copy|actions)\s*$
+# Skill tile markup built and escaped in App\\mh_skill_tile (resources/views/blocks/skills.blade.php).
+^\s*\\?(App\\)?mh_skill_tile\s*\(

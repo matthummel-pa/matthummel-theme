@@ -26,6 +26,7 @@ function mh_block_page_builders(): array
 {
     return [
         'front-page.blade.php' => __NAMESPACE__.'\\mh_home_blocks_markup',
+        'template-about.blade.php' => __NAMESPACE__.'\\mh_about_blocks_markup',
     ];
 }
 
@@ -172,6 +173,309 @@ function mh_home_blocks_markup(int $id): string
             esc_url(home_url('/about/#code'))
         ), $id))
         .mh_blocks_buttons([['text' => $f('home_link_hello', __('Say hello', 'sage')), 'url' => home_url('/contact/')]])
+    );
+
+    return $out;
+}
+
+/**
+ * A data block with its settings. Unlike mh_blocks_wrap(), a setting that is switched off is kept.
+ *
+ * @param  string  $slug  Folder name in resources/blocks, e.g. "github-repos".
+ * @param  array<string, mixed>  $attrs  Block attributes.
+ */
+function mh_blocks_data(string $slug, array $attrs = []): string
+{
+    return '<!-- wp:matthummel/'.sanitize_key($slug).($attrs === [] ? '' : ' '.serialize_block_attributes($attrs))." /-->\n\n";
+}
+
+/**
+ * One Card with a heading and any blocks under it.
+ *
+ * @param  array<string, mixed>  $attrs  Card attributes (`icon`, `number`).
+ * @param  string  $inner  Block markup that follows the heading.
+ */
+function mh_blocks_card(string $title, string $inner, array $attrs = []): string
+{
+    return trim($title) === '' ? '' : mh_blocks_wrap('matthummel/card', $attrs, mh_blocks_heading($title, 3).$inner);
+}
+
+/**
+ * About: hero, story, now, services, hire, resume, hiring facts, process, fit, approach, code, stack, questions, links, closing band.
+ */
+function mh_about_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+    $contact = home_url('/contact/');
+    $login = mh_github_login();
+    $linkedin = LinkedIn::profileUrl();
+    $booking = mh_booking_url();
+    $bookingButton = $booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'outline']] : [];
+
+    // Hero.
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        [
+            'eyebrow' => $f('about_kicker', __('Matt Hummel', 'sage')),
+            'showPortrait' => true,
+            'portraitCaption' => $f('about_photo_caption', __('Full-stack and WordPress developer · Gettysburg, PA', 'sage')),
+        ],
+        mh_blocks_heading($f('about_h1', __('WordPress developer for shops and agencies.', 'sage')), 1)
+        .$text($f('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')), 'lead')
+        .mh_blocks_buttons(array_merge(
+            [['text' => __('Say hello', 'sage'), 'url' => $contact]],
+            $bookingButton,
+            [['text' => __('Hire me', 'sage'), 'url' => '#hire', 'style' => 'arrow']]
+        ))
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Story.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Story', 'sage'), 'anchor' => 'story', 'navLabel' => __('Story', 'sage')],
+        mh_blocks_heading($f('about_story_h2', __('How I got here.', 'sage')))
+        .mh_blocks_paragraphs(mh_about_story_html($id))
+        .mh_blocks_buttons([
+            ['text' => $f('about_story_cta', __('Say hello', 'sage')), 'url' => $contact],
+            ['text' => $f('about_story_now', __('What I\'m doing now', 'sage')), 'url' => '#now', 'style' => 'arrow'],
+        ])
+        .mh_blocks_data('profile-cards')
+    );
+
+    // Now.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Now', 'sage'), 'anchor' => 'now', 'navLabel' => __('Now', 'sage')],
+        mh_blocks_heading($f('now_h1', __('What I’m doing now.', 'sage')))
+        .$text($f('now_lede', __('A short list of where my time is going.', 'sage')))
+        .mh_blocks_list(field_lines('now_items', mh_now_items_defaults(), $id), 'checklist')
+        .$text($f('now_life_p1', __('Nights and weekends belong to my family, not projects.', 'sage')))
+        .mh_blocks_data('last-updated', array_filter(['text' => trim($f('now_updated', ''))]))
+        .mh_blocks_heading($f('about_posts_h2', __('Recent posts.', 'sage')), 3)
+        .mh_blocks_data('recent-posts', ['count' => 3, 'linkText' => $f('about_posts_all', __('All posts', 'sage')), 'showRss' => false])
+    );
+
+    // What I build. The adjacent-work sentence is printed here once; later sections skip it while it says the same thing.
+    $range = trim($f('about_services_intro', mh_adjacent_range_copy()));
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Services', 'sage'), 'anchor' => 'build', 'navLabel' => __('What I build', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('about_services_h2', __('What I build.', 'sage')))
+        .$text($range)
+        .mh_blocks_cards(array_map(
+            static fn (array $row): array => ['icon' => $row['icon'], 'title' => $row['title'], 'body' => esc_html($row['body'])],
+            mh_about_page_services($id)
+        ), 3, true)
+        .mh_blocks_paragraph(field_html('about_services_note', sprintf(
+            /* translators: %s: contact page URL. */
+            __('Curious about a specific project type? <a href="%s">Write a note</a>.', 'sage'),
+            esc_url($contact)
+        ), $id))
+    );
+
+    // Hire.
+    $workRange = trim($f('about_work_range', mh_adjacent_range_copy()));
+    $workTypes = '';
+    foreach (mh_about_page_work_types($id) as $type) {
+        $workTypes .= mh_blocks_card($type['title'], $text($type['detail']), ['icon' => 'check']);
+    }
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Hire me', 'sage'), 'anchor' => 'hire', 'navLabel' => __('Hire', 'sage')],
+        mh_blocks_heading($f('about_work_h2', __('Open for work.', 'sage')))
+        .mh_blocks_data('availability')
+        .$text($f('about_work_p1', __('I’m open to full-time roles, contract work, and freelance projects. Happy to work remote or on-site.', 'sage')))
+        .$text($f('about_work_p2', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')))
+        .($workRange !== $range ? $text($workRange) : '')
+        .$text($f('about_work_price', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')))
+        .mh_blocks_buttons([
+            ['text' => $f('about_work_cta', __('Start a conversation', 'sage')), 'url' => $contact],
+            ['text' => __('LinkedIn', 'sage'), 'url' => $linkedin, 'style' => 'arrow'],
+        ])
+        .($workTypes !== '' ? mh_blocks_wrap('matthummel/cards', ['columns' => 2], $workTypes) : '')
+        .mh_blocks_heading($f('about_need_h3', __('What I need from you.', 'sage')), 3)
+        .$text($f('about_need_intro', __('You don’t need a finished spec. A short description of the problem is enough. Here’s what helps:', 'sage')))
+        .mh_blocks_list([
+            __('Who the site or app is for', 'sage'),
+            __('What it needs to do', 'sage'),
+            __('Any existing sites or references you like', 'sage'),
+            __('A rough sense of your timeline', 'sage'),
+        ], 'checklist')
+        .$text($f('about_need_note', __('That’s it. I’ll follow up with clarifying questions or an honest note if I’m not the right fit.', 'sage')))
+        .mh_blocks_heading(__('Ready to write?', 'sage'), 3)
+        .$text(__('Use the contact form — a paragraph is plenty.', 'sage').' '.mh_reply_sla())
+        .mh_blocks_buttons(array_merge([['text' => __('Say hello', 'sage'), 'url' => $contact]], $bookingButton))
+        .mh_blocks_paragraph(sprintf(
+            /* translators: %s: LinkedIn profile URL */
+            __('Or <a href="%s" rel="noopener" target="_blank">message on LinkedIn</a>', 'sage'),
+            esc_url($linkedin)
+        ))
+    );
+
+    // Resume.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Experience', 'sage'), 'anchor' => 'resume', 'navLabel' => __('Resume', 'sage')],
+        mh_blocks_heading($f('hire_cv_h2', __('Resume.', 'sage')))
+        .$text($f('hire_cv_intro', __('Newest role first. I work with shops and agencies anywhere, and I’m open to full-time, contract, and agency overflow work.', 'sage')))
+        .mh_blocks_data('resume')
+    );
+
+    // For hiring managers.
+    $resumeUrl = esc_url(home_url('/about/#resume'));
+    $glanceRange = trim($f('glance_range', mh_adjacent_range_copy()));
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('At a glance', 'sage'), 'anchor' => 'glance', 'tone' => 'alt'],
+        mh_blocks_heading(__('For hiring managers.', 'sage'))
+        .$text($f('glance_note', __('The short version, if you are hiring. The resume above has the detail.', 'sage')))
+        .mh_blocks_data('recruiter-glance', [
+            'role' => $f('glance_role', __('WordPress / full-stack PHP', 'sage')),
+            'stack' => $f('glance_stack', __('WordPress, PHP, custom themes & plugins', 'sage')),
+            'timezone' => $f('glance_tz', __('America/New_York (ET)', 'sage')),
+            'location' => $f('glance_location', __('Gettysburg, PA · remote OK', 'sage')),
+            'experience' => $f('glance_experience', ''),
+            'availability' => $f('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
+        ])
+        .mh_blocks_paragraph(field_html('glance_employers', sprintf(
+            /* translators: %s: resume section URL */
+            __('Employers on the record: <a href="%s">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage'),
+            $resumeUrl
+        ), $id))
+        .mh_blocks_paragraph(field_html('glance_power', sprintf(
+            /* translators: %s: resume section URL */
+            __('PowerApps, Power Automate, and InfoPath for federal agencies — details in the <a href="%s">resume</a>. There is no public demo.', 'sage'),
+            $resumeUrl
+        ), $id))
+        .($glanceRange !== $range ? $text($glanceRange) : '')
+        .mh_blocks_buttons([
+            ['text' => __('Contact', 'sage'), 'url' => $contact],
+            ['text' => __('Hire', 'sage'), 'url' => '#hire', 'style' => 'arrow'],
+            ['text' => __('Projects', 'sage'), 'url' => mh_work_listing_url(), 'style' => 'arrow'],
+            ['text' => __('GitHub', 'sage'), 'url' => 'https://github.com/'.$login, 'style' => 'arrow'],
+        ])
+        .$text($f('glance_nda', __('Hiring managers can ask for a private walkthrough of constrained employer work under NDA.', 'sage')))
+    );
+
+    // Process.
+    $steps = [
+        [__('Write.', 'sage'), __('1–2 days', 'sage'), __('Tell me who the site is for, what is broken, and what a win looks like. A short note is enough.', 'sage'), [__('A reply with questions', 'sage'), __('An honest no if I am the wrong fit', 'sage'), __('No sales pitch', 'sage')]],
+        [__('Scope.', 'sage'), __('2–4 days', 'sage'), __('I send a plain list of work, a rough timeline, and what is out of scope. You approve or push back.', 'sage'), [__('Written scope', 'sage'), __('Clear out-of-scope list', 'sage'), __('No lock-in contract', 'sage')]],
+        [__('Build.', 'sage'), __('1–2 weeks', 'sage'), __('I build on staged pages you can click. Every line ships after I have read and tested it.', 'sage'), [__('Staged previews', 'sage'), __('Reviewed code before it ships', 'sage'), __('Room for feedback mid-build', 'sage')]],
+        [__('Yours.', 'sage'), __('Handoff', 'sage'), __('You own the domain, hosting, database, and code. I leave a short admin guide and stay reachable for questions.', 'sage'), [__('Full ownership', 'sage'), __('Plain-language admin notes', 'sage'), __('No monthly lock-in', 'sage')]],
+    ];
+    $stepCards = '';
+    foreach ($steps as [$title, $timing, $body, $gets]) {
+        $stepCards .= mh_blocks_card($title, $text($timing).$text($body).mh_blocks_list($gets, 'checklist'));
+    }
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Process', 'sage'), 'anchor' => 'process', 'navLabel' => __('Process', 'sage')],
+        mh_blocks_heading($f('home_process_h2', __('How a project goes.', 'sage')))
+        .$text(__('Four steps. Written scope. You own everything at the end.', 'sage'))
+        .mh_blocks_wrap('matthummel/cards', ['columns' => 4, 'numbered' => true], $stepCards)
+    );
+
+    // Fit.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Fit', 'sage'), 'anchor' => 'fit', 'tone' => 'alt'],
+        mh_blocks_heading(__('Is this a good fit?', 'sage'))
+        .$text(__('A few honest checks before we spend time on a call.', 'sage'))
+        .mh_blocks_wrap(
+            'matthummel/cards',
+            ['columns' => 2],
+            mh_blocks_card(__('Good fit', 'sage'), mh_blocks_list([
+                __('You need a WordPress site or web app you can own', 'sage'),
+                __('You want clean code another developer can read', 'sage'),
+                __('You have a clear goal — or want help naming one', 'sage'),
+                __('You want written scope before work starts', 'sage'),
+                __('You are a shop, agency, or hiring manager', 'sage'),
+            ], 'checklist'), ['icon' => 'check'])
+            .mh_blocks_card(__('Not a fit', 'sage'), mh_blocks_list([
+                __('You need a designer — I am a developer (I can refer one)', 'sage'),
+                __('You need a site in under a week', 'sage'),
+                __('You want ongoing social or ads management', 'sage'),
+                __('You need a large ecommerce platform from scratch', 'sage'),
+            ]))
+        )
+    );
+
+    // How I work.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Approach', 'sage'), 'anchor' => 'approach', 'tone' => 'alt'],
+        mh_blocks_heading($f('about_values_h2', __('How I work.', 'sage')))
+        .$text($f('about_values_intro', __('Sage 11, Blade, Tailwind, Vite, and PHP 8.3 — shipped through GitHub. Here is how I run a WordPress build from the first note to a clean handoff.', 'sage')))
+        .mh_blocks_cards(array_map(
+            static fn (array $row): array => ['icon' => $row['icon'], 'title' => $row['title'], 'body' => esc_html($row['body'])],
+            mh_about_page_approach($id)
+        ), 2)
+        .mh_blocks_buttons([['text' => __('Repos and stack notes below', 'sage'), 'url' => '#code', 'style' => 'arrow']])
+    );
+
+    // Code.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Open source', 'sage'), 'anchor' => 'code', 'navLabel' => __('Code', 'sage'), 'className' => 'code-gh'],
+        mh_blocks_heading($f('code_gh_h2', __('Open-source full-stack and WordPress code on GitHub.', 'sage')))
+        .$text($f('code_gh_intro', __('Public Sage themes, WordPress plugins, and web apps shops and developers can fork. Stats below pull live from the GitHub API.', 'sage')))
+        .mh_blocks_data('github-stats')
+        .mh_blocks_heading($f('code_pin_h2', __('Pinned on GitHub', 'sage')), 3)
+        .$text($f('code_pin_intro', __('The repos pinned to my GitHub profile — the ones I point developers to first. Pin or unpin a repo on GitHub and this list follows within the hour.', 'sage')))
+        .mh_blocks_data('github-repos', ['source' => 'pinned', 'count' => 12])
+        .mh_blocks_heading($f('code_live_h2', __('Recently pushed', 'sage')), 3)
+        .$text($f('code_live_intro', __('Fresh commits on public GitHub repos — a quick read on what I am shipping this week.', 'sage')))
+        .mh_blocks_data('github-repos', ['source' => 'recent', 'count' => 6, 'showAllLink' => true])
+        .mh_blocks_heading($f('code_lang_h3', __('Languages on GitHub', 'sage')), 3)
+        .$text($f('code_lang_intro', __('Primary language of each public repo, counted live. Small static sites pull HTML up; the themes and plugins are PHP.', 'sage')))
+        .mh_blocks_data('github-languages')
+    );
+
+    // Stack.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Stack', 'sage'), 'anchor' => 'stack', 'tone' => 'alt', 'className' => 'code-skills-sec'],
+        mh_blocks_heading($f('code_sk_h2', __('Skills and tools.', 'sage')))
+        .$text($f('code_sk_intro', __('WordPress, Sage, Tailwind, and the rest of the stack behind shipped repos. Not an exhaustive list — just what shows up in public GitHub.', 'sage')))
+        .mh_blocks_data('skills')
+    );
+
+    // Questions.
+    $questions = [
+        [__('What does “you own it” mean?', 'sage'), __('The domain, hosting, database, and code are yours. After handoff I have no access unless you invite me. Another developer can pick up where I left off.', 'sage')],
+        [__('Do you do design, or just development?', 'sage'), __('Development. I can work from your design or a clear reference. For original design work I will refer someone rather than half-guess it.', 'sage')],
+        [__('How long does a WordPress site usually take?', 'sage'), __('A simple site is often two to three weeks. Custom fields or booking can take four to eight. I give a realistic estimate during scoping.', 'sage')],
+        [__('Can I edit the site myself after handoff?', 'sage'), __('Yes. Pages use standard WordPress fields. I document anything unusual in plain English before handoff.', 'sage')],
+        [__('Do you work with agencies?', 'sage'), __('Yes. I can stay in the background on agency work. Rate is project-based. Write and tell me what you need.', 'sage')],
+        [__('Is GitHub the start of your career?', 'sage'), __('No. I have about 17 years of in-house employer web work. Most of that cannot be shown. Public GitHub is the trail I started in 2025.', 'sage')],
+        [__('Do you only do WordPress?', 'sage'), mh_adjacent_range_copy()],
+    ];
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'faq', 'navLabel' => __('FAQ', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading(__('Common questions.', 'sage'))
+        .mh_blocks_paragraph(sprintf(
+            /* translators: %s: contact page URL */
+            __('If yours is not here, <a href="%s">ask</a>.', 'sage'),
+            esc_url($contact)
+        ))
+        .mh_blocks_faq(array_map(
+            static fn (array $row): array => ['title' => $row[0], 'text' => esc_html($row[1])],
+            $questions
+        ))
+    );
+
+    // Elsewhere.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Online', 'sage'), 'anchor' => 'elsewhere', 'navLabel' => __('Elsewhere', 'sage')],
+        mh_blocks_heading($f('about_elsewhere_h2', __('Where to find me.', 'sage')))
+        .$text($f('about_elsewhere_intro', __('Most of my WordPress code and writing shows up here and on GitHub. RSS is the calmest way to follow along.', 'sage')))
+        .mh_blocks_data('social-links')
+    );
+
+    // Closing band.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['eyebrow' => $f('about_cta_kicker', __('Get in touch', 'sage')), 'note' => mh_reply_sla('note')],
+        mh_blocks_heading($f('about_cta_h2', __('Need a WordPress or full-stack developer?', 'sage')))
+        .$text($f('about_cta_lede', __('Got a question about a post, a project, or a role? Send it over. I usually reply within one business day (ET).', 'sage')))
+        .mh_blocks_buttons(array_merge(
+            [['text' => $f('about_cta_btn', __('Say hello', 'sage')), 'url' => $contact]],
+            $booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'ghost']] : [],
+            [['text' => '@'.$login, 'url' => 'https://github.com/'.$login, 'style' => 'ghost']]
+        ))
     );
 
     return $out;

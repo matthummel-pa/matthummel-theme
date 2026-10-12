@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.2 — About is a block page
+
+- About's copy is now blocks: hero, Story, Now, What I build, Hire, Resume, hiring facts, Process, Fit, How I work, Code, Stack, Questions, Where to find me, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#story`, `#now`, `#build`, `#hire`, `#resume`, `#glance`, `#process`, `#fit`, `#approach`, `#code`, `#stack`, `#faq`, `#elsewhere`), so `/hire/`, `/code/`, `/now/` and links from other pages still land in the right place.
+- New data blocks: **Profile cards**, **Availability line**, **Last updated**, **Resume timeline**, **Hiring facts**, **GitHub stats**, **GitHub repos** (pinned or recently pushed), **GitHub languages**, **Skills and tools**, and **Social links**. The GitHub blocks show a plain link or a short note when GitHub gives nothing back.
+- The resume roles still come from the saved resume rows. The Skills block uses the saved list unless you type one in its sidebar.
+- The portrait in the Page hero shows the name above the caption again.
+- `template-about.blade.php` and the partials only it used (`about-hire-sections`, `about-faq`, `resume-timeline`, `recruiter-glance`) moved to `resources/archive/views/` (to delete).
+
 ## 3.7.1 — Home is a block page
 
 - Home's copy is now blocks: hero, Projects, Journal, Services, Questions, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

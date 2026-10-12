@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/last-updated",
+  "title": "Last updated",
+  "category": "matthummel",
+  "icon": "clock",
+  "description": "A “Last updated” line with the date this page was last saved.",
+  "keywords": [
+    "date",
+    "now",
+    "updated"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "mhControls": {
+    "text": {
+      "label": "Date text",
+      "help": "Leave empty to use the date this page was last saved."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

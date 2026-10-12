@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/social-links",
+  "title": "Social links",
+  "category": "matthummel",
+  "icon": "share",
+  "description": "Links to GitHub, LinkedIn and the other profiles set for the site, with labels.",
+  "keywords": [
+    "social",
+    "links",
+    "elsewhere"
+  ],
+  "textdomain": "sage",
+  "attributes": {},
+  "mhControls": {},
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

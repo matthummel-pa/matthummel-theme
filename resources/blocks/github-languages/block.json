@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/github-languages",
+  "title": "GitHub languages",
+  "category": "matthummel",
+  "icon": "chart-pie",
+  "description": "A bar and legend of the main language of each public repo.",
+  "keywords": [
+    "github",
+    "languages",
+    "code"
+  ],
+  "textdomain": "sage",
+  "attributes": {},
+  "mhControls": {},
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

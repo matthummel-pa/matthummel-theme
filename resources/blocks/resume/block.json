@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/resume",
+  "title": "Resume timeline",
+  "category": "matthummel",
+  "icon": "businessperson",
+  "description": "The resume: roles newest first, with employer, dates and bullet points.",
+  "keywords": [
+    "resume",
+    "experience",
+    "jobs"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "showLinkedIn": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "showLinkedIn": {
+      "label": "Show the LinkedIn button"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

@@ -43,6 +43,7 @@
         @include('partials.profile-photo', ['size' => 320, 'class' => 'about-portrait__img', 'eager' => true, 'alt' => __('Matt Hummel, WordPress developer', 'sage')])
         @if ($caption !== '')
           <figcaption class="about-portrait__caption">
+            <span class="about-portrait__name">{{ (\App\Github::fetchUser(\App\mh_github_login())['name'] ?? '') ?: __('Matt Hummel', 'sage') }}</span>
             <span class="about-portrait__meta">{{ $caption }}</span>
           </figcaption>
         @endif

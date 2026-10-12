@@ -6395,5 +6395,17 @@ ul.is-style-checklist > li::before {
 html.mh-dark ul.is-style-checklist > li { border-top-color: rgba(167, 139, 250, .22); }
 html.mh-dark ul.is-style-checklist > li::before { border-color: var(--lime-300); }
 
+/* 3.7.2 · About data blocks. */
+.mh-profile-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }
+@media (max-width: 640px) { .mh-profile-cards { grid-template-columns: 1fr; } }
+.mh-resume .code-resume-links { margin-bottom: var(--card-gap); }
+.mh-block-section h3.wp-block-heading { margin-top: var(--card-gap-roomy); }
+.mh-card h3.wp-block-heading { margin-top: 0; }
+.mh-card ul.is-style-checklist { margin-bottom: 0; }
+.mh-card .wp-block-list { font-size: .9375rem; }
+.mh-card ul.wp-block-list:not(.is-style-checklist) { margin: 1.5rem 0 0; padding-left: 1.25rem; list-style: disc; }
+#hire, #resume, #now, #code, #stack { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) { #hire, #resume, #now, #code, #stack { scroll-margin-top: 1rem; } }
+
 /* Projects "inside each one" note: the pale panel sat behind light text in dark mode. */
 html.mh-dark .work-context__note { background: var(--color-surface); border-color: rgba(167, 139, 250, .22); }
