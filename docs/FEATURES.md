@@ -6,6 +6,8 @@ What the 3.x Sage theme does, and where it lives.
 
 - Grid gaps come from three tokens set at the end of `studio.css`: `--card-gap` (cards), `--card-gap-tight` (tiles, rows, button rows) and `--card-gap-roomy` (two-up lists). A new grid picks one of them; do not hard-code a gap.
 - In `html.mh-dark` rules, text uses `--color-text` / `--color-text-secondary` / `--color-text-muted` and fills use `--color-surface` or `--color-surface-raised`. Dark text on a bright chip uses `--blue-900`. `--gray-*` is flipped in dark mode, so a dark-scoped rule that names it is almost always wrong.
+- Dark-mode cards share one recipe (3.6.60, last blocks of `studio.css`): lime border, lime counts, and lighter copy through scoped `--color-text-secondary` / `--color-text-muted`. A new card class goes in those `:is()` lists.
+- Link hover color is the `--color-accent-hover` token. A container that is dark in light mode, or an element that fills on hover, sets the token on itself instead of fighting the global `a:hover` rule.
 - Heroes (`.page-header`, `.post-hero`) are dark in both modes. Text inside them needs a light color that is not scoped to `html.mh-dark`.
 - Footer links to wp-admin pages go through `\App\mh_is_published_path()` so they cannot ship before the page does.
 
