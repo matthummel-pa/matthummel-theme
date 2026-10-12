@@ -215,7 +215,10 @@ class Schema
     }
 
     /**
-     * BlogPosting for posts and Article for pages and projects.
+     * BlogPosting for posts and Article for projects and other post types.
+     *
+     * Pages (Home, About, Projects, Contact, legal) are not articles. They keep
+     * their WebPage node and get no Article node.
      *
      * @param  array<string, mixed>  $context  Request context.
      * @param  string  $title  Title.
@@ -232,6 +235,9 @@ class Schema
             return null;
         }
         $post_type = (string) ($context['post_type'] ?? 'page');
+        if ($view === 'front' || $post_type === 'page') {
+            return null;
+        }
         $type = $post_type === 'post' ? 'BlogPosting' : 'Article';
         $node = [
             '@type' => $type,
