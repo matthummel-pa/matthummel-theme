@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.61 — Article schema only on posts and projects
+
+- MH SEO (bundled): pages such as Home, About, Projects and Contact no longer output an `Article` node. They keep `WebPage` and breadcrumbs. Posts stay `BlogPosting` and projects stay `Article`. The module version is unchanged, so its one-time setup does not re-run.
+- Related posts: the thumbnail's alt text was escaped twice ("Cobble &amp;amp; Candle"). The thumbnail link is hidden from assistive tech and the title link follows it, so the image is decorative and its alt is empty.
+
 ## 3.6.60 — Dark cards on one recipe, hover contrast
 
 - Dark mode: every card has the lime border, lime count numbers and body copy one step lighter. The home project and help cards, post, project and related-post cards, journal topics, résumé, accessibility, contact, privacy and legal cards, the newsletter box and the post author box had blue or violet borders. Hero stats on project pages, the About GitHub counts and the reaction count are lime.
