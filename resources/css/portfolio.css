@@ -1773,7 +1773,6 @@ html.mh-dark .h-hero-work__foot {
   color: var(--color-text);
   border-color: var(--color-border);
 }
-.page-header .search-form button { background: var(--color-accent); border-color: var(--color-accent); }
 
 /* Split marketing hero — copy left, panel right */
 .page-header--split {
@@ -4372,14 +4371,14 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 }
 html.mh-dark .code-gh-star-repo,
 html.mh-dark .code-gh-watch-repo {
-  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
 }
 html.mh-dark .code-gh-stargazer {
-  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
 }
 html.mh-dark .code-gh-stargazer:hover,
 html.mh-dark .code-gh-stargazer:focus-visible {
-  background: color-mix(in srgb, #92400e 12%, var(--gray-800));
+  background: color-mix(in srgb, #92400e 12%, var(--color-surface-raised));
 }
 .code-gh-badges__title {
   display: flex;
@@ -4442,11 +4441,11 @@ html.mh-dark .code-gh-stargazer:focus-visible {
 html.mh-dark .code-gh-community,
 html.mh-dark .code-gh-community__panel,
 html.mh-dark .code-gh-badge {
-  background: color-mix(in srgb, var(--gray-900, #0f172a) 92%, var(--white));
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--white));
 }
-html.mh-dark .code-gh-community__stats { background: color-mix(in srgb, var(--gray-800) 80%, transparent); }
+html.mh-dark .code-gh-community__stats { background: color-mix(in srgb, var(--color-surface-raised) 80%, transparent); }
 html.mh-dark .code-gh-person:hover,
-html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(--gray-800) 70%, transparent); }
+html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent); }
 
 .code-gh-split {
   display: grid;
@@ -7257,12 +7256,12 @@ html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(
 }
 
 html.mh-dark .svc-theme-band {
-  background: color-mix(in srgb, var(--color-navy) 35%, var(--gray-900, #0f172a));
-  border-color: var(--gray-700, #334155);
+  background: color-mix(in srgb, var(--color-navy) 35%, var(--color-surface));
+  border-color: var(--color-border);
 }
 html.mh-dark .svc-addon-card {
-  background: var(--gray-900, #0f172a);
-  border-color: var(--gray-700, #334155);
+  background: var(--color-surface);
+  border-color: var(--color-border);
 }
 html.mh-dark .svc-addon-card__title,
 html.mh-dark .svc-audience-card__title {
@@ -7274,8 +7273,8 @@ html.mh-dark .svc-theme-band__copy {
   color: #cbd5e1;
 }
 html.mh-dark .svc-audience-card {
-  background: var(--gray-900, #0f172a);
-  border-color: var(--gray-700, #334155);
+  background: var(--color-surface);
+  border-color: var(--color-border);
 }
 
 /* ── Not a good fit callout ── */
@@ -11010,7 +11009,7 @@ html.mh-dark .journal-topic-card {
 html.mh-dark .now-desk__tab[aria-selected="true"] {
   background: var(--blue-400);
   border-color: var(--blue-400);
-  color: var(--gray-900);
+  color: var(--blue-900);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -13674,8 +13673,8 @@ html.mh-dark .pf-purchase-widget {
   border-color: var(--color-border);
   box-shadow: 0 4px 24px -4px rgb(0 0 0 / .3);
 }
-html.mh-dark .pf-product-card__image { background: var(--gray-800, #1e293b); }
-html.mh-dark .pf-screenshot { background: var(--gray-800, #1e293b); }
+html.mh-dark .pf-product-card__image { background: var(--color-surface-raised); }
+html.mh-dark .pf-screenshot { background: var(--color-surface-raised); }
 html.mh-dark .pf-tech-tag {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 85%, var(--color-accent) 5%);
 }
@@ -14472,12 +14471,12 @@ html.mh-dark .pf-block-card {
 /* ─── Dark mode ──────────────────────────────────────────────────── */
 html.mh-dark .woo-checkout-shell,
 html.mh-dark .legal-page--boost {
-  background: var(--gray-900, #111827);
+  background: var(--color-surface);
   border-color: var(--color-border);
 }
 html.mh-dark .mh-shop .woocommerce-result-count,
 html.mh-dark .mh-shop .woocommerce-ordering {
-  background: color-mix(in srgb, var(--gray-900, #111827) 90%, var(--navy-800, #1e293b));
+  background: color-mix(in srgb, var(--color-surface) 90%, var(--navy-800, #1e293b));
 }
 html.mh-dark .catalog-filter-nav__link {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 92%, var(--color-accent) 4%);
@@ -15969,7 +15968,7 @@ html.mh-dark .mh-shop .woocommerce-MyAccount-navigation .is-active a {
   .pf-sticky-bar__buy { width: 100%; justify-content: center; }
 }
 html.mh-dark .pf-sticky-bar {
-  background: var(--gray-900, #0b1220);
+  background: var(--color-surface);
   border-color: #334155;
   box-shadow: 0 -4px 24px -4px rgb(0 0 0 / .3);
 }
@@ -16187,7 +16186,7 @@ html.mh-dark .pf-related-card {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 90%, var(--color-accent) 4%);
 }
 html.mh-dark .pf-related-card__img-wrap {
-  background: var(--gray-800, #1e293b);
+  background: var(--color-surface-raised);
 }
 
 /* ── Account page navigation improvements ───────────────────────────────── */

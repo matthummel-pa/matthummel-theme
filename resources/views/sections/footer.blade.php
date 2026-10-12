@@ -40,8 +40,13 @@
       <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
       <ul class="footer-nav">
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/agency-white-label-wordpress/') }}">{{ __('For agencies', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/wordpress-handoff-checklist/') }}">{{ __('Handoff checklist', 'sage') }}</a></li>
+        {{-- These two are written in wp-admin; each link shows once its page is published. --}}
+        @if (\App\mh_is_published_path('/agency-white-label-wordpress/'))
+          <li><a href="{{ esc_url(home_url('/agency-white-label-wordpress/')) }}">{{ __('For agencies', 'sage') }}</a></li>
+        @endif
+        @if (\App\mh_is_published_path('/wordpress-handoff-checklist/'))
+          <li><a href="{{ esc_url(home_url('/wordpress-handoff-checklist/')) }}">{{ __('Handoff checklist', 'sage') }}</a></li>
+        @endif
         <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
       </ul>
     </nav>
@@ -137,6 +142,6 @@
         <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
       </nav>
     @endif
-    <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage</a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI</a>.</p>
+    <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
   </div>
 </footer>

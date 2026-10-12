@@ -46,7 +46,7 @@
     @if ($github !== '' && str_starts_with($github, 'http'))
       <a class="project-react__jump" href="{{ esc_url($github) }}" rel="noopener" target="_blank">
         {!! \App\mh_svg_icon('github', 15) !!}
-        {{ __('Star on GitHub', 'sage') }} <span aria-hidden="true">↗</span>
+        {{ __('Star on GitHub', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
       </a>
     @endif
   </div>

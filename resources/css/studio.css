@@ -1697,7 +1697,7 @@ html.mh-dark .h-faq__q::after {
   border-bottom: 1px solid var(--color-border);
 }
 html.mh-dark .project-arch-list > li {
-  color: var(--gray-300);
+  color: var(--color-text-secondary);
   background: transparent;
   border-bottom-color: var(--color-border);
   box-shadow: none;
@@ -1825,10 +1825,10 @@ html.mh-dark .project-spec-block {
 }
 html.mh-dark .project-stat dd,
 html.mh-dark .project-spec-value {
-  color: var(--gray-100);
+  color: var(--color-text);
 }
 html.mh-dark .project-spec-label {
-  color: var(--gray-100);
+  color: var(--color-text);
 }
 html.mh-dark .project-spec-list a.project-spec-value {
   color: var(--blue-300);
@@ -2777,22 +2777,22 @@ html.mh-dark .site-footer a.footer-avail:hover {
 html.mh-dark .project-type-row .spec-badge {
   background: var(--blue-400);
   border-color: var(--blue-400);
-  color: var(--gray-900);
+  color: var(--blue-900);
 }
 html.mh-dark .project-cat-pill {
-  background: var(--gray-900, #0f172a);
+  background: var(--color-surface);
   border-color: var(--blue-800);
   color: var(--blue-200);
 }
 html.mh-dark .project-place-pill {
-  background: color-mix(in srgb, var(--gray-800) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
   border-color: var(--color-border);
-  color: var(--gray-300);
+  color: var(--color-text-secondary);
 }
 html.mh-dark .project-stage__note,
 html.mh-dark .project-stage__gh-desc {
-  background: color-mix(in srgb, var(--gray-800) 55%, transparent);
-  color: var(--gray-200);
+  background: color-mix(in srgb, var(--color-surface-raised) 55%, transparent);
+  color: var(--color-text-secondary);
 }
 html.mh-dark .project-stage__note {
   border-color: var(--blue-800);
@@ -2800,14 +2800,14 @@ html.mh-dark .project-stage__note {
 }
 html.mh-dark .project-stage__note-kicker {
   background: var(--blue-400);
-  color: var(--gray-900);
+  color: var(--blue-900);
 }
 html.mh-dark .project-hero-crumb .concept-crumb {
   color: var(--blue-300);
 }
 html.mh-dark .project-hero-repo,
 html.mh-dark .project-hero-crumb {
-  color: var(--gray-400);
+  color: var(--color-text-muted);
 }
 
 /* ── 3.6.27 Heading scale (last-win over paragraph-sized h2–h6) ─────────── */
@@ -3251,8 +3251,8 @@ html.mh-dark .project-talk__ask {
 }
 html.mh-dark .project-react__btn {
   background: var(--color-canvas, #111827);
-  border-color: var(--gray-700);
-  color: var(--gray-100);
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 html.mh-dark .project-hero-tagline {
   color: var(--gray-700);
@@ -3651,11 +3651,11 @@ html.mh-dark .project-proof {
 html.mh-dark .project-proof__item strong,
 html.mh-dark .project-story__title,
 html.mh-dark .project-hood__title {
-  color: var(--gray-100);
+  color: var(--color-text);
 }
 html.mh-dark .project-proof__item span,
 html.mh-dark .project-hero-meta {
-  color: var(--gray-400);
+  color: var(--color-text-muted);
 }
 html.mh-dark .project-story__steps {
   background: var(--color-border);
@@ -3669,17 +3669,17 @@ html.mh-dark .project-story__num {
 }
 html.mh-dark .project-story__body,
 html.mh-dark .project-section__intro {
-  color: var(--gray-300);
+  color: var(--color-text-secondary);
 }
 html.mh-dark .project-feat-more > summary,
 html.mh-dark .project-hood__palette.concept-brand-palette li,
 html.mh-dark .pill.pill--more {
   background: var(--color-surface, #1c2430);
-  border-color: var(--gray-700);
-  color: var(--gray-100);
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 html.mh-dark .project-talk__copy {
-  color: var(--gray-300);
+  color: var(--color-text-secondary);
 }
 
 /* ── 3.6.46 — TOCguide reading guide on posts: readable size and contrast (plugin ships 8–9px at ~4:1) ── */
@@ -3696,7 +3696,7 @@ html.mh-dark .project-talk__copy {
 html.mh-dark .single .tocguide__total-time,
 html.mh-dark .single .tocguide__time,
 html.mh-dark .single .tocguide__preview {
-  color: var(--gray-300);
+  color: var(--color-text-secondary);
 }
 html.mh-dark .single .tocguide__link {
   color: var(--blue-300);
@@ -3765,7 +3765,7 @@ html.mh-dark .single .tocguide__link {
 }
 html.mh-dark .work-grid--roomy .work-card {
   background: var(--color-surface, #1c2430);
-  border-color: var(--gray-700);
+  border-color: var(--color-border);
 }
 
 .work-faq__head {
@@ -3802,13 +3802,19 @@ html.mh-dark .work-grid--roomy .work-card {
     max-width: 38rem;
   }
 }
-.page-header--project .page-header__wash {
-  background:
-    linear-gradient(100deg, rgba(255, 255, 255, .92) 0%, rgba(255, 255, 255, .5) 34%, rgba(255, 255, 255, .1) 58%, rgba(255, 255, 255, 0) 100%);
-}
+/* Hero type is light in both modes, so the wash is a dark scrim in both. It stays
+   near-opaque across the copy column so the screenshot's own text cannot show through. */
+.page-header--project .page-header__wash,
 html.mh-dark .page-header--project .page-header__wash {
   background:
-    linear-gradient(100deg, rgba(20, 28, 40, .94) 0%, rgba(20, 28, 40, .55) 38%, rgba(20, 28, 40, .12) 62%, rgba(20, 28, 40, 0) 100%);
+    linear-gradient(100deg, rgba(5, 13, 28, .97) 0%, rgba(5, 13, 28, .95) 52%, rgba(8, 21, 39, .72) 70%, rgba(10, 26, 51, .38) 100%);
+}
+@media (max-width: 959px) {
+  /* Copy spans the full width here, so the scrim does too. */
+  .page-header--project .page-header__wash,
+  html.mh-dark .page-header--project .page-header__wash {
+    background: rgba(5, 13, 28, .93);
+  }
 }
 
 .project-stage--landing {
@@ -3840,7 +3846,7 @@ html.mh-dark .page-header--project .page-header__wash {
   padding: 1.75rem 1.6rem 1.9rem;
 }
 html.mh-dark .project-page .pf-product-gallery__stage {
-  border-color: var(--gray-700);
+  border-color: var(--color-border);
   background: var(--color-surface, #1c2430);
   box-shadow: none;
 }
@@ -4820,7 +4826,7 @@ html.mh-dark .post-prose a,
 html.mh-dark .about-story__body a,
 html.mh-dark .sec-intro a,
 html.mh-dark .about-services-note a,
-html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
+html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
 html.mh-dark .btn-outline { background: transparent; color: var(--blue-300); border-color: rgba(96, 165, 250, .4); }
 html.mh-dark .btn-outline:hover { background: rgba(59, 130, 246, .14); color: #fff; border-color: var(--blue-400); }
 html.mh-dark .contact-form input,
@@ -6325,3 +6331,241 @@ html:not(.mh-dark) .h-faq__item:hover,
 html:not(.mh-dark) .h-faq__item[open] { background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%); }
 html.mh-dark .h-faq__item:hover,
 html.mh-dark .h-faq__item[open] { background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%); }
+
+/* ── 3.6.59 · Contrast pass (WCAG 1.4.3 / 1.4.11), both modes ──────────────
+   Measured on the rendered pages. Most dark-mode misses came from rules that
+   still assumed the old gray ramp (the dark skin flips --gray-*), fixed in
+   place above; the rest are below. ──────────────────────────────────────── */
+
+/* A step above --color-surface for chips and wells that sit on a card. Named here
+   because the dark skin flips --gray-*, so dark fills must not be built from it. */
+html.mh-dark { --color-surface-raised: #142a4e; }
+
+/* Fills built from --color-text flip light in dark mode, so their label flips dark. */
+html.mh-dark .skip-link,
+html.mh-dark .comment-tab.is-active,
+html.mh-dark .comment-tool:hover,
+html.mh-dark .comment-sort-btn.is-active,
+html.mh-dark .posts-nav .page-numbers.current { color: var(--blue-900); }
+/* Hovered page links take the global link-hover color, so the fill stays dark under it. */
+html.mh-dark .posts-nav a.page-numbers:hover,
+html.mh-dark .posts-nav a.page-numbers:focus-visible { background: var(--color-surface-raised); border-color: var(--blue-400); }
+
+/* Journal toolbar: white label on the gradient needs the violet-700 end stop (4.5:1). */
+.write-sort-btn.is-active,
+.write-view-btn.is-active,
+html.mh-dark .write-sort-btn.is-active,
+html.mh-dark .write-view-btn.is-active {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  color: #fff;
+}
+
+/* Blue tint chips and icon tiles kept their light fill in dark mode under a light-blue label. */
+html.mh-dark .a11y-standard-card__badge,
+html.mh-dark .cl-label,
+html.mh-dark .cl-change--changed .cl-change__badge,
+html.mh-dark .priv-tracker-pill,
+html.mh-dark .priv-collect-card__icon,
+html.mh-dark .contact-info-icon,
+html.mh-dark .code-skills__mark {
+  background: rgba(59, 130, 246, .14);
+  border-color: rgba(96, 165, 250, .32);
+  color: var(--blue-300);
+}
+
+/* Legal prose card: the light-blue corner tint glared behind light type. */
+html.mh-dark .legal-prose { background: var(--color-surface); }
+
+/* Sidebar availability pill: lime fill needs the violet label in dark mode too. */
+html.mh-dark .side-card .side-author__avail { color: var(--violet-900); }
+
+/* Fit columns: label colors for the dark card. */
+html.mh-dark .h-fit__col--yes .h-fit__col-label { color: var(--lime-300); }
+html.mh-dark .h-fit__col--no .h-fit__col-label { color: #fda4af; }
+
+/* Step numbers join the lime index recipe (were border-colored, under 2:1). */
+html:not(.mh-dark) .svc-process__num,
+html:not(.mh-dark) .project-story__num { color: var(--lime-700); }
+html.mh-dark .svc-process__num,
+html.mh-dark .project-story__num { color: var(--lime-300); }
+
+/* Heroes are dark in both modes; these still carried light-surface text colors. */
+.post-hero .post-hero-meta,
+.post-hero .post-hero-meta__read,
+.post-hero .post-hero-share__label,
+.page-header .write-crumbs,
+.page-header .start-hero-proof li,
+.page-header--project .project-proof__item span,
+.page-header--project .project-hero-meta,
+.page-header--project .project-hero-repo,
+.page-header--project .project-hero-crumb { color: #c9d9ef; }
+.post-hero .post-hero-meta__author,
+.page-header--project .project-proof__item strong { color: #fff; }
+.post-hero .post-hero-meta__sep { color: rgba(201, 217, 239, .55); }
+.page-header--project .project-hero-actions .h-text-arrow { color: var(--blue-300); }
+.post-hero .post-share-btn {
+  background: rgba(255, 255, 255, .08);
+  border-color: rgba(201, 217, 239, .4);
+  color: #dbe9fa;
+}
+.post-hero .post-share-btn:hover,
+.post-hero .post-share-btn:focus-visible {
+  background: rgba(255, 255, 255, .18);
+  border-color: #fff;
+  color: #fff;
+}
+
+/* ── 3.6.59 · Grid gaps on one scale ───────────────────────────────────────
+   Card grids were spread over eleven values from 0 to 28px, and four still had
+   the 1px hairline gap from before their cells became bordered cards, so the
+   cards touched. Two steps on the 8pt scale now: --card-gap (24px, 16px on
+   phones) between cards, --card-gap-tight (16px) between tiles and rows. ── */
+:root { --card-gap: 1.5rem; --card-gap-tight: 1rem; --card-gap-roomy: 2rem; }
+@media (max-width: 640px) {
+  :root { --card-gap: 1rem; --card-gap-roomy: 1.5rem; }
+}
+
+.h-project-grid, .h-journal-list, .h-help-grid,
+.about-services, .h-glance__facts, .about-approach, .code-skills-groups,
+.a11y-standards-grid, .a11y-limits-grid,
+.journal-topics-grid, .post-related__grid, .post-nav,
+.project-feat-grid, .resources-list, .uses-body__grid,
+.priv-collect-grid, .legal-data-grid,
+.h-process__grid, .h-fit__grid, .svc-process, .project-story__steps { gap: var(--card-gap); }
+
+/* The content-list rule (3.6.9) adds .45em under each feature, which made rows wider than columns. */
+:is(.project-features) ul.project-feat-grid:not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.comment-list) > li.project-feat { margin: 0; }
+
+.work-grid--roomy:not(.is-list),
+.post-list--roomy:not(.is-list) { gap: var(--card-gap-roomy); }
+
+.code-pulse, .code-skills-grid, .h-faq__list, .faq-list, .uses-list,
+.about-openwork__types, .about-story__aside, .contact-aside-v2,
+.cta-band__actions, .concept-hero-actions, .project-page .project-hero-actions,
+.support-product__actions { gap: var(--card-gap-tight); }
+
+/* Former hairline rails: the wrapper stops drawing the dividers and frame… */
+.h-process__grid, .h-fit__grid, .svc-process, .project-story__steps,
+html.mh-dark .project-story__steps,
+.code-pulse {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+.code-pulse__stat, .code-pulse__stat:first-child { border-left-width: 1px; }
+/* …and the two rails whose steps were bare panels take the grid-card recipe. */
+.svc-process__step, .project-story__step {
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  border: 1px solid var(--lime-400);
+  border-radius: 14px;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+}
+html.mh-dark .svc-process__step, html.mh-dark .project-story__step {
+  background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  border-color: rgba(163, 230, 53, .55);
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
+
+/* ── 3.6.59 · Pointer targets and label size ───────────────────────────────
+   Standalone text links and pills were 12–23px tall. They get a 24px floor
+   (WCAG 2.2 · 2.5.8); links inside sentences are exempt and untouched. Pill
+   and badge labels under 11.5px go to 12px. ─────────────────────────────── */
+.h-text-arrow, .about-text-link, .post-tag, .post-cat, .project-cat-pill,
+.project-react__jump, .write-aside-devto__link, .code-recent__hit,
+.footer-legal-links a, .post-breadcrumb a, .post-author-bio__links a,
+.side-cats a, .about-hero-links a, .support-product__meta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.footer-legal-links a, .side-cats a { min-width: 24px; }
+.post-card .post-cat.project-cat-pill { min-height: 24px; }
+
+.spec-badge, .project-place-pill, .project-cat-pill, .post-cat, .h-journal__cat,
+.repo-card__kind, .post-related-card__cat, .resources-card__aff, .resources-card__badge,
+.uses-item__aff, .cl-label, .cl-change__badge, .pill, .filter-count { font-size: .75rem; }
+
+/* ── 3.6.60 · Hover and focus colors that failed contrast ──────────────────
+   The global link-hover rule paints `--color-accent-hover`. In light mode that
+   was blue-500 (3.7:1 on white). It is violet-700 now, and containers that are
+   dark in both modes, or that fill on hover, set the token for their own links
+   instead of out-specifying the global rule. ───────────────────────────── */
+html:not(.mh-dark) { --color-accent-hover: var(--violet-700); }
+html:not(.mh-dark) :is(.page-header, .h-hero, .post-hero, .cta-band, .post-cta) { --color-accent-hover: var(--lime-300); }
+
+/* Pills and toolbar buttons that take a solid fill on hover keep a white label. */
+.project-cat-pill:hover, .project-cat-pill:focus-visible,
+.write-sort-btn.is-active:hover, .write-sort-btn.is-active:focus-visible,
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible,
+html.mh-dark .write-sort-btn.is-active:hover, html.mh-dark .write-sort-btn.is-active:focus-visible { --color-accent-hover: #fff; }
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible { background: var(--blue-600); border-color: var(--blue-600); }
+/* Three dark link-hover rules (0,7,2 and up, plus the lime prose-link rule) all reach these; one flag beats re-listing them. */
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible,
+html.mh-dark main p a.project-cat-pill:hover, html.mh-dark main p a.project-cat-pill:focus-visible,
+html.mh-dark .write-sort-btn.is-active:hover, html.mh-dark .write-sort-btn.is-active:focus-visible { color: #fff !important; }
+.posts-nav a.page-numbers:hover, .posts-nav a.page-numbers:focus-visible { --color-accent-hover: #fff; }
+
+/* Dark mode: share buttons hovered to a light-blue fill under light type. */
+html.mh-dark .post-share-btn:hover,
+html.mh-dark .post-share-btn:focus-visible { background: rgba(59, 130, 246, .14); border-color: var(--lime-400); }
+
+/* Dark mode: labels that picked up a link or flipped-gray color on a bright fill. */
+html.mh-dark .about-story__links a.btn:hover,
+html.mh-dark .about-story__links a.btn:focus-visible { color: #fff !important; } /* the 3.6.54 lime link-hover rule is !important */
+html.mh-dark .mh-popout .mh-popout-cta { color: var(--violet-900); }
+html.mh-dark .mhn-signup-block__form button:hover,
+html.mh-dark .mhn-signup-block__button:hover { color: var(--blue-900); }
+
+/* ── 3.6.60 · Dark mode: every card on one recipe ──────────────────────────
+   Lime border, lime index and count numbers, body copy one step lighter.
+   About cards had it (3.6.57); the blue-bordered and violet-bordered cards
+   now match. Borders need `!important` because the older card recipes do. ── */
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .about-now__posts, .hire-need-cta,
+  .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
+  .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
+  .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
+  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block
+) { border-color: rgba(163, 230, 53, .55) !important; }
+/* Two recipes sit at higher specificity; match them rather than out-rank them elsewhere. */
+html.mh-dark .work-grid .work-card,
+html.mh-dark .work-grid--roomy .work-card,
+html.mh-dark .resume-card.is-current { border-color: rgba(163, 230, 53, .55) !important; }
+html.mh-dark .resume-card.is-current { border-left-color: var(--lime-400) !important; }
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .uses-item,
+  .a11y-standard-card, .a11y-limit-card, .contact-info-card, .priv-collect-card,
+  .legal-data-card, .legal-right-card
+):hover { border-color: var(--lime-300) !important; }
+
+/* Body copy inside cards: one step lighter than page copy. Scoped tokens, so chips,
+   links and anything with its own color are untouched. */
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .about-now__posts, .hire-need-cta,
+  .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
+  .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
+  .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
+  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block,
+  .about-aside-card, .about-svc-card, .about-work-type, .h-glance__card, .h-glance__fact,
+  .h-process__step, .h-fit__col, .about-approach__item, .code-pulse__stat, .repo-card,
+  .code-skills-group, .code-skills__tile, .side-card, .write-aside-card,
+  .svc-process__step, .project-story__step, .resources-card, .h-faq__item
+) { --color-text-secondary: #dbe4f3; --color-text-muted: #c3d0e6; }
+
+/* Count numbers that were still white or blue. */
+html.mh-dark .about-aside-card__stats strong,
+html.mh-dark .page-header--project .project-proof__item strong,
+html.mh-dark .project-react__count { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+
+/* ── 3.6.60 · 12px floor for small labels (were 11.2–11.5px) ── */
+.eyebrow, .h-hero__kicker, .h-page-nav__label, .h-section-label, .post-cta__eyebrow,
+.post-related-card__meta, .project-react__label, .resume-now, .resume-tag, .side-author__avail,
+.side-author__eyebrow, .about-aside-avail, .about-svc-card__n, .discovery-step__eyebrow,
+.h-process__timing, .header-avail__label, .mh-code-lang, .post-hero-share__label, .post-nav__dir,
+.priv-tracker-pill, .repo-card__slug, .a11y-standard-card__badge, .a11y-contact-card__label,
+.project-proof__item span, .code-pulse dt { font-size: .75rem; }

@@ -755,32 +755,32 @@ html.mh-dark .mh-ship-note,
 html.mh-dark .post-prose .mh-ship-pipe > li,
 html.mh-dark .post-prose .mh-ai-figure,
 html.mh-dark .post-prose .faq-list details {
-  background: var(--gray-900);
-  border-color: var(--gray-700);
+  background: var(--color-surface);
+  border-color: var(--color-border);
 }
 
 html.mh-dark .post-prose .mh-ai-figure {
-  background: linear-gradient(180deg, var(--gray-900) 0%, #0b1220 100%);
+  background: linear-gradient(180deg, var(--color-surface) 0%, #0b1220 100%);
 }
 
 html.mh-dark .mh-tool-card:hover,
 html.mh-dark .mh-tool-card:focus-within,
 html.mh-dark .post-prose .mh-ship-pipe > li:hover {
-  border-color: var(--gray-600);
+  border-color: var(--blue-400);
 }
 
 html.mh-dark .mh-tool-card__mark,
 html.mh-dark .mh-tool-card:not(:has(.mh-tool-card__mark))::before {
-  background: var(--gray-800);
-  border-color: var(--gray-700);
+  background: var(--color-surface-raised);
+  border-color: var(--color-border);
   color: var(--blue-400);
 }
 
 html.mh-dark .mh-tool-card__role,
 html.mh-dark .post-prose .mh-ship-pipe > li::before {
-  background: var(--gray-800);
-  border-color: var(--gray-700);
-  color: var(--gray-300);
+  background: var(--color-surface-raised);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
 }
 
 html.mh-dark .mh-tool-card dt,
@@ -788,24 +788,24 @@ html.mh-dark .mh-tool-card__dt,
 html.mh-dark .mh-tool-card__name,
 html.mh-dark .mh-ship-pipe__name,
 html.mh-dark .mh-ship-note strong {
-  color: var(--gray-50);
+  color: var(--color-text);
 }
 
 html.mh-dark .mh-tool-card dt,
 html.mh-dark .mh-tool-card__dt,
 html.mh-dark .mh-tool-card__role {
-  background: var(--gray-800);
-  border-color: var(--gray-700);
+  background: var(--color-surface-raised);
+  border-color: var(--color-border);
 }
 
 html.mh-dark .mh-tool-card dd,
 html.mh-dark .mh-tool-card__dd {
-  border-bottom-color: var(--gray-700);
+  border-bottom-color: var(--color-border);
 }
 
 html.mh-dark .mh-tool-card code {
-  background: var(--gray-800);
-  color: var(--gray-100);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
 }
 
 
@@ -908,7 +908,7 @@ html.mh-dark .mh-tool-card code {
 .wp-block-matthummel-ship-step.mh-ship-step:hover,
 .post-prose .mh-ship-pipe > .mh-ship-step:hover,
 .editor-styles-wrapper .mh-ship-step:hover {
-  border-color: var(--gray-300);
+  border-color: var(--blue-400);
   box-shadow: 0 3px 12px rgba(17, 24, 39, .05);
 }
 
@@ -933,11 +933,11 @@ html.mh-dark .mh-tool-card code {
 
 html.mh-dark .wp-block-matthummel-ship-step.mh-ship-step,
 html.mh-dark .post-prose .mh-ship-pipe > .mh-ship-step {
-  background: var(--gray-900);
-  border-color: var(--gray-700);
+  background: var(--color-surface);
+  border-color: var(--color-border);
 }
 
 html.mh-dark .wp-block-matthummel-tool-grid.mh-ai-figure {
-  background: linear-gradient(180deg, var(--gray-900) 0%, #0b1220 100%);
-  border-color: var(--gray-700);
+  background: linear-gradient(180deg, var(--color-surface) 0%, #0b1220 100%);
+  border-color: var(--color-border);
 }

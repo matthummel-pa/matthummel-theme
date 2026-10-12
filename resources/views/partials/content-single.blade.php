@@ -304,7 +304,8 @@
                 <article class="post-related-card">
                   @if (! empty($rp['thumb']))
                     <a class="post-related-card__img" href="{{ esc_url($rp['url']) }}" tabindex="-1" aria-hidden="true">
-                      <img src="{{ esc_url($rp['thumb']) }}" alt="{{ esc_attr($rp['title']) }}" width="400" height="225" loading="lazy" decoding="async">
+                      {{-- Decorative: the link is aria-hidden and the title link follows. (The old alt was escaped twice.) --}}
+                      <img src="{{ esc_url($rp['thumb']) }}" alt="" width="400" height="225" loading="lazy" decoding="async">
                     </a>
                   @endif
                   <div class="post-related-card__body">

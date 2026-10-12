@@ -62,13 +62,13 @@
           <div class="support-product__actions">
             @if ($product['hub'] !== '')
               <a class="btn" href="{{ esc_url($product['hub']) }}" rel="noopener" target="_blank">
-                {{ __('Open HTML docs', 'sage') }} <span aria-hidden="true">↗</span>
+                {{ __('Open HTML docs', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
               </a>
             @endif
             <a class="btn btn-outline" href="{{ esc_url($product['project_url']) }}">{{ __('Concept page', 'sage') }}</a>
             @if ($product['demo'] !== '')
               <a class="h-text-arrow" href="{{ esc_url($product['demo']) }}" rel="noopener" target="_blank">
-                {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
+                {{ __('Live demo', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
               </a>
             @endif
           </div>
@@ -80,7 +80,7 @@
             @foreach ($product['guides'] as $guide)
               <li>
                 <a class="support-guide-card" href="{{ esc_url($guide['url']) }}" rel="noopener" target="_blank">
-                  <span class="support-guide-card__title">{{ $guide['label'] }} <span aria-hidden="true">↗</span></span>
+                  <span class="support-guide-card__title">{{ $guide['label'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></span>
                   @if (! empty($guide['blurb']))
                     <span class="support-guide-card__blurb">{{ $guide['blurb'] }}</span>
                   @endif
@@ -93,7 +93,7 @@
           <ul class="support-doc-list">
             @foreach ($product['docs'] as $doc)
               <li>
-                <a href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">{{ $doc['label'] }} <span aria-hidden="true">↗</span></a>
+                <a href="{{ esc_url($doc['url']) }}" rel="noopener" target="_blank">{{ $doc['label'] }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
               </li>
             @endforeach
           </ul>
@@ -101,13 +101,13 @@
 
         <p class="support-product__meta">
           @if ($product['github'] !== '')
-            <a href="{{ esc_url($product['github']) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('github', 14) !!} {{ __('Repository', 'sage') }}</a>
+            <a href="{{ esc_url($product['github']) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('github', 14) !!} {{ __('Repository', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
           @endif
           @if ($product['support'] !== '')
-            <a href="{{ esc_url($product['support']) }}" rel="noopener" target="_blank">{{ __('Support notes', 'sage') }} ↗</a>
+            <a href="{{ esc_url($product['support']) }}" rel="noopener" target="_blank">{{ __('Support notes', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
           @endif
           @if ($product['github'] !== '')
-            <a href="{{ esc_url(rtrim($product['github'], '/').'/issues') }}" rel="noopener" target="_blank">{{ __('GitHub issues', 'sage') }} ↗</a>
+            <a href="{{ esc_url(rtrim($product['github'], '/').'/issues') }}" rel="noopener" target="_blank">{{ __('GitHub issues', 'sage') }}<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
           @endif
         </p>
       </section>
