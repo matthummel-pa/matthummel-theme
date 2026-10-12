@@ -10,6 +10,7 @@ What the 3.x Sage theme does, and where it lives.
 - Core blocks get theme classes from the `render_block` filter in `app/blocks.php`, on block pages only. A new mapping goes there, with the matching editor rule in `resources/css/editor.css`.
 - Data sections (project grid, journal list, GitHub, résumé, contact form) become PHP-rendered blocks in the PR that converts their page. No Custom HTML blocks.
 - Converting a page: build markup with the `mh_blocks_*` helpers from the page's saved fields, call `mh_save_page_blocks()`, leave the `mh_f_*` meta in place as the backup.
+- Retiring a template: once a converted page is confirmed on live, move its old `template-*.blade.php` to `resources/archive/views/` (outside `resources/views/`, so WordPress stops listing it as a page template) in the next PR. Switch the page to the Block page template in the same conversion, or it loses its template when the file moves. The archive folder is deleted when every page is done.
 
 ## Editor’s notes (3.6.62 polish)
 
