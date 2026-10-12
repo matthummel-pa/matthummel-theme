@@ -6410,3 +6410,56 @@ html.mh-dark .project-story__num { color: var(--lime-300); }
   border-color: #fff;
   color: #fff;
 }
+
+/* ── 3.6.59 · Grid gaps on one scale ───────────────────────────────────────
+   Card grids were spread over eleven values from 0 to 28px, and four still had
+   the 1px hairline gap from before their cells became bordered cards, so the
+   cards touched. Two steps on the 8pt scale now: --card-gap (24px, 16px on
+   phones) between cards, --card-gap-tight (16px) between tiles and rows. ── */
+:root { --card-gap: 1.5rem; --card-gap-tight: 1rem; --card-gap-roomy: 2rem; }
+@media (max-width: 640px) {
+  :root { --card-gap: 1rem; --card-gap-roomy: 1.5rem; }
+}
+
+.h-project-grid, .h-journal-list, .h-help-grid,
+.about-services, .h-glance__facts, .about-approach, .code-skills-groups,
+.a11y-standards-grid, .a11y-limits-grid,
+.journal-topics-grid, .post-related__grid, .post-nav,
+.project-feat-grid, .resources-list, .uses-body__grid,
+.priv-collect-grid, .legal-data-grid,
+.h-process__grid, .h-fit__grid, .svc-process, .project-story__steps { gap: var(--card-gap); }
+
+/* The content-list rule (3.6.9) adds .45em under each feature, which made rows wider than columns. */
+:is(.project-features) ul.project-feat-grid:not(.mh-tool-grid):not(.mh-ship-pipe):not(.contains-task-list):not(.process-list):not(.svc-list):not(.value-grid):not(.now-list):not(.comment-list) > li.project-feat { margin: 0; }
+
+.work-grid--roomy:not(.is-list),
+.post-list--roomy:not(.is-list) { gap: var(--card-gap-roomy); }
+
+.code-pulse, .code-skills-grid, .h-faq__list, .faq-list, .uses-list,
+.about-openwork__types, .about-story__aside, .contact-aside-v2,
+.cta-band__actions, .concept-hero-actions, .project-page .project-hero-actions,
+.support-product__actions { gap: var(--card-gap-tight); }
+
+/* Former hairline rails: the wrapper stops drawing the dividers and frame… */
+.h-process__grid, .h-fit__grid, .svc-process, .project-story__steps,
+html.mh-dark .project-story__steps,
+.code-pulse {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+.code-pulse__stat, .code-pulse__stat:first-child { border-left-width: 1px; }
+/* …and the two rails whose steps were bare panels take the grid-card recipe. */
+.svc-process__step, .project-story__step {
+  background: linear-gradient(160deg, #f6f3ff 0%, #ffffff 60%);
+  border: 1px solid var(--lime-400);
+  border-radius: 14px;
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+}
+html.mh-dark .svc-process__step, html.mh-dark .project-story__step {
+  background: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  border-color: rgba(163, 230, 53, .55);
+  box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
+}
