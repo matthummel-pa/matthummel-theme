@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.6.59 — Contrast pass, one grid gap scale, target sizes
+
+- Dark mode: project pages (story steps, specs, "under the hood", feature toggles), journal tool cards and a few stat tiles still read `--gray-50…400` as light text and `--gray-700…900` as dark fills, which the dark skin flips. They rendered navy on navy at about 1.2:1. They now use the text and surface tokens. A new `--color-surface-raised` covers chips that sit on a card.
+- Project hero: the wash is a dark scrim in both modes and stays near-opaque behind the copy, so the screenshot's own headline no longer shows through. In light mode the stats, repo line and "View code" link are light like the rest of the hero.
+- Light mode: post hero meta (author, read time, share label and buttons), the Start page proof list and journal breadcrumbs sat dark on the dark hero. They are light now.
+- Smaller contrast fixes: skip link, active comment tab and current page number in dark mode; blue tint chips and icon tiles (changelog, privacy, accessibility, contact, skills); the sidebar "Available" pill; fit-column labels; code comments; the search button on 404 and search pages is lime like every other search button; active Journal sort/view buttons end on violet-700 so white type clears 4.5:1.
+- Step numbers on the Projects guide and project story use the lime index recipe (were under 2:1).
+- Grid gaps: card grids used eleven values from 0 to 28px. They now use `--card-gap` (24px, 16px on phones), `--card-gap-tight` (16px) and `--card-gap-roomy` (32px). The About process steps, fit columns and GitHub pulse cards no longer touch, and the Projects guide and project story rails are separate cards.
+- Standalone text links and pills have a 24px minimum height. Pill and badge labels under 11.5px are 12px.
+- New-window links that had no hint ("Live demo" on home cards, Support page links, footer credits, "Star on GitHub") announce "(opens in a new window)".
+- Footer: "For agencies" and "Handoff checklist" only show once their pages are published. Both were 404s.
+- The contact band is marked for scroll reveal in the HTML; a `<noscript>` rule keeps it visible when JavaScript does not run.
+
 ## 3.6.58 — Sidebar buttons, open FAQ surface
 
 - Sidebar: the primary "Say hello" button is lime with violet type again and the secondary / RSS buttons read lime (dark) or violet (light) — the broad dark-mode link rule was recoloring them blue.
