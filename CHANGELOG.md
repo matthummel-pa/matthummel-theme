@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.6.62 — Site polish: type, cards, in-page filters, About, Resources, cleanup
+
+- Type: every font size under about 16.5px went up one step (12→13, 13→14, 14→16, 15→16/17px). Card copy that was 14px is 16px. The sizes were edited in place, not overridden.
+- Cards: the thick lime edge on one side is gone (top edge on grid cards, left edge on the current résumé card and the hiring-manager card). Cards have one even border; hover lifts the card and draws a lime ring.
+- Headings: section and hero headings are one solid color. The script that wrapped the last words in a gradient span is removed.
+- Header: "Say hello" was violet type on dark glass at the top of every page (about 1.1:1). It is the lime button at all scroll positions.
+- Footer: three columns. The Work column is folded into Site.
+- Projects: type pills filter the grid in place, with the search box, and update `?cat=` without a reload. List view gives the screenshot a wide 16:10 column and the image fills it. Pills have more padding.
+- Journal: topic pills, pagination, sort, and category pills on cards swap results in place; search runs as you type. Each is a normal link or form without JavaScript. Pagination shows "Page 2 of 4", has 44px round targets, and says Previous / Next. Topic archives and search share one results partial with the journal home.
+- Motion: list changes use the View Transitions API where the browser has it and a short fade elsewhere; none with reduced motion.
+- About: profile photo in the hero. The adjacent-work sentence prints once instead of three times. A one-time migration trims four repeated sentences in stored copy, only where the field still holds the old text.
+- Resources: overview with jump links, each section as a heading beside its cards, whole card clickable, stack groups as plain rows in one card. Catalog copy rewritten; a note-to-self ("swap in your partner URLs when active") no longer shows to visitors.
+- SEO score: pages on a named template were scored on an empty `post_content`. They are scored on the rendered page, and fall back to the template's default focus keyword. Two filters added to the bundled MH SEO module: `mh_seo_score_content`, `mh_seo_score_keyword`.
+- Removed: 748 CSS classes that appear nowhere in the theme (1,374 rules), 8 unused keyframes, the disabled Rank Math keyword-padding code (about 490 lines), `receive-walkthrough.js`, `product-section-nav.js`, the hero parallax and the copy/share handlers with no markup. Built CSS is 562 KB (86 KB gzipped), down from 730 KB (108 KB).
+- Dark mode contrast: stack links on Resources, empty states, and Services step numbers.
+
 ## 3.6.61 — Article schema only on posts and projects
 
 - MH SEO (bundled): pages such as Home, About, Projects and Contact no longer output an `Article` node. They keep `WebPage` and breadcrumbs. Posts stay `BlogPosting` and projects stay `Article`. The module version is unchanged, so its one-time setup does not re-run.

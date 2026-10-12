@@ -454,7 +454,7 @@ function mh_recruiter_glance(): array
         'availability' => field('glance_avail', __('Full-time, contract, freelance, agency overflow', 'sage')),
         'note' => field(
             'glance_note',
-            __('Most production work lived inside employers, so I now publish WordPress themes, plugins, and builds on GitHub. Stack details are below.', 'sage')
+            __('The short version, if you are hiring. The resume above has the detail.', 'sage')
         ),
         'employers' => field_html(
             'glance_employers',

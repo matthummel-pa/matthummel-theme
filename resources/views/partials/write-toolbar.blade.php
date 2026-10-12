@@ -21,8 +21,8 @@
     </div>
   @endif
   <div class="write-tool-actions">
-    <p class="write-count">{{ $countLabel }}</p>
-    <div class="write-sort" role="group" aria-label="{{ __('Sort posts', 'sage') }}">
+    <p class="write-count" role="status" data-journal-region="count">{{ $countLabel }}</p>
+    <div class="write-sort" role="group" aria-label="{{ __('Sort posts', 'sage') }}" data-journal-region="sort">
       <a class="write-sort-btn{{ $oldest ? '' : ' is-active' }}" href="{{ esc_url(\App\mh_journal_sort_url('newest')) }}" @if (! $oldest) aria-current="page" @endif>{{ __('Newest', 'sage') }}</a>
       <a class="write-sort-btn{{ $oldest ? ' is-active' : '' }}" href="{{ esc_url(\App\mh_journal_sort_url('oldest')) }}" @if ($oldest) aria-current="page" @endif>{{ __('Oldest', 'sage') }}</a>
     </div>

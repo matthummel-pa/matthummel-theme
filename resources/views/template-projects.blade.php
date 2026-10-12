@@ -106,7 +106,7 @@
         </form>
       </div>
       <div class="write-tool-actions">
-        <p class="write-count" data-work-count aria-live="polite">{{ $countLabel }}</p>
+        <p class="write-count" data-work-count role="status" data-label-one="{{ esc_attr__('%d project', 'sage') }}" data-label-many="{{ esc_attr__('%d projects', 'sage') }}">{{ $countLabel }}</p>
         <div class="write-view" role="group" aria-label="{{ __('Layout', 'sage') }}">
           <button type="button" class="write-view-btn is-active" data-work-view="grid" aria-pressed="true">{{ __('Grid', 'sage') }}</button>
           <button type="button" class="write-view-btn" data-work-view="list" aria-pressed="false">{{ __('List', 'sage') }}</button>
@@ -115,36 +115,35 @@
       </div>
     </div>
 
-    <nav class="filter-row" aria-label="{{ __('Filter by type', 'sage') }}">
-      <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" @if ($cat === '') aria-current="page" @endif>
+    {{-- Type filter: links that work without JS (?cat=…); work-tools.js filters the grid in place. --}}
+    <nav class="filter-row" aria-label="{{ __('Filter by type', 'sage') }}" data-work-cats>
+      <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" data-work-cat="" @if ($cat === '') aria-current="true" @endif>
         {{ __('All', 'sage') }} <span class="filter-count">{{ $total }}</span>
       </a>
       @foreach ($cats as $c)
-        <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', $c, $pageUrl)) }}" @if ($cat === $c) aria-current="page" @endif>
+        <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', rawurlencode($c), $pageUrl)) }}" data-work-cat="{{ esc_attr($c) }}" @if ($cat === $c) aria-current="true" @endif>
           {{ $c }} <span class="filter-count">{{ (int) $counts[$c] }}</span>
         </a>
       @endforeach
     </nav>
 
-    @if ($shown === [])
-      <div class="work-empty work-empty--compact" role="status">
-        <h3 class="work-empty__title">{{ __('No projects in this type yet.', 'sage') }}</h3>
-        <p class="work-empty__text">{{ __('Try another filter, or browse the full list.', 'sage') }}</p>
-        <div class="work-empty__actions">
-          <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}">{{ __('Show all projects', 'sage') }}</a>
-        </div>
+    {{-- Every card is in the HTML; the ones outside the current type are hidden. --}}
+    <div class="work-grid work-grid--roomy" data-work-grid>
+      @foreach ($all as $p)
+        @include('partials.work-card', [
+          'p' => $p,
+          'pageUrl' => $pageUrl,
+          'isHidden' => $cat !== '' && ($p['cat'] ?? '') !== $cat,
+        ])
+      @endforeach
+    </div>
+    <div class="work-empty work-empty--compact" data-work-empty role="status" @if ($shown !== []) hidden @endif>
+      <h3 class="work-empty__title">{{ __('No projects match.', 'sage') }}</h3>
+      <p class="work-empty__text">{{ __('Try another type or a different search.', 'sage') }}</p>
+      <div class="work-empty__actions">
+        <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}" data-work-reset>{{ __('Show all projects', 'sage') }}</a>
       </div>
-    @else
-      <div class="work-grid work-grid--roomy" data-work-grid>
-        @foreach ($shown as $p)
-          @include('partials.work-card', [
-            'p' => $p,
-            'pageUrl' => $pageUrl,
-          ])
-        @endforeach
-      </div>
-      <p class="archive-desc" data-work-empty hidden role="status" aria-live="polite">{{ __('No projects match that search.', 'sage') }}</p>
-    @endif
+    </div>
 
     <div class="work-footer-links">
       {!! \App\field_html('work_foot', \App\mh_projects_listing_default('foot')) !!}

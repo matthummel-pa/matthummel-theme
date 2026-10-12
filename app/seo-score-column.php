@@ -4,8 +4,11 @@
  * MH SEO score column on the Posts, Pages, and other public list screens.
  *
  * Reads the score the MH SEO plugin saves to `_mh_seo_score` (0–100) and shows
- * it as a green / yellow / red badge, like Rank Math. Read-only: nothing here
- * calculates or writes scores. Loads only when MH SEO is active.
+ * it as a green / yellow / red badge, like Rank Math. The column is read-only.
+ *
+ * The two filters at the end feed the score: pages on a named template are
+ * scored on the page visitors get, and fall back to the template's default
+ * focus keyword. Loads only when MH SEO is active.
  */
 
 namespace App;
@@ -167,3 +170,104 @@ add_action('admin_enqueue_scripts', function (string $hook): void {
         .mh-seo-score__kw { display: block; margin-top: 4px; max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #646970; font-size: 12px; }
     ');
 });
+
+/**
+ * Score a template page on the HTML visitors get.
+ *
+ * Named-template pages keep their copy in Page content (theme) fields and Blade,
+ * so post_content is empty and every content check (length, links, headings,
+ * image alts) failed no matter what the page said. For a published page on a
+ * named template, the front page, or the journal page, this returns the
+ * rendered <main> instead. Any failure falls back to post_content.
+ *
+ * @param  string  $content  HTML the score is computed from.
+ * @param  \WP_Post  $post  Post being scored.
+ */
+function mh_seo_score_rendered_page(string $content, \WP_Post $post): string
+{
+    if ($post->post_type !== 'page' || $post->post_status !== 'publish' || post_password_required($post)) {
+        return $content;
+    }
+
+    $id = (int) $post->ID;
+    $hasTemplate = (string) get_page_template_slug($post) !== '';
+    $isFront = (int) get_option('page_on_front') === $id;
+    $isJournal = (int) get_option('page_for_posts') === $id;
+    if (! $hasTemplate && ! $isFront && ! $isJournal) {
+        return $content;
+    }
+
+    $html = mh_seo_fetch_main_html((string) get_permalink($post));
+
+    return $html !== '' ? $html : $content;
+}
+
+/**
+ * Fetch one of this site's own pages and return the inside of its <main>.
+ *
+ * Scripts, styles, inline SVG, and forms are dropped so they are not counted as copy,
+ * and the page's own <h1> is removed because the title is scored separately.
+ * Returns an empty string on any error; the caller keeps what it had.
+ *
+ * @param  string  $url  A permalink on this site.
+ */
+function mh_seo_fetch_main_html(string $url): string
+{
+    // PHP's built-in server answers one request at a time, so a page cannot fetch itself there.
+    if ($url === '' || (PHP_SAPI === 'cli-server')) {
+        return '';
+    }
+
+    // A throwaway query arg keeps a page cache from answering with a stale copy.
+    $response = wp_remote_get(add_query_arg('mh_seo_score', (string) time(), $url), [
+        'timeout' => 8,
+        'redirection' => 2,
+        'headers' => ['Cache-Control' => 'no-cache'],
+    ]);
+    if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
+        return '';
+    }
+
+    $body = (string) wp_remote_retrieve_body($response);
+    if (preg_match('#<main\b[^>]*>(.*)</main>#is', $body, $match) !== 1) {
+        return '';
+    }
+
+    $main = preg_replace('#<(script|style|svg|noscript|template|form)\b[^>]*>.*?</\1>#is', '', $match[1]);
+    if (! is_string($main)) {
+        return '';
+    }
+
+    // The analyzer scores a post body, where an <h1> is a mistake because the title is the h1.
+    // Here the first <h1> is that title, so take it out; a second one still counts against the page.
+    $body = preg_replace('#<h1\b[^>]*>.*?</h1>#is', '', $main, 1);
+
+    return is_string($body) ? $body : $main;
+}
+
+/**
+ * Use the page template's default focus keyword when none is saved.
+ *
+ * @param  string  $keyword  Saved focus keyword, or an empty string.
+ * @param  \WP_Post  $post  Post being scored.
+ */
+function mh_seo_score_default_keyword(string $keyword, \WP_Post $post): string
+{
+    if ($keyword !== '' || $post->post_type !== 'page') {
+        return $keyword;
+    }
+
+    $id = (int) $post->ID;
+    $key = mh_effective_field_map_key($id);
+    if ((int) get_option('page_for_posts') === $id) {
+        $key = 'index.blade.php';
+    }
+    if ((int) get_option('page_on_front') === $id) {
+        $key = 'front-page.blade.php';
+    }
+
+    return mh_page_focus_keyword_defaults()[$key] ?? '';
+}
+
+add_filter('mh_seo_score_content', __NAMESPACE__.'\\mh_seo_score_rendered_page', 10, 2);
+add_filter('mh_seo_score_keyword', __NAMESPACE__.'\\mh_seo_score_default_keyword', 10, 2);

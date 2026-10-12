@@ -110,30 +110,17 @@
 ])
 
 {{-- POSTS --}}
-<div id="journal-posts" class="container wide page-block write-hub write-hub--home" aria-labelledby="journal-posts-heading">
-  <h2 id="journal-posts-heading" class="display-title is-section">{{ __('Browse the posts', 'sage') }}</h2>
-  <p class="lead work-guide__intro">{{ __('Search by keyword, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage') }}</p>
+<div id="journal-posts" class="container wide page-block write-hub write-hub--home" aria-labelledby="journal-posts-heading" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list post-list--roomy">
+  <h2 id="journal-posts-heading" class="display-title is-section" tabindex="-1">{{ __('Browse the posts', 'sage') }}</h2>
+  <p class="lead work-guide__intro">{{ __('Search as you type, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage') }}</p>
 
   @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl])
-  @include('partials.write-topics', compact('writeId', 'writeUrl'))
-
-  @if (! have_posts())
-    <p>No posts yet.</p>
-  @else
-    <div class="post-list post-list--roomy" data-post-list>
-      @while(have_posts())
-        @php(the_post())
-        @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-      @endwhile
-    </div>
-    <div class="posts-nav">
-      {!! get_the_posts_pagination([
-        'mid_size' => 1,
-        'prev_text' => __('← Older', 'sage'),
-        'next_text' => __('Newer →', 'sage'),
-      ]) !!}
-    </div>
-  @endif
+  <div data-journal-region="topics">
+    @include('partials.write-topics', compact('writeId', 'writeUrl'))
+  </div>
+  <div data-journal-region="results">
+    @include('partials.journal-results', ['writeUrl' => $writeUrl, 'emptyText' => __('No posts yet.', 'sage')])
+  </div>
 
   @include('partials.write-subscribe', compact('writeId'))
 

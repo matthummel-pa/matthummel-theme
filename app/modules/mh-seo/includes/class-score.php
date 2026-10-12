@@ -95,10 +95,29 @@ class Score
         if ($keyword === '') {
             $keyword = (new Migrator)->first_keyword((string) get_post_meta($post_id, 'rank_math_focus_keyword', true));
         }
+        /**
+         * Filters the focus keyword a post is scored against.
+         *
+         * Lets a theme supply a default for posts that have none saved.
+         *
+         * @param  string  $keyword  Saved focus keyword, or an empty string.
+         * @param  \WP_Post  $post  Post being scored.
+         */
+        $keyword = trim((string) apply_filters('mh_seo_score_keyword', $keyword, $post));
         $content = (string) $post->post_content;
         if (function_exists('do_blocks')) {
             $content = do_blocks($content);
         }
+        /**
+         * Filters the HTML a post is scored on.
+         *
+         * Pages that render from a template instead of post_content can return
+         * the HTML visitors get, so the content checks measure the real page.
+         *
+         * @param  string  $content  Rendered post_content.
+         * @param  \WP_Post  $post  Post being scored.
+         */
+        $content = (string) apply_filters('mh_seo_score_content', $content, $post);
         $result = (new Score_Analyzer)->analyze(
             [
                 'seo_title' => (string) ($context['custom_title'] ?? ''),

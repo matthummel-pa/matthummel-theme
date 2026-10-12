@@ -24,7 +24,9 @@
   class="work-card{{ $featured ? ' work-card--featured' : '' }}"
   id="{{ esc_attr($slug) }}"
   data-work-card
+  data-cat="{{ esc_attr((string) ($p['cat'] ?? '')) }}"
   data-search="{{ esc_attr($haystack) }}"
+  @if (! empty($isHidden)) hidden @endif
 >
   @if ($shot !== '')
     <a class="work-shot" href="{{ esc_url($conceptUrl) }}" aria-hidden="true" tabindex="-1">

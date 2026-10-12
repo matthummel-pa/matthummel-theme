@@ -49,24 +49,41 @@
 
 @include('partials.page-nav', ['pills' => $resourcePills])
 
-@if ($hasAffiliate)
-  <div class="container wide">
-    <aside class="affiliate-note" role="note" aria-label="{{ __('Affiliate disclosure', 'sage') }}">
-      <p>
-        <strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
-        {{ \App\mh_affiliate_disclosure_note() }}
-        <a href="{{ esc_url($disclosureUrl) }}">{{ __('How affiliate links work', 'sage') }}</a>
-      </p>
-    </aside>
-  </div>
-@endif
-
-<section class="pf-section work-guide" aria-labelledby="resources-intro-heading">
-  <div class="container wide">
-    <h2 id="resources-intro-heading" class="display-title is-section">
-      {{ \App\field('resources_intro_h2', __('What you will find here.', 'sage')) }}
-    </h2>
-    <p class="lead work-guide__intro">{{ \App\field('resources_intro_p', __('Starters are free to fork. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear. The stack list at the end is what I actually use on shipped work.', 'sage')) }}</p>
+<section class="pf-section resources-overview" aria-labelledby="resources-intro-heading">
+  <div class="container wide resources-overview__grid">
+    <div>
+      <h2 id="resources-intro-heading" class="display-title is-section">
+        {{ \App\field('resources_intro_h2', __('What you will find here.', 'sage')) }}
+      </h2>
+      <p class="lead work-guide__intro">{{ \App\field('resources_intro_p', __('Starters are free to fork. Tool recommendations may include disclosed affiliate links. The stack list at the end is what I use on shipped work.', 'sage')) }}</p>
+    </div>
+    <ul class="resources-jump">
+      @foreach ($sections as $section)
+        <li>
+          <a href="#resources-{{ \Illuminate\Support\Str::slug($section['title']) }}">
+            <span class="resources-jump__n">{{ number_format_i18n(count($section['items'])) }}</span>
+            <span class="resources-jump__label">{{ $section['title'] }}</span>
+            <span class="resources-jump__go" aria-hidden="true">↓</span>
+          </a>
+        </li>
+      @endforeach
+      <li>
+        <a href="#uses">
+          <span class="resources-jump__n">{{ number_format_i18n(count($stack)) }}</span>
+          <span class="resources-jump__label">{{ __('Stack groups', 'sage') }}</span>
+          <span class="resources-jump__go" aria-hidden="true">↓</span>
+        </a>
+      </li>
+    </ul>
+    @if ($hasAffiliate)
+      <aside class="affiliate-note" role="note" aria-label="{{ esc_attr__('Affiliate disclosure', 'sage') }}">
+        <p>
+          <strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
+          {{ \App\mh_affiliate_disclosure_note() }}
+          <a href="{{ esc_url($disclosureUrl) }}">{{ __('How affiliate links work', 'sage') }}</a>
+        </p>
+      </aside>
+    @endif
   </div>
 </section>
 
@@ -77,6 +94,8 @@
         <div class="resources-section__head">
           <h2 id="resources-{{ \Illuminate\Support\Str::slug($section['title']) }}" class="resources-section__title">{{ $section['title'] }}</h2>
           <p class="resources-section__intro">{{ $section['intro'] }}</p>
+          {{-- translators: %s: number of links in this section. --}}
+          <p class="resources-section__count">{{ sprintf(_n('%s link', '%s links', count($section['items']), 'sage'), number_format_i18n(count($section['items']))) }}</p>
         </div>
         <ul class="resources-list">
           @foreach ($section['items'] as $item)
@@ -102,6 +121,7 @@
                 >{{ $item['name'] }}@if (\App\mh_is_external_url($item['url']))<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>@endif</a>
               </h3>
               <p class="resources-card__blurb">{{ $item['blurb'] }}</p>
+              <span class="resources-card__go" aria-hidden="true">{{ \App\mh_is_external_url($item['url']) ? '↗' : '→' }}</span>
             </li>
           @endforeach
         </ul>

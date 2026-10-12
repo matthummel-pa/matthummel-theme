@@ -1,5 +1,9 @@
 @php
   $glance = $glance ?? \App\mh_recruiter_glance();
+  // About already prints this sentence under What I build; do not repeat it here.
+  if (isset($rangeShown) && trim((string) ($glance['range'] ?? '')) === $rangeShown) {
+    $glance['range'] = '';
+  }
   $facts = [
     ['Role', $glance['role'], 'briefcase'],
     ['Stack', $glance['stack'], 'code'],

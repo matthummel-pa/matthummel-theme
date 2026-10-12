@@ -39,7 +39,7 @@
 .mh-code-traffic i:nth-child(2) { background: #ffbd2e; }
 .mh-code-traffic i:nth-child(3) { background: #27c93f; }
 .mh-code-lang {
-  font: 600 .72rem/1 var(--font-mono);
+  font: 600 .8125rem/1 var(--font-mono);
   letter-spacing: .08em;
   text-transform: uppercase;
   color: #9cdcfe;
@@ -56,7 +56,7 @@
   border-radius: 4px;
   background: #2d2d2d;
   color: #cccccc;
-  font: 600 .75rem/1 var(--font-display);
+  font: 600 .8125rem/1 var(--font-display);
   cursor: pointer;
 }
 .mh-code-copy:hover,
@@ -74,7 +74,7 @@
   background: transparent;
   color: var(--mh-code-fg);
   border-radius: 0;
-  font-size: .9rem;
+  font-size: 1rem;
   line-height: 1.65;
   tab-size: 2;
 }

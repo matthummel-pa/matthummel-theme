@@ -102,7 +102,7 @@ function mh_about_story_default_paragraphs(): array
         __('I started on the web in higher-ed marketing — landing pages, content updates, and figuring out why a page that looked fine still wasn’t getting clicks. That taught me more about what people need than any course or tool.', 'sage'),
         __('WordPress is the tool I kept coming back to. Most shops need a site they can edit themselves: update hours, add a product, fix a typo, without waiting on a developer. That still matters to me.', 'sage'),
         __('The Projects page showcases WordPress themes and plugins — Sage 11 builds I can adapt for a shop or a role. Production client and in-house work stays private unless a shop asks to be featured.', 'sage'),
-        __('Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are in the resume below. There is no public demo.', 'sage'),
+        __('Most of my earlier work lived inside employers, so the public repos are recent. The Power Platform work for federal agencies is in the resume below; it has no public demo.', 'sage'),
     ];
 }
 
@@ -414,7 +414,7 @@ function mh_home_fields(): array
             ['glance_location', __('Location', 'sage'), 'text', __('Gettysburg, PA · remote OK', 'sage')],
             ['glance_experience', __('Experience line', 'sage'), 'text', ''],
             ['glance_avail', __('Availability', 'sage'), 'text', __('Full-time, contract, freelance, agency overflow', 'sage')],
-            ['glance_note', __('Public-work sentence', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing WordPress themes, plugins, and builds on GitHub. Stack details are on About.', 'sage')],
+            ['glance_note', __('The short version, if you are hiring. The resume above has the detail.', 'sage'), 'textarea', __('Most production work lived inside employers, so I am now publishing WordPress themes, plugins, and builds on GitHub. Stack details are on About.', 'sage')],
             ['glance_employers', __('Employers line (HTML)', 'sage'), 'html', __('Employers on the record: <a href="/about/#resume">Saliense, All Native Group, and Knowledge Capital Associates (USMC)</a>.', 'sage')],
             ['glance_power', __('Power Platform line (HTML)', 'sage'), 'html', __('PowerApps, Power Automate, and InfoPath for federal agencies — details in the <a href="/about/#resume">resume</a>. There is no public demo.', 'sage')],
             ['glance_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
@@ -490,6 +490,7 @@ function page_field_map(): array
                 ['about_kicker', __('Kicker', 'sage'), 'text', __('About me', 'sage')],
                 ['about_h1', __('Heading', 'sage'), 'text', __('Seventeen years of building for the web.', 'sage')],
                 ['about_lede', __('Intro', 'sage'), 'textarea', __('I started in higher-ed marketing and kept coming back to WordPress because it gives people real ownership of their site. Today I build themes, plugins, and web apps for businesses and agencies — and write it all down for the next developer.', 'sage')],
+                ['about_photo_caption', __('Photo caption', 'sage'), 'text', __('Full-stack and WordPress developer · Gettysburg, PA', 'sage')],
             ],
             __('How I got here', 'sage') => [
                 ['about_story_h2', __('Heading', 'sage'), 'text', __('How I got here.', 'sage')],
@@ -502,7 +503,7 @@ function page_field_map(): array
                 ['now_lede', __('Intro', 'sage'), 'textarea', __('A short list of where my time is going.', 'sage')],
                 ['now_updated', __('Last updated label (blank uses the page edit date)', 'sage'), 'text', ''],
                 ['now_items', __('Items (one per line)', 'sage'), 'lines', mh_now_items_defaults()],
-                ['now_life_p1', __('Life paragraph', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
+                ['now_life_p1', __('Nights and weekends belong to my family, not projects.', 'sage'), 'textarea', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')],
                 ['now_posts_empty', __('Recent posts empty state', 'sage'), 'textarea', __('No journal posts are published yet.', 'sage')],
             ],
             __('What I build', 'sage') => [
@@ -517,7 +518,7 @@ function page_field_map(): array
             ],
             __('Open for work', 'sage') => [
                 ['about_work_h2', __('Heading', 'sage'), 'text', __('Open for work.', 'sage')],
-                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I\'m looking for full-time roles, contract gigs, and freelance projects. Happy to work remote or on-site.', 'sage')],
+                ['about_work_p1', __('Paragraph 1', 'sage'), 'textarea', __('I’m open to full-time roles, contract work, and freelance projects. Happy to work remote or on-site.', 'sage')],
                 ['about_work_p2', __('Paragraph 2', 'sage'), 'textarea', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')],
                 ['about_work_cta', __('Button label', 'sage'), 'text', __('Start a conversation', 'sage')],
                 ['about_work_range', __('Adjacent-work sentence', 'sage'), 'textarea', mh_adjacent_range_copy()],
@@ -543,7 +544,7 @@ function page_field_map(): array
             ],
             __('Resume', 'sage') => [
                 ['hire_cv_h2', __('Heading', 'sage'), 'text', __('Resume.', 'sage')],
-                ['hire_cv_intro', __('Intro', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')],
+                ['hire_cv_intro', __('Newest role first. I work with shops and agencies anywhere, and I’m open to full-time, contract, and agency overflow work.', 'sage'), 'textarea', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')],
                 ['hire_cv_jobs', __('Roles', 'sage'), 'repeater', mh_code_resume_defaults(), [
                     ['role', __('Role', 'sage'), 'text'],
                     ['org', __('Organization', 'sage'), 'text'],
@@ -2140,12 +2141,10 @@ add_action('init', function (): void {
 
         $content = (string) get_post_field('post_content', $svcId, 'raw');
         if (str_contains($content, 'wp-block-rank-math-toc-block') || str_contains($content, 'custom WordPress sites')) {
-            remove_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
             wp_update_post([
                 'ID' => $svcId,
                 'post_content' => '',
             ]);
-            add_action('save_post_page', __NAMESPACE__.'\\mh_on_save_page_seo_analysis_body', 30);
         }
     }
 

@@ -4286,3 +4286,75 @@ add_action('init', function (): void {
 
     update_option('mh_retire_merged_pages_v1', true);
 }, 64);
+
+/**
+ * 3.6.62 — About copy tidy: say each thing once.
+ *
+ * The same three sentences (adjacent work, "no public demo", family hours) each
+ * appeared two or three times down the page. The template now prints the
+ * adjacent-work sentence once; this trims the other repeats in stored copy.
+ * A field is only changed while it still holds the exact text listed here,
+ * so anything edited in wp-admin since is left alone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_about_copy_tidy_v1') || wp_installing()) {
+        return;
+    }
+
+    $workP1 = 'I’m open to full-time roles, contract work, and freelance projects. I’m based in Gettysburg, PA, and happy to work remote.';
+    $cvIntro = 'Newest role first. I work with shops and agencies anywhere, and I’m open to full-time, contract, and agency overflow work.';
+    $glanceNote = 'The short version, if you are hiring. The resume above has the detail.';
+    $life = 'Nights and weekends belong to my family, not projects.';
+
+    // Whole-field swaps: stored value => replacement.
+    $swaps = [
+        'mh_f_about_work_p1' => [
+            'I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.' => $workP1,
+            'I’m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.' => $workP1,
+        ],
+        'mh_f_hire_cv_intro' => [
+            'Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.' => $cvIntro,
+        ],
+        'mh_f_glance_note' => [
+            'Most production work lived inside employers, so I now publish WordPress themes, plugins, and builds on GitHub. Stack details are below.' => $glanceNote,
+        ],
+        'mh_f_now_life_p1' => [
+            'I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.' => $life,
+        ],
+    ];
+
+    // Sentence swaps inside the story (one WYSIWYG value, so match the sentence, not the field).
+    $storySwaps = [
+        ' Hire me here for a real build.' => '',
+        ' Hire me on this site for a real build.' => '',
+        'Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are in the resume below. There is no public demo.' => 'Most of my earlier work lived inside employers, so the public repos are recent. The Power Platform work for federal agencies is in the resume below; it has no public demo.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($pairs[$val])) {
+                update_post_meta($id, $key, $pairs[$val]);
+            }
+        }
+
+        $story = get_post_meta($id, 'mh_f_about_story', true);
+        if (is_string($story) && $story !== '') {
+            $next = str_replace(array_keys($storySwaps), array_values($storySwaps), $story);
+            if ($next !== $story) {
+                update_post_meta($id, 'mh_f_about_story', $next);
+            }
+        }
+    }
+
+    update_option('mh_about_copy_tidy_v1', true);
+}, 75);

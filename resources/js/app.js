@@ -12,7 +12,6 @@ import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
 import { initProjectFeedback } from './project-feedback.js';
 import { initSectionNav } from './section-nav.js';
-import { initReceiveWalkthrough } from './receive-walkthrough.js';
 import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 import { initWooDesk } from './woo-desk.js';
@@ -426,7 +425,7 @@ function initCardTilt() {
     return;
   }
 
-  document.querySelectorAll('.work-card, .who-card, .lift-card, .repo-card, .post-card, .h-work-card-v2').forEach((card) => {
+  document.querySelectorAll('.work-card, .who-card, .repo-card, .post-card').forEach((card) => {
     card.addEventListener('pointermove', (event) => {
       const rect = card.getBoundingClientRect();
       const px = (event.clientX - rect.left) / rect.width;
@@ -443,24 +442,6 @@ function initCardTilt() {
       card.classList.remove('is-tilting');
     });
   });
-}
-
-function initHeroParallax() {
-  const layers = document.querySelectorAll('[data-parallax]');
-  if (!layers.length || prefersReducedMotion()) {
-    return;
-  }
-
-  const onScroll = () => {
-    const y = window.scrollY;
-    layers.forEach((el) => {
-      const factor = Number(el.getAttribute('data-parallax') || 0.08);
-      el.style.transform = `translate3d(0, ${(y * factor).toFixed(1)}px, 0)`;
-    });
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 }
 
 function initPresenceReveal() {
@@ -519,7 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductGallery();
   initProjectFeedback();
   initSectionNav();
-  initReceiveWalkthrough();
   initStudioCart();
   initCheckoutInstallNotes();
   initCopyBrief();
@@ -527,5 +507,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();
-  initHeroParallax();
 });
