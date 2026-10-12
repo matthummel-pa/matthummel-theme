@@ -6355,6 +6355,18 @@ html.mh-dark .hire-step__num { color: var(--lime-300); -webkit-text-fill-color: 
 html.mh-dark .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before { color: var(--lime-300); }
 .mh-card > :last-child { margin-bottom: 0; }
 
+/* Data blocks: a quiet row of count and links above the list. */
+.mh-data { margin-top: var(--card-gap-roomy); }
+.mh-data__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1.25rem;
+  margin-bottom: var(--card-gap);
+}
+.mh-data__meta > :only-child { margin-left: auto; }
+
 .mh-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--card-gap-tight); margin-top: 1.5rem; }
 .mh-buttons .wp-block-button { margin: 0; }
 .mh-block-section > .container > :first-child { margin-top: 0; }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.1 — Home is a block page
+
+- Home's copy is now blocks: hero, Projects, Journal, Services, Questions, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- New data blocks, filled in by the site: **Featured projects** and **Recent posts**. A data block is a `block.json` and a Blade view; its sidebar controls come from the `mhControls` key.
+- Page hero has a **Home hero** layout (the full-height photo hero).
+- A converted page moves to the Block page template and remembers the template it came from, so SEO defaults and page checks keep working.
+- `template-home.blade.php` and `partials/home.blade.php` moved to `resources/archive/views/` (to delete). The theme zip leaves that folder out.
+- New file `app/block-pages.php` holds the one-time converters. It can go when every page is converted on live.
+
 ## 3.7.0 — Page blocks (foundation)
 
 First step of moving pages from Page content (theme) fields to the block editor. No existing page changes in this release.

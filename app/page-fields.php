@@ -228,7 +228,8 @@ function page_template_key(int $post_id): string
         return 'index.blade.php';
     }
 
-    return (string) get_post_meta($post_id, '_wp_page_template', true);
+    // A page converted to blocks is still known by the field template it came from.
+    return mh_page_template_slug($post_id);
 }
 
 /**
@@ -1111,7 +1112,22 @@ function mh_page_id_by_template(string $template): int
         'meta_value' => $template,
     ]);
 
-    return isset($pages[0]) ? (int) $pages[0] : 0;
+    if (isset($pages[0])) {
+        return (int) $pages[0];
+    }
+
+    // Pages converted to blocks use the Block page template and remember the old one.
+    $converted = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'numberposts' => 1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_key' => MH_BLOCK_PAGE_FROM_META,
+        'meta_value' => $template,
+    ]);
+
+    return isset($converted[0]) ? (int) $converted[0] : 0;
 }
 
 function mh_code_page_resources(?int $post_id = null): array

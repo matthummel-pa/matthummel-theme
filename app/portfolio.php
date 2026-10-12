@@ -1757,7 +1757,7 @@ function mh_is_project_surface(): bool
         return true;
     }
 
-    return (string) get_page_template_slug() === 'template-projects.blade.php';
+    return mh_page_template_slug((int) get_queried_object_id()) === 'template-projects.blade.php';
 }
 
 /**
@@ -4294,7 +4294,7 @@ function mh_hero_scene_url(?int $post_id = null): string
 {
     $template = '';
     if ($post_id !== null && $post_id > 0) {
-        $template = (string) get_page_template_slug($post_id);
+        $template = mh_page_template_slug($post_id);
     }
 
     if (is_singular('project')) {
