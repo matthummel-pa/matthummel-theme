@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.7.0 — Page blocks (foundation)
+
+First step of moving pages from Page content (theme) fields to the block editor. No existing page changes in this release.
+
+- Seven page blocks, each with a `block.json`, an editor component, and a PHP render through a Blade view: Page hero, Section, Card grid, Card, Questions, Call to action band, On this page.
+- Inside them you use core blocks: Heading, Paragraph, List, Buttons, Details. On a block page the theme adds its own classes to those (`.btn`, `.display-title`, `.lead`), so there is one set of styles and no second copy for blocks.
+- New styles for core blocks in the sidebar: Button "Ghost" and "Text with arrow", Paragraph "Lead", List "Checklist".
+- New page template "Block page". The "On this page" block lists every Section that has a link label.
+- Pages open in the block editor unless their template still uses theme fields. The fields box is hidden on block pages.
+- The editor loads the theme stylesheet, so blocks look like the site while you edit (light mode).
+- PHP helpers that build block markup (`mh_blocks_*`, `mh_save_page_blocks`) for the per-page conversions that follow. They never overwrite a page that already has content and never delete field values.
+
 ## 3.6.63 — Page copy for the phrases each page targets
 
 - Home: a "Hiring a WordPress developer: common questions" section with six short answers. The role line now says "Full-stack and WordPress developer".

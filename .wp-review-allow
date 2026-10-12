@@ -7,3 +7,5 @@
 ^\s*do_shortcode\(\s*'\[mhn_signup source="post"\]'\s*\)\s*$
 # JSON-LD encoded with JSON_HEX_TAG (single project page).
 ^\s*\$ldJson\s*$
+# Rendered inner blocks (WP_Block::render output) in resources/views/blocks/cta-band.blade.php.
+^\s*\$(copy|actions)\s*$

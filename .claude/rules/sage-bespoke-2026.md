@@ -12,7 +12,7 @@ This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the dire
 - **Dark mode today:** runtime class is `html.mh-dark` (header toggle + `prefers-color-scheme`). CSS in `resources/css/portfolio.css` keys off that class. If adding a Customizer default (§2), map `system|light|dark` into that class; do not switch the whole theme to `[data-theme]` and abandon `.mh-dark`.
 - **Tailwind v4:** `@tailwindcss/vite` in `vite.config.js`. Front-end tokens live in CSS `@theme` (`resources/css/app.css`). `tailwind.config.js` is only the Gutenberg / `wordpressThemeJson` map. Do not add `@config` unless Matt migrates off CSS tokens.
 - **Deploy today:** `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`) builds on the runner and publishes GitHub Release `theme-latest`. Production is `matthummel.com` on Hostinger. Theme path is `wp-content/themes/matthummel/`. PHP 8.3, Node 22, npm (not yarn, not `web/app/themes/sage`). No SiteGround FTP or SSH.
-- **Gutenberg:** pages use named Blade templates (no block editor). Posts still use the block editor. Do not add block patterns or Kadence.
+- **Gutenberg:** posts use the block editor. Pages are moving to it one template at a time (3.7.0): a converted page is core blocks inside the theme's page blocks, PHP-rendered through Blade. Do not add block patterns, Custom HTML blocks, or Kadence.
 - **PHP:** prefer functions in `App` for theme helpers. Use classes for ACF/Customizer registries when those features are introduced.
 - **Branches:** this repo’s default branch is `main`. Cloud agent branches use `cursor/<name>-a1f6`. Do not invent a `staging` branch unless Matt wants one.
 
@@ -21,7 +21,7 @@ This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the dire
 ## Core architectural directives
 
 - **Bespoke only:** zero pre-made templates, child themes, or page-builder bloat.
-- **No Gutenberg on marketing pages:** ignore native block configurations or patterns for `template-*.blade.php` pages.
+- **Blocks on pages:** use the theme's page blocks and core blocks; ignore block patterns. A `template-*.blade.php` page that is not converted yet keeps its fields.
 - **Philosophy:** structured content belongs in programmatic custom fields (meta). Site-wide design variables belong in the WordPress Customizer when Matt asks for them.
 - **2026 visual design:** layouts use modern CSS — container queries (`@container`), fluid type (`clamp()`), and design tokens as CSS custom properties wired to Tailwind v4.
 

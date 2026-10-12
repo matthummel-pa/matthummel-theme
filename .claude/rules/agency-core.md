@@ -42,7 +42,8 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 
 ## Hard no’s
 
-- No Kadence, no child themes of this theme, no extra theme-options admin, no Gutenberg patterns on marketing pages.
+- No Kadence, no child themes of this theme, no extra theme-options admin, no block patterns or page builders.
+- **Pages are moving to blocks (Matt asked, 3.7.0).** A converted page keeps its copy in `post_content` as blocks: core blocks inside the theme's page blocks (`resources/blocks/`, `resources/views/blocks/`, editor code in `resources/js/blocks/page/`). No Custom HTML blocks and no new `mh_f_*` fields. Pages not converted yet still use **Page content (theme)** until their PR lands; see `docs/FEATURES.md` (3.7.0).
 - No installing ACF, WooCommerce, or new `app/*.php` modules unless Matt asks.
 - No rewriting dark mode off `html.mh-dark` unless Matt asks.
 - Do not add a second production deploy workflow. Edit `.github/workflows/deploy.yml` in place. Production is `matthummel.com` on Hostinger. Live theme path is `wp-content/themes/matthummel/`. No SiteGround FTP or SSH.

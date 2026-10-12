@@ -1,6 +1,8 @@
 @import "tailwindcss";
+@import "./portfolio.css";
 @import "./journal-blocks.css";
 @import "./code-blocks.css";
+@import "./studio.css";
 
 /**
  * Block editor canvas — match journal post chrome for comparison grids.
@@ -158,3 +160,40 @@
 .editor-styles-wrapper details {
   margin: 0 0 .65rem;
 }
+
+/* Page blocks in the editor: sections span the canvas, and core blocks inside them
+   take the same look the PHP class mapping gives them on the front end. */
+.editor-styles-wrapper .wp-block-matthummel-hero,
+.editor-styles-wrapper .wp-block-matthummel-section,
+.editor-styles-wrapper .wp-block-matthummel-cta-band,
+.editor-styles-wrapper .wp-block-matthummel-page-nav { max-width: none; }
+.editor-styles-wrapper .wp-block-matthummel-section .wp-block,
+.editor-styles-wrapper .wp-block-matthummel-hero .wp-block,
+.editor-styles-wrapper .wp-block-matthummel-cta-band .wp-block { max-width: none; }
+.editor-styles-wrapper .wp-block-matthummel-page-nav { position: static; }
+.editor-styles-wrapper .wp-block-matthummel-hero { margin-top: 0; padding-top: 4rem; }
+.editor-styles-wrapper .wp-block-matthummel-hero h1.wp-block-heading {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -.05em;
+  color: #fff;
+  margin: .35em 0;
+}
+.editor-styles-wrapper .wp-block-matthummel-hero p { color: #dbe9fa; }
+.editor-styles-wrapper .wp-block-matthummel-cta-band :is(h2.wp-block-heading, p) { color: #fff; }
+.editor-styles-wrapper .wp-block-matthummel-card h3.wp-block-heading { font-size: 1.25rem; margin: .6rem 0 .35rem; }
+/* Core buttons take the lime button look that `.btn` gives them on the front end. */
+.editor-styles-wrapper .wp-block-button__link {
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  border: 1px solid var(--lime-500);
+  border-radius: 10px;
+  color: var(--violet-900);
+  font: 700 1rem/1.2 var(--font-display);
+  padding: .8rem 1.3rem;
+}
+.editor-styles-wrapper .is-style-outline > .wp-block-button__link { background: transparent; border-color: var(--violet-400); color: var(--violet-900); }
+.editor-styles-wrapper :is(.wp-block-matthummel-hero, .wp-block-matthummel-cta-band) :is(.is-style-outline, .is-style-ghost, .is-style-arrow) > .wp-block-button__link { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .4); color: #fff; }
+.editor-styles-wrapper .is-style-arrow > .wp-block-button__link::after { content: " →"; }
+.editor-styles-wrapper .mh-block-nav li::before,
+.editor-styles-wrapper .mh-block-nav li::marker { content: none; display: none; }
+.editor-styles-wrapper .mh-block-nav ul { list-style: none; display: flex; gap: .5rem; margin: 0; padding: 0; }

@@ -6327,3 +6327,61 @@ html.mh-dark .hire-step__num { color: var(--lime-300); -webkit-text-fill-color: 
 .work-context__list { margin: 0; }
 @media (max-width: 860px) { .work-context__grid { grid-template-columns: 1fr; } }
 .work-faq__foot { margin: 1.5rem 0 0; color: var(--color-text-secondary); }
+
+/* ── 3.7.0 · Page blocks ───────────────────────────────────────────────────
+   Blocks reuse the theme's own classes (added in PHP: `.btn`, `.display-title`,
+   `.lead`, the service-card recipe). Only layout that had no class yet is here. */
+.mh-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--card-gap);
+  margin-block: var(--card-gap-roomy);
+}
+.mh-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mh-cards--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 960px) { .mh-cards, .mh-cards--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .mh-cards, .mh-cards--2, .mh-cards--4 { grid-template-columns: 1fr; } }
+/* Numbered grids print 01, 02… from a counter unless a card sets its own corner label. */
+.mh-cards--numbered { counter-reset: mh-card; }
+.mh-cards--numbered > .mh-card { counter-increment: mh-card; position: relative; }
+.mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before {
+  content: counter(mh-card, decimal-leading-zero);
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  font: 700 .8125rem/1 var(--font-mono);
+  color: var(--lime-700);
+}
+html.mh-dark .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before { color: var(--lime-300); }
+.mh-card > :last-child { margin-bottom: 0; }
+
+.mh-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--card-gap-tight); margin-top: 1.5rem; }
+.mh-buttons .wp-block-button { margin: 0; }
+.mh-block-section > .container > :first-child { margin-top: 0; }
+.mh-block-section .mh-block-faq { margin-top: var(--card-gap-roomy); }
+.mh-block-faq details > :not(summary) { margin: 0; }
+
+/* Core List, "Checklist" style. */
+ul.is-style-checklist { list-style: none; margin: 1.5rem 0; padding: 0; display: grid; gap: 0; }
+ul.is-style-checklist > li {
+  position: relative;
+  padding: .85rem 0 .85rem 2rem;
+  border-top: 1px solid var(--color-border-light);
+}
+ul.is-style-checklist > li:first-child { border-top: 0; }
+ul.is-style-checklist > li::before {
+  content: "";
+  position: absolute;
+  left: .2rem;
+  top: 1.25rem;
+  width: .8rem;
+  height: .45rem;
+  border-left: 2px solid var(--lime-700);
+  border-bottom: 2px solid var(--lime-700);
+  transform: rotate(-45deg);
+}
+html.mh-dark ul.is-style-checklist > li { border-top-color: rgba(167, 139, 250, .22); }
+html.mh-dark ul.is-style-checklist > li::before { border-color: var(--lime-300); }
+
+/* Projects "inside each one" note: the pale panel sat behind light text in dark mode. */
+html.mh-dark .work-context__note { background: var(--color-surface); border-color: rgba(167, 139, 250, .22); }

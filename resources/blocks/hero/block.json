@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/hero",
+  "title": "Page hero",
+  "category": "matthummel",
+  "icon": "cover-image",
+  "description": "The dark band at the top of a page: kicker, the page heading, an intro, and buttons.",
+  "textdomain": "sage",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "background": {
+      "type": "string",
+      "enum": [
+        "photo",
+        "scene"
+      ],
+      "default": "photo"
+    },
+    "showPortrait": {
+      "type": "boolean",
+      "default": false
+    },
+    "portraitCaption": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "multiple": false,
+    "reusable": false
+  }
+}

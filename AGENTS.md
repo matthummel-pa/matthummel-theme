@@ -6,6 +6,9 @@ Tailwind v4, Vite, and Acorn. The repo root *is* the theme folder.
 A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Github.php`,
 `app/page-fields.php`, `resources/css/portfolio.css`, and the `template-*.blade.php` views.
 Page copy is edited in wp-admin (**Page content (theme)**), not hardcoded in Blade.
+Pages are moving to the block editor one template at a time (3.7.0): page blocks live in
+`resources/blocks/` (block.json), `resources/views/blocks/` (Blade render), and
+`resources/js/blocks/page/` (editor). A converted page has no theme fields.
 
 Sage docs (also listed in `.cursor/docs.json`):
 

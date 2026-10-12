@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/faq",
+  "title": "Questions",
+  "category": "matthummel",
+  "icon": "editor-help",
+  "description": "A list of questions. Each one is a Details block: the question is the summary, the answer goes inside.",
+  "textdomain": "sage",
+  "attributes": {},
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true
+  }
+}

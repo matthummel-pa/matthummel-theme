@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/section",
+  "title": "Section",
+  "category": "matthummel",
+  "icon": "align-wide",
+  "description": "A page section with an optional kicker. Put headings, text, lists, cards, and other blocks inside.",
+  "textdomain": "sage",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "tone": {
+      "type": "string",
+      "enum": [
+        "default",
+        "alt"
+      ],
+      "default": "default"
+    },
+    "navLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "anchor": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true
+  }
+}
