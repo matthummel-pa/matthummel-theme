@@ -12,6 +12,25 @@ function mh_github_login(): string
     return 'matthummel-pa';
 }
 
+/**
+ * Whether a root-level path (`/handoff-checklist/`) is a published page or post.
+ *
+ * Footer links to content that is written in wp-admin use this, so a link
+ * appears when its page is published and never points at a 404 before then.
+ * get_page_by_path() returns drafts too, so the status is checked here.
+ */
+function mh_is_published_path(string $path): bool
+{
+    $slug = trim($path, '/');
+    if ($slug === '') {
+        return false;
+    }
+
+    $post = get_page_by_path($slug, OBJECT, ['page', 'post']);
+
+    return $post instanceof \WP_Post && $post->post_status === 'publish';
+}
+
 /** Rewrite leftover studio-brand phrasing in visitor-facing strings. */
 function mh_visitor_brand_text(string $text): string
 {

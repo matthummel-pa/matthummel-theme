@@ -33,7 +33,7 @@
       <a class="h-text-arrow" href="{{ $url }}">{{ __('Open project', 'sage') }} <span aria-hidden="true">→</span></a>
       @if ($demo !== '')
         <a class="h-text-arrow h-text-arrow--quiet" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-          {{ __('Live demo', 'sage') }} <span aria-hidden="true">↗</span>
+          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
         </a>
       @endif
     </p>

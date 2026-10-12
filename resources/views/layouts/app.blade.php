@@ -8,6 +8,8 @@
     @php(wp_head())
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @php(do_action('mh_head_end'))
+    {{-- Scroll reveals start hidden; without JS nothing would ever show them. --}}
+    <noscript><style>[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
   </head>
   <body @php(body_class())>
     @php(wp_body_open())

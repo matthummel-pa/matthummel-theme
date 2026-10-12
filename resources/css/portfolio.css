@@ -4371,14 +4371,14 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 }
 html.mh-dark .code-gh-star-repo,
 html.mh-dark .code-gh-watch-repo {
-  background: color-mix(in srgb, var(--gray-100) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
 }
 html.mh-dark .code-gh-stargazer {
-  background: color-mix(in srgb, var(--gray-100) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
 }
 html.mh-dark .code-gh-stargazer:hover,
 html.mh-dark .code-gh-stargazer:focus-visible {
-  background: color-mix(in srgb, #92400e 12%, var(--gray-100));
+  background: color-mix(in srgb, #92400e 12%, var(--color-surface-raised));
 }
 .code-gh-badges__title {
   display: flex;
@@ -4443,9 +4443,9 @@ html.mh-dark .code-gh-community__panel,
 html.mh-dark .code-gh-badge {
   background: color-mix(in srgb, var(--color-surface) 92%, var(--white));
 }
-html.mh-dark .code-gh-community__stats { background: color-mix(in srgb, var(--gray-100) 80%, transparent); }
+html.mh-dark .code-gh-community__stats { background: color-mix(in srgb, var(--color-surface-raised) 80%, transparent); }
 html.mh-dark .code-gh-person:hover,
-html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(--gray-100) 70%, transparent); }
+html.mh-dark .code-gh-person:focus-visible { background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent); }
 
 .code-gh-split {
   display: grid;
@@ -13673,8 +13673,8 @@ html.mh-dark .pf-purchase-widget {
   border-color: var(--color-border);
   box-shadow: 0 4px 24px -4px rgb(0 0 0 / .3);
 }
-html.mh-dark .pf-product-card__image { background: var(--gray-100); }
-html.mh-dark .pf-screenshot { background: var(--gray-100); }
+html.mh-dark .pf-product-card__image { background: var(--color-surface-raised); }
+html.mh-dark .pf-screenshot { background: var(--color-surface-raised); }
 html.mh-dark .pf-tech-tag {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 85%, var(--color-accent) 5%);
 }
@@ -16186,7 +16186,7 @@ html.mh-dark .pf-related-card {
   background: color-mix(in srgb, var(--color-surface, #0b1220) 90%, var(--color-accent) 4%);
 }
 html.mh-dark .pf-related-card__img-wrap {
-  background: var(--gray-100);
+  background: var(--color-surface-raised);
 }
 
 /* ── Account page navigation improvements ───────────────────────────────── */

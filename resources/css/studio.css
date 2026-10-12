@@ -2785,13 +2785,13 @@ html.mh-dark .project-cat-pill {
   color: var(--blue-200);
 }
 html.mh-dark .project-place-pill {
-  background: color-mix(in srgb, var(--gray-100) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
   border-color: var(--color-border);
   color: var(--color-text-secondary);
 }
 html.mh-dark .project-stage__note,
 html.mh-dark .project-stage__gh-desc {
-  background: color-mix(in srgb, var(--gray-100) 55%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 55%, transparent);
   color: var(--color-text-secondary);
 }
 html.mh-dark .project-stage__note {
@@ -6337,6 +6337,10 @@ html.mh-dark .h-faq__item[open] { background: linear-gradient(160deg, #2a2160 0%
    still assumed the old gray ramp (the dark skin flips --gray-*), fixed in
    place above; the rest are below. ──────────────────────────────────────── */
 
+/* A step above --color-surface for chips and wells that sit on a card. Named here
+   because the dark skin flips --gray-*, so dark fills must not be built from it. */
+html.mh-dark { --color-surface-raised: #142a4e; }
+
 /* Fills built from --color-text flip light in dark mode, so their label flips dark. */
 html.mh-dark .skip-link,
 html.mh-dark .comment-tab.is-active,
@@ -6345,7 +6349,7 @@ html.mh-dark .comment-sort-btn.is-active,
 html.mh-dark .posts-nav .page-numbers.current { color: var(--blue-900); }
 /* Hovered page links take the global link-hover color, so the fill stays dark under it. */
 html.mh-dark .posts-nav a.page-numbers:hover,
-html.mh-dark .posts-nav a.page-numbers:focus-visible { background: var(--gray-100); border-color: var(--blue-400); }
+html.mh-dark .posts-nav a.page-numbers:focus-visible { background: var(--color-surface-raised); border-color: var(--blue-400); }
 
 /* Journal toolbar: white label on the gradient needs the violet-700 end stop (4.5:1). */
 .write-sort-btn.is-active,
@@ -6463,3 +6467,22 @@ html.mh-dark .svc-process__step, html.mh-dark .project-story__step {
   border-color: rgba(163, 230, 53, .55);
   box-shadow: inset 0 3px 0 0 var(--lime-400), 0 1px 0 rgba(196, 181, 253, .06) inset, 0 18px 40px -28px rgba(109, 40, 217, .6);
 }
+
+/* ── 3.6.59 · Pointer targets and label size ───────────────────────────────
+   Standalone text links and pills were 12–23px tall. They get a 24px floor
+   (WCAG 2.2 · 2.5.8); links inside sentences are exempt and untouched. Pill
+   and badge labels under 11.5px go to 12px. ─────────────────────────────── */
+.h-text-arrow, .about-text-link, .post-tag, .post-cat, .project-cat-pill,
+.project-react__jump, .write-aside-devto__link, .code-recent__hit,
+.footer-legal-links a, .post-breadcrumb a, .post-author-bio__links a,
+.side-cats a, .about-hero-links a, .support-product__meta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.footer-legal-links a, .side-cats a { min-width: 24px; }
+.post-card .post-cat.project-cat-pill { min-height: 24px; }
+
+.spec-badge, .project-place-pill, .project-cat-pill, .post-cat, .h-journal__cat,
+.repo-card__kind, .post-related-card__cat, .resources-card__aff, .resources-card__badge,
+.uses-item__aff, .cl-label, .cl-change__badge, .pill, .filter-count { font-size: .75rem; }

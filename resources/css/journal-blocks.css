@@ -766,19 +766,19 @@ html.mh-dark .post-prose .mh-ai-figure {
 html.mh-dark .mh-tool-card:hover,
 html.mh-dark .mh-tool-card:focus-within,
 html.mh-dark .post-prose .mh-ship-pipe > li:hover {
-  border-color: var(--gray-300);
+  border-color: var(--blue-400);
 }
 
 html.mh-dark .mh-tool-card__mark,
 html.mh-dark .mh-tool-card:not(:has(.mh-tool-card__mark))::before {
-  background: var(--gray-100);
+  background: var(--color-surface-raised);
   border-color: var(--color-border);
   color: var(--blue-400);
 }
 
 html.mh-dark .mh-tool-card__role,
 html.mh-dark .post-prose .mh-ship-pipe > li::before {
-  background: var(--gray-100);
+  background: var(--color-surface-raised);
   border-color: var(--color-border);
   color: var(--color-text-secondary);
 }
@@ -794,7 +794,7 @@ html.mh-dark .mh-ship-note strong {
 html.mh-dark .mh-tool-card dt,
 html.mh-dark .mh-tool-card__dt,
 html.mh-dark .mh-tool-card__role {
-  background: var(--gray-100);
+  background: var(--color-surface-raised);
   border-color: var(--color-border);
 }
 
@@ -804,7 +804,7 @@ html.mh-dark .mh-tool-card__dd {
 }
 
 html.mh-dark .mh-tool-card code {
-  background: var(--gray-100);
+  background: var(--color-surface-raised);
   color: var(--color-text);
 }
 
@@ -908,7 +908,7 @@ html.mh-dark .mh-tool-card code {
 .wp-block-matthummel-ship-step.mh-ship-step:hover,
 .post-prose .mh-ship-pipe > .mh-ship-step:hover,
 .editor-styles-wrapper .mh-ship-step:hover {
-  border-color: var(--gray-300);
+  border-color: var(--blue-400);
   box-shadow: 0 3px 12px rgba(17, 24, 39, .05);
 }
 
