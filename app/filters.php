@@ -122,7 +122,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-resources.blade.php' => [
             'title' => __('WordPress Starters, Tools & Stack', 'sage').' | '.$brand,
-            'desc' => __('WordPress starters, tools I recommend, and the stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths.', 'sage'),
+            'desc' => __('WordPress starters, tools I recommend, and the stack I use daily: Sage, Vite, Tailwind, GitHub, and deploy paths. See what I build with.', 'sage'),
         ],
         'template-affiliate-disclosure.blade.php' => [
             'title' => __('Affiliate Disclosure', 'sage').' | '.$brand,

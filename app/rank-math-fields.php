@@ -29,7 +29,7 @@ function mh_page_focus_keyword_defaults(): array
         'template-services.blade.php' => 'Acreline services',
         'template-portfolio.blade.php' => 'WordPress developer portfolio',
         'template-projects.blade.php' => 'WordPress projects',
-        'template-contact.blade.php' => 'contact WordPress developer',
+        'template-contact.blade.php' => 'contact a WordPress developer',
         'template-start.blade.php' => 'WordPress project brief',
         'template-resources.blade.php' => 'WordPress starters',
         'index.blade.php' => 'WordPress development',

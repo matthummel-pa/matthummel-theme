@@ -51,6 +51,7 @@
   @include('partials.page-nav', [
     'pills' => [
       ['gallery', __('Projects', 'sage')],
+      ['inside', __('Inside each one', 'sage')],
       ['how', __('How it works', 'sage')],
       ['work-faq', __('FAQ', 'sage')],
     ],
@@ -149,6 +150,25 @@
       {!! \App\field_html('work_foot', \App\mh_projects_listing_default('foot')) !!}
     </div>
   </div>
+
+  {{-- What a project page contains (the work_context_* fields existed but were not printed) --}}
+  <section class="pf-section pf-section--alt work-guide work-context" id="inside" aria-labelledby="work-context-heading">
+    <div class="container wide work-context__grid">
+      <div>
+        <p class="eyebrow">{{ __('Inside each one', 'sage') }}</p>
+        <h2 id="work-context-heading" class="display-title is-section">
+          {{ \App\field('work_context_h2', \App\mh_projects_listing_default('context_h2')) }}
+        </h2>
+        <p class="lead work-guide__intro">{{ \App\field('work_context_p1', \App\mh_projects_listing_default('context_p1')) }}</p>
+        <p class="work-context__note">{!! \App\field_html('work_context_p2', \App\mh_projects_listing_default('context_p2')) !!}</p>
+      </div>
+      <ul class="now-checklist work-context__list">
+        @foreach (\App\field_lines('work_show_items', \App\mh_work_show_defaults()) as $line)
+          <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $line }}</span></li>
+        @endforeach
+      </ul>
+    </div>
+  </section>
 
   <section class="pf-section work-guide" id="how" aria-labelledby="work-how-heading">
     <div class="container wide">

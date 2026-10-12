@@ -67,7 +67,7 @@
     </div>
     @if (\App\mh_profile_photo_url(640) !== '')
       <figure class="about-portrait">
-        @include('partials.profile-photo', ['size' => 320, 'class' => 'about-portrait__img', 'eager' => true])
+        @include('partials.profile-photo', ['size' => 320, 'class' => 'about-portrait__img', 'eager' => true, 'alt' => __('Matt Hummel, WordPress developer', 'sage')])
         <figcaption class="about-portrait__caption">
           <span class="about-portrait__name">{{ $gh['name'] ?? '' ?: __('Matt Hummel', 'sage') }}</span>
           <span class="about-portrait__meta">{{ \App\field('about_photo_caption', __('Full-stack and WordPress developer · Gettysburg, PA', 'sage')) }}</span>

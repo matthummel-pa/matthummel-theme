@@ -217,6 +217,17 @@
   </div>
 </section>
 
+{{-- Questions people ask before they write (3.6.63) --}}
+@include('partials.page-faq', [
+  'id' => 'questions',
+  'headingId' => 'h-faq-heading',
+  'eyebrow' => __('Questions', 'sage'),
+  'h2' => \App\field('home_faq_h2', __('Hiring a WordPress developer: common questions.', 'sage')),
+  'intro' => \App\field('home_faq_intro', __('Short answers before you write.', 'sage')),
+  'items' => \App\mh_page_faq_rows('home_faq', \App\mh_home_faq_defaults()),
+  'cta' => __('Ask me', 'sage'),
+])
+
 {{-- Quiet close — not a sales band --}}
 <section class="h-close" id="close" aria-labelledby="h-cta-heading">
   <div class="container wide h-close__inner">

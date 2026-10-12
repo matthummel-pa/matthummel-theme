@@ -162,7 +162,7 @@ function mh_resources_catalog(): array
 
     return [
         [
-            'title' => __('Free starters', 'sage'),
+            'title' => __('Free WordPress starters', 'sage'),
             'intro' => __('Open code and example builds. Fork them, read them, or hire me to turn one into a production site.', 'sage'),
             'items' => [
                 [

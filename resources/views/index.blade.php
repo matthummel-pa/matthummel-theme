@@ -58,7 +58,7 @@
     '@context'    => 'https://schema.org',
     '@type'       => 'Blog',
     'name'        => \App\field('write_h1', __('WordPress, PHP, and JavaScript — in practice.', 'sage'), $writeId),
-    'description' => \App\field('write_lede', __('Practical notes from WordPress themes, PHP plugins, and full-stack web work. Most posts ship with a working snippet you can paste and adapt.', 'sage'), $writeId),
+    'description' => \App\field('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage'), $writeId),
     'url'         => esc_url($blogUrl),
     'inLanguage'  => 'en-US',
     'author'      => [
@@ -90,7 +90,7 @@
     {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
   </h1>
   <p class="lead">
-    {{ \App\field('write_lede', __('Practical WordPress, PHP, and front-end notes from real projects. Most posts include code you can adapt.', 'sage'), $writeId) }}
+    {{ \App\field('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage'), $writeId) }}
   </p>
   <div class="page-header-split__actions">
     <a class="btn" href="#journal-posts">
@@ -111,7 +111,7 @@
 
 {{-- POSTS --}}
 <div id="journal-posts" class="container wide page-block write-hub write-hub--home" aria-labelledby="journal-posts-heading" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list post-list--roomy">
-  <h2 id="journal-posts-heading" class="display-title is-section" tabindex="-1">{{ __('Browse the posts', 'sage') }}</h2>
+  <h2 id="journal-posts-heading" class="display-title is-section" tabindex="-1">{{ __('Browse WordPress development posts', 'sage') }}</h2>
   <p class="lead work-guide__intro">{{ __('Search as you type, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage') }}</p>
 
   @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl])

@@ -265,10 +265,10 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
 {
     $copy = [
         'h1' => __('I build WordPress sites your team can run.', 'sage'),
-        'role' => __('Full-stack developer · WordPress themes, plugins, and web apps', 'sage'),
+        'role' => __('Full-stack and WordPress developer · themes, plugins, and web apps', 'sage'),
         'lede' => __('I build WordPress themes, plugins, and web apps that are easy to edit, easy to hand off, and built to last. Open to full-time, contract, and freelance work.', 'sage'),
         'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress developer for businesses, agencies, and developers. Themes, plugins, and clear handoffs. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.', 'sage'),
         'kicker' => __('Hi, I’m Matt 👋', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
@@ -295,7 +295,7 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
     $copy = [
         'kicker' => __('Projects', 'sage'),
         'h1' => __('Things I’ve built, and why.', 'sage'),
-        'lede' => __('Real themes and plugins with live demos and the story behind each one. Open a project, click around, and see how I work before we ever talk.', 'sage'),
+        'lede' => __('WordPress projects with live demos and the story behind each one. Open a theme or plugin, click around, and see how I work before we ever talk.', 'sage'),
         'hero_cta_primary' => __('Say hello', 'sage'),
         'hero_cta_secondary' => __('Hire me', 'sage'),
         'foot' => __('Want the repos? See the <a href="/about/#code">Code section</a>. Live demos open from each project when I have one.', 'sage'),
@@ -309,8 +309,8 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
         'empty_h2' => __('Projects are on the way.', 'sage'),
         'empty_text' => __('I am adding the first sample sites here. Write and tell me what you need built, or the role you are filling.', 'sage'),
         'empty_cta' => __('Say hello', 'sage'),
-        'context_h2' => __('What you will find.', 'sage'),
-        'context_p1' => __('Each card is a sample I built in public. You get screenshots, a short story, and a live demo when I have one.', 'sage'),
+        'context_h2' => __('What each WordPress project shows.', 'sage'),
+        'context_p1' => __('Each card is a sample I built in public, written up the same way so you can compare them. Open one and you get the story behind it and a demo to try.', 'sage'),
         'context_p2' => __('These are not client sites. Code is on GitHub. If one fits, <a href="/contact/">write and say which</a>.', 'sage'),
         'fit_h2' => __('Who this page is for.', 'sage'),
         'fit_intro' => __('Hiring managers reviewing public work, and shops or agencies that need a site like one of these.', 'sage'),
@@ -319,8 +319,8 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
         'faq_h2' => __('Quick answers.', 'sage'),
         'faq_intro' => __('Short answers for hiring managers and shops.', 'sage'),
         'seo_title' => __('WordPress Projects', 'sage').' | '.$brand,
-        'seo_desc' => __('Sample WordPress themes and plugins with live demos. Open a project, then say hello.', 'sage'),
-        'gallery_h2' => __('Browse the samples', 'sage'),
+        'seo_desc' => __('WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.', 'sage'),
+        'gallery_h2' => __('Browse the WordPress projects', 'sage'),
     ];
 
     $key = str_starts_with($key, 'work_') ? substr($key, 5) : $key;
@@ -422,6 +422,14 @@ function mh_home_fields(): array
         ],
         __('Availability', 'sage') => [
             ['home_avail_status', __('Status line', 'sage'), 'text', __('Open for work', 'sage')],
+        ],
+        __('Questions', 'sage') => [
+            ['home_faq_h2', __('Heading', 'sage'), 'text', __('Hiring a WordPress developer: common questions.', 'sage')],
+            ['home_faq_intro', __('Intro', 'sage'), 'textarea', __('Short answers before you write.', 'sage')],
+            ['home_faq', __('Questions', 'sage'), 'repeater', mh_home_faq_defaults(), [
+                ['title', __('Question', 'sage'), 'text'],
+                ['text', __('Answer', 'sage'), 'textarea'],
+            ]],
         ],
         __('Help section', 'sage') => [
             ['home_help_h2', __('Heading', 'sage'), 'text', __('Hiring or building?', 'sage')],
@@ -648,7 +656,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],
                 ['cnt_h1', __('Heading', 'sage'), 'text', __('Let’s talk about your project.', 'sage')],
-                ['cnt_lede', __('Intro', 'sage'), 'textarea', __('Hiring, building, or just stuck on something WordPress? Send a few sentences — I read everything and reply within one business day (ET).', 'sage')],
+                ['cnt_lede', __('Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).', 'sage'), 'textarea', __('Hiring, building, or just stuck on something WordPress? Send a few sentences — I read everything and reply within one business day (ET).', 'sage')],
             ],
             __('Form', 'sage') => [
                 ['cnt_form_h2', __('Heading', 'sage'), 'text', __('Write a note', 'sage')],
@@ -682,6 +690,15 @@ function page_field_map(): array
                     ['text', __('Text', 'sage'), 'textarea'],
                 ]],
             ],
+            __('Questions', 'sage') => [
+                ['cnt_faq_h2', __('Heading', 'sage'), 'text', __('Before you contact a WordPress developer.', 'sage')],
+                ['cnt_faq_intro', __('Intro', 'sage'), 'textarea', __('Short answers about what to send and what happens next.', 'sage')],
+                ['cnt_faq_foot', __('Line under the questions (basic HTML ok)', 'sage'), 'html', __('Want background first? See the <a href="/projects/">projects</a>, read <a href="/about/">about me</a>, or browse the <a href="/blog/">journal</a>.', 'sage')],
+                ['cnt_faq', __('Questions', 'sage'), 'repeater', mh_contact_faq_defaults(), [
+                    ['title', __('Question', 'sage'), 'text'],
+                    ['text', __('Answer', 'sage'), 'textarea'],
+                ]],
+            ],
         ],
         'template-projects.blade.php' => [
             __('Intro', 'sage') => [
@@ -706,6 +723,7 @@ function page_field_map(): array
                 ['work_context_h2', __('Context heading', 'sage'), 'text', mh_projects_listing_default('context_h2')],
                 ['work_context_p1', __('Context paragraph 1', 'sage'), 'textarea', mh_projects_listing_default('context_p1')],
                 ['work_context_p2', __('Context paragraph 2 (basic HTML ok)', 'sage'), 'html', mh_projects_listing_default('context_p2')],
+                ['work_show_items', __('What each project shows (one per line)', 'sage'), 'lines', mh_work_show_defaults()],
                 ['work_fit_h2', __('Who fits heading', 'sage'), 'text', mh_projects_listing_default('fit_h2')],
                 ['work_fit_intro', __('Who fits intro', 'sage'), 'textarea', mh_projects_listing_default('fit_intro')],
                 ['work_fit_items', __('Audience cards', 'sage'), 'repeater', mh_work_fit_defaults(), [
@@ -744,7 +762,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['resources_kicker', __('Kicker', 'sage'), 'text', __('Resources', 'sage')],
                 ['resources_h1', __('Heading', 'sage'), 'text', __('Starters, tools, and the stack I use.', 'sage')],
-                ['resources_lede', __('Intro', 'sage'), 'textarea', __('Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and business owners alike.', 'sage')],
+                ['resources_lede', __('Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.', 'sage'), 'textarea', __('Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and business owners alike.', 'sage')],
                 ['resources_intro_h2', __('Below-hero heading', 'sage'), 'text', __('What you will find here.', 'sage')],
                 ['resources_intro_p', __('Below-hero intro', 'sage'), 'textarea', __('Starters are free to fork. Paid themes link to the shop when listed. Tool recommendations may include disclosed affiliate links — see the note at the top when they appear.', 'sage')],
             ],
@@ -800,7 +818,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['write_kicker', __('Kicker', 'sage'), 'text', __('Journal', 'sage')],
                 ['write_h1', __('Heading', 'sage'), 'text', __('Notes from real WordPress work.', 'sage')],
-                ['write_lede', __('Intro', 'sage'), 'textarea', __('Short, practical posts on WordPress, PHP, and JavaScript — most come with code you can paste into your own project.', 'sage')],
+                ['write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage'), 'textarea', __('Short, practical posts on WordPress, PHP, and JavaScript — most come with code you can paste into your own project.', 'sage')],
                 ['write_browse', __('Jump to posts label', 'sage'), 'text', __('Browse posts', 'sage')],
                 ['write_devto_h2', __('DEV.to heading', 'sage'), 'text', __('Cross-posted to DEV.to', 'sage')],
                 ['write_search_ph', __('Search placeholder', 'sage'), 'text', __('Search WordPress, PHP, Tailwind…', 'sage')],
@@ -1563,28 +1581,96 @@ function mh_work_page_how(?int $post_id = null): array
 }
 
 /**
+ * Default "what each project shows" lines for the Projects page.
+ *
+ * @since 3.6.63
+ *
+ * @return list<string>
+ */
+function mh_work_show_defaults(): array
+{
+    return [
+        __('The problem the theme or plugin solves, in plain words.', 'sage'),
+        __('The stack it is built on, and the plugins it needs.', 'sage'),
+        __('A live demo you can click through, when there is one.', 'sage'),
+        __('What the owner can edit without a developer.', 'sage'),
+        __('The repo, when the code is public.', 'sage'),
+        __('Screenshots of the pages a visitor sees first.', 'sage'),
+    ];
+}
+
+/**
  * @return list<array{title: string, text: string}>
  */
 function mh_work_page_faq(?int $post_id = null): array
 {
-    $rows = field_rows('work_faq', [], $post_id);
-    if ($rows === []) {
-        return mh_work_faq_defaults();
-    }
+    return mh_page_faq_rows('work_faq', mh_work_faq_defaults(), $post_id);
+}
+
+/**
+ * Question-and-answer rows for a page: the saved repeater rows, or the defaults.
+ *
+ * @since 3.6.63
+ *
+ * @param  string  $key  Repeater field key (without the mh_f_ prefix).
+ * @param  list<array{title: string, text: string}>  $defaults  Rows used when nothing is saved.
+ * @param  int|null  $post_id  Post ID; falls back to get_the_ID() when null.
+ * @return list<array{title: string, text: string}>
+ */
+function mh_page_faq_rows(string $key, array $defaults, ?int $post_id = null): array
+{
     $out = [];
-    foreach ($rows as $r) {
+    foreach (field_rows($key, [], $post_id) as $r) {
         $title = trim((string) ($r['title'] ?? ''));
         $text = trim((string) ($r['text'] ?? ''));
         if ($title === '' && $text === '') {
             continue;
         }
-        $out[] = [
-            'title' => $title,
-            'text' => $text,
-        ];
+        $out[] = ['title' => $title, 'text' => $text];
     }
 
-    return $out !== [] ? $out : mh_work_faq_defaults();
+    return $out !== [] ? $out : $defaults;
+}
+
+/**
+ * Default Home questions: what a visitor asks before hiring.
+ *
+ * @since 3.6.63
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_home_faq_defaults(): array
+{
+    return [
+        ['title' => __('What does a WordPress developer do that a page builder does not?', 'sage'), 'text' => __('I write the theme and plugins for your site instead of stacking add-ons. You get pages you can edit in wp-admin and code another developer can read. Nothing ships that you do not use.', 'sage')],
+        ['title' => __('What kind of work do you take?', 'sage'), 'text' => __('Full-time roles, contract work, freelance projects, and agency overflow. WordPress themes and plugins are the core. APIs, React, and deploy work are in range too.', 'sage')],
+        ['title' => __('How does a project start?', 'sage'), 'text' => __('Send a short note about who the site is for and what it needs to do. I reply with questions, then a written scope and a rough timeline. Work starts after you approve it.', 'sage')],
+        ['title' => __('Who owns the site when it is done?', 'sage'), 'text' => __('You do. You own the domain, hosting, database, and code. I leave a short admin guide and stay reachable for questions.', 'sage')],
+        ['title' => __('Where are you, and when do you work?', 'sage'), 'text' => __('I am in Gettysburg, Pennsylvania, and I work Eastern Time. I work remote with shops and agencies anywhere.', 'sage')],
+        ['title' => __('Can I see your work first?', 'sage'), 'text' => __('Yes. The Projects page has themes and plugins with live demos, and the code is on GitHub.', 'sage')],
+    ];
+}
+
+/**
+ * Default Contact questions: what to send and what happens next.
+ *
+ * @since 3.6.63
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_contact_faq_defaults(): array
+{
+    return [
+        ['title' => __('What should I send?', 'sage'), 'text' => __('Who the site or app is for, what it needs to do, any sites you like, and a rough timeline. A paragraph is plenty. You do not need a finished spec.', 'sage')],
+        ['title' => __('How fast do you reply?', 'sage'), 'text' => __('Within one business day, Eastern Time. I read every note myself.', 'sage')],
+        ['title' => __('What happens after I write?', 'sage'), 'text' => __('I reply with questions, or an honest no if I am the wrong fit. If it is a fit, I send a written scope and a rough timeline before any work starts.', 'sage')],
+        ['title' => __('What do you build?', 'sage'), 'text' => __('WordPress sites, plugins and tools, and full-stack web applications. The About page describes each one, and the Projects page has live demos.', 'sage')],
+        ['title' => __('Do you work with agencies?', 'sage'), 'text' => __('Yes. I take agency overflow and silent sub-contract work. You keep the relationship, and I build the WordPress platform, plugin, or integration.', 'sage')],
+        ['title' => __('Can I ask about a full-time role?', 'sage'), 'text' => __('Yes. I am open to full-time, contract, and freelance work, remote or on-site. Hiring managers can ask for a private walkthrough of employer work under NDA.', 'sage')],
+        ['title' => __('Do I own the code when the work is done?', 'sage'), 'text' => __('Yes. You own the domain, hosting, database, and code. I leave a short admin guide so your team can run the site without me.', 'sage')],
+        ['title' => __('Where are you, and when do you work?', 'sage'), 'text' => __('I am in Gettysburg, Pennsylvania, and I work Eastern Time. I work remote with shops and agencies anywhere.', 'sage')],
+        ['title' => __('What if I only have a question about a post or a repo?', 'sage'), 'text' => __('Send it. Questions about a journal post, a snippet, or a GitHub repo are welcome here too.', 'sage')],
+    ];
 }
 
 /**

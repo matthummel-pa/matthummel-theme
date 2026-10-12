@@ -238,6 +238,13 @@ function mh_seo_fetch_main_html(string $url): string
         return '';
     }
 
+    // An image with an empty alt is decorative by design (WCAG H67), not one that is missing its alt.
+    // Leave them out when the page also has described images; a page with none still gets flagged.
+    $described = (string) preg_replace('#<img\b(?=[^>]*\balt=(""|\'\'))[^>]*>#i', '', $main);
+    if (stripos($described, '<img') !== false) {
+        $main = $described;
+    }
+
     // The analyzer scores a post body, where an <h1> is a mistake because the title is the h1.
     // Here the first <h1> is that title, so take it out; a second one still counts against the page.
     $body = preg_replace('#<h1\b[^>]*>.*?</h1>#is', '', $main, 1);

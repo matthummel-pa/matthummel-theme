@@ -6315,3 +6315,15 @@ html.mh-dark .work-empty__text { color: var(--color-text-secondary); }
 /* Services step numbers join the lime index recipe (were border-colored, under 2:1). */
 html:not(.mh-dark) .hire-step__num { color: var(--lime-700); -webkit-text-fill-color: currentColor; }
 html.mh-dark .hire-step__num { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+
+/* ── 3.6.63 · Projects: what each project page contains ── */
+.work-context__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--card-gap-roomy) clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+.work-context__note { margin: 1rem 0 0; color: var(--color-text-secondary); }
+.work-context__list { margin: 0; }
+@media (max-width: 860px) { .work-context__grid { grid-template-columns: 1fr; } }
+.work-faq__foot { margin: 1.5rem 0 0; color: var(--color-text-secondary); }

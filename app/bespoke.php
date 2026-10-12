@@ -4358,3 +4358,73 @@ add_action('init', function (): void {
 
     update_option('mh_about_copy_tidy_v1', true);
 }, 75);
+
+/**
+ * 3.6.63 — Put each page's own search phrase in its intro and description.
+ *
+ * The Home page targets "WordPress developer" but never said it in the body;
+ * Projects, Journal, Resources and Contact had the same gap. This swaps the
+ * intro line and the meta description on those pages, plus About's description.
+ * A value is only changed while it still holds the exact text listed here.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_seo_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    // Intro fields: meta key => [stored value => replacement].
+    $fields = [
+        'mh_f_home_role' => [
+            'Full-stack developer · WordPress themes, plugins, and web apps' => 'Full-stack and WordPress developer · themes, plugins, and web apps',
+        ],
+        'mh_f_work_lede' => [
+            'Real themes and plugins with live demos and the story behind each one. Open a project, click around, and see how I work before we ever talk.' => 'WordPress projects with live demos and the story behind each one. Open a theme or plugin, click around, and see how I work before we ever talk.',
+        ],
+        'mh_f_write_lede' => [
+            'Short, practical posts on WordPress, PHP, and JavaScript — most come with code you can paste into your own project.' => 'Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.',
+        ],
+        'mh_f_resources_lede' => [
+            'Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and business owners alike.' => 'Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.',
+            'Free code to study, tools I actually recommend, and what\'s behind every site I ship — for developers and business owners alike.' => 'Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.',
+        ],
+        'mh_f_cnt_lede' => [
+            'Hiring, building, or just stuck on something WordPress? Send a few sentences — I read everything and reply within one business day (ET).' => 'Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).',
+        ],
+    ];
+
+    // Meta descriptions, wherever one is stored: MH SEO, the old Rank Math key, or the theme field.
+    $descriptions = [
+        'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.' => 'WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.',
+        'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.' => 'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
+        'Sample WordPress themes and plugins with live demos and short build stories. Open a project, try the demo, and see how I build for shops and agencies.' => 'WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.',
+        'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.' => 'WordPress development notes from real projects: PHP, JavaScript, React, APIs, and tools. Most posts include code you can adapt.',
+        'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.' => 'Contact a WordPress developer about a site, plugin, web app, role, or agency overflow work. I reply within one business day (ET).',
+    ];
+    $descriptionKeys = ['_mh_seo_description', 'rank_math_description', 'mh_f_seo_desc'];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($fields as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($pairs[$val])) {
+                update_post_meta($id, $key, $pairs[$val]);
+            }
+        }
+        foreach ($descriptionKeys as $key) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($descriptions[$val])) {
+                update_post_meta($id, $key, $descriptions[$val]);
+            }
+        }
+    }
+
+    update_option('mh_seo_copy_v1', true);
+}, 76);

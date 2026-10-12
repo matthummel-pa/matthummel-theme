@@ -38,7 +38,7 @@
 @component('partials.page-hero', ['extra' => 'page-header--resources'])
   <p class="eyebrow">{{ \App\field('resources_kicker', __('Resources', 'sage')) }}</p>
   <h1 class="display-title is-hero">{{ \App\field('resources_h1', __('Free starters, themes, tools, and the stack I use.', 'sage')) }}</h1>
-  <p class="lead">{{ \App\field('resources_lede', __('A quiet catalog for developers and shops: open code to study, tools I use on real projects, and the stack behind every build. Hire me when you want a full site.', 'sage')) }}</p>
+  <p class="lead">{{ \App\field('resources_lede', __('Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>
     <a class="h-text-arrow" href="#uses">

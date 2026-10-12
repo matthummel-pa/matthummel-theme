@@ -15,7 +15,7 @@
     {{ \App\field('cnt_h1', __('Say hello.', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('cnt_lede', __('Open for full-time roles, contract work, freelance builds, and agency overflow. Questions about a post or GitHub are welcome too. I usually reply within one business day (ET).', 'sage')) }}
+    {{ \App\field('cnt_lede', __('Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).', 'sage')) }}
   </p>
 @endcomponent
 
@@ -141,5 +141,22 @@
     </ul>
   </div>
 </section>
+
+@include('partials.page-faq', [
+  'id' => 'questions',
+  'headingId' => 'contact-faq-heading',
+  'alt' => true,
+  'eyebrow' => __('Questions', 'sage'),
+  'h2' => \App\field('cnt_faq_h2', __('Before you contact a WordPress developer.', 'sage')),
+  'intro' => \App\field('cnt_faq_intro', __('Short answers about what to send and what happens next.', 'sage')),
+  'items' => \App\mh_page_faq_rows('cnt_faq', \App\mh_contact_faq_defaults()),
+  'foot' => \App\field_html('cnt_faq_foot', sprintf(
+    /* translators: 1: Projects URL, 2: About URL, 3: Journal URL */
+    __('Want background first? See the <a href="%1$s">projects</a>, read <a href="%2$s">about me</a>, or browse the <a href="%3$s">journal</a>.', 'sage'),
+    esc_url(\App\mh_work_listing_url()),
+    esc_url(home_url('/about/')),
+    esc_url(get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/'))
+  )),
+])
 
 @endsection

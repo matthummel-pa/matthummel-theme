@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.6.63 — Page copy for the phrases each page targets
+
+- Home: a "Hiring a WordPress developer: common questions" section with six short answers. The role line now says "Full-stack and WordPress developer".
+- Projects: a "What each WordPress project shows" section (the `work_context_*` fields existed but were never printed) with a short checklist. The grid heading is "Browse the WordPress projects". Project screenshots have alt text.
+- Contact: a "Before you contact a WordPress developer" section with nine short answers and links to Projects, About, and the Journal.
+- Journal and Resources: the intro and one heading name the page's phrase ("WordPress development", "WordPress starters").
+- About: the portrait's alt text is "Matt Hummel, WordPress developer".
+- Meta descriptions for Home, About, Projects, Journal, Contact, and Resources lead with the page's phrase. A one-time migration updates stored intros and descriptions only where they still hold the old text.
+- SEO score: decorative images (empty alt) are not counted as missing alt text when the page also has described images. The default Contact keyword is "contact a WordPress developer", which matches its title.
+- All new copy is in Page content (theme) fields.
+
 ## 3.6.62 — Site polish: type, cards, in-page filters, About, Resources, cleanup
 
 - Type: every font size under about 16.5px went up one step (12→13, 13→14, 14→16, 15→16/17px). Card copy that was 14px is 16px. The sizes were edited in place, not overridden.
