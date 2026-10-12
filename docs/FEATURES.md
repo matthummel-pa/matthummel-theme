@@ -2,6 +2,16 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.6.62 polish)
+
+- Small type was raised in place across the stylesheets. Do not add sizes under `.8125rem`; card copy is `1rem`.
+- Cards have one even border. Do not add a thicker edge on one side; hover is the lift and lime ring in the 3.6.62 block of `studio.css`.
+- `resources/js/list-transition.js` animates any list that changes in place: `swapWithMotion(list, mutate, { rich })`. Use `rich: true` for clicks, leave it off for per-keystroke updates.
+- Projects filter: every card is in the HTML with `data-cat`; `?cat=` hides the rest server-side and `work-tools.js` does the same in place.
+- Journal: the home, archives, and search wrap their results in `[data-journal]` with `data-journal-region` parts (`topics`, `results`, `count`, `sort`). `writing-tools.js` fetches the normal page and swaps those regions. A new journal template needs the same regions and `partials/journal-results`.
+- SEO score for template pages comes from the rendered page (`app/seo-score-column.php`). It fetches the page over HTTP on save, so it is skipped under PHP's built-in server; `wp mh-seo score` re-scores everything.
+- Unused CSS was removed by checking every class against the views, PHP, and JS. `journal-blocks.css`, `product-landing.css`, and `code-blocks.css` were left alone because they style markup typed into posts and products.
+
 ## Editor’s notes (3.6.59 contrast and gaps)
 
 - Grid gaps come from three tokens set at the end of `studio.css`: `--card-gap` (cards), `--card-gap-tight` (tiles, rows, button rows) and `--card-gap-roomy` (two-up lists). A new grid picks one of them; do not hard-code a gap.
@@ -18,7 +28,7 @@ What the 3.x Sage theme does, and where it lives.
 - Header is `position: fixed`; `brand-ui.js` writes the measured header height to `--header-h`, and `body` padding, the heroes, and `.h-page-nav` read it. **Never give `.site-header` or `.site-header-inner` a size that reads `--header-h`** — that feeds the ResizeObserver back on itself and the header grows every frame (3.6.51 hotfix). A new template that does not start with one of those needs its own top spacing.
 - Dark-mode surfaces for the About › Code blocks live in `studio.css` (3.6.52). `code-page.css` mixes `--gray-900` for its own dark rules, but the dark skin flips the gray scale, so never build a dark surface from `--gray-*` — mix `--blue-800` / `--violet-900` instead.
 - "On this page" sub-nav colors live in **one** block at the end of `studio.css` (3.6.57). Change colors there only; never add another `.h-page-nav__pill` rule earlier in the file — the block has no `!important` and relies on being last.
-- Two-tone headings: `initHeadingAccent()` in `brand-ui.js` wraps the last two words (three when ≥ 6 words) of `.display-title`, `.h-section__title`, `.h-hero__name`, `.h-glance__title`, and post-hero `h1` in `<span class="hd-accent">`; only headings whose last child is a text node are touched. `.hd-accent` is gradient text; the base heading is solid white (dark) or navy (light). Do not put the gradient back on the whole heading.
+- Headings are one solid color (3.6.62): white on dark and on heroes, navy on light. The two-tone script and `.hd-accent` are gone; do not put a gradient back on headings.
 - Reveal delays go to `data-reveal-delay="6"`. Do not animate `.site-header`, `.h-page-nav`, or anything inside the hero panel.
 
 - The brand layer is the last block in `resources/css/studio.css` (tokens on `:root` / `html.mh-dark`, then component overrides). Change colors there, not in `portfolio.css`. Signal blue is `--blue-500` (#1d6fe0); navy is `--blue-800` / `--blue-900`. Do not reintroduce `#0d2e57` as the accent.

@@ -1,3 +1,5 @@
+import { nameItems, swapWithMotion } from './list-transition.js'
+
 function resolvePostList(root) {
   if (!root) return null
   if (root.classList.contains('post-list')) return root
@@ -57,35 +59,164 @@ async function copyRss(button) {
   }, 1600);
 }
 
+/** Saved grid/list choice for the journal. */
+function storedView() {
+  try {
+    const stored = window.localStorage.getItem('mh-write-view')
+    return stored === 'list' ? 'list' : 'grid'
+  } catch {
+    return 'grid' // private mode
+  }
+}
+
+/** Track post cards by id so a view transition can move the ones that stay. */
+function namePosts(root) {
+  nameItems(root.querySelectorAll('.post-card'), (card, i) => card.className.match(/\bpost-\d+\b/)?.[0] || `post-n${i}`)
+}
+
+/**
+ * Journal without page reloads: topic pills, pagination, sort, and search-as-you-type
+ * fetch the normal server-rendered page and swap its results into this one.
+ * Every link still works as a plain link when the fetch fails or JS is off.
+ */
+function initJournalSwap() {
+  const hub = document.querySelector('[data-journal]')
+  if (!hub || typeof window.fetch !== 'function' || typeof window.DOMParser !== 'function') return
+
+  const regionsOf = (root) => [...root.querySelectorAll('[data-journal-region]')]
+  const search = document.querySelector('.js-mh-search')
+  const form = search?.closest('form')
+  const homeUrl = hub.getAttribute('data-journal-home') || window.location.href
+  // The host page's own list classes (two-up on the journal home, one column beside the archive aside).
+  const listClass = hub.getAttribute('data-journal-list') || 'post-list'
+  let controller = null
+  let timer = 0
+
+  namePosts(hub)
+
+  async function load(url, { push = false, rich = false, scroll = false, refocus = '' } = {}) {
+    controller?.abort()
+    controller = new AbortController()
+    hub.setAttribute('aria-busy', 'true')
+
+    let doc
+    try {
+      const response = await fetch(url, { signal: controller.signal, credentials: 'same-origin' })
+      // A search with no matches is a normal page; anything else unexpected falls back to a real visit.
+      if (!response.ok && response.status !== 404) throw new Error(`HTTP ${response.status}`)
+      doc = new DOMParser().parseFromString(await response.text(), 'text/html')
+    } catch (error) {
+      if (error?.name === 'AbortError') return
+      window.location.assign(url)
+      return
+    }
+
+    const next = doc.querySelector('[data-journal]')
+    if (!next) {
+      window.location.assign(url)
+      return
+    }
+
+    const results = hub.querySelector('[data-journal-region="results"]')
+
+    await swapWithMotion(results, () => {
+      const incoming = new Map(regionsOf(next).map((region) => [region.getAttribute('data-journal-region'), region]))
+      regionsOf(hub).forEach((region) => {
+        const from = incoming.get(region.getAttribute('data-journal-region'))
+        if (!from) return
+        region.replaceChildren(...[...from.childNodes].map((node) => document.importNode(node, true)))
+      })
+      // The host page keeps its own layout classes and the visitor's grid/list choice.
+      const fresh = hub.querySelector('[data-post-list]')
+      if (fresh) {
+        fresh.className = listClass
+        setView(fresh, storedView())
+      }
+      namePosts(hub)
+    }, { rich })
+
+    hub.removeAttribute('aria-busy')
+    if (doc.title) document.title = doc.title
+    if (push) window.history.pushState({ mhJournal: true }, '', url)
+    else window.history.replaceState({ mhJournal: true }, '', url)
+
+    if (refocus) {
+      const again = [...hub.querySelectorAll('.filter-pill')].find((link) => link.href === refocus)
+      again?.focus({ preventScroll: true })
+    }
+    if (scroll) {
+      const heading = hub.querySelector('h2[tabindex="-1"]') || hub
+      const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      heading.scrollIntoView({ block: 'start', behavior: instant ? 'auto' : 'smooth' })
+      if (heading !== hub) heading.focus({ preventScroll: true })
+    }
+  }
+
+  hub.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const link = event.target instanceof Element
+      ? event.target.closest('.filter-pill, .page-numbers, .write-sort-btn, .post-cat, [data-journal-link]')
+      : null
+    if (!(link instanceof HTMLAnchorElement) || link.origin !== window.location.origin || link.target === '_blank') return
+    event.preventDefault()
+    const paging = link.classList.contains('page-numbers')
+    if (search && !paging) search.value = ''
+    load(link.href, { push: true, rich: true, scroll: paging, refocus: paging ? '' : link.href })
+  })
+
+  window.addEventListener('popstate', () => {
+    load(window.location.href, { rich: true })
+  })
+
+  if (!search || !form) return
+
+  const searchUrl = (term) => {
+    const url = new URL(form.getAttribute('action') || '/', window.location.origin)
+    url.searchParams.set('s', term)
+    return url.toString()
+  }
+
+  // Search as you type: wait for a pause, and for two characters.
+  search.addEventListener('input', () => {
+    window.clearTimeout(timer)
+    const term = search.value.trim()
+    timer = window.setTimeout(() => {
+      if (term === '') load(homeUrl)
+      else if (term.length >= 2) load(searchUrl(term))
+    }, 260)
+  })
+
+  form.addEventListener('submit', (event) => {
+    const term = search.value.trim()
+    if (term === '') return
+    event.preventDefault()
+    window.clearTimeout(timer)
+    load(searchUrl(term), { push: true })
+  })
+}
+
 export function initWritingTools() {
   const listRoot = document.querySelector('[data-post-list]')
   const list = resolvePostList(listRoot)
   const search = document.querySelector('.js-mh-search')
 
-  if (list) {
-    let view = 'grid'
-    try {
-      const stored = window.localStorage.getItem('mh-write-view')
-      if (stored === 'list' || stored === 'grid') {
-        view = stored
-      }
-    } catch {
-      /* private mode */
-    }
-    setView(list, view)
+  if (list) setView(list, storedView())
 
-    document.querySelectorAll('[data-write-view]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const next = button.getAttribute('data-write-view') === 'list' ? 'list' : 'grid'
-        setView(list, next)
-        try {
-          window.localStorage.setItem('mh-write-view', next)
-        } catch {
-          /* private mode */
-        }
-      })
+  document.querySelectorAll('[data-write-view]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = button.getAttribute('data-write-view') === 'list' ? 'list' : 'grid'
+      // Results are swapped in place, so look the list up at click time.
+      const current = resolvePostList(document.querySelector('[data-post-list]'))
+      if (current) setView(current, next)
+      try {
+        window.localStorage.setItem('mh-write-view', next)
+      } catch {
+        /* private mode */
+      }
     })
-  }
+  })
+
+  initJournalSwap()
 
   document.querySelectorAll('[data-copy-rss]').forEach((button) => {
     button.addEventListener('click', () => {

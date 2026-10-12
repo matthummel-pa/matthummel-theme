@@ -1,21 +1,4 @@
-import { copyText } from './writing-tools.js';
-
-function flashLabel(button, next) {
-  const node = button.childNodes[0];
-  if (!node) {
-    return;
-  }
-  const label = node.textContent?.trim() || button.textContent.trim();
-  const hidden = button.querySelector('.visually-hidden');
-  node.textContent = `${next} `;
-  setTimeout(() => {
-    node.textContent = `${label} `;
-    // Re-append to preserve screen reader announcement order after text swap.
-    if (hidden) {
-      button.appendChild(hidden);
-    }
-  }, 1600);
-}
+import { nameItems, swapWithMotion } from './list-transition.js';
 
 function setWorkView(grid, view) {
   const isList = view === 'list';
@@ -39,7 +22,6 @@ export function initWorkTools() {
   const form = hub.querySelector('[data-work-filter-form]');
   const count = hub.querySelector('[data-work-count]');
   const empty = hub.querySelector('[data-work-empty]');
-  const totalLabel = count?.textContent || '';
 
   if (grid) {
     let view = 'grid';
@@ -69,70 +51,83 @@ export function initWorkTools() {
     event.preventDefault();
   });
 
-  const applyFilter = () => {
-    const q = (filter?.value || '').trim().toLowerCase();
+  // Type pills and the search box filter the same cards, in place.
+  const pills = [...hub.querySelectorAll('[data-work-cat]')];
+  const reset = hub.querySelector('[data-work-reset]');
+  const labelOne = count?.getAttribute('data-label-one') || '%d project';
+  const labelMany = count?.getAttribute('data-label-many') || '%d projects';
+  const state = {
+    cat: pills.find((pill) => pill.classList.contains('is-active'))?.getAttribute('data-work-cat') || '',
+    q: '',
+  };
+  nameItems(cards, (card) => `work-${card.id}`);
+
+  const render = () => {
     let visible = 0;
     cards.forEach((card) => {
-      const hay = card.getAttribute('data-search') || '';
-      const show = q === '' || hay.includes(q);
-      card.hidden = !show;
-      if (show) {
+      const inCat = state.cat === '' || card.getAttribute('data-cat') === state.cat;
+      const inSearch = state.q === '' || (card.getAttribute('data-search') || '').includes(state.q);
+      card.hidden = !(inCat && inSearch);
+      if (!card.hidden) {
         visible += 1;
       }
     });
+    pills.forEach((pill) => {
+      const on = pill.getAttribute('data-work-cat') === state.cat;
+      pill.classList.toggle('is-active', on);
+      if (on) {
+        pill.setAttribute('aria-current', 'true');
+      } else {
+        pill.removeAttribute('aria-current');
+      }
+    });
     if (count) {
-      count.textContent = q === '' ? totalLabel : `${visible} match${visible === 1 ? '' : 'es'}`;
+      count.textContent = (visible === 1 ? labelOne : labelMany).replace('%d', String(visible));
     }
     if (empty) {
       empty.hidden = visible !== 0;
-      empty.setAttribute('role', visible === 0 ? 'status' : 'presentation');
-      if (visible === 0) {
-        empty.setAttribute('aria-live', 'polite');
-      } else {
-        empty.removeAttribute('aria-live');
-      }
     }
   };
 
-  filter?.addEventListener('input', applyFilter);
+  const setCat = (cat) => {
+    if (cat === state.cat) {
+      return;
+    }
+    state.cat = cat;
+    swapWithMotion(grid, render, { rich: true });
+    const url = new URL(window.location.href);
+    if (cat === '') {
+      url.searchParams.delete('cat');
+    } else {
+      url.searchParams.set('cat', cat);
+    }
+    window.history.replaceState(null, '', url);
+  };
 
-  hub.querySelectorAll('[data-copy-url]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const url = button.getAttribute('data-copy-url');
-      if (!url) {
+  pills.forEach((pill) => {
+    pill.addEventListener('click', (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
         return;
       }
-      const ok = await copyText(url);
-      const label = button.childNodes[0];
-      if (!label) {
-        return;
-      }
-      const was = label.textContent;
-      label.textContent = ok ? 'Copied ' : 'Copy failed ';
-      setTimeout(() => {
-        label.textContent = was;
-      }, 1600);
+      event.preventDefault();
+      setCat(pill.getAttribute('data-work-cat') || '');
     });
   });
 
-  hub.querySelectorAll('[data-share-project]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const url = button.getAttribute('data-share-url') || window.location.href;
-      const title = button.getAttribute('data-share-title') || document.title;
-      const text = button.getAttribute('data-share-text') || title;
-      if (typeof navigator.share === 'function') {
-        try {
-          await navigator.share({ title, text, url });
-          return;
-        } catch (error) {
-          if (error && error.name === 'AbortError') {
-            return;
-          }
-        }
-      }
-      const ok = await copyText(url);
-      flashLabel(button, ok ? 'Copied' : 'Share failed');
-    });
+  reset?.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (filter) {
+      filter.value = '';
+    }
+    state.q = '';
+    state.cat = '';
+    swapWithMotion(grid, render, { rich: true });
+    window.history.replaceState(null, '', reset.getAttribute('href') || window.location.pathname);
+  });
+
+  filter?.addEventListener('input', () => {
+    state.q = filter.value.trim().toLowerCase();
+    swapWithMotion(grid, render);
   });
 
   const hash = window.location.hash.replace('#', '');

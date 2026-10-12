@@ -38,34 +38,17 @@
     ],
   ])
 
-  <div class="container wide page-block write-hub">
+  <div class="container wide page-block write-hub" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list">
     @include('partials.write-toolbar', compact('writeId', 'writeUrl'))
-    <div id="journal-topics">
+    <div id="journal-topics" data-journal-region="topics">
       @include('partials.write-topics', compact('writeId', 'writeUrl'))
     </div>
-    @if (! have_posts())
-      <div id="journal-posts">
-        <p>{{ __('No posts in this topic yet.', 'sage') }}</p>
+    <div class="write-layout">
+      <div class="write-main" id="journal-posts" data-journal-region="results">
+        @include('partials.journal-results', ['writeUrl' => $writeUrl, 'listClass' => 'post-list', 'emptyText' => __('No posts in this topic yet.', 'sage')])
       </div>
-    @else
-      <div class="write-layout">
-        <div class="write-main" id="journal-posts">
-          <div class="post-list" data-post-list>
-            @while(have_posts()) @php(the_post())
-              @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-            @endwhile
-          </div>
-          <div class="posts-nav">
-            {!! get_the_posts_pagination([
-              'mid_size' => 1,
-              'prev_text' => __('Previous', 'sage'),
-              'next_text' => __('Next', 'sage'),
-            ]) !!}
-          </div>
-        </div>
-        @include('partials.write-aside', compact('writeId'))
-      </div>
-    @endif
+      @include('partials.write-aside', compact('writeId'))
+    </div>
     @include('partials.write-subscribe', compact('writeId'))
   </div>
 @endsection

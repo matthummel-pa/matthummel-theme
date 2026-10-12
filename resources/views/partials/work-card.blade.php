@@ -24,13 +24,16 @@
   class="work-card{{ $featured ? ' work-card--featured' : '' }}"
   id="{{ esc_attr($slug) }}"
   data-work-card
+  data-cat="{{ esc_attr((string) ($p['cat'] ?? '')) }}"
   data-search="{{ esc_attr($haystack) }}"
+  @if (! empty($isHidden)) hidden @endif
 >
   @if ($shot !== '')
+    {{-- The link is hidden from assistive tech (the title link follows); the alt is for image search. --}}
     <a class="work-shot" href="{{ esc_url($conceptUrl) }}" aria-hidden="true" tabindex="-1">
       <img
         src="{{ esc_url($shot) }}"
-        alt=""
+        alt="{{ sprintf(__('%s demo screenshot', 'sage'), $title) }}"
         width="960"
         height="540"
         loading="{{ $featured ? 'eager' : 'lazy' }}"

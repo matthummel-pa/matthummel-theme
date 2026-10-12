@@ -4286,3 +4286,145 @@ add_action('init', function (): void {
 
     update_option('mh_retire_merged_pages_v1', true);
 }, 64);
+
+/**
+ * 3.6.62 — About copy tidy: say each thing once.
+ *
+ * The same three sentences (adjacent work, "no public demo", family hours) each
+ * appeared two or three times down the page. The template now prints the
+ * adjacent-work sentence once; this trims the other repeats in stored copy.
+ * A field is only changed while it still holds the exact text listed here,
+ * so anything edited in wp-admin since is left alone.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_about_copy_tidy_v1') || wp_installing()) {
+        return;
+    }
+
+    $workP1 = 'I’m open to full-time roles, contract work, and freelance projects. I’m based in Gettysburg, PA, and happy to work remote.';
+    $cvIntro = 'Newest role first. I work with shops and agencies anywhere, and I’m open to full-time, contract, and agency overflow work.';
+    $glanceNote = 'The short version, if you are hiring. The resume above has the detail.';
+    $life = 'Nights and weekends belong to my family, not projects.';
+
+    // Whole-field swaps: stored value => replacement.
+    $swaps = [
+        'mh_f_about_work_p1' => [
+            'I\'m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.' => $workP1,
+            'I’m looking for full-time roles, contract gigs, and freelance projects on matthummel.com. Based in Gettysburg, PA, and happy to work remote.' => $workP1,
+        ],
+        'mh_f_hire_cv_intro' => [
+            'Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.' => $cvIntro,
+        ],
+        'mh_f_glance_note' => [
+            'Most production work lived inside employers, so I now publish WordPress themes, plugins, and builds on GitHub. Stack details are below.' => $glanceNote,
+        ],
+        'mh_f_now_life_p1' => [
+            'I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.' => $life,
+        ],
+    ];
+
+    // Sentence swaps inside the story (one WYSIWYG value, so match the sentence, not the field).
+    $storySwaps = [
+        ' Hire me here for a real build.' => '',
+        ' Hire me on this site for a real build.' => '',
+        'Most production work lived inside employers, so I am now publishing Sage/WordPress work, plugins, and spec builds on GitHub. PowerApps, Power Automate, and InfoPath for federal agencies are in the resume below. There is no public demo.' => 'Most of my earlier work lived inside employers, so the public repos are recent. The Power Platform work for federal agencies is in the resume below; it has no public demo.',
+    ];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($swaps as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($pairs[$val])) {
+                update_post_meta($id, $key, $pairs[$val]);
+            }
+        }
+
+        $story = get_post_meta($id, 'mh_f_about_story', true);
+        if (is_string($story) && $story !== '') {
+            $next = str_replace(array_keys($storySwaps), array_values($storySwaps), $story);
+            if ($next !== $story) {
+                update_post_meta($id, 'mh_f_about_story', $next);
+            }
+        }
+    }
+
+    update_option('mh_about_copy_tidy_v1', true);
+}, 75);
+
+/**
+ * 3.6.63 — Put each page's own search phrase in its intro and description.
+ *
+ * The Home page targets "WordPress developer" but never said it in the body;
+ * Projects, Journal, Resources and Contact had the same gap. This swaps the
+ * intro line and the meta description on those pages, plus About's description.
+ * A value is only changed while it still holds the exact text listed here.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_seo_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    // Intro fields: meta key => [stored value => replacement].
+    $fields = [
+        'mh_f_home_role' => [
+            'Full-stack developer · WordPress themes, plugins, and web apps' => 'Full-stack and WordPress developer · themes, plugins, and web apps',
+        ],
+        'mh_f_work_lede' => [
+            'Real themes and plugins with live demos and the story behind each one. Open a project, click around, and see how I work before we ever talk.' => 'WordPress projects with live demos and the story behind each one. Open a theme or plugin, click around, and see how I work before we ever talk.',
+        ],
+        'mh_f_write_lede' => [
+            'Short, practical posts on WordPress, PHP, and JavaScript — most come with code you can paste into your own project.' => 'Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.',
+        ],
+        'mh_f_resources_lede' => [
+            'Free code to study, tools I actually recommend, and what’s behind every site I ship — for developers and business owners alike.' => 'Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.',
+            'Free code to study, tools I actually recommend, and what\'s behind every site I ship — for developers and business owners alike.' => 'Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.',
+        ],
+        'mh_f_cnt_lede' => [
+            'Hiring, building, or just stuck on something WordPress? Send a few sentences — I read everything and reply within one business day (ET).' => 'Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).',
+        ],
+    ];
+
+    // Meta descriptions, wherever one is stored: MH SEO, the old Rank Math key, or the theme field.
+    $descriptions = [
+        'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.' => 'WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.',
+        'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.' => 'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
+        'Sample WordPress themes and plugins with live demos and short build stories. Open a project, try the demo, and see how I build for shops and agencies.' => 'WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.',
+        'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.' => 'WordPress development notes from real projects: PHP, JavaScript, React, APIs, and tools. Most posts include code you can adapt.',
+        'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.' => 'Contact a WordPress developer about a site, plugin, web app, role, or agency overflow work. I reply within one business day (ET).',
+    ];
+    $descriptionKeys = ['_mh_seo_description', 'rank_math_description', 'mh_f_seo_desc'];
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+        foreach ($fields as $key => $pairs) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($pairs[$val])) {
+                update_post_meta($id, $key, $pairs[$val]);
+            }
+        }
+        foreach ($descriptionKeys as $key) {
+            $val = get_post_meta($id, $key, true);
+            if (is_string($val) && isset($descriptions[$val])) {
+                update_post_meta($id, $key, $descriptions[$val]);
+            }
+        }
+    }
+
+    update_option('mh_seo_copy_v1', true);
+}, 76);

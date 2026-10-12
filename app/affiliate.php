@@ -162,19 +162,19 @@ function mh_resources_catalog(): array
 
     return [
         [
-            'title' => __('Free starters', 'sage'),
-            'intro' => __('Open code and example builds from this site. Fork them, read them, or hire me to turn one into a production site.', 'sage'),
+            'title' => __('Free WordPress starters', 'sage'),
+            'intro' => __('Open code and example builds. Fork them, read them, or hire me to turn one into a production site.', 'sage'),
             'items' => [
                 [
-                    'name' => __('Work — example sites', 'sage'),
-                    'blurb' => __('WordPress themes and plugins with stack notes, demos, and buy/help CTAs when a pack is for sale.', 'sage'),
+                    'name' => __('Projects', 'sage'),
+                    'blurb' => __('WordPress themes and plugins with a live demo, stack notes, and the repo for each one.', 'sage'),
                     'url' => home_url('/projects/'),
                     'affiliate' => false,
-                    'badge' => __('Portfolio', 'sage'),
+                    'badge' => __('Example sites', 'sage'),
                 ],
                 [
-                    'name' => __('Code & GitHub', 'sage'),
-                    'blurb' => __('Public repos, contribution activity, and snippets you can adapt. Proof of how I ship.', 'sage'),
+                    'name' => __('Code on this site', 'sage'),
+                    'blurb' => __('Pinned repos, recent pushes, and the languages I work in, pulled from the GitHub API.', 'sage'),
                     'url' => home_url('/about/#code'),
                     'affiliate' => false,
                     'badge' => __('Open source', 'sage'),
@@ -190,18 +190,18 @@ function mh_resources_catalog(): array
         ],
         [
             'title' => __('Themes for sale', 'sage'),
-            'intro' => __('Paid packs from my WordPress projects. Story and screenshots live on Projects; checkout is optional Shop.', 'sage'),
+            'intro' => __('Paid themes from my WordPress projects. Read the project page first, then buy from the shop if it fits.', 'sage'),
             'items' => [
                 [
-                    'name' => __('Browse Work', 'sage'),
-                    'blurb' => __('See the product page first — problem, approach, stack — then buy if you want the theme or plugin pack.', 'sage'),
+                    'name' => __('Project pages', 'sage'),
+                    'blurb' => __('The problem each theme solves, how it is built, and a demo you can click through before you buy.', 'sage'),
                     'url' => home_url('/projects/'),
                     'affiliate' => false,
-                    'badge' => __('Primary', 'sage'),
+                    'badge' => __('Start here', 'sage'),
                 ],
                 [
                     'name' => __('Theme shop', 'sage'),
-                    'blurb' => __('Short catalog of purchasable themes. Product links open the matching Work landing.', 'sage'),
+                    'blurb' => __('The short list of themes for sale. Each product links back to its project page.', 'sage'),
                     'url' => function_exists('wc_get_page_permalink') ? (string) wc_get_page_permalink('shop') : home_url('/shop/'),
                     'affiliate' => false,
                     'badge' => __('Paid', 'sage'),
@@ -210,7 +210,7 @@ function mh_resources_catalog(): array
         ],
         [
             'title' => __('Tools I recommend', 'sage'),
-            'intro' => __('Hosting, editors, and marketing tools I actually use. Affiliate links are marked; swap in your partner URLs when active.', 'sage'),
+            'intro' => __('Hosting, editors, and marketing tools I use. Affiliate links are labeled.', 'sage'),
             'items' => [
                 [
                     'name' => 'Cursor',

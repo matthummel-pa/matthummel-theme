@@ -19,7 +19,7 @@
   padding: 0;
   list-style: none;
   color: var(--color-text-secondary);
-  font-size: .84rem;
+  font-size: .9375rem;
   font-weight: 600;
 }
 .concept-hero-trust li {
@@ -66,7 +66,7 @@
 }
 .concept-buy-kicker {
   margin: 0 0 .35rem;
-  font-size: .78rem;
+  font-size: .875rem;
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -81,7 +81,7 @@
 .concept-buy-price :where(.amount) { font: inherit; }
 .concept-buy-note {
   margin: 0 0 .85rem;
-  font-size: .9rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -120,7 +120,7 @@
   margin: .65rem 0 0;
   color: var(--color-text-secondary);
   line-height: 1.6;
-  font-size: .98rem;
+  font-size: 1.05rem;
 }
 
 /* ThemeForest-style sidebar facts */
@@ -134,7 +134,7 @@
   grid-template-columns: 7.5rem 1fr;
   gap: .35rem .75rem;
   align-items: baseline;
-  font-size: .92rem;
+  font-size: 1rem;
 }
 .concept-fact dt {
   margin: 0;
@@ -153,7 +153,7 @@
 }
 .concept-aside-subtitle {
   margin: 1rem 0 .4rem;
-  font-size: .78rem;
+  font-size: .875rem;
   font-weight: 700;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -166,7 +166,7 @@
   list-style: none;
   display: grid;
   gap: .35rem;
-  font-size: .92rem;
+  font-size: 1rem;
 }
 .concept-fact-files li {
   padding-left: .85rem;
@@ -192,7 +192,7 @@
 .concept-fact-github,
 .concept-fact-support {
   margin: .85rem 0 0;
-  font-size: .92rem;
+  font-size: 1rem;
 }
 .concept-fact-github a {
   display: inline-flex;
@@ -209,7 +209,7 @@
   gap: .35rem;
 }
 .concept-topic {
-  font-size: .75rem;
+  font-size: .8125rem;
   padding: .2rem .5rem;
   border: 1px solid var(--color-border);
   border-radius: 4px;
@@ -232,7 +232,7 @@
   grid-template-columns: 1.15rem 1fr auto;
   gap: .55rem;
   align-items: center;
-  font-size: .88rem;
+  font-size: 1rem;
 }
 .concept-brand-swatch {
   width: 1.15rem;
@@ -242,7 +242,7 @@
   border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
 }
 .concept-brand-palette code {
-  font-size: .78rem;
+  font-size: .875rem;
   color: var(--color-text-secondary);
 }
 .concept-gallery {
@@ -263,7 +263,7 @@
 }
 .concept-gallery figcaption {
   margin-top: .45rem;
-  font-size: .88rem;
+  font-size: 1rem;
   color: var(--color-text-secondary);
 }
 

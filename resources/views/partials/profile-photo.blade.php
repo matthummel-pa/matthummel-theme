@@ -15,7 +15,7 @@
     @if ($decorative)
       alt=""
     @else
-      alt="{{ __('Matt Hummel', 'sage') }}"
+      alt="{{ $alt ?? __('Matt Hummel', 'sage') }}"
     @endif
     @if ($eager)
       fetchpriority="high"

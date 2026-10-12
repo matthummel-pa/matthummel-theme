@@ -1,6 +1,6 @@
 @php
   $gh          = \App\Github::fetchUser(\App\mh_github_login());
-  $footerName  = $gh['name'] ?: 'Matt Hummel';
+  $footerName  = ($gh['name'] ?? '') ?: 'Matt Hummel';
   $writing     = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $footerHomeId = (int) get_option('page_on_front');
   $footerBlurb = \App\field(
@@ -35,11 +35,15 @@
       </div>
     </div>
 
-    {{-- Work --}}
-    <nav class="footer-nav-col" aria-label="Work">
-      <p class="footer-nav-label">{{ __('Work', 'sage') }}</p>
-      <ul class="footer-nav">
+    {{-- Site: one link column (the Work column was folded in here in 3.6.62) --}}
+    <nav class="footer-nav-col" aria-label="{{ esc_attr__('Site', 'sage') }}">
+      <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
+      <ul class="footer-nav footer-nav--split">
+        <li><a href="{{ esc_url(home_url('/about/')) }}">{{ __('About', 'sage') }}</a></li>
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
+        <li><a href="{{ esc_url($writing) }}">{{ __('Journal', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/resources/')) }}">{{ __('Resources', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/support/')) }}">{{ __('Support', 'sage') }}</a></li>
         {{-- These two are written in wp-admin; each link shows once its page is published. --}}
         @if (\App\mh_is_published_path('/agency-white-label-wordpress/'))
           <li><a href="{{ esc_url(home_url('/agency-white-label-wordpress/')) }}">{{ __('For agencies', 'sage') }}</a></li>
@@ -47,19 +51,8 @@
         @if (\App\mh_is_published_path('/wordpress-handoff-checklist/'))
           <li><a href="{{ esc_url(home_url('/wordpress-handoff-checklist/')) }}">{{ __('Handoff checklist', 'sage') }}</a></li>
         @endif
-        <li><a href="{{ home_url('/support/') }}">{{ __('Support', 'sage') }}</a></li>
-      </ul>
-    </nav>
-
-    {{-- Site --}}
-    <nav class="footer-nav-col" aria-label="Site">
-      <p class="footer-nav-label">Site</p>
-      <ul class="footer-nav">
-        <li><a href="{{ home_url('/about/') }}">{{ __('About', 'sage') }}</a></li>
-        <li><a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/contact/') }}">{{ __('Contact', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/resources/') }}">{{ __('Resources', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/changelog/') }}">{{ __('Changelog', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/changelog/')) }}">{{ __('Changelog', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'sage') }}</a></li>
       </ul>
     </nav>
 

@@ -30,6 +30,11 @@
   $posts       = \App\mh_latest_posts(3);
   $journal     = get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/');
 
+  // The adjacent-work sentence is a field in three sections. Print it once (What I build)
+  // and skip the others while they still say the same thing.
+  $rangeShown  = trim(\App\field('about_services_intro', \App\mh_adjacent_range_copy()));
+  $workRange   = trim(\App\field('about_work_range', \App\mh_adjacent_range_copy()));
+
   $needs = [
     __('Who the site or app is for', 'sage'),
     __('What it needs to do', 'sage'),
@@ -42,22 +47,33 @@
 
 {{-- HERO --}}
 @component('partials.page-hero', ['extra' => 'about-hero'])
-  <div class="about-hero__copy">
-    <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
-    <h1 class="display-title is-hero">
-      {{ \App\field('about_h1', __('WordPress developer for shops and agencies.', 'sage')) }}
-    </h1>
-    <p class="lead about-hero__lede">
-      {{ \App\field('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')) }}
-    </p>
-    <div class="page-header-split__actions about-hero__actions">
-      <a class="btn" href="{{ home_url('/contact/') }}">
-        {!! \App\mh_svg_icon('mail', 16) !!}
-        {{ __('Say hello', 'sage') }}
-      </a>
-      @include('partials.booking-link')
-      <a class="h-text-arrow" href="#hire">{{ __('Hire me', 'sage') }} <span aria-hidden="true">→</span></a>
+  <div class="about-hero__grid">
+    <div class="about-hero__copy">
+      <p class="eyebrow">{{ \App\field('about_kicker', __('Matt Hummel', 'sage')) }}</p>
+      <h1 class="display-title is-hero">
+        {{ \App\field('about_h1', __('WordPress developer for shops and agencies.', 'sage')) }}
+      </h1>
+      <p class="lead about-hero__lede">
+        {{ \App\field('about_lede', __('I build WordPress sites and web apps shops can edit, agencies can hand off, and the next developer can read.', 'sage')) }}
+      </p>
+      <div class="page-header-split__actions about-hero__actions">
+        <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">
+          {!! \App\mh_svg_icon('mail', 16) !!}
+          {{ __('Say hello', 'sage') }}
+        </a>
+        @include('partials.booking-link')
+        <a class="h-text-arrow" href="#hire">{{ __('Hire me', 'sage') }} <span aria-hidden="true">→</span></a>
+      </div>
     </div>
+    @if (\App\mh_profile_photo_url(640) !== '')
+      <figure class="about-portrait">
+        @include('partials.profile-photo', ['size' => 320, 'class' => 'about-portrait__img', 'eager' => true, 'alt' => __('Matt Hummel, WordPress developer', 'sage')])
+        <figcaption class="about-portrait__caption">
+          <span class="about-portrait__name">{{ $gh['name'] ?? '' ?: __('Matt Hummel', 'sage') }}</span>
+          <span class="about-portrait__meta">{{ \App\field('about_photo_caption', __('Full-stack and WordPress developer · Gettysburg, PA', 'sage')) }}</span>
+        </figcaption>
+      </figure>
+    @endif
   </div>
 @endcomponent
 
@@ -198,7 +214,7 @@
               <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $item }}</span></li>
             @endforeach
           </ul>
-          <p class="about-now__life">{{ \App\field('now_life_p1', __('I live with my family. Nights and weekends belong to people, not projects. Weekdays I take full-time, contract, and freelance WordPress work. I work Eastern Time hours.', 'sage')) }}</p>
+          <p class="about-now__life">{{ \App\field('now_life_p1', __('Nights and weekends belong to my family, not projects.', 'sage')) }}</p>
           <p class="about-now__updated">
             {{ __('Last updated', 'sage') }}
             @if ($nowUpdated['iso'] !== '')
@@ -249,7 +265,7 @@
             {{ \App\field('about_services_h2', __('What I build.', 'sage')) }}
           </h2>
           <p class="sec-intro">
-            {{ \App\field('about_services_intro', \App\mh_adjacent_range_copy()) }}
+            {{ $rangeShown }}
           </p>
         </header>
         <div class="about-services">
@@ -287,9 +303,11 @@
               {{ \App\mh_availability_label($gh, __('Available for hire', 'sage')) }}
             </p>
           @endif
-          <p>{{ \App\field('about_work_p1', __('I\'m looking for full-time roles, contract gigs, and freelance projects. Happy to work remote or on-site.', 'sage')) }}</p>
+          <p>{{ \App\field('about_work_p1', __('I’m open to full-time roles, contract work, and freelance projects. Happy to work remote or on-site.', 'sage')) }}</p>
           <p>{{ \App\field('about_work_p2', __('If you’re hiring a full-stack developer, need an experienced WordPress specialist, want agency overflow support, or have a web project to discuss, send a short note about what you’re working on.', 'sage')) }}</p>
-          <p class="sec-intro range-note">{{ \App\field('about_work_range', \App\mh_adjacent_range_copy()) }}</p>
+          @if ($workRange !== '' && $workRange !== $rangeShown)
+            <p class="sec-intro range-note">{{ $workRange }}</p>
+          @endif
           <p class="sec-intro">{{ \App\field('about_work_price', __('Written scope before I start. Custom quotes — no menu of add-ons.', 'sage')) }}</p>
           <div class="about-story__links">
             <a class="btn" href="{{ home_url('/contact/') }}">
@@ -353,7 +371,7 @@
   'linkedin' => $liUrl,
   'headingId' => 'about-resume-heading',
   'h2' => \App\field('hire_cv_h2', __('Resume.', 'sage')),
-  'intro' => \App\field('hire_cv_intro', __('Working with shops and agencies anywhere. Open to full-time, contract, and agency overflow. PowerApps, Power Automate, and InfoPath for federal agencies are in the roles below. There is no public demo.', 'sage')),
+  'intro' => \App\field('hire_cv_intro', __('Newest role first. I work with shops and agencies anywhere, and I’m open to full-time, contract, and agency overflow work.', 'sage')),
   'eyebrow' => __('Experience', 'sage'),
 ])
 

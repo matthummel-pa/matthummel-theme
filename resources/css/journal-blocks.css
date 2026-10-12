@@ -399,7 +399,7 @@ article.mh-tool-card,
   border-radius: 10px;
   background: var(--blue-50);
   color: var(--color-accent);
-  font: 700 .7rem/1 var(--font-display);
+  font: 700 .8125rem/1 var(--font-display);
   letter-spacing: .03em;
   box-sizing: border-box;
   grid-row: 1 / span 2;
@@ -433,7 +433,7 @@ article.mh-tool-card,
   border-radius: 10px;
   background: var(--blue-50);
   color: var(--color-accent);
-  font: 700 .7rem/1 var(--font-display);
+  font: 700 .8125rem/1 var(--font-display);
   letter-spacing: .03em;
   box-sizing: border-box;
   grid-row: 1 / span 2;
@@ -503,7 +503,7 @@ article.mh-tool-card,
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--gray-50);
-  font: 600 .68rem/1.3 var(--font-display) !important;
+  font: 600 .8125rem/1.3 var(--font-display) !important;
   letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -543,7 +543,7 @@ article.mh-tool-card,
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--gray-50);
-  font: 700 .68rem/1.2 var(--font-display) !important;
+  font: 700 .8125rem/1.2 var(--font-display) !important;
   letter-spacing: .05em;
   text-transform: uppercase;
   color: var(--color-navy);
@@ -583,7 +583,7 @@ article.mh-tool-card,
   padding: 0 0 .75rem !important;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-secondary);
-  font: 400 .95rem/1.6 var(--font-body) !important;
+  font: 400 1.05rem/1.6 var(--font-body) !important;
 }
 
 .mh-tool-card dd:last-of-type,
@@ -662,7 +662,7 @@ article.mh-tool-card,
   border-radius: 8px;
   background: var(--gray-50);
   color: var(--color-navy);
-  font: 700 .75rem/1 var(--font-display);
+  font: 700 .8125rem/1 var(--font-display);
 }
 
 .post-prose .mh-ship-pipe__name,
@@ -672,7 +672,7 @@ article.mh-tool-card,
 .editor-styles-wrapper .mh-ship-pipe p.mh-ship-pipe__name {
   grid-column: 2;
   margin: 0 0 .25rem !important;
-  font: 700 1rem/1.25 var(--font-display) !important;
+  font: 700 1.05rem/1.25 var(--font-display) !important;
   letter-spacing: -0.03em;
   color: var(--color-text);
 }
@@ -683,7 +683,7 @@ article.mh-tool-card,
   grid-column: 2;
   margin: 0 !important;
   color: var(--color-text-secondary);
-  font: 400 .98rem/1.65 var(--font-body) !important;
+  font: 400 1.05rem/1.65 var(--font-body) !important;
 }
 
 .post-prose .mh-ship-note,
@@ -695,7 +695,7 @@ article.mh-tool-card,
   border-radius: var(--radius-card);
   background: var(--gray-50);
   color: var(--color-text-secondary);
-  font: 400 .98rem/1.65 var(--font-body) !important;
+  font: 400 1.05rem/1.65 var(--font-body) !important;
 }
 
 .mh-ship-note strong { color: var(--color-text); }
@@ -724,7 +724,7 @@ article.mh-tool-card,
 .editor-styles-wrapper .faq-list .wp-block-details summary,
 .post-prose .faq-list summary {
   cursor: pointer;
-  font: 600 .98rem/1.35 var(--font-display);
+  font: 600 1.05rem/1.35 var(--font-display);
   color: var(--color-text);
   padding: .85rem 1rem;
 }
@@ -734,7 +734,7 @@ article.mh-tool-card,
   margin: 0 !important;
   padding: 0 1rem 1rem !important;
   color: var(--color-text-secondary);
-  font: 400 .95rem/1.65 var(--font-body);
+  font: 400 1.05rem/1.65 var(--font-body);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -928,7 +928,7 @@ html.mh-dark .mh-tool-card code {
   border-radius: 8px;
   background: var(--gray-50);
   color: var(--color-navy);
-  font: 700 .75rem/1 var(--font-display);
+  font: 700 .8125rem/1 var(--font-display);
 }
 
 html.mh-dark .wp-block-matthummel-ship-step.mh-ship-step,

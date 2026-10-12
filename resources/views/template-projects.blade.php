@@ -51,6 +51,7 @@
   @include('partials.page-nav', [
     'pills' => [
       ['gallery', __('Projects', 'sage')],
+      ['inside', __('Inside each one', 'sage')],
       ['how', __('How it works', 'sage')],
       ['work-faq', __('FAQ', 'sage')],
     ],
@@ -106,7 +107,7 @@
         </form>
       </div>
       <div class="write-tool-actions">
-        <p class="write-count" data-work-count aria-live="polite">{{ $countLabel }}</p>
+        <p class="write-count" data-work-count role="status" data-label-one="{{ esc_attr__('%d project', 'sage') }}" data-label-many="{{ esc_attr__('%d projects', 'sage') }}">{{ $countLabel }}</p>
         <div class="write-view" role="group" aria-label="{{ __('Layout', 'sage') }}">
           <button type="button" class="write-view-btn is-active" data-work-view="grid" aria-pressed="true">{{ __('Grid', 'sage') }}</button>
           <button type="button" class="write-view-btn" data-work-view="list" aria-pressed="false">{{ __('List', 'sage') }}</button>
@@ -115,41 +116,59 @@
       </div>
     </div>
 
-    <nav class="filter-row" aria-label="{{ __('Filter by type', 'sage') }}">
-      <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" @if ($cat === '') aria-current="page" @endif>
+    {{-- Type filter: links that work without JS (?cat=…); work-tools.js filters the grid in place. --}}
+    <nav class="filter-row" aria-label="{{ __('Filter by type', 'sage') }}" data-work-cats>
+      <a class="filter-pill{{ $cat === '' ? ' is-active' : '' }}" href="{{ esc_url($pageUrl) }}" data-work-cat="" @if ($cat === '') aria-current="true" @endif>
         {{ __('All', 'sage') }} <span class="filter-count">{{ $total }}</span>
       </a>
       @foreach ($cats as $c)
-        <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', $c, $pageUrl)) }}" @if ($cat === $c) aria-current="page" @endif>
+        <a class="filter-pill{{ $cat === $c ? ' is-active' : '' }}" href="{{ esc_url(add_query_arg('cat', rawurlencode($c), $pageUrl)) }}" data-work-cat="{{ esc_attr($c) }}" @if ($cat === $c) aria-current="true" @endif>
           {{ $c }} <span class="filter-count">{{ (int) $counts[$c] }}</span>
         </a>
       @endforeach
     </nav>
 
-    @if ($shown === [])
-      <div class="work-empty work-empty--compact" role="status">
-        <h3 class="work-empty__title">{{ __('No projects in this type yet.', 'sage') }}</h3>
-        <p class="work-empty__text">{{ __('Try another filter, or browse the full list.', 'sage') }}</p>
-        <div class="work-empty__actions">
-          <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}">{{ __('Show all projects', 'sage') }}</a>
-        </div>
+    {{-- Every card is in the HTML; the ones outside the current type are hidden. --}}
+    <div class="work-grid work-grid--roomy" data-work-grid>
+      @foreach ($all as $p)
+        @include('partials.work-card', [
+          'p' => $p,
+          'pageUrl' => $pageUrl,
+          'isHidden' => $cat !== '' && ($p['cat'] ?? '') !== $cat,
+        ])
+      @endforeach
+    </div>
+    <div class="work-empty work-empty--compact" data-work-empty role="status" @if ($shown !== []) hidden @endif>
+      <h3 class="work-empty__title">{{ __('No projects match.', 'sage') }}</h3>
+      <p class="work-empty__text">{{ __('Try another type or a different search.', 'sage') }}</p>
+      <div class="work-empty__actions">
+        <a class="btn btn-outline" href="{{ esc_url($pageUrl) }}" data-work-reset>{{ __('Show all projects', 'sage') }}</a>
       </div>
-    @else
-      <div class="work-grid work-grid--roomy" data-work-grid>
-        @foreach ($shown as $p)
-          @include('partials.work-card', [
-            'p' => $p,
-            'pageUrl' => $pageUrl,
-          ])
-        @endforeach
-      </div>
-      <p class="archive-desc" data-work-empty hidden role="status" aria-live="polite">{{ __('No projects match that search.', 'sage') }}</p>
-    @endif
+    </div>
 
     <div class="work-footer-links">
       {!! \App\field_html('work_foot', \App\mh_projects_listing_default('foot')) !!}
     </div>
   </div>
+
+  {{-- What a project page contains (the work_context_* fields existed but were not printed) --}}
+  <section class="pf-section pf-section--alt work-guide work-context" id="inside" aria-labelledby="work-context-heading">
+    <div class="container wide work-context__grid">
+      <div>
+        <p class="eyebrow">{{ __('Inside each one', 'sage') }}</p>
+        <h2 id="work-context-heading" class="display-title is-section">
+          {{ \App\field('work_context_h2', \App\mh_projects_listing_default('context_h2')) }}
+        </h2>
+        <p class="lead work-guide__intro">{{ \App\field('work_context_p1', \App\mh_projects_listing_default('context_p1')) }}</p>
+        <p class="work-context__note">{!! \App\field_html('work_context_p2', \App\mh_projects_listing_default('context_p2')) !!}</p>
+      </div>
+      <ul class="now-checklist work-context__list">
+        @foreach (\App\field_lines('work_show_items', \App\mh_work_show_defaults()) as $line)
+          <li>{!! \App\mh_svg_icon('check', 14) !!}<span>{{ $line }}</span></li>
+        @endforeach
+      </ul>
+    </div>
+  </section>
 
   <section class="pf-section work-guide" id="how" aria-labelledby="work-how-heading">
     <div class="container wide">

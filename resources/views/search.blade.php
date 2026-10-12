@@ -21,37 +21,16 @@
   ],
 ])
 
-  <div class="container wide page-block write-hub">
+  <div class="container wide page-block write-hub" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list">
     @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl, 'hideSearch' => true])
-    <div id="journal-topics">
+    <div id="journal-topics" data-journal-region="topics">
       @include('partials.write-topics', compact('writeId', 'writeUrl'))
     </div>
-    @if (! have_posts())
-      <div id="journal-posts">
-      <p class="archive-desc">{{ __('Nothing matched. Try another search, or browse the journal and Code.', 'sage') }}</p>
-      <p class="btn-row">
-        <a class="btn" href="{{ esc_url($writeUrl) }}">{{ \App\field('write_h1', __('Journal', 'sage'), $writeId) }}</a>
-        <a class="btn btn-outline" href="{{ home_url('/about/#code') }}">{{ __('Code', 'sage') }}</a>
-      </p>
+    <div class="write-layout">
+      <div class="write-main" id="journal-posts" data-journal-region="results">
+        @include('partials.journal-results', ['writeUrl' => $writeUrl, 'listClass' => 'post-list', 'emptyText' => __('Nothing matched. Try another search, or pick a topic.', 'sage')])
       </div>
-    @else
-      <div class="write-layout">
-        <div class="write-main" id="journal-posts">
-          <div class="post-list" data-post-list>
-            @while(have_posts()) @php(the_post())
-              @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
-            @endwhile
-          </div>
-          <div class="posts-nav">
-            {!! get_the_posts_pagination([
-              'mid_size' => 1,
-              'prev_text' => __('Previous', 'sage'),
-              'next_text' => __('Next', 'sage'),
-            ]) !!}
-          </div>
-        </div>
-        @include('partials.write-aside', compact('writeId'))
-      </div>
-    @endif
+      @include('partials.write-aside', compact('writeId'))
+    </div>
   </div>
 @endsection

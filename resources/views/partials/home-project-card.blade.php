@@ -9,9 +9,10 @@
 <article class="h-project-card">
   <a class="h-project-card__media" href="{{ $url }}" tabindex="-1" aria-hidden="true">
     @if ($image !== '')
+      {{-- The link is hidden from assistive tech (the title link follows); the alt is for image search. --}}
       <img
         src="{{ esc_url($image) }}"
-        alt=""
+        alt="{{ sprintf(__('%s demo screenshot', 'sage'), $title) }}"
         width="640"
         height="400"
         loading="lazy"
