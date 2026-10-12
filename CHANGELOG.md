@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.6.61 — Article schema only on posts and projects
+
+- MH SEO (bundled): pages such as Home, About, Projects and Contact no longer output an `Article` node. They keep `WebPage` and breadcrumbs. Posts stay `BlogPosting` and projects stay `Article`. The module version is unchanged, so its one-time setup does not re-run.
+- Related posts: the thumbnail's alt text was escaped twice ("Cobble &amp;amp; Candle"). The thumbnail link is hidden from assistive tech and the title link follows it, so the image is decorative and its alt is empty.
+
+## 3.6.60 — Dark cards on one recipe, hover contrast
+
+- Dark mode: every card has the lime border, lime count numbers and body copy one step lighter. The home project and help cards, post, project and related-post cards, journal topics, résumé, accessibility, contact, privacy and legal cards, the newsletter box and the post author box had blue or violet borders. Hero stats on project pages, the About GitHub counts and the reaction count are lime.
+- Light mode: links hovered to blue-500, which is 3.7:1 on white. `--color-accent-hover` is violet-700 (7:1). Heroes, the contact band and the post call-out are dark in light mode too, so links inside them hover to lime.
+- Hover fixes in dark mode: category pills and the active Journal sort button keep a white label on their fill; share buttons no longer flip to a light-blue fill under light type; "Say hello" on About keeps white type on the gradient; the newsletter block button and the mobile menu "Available now" button have dark labels on their bright fills.
+- Pagination: the hovered page number has a white label in light mode.
+- Small labels that were 11.2–11.5px (eyebrows, kickers, tags, timing chips) are 12px.
+
 ## 3.6.59 — Contrast pass, one grid gap scale, target sizes
 
 - Dark mode: project pages (story steps, specs, "under the hood", feature toggles), journal tool cards and a few stat tiles still read `--gray-50…400` as light text and `--gray-700…900` as dark fills, which the dark skin flips. They rendered navy on navy at about 1.2:1. They now use the text and surface tokens. A new `--color-surface-raised` covers chips that sit on a card.

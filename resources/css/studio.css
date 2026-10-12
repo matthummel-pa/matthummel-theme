@@ -4826,7 +4826,7 @@ html.mh-dark .post-prose a,
 html.mh-dark .about-story__body a,
 html.mh-dark .sec-intro a,
 html.mh-dark .about-services-note a,
-html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
+html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
 html.mh-dark .btn-outline { background: transparent; color: var(--blue-300); border-color: rgba(96, 165, 250, .4); }
 html.mh-dark .btn-outline:hover { background: rgba(59, 130, 246, .14); color: #fff; border-color: var(--blue-400); }
 html.mh-dark .contact-form input,
@@ -6486,3 +6486,86 @@ html.mh-dark .svc-process__step, html.mh-dark .project-story__step {
 .spec-badge, .project-place-pill, .project-cat-pill, .post-cat, .h-journal__cat,
 .repo-card__kind, .post-related-card__cat, .resources-card__aff, .resources-card__badge,
 .uses-item__aff, .cl-label, .cl-change__badge, .pill, .filter-count { font-size: .75rem; }
+
+/* ── 3.6.60 · Hover and focus colors that failed contrast ──────────────────
+   The global link-hover rule paints `--color-accent-hover`. In light mode that
+   was blue-500 (3.7:1 on white). It is violet-700 now, and containers that are
+   dark in both modes, or that fill on hover, set the token for their own links
+   instead of out-specifying the global rule. ───────────────────────────── */
+html:not(.mh-dark) { --color-accent-hover: var(--violet-700); }
+html:not(.mh-dark) :is(.page-header, .h-hero, .post-hero, .cta-band, .post-cta) { --color-accent-hover: var(--lime-300); }
+
+/* Pills and toolbar buttons that take a solid fill on hover keep a white label. */
+.project-cat-pill:hover, .project-cat-pill:focus-visible,
+.write-sort-btn.is-active:hover, .write-sort-btn.is-active:focus-visible,
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible,
+html.mh-dark .write-sort-btn.is-active:hover, html.mh-dark .write-sort-btn.is-active:focus-visible { --color-accent-hover: #fff; }
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible { background: var(--blue-600); border-color: var(--blue-600); }
+/* Three dark link-hover rules (0,7,2 and up, plus the lime prose-link rule) all reach these; one flag beats re-listing them. */
+html.mh-dark .project-cat-pill:hover, html.mh-dark .project-cat-pill:focus-visible,
+html.mh-dark main p a.project-cat-pill:hover, html.mh-dark main p a.project-cat-pill:focus-visible,
+html.mh-dark .write-sort-btn.is-active:hover, html.mh-dark .write-sort-btn.is-active:focus-visible { color: #fff !important; }
+.posts-nav a.page-numbers:hover, .posts-nav a.page-numbers:focus-visible { --color-accent-hover: #fff; }
+
+/* Dark mode: share buttons hovered to a light-blue fill under light type. */
+html.mh-dark .post-share-btn:hover,
+html.mh-dark .post-share-btn:focus-visible { background: rgba(59, 130, 246, .14); border-color: var(--lime-400); }
+
+/* Dark mode: labels that picked up a link or flipped-gray color on a bright fill. */
+html.mh-dark .about-story__links a.btn:hover,
+html.mh-dark .about-story__links a.btn:focus-visible { color: #fff !important; } /* the 3.6.54 lime link-hover rule is !important */
+html.mh-dark .mh-popout .mh-popout-cta { color: var(--violet-900); }
+html.mh-dark .mhn-signup-block__form button:hover,
+html.mh-dark .mhn-signup-block__button:hover { color: var(--blue-900); }
+
+/* ── 3.6.60 · Dark mode: every card on one recipe ──────────────────────────
+   Lime border, lime index and count numbers, body copy one step lighter.
+   About cards had it (3.6.57); the blue-bordered and violet-bordered cards
+   now match. Borders need `!important` because the older card recipes do. ── */
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .about-now__posts, .hire-need-cta,
+  .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
+  .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
+  .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
+  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block
+) { border-color: rgba(163, 230, 53, .55) !important; }
+/* Two recipes sit at higher specificity; match them rather than out-rank them elsewhere. */
+html.mh-dark .work-grid .work-card,
+html.mh-dark .work-grid--roomy .work-card,
+html.mh-dark .resume-card.is-current { border-color: rgba(163, 230, 53, .55) !important; }
+html.mh-dark .resume-card.is-current { border-left-color: var(--lime-400) !important; }
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .uses-item,
+  .a11y-standard-card, .a11y-limit-card, .contact-info-card, .priv-collect-card,
+  .legal-data-card, .legal-right-card
+):hover { border-color: var(--lime-300) !important; }
+
+/* Body copy inside cards: one step lighter than page copy. Scoped tokens, so chips,
+   links and anything with its own color are untouched. */
+html.mh-dark :is(
+  .h-project-card, .h-help-card, .h-journal-item, .post-card, .work-card, .post-related-card,
+  .journal-topic-card, .code-skills__card, .resume-card, .about-now__posts, .hire-need-cta,
+  .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
+  .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
+  .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
+  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block,
+  .about-aside-card, .about-svc-card, .about-work-type, .h-glance__card, .h-glance__fact,
+  .h-process__step, .h-fit__col, .about-approach__item, .code-pulse__stat, .repo-card,
+  .code-skills-group, .code-skills__tile, .side-card, .write-aside-card,
+  .svc-process__step, .project-story__step, .resources-card, .h-faq__item
+) { --color-text-secondary: #dbe4f3; --color-text-muted: #c3d0e6; }
+
+/* Count numbers that were still white or blue. */
+html.mh-dark .about-aside-card__stats strong,
+html.mh-dark .page-header--project .project-proof__item strong,
+html.mh-dark .project-react__count { color: var(--lime-300); -webkit-text-fill-color: currentColor; }
+
+/* ── 3.6.60 · 12px floor for small labels (were 11.2–11.5px) ── */
+.eyebrow, .h-hero__kicker, .h-page-nav__label, .h-section-label, .post-cta__eyebrow,
+.post-related-card__meta, .project-react__label, .resume-now, .resume-tag, .side-author__avail,
+.side-author__eyebrow, .about-aside-avail, .about-svc-card__n, .discovery-step__eyebrow,
+.h-process__timing, .header-avail__label, .mh-code-lang, .post-hero-share__label, .post-nav__dir,
+.priv-tracker-pill, .repo-card__slug, .a11y-standard-card__badge, .a11y-contact-card__label,
+.project-proof__item span, .code-pulse dt { font-size: .75rem; }
