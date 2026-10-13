@@ -153,8 +153,9 @@ add_filter('the_content', function (string $content): string {
  *
  * Replace affiliate URLs with your live partner links when you join a program.
  * Set `affiliate` => true only when the URL is a compensated referral.
+ * `key` is what the Resource links block stores to pick a group; do not rename one.
  *
- * @return list<array{title: string, intro: string, items: list<array{name: string, blurb: string, url: string, affiliate: bool, badge: string}>}>
+ * @return list<array{key: string, title: string, intro: string, items: list<array{name: string, blurb: string, url: string, affiliate: bool, badge: string}>}>
  */
 function mh_resources_catalog(): array
 {
@@ -162,6 +163,7 @@ function mh_resources_catalog(): array
 
     return [
         [
+            'key' => 'starters',
             'title' => __('Free WordPress starters', 'sage'),
             'intro' => __('Open code and example builds. Fork them, read them, or hire me to turn one into a production site.', 'sage'),
             'items' => [
@@ -189,6 +191,7 @@ function mh_resources_catalog(): array
             ],
         ],
         [
+            'key' => 'themes',
             'title' => __('Themes for sale', 'sage'),
             'intro' => __('Paid themes from my WordPress projects. Read the project page first, then buy from the shop if it fits.', 'sage'),
             'items' => [
@@ -209,6 +212,7 @@ function mh_resources_catalog(): array
             ],
         ],
         [
+            'key' => 'tools',
             'title' => __('Tools I recommend', 'sage'),
             'intro' => __('Hosting, editors, and marketing tools I use. Affiliate links are labeled.', 'sage'),
             'items' => [
@@ -313,4 +317,89 @@ function mh_uses_sections(): array
             ],
         ],
     ];
+}
+
+/**
+ * One group of the Resources catalog by its key ("starters", "themes", "tools").
+ *
+ * @return array{key: string, title: string, intro: string, items: list<array<string, mixed>>}|null
+ */
+function mh_resources_catalog_group(string $key): ?array
+{
+    foreach (mh_resources_catalog() as $group) {
+        if ($group['key'] === $key) {
+            return $group;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Whether the Resources catalog or the stack list holds at least one compensated link.
+ */
+function mh_resources_have_affiliate_links(): bool
+{
+    foreach (mh_resources_catalog() as $group) {
+        foreach ($group['items'] as $item) {
+            if (! empty($item['affiliate'])) {
+                return true;
+            }
+        }
+    }
+    foreach (mh_uses_sections() as $group) {
+        foreach ($group['items'] as $row) {
+            if (! empty($row[3])) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Whether a block that prints affiliate links has to print the disclosure itself.
+ *
+ * True when the page it sits on has no Affiliate disclosure block, so the note cannot be lost by deleting that block.
+ */
+function mh_affiliate_note_is_missing(): bool
+{
+    $post = get_post();
+
+    return ! $post instanceof \WP_Post || ! has_block('matthummel/affiliate-note', $post);
+}
+
+/**
+ * Jump links for the Resources overview: every Section on the page that holds a Resource links or Stack list block.
+ *
+ * @return list<array{anchor: string, label: string, count: int}>
+ */
+function mh_resources_jump_rows(?int $post_id = null): array
+{
+    $post = get_post($post_id ?: (int) get_the_ID());
+    if (! $post instanceof \WP_Post) {
+        return [];
+    }
+
+    $rows = [];
+    foreach (parse_blocks((string) $post->post_content) as $block) {
+        $anchor = sanitize_html_class((string) ($block['attrs']['anchor'] ?? ''));
+        if (($block['blockName'] ?? '') !== 'matthummel/section' || $anchor === '') {
+            continue;
+        }
+        foreach ((array) ($block['innerBlocks'] ?? []) as $inner) {
+            if (($inner['blockName'] ?? '') === 'matthummel/resource-catalog') {
+                $group = mh_resources_catalog_group((string) ($inner['attrs']['section'] ?? 'starters'));
+                if ($group !== null) {
+                    $rows[] = ['anchor' => $anchor, 'label' => $group['title'], 'count' => count($group['items'])];
+                }
+            }
+            if (($inner['blockName'] ?? '') === 'matthummel/stack-list') {
+                $rows[] = ['anchor' => $anchor, 'label' => __('Stack groups', 'sage'), 'count' => count(mh_uses_sections())];
+            }
+        }
+    }
+
+    return $rows;
 }
