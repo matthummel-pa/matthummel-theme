@@ -4763,7 +4763,10 @@ function mh_ensure_theme_page(string $slug, string $title, string $template): in
 
     $existing = get_page_by_path($slug);
     if ($existing instanceof \WP_Post) {
-        update_post_meta($existing->ID, '_wp_page_template', $template);
+        // A page converted to blocks keeps the Block page template; its old template file is archived.
+        if (! mh_page_uses_blocks((int) $existing->ID)) {
+            update_post_meta($existing->ID, '_wp_page_template', $template);
+        }
         if ($existing->post_status !== 'publish') {
             wp_update_post([
                 'ID' => $existing->ID,

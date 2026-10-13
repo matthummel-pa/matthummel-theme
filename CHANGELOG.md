@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.7.5 — Resources is a block page
+
+- Resources' copy is now blocks: hero, What you will find here, one section for each group of links, The stack I use, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#resources-intro-heading`, `#resources-free-wordpress-starters`, `#resources-themes-for-sale`, `#resources-tools-i-recommend`, `#uses`), so `/uses/` still lands on the stack.
+- New data block: **Resource links**. It prints the link cards for one group of the catalog in `app/affiliate.php` (starters, themes, or tools; picked in its sidebar) and how many links there are. Each group's heading and intro are now a Heading and a Paragraph you can edit.
+- New data block: **Stack list** (the groups under "The stack I use").
+- New data block: **Resource jump links**. It counts the links itself, so it stays a block instead of the "On this page" row: it lists every Section on the page that holds Resource links or the Stack list.
+- New data block: **Affiliate disclosure**. It shows only while a listed link is an affiliate link, as before. If the block is removed from a page, Resource links and Stack list print the disclosure themselves above any affiliate link.
+- Affiliate links print the same as before: the "Affiliate" label, `rel="sponsored noopener"`, and `data-affiliate`.
+- The utility-page check no longer points a converted page back at its old template on every request.
+- `template-resources.blade.php` moved to `resources/archive/views/` (to delete).
+
 ## 3.7.4 — Journal intro and list are blocks
 
 - The Journal (`/blog/`, the posts page) keeps its copy as blocks on the posts page: hero, Browse posts, Follow with RSS, What I write about, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

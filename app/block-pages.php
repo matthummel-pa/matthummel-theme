@@ -29,6 +29,7 @@ function mh_block_page_builders(): array
         'template-about.blade.php' => __NAMESPACE__.'\\mh_about_blocks_markup',
         'template-projects.blade.php' => __NAMESPACE__.'\\mh_projects_blocks_markup',
         'index.blade.php' => __NAMESPACE__.'\\mh_journal_blocks_markup',
+        'template-resources.blade.php' => __NAMESPACE__.'\\mh_resources_blocks_markup',
     ];
 }
 
@@ -627,6 +628,67 @@ function mh_journal_blocks_markup(int $id): string
         ['eyebrow' => __('Get in touch', 'sage'), 'note' => mh_reply_sla('note')],
         mh_blocks_heading(__('Questions about a post?', 'sage'))
         .$text(__('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within one business day (ET).', 'sage'))
+        .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
+    );
+
+    return $out;
+}
+
+/**
+ * Resources: hero, overview with jump links and the affiliate disclosure, one section per catalog group, the stack list, closing band.
+ */
+function mh_resources_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('resources_kicker', __('Resources', 'sage')), 'className' => 'page-header--resources'],
+        mh_blocks_heading($f('resources_h1', __('Free starters, themes, tools, and the stack I use.', 'sage')), 1)
+        .$text($f('resources_lede', __('Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.', 'sage')), 'lead')
+        .mh_blocks_buttons([
+            ['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')],
+            ['text' => __('Jump to the stack', 'sage'), 'url' => '#uses', 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Overview: the jump list counts the links itself, and the disclosure shows only while a link is compensated.
+    $out .= mh_blocks_section(
+        ['anchor' => 'resources-intro-heading', 'navLabel' => __('Overview', 'sage'), 'className' => 'resources-overview'],
+        mh_blocks_heading($f('resources_intro_h2', __('What you will find here.', 'sage')))
+        .$text($f('resources_intro_p', __('Starters are free to fork. Tool recommendations may include disclosed affiliate links. The stack list at the end is what I use on shipped work.', 'sage')), 'lead')
+        .mh_blocks_data('resource-jump')
+        .mh_blocks_data('affiliate-note')
+    );
+
+    // One section per catalog group. The heading and intro are copy; the cards come from the catalog.
+    foreach (mh_resources_catalog() as $group) {
+        $anchor = 'resources-'.sanitize_title($group['title']);
+        $out .= mh_blocks_section(
+            ['anchor' => $anchor, 'navLabel' => $group['title'], 'className' => 'resources-group'],
+            mh_blocks_heading($group['title'])
+            .$text($group['intro'])
+            .mh_blocks_data('resource-catalog', ['section' => $group['key']])
+        );
+    }
+
+    // The stack I use (was /uses/).
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Uses', 'sage'), 'anchor' => 'uses', 'navLabel' => __('Stack I use', 'sage'), 'tone' => 'alt', 'className' => 'uses-stack'],
+        mh_blocks_heading($f('uses_intro_h2', __('The stack I use.', 'sage')))
+        .$text($f('uses_intro_p', __('What I actually use on shipped WordPress and web work — not exhaustive, just what I reach for. External links open in a new tab; affiliate links are labeled.', 'sage')), 'lead')
+        .mh_blocks_data('stack-list')
+    );
+
+    // Closing band. "Available now" shows only while GitHub says so, as before.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['showAvailability' => true, 'note' => mh_reply_sla('note')],
+        mh_blocks_heading(__('Want this stack on your project?', 'sage'))
+        .$text(__('Resources here are starting points. Hire me for a production WordPress site, plugin, or web app — full-time, contract, or project.', 'sage'))
         .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
     );
 

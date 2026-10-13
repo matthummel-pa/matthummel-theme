@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/stack-list",
+  "title": "Stack list",
+  "category": "matthummel",
+  "icon": "list-view",
+  "description": "The stack I use, in groups. Affiliate links are labeled and marked as sponsored.",
+  "keywords": [
+    "resources",
+    "affiliate",
+    "stack"
+  ],
+  "textdomain": "sage",
+  "attributes": {},
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}
