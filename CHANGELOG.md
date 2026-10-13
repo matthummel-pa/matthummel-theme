@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.7.7 — SEO box on the edit screen
+
+- MH SEO 1.2.0. The SEO box under the editor has four tabs: Search, Social, Advanced, and Schema. It shows the score as a ring, with the checks still to fix.
+- Length meters for the SEO title and meta description. Each one marks the target range and says in words whether the text is short, good, or long.
+- Search preview (desktop and mobile), a link preview card, and an X card preview. They update as you type.
+- New fields per post: social title and description; X title, description, image, and card size; nofollow, noarchive, nosnippet, noimageindex, and snippet, image, and video preview limits; secondary keywords; breadcrumb title; pillar content; article schema type; FAQ and HowTo data built from the page.
+- Each field is post meta with REST support, is printed in the head where it applies, and is copied from Rank Math and Yoast by `wp mh-seo migrate`.
+- The box and the SEO sidebar now stay on the same values in the block editor.
+- Field ids no longer clash with the box heading id that WordPress 7.1 adds.
+- Details: `app/modules/mh-seo/CHANGELOG.md`.
+
 ## 3.7.6 — Contact is a block page
 
 - Contact's copy is now blocks: hero, Write a note (the form, with Before you write and Find me elsewhere beside it), Three things that help, What happens next, and Questions. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

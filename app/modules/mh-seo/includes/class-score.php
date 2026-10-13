@@ -236,16 +236,18 @@ class Score
         $raw = get_post_meta($post_id, '_mh_seo_score', true);
         if ((string) $raw === '') {
             echo '<span class="mh-seo-score">—</span>';
-
-            return;
+        } else {
+            $score = (int) $raw;
+            $color = Score_Analyzer::color($score);
+            printf(
+                '<span class="mh-seo-score mh-seo-score--%1$s"><span class="mh-seo-score__dot" aria-hidden="true"></span>%2$s</span>',
+                esc_attr($color),
+                esc_html((string) $score)
+            );
         }
-        $score = (int) $raw;
-        $color = Score_Analyzer::color($score);
-        printf(
-            '<span class="mh-seo-score mh-seo-score--%1$s"><span class="mh-seo-score__dot" aria-hidden="true"></span>%2$s</span>',
-            esc_attr($color),
-            esc_html((string) $score)
-        );
+        if ((string) get_post_meta($post_id, '_mh_seo_pillar', true) === '1') {
+            echo ' <span class="mh-seo-pillar">'.esc_html__('Pillar', 'mh-seo').'</span>';
+        }
     }
 
     /**
@@ -340,7 +342,7 @@ class Score
         wp_enqueue_style('mh-seo-admin');
         wp_add_inline_style(
             'mh-seo-admin',
-            '.column-mh_seo_score{width:88px}.mh-seo-score{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}.mh-seo-score__dot{width:8px;height:8px;border-radius:50%;background:#8c8f94}.mh-seo-score--red .mh-seo-score__dot{background:#d63638}.mh-seo-score--orange .mh-seo-score__dot{background:#dba617}.mh-seo-score--green .mh-seo-score__dot{background:#00a32a}'
+            '.column-mh_seo_score{width:96px}.mh-seo-score{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}.mh-seo-score__dot{width:8px;height:8px;border-radius:50%;background:#8c8f94}.mh-seo-score--red .mh-seo-score__dot{background:#d63638}.mh-seo-score--orange .mh-seo-score__dot{background:#dba617}.mh-seo-score--green .mh-seo-score__dot{background:#00a32a}.mh-seo-pillar{background:#f0f0f1;border-radius:3px;color:#50575e;display:inline-block;font-size:11px;margin-top:2px;padding:0 5px}'
         );
     }
 }
