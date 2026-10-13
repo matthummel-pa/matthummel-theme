@@ -7,7 +7,12 @@
   "icon": "editor-help",
   "description": "A list of questions. Each one is a Details block: the question is the summary, the answer goes inside.",
   "textdomain": "sage",
-  "attributes": {},
+  "attributes": {
+    "schema": {
+      "type": "boolean",
+      "default": false
+    }
+  },
   "supports": {
     "html": false,
     "align": false,

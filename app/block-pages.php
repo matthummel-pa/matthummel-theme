@@ -27,6 +27,7 @@ function mh_block_page_builders(): array
     return [
         'front-page.blade.php' => __NAMESPACE__.'\\mh_home_blocks_markup',
         'template-about.blade.php' => __NAMESPACE__.'\\mh_about_blocks_markup',
+        'template-projects.blade.php' => __NAMESPACE__.'\\mh_projects_blocks_markup',
     ];
 }
 
@@ -476,6 +477,90 @@ function mh_about_blocks_markup(int $id): string
             $booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'ghost']] : [],
             [['text' => '@'.$login, 'url' => 'https://github.com/'.$login, 'style' => 'ghost']]
         ))
+    );
+
+    return $out;
+}
+
+/**
+ * Projects: hero, project browser, inside each one, how it works, questions, closing band.
+ */
+function mh_projects_blocks_markup(int $id): string
+{
+    $f = static fn (string $key): string => field($key, mh_projects_listing_default($key), $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+    $contact = home_url('/contact/');
+    $hire = home_url('/about/#hire');
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('work_kicker'), 'background' => 'scene'],
+        mh_blocks_heading($f('work_h1'), 1)
+        .$text($f('work_lede'), 'lead')
+        .mh_blocks_buttons([
+            ['text' => $f('work_hero_cta_primary'), 'url' => $contact],
+            ['text' => $f('work_hero_cta_secondary'), 'url' => $hire, 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Projects: the browser fills itself in; its labels are block settings.
+    $out .= mh_blocks_section(
+        ['anchor' => 'gallery', 'navLabel' => __('Projects', 'sage')],
+        mh_blocks_heading(mh_projects_listing_default('gallery_h2'))
+        .$text($f('work_fit_intro'), 'lead')
+        .mh_blocks_data('project-browser', [
+            'searchPlaceholder' => $f('work_search_ph'),
+            'noProjectsTitle' => $f('work_empty_h2'),
+            'noProjectsText' => $f('work_empty_text'),
+            'noProjectsButton' => $f('work_empty_cta'),
+        ])
+        .mh_blocks_paragraph(field_html('work_foot', mh_projects_listing_default('foot'), $id))
+    );
+
+    // Inside each one.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Inside each one', 'sage'), 'anchor' => 'inside', 'navLabel' => __('Inside each one', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('work_context_h2'))
+        .$text($f('work_context_p1'), 'lead')
+        .mh_blocks_list(field_lines('work_show_items', mh_work_show_defaults(), $id), 'checklist')
+        .mh_blocks_paragraph(field_html('work_context_p2', mh_projects_listing_default('context_p2'), $id))
+    );
+
+    // How it works.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Three steps', 'sage'), 'anchor' => 'how', 'navLabel' => __('How it works', 'sage')],
+        mh_blocks_heading($f('work_how_h2'))
+        .$text($f('work_how_intro'), 'lead')
+        .mh_blocks_cards(array_map(
+            static fn (array $step): array => ['title' => $step['title'], 'body' => esc_html($step['body'])],
+            mh_work_page_how($id)
+        ), 3, true)
+    );
+
+    // Questions. The old template printed FAQPage structured data, so the block keeps it switched on.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'work-faq', 'navLabel' => __('FAQ', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('work_faq_h2'))
+        .$text($f('work_faq_intro'))
+        .mh_blocks_faq(array_map(
+            static fn (array $row): array => ['title' => $row['title'], 'text' => esc_html($row['text'])],
+            mh_work_page_faq($id)
+        ), ['schema' => true])
+        .mh_blocks_buttons([['text' => __('Ask me', 'sage'), 'url' => $contact]])
+    );
+
+    // Closing band.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['eyebrow' => __('Work with me', 'sage'), 'note' => mh_reply_sla('note')],
+        mh_blocks_heading($f('work_band_h2'))
+        .$text($f('work_band_lede'))
+        .mh_blocks_buttons([
+            ['text' => $f('work_hero_cta_primary'), 'url' => $contact],
+            ['text' => $f('work_hero_cta_secondary'), 'url' => $hire, 'style' => 'ghost'],
+        ])
     );
 
     return $out;

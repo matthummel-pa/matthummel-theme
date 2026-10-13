@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.7.3 — Projects is a block page
+
+- Projects' copy is now blocks: hero, the project browser, Inside each one, How to use this page, Questions, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#gallery`, `#inside`, `#how`, `#work-faq`), and `?cat=` links still open the list on that type.
+- New data block: **Project browser**. It prints every project card with search, type filters and Grid/List, the same markup `work-tools.js` already drives. The search hint, the Grid and List buttons, and both empty-state messages are settings in its sidebar.
+- The Questions block has a new switch, **Add FAQ structured data**. It is on for Projects, which printed FAQPage JSON-LD before, and off everywhere else.
+- "Inside each one" now reads top to bottom (heading, intro, checklist, note) instead of two columns, and the three steps use the numbered Card grid.
+- The breadcrumb stays hidden on the converted page (the rule now also looks for the Project browser block).
+- `template-projects.blade.php` moved to `resources/archive/views/` (to delete).
+
 ## 3.7.2 — About is a block page
 
 - About's copy is now blocks: hero, Story, Now, What I build, Hire, Resume, hiring facts, Process, Fit, How I work, Code, Stack, Questions, Where to find me, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
