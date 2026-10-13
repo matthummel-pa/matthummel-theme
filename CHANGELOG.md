@@ -1,5 +1,50 @@
 # Changelog
 
+## 3.7.6 — Contact is a block page
+
+- Contact's copy is now blocks: hero, Write a note (the form, with Before you write and Find me elsewhere beside it), Three things that help, What happens next, and Questions. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#write`, `#tips`, `#next`, `#questions`), and the form still returns to `#contact-status`.
+- New data block: **Contact form**. It prints the same form partial as before, so the nonce, the honeypot, the field names, the labels and `autocomplete` values are unchanged. `app/contact.php` (checks, sanitizing, where a note is sent) is not touched. The "who you are" label, the message hint, the button, the note beside it, and the two status messages are settings in its sidebar. Where a note is sent is not a block setting.
+- New data block: **Contact facts** (reply time, availability while GitHub says hireable, location, best fit). Reply time follows the site's reply time unless you type one.
+- Social links has a new switch, **Show a short note under each link**. It is on for Contact.
+- "Before you write" and "Find me elsewhere" are headings beside the form instead of two boxed cards with small caps titles. The two rows of three use the Card grid.
+- The form on project pages is the same partial and prints as before.
+- `template-contact.blade.php` and `partials/page-faq.blade.php` (only Contact used it) moved to `resources/archive/views/` (to delete).
+- This was the last of the six main pages. Home, About, Projects, Journal, Resources and Contact are all block pages now.
+
+## 3.7.5 — Resources is a block page
+
+- Resources' copy is now blocks: hero, What you will find here, one section for each group of links, The stack I use, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#resources-intro-heading`, `#resources-free-wordpress-starters`, `#resources-themes-for-sale`, `#resources-tools-i-recommend`, `#uses`), so `/uses/` still lands on the stack.
+- New data block: **Resource links**. It prints the link cards for one group of the catalog in `app/affiliate.php` (starters, themes, or tools; picked in its sidebar) and how many links there are. Each group's heading and intro are now a Heading and a Paragraph you can edit.
+- New data block: **Stack list** (the groups under "The stack I use").
+- New data block: **Resource jump links**. It counts the links itself, so it stays a block instead of the "On this page" row: it lists every Section on the page that holds Resource links or the Stack list.
+- New data block: **Affiliate disclosure**. It shows only while a listed link is an affiliate link, as before. If the block is removed from a page, Resource links and Stack list print the disclosure themselves above any affiliate link.
+- Affiliate links print the same as before: the "Affiliate" label, `rel="sponsored noopener"`, and `data-affiliate`.
+- The utility-page check no longer points a converted page back at its old template on every request.
+- `template-resources.blade.php` moved to `resources/archive/views/` (to delete).
+
+## 3.7.4 — Journal intro and list are blocks
+
+- The Journal (`/blog/`, the posts page) keeps its copy as blocks on the posts page: hero, Browse posts, Follow with RSS, What I write about, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- New data block: **Journal posts**. It prints the toolbar, topic pills, post list and page links from the Journal's own query, the same markup `writing-tools.js` already drives. In the editor it shows a short note instead of posts. The search hint and the no-posts text are settings in its sidebar.
+- New data block: **RSS feed address** (the feed URL, Copy RSS, Open feed).
+- Section ids are the same (`#journal-posts`, `#topics`); the RSS section is `#subscribe`.
+- "What I write about" uses the Card grid, and the RSS copy is a plain section instead of a boxed panel.
+- The Blog structured data takes its name and description from the hero's heading and intro.
+- Topic, tag, date and search pages are unchanged. They still read their labels (kicker, search hint, sidebar headings) from the posts page's saved fields.
+- `template-blog.blade.php` (unused) and the old field version of `index.blade.php` are in `resources/archive/views/` (to delete).
+
+## 3.7.3 — Projects is a block page
+
+- Projects' copy is now blocks: hero, the project browser, Inside each one, How to use this page, Questions, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#gallery`, `#inside`, `#how`, `#work-faq`), and `?cat=` links still open the list on that type.
+- New data block: **Project browser**. It prints every project card with search, type filters and Grid/List, the same markup `work-tools.js` already drives. The search hint, the Grid and List buttons, and both empty-state messages are settings in its sidebar.
+- The Questions block has a new switch, **Add FAQ structured data**. It is on for Projects, which printed FAQPage JSON-LD before, and off everywhere else.
+- "Inside each one" now reads top to bottom (heading, intro, checklist, note) instead of two columns, and the three steps use the numbered Card grid.
+- The breadcrumb stays hidden on the converted page (the rule now also looks for the Project browser block).
+- `template-projects.blade.php` moved to `resources/archive/views/` (to delete).
+
 ## 3.7.2 — About is a block page
 
 - About's copy is now blocks: hero, Story, Now, What I build, Hire, Resume, hiring facts, Process, Fit, How I work, Code, Stack, Questions, Where to find me, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

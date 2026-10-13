@@ -27,6 +27,10 @@ function mh_block_page_builders(): array
     return [
         'front-page.blade.php' => __NAMESPACE__.'\\mh_home_blocks_markup',
         'template-about.blade.php' => __NAMESPACE__.'\\mh_about_blocks_markup',
+        'template-projects.blade.php' => __NAMESPACE__.'\\mh_projects_blocks_markup',
+        'index.blade.php' => __NAMESPACE__.'\\mh_journal_blocks_markup',
+        'template-resources.blade.php' => __NAMESPACE__.'\\mh_resources_blocks_markup',
+        'template-contact.blade.php' => __NAMESPACE__.'\\mh_contact_blocks_markup',
     ];
 }
 
@@ -476,6 +480,295 @@ function mh_about_blocks_markup(int $id): string
             $booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'ghost']] : [],
             [['text' => '@'.$login, 'url' => 'https://github.com/'.$login, 'style' => 'ghost']]
         ))
+    );
+
+    return $out;
+}
+
+/**
+ * Projects: hero, project browser, inside each one, how it works, questions, closing band.
+ */
+function mh_projects_blocks_markup(int $id): string
+{
+    $f = static fn (string $key): string => field($key, mh_projects_listing_default($key), $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+    $contact = home_url('/contact/');
+    $hire = home_url('/about/#hire');
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('work_kicker'), 'background' => 'scene'],
+        mh_blocks_heading($f('work_h1'), 1)
+        .$text($f('work_lede'), 'lead')
+        .mh_blocks_buttons([
+            ['text' => $f('work_hero_cta_primary'), 'url' => $contact],
+            ['text' => $f('work_hero_cta_secondary'), 'url' => $hire, 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Projects: the browser fills itself in; its labels are block settings.
+    $out .= mh_blocks_section(
+        ['anchor' => 'gallery', 'navLabel' => __('Projects', 'sage')],
+        mh_blocks_heading(mh_projects_listing_default('gallery_h2'))
+        .$text($f('work_fit_intro'), 'lead')
+        .mh_blocks_data('project-browser', [
+            'searchPlaceholder' => $f('work_search_ph'),
+            'noProjectsTitle' => $f('work_empty_h2'),
+            'noProjectsText' => $f('work_empty_text'),
+            'noProjectsButton' => $f('work_empty_cta'),
+        ])
+        .mh_blocks_paragraph(field_html('work_foot', mh_projects_listing_default('foot'), $id))
+    );
+
+    // Inside each one.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Inside each one', 'sage'), 'anchor' => 'inside', 'navLabel' => __('Inside each one', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('work_context_h2'))
+        .$text($f('work_context_p1'), 'lead')
+        .mh_blocks_list(field_lines('work_show_items', mh_work_show_defaults(), $id), 'checklist')
+        .mh_blocks_paragraph(field_html('work_context_p2', mh_projects_listing_default('context_p2'), $id))
+    );
+
+    // How it works.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Three steps', 'sage'), 'anchor' => 'how', 'navLabel' => __('How it works', 'sage')],
+        mh_blocks_heading($f('work_how_h2'))
+        .$text($f('work_how_intro'), 'lead')
+        .mh_blocks_cards(array_map(
+            static fn (array $step): array => ['title' => $step['title'], 'body' => esc_html($step['body'])],
+            mh_work_page_how($id)
+        ), 3, true)
+    );
+
+    // Questions. The old template printed FAQPage structured data, so the block keeps it switched on.
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'work-faq', 'navLabel' => __('FAQ', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('work_faq_h2'))
+        .$text($f('work_faq_intro'))
+        .mh_blocks_faq(array_map(
+            static fn (array $row): array => ['title' => $row['title'], 'text' => esc_html($row['text'])],
+            mh_work_page_faq($id)
+        ), ['schema' => true])
+        .mh_blocks_buttons([['text' => __('Ask me', 'sage'), 'url' => $contact]])
+    );
+
+    // Closing band.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['eyebrow' => __('Work with me', 'sage'), 'note' => mh_reply_sla('note')],
+        mh_blocks_heading($f('work_band_h2'))
+        .$text($f('work_band_lede'))
+        .mh_blocks_buttons([
+            ['text' => $f('work_hero_cta_primary'), 'url' => $contact],
+            ['text' => $f('work_hero_cta_secondary'), 'url' => $hire, 'style' => 'ghost'],
+        ])
+    );
+
+    return $out;
+}
+
+/**
+ * Journal (the posts page): hero, post list, RSS, topics, closing band.
+ */
+function mh_journal_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('write_kicker', __('Journal', 'sage'))],
+        mh_blocks_heading($f('write_h1', __('WordPress development notes.', 'sage')), 1)
+        .$text($f('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage')), 'lead')
+        .mh_blocks_buttons([
+            ['text' => __('Browse posts', 'sage'), 'url' => '#journal-posts'],
+            ['text' => __('Subscribe by RSS', 'sage'), 'url' => home_url('/feed/'), 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Posts: the list fills itself in from the Journal's own query.
+    $out .= mh_blocks_section(
+        ['anchor' => 'journal-posts', 'navLabel' => __('Posts', 'sage')],
+        mh_blocks_heading(__('Browse WordPress development posts', 'sage'))
+        .$text(__('Search as you type, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage'), 'lead')
+        .mh_blocks_data('journal-list', ['searchPlaceholder' => $f('write_search_ph', __('Search posts', 'sage'))])
+    );
+
+    // RSS and profiles.
+    $out .= mh_blocks_section(
+        ['anchor' => 'subscribe'],
+        mh_blocks_heading($f('write_subscribe_h2', __('Follow with RSS', 'sage')))
+        .$text($f('write_subscribe_lede', __('There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.', 'sage')))
+        .mh_blocks_data('rss-feed')
+        .$text($f('write_follow', __('More of my writing', 'sage')))
+        .mh_blocks_data('social-links')
+    );
+
+    // Topics.
+    $out .= mh_blocks_section(
+        ['anchor' => 'topics', 'navLabel' => __('Topics', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading(__('What I write about', 'sage'))
+        .$text(__('Mostly WordPress — themes, plugins, and the practical notes that help a build ship.', 'sage'))
+        .mh_blocks_cards([
+            ['icon' => 'wordpress', 'title' => __('WordPress', 'sage'), 'body' => esc_html__('Custom themes, plugins, admin UI, and handoffs shops can keep using.', 'sage')],
+            ['icon' => 'php', 'title' => __('PHP', 'sage'), 'body' => esc_html__('Plugins, hooks, and clean code another developer can pick up without a scavenger hunt.', 'sage')],
+            ['icon' => 'javascript', 'title' => __('JavaScript', 'sage'), 'body' => esc_html__('Front-end behavior, forms, and small modules from real WordPress projects.', 'sage')],
+            ['icon' => 'tailwind', 'title' => __('CSS & layout', 'sage'), 'body' => esc_html__('Readable layouts, fluid type, and styles that hold up on phones and wide screens.', 'sage')],
+            ['icon' => 'vite', 'title' => __('Build & deploy', 'sage'), 'body' => esc_html__('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage')],
+            ['icon' => 'cursor-ai', 'title' => __('AI-assisted work', 'sage'), 'body' => esc_html__('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage')],
+        ])
+    );
+
+    // Closing band.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['eyebrow' => __('Get in touch', 'sage'), 'note' => mh_reply_sla('note')],
+        mh_blocks_heading(__('Questions about a post?', 'sage'))
+        .$text(__('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within one business day (ET).', 'sage'))
+        .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
+    );
+
+    return $out;
+}
+
+/**
+ * Resources: hero, overview with jump links and the affiliate disclosure, one section per catalog group, the stack list, closing band.
+ */
+function mh_resources_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('resources_kicker', __('Resources', 'sage')), 'className' => 'page-header--resources'],
+        mh_blocks_heading($f('resources_h1', __('Free starters, themes, tools, and the stack I use.', 'sage')), 1)
+        .$text($f('resources_lede', __('Free WordPress starters to study, tools I recommend, and the stack behind every site I ship. For developers and business owners alike.', 'sage')), 'lead')
+        .mh_blocks_buttons([
+            ['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')],
+            ['text' => __('Jump to the stack', 'sage'), 'url' => '#uses', 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Overview: the jump list counts the links itself, and the disclosure shows only while a link is compensated.
+    $out .= mh_blocks_section(
+        ['anchor' => 'resources-intro-heading', 'navLabel' => __('Overview', 'sage'), 'className' => 'resources-overview'],
+        mh_blocks_heading($f('resources_intro_h2', __('What you will find here.', 'sage')))
+        .$text($f('resources_intro_p', __('Starters are free to fork. Tool recommendations may include disclosed affiliate links. The stack list at the end is what I use on shipped work.', 'sage')), 'lead')
+        .mh_blocks_data('resource-jump')
+        .mh_blocks_data('affiliate-note')
+    );
+
+    // One section per catalog group. The heading and intro are copy; the cards come from the catalog.
+    foreach (mh_resources_catalog() as $group) {
+        $anchor = 'resources-'.sanitize_title($group['title']);
+        $out .= mh_blocks_section(
+            ['anchor' => $anchor, 'navLabel' => $group['title'], 'className' => 'resources-group'],
+            mh_blocks_heading($group['title'])
+            .$text($group['intro'])
+            .mh_blocks_data('resource-catalog', ['section' => $group['key']])
+        );
+    }
+
+    // The stack I use (was /uses/).
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Uses', 'sage'), 'anchor' => 'uses', 'navLabel' => __('Stack I use', 'sage'), 'tone' => 'alt', 'className' => 'uses-stack'],
+        mh_blocks_heading($f('uses_intro_h2', __('The stack I use.', 'sage')))
+        .$text($f('uses_intro_p', __('What I actually use on shipped WordPress and web work — not exhaustive, just what I reach for. External links open in a new tab; affiliate links are labeled.', 'sage')), 'lead')
+        .mh_blocks_data('stack-list')
+    );
+
+    // Closing band. "Available now" shows only while GitHub says so, as before.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['showAvailability' => true, 'note' => mh_reply_sla('note')],
+        mh_blocks_heading(__('Want this stack on your project?', 'sage'))
+        .$text(__('Resources here are starting points. Hire me for a production WordPress site, plugin, or web app — full-time, contract, or project.', 'sage'))
+        .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
+    );
+
+    return $out;
+}
+
+/**
+ * Contact: hero, the form with the facts and profile links beside it, what to send, what happens next, questions.
+ */
+function mh_contact_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+    $cards = static fn (array $rows): string => mh_blocks_cards(array_map(
+        static fn (array $row): array => ['title' => (string) ($row['title'] ?? ''), 'body' => esc_html((string) ($row['text'] ?? ''))],
+        $rows
+    ));
+    $booking = mh_booking_url();
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('cnt_kicker', __('Contact', 'sage')), 'className' => 'contact-hero'],
+        mh_blocks_heading($f('cnt_h1', __('Say hello.', 'sage')), 1)
+        .$text($f('cnt_lede', __('Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).', 'sage')), 'lead')
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // The form's labels are block settings. A reply note left empty follows the site's reply time.
+    $replyNote = trim($f('cnt_reply_note', ''));
+    $out .= mh_blocks_section(
+        ['anchor' => 'write', 'navLabel' => __('Write', 'sage'), 'className' => 'contact-write'],
+        mh_blocks_heading($f('cnt_form_h2', __('Write a note.', 'sage')))
+        .$text($f('cnt_form_intro', __('Name, email, and a few sentences are enough. No pitch deck required. This form goes straight to my inbox.', 'sage')), 'lead')
+        .mh_blocks_buttons($booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'outline']] : [])
+        .mh_blocks_data('contact-form', array_filter([
+            'whoLabel' => $f('cnt_who_label', __('Who you are', 'sage')),
+            'messageHint' => $f('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage')),
+            'submitLabel' => $f('cnt_submit', __('Send note', 'sage')),
+            'replyNote' => $replyNote !== mh_reply_sla() ? $replyNote : '',
+            'successMessage' => $f('cnt_success', __('Thanks — I got it and will write back soon.', 'sage')),
+            'errorMessage' => $f('cnt_error', __('Something went wrong. Check the required fields and try again.', 'sage')),
+        ]))
+        .mh_blocks_heading(__('Before you write', 'sage'), 3)
+        .mh_blocks_data('contact-facts')
+        .mh_blocks_heading($f('cnt_else_h2', __('Find me elsewhere', 'sage')), 3)
+        .$text($f('cnt_aside', __('Prefer GitHub or LinkedIn? Those work too.', 'sage')))
+        .mh_blocks_data('social-links', ['showNotes' => true])
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('What to include', 'sage'), 'anchor' => 'tips', 'navLabel' => __('What helps', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('cnt_tips_h2', __('Three things that help.', 'sage')))
+        .$text($f('cnt_tips_intro', __('You don\'t need a spec. These three make it easier for me to reply with something useful.', 'sage')), 'lead')
+        .$cards(field_rows('cnt_tips', mh_contact_tips(), $id))
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('After you send', 'sage'), 'anchor' => 'next', 'navLabel' => __('What happens next', 'sage')],
+        mh_blocks_heading($f('cnt_expect_h2', __('What happens next.', 'sage')))
+        .$text($f('cnt_expect_intro', __('A fair picture of how I use this inbox.', 'sage')), 'lead')
+        .$cards(field_rows('cnt_expect', mh_contact_expect(), $id))
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'questions', 'tone' => 'alt'],
+        mh_blocks_heading($f('cnt_faq_h2', __('Before you contact a WordPress developer.', 'sage')))
+        .$text($f('cnt_faq_intro', __('Short answers about what to send and what happens next.', 'sage')))
+        .mh_blocks_faq(array_map(
+            static fn (array $row): array => ['title' => $row['title'], 'text' => esc_html($row['text'])],
+            mh_page_faq_rows('cnt_faq', mh_contact_faq_defaults(), $id)
+        ))
+        .mh_blocks_paragraph(field_html('cnt_faq_foot', sprintf(
+            /* translators: 1: Projects URL, 2: About URL, 3: Journal URL */
+            __('Want background first? See the <a href="%1$s">projects</a>, read <a href="%2$s">about me</a>, or browse the <a href="%3$s">journal</a>.', 'sage'),
+            esc_url(mh_work_listing_url()),
+            esc_url(home_url('/about/')),
+            esc_url(get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/'))
+        ), $id))
     );
 
     return $out;

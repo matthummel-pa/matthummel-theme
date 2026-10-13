@@ -776,8 +776,9 @@ function mh_blocks_list(array $items, string $style = ''): string
  * A Questions block from question/answer rows.
  *
  * @param  list<array{title: string, text: string}>  $rows  Rows as stored by the FAQ repeaters.
+ * @param  array<string, mixed>  $attrs  Block attributes (`schema` prints FAQPage JSON-LD).
  */
-function mh_blocks_faq(array $rows): string
+function mh_blocks_faq(array $rows, array $attrs = []): string
 {
     $inner = '';
     foreach ($rows as $i => $row) {
@@ -794,7 +795,7 @@ function mh_blocks_faq(array $rows): string
         );
     }
 
-    return $inner === '' ? '' : mh_blocks_wrap('matthummel/faq', [], $inner);
+    return $inner === '' ? '' : mh_blocks_wrap('matthummel/faq', $attrs, $inner);
 }
 
 /**
