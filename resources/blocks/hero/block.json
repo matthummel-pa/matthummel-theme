@@ -8,6 +8,14 @@
   "description": "The dark band at the top of a page: kicker, the page heading, an intro, and buttons.",
   "textdomain": "sage",
   "attributes": {
+    "layout": {
+      "type": "string",
+      "enum": [
+        "page",
+        "home"
+      ],
+      "default": "page"
+    },
     "eyebrow": {
       "type": "string",
       "default": ""

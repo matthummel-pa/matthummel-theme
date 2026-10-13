@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/skills",
+  "title": "Skills and tools",
+  "category": "matthummel",
+  "icon": "admin-tools",
+  "description": "The skills list, grouped: front-end, WordPress, ship, and the rest.",
+  "keywords": [
+    "skills",
+    "stack",
+    "tools"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "list": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "mhControls": {
+    "list": {
+      "label": "Skills",
+      "help": "Names with commas between them, for example: PHP, WordPress, Vite. Leave empty to use the saved list."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

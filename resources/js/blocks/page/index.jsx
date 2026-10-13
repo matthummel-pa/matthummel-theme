@@ -20,8 +20,10 @@ import {
   SelectControl,
   RangeControl,
   Notice,
+  Disabled,
 } from '@wordpress/components'
 import { useSelect } from '@wordpress/data'
+import ServerSideRender from '@wordpress/server-side-render'
 import { __ } from '@wordpress/i18n'
 
 import heroMeta from '../../../blocks/hero/block.json'
@@ -58,7 +60,7 @@ const HERO_TEMPLATE = [
 ]
 
 function HeroEdit({ attributes, setAttributes }) {
-  const { eyebrow, background, showPortrait, portraitCaption } = attributes
+  const { eyebrow, background, showPortrait, portraitCaption, layout } = attributes
   const blockProps = useBlockProps({ className: 'page-header page-header--photo mh-block-hero' })
   const inner = useInnerBlocksProps(
     { className: 'page-header__panel-inner' },
@@ -69,6 +71,17 @@ function HeroEdit({ attributes, setAttributes }) {
     <>
       <InspectorControls>
         <PanelBody title={__('Hero', 'sage')}>
+          <SelectControl
+            {...controlProps}
+            label={__('Layout', 'sage')}
+            value={layout}
+            options={[
+              { value: 'page', label: __('Page hero', 'sage') },
+              { value: 'home', label: __('Home hero (full height)', 'sage') },
+            ]}
+            onChange={(value) => setAttributes({ layout: value })}
+            help={__('The Home hero is sized in Customize → Home hero. The editor shows the page hero for both.', 'sage')}
+          />
           <SelectControl
             {...controlProps}
             label={__('Background', 'sage')}
@@ -279,11 +292,26 @@ const FAQ_TEMPLATE = [
   ['core/details', { summary: __('Question', 'sage') }, [['core/paragraph', { placeholder: __('Answer in one to three sentences.', 'sage') }]]],
 ]
 
-function FaqEdit() {
+function FaqEdit({ attributes, setAttributes }) {
   const blockProps = useBlockProps({ className: 'faq-list mh-block-faq' })
   const inner = useInnerBlocksProps(blockProps, { template: FAQ_TEMPLATE, allowedBlocks: ['core/details'] })
 
-  return <div {...inner} />
+  return (
+    <>
+      <InspectorControls>
+        <PanelBody title={__('Questions', 'sage')}>
+          <ToggleControl
+            __nextHasNoMarginBottom
+            label={__('Add FAQ structured data', 'sage')}
+            checked={!!attributes.schema}
+            onChange={(value) => setAttributes({ schema: value })}
+            help={__('Prints FAQPage JSON-LD for search engines. Use it on one question list per page.', 'sage')}
+          />
+        </PanelBody>
+      </InspectorControls>
+      <div {...inner} />
+    </>
+  )
 }
 
 registerBlockType(faqMeta, { edit: FaqEdit, save: saveInner })
@@ -371,3 +399,59 @@ function NavEdit() {
 }
 
 registerBlockType(navMeta, { edit: NavEdit, save: () => null })
+
+/* ── Data blocks ───────────────────────────────────────────────────────────
+ * Lists the site fills in by itself (projects, posts, GitHub, the contact form…).
+ * Each has a block.json and a Blade view and nothing else: the title, attributes
+ * and sidebar controls come from PHP (App\mh_data_blocks_for_editor), and the
+ * editor shows the real server render.
+ */
+function DataControl({ control, value, onChange }) {
+  const { type, label, help, min, max, options } = control
+  if (type === 'toggle') {
+    return <ToggleControl __nextHasNoMarginBottom label={label} help={help} checked={!!value} onChange={onChange} />
+  }
+  if (type === 'number') {
+    return <RangeControl {...controlProps} label={label} help={help} min={min} max={max} value={Number(value) || min} onChange={onChange} />
+  }
+  if (type === 'select') {
+    return <SelectControl {...controlProps} label={label} help={help} value={value} options={options} onChange={onChange} />
+  }
+
+  return <TextControl {...controlProps} label={label} help={help} value={value || ''} onChange={onChange} />
+}
+
+function dataBlockEdit(name, controls) {
+  return function DataBlockEdit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'mh-data-block' })
+
+    return (
+      <>
+        {controls.length > 0 && (
+          <InspectorControls>
+            <PanelBody title={__('Settings', 'sage')}>
+              {controls.map((control) => (
+                <DataControl
+                  key={control.key}
+                  control={control}
+                  value={attributes[control.key]}
+                  onChange={(value) => setAttributes({ [control.key]: value })}
+                />
+              ))}
+            </PanelBody>
+          </InspectorControls>
+        )}
+        <div {...blockProps}>
+          {/* Links and forms in the preview are not clickable, so a click selects the block. */}
+          <Disabled>
+            <ServerSideRender block={name} attributes={attributes} />
+          </Disabled>
+        </div>
+      </>
+    )
+  }
+}
+
+for (const { name, controls } of window.mhPageBlocks?.dataBlocks || []) {
+  registerBlockType(name, { edit: dataBlockEdit(name, controls), save: () => null })
+}

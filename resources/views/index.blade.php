@@ -1,65 +1,54 @@
+{{--
+  Journal (the posts page) and the last-resort template for any other list.
+  The Journal's copy and its post list are blocks saved on the posts page; this file prints them.
+  The old field version is in resources/archive/views/index.blade.php.
+--}}
 @extends('layouts.app')
 
 @section('content')
 @php
-  $writeId  = \App\mh_writing_id();
-  $writeUrl = $writeId ? get_permalink($writeId) : home_url('/blog/');
-  $rssUrl   = home_url('/feed/');
+  $writeId = \App\mh_writing_id();
+  $writeUrl = $writeId ? (string) get_permalink($writeId) : home_url('/blog/');
+  $usesBlocks = is_home() && $writeId > 0 && \App\mh_page_uses_blocks($writeId);
+  $journalHtml = '';
+  $blogName = $writeId ? get_the_title($writeId) : __('Journal', 'sage');
+  $blogDescription = '';
 
-  $latestJournal = get_posts([
-    'post_type'      => 'post',
-    'posts_per_page' => 1,
-    'post_status'    => 'publish',
-    'no_found_rows'  => true,
-    'orderby'        => 'date',
-    'order'          => 'DESC',
-  ]);
-  $journalShot = $latestJournal !== [] ? \App\mh_post_card_image((int) $latestJournal[0]->ID) : '';
+  if ($usesBlocks) {
+    $journalPage = get_post($writeId);
 
-  $journalTopics = [
-    [
-      'icon'  => 'wordpress',
-      'title' => __('WordPress', 'sage'),
-      'desc'  => __('Custom themes, plugins, admin UI, and handoffs shops can keep using.', 'sage'),
-    ],
-    [
-      'icon'  => 'php',
-      'title' => __('PHP', 'sage'),
-      'desc'  => __('Plugins, hooks, and clean code another developer can pick up without a scavenger hunt.', 'sage'),
-    ],
-    [
-      'icon'  => 'javascript',
-      'title' => __('JavaScript', 'sage'),
-      'desc'  => __('Front-end behavior, forms, and small modules from real WordPress projects.', 'sage'),
-    ],
-    [
-      'icon'  => 'tailwind',
-      'title' => __('CSS & layout', 'sage'),
-      'desc'  => __('Readable layouts, fluid type, and styles that hold up on phones and wide screens.', 'sage'),
-    ],
-    [
-      'icon'  => 'vite',
-      'title' => __('Build & deploy', 'sage'),
-      'desc'  => __('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage'),
-    ],
-    [
-      'icon'  => 'cursor-ai',
-      'title' => __('AI-assisted work', 'sage'),
-      'desc'  => __('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage'),
-    ],
-  ];
-@endphp
+    // Blog schema: name and description are the hero's heading and intro.
+    foreach (parse_blocks((string) $journalPage->post_content) as $parsed) {
+      if (($parsed['blockName'] ?? '') !== 'matthummel/hero') {
+        continue;
+      }
+      foreach ($parsed['innerBlocks'] as $inner) {
+        $plain = trim(wp_strip_all_tags((string) ($inner['innerHTML'] ?? '')));
+        if ($plain === '') {
+          continue;
+        }
+        if (($inner['blockName'] ?? '') === 'core/heading' && (int) ($inner['attrs']['level'] ?? 2) === 1) {
+          $blogName = $plain;
+        } elseif (($inner['blockName'] ?? '') === 'core/paragraph' && $blogDescription === '') {
+          $blogDescription = $plain;
+        }
+      }
+      break;
+    }
 
-{{-- ── JSON-LD: Blog schema for Google / AI search ───────────────── --}}
-@php
-  $postCount = (int) wp_count_posts('post')->publish;
-  $blogUrl   = $writeUrl;
-  $blogLd = [
+    // WordPress does not run the posts page's own content, so run it here with the page as the current post.
+    $GLOBALS['post'] = $journalPage;
+    setup_postdata($journalPage);
+    $journalHtml = apply_filters('the_content', (string) $journalPage->post_content);
+    wp_reset_postdata();
+  }
+
+  $blogLd = array_filter([
     '@context'    => 'https://schema.org',
     '@type'       => 'Blog',
-    'name'        => \App\field('write_h1', __('WordPress, PHP, and JavaScript — in practice.', 'sage'), $writeId),
-    'description' => \App\field('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage'), $writeId),
-    'url'         => esc_url($blogUrl),
+    'name'        => $blogName,
+    'description' => $blogDescription,
+    'url'         => esc_url_raw($writeUrl),
     'inLanguage'  => 'en-US',
     'author'      => [
       '@type' => 'Person',
@@ -79,81 +68,29 @@
       ],
       'query-input' => 'required name=search_term_string',
     ],
-  ];
+  ]);
+  $blogLdJson = wp_json_encode($blogLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
 @endphp
-<script type="application/ld+json">{!! wp_json_encode($blogLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
-{{-- HERO --}}
-@component('partials.page-hero', ['image' => $journalShot])
-  <p class="eyebrow">{{ \App\field('write_kicker', __('Journal', 'sage'), $writeId) }}</p>
-  <h1 class="display-title is-hero">
-    {{ \App\field('write_h1', __('WordPress development notes.', 'sage'), $writeId) }}
-  </h1>
-  <p class="lead">
-    {{ \App\field('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage'), $writeId) }}
-  </p>
-  <div class="page-header-split__actions">
-    <a class="btn" href="#journal-posts">
-      {{ __('Browse posts', 'sage') }} <span aria-hidden="true">↓</span>
-    </a>
-    <a class="h-text-arrow" href="{{ esc_url($rssUrl) }}">
-      {{ __('Subscribe by RSS', 'sage') }} <span aria-hidden="true">→</span>
-    </a>
+@if ($usesBlocks)
+  {{-- JSON-LD: Blog schema for Google / AI search --}}
+  <script type="application/ld+json">{!! $blogLdJson !!}</script>
+  <div class="mh-block-page mh-block-page--journal">
+    {!! $journalHtml !!}
   </div>
-@endcomponent
-
-@include('partials.page-nav', [
-  'pills' => [
-    ['journal-posts', __('Posts', 'sage')],
-    ['topics', __('Topics', 'sage')],
-  ],
-])
-
-{{-- POSTS --}}
-<div id="journal-posts" class="container wide page-block write-hub write-hub--home" aria-labelledby="journal-posts-heading" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list post-list--roomy">
-  <h2 id="journal-posts-heading" class="display-title is-section" tabindex="-1">{{ __('Browse WordPress development posts', 'sage') }}</h2>
-  <p class="lead work-guide__intro">{{ __('Search as you type, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage') }}</p>
-
-  @include('partials.write-toolbar', ['writeId' => $writeId, 'writeUrl' => $writeUrl])
-  <div data-journal-region="topics">
-    @include('partials.write-topics', compact('writeId', 'writeUrl'))
-  </div>
-  <div data-journal-region="results">
-    @include('partials.journal-results', ['writeUrl' => $writeUrl, 'emptyText' => __('No posts yet.', 'sage')])
-  </div>
-
-  @include('partials.write-subscribe', compact('writeId'))
-
-  {{-- Elsewhere --}}
-  <div class="journal-elsewhere">
-    <p class="write-follow">{{ \App\field('write_follow', __('More of my writing', 'sage'), $writeId) }}</p>
-    @include('partials.social', ['labeled' => true])
-  </div>
-</div>
-
-{{-- ── What I write about — topic coverage grid ───────────────────── --}}
-<section class="pf-section pf-section--alt journal-topics-section" id="topics" aria-labelledby="journal-topics-heading">
-  <div class="container wide">
-    <div class="journal-topics-head">
-      <h2 id="journal-topics-heading" class="journal-topics__title">{{ __('What I write about', 'sage') }}</h2>
-      <p class="journal-topics__sub">{{ __('Mostly WordPress — themes, plugins, and the practical notes that help a build ship.', 'sage') }}</p>
+@else
+  {{-- The posts page has no blocks yet, or this is another kind of list: a title and the posts. --}}
+  @component('partials.page-hero')
+    <h1 class="display-title is-hero">{{ is_home() ? $blogName : wp_strip_all_tags(get_the_archive_title()) }}</h1>
+  @endcomponent
+  <div class="container wide page-block write-hub" data-journal data-journal-home="{{ esc_url($writeUrl) }}" data-journal-list="post-list post-list--roomy">
+    @include('partials.write-toolbar', compact('writeId', 'writeUrl'))
+    <div data-journal-region="topics">
+      @include('partials.write-topics', compact('writeId', 'writeUrl'))
     </div>
-    <div class="journal-topics-grid">
-      @foreach ($journalTopics as $topic)
-        <div class="journal-topic-card">
-          <span class="journal-topic-card__icon" aria-hidden="true">{!! \App\mh_svg_icon($topic['icon'], 22) !!}</span>
-          <h3 class="journal-topic-card__title">{{ $topic['title'] }}</h3>
-          <p class="journal-topic-card__desc">{{ $topic['desc'] }}</p>
-        </div>
-      @endforeach
+    <div id="journal-posts" data-journal-region="results">
+      @include('partials.journal-results', ['writeUrl' => $writeUrl])
     </div>
   </div>
-</section>
-
-@include('partials.cta-band', [
-  'kicker' => __('Get in touch', 'sage'),
-  'title' => __('Questions about a post?', 'sage'),
-  'text' => __('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within one business day (ET).', 'sage'),
-  'label' => __('Say hello', 'sage'),
-])
+@endif
 @endsection

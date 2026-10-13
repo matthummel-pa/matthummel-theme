@@ -20,6 +20,7 @@ tar -C "$root" \
   --exclude='.env' \
   --exclude='.env.*' \
   --exclude='plugins' \
+  --exclude='resources/archive' \
   --exclude='mh-last-fatal.txt' \
   --exclude='*fatal*.txt' \
   --exclude='*.log' \
