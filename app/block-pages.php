@@ -30,6 +30,7 @@ function mh_block_page_builders(): array
         'template-projects.blade.php' => __NAMESPACE__.'\\mh_projects_blocks_markup',
         'index.blade.php' => __NAMESPACE__.'\\mh_journal_blocks_markup',
         'template-resources.blade.php' => __NAMESPACE__.'\\mh_resources_blocks_markup',
+        'template-contact.blade.php' => __NAMESPACE__.'\\mh_contact_blocks_markup',
     ];
 }
 
@@ -690,6 +691,84 @@ function mh_resources_blocks_markup(int $id): string
         mh_blocks_heading(__('Want this stack on your project?', 'sage'))
         .$text(__('Resources here are starting points. Hire me for a production WordPress site, plugin, or web app — full-time, contract, or project.', 'sage'))
         .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
+    );
+
+    return $out;
+}
+
+/**
+ * Contact: hero, the form with the facts and profile links beside it, what to send, what happens next, questions.
+ */
+function mh_contact_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+    $cards = static fn (array $rows): string => mh_blocks_cards(array_map(
+        static fn (array $row): array => ['title' => (string) ($row['title'] ?? ''), 'body' => esc_html((string) ($row['text'] ?? ''))],
+        $rows
+    ));
+    $booking = mh_booking_url();
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('cnt_kicker', __('Contact', 'sage')), 'className' => 'contact-hero'],
+        mh_blocks_heading($f('cnt_h1', __('Say hello.', 'sage')), 1)
+        .$text($f('cnt_lede', __('Want to contact a WordPress developer about a role, a build, or something you are stuck on? Send a few sentences. I read everything and reply within one business day (ET).', 'sage')), 'lead')
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // The form's labels are block settings. A reply note left empty follows the site's reply time.
+    $replyNote = trim($f('cnt_reply_note', ''));
+    $out .= mh_blocks_section(
+        ['anchor' => 'write', 'navLabel' => __('Write', 'sage'), 'className' => 'contact-write'],
+        mh_blocks_heading($f('cnt_form_h2', __('Write a note.', 'sage')))
+        .$text($f('cnt_form_intro', __('Name, email, and a few sentences are enough. No pitch deck required. This form goes straight to my inbox.', 'sage')), 'lead')
+        .mh_blocks_buttons($booking !== '' ? [['text' => __('Book a 15-minute call', 'sage'), 'url' => $booking, 'style' => 'outline']] : [])
+        .mh_blocks_data('contact-form', array_filter([
+            'whoLabel' => $f('cnt_who_label', __('Who you are', 'sage')),
+            'messageHint' => $f('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage')),
+            'submitLabel' => $f('cnt_submit', __('Send note', 'sage')),
+            'replyNote' => $replyNote !== mh_reply_sla() ? $replyNote : '',
+            'successMessage' => $f('cnt_success', __('Thanks — I got it and will write back soon.', 'sage')),
+            'errorMessage' => $f('cnt_error', __('Something went wrong. Check the required fields and try again.', 'sage')),
+        ]))
+        .mh_blocks_heading(__('Before you write', 'sage'), 3)
+        .mh_blocks_data('contact-facts')
+        .mh_blocks_heading($f('cnt_else_h2', __('Find me elsewhere', 'sage')), 3)
+        .$text($f('cnt_aside', __('Prefer GitHub or LinkedIn? Those work too.', 'sage')))
+        .mh_blocks_data('social-links', ['showNotes' => true])
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('What to include', 'sage'), 'anchor' => 'tips', 'navLabel' => __('What helps', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading($f('cnt_tips_h2', __('Three things that help.', 'sage')))
+        .$text($f('cnt_tips_intro', __('You don\'t need a spec. These three make it easier for me to reply with something useful.', 'sage')), 'lead')
+        .$cards(field_rows('cnt_tips', mh_contact_tips(), $id))
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('After you send', 'sage'), 'anchor' => 'next', 'navLabel' => __('What happens next', 'sage')],
+        mh_blocks_heading($f('cnt_expect_h2', __('What happens next.', 'sage')))
+        .$text($f('cnt_expect_intro', __('A fair picture of how I use this inbox.', 'sage')), 'lead')
+        .$cards(field_rows('cnt_expect', mh_contact_expect(), $id))
+    );
+
+    $out .= mh_blocks_section(
+        ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'questions', 'tone' => 'alt'],
+        mh_blocks_heading($f('cnt_faq_h2', __('Before you contact a WordPress developer.', 'sage')))
+        .$text($f('cnt_faq_intro', __('Short answers about what to send and what happens next.', 'sage')))
+        .mh_blocks_faq(array_map(
+            static fn (array $row): array => ['title' => $row['title'], 'text' => esc_html($row['text'])],
+            mh_page_faq_rows('cnt_faq', mh_contact_faq_defaults(), $id)
+        ))
+        .mh_blocks_paragraph(field_html('cnt_faq_foot', sprintf(
+            /* translators: 1: Projects URL, 2: About URL, 3: Journal URL */
+            __('Want background first? See the <a href="%1$s">projects</a>, read <a href="%2$s">about me</a>, or browse the <a href="%3$s">journal</a>.', 'sage'),
+            esc_url(mh_work_listing_url()),
+            esc_url(home_url('/about/')),
+            esc_url(get_permalink((int) get_option('page_for_posts')) ?: home_url('/blog/'))
+        ), $id))
     );
 
     return $out;
