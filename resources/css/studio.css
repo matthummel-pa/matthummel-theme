@@ -6422,3 +6422,63 @@ html.mh-dark ul.is-style-checklist > li::before { border-color: var(--lime-300);
 
 /* Projects "inside each one" note: the pale panel sat behind light text in dark mode. */
 html.mh-dark .work-context__note { background: var(--color-surface); border-color: rgba(167, 139, 250, .22); }
+
+/* 3.7.4 · Journal: the post list inside a Section, and the feed row under its heading. */
+.mh-journal-list.write-hub { padding-block: 0; padding-inline: 0; }
+.mh-rss-feed { max-width: 40rem; }
+#journal-posts, #subscribe, #topics { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) {
+  #journal-posts, #subscribe, #topics { scroll-margin-top: 1rem; }
+}
+
+/* 3.7.5 · Resources: copy beside the jump list, and each catalog group as a head beside its cards. */
+.resources-overview > .container,
+.resources-group > .container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+.resources-overview > .container > * { grid-column: 1; }
+.resources-overview > .container > .mh-resource-jump { grid-column: 2; grid-row: 1 / span 2; }
+.resources-overview > .container > .affiliate-note { grid-column: 1 / -1; margin: var(--card-gap-roomy) 0 0; }
+.resources-group > .container { grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); grid-template-rows: auto auto 1fr; }
+.resources-group > .container > * { grid-column: 1; }
+/* The shared section title size is set with !important further up, so this one has to be too. */
+.resources-group > .container > h2.wp-block-heading { font-size: clamp(1.5rem, 2.4vw, 1.9rem) !important; line-height: 1.15; letter-spacing: -.035em; margin: 0 0 .6rem; }
+.resources-group > .container > p { margin: 0; color: var(--color-text-secondary); font-size: 1.05rem; line-height: 1.6; }
+/* The block's count sits under the intro and its cards fill the second column. */
+.resources-group .mh-resource-catalog { display: contents; }
+.resources-group .mh-resource-catalog > .resources-list { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+.resources-group .mh-resource-catalog > .affiliate-note { margin: 1rem 0 0; }
+.resources-group + .resources-group { padding-top: 0; }
+.resources-overview, .resources-group, #uses { scroll-margin-top: 5.5rem; }
+@media (max-width: 860px) {
+  .resources-overview > .container, .resources-group > .container { grid-template-columns: 1fr; }
+  .resources-overview > .container > .mh-resource-jump,
+  .resources-group .mh-resource-catalog > .resources-list { grid-column: 1; grid-row: auto; margin-top: var(--card-gap-roomy); }
+}
+@media (max-width: 900px) { .resources-overview, .resources-group, #uses { scroll-margin-top: 1rem; } }
+
+/* 3.7.6 · Contact: heading and intro on top, then the form with the facts and profile links beside it. */
+.contact-write > .container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(16rem, .85fr);
+  column-gap: 3.5rem;
+  grid-auto-flow: dense;
+  align-items: start;
+}
+.contact-write > .container > * { grid-column: 1 / -1; }
+/* The form spans many (empty) rows so the blocks after it stack beside it without being pushed apart. */
+.contact-write > .container > .mh-contact-form { grid-column: 1; grid-row: span 40; }
+.contact-write > .container > .mh-contact-form ~ * { grid-column: 2; }
+.contact-write > .container > .mh-contact-form + h3.wp-block-heading { margin-top: 0; }
+.contact-write .mh-contact-facts,
+.contact-write .mh-social-links { margin-top: var(--card-gap-tight); }
+.contact-write > .container > .mh-contact-form ~ p { margin: var(--card-gap-tight) 0 0; font-size: .9375rem; color: var(--color-text-secondary); }
+@media (max-width: 780px) { .contact-write > .container > .mh-contact-form + h3.wp-block-heading { margin-top: var(--card-gap-roomy); } }
+#write, #tips, #next, #questions { scroll-margin-top: 5.5rem; }
+@media (max-width: 780px) {
+  .contact-write > .container { display: block; }
+}
+@media (max-width: 900px) { #write, #tips, #next, #questions { scroll-margin-top: 1rem; } }

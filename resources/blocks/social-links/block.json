@@ -12,8 +12,18 @@
     "elsewhere"
   ],
   "textdomain": "sage",
-  "attributes": {},
-  "mhControls": {},
+  "attributes": {
+    "showNotes": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "mhControls": {
+    "showNotes": {
+      "label": "Show a short note under each link",
+      "help": "The notes are the ones the Contact page has always shown."
+    }
+  },
   "supports": {
     "html": false,
     "align": false,

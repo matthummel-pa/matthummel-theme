@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/resource-catalog",
+  "title": "Resource links",
+  "category": "matthummel",
+  "icon": "admin-links",
+  "description": "Link cards from one group of the Resources catalog. Affiliate links are labeled and marked as sponsored.",
+  "keywords": [
+    "resources",
+    "tools",
+    "affiliate"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "section": {
+      "type": "string",
+      "enum": [
+        "starters",
+        "themes",
+        "tools"
+      ],
+      "default": "starters"
+    },
+    "showCount": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "section": {
+      "label": "Which group",
+      "options": {
+        "starters": "Free WordPress starters",
+        "themes": "Themes for sale",
+        "tools": "Tools I recommend"
+      }
+    },
+    "showCount": {
+      "label": "Show how many links there are"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

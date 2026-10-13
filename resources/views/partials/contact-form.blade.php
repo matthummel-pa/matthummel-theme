@@ -21,6 +21,12 @@
   $presetMessage = (string) ($presetMessage ?? '');
   $presetWho = (string) ($presetWho ?? '');
   $submitLabel = (string) ($submitLabel ?? '');
+  // The Contact form block passes its own labels; anywhere else these come from the page's saved fields.
+  $whoLabel = trim((string) ($whoLabel ?? '')) ?: \App\field('cnt_who_label', __('Who you are', 'sage'));
+  $messageHint = trim((string) ($messageHint ?? '')) ?: \App\field('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage'));
+  $replyNote = trim((string) ($replyNote ?? '')) ?: \App\field('cnt_reply_note', \App\mh_reply_sla());
+  $successText = trim((string) ($successText ?? '')) ?: \App\field('cnt_success', __('Thanks — I got it and will write back soon.', 'sage'));
+  $errorText = trim((string) ($errorText ?? '')) ?: \App\field('cnt_error', __('Something went wrong. Check the required fields and try again.', 'sage'));
   $compactWhoFallback = isset($compactWhoFallback) ? (string) $compactWhoFallback : 'business';
   $messageRows = (int) ($messageRows ?? ($compact ? 5 : 7));
   if ($messageRows < 2 || $messageRows > 12) {
@@ -57,11 +63,11 @@
 @if ($mhOk)
   <p class="form-success" id="{{ $statusId }}" role="status" tabindex="-1">
     {!! \App\mh_svg_icon('check', 18) !!}
-    {{ \App\field('cnt_success', __('Thanks — I got it and will write back soon.', 'sage')) }}
+    {{ $successText }}
   </p>
 @elseif ($mhError)
   <p class="form-error" id="{{ $statusId }}" role="alert" tabindex="-1">
-    {{ \App\field('cnt_error', __('Something went wrong. Check the required fields and try again.', 'sage')) }}
+    {{ $errorText }}
   </p>
 @endif
 
@@ -92,7 +98,7 @@
 
   @if (! $compact)
     <div class="field">
-      <label for="{{ $whoId }}">{{ \App\field('cnt_who_label', __('Who you are', 'sage')) }} <span class="field-opt">{{ __('(optional — helps me reply in the right shape)', 'sage') }}</span></label>
+      <label for="{{ $whoId }}">{{ $whoLabel }} <span class="field-opt">{{ __('(optional — helps me reply in the right shape)', 'sage') }}</span></label>
       <select id="{{ $whoId }}" name="mh_who" autocomplete="off">
         <option value=""@if ($oldWho === '') selected @endif>{{ __('Choose one', 'sage') }}</option>
         <option value="developer"@if ($oldWho === 'developer') selected @endif>{{ __('A developer', 'sage') }}</option>
@@ -116,7 +122,7 @@
   <div class="field">
     <label for="{{ $messageId }}">{{ __('Message', 'sage') }} <span class="field-req" aria-hidden="true">*</span></label>
     <textarea id="{{ $messageId }}" name="mh_message" rows="{{ (int) $messageRows }}" required aria-required="true" placeholder="{{ esc_attr__('Tell me what you would change, or what you need. A few sentences is plenty.', 'sage') }}" aria-describedby="{{ $messageId }}-hint{{ in_array('message', $invalid, true) ? ' '.$statusId : '' }}"@if (in_array('message', $invalid, true)) aria-invalid="true"@endif>{{ $oldMessage }}</textarea>
-    <p class="field-hint" id="{{ $messageId }}-hint">{{ \App\field('cnt_message_hint', __('No pitch deck needed. Paste a URL if you have one.', 'sage')) }}</p>
+    <p class="field-hint" id="{{ $messageId }}-hint">{{ $messageHint }}</p>
   </div>
 
   <div class="contact-form__actions">
@@ -124,6 +130,6 @@
       {!! \App\mh_svg_icon('mail', 16) !!}
       {{ $submitLabel !== '' ? $submitLabel : \App\field('cnt_submit', __('Send note', 'sage')) }}
     </button>
-    <p class="field-hint">{{ \App\field('cnt_reply_note', \App\mh_reply_sla()) }}</p>
+    <p class="field-hint">{{ $replyNote }}</p>
   </div>
 </form>

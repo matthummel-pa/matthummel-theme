@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/journal-list",
+  "title": "Journal posts",
+  "category": "matthummel",
+  "icon": "list-view",
+  "description": "The Journal's post list with search, topic pills, sort, grid or list, and page links. It only shows posts on the Journal page.",
+  "keywords": [
+    "journal",
+    "posts",
+    "blog"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "searchPlaceholder": {
+      "type": "string",
+      "default": "Search posts"
+    },
+    "emptyText": {
+      "type": "string",
+      "default": "No posts yet."
+    }
+  },
+  "mhControls": {
+    "searchPlaceholder": {
+      "label": "Search box hint"
+    },
+    "emptyText": {
+      "label": "Text when there are no posts"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "multiple": false,
+    "reusable": false
+  }
+}
