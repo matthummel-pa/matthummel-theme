@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/contact-form",
+  "title": "Contact form",
+  "category": "matthummel",
+  "icon": "email",
+  "description": "The site's contact form. Notes go to the site inbox; where they are sent is not a block setting.",
+  "keywords": [
+    "contact",
+    "form",
+    "message"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "whoLabel": {
+      "type": "string",
+      "default": "Who you are"
+    },
+    "messageHint": {
+      "type": "string",
+      "default": "No pitch deck needed. Paste a URL if you have one."
+    },
+    "submitLabel": {
+      "type": "string",
+      "default": "Send note"
+    },
+    "replyNote": {
+      "type": "string",
+      "default": ""
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "Thanks — I got it and will write back soon."
+    },
+    "errorMessage": {
+      "type": "string",
+      "default": "Something went wrong. Check the required fields and try again."
+    }
+  },
+  "mhControls": {
+    "whoLabel": {
+      "label": "Label of the \"who you are\" menu"
+    },
+    "messageHint": {
+      "label": "Hint under the message box"
+    },
+    "submitLabel": {
+      "label": "Send button"
+    },
+    "replyNote": {
+      "label": "Note beside the button",
+      "help": "Leave empty to show the site's usual reply time."
+    },
+    "successMessage": {
+      "label": "Message after a note is sent"
+    },
+    "errorMessage": {
+      "label": "Message when a required field is missing"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false,
+    "multiple": false
+  }
+}

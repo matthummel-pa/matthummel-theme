@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.7.6 — Contact is a block page
+
+- Contact's copy is now blocks: hero, Write a note (the form, with Before you write and Find me elsewhere beside it), Three things that help, What happens next, and Questions. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- Section ids are the same (`#write`, `#tips`, `#next`, `#questions`), and the form still returns to `#contact-status`.
+- New data block: **Contact form**. It prints the same form partial as before, so the nonce, the honeypot, the field names, the labels and `autocomplete` values are unchanged. `app/contact.php` (checks, sanitizing, where a note is sent) is not touched. The "who you are" label, the message hint, the button, the note beside it, and the two status messages are settings in its sidebar. Where a note is sent is not a block setting.
+- New data block: **Contact facts** (reply time, availability while GitHub says hireable, location, best fit). Reply time follows the site's reply time unless you type one.
+- Social links has a new switch, **Show a short note under each link**. It is on for Contact.
+- "Before you write" and "Find me elsewhere" are headings beside the form instead of two boxed cards with small caps titles. The two rows of three use the Card grid.
+- The form on project pages is the same partial and prints as before.
+- `template-contact.blade.php` and `partials/page-faq.blade.php` (only Contact used it) moved to `resources/archive/views/` (to delete).
+- This was the last of the six main pages. Home, About, Projects, Journal, Resources and Contact are all block pages now.
+
 ## 3.7.5 — Resources is a block page
 
 - Resources' copy is now blocks: hero, What you will find here, one section for each group of links, The stack I use, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

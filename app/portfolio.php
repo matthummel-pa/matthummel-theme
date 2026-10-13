@@ -2222,7 +2222,10 @@ function mh_ensure_projects_listing_page(): void
         return;
     }
 
-    update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
+    // A Projects page already converted to blocks keeps the Block page template.
+    if (! mh_page_uses_blocks((int) $page->ID)) {
+        update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
+    }
 
     if (in_array($page->post_title, ['Work', 'Shop', 'Themes & plugins', 'Themes and plugins'], true)) {
         wp_update_post([
