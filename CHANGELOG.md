@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.7 — Resources refresh
+
+- Tools I recommend: added Claude and n8n; SiteGround is replaced by Hostinger (the host this site runs on); HubSpot is removed. Hostinger is not marked as an affiliate link until a referral URL exists.
+- Free WordPress starters: added the AI Dev Standards Playbook repo and TOCguide on WordPress.org.
+- The stack I use: added Claude Code, Block editor, PHPCS + WordPress Coding Standards, PHPStan, WooCommerce, Rank Math, IndexNow, and two new groups, AI and automation (n8n, the playbook, Notion) and Testing and accessibility (Lighthouse, axe-core). HubSpot is removed.
+- With no compensated links left, the affiliate disclosure hides itself (`mh_resources_have_affiliate_links()`). It comes back as soon as one item sets `affiliate => true`.
+
 ## 3.7.6 — Contact is a block page
 
 - Contact's copy is now blocks: hero, Write a note (the form, with Before you write and Find me elsewhere beside it), Three things that help, What happens next, and Questions. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
