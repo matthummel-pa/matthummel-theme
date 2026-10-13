@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/recent-posts",
+  "title": "Recent posts",
+  "category": "matthummel",
+  "icon": "admin-post",
+  "description": "The newest Journal posts with image, topic, date and excerpt.",
+  "keywords": [
+    "journal",
+    "blog",
+    "writing"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "count": {
+      "type": "number",
+      "default": 3
+    },
+    "linkText": {
+      "type": "string",
+      "default": "All posts"
+    },
+    "showRss": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "count": {
+      "label": "Posts to show",
+      "min": 1,
+      "max": 9
+    },
+    "linkText": {
+      "label": "Link to the Journal",
+      "help": "Leave empty to hide the link."
+    },
+    "showRss": {
+      "label": "Show the RSS link"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

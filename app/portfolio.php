@@ -1757,7 +1757,7 @@ function mh_is_project_surface(): bool
         return true;
     }
 
-    return (string) get_page_template_slug() === 'template-projects.blade.php';
+    return mh_page_template_slug((int) get_queried_object_id()) === 'template-projects.blade.php';
 }
 
 /**
@@ -2222,7 +2222,10 @@ function mh_ensure_projects_listing_page(): void
         return;
     }
 
-    update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
+    // A Projects page already converted to blocks keeps the Block page template.
+    if (! mh_page_uses_blocks((int) $page->ID)) {
+        update_post_meta($page->ID, '_wp_page_template', 'template-projects.blade.php');
+    }
 
     if (in_array($page->post_title, ['Work', 'Shop', 'Themes & plugins', 'Themes and plugins'], true)) {
         wp_update_post([
@@ -4294,7 +4297,7 @@ function mh_hero_scene_url(?int $post_id = null): string
 {
     $template = '';
     if ($post_id !== null && $post_id > 0) {
-        $template = (string) get_page_template_slug($post_id);
+        $template = mh_page_template_slug($post_id);
     }
 
     if (is_singular('project')) {
@@ -4763,7 +4766,10 @@ function mh_ensure_theme_page(string $slug, string $title, string $template): in
 
     $existing = get_page_by_path($slug);
     if ($existing instanceof \WP_Post) {
-        update_post_meta($existing->ID, '_wp_page_template', $template);
+        // A page converted to blocks keeps the Block page template; its old template file is archived.
+        if (! mh_page_uses_blocks((int) $existing->ID)) {
+            update_post_meta($existing->ID, '_wp_page_template', $template);
+        }
         if ($existing->post_status !== 'publish') {
             wp_update_post([
                 'ID' => $existing->ID,

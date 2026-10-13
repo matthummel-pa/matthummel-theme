@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/project-browser",
+  "title": "Project browser",
+  "category": "matthummel",
+  "icon": "screenoptions",
+  "description": "Every project as a card, with search, type filters and a grid or list layout. The cards update when projects change.",
+  "keywords": [
+    "projects",
+    "work",
+    "filter"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "searchPlaceholder": {
+      "type": "string",
+      "default": "Search projects…"
+    },
+    "gridLabel": {
+      "type": "string",
+      "default": "Grid"
+    },
+    "listLabel": {
+      "type": "string",
+      "default": "List"
+    },
+    "emptyTitle": {
+      "type": "string",
+      "default": "No projects match."
+    },
+    "emptyText": {
+      "type": "string",
+      "default": "Try another type or a different search."
+    },
+    "resetLabel": {
+      "type": "string",
+      "default": "Show all projects"
+    },
+    "noProjectsTitle": {
+      "type": "string",
+      "default": "Projects are on the way."
+    },
+    "noProjectsText": {
+      "type": "string",
+      "default": "I am adding the first sample sites here. Write and tell me what you need built, or the role you are filling."
+    },
+    "noProjectsButton": {
+      "type": "string",
+      "default": "Say hello"
+    }
+  },
+  "mhControls": {
+    "searchPlaceholder": {
+      "label": "Search box hint"
+    },
+    "gridLabel": {
+      "label": "Grid button"
+    },
+    "listLabel": {
+      "label": "List button"
+    },
+    "emptyTitle": {
+      "label": "No matches: heading"
+    },
+    "emptyText": {
+      "label": "No matches: text"
+    },
+    "resetLabel": {
+      "label": "No matches: button",
+      "help": "Clears the search and the type filter."
+    },
+    "noProjectsTitle": {
+      "label": "No projects yet: heading",
+      "help": "Shown only while the project list is empty."
+    },
+    "noProjectsText": {
+      "label": "No projects yet: text"
+    },
+    "noProjectsButton": {
+      "label": "No projects yet: button",
+      "help": "Links to Contact. Leave empty to hide it."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false,
+    "multiple": false
+  }
+}

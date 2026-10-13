@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/cta-band",
+  "title": "Call to action band",
+  "category": "matthummel",
+  "icon": "megaphone",
+  "description": "The closing band: heading, a sentence, and the Say hello button.",
+  "textdomain": "sage",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "showAvailability": {
+      "type": "boolean",
+      "default": false
+    },
+    "note": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "multiple": false
+  }
+}

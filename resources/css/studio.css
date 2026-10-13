@@ -2820,7 +2820,8 @@ body.single-project .rank-math-breadcrumb,
 body.single-project .yoast-breadcrumb,
 body.single-project nav.rank-math-breadcrumb,
 .project-page .rank-math-breadcrumb,
-.page-template-template-projects .rank-math-breadcrumb {
+.page-template-template-projects .rank-math-breadcrumb,
+body:has(.mh-project-browser) .rank-math-breadcrumb {
   display: none !important;
 }
 .project-feat-grid > .project-feat {
@@ -6327,3 +6328,157 @@ html.mh-dark .hire-step__num { color: var(--lime-300); -webkit-text-fill-color: 
 .work-context__list { margin: 0; }
 @media (max-width: 860px) { .work-context__grid { grid-template-columns: 1fr; } }
 .work-faq__foot { margin: 1.5rem 0 0; color: var(--color-text-secondary); }
+
+/* ── 3.7.0 · Page blocks ───────────────────────────────────────────────────
+   Blocks reuse the theme's own classes (added in PHP: `.btn`, `.display-title`,
+   `.lead`, the service-card recipe). Only layout that had no class yet is here. */
+.mh-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--card-gap);
+  margin-block: var(--card-gap-roomy);
+}
+.mh-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mh-cards--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 960px) { .mh-cards, .mh-cards--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .mh-cards, .mh-cards--2, .mh-cards--4 { grid-template-columns: 1fr; } }
+/* Numbered grids print 01, 02… from a counter unless a card sets its own corner label. */
+.mh-cards--numbered { counter-reset: mh-card; }
+.mh-cards--numbered > .mh-card { counter-increment: mh-card; position: relative; }
+.mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before {
+  content: counter(mh-card, decimal-leading-zero);
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  font: 700 .8125rem/1 var(--font-mono);
+  color: var(--lime-700);
+}
+html.mh-dark .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before { color: var(--lime-300); }
+.mh-card > :last-child { margin-bottom: 0; }
+
+/* Data blocks: a quiet row of count and links above the list. */
+.mh-data { margin-top: var(--card-gap-roomy); }
+.mh-data__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1.25rem;
+  margin-bottom: var(--card-gap);
+}
+.mh-data__meta > :only-child { margin-left: auto; }
+
+.mh-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--card-gap-tight); margin-top: 1.5rem; }
+.mh-buttons .wp-block-button { margin: 0; }
+.mh-block-section > .container > :first-child { margin-top: 0; }
+.mh-block-section .mh-block-faq { margin-top: var(--card-gap-roomy); }
+.mh-block-faq details > :not(summary) { margin: 0; }
+
+/* Core List, "Checklist" style. */
+ul.is-style-checklist { list-style: none; margin: 1.5rem 0; padding: 0; display: grid; gap: 0; }
+ul.is-style-checklist > li {
+  position: relative;
+  padding: .85rem 0 .85rem 2rem;
+  border-top: 1px solid var(--color-border-light);
+}
+ul.is-style-checklist > li:first-child { border-top: 0; }
+ul.is-style-checklist > li::before {
+  content: "";
+  position: absolute;
+  left: .2rem;
+  top: 1.25rem;
+  width: .8rem;
+  height: .45rem;
+  border-left: 2px solid var(--lime-700);
+  border-bottom: 2px solid var(--lime-700);
+  transform: rotate(-45deg);
+}
+html.mh-dark ul.is-style-checklist > li { border-top-color: rgba(167, 139, 250, .22); }
+html.mh-dark ul.is-style-checklist > li::before { border-color: var(--lime-300); }
+
+/* 3.7.2 · About data blocks. */
+.mh-profile-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }
+@media (max-width: 640px) { .mh-profile-cards { grid-template-columns: 1fr; } }
+.mh-resume .code-resume-links { margin-bottom: var(--card-gap); }
+.mh-block-section h3.wp-block-heading { margin-top: var(--card-gap-roomy); }
+.mh-card h3.wp-block-heading { margin-top: 0; }
+.mh-card ul.is-style-checklist { margin-bottom: 0; }
+.mh-card .wp-block-list { font-size: .9375rem; }
+.mh-card ul.wp-block-list:not(.is-style-checklist) { margin: 1.5rem 0 0; padding-left: 1.25rem; list-style: disc; }
+#hire, #resume, #now, #code, #stack { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) { #hire, #resume, #now, #code, #stack { scroll-margin-top: 1rem; } }
+
+/* 3.7.3 · Projects: the browser inside a Section, and the line under it. */
+.mh-project-browser + p { margin-top: var(--card-gap); color: var(--color-text-muted); }
+#gallery, #inside, #how, #work-faq { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) {
+  #gallery, #inside, #how, #work-faq { scroll-margin-top: 1rem; }
+}
+@media (max-width: 800px) {
+  .mh-project-browser .write-tools { flex-direction: column; align-items: stretch; }
+  .mh-project-browser .search-wrap--inline { flex: 1 1 auto; max-width: none; width: 100%; }
+  .mh-project-browser .write-tool-actions { width: 100%; justify-content: space-between; }
+}
+
+/* Projects "inside each one" note: the pale panel sat behind light text in dark mode. */
+html.mh-dark .work-context__note { background: var(--color-surface); border-color: rgba(167, 139, 250, .22); }
+
+/* 3.7.4 · Journal: the post list inside a Section, and the feed row under its heading. */
+.mh-journal-list.write-hub { padding-block: 0; padding-inline: 0; }
+.mh-rss-feed { max-width: 40rem; }
+#journal-posts, #subscribe, #topics { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) {
+  #journal-posts, #subscribe, #topics { scroll-margin-top: 1rem; }
+}
+
+/* 3.7.5 · Resources: copy beside the jump list, and each catalog group as a head beside its cards. */
+.resources-overview > .container,
+.resources-group > .container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+.resources-overview > .container > * { grid-column: 1; }
+.resources-overview > .container > .mh-resource-jump { grid-column: 2; grid-row: 1 / span 2; }
+.resources-overview > .container > .affiliate-note { grid-column: 1 / -1; margin: var(--card-gap-roomy) 0 0; }
+.resources-group > .container { grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); grid-template-rows: auto auto 1fr; }
+.resources-group > .container > * { grid-column: 1; }
+/* The shared section title size is set with !important further up, so this one has to be too. */
+.resources-group > .container > h2.wp-block-heading { font-size: clamp(1.5rem, 2.4vw, 1.9rem) !important; line-height: 1.15; letter-spacing: -.035em; margin: 0 0 .6rem; }
+.resources-group > .container > p { margin: 0; color: var(--color-text-secondary); font-size: 1.05rem; line-height: 1.6; }
+/* The block's count sits under the intro and its cards fill the second column. */
+.resources-group .mh-resource-catalog { display: contents; }
+.resources-group .mh-resource-catalog > .resources-list { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+.resources-group .mh-resource-catalog > .affiliate-note { margin: 1rem 0 0; }
+.resources-group + .resources-group { padding-top: 0; }
+.resources-overview, .resources-group, #uses { scroll-margin-top: 5.5rem; }
+@media (max-width: 860px) {
+  .resources-overview > .container, .resources-group > .container { grid-template-columns: 1fr; }
+  .resources-overview > .container > .mh-resource-jump,
+  .resources-group .mh-resource-catalog > .resources-list { grid-column: 1; grid-row: auto; margin-top: var(--card-gap-roomy); }
+}
+@media (max-width: 900px) { .resources-overview, .resources-group, #uses { scroll-margin-top: 1rem; } }
+
+/* 3.7.6 · Contact: heading and intro on top, then the form with the facts and profile links beside it. */
+.contact-write > .container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(16rem, .85fr);
+  column-gap: 3.5rem;
+  grid-auto-flow: dense;
+  align-items: start;
+}
+.contact-write > .container > * { grid-column: 1 / -1; }
+/* The form spans many (empty) rows so the blocks after it stack beside it without being pushed apart. */
+.contact-write > .container > .mh-contact-form { grid-column: 1; grid-row: span 40; }
+.contact-write > .container > .mh-contact-form ~ * { grid-column: 2; }
+.contact-write > .container > .mh-contact-form + h3.wp-block-heading { margin-top: 0; }
+.contact-write .mh-contact-facts,
+.contact-write .mh-social-links { margin-top: var(--card-gap-tight); }
+.contact-write > .container > .mh-contact-form ~ p { margin: var(--card-gap-tight) 0 0; font-size: .9375rem; color: var(--color-text-secondary); }
+@media (max-width: 780px) { .contact-write > .container > .mh-contact-form + h3.wp-block-heading { margin-top: var(--card-gap-roomy); } }
+#write, #tips, #next, #questions { scroll-margin-top: 5.5rem; }
+@media (max-width: 780px) {
+  .contact-write > .container { display: block; }
+}
+@media (max-width: 900px) { #write, #tips, #next, #questions { scroll-margin-top: 1rem; } }

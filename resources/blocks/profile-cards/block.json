@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/profile-cards",
+  "title": "Profile cards",
+  "category": "matthummel",
+  "icon": "id",
+  "description": "GitHub and LinkedIn cards: name, bio, repo and follower counts, and a link to each profile.",
+  "keywords": [
+    "github",
+    "linkedin",
+    "profile"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "showGithub": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLinkedin": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "showGithub": {
+      "label": "Show the GitHub card"
+    },
+    "showLinkedin": {
+      "label": "Show the LinkedIn card"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

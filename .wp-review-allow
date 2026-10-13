@@ -7,3 +7,11 @@
 ^\s*do_shortcode\(\s*'\[mhn_signup source="post"\]'\s*\)\s*$
 # JSON-LD encoded with JSON_HEX_TAG (single project page).
 ^\s*\$ldJson\s*$
+# Rendered inner blocks (WP_Block::render output) in resources/views/blocks/cta-band.blade.php.
+^\s*\$(copy|actions)\s*$
+# Skill tile markup built and escaped in App\\mh_skill_tile (resources/views/blocks/skills.blade.php).
+^\s*\\?(App\\)?mh_skill_tile\s*\(
+# FAQPage JSON-LD encoded with JSON_HEX_TAG in resources/views/blocks/faq.blade.php.
+^\s*\$faqJsonLd\s*$
+# Blog JSON-LD encoded with JSON_HEX_TAG, and the posts page blocks run through the_content (resources/views/index.blade.php).
+^\s*\$(blogLdJson|journalHtml)\s*$

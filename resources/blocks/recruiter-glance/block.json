@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/recruiter-glance",
+  "title": "Hiring facts",
+  "category": "matthummel",
+  "icon": "list-view",
+  "description": "Six short facts for hiring managers: role, stack, timezone, location, experience and availability.",
+  "keywords": [
+    "hire",
+    "recruiter",
+    "glance"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "role": {
+      "type": "string",
+      "default": "WordPress / full-stack PHP"
+    },
+    "stack": {
+      "type": "string",
+      "default": "WordPress, PHP, custom themes & plugins"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/New_York (ET)"
+    },
+    "location": {
+      "type": "string",
+      "default": "Gettysburg, PA · remote OK"
+    },
+    "experience": {
+      "type": "string",
+      "default": ""
+    },
+    "availability": {
+      "type": "string",
+      "default": "Full-time, contract, freelance, agency overflow"
+    }
+  },
+  "mhControls": {
+    "role": {
+      "label": "Role"
+    },
+    "stack": {
+      "label": "Stack"
+    },
+    "timezone": {
+      "label": "Timezone"
+    },
+    "location": {
+      "label": "Location"
+    },
+    "experience": {
+      "label": "Experience",
+      "help": "Leave empty to count the years automatically."
+    },
+    "availability": {
+      "label": "Availability"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

@@ -2,6 +2,7 @@
   $writeId = $writeId ?? \App\mh_writing_id();
   $writeUrl = $writeUrl ?? ($writeId ? get_permalink($writeId) : home_url('/blog/'));
   $hideSearch = ! empty($hideSearch);
+  $searchPlaceholder = trim((string) ($searchPlaceholder ?? '')) ?: \App\field('write_search_ph', __('Search posts', 'sage'), $writeId);
   $rss = get_feed_link('rss2');
   $found = (int) $GLOBALS['wp_query']->found_posts;
   $total = \App\mh_published_post_count();
@@ -17,7 +18,7 @@
 <div class="write-tools" data-write-tools>
   @if (! $hideSearch)
     <div class="search-wrap search-wrap--inline">
-      @include('forms.search', ['placeholder' => \App\field('write_search_ph', __('Search posts', 'sage'), $writeId)])
+      @include('forms.search', ['placeholder' => $searchPlaceholder])
     </div>
   @endif
   <div class="write-tool-actions">

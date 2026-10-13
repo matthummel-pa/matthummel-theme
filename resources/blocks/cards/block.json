@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/cards",
+  "title": "Card grid",
+  "category": "matthummel",
+  "icon": "grid-view",
+  "description": "A grid of cards with an icon, a heading, and a short paragraph each.",
+  "textdomain": "sage",
+  "attributes": {
+    "columns": {
+      "type": "number",
+      "default": 3
+    },
+    "numbered": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true
+  }
+}

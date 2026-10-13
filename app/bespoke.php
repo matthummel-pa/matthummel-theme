@@ -52,8 +52,8 @@ add_filter('block_editor_settings_all', function ($settings, $context = null) {
 
 /** Skip core block stylesheet on custom-field pages (faster, no FSE leftovers). */
 add_action('wp_enqueue_scripts', function () {
-    if (is_singular('post') || is_singular('attachment')) {
-        return;
+    if (is_singular('post') || is_singular('attachment') || mh_is_block_page_view()) {
+        return; // these render blocks, so they keep the core block styles
     }
     wp_dequeue_style('wp-block-library');
     wp_dequeue_style('wp-block-library-theme');
@@ -86,7 +86,7 @@ function mh_clear_page_block_content(): void
 
     foreach ($pages as $id) {
         $id = (int) $id;
-        if (in_array($id, $skip, true)) {
+        if (in_array($id, $skip, true) || mh_page_uses_blocks($id)) {
             continue;
         }
         $content = (string) get_post_field('post_content', $id, 'raw');

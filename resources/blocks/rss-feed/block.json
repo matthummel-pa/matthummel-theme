@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/rss-feed",
+  "title": "RSS feed address",
+  "category": "matthummel",
+  "icon": "rss",
+  "description": "The site's feed address with a copy button and a link that opens the feed.",
+  "keywords": [
+    "rss",
+    "feed",
+    "subscribe"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "copyLabel": {
+      "type": "string",
+      "default": "Copy RSS"
+    },
+    "openLabel": {
+      "type": "string",
+      "default": "Open feed"
+    }
+  },
+  "mhControls": {
+    "copyLabel": {
+      "label": "Copy button"
+    },
+    "openLabel": {
+      "label": "Feed link",
+      "help": "Leave empty to hide the link."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}
