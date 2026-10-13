@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/contact-facts",
+  "title": "Contact facts",
+  "category": "matthummel",
+  "icon": "info-outline",
+  "description": "Short facts beside the contact form: reply time, availability (only while GitHub says hireable), location and best fit.",
+  "keywords": [
+    "contact",
+    "reply",
+    "facts"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "reply": {
+      "type": "string",
+      "default": ""
+    },
+    "availability": {
+      "type": "string",
+      "default": "Full-time, part-time, freelance, or agency overflow."
+    },
+    "location": {
+      "type": "string",
+      "default": "Eastern Time. Available remotely anywhere."
+    },
+    "bestFit": {
+      "type": "string",
+      "default": "Full-stack web apps, WordPress platforms, plugins, integrations, and agency partnerships."
+    }
+  },
+  "mhControls": {
+    "reply": {
+      "label": "Reply time",
+      "help": "Leave empty to show the site's usual reply time."
+    },
+    "availability": {
+      "label": "Availability",
+      "help": "Shown only while the GitHub profile is marked hireable."
+    },
+    "location": {
+      "label": "Location"
+    },
+    "bestFit": {
+      "label": "Best fit"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

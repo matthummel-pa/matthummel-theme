@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/github-repos",
+  "title": "GitHub repos",
+  "category": "matthummel",
+  "icon": "editor-code",
+  "description": "Repos from GitHub: the ones pinned to the profile, or the most recently pushed.",
+  "keywords": [
+    "github",
+    "repos",
+    "code"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "pinned",
+        "recent"
+      ],
+      "default": "pinned"
+    },
+    "count": {
+      "type": "number",
+      "default": 6
+    },
+    "showAllLink": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "mhControls": {
+    "source": {
+      "label": "Which repos",
+      "options": {
+        "pinned": "Pinned on GitHub",
+        "recent": "Recently pushed"
+      }
+    },
+    "count": {
+      "label": "Repos to show",
+      "min": 1,
+      "max": 12
+    },
+    "showAllLink": {
+      "label": "Show the link to all repos"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

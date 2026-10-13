@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/github-stats",
+  "title": "GitHub stats",
+  "category": "matthummel",
+  "icon": "chart-bar",
+  "description": "Counts from the GitHub profile: public repos, contributions, streak, stars and followers.",
+  "keywords": [
+    "github",
+    "stats",
+    "code"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "showSync": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "showSync": {
+      "label": "Show when the numbers were last synced"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

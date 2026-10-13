@@ -1010,10 +1010,21 @@ function mh_code_page_skills(?int $post_id = null): array
  */
 function mh_code_page_skills_grouped(?int $post_id = null): array
 {
+    return mh_skills_grouped(mh_code_page_skills($post_id));
+}
+
+/**
+ * Group a list of skill names (preserves first-seen group order).
+ *
+ * @param  list<string>  $skills  Skill names.
+ * @return list<array{label: string, icon: string, items: list<array{name: string, hint: string, group: string}>}>
+ */
+function mh_skills_grouped(array $skills): array
+{
     $grouped = [];
     $order = [];
 
-    foreach (mh_code_page_skills($post_id) as $skill) {
+    foreach ($skills as $skill) {
         $skill = trim((string) $skill);
         if ($skill === '') {
             continue;

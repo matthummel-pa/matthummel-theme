@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/resource-jump",
+  "title": "Resource jump links",
+  "category": "matthummel",
+  "icon": "editor-ol",
+  "description": "Jump links to each group of resource links and to the stack list on this page, with a count for each.",
+  "keywords": [
+    "resources",
+    "affiliate",
+    "stack"
+  ],
+  "textdomain": "sage",
+  "attributes": {},
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/availability",
+  "title": "Availability line",
+  "category": "matthummel",
+  "icon": "yes",
+  "description": "One line that shows when the GitHub profile is marked available for hire. It prints the GitHub status when one is set.",
+  "keywords": [
+    "hire",
+    "available",
+    "status"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": "Available for hire"
+    }
+  },
+  "mhControls": {
+    "label": {
+      "label": "Text when GitHub has no status",
+      "help": "Nothing is shown while the GitHub profile is not marked hireable."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}
