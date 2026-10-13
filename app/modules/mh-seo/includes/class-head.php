@@ -100,24 +100,33 @@ class Head
             return $robots;
         }
 
-        return self::merge_robots($robots, ! empty($this->document()['noindex']));
+        $document = $this->document();
+        $advanced = is_array($document['robots_advanced'] ?? null) ? $document['robots_advanced'] : [];
+
+        return self::merge_robots($robots, ! empty($document['noindex']), $advanced);
     }
 
     /**
      * Merge document robots with directives already on the request.
      *
      * Nofollow wins, so a paired follow directive is dropped. max-image-preview,
-     * max-snippet, and max-video-preview stay.
+     * max-snippet, and max-video-preview stay, with a post's own limits when it has them.
      *
      * @param  array<string, bool|string>  $robots  Existing directives.
      * @param  bool  $noindex  Whether this document is noindex.
+     * @param  array<string, bool|string>  $advanced  Per-post robots choices. See Context.
      * @return array<string, bool|string>
      */
-    public static function merge_robots(array $robots, bool $noindex): array
+    public static function merge_robots(array $robots, bool $noindex, array $advanced = []): array
     {
-        $robots['max-image-preview'] = 'large';
-        $robots['max-snippet'] = '-1';
-        $robots['max-video-preview'] = '-1';
+        foreach (Document_Builder::robots_limits($advanced) as $name => $value) {
+            $robots[$name] = $value;
+        }
+        foreach (['nofollow', 'noarchive', 'nosnippet', 'noimageindex'] as $flag) {
+            if (! empty($advanced[$flag])) {
+                $robots[$flag] = true;
+            }
+        }
         if ($noindex) {
             $robots['noindex'] = true;
             unset($robots['index']);

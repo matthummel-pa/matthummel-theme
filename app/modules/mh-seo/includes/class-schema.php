@@ -48,6 +48,16 @@ class Schema
             $graph[] = $article_node;
         }
 
+        $faq_node = $this->faq_node($context, $this->fragment($url, 'faq'), $page);
+        if ($faq_node !== null) {
+            $graph[] = $faq_node;
+        }
+
+        $howto_node = $this->howto_node($context, $title, $this->fragment($url, 'howto'), $page);
+        if ($howto_node !== null) {
+            $graph[] = $howto_node;
+        }
+
         return [
             '@context' => 'https://schema.org',
             '@graph' => $graph,
@@ -220,6 +230,9 @@ class Schema
      * Pages (Home, About, Projects, Contact, legal) are not articles. They keep
      * their WebPage node and get no Article node.
      *
+     * A post's own schema type wins: a named type is used on any post or page,
+     * and "none" leaves the Article node out.
+     *
      * @param  array<string, mixed>  $context  Request context.
      * @param  string  $title  Title.
      * @param  string  $description  Description.
@@ -235,10 +248,20 @@ class Schema
             return null;
         }
         $post_type = (string) ($context['post_type'] ?? 'page');
-        if ($view === 'front' || $post_type === 'page') {
+        $chosen = (string) ($context['schema_type'] ?? '');
+        if ($chosen === 'none') {
+            return null;
+        }
+        if (! in_array($chosen, ['Article', 'BlogPosting', 'TechArticle', 'NewsArticle'], true)) {
+            $chosen = '';
+        }
+        if ($chosen === '' && ($view === 'front' || $post_type === 'page')) {
             return null;
         }
         $type = $post_type === 'post' ? 'BlogPosting' : 'Article';
+        if ($chosen !== '') {
+            $type = $chosen;
+        }
         $node = [
             '@type' => $type,
             '@id' => $id,
@@ -285,6 +308,136 @@ class Schema
         }
 
         return $node;
+    }
+
+    /**
+     * FAQPage built from the question headings on the page, when the post asks for it.
+     *
+     * @param  array<string, mixed>  $context  Request context.
+     * @param  string  $id  Node id.
+     * @param  string  $page  WebPage node id.
+     * @return array<string, mixed>|null
+     */
+    private function faq_node(array $context, string $id, string $page): ?array
+    {
+        if (empty($context['schema_faq']) || ! in_array((string) ($context['view'] ?? ''), ['singular', 'front'], true)) {
+            return null;
+        }
+        $questions = self::faq_items((string) ($context['content_html'] ?? ''));
+        if ($questions === []) {
+            return null;
+        }
+        $entities = [];
+        foreach ($questions as $item) {
+            $entities[] = [
+                '@type' => 'Question',
+                'name' => $item['question'],
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => $item['answer'],
+                ],
+            ];
+        }
+
+        return [
+            '@type' => 'FAQPage',
+            '@id' => $id,
+            'isPartOf' => ['@id' => $page],
+            'mainEntity' => $entities,
+        ];
+    }
+
+    /**
+     * HowTo built from the first numbered list on the page, when the post asks for it.
+     *
+     * @param  array<string, mixed>  $context  Request context.
+     * @param  string  $title  Title.
+     * @param  string  $id  Node id.
+     * @param  string  $page  WebPage node id.
+     * @return array<string, mixed>|null
+     */
+    private function howto_node(array $context, string $title, string $id, string $page): ?array
+    {
+        if (empty($context['schema_howto']) || ! in_array((string) ($context['view'] ?? ''), ['singular', 'front'], true)) {
+            return null;
+        }
+        $steps = self::howto_steps((string) ($context['content_html'] ?? ''));
+        if (count($steps) < 2) {
+            return null;
+        }
+        $list = [];
+        foreach ($steps as $index => $text) {
+            $list[] = [
+                '@type' => 'HowToStep',
+                'position' => $index + 1,
+                'text' => $text,
+            ];
+        }
+
+        return [
+            '@type' => 'HowTo',
+            '@id' => $id,
+            'name' => $title,
+            'isPartOf' => ['@id' => $page],
+            'step' => $list,
+        ];
+    }
+
+    /**
+     * Questions and answers visible on the page.
+     *
+     * A question is an H2, H3, or H4 that ends with a question mark. Its answer
+     * is the text up to the next heading. Code blocks are left out.
+     *
+     * @param  string  $html  Rendered post content.
+     * @return array<int, array{question: string, answer: string}>
+     */
+    public static function faq_items(string $html): array
+    {
+        $html = Text::prose_html($html);
+        if (! preg_match_all('#<h([2-4])\b[^>]*>(.*?)</h\1>(.*?)(?=<h[1-6]\b|\z)#is', $html, $matches, PREG_SET_ORDER)) {
+            return [];
+        }
+        $items = [];
+        foreach ($matches as $match) {
+            $question = Text::plain((string) $match[2]);
+            $answer = Text::plain((string) $match[3]);
+            if ($answer === '' || ! str_ends_with($question, '?')) {
+                continue;
+            }
+            $items[] = [
+                'question' => html_entity_decode($question, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'answer' => html_entity_decode($answer, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * The items of the first numbered list on the page.
+     *
+     * @param  string  $html  Rendered post content.
+     * @return array<int, string>
+     */
+    public static function howto_steps(string $html): array
+    {
+        $html = Text::prose_html($html);
+        if (! preg_match('#<ol\b[^>]*>(.*?)</ol>#is', $html, $list)) {
+            return [];
+        }
+        if (! preg_match_all('#<li\b[^>]*>(.*?)</li>#is', (string) $list[1], $items)) {
+            return [];
+        }
+        $steps = [];
+        foreach ($items[1] as $item) {
+            $text = html_entity_decode(Text::plain((string) $item), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($text !== '') {
+                $steps[] = $text;
+            }
+        }
+
+        return $steps;
     }
 
     /**

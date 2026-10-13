@@ -9,14 +9,14 @@ declare(strict_types=1);
 namespace MH_SEO;
 
 /**
- * WP-CLI commands for copying Rank Math meta and recalculating scores.
+ * WP-CLI commands for copying Rank Math and Yoast meta and recalculating scores.
  */
 class CLI
 {
     /**
-     * Copy Rank Math meta into MH SEO meta.
+     * Copy Rank Math and Yoast meta into MH SEO meta.
      *
-     * Existing MH SEO values are left alone. Rank Math values are not deleted.
+     * Existing MH SEO values are left alone. Rank Math and Yoast values are not deleted.
      *
      * ## OPTIONS
      *
@@ -47,12 +47,16 @@ class CLI
             $run = false;
         }
         global $wpdb;
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $source_keys = Migrator::source_keys();
+        $placeholders = implode(', ', array_fill(0, count($source_keys), '%s'));
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one read for a CLI run; the IN list is %s placeholders only.
         $ids = $wpdb->get_col(
-            "SELECT DISTINCT post_id FROM {$wpdb->postmeta}
-			WHERE meta_key IN ( 'rank_math_title', 'rank_math_description', 'rank_math_focus_keyword', 'rank_math_robots', 'rank_math_primary_category' )
-			AND meta_value != ''"
+            $wpdb->prepare(
+                "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key IN ( {$placeholders} ) AND meta_value != ''",
+                $source_keys
+            )
         );
+        // phpcs:enable
         $migrator = new Migrator;
         $site = (string) get_bloginfo('name');
         $rows = [];
@@ -63,15 +67,11 @@ class CLI
                 continue;
             }
             $source = [];
-            foreach (['rank_math_title', 'rank_math_description', 'rank_math_focus_keyword', 'rank_math_robots', 'rank_math_primary_category'] as $key) {
-                $value = get_post_meta($post_id, $key, true);
-                if (is_array($value)) {
-                    $value = implode(',', $value);
-                }
-                $source[$key] = is_scalar($value) ? (string) $value : '';
+            foreach ($source_keys as $key) {
+                $source[$key] = $this->flatten(get_post_meta($post_id, $key, true));
             }
             $existing = [];
-            foreach (['_mh_seo_title', '_mh_seo_description', '_mh_seo_focus_keyword', '_mh_seo_noindex', '_mh_seo_primary_term'] as $key) {
+            foreach (Migrator::destination_keys() as $key) {
                 $existing[$key] = (string) get_post_meta($post_id, $key, true);
             }
             $plan = $migrator->plan($source, $existing, get_the_title($post), $site);
@@ -145,6 +145,33 @@ class CLI
             \WP_CLI::log(sprintf('%d → %d', (int) $id, $value));
         }
         \WP_CLI::success(sprintf('Scored %d posts.', count($ids)));
+    }
+
+    /**
+     * A meta value as one string.
+     *
+     * A list becomes "a,b". A keyed array, such as Rank Math's advanced robots,
+     * becomes "name:value,name:value".
+     *
+     * @param  mixed  $value  Stored meta value.
+     */
+    private function flatten($value): string
+    {
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+        if (! is_array($value)) {
+            return '';
+        }
+        $parts = [];
+        foreach ($value as $key => $item) {
+            if (! is_scalar($item)) {
+                continue;
+            }
+            $parts[] = is_string($key) ? $key.':'.$item : (string) $item;
+        }
+
+        return implode(',', $parts);
     }
 
     /**

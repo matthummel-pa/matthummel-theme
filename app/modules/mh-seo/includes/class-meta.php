@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace MH_SEO;
 
 /**
- * Registers meta and a classic editor box for the same fields.
+ * Registers and sanitizes the SEO meta. Meta_Box prints the fields on the edit screen.
  */
 class Meta
 {
@@ -31,8 +31,62 @@ class Meta
             '_mh_seo_score' => 'integer',
             '_mh_seo_checks' => 'string',
             '_mh_seo_primary_term' => 'integer',
+            '_mh_seo_og_title' => 'string',
+            '_mh_seo_og_description' => 'string',
+            '_mh_seo_twitter_title' => 'string',
+            '_mh_seo_twitter_description' => 'string',
+            '_mh_seo_twitter_image' => 'integer',
+            '_mh_seo_twitter_card' => 'string',
+            '_mh_seo_nofollow' => 'string',
+            '_mh_seo_noarchive' => 'string',
+            '_mh_seo_nosnippet' => 'string',
+            '_mh_seo_noimageindex' => 'string',
+            '_mh_seo_max_snippet' => 'string',
+            '_mh_seo_max_image_preview' => 'string',
+            '_mh_seo_max_video_preview' => 'string',
+            '_mh_seo_keywords' => 'string',
+            '_mh_seo_breadcrumb_title' => 'string',
+            '_mh_seo_pillar' => 'string',
+            '_mh_seo_schema_type' => 'string',
+            '_mh_seo_schema_faq' => 'string',
+            '_mh_seo_schema_howto' => 'string',
         ];
     }
+
+    /**
+     * Meta keys stored as "1", "0", or an empty string when never saved.
+     *
+     * @return array<int, string>
+     */
+    public static function flag_keys(): array
+    {
+        return [
+            '_mh_seo_noindex',
+            '_mh_seo_sitemap_exclude',
+            '_mh_seo_nofollow',
+            '_mh_seo_noarchive',
+            '_mh_seo_nosnippet',
+            '_mh_seo_noimageindex',
+            '_mh_seo_pillar',
+            '_mh_seo_schema_faq',
+            '_mh_seo_schema_howto',
+        ];
+    }
+
+    /**
+     * Schema types a post can pick. An empty value keeps the post type's default.
+     *
+     * @return array<int, string>
+     */
+    public static function schema_types(): array
+    {
+        return ['', 'Article', 'BlogPosting', 'TechArticle', 'NewsArticle', 'none'];
+    }
+
+    /**
+     * The most secondary keywords kept for one post.
+     */
+    public const MAX_KEYWORDS = 5;
 
     /**
      * Register hooks.
@@ -40,8 +94,6 @@ class Meta
     public function hooks(): void
     {
         add_action('init', [$this, 'register']);
-        add_action('add_meta_boxes', [$this, 'box']);
-        add_action('save_post', [$this, 'save_box']);
     }
 
     /**
@@ -94,7 +146,7 @@ class Meta
     public function sanitize($value, string $meta_key = '', string $object_type = '', ...$extra)
     {
         unset($object_type, $extra);
-        if ($meta_key === '_mh_seo_noindex' || $meta_key === '_mh_seo_sitemap_exclude') {
+        if (in_array($meta_key, self::flag_keys(), true)) {
             if ($value === true || (string) $value === '1' || $value === 1) {
                 return '1';
             }
@@ -104,7 +156,7 @@ class Meta
 
             return '';
         }
-        if ($meta_key === '_mh_seo_og_image' || $meta_key === '_mh_seo_primary_term') {
+        if (in_array($meta_key, ['_mh_seo_og_image', '_mh_seo_twitter_image', '_mh_seo_primary_term'], true)) {
             return absint($value);
         }
         if ($meta_key === '_mh_seo_score') {
@@ -116,8 +168,61 @@ class Meta
         if ($meta_key === '_mh_seo_canonical') {
             return esc_url_raw((string) $value);
         }
+        if ($meta_key === '_mh_seo_twitter_card') {
+            return in_array((string) $value, ['summary', 'summary_large_image'], true) ? (string) $value : '';
+        }
+        if ($meta_key === '_mh_seo_max_image_preview') {
+            return in_array((string) $value, ['none', 'standard', 'large'], true) ? (string) $value : '';
+        }
+        if ($meta_key === '_mh_seo_max_snippet' || $meta_key === '_mh_seo_max_video_preview') {
+            return self::sanitize_limit($value);
+        }
+        if ($meta_key === '_mh_seo_schema_type') {
+            return in_array((string) $value, self::schema_types(), true) ? (string) $value : '';
+        }
+        if ($meta_key === '_mh_seo_keywords') {
+            return implode(', ', self::keyword_list((string) $value));
+        }
 
         return sanitize_text_field((string) $value);
+    }
+
+    /**
+     * A robots limit: an empty string for the default, or a whole number from -1 up.
+     *
+     * @param  mixed  $value  Raw value.
+     */
+    public static function sanitize_limit($value): string
+    {
+        $value = is_scalar($value) ? trim((string) $value) : '';
+        if ($value === '' || ! preg_match('/^-?\d+$/', $value)) {
+            return '';
+        }
+
+        return (string) max(-1, (int) $value);
+    }
+
+    /**
+     * Secondary keywords as a clean list.
+     *
+     * @param  string  $value  Comma-separated keywords.
+     * @return array<int, string>
+     */
+    public static function keyword_list(string $value): array
+    {
+        $clean = [];
+        foreach (explode(',', $value) as $keyword) {
+            $keyword = trim(sanitize_text_field($keyword));
+            if ($keyword === '' || in_array(strtolower($keyword), array_map('strtolower', $clean), true)) {
+                continue;
+            }
+            $clean[] = $keyword;
+            if (count($clean) >= self::MAX_KEYWORDS) {
+                break;
+            }
+        }
+
+        return $clean;
     }
 
     /**
@@ -190,88 +295,5 @@ class Meta
         }
 
         return (new Migrator)->first_keyword((string) get_post_meta($post_id, 'rank_math_focus_keyword', true));
-    }
-
-    /**
-     * Classic editor box. The block editor uses the sidebar instead.
-     */
-    public function box(): void
-    {
-        foreach (mh_seo_post_types() as $post_type) {
-            add_meta_box(
-                'mh-seo',
-                __('SEO', 'mh-seo'),
-                [$this, 'render_box'],
-                $post_type,
-                'normal',
-                'default'
-            );
-        }
-    }
-
-    /**
-     * Classic editor fields.
-     *
-     * @param  \WP_Post  $post  Post being edited.
-     */
-    public function render_box(\WP_Post $post): void
-    {
-        wp_nonce_field('mh_seo_save_meta', 'mh_seo_meta_nonce');
-        $title = (string) get_post_meta($post->ID, '_mh_seo_title', true);
-        $description = (string) get_post_meta($post->ID, '_mh_seo_description', true);
-        $keyword = (string) get_post_meta($post->ID, '_mh_seo_focus_keyword', true);
-        $canonical = (string) get_post_meta($post->ID, '_mh_seo_canonical', true);
-        $noindex = (string) get_post_meta($post->ID, '_mh_seo_noindex', true);
-        $image = (int) get_post_meta($post->ID, '_mh_seo_og_image', true);
-        echo '<p><label for="mh-seo-title"><strong>'.esc_html__('SEO title', 'mh-seo').'</strong></label><br />';
-        echo '<input class="widefat" type="text" id="mh-seo-title" name="mh_seo_title" value="'.esc_attr($title).'" />';
-        echo '<span class="description">'.esc_html__('Leave blank to use the title template. A title you type here is used exactly, with nothing added.', 'mh-seo').'</span></p>';
-        echo '<p><label for="mh-seo-description"><strong>'.esc_html__('Meta description', 'mh-seo').'</strong></label><br />';
-        echo '<textarea class="widefat" rows="3" id="mh-seo-description" name="mh_seo_description">'.esc_textarea($description).'</textarea></p>';
-        echo '<p><label for="mh-seo-keyword"><strong>'.esc_html__('Focus keyword', 'mh-seo').'</strong></label><br />';
-        echo '<input class="widefat" type="text" id="mh-seo-keyword" name="mh_seo_focus_keyword" value="'.esc_attr($keyword).'" /></p>';
-        echo '<p><label for="mh-seo-canonical"><strong>'.esc_html__('Canonical URL', 'mh-seo').'</strong></label><br />';
-        echo '<input class="widefat" type="url" id="mh-seo-canonical" name="mh_seo_canonical" value="'.esc_attr($canonical).'" /></p>';
-        echo '<p><label for="mh-seo-image"><strong>'.esc_html__('Social image ID', 'mh-seo').'</strong></label><br />';
-        echo '<input type="number" min="0" id="mh-seo-image" name="mh_seo_og_image" value="'.esc_attr((string) $image).'" /></p>';
-        $exclude = (string) get_post_meta($post->ID, '_mh_seo_sitemap_exclude', true);
-        echo '<p><label><input type="checkbox" name="mh_seo_noindex" value="1" '.checked('1', $noindex, false).' /> '.esc_html__('Hide from search engines', 'mh-seo').'</label></p>';
-        echo '<p><label><input type="checkbox" name="mh_seo_sitemap_exclude" value="1" '.checked('1', $exclude, false).' /> '.esc_html__('Leave this out of the sitemap', 'mh-seo').'</label></p>';
-        echo '<p class="description">'.esc_html__('Hiding a page from search engines also leaves it out of the sitemap. The sitemap checkbox is for a page that can stay indexed but should not be listed.', 'mh-seo').'</p>';
-    }
-
-    /**
-     * Save the classic editor box.
-     *
-     * The block editor does not send this nonce, so it cannot wipe the REST meta.
-     *
-     * @param  int  $post_id  Post id.
-     */
-    public function save_box(int $post_id): void
-    {
-        if (! isset($_POST['mh_seo_meta_nonce']) || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['mh_seo_meta_nonce'])), 'mh_seo_save_meta')) {
-            return;
-        }
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-        if (! current_user_can('edit_post', $post_id)) {
-            return;
-        }
-        $fields = [
-            'mh_seo_title' => '_mh_seo_title',
-            'mh_seo_description' => '_mh_seo_description',
-            'mh_seo_focus_keyword' => '_mh_seo_focus_keyword',
-            'mh_seo_canonical' => '_mh_seo_canonical',
-            'mh_seo_og_image' => '_mh_seo_og_image',
-        ];
-        foreach ($fields as $posted => $key) {
-            $raw = isset($_POST[$posted]) ? wp_unslash($_POST[$posted]) : '';
-            update_post_meta($post_id, $key, $this->sanitize($raw, $key, 'post'));
-        }
-        $noindex = isset($_POST['mh_seo_noindex']) ? '1' : '0';
-        update_post_meta($post_id, '_mh_seo_noindex', $noindex);
-        $exclude = isset($_POST['mh_seo_sitemap_exclude']) ? '1' : '0';
-        update_post_meta($post_id, '_mh_seo_sitemap_exclude', $exclude);
     }
 }

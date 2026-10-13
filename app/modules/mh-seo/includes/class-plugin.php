@@ -37,6 +37,7 @@ final class Plugin
     {
         add_action('init', [$this, 'load_textdomain']);
         (new Meta)->hooks();
+        (new Meta_Box)->hooks();
         (new Head)->hooks();
         (new Sitemap)->hooks();
         (new Redirects)->hooks();

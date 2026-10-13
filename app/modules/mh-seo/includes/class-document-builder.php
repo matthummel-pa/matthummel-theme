@@ -31,12 +31,14 @@ class Document_Builder
         $noindex = $this->is_noindex($context, $settings);
         $canonical = $noindex ? '' : $this->canonical($context);
         $schema = (new Schema)->graph($context, $settings, $title, $description);
+        $advanced = is_array($context['robots_advanced'] ?? null) ? $context['robots_advanced'] : [];
 
         return [
             'title' => $title,
             'description' => $description,
             'noindex' => $noindex,
-            'robots' => $this->robots($noindex),
+            'robots' => $this->robots($noindex, $advanced),
+            'robots_advanced' => $advanced,
             'canonical' => $canonical,
             'emit_canonical' => ! $noindex && empty($context['core_prints_canonical']),
             'og' => $this->open_graph($context, $title, $description, $canonical),
@@ -221,12 +223,45 @@ class Document_Builder
      * Robots content value.
      *
      * @param  bool  $noindex  Whether the page is noindex.
+     * @param  array<string, bool|string>  $advanced  Per-post robots choices. See Context.
      */
-    public function robots(bool $noindex): string
+    public function robots(bool $noindex, array $advanced = []): string
     {
-        $index = $noindex ? 'noindex' : 'index';
+        $parts = [$noindex ? 'noindex' : 'index'];
+        $parts[] = ! empty($advanced['nofollow']) ? 'nofollow' : 'follow';
+        foreach (['noarchive', 'nosnippet', 'noimageindex'] as $flag) {
+            if (! empty($advanced[$flag])) {
+                $parts[] = $flag;
+            }
+        }
+        foreach (self::robots_limits($advanced) as $name => $value) {
+            $parts[] = $name.':'.$value;
+        }
 
-        return $index.', follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+        return implode(', ', $parts);
+    }
+
+    /**
+     * The three preview limits, with the site defaults filled in.
+     *
+     * @param  array<string, bool|string>  $advanced  Per-post robots choices.
+     * @return array<string, string>
+     */
+    public static function robots_limits(array $advanced): array
+    {
+        $limits = [
+            'max-image-preview' => 'large',
+            'max-snippet' => '-1',
+            'max-video-preview' => '-1',
+        ];
+        foreach ($limits as $name => $default) {
+            $value = trim((string) ($advanced[$name] ?? ''));
+            if ($value !== '') {
+                $limits[$name] = $value;
+            }
+        }
+
+        return $limits;
     }
 
     /**
@@ -327,6 +362,14 @@ class Document_Builder
             $type = 'profile';
         }
         $url = $canonical !== '' ? $canonical : (string) ($context['url'] ?? '');
+        $own_title = trim((string) ($context['og_title'] ?? ''));
+        if ($own_title !== '') {
+            $title = $own_title;
+        }
+        $own_description = trim((string) ($context['og_description'] ?? ''));
+        if ($own_description !== '') {
+            $description = $own_description;
+        }
         $tags = [
             'og:locale' => (string) ($context['locale'] ?? 'en_US'),
             'og:type' => $type,
@@ -372,6 +415,8 @@ class Document_Builder
     /**
      * Twitter card tags. Site and creator are included only when a handle is saved.
      *
+     * Each field falls back from the X value to the Open Graph value to the search value.
+     *
      * @param  array<string, mixed>  $context  Request context.
      * @param  array<string, mixed>  $settings  Plugin settings.
      * @param  string  $title  Resolved title.
@@ -381,7 +426,29 @@ class Document_Builder
     private function twitter(array $context, array $settings, string $title, string $description): array
     {
         $image = is_array($context['image'] ?? null) ? $context['image'] : [];
+        $own_image = is_array($context['twitter_image'] ?? null) ? $context['twitter_image'] : [];
+        if (! empty($own_image['url'])) {
+            $image = $own_image;
+        }
+        foreach (['twitter_title', 'og_title'] as $key) {
+            $own = trim((string) ($context[$key] ?? ''));
+            if ($own !== '') {
+                $title = $own;
+                break;
+            }
+        }
+        foreach (['twitter_description', 'og_description'] as $key) {
+            $own = trim((string) ($context[$key] ?? ''));
+            if ($own !== '') {
+                $description = $own;
+                break;
+            }
+        }
         $card = ! empty($image['url']) ? 'summary_large_image' : 'summary';
+        $own_card = (string) ($context['twitter_card'] ?? '');
+        if (in_array($own_card, ['summary', 'summary_large_image'], true)) {
+            $card = $own_card;
+        }
         $tags = [
             'twitter:card' => $card,
             'twitter:title' => $title,

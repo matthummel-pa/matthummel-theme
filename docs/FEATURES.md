@@ -12,6 +12,15 @@ What the 3.x Sage theme does, and where it lives.
 - Converting a page: build markup with the `mh_blocks_*` helpers from the page's saved fields, call `mh_save_page_blocks()`, leave the `mh_f_*` meta in place as the backup.
 - Retiring a template: once a converted page is confirmed on live, move its old `template-*.blade.php` to `resources/archive/views/` (outside `resources/views/`, so WordPress stops listing it as a page template) in the next PR. Switch the page to the Block page template in the same conversion, or it loses its template when the file moves. The archive folder is deleted when every page is done.
 
+## Editor’s notes (3.7.7 SEO box)
+
+- The SEO box is `app/modules/mh-seo/includes/class-meta-box.php` with `assets/meta-box.js` and `assets/meta-box.css`. They are plain files with no build step. The SEO sidebar is still the compiled `build/index.js`; its source is in the MH SEO plugin repository, not here.
+- A new per-post field needs four things: a key in `Meta::keys()` (and `Meta::flag_keys()` for a checkbox), a branch in `Meta::sanitize()` when it is not plain text, a name in `Meta_Box::text_fields()`, and a field in one of the `render_*` methods. The script picks it up from the config, so the sidebar sync needs no change.
+- Field ids start with `mh-seo-field-`. WordPress 7.1 gives the box heading the id `mh-seo-title`.
+- Robots choices travel as `robots_advanced` from `Context` through `Document_Builder::build()` to `Head::merge_robots()`. Core prints the tag.
+- FAQ and HowTo schema read the rendered content (`Schema::faq_items()`, `Schema::howto_steps()`), so they only describe what is visible on the page. They are off unless ticked on a post.
+- These changes are in the bundled module only. Copy them to the standalone MH SEO plugin before its next release, or the plugin copy will win and hide them.
+
 ## Editor’s notes (3.6.62 polish)
 
 - Small type was raised in place across the stylesheets. Do not add sizes under `.8125rem`; card copy is `1rem`.
