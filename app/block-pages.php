@@ -28,6 +28,7 @@ function mh_block_page_builders(): array
         'front-page.blade.php' => __NAMESPACE__.'\\mh_home_blocks_markup',
         'template-about.blade.php' => __NAMESPACE__.'\\mh_about_blocks_markup',
         'template-projects.blade.php' => __NAMESPACE__.'\\mh_projects_blocks_markup',
+        'index.blade.php' => __NAMESPACE__.'\\mh_journal_blocks_markup',
     ];
 }
 
@@ -561,6 +562,72 @@ function mh_projects_blocks_markup(int $id): string
             ['text' => $f('work_hero_cta_primary'), 'url' => $contact],
             ['text' => $f('work_hero_cta_secondary'), 'url' => $hire, 'style' => 'ghost'],
         ])
+    );
+
+    return $out;
+}
+
+/**
+ * Journal (the posts page): hero, post list, RSS, topics, closing band.
+ */
+function mh_journal_blocks_markup(int $id): string
+{
+    $f = static fn (string $key, string $default): string => field($key, $default, $id);
+    $text = static fn (string $value, string $style = ''): string => mh_blocks_paragraph(esc_html($value), $style);
+
+    $out = mh_blocks_wrap(
+        'matthummel/hero',
+        ['eyebrow' => $f('write_kicker', __('Journal', 'sage'))],
+        mh_blocks_heading($f('write_h1', __('WordPress development notes.', 'sage')), 1)
+        .$text($f('write_lede', __('Short, practical WordPress development posts on PHP, JavaScript, and the tools I use. Most come with code you can paste into your own project.', 'sage')), 'lead')
+        .mh_blocks_buttons([
+            ['text' => __('Browse posts', 'sage'), 'url' => '#journal-posts'],
+            ['text' => __('Subscribe by RSS', 'sage'), 'url' => home_url('/feed/'), 'style' => 'arrow'],
+        ])
+    );
+
+    $out .= mh_blocks_wrap('matthummel/page-nav', [], null);
+
+    // Posts: the list fills itself in from the Journal's own query.
+    $out .= mh_blocks_section(
+        ['anchor' => 'journal-posts', 'navLabel' => __('Posts', 'sage')],
+        mh_blocks_heading(__('Browse WordPress development posts', 'sage'))
+        .$text(__('Search as you type, pick a topic, or switch between grid and list. Most posts include code you can adapt.', 'sage'), 'lead')
+        .mh_blocks_data('journal-list', ['searchPlaceholder' => $f('write_search_ph', __('Search posts', 'sage'))])
+    );
+
+    // RSS and profiles.
+    $out .= mh_blocks_section(
+        ['anchor' => 'subscribe'],
+        mh_blocks_heading($f('write_subscribe_h2', __('Follow with RSS', 'sage')))
+        .$text($f('write_subscribe_lede', __('There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.', 'sage')))
+        .mh_blocks_data('rss-feed')
+        .$text($f('write_follow', __('More of my writing', 'sage')))
+        .mh_blocks_data('social-links')
+    );
+
+    // Topics.
+    $out .= mh_blocks_section(
+        ['anchor' => 'topics', 'navLabel' => __('Topics', 'sage'), 'tone' => 'alt'],
+        mh_blocks_heading(__('What I write about', 'sage'))
+        .$text(__('Mostly WordPress — themes, plugins, and the practical notes that help a build ship.', 'sage'))
+        .mh_blocks_cards([
+            ['icon' => 'wordpress', 'title' => __('WordPress', 'sage'), 'body' => esc_html__('Custom themes, plugins, admin UI, and handoffs shops can keep using.', 'sage')],
+            ['icon' => 'php', 'title' => __('PHP', 'sage'), 'body' => esc_html__('Plugins, hooks, and clean code another developer can pick up without a scavenger hunt.', 'sage')],
+            ['icon' => 'javascript', 'title' => __('JavaScript', 'sage'), 'body' => esc_html__('Front-end behavior, forms, and small modules from real WordPress projects.', 'sage')],
+            ['icon' => 'tailwind', 'title' => __('CSS & layout', 'sage'), 'body' => esc_html__('Readable layouts, fluid type, and styles that hold up on phones and wide screens.', 'sage')],
+            ['icon' => 'vite', 'title' => __('Build & deploy', 'sage'), 'body' => esc_html__('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage')],
+            ['icon' => 'cursor-ai', 'title' => __('AI-assisted work', 'sage'), 'body' => esc_html__('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage')],
+        ])
+    );
+
+    // Closing band.
+    $out .= mh_blocks_wrap(
+        'matthummel/cta-band',
+        ['eyebrow' => __('Get in touch', 'sage'), 'note' => mh_reply_sla('note')],
+        mh_blocks_heading(__('Questions about a post?', 'sage'))
+        .$text(__('A note about a snippet, a WordPress question, or a role is welcome. I usually reply within one business day (ET).', 'sage'))
+        .mh_blocks_buttons([['text' => __('Say hello', 'sage'), 'url' => home_url('/contact/')]])
     );
 
     return $out;

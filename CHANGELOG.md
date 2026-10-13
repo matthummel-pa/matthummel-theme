@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.7.4 — Journal intro and list are blocks
+
+- The Journal (`/blog/`, the posts page) keeps its copy as blocks on the posts page: hero, Browse posts, Follow with RSS, What I write about, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.
+- New data block: **Journal posts**. It prints the toolbar, topic pills, post list and page links from the Journal's own query, the same markup `writing-tools.js` already drives. In the editor it shows a short note instead of posts. The search hint and the no-posts text are settings in its sidebar.
+- New data block: **RSS feed address** (the feed URL, Copy RSS, Open feed).
+- Section ids are the same (`#journal-posts`, `#topics`); the RSS section is `#subscribe`.
+- "What I write about" uses the Card grid, and the RSS copy is a plain section instead of a boxed panel.
+- The Blog structured data takes its name and description from the hero's heading and intro.
+- Topic, tag, date and search pages are unchanged. They still read their labels (kicker, search hint, sidebar headings) from the posts page's saved fields.
+- `template-blog.blade.php` (unused) and the old field version of `index.blade.php` are in `resources/archive/views/` (to delete).
+
 ## 3.7.3 — Projects is a block page
 
 - Projects' copy is now blocks: hero, the project browser, Inside each one, How to use this page, Questions, and the closing band. The first load after the update writes the saved field copy into blocks once. The old `mh_f_*` values stay in the database.

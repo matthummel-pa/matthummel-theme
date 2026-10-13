@@ -6422,3 +6422,11 @@ html.mh-dark ul.is-style-checklist > li::before { border-color: var(--lime-300);
 
 /* Projects "inside each one" note: the pale panel sat behind light text in dark mode. */
 html.mh-dark .work-context__note { background: var(--color-surface); border-color: rgba(167, 139, 250, .22); }
+
+/* 3.7.4 · Journal: the post list inside a Section, and the feed row under its heading. */
+.mh-journal-list.write-hub { padding-block: 0; padding-inline: 0; }
+.mh-rss-feed { max-width: 40rem; }
+#journal-posts, #subscribe, #topics { scroll-margin-top: 5.5rem; }
+@media (max-width: 900px) {
+  #journal-posts, #subscribe, #topics { scroll-margin-top: 1rem; }
+}
