@@ -12,6 +12,12 @@
 - Post sidebar: Follow along and the availability card use a styled paragraph instead of an H2. Follow along mentions Get updates.
 - Headings without trailing periods on Accessibility, Privacy, Terms, Changelog, Thank you, Start, Support, and Get updates. Start's hiring band points to About.
 - US spelling on Accessibility, Terms, and Changelog (color, license, center).
+- Core sitemap (wp-sitemap.xml) leaves out noindexed and excluded posts, tag archives, and author archives, to match the robots rules.
+- Author archives redirect to About. They were noindex and exposed the admin username in /author/admin/.
+- Category and tag archives also leave out noindexed posts.
+- Project cards use H3 (they always sit under a section H2). CSS selectors cover both levels.
+- Project catalog: SEO titles use a colon instead of an em dash, the Cobble & Candle title fits in 60 characters, and em dashes in project copy are now periods, commas, or colons.
+- 404 heading has no trailing period.
 
 ## 3.7.7 — SEO box on the edit screen
 

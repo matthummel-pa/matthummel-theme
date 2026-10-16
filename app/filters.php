@@ -756,13 +756,13 @@ function mh_exclude_noindex_meta_query(): array
 }
 
 /**
- * Keep noindexed posts out of the Journal list and site search. Their URLs still work.
+ * Keep noindexed posts out of the Journal list, category and tag lists, and site search. Their URLs still work.
  */
 add_action('pre_get_posts', function (\WP_Query $query): void {
     if (is_admin() || ! $query->is_main_query()) {
         return;
     }
-    if (! $query->is_home() && ! $query->is_search()) {
+    if (! $query->is_home() && ! $query->is_search() && ! $query->is_category() && ! $query->is_tag()) {
         return;
     }
     $meta = $query->get('meta_query');
@@ -770,3 +770,44 @@ add_action('pre_get_posts', function (\WP_Query $query): void {
     $meta[] = mh_exclude_noindex_meta_query();
     $query->set('meta_query', $meta);
 });
+
+/**
+ * Core sitemap (wp-sitemap.xml) is the live one, so make it follow MH SEO's robots rules:
+ * no posts marked noindex or excluded, and no tag or author lists (both are noindex).
+ */
+add_filter('wp_sitemaps_posts_query_args', function (array $args, string $postType): array {
+    unset($postType);
+    $meta = isset($args['meta_query']) && is_array($args['meta_query']) ? $args['meta_query'] : [];
+    $meta[] = mh_exclude_noindex_meta_query();
+    $meta[] = [
+        'relation' => 'OR',
+        ['key' => '_mh_seo_sitemap_exclude', 'compare' => 'NOT EXISTS'],
+        ['key' => '_mh_seo_sitemap_exclude', 'value' => '1', 'compare' => '!='],
+    ];
+    $args['meta_query'] = $meta;
+
+    return $args;
+}, 10, 2);
+
+add_filter('wp_sitemaps_taxonomies', function (array $taxonomies): array {
+    unset($taxonomies['post_tag']);
+
+    return $taxonomies;
+});
+
+add_filter('wp_sitemaps_add_provider', function ($provider, string $name) {
+    return $name === 'users' ? false : $provider;
+}, 10, 2);
+
+/**
+ * Author archives are noindex and show a username in the URL (/author/admin/).
+ * There is one author, so send them to About.
+ */
+add_action('template_redirect', function (): void {
+    if (! is_author()) {
+        return;
+    }
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    wp_safe_redirect($aboutId > 0 ? (string) get_permalink($aboutId) : home_url('/about/'), 301);
+    exit;
+}, 4);
