@@ -101,7 +101,7 @@
 
       {{-- Step 1: You --}}
       <fieldset class="discovery-step is-active" data-discovery-step="1" aria-labelledby="df-step1-legend">
-        <legend id="df-step1-legend" class="discovery-step__legend">
+        <legend id="df-step1-legend" class="discovery-step__legend" tabindex="-1">
           <span class="discovery-step__eyebrow">Step 1 of 4</span>
           About you
         </legend>
@@ -137,7 +137,7 @@
 
       {{-- Step 2: Project --}}
       <fieldset class="discovery-step" data-discovery-step="2" aria-labelledby="df-step2-legend">
-        <legend id="df-step2-legend" class="discovery-step__legend">
+        <legend id="df-step2-legend" class="discovery-step__legend" tabindex="-1">
           <span class="discovery-step__eyebrow">Step 2 of 4</span>
           The project
         </legend>
@@ -173,7 +173,7 @@
 
       {{-- Step 3: Goals --}}
       <fieldset class="discovery-step" data-discovery-step="3" aria-labelledby="df-step3-legend">
-        <legend id="df-step3-legend" class="discovery-step__legend">
+        <legend id="df-step3-legend" class="discovery-step__legend" tabindex="-1">
           <span class="discovery-step__eyebrow">Step 3 of 4</span>
           Goals and constraints
         </legend>
@@ -213,7 +213,7 @@
 
       {{-- Step 4: Send --}}
       <fieldset class="discovery-step" data-discovery-step="4" aria-labelledby="df-step4-legend">
-        <legend id="df-step4-legend" class="discovery-step__legend">
+        <legend id="df-step4-legend" class="discovery-step__legend" tabindex="-1">
           <span class="discovery-step__eyebrow">Step 4 of 4</span>
           Anything else?
         </legend>

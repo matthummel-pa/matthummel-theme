@@ -18,6 +18,7 @@
 declare(strict_types=1);
 use MH_SEO\Plugin;
 use MH_SEO\Redirects;
+use MH_SEO\Settings;
 use MH_SEO\Sitemap;
 
 if (! defined('ABSPATH')) {
@@ -66,6 +67,7 @@ require_once MH_SEO_PATH.'includes/class-cli.php';
 add_action(
     'init',
     static function () {
+        Settings::ensure_indexnow_key();
         if (get_option('mh_seo_bundled_version') === MH_SEO_VERSION) {
             return;
         }
