@@ -96,7 +96,17 @@ class Settings
         if (! is_array($saved)) {
             $saved = [];
         }
-        if (self::sanitize_key((string) ($saved['indexnow_key'] ?? ''), '') !== '') {
+        $raw = (string) ($saved['indexnow_key'] ?? '');
+        $sanitized = self::sanitize_key($raw, '');
+        if ($sanitized !== '') {
+            // The stored value is valid but may carry stray characters sanitize_key()
+            // stripped (e.g. an older/manually-edited key) — persist the clean form so
+            // get()/serve_key()/ping() (which read the option as-is) stay in sync.
+            if ($raw !== $sanitized) {
+                $saved['indexnow_key'] = $sanitized;
+                update_option(self::OPTION, $saved);
+            }
+
             return;
         }
         $saved['indexnow_key'] = wp_generate_password(32, false, false);
