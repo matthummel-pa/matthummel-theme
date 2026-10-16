@@ -33,8 +33,7 @@
 ^\s*post_class\s*\(
 # Core archive title/description: built from admin-controlled term/author names and kses'd term descriptions, same trust level as the_title() (resources/views/archive.blade.php).
 ^\s*get_the_archive_(title|description)\s*\(\s*\)\s*$
-# Comments composer (app/View/Composers/Comments.php): $title is a translated sprintf of the comment count + post title; $responses is wp_list_comments() rendered through the fully-escaped App\mh_comment_list_item callback (app/comments.php); $previous/$next are core get_previous_comments_link()/get_next_comments_link() output (resources/views/partials/comments.blade.php).
-^\s*\$title\s*$
+# Comments composer (app/View/Composers/Comments.php): $title is now escaped Blade output ({{ }}), not allowlisted here — it wraps mh_post_title(), which html_entity_decode()s the post title and could otherwise re-introduce markup through {!! !!}. $responses is wp_list_comments() rendered through the fully-escaped App\mh_comment_list_item callback (app/comments.php); $previous/$next are core get_previous_comments_link()/get_next_comments_link() output (resources/views/partials/comments.blade.php).
 ^\s*\$responses\s*$
 ^\s*\$previous\s*$
 ^\s*\$next\s*$

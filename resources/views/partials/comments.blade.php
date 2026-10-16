@@ -6,7 +6,7 @@
     <header class="comments-head">
       <h2 class="comments-title" id="comments-title">
         @if ($responses())
-          {!! $title !!}
+          {{ $title }}
         @elseif ($isProject)
           {{ __('Visitor notes', 'sage') }}
         @else

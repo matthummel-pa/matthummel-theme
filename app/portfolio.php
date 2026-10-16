@@ -1660,6 +1660,28 @@ function mh_studio_project_image_url(array $project): string
     return '';
 }
 
+/**
+ * Sanitize a `_mh_project_image` value on save.
+ *
+ * The field holds either a full http(s) URL or a theme-relative path such as
+ * `products/acreline/featured.webp` (see mh_studio_project_image_url() above,
+ * which resolves the relative form against resources/images/*). esc_url_raw()
+ * is only safe for the URL case: on a schemeless relative path it prepends
+ * `http://`, turning `products/...` into `http://products/...` and breaking
+ * the lookup. Sanitize each form the way it is actually used.
+ */
+function mh_sanitize_project_image_value(string $raw): string
+{
+    $raw = trim($raw);
+    if ($raw === '') {
+        return '';
+    }
+
+    return preg_match('#^https?://#i', $raw) === 1
+        ? esc_url_raw($raw)
+        : sanitize_text_field($raw);
+}
+
 function mh_studio_project_categories(): array
 {
     if (mh_project_cpt_has_posts()) {
@@ -2512,7 +2534,7 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
-    update_post_meta($post_id, '_mh_project_image', esc_url_raw(wp_unslash($_POST['mh_project_image'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', mh_sanitize_project_image_value(wp_unslash($_POST['mh_project_image'] ?? '')));
 
     for ($i = 1; $i <= 3; $i++) {
         update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
@@ -3613,7 +3635,9 @@ function mh_journal_is_oldest(): bool
 
 function mh_journal_sort_url(string $which): string
 {
-    $url = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
+    // esc_url_raw(), not sanitize_text_field(): the latter strips %XX octets, which would
+    // corrupt an encoded query value (e.g. a search term) before add_query_arg() runs.
+    $url = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
     if ($which === 'oldest') {
         return esc_url(add_query_arg('order', 'asc', $url));
     }
