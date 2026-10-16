@@ -311,7 +311,7 @@ body {
   box-shadow: var(--studio-shadow);
 }
 
-.work-card--featured h2 a:hover,
+.work-card--featured :is(h2, h3) a:hover,
 .work-card--featured h3 a:hover {
   color: var(--blue-200);
 }
@@ -3280,7 +3280,7 @@ html.mh-dark .single .tocguide__link {
 .work-grid--roomy .work-body {
   padding: 1.25rem 1.35rem 1.4rem;
 }
-.work-grid--roomy .work-card h2,
+.work-grid--roomy .work-card :is(h2, h3),
 .work-grid--roomy .work-card h3 {
   font-size: clamp(1.2rem, 1.7vw, 1.45rem);
   letter-spacing: -.04em;
@@ -5037,7 +5037,7 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
 
 /* ── Card titles are links with an animated gradient underline; nav hover gets a gradient ── */
 @keyframes mh-underline-flow { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
@@ -5060,25 +5060,25 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
   -webkit-background-clip: text, padding-box;
   transition: background-size .35s cubic-bezier(.2, .7, .2, 1);
 }
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
 .h-project-card__title a,
 .resources-card__name a { background-size: 100% 100%, 0% 3px; }
-.work-card h2 a:hover,
+.work-card :is(h2, h3) a:hover,
 .work-body h2 a:hover,
 .post-card-title a:hover,
 .h-journal-item__title a:hover,
 .h-project-card__title a:hover,
 .resources-card__name a:hover,
-.work-card h2 a:focus-visible,
+.work-card :is(h2, h3) a:focus-visible,
 .work-body h2 a:focus-visible,
 .post-card-title a:focus-visible,
 .h-journal-item__title a:focus-visible,
 .h-project-card__title a:focus-visible,
 .resources-card__name a:focus-visible,
-.work-card h2 a:active,
+.work-card :is(h2, h3) a:active,
 .post-card-title a:active,
 .h-journal-item__title a:active,
 .work-card:hover h2 a,
@@ -5091,7 +5091,7 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
   text-decoration: none;
   outline-offset: 4px;
 }
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
@@ -5127,7 +5127,7 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"] {
 .site-header .header-nav-list .current-menu-item > a:hover,
 .site-header .header-nav-list a[aria-current="page"]:hover { background: linear-gradient(90deg, var(--blue-500) 0%, var(--violet-400) 100%); }
 @media (prefers-reduced-motion: reduce) {
-  .work-card h2 a, .post-card-title a, .h-journal-item__title a, .h-project-card__title a, .resources-card__name a { animation: none !important; transition: none; }
+  .work-card :is(h2, h3) a, .post-card-title a, .h-journal-item__title a, .h-project-card__title a, .resources-card__name a { animation: none !important; transition: none; }
 }
 
 /* ── Site title: bold caps with the brand gradient ─────────────────────── */
@@ -5304,13 +5304,13 @@ html:not(.mh-dark) .soc-list--labeled .soc-link { width: auto; padding: 0 1.05re
 .soc-list--labeled .soc-link__label { color: inherit; }
 
 /* ── Title underline as a pseudo-element (the two-layer background got clipped to the glyphs) ── */
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
 .h-project-card__title a,
 .resources-card__name a,
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
@@ -5328,13 +5328,13 @@ html:not(.mh-dark) .resources-card__name a {
   animation: none;
   transition: none;
 }
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
 html:not(.mh-dark) .h-project-card__title a,
 html:not(.mh-dark) .resources-card__name a { background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); }
-.work-card h2 a::after,
+.work-card :is(h2, h3) a::after,
 .work-body h2 a::after,
 .post-card-title a::after,
 .h-journal-item__title a::after,
@@ -5351,23 +5351,23 @@ html:not(.mh-dark) .resources-card__name a { background-image: linear-gradient(9
   background-size: 200% 100%;
   transition: width .35s cubic-bezier(.2, .7, .2, 1);
 }
-html:not(.mh-dark) .work-card h2 a::after,
+html:not(.mh-dark) .work-card :is(h2, h3) a::after,
 html:not(.mh-dark) .post-card-title a::after,
 html:not(.mh-dark) .h-journal-item__title a::after,
 html:not(.mh-dark) .h-project-card__title a::after,
 html:not(.mh-dark) .resources-card__name a::after { background: linear-gradient(90deg, var(--blue-600), var(--violet-500), var(--lime-500), var(--blue-600)); background-size: 200% 100%; }
-.work-card h2 a:hover::after,
+.work-card :is(h2, h3) a:hover::after,
 .work-body h2 a:hover::after,
 .post-card-title a:hover::after,
 .h-journal-item__title a:hover::after,
 .h-project-card__title a:hover::after,
 .resources-card__name a:hover::after,
-.work-card h2 a:focus-visible::after,
+.work-card :is(h2, h3) a:focus-visible::after,
 .post-card-title a:focus-visible::after,
 .h-journal-item__title a:focus-visible::after,
 .h-project-card__title a:focus-visible::after,
 .resources-card__name a:focus-visible::after,
-.work-card h2 a:active::after,
+.work-card :is(h2, h3) a:active::after,
 .post-card-title a:active::after,
 .work-card:hover h2 a::after,
 .post-card:hover .post-card-title a::after,
@@ -5377,11 +5377,11 @@ html:not(.mh-dark) .resources-card__name a::after { background: linear-gradient(
 .work-card:hover h2 a,
 .post-card:hover .post-card-title a,
 .h-journal-item:hover .h-journal-item__title a,
-.work-card h2 a:hover,
+.work-card :is(h2, h3) a:hover,
 .post-card-title a:hover,
 .h-journal-item__title a:hover { background-image: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after { animation: none !important; transition: none; }
+  .work-card :is(h2, h3) a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after { animation: none !important; transition: none; }
 }
 
 /* ── Header height is intrinsic; --header-h is only read by body padding, heroes, and the page nav ── */

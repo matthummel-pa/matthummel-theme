@@ -49,8 +49,8 @@
 
   {{-- Newsletter / RSS --}}
   <div class="side-card side-subscribe">
-    <h2 class="side-card-title">Follow along</h2>
-    <p class="side-subscribe__body">New posts in your RSS reader. No email list, no ads.</p>
+    <p class="side-card-title">Follow along</p>
+    <p class="side-subscribe__body">New posts in your RSS reader, or by email from <a href="{{ esc_url(home_url('/get-updates/')) }}">Get updates</a>. No ads.</p>
     <a class="side-subscribe__btn" href="{{ esc_url(home_url('/feed/')) }}" rel="alternate" type="application/rss+xml">
       {!! \App\mh_svg_icon('rss', 16) !!} RSS feed
     </a>
@@ -89,10 +89,10 @@
   {{-- Hire me CTA (GitHub hireable) --}}
   @if (\App\mh_is_hireable($gh))
   <div class="side-card side-hire">
-    <h2 class="side-card-title">
+    <p class="side-card-title">
       @include('partials.avail-mark', ['gh' => $gh])
       {{ \App\mh_availability_label($gh, __('Open for work', 'sage')) }}
-    </h2>
+    </p>
     <p class="side-hire__body">WordPress sites, plugins, and web apps. Full-time, contract, or freelance.</p>
     <a class="btn" href="{{ home_url('/contact/') }}" style="width:100%;justify-content:center">
       {!! \App\mh_svg_icon('mail', 15) !!} Say hello

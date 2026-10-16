@@ -12,8 +12,8 @@
     ['Skip navigation link',       'The first focusable element on every page is a "Skip to main content" link. Keyboard users and screen reader users can bypass the navigation and jump straight to the page content.'],
     ['Semantic HTML landmarks',    'Every page uses correct landmark elements — <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;aside&gt;</code>, and <code>&lt;section&gt;</code> — so screen readers can navigate by landmark.'],
     ['Keyboard navigation',        'All interactive elements are reachable via keyboard alone. The mobile menu includes a focus trap. The <kbd>Escape</kbd> key closes overlays and menus.'],
-    ['Visible focus indicators',   'Every interactive element shows a 2px accent-coloured focus ring when reached by keyboard. Focus indicators are not suppressed for mouse users via <code>:focus-visible</code>.'],
-    ['Colour contrast',            'Text and UI components meet WCAG AA — at least 4.5:1 for body text and 3:1 for large text. Colour is never the only means of conveying information.'],
+    ['Visible focus indicators',   'Every interactive element shows a 2px accent-colored focus ring when reached by keyboard. Focus indicators are not suppressed for mouse users via <code>:focus-visible</code>.'],
+    ['Color contrast',             'Text and UI components meet WCAG AA — at least 4.5:1 for body text and 3:1 for large text. Color is never the only means of conveying information.'],
     ['Image alternative text',     'Meaningful images carry descriptive <code>alt</code> attributes. Decorative images use <code>alt=""</code> and <code>aria-hidden="true"</code> so screen readers skip them.'],
     ['Accessible forms',           'Every field has a visible <code>&lt;label&gt;</code>. Required fields use <code>aria-required</code>. Error messages are linked via <code>aria-describedby</code> and announced through a live region.'],
     ['Reduced motion support',     'Animations respect <code>prefers-reduced-motion</code>. Users with that system preference enabled see a static, non-animated experience throughout the site.'],
@@ -42,7 +42,7 @@
     'Manual keyboard navigation testing on all page templates before release',
     'Automated audits using Lighthouse and axe on key pages',
     'Screen reader testing with VoiceOver (macOS / iOS) and NVDA (Windows)',
-    'Colour contrast verified against WCAG 2.1 AA ratios in browser developer tools',
+    'Color contrast verified against WCAG 2.1 AA ratios in browser developer tools',
     'HTML validated against the W3C specification',
     'Accessibility issues treated as bugs — addressed before new features, not after',
   ];
@@ -53,7 +53,7 @@
 {{-- ── HERO ──────────────────────────────────────────────── --}}
 @component('partials.page-hero')
   <p class="eyebrow">Accessibility</p>
-  <h1 class="display-title is-hero">Accessibility statement.</h1>
+  <h1 class="display-title is-hero">Accessibility statement</h1>
   <p class="lead">This site is built to be usable by everyone. Here is what that means in practice, and how to reach me if something gets in the way.</p>
   <p class="about-hero-links" style="margin-top:1rem">
     <a href="#a11y-features-heading">{!! \App\mh_svg_icon('check', 15) !!} What's implemented</a>

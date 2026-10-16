@@ -3,7 +3,7 @@
 @section('content')
   @component('partials.page-hero', ['tag' => 'section', 'extra' => 'error-404'])
     <p class="eyebrow">{{ __('404', 'sage') }}</p>
-    <h1 class="display-title is-hero">{{ __('That page is not here.', 'sage') }}</h1>
+    <h1 class="display-title is-hero">{{ __('That page is not here', 'sage') }}</h1>
     <p class="lead">{{ __('It may have moved. Search, go home, or pick a door.', 'sage') }}</p>
     <div class="search-wrap">{!! get_search_form(false) !!}</div>
     <ul class="elsewhere error-links">

@@ -13,7 +13,7 @@
 
 @component('partials.page-hero')
   <p class="eyebrow">Legal</p>
-  <h1 class="display-title is-hero">Privacy policy.</h1>
+  <h1 class="display-title is-hero">Privacy policy</h1>
   <p class="lead">What data this site collects, how it is used, and what your rights are. Plain language — no legalese.</p>
 @endcomponent
 

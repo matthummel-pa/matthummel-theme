@@ -5,6 +5,7 @@
   $postId    = get_the_ID();
   $postObj   = get_post($postId);
   $postCats  = get_the_category();
+  $primaryCat = \App\mh_primary_category($postCats, (int) get_the_ID());
   $postTags  = get_the_tags();
   $raw       = apply_filters('the_content', $postObj ? $postObj->post_content : get_the_content());
   [$bodyHtml, $toc] = \App\mh_content_with_toc($raw);
@@ -34,6 +35,7 @@
       'orderby'        => 'date',
       'order'          => 'DESC',
       'no_found_rows'  => true,
+      'meta_query'     => \App\mh_exclude_noindex_meta_query(),
     ]);
     foreach ($relQ->posts as $rp) {
       $rc = get_the_category($rp->ID);
@@ -57,7 +59,7 @@
   <meta itemprop="publisher" content="matthummel.com">
   <link itemprop="url" href="{{ esc_url($postUrl) }}">
   <meta itemprop="datePublished" content="{{ esc_attr($postIso) }}">
-  @if ($postCats)<meta itemprop="articleSection" content="{{ esc_attr($postCats[0]->name) }}">@endif
+  @if ($postCats)<meta itemprop="articleSection" content="{{ esc_attr($primaryCat->name) }}">@endif
 
   {{-- ── POST HERO ────────────────────────────────────────── --}}
   <header @class(['post-hero', 'post-hero--has-media' => has_post_thumbnail()]) aria-labelledby="post-title-{{ $postId }}">
@@ -69,8 +71,8 @@
         <a href="{{ $writing }}">Journal</a>
         @if ($postCats)
           <span aria-hidden="true">›</span>
-          <a href="{{ esc_url(get_category_link($postCats[0]->term_id)) }}" itemprop="articleSection">
-            {{ $postCats[0]->name }}
+          <a href="{{ esc_url(get_category_link($primaryCat->term_id)) }}" itemprop="articleSection">
+            {{ $primaryCat->name }}
           </a>
         @endif
       </nav>
@@ -297,7 +299,7 @@
           <section class="post-related" aria-labelledby="related-heading">
             <h2 id="related-heading" class="post-related__heading">
               More from the journal
-              @if ($postCats)<span class="post-related__cat">in {{ $postCats[0]->name }}</span>@endif
+              @if ($postCats)<span class="post-related__cat">in {{ $primaryCat->name }}</span>@endif
             </h2>
             <div class="post-related__grid">
               @foreach ($relatedPosts as $rp)

@@ -1719,7 +1719,7 @@ html.mh-dark .h-hero-illu__status {
 }
 .work-card:hover .work-shot img { transform: scale(1.04); }
 .work-body, .post-body { padding: .9rem 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
-.work-card h2, .work-card h3 {
+.work-card :is(h2, h3), .work-card h3 {
   font-size: clamp(1rem, 1.4vw, 1.05rem);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -1727,10 +1727,10 @@ html.mh-dark .h-hero-illu__status {
   margin: 0 0 .4rem;
   color: var(--color-text);
 }
-.work-card h2 a, .work-card h3 a { color: inherit; text-decoration: none; }
-.work-card h2 a:hover, .work-card h3 a:hover { color: var(--color-accent); }
-.work-card--featured h2 a, .work-card--featured h3 a { color: #fff; }
-.work-card--featured h2 a:hover, .work-card--featured h3 a:hover { color: #93c5fd; }
+.work-card :is(h2, h3) a, .work-card h3 a { color: inherit; text-decoration: none; }
+.work-card :is(h2, h3) a:hover, .work-card h3 a:hover { color: var(--color-accent); }
+.work-card--featured :is(h2, h3) a, .work-card--featured h3 a { color: #fff; }
+.work-card--featured :is(h2, h3) a:hover, .work-card--featured h3 a:hover { color: #93c5fd; }
 .work-shot { text-decoration: none; color: inherit; }
 .work-card p, .post-card p { margin: 0 0 .6em; font-size: 1rem; color: var(--color-text-secondary); }
 .work-actions { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: auto; padding-top: .7rem; position: relative; z-index: 2; }
@@ -1758,7 +1758,7 @@ html.mh-dark .h-hero-illu__status {
 }
 .work-grid.is-list .work-card--featured .work-shot { aspect-ratio: 4/3; height: auto; }
 .work-grid.is-list .work-card--featured .work-body { padding: .9rem 1rem 1.1rem; }
-.work-grid.is-list .work-card--featured h2,
+.work-grid.is-list .work-card--featured :is(h2, h3),
 .work-grid.is-list .work-card--featured h3 {
   color: var(--color-text);
   font-size: clamp(1rem, 1.4vw, 1.05rem);
@@ -1796,7 +1796,7 @@ html.mh-dark .h-hero-illu__status {
 }
 .work-card--featured .work-shot { aspect-ratio: auto; height: 100%; }
 .work-card--featured .work-body { padding: 1.75rem 1.85rem; }
-.work-card--featured h2, .work-card--featured h3 { color: #fff; font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
+.work-card--featured :is(h2, h3), .work-card--featured h3 { color: #fff; font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
 .work-card--featured p { color: #9ca3af; }
 .work-card--featured .btn { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
 .work-card--featured .btn-outline,

@@ -51,7 +51,8 @@
       <p class="eyebrow">{{ __('Featured', 'sage') }}</p>
     @endif
     @include('partials.project-type-row', ['p' => $p])
-    <h2><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h2>
+    {{-- H3: cards always sit under a section H2 (project browser, More projects). --}}
+    <h3><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h3>
     <p>{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))
       @php

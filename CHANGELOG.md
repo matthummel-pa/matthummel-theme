@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.7.8 — Content audit fixes
+
+- MH SEO redirects: a path that is the live permalink of a published post is no longer redirected. The stale row is removed on the first request. This fixes the redirect loop on the TOCguide plugin post.
+- MH SEO redirects: when a slug changes, rows that redirected away from the new slug are removed before the new row is added.
+- MH SEO redirects: a one-time migration (runs on the next admin page load) sets the older AI workflow post to draft and redirects it to the merged section of the full AI workflow post.
+- Journal list and site search leave out posts marked noindex. Their URLs still work. Related posts do the same.
+- Post category label and "More from the journal in …" use the primary category, then the first category that is not DEV.to.
+- Resources: SiteGround and HubSpot are no longer marked as affiliate links. Hostinger and n8n, the two affiliate programs, are listed under Tools I recommend. Hostinger in the stack list carries the Affiliate label.
+- Availability mark shows the pulse dot only; the GitHub status emoji is no longer printed.
+- Post sidebar: Follow along and the availability card use a styled paragraph instead of an H2. Follow along mentions Get updates.
+- Headings without trailing periods on Accessibility, Privacy, Terms, Changelog, Thank you, Start, Support, and Get updates. Start's hiring band points to About.
+- US spelling on Accessibility, Terms, and Changelog (color, license, center).
+- Core sitemap (wp-sitemap.xml) leaves out noindexed and excluded posts, tag archives, and author archives, to match the robots rules.
+- Author archives redirect to About. They were noindex and exposed the admin username in /author/admin/.
+- Category and tag archives also leave out noindexed posts.
+- Project cards use H3 (they always sit under a section H2). CSS selectors cover both levels.
+- Project catalog: SEO titles use a colon instead of an em dash, the Cobble & Candle title fits in 60 characters, and em dashes in project copy are now periods, commas, or colons.
+- 404 heading has no trailing period.
+
 ## 3.7.7 — SEO box on the edit screen
 
 - MH SEO 1.2.0. The SEO box under the editor has four tabs: Search, Social, Advanced, and Schema. It shows the score as a ring, with the checks still to fix.

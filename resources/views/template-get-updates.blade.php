@@ -13,7 +13,7 @@
     : \App\field('upd_kicker', __('Get updates', 'sage'), $pageId);
   $heroTitle = $isUnsub
     ? __('Unsubscribe', 'sage')
-    : ($isPrefs ? __('Manage preferences', 'sage') : \App\field('upd_h1', __('Notes when I publish.', 'sage'), $pageId));
+    : ($isPrefs ? __('Manage preferences', 'sage') : \App\field('upd_h1', __('Notes when I publish', 'sage'), $pageId));
   $heroLead = $isUnsub
     ? __('Use the link in an email, then confirm. I keep the address on this site.', 'sage')
     : ($isPrefs
