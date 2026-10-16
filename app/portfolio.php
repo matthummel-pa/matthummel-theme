@@ -2512,7 +2512,7 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
-    update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', esc_url_raw(wp_unslash($_POST['mh_project_image'] ?? '')));
 
     for ($i = 1; $i <= 3; $i++) {
         update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
@@ -3613,12 +3613,12 @@ function mh_journal_is_oldest(): bool
 
 function mh_journal_sort_url(string $which): string
 {
-    $url = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+    $url = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
     if ($which === 'oldest') {
-        return add_query_arg('order', 'asc', $url);
+        return esc_url(add_query_arg('order', 'asc', $url));
     }
 
-    return remove_query_arg('order', $url);
+    return esc_url(remove_query_arg('order', $url));
 }
 
 /** @return list<array{year: int, count: int, url: string}> */
@@ -5321,9 +5321,9 @@ if (defined('WP_CLI') && WP_CLI) {
     ]);
 }
 
-add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
-add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply within one business day (ET).', 'matthummel'));
-add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
+add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'sage'));
+add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply within one business day (ET).', 'sage'));
+add_filter('matthummel/cta_label', fn () => __('Get in touch', 'sage'));
 
 /**
  * Default service cards for the About page.

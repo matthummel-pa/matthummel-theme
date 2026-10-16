@@ -6,7 +6,7 @@
  * Credential resolution (first match wins):
  *   1. WP-CLI --ssh-* flags on the command
  *   2. MH_SSH_* constants in wp-config.php
- *   3. SITEGROUND_* / SERVER_* env vars — same names as deploy.yml secrets
+ *   3. SERVER_* env vars — same names as deploy.yml secrets
  *
  * Commands:
  *   wp mh db-pull   Export prod DB via SSH, import locally, search-replace URLs.
@@ -198,17 +198,17 @@ function mh_db_load_identity(string $identity): void
         $host = mh_db_cred(
             (string) ($assoc_args['ssh-host'] ?? ''),
             'MH_SSH_HOST',
-            'SITEGROUND_HOST', 'SERVER_IP'
+            'SERVER_IP'
         );
         $port = mh_db_cred(
             (string) ($assoc_args['ssh-port'] ?? ''),
             'MH_SSH_PORT',
-            'SITEGROUND_PORT', 'SERVER_SSH_PORT'
+            'SERVER_SSH_PORT'
         );
         $user = mh_db_cred(
             (string) ($assoc_args['ssh-user'] ?? ''),
             'MH_SSH_USER',
-            'SITEGROUND_USER', 'SERVER_USER'
+            'SERVER_USER'
         );
         $remotePath = mh_db_cred(
             (string) ($assoc_args['ssh-path'] ?? ''),
@@ -230,7 +230,7 @@ function mh_db_load_identity(string $identity): void
             \WP_CLI::error(
                 'SSH host/user not set. Pass --ssh-host and --ssh-user, or define '
                 .'MH_SSH_HOST / MH_SSH_USER in wp-config.php, or set '
-                .'SITEGROUND_HOST / SITEGROUND_USER env vars.'
+                .'SERVER_IP / SERVER_USER env vars.'
             );
         }
         if ($wpRoot === '') {
@@ -316,19 +316,19 @@ function mh_db_load_identity(string $identity): void
             [
                 'type' => 'assoc',
                 'name' => 'ssh-host',
-                'description' => 'SSH hostname (default: MH_SSH_HOST → SITEGROUND_HOST → SERVER_IP).',
+                'description' => 'SSH hostname (default: MH_SSH_HOST → SERVER_IP).',
                 'optional' => true,
             ],
             [
                 'type' => 'assoc',
                 'name' => 'ssh-port',
-                'description' => 'SSH port (default: MH_SSH_PORT → SITEGROUND_PORT → SERVER_SSH_PORT, else 22).',
+                'description' => 'SSH port (default: MH_SSH_PORT → SERVER_SSH_PORT, else 22).',
                 'optional' => true,
             ],
             [
                 'type' => 'assoc',
                 'name' => 'ssh-user',
-                'description' => 'SSH username (default: MH_SSH_USER → SITEGROUND_USER → SERVER_USER).',
+                'description' => 'SSH username (default: MH_SSH_USER → SERVER_USER).',
                 'optional' => true,
             ],
             [
@@ -361,7 +361,7 @@ function mh_db_load_identity(string $identity): void
         'longdesc' => <<<'HELP'
 ## EXAMPLES
 
-    # Pull using env vars (set SITEGROUND_HOST, SITEGROUND_USER, SERVER_DESTINATION_PATH)
+    # Pull using env vars (set SERVER_IP, SERVER_USER, SERVER_DESTINATION_PATH)
     wp mh db-pull
 
     # Explicit flags
@@ -403,17 +403,17 @@ HELP,
         $host = mh_db_cred(
             (string) ($assoc_args['ssh-host'] ?? ''),
             'MH_SSH_HOST',
-            'SITEGROUND_HOST', 'SERVER_IP'
+            'SERVER_IP'
         );
         $port = mh_db_cred(
             (string) ($assoc_args['ssh-port'] ?? ''),
             'MH_SSH_PORT',
-            'SITEGROUND_PORT', 'SERVER_SSH_PORT'
+            'SERVER_SSH_PORT'
         );
         $user = mh_db_cred(
             (string) ($assoc_args['ssh-user'] ?? ''),
             'MH_SSH_USER',
-            'SITEGROUND_USER', 'SERVER_USER'
+            'SERVER_USER'
         );
         $remotePath = mh_db_cred(
             (string) ($assoc_args['ssh-path'] ?? ''),

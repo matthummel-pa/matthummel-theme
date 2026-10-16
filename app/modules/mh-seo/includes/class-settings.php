@@ -40,7 +40,7 @@ class Settings
             'noindex_empty_tax' => 1,
             'redirect_attachments' => 1,
             'indexnow_enabled' => 1,
-            'indexnow_key' => '4c8b0c3a27db4628ad675657129286af',
+            'indexnow_key' => '',
             'sitemap_enabled' => 0,
             'sitemap_authors' => 0,
             'sitemap_per_page' => 1000,
@@ -82,6 +82,25 @@ class Settings
         $settings['sitemap_per_page'] = Sitemap_Xml::per_page((int) $settings['sitemap_per_page']);
 
         return $settings;
+    }
+
+    /**
+     * Generate and persist a random IndexNow key the first time this site runs
+     * without one, instead of shipping the same hardcoded key on every install.
+     *
+     * Safe to call on every request; it only writes when the stored key is empty.
+     */
+    public static function ensure_indexnow_key(): void
+    {
+        $saved = get_option(self::OPTION, []);
+        if (! is_array($saved)) {
+            $saved = [];
+        }
+        if (self::sanitize_key((string) ($saved['indexnow_key'] ?? ''), '') !== '') {
+            return;
+        }
+        $saved['indexnow_key'] = wp_generate_password(32, false, false);
+        update_option(self::OPTION, $saved);
     }
 
     /**

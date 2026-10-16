@@ -414,7 +414,7 @@ add_action('init', function () {
         $redirect('error');
     }
 
-    $mailSubject = $subject !== '' ? $subject : __('New contact form message', 'matthummel');
+    $mailSubject = $subject !== '' ? $subject : __('New contact form message', 'sage');
     $body = "Name: {$name}\nEmail: {$email}";
     if ($who !== '') {
         $body .= "\nWho: {$who}";

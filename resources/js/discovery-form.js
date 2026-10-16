@@ -47,7 +47,7 @@ export function initDiscoveryForm() {
     return ok
   }
 
-  function showStep(n) {
+  function showStep(n, { focusStep = true } = {}) {
     current = Math.max(1, Math.min(total, n))
     steps.forEach((step) => {
       const id = Number(step.dataset.discoveryStep)
@@ -82,6 +82,12 @@ export function initDiscoveryForm() {
       review.hidden = true
     }
     form.setAttribute('data-current-step', String(current))
+
+    if (focusStep) {
+      const activeStep = stepEl(current)
+      const heading = activeStep?.querySelector('legend[tabindex="-1"]')
+      heading?.focus({ preventScroll: true })
+    }
   }
 
   function labelFor(name) {
@@ -155,8 +161,8 @@ export function initDiscoveryForm() {
         break
       }
     }
-    showStep(firstInvalid)
+    showStep(firstInvalid, { focusStep: false })
   } else {
-    showStep(1)
+    showStep(1, { focusStep: false })
   }
 }
