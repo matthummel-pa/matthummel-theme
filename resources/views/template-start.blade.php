@@ -37,7 +37,7 @@
 @component('partials.page-hero', ['extra' => 'start-hero'])
   <p class="eyebrow">{{ \App\field('start_kicker', __('Project brief', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('start_h1', __('Prepare for our first meeting.', 'sage')) }}
+    {{ \App\field('start_h1', __('Prepare for our first meeting', 'sage')) }}
   </h1>
   <p class="lead">
     {{ \App\field('start_lede', __('Four short steps for shops and agencies. I read every brief before we talk so the first call is useful — not a blank page.', 'sage')) }}
@@ -63,7 +63,7 @@
 
     <div class="start-form-head">
       <h2 id="start-form-heading" class="display-title is-section">
-        {{ \App\field('start_form_h2', __('Start the brief.', 'sage')) }}
+        {{ \App\field('start_form_h2', __('Start the brief', 'sage')) }}
       </h2>
       <p class="sec-intro">
         {{ \App\field('start_form_intro', __('Name, project type, and what “done” looks like. Optional fields can stay blank.', 'sage')) }}
@@ -255,8 +255,8 @@
 
 @include('partials.cta-band', [
   'kicker' => __('Hiring instead?', 'sage'),
-  'title' => __('Roles and resume are on Hire.', 'sage'),
-  'text' => __('The brief is for project work. Recruiters and hiring managers can start from Hire or the contact form.', 'sage'),
+  'title' => __('Roles and resume are on About', 'sage'),
+  'text' => __('The brief is for project work. Recruiters and hiring managers can start from the About page or the contact form.', 'sage'),
   'label' => __('Hire me', 'sage'),
   'href' => home_url('/about/#hire'),
   'secondary' => __('Contact form', 'sage'),

@@ -19,7 +19,7 @@
         {!! \App\mh_svg_icon('check', 26) !!}
       </div>
       <div>
-        <h1 class="ty-confirm__heading">{{ $fromStart ? 'Brief received.' : 'Message received.' }}</h1>
+        <h1 class="ty-confirm__heading">{{ $fromStart ? 'Brief received' : 'Message received' }}</h1>
         <p class="ty-confirm__lede">
           @if ($fromStart)
             Your project brief is in my inbox. I’ll read it before we talk so the first meeting starts with context, not a blank page. I usually reply within one business day (ET).
@@ -76,7 +76,7 @@
 <section class="pf-section pf-section--alt" aria-labelledby="ty-browse-heading">
   <div class="container wide">
     <p class="eyebrow">While you wait</p>
-    <h2 id="ty-browse-heading" class="display-title is-section">Take a look around.</h2>
+    <h2 id="ty-browse-heading" class="display-title is-section">Take a look around</h2>
     <p class="sec-intro" style="max-width:48ch;margin-bottom:2rem">A few places worth visiting while my reply is on the way.</p>
 
     <div class="ty-browse-grid">
@@ -132,7 +132,7 @@
 <section class="pf-section" aria-labelledby="ty-work-heading">
   <div class="container wide">
     <p class="eyebrow">Recent work</p>
-    <h2 id="ty-work-heading" class="display-title is-section">A few recent projects.</h2>
+    <h2 id="ty-work-heading" class="display-title is-section">A few recent projects</h2>
     <div class="svc-work-grid">
       @foreach ($featured as $p)
         @php

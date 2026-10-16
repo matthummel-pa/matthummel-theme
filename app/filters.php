@@ -711,3 +711,62 @@ add_action('template_redirect', function (): void {
     wp_safe_redirect($base.($query !== '' ? '?'.$query : '').'#'.$path, 301);
     exit;
 }, 3);
+
+/**
+ * The category to show for a post: the MH SEO primary term when set, otherwise the
+ * first category that is not a cross-post source label (DEV.to), otherwise the first.
+ *
+ * get_the_category() sorts by name, so without this "DEV.to" wins on cross-posted posts.
+ *
+ * @param  array<int, \WP_Term>  $cats  Categories from get_the_category().
+ * @param  int  $postId  Post ID.
+ */
+function mh_primary_category(array $cats, int $postId): ?\WP_Term
+{
+    if ($cats === []) {
+        return null;
+    }
+    $primaryId = (int) get_post_meta($postId, '_mh_seo_primary_term', true);
+    foreach ($cats as $cat) {
+        if ($cat instanceof \WP_Term && $primaryId > 0 && (int) $cat->term_id === $primaryId) {
+            return $cat;
+        }
+    }
+    foreach ($cats as $cat) {
+        if ($cat instanceof \WP_Term && $cat->slug !== 'dev-to') {
+            return $cat;
+        }
+    }
+
+    return $cats[0] instanceof \WP_Term ? $cats[0] : null;
+}
+
+/**
+ * Meta query that leaves out posts marked noindex in MH SEO (the archived Power Apps notes).
+ *
+ * @return array<int|string, mixed>
+ */
+function mh_exclude_noindex_meta_query(): array
+{
+    return [
+        'relation' => 'OR',
+        ['key' => '_mh_seo_noindex', 'compare' => 'NOT EXISTS'],
+        ['key' => '_mh_seo_noindex', 'value' => '1', 'compare' => '!='],
+    ];
+}
+
+/**
+ * Keep noindexed posts out of the Journal list and site search. Their URLs still work.
+ */
+add_action('pre_get_posts', function (\WP_Query $query): void {
+    if (is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+    if (! $query->is_home() && ! $query->is_search()) {
+        return;
+    }
+    $meta = $query->get('meta_query');
+    $meta = is_array($meta) ? $meta : [];
+    $meta[] = mh_exclude_noindex_meta_query();
+    $query->set('meta_query', $meta);
+});

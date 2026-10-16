@@ -14,7 +14,7 @@
 
 @component('partials.page-hero')
   <p class="eyebrow">Legal</p>
-  <h1 class="display-title is-hero">Terms of use.</h1>
+  <h1 class="display-title is-hero">Terms of use</h1>
   <p class="lead">The terms that apply when you use this site or copy its code and content. Plain language.</p>
 @endcomponent
 
@@ -57,7 +57,7 @@
 
       <div class="legal-data-card">
         <h3 class="legal-data-card__title">Code — free to copy</h3>
-        <p class="legal-data-card__intro">Code snippets, GitHub repositories, and examples published on this site are available under the <strong>MIT Licence</strong> unless a repository's own licence says otherwise.</p>
+        <p class="legal-data-card__intro">Code snippets, GitHub repositories, and examples published on this site are available under the <strong>MIT Licence</strong> unless a repository's own license says otherwise.</p>
         <ul class="legal-data-card__list">
           <li>Copy, modify, and use in personal or commercial projects</li>
           <li>No attribution required, though appreciated</li>

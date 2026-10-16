@@ -13,16 +13,16 @@
       'changes' => [
         ['added',   'Accessibility statement page — WCAG 2.1 AA and Section 508 conformance, 12 features documented, known limitations, opt-out instructions'],
         ['added',   'Privacy policy — covers Google Analytics 4, Google Tag Manager, HubSpot, Meta Pixel, Microsoft/Bing UET, server logs, GDPR rights'],
-        ['added',   'Terms of use — MIT licence for code snippets, copyright for writing, concept site disclaimers'],
+        ['added',   'Terms of use — MIT license for code snippets, copyright for writing, concept site disclaimers'],
         ['added',   'This changelog page'],
         ['added',   'Hire page — focused landing for new work enquiries'],
         ['added',   'Uses page — tech stack and tools reference'],
         ['added',   'Thank you page — post-form redirect for conversion tracking'],
-        ['added',   'Footer bottom bar: copyright left · Privacy · Terms · Accessibility centre · Built with right'],
+        ['added',   'Footer bottom bar: copyright left · Privacy · Terms · Accessibility center · Built with right'],
         ['changed', 'Services page: pricing section removed, commitment strip, audience cards with fit bullets, mid-page CTA, work teaser, FAQ JSON-LD schema'],
         ['changed', 'Home hero: h1 smaller, profile photo removed, copy wider'],
         ['fixed',   'WCAG 1.4.3: --color-text-muted contrast raised from 2.49:1 to 4.63:1'],
-        ['fixed',   'WCAG 1.4.1: post body links now underlined in addition to colour'],
+        ['fixed',   'WCAG 1.4.1: post body links now underlined in addition to color'],
         ['fixed',   'WCAG 2.4.7: form focus outline now uses :focus-visible'],
         ['fixed',   'Mobile menu inert attribute added alongside aria-hidden'],
         ['fixed',   'Concept images on home page and /projects/ — were rendering as http://filename.jpg'],
@@ -117,7 +117,7 @@
 
 @component('partials.page-hero')
   <p class="eyebrow">Changelog</p>
-  <h1 class="display-title is-hero">What's changed.</h1>
+  <h1 class="display-title is-hero">What's changed</h1>
   <p class="lead">A public record of notable updates to matthummel.com — new pages, design changes, bug fixes, and anything worth knowing about.</p>
 @endcomponent
 

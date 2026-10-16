@@ -22,6 +22,7 @@ class Redirects
         add_action('template_redirect', [$this, 'maybe_redirect_attachment'], 2);
         add_action('template_redirect', [$this, 'log_404'], 20);
         add_action('post_updated', [$this, 'slug_changed'], 10, 3);
+        add_action('admin_init', [$this, 'migrate']);
         add_action('admin_menu', [$this, 'menu']);
         add_action('admin_post_mh_seo_save_redirect', [$this, 'save']);
         add_action('admin_post_mh_seo_delete_redirect', [$this, 'delete']);
@@ -75,6 +76,28 @@ class Redirects
     }
 
     /**
+     * One-time redirect additions that ship with the theme. Each runs once, tracked by an option.
+     */
+    public function migrate(): void
+    {
+        if (! current_user_can('manage_options')) {
+            return;
+        }
+        $version = (int) get_option('mh_seo_redirects_migration', 0);
+        if ($version >= 1) {
+            return;
+        }
+        // Oct 2026 content audit: the older AI workflow post was merged into the full workflow post.
+        // Unpublish the old post first. A published post at the source path would win over the redirect.
+        $old = get_page_by_path('ai-wordpress-workflow-what-it-speeds-up', OBJECT, 'post');
+        if ($old instanceof \WP_Post && $old->post_status === 'publish') {
+            wp_update_post(['ID' => $old->ID, 'post_status' => 'draft']);
+        }
+        $this->insert_if_missing('/ai-wordpress-workflow-what-it-speeds-up', '/ai-workflow-for-wordpress-development/#what-ai-speeds-up', 301, 'exact');
+        update_option('mh_seo_redirects_migration', 1, false);
+    }
+
+    /**
      * Send a matching redirect.
      */
     public function maybe_redirect(): void
@@ -88,6 +111,14 @@ class Redirects
         }
         $row = $this->find($path);
         if (! is_object($row)) {
+            return;
+        }
+        // Live content wins. If this path is the current permalink of a published post,
+        // the row is stale (left over from a slug change that was later reversed) and
+        // following it would loop with core's old-slug redirect. Drop it and serve the post.
+        if ($row->match_type === 'exact' && $this->is_live_permalink($path)) {
+            $this->delete_by_source((string) $row->source);
+
             return;
         }
         $this->hit((int) $row->id);
@@ -191,7 +222,43 @@ class Redirects
         if ($source === '' || $source === $target) {
             return;
         }
+        // The new slug is live now, so any older row that redirects away from it is stale.
+        $this->delete_by_source($target);
         $this->insert_if_missing($source, $target, 301, 'exact');
+    }
+
+    /**
+     * Whether a request path is the current permalink of the published singular object.
+     *
+     * @param  string  $path  Normalized request path.
+     */
+    private function is_live_permalink(string $path): bool
+    {
+        if (! is_singular()) {
+            return false;
+        }
+        $post = get_queried_object();
+        if (! $post instanceof \WP_Post || $post->post_status !== 'publish') {
+            return false;
+        }
+
+        return Paths::normalize_source((string) get_permalink($post)) === $path;
+    }
+
+    /**
+     * Delete exact-match rows for a source path.
+     *
+     * @param  string  $source  Normalized source path.
+     */
+    private function delete_by_source(string $source): void
+    {
+        if ($source === '') {
+            return;
+        }
+        global $wpdb;
+        $table = $wpdb->prefix.'mh_seo_redirects';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->delete($table, ['source' => $source, 'match_type' => 'exact'], ['%s', '%s']);
     }
 
     /**
