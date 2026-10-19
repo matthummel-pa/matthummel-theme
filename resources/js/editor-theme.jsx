@@ -21,6 +21,12 @@ const STORAGE_KEY = 'mh-theme'
 const DARK_CLASS = 'mh-dark'
 const PAGE_BLOCKS = ['matthummel/hero', 'matthummel/section', 'matthummel/cta-band', 'matthummel/card']
 
+/* The choice for this screen. Read from storage on load; kept here so a private
+   window (storage throws) still holds the menu's pick, and so the menu item and
+   the canvas always flip from the same value. */
+let isDark = true
+const listeners = new Set()
+
 /* ── Dark mode ─────────────────────────────────────────────────────────── */
 
 /** The visitor's saved choice. Dark unless they picked light, like the front end. */
@@ -28,8 +34,15 @@ export function prefersDark() {
   try {
     return localStorage.getItem(STORAGE_KEY) !== 'light'
   } catch (e) {
-    return true
+    return isDark
   }
+}
+
+/** Set the choice for this screen, paint the canvas, and tell the menu item. */
+function setDark(dark) {
+  isDark = dark
+  applyTheme(dark)
+  listeners.forEach((fn) => fn(dark))
 }
 
 /** Every root the canvas can have: the editor iframe's <html>, or the wrapper when there is no iframe. */
@@ -59,7 +72,7 @@ function saveTheme(dark) {
 
 /** Keep the class on the canvas as the editor mounts, re-mounts, or swaps its iframe. */
 export function initEditorTheme() {
-  const sync = () => applyTheme(prefersDark())
+  const sync = () => setDark(prefersDark())
   sync()
 
   const observer = new MutationObserver(sync)
@@ -82,18 +95,20 @@ export function initEditorTheme() {
 
 /** Options menu (⋮) → "Dark mode" check item. */
 function DarkModeMenuItem() {
-  const [dark, setDark] = useState(prefersDark())
+  const [dark, setMenuDark] = useState(isDark)
 
+  // Follow the canvas: a storage event from another tab, or the first sync, lands here too.
   useEffect(() => {
-    applyTheme(dark)
-  }, [dark])
+    listeners.add(setMenuDark)
+    return () => listeners.delete(setMenuDark)
+  }, [])
 
   return (
     <PluginMoreMenuItem
       role="menuitemcheckbox"
       isSelected={dark}
       onClick={() => {
-        const next = !dark
+        const next = !isDark
         saveTheme(next)
         setDark(next)
       }}
