@@ -4456,6 +4456,16 @@ add_action('enqueue_block_editor_assets', static function (): void {
     wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
 }, 5);
 
+// The editor canvas is an iframe (WordPress 6.3+ when every block is API v3, always on 7.1+).
+// Only styles enqueued on enqueue_block_assets are copied into it, so the fonts go here too
+// or the canvas falls back to system type while the page uses Inter / IBM Plex.
+add_action('enqueue_block_assets', static function (): void {
+    if (! is_admin()) {
+        return;
+    }
+    wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
+}, 5);
+
 add_action('after_switch_theme', __NAMESPACE__.'\\mh_seed_portfolio_pages');
 add_action('init', function () {
     if (! get_option('mh_portfolio_seeded_v2') && ! wp_installing()) {
