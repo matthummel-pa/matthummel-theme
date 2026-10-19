@@ -538,6 +538,8 @@ add_action('init', function (): void {
     register_block_style('core/button', ['name' => 'arrow', 'label' => __('Text with arrow', 'sage')]);
     register_block_style('core/paragraph', ['name' => 'lead', 'label' => __('Lead', 'sage')]);
     register_block_style('core/list', ['name' => 'checklist', 'label' => __('Checklist', 'sage')]);
+    // A plain Group on the theme card recipe (lime border, card surface). Styled in resources/css/blocks.css.
+    register_block_style('core/group', ['name' => 'card', 'label' => __('Card', 'sage')]);
 }, 9);
 
 /**

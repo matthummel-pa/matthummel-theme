@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.7.9 — Core blocks: one look, light and dark, editor matches the page
+
+- New `resources/css/blocks.css`, loaded last by both `app.css` and `editor.css`: every block that ships with WordPress (paragraph, heading, list, quote, pullquote, verse, code, preformatted, separator, spacer, image, gallery, cover, media & text, file, audio, video, embed, table, details, buttons, columns, group, social links, latest posts, categories, archives, page list, tag cloud, search, calendar, RSS, footnotes) takes the theme recipe on posts, default pages, block pages, and the editor canvas. Colors are tokens, so `html.mh-dark` flips them.
+- Core buttons use the site button everywhere (lime fill, violet type, blue→violet hover); Outline, Ghost, and Text-with-arrow styles match their `.btn` counterparts in both modes. Lists inside page Sections draw the same round check and numbered badge markers posts have. Inline code and quotes use the post recipe on pages too.
+- New Group style, Card: a plain Group on the card recipe.
+- Editor canvas is the public page: the warm 3.5-era palette pinned on `.editor-styles-wrapper` in `journal-blocks.css` and the hardcoded colors in `editor.css` are gone; the canvas reads the same `:root` tokens, fonts, and body background as the site. Tailwind `@theme` tokens moved to `resources/css/theme-tokens.css` so the canvas gets `--font-display`, `--radius-btn`, and the brand colors.
+- Editor light/dark follows the visitor toggle: `resources/js/editor-theme.jsx` sets `mh-dark` on the canvas from the same `mh-theme` localStorage key the header writes (dark by default, like the site). The editor options menu (⋮) has a "Dark mode" item that flips both.
+- Core blocks inside page blocks get the front-end theme classes in the editor too (`display-title is-hero` / `is-section`, `lead`, `mh-buttons`) through an `editor.BlockListBlock` filter that mirrors the `render_block` mapping in `app/blocks.php`.
+- Fonts are enqueued on `enqueue_block_assets` for the admin so the iframed canvas loads Inter / IBM Plex.
+
 ## 3.7.8 — Content audit fixes
 
 - MH SEO redirects: a path that is the live permalink of a published post is no longer redirected. The stale row is removed on the first request. This fixes the redirect loop on the TOCguide plugin post.

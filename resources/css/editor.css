@@ -1,22 +1,25 @@
 @import "tailwindcss";
+@import "./theme-tokens.css";
 @import "./portfolio.css";
 @import "./journal-blocks.css";
 @import "./code-blocks.css";
 @import "./studio.css";
+@import "./blocks.css";
 
 /**
- * Block editor canvas — match journal post chrome for comparison grids.
- * Fonts are also enqueued via enqueue_block_editor_assets in portfolio.php.
+ * Block editor canvas.
+ *
+ * Colors, type, and every core block come from the same files the front end
+ * loads (blocks.css last), so the canvas is the public page. Light or dark is
+ * the visitor setting: resources/js/editor-theme.js reads the `mh-theme` key the
+ * header toggle writes and sets `mh-dark` on the canvas root. Only layout that
+ * exists for the editor alone lives here (canvas width, page blocks spanning it).
  */
-.editor-styles-wrapper {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: #161412;
-}
+:root { color-scheme: light; }
+html.mh-dark { color-scheme: dark; }
 
-.editor-styles-wrapper .wp-block {
-  max-width: 720px;
-}
+/* Posts read at the journal's measure; page blocks widen to the site container. */
+.editor-styles-wrapper .wp-block { max-width: var(--prose-max, 40rem); }
 
 /* Comparison figure / pipeline can span the wider editor canvas */
 .editor-styles-wrapper .wp-block-matthummel-tool-grid,
@@ -32,168 +35,22 @@
   outline-offset: 3px;
 }
 
-.editor-styles-wrapper .wp-block-heading {
-  font-family: Inter, system-ui, sans-serif;
-  letter-spacing: -0.03em;
-  font-weight: 800;
-  color: #161412;
-}
-
-.editor-styles-wrapper h2.wp-block-heading {
-  font-size: clamp(1.75rem, 3.2vw, 2.2rem);
-  margin: 1.85em 0 .55em;
-  line-height: 1.15;
-}
-
-.editor-styles-wrapper h3.wp-block-heading {
-  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
-  margin: 1.65em 0 .5em;
-  line-height: 1.2;
-}
-
-.editor-styles-wrapper h4.wp-block-heading {
-  font-size: clamp(1.32rem, 2vw, 1.58rem);
-  margin: 1.45em 0 .45em;
-  line-height: 1.25;
-}
-
-.editor-styles-wrapper h5.wp-block-heading {
-  font-size: clamp(1.22rem, 1.6vw, 1.42rem);
-}
-
-.editor-styles-wrapper h6.wp-block-heading {
-  font-size: clamp(1.2rem, 1.45vw, 1.4rem);
-}
-
-.editor-styles-wrapper .wp-block-heading:first-child {
-  margin-top: 0;
-}
-
-.editor-styles-wrapper p,
-.editor-styles-wrapper .wp-block-paragraph {
-  font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
-  color: #141c28;
-  margin: 0 0 1.25em;
-  line-height: 1.78;
-}
-
-.editor-styles-wrapper a {
-  color: #c4271a;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.editor-styles-wrapper blockquote,
-.editor-styles-wrapper .wp-block-quote {
-  margin: 0 0 1.45em;
-  padding-left: 1.25rem;
-  border-left: 3px solid #d2c8b0;
-  color: #2a2622;
-  font-style: italic;
-}
-
-.editor-styles-wrapper blockquote p:last-child,
-.editor-styles-wrapper .wp-block-quote p:last-child {
-  margin-bottom: 0;
-}
-
-.editor-styles-wrapper :not(pre) > code,
-.editor-styles-wrapper .wp-block-code code {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: .88em;
-  background: #e4edf7;
-  color: #161412;
-  padding: .15em .4em;
-  border-radius: 4px;
-  border: 1px solid #c5d0de;
-}
-
-.editor-styles-wrapper pre,
-.editor-styles-wrapper .wp-block-code {
-  max-width: 100%;
-  overflow-x: auto;
-  margin: 0 0 1.45em;
-}
-
-.editor-styles-wrapper pre code {
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
-.editor-styles-wrapper hr,
-.editor-styles-wrapper .wp-block-separator {
-  border: none;
-  border-top: 1px solid #c5d0de;
-  margin: 2em 0;
-}
-
-.editor-styles-wrapper img,
-.editor-styles-wrapper .wp-block-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid #c5d0de;
-}
-
-.editor-styles-wrapper table,
-.editor-styles-wrapper .wp-block-table table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: .95rem;
-  margin: 0 0 1.45em;
-}
-
-.editor-styles-wrapper th,
-.editor-styles-wrapper td {
-  padding: .6rem .85rem;
-  border: 1px solid #c5d0de;
-  text-align: left;
-}
-
-.editor-styles-wrapper th {
-  background: #dde5ef;
-  font-weight: 700;
-}
-
-.editor-styles-wrapper .wp-block-details,
-.editor-styles-wrapper details {
-  margin: 0 0 .65rem;
-}
+/* Rhythm between blocks: heading sits closer to what follows it. */
+.editor-styles-wrapper .wp-block-heading:first-child { margin-top: 0; }
+.editor-styles-wrapper h2.wp-block-heading { margin: 1.85em 0 .55em; }
+.editor-styles-wrapper h3.wp-block-heading { margin: 1.65em 0 .5em; }
+.editor-styles-wrapper h4.wp-block-heading { margin: 1.45em 0 .45em; }
+.editor-styles-wrapper :is(p, .wp-block-paragraph) { margin: 0 0 1.25em; }
 
 /* Page blocks in the editor: sections span the canvas, and core blocks inside them
-   take the same look the PHP class mapping gives them on the front end. */
-.editor-styles-wrapper .wp-block-matthummel-hero,
-.editor-styles-wrapper .wp-block-matthummel-section,
-.editor-styles-wrapper .wp-block-matthummel-cta-band,
-.editor-styles-wrapper .wp-block-matthummel-page-nav { max-width: none; }
-.editor-styles-wrapper .wp-block-matthummel-section .wp-block,
-.editor-styles-wrapper .wp-block-matthummel-hero .wp-block,
-.editor-styles-wrapper .wp-block-matthummel-cta-band .wp-block { max-width: none; }
+   take the same look the PHP class mapping gives them on the front end (the
+   classes are added in the editor by resources/js/editor-theme.js). */
+.editor-styles-wrapper :is(.wp-block-matthummel-hero, .wp-block-matthummel-section, .wp-block-matthummel-cta-band, .wp-block-matthummel-page-nav) { max-width: none; }
+.editor-styles-wrapper :is(.wp-block-matthummel-section, .wp-block-matthummel-hero, .wp-block-matthummel-cta-band) .wp-block { max-width: none; }
 .editor-styles-wrapper .wp-block-matthummel-page-nav { position: static; }
-.editor-styles-wrapper .wp-block-matthummel-hero { margin-top: 0; padding-top: 4rem; }
-.editor-styles-wrapper .wp-block-matthummel-hero h1.wp-block-heading {
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  line-height: 1.02;
-  letter-spacing: -.05em;
-  color: #fff;
-  margin: .35em 0;
-}
-.editor-styles-wrapper .wp-block-matthummel-hero p { color: #dbe9fa; }
-.editor-styles-wrapper .wp-block-matthummel-cta-band :is(h2.wp-block-heading, p) { color: #fff; }
-.editor-styles-wrapper .wp-block-matthummel-card h3.wp-block-heading { font-size: 1.25rem; margin: .6rem 0 .35rem; }
-/* Core buttons take the lime button look that `.btn` gives them on the front end. */
-.editor-styles-wrapper .wp-block-button__link {
-  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
-  border: 1px solid var(--lime-500);
-  border-radius: 10px;
-  color: var(--violet-900);
-  font: 700 1rem/1.2 var(--font-display);
-  padding: .8rem 1.3rem;
-}
-.editor-styles-wrapper .is-style-outline > .wp-block-button__link { background: transparent; border-color: var(--violet-400); color: var(--violet-900); }
-.editor-styles-wrapper :is(.wp-block-matthummel-hero, .wp-block-matthummel-cta-band) :is(.is-style-outline, .is-style-ghost, .is-style-arrow) > .wp-block-button__link { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .4); color: #fff; }
-.editor-styles-wrapper .is-style-arrow > .wp-block-button__link::after { content: " →"; }
+.editor-styles-wrapper .wp-block-matthummel-hero { margin-top: 0; }
+.editor-styles-wrapper .wp-block-matthummel-hero h1.wp-block-heading { margin: .35em 0; }
+.editor-styles-wrapper .wp-block-matthummel-card h3.wp-block-heading { margin: .6rem 0 .35rem; }
 .editor-styles-wrapper .mh-block-nav li::before,
 .editor-styles-wrapper .mh-block-nav li::marker { content: none; display: none; }
 .editor-styles-wrapper .mh-block-nav ul { list-style: none; display: flex; gap: .5rem; margin: 0; padding: 0; }

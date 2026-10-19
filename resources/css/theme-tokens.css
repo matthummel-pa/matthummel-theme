@@ -1,0 +1,38 @@
+/* Tailwind v4 @theme tokens shared by app.css (site) and editor.css (block editor canvas).
+   `static` emits every variable, so --font-display, --radius-btn, and the brand colors exist
+   on the canvas too, not only where a utility class used them. tailwind.config.js carries the
+   same colors for the generated theme.json. */
+@theme static {
+  --font-sans: Inter, "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: Inter, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  --font-heading: Inter, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-btn: 4px;
+  --radius-card: 4px;
+  --page-max: 1280px;
+  --page-gutter: 1.75rem;
+  --space-section: clamp(6rem, 12vw, 10.5rem);
+  --space-grid: 2.25rem;
+
+  --color-khaki: #eef3f9;
+  --color-cream: #f7f9fc;
+  --color-blue: #0d2e57;
+  --color-blue-ink: #0a2446;
+  --color-blue-soft: #dceaf8;
+  --color-baby: #93c5fd;
+  --color-navy: #0d2e57;
+  --color-slate: #243041;
+  --color-ink: #0b1220;
+  --color-paper: #f7f9fc;
+  --color-body: #141c28;
+  --color-muted: #3a4554;
+  --color-line: #cfd9e6;
+  --color-focus: #0d2e57;
+  --color-card: #ffffff;
+  --color-tomato: #0d2e57;
+  --color-amber: #4f8fd4;
+  --color-lime: #3d8b6e;
+  --color-violet: #3b5b9c;
+}
