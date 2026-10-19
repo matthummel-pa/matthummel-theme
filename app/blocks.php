@@ -430,7 +430,9 @@ add_action('add_meta_boxes_page', function (\WP_Post $post): void {
  */
 function mh_render_page_block(array $attributes, string $content, \WP_Block $block): string
 {
-    $slug = sanitize_key(substr((string) $block->name, strlen('matthummel/')));
+    // The view is named after the folder, which matches the part after the namespace.
+    // Most blocks are matthummel/*; mh/release-rundown keeps the old plugin's name so saved pages still render.
+    $slug = sanitize_key(substr((string) strrchr((string) $block->name, '/'), 1));
     if ($slug === 'card') {
         $content = mh_html_add_class($content, 'H3', 'about-svc-card__title');
         $content = mh_html_add_class($content, 'P', 'about-svc-card__body');

@@ -5,6 +5,7 @@
 @import "./code-blocks.css";
 @import "./studio.css";
 @import "./blocks.css";
+@import "./release-watch.css";
 
 /**
  * Block editor canvas.

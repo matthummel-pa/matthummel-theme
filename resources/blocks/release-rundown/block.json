@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "mh/release-rundown",
+  "title": "WordPress release rundown",
+  "category": "matthummel",
+  "icon": "calendar-alt",
+  "description": "The next WordPress release: date, milestones, every planned feature, and the latest posts from Make WordPress Core. Updates itself twice a day.",
+  "keywords": [
+    "wordpress",
+    "release",
+    "countdown",
+    "roadmap"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "variant": {
+      "type": "string",
+      "enum": [
+        "summary",
+        "full"
+      ],
+      "default": "summary"
+    },
+    "count": {
+      "type": "integer",
+      "default": 5
+    },
+    "showSchedule": {
+      "type": "boolean",
+      "default": true
+    },
+    "headingLevel": {
+      "type": "integer",
+      "default": 2
+    },
+    "kicker": {
+      "type": "string",
+      "default": ""
+    },
+    "moreUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "mhControls": {
+    "variant": {
+      "label": "Show",
+      "options": {
+        "summary": "Latest updates only",
+        "full": "Every planned feature plus updates"
+      }
+    },
+    "count": {
+      "label": "Latest updates to list",
+      "min": 0,
+      "max": 12
+    },
+    "showSchedule": {
+      "label": "Show the release schedule"
+    },
+    "headingLevel": {
+      "label": "Heading level",
+      "help": "2 when this block starts a section, 3 when it sits under another heading.",
+      "min": 2,
+      "max": 4
+    },
+    "kicker": {
+      "label": "Kicker",
+      "help": "The small line above the heading. Leave empty for “Release watch · auto-updated”."
+    },
+    "moreUrl": {
+      "label": "“See every feature” link",
+      "help": "Optional, for the short version: link to the page with the full list."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "anchor": false
+  }
+}

@@ -4343,7 +4343,7 @@ html.mh-dark .post-prose a,
 html.mh-dark .about-story__body a,
 html.mh-dark .sec-intro a,
 html.mh-dark .about-services-note a,
-html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
+html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill):not(.mhrw-banner a):not(.mhrw-rundown a) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
 html.mh-dark .btn-outline { background: transparent; color: var(--blue-300); border-color: rgba(96, 165, 250, .4); }
 html.mh-dark .btn-outline:hover { background: rgba(59, 130, 246, .14); color: #fff; border-color: var(--blue-400); }
 html.mh-dark .contact-form input,

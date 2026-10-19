@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.10 — Release watch moves into the theme
+
+- The MH Release Watch plugin is replaced by theme code. `app/release-watch.php` reads Make WordPress Core twice a day (WP-Cron) for the next release: the schedule, every roadmap item grouped by area, and the latest posts tagged for that version. It is stored in one option, so pages never wait on WordPress.org, and the last good copy stays up if WordPress.org is down. `wp mh release-watch` refreshes it on demand.
+- The WordPress release rundown block keeps its old name, `mh/release-rundown`, so the Release Watch page renders again without re-adding it. New sidebar settings: kicker text and a "See every feature" link for the short version.
+- New block: WordPress release banner (`matthummel/release-banner`). The countdown bar is no longer printed above every page; place it where you want it. Button text and link are settings, it can be closed (remembered per release), and it hides itself after release day.
+- Banner button readable in dark mode: the theme's dark link color (`html.mh-dark a:not(...)` in `studio.css`) no longer reaches links inside the release blocks, so the lime button keeps navy text. The arrow keeps its space.
+- Feature lists number 01, 02, 03… again; the theme's own ordered-list counter was taking over.
+
 ## 3.7.9 — Core blocks: one look, light and dark, editor matches the page
 
 - New `resources/css/blocks.css`, loaded last by both `app.css` and `editor.css`: every block that ships with WordPress (paragraph, heading, list, quote, pullquote, verse, code, preformatted, separator, spacer, image, gallery, cover, media & text, file, audio, video, embed, table, details, buttons, columns, group, social links, latest posts, categories, archives, page list, tag cloud, search, calendar, RSS, footnotes) takes the theme recipe on posts, default pages, block pages, and the editor canvas. Colors are tokens, so `html.mh-dark` flips them.
