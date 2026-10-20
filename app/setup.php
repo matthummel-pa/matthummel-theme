@@ -175,8 +175,8 @@ add_action('widgets_init', function () {
             __('Replaces the Site link column. Use a Heading (class footer-nav-label) and a List (class footer-nav footer-nav--split).', 'sage'),
         ],
         'footer-updates' => [
-            __('Footer: Get updates', 'sage'),
-            __('Replaces the signup column: heading, short lede and your signup form.', 'sage'),
+            __('Footer: Updates (Hostinger Reach)', 'sage'),
+            __('Optional signup column. Add a heading, a short line and your Hostinger Reach form. Leave empty to hide the column.', 'sage'),
         ],
         'footer-legal' => [
             __('Footer: Bottom bar', 'sage'),
