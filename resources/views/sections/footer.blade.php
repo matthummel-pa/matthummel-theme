@@ -17,7 +17,13 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ $footerBlurb }}</p>
+      @if (is_active_sidebar('footer-about'))
+        <div class="footer-blurb footer-widgets">
+          @php(dynamic_sidebar('footer-about'))
+        </div>
+      @else
+        <p class="footer-blurb">{{ $footerBlurb }}</p>
+      @endif
       <div class="footer-brand-meta">
         @if (\App\mh_is_hireable($gh))
           <a
@@ -37,6 +43,9 @@
 
     {{-- Site: one link column (the Work column was folded in here in 3.6.62) --}}
     <nav class="footer-nav-col" aria-label="{{ esc_attr__('Site', 'sage') }}">
+      @if (is_active_sidebar('footer-links'))
+        @php(dynamic_sidebar('footer-links'))
+      @else
       <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
       <ul class="footer-nav footer-nav--split">
         <li><a href="{{ esc_url(home_url('/about/')) }}">{{ __('About', 'sage') }}</a></li>
@@ -54,6 +63,7 @@
         <li><a href="{{ esc_url(home_url('/changelog/')) }}">{{ __('Changelog', 'sage') }}</a></li>
         <li><a href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'sage') }}</a></li>
       </ul>
+      @endif
     </nav>
 
     {{-- Get updates --}}
@@ -62,6 +72,9 @@
       $privacyUrl = \App\mh_privacy_policy_url();
     @endphp
     <div class="footer-nav-col footer-follow" id="footer-signup">
+      @if (is_active_sidebar('footer-updates'))
+        @php(dynamic_sidebar('footer-updates'))
+      @else
       <p class="footer-nav-label">{{ \App\field('footer_signup_label', __('Get updates', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</p>
       <p class="footer-follow__lede">{{ \App\field(
         'footer_signup_lede',
@@ -106,13 +119,19 @@
         <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
       </form>
       @endif
+      @endif
     </div>
 
   </div>
 
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
-    @php
+    @if (is_active_sidebar('footer-legal'))
+      <nav class="footer-legal footer-widgets" aria-label="{{ esc_attr__('Legal', 'sage') }}">
+        @php(dynamic_sidebar('footer-legal'))
+      </nav>
+    @else
+@php
       $bottomMenuItems = has_nav_menu('footer_bottom_navigation')
         ? wp_get_nav_menu_items(get_nav_menu_locations()['footer_bottom_navigation'] ?? 0) ?: []
         : [];
@@ -136,5 +155,6 @@
       </nav>
     @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
+    @endif
   </div>
 </footer>

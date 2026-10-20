@@ -6482,3 +6482,20 @@ html.mh-dark .work-context__note { background: var(--color-surface); border-colo
   .contact-write > .container { display: block; }
 }
 @media (max-width: 900px) { #write, #tips, #next, #questions { scroll-margin-top: 1rem; } }
+
+/* ── Footer widget areas (3.7.11) ──
+   Block widgets reuse the hard-coded footer's classes (set under Advanced → Additional CSS class):
+   Heading → footer-nav-label, List → footer-nav footer-nav--split, legal List → footer-legal-links,
+   credit Paragraph → footer-stack, signup lede → footer-follow__lede. */
+.site-footer .footer-widget > :first-child { margin-top: 0; }
+.site-footer .footer-widget > :last-child { margin-bottom: 0; }
+.site-footer h2.footer-nav-label { margin-top: 0; }
+.site-footer .footer-blurb.footer-widgets p { margin: 0; }
+.site-footer ul.wp-block-list.footer-nav { padding-left: 0; margin-top: 0; list-style: none; }
+/* Bottom bar: the Legal nav holds the link list and credit line in one row next to the copyright.
+   No display: contents here, it would drop the nav landmark in some screen readers. */
+.footer-bottom .footer-legal { flex: 1 1 32rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-legal-links) { flex: 1 1 12rem; display: flex; justify-content: center; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-stack) { flex: 0 1 20rem; }
+.footer-bottom ul.footer-legal-links { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; margin: 0; padding: 0; list-style: none; }
+.footer-bottom ul.footer-legal-links li + li::before { content: "·"; content: "·" / ""; margin-right: .5rem; }

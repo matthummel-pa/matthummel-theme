@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.11 — Footer columns become widget areas
+
+- Four new widget areas in Appearance → Widgets: **Footer: About** (blurb), **Footer: Site links**, **Footer: Get updates** and **Footer: Bottom bar** (legal links and the "Built with" line).
+- Each column shows its widgets when the area has any, and falls back to the current output (page fields, the footer bottom menu, the signup form) when it is empty, so nothing changes on deploy until widgets are added.
+- The theme keeps the brand name, availability badge, social icons and the copyright year.
+- Block widgets reuse the footer's own classes (Advanced → Additional CSS class): `footer-nav-label` on a Heading, `footer-nav footer-nav--split` on the links List, `footer-legal-links` on the legal List, `footer-stack` on the credit Paragraph. New rules at the end of `studio.css`.
+- The stock Sage "Footer" sidebar (`sidebar-footer`) is gone; it was never printed. Anything left in it moves to Inactive widgets.
+
 ## 3.7.10 — Release watch moves into the theme
 
 - The MH Release Watch plugin is replaced by theme code. `app/release-watch.php` reads Make WordPress Core twice a day (WP-Cron) for the next release: the schedule, every roadmap item grouped by area, and the latest posts tagged for that version. It is stored in one option, so pages never wait on WordPress.org, and the last good copy stays up if WordPress.org is down. `wp mh release-watch` refreshes it on demand.
