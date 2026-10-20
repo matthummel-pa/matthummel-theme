@@ -2,6 +2,13 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.7.13 footer Reach form)
+
+- Footer signup is the Hostinger Reach plugin's block in the **Footer: Get updates** widget area. Two modes: a *builder* form (`formBuilderId` set) is `<div data-reach-form>` → cross-origin iframe, unstyleable from the theme; the *classic* form (no builder id) is `form.hostinger-reach-block-subscription-form` posting to `hostinger-reach/v1/contact` via the plugin's `view.js`. Use the classic one.
+- `mh_reach_form_block_html()` (`render_block_hostinger-reach/subscription`, `app/blocks.php`) swaps the plugin's button classes for `.btn.mh-reach-submit` in widget areas and on block pages — the same places the theme maps core buttons to `.btn` — and, inside a widget area, adds `.footer-follow__email` to the inputs. Elsewhere the block keeps the plugin's own classes. Keep the `hostinger-reach-block-subscription-form` form class and `.reach-subscription-message`; the plugin script keys on them.
+- `mh_in_widget_area()` (dynamic_sidebar before/after counts) gates the core-block class filter. Anything that should not restyle footer widgets goes behind it.
+- Styles: end of `studio.css` ("Footer signup via Hostinger Reach"). Light-mode footer colors are the violet set, dark is lime on navy, same as the rest of the footer.
+
 ## Editor’s notes (3.7.0 page blocks)
 
 - A page is "block-built" when it uses the Block page template or has the `_mh_block_page` meta (`App\mh_page_uses_blocks()`). Converted templates render `partials.block-page` for those pages and keep their field markup for the rest.

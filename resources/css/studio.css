@@ -6499,3 +6499,58 @@ html.mh-dark .work-context__note { background: var(--color-surface); border-colo
 .footer-bottom .footer-legal .footer-widget:has(.footer-stack) { flex: 0 1 20rem; }
 .footer-bottom ul.footer-legal-links { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; margin: 0; padding: 0; list-style: none; }
 .footer-bottom ul.footer-legal-links li + li::before { content: "·"; content: "·" / ""; margin-right: .5rem; }
+
+/* ── Footer signup via Hostinger Reach (3.7.13) ──
+   The "classic Reach form" block prints real HTML. app/blocks.php gives its button `.btn` and its inputs
+   `.footer-follow__email`, so the field and button recipes above apply; this block covers the rest.
+   A Reach *builder* form is an iframe from reach-forms.hostingerusercontent.com — theme CSS cannot reach
+   inside it, so style that one in Reach itself or switch the block to "Use classic Reach Form". */
+.site-footer .hostinger-reach-block-subscription-form-wrapper { margin-top: .15rem; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields { gap: .65rem; align-items: stretch; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline { align-items: end; flex-wrap: wrap; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-field { margin-top: 0; flex: none; min-width: 0; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .hostinger-reach-block-form-field { flex: 1 1 12rem; }
+.site-footer .hostinger-reach-block-subscription-form label {
+  display: block;
+  margin: 0 0 .3rem;
+  padding: 0;
+  font: 600 .8125rem/1.3 var(--font-display);
+  letter-spacing: .02em;
+  text-transform: none;
+  color: #c9d9ef;
+}
+.site-footer .hostinger-reach-block-subscription-form label .required { color: var(--lime-300); }
+.site-footer .hostinger-reach-block-subscription-form .mh-reach-submit { width: fit-content; margin-top: .2rem; }
+.site-footer .hostinger-reach-block-subscription-form .mh-reach-submit[disabled] { opacity: .65; cursor: progress; transform: none; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .mh-reach-submit { margin-top: 0; flex: none; min-width: 0; }
+.site-footer .reach-subscription-message {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .6rem;
+  padding: .6rem .75rem;
+  border-radius: var(--radius);
+  font: 600 .95rem/1.4 var(--font-display);
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+}
+.site-footer .reach-subscription-message.is-success { background: rgba(190, 242, 100, .16); }
+.site-footer .reach-subscription-message.is-error { background: rgba(234, 71, 104, .2); }
+.site-footer .reach-subscription-message svg { width: 1.25rem; height: 1.25rem; flex: none; }
+.site-footer .reach-subscription-message svg path { fill: currentColor; }
+html:not(.mh-dark) .site-footer .hostinger-reach-block-subscription-form label { color: var(--gray-700); }
+html:not(.mh-dark) .site-footer .hostinger-reach-block-subscription-form label .required { color: var(--violet-700); }
+html:not(.mh-dark) .site-footer .reach-subscription-message { color: var(--color-text); background: #fff; border: 1px solid var(--violet-100); }
+html:not(.mh-dark) .site-footer .reach-subscription-message.is-success { background: rgba(163, 230, 53, .22); border-color: transparent; }
+html:not(.mh-dark) .site-footer .reach-subscription-message.is-error { background: rgba(234, 71, 104, .12); border-color: transparent; color: #a10223; }
+/* A footer widget Heading is a column label, whatever classes it arrives with. */
+.site-footer .footer-nav-label.display-title,
+.site-footer h2.footer-nav-label {
+  font: 800 1.05rem/1.2 var(--font-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  max-width: none;
+}
+/* A Reach builder form (iframe) sits a little off the lede; the card itself is styled in Reach. */
+.site-footer [data-reach-form] { margin-top: .35rem; }
