@@ -6492,8 +6492,10 @@ html.mh-dark .work-context__note { background: var(--color-surface); border-colo
 .site-footer h2.footer-nav-label { margin-top: 0; }
 .site-footer .footer-blurb.footer-widgets p { margin: 0; }
 .site-footer ul.wp-block-list.footer-nav { padding-left: 0; margin-top: 0; list-style: none; }
-/* Bottom bar: unwrap the widget containers so the list and credit line sit in the same row as the copyright. */
-.footer-bottom .footer-legal,
-.footer-bottom .footer-legal .footer-widget { display: contents; }
+/* Bottom bar: the Legal nav holds the link list and credit line in one row next to the copyright.
+   No display: contents here, it would drop the nav landmark in some screen readers. */
+.footer-bottom .footer-legal { flex: 1 1 32rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-legal-links) { flex: 1 1 12rem; display: flex; justify-content: center; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-stack) { flex: 0 1 20rem; }
 .footer-bottom ul.footer-legal-links { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; margin: 0; padding: 0; list-style: none; }
 .footer-bottom ul.footer-legal-links li + li::before { content: "·"; content: "·" / ""; margin-right: .5rem; }
