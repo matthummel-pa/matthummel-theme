@@ -127,9 +127,9 @@
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
     @if (is_active_sidebar('footer-legal'))
-      <div class="footer-legal footer-widgets">
+      <nav class="footer-legal footer-widgets" aria-label="{{ esc_attr__('Legal', 'sage') }}">
         @php(dynamic_sidebar('footer-legal'))
-      </div>
+      </nav>
     @else
 @php
       $bottomMenuItems = has_nav_menu('footer_bottom_navigation')
