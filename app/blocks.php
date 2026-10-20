@@ -555,7 +555,8 @@ add_action('init', function (): void {
  * @param  array<string, mixed>  $block  Parsed block.
  */
 add_filter('render_block', function ($html, $block) {
-    if (! is_string($html) || $html === '' || ! mh_is_block_page_view()) {
+    // Widget areas (the footer) keep their own classes: a footer Heading stays a label, not a section title.
+    if (! is_string($html) || $html === '' || ! mh_is_block_page_view() || mh_in_widget_area()) {
         return $html;
     }
 
@@ -606,6 +607,61 @@ add_filter('render_block', function ($html, $block) {
 
     return $html;
 }, 10, 2);
+
+/**
+ * True while WordPress is printing a widget area (`dynamic_sidebar()`), including
+ * Customizer partial refreshes. Core fires the before/after actions as a pair.
+ *
+ * @since 3.7.12
+ */
+function mh_in_widget_area(): bool
+{
+    return did_action('dynamic_sidebar_before') > did_action('dynamic_sidebar_after');
+}
+
+/**
+ * Hostinger Reach "classic" subscription form on the site recipe.
+ *
+ * The plugin block prints `<form class="hostinger-reach-block-subscription-form">`
+ * with its own button and input classes (a Reach *builder* form is an iframe
+ * instead and is not touched here). The button becomes `.btn`; in a widget area
+ * the inputs take `.footer-follow__email`, so the theme's existing light, dark,
+ * hover, and focus rules apply. Submit still goes through the plugin's `view.js`,
+ * which only needs the form class and the message element.
+ *
+ * @since 3.7.12
+ *
+ * @param  string  $html  Rendered block.
+ */
+add_filter('render_block_hostinger-reach/subscription', function ($html) {
+    if (! is_string($html) || ! str_contains($html, 'hostinger-reach-block-subscription-form')) {
+        return $html;
+    }
+
+    $inFooter = mh_in_widget_area();
+    $tags = new \WP_HTML_Tag_Processor($html);
+
+    while ($tags->next_tag()) {
+        $tag = $tags->get_tag();
+
+        if ($tag === 'BUTTON' && $tags->has_class('hostinger-reach-block-submit')) {
+            // Drop the plugin's button classes so its stylesheet (pill, full width, 40px) does not fight `.btn`.
+            foreach (['hostinger-reach-block-submit', 'has-light-color', 'has-color-3-background-color', 'has-text-color', 'has-background', 'has-link-color'] as $class) {
+                $tags->remove_class($class);
+            }
+            $tags->add_class('btn');
+            $tags->add_class('mh-reach-submit');
+
+            continue;
+        }
+
+        if ($inFooter && $tag === 'INPUT' && in_array($tags->get_attribute('type'), ['email', 'text'], true)) {
+            $tags->add_class('footer-follow__email');
+        }
+    }
+
+    return $tags->get_updated_html();
+});
 
 /**
  * "On this page" links for a block page: every top-level Section with an anchor and a label.
