@@ -624,21 +624,28 @@ function mh_in_widget_area(): bool
  *
  * The plugin block prints `<form class="hostinger-reach-block-subscription-form">`
  * with its own button and input classes (a Reach *builder* form is an iframe
- * instead and is not touched here). The button becomes `.btn`; in a widget area
- * the inputs take `.footer-follow__email`, so the theme's existing light, dark,
- * hover, and focus rules apply. Submit still goes through the plugin's `view.js`,
- * which only needs the form class and the message element.
+ * instead and is not touched here). Where the theme already maps buttons to
+ * `.btn` — widget areas and block pages — the submit becomes `.btn`; in a widget
+ * area the inputs also take `.footer-follow__email`, so the theme's existing
+ * light, dark, hover, and focus rules apply. Elsewhere the block is left alone.
+ * Submit still goes through the plugin's `view.js`, which only needs the form
+ * class and the message element.
  *
  * @since 3.7.12
  *
  * @param  string  $html  Rendered block.
  */
-add_filter('render_block_hostinger-reach/subscription', function ($html) {
+function mh_reach_form_block_html(mixed $html): mixed
+{
     if (! is_string($html) || ! str_contains($html, 'hostinger-reach-block-subscription-form')) {
         return $html;
     }
 
-    $inFooter = mh_in_widget_area();
+    $inWidgetArea = mh_in_widget_area();
+    if (! $inWidgetArea && ! mh_is_block_page_view()) {
+        return $html;
+    }
+
     $tags = new \WP_HTML_Tag_Processor($html);
 
     while ($tags->next_tag()) {
@@ -655,13 +662,15 @@ add_filter('render_block_hostinger-reach/subscription', function ($html) {
             continue;
         }
 
-        if ($inFooter && $tag === 'INPUT' && in_array($tags->get_attribute('type'), ['email', 'text'], true)) {
+        if ($inWidgetArea && $tag === 'INPUT' && in_array($tags->get_attribute('type'), ['email', 'text'], true)) {
             $tags->add_class('footer-follow__email');
         }
     }
 
     return $tags->get_updated_html();
-});
+}
+
+add_filter('render_block_hostinger-reach/subscription', __NAMESPACE__.'\\mh_reach_form_block_html');
 
 /**
  * "On this page" links for a block page: every top-level Section with an anchor and a label.
