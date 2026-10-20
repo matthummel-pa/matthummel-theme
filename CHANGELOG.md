@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.12 — Footer template compile fix
+
+- The 3.7.11 footer used the inline `@php(dynamic_sidebar('…'))` form. Blade extracts `@php … @endphp` blocks before directives with a lazy match, so the first inline call paired with the next block's `@endphp` and swallowed the `@if`/`@else` between them. A fresh compile produced invalid PHP (`unexpected end of file, expecting endif`) and every front-end page returned 500 after the theme was reinstalled. The four calls now use the block form. No visible change.
+- 3.7.12's Reach form styling was reverted while this was found and will return in the next release.
+
 ## 3.7.11 — Footer columns become widget areas
 
 - Four new widget areas in Appearance → Widgets: **Footer: About** (blurb), **Footer: Site links**, **Footer: Get updates** and **Footer: Bottom bar** (legal links and the "Built with" line).

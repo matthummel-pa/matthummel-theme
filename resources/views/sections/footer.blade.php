@@ -19,7 +19,7 @@
       </a>
       @if (is_active_sidebar('footer-about'))
         <div class="footer-blurb footer-widgets">
-          @php(dynamic_sidebar('footer-about'))
+          @php dynamic_sidebar('footer-about'); @endphp
         </div>
       @else
         <p class="footer-blurb">{{ $footerBlurb }}</p>
@@ -44,7 +44,7 @@
     {{-- Site: one link column (the Work column was folded in here in 3.6.62) --}}
     <nav class="footer-nav-col" aria-label="{{ esc_attr__('Site', 'sage') }}">
       @if (is_active_sidebar('footer-links'))
-        @php(dynamic_sidebar('footer-links'))
+        @php dynamic_sidebar('footer-links'); @endphp
       @else
       <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
       <ul class="footer-nav footer-nav--split">
@@ -73,7 +73,7 @@
     @endphp
     <div class="footer-nav-col footer-follow" id="footer-signup">
       @if (is_active_sidebar('footer-updates'))
-        @php(dynamic_sidebar('footer-updates'))
+        @php dynamic_sidebar('footer-updates'); @endphp
       @else
       <p class="footer-nav-label">{{ \App\field('footer_signup_label', __('Get updates', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</p>
       <p class="footer-follow__lede">{{ \App\field(
@@ -128,7 +128,7 @@
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
     @if (is_active_sidebar('footer-legal'))
       <nav class="footer-legal footer-widgets" aria-label="{{ esc_attr__('Legal', 'sage') }}">
-        @php(dynamic_sidebar('footer-legal'))
+        @php dynamic_sidebar('footer-legal'); @endphp
       </nav>
     @else
 @php
