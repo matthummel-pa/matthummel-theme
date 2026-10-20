@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.14 — Footer signup fields stack
+
+- The footer Reach form's field group sets its own layout (`display: flex; flex-direction: column`) instead of inheriting it. The site's Additional CSS carried an older grid rule for that block, which put the Subscribe button beside the email field; the theme rule now wins. Inline layout still works when the block is set to it.
+
 ## 3.7.13 — Footer signup form on the site recipe
 
 - Hostinger Reach's "classic Reach form" block takes the theme's form look in the footer: the Subscribe button is the site button (`.btn`), the email and name fields use the footer field recipe (light and dark, hover, focus), labels are small and sentence case, and the thanks/error message matches the footer status style.

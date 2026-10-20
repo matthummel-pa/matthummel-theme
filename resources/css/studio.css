@@ -6506,8 +6506,8 @@ html.mh-dark .work-context__note { background: var(--color-surface); border-colo
    A Reach *builder* form is an iframe from reach-forms.hostingerusercontent.com — theme CSS cannot reach
    inside it, so style that one in Reach itself or switch the block to "Use classic Reach Form". */
 .site-footer .hostinger-reach-block-subscription-form-wrapper { margin-top: .15rem; }
-.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields { gap: .65rem; align-items: stretch; }
-.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline { align-items: end; flex-wrap: wrap; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields { display: flex; flex-direction: column; gap: .65rem; align-items: stretch; grid-template-columns: none; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline { flex-direction: row; align-items: end; flex-wrap: wrap; }
 .site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-field { margin-top: 0; flex: none; min-width: 0; }
 .site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .hostinger-reach-block-form-field { flex: 1 1 12rem; }
 .site-footer .hostinger-reach-block-subscription-form label {
