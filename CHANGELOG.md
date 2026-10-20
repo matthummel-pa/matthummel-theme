@@ -1,9 +1,16 @@
 # Changelog
 
+## 3.7.13 — Footer signup form on the site recipe
+
+- Hostinger Reach's "classic Reach form" block takes the theme's form look in the footer: the Subscribe button is the site button (`.btn`), the email and name fields use the footer field recipe (light and dark, hover, focus), labels are small and sentence case, and the thanks/error message matches the footer status style.
+- Widget Headings stay column labels. The block-page filter that turns every H2 into a section title (`display-title is-section`) skips widget areas, and a CSS rule holds the label size either way. On the home page the footer's "Get updates" had been printing at 37px.
+- Re-lands the change reverted in 3.7.12's rollback; the footer template fix shipped first.
+- A Reach form built in Reach's form builder is an iframe; the theme cannot style inside it. In the block, choose **Use classic Reach Form** to get the styled version.
 ## 3.7.12 — Footer template compile fix
 
 - The 3.7.11 footer used the inline `@php(dynamic_sidebar('…'))` form. Blade extracts `@php … @endphp` blocks before directives with a lazy match, so the first inline call paired with the next block's `@endphp` and swallowed the `@if`/`@else` between them. A fresh compile produced invalid PHP (`unexpected end of file, expecting endif`) and every front-end page returned 500 after the theme was reinstalled. The four calls now use the block form. No visible change.
-- 3.7.12's Reach form styling was reverted while this was found and will return in the next release.
+- The Reach form styling was reverted while this was found; it returns in 3.7.13.
+||||||| parent of aec4ed9 (fix(footer): Reach classic form on the site recipe; widget headings stay labels (3.7.12) (#297))
 
 ## 3.7.11 — Footer columns become widget areas
 
