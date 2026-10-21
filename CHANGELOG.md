@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
+
+- Everything that lived in Appearance → Customize → Additional CSS is now `resources/css/site-extras.css`, imported last in `app.css` so the cascade order stays the same. That covers the post components (`mh-table`, `mh-cards`, `mh-callout`), the Hostinger Reach signup and Journal newsletter forms, the CTA band buttons and mobile note spacing, the home FAQ two-column layout with the sticky "Still have a question?" card (one column at 1024px and below), the hero dot waves, and the section line-art illustrations.
+- Hero wave: the two dot bands no longer sweep across on a linear loop. They drift slowly side to side (ease-in-out, alternating) while swelling and fading on an 8-second breath, half a cycle apart, so the hero reads as a breathing wave. The breath uses `transform` and `opacity`. `prefers-reduced-motion` still turns the whole effect off.
+- After this deploys, clear Additional CSS on the live site so the rules are not loaded twice.
 ## 3.7.24 — Subtle glass on the chrome
 
 - Translucent, blurred surfaces in the iOS spirit, kept quiet: the scrolled header, the mobile menu panel, the "On this page" bar and its pills, the header chips (theme toggle, menu button, preview chevron), the Get updates preview card, and the FAQ cards. Each one shows a blurred, slightly more saturated version of what is behind it, with a 1px top highlight and a faint blue→cyan→lime tint. Light mode stays white-ish; dark mode stays navy.
