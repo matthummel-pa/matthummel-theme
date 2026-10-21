@@ -49,7 +49,7 @@
         <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">{!! \App\mh_svg_icon('moon', 16) !!}</span>
       </button>
 
-      {{-- One call to action: the green Available now pill while GitHub says hireable, else Say hello. Both go to Contact. --}}
+      {{-- One call to action: the green Available now pill (→ Get updates) while GitHub says hireable, else Say hello (→ Contact). --}}
       @php
         $ghAvail = \App\Github::fetchUser(\App\mh_github_login());
         $isHireable = \App\mh_is_hireable($ghAvail);
@@ -57,8 +57,8 @@
       @if ($isHireable)
         <a
           class="header-avail"
-          href="{{ esc_url(home_url('/contact/')) }}"
-          aria-label="{{ __('Available now — say hello', 'sage') }}"
+          href="{{ esc_url(home_url('/get-updates/')) }}"
+          aria-label="{{ __('Available now — get updates', 'sage') }}"
         >
           @include('partials.avail-mark', ['gh' => $ghAvail])
           <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
