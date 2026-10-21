@@ -282,8 +282,8 @@ class Schema
         }
         $post_type = (string) ($context['post_type'] ?? 'page');
         $chosen = (string) ($context['schema_type'] ?? '');
-        // ProfilePage is a WebPage type (see webpage_node), so it carries no article node.
-        if ($chosen === 'none' || $chosen === 'ProfilePage') {
+        // A ProfilePage (About, or the explicit choice) is a WebPage type, so it carries no article node.
+        if ($chosen === 'none' || self::is_profile_page($context)) {
             return null;
         }
         if (! in_array($chosen, ['Article', 'BlogPosting', 'TechArticle', 'NewsArticle'], true)) {
@@ -486,8 +486,10 @@ class Schema
             return [];
         }
         $xpath = new \DOMXPath($dom);
-        // Outermost details only: a nested details is part of its parent's answer, not a second question.
-        $details = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]//details[not(ancestor::details)]");
+        // A details nested inside another question is part of that answer, not a second question.
+        // A details that wraps the whole Questions block (outside the list) does not count as a question.
+        $in_list = "ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]";
+        $details = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]//details[not(ancestor::details[{$in_list}])]");
         if ($details === false) {
             return [];
         }
