@@ -539,6 +539,7 @@ function handle_public_issue(): void
     header('Content-Type: text/html; charset=utf-8');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; img-src https: http: data:; font-src https: data:; base-uri 'none'; form-action 'none'");
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- A whole email document: every value in it was escaped when the letter was rendered and stored, and the placeholders above are filled with escaped values.
     echo public_issue_html($row);
     exit;
 }

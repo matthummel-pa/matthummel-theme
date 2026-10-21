@@ -1254,9 +1254,9 @@ function handle_settings(): void
         'mhn_rules_present' => '1',
         'rule_categories' => wp_unslash($_POST['rule_categories'] ?? []),
         'mhn_funnel_present' => '1',
-        'welcome_send' => $_POST['welcome_send'] ?? '',
-        'utm_links' => $_POST['utm_links'] ?? '',
-        'public_archive' => $_POST['public_archive'] ?? '',
+        'welcome_send' => isset($_POST['welcome_send']) ? sanitize_key(wp_unslash($_POST['welcome_send'])) : '',
+        'utm_links' => isset($_POST['utm_links']) ? sanitize_key(wp_unslash($_POST['utm_links'])) : '',
+        'public_archive' => isset($_POST['public_archive']) ? sanitize_key(wp_unslash($_POST['public_archive'])) : '',
     ]);
     if (settings()['public_archive'] === 1) {
         ensure_archive_page();
