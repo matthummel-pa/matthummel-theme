@@ -6722,3 +6722,45 @@ html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); out
   .header-updates__icon,
   html .header-updates__cta:hover { transform: none; }
 }
+
+/* ── 3.7.19 · Social icons share the Get updates CTA look: navy fill, brand ring, cyan glyph → lime glow ──
+   The 3.6.x block above sets the lime round buttons with (0,4,1) light-mode selectors; the tripled
+   .soc-list class here ties or beats them without !important. */
+html .soc-list.soc-list.soc-list .soc-link,
+html .site-footer .soc-list.soc-list.soc-list .soc-link {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box;
+  color: #22d3ee;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 8px 18px -12px rgba(59, 130, 246, .9);
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .soc-list.soc-list.soc-list .soc-link svg { fill: currentColor; transition: transform .18s ease; }
+html .soc-list.soc-list.soc-list .soc-link:hover,
+html .soc-list.soc-list.soc-list .soc-link:focus-visible,
+html .site-footer .soc-list.soc-list.soc-list .soc-link:hover,
+html .site-footer .soc-list.soc-list.soc-list .soc-link:focus-visible {
+  background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box;
+  border-color: transparent;
+  color: #a3e635;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 24px rgba(163, 230, 53, .35), 0 12px 26px -12px rgba(59, 130, 246, .9);
+}
+html .soc-list.soc-list.soc-list .soc-link:hover svg { transform: translateY(-1px) rotate(-6deg); }
+html .soc-list.soc-list.soc-list .soc-link:active { transform: translateY(0); }
+html .soc-list.soc-list.soc-list .soc-link:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; }
+/* Compact rows (footer, mobile menu): ringed buttons need air, not the hairline separators. */
+html .soc-list--compact.soc-list.soc-list { gap: .5rem; }
+html .soc-list--compact.soc-list.soc-list li + li::before { display: none; }
+/* Labeled pills and the card rows: ink label, soft note, same ring. */
+html .soc-list.soc-list.soc-list .soc-link__label { color: #f1f5fb; }
+html .soc-list.soc-list.soc-list .soc-link__note { color: #b7c6dc; }
+html .soc-list--cards.soc-list.soc-list .soc-link { border-radius: 14px; }
+html .soc-list--cards.soc-list.soc-list .soc-link:hover .soc-link__note { color: #b7c6dc; }
+@media (prefers-reduced-motion: reduce) {
+  html .soc-list.soc-list.soc-list .soc-link:hover,
+  html .soc-list.soc-list.soc-list .soc-link:hover svg { transform: none; }
+}
