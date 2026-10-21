@@ -691,3 +691,9 @@ Passphrase-protected keys need `SERVER_SSH_PRIVATE_KEY_PASSPHRASE` (or an unencr
 ## Stack
 
 Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Inter + IBM Plex Sans
+
+## Editor’s notes (3.7.24 glass surfaces)
+
+- `--glass-*` tokens (`:root` light, `html.mh-dark` dark) at the end of `studio.css` feed the scrolled header, `.mh-popout`, `.h-page-nav` and its pills, the header chips, the Get updates preview (`.header-updates__panel`), and the FAQ cards (`--glass-card`, `--glass-card-top`, `--glass-card-blur` read by the 3.7.23 block). Tune opacity, blur or tint there, not per element.
+- `@media (prefers-reduced-transparency: reduce)` and `@supports not (backdrop-filter)` reset the tokens to opaque. Keep both when touching the block; the header over photo heroes relies on the translucent surface for readability only after `.is-scrolled`.
+- Do not add `backdrop-filter` to large content cards (post/work cards): it is costly on long grids and the effect is meant for chrome.

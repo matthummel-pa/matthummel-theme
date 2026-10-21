@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.24 — Subtle glass on the chrome
+
+- Translucent, blurred surfaces in the iOS spirit, kept quiet: the scrolled header, the mobile menu panel, the "On this page" bar and its pills, the header chips (theme toggle, menu button, preview chevron), the Get updates preview card, and the FAQ cards. Each one shows a blurred, slightly more saturated version of what is behind it, with a 1px top highlight and a faint blue→cyan→lime tint. Light mode stays white-ish; dark mode stays navy.
+- One set of tokens (`--glass-*` on `:root` / `html.mh-dark`) drives all of it, so the look can be tuned in one place. Visitors who set "reduce transparency" in their OS, and browsers without `backdrop-filter`, get the opaque surfaces back.
+- CSS only; no markup change.
+
 ## 3.7.23 — FAQ accordions: roomier cards in the brand recipe
 
 - Every FAQ accordion (the FAQ block, project and services questions, and the older About/Home items) is now a card instead of a flat grey tile: white (navy in dark mode) with a hairline border, 18px corners, and a soft shadow. Hover tints the border cyan; the open item gets the blue→cyan→lime ring and a light glow, the same recipe as the Get updates button.
