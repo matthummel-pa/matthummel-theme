@@ -6800,3 +6800,140 @@ html .btn.mh-reach-submit[disabled] { opacity: .65; cursor: progress; transform:
 @media (prefers-reduced-motion: reduce) {
   html .btn.mh-reach-submit:hover { transform: none; }
 }
+
+/* ── 3.7.23 · FAQ accordions: roomier cards in the brand recipe ──
+   Native details/summary (the FAQ block, project and services FAQs, and the older .h-faq items).
+   The 3.6.x tile rules above zero the border and shadow with !important, so the flags here are
+   the minimum needed to put a card border, a ring on the open item, and the icon box back. */
+.faq-list,
+.h-faq__list { gap: .8rem; }
+html .faq-list details,
+html .faq-list .project-faq,
+html .post-prose .faq-list details,
+html .h-faq__item {
+  --fq-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --fq-line: var(--color-border);
+  --fq-surface: #fff;
+  --fq-cyan: #22d3ee;
+  --fq-navy: #0a1a33;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--fq-line) !important;
+  border-radius: 18px;
+  background: var(--fq-surface) !important;
+  box-shadow: 0 1px 0 rgba(10, 26, 51, .03), 0 10px 24px -20px rgba(10, 26, 51, .35) !important;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+html .faq-list details:hover,
+html .post-prose .faq-list details:hover,
+html .h-faq__item:hover {
+  border: 1.5px solid rgba(34, 211, 238, .55) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 14px 28px -20px rgba(10, 26, 51, .45) !important;
+}
+html .faq-list details[open],
+html .post-prose .faq-list details[open],
+html .h-faq__item[open] {
+  border: 1.5px solid transparent !important;
+  background: linear-gradient(var(--fq-surface), var(--fq-surface)) padding-box, var(--fq-grad) border-box !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .10), 0 18px 36px -22px rgba(59, 130, 246, .55) !important;
+}
+html .faq-list summary,
+html .h-faq__q {
+  min-height: 0;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem 1.15rem 1.35rem;
+  font: 700 1.08rem/1.4 var(--font-display);
+  letter-spacing: -.012em;
+}
+html .faq-list details[open] > summary,
+html .h-faq__item[open] > .h-faq__q { padding-bottom: .95rem; }
+html .faq-list summary:focus-visible,
+html .h-faq__q:focus-visible { outline: 2px solid var(--fq-cyan); outline-offset: -4px; border-radius: 14px; }
+/* Chevron sits in a cyan icon box; the open item flips it onto a lime fill. */
+html .faq-list summary::after,
+html .h-faq__q::after {
+  content: "" !important;
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  border: 1px solid rgba(34, 211, 238, .32) !important;
+  border-radius: 10px;
+  background: rgba(34, 211, 238, .08) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e7490' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat !important;
+  transform: none;
+  transform-origin: center;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+html .faq-list details[open] > summary::after,
+html .h-faq__item[open] > .h-faq__q::after {
+  border-color: transparent !important;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a1a33' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat, linear-gradient(180deg, #c3f05a 0%, #a3e635 100%) !important;
+  background-blend-mode: normal;
+  box-shadow: 0 0 18px rgba(163, 230, 53, .35);
+  transform: rotate(180deg);
+}
+/* Answer: hairline rule, then roomy copy. Blocks inside the Details block, not only <p>. */
+html .faq-list details > :not(summary),
+html .h-faq__a {
+  margin: 0 1.35rem 0 1.35rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--fq-line);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  animation: fq-rise .22s cubic-bezier(.2, .8, .2, 1) both;
+}
+html .faq-list details > :not(summary) ~ :not(summary) { border-top: 0; padding-top: .6rem; }
+html .faq-list details > :not(summary):last-child,
+html .h-faq__a { padding-bottom: 1.3rem; }
+html .faq-list details > :not(summary) a { color: var(--color-accent); }
+@keyframes fq-rise { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+html.mh-dark .faq-list details,
+html.mh-dark .faq-list .project-faq,
+html.mh-dark .post-prose .faq-list details,
+html.mh-dark .h-faq__item {
+  --fq-line: #1c3358;
+  --fq-surface: #0b1b35;
+  border: 1.5px solid var(--fq-line) !important;
+  box-shadow: inset 0 1px 0 rgba(103, 232, 249, .06), 0 14px 30px -22px rgba(2, 6, 14, .9) !important;
+}
+html.mh-dark .faq-list details:hover,
+html.mh-dark .post-prose .faq-list details:hover,
+html.mh-dark .h-faq__item:hover {
+  border: 1.5px solid rgba(34, 211, 238, .55) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 14px 30px -22px rgba(2, 6, 14, .9) !important;
+}
+html.mh-dark .faq-list details[open],
+html.mh-dark .post-prose .faq-list details[open],
+html.mh-dark .h-faq__item[open] {
+  border: 1.5px solid transparent !important;
+  background: linear-gradient(180deg, #0e2140 0%, #0b1b35 100%) padding-box, var(--fq-grad) border-box !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .12), 0 0 32px rgba(59, 130, 246, .18), inset 0 1px 0 rgba(103, 232, 249, .06) !important;
+}
+html.mh-dark .faq-list summary::after,
+html.mh-dark .h-faq__q::after {
+  background: rgba(34, 211, 238, .08) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat !important;
+}
+html.mh-dark .faq-list details[open] > summary::after,
+html.mh-dark .h-faq__item[open] > .h-faq__q::after {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a1a33' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat, linear-gradient(180deg, #c3f05a 0%, #a3e635 100%) !important;
+}
+html.mh-dark .faq-list details > :not(summary),
+html.mh-dark .h-faq__a { color: #b7c6dc; }
+
+@media (max-width: 640px) {
+  html .faq-list summary,
+  html .h-faq__q { padding: 1rem 1rem 1rem 1.1rem; font-size: 1.02rem; gap: .75rem; }
+  html .faq-list details > :not(summary),
+  html .h-faq__a { margin-left: 1.1rem; margin-right: 1.1rem; }
+  html .faq-list summary::after,
+  html .h-faq__q::after { width: 30px; height: 30px; border-radius: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .faq-list details > :not(summary),
+  html .h-faq__a { animation: none; }
+  html .faq-list summary::after,
+  html .h-faq__q::after { transition: none; }
+}
