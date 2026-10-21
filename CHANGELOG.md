@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.21 — No Get updates pill in the footer
+
+- The footer brand column no longer prints the Get updates pill under the blurb; the social icons sit there on their own. The footer's Get updates widget column (with the Reach form) and the header pill are unchanged.
+
 ## 3.7.20 — Footer Subscribe button matches the Get updates button
 
 - The Hostinger Reach **Subscribe** button (footer widget area, and the same block on block pages such as Get updates) takes the Get updates pill look: navy fill, blue→cyan→lime ring, ink text. Hover and focus turn the text lime with the lime glow and a small lift. CSS only.
