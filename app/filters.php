@@ -19,6 +19,21 @@ add_filter('document_title_separator', function () {
     return '|';
 });
 
+/**
+ * Pages get an mh-page-{slug} body class (e.g. mh-page-about) so page-specific
+ * CSS does not depend on a post ID that changes between databases.
+ */
+add_filter('body_class', function (array $classes): array {
+    if (is_page()) {
+        $slug = (string) get_post_field('post_name', get_queried_object_id());
+        if ($slug !== '') {
+            $classes[] = 'mh-page-'.sanitize_html_class($slug);
+        }
+    }
+
+    return $classes;
+});
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);

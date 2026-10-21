@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.31 — About page: section line art, readable copy, side-by-side FAQ
+
+- New `resources/css/about-page.css` (imported last in `app.css`). On screens 900px and wider, Story, What I build, Selected work, Experience, and Open source each get a small line drawing on the right: a 2011-to-now path, stacked site/plugin/app layers, a browser window, a resume sheet with checks, and a branch merging back into main. They are CSS masks filled with the `--il-*` gradient, so dark mode is automatic and screen readers never see them. Intro copy is capped at 62ch and stays clear of the drawing.
+- More air above Story's "How I work" cards and Experience's skills block; jump links land below the sticky header.
+- FAQ on desktop (1025px and up): heading and intro on the left, questions on the right.
+- Pages now get an `mh-page-{slug}` body class (`app/filters.php`), so the About rules use `.mh-page-about` instead of the database ID `page-id-8`.
+- Fixed the doubled arrow on "All posts" / "Browse all" links: the Recent posts and Featured projects blocks printed a `→` in the markup on top of the arrow `.h-text-arrow` already draws, so the markup copy is gone.
+
 ## 3.7.30 — Newsletter section: tighter copy, perks under the form
 
 - The Get updates section heading caps at 18ch and the blurb at 34rem (balanced / pretty wrapping), so neither runs into the envelope illustration.

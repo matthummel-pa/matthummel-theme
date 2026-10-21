@@ -14,7 +14,7 @@
         <span class="h-work-count">{{ sprintf(_n('%s project', '%s projects', $total, 'sage'), number_format_i18n($total)) }}</span>
       @endif
       @if ($linkText !== '')
-        <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ $linkText }} <span aria-hidden="true">→</span></a>
+        <a class="h-text-arrow" href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ $linkText }}</a>
       @endif
     </div>
   @endif
