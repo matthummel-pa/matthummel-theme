@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.26 — FAQ card scrolls; its illustration sits above it
+
+- The "Still have a question?" card on the home FAQ is no longer sticky on desktop; it scrolls with the rest of the left column.
+- The FAQ line-art drawing moves from the bottom-left corner of the section into the left column, directly above that card. `blocks/section.blade.php` prints it just before the `faq-help-card` group; if the card is missing it falls back to the old section-level placement. Still hidden at 1024px and below, `aria-hidden`, and still animated (reduced motion respected).
+
 ## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
 
 - Everything that lived in Appearance → Customize → Additional CSS is now `resources/css/site-extras.css`, imported last in `app.css` so the cascade order stays the same. That covers the post components (`mh-table`, `mh-cards`, `mh-callout`), the Hostinger Reach signup and Journal newsletter forms, the CTA band buttons and mobile note spacing, the home FAQ two-column layout with the sticky "Still have a question?" card (one column at 1024px and below), the hero dot waves, and the section line-art illustrations.
