@@ -345,8 +345,7 @@ html .cta-band .wp-block-button__link.btn:hover{transform:none}
 #questions .faq-main .faq-list{gap:.75rem}
 #questions .faq-list details p a{color:var(--color-accent);text-decoration:underline;text-underline-offset:2px}
 html.mh-dark #questions .faq-list details p a{color:var(--cyan-300)}
-/* One column on tablet and mobile; sticky intro only on desktop */
-@media (min-width:1025px){#questions .faq-layout{align-items:stretch}#questions .faq-help-card{position:sticky;top:10.5rem}}
+/* One column on tablet and mobile. The help card scrolls with the page (no longer sticky, 3.7.26). */
 @media (max-width:1024px){#questions .faq-layout{flex-direction:column;flex-wrap:nowrap;gap:2rem}#questions .faq-layout>.wp-block-column{flex-basis:auto!important;width:100%}#questions .faq-aside>p{max-width:60ch}#questions .faq-help-card{margin-top:1.5rem}}
 /* FAQ intro heading size (the illustration itself is now inline SVG, see illustrations.css). */
 #questions .faq-aside>h2{font-size:clamp(1.85rem,4vw,2.875rem)!important;line-height:1.12}
@@ -373,6 +372,83 @@ html.mh-dark #questions .faq-list details p a{color:var(--cyan-300)}
 /* Section illustrations moved to inline SVG: partials/section-illustration.blade.php + illustrations.css. */
 /* === /Line-art illustrations === */
 
+/* === 3.7.27 · Every button wears the nav "Get updates" pill ===
+   Navy fill, blue→cyan→lime brand ring, 999px, ink type; lime type and a glow on hover
+   (the same look 3.7.18 gave the header pill and 3.7.19–3.7.25 ported one element at a time).
+   Covers .btn, core button block links, and the search submit. Outline/ghost keep the ring
+   on the page surface so they still read as secondary, and hover the same way.
+   The 3.6.54 hover rules in studio.css are (0,3,1) !important; the doubled class here ties
+   them and wins by sitting later in the cascade. Padding and font size are untouched. */
+html .btn.btn,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow),
+html .search-form.search-form button {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  --hu-ink: #f1f5fb;
+  --hu-cyan: #22d3ee;
+  --hu-lime: #a3e635;
+  --hu-fill: var(--hu-navy);
+  --hu-type: var(--hu-ink);
+  border: 1.5px solid transparent !important;
+  border-radius: 999px !important;
+  background: linear-gradient(var(--hu-fill), var(--hu-fill)) padding-box, var(--hu-grad) border-box !important;
+  color: var(--hu-type) !important;
+  -webkit-text-fill-color: var(--hu-type);
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .10), 0 10px 22px -12px rgba(59, 130, 246, .9) !important;
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .btn.btn svg,
+html .wp-block-button__link.wp-block-button__link svg { color: var(--hu-cyan); transition: color .18s ease; }
+
+/* Secondary: same pill and ring, page-surface fill, ink type. */
+html .btn.btn-outline,
+html .btn.btn-ghost,
+html :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link.wp-block-button__link {
+  --hu-fill: #fff;
+  --hu-type: var(--hu-navy);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08) !important;
+}
+html.mh-dark .btn.btn-outline,
+html.mh-dark .btn.btn-ghost,
+html.mh-dark :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link.wp-block-button__link {
+  --hu-fill: var(--color-bg, #111a28);
+  --hu-type: var(--hu-ink);
+}
+
+html .btn.btn:hover,
+html .btn.btn:focus-visible,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow):hover,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow):focus-visible,
+html .search-form.search-form button:hover,
+html .search-form.search-form button:focus-visible {
+  --hu-fill: var(--hu-navy-deep);
+  --hu-type: var(--hu-lime);
+  border-color: transparent !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 28px rgba(163, 230, 53, .35), 0 14px 30px -12px rgba(59, 130, 246, .9) !important;
+  transform: translateY(-1px);
+}
+html .btn.btn:hover svg,
+html .btn.btn:focus-visible svg,
+html .wp-block-button__link.wp-block-button__link:hover svg,
+html .wp-block-button__link.wp-block-button__link:focus-visible svg { color: var(--hu-lime) !important; }
+html .btn.btn:active,
+html .wp-block-button__link.wp-block-button__link:active,
+html .search-form.search-form button:active { transform: translateY(0); }
+html .btn.btn:focus-visible,
+html .wp-block-button__link.wp-block-button__link:focus-visible,
+html .search-form.search-form button:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
+html .btn.btn:disabled,
+html .btn.btn[disabled],
+html .btn.btn[aria-disabled="true"] { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html .btn.btn:hover,
+  html .wp-block-button__link.wp-block-button__link:hover,
+  html .search-form.search-form button:hover { transform: none; }
+}
+/* === /3.7.27 buttons === */
 /* === 3.7.28 · Page heroes: more air top and bottom; copy no longer runs the full container ===
    Home (.h-hero) keeps its viewport sizing and pad modifiers. The 3.6.x panel rules set the title
    and lead to max-width: none (studio.css ~2598), so block paragraphs ran the full 1120px. */
