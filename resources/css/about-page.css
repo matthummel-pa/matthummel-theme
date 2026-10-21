@@ -22,9 +22,13 @@
   margin-top: clamp(3rem, 6vw, 4.5rem);
 }
 
-/* Keep jump links clear of the sticky header + on-page nav */
-.mh-page-about .pf-section[id] {
-  scroll-margin-top: 7.5rem;
+/* Keep jump links clear of the sticky header + on-page nav. Desktop only:
+   under 901px the header is not sticky and portfolio.css keeps 1rem. The
+   :is() list carries ID weight so it beats portfolio.css's #story/#build/#faq. */
+@media (width >= 901px) {
+  .mh-page-about :is(.pf-section[id], #story, #build, #faq) {
+    scroll-margin-top: 7.5rem;
+  }
 }
 
 @media (width >= 900px) {
