@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.30 — Newsletter section: tighter copy, perks under the form
+
+- The Get updates section heading caps at 18ch and the blurb at 34rem (balanced / pretty wrapping), so neither runs into the envelope illustration.
+- A core List block with the class `mh-newsletter__perks` under the Reach form now shows as an inline row of perks, each with a small lime check (CSS mask, decorative). Spacing uses top padding because a theme flow rule resets that list's top margin.
+- CSS only (`site-extras.css`); no markup change.
+
 ## 3.7.29 — SEO: ProfilePage on About, FAQ data from every Questions block, one "Matt Hummel" per title
 
 - **About is a ProfilePage.** MH SEO now marks the About page (slug `about`) as `ProfilePage` instead of a generic `WebPage`, with the existing `Person` node as `mainEntity` plus `dateCreated` / `dateModified`. Any other page can opt in from the SEO sidebar → Schema → Article type → **ProfilePage**.
