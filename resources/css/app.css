@@ -9,6 +9,7 @@
 @import "./blocks.css";
 @import "./release-watch.css";
 @import "./site-extras.css"; /* formerly Additional CSS; keep last */
+@import "./illustrations.css"; /* animated section line art (after site-extras so its positioning wins) */
 
 /* Light mode default. Dark visitors still use html.mh-dark. */
 :root { color-scheme: light; }
