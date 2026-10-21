@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.28 — Page heroes: more air, narrower copy
+
+- Page heroes (`.page-header`, every page but the home hero) get more top and bottom padding: `clamp(4rem, 8vw, 6.25rem)` above and `clamp(3.5rem, 6.5vw, 5rem)` below, up from about 3.25/2.75rem at the small end.
+- Hero copy no longer runs the full 1120px container: the title caps at 22ch and the lead, intro, and paragraphs at 42rem. Small block at the end of `resources/css/site-extras.css`. Home `.h-hero` keeps its viewport sizing and pad modifiers.
 ## 3.7.27 — Every button wears the nav pill
 
 - All buttons now use the header "Get updates" look: navy fill, blue→cyan→lime brand ring, pill radius, light type; lime type and a glow on hover and focus. That covers `.btn` everywhere (Say hello, forms, cards, the mobile menu CTA, WooCommerce), core button blocks on posts and pages, and the search submit. `.btn-outline` and `.btn-ghost` keep the same pill and ring on the page surface (white in light, page background in dark) so they still read as secondary, and hover the same way. One block at the end of `resources/css/site-extras.css`; padding and font sizes are untouched. Reduced motion drops the lift.

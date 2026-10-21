@@ -449,3 +449,13 @@ html .btn.btn[aria-disabled="true"] { opacity: .65; cursor: not-allowed; transfo
   html .search-form.search-form button:hover { transform: none; }
 }
 /* === /3.7.27 buttons === */
+/* === 3.7.28 · Page heroes: more air top and bottom; copy no longer runs the full container ===
+   Home (.h-hero) keeps its viewport sizing and pad modifiers. The 3.6.x panel rules set the title
+   and lead to max-width: none (studio.css ~2598), so block paragraphs ran the full 1120px. */
+html .page-header { padding-block: clamp(4rem, 8vw, 6.25rem) clamp(3.5rem, 6.5vw, 5rem); }
+html .page-header .page-header__panel .display-title.is-hero,
+html .page-header .about-hero__copy .display-title.is-hero { max-width: 22ch; }
+html .page-header .page-header__panel .lead,
+html .page-header .page-header__panel .sec-intro,
+html .page-header .page-header__panel p:not(.eyebrow):not(.h-badge) { max-width: 42rem; }
+/* === /3.7.28 page heroes === */
