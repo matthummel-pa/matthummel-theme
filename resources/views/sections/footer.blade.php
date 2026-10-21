@@ -26,10 +26,6 @@
         <p class="footer-blurb">{{ $footerBlurb }}</p>
       @endif
       <div class="footer-brand-meta">
-        <a class="header-avail footer-avail header-updates__link" href="{{ esc_url(home_url('/get-updates/')) }}">
-          <span class="header-updates__icon" aria-hidden="true">{!! \App\mh_svg_icon('mail', 16) !!}</span>
-          <span class="header-avail__label">{{ __('Get updates', 'sage') }}</span>
-        </a>
         <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
           @include('partials.social', ['compact' => true])
         </nav>
