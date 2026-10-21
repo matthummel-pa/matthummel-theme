@@ -4475,12 +4475,14 @@ add_action('init', function (): void {
     }
 
     $titles = [
+        'About, Hire & Code — WordPress Developer | Matt Hummel' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
         'About Matt Hummel, WordPress Developer | Matt Hummel' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
         'About Matt Hummel, WordPress Developer' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
     ];
     $titleKeys = ['_mh_seo_title', 'rank_math_title', 'mh_f_seo_title'];
 
     $descriptions = [
+        'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
         'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
         'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
         'WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.' => 'WordPress themes and plugins I\'ve built, each with a live demo and a short build story. Open one, try the demo, and see how I build.',
@@ -4491,8 +4493,9 @@ add_action('init', function (): void {
         'WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.' => 'A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.',
     ];
     $descriptionKeys = ['_mh_seo_description', 'rank_math_description', 'mh_f_seo_desc', 'mh_f_seo_description'];
-    // These two rewrite to About-specific copy, so they only apply on the About page itself.
+    // These rewrite to About-specific copy, so they only apply on the About page itself.
     $aboutDescriptions = array_flip([
+        'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.',
         'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
         'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.',
     ]);
