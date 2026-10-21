@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.28 — Page heroes: more air, narrower copy
+
+- Page heroes (`.page-header`, every page but the home hero) get more top and bottom padding: `clamp(4rem, 8vw, 6.25rem)` above and `clamp(3.5rem, 6.5vw, 5rem)` below, up from about 3.25/2.75rem at the small end.
+- Hero copy no longer runs the full 1120px container: the title caps at 22ch and the lead, intro, and paragraphs at 42rem. Small block at the end of `resources/css/site-extras.css`. Home `.h-hero` keeps its viewport sizing and pad modifiers.
+
 ## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
 
 - Everything that lived in Appearance → Customize → Additional CSS is now `resources/css/site-extras.css`, imported last in `app.css` so the cascade order stays the same. That covers the post components (`mh-table`, `mh-cards`, `mh-callout`), the Hostinger Reach signup and Journal newsletter forms, the CTA band buttons and mobile note spacing, the home FAQ two-column layout with the sticky "Still have a question?" card (one column at 1024px and below), the hero dot waves, and the section line-art illustrations.
