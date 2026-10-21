@@ -323,6 +323,17 @@ html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type=
 html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]:focus,
 html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]:focus-visible{border-color:var(--blue-400);outline:2px solid var(--color-focus);outline-offset:2px}
 
+/* Newsletter section: keep heading + blurb clear of the envelope illustration */
+.mh-newsletter .display-title{max-inline-size:18ch;text-wrap:balance}
+.mh-newsletter .display-title + p{max-inline-size:34rem;text-wrap:pretty}
+
+/* Newsletter perks list under the form (core/list with class mh-newsletter__perks).
+   Padding, not margin, for the gap: a theme flow rule resets this list's top margin. */
+.mh-newsletter .mh-newsletter__perks{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:0;padding:1.5rem 0 0;list-style:none;font-size:.875rem;line-height:1.5}
+.mh-newsletter .mh-newsletter__perks li{display:inline-flex;align-items:center;gap:.5rem;margin:0}
+/* Decorative check mark drawn with a mask so it takes the lime token */
+.mh-newsletter .mh-newsletter__perks li::before{content:"";flex:none;inline-size:1rem;block-size:1rem;background:var(--color-lime);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+
 /* CTA band buttons: same gradient pill as the newsletter/footer Subscribe button */
 html .cta-band .wp-block-button__link.btn{--hu-grad:linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);--hu-navy:#0a1a33;--hu-navy-deep:#081527;-webkit-text-fill-color:#f1f5fb;letter-spacing:.02em;border-radius:999px;font-weight:700;transition:box-shadow .18s,transform .18s,color .18s,background .18s;box-shadow:0 0 0 3px #22d3ee1a,0 10px 22px -12px #3b82f6e6;background:linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box!important;color:#f1f5fb!important;border:1.5px solid #0000!important}
 html .cta-band .wp-block-button__link.btn:hover,html .cta-band .wp-block-button__link.btn:focus-visible{-webkit-text-fill-color:#a3e635;transform:translateY(-1px);background:linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box!important;color:#a3e635!important;border-color:#0000!important;box-shadow:0 0 0 4px #22d3ee2e,0 0 28px #a3e63559,0 14px 30px -12px #3b82f6e6!important}
