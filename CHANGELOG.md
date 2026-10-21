@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.23 — FAQ accordions: roomier cards in the brand recipe
+
+- Every FAQ accordion (the FAQ block, project and services questions, and the older About/Home items) is now a card instead of a flat grey tile: white (navy in dark mode) with a hairline border, 18px corners, and a soft shadow. Hover tints the border cyan; the open item gets the blue→cyan→lime ring and a light glow, the same recipe as the Get updates button.
+- More room: the question row has about a third more padding, the answer sits under a hairline rule with roomier line height, and items sit `.8rem` apart. Phone widths tighten the padding a little.
+- The chevron sits in a cyan icon box on the right; opening flips it onto a lime fill. Answers fade and rise in on open; both animations respect `prefers-reduced-motion`. Keyboard focus shows a cyan ring inside the card.
+- CSS only, one block at the end of `studio.css`; no markup change, so every existing FAQ picks it up.
+
 ## 3.7.22 — Footer sentence in Matt's voice
 
 - The footer sentence under the name now reads: "I’m a full-stack WordPress developer. I build custom themes, plugins, and web apps for shops, agencies, and other developers, then write up what I learn here. A few tool links are affiliate links, and each one is labeled." First person, the site's glossary (shops, agencies, developers), the "full-stack WordPress developer" phrase the home page already targets, and the affiliate disclosure kept in plain words.

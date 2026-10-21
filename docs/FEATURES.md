@@ -292,6 +292,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.6.11 FAQ toggles)
 
 - Project Questions are `<details class="project-faq">` inside `.faq-list`. Do not restore always-open `<h3>` / `<p>` pairs.
+- Since 3.7.23 every `.faq-list details`, `.project-faq`, and `.h-faq__item` is a brand-recipe card (hairline border, cyan hover, blue→cyan→lime ring when open, cyan icon box that turns lime) via the last block of `studio.css`. The 3.6.x grey-tile rules above it zero the border with `!important`, so that block repeats `border` with `!important` on purpose; edit it there rather than adding a third generation.
 - Grey tile: `background: var(--gray-50)` (dark: `--color-surface`), `border: 0`, `box-shadow: none`. Override lives in `studio.css` so `portfolio.css` hover shadows stay off.
 - Chevron is `summary::after`. Keep native details (no JS accordion).
 
