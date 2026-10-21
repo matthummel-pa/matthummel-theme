@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.18 — Get updates header CTA with a preview
+
+- The header pill reads **Get updates** and carries the mail icon instead of the pulse dot. New look in the brand colors: navy fill, a blue→cyan→lime ring, cyan icon that turns lime on hover with a lime glow. It shows for every visitor (it is no longer tied to GitHub's hireable flag); Say hello still appears when not hireable.
+- Hovering the pill, or pressing the chevron next to it, opens a small preview card of what a subscriber gets: new posts, release notes, checklists, a one-line promise, and a lime **Sign up** button. Keyboard and touch use the chevron (`aria-expanded`); Escape, clicking elsewhere, or tabbing away closes it. Below 900px only the pill shows.
+- The mobile menu CTA and the footer pill read Get updates with the same icon and link.
+
 ## 3.7.17 — Available now pill goes to Get updates
 
 - The green **Available now** pill in the header and footer links to `/get-updates/` instead of `/contact/`. Its accessible name is "Available now — get updates". The Say hello button (shown when GitHub says not hireable) and the Contact menu item still go to Contact.
