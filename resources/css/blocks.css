@@ -515,7 +515,8 @@ html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .edi
   transform: none;
 }
 :where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link::after,
-:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow::after { content: "→"; transition: translate .15s; }
+/* Skip the CSS arrow when the link already carries one in markup (avoids "→ →"). */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow:not(:has(> [aria-hidden="true"]))::after { content: "→"; transition: translate .15s; }
 :where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link:is(:hover, :focus-visible),
 :where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow:is(:hover, :focus-visible) {
   background: none;

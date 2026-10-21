@@ -1041,6 +1041,8 @@ function mh_skills_grouped(array $skills): array
         if ($skill === '') {
             continue;
         }
+        // Fix stored names that lost their capitals (e.g. "Vs Code").
+        $skill = mh_title_label_phrase($skill) ?? $skill;
         $key = mh_code_skill_group($skill);
         if (! isset($grouped[$key])) {
             $grouped[$key] = [];

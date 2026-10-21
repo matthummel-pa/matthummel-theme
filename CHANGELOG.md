@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.32 — Skills and repo labels
+
+- **VS Code reads right.** Multi-word tech names that split badly word by word ("Vs Code") now map to their real spelling through `mh_title_label_phrase()`, used by `mh_title_label()` and by the Skills block for names already saved in the database.
+- **One shelf instead of two one-item shelves.** Power Apps, Power Automate, SharePoint, and n8n now group under **Platforms and automation** instead of separate Microsoft and Workflow shelves.
+- **Repo cards get the right type.** `mh_code_repo_category()` checks for dev tooling first (Claude Code, AI agents, playbooks), then theme vs plugin. The AI Dev Standards Playbook now reads **Dev tooling** instead of Sage theme, and WalkRidge reads **WordPress theme** instead of WordPress plugin.
+- **No double arrows.** `.h-text-arrow` only draws its CSS arrow when the link has no `aria-hidden` arrow in the markup, so cards like "Open project →" inside block sections show one arrow.
+
 ## 3.7.31 — About page: section line art, readable copy, side-by-side FAQ
 
 - New `resources/css/about-page.css` (imported last in `app.css`). On screens 900px and wider, Story, What I build, Selected work, Experience, and Open source each get a small line drawing on the right: a 2011-to-now path, stacked site/plugin/app layers, a browser window, a resume sheet with checks, and a branch merging back into main. They are CSS masks filled with the `--il-*` gradient, so dark mode is automatic and screen readers never see them. Intro copy is capped at 62ch and stays clear of the drawing.
