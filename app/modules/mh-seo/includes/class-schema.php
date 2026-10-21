@@ -282,7 +282,8 @@ class Schema
         }
         $post_type = (string) ($context['post_type'] ?? 'page');
         $chosen = (string) ($context['schema_type'] ?? '');
-        if ($chosen === 'none') {
+        // ProfilePage is a WebPage type (see webpage_node), so it carries no article node.
+        if ($chosen === 'none' || $chosen === 'ProfilePage') {
             return null;
         }
         if (! in_array($chosen, ['Article', 'BlogPosting', 'TechArticle', 'NewsArticle'], true)) {
@@ -372,7 +373,7 @@ class Schema
         $seen = [];
         foreach ($questions as $item) {
             // One entry per question, even when a heading repeats a block question.
-            $key = strtolower($item['question']);
+            $key = mb_strtolower($item['question']);
             if (isset($seen[$key])) {
                 continue;
             }
@@ -485,7 +486,8 @@ class Schema
             return [];
         }
         $xpath = new \DOMXPath($dom);
-        $details = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]//details");
+        // Outermost details only: a nested details is part of its parent's answer, not a second question.
+        $details = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]//details[not(ancestor::details)]");
         if ($details === false) {
             return [];
         }
@@ -509,9 +511,10 @@ class Schema
             if ($question === '' || $answer === '') {
                 continue;
             }
+            // textContent is already decoded text; a second html_entity_decode would eat literal "&not"-style runs.
             $items[] = [
-                'question' => html_entity_decode($question, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-                'answer' => html_entity_decode($answer, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'question' => $question,
+                'answer' => $answer,
             ];
         }
 

@@ -542,7 +542,7 @@ function mh_projects_blocks_markup(int $id): string
         ), 3, true)
     );
 
-    // Questions. MH SEO adds FAQPage data for every Questions block; `schema` is kept for older saved blocks.
+    // Questions. MH SEO adds FAQPage data for every Questions block, so new markup sets no `schema` attribute.
     $out .= mh_blocks_section(
         ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'work-faq', 'navLabel' => __('FAQ', 'sage'), 'tone' => 'alt'],
         mh_blocks_heading($f('work_faq_h2'))
@@ -550,7 +550,7 @@ function mh_projects_blocks_markup(int $id): string
         .mh_blocks_faq(array_map(
             static fn (array $row): array => ['title' => $row['title'], 'text' => esc_html($row['text'])],
             mh_work_page_faq($id)
-        ), ['schema' => true])
+        ))
         .mh_blocks_buttons([['text' => __('Ask me', 'sage'), 'url' => $contact]])
     );
 

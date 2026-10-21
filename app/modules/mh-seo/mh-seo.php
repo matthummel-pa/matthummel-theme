@@ -1,7 +1,7 @@
 <?php
 
 /**
- * MH SEO: titles, descriptions, schema, sitemaps, redirects, and a writing score. Version 1.2.0.
+ * MH SEO: titles, descriptions, schema, sitemaps, redirects, and a writing score. Version 1.2.1.
  *
  * Bundled with the matthummel theme. If the standalone MH SEO plugin is active, it wins
  * and this copy stays out of the way (no duplicate classes).
@@ -28,7 +28,7 @@ if (defined('MH_SEO_VERSION')) {
     return;
 }
 
-define('MH_SEO_VERSION', '1.2.0');
+define('MH_SEO_VERSION', '1.2.1');
 define('MH_SEO_FILE', __FILE__);
 define('MH_SEO_PATH', trailingslashit(__DIR__));
 define('MH_SEO_URL', trailingslashit(get_theme_file_uri('app/modules/mh-seo')));

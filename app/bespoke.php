@@ -4466,7 +4466,8 @@ add_action('init', function (): void {
  * searchers nothing about the page. Each stored value is replaced only while
  * it still holds the exact text listed here; anything Matt rewrote stays.
  * Looks at every key a title or description can live in: MH SEO, the old
- * Rank Math keys, and the theme fields.
+ * Rank Math keys, and the theme fields. The About title and the two About
+ * descriptions apply only to the page with slug `about`.
  */
 add_action('init', function (): void {
     if (get_option('mh_seo_copy_v2') || wp_installing()) {
@@ -4490,6 +4491,11 @@ add_action('init', function (): void {
         'WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.' => 'A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.',
     ];
     $descriptionKeys = ['_mh_seo_description', 'rank_math_description', 'mh_f_seo_desc', 'mh_f_seo_description'];
+    // These two rewrite to About-specific copy, so they only apply on the About page itself.
+    $aboutDescriptions = array_flip([
+        'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
+        'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.',
+    ]);
 
     $ids = get_posts([
         'post_type' => ['page', 'post', mh_project_post_type()],
@@ -4499,19 +4505,30 @@ add_action('init', function (): void {
         'fields' => 'ids',
     ]);
 
+    // `fields => ids` skips the meta cache; prime it once instead of one query per key per post.
+    update_meta_cache('post', $ids);
+
     foreach ($ids as $id) {
         $id = (int) $id;
-        foreach ($titleKeys as $key) {
-            $val = get_post_meta($id, $key, true);
-            if (is_string($val) && isset($titles[$val])) {
-                update_post_meta($id, $key, $titles[$val]);
+        $isAbout = get_post_field('post_name', $id) === 'about';
+        // The About strings are named for that page; another post holding the same text keeps it.
+        if ($isAbout) {
+            foreach ($titleKeys as $key) {
+                $val = get_post_meta($id, $key, true);
+                if (is_string($val) && isset($titles[$val])) {
+                    update_post_meta($id, $key, $titles[$val]);
+                }
             }
         }
         foreach ($descriptionKeys as $key) {
             $val = get_post_meta($id, $key, true);
-            if (is_string($val) && isset($descriptions[$val])) {
-                update_post_meta($id, $key, $descriptions[$val]);
+            if (! is_string($val) || ! isset($descriptions[$val])) {
+                continue;
             }
+            if (! $isAbout && isset($aboutDescriptions[$val])) {
+                continue;
+            }
+            update_post_meta($id, $key, $descriptions[$val]);
         }
     }
 

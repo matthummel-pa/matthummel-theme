@@ -390,10 +390,10 @@ class Document_Builder
     {
         $view = (string) ($context['view'] ?? '');
         $type = 'website';
-        if ($view === 'singular') {
-            $type = 'article';
-        } elseif ($view === 'author') {
+        if ($view === 'author' || Schema::is_profile_page($context)) {
             $type = 'profile';
+        } elseif ($view === 'singular') {
+            $type = 'article';
         }
         $url = $canonical !== '' ? $canonical : (string) ($context['url'] ?? '');
         $own_title = trim((string) ($context['og_title'] ?? ''));
