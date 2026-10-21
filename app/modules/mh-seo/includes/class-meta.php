@@ -80,7 +80,7 @@ class Meta
      */
     public static function schema_types(): array
     {
-        return ['', 'Article', 'BlogPosting', 'TechArticle', 'NewsArticle', 'none'];
+        return ['', 'Article', 'BlogPosting', 'TechArticle', 'NewsArticle', 'ProfilePage', 'none'];
     }
 
     /**

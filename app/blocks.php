@@ -845,7 +845,7 @@ function mh_blocks_list(array $items, string $style = ''): string
  * A Questions block from question/answer rows.
  *
  * @param  list<array{title: string, text: string}>  $rows  Rows as stored by the FAQ repeaters.
- * @param  array<string, mixed>  $attrs  Block attributes (`schema` prints FAQPage JSON-LD).
+ * @param  array<string, mixed>  $attrs  Block attributes. `schema` is legacy: MH SEO adds FAQPage data for every Questions block.
  */
 function mh_blocks_faq(array $rows, array $attrs = []): string
 {

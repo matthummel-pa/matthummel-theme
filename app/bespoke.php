@@ -4458,3 +4458,82 @@ add_action('init', function (): void {
 
     update_option('mh_footer_blurb_copy_v1', true);
 }, 77);
+
+/**
+ * 3.7.29: titles say "Matt Hummel" once, and meta descriptions stop ending on "Say hello."
+ *
+ * The CTA cost about 11 of the ~155 characters a description gets and told
+ * searchers nothing about the page. Each stored value is replaced only while
+ * it still holds the exact text listed here; anything Matt rewrote stays.
+ * Looks at every key a title or description can live in: MH SEO, the old
+ * Rank Math keys, and the theme fields. The About title and the two About
+ * descriptions apply only to the page with slug `about`.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_seo_copy_v2') || wp_installing()) {
+        return;
+    }
+
+    $titles = [
+        'About, Hire & Code — WordPress Developer | Matt Hummel' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
+        'About Matt Hummel, WordPress Developer | Matt Hummel' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
+        'About Matt Hummel, WordPress Developer' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
+    ];
+    $titleKeys = ['_mh_seo_title', 'rank_math_title', 'mh_f_seo_title'];
+
+    $descriptions = [
+        'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
+        'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
+        'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
+        'WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.' => 'WordPress themes and plugins I\'ve built, each with a live demo and a short build story. Open one, try the demo, and see how I build.',
+        'WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.' => 'WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps that shops can edit and agencies can hand off.',
+        'I build WordPress platforms shops can edit and agencies can hand off. Sage themes, plugins, and clear deploy paths. Say hello.' => 'I build WordPress platforms shops can edit and agencies can hand off: Sage themes, custom plugins, and clear deploy paths with no lock-in.',
+        'Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.' => 'Acreline install, setup, listings, content, and site care, plus custom WordPress builds when a theme alone will not cover what you need.',
+        'Browse WordPress themes and plugins with live demos. Buy a pack from the shop or hire me to adapt one. Say hello.' => 'Browse WordPress themes and plugins with live demos. Buy a pack from the shop, or hire me to adapt one to your site and content.',
+        'WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.' => 'A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.',
+    ];
+    $descriptionKeys = ['_mh_seo_description', 'rank_math_description', 'mh_f_seo_desc', 'mh_f_seo_description'];
+    // These rewrite to About-specific copy, so they only apply on the About page itself.
+    $aboutDescriptions = array_flip([
+        'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.',
+        'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
+        'Full-stack developer in Gettysburg building WordPress sites shops can edit and agencies can hand off. Say hello.',
+    ]);
+
+    $ids = get_posts([
+        'post_type' => ['page', 'post', mh_project_post_type()],
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+    ]);
+
+    // `fields => ids` skips the meta cache; prime it once instead of one query per key per post.
+    update_meta_cache('post', $ids);
+
+    foreach ($ids as $id) {
+        $id = (int) $id;
+        $isAbout = get_post_field('post_name', $id) === 'about';
+        // The About strings are named for that page; another post holding the same text keeps it.
+        if ($isAbout) {
+            foreach ($titleKeys as $key) {
+                $val = get_post_meta($id, $key, true);
+                if (is_string($val) && isset($titles[$val])) {
+                    update_post_meta($id, $key, $titles[$val]);
+                }
+            }
+        }
+        foreach ($descriptionKeys as $key) {
+            $val = get_post_meta($id, $key, true);
+            if (! is_string($val) || ! isset($descriptions[$val])) {
+                continue;
+            }
+            if (! $isAbout && isset($aboutDescriptions[$val])) {
+                continue;
+            }
+            update_post_meta($id, $key, $descriptions[$val]);
+        }
+    }
+
+    update_option('mh_seo_copy_v2', true);
+}, 78);

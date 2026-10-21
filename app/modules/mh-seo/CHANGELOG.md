@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- The About page (slug `about`), or any page whose schema type is set to the new **ProfilePage** choice, is a `ProfilePage` with the site Person as `mainEntity`. A ProfilePage gets no article node and sends `og:type` `profile`.
+- FAQ data is built from every `matthummel/faq` Questions block on the page (outermost `details` only), merged with the question headings when that box is ticked, deduplicated by question.
+- A title that already names the site loses a trailing `| Site name` (also `-`, `–`, `—`).
+- Copy the same changes into the standalone MH SEO plugin; when it is active, it wins over this bundled copy.
+
 ## 1.2.0
 
 - The SEO box on the edit screen has tabs (Search, Social, Advanced, Schema), a score ring, and live length meters for the SEO title and meta description. The meters show the target range and say in words whether the text is short, good, or long.

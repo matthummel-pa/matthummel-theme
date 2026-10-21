@@ -110,7 +110,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-services.blade.php' => [
             'title' => __('Acreline Services', 'sage').' | '.$brand,
-            'desc' => __('Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.', 'sage'),
+            'desc' => __('Acreline install, setup, listings, content, and site care, plus custom WordPress builds when a theme alone will not cover what you need.', 'sage'),
         ],
         'template-portfolio.blade.php' => [
             'title' => __('WordPress Developer Portfolio & GitHub', 'sage').' | '.$brand,
@@ -161,12 +161,12 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => __('About, Hire & Code — WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.', 'sage'),
+            'title' => __('About Matt Hummel, WordPress Developer in Gettysburg, PA', 'sage'),
+            'desc' => __('About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.', 'sage'),
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
-            'desc' => __('WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.', 'sage'),
+            'desc' => __('A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,
