@@ -66,6 +66,26 @@ html.mh-dark {
   .mh-illus { display: none; }
 }
 
+/* 3.7.26: on the home FAQ the drawing is printed inside the left column, just above
+   the "Still have a question?" card (blocks/section.blade.php), so it flows with the
+   intro instead of sitting absolutely at the section's bottom edge. */
+@media (min-width: 1025px) {
+  .faq-aside .mh-illus--questions {
+    position: static;
+    z-index: auto;
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 360 / 250;
+    margin-top: 2rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .faq-aside .mh-illus--questions + .faq-help-card { margin-top: 1rem; }
+}
+
 /* The FAQ goes single-column at 1024px (site-extras.css); its drawing would sit under the rows. */
 @media (max-width: 1024px) {
   .mh-illus--questions { display: none; }

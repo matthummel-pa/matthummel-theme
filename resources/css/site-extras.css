@@ -345,8 +345,7 @@ html .cta-band .wp-block-button__link.btn:hover{transform:none}
 #questions .faq-main .faq-list{gap:.75rem}
 #questions .faq-list details p a{color:var(--color-accent);text-decoration:underline;text-underline-offset:2px}
 html.mh-dark #questions .faq-list details p a{color:var(--cyan-300)}
-/* One column on tablet and mobile; sticky intro only on desktop */
-@media (min-width:1025px){#questions .faq-layout{align-items:stretch}#questions .faq-help-card{position:sticky;top:10.5rem}}
+/* One column on tablet and mobile. The help card scrolls with the page (no longer sticky, 3.7.26). */
 @media (max-width:1024px){#questions .faq-layout{flex-direction:column;flex-wrap:nowrap;gap:2rem}#questions .faq-layout>.wp-block-column{flex-basis:auto!important;width:100%}#questions .faq-aside>p{max-width:60ch}#questions .faq-help-card{margin-top:1.5rem}}
 /* FAQ intro heading size (the illustration itself is now inline SVG, see illustrations.css). */
 #questions .faq-aside>h2{font-size:clamp(1.85rem,4vw,2.875rem)!important;line-height:1.12}

@@ -3,6 +3,10 @@
 ## 3.7.27 — Every button wears the nav pill
 
 - All buttons now use the header "Get updates" look: navy fill, blue→cyan→lime brand ring, pill radius, light type; lime type and a glow on hover and focus. That covers `.btn` everywhere (Say hello, forms, cards, the mobile menu CTA, WooCommerce), core button blocks on posts and pages, and the search submit. `.btn-outline` and `.btn-ghost` keep the same pill and ring on the page surface (white in light, page background in dark) so they still read as secondary, and hover the same way. One block at the end of `resources/css/site-extras.css`; padding and font sizes are untouched. Reduced motion drops the lift.
+## 3.7.26 — FAQ card scrolls; its illustration sits above it
+
+- The "Still have a question?" card on the home FAQ is no longer sticky on desktop; it scrolls with the rest of the left column.
+- The FAQ line-art drawing moves from the bottom-left corner of the section into the left column, directly above that card. `blocks/section.blade.php` prints it just before the `faq-help-card` group; if the card is missing it falls back to the old section-level placement. Still hidden at 1024px and below, `aria-hidden`, and still animated (reduced motion respected).
 
 ## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
 
