@@ -30,4 +30,3 @@ jobs:
 
       - run: vendor/bin/pint --test
 
-      - run: php plugins/matthummel-newsletter/bin/check-email.php

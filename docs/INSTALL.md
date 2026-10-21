@@ -101,16 +101,8 @@ cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
 
 Admin: `admin` / `password`.
 
-## Newsletter plugin
+## Newsletter
 
-The self-hosted newsletter is not part of the theme zip. A push to `main` publishes GitHub Release `matthummel-newsletter-latest` (asset `matthummel-newsletter.zip`), next to `theme-latest`. You can also pack it locally:
+The newsletter is Hostinger Reach, installed from hPanel as the Hostinger Reach plugin. Nothing in the theme stores addresses or sends letters. Put the Reach form block (choose **Use classic Reach Form** so the theme can style it) in Appearance → Widgets → **Footer: Get updates** and in the body of the Get updates page. Sending, confirmation, unsubscribe, and the audience all live in Reach.
 
-```bash
-bash .github/scripts/pack-plugin.sh
-```
-
-In wp-admin, upload `matthummel-newsletter.zip` via Plugins → Add New → Upload. Activate it. That creates the Get updates, Unsubscribe, and Manage preferences pages if they are missing, and copies any existing footer signups onto the list. Activation does not send email. Running it again does not add a second copy of those addresses. The preferences page keeps the `email-preferences` address so older links still open.
-
-Leave automatic sending off until the From address is a mailbox on your domain and SPF, DKIM, and DMARC are in place. Sending uses `wp_mail`, so an SMTP plugin on the site is used when one is installed.
-
-To write and send an issue, follow `docs/NEWSLETTER.md`. In wp-admin that path is **Get updates → Create newsletter**.
+Sites that ran the old self-hosted list (theme 3.6.20 to 3.7.14) still have the tables `wp_mh_newsletter`, `wp_mhn_subscribers`, `wp_mhn_events`, and `wp_mhn_archive`. Export those addresses into Reach before you deactivate and delete the old plugin; its uninstall drops its tables.

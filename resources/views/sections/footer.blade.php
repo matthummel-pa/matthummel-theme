@@ -3,6 +3,7 @@
   $footerName  = ($gh['name'] ?? '') ?: 'Matt Hummel';
   $writing     = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $footerHomeId = (int) get_option('page_on_front');
+  $privacyUrl  = \App\mh_privacy_policy_url();
   $footerBlurb = \App\field(
     'footer_blurb',
     __('Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
@@ -66,11 +67,7 @@
       @endif
     </nav>
 
-    {{-- Get updates --}}
-    @php
-      $signupStatus = isset($_GET['signup']) ? sanitize_key(wp_unslash($_GET['signup'])) : '';
-      $privacyUrl = \App\mh_privacy_policy_url();
-    @endphp
+    {{-- Get updates: the Hostinger Reach form block in the Footer: Get updates widget area. --}}
     <div class="footer-nav-col footer-follow" id="footer-signup">
       @if (is_active_sidebar('footer-updates'))
         @php dynamic_sidebar('footer-updates'); @endphp
@@ -81,44 +78,7 @@
         __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage'),
         $footerHomeId > 0 ? $footerHomeId : null
       ) }}</p>
-      @if (function_exists('mhn_render_footer_form'))
-        {!! mhn_render_footer_form() !!}
-        <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
-      @else
-      @if ($signupStatus === 'ok')
-        <p class="footer-follow__status" role="status">{{ __('You are on the list. Thanks.', 'sage') }}</p>
-      @elseif ($signupStatus === 'confirm')
-        <p class="footer-follow__status" role="status">{{ __('Check your email to confirm.', 'sage') }}</p>
-      @elseif ($signupStatus === 'dup')
-        <p class="footer-follow__status" role="status">{{ __('That address is already signed up.', 'sage') }}</p>
-      @elseif ($signupStatus === 'wait')
-        <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Please wait a while, then try again.', 'sage') }}</p>
-      @elseif ($signupStatus === 'error')
-        <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Use a valid email, then try again.', 'sage') }}</p>
-      @endif
-      <form class="footer-follow__form" method="post" action="{{ esc_url(home_url('/')) }}">
-        <input type="hidden" name="action" value="mh_newsletter">
-        {!! wp_nonce_field('mh_newsletter', 'mh_newsletter_nonce', true, false) !!}
-        <p class="visually-hidden" aria-hidden="true">
-          <label for="mh-nl-hp">{{ __('Leave blank', 'sage') }}</label>
-          <input id="mh-nl-hp" type="text" name="mh_nl_hp" value="" tabindex="-1" autocomplete="off">
-        </p>
-        <div class="footer-follow__row">
-          <label class="visually-hidden" for="mh-nl-email">{{ __('Email', 'sage') }}</label>
-          <input
-            id="mh-nl-email"
-            class="footer-follow__email"
-            type="email"
-            name="mh_nl_email"
-            required
-            autocomplete="email"
-            placeholder="{{ esc_attr__('you@example.com', 'sage') }}"
-          >
-          <button type="submit" class="btn">{{ \App\field('footer_signup_button', __('Sign up', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</button>
-        </div>
-        <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
-      </form>
-      @endif
+      <p class="footer-follow__note"><a href="{{ esc_url(home_url('/get-updates/')) }}">{{ \App\field('footer_signup_button', __('Sign up', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</a> · <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
       @endif
     </div>
 

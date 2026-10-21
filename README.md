@@ -93,12 +93,12 @@ A personal site is the one project where the developer is also the client, the c
 <details open>
 <summary><strong>Journal and publishing</strong></summary>
 
-- **Posts** with reading progress, table-of-contents spy, VS Code-style code blocks with copy button, author bio, related posts, affiliate disclosure, and an end-of-post newsletter signup.
+- **Posts** with reading progress, table-of-contents spy, VS Code-style code blocks with copy button, author bio, related posts, and affiliate disclosure.
 - **Comments** with ASCII/markdown formatting, preview, and reply notifications.
 - **Social share cards** in the editor: per-network drafts (Bluesky, Facebook, LinkedIn, Reddit, DEV.to) with Generate (OpenAI or rule-based), Post, Share dialog, and Copy. Bluesky posts over the AT Protocol, Facebook to a Page via the Graph API, DEV.to via its API; auto-share on publish is optional.
 - **DEV.to import/export**: HTML → Markdown conversion, canonical URLs, hourly import of new DEV.to articles.
 - **Featured image generation** (OpenAI Images) from the post editor and the Projects admin.
-- **Newsletter** — the bundled [`matthummel-newsletter`](plugins/matthummel-newsletter) plugin (1.11.0): double opt-in, issues with layouts, a wizard, archive, tracking tokens, a11y checks in CI. Nothing leaves the WordPress database.
+- **Newsletter** — Hostinger Reach. Its form block sits in the **Footer: Get updates** widget area and on the Get updates page; the theme only styles the classic Reach form (3.7.13). No list code lives in the theme.
 </details>
 
 <details open>
@@ -175,7 +175,7 @@ Design tokens are CSS custom properties in [`resources/css/app.css`](resources/c
 | Practice | How it shows up here |
 | --- | --- |
 | **Small PRs, conventional commits** | `feat` / `fix` / `docs` / `chore`; the body says *why*. Squash-merged with the PR number. |
-| **Automated gates** | [`ci.yml`](.github/workflows/ci.yml): Composer, Vite build, Pint, newsletter email a11y check. [`wp-review.yml`](.github/workflows/wp-review.yml): WordPress Coding Standards (escaping, sanitizing, nonces, i18n, `$wpdb->prepare`) on changed lines. PHPStan level 5 with WordPress and WooCommerce stubs. |
+| **Automated gates** | [`ci.yml`](.github/workflows/ci.yml): Composer, Vite build, Pint. [`wp-review.yml`](.github/workflows/wp-review.yml): WordPress Coding Standards (escaping, sanitizing, nonces, i18n, `$wpdb->prepare`) on changed lines. PHPStan level 5 with WordPress and WooCommerce stubs. |
 | **Security review** | Every PR that touches input, output, headers, or credentials gets a written review (Blocker → Should fix → Nit) and the fixes land before merge — see the 3.6.46 and 3.6.47 notes. |
 | **Escape late, sanitize early** | Blade `{{ }}`; `esc_url()` on every `href`/`src`; `wp_kses()` with an allowlist where helpers return markup; `wp_unslash()` + `sanitize_*()` on all request input; capability + nonce on every write. |
 | **Fail soft** | Every external call has a timeout, retries where it matters, cached fallbacks, and an empty-state UI. The site renders with GitHub, DEV.to, or OpenAI down. |
@@ -253,9 +253,8 @@ resources/css/            app.css (@theme tokens) · portfolio.css · studio.css
 resources/js/             Small modules: nav, section spy, galleries, forms, share cards, admin helpers
 resources/data/           product-catalog.json, concept-pages.json (versioned seeds)
 resources/images/         Logo, profile photo, product screenshots
-plugins/matthummel-newsletter/   Bundled newsletter plugin (separate zip, own CI job)
 mu-plugins/               Rank Math REST meta bridge, fatal probe
-.github/workflows/        ci.yml · wp-review.yml · deploy.yml · plugin-newsletter.yml · diagnose-live.yml
+.github/workflows/        ci.yml · wp-review.yml · deploy.yml · diagnose-live.yml
 .github/scripts/          pack-theme.sh · build-vite-assets.mjs · db-pull.sh · importers · wp-review
 docs/                     THEME.md (deep dive) · FEATURES.md (editor's notes) · ERRORS.md · INSTALL.md · playbooks
 public/build/             Vite output — built by CI, never committed

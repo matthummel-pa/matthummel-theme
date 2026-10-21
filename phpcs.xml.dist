@@ -24,7 +24,6 @@
 	     Sage's index.php (echo view(...)->render()) is left out on purpose: Blade escapes {{ }}. -->
 	<file>./app</file>
 	<file>./functions.php</file>
-	<file>./plugins</file>
 	<file>./mu-plugins</file>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -77,7 +76,6 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="sage"/>
-				<element value="matthummel-newsletter"/>
 			</property>
 		</properties>
 	</rule>

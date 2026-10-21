@@ -38,17 +38,13 @@ add_action('init', function () {
 }, 99);
 
 add_filter('should_load_remote_block_patterns', '__return_false');
-add_filter('block_editor_settings_all', function ($settings, $context = null) {
-    $post = is_object($context) ? ($context->post ?? null) : null;
-    $isIssue = $post instanceof \WP_Post && $post->post_type === 'newsletter_issue';
-    if (! $isIssue) {
-        $settings['__experimentalBlockPatterns'] = [];
-        $settings['__experimentalBlockPatternCategories'] = [];
-    }
+add_filter('block_editor_settings_all', function ($settings) {
+    $settings['__experimentalBlockPatterns'] = [];
+    $settings['__experimentalBlockPatternCategories'] = [];
     $settings['enableOpenverseMediaCategory'] = false;
 
     return $settings;
-}, 10, 2);
+});
 
 /** Skip core block stylesheet on custom-field pages (faster, no FSE leftovers). */
 add_action('wp_enqueue_scripts', function () {
@@ -1457,7 +1453,8 @@ function mh_apply_journal_rename(): void
         'mh_f_write_search_ph' => ['Search posts…' => 'Search posts'],
         'mh_f_write_subscribe_h2' => ['Subscribe in a reader' => 'Follow with RSS'],
         'mh_f_write_subscribe_lede' => [
-            'No newsletter form. Copy the RSS URL into Feedly, NetNewsWire, or the reader you already use.' => 'There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.',
+            'No newsletter form. Copy the RSS URL into Feedly, NetNewsWire, or the reader you already use.' => 'Copy the feed URL into Feedly, NetNewsWire, or another reader you already use. Email updates are on the Get updates page.',
+            'There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.' => 'Copy the feed URL into Feedly, NetNewsWire, or another reader you already use. Email updates are on the Get updates page.',
         ],
         'mh_f_write_follow' => ['Follow along:' => 'More of my notes'],
         'mh_f_write_bio' => [

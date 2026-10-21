@@ -2,6 +2,14 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
+
+- The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.
+- Signup surfaces: the Reach form block in the **Footer: Get updates** widget area (styled by `mh_reach_form_block_html()`, 3.7.13) and in the body of the Get updates page (`template-get-updates.blade.php` prints the hero fields, then `the_content()`). When the footer widget area is empty, the column prints the label, the lede, and a Sign up link to that page; there is no theme form.
+- The end-of-post signup, the `mhn_*` CSS hooks, and the `newsletter_issue` post type special cases (block patterns, SEO panel) are removed. Posts end with the author bio and the Say hello band.
+- Copy no longer claims "I keep the address on this site". `upd_lede` and the journal subscribe lede defaults changed; `mh_f_write_subscribe_lede` rewrites the old defaults in `app/bespoke.php`.
+- Live data: `wp_mh_newsletter` and the `wp_mhn_*` tables stay on the server until the old plugin is deleted. Export them into Reach first (`docs/INSTALL.md`).
+
 ## Editor’s notes (3.7.13 footer Reach form)
 
 - Footer signup is the Hostinger Reach plugin's block in the **Footer: Get updates** widget area. Two modes: a *builder* form (`formBuilderId` set) is `<div data-reach-form>` → cross-origin iframe, unstyleable from the theme; the *classic* form (no builder id) is `form.hostinger-reach-block-subscription-form` posting to `hostinger-reach/v1/contact` via the plugin's `view.js`. Use the classic one.
@@ -137,31 +145,10 @@ What the 3.x Sage theme does, and where it lives.
 - The theme does not write that file. PHP errors stay in the host error log.
 - `*fatal*.txt` and `*.log` stay out of git and out of the theme zip.
 
-## Editor’s notes (3.6.39 unsubscribe and preferences)
+## Editor’s notes (3.6.38 – 3.6.39 Get updates)
 
-- `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
-- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.1). Do not add Mailchimp, HubSpot, or another ESP.
-- 1.11.0 provisions those pages only on activation or in wp-admin, stores the page IDs, and locks the insert. Unsubscribe, email preferences, and thank-you stay noindex with Rank Math.
-- 1.11.1 leaves a draft, a child page, or a page with its own content in place when the slug matches. Only an extra top-level shortcode copy is removed.
-- `[mhn_signup source="post"]` sits at the end of a single post. The welcome letter can add a checklist button when the checklist link setting is an https URL. It is empty by default.
-- 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
-
-## Editor’s notes (3.6.38 Get updates)
-
-- Newsletter behavior lives in `plugins/matthummel-newsletter/`. Do not add Mailchimp, HubSpot, or another ESP.
-- Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
-- Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
-- Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
-- **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
-- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each use one editor body (`_mhn_body`, `_mhn_body_v`). Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` still seed the block editor.
-- Layouts live in `layouts()` (`includes/layouts.php`): Standard, Welcome, Plain, Feature, Blog post. The choice is post meta `_mhn_layout` (default `standard`). Reusable intro, sign-off, welcome subject, and welcome body are keys on `mhn_settings`. Letter style is `letter_style`, `letter_masthead`, and `letter_button` on that same option (`card` / `left` / `solid` by default). One issue can override them with post meta `_mhn_letter_style`. Welcome is not auto-sent. Dashboard and picker previews use `#` links and do not call the tracker. The wizard email frame (`assets/emulator.js`, `mhn_emulator_preview`) updates from the draft without a reload, including a letter-style change. Desktop is 600px and Mobile is 375px. `_mhn_editor` is `simple` or `advanced`. Advanced block text is the `_mhn_blocks` array. Simple issues ignore that array.
-- Letter CSS is `assets/email.css`. `email_css()` injects it in a `<style>` block, and the same colors are inlined on the shell, because the preview iframe is `sandbox=""` `srcdoc` and many clients drop `<style>`. Do not put the letter design in `admin.css`. Admin CSS and `emulator.js` are enqueued with `MHN_VERSION`.
-- Publishing a post drafts a blog update. The letter starts with `Hi {first_name|there},`, the post, and a Read more button. It does not send. Owner steps: `docs/NEWSLETTER.md`.
-- The confirm page collects optional first and last name (`sanitize_text_field`, 80 characters). Columns ship through `mhn_db_version` 2 (`ensure_subscriber_columns()`), so plugin 1.0.0 can add `last_name` without a version bump. Merge tags `{first_name}`, `{last_name}`, and `{full_name}` escape HTML and accept a fallback (`{first_name|there}`). The wizard preview uses sample names Ada Lovelace.
-- The wizard content step is one `wp_editor()` body. A blog update starter includes the featured image, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image in that block. Changing the selected posts asks before it inserts or refreshes those blocks. An old draft is migrated once from the note, the posts, and the P.S. The same letter is what an automatic send would use.
-- Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text. A leftover name merge tag is an error.
-- Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
-- A finished send inserts one row in `wp_mhn_archive` (`mhn_db_version` 3). The row stores the unmerged HTML and plain text, subject, preheader, From, template, start and finish times, sender id, counts, list label, and plugin version. Later edits do not update that row. Sent issues are read-only; **Duplicate as new draft** copies the issue into a new draft. **Sent archive** (`admin.php?page=mhn-archive`) lists, filters, and pages those rows, and shows one in a sandboxed iframe. HTML, EML, and metadata CSV exports require `manage_options` and a nonce. `_mhn_archived` hides an issue from the main lists and keeps the row. Delete is a confirmed administrator action. There is no public archive page. A public web archive setting is noted for later and stays off; it is not built.
+- The self-hosted newsletter plugin and the theme's own footer list from these releases were removed in 3.7.15. The newsletter is Hostinger Reach; see the 3.7.15 note at the top.
+- Visitor hero copy for the Get updates page is still `upd_kicker`, `upd_h1`, `upd_lede` on `template-get-updates.blade.php`. The page body holds the Reach form block.
 
 ## Editor’s notes (3.6.37 projects listing)
 
@@ -243,9 +230,8 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.22 footer signup / simple heroes)
 
-- Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
+- Footer signup was first-party (`app/newsletter.php`) from 3.6.22 to 3.7.14. Removed in 3.7.15; the footer form is Hostinger Reach.
 - Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
-- Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
 - `partials/page-hero.blade.php` renders `$split` / `$aside` again (3.6.29). Keep glow/orbs off.
 - Keep On this page arrows (`page-nav-track` + `initPageNavTrack()`). Do not restore a visible scrollbar or the About mobile `<details>` dropdown.
 - Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`.

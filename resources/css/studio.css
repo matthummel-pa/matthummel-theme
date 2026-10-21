@@ -2857,12 +2857,6 @@ html.mh-dark .project-feat-grid > .project-feat::before {
   max-width: 40rem;
   padding-block: clamp(2.5rem, 6vw, 4.5rem);
 }
-.updates-wrap .mhn-signup:not(.mhn-signup-compact) {
-  max-width: none;
-}
-.footer-follow .mhn-signup-compact .mhn-compose .btn {
-  width: 100%;
-}
 
 /* ── 3.6.44 — Project landing page (hero proof, sections, story rail, under the hood) ── */
 .project-stage--landing {
@@ -5963,8 +5957,6 @@ html.mh-dark .post-share-btn:focus-visible { background: rgba(59, 130, 246, .14)
 html.mh-dark .about-story__links a.btn:hover,
 html.mh-dark .about-story__links a.btn:focus-visible { color: #fff !important; } /* the 3.6.54 lime link-hover rule is !important */
 html.mh-dark .mh-popout .mh-popout-cta { color: var(--violet-900); }
-html.mh-dark .mhn-signup-block__form button:hover,
-html.mh-dark .mhn-signup-block__button:hover { color: var(--blue-900); }
 
 /* ── 3.6.60 · Dark mode: every card on one recipe ──────────────────────────
    Lime border, lime index and count numbers, body copy one step lighter.
@@ -5976,7 +5968,7 @@ html.mh-dark :is(
   .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
   .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
   .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
-  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block
+  .post-author-bio, .post-share-bottom
 ) { border-color: rgba(163, 230, 53, .34) !important; }
 /* Two recipes sit at higher specificity; match them rather than out-rank them elsewhere. */
 html.mh-dark .work-grid .work-card,
@@ -5997,7 +5989,7 @@ html.mh-dark :is(
   .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
   .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
   .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
-  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block,
+  .post-author-bio, .post-share-bottom,
   .about-aside-card, .about-svc-card, .about-work-type, .h-glance__card, .h-glance__fact,
   .h-process__step, .h-fit__col, .about-approach__item, .code-pulse__stat, .repo-card,
   .code-skills-group, .code-skills__tile, .side-card, .write-aside-card,
