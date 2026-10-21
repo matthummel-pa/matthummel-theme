@@ -248,7 +248,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.19 footer social / hover)
 
-- Footer social lives in `.footer-brand-social` (under Open for work). Icon-only `.soc-link` has no circle and no hover fill.
+- Footer social lives in `.footer-brand-social` (under the Get updates pill). Since 3.7.19 every `.soc-link` (icon-only, labeled, cards) shares the Get updates CTA look: navy fill, blue→cyan→lime ring, cyan glyph, lime glyph + glow on hover (last block of `studio.css`).
 - Follow / RSS is the last footer column (`footer-follow`), not the brand column.
 - Hover for `.btn` and `a` must change `color` (and keep `:focus-visible`). Do not restore filled social circles.
 

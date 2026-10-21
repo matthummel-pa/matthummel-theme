@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.19 — Social icons match the Get updates button
+
+- Every social link (`partials/social`: footer, mobile menu, the About "Elsewhere" pills, and the Social links block cards) takes the Get updates look: navy fill, the blue→cyan→lime ring, cyan glyph. Hover and focus turn the glyph lime with the lime glow and a small lift. Labels stay ink, notes stay soft. No markup change.
+
 ## 3.7.18 — Get updates header CTA with a preview
 
 - The header pill reads **Get updates** and carries the mail icon instead of the pulse dot. New look in the brand colors: navy fill, a blue→cyan→lime ring, cyan icon that turns lime on hover with a lime glow. It shows for every visitor (it is no longer tied to GitHub's hireable flag); Say hello still appears when not hireable.
