@@ -3,7 +3,10 @@
   $anchor = sanitize_html_class((string) ($attributes['anchor'] ?? ''));
   $eyebrow = trim((string) ($attributes['eyebrow'] ?? ''));
   // Home sections that get a decorative line-art drawing behind their content (partials/section-illustration).
-  $hasIllustration = in_array($anchor, ['inside', 'journal-posts', 'newsletter', 'uses', 'write', 'now', 'questions'], true);
+  // About sections get their own animated drawings (3.7.33); gated to the About page
+  // because Home also has a #work section.
+  $hasIllustration = in_array($anchor, ['inside', 'journal-posts', 'newsletter', 'uses', 'write', 'now', 'questions'], true)
+    || (in_array($anchor, ['story', 'build', 'work', 'resume', 'code'], true) && is_page('about'));
   $classes = trim('pf-section mh-block-section '.(($attributes['tone'] ?? 'default') === 'alt' ? 'pf-section--alt ' : '').($hasIllustration ? 'mh-block-section--illus ' : '').($attributes['className'] ?? ''));
   $illustration = $hasIllustration ? view('partials.section-illustration', ['anchor' => $anchor])->render() : '';
   // FAQ (3.7.26): draw the illustration in the left column, right above the

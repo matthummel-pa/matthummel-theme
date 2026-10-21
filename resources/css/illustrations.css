@@ -127,11 +127,19 @@ html.mh-dark {
   transform-origin: left center;
 }
 
-/* Stagger helpers. */
-.mh-illus .il-d2 { animation-delay: .35s; }
-.mh-illus .il-d3 { animation-delay: .7s; }
-.mh-illus .il-d4 { animation-delay: 1.05s; }
-.mh-illus .il-d5 { animation-delay: 1.4s; }
+.mh-illus .il-milestone,
+.mh-illus .il-ping,
+.mh-illus .il-click,
+.mh-illus .il-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* The cursor scales around its tip (top-left of its box). */
+.mh-illus .il-cursor {
+  transform-box: fill-box;
+  transform-origin: 0 0;
+}
 
 /* --- Generic parts ------------------------------------------------------ */
 
@@ -286,9 +294,6 @@ html.mh-dark {
 }
 
 .mh-illus .il-typing { animation: il-typing 1.3s ease-in-out infinite; }
-.mh-illus .il-typing.il-d2 { animation-delay: .2s; }
-.mh-illus .il-typing.il-d3 { animation-delay: .4s; }
-
 @keyframes il-typing {
   0%, 60%, 100% { transform: translateY(0); }
   30% { transform: translateY(-4px); }
@@ -324,8 +329,6 @@ html.mh-dark {
 
 /* --- Questions: closed rows flip their chevron in turn ---------------------- */
 .mh-illus .il-chev { animation: il-chev 7s ease-in-out infinite; }
-.mh-illus .il-chev.il-d3 { animation-delay: 3.5s; }
-
 @keyframes il-chev {
   0%, 40% { transform: rotate(0deg); }
   48%, 82% { transform: rotate(180deg); }
@@ -334,6 +337,105 @@ html.mh-dark {
 
 .mh-illus .il-chev-open { stroke: #0b1530; }
 html.mh-dark .mh-illus .il-chev-open { stroke: #081527; }
+
+/* --- About (3.7.33) ------------------------------------------------------ */
+
+/* Dashed roads and outlines march forward (dash period 9, so -18 loops clean). */
+.mh-illus .il-march { animation: il-march 1.6s linear infinite; }
+
+@keyframes il-march {
+  to { stroke-dashoffset: -18; }
+}
+
+/* Story stops, commits, the merge dot: light up in turn on the shared 9s beat. */
+.mh-illus .il-milestone { animation: il-milestone 9s ease-out infinite; }
+
+@keyframes il-milestone {
+  0% { transform: scale(0); opacity: 0; }
+  6% { transform: scale(1.35); opacity: 1; }
+  10%, 86% { transform: scale(1); opacity: 1; }
+  93%, 100% { transform: scale(0); opacity: 0; }
+}
+
+/* "You are here" ring. Hidden in the still frame. */
+.mh-illus .il-ping {
+  opacity: 0;
+  animation: il-ping 2.4s ease-out infinite;
+}
+
+@keyframes il-ping {
+  0% { transform: scale(1); opacity: .9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Resume ticks draw quickly, one row after another. */
+.mh-illus .il-check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: il-check 9s ease-out infinite;
+}
+
+@keyframes il-check {
+  0% { stroke-dashoffset: 1; opacity: 1; }
+  7% { stroke-dashoffset: 0; }
+  86% { stroke-dashoffset: 0; opacity: 1; }
+  92% { opacity: 0; }
+  93% { stroke-dashoffset: 1; opacity: 0; }
+  100% { stroke-dashoffset: 1; opacity: 1; }
+}
+
+/* The badge pops on the same 9s beat as the checks, after the third row. */
+.mh-illus--resume .il-pop { animation-duration: 9s; }
+
+/* Work: the cursor glides to the button and clicks; the button presses and ripples. */
+.mh-illus .il-cursor { animation: il-cursor 6s ease-in-out infinite; }
+
+@keyframes il-cursor {
+  0% { transform: translate(26px, 28px); opacity: 0; }
+  12% { opacity: 1; }
+  38%, 44% { transform: translate(-20px, -16px) scale(1); }
+  47% { transform: translate(-20px, -16px) scale(.85); }
+  52%, 78% { transform: translate(-20px, -16px) scale(1); opacity: 1; }
+  92%, 100% { transform: translate(26px, 28px); opacity: 0; }
+}
+
+.mh-illus .il-click { animation: il-click 6s ease-in-out infinite; }
+
+@keyframes il-click {
+  0%, 44% { transform: scale(1); }
+  47% { transform: scale(.92); }
+  53% { transform: scale(1.06); }
+  60%, 100% { transform: scale(1); }
+}
+
+.mh-illus .il-ripple {
+  opacity: 0;
+  animation: il-ripple 6s ease-out infinite;
+}
+
+@keyframes il-ripple {
+  0%, 46% { transform: scale(1); opacity: 0; }
+  48% { opacity: .9; }
+  72%, 100% { transform: scale(1.35, 1.9); opacity: 0; }
+}
+
+/* Stagger helpers. These come after every animation shorthand on purpose: an
+   earlier `animation:` would reset the delay back to 0 (the 3.7.25 drawings
+   lost their stagger that way). */
+.mh-illus .il-d2 { animation-delay: .35s; }
+.mh-illus .il-d3 { animation-delay: .7s; }
+.mh-illus .il-d4 { animation-delay: 1.05s; }
+.mh-illus .il-d5 { animation-delay: 1.4s; }
+.mh-illus .il-step-2 { animation-delay: 1s; }
+.mh-illus .il-step-3 { animation-delay: 2s; }
+.mh-illus .il-step-4 { animation-delay: 3s; }
+.mh-illus .il-chev.il-d3 { animation-delay: 3.5s; }
+.mh-illus .il-typing.il-d2 { animation-delay: .2s; }
+.mh-illus .il-typing.il-d3 { animation-delay: .4s; }
+
+/* Parts that start undrawn hold their first frame while they wait, so a
+   delayed bar never flashes in full before it types. */
+.mh-illus :is(.il-type, .il-draw, .il-check, .il-milestone, .il-pop) { animation-fill-mode: backwards; }
 
 /* Motion off: the finished drawing is the still frame. */
 @media (prefers-reduced-motion: reduce) {

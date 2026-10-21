@@ -11,8 +11,13 @@
   $g = "url(#{$id}-g)";
   $v = "url(#{$id}-v)";
 @endphp
-@if (in_array($anchor, ['inside', 'journal-posts', 'newsletter', 'uses', 'write', 'now', 'questions'], true))
-<svg class="mh-illus mh-illus--{{ $anchor }}" viewBox="0 0 360 250" preserveAspectRatio="{{ $anchor === 'questions' ? 'xMinYMax' : 'xMaxYMin' }} meet" fill="none" aria-hidden="true" focusable="false">
+@php
+  // About drawings (3.7.33). The Section block only asks for these on the About page,
+  // because Home also has a #work section.
+  $isAbout = in_array($anchor, ['story', 'build', 'work', 'resume', 'code'], true);
+@endphp
+@if ($isAbout || in_array($anchor, ['inside', 'journal-posts', 'newsletter', 'uses', 'write', 'now', 'questions'], true))
+<svg class="mh-illus mh-illus--{{ $anchor }} @if ($isAbout) mh-illus--about @endif" viewBox="0 0 360 250" preserveAspectRatio="{{ $anchor === 'questions' ? 'xMinYMax' : 'xMaxYMin' }} meet" fill="none" aria-hidden="true" focusable="false">
   <defs>
     <linearGradient id="{{ $id }}-g" x1="0" y1="0" x2="1" y2="0"><stop class="il-s1" offset="0"/><stop class="il-s2" offset=".55"/><stop class="il-s3" offset="1"/></linearGradient>
     <linearGradient id="{{ $id }}-v" x1="0" y1="0" x2="1" y2="1"><stop class="il-s1" offset="0"/><stop class="il-s3" offset="1"/></linearGradient>
@@ -200,6 +205,141 @@
       <path class="il-b il-twinkle il-d3" d="M326 160v7M322.5 163.5h7" stroke-opacity=".8"/>
       <circle class="il-fa il-blink il-d4" cx="8" cy="132" r="2"/>
       <circle class="il-a il-twinkle il-d2" cx="296" cy="208" r="2.5"/>
+      @break
+
+    @case('story')
+      {{-- 2011 to now: the dashed road marches forward, each stop lights up in turn, the "now" pin pings. --}}
+      <path class="il-b il-march" d="M24 222C92 222 70 158 136 158S186 100 246 100 300 52 336 46" stroke-dasharray="2 7" stroke-opacity=".85"/>
+      <path d="M24 216v-12M136 152v-14M246 94v-14" stroke="{{ $g }}" stroke-opacity=".6"/>
+      <circle class="il-card" cx="24" cy="222" r="6" stroke="{{ $g }}"/>
+      <circle class="il-fa il-milestone" cx="24" cy="222" r="3"/>
+      <circle class="il-card" cx="136" cy="158" r="6" stroke="{{ $g }}"/>
+      <circle class="il-fb il-milestone il-step-2" cx="136" cy="158" r="3"/>
+      <circle class="il-card" cx="246" cy="100" r="6" stroke="{{ $g }}"/>
+      <circle class="il-fb il-milestone il-step-3" cx="246" cy="100" r="3"/>
+      <circle class="il-c il-ping il-step-4" cx="336" cy="46" r="10"/>
+      <circle class="il-card" cx="336" cy="46" r="10" stroke="{{ $v }}"/>
+      <circle class="il-fc il-milestone il-step-4" cx="336" cy="46" r="4"/>
+      {{-- College --}}
+      <g class="il-float">
+        <rect class="il-card" x="0.75" y="156.75" width="68" height="48" rx="9" stroke="{{ $g }}"/>
+        <path class="il-a" d="M12 174l22-10 22 10M17 176v16M26 176v16M42 176v16M51 176v16M12 194h44"/>
+      </g>
+      {{-- Contracts --}}
+      <g class="il-float il-d3">
+        <rect class="il-card" x="102.75" y="90.75" width="68" height="48" rx="9" stroke="{{ $g }}"/>
+        <rect class="il-b" x="121" y="106" width="30" height="22" rx="4"/>
+        <path class="il-b" d="M130 106v-4h12v4M121 116h30"/>
+      </g>
+      {{-- Freelance code --}}
+      <g class="il-float il-d5">
+        <rect class="il-card" x="212.75" y="32.75" width="68" height="48" rx="9" stroke="{{ $v }}"/>
+        <path class="il-b" d="M212.75 44.75h68" stroke-opacity=".5"/>
+        <circle class="il-fa il-blink" cx="220" cy="38.75" r="1.5"/>
+        <circle class="il-fb il-blink il-d2" cx="226" cy="38.75" r="1.5"/>
+        <path class="il-c il-draw il-draw--code" d="M236 54l-6 7 6 7M256 54l6 7-6 7M249 51l-6 20" pathLength="1" stroke-width="2"/>
+      </g>
+      <path class="il-c il-twinkle" d="M300 150v10M295 155h10"/>
+      <circle class="il-a il-twinkle il-d2" cx="196" cy="214" r="2.5"/>
+      @break
+
+    @case('build')
+      {{-- Site, plugin, app: the layers breathe apart, the plugin outline marches, the code draws, the labels type in. --}}
+      <path d="M46 102v68M294 102v68M170 148v68" stroke="{{ $g }}" stroke-opacity=".35"/>
+      <g class="il-tier il-tier--1">
+        <path d="M46 170l124 46 124-46" stroke="{{ $g }}" stroke-opacity=".5"/>
+      </g>
+      <g class="il-tier il-tier--2">
+        <path d="M46 136l124 46 124-46" stroke="{{ $g }}" stroke-opacity=".75"/>
+      </g>
+      <g class="il-tier il-tier--3">
+        <path class="il-card" d="M170 56l124 46-124 46-124-46z" stroke="{{ $g }}"/>
+        <path class="il-b il-march" d="M170 76l70 26-70 26-70-26z" stroke-dasharray="3 6" stroke-opacity=".8"/>
+        <path class="il-c il-draw il-draw--code" d="M150 96l-10 6 10 6M190 96l10 6-10 6M174 92l-8 20" pathLength="1" stroke-width="2"/>
+      </g>
+      <path class="il-a" d="M298 101h6M298 135h6M298 169h6" stroke-dasharray="2 3" stroke-opacity=".7"/>
+      <rect class="il-card il-b il-type" x="306" y="94" width="40" height="14" rx="7"/>
+      <rect class="il-card il-b il-type il-step-2" x="306" y="128" width="40" height="14" rx="7"/>
+      <rect class="il-card il-b il-type il-step-3" x="306" y="162" width="40" height="14" rx="7"/>
+      <circle class="il-fc il-blink" cx="314" cy="101" r="2.5"/>
+      <circle class="il-fb il-blink il-d2" cx="314" cy="135" r="2.5"/>
+      <circle class="il-fa il-blink il-d3" cx="314" cy="169" r="2.5"/>
+      <path class="il-c il-twinkle" d="M26 60v10M21 65h10"/>
+      <circle class="il-a il-twinkle il-d3" cx="320" cy="214" r="2.5"/>
+      @break
+
+    @case('work')
+      {{-- Browser: the page loads, the preview draws, copy types, the cursor clicks the button. --}}
+      <rect class="il-card" x="30.75" y="22.75" width="290" height="196" rx="14" stroke="{{ $g }}"/>
+      <path class="il-b" d="M30.75 54.75h290" stroke-opacity=".4"/>
+      <rect class="il-fb il-type" x="31" y="53.5" width="289" height="2.5" rx="1.25" fill-opacity=".8"/>
+      <circle class="il-fa il-blink" cx="48" cy="38.75" r="3.5"/>
+      <circle class="il-fb il-blink il-d2" cx="62" cy="38.75" r="3.5" fill-opacity=".8"/>
+      <circle class="il-fc il-blink il-d3" cx="76" cy="38.75" r="3.5" fill-opacity=".8"/>
+      <rect class="il-bar" x="96" y="32" width="150" height="13" rx="6.5"/>
+      <rect class="il-b" x="50.75" y="72.75" width="150" height="126" rx="9" stroke-opacity=".55"/>
+      <path class="il-draw il-draw--chart" d="M51 176l40-46 28 30 20-18 61 52" pathLength="1" stroke="{{ $g }}" stroke-width="2"/>
+      <circle class="il-c il-pulse" cx="170" cy="98" r="10"/>
+      <rect class="il-fb il-type" x="220" y="77" width="76" height="6" rx="3"/>
+      <rect class="il-bar il-type il-d2" x="220" y="93" width="58" height="5" rx="2.5"/>
+      <rect class="il-bar il-type il-d3" x="220" y="107" width="68" height="5" rx="2.5"/>
+      <rect class="il-bar il-type il-d4" x="220" y="121" width="44" height="5" rx="2.5"/>
+      <rect class="il-c il-ripple" x="220" y="148" width="56" height="18" rx="9"/>
+      <rect class="il-fc il-click" x="220" y="148" width="56" height="18" rx="9"/>
+      <path class="il-card il-cursor" d="M282 176v38l10-10 8 17 7-3-8-17h14z" stroke="{{ $v }}"/>
+      <path class="il-c il-twinkle" d="M340 70v10M335 75h10"/>
+      <circle class="il-a il-twinkle il-d2" cx="16" cy="200" r="2.5"/>
+      @break
+
+    @case('resume')
+      {{-- Resume: the back sheet drifts, each role checks off in turn, the approval badge pops. --}}
+      <rect class="il-card il-sway" x="118.75" y="30.75" width="150" height="200" rx="12" stroke="{{ $g }}" stroke-opacity=".35"/>
+      <g class="il-float">
+        <rect class="il-card" x="96.75" y="16.75" width="158" height="210" rx="12" stroke="{{ $g }}"/>
+        <circle class="il-a" cx="130" cy="54" r="16"/>
+        <path class="il-a" d="M122 62c2-6 14-6 16 0M126 50a4 4 0 1 0 8 0 4 4 0 1 0-8 0"/>
+        <rect class="il-fb il-type" x="156" y="45" width="76" height="6" rx="3"/>
+        <rect class="il-bar il-type il-d2" x="156" y="59" width="52" height="5" rx="2.5"/>
+        <path class="il-b" d="M114 90h122" stroke-opacity=".4"/>
+        @foreach ([[106, 90, ''], [138, 76, 'il-step-2'], [170, 84, 'il-step-3']] as [$y, $w, $step])
+          <rect class="il-b" x="114" y="{{ $y }}" width="14" height="14" rx="4"/>
+          <path class="il-c il-check {{ $step }}" d="M117.5 {{ $y + 7 }}l3 3 5.5-6" pathLength="1" stroke-width="2"/>
+          <rect class="il-bar il-type {{ $step }}" x="138" y="{{ $y + 4.5 }}" width="{{ $w }}" height="5" rx="2.5"/>
+        @endforeach
+      </g>
+      <g class="il-pop">
+        <circle class="il-fc" cx="270" cy="196" r="22"/>
+        <path class="il-check il-step-4" d="M259 196l8 8 14-15" pathLength="1" stroke="#fff" stroke-width="2.5"/>
+      </g>
+      <path class="il-c il-twinkle" d="M300 60v10M295 65h10"/>
+      <circle class="il-a il-twinkle il-d2" cx="60" cy="150" r="2.5"/>
+      @break
+
+    @case('code')
+      {{-- A branch leaves main, a commit lands, it merges back and the merge point pings. --}}
+      {{-- Flat lines get a solid stroke: a gradient on a zero-height box does not paint. --}}
+      <path class="il-a" d="M20 196h320" stroke-width="2" stroke-opacity=".7"/>
+      <path class="il-a il-march" d="M60 196c22 0 22-120 54-120h24" stroke-dasharray="3 6" stroke-opacity=".6"/>
+      <path class="il-draw il-draw--branch" d="M106 196c34 0 34-74 68-74h20c34 0 34 74 68 74" pathLength="1" stroke="{{ $v }}" stroke-width="2"/>
+      <circle class="il-card" cx="60" cy="196" r="7" stroke="{{ $g }}"/>
+      <circle class="il-card" cx="106" cy="196" r="7" stroke="{{ $g }}"/>
+      <circle class="il-card il-milestone il-step-2" cx="184" cy="122" r="7" stroke="{{ $v }}"/>
+      <circle class="il-c il-ping il-step-3" cx="262" cy="196" r="9"/>
+      <circle class="il-card" cx="262" cy="196" r="9" stroke="{{ $g }}"/>
+      <circle class="il-fc il-milestone il-step-3" cx="262" cy="196" r="3.5"/>
+      <circle class="il-card" cx="316" cy="196" r="7" stroke="{{ $g }}"/>
+      <g class="il-float il-d2">
+        <rect class="il-card" x="214.75" y="22.75" width="120" height="76" rx="10" stroke="{{ $v }}"/>
+        <path class="il-b" d="M214.75 38.75h120" stroke-opacity=".5"/>
+        <circle class="il-fa il-blink" cx="224" cy="30.75" r="2"/>
+        <circle class="il-fb il-blink il-d2" cx="232" cy="30.75" r="2"/>
+        <rect class="il-fb il-type" x="228" y="51" width="44" height="6" rx="3"/>
+        <rect class="il-bar il-type il-d2" x="236" y="65" width="62" height="5" rx="2.5"/>
+        <rect class="il-bar il-type il-d3" x="228" y="79" width="34" height="5" rx="2.5"/>
+      </g>
+      <path class="il-b il-draw il-draw--code" d="M44 34l-16 16 16 16M86 34l16 16-16 16M72 28l-14 44" pathLength="1" stroke-width="2"/>
+      <path class="il-c il-twinkle" d="M150 40v10M145 45h10"/>
+      <circle class="il-a il-twinkle il-d3" cx="340" cy="150" r="2.5"/>
       @break
   @endswitch
   </g>
