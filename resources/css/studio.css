@@ -6764,3 +6764,39 @@ html .soc-list--cards.soc-list.soc-list .soc-link:hover .soc-link__note { color:
   html .soc-list.soc-list.soc-list .soc-link:hover,
   html .soc-list.soc-list.soc-list .soc-link:hover svg { transform: none; }
 }
+
+/* ── 3.7.20 · Reach "Subscribe" button (footer widget and block pages) matches the Get updates pill ──
+   The .btn hover rules at ~5165 / ~5432 / ~5569 paint lime or violet with !important; the flags here
+   are the minimum needed to keep the navy fill, brand ring, and lime text on hover. */
+html .btn.mh-reach-submit,
+html .site-footer .btn.mh-reach-submit {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  border: 1.5px solid transparent !important;
+  border-radius: 999px;
+  background: linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box !important;
+  color: #f1f5fb !important;
+  -webkit-text-fill-color: #f1f5fb;
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .10), 0 10px 22px -12px rgba(59, 130, 246, .9);
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .btn.mh-reach-submit:hover,
+html .btn.mh-reach-submit:focus-visible,
+html .site-footer .btn.mh-reach-submit:hover,
+html .site-footer .btn.mh-reach-submit:focus-visible {
+  background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box !important;
+  border-color: transparent !important;
+  color: #a3e635 !important;
+  -webkit-text-fill-color: #a3e635;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 28px rgba(163, 230, 53, .35), 0 14px 30px -12px rgba(59, 130, 246, .9) !important;
+  transform: translateY(-1px);
+}
+html .btn.mh-reach-submit:active { transform: translateY(0); }
+html .btn.mh-reach-submit:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; }
+html .btn.mh-reach-submit[disabled] { opacity: .65; cursor: progress; transform: none; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  html .btn.mh-reach-submit:hover { transform: none; }
+}
