@@ -90,6 +90,18 @@ function field_rich(string $key, string $default = '', ?int $post_id = null): st
 }
 
 /**
+ * Built-in footer sentence (home page field `footer_blurb`).
+ *
+ * One source for the admin default, the Blade fallback, and the 3.7.22 rewrite.
+ *
+ * @since 3.7.22
+ */
+function mh_footer_blurb_default(): string
+{
+    return __('I’m a full-stack WordPress developer. I build custom themes, plugins, and web apps for shops, agencies, and other developers, then write up what I learn here. A few tool links are affiliate links, and each one is labeled.', 'sage');
+}
+
+/**
  * Built-in About story paragraphs (same order as the retired about_p1–about_p4 fields).
  *
  * @since 3.5.25
@@ -442,7 +454,7 @@ function mh_home_fields(): array
             )],
         ],
         __('Footer (site-wide)', 'sage') => [
-            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack and WordPress developer. Selected projects, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
+            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', mh_footer_blurb_default()],
             ['footer_signup_label', __('Signup heading', 'sage'), 'text', __('Get updates', 'sage')],
             ['footer_signup_lede', __('Signup sentence', 'sage'), 'textarea', __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage')],
             ['footer_signup_button', __('Signup button', 'sage'), 'text', __('Sign up', 'sage')],

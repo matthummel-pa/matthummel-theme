@@ -6,7 +6,7 @@
   $privacyUrl  = \App\mh_privacy_policy_url();
   $footerBlurb = \App\field(
     'footer_blurb',
-    __('Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
+    \App\mh_footer_blurb_default(),
     $footerHomeId > 0 ? $footerHomeId : null
   );
 @endphp
