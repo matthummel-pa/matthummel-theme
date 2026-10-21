@@ -25,7 +25,6 @@ tar -C "$root" \
   --exclude='*fatal*.txt' \
   --exclude='*.log' \
   --exclude='matthummel.zip' \
-  --exclude='matthummel-newsletter.zip' \
   --exclude='.claude' \
   --exclude='.mcp.json' \
   --exclude='.wp-env.json' \
@@ -74,7 +73,7 @@ if find "$stage/matthummel" \( -name '*fatal*.txt' -o -name '*.log' \) | grep -q
   exit 1
 fi
 (cd "$stage" && zip -rq "$out" matthummel)
-if unzip -l "$out" | grep -E 'matthummel/plugins/|matthummel-newsletter/' >/dev/null; then
+if unzip -l "$out" | grep -E 'matthummel/plugins/' >/dev/null; then
   echo "plugins/ leaked into the theme zip" >&2
   exit 1
 fi

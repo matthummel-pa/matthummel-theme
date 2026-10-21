@@ -650,7 +650,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['upd_kicker', __('Kicker', 'sage'), 'text', __('Get updates', 'sage')],
                 ['upd_h1', __('Heading', 'sage'), 'text', __('Notes when I publish', 'sage')],
-                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. I keep your address on this site. No newsletter service.', 'sage')],
+                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. Unsubscribe any time from the link in each one.', 'sage')],
             ],
         ],
         'template-contact.blade.php' => [

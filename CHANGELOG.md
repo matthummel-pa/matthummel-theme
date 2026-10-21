@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.15 — Newsletter is Hostinger Reach
+
+- The theme no longer carries any newsletter code. The self-hosted `matthummel-newsletter` plugin (3.6.38 to 3.7.14) and the theme's own footer list (`app/newsletter.php`, 3.6.20 to 3.7.14) are removed, along with the plugin pack script and workflow, the email a11y step in CI, their PHPStan baseline entries, `docs/NEWSLETTER.md`, and the **Get updates** admin menu.
+- The newsletter is the Hostinger Reach plugin as it ships. Its form block sits in the **Footer: Get updates** widget area (styled since 3.7.13) and in the body of the Get updates page. The Get updates template prints the hero fields and the page content; the Unsubscribe and Manage preferences branches are gone because Reach handles both.
+- When the footer widget area is empty the column shows the label, the lede, and a Sign up link to the Get updates page instead of a theme form.
+- Posts no longer print the end-of-post signup box. The post sidebar still points to RSS and the Get updates page.
+- Copy stops promising "I keep the address on this site": the Get updates intro and the journal subscribe lede have new defaults, and the old journal default is rewritten on sites that still have it.
+- Before deleting the old plugin on the live site, export its subscribers into Reach. See `docs/INSTALL.md` → Newsletter.
+
 ## 3.7.14 — Footer signup fields stack
 
 - The footer Reach form's field group sets its own layout (`display: flex; flex-direction: column`) instead of inheriting it. The site's Additional CSS carried an older grid rule for that block, which put the Subscribe button beside the email field; the theme rule now wins. Inline layout still works when the block is set to it.
