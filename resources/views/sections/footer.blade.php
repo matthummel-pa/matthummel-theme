@@ -29,8 +29,8 @@
         @if (\App\mh_is_hireable($gh))
           <a
             class="header-avail footer-avail"
-            href="{{ esc_url(home_url('/contact/')) }}"
-            aria-label="{{ __('Available now — say hello', 'sage') }}"
+            href="{{ esc_url(home_url('/get-updates/')) }}"
+            aria-label="{{ __('Available now — get updates', 'sage') }}"
           >
             @include('partials.avail-mark', ['gh' => $gh])
             <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>

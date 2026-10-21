@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.17 — Available now pill goes to Get updates
+
+- The green **Available now** pill in the header and footer links to `/get-updates/` instead of `/contact/`. Its accessible name is "Available now — get updates". The Say hello button (shown when GitHub says not hireable) and the Contact menu item still go to Contact.
+
 ## 3.7.16 — Privacy policy names Hostinger Reach
 
 - The Privacy page's short version and "Who sees your data" list now say that the signup forms send the address and optional first name to Hostinger Reach, what Reach stores, and that it handles unsubscribes. No other change.
