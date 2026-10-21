@@ -281,7 +281,7 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
         'role' => __('Full-stack and WordPress developer · themes, plugins, and web apps', 'sage'),
         'lede' => __('I build WordPress themes, plugins, and web apps that are easy to edit, easy to hand off, and built to last. Open to full-time, contract, and freelance work.', 'sage'),
         'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps that shops can edit and agencies can hand off.', 'sage'),
         'kicker' => __('Hi, I’m Matt 👋', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
@@ -332,7 +332,7 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
         'faq_h2' => __('Quick answers.', 'sage'),
         'faq_intro' => __('Short answers for hiring managers and shops.', 'sage'),
         'seo_title' => __('WordPress Projects', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress themes and plugins I\'ve built, each with a live demo and a short build story. Open one, try the demo, and see how I build.', 'sage'),
         'gallery_h2' => __('Browse the WordPress projects', 'sage'),
     ];
 

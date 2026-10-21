@@ -542,7 +542,7 @@ function mh_projects_blocks_markup(int $id): string
         ), 3, true)
     );
 
-    // Questions. The old template printed FAQPage structured data, so the block keeps it switched on.
+    // Questions. MH SEO adds FAQPage data for every Questions block; `schema` is kept for older saved blocks.
     $out .= mh_blocks_section(
         ['eyebrow' => __('Questions', 'sage'), 'anchor' => 'work-faq', 'navLabel' => __('FAQ', 'sage'), 'tone' => 'alt'],
         mh_blocks_heading($f('work_faq_h2'))

@@ -11,9 +11,11 @@ namespace MH_SEO;
 /**
  * Turns a request context into the tags search engines should see.
  *
- * A custom SEO title is returned exactly as stored. Resolution order is the
- * MH SEO field, the Rank Math field, the saved theme field, then generated
- * defaults (the theme's built-in landing copy, then the title template).
+ * A custom SEO title is returned as stored, except that a trailing site name
+ * is dropped when the title already says it ("About Matt Hummel | Matt Hummel"
+ * becomes "About Matt Hummel"). Resolution order is the MH SEO field, the
+ * Rank Math field, the saved theme field, then generated defaults (the
+ * theme's built-in landing copy, then the title template).
  */
 class Document_Builder
 {
@@ -56,24 +58,29 @@ class Document_Builder
      */
     public function title(array $context, array $settings): string
     {
+        $site = trim((string) ($context['site_name'] ?? ''));
+        if ($site === '') {
+            $site = 'Matt Hummel';
+        }
+
         $custom = trim((string) ($context['custom_title'] ?? ''));
         if ($custom !== '') {
-            return $custom;
+            return self::without_repeated_brand($custom, $site);
         }
 
         $rank = trim((string) ($context['rank_math_title'] ?? ''));
         if ($rank !== '' && ! str_contains($rank, '%')) {
-            return $rank;
+            return self::without_repeated_brand($rank, $site);
         }
 
         $field = trim((string) ($context['field_title'] ?? ''));
         if ($field !== '') {
-            return $this->with_page($field, $context);
+            return $this->with_page(self::without_repeated_brand($field, $site), $context);
         }
 
         $landing = trim((string) ($context['landing_title'] ?? ''));
         if ($landing !== '') {
-            return $this->with_page($landing, $context);
+            return $this->with_page(self::without_repeated_brand($landing, $site), $context);
         }
 
         $name = trim((string) ($context['document_name'] ?? ''));
@@ -86,7 +93,6 @@ class Document_Builder
         if ($template === '') {
             $template = '%title% | Matt Hummel';
         }
-        $site = trim((string) ($context['site_name'] ?? 'Matt Hummel'));
         $title = strtr(
             $template,
             [
@@ -97,7 +103,35 @@ class Document_Builder
         );
         $title = trim((string) preg_replace('/\s+/u', ' ', $title));
 
-        return $this->with_page($title, $context);
+        return $this->with_page(self::without_repeated_brand($title, $site), $context);
+    }
+
+    /**
+     * Drop a trailing " | Site name" when the rest of the title already names the site.
+     *
+     * Handles |, -, –, and — as the separator and ignores case. A title that
+     * names the site only once is returned unchanged.
+     *
+     * @param  string  $title  Resolved title.
+     * @param  string  $site  Site name, e.g. "Matt Hummel".
+     */
+    public static function without_repeated_brand(string $title, string $site): string
+    {
+        $title = trim($title);
+        $site = trim($site);
+        if ($title === '' || $site === '') {
+            return $title;
+        }
+        $pattern = '/\s*[|\x{2013}\x{2014}-]\s*'.preg_quote($site, '/').'\s*$/iu';
+        if (! preg_match($pattern, $title)) {
+            return $title;
+        }
+        $lead = trim((string) preg_replace($pattern, '', $title));
+        if ($lead === '' || mb_stripos($lead, $site) === false) {
+            return $title;
+        }
+
+        return $lead;
     }
 
     /**

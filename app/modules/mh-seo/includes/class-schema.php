@@ -35,7 +35,7 @@ class Schema
         $graph = [
             $this->website_node($context, $settings, $website, $person),
             $this->person_node($context, $settings, $person),
-            $this->webpage_node($context, $title, $description, $page, $website, $crumb),
+            $this->webpage_node($context, $title, $description, $page, $website, $crumb, $person),
         ];
 
         $crumbs = $this->breadcrumb_node($context, $crumb);
@@ -142,21 +142,26 @@ class Schema
     /**
      * WebPage, CollectionPage, or ProfilePage.
      *
+     * The About page (slug `about`, or any page whose schema type is set to
+     * ProfilePage) is a ProfilePage whose mainEntity is the site Person.
+     *
      * @param  array<string, mixed>  $context  Request context.
      * @param  string  $title  Title.
      * @param  string  $description  Description.
      * @param  string  $id  Node id.
      * @param  string  $website  WebSite node id.
      * @param  string  $crumb  Breadcrumb node id.
+     * @param  string  $person  Person node id.
      * @return array<string, mixed>
      */
-    private function webpage_node(array $context, string $title, string $description, string $id, string $website, string $crumb): array
+    private function webpage_node(array $context, string $title, string $description, string $id, string $website, string $crumb, string $person): array
     {
         $view = (string) ($context['view'] ?? '');
         $type = 'WebPage';
+        $is_profile = self::is_profile_page($context);
         if (in_array($view, ['category', 'tag', 'blog', 'tax', 'date'], true)) {
             $type = 'CollectionPage';
-        } elseif ($view === 'author') {
+        } elseif ($view === 'author' || $is_profile) {
             $type = 'ProfilePage';
         }
         $node = [
@@ -167,6 +172,16 @@ class Schema
             'isPartOf' => ['@id' => $website],
             'breadcrumb' => ['@id' => $crumb],
         ];
+        if ($is_profile) {
+            // The page is about Matt, so it points at the one Person node in the graph.
+            $node['mainEntity'] = ['@id' => $person];
+            if (! empty($context['published'])) {
+                $node['dateCreated'] = (string) $context['published'];
+            }
+            if (! empty($context['modified'])) {
+                $node['dateModified'] = (string) $context['modified'];
+            }
+        }
         if ($description !== '') {
             $node['description'] = $description;
         }
@@ -176,6 +191,24 @@ class Schema
         }
 
         return $node;
+    }
+
+    /**
+     * Whether this request is the About page (or another page set to ProfilePage).
+     *
+     * @param  array<string, mixed>  $context  Request context.
+     */
+    public static function is_profile_page(array $context): bool
+    {
+        if (! in_array((string) ($context['view'] ?? ''), ['singular', 'front'], true)) {
+            return false;
+        }
+        if ((string) ($context['schema_type'] ?? '') === 'ProfilePage') {
+            return true;
+        }
+
+        return (string) ($context['post_type'] ?? '') === 'page'
+            && (string) ($context['post_slug'] ?? '') === 'about';
     }
 
     /**
@@ -311,7 +344,11 @@ class Schema
     }
 
     /**
-     * FAQPage built from the question headings on the page, when the post asks for it.
+     * FAQPage for the questions on the page.
+     *
+     * Questions blocks (matthummel/faq) always count, so every page with a
+     * question list gets FAQPage data without a checkbox. Question headings
+     * count only when the post's "Add FAQ data" box is ticked.
      *
      * @param  array<string, mixed>  $context  Request context.
      * @param  string  $id  Node id.
@@ -320,15 +357,26 @@ class Schema
      */
     private function faq_node(array $context, string $id, string $page): ?array
     {
-        if (empty($context['schema_faq']) || ! in_array((string) ($context['view'] ?? ''), ['singular', 'front'], true)) {
+        if (! in_array((string) ($context['view'] ?? ''), ['singular', 'front'], true)) {
             return null;
         }
-        $questions = self::faq_items((string) ($context['content_html'] ?? ''));
+        $html = (string) ($context['content_html'] ?? '');
+        $questions = self::faq_block_items($html);
+        if (! empty($context['schema_faq'])) {
+            $questions = array_merge($questions, self::faq_items($html));
+        }
         if ($questions === []) {
             return null;
         }
         $entities = [];
+        $seen = [];
         foreach ($questions as $item) {
+            // One entry per question, even when a heading repeats a block question.
+            $key = strtolower($item['question']);
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
             $entities[] = [
                 '@type' => 'Question',
                 'name' => $item['question'],
@@ -403,6 +451,62 @@ class Schema
             $question = Text::plain((string) $match[2]);
             $answer = Text::plain((string) $match[3]);
             if ($answer === '' || ! str_ends_with($question, '?')) {
+                continue;
+            }
+            $items[] = [
+                'question' => html_entity_decode($question, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'answer' => html_entity_decode($answer, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Questions and answers from the Questions blocks on the page.
+     *
+     * Each core Details block inside a `.mh-block-faq` list is one question:
+     * the summary is the question, everything after it is the answer.
+     *
+     * @param  string  $html  Rendered post content.
+     * @return array<int, array{question: string, answer: string}>
+     */
+    public static function faq_block_items(string $html): array
+    {
+        if (! str_contains($html, 'mh-block-faq') || ! class_exists(\DOMDocument::class)) {
+            return [];
+        }
+        $dom = new \DOMDocument;
+        $previous = libxml_use_internal_errors(true);
+        $loaded = $dom->loadHTML('<?xml encoding="UTF-8"><div>'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NONET);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        if (! $loaded) {
+            return [];
+        }
+        $xpath = new \DOMXPath($dom);
+        $details = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' mh-block-faq ')]//details");
+        if ($details === false) {
+            return [];
+        }
+        $items = [];
+        foreach ($details as $detail) {
+            $question = '';
+            $answer = '';
+            foreach ($detail->childNodes as $child) {
+                if ($child instanceof \DOMElement && strtolower($child->tagName) === 'summary' && $question === '') {
+                    $question = (string) $child->textContent;
+
+                    continue;
+                }
+                if ($child instanceof \DOMElement && in_array(strtolower($child->tagName), ['script', 'style', 'pre'], true)) {
+                    continue;
+                }
+                $answer .= ' '.$child->textContent;
+            }
+            $question = trim((string) preg_replace('/\s+/u', ' ', $question));
+            $answer = trim((string) preg_replace('/\s+/u', ' ', $answer));
+            if ($question === '' || $answer === '') {
                 continue;
             }
             $items[] = [

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.29 — SEO: ProfilePage on About, FAQ data from every Questions block, one "Matt Hummel" per title
+
+- **About is a ProfilePage.** MH SEO now marks the About page (slug `about`) as `ProfilePage` instead of a generic `WebPage`, with the existing `Person` node as `mainEntity` plus `dateCreated` / `dateModified`. Any other page can opt in from the SEO sidebar → Schema → Article type → **ProfilePage**.
+- **FAQPage from Questions blocks, sitewide.** Every `matthummel/faq` block on a page now feeds a `FAQPage` node in the page's single JSON-LD graph (summary = question, the rest = answer). No checkbox needed, so Home and About pick it up today. The block no longer prints its own separate `<script>` (that was the source of a possible second FAQPage), and the "Add FAQ structured data" toggle is gone from the editor; the old `schema` attribute is left alone on saved blocks. The "Add FAQ data from the question headings" box still adds H2–H4 questions on top, with duplicates dropped. Google shows FAQ rich results for only government and health sites, but AI answer engines still read the data.
+- **No repeated brand in titles.** When a title already says the site name, MH SEO drops the trailing `| Matt Hummel` (also `-`, `–`, `—`). Applies to custom, Rank Math, theme-field, landing, and template titles.
+- **About title and description.** One-time update (`mh_seo_copy_v2`): About's title becomes "About Matt Hummel, WordPress Developer in Gettysburg, PA" and its description says what I build instead of ending on "Say hello." The same pass rewrites the other stored descriptions that ended on "Say hello." (Projects, the old Home and Acreline Services copy, the project brief). Values are changed only while they still hold the exact old text. Field defaults in `app/page-fields.php` and `app/filters.php` match.
+- SEO playbook rule updated: say the name once in a title, and do not end a description on a bare "Say hello."
+
 ## 3.7.28 — Page heroes: more air, narrower copy
 
 - Page heroes (`.page-header`, every page but the home hero) get more top and bottom padding: `clamp(4rem, 8vw, 6.25rem)` above and `clamp(3.5rem, 6.5vw, 5rem)` below, up from about 3.25/2.75rem at the small end.
