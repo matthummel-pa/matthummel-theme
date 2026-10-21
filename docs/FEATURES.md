@@ -2,6 +2,17 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.7.15 newsletter funnel)
+
+- After-signup behavior lives in `plugins/matthummel-newsletter/includes/funnel.php` (1.12.0): `on_subscriber_confirmed()` sends the welcome letter on the `mhn_subscriber_confirmed` action, fired from `confirm_post_status()`. Settings keys `welcome_send` (1), `utm_links` (1), `public_archive` (0) on `mhn_settings`; the checkboxes post with `mhn_funnel_present` so a partial `update_settings()` call keeps saved values.
+- `welcome_message()` is `apply_layout('welcome', '')` + `email_document(..., includeRecent: true, layout: 'welcome')`, so Settings → Reusable copy and the checklist link are the whole letter. Logged as `welcome` / `welcome_failed` events with issue 0.
+- `apply_utm_links()` runs in `issue_message_body()` before `apply_merge()` and `apply_tracking()`, so click tracking wraps the tagged URL. It skips other hosts, anything with `mhn_` or `utm_` already in the query, and merge-tag placeholders. The sent-archive snapshot is stored without UTM tags on purpose: the public archive view serves it, and web visits should not count as email.
+- Confirm redirects to `confirmed_landing_url()` (Get updates page + `?signup=confirmed#signup`); `shortcode_updates()` returns `confirmed_panel_html()` for that status before the admin dashboard branch. No form on that panel.
+- Public archive: `[mhn_archive]` + `handle_public_issue()` (`?mhn_issue={snapshot id}` on `template_redirect`). `sent_archive_query()` takes `public => true` to leave out Allowlist (test) sends; `snapshot_is_public()` also drops archived issues. `ensure_archive_page()` creates `/newsletter/` from the settings handler only when the box is on. That slug is not in `is_noindex_utility_slug()`, so the page indexes. The issue view sends a CSP with no script source.
+- Signup sources: `signup_sources()` is the allowlist (`page`, `footer`, `post`, `sidebar`, `journal`, `thankyou`, `archive`). `source_is_compact()` decides the stacked form (footer, sidebar). Compact forms outside the footer get `id="mhn-signup-{source}"` so two forms on one page do not share an id.
+- Theme: `partials/post-sidebar.blade.php`, `partials/write-subscribe.blade.php`, and `template-thankyou.blade.php` print `[mhn_signup source="…"]` through `do_shortcode()` when the plugin is active and keep their old output otherwise. Placement CSS is at the end of `studio.css`; the form recipe stays in the plugin's `assets/public.css`.
+- Footer signup on live is still the Hostinger Reach widget (3.7.13). Until that is decided, footer signups go to Reach and every other form goes to the plugin. See `docs/FUNNEL-REVIEW.md`.
+
 ## Editor’s notes (3.7.13 footer Reach form)
 
 - Footer signup is the Hostinger Reach plugin's block in the **Footer: Get updates** widget area. Two modes: a *builder* form (`formBuilderId` set) is `<div data-reach-form>` → cross-origin iframe, unstyleable from the theme; the *classic* form (no builder id) is `form.hostinger-reach-block-subscription-form` posting to `hostinger-reach/v1/contact` via the plugin's `view.js`. Use the classic one.

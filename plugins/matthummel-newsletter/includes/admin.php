@@ -556,12 +556,12 @@ function page_subscribers(): void
     echo '</div>';
     echo '<section class="mhn-card mhn-table-card">';
     echo '<table class="widefat striped mhn-sub-table"><thead><tr>';
-    foreach ([__('Email', 'matthummel-newsletter'), __('First name', 'matthummel-newsletter'), __('Last name', 'matthummel-newsletter'), __('Status', 'matthummel-newsletter'), __('Opt-in', 'matthummel-newsletter'), __('Signed up', 'matthummel-newsletter'), __('Actions', 'matthummel-newsletter')] as $heading) {
+    foreach ([__('Email', 'matthummel-newsletter'), __('First name', 'matthummel-newsletter'), __('Last name', 'matthummel-newsletter'), __('Status', 'matthummel-newsletter'), __('Opt-in', 'matthummel-newsletter'), __('Source', 'matthummel-newsletter'), __('Signed up', 'matthummel-newsletter'), __('Actions', 'matthummel-newsletter')] as $heading) {
         echo '<th>'.esc_html($heading).'</th>';
     }
     echo '</tr></thead><tbody>';
     if (! is_array($rows) || $rows === []) {
-        echo '<tr><td colspan="7">'.esc_html__('No subscribers yet.', 'matthummel-newsletter').'</td></tr>';
+        echo '<tr><td colspan="8">'.esc_html__('No subscribers yet.', 'matthummel-newsletter').'</td></tr>';
     } else {
         foreach ($rows as $row) {
             $id = (int) ($row['id'] ?? 0);
@@ -579,6 +579,7 @@ function page_subscribers(): void
             $signedUp = admin_datetime((string) ($row['created_at'] ?? ''));
             echo '<td>'.admin_status_badge(subscriber_status_label((string) ($row['status'] ?? '')), (string) ($row['status'] ?? '')).'</td>';
             echo '<td>'.esc_html(opt_in_label((string) ($row['opt_in'] ?? ''))).'</td>';
+            echo '<td>'.esc_html(source_label((string) ($row['source'] ?? ''))).'</td>';
             echo '<td>'.esc_html($signedUp !== '' ? $signedUp : (string) ($row['created_at'] ?? '')).'</td>';
             echo '<td class="mhn-row-actions">';
             echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
@@ -848,6 +849,29 @@ function render_letter_system_card(): void
 }
 
 /**
+ * After signup: welcome letter, UTM tags, and the public archive.
+ *
+ * @param  array<string, mixed>  $config
+ */
+function render_after_signup_card(array $config): void
+{
+    $testUrl = wp_nonce_url(admin_url('admin-post.php?action=mhn_welcome_test'), 'mhn_welcome_test');
+    $archive = public_archive_url();
+
+    echo '<section class="mhn-card" aria-labelledby="mhn-funnel-heading"><h2 id="mhn-funnel-heading">'.esc_html__('After signup', 'matthummel-newsletter').'</h2>';
+    echo '<p class="mhn-card-lead">'.esc_html__('What happens once someone presses Confirm, and what a sent letter carries.', 'matthummel-newsletter').'</p>';
+    echo '<input type="hidden" name="mhn_funnel_present" value="1">';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="welcome_send" value="1" '.checked((int) ($config['welcome_send'] ?? 1), 1, false).'> '.esc_html__('Send the welcome letter as soon as they confirm. It uses the welcome copy above, the checklist button when that link is set, and the three latest posts.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="description"><a href="'.esc_url($testUrl).'">'.esc_html__('Send me the welcome letter', 'matthummel-newsletter').'</a> — '.esc_html__('a copy goes to your account address so you can check it on your phone.', 'matthummel-newsletter').'</p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="utm_links" value="1" '.checked((int) ($config['utm_links'] ?? 1), 1, false).'> '.esc_html__('Tag links back to this site with utm_source=newsletter, utm_medium=email, and utm_campaign set to the issue slug, so analytics can tell email visits apart. Other sites and tracked links are left alone.', 'matthummel-newsletter').'</label></p>';
+    echo '<p class="mhn-check"><label><input type="checkbox" name="public_archive" value="1" '.checked((int) ($config['public_archive'] ?? 0), 1, false).'> '.esc_html__('Public archive. Saving with this on creates a Past issues page at /newsletter/ that lists every full-list send with the signup form under it. Test sends and archived issues stay private.', 'matthummel-newsletter').'</label></p>';
+    if ($archive !== '') {
+        echo '<p class="description"><a href="'.esc_url($archive).'">'.esc_html__('Open the Past issues page', 'matthummel-newsletter').'</a></p>';
+    }
+    echo '</section>';
+}
+
+/**
  * @param  array{skip_sent_post: int, rule_categories: list<string>}  $config
  */
 function render_newsletter_rules_card(array $config): void
@@ -892,6 +916,11 @@ function page_settings(): void
     echo '<hr class="wp-header-end">';
     if (isset($_GET['saved'])) {
         echo '<div class="notice notice-success"><p>'.esc_html__('Saved.', 'matthummel-newsletter').'</p></div>';
+    }
+    if (isset($_GET['welcome_test'])) {
+        echo sanitize_key(wp_unslash($_GET['welcome_test'])) === '1'
+            ? '<div class="notice notice-success"><p>'.esc_html__('The welcome letter is on its way to your address.', 'matthummel-newsletter').'</p></div>'
+            : '<div class="notice notice-error"><p>'.esc_html__('The welcome letter could not be sent. Check the From address and the mail setup.', 'matthummel-newsletter').'</p></div>';
     }
     $domainWarning = from_domain_warning();
     if ($domainWarning !== '') {
@@ -939,6 +968,7 @@ function page_settings(): void
     render_letter_style_card($config);
     render_letter_brand_card($config);
     render_newsletter_rules_card($config);
+    render_after_signup_card($config);
 
     echo '<section class="mhn-card"><h2>'.esc_html__('Publishing', 'matthummel-newsletter').'</h2>';
     echo '<p class="mhn-check"><label><input type="checkbox" name="auto_draft" value="1" '.checked($config['auto_draft'], 1, false).'> '.esc_html__('When a post is published, save a draft issue for review.', 'matthummel-newsletter').'</label></p>';
@@ -1099,7 +1129,7 @@ function handle_export(): void
  */
 function export_columns(): array
 {
-    return ['email', 'first_name', 'last_name', 'status', 'opt_in', 'created_at', 'confirmed_at'];
+    return ['email', 'first_name', 'last_name', 'status', 'opt_in', 'source', 'created_at', 'confirmed_at'];
 }
 
 function handle_subscriber_names(): void
@@ -1223,7 +1253,14 @@ function handle_settings(): void
         'skip_sent_post' => $_POST['skip_sent_post'] ?? '',
         'mhn_rules_present' => '1',
         'rule_categories' => wp_unslash($_POST['rule_categories'] ?? []),
+        'mhn_funnel_present' => '1',
+        'welcome_send' => $_POST['welcome_send'] ?? '',
+        'utm_links' => $_POST['utm_links'] ?? '',
+        'public_archive' => $_POST['public_archive'] ?? '',
     ]);
+    if (settings()['public_archive'] === 1) {
+        ensure_archive_page();
+    }
     wp_safe_redirect(admin_url('admin.php?page=mhn-settings&saved=1'));
     exit;
 }

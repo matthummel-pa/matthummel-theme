@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.7.15 — Newsletter funnel: welcome letter, confirmed page, past issues
+
+Theme 3.7.15 and newsletter plugin 1.12.0. The plugin ships separately (`Pack newsletter plugin` workflow); install both.
+
+- **Welcome letter sends itself.** Pressing Confirm now sends the Welcome layout with the reusable welcome copy, the WordPress Handoff Checklist button when that link is set under Settings, and the three latest posts. Before this, the post form promised a free checklist that nothing delivered. Off under Get updates → Settings → After signup. "Send me the welcome letter" on that screen mails you a copy.
+- **Confirm lands on a real page.** The confirm button redirects to `/get-updates/?signup=confirmed`: a thank-you, the checklist link, three posts to start with, and a line asking them to reply. The hero on that page says "You are on the list". The bare confirm page remains as the fallback when the Get updates page is missing.
+- **UTM tags on letter links.** Links back to this site in a sent letter carry `utm_source=newsletter`, `utm_medium=email`, and `utm_campaign={issue slug}` (`welcome` for the welcome letter). Other hosts, tracked links, and links that already carry UTM tags are untouched. Setting under After signup, on by default.
+- **Past issues (public archive), off by default.** Turning the setting on creates `/newsletter/` with every full-list send, newest first, and the signup form under the list. Each issue opens on its own URL with merge tags filled, footer links pointed at Get updates, a "this went out on" line, and a canonical tag. Test sends and archived issues stay private. `template-get-updates.blade.php` titles that page.
+- **The form is where readers are.** Post sidebar "Follow along" carries the compact form. The journal page's subscribe section carries the full form (its default copy no longer says "There is no email list"). The contact thank-you page gets a "Want a note when I publish?" section. Each form reports its source; Subscribers shows a Source column and the CSV export includes it.
+- Docs: `docs/FUNNEL-REVIEW.md` (newsletter and funnel audit, the Reach-or-plugin decision, page options), `docs/NEWSLETTER.md` updated.
+
 ## 3.7.14 — Footer signup fields stack
 
 - The footer Reach form's field group sets its own layout (`display: flex; flex-direction: column`) instead of inheriting it. The site's Additional CSS carried an older grid rule for that block, which put the Subscribe button beside the email field; the theme rule now wins. Inline layout still works when the block is set to it.

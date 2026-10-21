@@ -62,15 +62,32 @@
 </section>
 
 @php
+  $tyHasList = shortcode_exists('mhn_signup');
   $tyPills = [
     ['received', __('Received', 'sage')],
-    ['ty-browse-heading', __('While you wait', 'sage')],
   ];
+  if ($tyHasList) {
+      $tyPills[] = ['ty-updates-heading', __('Get updates', 'sage')];
+  }
+  $tyPills[] = ['ty-browse-heading', __('While you wait', 'sage')];
   if (! empty($featured)) {
       $tyPills[] = ['ty-work-heading', __('Recent work', 'sage')];
   }
 @endphp
 @include('partials.page-nav', ['pills' => $tyPills])
+
+{{-- ── GET UPDATES ───────────────────────────────────── --}}
+@if ($tyHasList)
+<section class="pf-section" aria-labelledby="ty-updates-heading">
+  <div class="container wide ty-updates">
+    <p class="eyebrow">{{ __('Get updates', 'sage') }}</p>
+    <h2 id="ty-updates-heading" class="display-title is-section">{{ __('Want a note when I publish?', 'sage') }}</h2>
+    <p class="sec-intro" style="max-width:48ch;margin-bottom:1.5rem">{{ __('Occasional notes on WordPress work and new posts, and a free WordPress Handoff Checklist with the first one. Your address stays on this site.', 'sage') }}</p>
+    {{-- Shortcode HTML is escaped in the plugin. --}}
+    {!! do_shortcode('[mhn_signup source="thankyou"]') !!}
+  </div>
+</section>
+@endif
 
 {{-- ── WHILE YOU WAIT ────────────────────────────────── --}}
 <section class="pf-section pf-section--alt" aria-labelledby="ty-browse-heading">

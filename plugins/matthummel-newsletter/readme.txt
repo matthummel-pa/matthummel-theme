@@ -4,7 +4,7 @@ Tags: newsletter, email
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.11.4
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ No. It saves a draft issue for review. Automatic sending is a setting, and it is
 Under Get updates → Sent archive. That copy stays as it was sent. A sent issue is read-only. Duplicate it when you want a new draft. There is no public archive page. A public web archive is not built. If it is added later, it stays off until you turn it on.
 
 == Changelog ==
+
+= 1.12.0 =
+* The welcome letter goes out on its own as soon as someone presses Confirm. It uses the Welcome layout, the reusable welcome copy, the checklist button when that link is set, and the three latest posts. Off under Get updates → Settings → After signup. A "Send me the welcome letter" link on that screen mails a copy to you.
+* Confirm lands on the Get updates page instead of a bare page: a thank-you, the checklist link, three posts to start with, and a line asking them to reply.
+* Links back to this site in a sent letter carry utm_source=newsletter, utm_medium=email, and utm_campaign={issue slug}. Other hosts, tracked links, and links that already have UTM tags are left alone. Can be turned off.
+* Public archive. Turning it on creates a Past issues page (/newsletter/) that lists every full-list send, newest first, with the signup form under it. Each issue opens on its own URL with the merge tags filled, the footer links pointed at the signup page, and a line saying when it went out. Off by default. Test sends and archived issues stay private.
+* Forms can say where they live: page, footer, post, sidebar, journal, thankyou, or archive. Subscribers shows a Source column and the CSV export includes it.
+* The journal page, the post sidebar, and the thank-you page in the theme now carry the form.
 
 = 1.11.4 =
 * A draft, a child page, or a page with its own content is no longer deleted when it shares a slug with Get updates, Unsubscribe, or Manage preferences.

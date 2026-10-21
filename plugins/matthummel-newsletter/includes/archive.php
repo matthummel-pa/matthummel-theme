@@ -293,6 +293,10 @@ function sent_archive_query(array $args): array
         $where[] = 'a.template = %s';
         $params[] = $template;
     }
+    if (! empty($args['public'])) {
+        $where[] = 'a.list_label <> %s';
+        $params[] = __('Allowlist', 'matthummel-newsletter');
+    }
     if ($from !== '') {
         $where[] = 'a.finished_at >= %s';
         $params[] = $from.' 00:00:00';

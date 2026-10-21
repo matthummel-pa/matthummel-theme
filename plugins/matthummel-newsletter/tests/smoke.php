@@ -925,6 +925,41 @@ $blankSaved = Newsletter\confirm_post_status($blankToken, wp_create_nonce('mhn_c
 $blankRow = Newsletter\find($blankId);
 mhn_check($blankSaved === 'ok' && $blankRow !== null && $blankRow['status'] === 'subscribed' && $blankRow['first_name'] === '' && $blankRow['last_name'] === '', 'a missing name does not block confirmation');
 
+// 1.12.0: the welcome letter follows the confirm button.
+mhn_check(Newsletter\has_event(0, $blankId, 'welcome'), 'confirm sends the welcome letter');
+mhn_check(mhn_mail_count('confirm-blank@example.com') === 1, 'the welcome letter is the one message after confirm');
+$welcomeMail = null;
+foreach (array_reverse($GLOBALS['mhn_outbox']) as $entry) {
+    if (is_array($entry) && ($entry['to'] ?? '') === 'confirm-blank@example.com') {
+        $welcomeMail = $entry;
+        break;
+    }
+}
+$welcomeHtml = is_array($welcomeMail) ? (string) ($welcomeMail['message'] ?? '') : '';
+mhn_check(str_contains($welcomeHtml, 'data-mhn-layout="welcome"'), 'the welcome letter uses the Welcome layout');
+mhn_check(str_contains($welcomeHtml, 'utm_campaign=welcome'), 'links back to the site in the welcome letter carry UTM tags');
+mhn_check(str_contains($welcomeHtml, 'mhn_unsub='), 'the welcome letter has a real unsubscribe link');
+Newsletter\update_settings(['mhn_funnel_present' => '1', 'welcome_send' => '', 'utm_links' => '1', 'public_archive' => '']);
+$quietId = Newsletter\insert_subscriber([
+    'email' => 'confirm-quiet@example.com',
+    'status' => 'pending',
+    'opt_in' => 'double',
+    'source' => 'test',
+]);
+$quietToken = Newsletter\store_confirm_token($quietId);
+Newsletter\confirm_post_status($quietToken, wp_create_nonce('mhn_confirm_subscription'), '', '');
+mhn_check(! Newsletter\has_event(0, $quietId, 'welcome') && mhn_mail_count('confirm-quiet@example.com') === 0, 'the welcome letter stays off when the box is unchecked');
+Newsletter\update_settings(['mhn_funnel_present' => '1', 'welcome_send' => '1', 'utm_links' => '1', 'public_archive' => '']);
+mhn_check(Newsletter\settings()['welcome_send'] === 1 && Newsletter\update_settings(['from_name' => 'Keep']) === null && Newsletter\settings()['welcome_send'] === 1, 'a settings save without the funnel boxes keeps them');
+$tagged = Newsletter\apply_utm_links('<a href="'.esc_url(home_url('/blog/')).'">Blog</a> <a href="https://example.org/x">Out</a> <a href="'.esc_url(home_url('/?mhn_view=1')).'">View</a>', 'issue-1');
+mhn_check(substr_count($tagged, 'utm_source=newsletter') === 1 && str_contains($tagged, 'utm_campaign=issue-1') && str_contains($tagged, 'https://example.org/x"'), 'UTM tags only touch untracked links to this site');
+$sidebarForm = Newsletter\shortcode_signup(['source' => 'sidebar']);
+mhn_check(str_contains($sidebarForm, 'value="sidebar"') && str_contains($sidebarForm, 'mhn-signup-compact') && str_contains($sidebarForm, 'id="mhn-signup-sidebar"'), 'the sidebar form is compact with its own id');
+mhn_check(str_contains(Newsletter\shortcode_signup(['source' => 'bogus']), 'value="page"'), 'an unknown source is stored as page');
+mhn_check(in_array('source', Newsletter\export_columns(), true), 'csv export includes the source');
+mhn_check(str_contains(Newsletter\confirmed_panel_html(), 'You are on the list') && ! str_contains(Newsletter\confirmed_panel_html(), '<form'), 'the confirmed panel has no form');
+mhn_check(Newsletter\shortcode_archive() === '' || current_user_can('manage_options'), 'the public archive prints nothing for visitors while it is off');
+
 $csvNames = tempnam(sys_get_temp_dir(), 'mhn');
 file_put_contents((string) $csvNames, "email,first_name,last_name\nnames-import@example.com,Grace,Hopper\n");
 $importedNames = Newsletter\import_rows((string) $csvNames, 'consented', false, false);

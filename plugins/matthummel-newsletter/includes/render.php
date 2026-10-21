@@ -72,6 +72,7 @@ function issue_message_body(int $issueId, ?array $subscriber, bool $preview, arr
     }
 
     $document = email_document($subject, $preheader, $body, $includeRecent, $sourceId, issue_layout_id($issueId), $look);
+    $document = apply_utm_links($document, issue_campaign($issueId));
     $html = apply_merge($document, $sample, $issueId, true);
     $text = apply_merge(plain_text($document), $sample, $issueId, false);
     $subject = apply_merge($subject, $sample, $issueId, false);

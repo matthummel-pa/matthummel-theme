@@ -83,16 +83,17 @@ function shortcode_signup(mixed $atts = []): string
     $atts = shortcode_atts([
         'source' => 'page',
     ], is_array($atts) ? $atts : [], 'mhn_signup');
-    $source = sanitize_key((string) $atts['source']);
-    if (! in_array($source, ['page', 'footer', 'post'], true)) {
-        $source = 'page';
-    }
+    $source = normalize_source((string) $atts['source']);
 
-    return signup_form($source, $source !== 'footer');
+    return signup_form($source, ! source_is_compact($source));
 }
 
 function shortcode_updates(): string
 {
+    $status = isset($_GET['signup']) ? sanitize_key(wp_unslash($_GET['signup'])) : '';
+    if ($status === 'confirmed') {
+        return confirmed_panel_html();
+    }
     if (current_user_can('manage_options')) {
         return public_dashboard();
     }
@@ -255,6 +256,10 @@ function on_template_redirect(): void
     if (isset($_GET['mhn_view'])) {
         handle_view();
     }
+
+    if (isset($_GET['mhn_issue'])) {
+        handle_public_issue();
+    }
 }
 
 function confirm_page_headers(): void
@@ -344,7 +349,21 @@ function confirm_post_status(string $token, string $nonce, string $first = '', s
         ]);
     }
 
-    return confirm_subscriber($token) === 'ok' ? 'ok' : 'error';
+    if (confirm_subscriber($token) !== 'ok') {
+        return 'error';
+    }
+
+    $confirmed = $row ? find((int) $row['id']) : null;
+    if ($confirmed) {
+        /**
+         * Fires once the subscriber pressed Confirm. The welcome letter hooks here.
+         *
+         * @param  array<string, string>  $confirmed
+         */
+        do_action('mhn_subscriber_confirmed', $confirmed);
+    }
+
+    return 'ok';
 }
 
 function render_confirm_get(string $token): void
@@ -377,6 +396,12 @@ function handle_confirm_post(): void
     $first = posted_text('mhn_fname');
     $last = posted_text('mhn_lname');
     $status = confirm_post_status($token, is_string($nonce) ? $nonce : '', $first, $last);
+    $landing = $status === 'ok' ? confirmed_landing_url() : '';
+    if ($landing !== '') {
+        send_privacy_headers();
+        wp_safe_redirect($landing);
+        exit;
+    }
     confirm_page_headers();
     status_header($status === 'ok' ? 200 : 400);
     header('Content-Type: text/html; charset=utf-8');
@@ -584,8 +609,11 @@ function signup_form(string $source, bool $showName): string
 {
     $status = isset($_GET['signup']) ? sanitize_key(wp_unslash($_GET['signup'])) : '';
     $invalid = in_array($status, ['error', 'mail'], true);
-    $compact = $source === 'footer';
-    $html = '<div class="'.($compact ? 'mhn-signup mhn-signup-compact' : 'mhn-signup').'" id="'.($compact ? 'footer-signup-form' : 'signup').'">';
+    $compact = source_is_compact($source);
+    // Non-compact forms keep `signup`, the anchor the redirect lands on. Compact ones outside
+    // the footer get their own id so a sidebar form and a post form can share a page.
+    $wrapId = $compact ? ($source === 'footer' ? 'footer-signup-form' : 'mhn-signup-'.$source) : 'signup';
+    $html = '<div class="'.($compact ? 'mhn-signup mhn-signup-compact' : 'mhn-signup').'" id="'.esc_attr($wrapId).'">';
     if ($source === 'post') {
         $html .= '<h2 class="mhn-signup__title" id="mhn-signup-post-title">'.esc_html__('Get the checklist', 'matthummel-newsletter').'</h2>';
     }

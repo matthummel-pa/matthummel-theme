@@ -6554,3 +6554,14 @@ html:not(.mh-dark) .site-footer .reach-subscription-message.is-error { backgroun
 }
 /* A Reach builder form (iframe) sits a little off the lede; the card itself is styled in Reach. */
 .site-footer [data-reach-form] { margin-top: .35rem; }
+
+/* ── 3.7.15 Newsletter funnel: forms in the sidebar, the journal page, and the thank-you page ──
+   The plugin ships the form recipe (assets/public.css); these rules only place it. */
+.side-subscribe .mhn-signup-compact { margin: 0 0 .9rem; }
+.side-subscribe .mhn-signup-compact .mhn-compose .btn { width: 100%; justify-content: center; }
+.side-subscribe .mhn-signup-compact .mhn-hint { display: none; }
+.write-subscribe-form { margin: 0 0 1.25rem; }
+.write-subscribe-form .mhn-signup { max-width: 40rem; }
+.ty-updates .mhn-signup { max-width: 40rem; }
+.updates-wrap .mhn-welcome,
+.updates-wrap .mhn-archive { max-width: none; }

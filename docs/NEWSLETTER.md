@@ -40,6 +40,18 @@ The template already sets the type size, the colors, and the footer. You still c
 
 New signups confirm by email before they are on the list. The link in that email opens a confirm page with optional first name and last name fields. The address is added only when they press the button. A missing name does not block that. A scanner that only opens the link does not confirm them. They can change the name later on the preferences page. The From address should be a mailbox on this site’s domain.
 
+## After they confirm
+
+Three things happen on their own. Each one is a checkbox under **Get updates → Settings → After signup**.
+
+1. **The welcome letter goes out.** It is the Welcome layout with the subject, body, and expectation list from **Reusable copy**, the **WordPress Handoff Checklist** button when that link is set, and the three latest posts. It goes out once, right after Confirm, and shows in Subscribers as a `welcome` event. Use **Send me the welcome letter** on the settings screen to get a copy on your phone before you change the copy. Turn the box off and nothing is sent; the post form still promises a checklist, so leave it on or change that copy.
+2. **They land on the Get updates page**, not a bare confirm page. It says they are on the list, hands them the checklist link, lists three posts to start with, and asks them to reply to the welcome note. There is no form on that view.
+3. **Links back to this site carry UTM tags** (`utm_source=newsletter`, `utm_medium=email`, `utm_campaign` is the issue slug, or `welcome`). Analytics can then tell email visits from search. Other sites, the unsubscribe and preferences links, and links that already have UTM tags are left alone.
+
+## Where the forms are
+
+Every form posts to the same signup handler and records where it was: Get updates page, footer, end of a post, post sidebar, journal page, thank-you page, or Past issues. Subscribers shows that in the **Source** column and the CSV export includes it, so you can see which spot earns signups. The footer on the live site may still be the Hostinger Reach widget; those addresses go to Reach, not to this list. `docs/FUNNEL-REVIEW.md` has the trade-off.
+
 ## Sent archive
 
 When a send finishes, WordPress keeps a private copy under **Get updates → Sent archive**. That copy is the letter as sent: subject, preview text, From name and address, template, start and finish times, who sent it, and the recipient, delivered, and failed counts. The list name is Subscribed, or Allowlist when a send is limited to a test list. Merge tags stay as placeholders. Subscriber addresses are not in the copy.
@@ -48,8 +60,8 @@ The list can be sorted by date, subject, or template. You can search, filter by 
 
 A sent issue is read-only. Use **Duplicate as new draft** when you want to send a revision. **Archive** hides an old issue from the issues list and from the default archive list. The copy stays. Choose **Archived** in the filter to see it again. Nothing in the archive is deleted on its own. **Delete** asks you to confirm, and only an administrator can do it.
 
-There is no public archive page.
+## Past issues (public archive)
 
-## Later
+Off until you turn it on under **Settings → After signup**. Saving with the box checked creates **Past issues** at `/newsletter/`: every full-list send, newest first, with the subject, the date, and the preview text, then the signup form. Each issue opens on its own address with the greeting filled in as “there”, the footer links pointed at Get updates, and a line at the top saying when it went out. Test sends and issues you archived stay private. Turn the box off and the page prints nothing for visitors.
 
-A public web archive, a page of sent issues that anyone could open, is not built. If it is added later, that setting stays off until you turn it on.
+A public archive gives a new reader proof before they hand over an address, and gives search engines a page per issue. Keep it off if you would rather the letter stay private.

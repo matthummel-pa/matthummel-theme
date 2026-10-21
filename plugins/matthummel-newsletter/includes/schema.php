@@ -97,6 +97,9 @@ function boot(): void
     add_shortcode('mhn_preferences', __NAMESPACE__.'\\shortcode_preferences');
     add_shortcode('mhn_unsubscribe', __NAMESPACE__.'\\shortcode_unsubscribe');
     add_shortcode('mhn_signup', __NAMESPACE__.'\\shortcode_signup');
+    add_shortcode('mhn_archive', __NAMESPACE__.'\\shortcode_archive');
+    add_action('mhn_subscriber_confirmed', __NAMESPACE__.'\\on_subscriber_confirmed');
+    add_action('admin_post_mhn_welcome_test', __NAMESPACE__.'\\handle_welcome_test');
     add_action('template_redirect', __NAMESPACE__.'\\on_template_redirect');
     add_filter('wp_robots', __NAMESPACE__.'\\robots');
     add_filter('rank_math/frontend/robots', __NAMESPACE__.'\\rank_math_robots', 99);

@@ -107,7 +107,10 @@ function archive_table(): string
  *     social_instagram: string,
  *     social_placement: string,
  *     skip_sent_post: int,
- *     rule_categories: list<string>
+ *     rule_categories: list<string>,
+ *     welcome_send: int,
+ *     utm_links: int,
+ *     public_archive: int
  * }
  */
 function settings(): array
@@ -153,6 +156,9 @@ function settings(): array
         'social_placement' => 'footer',
         'skip_sent_post' => 1,
         'rule_categories' => [],
+        'welcome_send' => 1,
+        'utm_links' => 1,
+        'public_archive' => 0,
     ];
 
     $merged = array_merge($defaults, $saved);
@@ -205,6 +211,9 @@ function settings(): array
         ),
         'skip_sent_post' => (int) $merged['skip_sent_post'] === 1 ? 1 : 0,
         'rule_categories' => sanitize_rule_categories($merged['rule_categories'] ?? []),
+        'welcome_send' => (int) ($merged['welcome_send'] ?? 1) === 1 ? 1 : 0,
+        'utm_links' => (int) ($merged['utm_links'] ?? 1) === 1 ? 1 : 0,
+        'public_archive' => (int) ($merged['public_archive'] ?? 0) === 1 ? 1 : 0,
     ];
 }
 
@@ -272,6 +281,10 @@ function update_settings(array $input): void
         'rule_categories' => array_key_exists('mhn_rules_present', $input)
             ? sanitize_rule_categories($input['rule_categories'] ?? [])
             : $current['rule_categories'],
+        // The three funnel checkboxes post together; a form without them keeps the saved values.
+        'welcome_send' => array_key_exists('mhn_funnel_present', $input) ? (empty($input['welcome_send']) ? 0 : 1) : $current['welcome_send'],
+        'utm_links' => array_key_exists('mhn_funnel_present', $input) ? (empty($input['utm_links']) ? 0 : 1) : $current['utm_links'],
+        'public_archive' => array_key_exists('mhn_funnel_present', $input) ? (empty($input['public_archive']) ? 0 : 1) : $current['public_archive'],
     ]);
 }
 

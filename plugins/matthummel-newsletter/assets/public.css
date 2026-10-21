@@ -239,3 +239,119 @@ html.mh-dark .mhn-status-error {
 .mhn-signup-compact .mhn-status {
   margin-bottom: 0.55rem;
 }
+
+/* ── 1.12.0 Confirmed page ─────────────────────────────────────────────── */
+.mhn-welcome {
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: var(--white, #fff);
+  border: 1px solid var(--color-border, #c5d0de);
+  border-radius: var(--radius-card, 16px);
+}
+
+.mhn-welcome__lead,
+.mhn-welcome__reply {
+  margin: 1rem 0 0.5rem;
+  line-height: 1.6;
+}
+
+.mhn-welcome__cta {
+  margin: 0.25rem 0 0;
+}
+
+.mhn-welcome__cta .btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+}
+
+.mhn-welcome__h {
+  margin: 1.5rem 0 0.5rem;
+  font-family: var(--font-display, Inter, system-ui, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.mhn-welcome__posts {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+
+.mhn-welcome__posts li {
+  margin: 0 0 0.4rem;
+}
+
+.mhn-welcome__links {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--color-text-muted, #3a4554);
+}
+
+html.mh-dark .mhn-welcome {
+  background: var(--white, #141c28);
+  border-color: var(--color-border, #243041);
+}
+
+/* ── 1.12.0 Past issues ────────────────────────────────────────────────── */
+.mhn-archive__list {
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.mhn-archive__item {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--color-border, #c5d0de);
+}
+
+.mhn-archive__item:first-child {
+  padding-top: 0;
+}
+
+.mhn-archive__title {
+  display: block;
+  font-family: var(--font-display, Inter, system-ui, sans-serif);
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.mhn-archive__title:hover,
+.mhn-archive__title:focus-visible {
+  text-decoration: underline;
+}
+
+.mhn-archive__date {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #3a4554);
+}
+
+.mhn-archive__lede {
+  margin: 0.4rem 0 0;
+  line-height: 1.55;
+  color: var(--color-text-secondary, #2b3645);
+}
+
+.mhn-archive__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 2rem;
+}
+
+.mhn-archive__signup-title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display, Inter, system-ui, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+html.mh-dark .mhn-archive__item {
+  border-color: var(--color-border, #243041);
+}

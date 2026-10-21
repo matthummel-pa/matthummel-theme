@@ -50,7 +50,13 @@
   {{-- Newsletter / RSS --}}
   <div class="side-card side-subscribe">
     <p class="side-card-title">Follow along</p>
-    <p class="side-subscribe__body">New posts in your RSS reader, or by email from <a href="{{ esc_url(home_url('/get-updates/')) }}">Get updates</a>. No ads.</p>
+    @if (shortcode_exists('mhn_signup'))
+      <p class="side-subscribe__body">{{ __('A note when I publish. I keep the address on this site. No ads.', 'sage') }}</p>
+      {{-- Shortcode HTML is escaped in the plugin. --}}
+      {!! do_shortcode('[mhn_signup source="sidebar"]') !!}
+    @else
+      <p class="side-subscribe__body">New posts in your RSS reader, or by email from <a href="{{ esc_url(home_url('/get-updates/')) }}">Get updates</a>. No ads.</p>
+    @endif
     <a class="side-subscribe__btn" href="{{ esc_url(home_url('/feed/')) }}" rel="alternate" type="application/rss+xml">
       {!! \App\mh_svg_icon('rss', 16) !!} RSS feed
     </a>
