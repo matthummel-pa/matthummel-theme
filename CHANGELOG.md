@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.22 — Footer sentence in Matt's voice
+
+- The footer sentence under the name now reads: "I’m a full-stack WordPress developer. I build custom themes, plugins, and web apps for shops, agencies, and other developers, then write up what I learn here. A few tool links are affiliate links, and each one is labeled." First person, the site's glossary (shops, agencies, developers), the "full-stack WordPress developer" phrase the home page already targets, and the affiliate disclosure kept in plain words.
+- One default for all three places: the admin field default, the Blade fallback (which had drifted to a different sentence), and a one-time rewrite (`mh_footer_blurb_copy_v1`) that updates the saved home-page field only while it still holds an earlier built-in sentence. A sentence Matt typed himself is left alone. Edit it any time in Pages → Home → Page content (theme) → Footer sentence.
+
 ## 3.7.21 — No Get updates pill in the footer
 
 - The footer brand column no longer prints the Get updates pill under the blurb; the social icons sit there on their own. The footer's Get updates widget column (with the Reach form) and the header pill are unchanged.

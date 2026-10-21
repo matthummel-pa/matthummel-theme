@@ -4425,3 +4425,36 @@ add_action('init', function (): void {
 
     update_option('mh_seo_copy_v1', true);
 }, 76);
+
+/**
+ * 3.7.22: the footer sentence reads as one person, in the site's voice.
+ *
+ * Rewrites the home page's `mh_f_footer_blurb` only while it is empty or still
+ * holds one of the earlier built-in sentences; a sentence Matt wrote stays.
+ */
+add_action('init', function (): void {
+    if (get_option('mh_footer_blurb_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $home = get_page_by_path('home') ?: get_page_by_path('homepage');
+    if (! $home && get_option('show_on_front') === 'page') {
+        $id = (int) get_option('page_on_front');
+        $home = $id ? get_post($id) : null;
+    }
+    if ($home instanceof \WP_Post) {
+        $previous = [
+            'Full-stack & WordPress developer. Portfolio work, themes you can buy, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+            'Full-stack and WordPress developer. Selected projects, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+            'Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+            'Full-stack & WordPress developer. Concept sites, a handful of theme packs, and tools I recommend — with clear affiliate disclosure when a link is compensated.',
+            'Notes, code, and example sites. Developers, shops, and agencies are welcome.',
+        ];
+        $current = trim((string) get_post_meta((int) $home->ID, 'mh_f_footer_blurb', true));
+        if ($current === '' || in_array($current, $previous, true)) {
+            update_post_meta((int) $home->ID, 'mh_f_footer_blurb', mh_footer_blurb_default());
+        }
+    }
+
+    update_option('mh_footer_blurb_copy_v1', true);
+}, 77);
