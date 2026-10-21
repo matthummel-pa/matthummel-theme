@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.20 — Footer Subscribe button matches the Get updates button
+
+- The Hostinger Reach **Subscribe** button (footer widget area, and the same block on block pages such as Get updates) takes the Get updates pill look: navy fill, blue→cyan→lime ring, ink text. Hover and focus turn the text lime with the lime glow and a small lift. CSS only.
+
 ## 3.7.19 — Social icons match the Get updates button
 
 - Every social link (`partials/social`: footer, mobile menu, the About "Elsewhere" pills, and the Social links block cards) takes the Get updates look: navy fill, the blue→cyan→lime ring, cyan glyph. Hover and focus turn the glyph lime with the lime glow and a small lift. Labels stay ink, notes stay soft. No markup change.
