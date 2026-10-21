@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.27 — Every button wears the nav pill
+
+- All buttons now use the header "Get updates" look: navy fill, blue→cyan→lime brand ring, pill radius, light type; lime type and a glow on hover and focus. That covers `.btn` everywhere (Say hello, forms, cards, the mobile menu CTA, WooCommerce), core button blocks on posts and pages, and the search submit. `.btn-outline` and `.btn-ghost` keep the same pill and ring on the page surface (white in light, page background in dark) so they still read as secondary, and hover the same way. One block at the end of `resources/css/site-extras.css`; padding and font sizes are untouched. Reduced motion drops the lift.
+
 ## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
 
 - Everything that lived in Appearance → Customize → Additional CSS is now `resources/css/site-extras.css`, imported last in `app.css` so the cascade order stays the same. That covers the post components (`mh-table`, `mh-cards`, `mh-callout`), the Hostinger Reach signup and Journal newsletter forms, the CTA band buttons and mobile note spacing, the home FAQ two-column layout with the sticky "Still have a question?" card (one column at 1024px and below), the hero dot waves, and the section line-art illustrations.
