@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.16 — Privacy policy names Hostinger Reach
+
+- The Privacy page's short version and "Who sees your data" list now say that the signup forms send the address and optional first name to Hostinger Reach, what Reach stores, and that it handles unsubscribes. No other change.
+
 ## 3.7.15 — Newsletter is Hostinger Reach
 
 - The theme no longer carries any newsletter code. The self-hosted `matthummel-newsletter` plugin (3.6.38 to 3.7.14) and the theme's own footer list (`app/newsletter.php`, 3.6.20 to 3.7.14) are removed, along with the plugin pack script and workflow, the email a11y step in CI, their PHPStan baseline entries, `docs/NEWSLETTER.md`, and the **Get updates** admin menu.
