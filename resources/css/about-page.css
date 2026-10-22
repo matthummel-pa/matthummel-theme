@@ -2,9 +2,9 @@
    About page (3.7.31): layout polish + decorative section illustrations.
    Scoped with .mh-page-about (body class from app/filters.php, built from the
    page slug), so it survives a database move where the page ID changes.
-   Illustrations are CSS masks filled with the theme's --il-a/b/c gradient
-   (illustrations.css), so they follow light/dark mode and stay out of the
-   accessibility tree.
+   3.7.33: the drawings are inline, animated SVG from
+   partials/section-illustration (story, build, work, resume, code), styled
+   and animated in illustrations.css. This file only sizes and places them.
    ========================================================================== */
 
 /* Readable line length for section intros and story copy */
@@ -32,59 +32,27 @@
 }
 
 @media (width >= 900px) {
-  .mh-page-about :is(#story, #build, #work, #resume, #code) {
-    position: relative;
-    isolation: isolate;
-  }
-
   /* Leave room on the right for the illustration */
   .mh-page-about :is(#story, #build, #work, #resume, #code) > .container > :is(p.wp-block-paragraph, h2) {
-    max-width: min(62ch, 60%);
+    max-width: min(62ch, 58%);
   }
 
-  .mh-page-about :is(#story, #build, #work, #resume, #code)::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
+  /* Top-right of the section, aligned to the content edge, a fixed 360:250
+     box instead of the home drawings' full-height frame. */
+  .mh-page-about .mh-illus--about {
     top: clamp(2rem, 4vw, 3rem);
     right: max(var(--page-gutter, 1.5rem), calc((100% - var(--page-max, 1120px)) / 2));
-    width: min(30%, 340px);
+    width: min(40%, 500px);
+    height: auto;
     aspect-ratio: 360 / 250;
-    pointer-events: none;
-    background: linear-gradient(90deg, var(--il-a), var(--il-b) 55%, var(--il-c));
-    opacity: var(--il-opacity, .6);
-    -webkit-mask: var(--about-il) center / contain no-repeat;
-    mask: var(--about-il) center / contain no-repeat;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 22%);
   }
 
-  .mh-page-about #story::before {
-    width: min(36%, 420px);
-  }
-
-  /* Story: a path from 2011 to now (college, contracts, freelance code) */
-  .mh-page-about #story {
-    --about-il: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 250' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M24 222C92 222 70 158 136 158S186 100 246 100 300 52 336 46' stroke-dasharray='2 7'/%3E%3Ccircle cx='24' cy='222' r='6'/%3E%3Ccircle cx='136' cy='158' r='6'/%3E%3Ccircle cx='246' cy='100' r='6'/%3E%3Ccircle cx='336' cy='46' r='10'/%3E%3Ccircle cx='336' cy='46' r='4' fill='%23fff'/%3E%3Cpath d='M24 216v-12M136 152v-14M246 94v-14'/%3E%3Crect x='0' y='156' width='68' height='48' rx='9'/%3E%3Cpath d='M12 174l22-10 22 10M17 176v16M26 176v16M42 176v16M51 176v16M12 194h44'/%3E%3Crect x='102' y='90' width='68' height='48' rx='9'/%3E%3Crect x='121' y='106' width='30' height='22' rx='4'/%3E%3Cpath d='M130 106v-4h12v4M121 116h30'/%3E%3Crect x='212' y='32' width='68' height='48' rx='9'/%3E%3Cpath d='M212 44h68'/%3E%3Ccircle cx='220' cy='38' r='1.5' fill='%23fff'/%3E%3Ccircle cx='226' cy='38' r='1.5' fill='%23fff'/%3E%3Cpath d='M236 54l-6 7 6 7M256 54l6 7-6 7M249 51l-6 20'/%3E%3C/svg%3E");
-  }
-
-  /* What I build: three stacked layers (site, plugin, app) */
-  .mh-page-about #build {
-    --about-il: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 250' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M46 170l124 46 124-46'/%3E%3Cpath d='M46 136l124 46 124-46'/%3E%3Cpath d='M170 56l124 46-124 46-124-46z' fill='%23fff' fill-opacity='.08'/%3E%3Cpath d='M46 102v68M294 102v68M170 148v68' stroke-opacity='.6'/%3E%3Cpath d='M170 76l70 26-70 26-70-26z' stroke-dasharray='3 6'/%3E%3Cpath d='M150 96l-10 6 10 6M190 96l10 6-10 6M174 92l-8 20'/%3E%3Crect x='306' y='94' width='40' height='14' rx='7'/%3E%3Crect x='306' y='128' width='40' height='14' rx='7'/%3E%3Crect x='306' y='162' width='40' height='14' rx='7'/%3E%3Cpath d='M296 101h8M296 135h8M296 169h8' stroke-dasharray='2 3'/%3E%3C/svg%3E");
-  }
-
-  /* Selected work: a browser window with a project preview */
-  .mh-page-about #work {
-    --about-il: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 250' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='30' y='22' width='290' height='196' rx='14'/%3E%3Cpath d='M30 54h290'/%3E%3Ccircle cx='48' cy='38' r='3.5'/%3E%3Ccircle cx='62' cy='38' r='3.5'/%3E%3Ccircle cx='76' cy='38' r='3.5'/%3E%3Crect x='96' y='31' width='150' height='14' rx='7' stroke-opacity='.6'/%3E%3Crect x='50' y='72' width='150' height='126' rx='9'/%3E%3Cpath d='M50 176l40-46 28 30 20-18 62 54' /%3E%3Ccircle cx='170' cy='98' r='10' fill='%23fff' fill-opacity='.2'/%3E%3Cpath d='M220 80h76M220 96h58M220 112h68M220 128h44' stroke-opacity='.7'/%3E%3Crect x='220' y='148' width='56' height='18' rx='9' fill='%23fff' fill-opacity='.25'/%3E%3Cpath d='M282 176v38l10-10 8 17 7-3-8-17h14z' fill='%23fff' fill-opacity='.15'/%3E%3C/svg%3E");
-  }
-
-  /* Experience: a resume sheet with checked-off roles */
-  .mh-page-about #resume {
-    --about-il: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 250' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='118' y='30' width='150' height='200' rx='12' stroke-opacity='.35'/%3E%3Crect x='96' y='16' width='158' height='210' rx='12' fill='%23fff' fill-opacity='.04'/%3E%3Ccircle cx='130' cy='54' r='16'/%3E%3Cpath d='M122 62c2-6 14-6 16 0M126 50a4 4 0 1 0 8 0 4 4 0 1 0-8 0'/%3E%3Cpath d='M156 48h76M156 62h52'/%3E%3Cpath d='M114 90h122' stroke-opacity='.5'/%3E%3Crect x='114' y='106' width='14' height='14' rx='4'/%3E%3Cpath d='M117.5 113l3 3 5.5-6M138 113h90'/%3E%3Crect x='114' y='138' width='14' height='14' rx='4'/%3E%3Cpath d='M117.5 145l3 3 5.5-6M138 145h76'/%3E%3Crect x='114' y='170' width='14' height='14' rx='4'/%3E%3Cpath d='M117.5 177l3 3 5.5-6M138 177h84'/%3E%3Ccircle cx='270' cy='196' r='28' fill='%23fff' fill-opacity='.08'/%3E%3Cpath d='M257 196l9 9 17-17'/%3E%3C/svg%3E");
-  }
-
-  /* Open source: a branch that merges back into main */
-  .mh-page-about #code {
-    --about-il: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 250' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 196h320'/%3E%3Cpath d='M106 196c34 0 34-74 68-74h20c34 0 34 74 68 74'/%3E%3Cpath d='M60 196c22 0 22-120 54-120h24' stroke-dasharray='3 6' stroke-opacity='.6'/%3E%3Ccircle cx='60' cy='196' r='7'/%3E%3Ccircle cx='106' cy='196' r='7'/%3E%3Ccircle cx='184' cy='122' r='7'/%3E%3Ccircle cx='262' cy='196' r='9'/%3E%3Ccircle cx='262' cy='196' r='3.5' fill='%23fff'/%3E%3Ccircle cx='316' cy='196' r='7'/%3E%3Crect x='214' y='22' width='120' height='76' rx='10' fill='%23fff' fill-opacity='.05'/%3E%3Cpath d='M214 38h120'/%3E%3Ccircle cx='224' cy='30' r='2' fill='%23fff'/%3E%3Ccircle cx='232' cy='30' r='2' fill='%23fff'/%3E%3Cpath d='M228 54h44M236 68h62M228 82h34' stroke-opacity='.75'/%3E%3Cpath d='M44 34l-16 16 16 16M86 34l16 16-16 16M72 28l-14 44'/%3E%3C/svg%3E");
-  }
+  .mh-page-about #story .mh-illus--about { width: min(46%, 580px); }
+  /* Work and Experience have short intros; keep the drawing clear of the cards below. */
+  .mh-page-about :is(#work, #resume) .mh-illus--about { width: min(32%, 400px); }
+  .mh-page-about #story > .container > :is(p.wp-block-paragraph, h2) { max-width: min(62ch, 52%); }
 }
 
 /* FAQ: heading and intro on the left, questions on the right. About's FAQ
@@ -110,7 +78,7 @@
      empty lower corner instead of a fixed offset from the top. */
   .mh-page-about #questions .mh-illus--questions {
     left: calc(var(--il-edge) + var(--page-gutter, 1.5rem));
-    width: min(26%, 300px);
+    width: min(28%, 360px);
     height: auto;
     aspect-ratio: 360 / 250;
     mask-image: none;

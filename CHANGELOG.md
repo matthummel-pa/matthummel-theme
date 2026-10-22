@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.33 — About drawings: bigger, inline, animated
+
+- The five About section drawings (Story, What I build, Selected work, Experience, Open source) are now inline SVG from `partials/section-illustration.blade.php` instead of static CSS masks, so each part can move. The Section block only renders them on the About page (`is_page('about')`), since Home has its own `#work` section.
+- What each one does: Story's dashed road marches toward "now", the three stops light up in order and the end pin pings. What I build's site/plugin/app layers breathe apart, the plugin outline marches, the code glyph draws, the labels type in. Selected work loads a page, draws the preview, types the copy, and a cursor clicks the button (press + ripple). Experience checks off each role in turn and pops an approval badge. Open source draws a branch off main, drops a commit, merges back and pings the merge point.
+- Bigger: About drawings go from `min(30%, 340px)` to `min(40%, 500px)` (Story `min(46%, 580px)`; Work and Experience `min(32%, 400px)` so they stay clear of the cards). The FAQ drawing goes from `min(26%, 300px)` to `min(28%, 360px)`. Story's intro caps at 52% width to make room.
+- Fixed: the stagger delays (`il-d2`…`il-d5`) never applied on the home drawings because each animation shorthand later in the file reset `animation-delay` to 0. The delay helpers now sit after every shorthand, and parts that start undrawn hold their first frame while waiting.
+- Flat horizontal lines in the new drawings use a solid stroke; a gradient on a zero-height bounding box does not paint.
+- `prefers-reduced-motion` still shows the finished still frame; the ping and ripple rings are hidden in it. Decorative only (`aria-hidden`), hidden under 900px.
+
 ## 3.7.32 — Skills and repo labels
 
 - **VS Code reads right.** Multi-word tech names that split badly word by word ("Vs Code") now map to their real spelling through `mh_title_label_phrase()`, used by `mh_title_label()` and by the Skills block for names already saved in the database.

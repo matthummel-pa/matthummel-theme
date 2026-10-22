@@ -705,3 +705,9 @@ Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · 
 - Colors are `--il-a/-b/-c` (blue, cyan, lime), `--il-card` (card fill) and `--il-bar` (text bars) on `:root` and `html.mh-dark`; gradient stops read them through `.il-s1/2/3`. Do not put hex back in the markup.
 - Animations are CSS classes inside the SVG (`il-draw`, `il-type`, `il-float`, `il-letter`, `il-plane`, `il-hand--min/--hour`, `il-today`, `il-chev`, …) using `transform-box: fill-box` (or `view-box` with a fixed origin for the pencil and clock hands). Every keyframe starts from the undrawn state and the default CSS is the finished drawing, so `prefers-reduced-motion` (`animation: none`) shows the complete still image.
 - Decorative only: `aria-hidden="true"`, `pointer-events: none`, hidden under 900px (FAQ under 1025px). Checked in Chromium mocks at 1440 / 1024 / 390 in light and dark; a manual pass over the live home page is still needed to confirm text contrast where headings cross the faded edge.
+
+## Editor’s notes (3.7.33 About drawings)
+
+- About's Story, What I build, Selected work, Experience, and Open source drawings are inline SVG cases in `partials/section-illustration.blade.php` (class `mh-illus--about`), rendered by `blocks/section.blade.php` only when `is_page('about')`. They replaced the 3.7.31 CSS-mask `::before` drawings, which could not animate their parts.
+- Size and placement live in `resources/css/about-page.css` (top-right, fixed 360:250 box). Motion lives in `resources/css/illustrations.css`: `il-march`, `il-milestone`, `il-ping`, `il-check`, `il-cursor`, `il-click`, `il-ripple`, with `il-step-2/3/4` (1s / 2s / 3s) sequencing on a shared 9s beat.
+- Keep the stagger helpers at the end of `illustrations.css`. Any `animation:` shorthand after them resets the delay.
