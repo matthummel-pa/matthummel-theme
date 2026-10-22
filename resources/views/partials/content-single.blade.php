@@ -1,5 +1,5 @@
 {{-- Reading progress bar --}}
-<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<div class="mh-progress" id="mh-progress" role="progressbar" aria-label="{{ __('Reading progress', 'sage') }}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
 @php
   $postId    = get_the_ID();
@@ -67,8 +67,8 @@
       <div class="post-hero-main">
 
       {{-- Breadcrumb / category --}}
-      <nav class="post-breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ $writing }}">Journal</a>
+      <nav class="post-breadcrumb" aria-label="{{ __('Breadcrumb', 'sage') }}">
+        <a href="{{ $writing }}">{{ __('Journal', 'sage') }}</a>
         @if ($postCats)
           <span aria-hidden="true">›</span>
           <a href="{{ esc_url(get_category_link($primaryCat->term_id)) }}" itemprop="articleSection">
@@ -93,7 +93,7 @@
         <span class="post-hero-meta__sep" aria-hidden="true">·</span>
         <span class="post-hero-meta__read">
           {!! \App\mh_svg_icon('book-open', 14) !!}
-          {{ $readMins }} min read
+          {{ sprintf(_n('%d min read', '%d min read', $readMins, 'sage'), $readMins) }}
         </span>
         @if (get_comments_number() > 0)
           <span class="post-hero-meta__sep" aria-hidden="true">·</span>
@@ -117,21 +117,21 @@
 
       {{-- Hero share --}}
       <div class="post-hero-share">
-        <span class="post-hero-share__label">Share</span>
-        <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="Share on Bluesky">
+        <span class="post-hero-share__label">{{ __('Share', 'sage') }}</span>
+        <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Bluesky', 'sage') }}">
           {!! \App\mh_svg_icon('bluesky', 15) !!} Bluesky
         </a>
-        <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
+        <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on LinkedIn', 'sage') }}">
           {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
         </a>
-        <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="Share on Facebook">
+        <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Facebook', 'sage') }}">
           {!! \App\mh_svg_icon('facebook', 15) !!} Facebook
         </a>
-        <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="Share on Reddit">
+        <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Reddit', 'sage') }}">
           {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
         </a>
-        <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
-          {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
+        <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="{{ __('Copy link', 'sage') }}">
+          {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
         </button>
       </div>
     </div>
@@ -162,10 +162,10 @@
 
         {{-- Article body --}}
         @if ($hasAffiliateLinks)
-          <aside class="post-extra-note affiliate-disclosure" aria-label="Affiliate disclosure">
-            <strong>Affiliate disclosure:</strong>
-            I may earn a commission if you buy through links in this post, at no extra cost to you. I only recommend tools I would use on a real project. The same disclosure covers Uses and Resources.
-            <a href="{{ home_url('/affiliate-disclosure/') }}">How affiliate links work on this site.</a>
+          <aside class="post-extra-note affiliate-disclosure" aria-label="{{ __('Affiliate disclosure', 'sage') }}">
+            <strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
+            {{ __('I may earn a commission if you buy through links in this post, at no extra cost to you. I only recommend tools I would use on a real project. The same disclosure covers Uses and Resources.', 'sage') }}
+            <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('How affiliate links work on this site.', 'sage') }}</a>
           </aside>
         @endif
         <div class="entry-content e-content post-prose" id="post-prose" itemprop="articleBody">
@@ -174,7 +174,7 @@
 
         {{-- Tags --}}
         @if ($postTags)
-          <div class="post-tags" aria-label="Tags">
+          <div class="post-tags" aria-label="{{ __('Tags', 'sage') }}">
             @foreach ($postTags as $tag)
               <a class="post-tag" href="{{ esc_url(get_tag_link($tag->term_id)) }}">#{{ $tag->name }}</a>
             @endforeach
@@ -183,22 +183,22 @@
 
         {{-- Bottom share --}}
         <div class="post-share-bottom">
-          <p class="post-share-bottom__prompt">Found this useful?</p>
+          <p class="post-share-bottom__prompt">{{ __('Found this useful?', 'sage') }}</p>
           <div class="post-share-bottom__btns">
-            <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="Share on Bluesky">
+            <a class="post-share-btn" href="{{ esc_url($shareBsky) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Bluesky', 'sage') }}">
               {!! \App\mh_svg_icon('bluesky', 15) !!} Bluesky
             </a>
-            <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="Share on LinkedIn">
+            <a class="post-share-btn" href="{{ esc_url($shareIn) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on LinkedIn', 'sage') }}">
               {!! \App\mh_svg_icon('linkedin', 15) !!} LinkedIn
             </a>
-            <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="Share on Facebook">
+            <a class="post-share-btn" href="{{ esc_url($shareFb) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Facebook', 'sage') }}">
               {!! \App\mh_svg_icon('facebook', 15) !!} Facebook
             </a>
-            <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="Share on Reddit">
+            <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Reddit', 'sage') }}">
               {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
             </a>
-            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="Copy link">
-              {!! \App\mh_svg_icon('share', 15) !!} <span>Copy link</span>
+            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="{{ __('Copy link', 'sage') }}">
+              {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
             </button>
           </div>
         </div>
@@ -213,15 +213,15 @@
           @include('partials.profile-photo', ['size' => 80, 'class' => 'profile-photo post-author-bio__photo', 'decorative' => false])
           <div class="post-author-bio__body">
             <p class="post-author-bio__name">{{ get_the_author() }}</p>
-            <p class="post-author-bio__role">Full-stack developer · WordPress specialist</p>
+            <p class="post-author-bio__role">{{ __('Full-stack developer · WordPress specialist', 'sage') }}</p>
             <p class="post-author-bio__desc">
-              {{ get_the_author_meta('description') ?: 'I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in.' }}
+              {{ get_the_author_meta('description') ?: __('I write about WordPress, PHP, and the tools I use on real projects — usually with code you can paste in.', 'sage') }}
             </p>
             <div class="post-author-bio__links">
-              <a href="{{ home_url('/about/') }}">About me</a>
-              <a href="{{ home_url('/about/#hire') }}">Work with me</a>
-              <a href="{{ home_url('/contact/') }}">Say hello</a>
-              <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">RSS feed</a>
+              <a href="{{ home_url('/about/') }}">{{ __('About me', 'sage') }}</a>
+              <a href="{{ home_url('/about/#hire') }}">{{ __('Work with me', 'sage') }}</a>
+              <a href="{{ home_url('/contact/') }}">{{ __('Say hello', 'sage') }}</a>
+              <a href="{{ home_url('/feed/') }}" rel="alternate" type="application/rss+xml">{{ __('RSS feed', 'sage') }}</a>
             </div>
           </div>
         </div>
@@ -269,10 +269,10 @@
           $nextPost = get_next_post();
         @endphp
         @if ($prevPost || $nextPost)
-          <nav class="post-nav" aria-label="Post navigation">
+          <nav class="post-nav" aria-label="{{ __('Post navigation', 'sage') }}">
             @if ($prevPost)
               <a class="post-nav__link post-nav__link--prev" href="{{ get_permalink($prevPost) }}">
-                <span class="post-nav__dir">← Previous post</span>
+                <span class="post-nav__dir">{{ __('← Previous post', 'sage') }}</span>
                 <span class="post-nav__title">{{ \App\mh_post_title($prevPost) }}</span>
               </a>
             @else
@@ -280,7 +280,7 @@
             @endif
             @if ($nextPost)
               <a class="post-nav__link post-nav__link--next" href="{{ get_permalink($nextPost) }}">
-                <span class="post-nav__dir">Next post →</span>
+                <span class="post-nav__dir">{{ __('Next post →', 'sage') }}</span>
                 <span class="post-nav__title">{{ \App\mh_post_title($nextPost) }}</span>
               </a>
             @endif
@@ -291,8 +291,8 @@
         @if (! empty($relatedPosts))
           <section class="post-related" aria-labelledby="related-heading">
             <h2 id="related-heading" class="post-related__heading">
-              More from the journal
-              @if ($postCats)<span class="post-related__cat">in {{ $primaryCat->name }}</span>@endif
+              {{ __('More from the journal', 'sage') }}
+              @if ($postCats)<span class="post-related__cat">{{ sprintf(__('in %s', 'sage'), $primaryCat->name) }}</span>@endif
             </h2>
             <div class="post-related__grid">
               @foreach ($relatedPosts as $rp)
@@ -309,12 +309,12 @@
                       <a href="{{ esc_url($rp['url']) }}">{{ $rp['title'] }}</a>
                     </h3>
                     @if ($rp['ex'])<p class="post-related-card__ex">{{ $rp['ex'] }}</p>@endif
-                    <p class="post-related-card__meta">{{ $rp['date'] }}@if($rp['mins']) · {{ $rp['mins'] }} min @endif</p>
+                    <p class="post-related-card__meta">{{ $rp['date'] }}@if($rp['mins']) · {{ sprintf(_n('%d min', '%d min', $rp['mins'], 'sage'), $rp['mins']) }}@endif</p>
                   </div>
                 </article>
               @endforeach
             </div>
-            <a class="h-text-arrow" href="{{ $writing }}" style="display:inline-flex;margin-top:1.5rem">All posts →</a>
+            <a class="h-text-arrow" href="{{ $writing }}" style="display:inline-flex;margin-top:1.5rem">{{ __('All posts →', 'sage') }}</a>
           </section>
         @endif
 

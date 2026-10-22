@@ -43,8 +43,8 @@
     {{ \App\field('start_lede', __('Four short steps for shops and agencies. I read every brief before we talk so the first call is useful — not a blank page.', 'sage')) }}
   </p>
   <ul class="start-hero-proof" aria-label="{{ __('What happens next', 'sage') }}">
-    <li>{{ __('I reply within one business day (ET)', 'sage') }}</li>
-    <li>{{ __('We agree a written scope before build', 'sage') }}</li>
+    <li>{{ rtrim(\App\mh_reply_sla(), '.') }}</li>
+    <li>{{ __('You approve a written scope before I build', 'sage') }}</li>
     <li>{{ __('You own hosting, files, and logins at handoff', 'sage') }}</li>
   </ul>
 @endcomponent

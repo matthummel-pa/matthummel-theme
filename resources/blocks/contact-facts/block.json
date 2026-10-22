@@ -19,7 +19,7 @@
     },
     "availability": {
       "type": "string",
-      "default": "Full-time, part-time, freelance, or agency overflow."
+      "default": "Full-time, contract, freelance, or agency overflow."
     },
     "location": {
       "type": "string",

@@ -262,7 +262,7 @@ img { max-width: 100%; display: block; }
 .skip-link:focus,
 .skip-link:focus-visible {
   top: 1rem;
-  outline: 2px solid var(--blue-400);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
 

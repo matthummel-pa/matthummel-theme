@@ -3,7 +3,7 @@
     "title": "Cobble & Candle",
     "cat": "Themes",
     "place": "Restaurants, taverns & inns",
-    "blurb": "A WordPress block theme for restaurants, taverns and inns: menus with diet filters, live “open now” hours, table and room bookings, events, and a setup wizard. No page builder.",
+    "blurb": "A WordPress block theme for restaurants, taverns, and inns: menus with diet filters, live “open now” hours, table and room bookings, events, and a setup wizard. No page builder.",
     "tech": [
       "Sage",
       "WordPress",
@@ -17,11 +17,11 @@
     "live": true,
     "price": "",
     "eyebrow": "Theme in progress · Restaurants, taverns & inns",
-    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is not in the shop yet.",
+    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is not in the shop yet.",
     "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
     "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
     "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is not for sale yet; say hello if you want it for your place or want me to set it up.",
-    "audience": "Restaurant, tavern and inn owners who want menus, hours and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs and tests.",
+    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
     "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
     "benefits": [
@@ -29,7 +29,7 @@
       "Menus with tabs, section links, diet filters and an allergen key",
       "Table bookings three ways: native request form with real time slots, OpenTable / Resy, or call-to-book",
       "Rooms with an availability calendar, weekend pricing, minimum stay and a running total",
-      "Two-way calendar sync with Airbnb, Booking.com and Vrbo",
+      "Two-way calendar sync with Airbnb, Booking.com, and Vrbo",
       "“Add dinner on your first night” when a guest books a room",
       "Five-step setup wizard with one-click demo import: no WP-CLI",
       "Menu import and export from Excel or Google Sheets, with a preview",
@@ -48,7 +48,7 @@
       "Menu CSV import / export",
       "Messages inbox, Status & logs screen",
       "Owner guide (11 pages), FAQ, developer hook reference",
-      "Screenshot, readme, licences and changelog"
+      "Screenshot, readme, licenses, and changelog"
     ],
     "blocks": [
       [
@@ -165,7 +165,7 @@
     "faq": [
       [
         "Is Cobble & Candle a WordPress restaurant theme?",
-        "Yes. It is a WordPress block theme for restaurants, taverns and inns, with menus, live opening hours, table bookings, events, private dining and rooms to stay, built without a page builder."
+        "Yes. It is a WordPress block theme for restaurants, taverns, and inns, with menus, live opening hours, table bookings, events, private dining, and rooms to stay, built without a page builder."
       ],
       [
         "Can I buy Cobble & Candle?",
@@ -173,11 +173,11 @@
       ],
       [
         "Does it handle rooms for a B&B or inn?",
-        "Yes. Rooms have nightly and weekend prices, a minimum stay and an availability calendar. Guests send a booking request, you confirm it from the dashboard, and the guest gets an email. Calendars sync both ways with Airbnb, Booking.com and Vrbo."
+        "Yes. Rooms have nightly and weekend prices, a minimum stay, and an availability calendar. Guests send a booking request, you confirm it from the dashboard, and the guest gets an email. Calendars sync both ways with Airbnb, Booking.com, and Vrbo."
       ],
       [
         "Does it take payments?",
-        "No, on purpose. Table and room bookings are requests you confirm, so there is no card handling or refund process to manage. Link your online-ordering system for takeaway."
+        "No, on purpose. Table and room bookings are requests you confirm, so there is no card handling or refund process to manage. Link your online-ordering system for takeout."
       ],
       [
         "Will my hours be right for Google?",
@@ -199,7 +199,7 @@
     "demo": "https://cobbleandcandle.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-cobbleandcandle",
     "version": "0.1.0",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.1)",
+    "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [
       "cobbleandcandle.zip (theme with Cobble & Candle Core bundled)",
@@ -481,15 +481,15 @@
       ],
       [
         "Is Acreline a live MLS or IDX theme?",
-        "No. It ships with demo inventory you manage in WordPress. Listings are a custom post type agencies edit in wp-admin. Wire a real MLS/IDX feed later. The UI does not depend on IDX chrome and the post type survives a theme switch via Acreline Core."
+        "No. It ships with demo inventory you manage in WordPress. Listings are a custom post type offices edit in wp-admin. Wire a real MLS/IDX feed later. The UI does not depend on IDX chrome and the post type survives a theme switch via Acreline Core."
       ],
       [
-        "How does a real estate agency edit page copy?",
+        "How does a real estate office edit page copy?",
         "Marketing pages use Core Gutenberg blocks with live ServerSideRender previews, so your agents edit them directly in wp-admin. Listings, agents, and bookings use classic metaboxes. Brand, phone, and colors stay in Customize → Identity (or the setup wizard). No developer needed for day-to-day edits."
       ],
       [
-        "Can I white-label Acreline for a client real estate agency?",
-        "Yes. Theme code is GPLv2 or later. Sage / Acorn remain MIT (GPL-compatible). You can install it for a client agency, customize it, resell services on top, or fork it as a white-label base. The child theme is included for safe agency customization."
+        "Can I white-label Acreline for a real estate office?",
+        "Yes. Theme code is GPLv2 or later. Sage / Acorn remain MIT (GPL-compatible). You can install it for an office, customize it, resell services on top, or fork it as a white-label base. The child theme is included for safe agency customization."
       ],
       [
         "Do I need Elementor or ACF for Acreline?",
@@ -497,13 +497,13 @@
       ],
       [
         "Can you install or customize Acreline for my real estate office?",
-        "Yes. Buy the pack for self-serve, or Get help and I brand it, import your listings, and hand off wp-admin editing to your brokers. I can also wire a real MLS feed or build custom listing filters for your market."
+        "Yes. Buy the pack for self-serve, or ask about this and I brand it, import your listings, and hand off wp-admin editing to your brokers. I can also wire a real MLS feed or build custom listing filters for your market."
       ]
     ],
     "demo": "https://acreline.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-acreline",
     "version": "1.5.9",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
+    "compatible": "WordPress 6.6+ (tested up to 7.0.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
@@ -579,7 +579,7 @@
       "WordPress listing theme"
     ],
     "seo_title": "Acreline: WordPress Real Estate Theme | Matt Hummel",
-    "seo_description": "WordPress theme for solo real estate agents and small teams: featured homes, agent bios, and showing requests on Gutenberg pages. No page builder."
+    "seo_description": "Acreline is my WordPress real estate theme for solo agents and small teams: listings, a map, agent bios, and showing requests, with no page builder."
   },
   "walkridge": {
     "title": "WalkRidge",
@@ -706,13 +706,13 @@
       ],
       [
         "Can you install or customize WalkRidge for my tour company?",
-        "Yes. Buy the pack for self-serve, or get help and I brand it, load your tour inventory, and hand off wp-admin editing to your team."
+        "Yes. Buy the pack for self-serve, or ask about this and I brand it, load your tour inventory, and hand off wp-admin editing to your team."
       ]
     ],
     "demo": "https://walkridge.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-walkridge",
     "version": "1.7.2",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 6.8)",
+    "compatible": "WordPress 6.6+ (tested up to 6.8), PHP 8.3+",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
@@ -834,8 +834,8 @@
         "download"
       ],
       [
-        "1.5.0",
-        "TOCguide identity"
+        "1.6.15",
+        "Current release"
       ],
       [
         "Server",
@@ -869,13 +869,13 @@
       ],
       [
         "Can you customize it for my theme?",
-        "Yes. Get help for sticky-header offsets, style presets that match your brand, or a private fork."
+        "Yes. Ask about this for sticky-header offsets, style presets that match your brand, or a private fork."
       ]
     ],
     "demo": "https://matthummel-pa.github.io/tocguide/",
     "github": "https://github.com/matthummel-pa/tocguide",
-    "version": "1.5.0",
-    "compatible": "WordPress 6.4+, PHP 7.4+ (tested up to 7.1)",
+    "version": "1.6.15",
+    "compatible": "WordPress 6.4+ (tested up to 7.1), PHP 7.4+",
     "license": "GPLv2 or later",
     "download": {
       "github_repo": "matthummel-pa/tocguide",

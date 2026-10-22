@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.38 — Site audit: light-mode focus rings, post i18n, thank-you noindex
+
+- Accessibility (WCAG 2.2 AA, light mode): button focus rings go navy outside the sections that stay navy in both modes (the cyan ring was 1.8:1 on white); "On this page" pills get a violet-700 ring in light mode on top of the `--color-focus` ring #293 added (studio's violet-100 hover border was 2.7:1); arrow links hover to violet-700 instead of blue-500 (3.4:1); contact, comment, and footer email fields get a solid 2px ring on top of studio's alpha glow; light-mode placeholders are gray-500 (Safari's default was 2.4:1); the header "Get updates" chevron is cyan over the dark hero; the skip link uses `--color-focus`.
+- Focus not obscured (2.4.11): `scroll-padding-top` of the measured header height + .5rem under 900px. The header is fixed at every width, but the mobile anchor targets only kept 1rem of scroll margin, so jump links landed under it.
+- A page with no dark hero (Thank you) paints the header's scrolled state at once (`brand-ui.js`) instead of white nav text on the light canvas.
+- `/thank-you/` is `noindex, follow` through `wp_robots` (it was indexable and listed in the sitemap).
+- i18n: every visible string and `aria-label` in `partials/content-single.blade.php` and the footer legal nav goes through `__()` / `esc_attr__()` with the `sage` text domain.
+- Copy that lives in the theme, from the content pass: one reply promise everywhere ("I usually reply within one business day (ET)" on project pages, the Start checklist, and the thank-you meta); Start says "You approve a written scope before I build" (the site's one brand-"we"); the Contact facts default reads "contract", not "part-time"; Support and Start meta descriptions are first person; catalog: TOCguide is 1.6.15 (the repo's release), Cobble & Candle lists get Oxford commas and US spellings, "ask about this" matches the button on project FAQs, Acreline's FAQ says office instead of agency, and its description names listings and the map.
+- Audit notes: the live pages already had one h1, clean heading order, alt text, canonicals, Open Graph and Twitter tags, and JSON-LD on every URL. What is left is content (one title and four descriptions over the length caps) and lives in WordPress, not the theme.
 ## 3.7.37 — Deploy notes: cache purge that works on staging
 
 - First real run of the SSH install on staging (3.7.34 → 3.7.36) showed `wp litespeed-purge` is not a registered command there: staging does not run the LiteSpeed Cache plugin, live does. The one-liner in `docs/INSTALL.md` §7 now falls back to `wp cache flush`, and the doc says to clear Hostinger's own cache for the staging site from hPanel or the Hostinger API (`agency-hosting_cache_clear-website`) — WP-CLI cannot reach that layer.

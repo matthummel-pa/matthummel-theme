@@ -459,7 +459,7 @@
   @include('partials.cta-band', [
     'kicker' => __('Work with me', 'sage'),
     'title' => sprintf(__('Like %s?', 'sage'), $title),
-    'text' => __('Tell me what you would change, or write about a role. I usually reply in a day.', 'sage'),
+    'text' => __('Tell me what you would change, or write about a role.', 'sage').' '.\App\mh_reply_sla(),
     'label' => __('Ask about this', 'sage'),
     'href' => $askUrl,
     'secondary' => __('Hire me', 'sage'),

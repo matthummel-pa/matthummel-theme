@@ -34,6 +34,22 @@ add_filter('body_class', function (array $classes): array {
     return $classes;
 });
 
+/**
+ * The contact form's thank-you page is a receipt, not a landing page: keep it out of
+ * search results. MH SEO and core both print the tag through wp_robots, so this holds
+ * whichever one is managing the head. Runs after MH SEO (priority 10).
+ */
+add_filter('wp_robots', function (array $robots): array {
+    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+        return $robots;
+    }
+    unset($robots['index'], $robots['nofollow']);
+    $robots['noindex'] = true;
+    $robots['follow'] = true;
+
+    return $robots;
+}, 20);
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);
@@ -133,7 +149,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-thankyou.blade.php' => [
             'title' => __('Message Received', 'sage').' | '.$brand,
-            'desc' => __('Your note is in my inbox. I reply within one business day (ET).', 'sage'),
+            'desc' => __('Your note is in my inbox. I usually reply within one business day (ET).', 'sage'),
         ],
         'template-resources.blade.php' => [
             'title' => __('WordPress Starters, Tools & Stack', 'sage').' | '.$brand,
@@ -152,8 +168,8 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('Changelog for the Matt Hummel WordPress theme: releases, fixes, and shipping notes.', 'sage'),
         ],
         'template-support.blade.php' => [
-            'title' => __('Theme & Plugin Support Docs', 'sage').' | '.$brand,
-            'desc' => __('HTML documentation for Acreline and other WordPress products: install, Customizer, FAQ, and support guides.', 'sage'),
+            'title' => __('Theme and Plugin Support Docs', 'sage').' | '.$brand,
+            'desc' => __('Install guides, Customizer notes, FAQs, and support docs for the WordPress themes and plugins I publish: Acreline, WalkRidge, and TOCguide.', 'sage'),
         ],
         'template-accessibility.blade.php' => [
             'title' => __('Accessibility Statement', 'sage').' | '.$brand,
@@ -181,7 +197,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
-            'desc' => __('A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.', 'sage'),
+            'desc' => __('A short project brief for shops and agencies: what you need built, your stack, and how handoff should work. I read every one before our first call.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,
