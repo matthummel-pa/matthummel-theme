@@ -1,13 +1,34 @@
 # Changelog
 
-## 3.7.36 — Site audit: light-mode focus rings, post i18n, thank-you noindex
+## 3.7.38 — Site audit: light-mode focus rings, post i18n, thank-you noindex
 
-- Accessibility (WCAG 2.2 AA, light mode): button focus rings go navy outside the sections that stay navy in both modes (the cyan ring was 1.8:1 on white); "On this page" pills keep a visible ring (`outline: none` dropped in `portfolio.css`, violet-700 ring in light); arrow links hover to violet-700 instead of blue-500 (3.4:1); contact, comment, and footer email fields get a solid 2px ring on top of studio's alpha glow; light-mode placeholders are gray-500 (Safari's default was 2.4:1); the header "Get updates" chevron is cyan over the dark hero; the skip link uses `--color-focus`.
+- Accessibility (WCAG 2.2 AA, light mode): button focus rings go navy outside the sections that stay navy in both modes (the cyan ring was 1.8:1 on white); "On this page" pills get a violet-700 ring in light mode on top of the `--color-focus` ring #293 added (studio's violet-100 hover border was 2.7:1); arrow links hover to violet-700 instead of blue-500 (3.4:1); contact, comment, and footer email fields get a solid 2px ring on top of studio's alpha glow; light-mode placeholders are gray-500 (Safari's default was 2.4:1); the header "Get updates" chevron is cyan over the dark hero; the skip link uses `--color-focus`.
 - Focus not obscured (2.4.11): `scroll-padding-top` of the measured header height + .5rem under 900px. The header is fixed at every width, but the mobile anchor targets only kept 1rem of scroll margin, so jump links landed under it.
 - A page with no dark hero (Thank you) paints the header's scrolled state at once (`brand-ui.js`) instead of white nav text on the light canvas.
 - `/thank-you/` is `noindex, follow` through `wp_robots` (it was indexable and listed in the sitemap).
 - i18n: every visible string and `aria-label` in `partials/content-single.blade.php` and the footer legal nav goes through `__()` / `esc_attr__()` with the `sage` text domain.
 - Audit notes: the live pages already had one h1, clean heading order, alt text, canonicals, Open Graph and Twitter tags, and JSON-LD on every URL. What is left is content (one title and four descriptions over the length caps) and lives in WordPress, not the theme.
+## 3.7.37 — Deploy notes: cache purge that works on staging
+
+- First real run of the SSH install on staging (3.7.34 → 3.7.36) showed `wp litespeed-purge` is not a registered command there: staging does not run the LiteSpeed Cache plugin, live does. The one-liner in `docs/INSTALL.md` §7 now falls back to `wp cache flush`, and the doc says to clear Hostinger's own cache for the staging site from hPanel or the Hostinger API (`agency-hosting_cache_clear-website`) — WP-CLI cannot reach that layer.
+- No theme code changed.
+
+## 3.7.36 — Repair after stale merges; resources refresh; staging-first deploys
+
+Five PRs merged on 2026-10-22 (#324, #323, #296, #293, #291). The last one was a stale branch whose squash set `style.css` back to 3.7.7 and replaced this changelog with an old copy, and `theme-latest` was built from that. This entry restores the history (3.7.8–3.7.35 are back below), bumps the version past every number already shipped, and records what the late merges actually changed.
+
+- **Version** `3.7.36` in `style.css` and `readme.txt` (the stable tag had been set to 3.7.7 by #293's drift fix, which was measured against a stale main).
+- **Resources refresh (#291).** Tools I recommend: added Claude and n8n; SiteGround is replaced by Hostinger (the host this site runs on); HubSpot is removed. Hostinger is not marked as an affiliate link until a referral URL exists. Free WordPress starters: added the AI Dev Standards Playbook repo and TOCguide on WordPress.org. The stack I use: added Claude Code, Block editor, PHPCS + WordPress Coding Standards, PHPStan, WooCommerce, Rank Math, IndexNow, and two new groups, AI and automation (n8n, the playbook, Notion) and Testing and accessibility (Lighthouse, axe-core). With no compensated links left, the affiliate disclosure hides itself (`mh_resources_have_affiliate_links()`) and comes back as soon as one item sets `affiliate => true`.
+- **Review findings (#293).** Text domains fixed in `app/contact.php` and `app/portfolio.php`; `_mh_project_image` saves with `esc_url_raw()`; `mh_journal_sort_url()` escapes its return value and sanitizes `REQUEST_URI`; MH SEO generates a random IndexNow key per site instead of shipping one; discovery form moves focus to the new step's heading; `project-react.blade.php` error region is `role="alert"`; visible `:focus-visible` outline restored on `.h-page-nav__pill` and `.pf-product-toc__pill`. Four unreferenced `siteground-ftp-*.py` scripts and the `SITEGROUND_*` env aliases are gone.
+- **Footer fatal and newsletter (#296).** The footer's mixed `@php(...)` / `@php … @endphp` usage swallowed an `@if` and fataled every page; `dynamic_sidebar` calls now use `@php …; @endphp`. The theme's own newsletter code is retired for Hostinger Reach: the "Get updates" column renders only the `footer-updates` widget area, `app/newsletter.php` and the newsletter plugin are removed.
+- **Staging first (#324).** New workflow rule (`.cursor/rules/hostinger-github-wordpress-workflow.mdc`, mirrored in `.claude/rules/`, and `AGENTS.md`): every design or dev change is installed on the Hostinger staging site ("hummel-dev"). Agents never deploy to, install on, or edit `matthummel.com`; live only changes when Matt publishes staging → live from hPanel. `docs/INSTALL.md` §7 documents a `matthummel-staging` SSH alias and a one-line staging install (`wp mh theme-update && wp litespeed-purge all` in the site root, resolved by glob and refused if more than one matches); the `theme-latest` release body names staging by role. Real host, port, username, and site id stay out of this public repo.
+
+## 3.7.35 — Resume: dates on the timeline, no numbers
+
+- The resume timeline no longer shows 1–5 numbers. They came from the prose ordered-list counter, which also matched the Resume block's `<ol>` once About became a block page; `.resume-timeline` is now excluded from those rules (`studio.css`, `journal-blocks.css`).
+- Each role's dates sit on the line as calendar chips (small month, bold year): end date at the top of the role, start date at the bottom, with an accent bar between them showing how long it ran. Newest first, so time runs down. The current role gets one lime **Now** chip and a bar that fades out.
+- The date pill is gone from each card (the chips carry it); the full period is still in the markup as visually hidden text for screen readers. The type pill stays.
+- New `resources/css/resume-timeline.css`, imported last in `app.css`. Markup in `blocks/resume.blade.php` parses periods written as "Mon YYYY – Mon YYYY" or "Current".
 
 ## 3.7.34 — About: profile photo moves under the Story drawing
 

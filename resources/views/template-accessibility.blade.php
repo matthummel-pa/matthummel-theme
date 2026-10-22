@@ -139,7 +139,7 @@
           </div>
           <div class="a11y-feature__content">
             <h3>{{ $title }}</h3>
-            <p>{!! $body !!}</p>
+            <p>{!! $body !!}</p> {{-- wp-review-ignore: $body is a literal string constant from this file's own @php block, not post meta or user input --}}
           </div>
         </div>
       @endforeach
@@ -161,7 +161,7 @@
           <div class="a11y-limit-card__icon">{!! \App\mh_svg_icon('x-circle', 16) !!}</div>
           <div>
             <h3 class="a11y-limit-card__title">{{ $lim['title'] }}</h3>
-            <p class="a11y-limit-card__body">{!! $lim['body'] !!}</p>
+            <p class="a11y-limit-card__body">{!! $lim['body'] !!}</p> {{-- wp-review-ignore: literal constant from this file's own @php block --}}
           </div>
         </div>
       @endforeach
@@ -183,7 +183,7 @@
       </div>
       <ul class="a11y-tech-list">
         @foreach ($testing as $item)
-          <li>{!! $item !!}</li>
+          <li>{{ $item }}</li>
         @endforeach
       </ul>
     </div>

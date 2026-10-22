@@ -2071,6 +2071,10 @@ html.mh-dark .h-page-nav__arrow {
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+.h-page-nav__pill:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
 .h-page-nav__pill.is-active,
 .h-page-nav__pill[aria-current="true"] {
   border-color: var(--color-navy, #0d2e57);
@@ -7629,6 +7633,10 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .pf-product-toc__pill:focus-visible {
   border-color: var(--color-accent);
   color: var(--color-accent);
+}
+.pf-product-toc__pill:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 .pf-product-toc__pill.is-active,
 .pf-product-toc__pill[aria-current="true"] {

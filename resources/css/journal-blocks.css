@@ -90,7 +90,7 @@
   background-image: none;
 }
 
-:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) {
+:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) {
   counter-reset: mh-ol;
 }
 
@@ -102,7 +102,7 @@
   counter-reset: mh-ol-c;
 }
 
-:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) > li {
+:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li {
   counter-increment: mh-ol;
 }
 
@@ -114,7 +114,7 @@
   counter-increment: mh-ol-c;
 }
 
-:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+:is(.post-prose, .mh-block-section, .editor-styles-wrapper) ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li::before {
   content: counter(mh-ol);
   position: absolute;
   inset-inline-start: 0;

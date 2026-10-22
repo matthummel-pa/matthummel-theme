@@ -454,10 +454,7 @@ function mh_home_fields(): array
             )],
         ],
         __('Footer (site-wide)', 'sage') => [
-            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', mh_footer_blurb_default()],
-            ['footer_signup_label', __('Signup heading', 'sage'), 'text', __('Get updates', 'sage')],
-            ['footer_signup_lede', __('Signup sentence', 'sage'), 'textarea', __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage')],
-            ['footer_signup_button', __('Signup button', 'sage'), 'text', __('Sign up', 'sage')],
+            ['footer_blurb', __('Footer sentence', 'sage'), 'textarea', __('Full-stack and WordPress developer. Selected projects, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage')],
         ],
     ];
 }

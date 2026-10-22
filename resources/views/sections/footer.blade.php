@@ -57,21 +57,12 @@
       @endif
     </nav>
 
-    {{-- Get updates: the Hostinger Reach form block in the Footer: Get updates widget area. --}}
-    <div class="footer-nav-col footer-follow" id="footer-signup">
-      @if (is_active_sidebar('footer-updates'))
+    {{-- Updates: the Hostinger Reach signup form lives in the Footer updates widget area. --}}
+    @if (is_active_sidebar('footer-updates'))
+      <div class="footer-nav-col footer-follow" id="footer-signup">
         @php dynamic_sidebar('footer-updates'); @endphp
-      @else
-      <p class="footer-nav-label">{{ \App\field('footer_signup_label', __('Get updates', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</p>
-      <p class="footer-follow__lede">{{ \App\field(
-        'footer_signup_lede',
-        __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage'),
-        $footerHomeId > 0 ? $footerHomeId : null
-      ) }}</p>
-      <p class="footer-follow__note"><a href="{{ esc_url(home_url('/get-updates/')) }}">{{ \App\field('footer_signup_button', __('Sign up', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</a> · <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
-      @endif
-    </div>
-
+      </div>
+    @endif
   </div>
 
   <div class="footer-bottom container wide">

@@ -58,6 +58,17 @@
 			</property>
 		</properties>
 	</rule>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<properties>
+			<!-- app/portfolio.php mh_sanitize_project_image_value(): sanitizes an already
+			     wp_unslash()'d _mh_project_image value as either esc_url_raw() (http(s) URLs)
+			     or sanitize_text_field() (theme-relative paths), since esc_url_raw() alone
+			     would prepend http:// to a schemeless relative path. -->
+			<property name="customSanitizingFunctions" type="array">
+				<element value="mh_sanitize_project_image_value"/>
+			</property>
+		</properties>
+	</rule>
 
 	<!-- ============ Database ============ -->
 	<rule ref="WordPress.DB.PreparedSQL"/>

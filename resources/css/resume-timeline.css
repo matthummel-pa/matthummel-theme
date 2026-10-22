@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Resume timeline (3.7.35)
+   No list numbers. Each role's dates sit ON the line as calendar chips: the
+   end date at the top of the role, the start date at the bottom, and an
+   accent bar between them shows how long the role ran. Newest first, so time
+   runs down the rail. The current role gets a single "Now" chip.
+   Markup: blocks/resume.blade.php. Real dates are in a visually-hidden span.
+   ========================================================================== */
+
+.resume-timeline {
+  --rail: 5.5rem;
+  --rail-gap: clamp(1rem, 2.5vw, 1.5rem);
+  --line: var(--blue-100);
+  --line-on: var(--color-accent);
+  --chip-bg: var(--white, #fff);
+  --chip-border: var(--color-border);
+  position: relative;
+  padding: 0;
+  border-left: 0;
+}
+
+html.mh-dark .resume-timeline {
+  --line: rgba(148, 163, 184, .22);
+  --line-on: var(--cyan-300, #67e8f9);
+  --chip-bg: var(--color-surface-raised, #0b1b35);
+  --chip-border: rgba(148, 163, 184, .28);
+}
+
+/* The base line runs the full height, centered in the date rail. */
+.resume-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--rail) / 2 - 1.5px);
+  width: 3px;
+  border-radius: 3px;
+  background: var(--line);
+}
+
+.resume-timeline > .resume-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: var(--rail-gap);
+  padding: 0;
+}
+
+/* Old dot and any list numbering are gone. */
+.resume-timeline > .resume-item::before,
+.resume-timeline > .resume-item::marker { content: none; display: none; }
+
+.resume-timeline .resume-card { grid-column: 2; min-width: 0; }
+
+.resume-when {
+  grid-column: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-block: 1.1rem;
+}
+
+/* How long the role ran: an accent bar from the end chip to the start chip. */
+.resume-when::before {
+  content: "";
+  position: absolute;
+  top: 1.6rem;
+  bottom: 1.6rem;
+  left: calc(50% - 1.5px);
+  width: 3px;
+  border-radius: 3px;
+  background: var(--line-on);
+  opacity: .75;
+}
+
+/* Current role: the bar fades out, it hasn't ended. */
+.resume-item.is-current .resume-when::before {
+  bottom: 0;
+  background: linear-gradient(180deg, var(--lime-400, #a3e635), transparent);
+  opacity: 1;
+}
+
+/* Calendar chip: small month over a bold year, opaque so it sits over the line. */
+.resume-cal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  min-width: 4.25rem;
+  padding: .35rem .5rem .4rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 10px;
+  background: var(--chip-bg);
+  font-family: var(--font-display);
+  line-height: 1.1;
+  box-shadow: 0 6px 16px -12px rgba(11, 21, 48, .45);
+}
+
+.resume-cal__m {
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.resume-cal__y {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--color-text);
+}
+
+/* The end chip gets a colored top edge, like a tear-off calendar page. */
+.resume-cal--end { border-top: 3px solid var(--line-on); }
+.resume-cal--start { opacity: .85; }
+
+.resume-item.is-current .resume-cal--end {
+  border-color: var(--lime-500, #84cc16);
+  border-top-color: var(--lime-400, #a3e635);
+}
+
+html.mh-dark .resume-item.is-current .resume-cal--end .resume-cal__y { color: var(--lime-400, #a3e635); }
+
+/* Small screens: a narrower rail, smaller chips. */
+@media (max-width: 640px) {
+  .resume-timeline { --rail: 3.75rem; --rail-gap: .75rem; }
+  .resume-cal { min-width: 3.5rem; padding: .3rem .35rem; }
+  .resume-cal__m { font-size: .625rem; }
+  .resume-cal__y { font-size: .875rem; }
+}

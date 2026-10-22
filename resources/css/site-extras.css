@@ -471,13 +471,13 @@ html .page-header .page-header__panel .sec-intro,
 html .page-header .page-header__panel p:not(.eyebrow):not(.h-badge) { max-width: 42rem; }
 /* === /3.7.28 page heroes === */
 
-/* === 3.7.36 · Site audit: focus rings, hover contrast, placeholders, scroll padding ===
+/* === 3.7.38 · Site audit: focus rings, hover contrast, placeholders, scroll padding ===
    Light-mode fixes from the October 2026 WCAG 2.2 AA pass (dark mode already passed).
    Ratios are against the page canvas (#fff / #f4f7fb), where the ring actually sits. */
 /* Buttons: the cyan ring is 1.8:1 on white. Navy ring (17:1) in light mode, except inside
    the sections that stay navy in both modes, where cyan still reads. */
 html:not(.mh-dark) :is(.btn.btn, .wp-block-button__link.wp-block-button__link, .search-form.search-form button, .hostinger-reach-block-submit):not(:is(.cta-band, .post-hero, .h-hero, .page-header, .post-cta, .mh-block-hero) *):focus-visible { outline-color: var(--hu-navy, #0a1a33); }
-/* On-this-page pills: studio's violet-100 border was 2.7:1. portfolio.css no longer sets outline: none. */
+/* On-this-page pills: studio's violet-100 hover border was 2.7:1; this sits on top of the --color-focus ring from #293. */
 html:not(.mh-dark) .h-page-nav__pill:focus-visible { outline: 2px solid var(--violet-700, #6d28d9); outline-offset: 2px; }
 /* Header "Get updates" chevron over the dark hero: blue-600 was 2.5–3.4:1 on the hero wash. */
 html:not(.mh-dark) .site-header:not(.is-scrolled) .header-updates__toggle { color: var(--hu-cyan, #22d3ee); border-color: rgba(255, 255, 255, .35); }
@@ -494,4 +494,4 @@ html:not(.mh-dark) :is(.contact-form, .search-form, .comment-form) :is(input, te
 @media (max-width: 900px) {
   html { scroll-padding-top: calc(var(--header-h, 4.5rem) + .5rem); }
 }
-/* === /3.7.36 site audit === */
+/* === /3.7.38 site audit === */

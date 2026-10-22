@@ -23,9 +23,14 @@ Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinge
 `wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
 `.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
 
-Live deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
-On Hostinger (`matthummel.com`), Appearance → **Update Theme** downloads that zip over HTTPS.
-There is no SiteGround FTP or SSH step. After install, purge LiteSpeed.
+Staging first: **[matthummel-com-524423.hostingersite.com](https://matthummel-com-524423.hostingersite.com/)**
+("hummel-dev") is Hostinger's staging copy of the site. Every design or dev change is installed
+and checked there. Agents never deploy to, install on, or edit `matthummel.com`; Matt publishes
+staging → live from hPanel.
+
+Deploys: push/merge to `main` builds a zip and publishes GitHub Release `theme-latest`.
+On the **staging** site, Appearance → **Update Theme** downloads that zip over HTTPS
+(or `wp mh theme-update` over SSH — `docs/INSTALL.md` §7). After install, purge LiteSpeed.
 The same PAT (Contents: Read) is saved on that screen or as `MH_GITHUB_TOKEN`.
 WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitHub).
 
@@ -107,11 +112,13 @@ Gotchas:
   Existing posts and categories are never deleted.
 - Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
   keys in `app/page-fields.php`, then `\App\field()` in the template.
-- Deploy from WordPress: Appearance → Update Theme. Needs a fine-grained GitHub PAT
-  (Contents read) saved on that screen or as `MH_GITHUB_TOKEN`. That **installs the
-  GitHub zip** over HTTPS. Optional: Actions read/write to click “Rebuild zip on GitHub”.
-  WP-CLI: `wp mh theme-update`. The Cursor Cloud `gh` token cannot create releases or
-  dispatch workflows (403); use Matt’s PAT on the live site, not the agent token.
+- Deploy from WordPress (**staging site only**): Appearance → Update Theme. Needs a
+  fine-grained GitHub PAT (Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
+  That **installs the GitHub zip** over HTTPS. Optional: Actions read/write to click
+  “Rebuild zip on GitHub”. WP-CLI: `wp mh theme-update`. The Cursor Cloud `gh` token
+  cannot create releases or dispatch workflows (403); use Matt’s PAT on the staging
+  site, not the agent token. Live (`matthummel.com`) only changes when Matt publishes
+  staging from hPanel.
 - WPVibe MCP URL is `https://mcp.wpvibe.ai/mcp` (API endpoint — a browser tab
   is usually a blank page). `.cursor/mcp.json` uses native HTTP (`url`), not
   `mcp-remote`. Cursor Cloud Agents do not support SSE or `mcp-remote`.
