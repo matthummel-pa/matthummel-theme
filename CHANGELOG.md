@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.36 — Site audit: light-mode focus rings, post i18n, thank-you noindex
+
+- Accessibility (WCAG 2.2 AA, light mode): button focus rings go navy outside the sections that stay navy in both modes (the cyan ring was 1.8:1 on white); "On this page" pills keep a visible ring (`outline: none` dropped in `portfolio.css`, violet-700 ring in light); arrow links hover to violet-700 instead of blue-500 (3.4:1); contact, comment, and footer email fields get a solid 2px ring on top of studio's alpha glow; light-mode placeholders are gray-500 (Safari's default was 2.4:1); the header "Get updates" chevron is cyan over the dark hero; the skip link uses `--color-focus`.
+- Focus not obscured (2.4.11): `scroll-padding-top` of the measured header height + .5rem under 900px. The header is fixed at every width, but the mobile anchor targets only kept 1rem of scroll margin, so jump links landed under it.
+- A page with no dark hero (Thank you) paints the header's scrolled state at once (`brand-ui.js`) instead of white nav text on the light canvas.
+- `/thank-you/` is `noindex, follow` through `wp_robots` (it was indexable and listed in the sitemap).
+- i18n: every visible string and `aria-label` in `partials/content-single.blade.php` and the footer legal nav goes through `__()` / `esc_attr__()` with the `sage` text domain.
+- Audit notes: the live pages already had one h1, clean heading order, alt text, canonicals, Open Graph and Twitter tags, and JSON-LD on every URL. What is left is content (one title and four descriptions over the length caps) and lives in WordPress, not the theme.
+
 ## 3.7.34 — About: profile photo moves under the Story drawing
 
 - On About, the profile photo and caption leave the hero and sit in the Story section's right column, centered under the animated 2011-to-now drawing. The hero is copy only now.
