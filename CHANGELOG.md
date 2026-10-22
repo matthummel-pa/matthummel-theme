@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.35 — Deploy notes: install from the terminal over SSH
+
+- `docs/INSTALL.md` §7 documents a `matthummel-site` SSH alias for the Hostinger shared host and a one-line deploy: `ssh matthummel-site 'cd ~/websites/*/public_html && wp mh theme-update && wp litespeed-purge all'`. The build still comes from the GitHub `theme-latest` release; SSH only replaces the Appearance → Update Theme clicks and the LiteSpeed purge.
+- Real host, port, username, and site id stay in `~/.ssh/config` and hPanel, not in this public repo. The doc also notes that the Hostinger VPS is a separate, empty server and not a deploy target.
+- No theme code changed.
+
 ## 3.7.34 — About: profile photo moves under the Story drawing
 
 - On About, the profile photo and caption leave the hero and sit in the Story section's right column, centered under the animated 2011-to-now drawing. The hero is copy only now.

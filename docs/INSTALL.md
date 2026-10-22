@@ -73,6 +73,36 @@ Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
 Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`). Then purge LiteSpeed.
 
+### From the terminal over SSH
+
+Same install, one line, no wp-admin clicks. The build still happens on GitHub (merge to `main` → `theme-latest` release); SSH only runs the install step.
+
+One-time setup, in `~/.ssh/config` on your machine (values come from hPanel → Websites → matthummel.com → Advanced → **SSH Access**; add your public key on that same page). Keep the real host, port, and username out of this repo — it is public.
+
+```text
+Host matthummel-site
+  HostName <IP or host from hPanel>
+  Port <port from hPanel>
+  User <u… username from hPanel>
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+  ServerAliveInterval 60
+```
+
+Deploy after the `Deploy Roots Production Ecosystem` run is green:
+
+```bash
+ssh matthummel-site 'cd ~/websites/*/public_html && wp mh theme-update && wp litespeed-purge all'
+```
+
+- WordPress on Hostinger shared hosting lives at `~/websites/<site-id>/public_html`; the glob resolves it so the id is not written down here.
+- `wp mh theme-update` is the theme's own command (`app/theme-updater.php`). It needs the GitHub token: `MH_GITHUB_TOKEN` in `wp-config.php`, or the token saved on the Update Theme screen. "No GitHub token is set" means neither is there.
+- `wp litespeed-purge all` is the LiteSpeed Cache plugin's command, so cached HTML stops pointing at old Vite hashes.
+- The login shell on that host is `ksh`, and WP-CLI is at `/usr/local/bin/wp`. Nothing to install.
+- Test the key without a password prompt: `ssh -o BatchMode=yes matthummel-site 'echo ok'`.
+
+The Hostinger VPS (`srv…hstgr.cloud`) is a separate, empty server. It does not host this site; do not deploy there.
+
 ## Must-use plugins (optional)
 
 Companion MU plugins live in the repo under `mu-plugins/`. The theme zip includes them; `functions.php` loads the Rank Math REST meta file when it is **not** already installed at `wp-content/mu-plugins/`.
