@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.37 — Deploy notes: cache purge that works on staging
+
+- First real run of the SSH install on staging (3.7.34 → 3.7.36) showed `wp litespeed-purge` is not a registered command there: staging does not run the LiteSpeed Cache plugin, live does. The one-liner in `docs/INSTALL.md` §7 now falls back to `wp cache flush`, and the doc says to clear Hostinger's own cache for the staging site from hPanel or the Hostinger API (`agency-hosting_cache_clear-website`) — WP-CLI cannot reach that layer.
+- No theme code changed.
+
 ## 3.7.36 — Repair after stale merges; resources refresh; staging-first deploys
 
 Five PRs merged on 2026-10-22 (#324, #323, #296, #293, #291). The last one was a stale branch whose squash set `style.css` back to 3.7.7 and replaced this changelog with an old copy, and `theme-latest` was built from that. This entry restores the history (3.7.8–3.7.35 are back below), bumps the version past every number already shipped, and records what the late merges actually changed.
