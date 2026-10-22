@@ -1,11 +1,210 @@
 # Changelog
 
-## 3.7.7 — Resources refresh
+## 3.7.36 — Repair after stale merges; resources refresh; staging-first deploys
 
-- Tools I recommend: added Claude and n8n; SiteGround is replaced by Hostinger (the host this site runs on); HubSpot is removed. Hostinger is not marked as an affiliate link until a referral URL exists.
-- Free WordPress starters: added the AI Dev Standards Playbook repo and TOCguide on WordPress.org.
-- The stack I use: added Claude Code, Block editor, PHPCS + WordPress Coding Standards, PHPStan, WooCommerce, Rank Math, IndexNow, and two new groups, AI and automation (n8n, the playbook, Notion) and Testing and accessibility (Lighthouse, axe-core). HubSpot is removed.
-- With no compensated links left, the affiliate disclosure hides itself (`mh_resources_have_affiliate_links()`). It comes back as soon as one item sets `affiliate => true`.
+Five PRs merged on 2026-10-22 (#324, #323, #296, #293, #291). The last one was a stale branch whose squash set `style.css` back to 3.7.7 and replaced this changelog with an old copy, and `theme-latest` was built from that. This entry restores the history (3.7.8–3.7.35 are back below), bumps the version past every number already shipped, and records what the late merges actually changed.
+
+- **Version** `3.7.36` in `style.css` and `readme.txt` (the stable tag had been set to 3.7.7 by #293's drift fix, which was measured against a stale main).
+- **Resources refresh (#291).** Tools I recommend: added Claude and n8n; SiteGround is replaced by Hostinger (the host this site runs on); HubSpot is removed. Hostinger is not marked as an affiliate link until a referral URL exists. Free WordPress starters: added the AI Dev Standards Playbook repo and TOCguide on WordPress.org. The stack I use: added Claude Code, Block editor, PHPCS + WordPress Coding Standards, PHPStan, WooCommerce, Rank Math, IndexNow, and two new groups, AI and automation (n8n, the playbook, Notion) and Testing and accessibility (Lighthouse, axe-core). With no compensated links left, the affiliate disclosure hides itself (`mh_resources_have_affiliate_links()`) and comes back as soon as one item sets `affiliate => true`.
+- **Review findings (#293).** Text domains fixed in `app/contact.php` and `app/portfolio.php`; `_mh_project_image` saves with `esc_url_raw()`; `mh_journal_sort_url()` escapes its return value and sanitizes `REQUEST_URI`; MH SEO generates a random IndexNow key per site instead of shipping one; discovery form moves focus to the new step's heading; `project-react.blade.php` error region is `role="alert"`; visible `:focus-visible` outline restored on `.h-page-nav__pill` and `.pf-product-toc__pill`. Four unreferenced `siteground-ftp-*.py` scripts and the `SITEGROUND_*` env aliases are gone.
+- **Footer fatal and newsletter (#296).** The footer's mixed `@php(...)` / `@php … @endphp` usage swallowed an `@if` and fataled every page; `dynamic_sidebar` calls now use `@php …; @endphp`. The theme's own newsletter code is retired for Hostinger Reach: the "Get updates" column renders only the `footer-updates` widget area, `app/newsletter.php` and the newsletter plugin are removed.
+- **Staging first (#324).** New workflow rule (`.cursor/rules/hostinger-github-wordpress-workflow.mdc`, mirrored in `.claude/rules/`, and `AGENTS.md`): every design or dev change is installed on the Hostinger staging site ("hummel-dev"). Agents never deploy to, install on, or edit `matthummel.com`; live only changes when Matt publishes staging → live from hPanel. `docs/INSTALL.md` §7 documents a `matthummel-staging` SSH alias and a one-line staging install (`wp mh theme-update && wp litespeed-purge all` in the site root, resolved by glob and refused if more than one matches); the `theme-latest` release body names staging by role. Real host, port, username, and site id stay out of this public repo.
+
+## 3.7.35 — Resume: dates on the timeline, no numbers
+
+- The resume timeline no longer shows 1–5 numbers. They came from the prose ordered-list counter, which also matched the Resume block's `<ol>` once About became a block page; `.resume-timeline` is now excluded from those rules (`studio.css`, `journal-blocks.css`).
+- Each role's dates sit on the line as calendar chips (small month, bold year): end date at the top of the role, start date at the bottom, with an accent bar between them showing how long it ran. Newest first, so time runs down. The current role gets one lime **Now** chip and a bar that fades out.
+- The date pill is gone from each card (the chips carry it); the full period is still in the markup as visually hidden text for screen readers. The type pill stays.
+- New `resources/css/resume-timeline.css`, imported last in `app.css`. Markup in `blocks/resume.blade.php` parses periods written as "Mon YYYY – Mon YYYY" or "Current".
+
+## 3.7.34 — About: profile photo moves under the Story drawing
+
+- On About, the profile photo and caption leave the hero and sit in the Story section's right column, centered under the animated 2011-to-now drawing. The hero is copy only now.
+- Still controlled from the hero block: **Show profile photo** turns it on or off and **Photo caption** sets the line under the name (the toggle's help text says where it shows on About). The Story section reads those attributes from the page's hero block.
+- The photo is below the fold now, so it lazy-loads instead of using `fetchpriority="high"`.
+- Under 900px the photo shows as a small photo + caption row above the Story intro.
+- New shared `partials/about-portrait.blade.php`, used by the hero (other pages) and the Story section.
+
+## 3.7.33 — About drawings: bigger, inline, animated
+
+- The five About section drawings (Story, What I build, Selected work, Experience, Open source) are now inline SVG from `partials/section-illustration.blade.php` instead of static CSS masks, so each part can move. The Section block only renders them on the About page (`is_page('about')`), since Home has its own `#work` section.
+- What each one does: Story's dashed road marches toward "now", the three stops light up in order and the end pin pings. What I build's site/plugin/app layers breathe apart, the plugin outline marches, the code glyph draws, the labels type in. Selected work loads a page, draws the preview, types the copy, and a cursor clicks the button (press + ripple). Experience checks off each role in turn and pops an approval badge. Open source draws a branch off main, drops a commit, merges back and pings the merge point.
+- Bigger: About drawings go from `min(30%, 340px)` to `min(40%, 500px)` (Story `min(46%, 580px)`; Work and Experience `min(32%, 400px)` so they stay clear of the cards). The FAQ drawing goes from `min(26%, 300px)` to `min(28%, 360px)`. Story's intro caps at 52% width to make room.
+- Fixed: the stagger delays (`il-d2`…`il-d5`) never applied on the home drawings because each animation shorthand later in the file reset `animation-delay` to 0. The delay helpers now sit after every shorthand, and parts that start undrawn hold their first frame while waiting.
+- Flat horizontal lines in the new drawings use a solid stroke; a gradient on a zero-height bounding box does not paint.
+- `prefers-reduced-motion` still shows the finished still frame; the ping and ripple rings are hidden in it. Decorative only (`aria-hidden`), hidden under 900px.
+
+## 3.7.32 — Skills and repo labels
+
+- **VS Code reads right.** Multi-word tech names that split badly word by word ("Vs Code") now map to their real spelling through `mh_title_label_phrase()`, used by `mh_title_label()` and by the Skills block for names already saved in the database.
+- **One shelf instead of two one-item shelves.** Power Apps, Power Automate, SharePoint, and n8n now group under **Platforms and automation** instead of separate Microsoft and Workflow shelves.
+- **Repo cards get the right type.** `mh_code_repo_category()` checks for dev tooling first (Claude Code, AI agents, playbooks), then theme vs plugin. The AI Dev Standards Playbook now reads **Dev tooling** instead of Sage theme, and WalkRidge reads **WordPress theme** instead of WordPress plugin.
+- **No double arrows.** `.h-text-arrow` only draws its CSS arrow when the link has no `aria-hidden` arrow in the markup, so cards like "Open project →" inside block sections show one arrow.
+
+## 3.7.31 — About page: section line art, readable copy, side-by-side FAQ
+
+- New `resources/css/about-page.css` (imported last in `app.css`). On screens 900px and wider, Story, What I build, Selected work, Experience, and Open source each get a small line drawing on the right: a 2011-to-now path, stacked site/plugin/app layers, a browser window, a resume sheet with checks, and a branch merging back into main. They are CSS masks filled with the `--il-*` gradient, so dark mode is automatic and screen readers never see them. Intro copy is capped at 62ch and stays clear of the drawing.
+- More air above Story's "How I work" cards and Experience's skills block; jump links land below the sticky header.
+- FAQ on desktop (1025px and up): heading and intro on the left, questions on the right.
+- Pages now get an `mh-page-{slug}` body class (`app/filters.php`), so the About rules use `.mh-page-about` instead of the database ID `page-id-8`.
+- Fixed the doubled arrow on "All posts" / "Browse all" links: the Recent posts and Featured projects blocks printed a `→` in the markup on top of the arrow `.h-text-arrow` already draws, so the markup copy is gone.
+
+## 3.7.30 — Newsletter section: tighter copy, perks under the form
+
+- The Get updates section heading caps at 18ch and the blurb at 34rem (balanced / pretty wrapping), so neither runs into the envelope illustration.
+- A core List block with the class `mh-newsletter__perks` under the Reach form now shows as an inline row of perks, each with a small lime check (CSS mask, decorative). Spacing uses top padding because a theme flow rule resets that list's top margin.
+- CSS only (`site-extras.css`); no markup change.
+
+## 3.7.29 — SEO: ProfilePage on About, FAQ data from every Questions block, one "Matt Hummel" per title
+
+- **About is a ProfilePage.** MH SEO now marks the About page (slug `about`) as `ProfilePage` instead of a generic `WebPage`, with the existing `Person` node as `mainEntity` plus `dateCreated` / `dateModified`. Any other page can opt in from the SEO sidebar → Schema → Article type → **ProfilePage**.
+- **FAQPage from Questions blocks, sitewide.** Every `matthummel/faq` block on a page now feeds a `FAQPage` node in the page's single JSON-LD graph (summary = question, the rest = answer). No checkbox needed, so Home and About pick it up today. The block no longer prints its own separate `<script>` (that was the source of a possible second FAQPage), and the "Add FAQ structured data" toggle is gone from the editor; the old `schema` attribute is left alone on saved blocks. The "Add FAQ data from the question headings" box still adds H2–H4 questions on top, with duplicates dropped. Google stopped showing FAQ rich results in May 2026, so this is valid structured data with no promised search feature.
+- **ProfilePage carries no article.** A post or project set to **ProfilePage** no longer also gets a `BlogPosting` / `Article` node, and a ProfilePage sends `og:type` `profile` instead of `article`.
+- **No repeated brand in titles.** When a title already says the site name, MH SEO drops the trailing `| Matt Hummel` (also `-`, `–`, `—`). Applies to custom, Rank Math, theme-field, landing, and template titles.
+- **About title and description.** One-time update (`mh_seo_copy_v2`): About's title becomes "About Matt Hummel, WordPress Developer in Gettysburg, PA" (this also catches the live "About, Hire & Code" title and its matching description) and its description says what I build instead of ending on "Say hello." The same pass rewrites the other stored descriptions that ended on "Say hello." (Projects, the old Home and Acreline Services copy, the project brief). Values are changed only while they still hold the exact old text. Field defaults in `app/page-fields.php` and `app/filters.php` match.
+- SEO playbook rule updated: say the name once in a title, and do not end a description on a bare "Say hello."
+
+## 3.7.28 — Page heroes: more air, narrower copy
+
+- Page heroes (`.page-header`, every page but the home hero) get more top and bottom padding: `clamp(4rem, 8vw, 6.25rem)` above and `clamp(3.5rem, 6.5vw, 5rem)` below, up from about 3.25/2.75rem at the small end.
+- Hero copy no longer runs the full 1120px container: the title caps at 22ch and the lead, intro, and paragraphs at 42rem. Small block at the end of `resources/css/site-extras.css`. Home `.h-hero` keeps its viewport sizing and pad modifiers.
+## 3.7.27 — Every button wears the nav pill
+
+- All buttons now use the header "Get updates" look: navy fill, blue→cyan→lime brand ring, pill radius, light type; lime type and a glow on hover and focus. That covers `.btn` everywhere (Say hello, forms, cards, the mobile menu CTA, WooCommerce), core button blocks on posts and pages, and the search submit. `.btn-outline` and `.btn-ghost` keep the same pill and ring on the page surface (white in light, page background in dark) so they still read as secondary, and hover the same way. One block at the end of `resources/css/site-extras.css`; padding and font sizes are untouched. Reduced motion drops the lift.
+## 3.7.26 — FAQ card scrolls; its illustration sits above it
+
+- The "Still have a question?" card on the home FAQ is no longer sticky on desktop; it scrolls with the rest of the left column.
+- The FAQ line-art drawing moves from the bottom-left corner of the section into the left column, directly above that card. `blocks/section.blade.php` prints it just before the `faq-help-card` group; if the card is missing it falls back to the old section-level placement. Still hidden at 1024px and below, `aria-hidden`, and still animated (reduced motion respected).
+
+## 3.7.25 — Additional CSS moves into the theme; hero wave breathes
+
+- Everything that lived in Appearance → Customize → Additional CSS is now `resources/css/site-extras.css`, imported last in `app.css` so the cascade order stays the same. That covers the post components (`mh-table`, `mh-cards`, `mh-callout`), the Hostinger Reach signup and Journal newsletter forms, the CTA band buttons and mobile note spacing, the home FAQ two-column layout with the sticky "Still have a question?" card (one column at 1024px and below), the hero dot waves, and the section line-art illustrations.
+- Hero wave: the two dot bands no longer sweep across on a linear loop. They drift slowly side to side (ease-in-out, alternating) while swelling and fading on an 8-second breath, half a cycle apart, so the hero reads as a breathing wave. The breath uses `transform` and `opacity`. `prefers-reduced-motion` still turns the whole effect off.
+- After this deploys, clear Additional CSS on the live site so the rules are not loaded twice.
+- Section illustrations are now inline SVG that moves. The seven line-art drawings (Inside, Journal, Get updates, Uses, Write to me, Now, Questions) were CSS background images; they are now rendered by `partials/section-illustration.blade.php` from the Section block, sit behind the section's content at about twice the size (up to 640px wide, never taller than the section, faded along the edge that meets the text), and each one animates its own parts: the chart draws in and its end-point rings, the two journal cards sway and float while the pencil writes, the note rises out of the envelope and the check pops, the three stack tiers float at staggered rhythms, the paper plane glides on its line while the dotted trail streams toward it and the reply bubble types, the calendar's lime "today" hops across the grid while the clock hands turn at real minute/hour ratios, and the closed FAQ rows flip their chevrons in turn while the open answer types. Colors come from `--il-*` custom properties (`illustrations.css`), so dark mode is a token swap, not a second image. Hidden under 900px (the FAQ one under 1025px, where it goes single-column), `aria-hidden`, and still under `prefers-reduced-motion` — the still frame is the finished drawing.
+
+## 3.7.24 — Subtle glass on the chrome
+
+- Translucent, blurred surfaces in the iOS spirit, kept quiet: the scrolled header, the mobile menu panel, the "On this page" bar and its pills, the header chips (theme toggle, menu button, preview chevron), the Get updates preview card, and the FAQ cards. Each one shows a blurred, slightly more saturated version of what is behind it, with a 1px top highlight and a faint blue→cyan→lime tint. Light mode stays white-ish; dark mode stays navy.
+- One set of tokens (`--glass-*` on `:root` / `html.mh-dark`) drives all of it, so the look can be tuned in one place. Visitors who set "reduce transparency" in their OS, and browsers without `backdrop-filter`, get the opaque surfaces back.
+- CSS only; no markup change.
+
+## 3.7.23 — FAQ accordions: roomier cards in the brand recipe
+
+- Every FAQ accordion (the FAQ block, project and services questions, and the older About/Home items) is now a card instead of a flat grey tile: white (navy in dark mode) with a hairline border, 18px corners, and a soft shadow. Hover tints the border cyan; the open item gets the blue→cyan→lime ring and a light glow, the same recipe as the Get updates button.
+- More room: the question row has about a third more padding, the answer sits under a hairline rule with roomier line height, and items sit `.8rem` apart. Phone widths tighten the padding a little.
+- The chevron sits in a cyan icon box on the right; opening flips it onto a lime fill. Answers fade and rise in on open; both animations respect `prefers-reduced-motion`. Keyboard focus shows a cyan ring inside the card.
+- CSS only, one block at the end of `studio.css`; no markup change, so every existing FAQ picks it up.
+
+## 3.7.22 — Footer sentence in Matt's voice
+
+- The footer sentence under the name now reads: "I’m a full-stack WordPress developer. I build custom themes, plugins, and web apps for shops, agencies, and other developers, then write up what I learn here. A few tool links are affiliate links, and each one is labeled." First person, the site's glossary (shops, agencies, developers), the "full-stack WordPress developer" phrase the home page already targets, and the affiliate disclosure kept in plain words.
+- One default for all three places: the admin field default, the Blade fallback (which had drifted to a different sentence), and a one-time rewrite (`mh_footer_blurb_copy_v1`) that updates the saved home-page field only while it still holds an earlier built-in sentence. A sentence Matt typed himself is left alone. Edit it any time in Pages → Home → Page content (theme) → Footer sentence.
+
+## 3.7.21 — No Get updates pill in the footer
+
+- The footer brand column no longer prints the Get updates pill under the blurb; the social icons sit there on their own. The footer's Get updates widget column (with the Reach form) and the header pill are unchanged.
+
+## 3.7.20 — Footer Subscribe button matches the Get updates button
+
+- The Hostinger Reach **Subscribe** button (footer widget area, and the same block on block pages such as Get updates) takes the Get updates pill look: navy fill, blue→cyan→lime ring, ink text. Hover and focus turn the text lime with the lime glow and a small lift. CSS only.
+
+## 3.7.19 — Social icons match the Get updates button
+
+- Every social link (`partials/social`: footer, mobile menu, the About "Elsewhere" pills, and the Social links block cards) takes the Get updates look: navy fill, the blue→cyan→lime ring, cyan glyph. Hover and focus turn the glyph lime with the lime glow and a small lift. Labels stay ink, notes stay soft. No markup change.
+
+## 3.7.18 — Get updates header CTA with a preview
+
+- The header pill reads **Get updates** and carries the mail icon instead of the pulse dot. New look in the brand colors: navy fill, a blue→cyan→lime ring, cyan icon that turns lime on hover with a lime glow. It shows for every visitor (it is no longer tied to GitHub's hireable flag); Say hello still appears when not hireable.
+- Hovering the pill, or pressing the chevron next to it, opens a small preview card of what a subscriber gets: new posts, release notes, checklists, a one-line promise, and a lime **Sign up** button. Keyboard and touch use the chevron (`aria-expanded`); Escape, clicking elsewhere, or tabbing away closes it. Below 900px only the pill shows.
+- The mobile menu CTA and the footer pill read Get updates with the same icon and link.
+
+## 3.7.17 — Available now pill goes to Get updates
+
+- The green **Available now** pill in the header and footer links to `/get-updates/` instead of `/contact/`. Its accessible name is "Available now — get updates". The Say hello button (shown when GitHub says not hireable) and the Contact menu item still go to Contact.
+
+## 3.7.16 — Privacy policy names Hostinger Reach
+
+- The Privacy page's short version and "Who sees your data" list now say that the signup forms send the address and optional first name to Hostinger Reach, what Reach stores, and that it handles unsubscribes. No other change.
+
+## 3.7.15 — Newsletter is Hostinger Reach
+
+- The theme no longer carries any newsletter code. The self-hosted `matthummel-newsletter` plugin (3.6.38 to 3.7.14) and the theme's own footer list (`app/newsletter.php`, 3.6.20 to 3.7.14) are removed, along with the plugin pack script and workflow, the email a11y step in CI, their PHPStan baseline entries, `docs/NEWSLETTER.md`, and the **Get updates** admin menu.
+- The newsletter is the Hostinger Reach plugin as it ships. Its form block sits in the **Footer: Get updates** widget area (styled since 3.7.13) and in the body of the Get updates page. The Get updates template prints the hero fields and the page content; the Unsubscribe and Manage preferences branches are gone because Reach handles both.
+- When the footer widget area is empty the column shows the label, the lede, and a Sign up link to the Get updates page instead of a theme form.
+- Posts no longer print the end-of-post signup box. The post sidebar still points to RSS and the Get updates page.
+- Copy stops promising "I keep the address on this site": the Get updates intro and the journal subscribe lede have new defaults, and the old journal default is rewritten on sites that still have it.
+- Before deleting the old plugin on the live site, export its subscribers into Reach. See `docs/INSTALL.md` → Newsletter.
+
+## 3.7.14 — Footer signup fields stack
+
+- The footer Reach form's field group sets its own layout (`display: flex; flex-direction: column`) instead of inheriting it. The site's Additional CSS carried an older grid rule for that block, which put the Subscribe button beside the email field; the theme rule now wins. Inline layout still works when the block is set to it.
+
+## 3.7.13 — Footer signup form on the site recipe
+
+- Hostinger Reach's "classic Reach form" block takes the theme's form look in the footer: the Subscribe button is the site button (`.btn`), the email and name fields use the footer field recipe (light and dark, hover, focus), labels are small and sentence case, and the thanks/error message matches the footer status style.
+- Widget Headings stay column labels. The block-page filter that turns every H2 into a section title (`display-title is-section`) skips widget areas, and a CSS rule holds the label size either way. On the home page the footer's "Get updates" had been printing at 37px.
+- Re-lands the change reverted in 3.7.12's rollback; the footer template fix shipped first.
+- A Reach form built in Reach's form builder is an iframe; the theme cannot style inside it. In the block, choose **Use classic Reach Form** to get the styled version.
+## 3.7.12 — Footer template compile fix
+
+- The 3.7.11 footer used the inline `@php(dynamic_sidebar('…'))` form. Blade extracts `@php … @endphp` blocks before directives with a lazy match, so the first inline call paired with the next block's `@endphp` and swallowed the `@if`/`@else` between them. A fresh compile produced invalid PHP (`unexpected end of file, expecting endif`) and every front-end page returned 500 after the theme was reinstalled. The four calls now use the block form. No visible change.
+- The Reach form styling was reverted while this was found; it returns in 3.7.13.
+## 3.7.11 — Footer columns become widget areas
+
+- Four new widget areas in Appearance → Widgets: **Footer: About** (blurb), **Footer: Site links**, **Footer: Get updates** and **Footer: Bottom bar** (legal links and the "Built with" line).
+- Each column shows its widgets when the area has any, and falls back to the current output (page fields, the footer bottom menu, the signup form) when it is empty, so nothing changes on deploy until widgets are added.
+- The theme keeps the brand name, availability badge, social icons and the copyright year.
+- Block widgets reuse the footer's own classes (Advanced → Additional CSS class): `footer-nav-label` on a Heading, `footer-nav footer-nav--split` on the links List, `footer-legal-links` on the legal List, `footer-stack` on the credit Paragraph. New rules at the end of `studio.css`.
+- The stock Sage "Footer" sidebar (`sidebar-footer`) is gone; it was never printed. Anything left in it moves to Inactive widgets.
+
+## 3.7.10 — Release watch moves into the theme
+
+- The MH Release Watch plugin is replaced by theme code. `app/release-watch.php` reads Make WordPress Core twice a day (WP-Cron) for the next release: the schedule, every roadmap item grouped by area, and the latest posts tagged for that version. It is stored in one option, so pages never wait on WordPress.org, and the last good copy stays up if WordPress.org is down. `wp mh release-watch` refreshes it on demand.
+- The WordPress release rundown block keeps its old name, `mh/release-rundown`, so the Release Watch page renders again without re-adding it. New sidebar settings: kicker text and a "See every feature" link for the short version.
+- New block: WordPress release banner (`matthummel/release-banner`). The countdown bar is no longer printed above every page; place it where you want it. Button text and link are settings, it can be closed (remembered per release), and it hides itself after release day.
+- Banner button readable in dark mode: the theme's dark link color (`html.mh-dark a:not(...)` in `studio.css`) no longer reaches links inside the release blocks, so the lime button keeps navy text. The arrow keeps its space.
+- Feature lists number 01, 02, 03… again; the theme's own ordered-list counter was taking over.
+
+## 3.7.9 — Core blocks: one look, light and dark, editor matches the page
+
+- New `resources/css/blocks.css`, loaded last by both `app.css` and `editor.css`: every block that ships with WordPress (paragraph, heading, list, quote, pullquote, verse, code, preformatted, separator, spacer, image, gallery, cover, media & text, file, audio, video, embed, table, details, buttons, columns, group, social links, latest posts, categories, archives, page list, tag cloud, search, calendar, RSS, footnotes) takes the theme recipe on posts, default pages, block pages, and the editor canvas. Colors are tokens, so `html.mh-dark` flips them.
+- Core buttons use the site button everywhere (lime fill, violet type, blue→violet hover); Outline, Ghost, and Text-with-arrow styles match their `.btn` counterparts in both modes. Lists inside page Sections draw the same round check and numbered badge markers posts have. Inline code and quotes use the post recipe on pages too.
+- New Group style, Card: a plain Group on the card recipe.
+- Editor canvas is the public page: the warm 3.5-era palette pinned on `.editor-styles-wrapper` in `journal-blocks.css` and the hardcoded colors in `editor.css` are gone; the canvas reads the same `:root` tokens, fonts, and body background as the site. Tailwind `@theme` tokens moved to `resources/css/theme-tokens.css` so the canvas gets `--font-display`, `--radius-btn`, and the brand colors.
+- Editor light/dark follows the visitor toggle: `resources/js/editor-theme.jsx` sets `mh-dark` on the canvas from the same `mh-theme` localStorage key the header writes (dark by default, like the site). The editor options menu (⋮) has a "Dark mode" item that flips both.
+- Core blocks inside page blocks get the front-end theme classes in the editor too (`display-title is-hero` / `is-section`, `lead`, `mh-buttons`) through an `editor.BlockListBlock` filter that mirrors the `render_block` mapping in `app/blocks.php`.
+- Fonts are enqueued on `enqueue_block_assets` for the admin so the iframed canvas loads Inter / IBM Plex.
+
+## 3.7.8 — Content audit fixes
+
+- MH SEO redirects: a path that is the live permalink of a published post is no longer redirected. The stale row is removed on the first request. This fixes the redirect loop on the TOCguide plugin post.
+- MH SEO redirects: when a slug changes, rows that redirected away from the new slug are removed before the new row is added.
+- MH SEO redirects: a one-time migration (runs on the next admin page load) sets the older AI workflow post to draft and redirects it to the merged section of the full AI workflow post.
+- Journal list and site search leave out posts marked noindex. Their URLs still work. Related posts do the same.
+- Post category label and "More from the journal in …" use the primary category, then the first category that is not DEV.to.
+- Resources: SiteGround and HubSpot are no longer marked as affiliate links. Hostinger and n8n, the two affiliate programs, are listed under Tools I recommend. Hostinger in the stack list carries the Affiliate label.
+- Availability mark shows the pulse dot only; the GitHub status emoji is no longer printed.
+- Post sidebar: Follow along and the availability card use a styled paragraph instead of an H2. Follow along mentions Get updates.
+- Headings without trailing periods on Accessibility, Privacy, Terms, Changelog, Thank you, Start, Support, and Get updates. Start's hiring band points to About.
+- US spelling on Accessibility, Terms, and Changelog (color, license, center).
+- Core sitemap (wp-sitemap.xml) leaves out noindexed and excluded posts, tag archives, and author archives, to match the robots rules.
+- Author archives redirect to About. They were noindex and exposed the admin username in /author/admin/.
+- Category and tag archives also leave out noindexed posts.
+- Project cards use H3 (they always sit under a section H2). CSS selectors cover both levels.
+- Project catalog: SEO titles use a colon instead of an em dash, the Cobble & Candle title fits in 60 characters, and em dashes in project copy are now periods, commas, or colons.
+- 404 heading has no trailing period.
+
+## 3.7.7 — SEO box on the edit screen
+
+- MH SEO 1.2.0. The SEO box under the editor has four tabs: Search, Social, Advanced, and Schema. It shows the score as a ring, with the checks still to fix.
+- Length meters for the SEO title and meta description. Each one marks the target range and says in words whether the text is short, good, or long.
+- Search preview (desktop and mobile), a link preview card, and an X card preview. They update as you type.
+- New fields per post: social title and description; X title, description, image, and card size; nofollow, noarchive, nosnippet, noimageindex, and snippet, image, and video preview limits; secondary keywords; breadcrumb title; pillar content; article schema type; FAQ and HowTo data built from the page.
+- Each field is post meta with REST support, is printed in the head where it applies, and is copied from Rank Math and Yoast by `wp mh-seo migrate`.
+- The box and the SEO sidebar now stay on the same values in the block editor.
+- Field ids no longer clash with the box heading id that WordPress 7.1 adds.
+- Details: `app/modules/mh-seo/CHANGELOG.md`.
 
 ## 3.7.6 — Contact is a block page
 
