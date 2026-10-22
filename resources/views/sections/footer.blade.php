@@ -87,21 +87,21 @@
         : [];
     @endphp
     @if ($bottomMenuItems)
-      <nav class="footer-legal-links" aria-label="Legal">
+      <nav class="footer-legal-links" aria-label="{{ esc_attr__('Legal', 'sage') }}">
         @foreach ($bottomMenuItems as $i => $item)
           @if ($i > 0)<span aria-hidden="true">·</span>@endif
           <a href="{{ esc_url($item->url) }}"{{ $item->target ? ' target="'.esc_attr($item->target).'" rel="noopener"' : '' }}>{{ esc_html($item->title) }}</a>
         @endforeach
       </nav>
     @else
-      <nav class="footer-legal-links" aria-label="Legal">
+      <nav class="footer-legal-links" aria-label="{{ esc_attr__('Legal', 'sage') }}">
         <a href="{{ esc_url(\App\mh_privacy_policy_url()) }}">{{ __('Privacy', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ esc_url(\App\mh_terms_url()) }}">{{ __('Terms', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
         <span aria-hidden="true">·</span>
-        <a href="{{ home_url('/accessibility/') }}">Accessibility</a>
+        <a href="{{ home_url('/accessibility/') }}">{{ __('Accessibility', 'sage') }}</a>
       </nav>
     @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>

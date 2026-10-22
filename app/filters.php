@@ -34,6 +34,22 @@ add_filter('body_class', function (array $classes): array {
     return $classes;
 });
 
+/**
+ * The contact form's thank-you page is a receipt, not a landing page: keep it out of
+ * search results. MH SEO and core both print the tag through wp_robots, so this holds
+ * whichever one is managing the head. Runs after MH SEO (priority 10).
+ */
+add_filter('wp_robots', function (array $robots): array {
+    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+        return $robots;
+    }
+    unset($robots['index']);
+    $robots['noindex'] = true;
+    $robots['follow'] = true;
+
+    return $robots;
+}, 20);
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);
