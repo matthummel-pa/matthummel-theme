@@ -93,7 +93,7 @@
         <span class="post-hero-meta__sep" aria-hidden="true">·</span>
         <span class="post-hero-meta__read">
           {!! \App\mh_svg_icon('book-open', 14) !!}
-          {{ sprintf(__('%d min read', 'sage'), $readMins) }}
+          {{ sprintf(_n('%d min read', '%d min read', $readMins, 'sage'), $readMins) }}
         </span>
         @if (get_comments_number() > 0)
           <span class="post-hero-meta__sep" aria-hidden="true">·</span>

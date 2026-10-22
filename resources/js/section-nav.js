@@ -7,6 +7,15 @@ export function initSectionNav() {
   const nav = document.querySelector('[data-section-nav], [data-product-section-nav]')
   if (!nav) return
 
+  // Publish the sticky nav's height so html { scroll-padding-top } can clear it as well as
+  // the header on anchor jumps (site-extras.css). Re-measured when the nav wraps or resizes.
+  const publishHeight = () => {
+    const h = Math.ceil(nav.getBoundingClientRect().height)
+    if (h > 0) document.documentElement.style.setProperty('--page-nav-h', `${h}px`)
+  }
+  publishHeight()
+  if ('ResizeObserver' in window) new ResizeObserver(publishHeight).observe(nav)
+
   const links = [...nav.querySelectorAll('a[href^="#"]')]
   if (links.length === 0) return
 

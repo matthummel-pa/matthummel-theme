@@ -493,5 +493,7 @@ html:not(.mh-dark) :is(.contact-form, .search-form, .comment-form) :is(input, te
    only keep 1rem of scroll margin. Pad the scroll container by the measured header height. */
 @media (max-width: 900px) {
   html { scroll-padding-top: calc(var(--header-h, 4.5rem) + .5rem); }
+  /* With the sticky "On this page" pills under the header, clear those too (section-nav.js publishes --page-nav-h). */
+  html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--page-nav-h, 3rem) + .5rem); }
 }
 /* === /3.7.38 site audit === */
