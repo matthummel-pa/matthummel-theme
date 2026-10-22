@@ -43,7 +43,7 @@ add_filter('wp_robots', function (array $robots): array {
     if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
         return $robots;
     }
-    unset($robots['index']);
+    unset($robots['index'], $robots['nofollow']);
     $robots['noindex'] = true;
     $robots['follow'] = true;
 
