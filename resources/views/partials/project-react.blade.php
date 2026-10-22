@@ -50,5 +50,5 @@
       </a>
     @endif
   </div>
-  <p class="project-react__hint" data-react-status hidden></p>
+  <p class="project-react__hint" data-react-status role="alert" hidden></p>
 </div>
