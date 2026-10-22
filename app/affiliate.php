@@ -188,6 +188,20 @@ function mh_resources_catalog(): array
                     'affiliate' => false,
                     'badge' => __('GitHub', 'sage'),
                 ],
+                [
+                    'name' => __('AI Dev Standards Playbook', 'sage'),
+                    'blurb' => __('The Claude Code rules, skills, and slash commands I run on every WordPress and Sage project. Install once; it syncs when the repo changes.', 'sage'),
+                    'url' => $gh.'/ai-dev-standards-playbook',
+                    'affiliate' => false,
+                    'badge' => __('Claude Code', 'sage'),
+                ],
+                [
+                    'name' => 'TOCguide',
+                    'blurb' => __('My free table-of-contents plugin, listed in the WordPress.org plugin directory.', 'sage'),
+                    'url' => 'https://wordpress.org/plugins/tocguide/',
+                    'affiliate' => false,
+                    'badge' => __('Plugin', 'sage'),
+                ],
             ],
         ],
         [
@@ -214,8 +228,15 @@ function mh_resources_catalog(): array
         [
             'key' => 'tools',
             'title' => __('Tools I recommend', 'sage'),
-            'intro' => __('Hosting, editors, and marketing tools I use. Affiliate links are labeled.', 'sage'),
+            'intro' => __('The AI, editor, hosting, and automation tools I use. Affiliate links are labeled.', 'sage'),
             'items' => [
+                [
+                    'name' => 'Claude',
+                    'blurb' => __('Claude Code is my pair programmer for planning, refactors, reviews, and audits. I read and test every line before it ships.', 'sage'),
+                    'url' => 'https://claude.com/product/claude-code',
+                    'affiliate' => false,
+                    'badge' => __('AI', 'sage'),
+                ],
                 [
                     'name' => 'Cursor',
                     'blurb' => __('AI-assisted editor I use daily for Sage, PHP, and front-end work.', 'sage'),
@@ -225,16 +246,17 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'Hostinger',
-                    'blurb' => __('Managed WordPress hosting. matthummel.com runs on it, and it is the host I recommend for small shops, tours, and inns that want to own their site.', 'sage'),
+                    'blurb' => __('Managed WordPress hosting for this site: LiteSpeed cache, PHP 8.3+, hPanel backups, and SSH.', 'sage'),
+                    // Swap in the referral URL and set 'affiliate' => true only after joining Hostinger's program.
                     'url' => 'https://www.hostinger.com',
-                    'affiliate' => true,
+                    'affiliate' => false,
                     'badge' => __('Hosting', 'sage'),
                 ],
                 [
                     'name' => 'n8n',
-                    'blurb' => __('Workflow automation. It runs the publishing pipeline behind this site, and agencies can self-host it.', 'sage'),
+                    'blurb' => __('Visual workflow automation for forms, notifications, and content jobs. Connects WordPress to the rest of my tools.', 'sage'),
                     'url' => 'https://n8n.io',
-                    'affiliate' => true,
+                    'affiliate' => false,
                     'badge' => __('Automation', 'sage'),
                 ],
             ],
@@ -264,6 +286,10 @@ function mh_uses_sections(): array
                 ['WP-CLI', __('Command-line tools for WordPress. Database exports, plugin management, custom commands. Most deploys never touch wp-admin.', 'sage'), 'https://wp-cli.org'],
                 ['Composer', __('PHP dependency manager. Every project has a composer.json. No manual library downloads.', 'sage'), 'https://getcomposer.org'],
                 ['Laravel Pint', __('PHP code style fixer. Runs in CI before every deploy. Catches whitespace and formatting issues automatically.', 'sage'), 'https://laravel.com/docs/pint'],
+                ['Block editor (Gutenberg)', __('Pages are built from core blocks plus custom blocks registered with block.json. No Custom HTML blocks.', 'sage'), 'https://developer.wordpress.org/block-editor/'],
+                ['PHPCS + WordPress Coding Standards', __('Checks escaping, sanitizing, nonces, i18n, and prepared SQL on every changed line, in CI and after each edit.', 'sage'), 'https://github.com/WordPress/WordPress-Coding-Standards'],
+                ['PHPStan', __('Static analysis at level 5 with WordPress and WooCommerce stubs. Catches type bugs before a reviewer does.', 'sage'), 'https://phpstan.org'],
+                ['WooCommerce', __('The theme shop, cart, checkout, and downloadable zips, rendered through Blade templates.', 'sage'), 'https://woocommerce.com'],
             ],
         ],
         [
@@ -271,6 +297,7 @@ function mh_uses_sections(): array
             'icon' => 'code',
             'items' => [
                 ['Cursor', __('My primary editor. VS Code-compatible with an AI layer that helps rather than gets in the way. This site was planned and built with it and Claude.', 'sage'), 'https://cursor.com'],
+                ['Claude Code', __('Terminal agent for planning, refactors, and reviews. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
                 ['GitHub', __('Version control and CI/CD trigger. Every project lives in a GitHub repo. Pushes to main kick off builds and deploys automatically.', 'sage'), 'https://github.com'],
                 ['GitHub Actions', __('Automated build and deploy pipeline. Runs Composer, npm, and the release zip on every push. Zero manual uploads.', 'sage'), 'https://github.com/features/actions'],
                 ['TablePlus', __('Database GUI for local MySQL and SQLite. Useful for inspecting WordPress tables without writing raw SQL.', 'sage'), 'https://tableplus.com'],
@@ -292,8 +319,26 @@ function mh_uses_sections(): array
             'items' => [
                 ['Google Analytics 4', __('Site traffic, page performance, and audience data. Linked through Google Tag Manager.', 'sage'), 'https://analytics.google.com'],
                 ['Google Tag Manager', __('Single container for all tracking scripts. One snippet on the page, everything else managed in GTM.', 'sage'), 'https://tagmanager.google.com'],
-                ['HubSpot', __('CRM and contact capture. Picks up form submissions and tracks visitor activity for follow-up.', 'sage'), 'https://www.hubspot.com'],
+                ['Rank Math', __('SEO titles, descriptions, and schema per page. The theme fills sensible fallbacks when a field is empty.', 'sage'), 'https://rankmath.com'],
+                ['IndexNow', __('Pings Bing and other engines the moment a page is published or updated, so new work gets crawled fast.', 'sage'), 'https://www.indexnow.org'],
                 ['Microsoft Clarity / Bing', __('Bing Webmaster Tools for search performance. Microsoft UET for ad conversion tracking.', 'sage'), 'https://clarity.microsoft.com'],
+            ],
+        ],
+        [
+            'title' => __('AI and automation', 'sage'),
+            'icon' => 'n8n',
+            'items' => [
+                ['n8n', __('Workflows behind the site forms and notifications, triggered by webhooks from WordPress.', 'sage'), 'https://n8n.io'],
+                ['AI Dev Standards Playbook', __('My public rules repo for Claude Code. One install, then every session picks up the latest standards.', 'sage'), 'https://github.com/matthummel-pa/ai-dev-standards-playbook'],
+                ['Notion', __('Project notes, specs, and to-dos in one place.', 'sage'), 'https://www.notion.com'],
+            ],
+        ],
+        [
+            'title' => __('Testing and accessibility', 'sage'),
+            'icon' => 'shield',
+            'items' => [
+                ['Lighthouse', __('Performance, SEO, and best-practice audits on key pages after every visible change. Target is 90+ on mobile.', 'sage'), 'https://developer.chrome.com/docs/lighthouse/'],
+                ['axe-core', __('Automated WCAG 2.1 AA checks. Paired with a manual keyboard and screen reader pass, because tools miss things.', 'sage'), 'https://github.com/dequelabs/axe-core'],
             ],
         ],
         [
