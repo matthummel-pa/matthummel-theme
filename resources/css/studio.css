@@ -1121,7 +1121,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) {
   counter-reset: mh-ol;
 }
 
@@ -1136,7 +1136,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li {
   counter-increment: mh-ol;
 }
 
@@ -1151,7 +1151,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li::before {
   content: counter(mh-ol);
   position: absolute;
   inset-inline-start: 0;
@@ -1307,7 +1307,7 @@ html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-secti
 }
 
 html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li::before {
   background: var(--blue-600);
   color: #fff;
 }

@@ -1,12 +1,11 @@
 # Changelog
 
-## 3.7.35 — Staging first: theme installs go to hummel-dev, Matt publishes live
+## 3.7.35 — Resume: dates on the timeline, no numbers
 
-- New workflow rule (`.cursor/rules/hostinger-github-wordpress-workflow.mdc`, mirrored in `.claude/rules/`, and `AGENTS.md`): every design or dev change is installed on the Hostinger staging site `matthummel-com-524423.hostingersite.com` ("hummel-dev"). Agents never deploy to, install on, or edit `matthummel.com`; live only changes when Matt publishes staging → live from hPanel.
-- `docs/INSTALL.md` §7 documents a `matthummel-staging` SSH alias and a one-line staging install (`wp mh theme-update && wp litespeed-purge all` in the site root, which is resolved by glob and refused if more than one matches). The build still comes from the GitHub `theme-latest` release; SSH only replaces the Appearance → Update Theme clicks and the LiteSpeed purge.
-- Real host, port, username, and site id stay in `~/.ssh/config` and hPanel, not in this public repo. The doc also notes that the Hostinger VPS is a separate, empty server and not a deploy target.
-- Same rule everywhere a reader could still be sent to live: the `theme-latest` release body (`.github/workflows/deploy.yml`) names staging, the workflow rule's "edit on production if no safer path" exception is gone, and `docs/INSTALL.md` says up front that every step runs on staging.
-- No theme code changed.
+- The resume timeline no longer shows 1–5 numbers. They came from the prose ordered-list counter, which also matched the Resume block's `<ol>` once About became a block page; `.resume-timeline` is now excluded from those rules (`studio.css`, `journal-blocks.css`).
+- Each role's dates sit on the line as calendar chips (small month, bold year): end date at the top of the role, start date at the bottom, with an accent bar between them showing how long it ran. Newest first, so time runs down. The current role gets one lime **Now** chip and a bar that fades out.
+- The date pill is gone from each card (the chips carry it); the full period is still in the markup as visually hidden text for screen readers. The type pill stays.
+- New `resources/css/resume-timeline.css`, imported last in `app.css`. Markup in `blocks/resume.blade.php` parses periods written as "Mon YYYY – Mon YYYY" or "Current".
 
 ## 3.7.34 — About: profile photo moves under the Story drawing
 
