@@ -22,7 +22,7 @@
 html.mh-dark .resume-timeline {
   --line: rgba(148, 163, 184, .22);
   --line-on: var(--cyan-300, #67e8f9);
-  --chip-bg: #0b1b35;
+  --chip-bg: var(--color-surface-raised, #0b1b35);
   --chip-border: rgba(148, 163, 184, .28);
 }
 

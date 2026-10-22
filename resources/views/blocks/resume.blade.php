@@ -19,10 +19,11 @@
     @foreach ($jobs as $job)
       @php
         $period = trim((string) ($job['period'] ?? ''));
-        $current = strcasecmp($period, 'Current') === 0;
         // 3.7.35: "Mar 2025 – Jul 2026" becomes two calendar chips on the line, end on top
-        // (newest first, so time runs down the rail). "Current" is a single "Now" chip.
-        $parts = $current ? [] : array_values(array_filter(array_map('trim', preg_split('/\s+[–—-]\s+/u', $period) ?: [])));
+        // (newest first, so time runs down the rail). A period of "Current", or one that
+        // ends in it ("Mar 2025 – Current"), is an ongoing role: a single "Now" end chip.
+        $parts = array_values(array_filter(array_map('trim', preg_split('/\s+[–—-]\s+/u', $period) ?: [])));
+        $current = $parts !== [] && strcasecmp((string) end($parts), 'Current') === 0;
         $toChip = static function (string $label): array {
             $bits = preg_split('/\s+/', trim($label)) ?: [];
             $year = (string) array_pop($bits);
