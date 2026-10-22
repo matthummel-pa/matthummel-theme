@@ -492,8 +492,10 @@ html:not(.mh-dark) :is(.contact-form, .search-form, .comment-form) :is(input, te
 /* 2.4.11 focus not obscured: the header is fixed at every width, but the mobile anchor targets
    only keep 1rem of scroll margin. Pad the scroll container by the measured header height. */
 @media (max-width: 900px) {
-  html { scroll-padding-top: calc(var(--header-h, 4.5rem) + .5rem); }
+  /* Logged in, the admin bar pushes the fixed header down by its height; core sets the variable (32px, 46px under 783px). */
+  html { --mh-bar-h: 0px; scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + .5rem); }
+  html:has(.admin-bar) { --mh-bar-h: var(--wp-admin--admin-bar--height, 32px); }
   /* With the sticky "On this page" pills under the header, clear those too (section-nav.js publishes --page-nav-h). */
-  html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--page-nav-h, 3rem) + .5rem); }
+  html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + var(--page-nav-h, 3rem) + .5rem); }
 }
 /* === /3.7.38 site audit === */

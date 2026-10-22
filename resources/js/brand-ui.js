@@ -55,11 +55,13 @@ function initHeaderScroll() {
   // A page with no dark hero under the header (Thank you, a bare block page) paints the
   // scrolled state at once; otherwise the white nav sits on the light canvas in light mode.
   // Only a hero that starts under the header counts: one lower on the page (after a light
-  // section) says nothing about what the header is sitting on.
+  // section) says nothing about what the header is sitting on. Both edges are read in
+  // viewport coordinates, so the admin bar (which pushes the fixed header down 32/46px)
+  // and a non-zero scroll position at load do not skew the comparison.
   const main = document.getElementById('main');
   const hero = main ? main.querySelector('.h-hero, .page-header, .post-hero, .mh-block-hero') : null;
   const hasHero = Boolean(hero)
-    && hero.getBoundingClientRect().top + window.scrollY <= header.getBoundingClientRect().height + 4;
+    && hero.getBoundingClientRect().top <= header.getBoundingClientRect().bottom + 4;
   const update = () => {
     header.classList.toggle('is-scrolled', ! hasHero || window.scrollY > 12);
     ticking = false;

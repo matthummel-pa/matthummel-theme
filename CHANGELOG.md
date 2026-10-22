@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.39 — Admin bar: header state and anchor padding while logged in
+
+- `brand-ui.js` compares the hero's top edge to the header's bottom edge in viewport coordinates, so the admin bar (which pushes the fixed header down 32/46px) and a non-zero scroll position at load no longer make a page with a hero start in the scrolled header state.
+- Under 900px, `scroll-padding-top` adds `--wp-admin--admin-bar--height` when `body.admin-bar` is present, so jump links land below the header and the "On this page" pills for logged-in users too. Logged-out behaviour is unchanged.
+- Follow-up to #327 (CodeRabbit notes that arrived after the merge).
+
 ## 3.7.38 — Site audit: light-mode focus rings, post i18n, thank-you noindex
 
 - Accessibility (WCAG 2.2 AA, light mode): button focus rings go navy outside the sections that stay navy in both modes (the cyan ring was 1.8:1 on white); "On this page" pills get a violet-700 ring in light mode on top of the `--color-focus` ring #293 added (studio's violet-100 hover border was 2.7:1); arrow links hover to violet-700 instead of blue-500 (3.4:1); contact, comment, and footer email fields get a solid 2px ring on top of studio's alpha glow; light-mode placeholders are gray-500 (Safari's default was 2.4:1); the header "Get updates" chevron is cyan over the dark hero; the skip link uses `--color-focus`.
