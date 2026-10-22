@@ -17,9 +17,26 @@
     $content = substr_replace($content, $illustration, $m[0][1], 0);
     $illustration = '';
   }
+  // About Story (3.7.34): the profile photo sits in the right column under the
+  // drawing. It follows the hero block's "Show profile photo" toggle and caption.
+  $portrait = null;
+  if ($anchor === 'story' && is_page('about') && \App\mh_profile_photo_url(640) !== '') {
+    foreach (parse_blocks((string) get_post_field('post_content', get_queried_object_id())) as $block) {
+      if (($block['blockName'] ?? '') !== 'matthummel/hero') continue;
+      if (! empty($block['attrs']['showPortrait'])) $portrait = trim((string) ($block['attrs']['portraitCaption'] ?? ''));
+      break;
+    }
+  }
 @endphp
 <section class="{{ $classes }}" @if ($anchor !== '') id="{{ $anchor }}" @endif>
-  {!! $illustration !!}
+  @if ($portrait !== null)
+    <div class="about-story-aside">
+      {!! $illustration !!}
+      @include('partials.about-portrait', ['caption' => $portrait, 'class' => 'about-portrait--story'])
+    </div>
+  @else
+    {!! $illustration !!}
+  @endif
   <div class="container wide">
     @if ($eyebrow !== '')
       <p class="eyebrow">{{ $eyebrow }}</p>

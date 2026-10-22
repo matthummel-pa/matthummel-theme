@@ -711,3 +711,8 @@ Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · 
 - About's Story, What I build, Selected work, Experience, and Open source drawings are inline SVG cases in `partials/section-illustration.blade.php` (class `mh-illus--about`), rendered by `blocks/section.blade.php` only when `is_page('about')`. They replaced the 3.7.31 CSS-mask `::before` drawings, which could not animate their parts.
 - Size and placement live in `resources/css/about-page.css` (top-right, fixed 360:250 box). Motion lives in `resources/css/illustrations.css`: `il-march`, `il-milestone`, `il-ping`, `il-check`, `il-cursor`, `il-click`, `il-ripple`, with `il-step-2/3/4` (1s / 2s / 3s) sequencing on a shared 9s beat.
 - Keep the stagger helpers at the end of `illustrations.css`. Any `animation:` shorthand after them resets the delay.
+
+## Editor’s notes (3.7.34 About portrait)
+
+- About's profile photo prints in `blocks/section.blade.php` for the `story` anchor, wrapped with the drawing in `.about-story-aside`. It only shows when the page's `matthummel/hero` block has **Show profile photo** on; the caption comes from that block's **Photo caption**. `blocks/hero.blade.php` skips the portrait on `is_page('about')`.
+- Rename the Story anchor and the photo disappears from About (the hero will not bring it back). Layout lives in `resources/css/about-page.css`.
