@@ -75,7 +75,7 @@ Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
 Theme updates go to the **staging site** — `https://matthummel-com-524423.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Check the change there. Live (`matthummel.com`) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish). Nobody installs the theme on live directly.
 
-On staging: Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`). Then purge LiteSpeed.
+On staging: Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`). Then clear the cache: hPanel → the staging site → **Clear cache** (or the Hostinger API `agency-hosting_cache_clear-website`). Staging does not run the LiteSpeed Cache plugin; live does.
 
 ### From the terminal over SSH
 
@@ -96,12 +96,14 @@ Host matthummel-staging
 Deploy to staging after the `Deploy Roots Production Ecosystem` run is green:
 
 ```bash
-ssh matthummel-staging 'set -- ~/websites/*/public_html; [ "$#" -eq 1 ] || { echo "expected one site root, found $#: $*" >&2; exit 1; }; cd "$1" && wp mh theme-update && wp litespeed-purge all'
+ssh matthummel-staging 'set -- ~/websites/*/public_html; [ "$#" -eq 1 ] || { echo "expected one site root, found $#: $*" >&2; exit 1; }; cd "$1" && wp mh theme-update && { wp litespeed-purge all 2>/dev/null || wp cache flush; }'
 ```
+
+Then clear Hostinger's own cache for the staging site (hPanel → **Clear cache**, or the Hostinger API `agency-hosting_cache_clear-website`). WP-CLI cannot reach that layer.
 
 - WordPress on Hostinger shared hosting lives at `~/websites/<site-id>/public_html`; the glob resolves it so the id is not written down here. The `set --` / `$#` check refuses to run if the glob matches more than one directory (a second site on the same account), instead of handing `cd` an ambiguous list.
 - `wp mh theme-update` is the theme's own command (`app/theme-updater.php`). It needs the GitHub token: `MH_GITHUB_TOKEN` in `wp-config.php`, or the token saved on the Update Theme screen. "No GitHub token is set" means neither is there.
-- `wp litespeed-purge all` is the LiteSpeed Cache plugin's command, so cached HTML stops pointing at old Vite hashes.
+- The purge step is tolerant on purpose: `wp litespeed-purge all` exists only where the LiteSpeed Cache plugin is active (live, not staging — on staging it is "not a registered wp command"), so it falls back to `wp cache flush`. Either way the goal is the same: cached HTML must stop pointing at old Vite hashes.
 - The login shell on Hostinger shared hosting is `ksh`, and WP-CLI is at `/usr/local/bin/wp`. Nothing to install.
 - Test the key without a password prompt: `ssh -o BatchMode=yes matthummel-staging 'echo ok'`.
 
