@@ -9,21 +9,22 @@ alwaysApply: true
 
 This is the **matthummel** Sage 11 theme. Map these workflow rules onto files and hosts that already ship. If they conflict with `agency-core.mdc` or what already ships, **this file wins on production host and domain**; shipping theme patterns still win on Sage, Blade, Vite, and “do not rip out what works.”
 
-- **Production site:** `https://matthummel.com` on Hostinger. Theme folder stays `wp-content/themes/matthummel/`. WPVibe default site is this URL, not `hummelwp.com`.
+- **Staging site (hummel-dev):** `https://matthummel-com-524423.hostingersite.com/` — Hostinger's staging copy of matthummel.com. **Every design or dev change lands here first.** Install the theme here, test here, point WPVibe here. Theme folder is `wp-content/themes/matthummel/` on both sites.
+- **Production site:** `https://matthummel.com` on Hostinger. **Agents do not deploy to, install on, or edit production.** Live changes only when Matt publishes staging → live from hPanel (Websites → Staging → Publish). Not `hummelwp.com`.
 - **Source of truth for custom code:** this GitHub repo. Do not treat live theme-file edits as canonical.
 - **WordPress connection:** WPVibe (`vibe-ai` plugin + `https://mcp.wpvibe.ai/mcp`) for posts, pages, settings, plugins, and site inspection.
 - **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
 - **This theme is already custom.** Do not add a child theme of `matthummel`. Do not edit WordPress core or third-party plugin files on the server.
-- **Git branches:** `main` is production code. Cloud agents use `cursor/*-ed2a`. Do not invent a git `staging` branch unless Matt creates one. A Hostinger staging *site* is welcome when it exists.
-- **Deploy today:** `.github/workflows/deploy.yml` builds the GitHub Release zip (`theme-latest`). No SiteGround FTP or SSH. Install on Hostinger with Appearance → **Update Theme** / `wp mh theme-update`, then purge LiteSpeed. Do not add a second production workflow.
+- **Git branches:** `main` is the released theme. Cloud agents use `cursor/*-ed2a`. Do not invent a git `staging` branch — staging is a Hostinger *site*, not a branch.
+- **Deploy today:** `.github/workflows/deploy.yml` builds the GitHub Release zip (`theme-latest`). Install it on the **staging site** with Appearance → **Update Theme**, `wp mh theme-update`, or the SSH one-liner in `docs/INSTALL.md` §7, then purge LiteSpeed there. Matt publishes staging → live from hPanel. No SiteGround FTP or SSH. Do not add a second deploy workflow.
 - **Copy vs code:** visitor sentences stay in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`). Keep content PRs/edits separate from theme/plugin/infrastructure PRs.
 
 ---
 
 ## 1. Core operating principles
 
-- Treat `matthummel.com` as the production WordPress site.
-- Never make production changes without first showing the proposed change and receiving explicit approval.
+- Treat `matthummel.com` as the production WordPress site and the staging site (`matthummel-com-524423.hostingersite.com`) as the working copy.
+- Do not change production. Make the change on staging, show it, and leave the staging → live publish to Matt in hPanel. If a task can only be done on production (DNS, hosting settings), show the proposed change and wait for explicit approval.
 - Prefer small, reversible changes over large rewrites.
 - Inspect the current code and configuration before editing anything.
 - Keep WordPress content changes separate from theme, plugin, and infrastructure changes.
@@ -36,8 +37,8 @@ This is the **matthummel** Sage 11 theme. Map these workflow rules onto files an
 Use three environments whenever possible:
 
 - **Local:** Cloud/local WordPress at `http://localhost:8080` (`~/wp-site`, theme symlink `matthummel`). Product themes (Acreline, etc.) use a **separate** site dir and port (`AGENTS.md` isolation; user skill `sage-docs`). Never activate them on this install.
-- **Staging:** a Hostinger copy of the site when Matt has one. Do not invent a git `staging` branch.
-- **Production:** `matthummel.com`; changes here must be deliberate and approved. `hummelwp.com` is a separate Hostinger install (do not treat it as the default).
+- **Staging (hummel-dev):** `https://matthummel-com-524423.hostingersite.com/`, Hostinger's staging copy of matthummel.com. This is where theme installs, design work, and content experiments happen. Do not invent a git `staging` branch.
+- **Production:** `matthummel.com`. Read-only for agents; Matt publishes staging → live from hPanel. `hummelwp.com` is a separate Hostinger install (do not treat it as the default).
 
 Rules:
 
@@ -105,7 +106,7 @@ Rules:
 
 For every code or WordPress change:
 
-1. Identify the target: local, staging, or `matthummel.com` production.
+1. Identify the target: local or staging (`matthummel-com-524423.hostingersite.com`). Production is not a target for agents.
 2. Inspect the current implementation and dependencies.
 3. Explain the planned change in plain language.
 4. Create or verify a backup when data or production code may be affected.
@@ -113,14 +114,14 @@ For every code or WordPress change:
 6. Run linting, tests, or a syntax check where available (`vendor/bin/pint`, `npm run build`). After Blade edits in Cloud: `cd ~/wp-site && wp acorn view:clear`.
 7. Review the complete diff.
 8. Test the affected page or feature and nearby functionality.
-9. Ask for approval before applying the production change.
-10. After deployment, verify the public site and WordPress admin.
+9. Stop at staging. Matt publishes staging → live from hPanel; do not push to production yourself.
+10. After a staging deploy, verify the staging site and its WordPress admin. After Matt publishes, verify the public site if asked.
 11. Record the commit, deployment, test result, and rollback instructions.
 
 ## 8. Deployment rules
 
 - Deploy from a reviewed Git commit, not from untracked local files.
-- Confirm the destination before deployment (`matthummel.com` vs local vs any staging host).
+- Confirm the destination before deployment: local or the staging site. `matthummel.com` is only ever updated by Matt publishing staging from hPanel.
 - Never deploy secrets or development configuration.
 - Prefer atomic or easily reversible deployments (built `theme-latest` zip over partial `public/` copies).
 - Do not run database migrations automatically against production without approval and a backup.
