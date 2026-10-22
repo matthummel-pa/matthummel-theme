@@ -171,6 +171,7 @@ class Context
             'view' => $view,
             'post_type' => $post instanceof \WP_Post ? $post->post_type : '',
             'post_id' => $post_id,
+            'post_slug' => $post instanceof \WP_Post ? (string) $post->post_name : '',
             'document_name' => $document_name,
             'custom_title' => $this->meta_string($post_id, '_mh_seo_title'),
             'rank_math_title' => $this->meta_string($post_id, 'rank_math_title'),

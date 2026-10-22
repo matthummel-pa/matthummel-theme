@@ -639,6 +639,24 @@ function mh_post_title(int|\WP_Post|null $post = null): string
     return html_entity_decode((string) get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 }
 
+/**
+ * Canonical spelling for multi-word tech names that split badly word by word
+ * ("vs code" would become "Vs Code"). Returns null when the text is not one of them.
+ */
+function mh_title_label_phrase(string $text): ?string
+{
+    $key = strtolower(trim((string) preg_replace('/[\s\-_]+/', ' ', $text)));
+    $phrases = [
+        'vs code' => 'VS Code',
+        'vscode' => 'VS Code',
+        'visual studio code' => 'VS Code',
+        'power apps' => 'Power Apps',
+        'power automate' => 'Power Automate',
+    ];
+
+    return $phrases[$key] ?? null;
+}
+
 function mh_title_label(string $text): string
 {
     $text = trim((string) preg_replace('/[\-_]+/', ' ', $text));
@@ -667,6 +685,10 @@ function mh_title_label(string $text): string
         'matthummel' => 'Matt Hummel',
         'ridgesandvalleys' => 'Sage 11 theme',
     ];
+    $phrase = mh_title_label_phrase($text);
+    if ($phrase !== null) {
+        return $phrase;
+    }
     $out = [];
     foreach (explode(' ', $text) as $part) {
         $low = strtolower($part);
@@ -1325,33 +1347,44 @@ function mh_code_repo_category(array $repo): string
     $name = strtolower((string) ($repo['name'] ?? ''));
     $desc = strtolower((string) ($repo['desc'] ?? ''));
     $haystack = array_merge($stack, $tags);
+    $has = static fn (array $needles): bool => array_intersect($needles, $haystack) !== [];
 
+    // Dev tooling first: a playbook that mentions Sage is not a Sage theme.
     if (
-        in_array('sage', $haystack, true)
-        || str_contains($name, 'sage')
-        || str_contains($desc, 'sage theme')
-        || str_contains($desc, 'sage 11')
+        $has(['claude-code', 'ai-agents', 'developer-tools', 'coding-standards', 'cli', 'devtools'])
+        || str_contains($desc, 'playbook')
+        || str_contains($name, 'playbook')
     ) {
-        return __('Sage theme', 'sage');
+        return __('Dev tooling', 'sage');
+    }
+
+    $isTheme = $has(['wordpress-theme', 'block-theme', 'theme'])
+        || str_contains($desc, ' theme')
+        || str_starts_with($desc, 'theme')
+        || str_contains($name, 'theme');
+    $isSage = $has(['sage', 'sage-theme', 'roots'])
+        || str_contains($desc, 'sage');
+
+    if ($isTheme) {
+        return $isSage ? __('Sage theme', 'sage') : __('WordPress theme', 'sage');
     }
     if (
-        in_array('wordpress', $haystack, true)
-        || in_array('gutenberg', $haystack, true)
-        || str_contains($desc, 'wordpress plugin')
+        $has(['wordpress-plugin', 'gutenberg', 'gutenberg-block'])
+        || str_contains($desc, 'plugin')
         || str_contains($desc, 'gutenberg')
     ) {
         return __('WordPress plugin', 'sage');
     }
+    if ($has(['wordpress'])) {
+        return __('WordPress', 'sage');
+    }
     if (
-        in_array('react', $haystack, true)
-        || in_array('supabase', $haystack, true)
-        || in_array('next.js', $haystack, true)
-        || in_array('nextjs', $haystack, true)
+        $has(['react', 'supabase', 'next.js', 'nextjs'])
         || str_contains($desc, 'react')
     ) {
         return __('Web app', 'sage');
     }
-    if (in_array('php', $haystack, true)) {
+    if ($has(['php'])) {
         return __('PHP project', 'sage');
     }
 
@@ -3001,8 +3034,8 @@ function mh_code_skill_group(string $name): string
         'wordpress', 'sage', 'php' => 'WordPress',
         'html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'tailwind', 'sass', 'vite' => 'Front-end',
         'git', 'github', 'vs code', 'vscode', 'node.js', 'nodejs', 'laravel' => 'Ship',
-        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint' => 'Microsoft',
-        'n8n', 'n8n.io' => 'Workflow',
+        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint',
+        'n8n', 'n8n.io' => 'Platforms and automation',
         default => __('More', 'sage'),
     };
 }
@@ -3016,7 +3049,7 @@ function mh_code_skill_group_icon(string $group): string
         'wordpress' => 'wordpress',
         'front-end', 'frontend' => 'code',
         'ship' => 'github',
-        'microsoft' => 'briefcase',
+        'platforms and automation', 'microsoft' => 'briefcase',
         'workflow' => 'n8n',
         default => 'globe',
     };

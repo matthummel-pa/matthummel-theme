@@ -1,7 +1,9 @@
 {{-- matthummel/hero: wraps the heading, intro and buttons in the shared page hero. --}}
 @php
   $eyebrow = trim((string) ($attributes['eyebrow'] ?? ''));
-  $showPortrait = ! empty($attributes['showPortrait']) && \App\mh_profile_photo_url(640) !== '';
+  // On About the photo moves out of the hero into the Story section's right
+  // column (blocks/section, 3.7.34); the toggle and caption still live here.
+  $showPortrait = ! empty($attributes['showPortrait']) && \App\mh_profile_photo_url(640) !== '' && ! is_page('about');
   $caption = trim((string) ($attributes['portraitCaption'] ?? ''));
 @endphp
 @if (($attributes['layout'] ?? 'page') === 'home')
@@ -39,15 +41,7 @@
         @endif
         {!! $content !!}
       </div>
-      <figure class="about-portrait">
-        @include('partials.profile-photo', ['size' => 320, 'class' => 'about-portrait__img', 'eager' => true, 'alt' => __('Matt Hummel, WordPress developer', 'sage')])
-        @if ($caption !== '')
-          <figcaption class="about-portrait__caption">
-            <span class="about-portrait__name">{{ (\App\Github::fetchUser(\App\mh_github_login())['name'] ?? '') ?: __('Matt Hummel', 'sage') }}</span>
-            <span class="about-portrait__meta">{{ $caption }}</span>
-          </figcaption>
-        @endif
-      </figure>
+      @include('partials.about-portrait', ['caption' => $caption, 'eager' => true])
     </div>
   @else
     @if ($eyebrow !== '')

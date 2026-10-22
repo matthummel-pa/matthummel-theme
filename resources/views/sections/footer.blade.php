@@ -3,9 +3,10 @@
   $footerName  = ($gh['name'] ?? '') ?: 'Matt Hummel';
   $writing     = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $footerHomeId = (int) get_option('page_on_front');
+  $privacyUrl  = \App\mh_privacy_policy_url();
   $footerBlurb = \App\field(
     'footer_blurb',
-    __('Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
+    \App\mh_footer_blurb_default(),
     $footerHomeId > 0 ? $footerHomeId : null
   );
 @endphp
@@ -25,16 +26,6 @@
         <p class="footer-blurb">{{ $footerBlurb }}</p>
       @endif
       <div class="footer-brand-meta">
-        @if (\App\mh_is_hireable($gh))
-          <a
-            class="header-avail footer-avail"
-            href="{{ esc_url(home_url('/contact/')) }}"
-            aria-label="{{ __('Available now — say hello', 'sage') }}"
-          >
-            @include('partials.avail-mark', ['gh' => $gh])
-            <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
-          </a>
-        @endif
         <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
           @include('partials.social', ['compact' => true])
         </nav>

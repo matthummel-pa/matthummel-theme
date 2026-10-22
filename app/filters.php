@@ -19,6 +19,21 @@ add_filter('document_title_separator', function () {
     return '|';
 });
 
+/**
+ * Pages get an mh-page-{slug} body class (e.g. mh-page-about) so page-specific
+ * CSS does not depend on a post ID that changes between databases.
+ */
+add_filter('body_class', function (array $classes): array {
+    if (is_page()) {
+        $slug = (string) get_post_field('post_name', get_queried_object_id());
+        if ($slug !== '') {
+            $classes[] = 'mh-page-'.sanitize_html_class($slug);
+        }
+    }
+
+    return $classes;
+});
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);
@@ -110,7 +125,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-services.blade.php' => [
             'title' => __('Acreline Services', 'sage').' | '.$brand,
-            'desc' => __('Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.', 'sage'),
+            'desc' => __('Acreline install, setup, listings, content, and site care, plus custom WordPress builds when a theme alone will not cover what you need.', 'sage'),
         ],
         'template-portfolio.blade.php' => [
             'title' => __('WordPress Developer Portfolio & GitHub', 'sage').' | '.$brand,
@@ -161,12 +176,12 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => __('About, Hire & Code — WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.', 'sage'),
+            'title' => __('About Matt Hummel, WordPress Developer in Gettysburg, PA', 'sage'),
+            'desc' => __('About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.', 'sage'),
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
-            'desc' => __('WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.', 'sage'),
+            'desc' => __('A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,

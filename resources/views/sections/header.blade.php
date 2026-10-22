@@ -49,21 +49,12 @@
         <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">{!! \App\mh_svg_icon('moon', 16) !!}</span>
       </button>
 
-      {{-- One call to action: the green Available now pill while GitHub says hireable, else Say hello. Both go to Contact. --}}
+      {{-- One call to action: the Get updates pill with its preview. Say hello (→ Contact) joins it only while GitHub says not hireable. --}}
       @php
         $ghAvail = \App\Github::fetchUser(\App\mh_github_login());
         $isHireable = \App\mh_is_hireable($ghAvail);
       @endphp
-      @if ($isHireable)
-        <a
-          class="header-avail"
-          href="{{ esc_url(home_url('/contact/')) }}"
-          aria-label="{{ __('Available now — say hello', 'sage') }}"
-        >
-          @include('partials.avail-mark', ['gh' => $ghAvail])
-          <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
-        </a>
-      @endif
+      @include('partials.header-updates')
 
       @if (\App\mh_public_shop_enabled() && \App\mh_shop_ready() && function_exists('wc_get_cart_url'))
         @php $cartCount = \App\mh_cart_count(); @endphp
@@ -172,7 +163,7 @@
     </button>
   @endif
 
-  <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/contact/')) }}">
-    {!! \App\mh_svg_icon('mail', 15) !!} {{ $isHireable ? __('Available now', 'sage') : __('Say hello', 'sage') }}
+  <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/get-updates/')) }}">
+    {!! \App\mh_svg_icon('mail', 15) !!} {{ __('Get updates', 'sage') }}
   </a>
 </div>

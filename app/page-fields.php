@@ -90,6 +90,18 @@ function field_rich(string $key, string $default = '', ?int $post_id = null): st
 }
 
 /**
+ * Built-in footer sentence (home page field `footer_blurb`).
+ *
+ * One source for the admin default, the Blade fallback, and the 3.7.22 rewrite.
+ *
+ * @since 3.7.22
+ */
+function mh_footer_blurb_default(): string
+{
+    return __('I’m a full-stack WordPress developer. I build custom themes, plugins, and web apps for shops, agencies, and other developers, then write up what I learn here. A few tool links are affiliate links, and each one is labeled.', 'sage');
+}
+
+/**
  * Built-in About story paragraphs (same order as the retired about_p1–about_p4 fields).
  *
  * @since 3.5.25
@@ -269,7 +281,7 @@ function mh_home_hero_default(string $key, string $brand = 'Matt Hummel'): strin
         'role' => __('Full-stack and WordPress developer · themes, plugins, and web apps', 'sage'),
         'lede' => __('I build WordPress themes, plugins, and web apps that are easy to edit, easy to hand off, and built to last. Open to full-time, contract, and freelance work.', 'sage'),
         'seo_title' => __('WordPress Developer', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps that shops can edit and agencies can hand off.', 'sage'),
         'kicker' => __('Hi, I’m Matt 👋', 'sage'),
         'cta_primary' => __('Hire me', 'sage'),
         'cta_secondary' => __('Browse projects', 'sage'),
@@ -320,7 +332,7 @@ function mh_projects_listing_default(string $key, string $brand = 'Matt Hummel')
         'faq_h2' => __('Quick answers.', 'sage'),
         'faq_intro' => __('Short answers for hiring managers and shops.', 'sage'),
         'seo_title' => __('WordPress Projects', 'sage').' | '.$brand,
-        'seo_desc' => __('WordPress projects with live demos and short build stories. Open a theme or plugin, try the demo, and see how I build. Say hello.', 'sage'),
+        'seo_desc' => __('WordPress themes and plugins I\'ve built, each with a live demo and a short build story. Open one, try the demo, and see how I build.', 'sage'),
         'gallery_h2' => __('Browse the WordPress projects', 'sage'),
     ];
 
@@ -647,7 +659,7 @@ function page_field_map(): array
             __('Intro', 'sage') => [
                 ['upd_kicker', __('Kicker', 'sage'), 'text', __('Get updates', 'sage')],
                 ['upd_h1', __('Heading', 'sage'), 'text', __('Notes when I publish', 'sage')],
-                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. I keep your address on this site. No newsletter service.', 'sage')],
+                ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. Unsubscribe any time from the link in each one.', 'sage')],
             ],
         ],
         'template-contact.blade.php' => [
@@ -1026,6 +1038,8 @@ function mh_skills_grouped(array $skills): array
         if ($skill === '') {
             continue;
         }
+        // Fix stored names that lost their capitals (e.g. "Vs Code").
+        $skill = mh_title_label_phrase($skill) ?? $skill;
         $key = mh_code_skill_group($skill);
         if (! isset($grouped[$key])) {
             $grouped[$key] = [];

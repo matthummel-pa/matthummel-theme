@@ -555,7 +555,8 @@ add_action('init', function (): void {
  * @param  array<string, mixed>  $block  Parsed block.
  */
 add_filter('render_block', function ($html, $block) {
-    if (! is_string($html) || $html === '' || ! mh_is_block_page_view()) {
+    // Widget areas (the footer) keep their own classes: a footer Heading stays a label, not a section title.
+    if (! is_string($html) || $html === '' || ! mh_is_block_page_view() || mh_in_widget_area()) {
         return $html;
     }
 
@@ -606,6 +607,70 @@ add_filter('render_block', function ($html, $block) {
 
     return $html;
 }, 10, 2);
+
+/**
+ * True while WordPress is printing a widget area (`dynamic_sidebar()`), including
+ * Customizer partial refreshes. Core fires the before/after actions as a pair.
+ *
+ * @since 3.7.13
+ */
+function mh_in_widget_area(): bool
+{
+    return did_action('dynamic_sidebar_before') > did_action('dynamic_sidebar_after');
+}
+
+/**
+ * Hostinger Reach "classic" subscription form on the site recipe.
+ *
+ * The plugin block prints `<form class="hostinger-reach-block-subscription-form">`
+ * with its own button and input classes (a Reach *builder* form is an iframe
+ * instead and is not touched here). Where the theme already maps buttons to
+ * `.btn` — widget areas and block pages — the submit becomes `.btn`; in a widget
+ * area the inputs also take `.footer-follow__email`, so the theme's existing
+ * light, dark, hover, and focus rules apply. Elsewhere the block is left alone.
+ * Submit still goes through the plugin's `view.js`, which only needs the form
+ * class and the message element.
+ *
+ * @since 3.7.13
+ *
+ * @param  string  $html  Rendered block.
+ */
+function mh_reach_form_block_html(mixed $html): mixed
+{
+    if (! is_string($html) || ! str_contains($html, 'hostinger-reach-block-subscription-form')) {
+        return $html;
+    }
+
+    $inWidgetArea = mh_in_widget_area();
+    if (! $inWidgetArea && ! mh_is_block_page_view()) {
+        return $html;
+    }
+
+    $tags = new \WP_HTML_Tag_Processor($html);
+
+    while ($tags->next_tag()) {
+        $tag = $tags->get_tag();
+
+        if ($tag === 'BUTTON' && $tags->has_class('hostinger-reach-block-submit')) {
+            // Drop the plugin's button classes so its stylesheet (pill, full width, 40px) does not fight `.btn`.
+            foreach (['hostinger-reach-block-submit', 'has-light-color', 'has-color-3-background-color', 'has-text-color', 'has-background', 'has-link-color'] as $class) {
+                $tags->remove_class($class);
+            }
+            $tags->add_class('btn');
+            $tags->add_class('mh-reach-submit');
+
+            continue;
+        }
+
+        if ($inWidgetArea && $tag === 'INPUT' && in_array($tags->get_attribute('type'), ['email', 'text'], true)) {
+            $tags->add_class('footer-follow__email');
+        }
+    }
+
+    return $tags->get_updated_html();
+}
+
+add_filter('render_block_hostinger-reach/subscription', __NAMESPACE__.'\\mh_reach_form_block_html');
 
 /**
  * "On this page" links for a block page: every top-level Section with an anchor and a label.
@@ -780,7 +845,7 @@ function mh_blocks_list(array $items, string $style = ''): string
  * A Questions block from question/answer rows.
  *
  * @param  list<array{title: string, text: string}>  $rows  Rows as stored by the FAQ repeaters.
- * @param  array<string, mixed>  $attrs  Block attributes (`schema` prints FAQPage JSON-LD).
+ * @param  array<string, mixed>  $attrs  Block attributes. `schema` is legacy: MH SEO adds FAQPage data for every Questions block.
  */
 function mh_blocks_faq(array $rows, array $attrs = []): string
 {

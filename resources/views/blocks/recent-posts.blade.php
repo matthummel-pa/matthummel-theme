@@ -10,7 +10,7 @@
   @if ($linkText !== '' || $showRss)
     <div class="mh-data__meta">
       @if ($linkText !== '')
-        <a class="h-text-arrow" href="{{ esc_url($writing) }}">{{ $linkText }} <span aria-hidden="true">→</span></a>
+        <a class="h-text-arrow" href="{{ esc_url($writing) }}">{{ $linkText }}</a>
       @endif
       @if ($showRss)
         <a class="h-journal__rss" href="{{ esc_url(home_url('/feed/')) }}" rel="alternate" type="application/rss+xml">

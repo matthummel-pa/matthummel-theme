@@ -581,14 +581,15 @@ class Meta_Box
                 'BlogPosting' => 'BlogPosting',
                 'TechArticle' => 'TechArticle',
                 'NewsArticle' => 'NewsArticle',
+                'ProfilePage' => __('ProfilePage: a page about me (the About page gets this on its own)', 'mh-seo'),
                 'none' => __('None: web page only', 'mh-seo'),
             ],
-            __('The page always gets WebSite, Person, WebPage, and breadcrumb data. This sets the article part.', 'mh-seo')
+            __('The page always gets WebSite, Person, WebPage, and breadcrumb data. This sets the article part. ProfilePage marks the page as being about the site Person, with no article.', 'mh-seo')
         );
 
         echo '<fieldset class="mh-seo-group"><legend>'.esc_html__('Extra structured data', 'mh-seo').'</legend>';
-        $this->checkbox('mh_seo_schema_faq', __('Add FAQ data from the question headings', 'mh-seo'), $value('_mh_seo_schema_faq') === '1');
-        echo '<p class="description">'.esc_html__('Each H2, H3, or H4 that ends with a question mark becomes a question. The text under it is the answer. Google shows FAQ results for only a few kinds of sites.', 'mh-seo').' <span data-faq-count></span></p>';
+        $this->checkbox('mh_seo_schema_faq', __('Also add FAQ data from the question headings', 'mh-seo'), $value('_mh_seo_schema_faq') === '1');
+        echo '<p class="description">'.esc_html__('Questions blocks always add FAQ data. Tick this to also turn each H2, H3, or H4 that ends with a question mark into a question, with the text under it as the answer. Google no longer shows FAQ rich results, but the data is still valid.', 'mh-seo').' <span data-faq-count></span></p>';
         $this->checkbox('mh_seo_schema_howto', __('Add HowTo data from the first numbered list', 'mh-seo'), $value('_mh_seo_schema_howto') === '1');
         echo '<p class="description">'.esc_html__('Each item in the first numbered list becomes a step. Use this only when that list is the steps of the page. Google no longer shows HowTo results, but the data is still valid.', 'mh-seo').' <span data-howto-count></span></p>';
         echo '</fieldset>';
