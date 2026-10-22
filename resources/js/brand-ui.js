@@ -52,8 +52,11 @@ function initHeaderScroll() {
       document.documentElement.style.setProperty('--header-h', `${h}px`);
     }
   };
+  // A page with no dark hero under the header (Thank you, a bare block page) paints the
+  // scrolled state at once; otherwise the white nav sits on the light canvas in light mode.
+  const hasHero = Boolean(document.querySelector('.h-hero, .page-header, .post-hero, .mh-block-hero'));
   const update = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 12);
+    header.classList.toggle('is-scrolled', ! hasHero || window.scrollY > 12);
     ticking = false;
   };
   measure();

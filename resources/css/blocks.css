@@ -13,7 +13,7 @@
 /* ─── Block tokens ───────────────────────────────────────────────────────── */
 :root {
   --mh-link: var(--blue-600);
-  --mh-link-hover: var(--blue-500);
+  --mh-link-hover: var(--violet-700); /* blue-500 was 3.4:1 on the light canvas */
   --mh-link-underline: color-mix(in srgb, var(--blue-600) 45%, transparent);
   --mh-quote-bg: var(--violet-50);
   --mh-quote-rule: var(--violet-400);

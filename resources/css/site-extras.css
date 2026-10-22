@@ -470,3 +470,28 @@ html .page-header .page-header__panel .lead,
 html .page-header .page-header__panel .sec-intro,
 html .page-header .page-header__panel p:not(.eyebrow):not(.h-badge) { max-width: 42rem; }
 /* === /3.7.28 page heroes === */
+
+/* === 3.7.36 · Site audit: focus rings, hover contrast, placeholders, scroll padding ===
+   Light-mode fixes from the October 2026 WCAG 2.2 AA pass (dark mode already passed).
+   Ratios are against the page canvas (#fff / #f4f7fb), where the ring actually sits. */
+/* Buttons: the cyan ring is 1.8:1 on white. Navy ring (17:1) in light mode, except inside
+   the sections that stay navy in both modes, where cyan still reads. */
+html:not(.mh-dark) :is(.btn.btn, .wp-block-button__link.wp-block-button__link, .search-form.search-form button, .hostinger-reach-block-submit):not(:is(.cta-band, .post-hero, .h-hero, .page-header, .post-cta, .mh-block-hero) *):focus-visible { outline-color: var(--hu-navy, #0a1a33); }
+/* On-this-page pills: studio's violet-100 border was 2.7:1. portfolio.css no longer sets outline: none. */
+html:not(.mh-dark) .h-page-nav__pill:focus-visible { outline: 2px solid var(--violet-700, #6d28d9); outline-offset: 2px; }
+/* Header "Get updates" chevron over the dark hero: blue-600 was 2.5–3.4:1 on the hero wash. */
+html:not(.mh-dark) .site-header:not(.is-scrolled) .header-updates__toggle { color: var(--hu-cyan, #22d3ee); border-color: rgba(255, 255, 255, .35); }
+html:not(.mh-dark) .site-header.is-scrolled .header-updates__toggle:focus-visible { outline-color: var(--blue-500, #3b82f6); }
+/* Form fields: studio.css replaced the outline with a 25% alpha glow (1.4:1). A solid ring on top. */
+html .contact-form :is(input, textarea, select):focus-visible,
+html .comment-form :is(input, textarea):focus-visible,
+html textarea:focus-visible,
+html .site-footer .footer-follow__email:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+/* Placeholders were only styled for dark mode; Safari's light default is 2.4:1. */
+html:not(.mh-dark) :is(.contact-form, .search-form, .comment-form) :is(input, textarea)::placeholder { color: var(--gray-500, #5f6d82); opacity: 1; }
+/* 2.4.11 focus not obscured: the header is fixed at every width, but the mobile anchor targets
+   only keep 1rem of scroll margin. Pad the scroll container by the measured header height. */
+@media (max-width: 900px) {
+  html { scroll-padding-top: calc(var(--header-h, 4.5rem) + .5rem); }
+}
+/* === /3.7.36 site audit === */

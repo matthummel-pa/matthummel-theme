@@ -262,7 +262,7 @@ img { max-width: 100%; display: block; }
 .skip-link:focus,
 .skip-link:focus-visible {
   top: 1rem;
-  outline: 2px solid var(--blue-400);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
 
@@ -2070,7 +2070,6 @@ html.mh-dark .h-page-nav__arrow {
 .h-page-nav__pill:focus-visible {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  outline: none;
 }
 .h-page-nav__pill.is-active,
 .h-page-nav__pill[aria-current="true"] {
@@ -7630,7 +7629,6 @@ html.mh-dark .entry-content > .mh-archive-note strong {
 .pf-product-toc__pill:focus-visible {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  outline: none;
 }
 .pf-product-toc__pill.is-active,
 .pf-product-toc__pill[aria-current="true"] {
