@@ -19,7 +19,6 @@
 
 # Sage / Node / Composer
 /node_modules
-plugins/matthummel-newsletter/node_modules/
 /vendor
 /public/*
 !/public/.gitkeep

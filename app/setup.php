@@ -156,10 +156,41 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-primary',
     ] + $config);
 
-    register_sidebar([
-        'name' => __('Footer', 'sage'),
-        'id' => 'sidebar-footer',
-    ] + $config);
+    // Footer columns (3.7.11). While an area is empty, its column falls back to
+    // the theme's own output, see resources/views/sections/footer.blade.php.
+    $footerConfig = [
+        'before_widget' => '<div class="footer-widget %1$s %2$s">',
+        'after_widget' => '</div>',
+        'before_title' => '<h2 class="footer-nav-label">',
+        'after_title' => '</h2>',
+    ];
+
+    $footerAreas = [
+        'footer-about' => [
+            __('Footer: About', 'sage'),
+            __('Blurb under your name. The name, availability badge and social icons stay in the theme.', 'sage'),
+        ],
+        'footer-links' => [
+            __('Footer: Site links', 'sage'),
+            __('Replaces the Site link column. Use a Heading (class footer-nav-label) and a List (class footer-nav footer-nav--split).', 'sage'),
+        ],
+        'footer-updates' => [
+            __('Footer: Updates (Hostinger Reach)', 'sage'),
+            __('Optional signup column. Add a heading, a short line and your Hostinger Reach form. Leave empty to hide the column.', 'sage'),
+        ],
+        'footer-legal' => [
+            __('Footer: Bottom bar', 'sage'),
+            __('Replaces the legal links and "Built with" line. The copyright line stays in the theme.', 'sage'),
+        ],
+    ];
+
+    foreach ($footerAreas as $id => [$name, $description]) {
+        register_sidebar([
+            'name' => $name,
+            'id' => $id,
+            'description' => $description,
+        ] + $footerConfig);
+    }
 });
 
 /**

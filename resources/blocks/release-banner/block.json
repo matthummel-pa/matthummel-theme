@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/release-banner",
+  "title": "WordPress release banner",
+  "category": "matthummel",
+  "icon": "megaphone",
+  "description": "A slim countdown bar to the next WordPress release. Place it anywhere; it hides itself after release day.",
+  "keywords": [
+    "wordpress",
+    "release",
+    "countdown",
+    "banner"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "ctaText": {
+      "type": "string",
+      "default": "Jump to the features"
+    },
+    "ctaUrl": {
+      "type": "string",
+      "default": "#mhrw-features"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "ctaText": {
+      "label": "Button text",
+      "help": "Leave empty for no button."
+    },
+    "ctaUrl": {
+      "label": "Button link",
+      "help": "#mhrw-features jumps to the feature list on this page. Use a full URL on other pages, e.g. /wordpress-release-watch/#mhrw-features."
+    },
+    "dismissible": {
+      "label": "Let visitors close it",
+      "help": "Closing hides it until the next release."
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": true
+  }
+}

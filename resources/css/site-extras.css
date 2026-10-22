@@ -1,0 +1,472 @@
+/*
+ * Site extras: moved from Appearance > Customize > Additional CSS (3.7.24).
+ * Post components (mh-table, mh-cards, mh-callout), Hostinger Reach forms,
+ * CTA band, home FAQ layout, hero breathing wave, and section line-art.
+ * Imported last in app.css so it keeps the same cascade order it had as
+ * Additional CSS. Edit here, not in the Customizer.
+ */
+
+/* ==========================================================
+   MH post components: tables, list cards, callouts
+   Light mode uses the theme's color vars; html.mh-dark
+   swaps them. Add the class in Block > Advanced > CSS class.
+   ========================================================== */
+
+/* ---------- Tables: add class "mh-table" ---------- */
+.mh-table {
+	margin-block: 2rem;
+	overflow-x: auto; /* small screens scroll the table, not the page */
+	-webkit-overflow-scrolling: touch;
+}
+.mh-table table {
+	width: 100%;
+	min-width: 520px;
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid var(--color-border, #d5dde8);
+	border-radius: 16px;
+	overflow: hidden;
+	background: var(--color-card, #fff);
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
+.mh-table thead {
+	border: 0;
+}
+.mh-table thead th {
+	background: var(--color-navy, #0a1a33);
+	color: #f1f5fb;
+	font-family: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 0.9rem 1rem;
+	border: 0;
+	/* brand gradient rule under the header */
+	border-bottom: 3px solid transparent;
+	border-image: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%) 1;
+}
+.mh-table td {
+	padding: 0.85rem 1rem;
+	border: 0;
+	border-top: 1px solid var(--color-border-light, #e8edf4);
+	color: var(--color-text, #0f1623);
+	background: transparent;
+	vertical-align: top;
+}
+.mh-table tbody tr:first-child td {
+	border-top: 0;
+}
+.mh-table tbody tr:nth-child(even) td {
+	background: var(--color-surface, #f4f7fb);
+}
+.mh-table td:first-child {
+	font-weight: 600;
+	white-space: nowrap;
+}
+.mh-table tbody tr:hover td {
+	background: var(--color-blue-soft, #eef4fc);
+}
+.mh-table figcaption {
+	color: var(--color-text-muted, #46536a);
+	font-size: 0.85rem;
+}
+
+html.mh-dark .mh-table table {
+	border-color: #1c3358;
+	background: linear-gradient(180deg, rgba(14, 33, 64, 0.82), rgba(8, 21, 39, 0.82));
+	box-shadow: inset 0 1px 0 rgba(103, 232, 249, 0.08);
+}
+html.mh-dark .mh-table thead th {
+	background: #0e2140;
+	color: #67e8f9;
+}
+html.mh-dark .mh-table td {
+	border-top-color: #1c3358;
+	color: var(--color-text, #eef3fb);
+}
+html.mh-dark .mh-table tbody tr:nth-child(even) td {
+	background: rgba(96, 165, 250, 0.06);
+}
+html.mh-dark .mh-table tbody tr:hover td {
+	background: rgba(34, 211, 238, 0.1);
+}
+html.mh-dark .mh-table strong {
+	color: #bef264;
+}
+
+/* ---------- List cards: add class "mh-cards" to a Columns block ---------- */
+.mh-cards {
+	gap: 1rem !important;
+	margin-block: 1.5rem 2rem;
+}
+.mh-cards > .wp-block-column {
+	position: relative;
+	overflow: hidden;
+	background: var(--color-card, #fff);
+	color: var(--color-text, #0f1623);
+	border: 1px solid var(--color-border, #d5dde8);
+	border-radius: 16px;
+	padding: 1.5rem 1.25rem 1.1rem;
+	box-shadow: 0 1px 0 rgba(15, 22, 35, 0.04), 0 10px 28px -16px rgba(15, 22, 35, 0.25);
+}
+/* gradient top bar */
+.mh-cards > .wp-block-column::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto;
+	height: 3px;
+	background: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards h3 {
+	margin: 0 0 0.85rem !important;
+	font-family: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
+	font-size: 0.75rem !important;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: 0.16em !important;
+	text-transform: uppercase;
+	color: var(--color-accent, #1d5fd6);
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards p {
+	margin: 0;
+	color: var(--color-text-secondary, #2f3a4d);
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards ul {
+	list-style: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards li {
+	position: relative;
+	display: block !important;
+	margin: 0.55rem 0 !important;
+	padding: 0 0 0 1.75rem !important;
+	font-size: 1rem !important;
+	line-height: 1.45 !important;
+}
+/* check box icon */
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards li::before {
+	content: "" !important;
+	position: absolute !important;
+	left: 0 !important;
+	top: 0.2em !important;
+	margin: 0 !important;
+	mask: none !important;
+	-webkit-mask: none !important;
+	width: 1.1rem !important;
+	height: 1.1rem !important;
+	border-radius: 5px !important;
+	background: #1d5fd6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 0.75rem no-repeat !important;
+}
+/* "not included" card: add class "mh-card--out" to the Column */
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards > .mh-card--out h3 {
+	color: #b45309;
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards > .mh-card--out li::before {
+	background: #fff7e6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b45309' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E") center / 0.7rem no-repeat !important;
+	box-shadow: inset 0 0 0 1.5px #d97706 !important;
+}
+
+html.mh-dark .mh-cards > .wp-block-column {
+	background: linear-gradient(180deg, rgba(14, 33, 64, 0.82), rgba(8, 21, 39, 0.82));
+	border-color: #1c3358;
+	color: var(--color-text, #eef3fb);
+	box-shadow: inset 0 1px 0 rgba(103, 232, 249, 0.08), 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+}
+html.mh-dark :is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards h3 {
+	color: #22d3ee;
+}
+html.mh-dark :is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards p {
+	color: var(--color-text-secondary, #c3d0e6);
+}
+html.mh-dark :is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards li::before {
+	background: #a3e635 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a1a33' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 0.75rem no-repeat !important;
+}
+html.mh-dark :is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards > .mh-card--out h3 {
+	color: #fbbf24;
+}
+html.mh-dark :is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-cards > .mh-card--out li::before {
+	background: rgba(251, 191, 36, 0.1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E") center / 0.7rem no-repeat !important;
+	box-shadow: inset 0 0 0 1.5px rgba(251, 191, 36, 0.7) !important;
+}
+
+/* ---------- Callouts: add "mh-callout" (+ "mh-callout--warn") to a Group ---------- */
+.mh-callout {
+	margin-block: 1.5rem;
+	padding: 1rem 1.25rem;
+	border-radius: 12px;
+	border-left: 4px solid var(--color-accent, #1d5fd6);
+	background: var(--color-blue-soft, #eef4fc);
+	color: var(--color-text, #0f1623);
+}
+.mh-callout > :first-child { margin-top: 0; }
+.mh-callout > :last-child { margin-bottom: 0; }
+.mh-callout--warn {
+	border-left-color: #d97706;
+	background: #fff8eb;
+}
+html.mh-dark .mh-callout {
+	background: rgba(34, 211, 238, 0.08);
+	border-left-color: #22d3ee;
+	color: var(--color-text, #eef3fb);
+}
+html.mh-dark .mh-callout--warn {
+	background: rgba(251, 191, 36, 0.08);
+	border-left-color: #fbbf24;
+}
+
+/* Table: beat the theme's .post-prose th/td borders */
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-table :is(th, td) {
+	border-left: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+:is(.post-prose, .entry-content, .editor-styles-wrapper) .mh-table thead th {
+	background-image: none;
+	border-bottom: 3px solid transparent;
+	border-image: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%) 1;
+}
+
+
+/* Hostinger Reach signup form: match site CTA (Release Watch checklist offer) */
+.hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields {
+	display: grid;
+	gap: 0.75rem;
+}
+@media (min-width: 640px) {
+	.hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields {
+		grid-template-columns: 1fr auto;
+		align-items: end;
+	}
+}
+.hostinger-reach-block-subscription-form label {
+	display: block;
+	margin-bottom: 0.375rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.hostinger-reach-block-subscription-form input[type="email"] {
+	width: 100%;
+	min-height: 3rem;
+	padding: 0.75rem 1rem;
+	border: 1.5px solid #1c3358;
+	border-radius: 0.75rem;
+	font-size: 1rem;
+}
+.hostinger-reach-block-subscription-form .hostinger-reach-block-submit {
+	min-height: 3rem;
+	padding: 0.75rem 1.5rem;
+	border: 0;
+	border-radius: 999px;
+	background: linear-gradient(90deg, #c3f05a, #a3e635) !important;
+	color: #0a1a33 !important;
+	font-weight: 800;
+	cursor: pointer;
+	box-shadow: 0 0 24px rgba(163, 230, 53, 0.35);
+	transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.hostinger-reach-block-subscription-form .hostinger-reach-block-submit:hover {
+	box-shadow: 0 0 34px rgba(163, 230, 53, 0.5);
+	transform: translateY(-1px);
+}
+.hostinger-reach-block-subscription-form :is(input, .hostinger-reach-block-submit):focus-visible {
+	outline: 3px solid #22d3ee;
+	outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+	.hostinger-reach-block-subscription-form .hostinger-reach-block-submit { transition: none; }
+	.hostinger-reach-block-subscription-form .hostinger-reach-block-submit:hover { transform: none; }
+}
+
+/* Journal newsletter form: mirrors the footer Reach form styles (theme app.css scopes them to .site-footer). Move into matthummel-theme as :is(.site-footer, .mh-newsletter) later. */
+.mh-newsletter .hostinger-reach-block-subscription-form-wrapper{margin-top:.15rem}
+.mh-newsletter .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields{flex-direction:column;grid-template-columns:none;align-items:stretch;gap:.65rem;display:flex}
+.mh-newsletter .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline{flex-flow:wrap;align-items:end}
+.mh-newsletter .hostinger-reach-block-subscription-form .hostinger-reach-block-form-field{flex:none;min-width:0;margin-top:0}
+.mh-newsletter .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .hostinger-reach-block-form-field{flex:12rem}
+.mh-newsletter .hostinger-reach-block-subscription-form label{font:600 .8125rem/1.3 var(--font-display);letter-spacing:.02em;text-transform:none;color:#c9d9ef;margin:0 0 .3rem;padding:0;display:block}
+.mh-newsletter .hostinger-reach-block-subscription-form label .required{color:var(--lime-300)}
+.mh-newsletter .hostinger-reach-block-subscription-form .mh-reach-submit{width:fit-content;margin-top:.2rem}
+.mh-newsletter .hostinger-reach-block-subscription-form .mh-reach-submit[disabled]{opacity:.65;cursor:progress;transform:none}
+.mh-newsletter .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .mh-reach-submit{flex:none;min-width:0;margin-top:0}
+.mh-newsletter .reach-subscription-message{border-radius:var(--radius);font:600 .95rem/1.4 var(--font-display);color:#fff;background:#ffffff14;align-items:center;gap:.5rem;margin-top:.6rem;padding:.6rem .75rem;display:flex}
+.mh-newsletter .reach-subscription-message.is-success{background:#bef26429}
+.mh-newsletter .reach-subscription-message.is-error{background:#ea476833}
+.mh-newsletter .reach-subscription-message svg{flex:none;width:1.25rem;height:1.25rem}
+.mh-newsletter .reach-subscription-message svg path{fill:currentColor}
+html:not(.mh-dark) .mh-newsletter .hostinger-reach-block-subscription-form label{color:var(--gray-700)}
+html:not(.mh-dark) .mh-newsletter .hostinger-reach-block-subscription-form label .required{color:var(--violet-700)}
+html:not(.mh-dark) .mh-newsletter .reach-subscription-message{color:var(--color-text);border:1px solid var(--violet-100);background:#fff}
+html:not(.mh-dark) .mh-newsletter .reach-subscription-message.is-success{background:#a3e63538;border-color:#0000}
+html:not(.mh-dark) .mh-newsletter .reach-subscription-message.is-error{color:#a10223;background:#ea47681f;border-color:#0000}
+.mh-newsletter [data-reach-form]{margin-top:.35rem}
+html .mh-newsletter .btn.mh-reach-submit{--hu-grad:linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);--hu-navy:#0a1a33;--hu-navy-deep:#081527;-webkit-text-fill-color:#f1f5fb;letter-spacing:.02em;border-radius:999px;font-weight:700;transition:box-shadow .18s,transform .18s,color .18s,background .18s;box-shadow:0 0 0 3px #22d3ee1a,0 10px 22px -12px #3b82f6e6;background:linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box!important;color:#f1f5fb!important;border:1.5px solid #0000!important}
+html .mh-newsletter .btn.mh-reach-submit:hover,html .mh-newsletter .btn.mh-reach-submit:focus-visible{-webkit-text-fill-color:#a3e635;transform:translateY(-1px);background:linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box!important;color:#a3e635!important;border-color:#0000!important;box-shadow:0 0 0 4px #22d3ee2e,0 0 28px #a3e63559,0 14px 30px -12px #3b82f6e6!important}
+.mh-newsletter [data-reach-form],.mh-newsletter .hostinger-reach-block-subscription-form-wrapper{max-width:40rem}
+/* Fallback if the Reach button keeps its default class outside the footer */
+html .mh-newsletter .hostinger-reach-block-submit{--hu-grad:linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);--hu-navy:#0a1a33;--hu-navy-deep:#081527;-webkit-text-fill-color:#f1f5fb;letter-spacing:.02em;border-radius:999px;font-weight:700;transition:box-shadow .18s,transform .18s,color .18s,background .18s;box-shadow:0 0 0 3px #22d3ee1a,0 10px 22px -12px #3b82f6e6;background:linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box!important;color:#f1f5fb!important;border:1.5px solid #0000!important}
+html .mh-newsletter .hostinger-reach-block-submit:hover,html .mh-newsletter .hostinger-reach-block-submit:focus-visible{-webkit-text-fill-color:#a3e635;transform:translateY(-1px);background:linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box!important;color:#a3e635!important;border-color:#0000!important;box-shadow:0 0 0 4px #22d3ee2e,0 0 28px #a3e63559,0 14px 30px -12px #3b82f6e6!important}
+html .mh-newsletter .hostinger-reach-block-submit:active{transform:translateY(0)}
+html .mh-newsletter .hostinger-reach-block-submit:focus-visible{outline-offset:3px;outline:2px solid #22d3ee}
+html .mh-newsletter .hostinger-reach-block-submit[disabled]{opacity:.65;cursor:progress;box-shadow:none;transform:none}
+html .mh-newsletter .hostinger-reach-block-submit:hover{transform:none}
+
+/* Journal newsletter form: dark-mode email field, matches the footer signup */
+.mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]{border-radius:var(--radius);min-height:48px}
+html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]{background:var(--color-bg);border:1px solid var(--gray-500);color:var(--color-text)}
+html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]::placeholder{color:var(--color-text);opacity:.7}
+html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]:focus,
+html.mh-dark .mh-newsletter .hostinger-reach-block-subscription-form input[type="email"]:focus-visible{border-color:var(--blue-400);outline:2px solid var(--color-focus);outline-offset:2px}
+
+/* Newsletter section: keep heading + blurb clear of the envelope illustration */
+.mh-newsletter .display-title{max-inline-size:18ch;text-wrap:balance}
+.mh-newsletter .display-title + p{max-inline-size:34rem;text-wrap:pretty}
+
+/* Newsletter perks list under the form (core/list with class mh-newsletter__perks).
+   Padding, not margin, for the gap: a theme flow rule resets this list's top margin. */
+.mh-newsletter .mh-newsletter__perks{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:0;padding:1.5rem 0 0;list-style:none;font-size:.875rem;line-height:1.5}
+.mh-newsletter .mh-newsletter__perks li{display:inline-flex;align-items:center;gap:.5rem;margin:0}
+/* Decorative check mark drawn with a mask so it takes the lime token */
+.mh-newsletter .mh-newsletter__perks li::before{content:"";flex:none;inline-size:1rem;block-size:1rem;background:var(--color-lime);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* CTA band buttons: same gradient pill as the newsletter/footer Subscribe button */
+html .cta-band .wp-block-button__link.btn{--hu-grad:linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);--hu-navy:#0a1a33;--hu-navy-deep:#081527;-webkit-text-fill-color:#f1f5fb;letter-spacing:.02em;border-radius:999px;font-weight:700;transition:box-shadow .18s,transform .18s,color .18s,background .18s;box-shadow:0 0 0 3px #22d3ee1a,0 10px 22px -12px #3b82f6e6;background:linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box!important;color:#f1f5fb!important;border:1.5px solid #0000!important}
+html .cta-band .wp-block-button__link.btn:hover,html .cta-band .wp-block-button__link.btn:focus-visible{-webkit-text-fill-color:#a3e635;transform:translateY(-1px);background:linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box!important;color:#a3e635!important;border-color:#0000!important;box-shadow:0 0 0 4px #22d3ee2e,0 0 28px #a3e63559,0 14px 30px -12px #3b82f6e6!important}
+html .cta-band .wp-block-button__link.btn:active{transform:translateY(0)}
+html .cta-band .wp-block-button__link.btn:focus-visible{outline-offset:3px;outline:2px solid #22d3ee}
+html .cta-band .wp-block-button__link.btn[disabled]{opacity:.65;cursor:progress;box-shadow:none;transform:none}
+html .cta-band .wp-block-button__link.btn:hover{transform:none}
+
+/* CTA band: more breathing room between the full-width button and the location note on mobile */
+@media (max-width: 640px){html .cta-band .cta-band__note{margin-top:.5rem}}
+
+
+/* FAQ section (home #questions): two-column layout */
+#questions .faq-layout{gap:clamp(2rem,5vw,4rem);align-items:flex-start;margin:0}
+#questions .faq-aside>h2{margin-top:0}
+#questions .faq-aside>p{color:var(--color-text-secondary);font-size:1.05rem;line-height:1.7;margin:1rem 0 0;max-width:38ch}
+#questions .faq-help-card{margin-top:2rem;padding:1.5rem;border:1px solid var(--color-border);border-radius:var(--radius-card,14px);background:var(--color-surface);background-image:linear-gradient(90deg,var(--blue-500),var(--cyan-400),var(--lime-400));background-size:100% 3px;background-repeat:no-repeat}
+#questions .faq-help-card h3{font:700 1.15rem/1.3 var(--font-display);margin:0 0 .5rem;color:var(--color-text)}
+#questions .faq-help-card p{margin:0 0 1.25rem;color:var(--color-text-secondary);font-size:1rem;line-height:1.6}
+#questions .faq-main .faq-list{gap:.75rem}
+#questions .faq-list details p a{color:var(--color-accent);text-decoration:underline;text-underline-offset:2px}
+html.mh-dark #questions .faq-list details p a{color:var(--cyan-300)}
+/* One column on tablet and mobile. The help card scrolls with the page (no longer sticky, 3.7.26). */
+@media (max-width:1024px){#questions .faq-layout{flex-direction:column;flex-wrap:nowrap;gap:2rem}#questions .faq-layout>.wp-block-column{flex-basis:auto!important;width:100%}#questions .faq-aside>p{max-width:60ch}#questions .faq-help-card{margin-top:1.5rem}}
+/* FAQ intro heading size (the illustration itself is now inline SVG, see illustrations.css). */
+#questions .faq-aside>h2{font-size:clamp(1.85rem,4vw,2.875rem)!important;line-height:1.12}
+/* /FAQ section */
+
+/* === Line-art illustrations + hero light wave (added Oct 2026) === */
+.h-hero__media,.page-header__media{--mh-wave1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='white' stop-opacity='0.35'/%3E%3Cstop offset='0.25' stop-color='white' stop-opacity='1'/%3E%3Cstop offset='0.5' stop-color='white' stop-opacity='0.45'/%3E%3Cstop offset='0.75' stop-color='white' stop-opacity='0.9'/%3E%3Cstop offset='1' stop-color='white' stop-opacity='0.3'/%3E%3C/linearGradient%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' x='-100' y='-100' width='600' height='800'%3E%3CfeGaussianBlur stdDeviation='26'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M200 -40 C90 80 310 170 200 300 S90 500 200 640' stroke='url(%23a)' stroke-width='110' fill='none' filter='url(%23b)'/%3E%3C/svg%3E");--mh-wave2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='white' stop-opacity='0.8'/%3E%3Cstop offset='0.3' stop-color='white' stop-opacity='0.3'/%3E%3Cstop offset='0.55' stop-color='white' stop-opacity='1'/%3E%3Cstop offset='0.8' stop-color='white' stop-opacity='0.4'/%3E%3Cstop offset='1' stop-color='white' stop-opacity='0.85'/%3E%3C/linearGradient%3E%3Cfilter id='b' filterUnits='userSpaceOnUse' x='-100' y='-100' width='600' height='800'%3E%3CfeGaussianBlur stdDeviation='26'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M200 -40 C310 100 90 220 200 320 S310 520 200 640' stroke='url(%23a)' stroke-width='110' fill='none' filter='url(%23b)'/%3E%3C/svg%3E");}
+/* Hero: dots light up as two soft waves cross the hero, plus slow drifting glints. Decorative, aria-hidden parents. */
+.h-hero__wash::before,.page-header__wash::before,.h-hero__wash::after,.page-header__wash::after,.h-hero__media::after,.page-header__media::after{content:"";position:absolute;inset:0;pointer-events:none;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.h-hero__wash::before,.page-header__wash::before{background:radial-gradient(rgba(186,246,253,1) 1.3px,transparent 1.75px) 0 0/22px 22px;-webkit-mask-image:var(--mh-wave1);mask-image:var(--mh-wave1);-webkit-mask-size:45% 100%;mask-size:45% 100%;opacity:.9;transform-origin:50% 50%;will-change:transform,opacity;animation:mh-drift 26s ease-in-out infinite alternate,mh-breathe 8s ease-in-out infinite alternate}
+.h-hero__wash::after,.page-header__wash::after{background:radial-gradient(rgba(190,242,100,.75) 1.1px,transparent 1.5px) 0 0/22px 22px;-webkit-mask-image:var(--mh-wave2);mask-image:var(--mh-wave2);-webkit-mask-size:35% 100%;mask-size:35% 100%;opacity:.6;transform-origin:50% 50%;will-change:transform,opacity;animation:mh-drift 34s ease-in-out -12s infinite alternate-reverse,mh-breathe-soft 8s ease-in-out -4s infinite alternate}
+.h-hero__media::after,.page-header__media::after{z-index:1;background:radial-gradient(rgba(103,232,249,.8) 1.1px,transparent 1.5px) 0 0/22px 22px;-webkit-mask-image:radial-gradient(closest-side,rgba(0,0,0,1),rgba(0,0,0,0.35) 55%,transparent),radial-gradient(closest-side,rgba(0,0,0,0.6),rgba(0,0,0,0.21) 55%,transparent),radial-gradient(closest-side,rgba(0,0,0,0.35),rgba(0,0,0,0.12249999999999998) 55%,transparent);mask-image:radial-gradient(closest-side,rgba(0,0,0,1),rgba(0,0,0,0.35) 55%,transparent),radial-gradient(closest-side,rgba(0,0,0,0.6),rgba(0,0,0,0.21) 55%,transparent),radial-gradient(closest-side,rgba(0,0,0,0.35),rgba(0,0,0,0.12249999999999998) 55%,transparent);-webkit-mask-size:300px 220px,220px 180px,460px 300px;mask-size:300px 220px,220px 180px,460px 300px;opacity:.7;animation:mh-glint 23s ease-in-out infinite alternate}
+/* Breathing wave: the dot bands drift slowly side to side while they swell and fade, like an inhale/exhale. The two bands breathe half a cycle apart. */
+@keyframes mh-drift{from{-webkit-mask-position:-15% 0;mask-position:-15% 0}to{-webkit-mask-position:115% 0;mask-position:115% 0}}
+@keyframes mh-breathe{from{opacity:.3;transform:scale(.96)}to{opacity:.95;transform:scale(1.04)}}
+@keyframes mh-breathe-soft{from{opacity:.15;transform:scale(.97)}to{opacity:.65;transform:scale(1.03)}}
+@keyframes mh-glint{
+0%{-webkit-mask-position:8% 20%,70% 80%,40% 10%;mask-position:8% 20%,70% 80%,40% 10%;opacity:.35}
+21%{-webkit-mask-position:30% 75%,55% 20%,88% 60%;mask-position:30% 75%,55% 20%,88% 60%;opacity:.6}
+43%{-webkit-mask-position:66% 30%,12% 58%,22% 90%;mask-position:66% 30%,12% 58%,22% 90%;opacity:.4}
+68%{-webkit-mask-position:92% 68%,42% 92%,62% 28%;mask-position:92% 68%,42% 92%,62% 28%;opacity:.65}
+100%{-webkit-mask-position:48% 12%,90% 36%,8% 52%;mask-position:48% 12%,90% 36%,8% 52%;opacity:.45}}
+@media (prefers-reduced-motion:reduce){.h-hero__wash::before,.page-header__wash::before,.h-hero__wash::after,.page-header__wash::after,.h-hero__media::after,.page-header__media::after{animation:none;display:none}}
+/* Section illustrations moved to inline SVG: partials/section-illustration.blade.php + illustrations.css. */
+/* === /Line-art illustrations === */
+
+/* === 3.7.27 · Every button wears the nav "Get updates" pill ===
+   Navy fill, blue→cyan→lime brand ring, 999px, ink type; lime type and a glow on hover
+   (the same look 3.7.18 gave the header pill and 3.7.19–3.7.25 ported one element at a time).
+   Covers .btn, core button block links, and the search submit. Outline/ghost keep the ring
+   on the page surface so they still read as secondary, and hover the same way.
+   The 3.6.54 hover rules in studio.css are (0,3,1) !important; the doubled class here ties
+   them and wins by sitting later in the cascade. Padding and font size are untouched. */
+html .btn.btn,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow),
+html .search-form.search-form button {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  --hu-ink: #f1f5fb;
+  --hu-cyan: #22d3ee;
+  --hu-lime: #a3e635;
+  --hu-fill: var(--hu-navy);
+  --hu-type: var(--hu-ink);
+  border: 1.5px solid transparent !important;
+  border-radius: 999px !important;
+  background: linear-gradient(var(--hu-fill), var(--hu-fill)) padding-box, var(--hu-grad) border-box !important;
+  color: var(--hu-type) !important;
+  -webkit-text-fill-color: var(--hu-type);
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .10), 0 10px 22px -12px rgba(59, 130, 246, .9) !important;
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .btn.btn svg,
+html .wp-block-button__link.wp-block-button__link svg { color: var(--hu-cyan); transition: color .18s ease; }
+
+/* Secondary: same pill and ring, page-surface fill, ink type. */
+html .btn.btn-outline,
+html .btn.btn-ghost,
+html :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link.wp-block-button__link {
+  --hu-fill: #fff;
+  --hu-type: var(--hu-navy);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08) !important;
+}
+html.mh-dark .btn.btn-outline,
+html.mh-dark .btn.btn-ghost,
+html.mh-dark :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link.wp-block-button__link {
+  --hu-fill: var(--color-bg, #111a28);
+  --hu-type: var(--hu-ink);
+}
+
+html .btn.btn:hover,
+html .btn.btn:focus-visible,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow):hover,
+html .wp-block-button__link.wp-block-button__link:not(.h-text-arrow):focus-visible,
+html .search-form.search-form button:hover,
+html .search-form.search-form button:focus-visible {
+  --hu-fill: var(--hu-navy-deep);
+  --hu-type: var(--hu-lime);
+  border-color: transparent !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 28px rgba(163, 230, 53, .35), 0 14px 30px -12px rgba(59, 130, 246, .9) !important;
+  transform: translateY(-1px);
+}
+html .btn.btn:hover svg,
+html .btn.btn:focus-visible svg,
+html .wp-block-button__link.wp-block-button__link:hover svg,
+html .wp-block-button__link.wp-block-button__link:focus-visible svg { color: var(--hu-lime) !important; }
+html .btn.btn:active,
+html .wp-block-button__link.wp-block-button__link:active,
+html .search-form.search-form button:active { transform: translateY(0); }
+html .btn.btn:focus-visible,
+html .wp-block-button__link.wp-block-button__link:focus-visible,
+html .search-form.search-form button:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
+html .btn.btn:disabled,
+html .btn.btn[disabled],
+html .btn.btn[aria-disabled="true"] { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html .btn.btn:hover,
+  html .wp-block-button__link.wp-block-button__link:hover,
+  html .search-form.search-form button:hover { transform: none; }
+}
+/* === /3.7.27 buttons === */
+/* === 3.7.28 · Page heroes: more air top and bottom; copy no longer runs the full container ===
+   Home (.h-hero) keeps its viewport sizing and pad modifiers. The 3.6.x panel rules set the title
+   and lead to max-width: none (studio.css ~2598), so block paragraphs ran the full 1120px. */
+html .page-header { padding-block: clamp(4rem, 8vw, 6.25rem) clamp(3.5rem, 6.5vw, 5rem); }
+html .page-header .page-header__panel .display-title.is-hero,
+html .page-header .about-hero__copy .display-title.is-hero { max-width: 22ch; }
+html .page-header .page-header__panel .lead,
+html .page-header .page-header__panel .sec-intro,
+html .page-header .page-header__panel p:not(.eyebrow):not(.h-badge) { max-width: 42rem; }
+/* === /3.7.28 page heroes === */

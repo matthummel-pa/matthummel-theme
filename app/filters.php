@@ -19,6 +19,21 @@ add_filter('document_title_separator', function () {
     return '|';
 });
 
+/**
+ * Pages get an mh-page-{slug} body class (e.g. mh-page-about) so page-specific
+ * CSS does not depend on a post ID that changes between databases.
+ */
+add_filter('body_class', function (array $classes): array {
+    if (is_page()) {
+        $slug = (string) get_post_field('post_name', get_queried_object_id());
+        if ($slug !== '') {
+            $classes[] = 'mh-page-'.sanitize_html_class($slug);
+        }
+    }
+
+    return $classes;
+});
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);
@@ -110,7 +125,7 @@ function mh_seo_landing_defaults(?int $post_id = null): array
         ],
         'template-services.blade.php' => [
             'title' => __('Acreline Services', 'sage').' | '.$brand,
-            'desc' => __('Acreline install, setup, listings, content, and site care. Custom WordPress when you need a build. Say hello.', 'sage'),
+            'desc' => __('Acreline install, setup, listings, content, and site care, plus custom WordPress builds when a theme alone will not cover what you need.', 'sage'),
         ],
         'template-portfolio.blade.php' => [
             'title' => __('WordPress Developer Portfolio & GitHub', 'sage').' | '.$brand,
@@ -161,12 +176,12 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),
         ],
         'template-about.blade.php' => [
-            'title' => __('About, Hire & Code — WordPress Developer', 'sage').' | '.$brand,
-            'desc' => __('About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.', 'sage'),
+            'title' => __('About Matt Hummel, WordPress Developer in Gettysburg, PA', 'sage'),
+            'desc' => __('About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.', 'sage'),
         ],
         'template-start.blade.php' => [
             'title' => __('WordPress Project Brief', 'sage').' | '.$brand,
-            'desc' => __('WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.', 'sage'),
+            'desc' => __('A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.', 'sage'),
         ],
         'index.blade.php' => [
             'title' => __('WordPress Development Journal', 'sage').' | '.$brand,
@@ -711,3 +726,103 @@ add_action('template_redirect', function (): void {
     wp_safe_redirect($base.($query !== '' ? '?'.$query : '').'#'.$path, 301);
     exit;
 }, 3);
+
+/**
+ * The category to show for a post: the MH SEO primary term when set, otherwise the
+ * first category that is not a cross-post source label (DEV.to), otherwise the first.
+ *
+ * get_the_category() sorts by name, so without this "DEV.to" wins on cross-posted posts.
+ *
+ * @param  array<int, \WP_Term>  $cats  Categories from get_the_category().
+ * @param  int  $postId  Post ID.
+ */
+function mh_primary_category(array $cats, int $postId): ?\WP_Term
+{
+    if ($cats === []) {
+        return null;
+    }
+    $primaryId = (int) get_post_meta($postId, '_mh_seo_primary_term', true);
+    foreach ($cats as $cat) {
+        if ($cat instanceof \WP_Term && $primaryId > 0 && (int) $cat->term_id === $primaryId) {
+            return $cat;
+        }
+    }
+    foreach ($cats as $cat) {
+        if ($cat instanceof \WP_Term && $cat->slug !== 'dev-to') {
+            return $cat;
+        }
+    }
+
+    return $cats[0] instanceof \WP_Term ? $cats[0] : null;
+}
+
+/**
+ * Meta query that leaves out posts marked noindex in MH SEO (the archived Power Apps notes).
+ *
+ * @return array<int|string, mixed>
+ */
+function mh_exclude_noindex_meta_query(): array
+{
+    return [
+        'relation' => 'OR',
+        ['key' => '_mh_seo_noindex', 'compare' => 'NOT EXISTS'],
+        ['key' => '_mh_seo_noindex', 'value' => '1', 'compare' => '!='],
+    ];
+}
+
+/**
+ * Keep noindexed posts out of the Journal list, category and tag lists, and site search. Their URLs still work.
+ */
+add_action('pre_get_posts', function (\WP_Query $query): void {
+    if (is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+    if (! $query->is_home() && ! $query->is_search() && ! $query->is_category() && ! $query->is_tag()) {
+        return;
+    }
+    $meta = $query->get('meta_query');
+    $meta = is_array($meta) ? $meta : [];
+    $meta[] = mh_exclude_noindex_meta_query();
+    $query->set('meta_query', $meta);
+});
+
+/**
+ * Core sitemap (wp-sitemap.xml) is the live one, so make it follow MH SEO's robots rules:
+ * no posts marked noindex or excluded, and no tag or author lists (both are noindex).
+ */
+add_filter('wp_sitemaps_posts_query_args', function (array $args, string $postType): array {
+    unset($postType);
+    $meta = isset($args['meta_query']) && is_array($args['meta_query']) ? $args['meta_query'] : [];
+    $meta[] = mh_exclude_noindex_meta_query();
+    $meta[] = [
+        'relation' => 'OR',
+        ['key' => '_mh_seo_sitemap_exclude', 'compare' => 'NOT EXISTS'],
+        ['key' => '_mh_seo_sitemap_exclude', 'value' => '1', 'compare' => '!='],
+    ];
+    $args['meta_query'] = $meta;
+
+    return $args;
+}, 10, 2);
+
+add_filter('wp_sitemaps_taxonomies', function (array $taxonomies): array {
+    unset($taxonomies['post_tag']);
+
+    return $taxonomies;
+});
+
+add_filter('wp_sitemaps_add_provider', function ($provider, string $name) {
+    return $name === 'users' ? false : $provider;
+}, 10, 2);
+
+/**
+ * Author archives are noindex and show a username in the URL (/author/admin/).
+ * There is one author, so send them to About.
+ */
+add_action('template_redirect', function (): void {
+    if (! is_author()) {
+        return;
+    }
+    $aboutId = mh_page_id_by_template('template-about.blade.php');
+    wp_safe_redirect($aboutId > 0 ? (string) get_permalink($aboutId) : home_url('/about/'), 301);
+    exit;
+}, 4);

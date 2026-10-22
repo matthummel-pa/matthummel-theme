@@ -11,9 +11,11 @@ namespace MH_SEO;
 /**
  * Turns a request context into the tags search engines should see.
  *
- * A custom SEO title is returned exactly as stored. Resolution order is the
- * MH SEO field, the Rank Math field, the saved theme field, then generated
- * defaults (the theme's built-in landing copy, then the title template).
+ * A custom SEO title is returned as stored, except that a trailing site name
+ * is dropped when the title already says it ("About Matt Hummel | Matt Hummel"
+ * becomes "About Matt Hummel"). Resolution order is the MH SEO field, the
+ * Rank Math field, the saved theme field, then generated defaults (the
+ * theme's built-in landing copy, then the title template).
  */
 class Document_Builder
 {
@@ -31,12 +33,14 @@ class Document_Builder
         $noindex = $this->is_noindex($context, $settings);
         $canonical = $noindex ? '' : $this->canonical($context);
         $schema = (new Schema)->graph($context, $settings, $title, $description);
+        $advanced = is_array($context['robots_advanced'] ?? null) ? $context['robots_advanced'] : [];
 
         return [
             'title' => $title,
             'description' => $description,
             'noindex' => $noindex,
-            'robots' => $this->robots($noindex),
+            'robots' => $this->robots($noindex, $advanced),
+            'robots_advanced' => $advanced,
             'canonical' => $canonical,
             'emit_canonical' => ! $noindex && empty($context['core_prints_canonical']),
             'og' => $this->open_graph($context, $title, $description, $canonical),
@@ -54,24 +58,29 @@ class Document_Builder
      */
     public function title(array $context, array $settings): string
     {
+        $site = trim((string) ($context['site_name'] ?? ''));
+        if ($site === '') {
+            $site = 'Matt Hummel';
+        }
+
         $custom = trim((string) ($context['custom_title'] ?? ''));
         if ($custom !== '') {
-            return $custom;
+            return self::without_repeated_brand($custom, $site);
         }
 
         $rank = trim((string) ($context['rank_math_title'] ?? ''));
         if ($rank !== '' && ! str_contains($rank, '%')) {
-            return $rank;
+            return self::without_repeated_brand($rank, $site);
         }
 
         $field = trim((string) ($context['field_title'] ?? ''));
         if ($field !== '') {
-            return $this->with_page($field, $context);
+            return $this->with_page(self::without_repeated_brand($field, $site), $context);
         }
 
         $landing = trim((string) ($context['landing_title'] ?? ''));
         if ($landing !== '') {
-            return $this->with_page($landing, $context);
+            return $this->with_page(self::without_repeated_brand($landing, $site), $context);
         }
 
         $name = trim((string) ($context['document_name'] ?? ''));
@@ -84,7 +93,6 @@ class Document_Builder
         if ($template === '') {
             $template = '%title% | Matt Hummel';
         }
-        $site = trim((string) ($context['site_name'] ?? 'Matt Hummel'));
         $title = strtr(
             $template,
             [
@@ -95,7 +103,35 @@ class Document_Builder
         );
         $title = trim((string) preg_replace('/\s+/u', ' ', $title));
 
-        return $this->with_page($title, $context);
+        return $this->with_page(self::without_repeated_brand($title, $site), $context);
+    }
+
+    /**
+     * Drop a trailing " | Site name" when the rest of the title already names the site.
+     *
+     * Handles |, -, –, and — as the separator and ignores case. A title that
+     * names the site only once is returned unchanged.
+     *
+     * @param  string  $title  Resolved title.
+     * @param  string  $site  Site name, e.g. "Matt Hummel".
+     */
+    public static function without_repeated_brand(string $title, string $site): string
+    {
+        $title = trim($title);
+        $site = trim($site);
+        if ($title === '' || $site === '') {
+            return $title;
+        }
+        $pattern = '/\s*[|\x{2013}\x{2014}-]\s*'.preg_quote($site, '/').'\s*$/iu';
+        if (! preg_match($pattern, $title)) {
+            return $title;
+        }
+        $lead = trim((string) preg_replace($pattern, '', $title));
+        if ($lead === '' || mb_stripos($lead, $site) === false) {
+            return $title;
+        }
+
+        return $lead;
     }
 
     /**
@@ -221,12 +257,45 @@ class Document_Builder
      * Robots content value.
      *
      * @param  bool  $noindex  Whether the page is noindex.
+     * @param  array<string, bool|string>  $advanced  Per-post robots choices. See Context.
      */
-    public function robots(bool $noindex): string
+    public function robots(bool $noindex, array $advanced = []): string
     {
-        $index = $noindex ? 'noindex' : 'index';
+        $parts = [$noindex ? 'noindex' : 'index'];
+        $parts[] = ! empty($advanced['nofollow']) ? 'nofollow' : 'follow';
+        foreach (['noarchive', 'nosnippet', 'noimageindex'] as $flag) {
+            if (! empty($advanced[$flag])) {
+                $parts[] = $flag;
+            }
+        }
+        foreach (self::robots_limits($advanced) as $name => $value) {
+            $parts[] = $name.':'.$value;
+        }
 
-        return $index.', follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+        return implode(', ', $parts);
+    }
+
+    /**
+     * The three preview limits, with the site defaults filled in.
+     *
+     * @param  array<string, bool|string>  $advanced  Per-post robots choices.
+     * @return array<string, string>
+     */
+    public static function robots_limits(array $advanced): array
+    {
+        $limits = [
+            'max-image-preview' => 'large',
+            'max-snippet' => '-1',
+            'max-video-preview' => '-1',
+        ];
+        foreach ($limits as $name => $default) {
+            $value = trim((string) ($advanced[$name] ?? ''));
+            if ($value !== '') {
+                $limits[$name] = $value;
+            }
+        }
+
+        return $limits;
     }
 
     /**
@@ -321,12 +390,20 @@ class Document_Builder
     {
         $view = (string) ($context['view'] ?? '');
         $type = 'website';
-        if ($view === 'singular') {
-            $type = 'article';
-        } elseif ($view === 'author') {
+        if ($view === 'author' || Schema::is_profile_page($context)) {
             $type = 'profile';
+        } elseif ($view === 'singular') {
+            $type = 'article';
         }
         $url = $canonical !== '' ? $canonical : (string) ($context['url'] ?? '');
+        $own_title = trim((string) ($context['og_title'] ?? ''));
+        if ($own_title !== '') {
+            $title = $own_title;
+        }
+        $own_description = trim((string) ($context['og_description'] ?? ''));
+        if ($own_description !== '') {
+            $description = $own_description;
+        }
         $tags = [
             'og:locale' => (string) ($context['locale'] ?? 'en_US'),
             'og:type' => $type,
@@ -372,6 +449,8 @@ class Document_Builder
     /**
      * Twitter card tags. Site and creator are included only when a handle is saved.
      *
+     * Each field falls back from the X value to the Open Graph value to the search value.
+     *
      * @param  array<string, mixed>  $context  Request context.
      * @param  array<string, mixed>  $settings  Plugin settings.
      * @param  string  $title  Resolved title.
@@ -381,7 +460,29 @@ class Document_Builder
     private function twitter(array $context, array $settings, string $title, string $description): array
     {
         $image = is_array($context['image'] ?? null) ? $context['image'] : [];
+        $own_image = is_array($context['twitter_image'] ?? null) ? $context['twitter_image'] : [];
+        if (! empty($own_image['url'])) {
+            $image = $own_image;
+        }
+        foreach (['twitter_title', 'og_title'] as $key) {
+            $own = trim((string) ($context[$key] ?? ''));
+            if ($own !== '') {
+                $title = $own;
+                break;
+            }
+        }
+        foreach (['twitter_description', 'og_description'] as $key) {
+            $own = trim((string) ($context[$key] ?? ''));
+            if ($own !== '') {
+                $description = $own;
+                break;
+            }
+        }
         $card = ! empty($image['url']) ? 'summary_large_image' : 'summary';
+        $own_card = (string) ($context['twitter_card'] ?? '');
+        if (in_array($own_card, ['summary', 'summary_large_image'], true)) {
+            $card = $own_card;
+        }
         $tags = [
             'twitter:card' => $card,
             'twitter:title' => $title,

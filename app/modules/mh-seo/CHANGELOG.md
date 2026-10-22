@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.1
+
+- The About page (slug `about`), or any page whose schema type is set to the new **ProfilePage** choice, is a `ProfilePage` with the site Person as `mainEntity`. A ProfilePage gets no article node and sends `og:type` `profile`.
+- FAQ data is built from every `matthummel/faq` Questions block on the page (outermost `details` only), merged with the question headings when that box is ticked, deduplicated by question.
+- A title that already names the site loses a trailing `| Site name` (also `-`, `–`, `—`).
+- Copy the same changes into the standalone MH SEO plugin; when it is active, it wins over this bundled copy.
+
+## 1.2.0
+
+- The SEO box on the edit screen has tabs (Search, Social, Advanced, Schema), a score ring, and live length meters for the SEO title and meta description. The meters show the target range and say in words whether the text is short, good, or long.
+- Search preview with a desktop and mobile view. Link previews for Facebook-style cards and for X.
+- New per-post fields: social title and description, X title, description, image, and card size.
+- New robots choices per post: nofollow, noarchive, nosnippet, noimageindex, and limits for snippet length, image preview size, and video preview length. The box shows the robots tag the page will send.
+- Secondary keywords (up to five, notes only), a breadcrumb title used in the breadcrumb schema, and a pillar-content flag with a "Pillar" label in the SEO column.
+- Schema per post: pick the article type or turn the article part off. Optional FAQ data from question headings and HowTo data from the first numbered list. Both read what is visible on the page.
+- In the block editor the box and the SEO sidebar stay on the same values. Before, the box posted its own values after the sidebar's and could undo a sidebar edit.
+- A post Rank Math had hidden from search stays ticked as hidden in the box until you untick it.
+- `wp mh-seo migrate` also copies Yoast values, and the social, robots, canonical, breadcrumb, and pillar values from both plugins.
+
 ## 1.1.1
 
 - Category and term archives use the MH SEO term description, then the term's own description trimmed to about 155 characters. Open Graph uses the same text.

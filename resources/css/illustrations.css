@@ -1,0 +1,443 @@
+/* ==========================================================================
+   Section illustrations (3.7.25)
+   Inline SVG line art sits behind the content of a few home sections
+   (partials/section-illustration.blade.php, included by blocks/section).
+   Each drawing animates its own parts: the chart draws, the plane glides,
+   the clock keeps time. Everything stops under prefers-reduced-motion and
+   the still frame is the finished drawing, so nothing depends on motion.
+   ========================================================================== */
+
+:root {
+  --il-a: #2563eb;
+  --il-b: #0891b2;
+  --il-c: #65a30d;
+  --il-card: rgba(255, 255, 255, .75);
+  --il-bar: rgba(71, 85, 105, .22);
+  --il-opacity: .72;
+}
+
+html.mh-dark {
+  --il-a: #3b82f6;
+  --il-b: #22d3ee;
+  --il-c: #a3e635;
+  --il-card: rgba(15, 30, 60, .55);
+  --il-bar: rgba(148, 163, 184, .22);
+  --il-opacity: .6;
+}
+
+/* Layout: the section is the frame; the SVG sits behind the container's content,
+   never taller than the section, right-aligned to the content edge. */
+.mh-block-section--illus {
+  position: relative;
+  isolation: isolate;
+}
+
+.mh-illus {
+  --il-edge: max(var(--page-gutter, 1.5rem), calc((100% - var(--page-max, 1280px)) / 2));
+  position: absolute;
+  z-index: -1;
+  top: 1.25rem;
+  right: calc(var(--il-edge) - 1rem);
+  width: min(50%, 640px);
+  height: calc(100% - 2.5rem);
+  pointer-events: none;
+  opacity: var(--il-opacity);
+  overflow: visible;
+  /* Fade the left edge so headings that reach over it stay clean. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 32%);
+}
+
+/* The FAQ intro lives in the left column, so its drawing sits bottom-left. */
+.mh-illus--questions {
+  top: auto;
+  right: auto;
+  bottom: 1.25rem;
+  left: calc(var(--il-edge) - 1rem);
+  width: min(42%, 520px);
+  height: min(60%, 480px);
+  -webkit-mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+  mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+}
+
+.mh-illus--write { width: min(44%, 560px); }
+
+@media (max-width: 899px) {
+  .mh-illus { display: none; }
+}
+
+/* 3.7.26: on the home FAQ the drawing is printed inside the left column, just above
+   the "Still have a question?" card (blocks/section.blade.php), so it flows with the
+   intro instead of sitting absolutely at the section's bottom edge. */
+@media (min-width: 1025px) {
+  .faq-aside .mh-illus--questions {
+    position: static;
+    z-index: auto;
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 360 / 250;
+    margin-top: 2rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .faq-aside .mh-illus--questions + .faq-help-card { margin-top: 1rem; }
+}
+
+/* The FAQ goes single-column at 1024px (site-extras.css); its drawing would sit under the rows. */
+@media (max-width: 1024px) {
+  .mh-illus--questions { display: none; }
+}
+
+/* Colors through custom properties so one markup serves both schemes. */
+.mh-illus .il-s1 { stop-color: var(--il-a); }
+.mh-illus .il-s2 { stop-color: var(--il-b); }
+.mh-illus .il-s3 { stop-color: var(--il-c); }
+.mh-illus .il-card { fill: var(--il-card); }
+.mh-illus .il-bar { fill: var(--il-bar); }
+.mh-illus .il-a { stroke: var(--il-a); }
+.mh-illus .il-b { stroke: var(--il-b); }
+.mh-illus .il-c { stroke: var(--il-c); }
+.mh-illus .il-fa { fill: var(--il-a); }
+.mh-illus .il-fb { fill: var(--il-b); }
+.mh-illus .il-fc { fill: var(--il-c); }
+
+/* Shared transform plumbing: animate each shape around its own box. */
+.mh-illus .il-float,
+.mh-illus .il-pulse,
+.mh-illus .il-ring,
+.mh-illus .il-pop,
+.mh-illus .il-twinkle,
+.mh-illus .il-sway,
+.mh-illus .il-tier,
+.mh-illus .il-letter,
+.mh-illus .il-plane,
+.mh-illus .il-typing,
+.mh-illus .il-nudge,
+.mh-illus .il-chev,
+.mh-illus .il-whoosh {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mh-illus .il-type {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.mh-illus .il-milestone,
+.mh-illus .il-ping,
+.mh-illus .il-click,
+.mh-illus .il-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* The cursor scales around its tip (top-left of its box). */
+.mh-illus .il-cursor {
+  transform-box: fill-box;
+  transform-origin: 0 0;
+}
+
+/* --- Generic parts ------------------------------------------------------ */
+
+/* Lines draw themselves in, hold, then fade and redraw. */
+.mh-illus .il-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: il-draw 9s ease-in-out infinite;
+}
+
+.mh-illus .il-draw--code { animation-duration: 7s; animation-delay: 1.2s; }
+
+@keyframes il-draw {
+  0% { stroke-dashoffset: 1; opacity: 1; }
+  28% { stroke-dashoffset: 0; }
+  82% { stroke-dashoffset: 0; opacity: 1; }
+  90% { opacity: 0; }
+  91% { stroke-dashoffset: 1; opacity: 0; }
+  100% { stroke-dashoffset: 1; opacity: 1; }
+}
+
+/* Text bars type in from the left. */
+.mh-illus .il-type { animation: il-type 9s ease-out infinite; }
+
+@keyframes il-type {
+  0% { transform: scaleX(0); }
+  22% { transform: scaleX(1); }
+  85% { transform: scaleX(1); }
+  92% { transform: scaleX(1); opacity: 0; }
+  93% { transform: scaleX(0); opacity: 0; }
+  100% { transform: scaleX(0); opacity: 1; }
+}
+
+.mh-illus .il-float { animation: il-float 6s ease-in-out infinite; }
+
+@keyframes il-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.mh-illus .il-pulse { animation: il-pulse 2.8s ease-in-out infinite; }
+
+@keyframes il-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: .8; }
+}
+
+.mh-illus .il-blink { animation: il-blink 3.2s ease-in-out infinite; }
+
+@keyframes il-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+
+.mh-illus .il-twinkle { animation: il-twinkle 4s ease-in-out infinite; }
+
+@keyframes il-twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 1; }
+  50% { transform: rotate(90deg) scale(.7); opacity: .4; }
+}
+
+/* --- Inside: chart end-point ring pulses with the line ------------------- */
+.mh-illus .il-ring { animation: il-ring 9s ease-in-out infinite; }
+
+@keyframes il-ring {
+  0%, 24% { transform: scale(.6); opacity: 0; }
+  32% { transform: scale(1.25); opacity: 1; }
+  40%, 82% { transform: scale(1); opacity: 1; }
+  90%, 100% { transform: scale(.6); opacity: 0; }
+}
+
+/* --- Journal: back card sways, read-more arrow nudges, pencil writes ------ */
+.mh-illus .il-sway { animation: il-sway 7s ease-in-out infinite; }
+
+@keyframes il-sway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(2deg) translateY(-3px); }
+}
+
+.mh-illus .il-nudge { animation: il-nudge 1.8s ease-in-out infinite; }
+
+@keyframes il-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+.mh-illus .il-pencil {
+  transform-box: view-box;
+  transform-origin: 216px 152px;
+  animation: il-pencil 2.4s ease-in-out infinite;
+}
+
+@keyframes il-pencil {
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  25% { transform: rotate(-3deg) translate(-3px, 1px); }
+  75% { transform: rotate(3deg) translate(3px, -1px); }
+}
+
+/* --- Newsletter: the note rises out of the envelope, check pops ------------ */
+.mh-illus .il-letter { animation: il-letter 8s ease-in-out infinite; }
+
+@keyframes il-letter {
+  0%, 12% { transform: translateY(0); }
+  30%, 70% { transform: translateY(-24px); }
+  88%, 100% { transform: translateY(0); }
+}
+
+.mh-illus .il-pop { animation: il-pop 8s ease-out infinite; }
+
+@keyframes il-pop {
+  0%, 28% { transform: scale(0); opacity: 0; }
+  36% { transform: scale(1.2); opacity: 1; }
+  42%, 86% { transform: scale(1); opacity: 1; }
+  94%, 100% { transform: scale(0); opacity: 0; }
+}
+
+.mh-illus .il-draw--tick { animation-duration: 8s; }
+
+.mh-illus .il-whoosh { animation: il-whoosh 8s ease-in-out infinite; }
+
+@keyframes il-whoosh {
+  0%, 12% { transform: translateX(0); opacity: 0; }
+  22% { transform: translateX(6px); opacity: 1; }
+  40%, 70% { transform: translateX(10px); opacity: .7; }
+  88%, 100% { transform: translateX(0); opacity: 0; }
+}
+
+/* --- Uses: tiers of the stack float at staggered rhythms ------------------ */
+.mh-illus .il-tier { animation: il-tier 5.5s ease-in-out infinite; }
+.mh-illus .il-tier--1 { --il-lift: -2px; }
+.mh-illus .il-tier--2 { --il-lift: -5px; animation-delay: .4s; }
+.mh-illus .il-tier--3 { --il-lift: -8px; animation-delay: .8s; }
+
+@keyframes il-tier {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(var(--il-lift, -4px)); }
+}
+
+/* --- Write: plane glides on its line, trail streams toward it, bubble types - */
+.mh-illus .il-plane { animation: il-plane 6s ease-in-out infinite; }
+
+@keyframes il-plane {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  35% { transform: translate(9px, -7px) rotate(-1.5deg); }
+  70% { transform: translate(-5px, 4px) rotate(1deg); }
+}
+
+.mh-illus .il-trail { animation: il-trail 1.4s linear infinite; }
+
+@keyframes il-trail {
+  to { stroke-dashoffset: 18; }
+}
+
+.mh-illus .il-typing { animation: il-typing 1.3s ease-in-out infinite; }
+@keyframes il-typing {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+/* --- Now: real clock ratios, today hops across the calendar --------------- */
+.mh-illus .il-hand {
+  transform-box: view-box;
+  transform-origin: 262px 170px;
+  animation: il-rotate linear infinite;
+}
+
+.mh-illus .il-hand--min { animation-duration: 60s; }
+.mh-illus .il-hand--hour { animation-duration: 720s; }
+
+@keyframes il-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.mh-illus .il-today { animation: il-today 12s steps(1, end) infinite; }
+
+@keyframes il-today {
+  0% { transform: translate(0, 0); }
+  12.5% { transform: translate(30px, 0); }
+  25% { transform: translate(60px, 0); }
+  37.5% { transform: translate(-90px, 28px); }
+  50% { transform: translate(-60px, 28px); }
+  62.5% { transform: translate(-30px, 28px); }
+  75% { transform: translate(0, 28px); }
+  87.5% { transform: translate(30px, 28px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* --- Questions: closed rows flip their chevron in turn ---------------------- */
+.mh-illus .il-chev { animation: il-chev 7s ease-in-out infinite; }
+@keyframes il-chev {
+  0%, 40% { transform: rotate(0deg); }
+  48%, 82% { transform: rotate(180deg); }
+  90%, 100% { transform: rotate(0deg); }
+}
+
+.mh-illus .il-chev-open { stroke: #0b1530; }
+html.mh-dark .mh-illus .il-chev-open { stroke: #081527; }
+
+/* --- About (3.7.33) ------------------------------------------------------ */
+
+/* Dashed roads and outlines march forward (dash period 9, so -18 loops clean). */
+.mh-illus .il-march { animation: il-march 1.6s linear infinite; }
+
+@keyframes il-march {
+  to { stroke-dashoffset: -18; }
+}
+
+/* Story stops, commits, the merge dot: light up in turn on the shared 9s beat. */
+.mh-illus .il-milestone { animation: il-milestone 9s ease-out infinite; }
+
+@keyframes il-milestone {
+  0% { transform: scale(0); opacity: 0; }
+  6% { transform: scale(1.35); opacity: 1; }
+  10%, 86% { transform: scale(1); opacity: 1; }
+  93%, 100% { transform: scale(0); opacity: 0; }
+}
+
+/* "You are here" ring. Hidden in the still frame. */
+.mh-illus .il-ping {
+  opacity: 0;
+  animation: il-ping 2.4s ease-out infinite;
+}
+
+@keyframes il-ping {
+  0% { transform: scale(1); opacity: .9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Resume ticks draw quickly, one row after another. */
+.mh-illus .il-check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: il-check 9s ease-out infinite;
+}
+
+@keyframes il-check {
+  0% { stroke-dashoffset: 1; opacity: 1; }
+  7% { stroke-dashoffset: 0; }
+  86% { stroke-dashoffset: 0; opacity: 1; }
+  92% { opacity: 0; }
+  93% { stroke-dashoffset: 1; opacity: 0; }
+  100% { stroke-dashoffset: 1; opacity: 1; }
+}
+
+/* The badge pops on the same 9s beat as the checks, after the third row. */
+.mh-illus--resume .il-pop { animation-duration: 9s; }
+
+/* Work: the cursor glides to the button and clicks; the button presses and ripples. */
+.mh-illus .il-cursor { animation: il-cursor 6s ease-in-out infinite; }
+
+@keyframes il-cursor {
+  0% { transform: translate(26px, 28px); opacity: 0; }
+  12% { opacity: 1; }
+  38%, 44% { transform: translate(-20px, -16px) scale(1); }
+  47% { transform: translate(-20px, -16px) scale(.85); }
+  52%, 78% { transform: translate(-20px, -16px) scale(1); opacity: 1; }
+  92%, 100% { transform: translate(26px, 28px); opacity: 0; }
+}
+
+.mh-illus .il-click { animation: il-click 6s ease-in-out infinite; }
+
+@keyframes il-click {
+  0%, 44% { transform: scale(1); }
+  47% { transform: scale(.92); }
+  53% { transform: scale(1.06); }
+  60%, 100% { transform: scale(1); }
+}
+
+.mh-illus .il-ripple {
+  opacity: 0;
+  animation: il-ripple 6s ease-out infinite;
+}
+
+@keyframes il-ripple {
+  0%, 46% { transform: scale(1); opacity: 0; }
+  48% { opacity: .9; }
+  72%, 100% { transform: scale(1.35, 1.9); opacity: 0; }
+}
+
+/* Stagger helpers. These come after every animation shorthand on purpose: an
+   earlier `animation:` would reset the delay back to 0 (the 3.7.25 drawings
+   lost their stagger that way). */
+.mh-illus .il-d2 { animation-delay: .35s; }
+.mh-illus .il-d3 { animation-delay: .7s; }
+.mh-illus .il-d4 { animation-delay: 1.05s; }
+.mh-illus .il-d5 { animation-delay: 1.4s; }
+.mh-illus .il-step-2 { animation-delay: 1s; }
+.mh-illus .il-step-3 { animation-delay: 2s; }
+.mh-illus .il-step-4 { animation-delay: 3s; }
+.mh-illus .il-chev.il-d3 { animation-delay: 3.5s; }
+.mh-illus .il-typing.il-d2 { animation-delay: .2s; }
+.mh-illus .il-typing.il-d3 { animation-delay: .4s; }
+
+/* Parts that start undrawn hold their first frame while they wait, so a
+   delayed bar never flashes in full before it types. */
+.mh-illus :is(.il-type, .il-draw, .il-check, .il-milestone, .il-pop) { animation-fill-mode: backwards; }
+
+/* Motion off: the finished drawing is the still frame. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-illus * { animation: none !important; }
+}

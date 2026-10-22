@@ -13,7 +13,7 @@
 
 @component('partials.page-hero')
   <p class="eyebrow">Legal</p>
-  <h1 class="display-title is-hero">Privacy policy.</h1>
+  <h1 class="display-title is-hero">Privacy policy</h1>
   <p class="lead">What data this site collects, how it is used, and what your rights are. Plain language — no legalese.</p>
 @endcomponent
 
@@ -40,6 +40,7 @@
       <ul class="legal-bullets">
         <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, <strong>Bing / Microsoft Analytics</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
         <li>The contact form and project brief collect your name, email, and the details you send so I can reply and prepare for a first meeting. That is all they are used for.</li>
+        <li>The email signup forms send your address, and your first name if you give it, to <strong>Hostinger Reach</strong>, the service that delivers my notes. It is used only for that list, and every email has an unsubscribe link.</li>
         <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
         <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
         <li>You can opt out of analytics tracking at any time — see the <a href="#priv-optout-heading">opt-out options</a> below.</li>
@@ -273,6 +274,7 @@
         <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
         <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
         <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
+        <li><strong>Hostinger Reach</strong> — the email service behind the signup forms. It stores the address and first name you enter, which form you used, and whether you opened or clicked a note, and it handles unsubscribes. Subject to the same <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger privacy policy</a>.</li>
         <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the About page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
         <li><strong>Law enforcement</strong> — data may be disclosed if required by a valid legal process.</li>
       </ul>

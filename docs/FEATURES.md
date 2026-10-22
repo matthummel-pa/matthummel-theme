@@ -2,15 +2,41 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
+
+- The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.
+- Signup surfaces: the Reach form block in the **Footer: Get updates** widget area (styled by `mh_reach_form_block_html()`, 3.7.13) and in the body of the Get updates page (`template-get-updates.blade.php` prints the hero fields, then `the_content()`). When the footer widget area is empty, the column prints the label, the lede, and a Sign up link to that page; there is no theme form.
+- The end-of-post signup, the `mhn_*` CSS hooks, and the `newsletter_issue` post type special cases (block patterns, SEO panel) are removed. Posts end with the author bio and the Say hello band.
+- Copy no longer claims "I keep the address on this site". `upd_lede` and the journal subscribe lede defaults changed; `mh_f_write_subscribe_lede` rewrites the old defaults in `app/bespoke.php`.
+- Live data: `wp_mh_newsletter` and the `wp_mhn_*` tables stay on the server until the old plugin is deleted. Export them into Reach first (`docs/INSTALL.md`).
+
+## Editor’s notes (3.7.13 footer Reach form)
+
+- Footer signup is the Hostinger Reach plugin's block in the **Footer: Get updates** widget area. Two modes: a *builder* form (`formBuilderId` set) is `<div data-reach-form>` → cross-origin iframe, unstyleable from the theme; the *classic* form (no builder id) is `form.hostinger-reach-block-subscription-form` posting to `hostinger-reach/v1/contact` via the plugin's `view.js`. Use the classic one.
+- `mh_reach_form_block_html()` (`render_block_hostinger-reach/subscription`, `app/blocks.php`) swaps the plugin's button classes for `.btn.mh-reach-submit` in widget areas and on block pages — the same places the theme maps core buttons to `.btn` — and, inside a widget area, adds `.footer-follow__email` to the inputs. Elsewhere the block keeps the plugin's own classes. Keep the `hostinger-reach-block-subscription-form` form class and `.reach-subscription-message`; the plugin script keys on them. Since 3.7.20 `.btn.mh-reach-submit` wears the Get updates pill look (navy fill, brand ring, lime text on hover; last block of `studio.css`). Since 3.7.27 every `.btn`, core button block link, and the search submit wears that pill (last block of `site-extras.css`); outline/ghost keep the ring on the page surface.
+- `mh_in_widget_area()` (dynamic_sidebar before/after counts) gates the core-block class filter. Anything that should not restyle footer widgets goes behind it.
+- Styles: end of `studio.css` ("Footer signup via Hostinger Reach"). Light-mode footer colors are the violet set, dark is lime on navy, same as the rest of the footer.
+
 ## Editor’s notes (3.7.0 page blocks)
 
 - A page is "block-built" when it uses the Block page template or has the `_mh_block_page` meta (`App\mh_page_uses_blocks()`). Converted templates render `partials.block-page` for those pages and keep their field markup for the rest.
 - A page block is three files: `resources/blocks/<name>/block.json`, `resources/views/blocks/<name>.blade.php`, and an edit component in `resources/js/blocks/page/index.jsx`. Add the slug to the list in `app/blocks.php`. Blocks save only their inner blocks; all wrapper markup is PHP, so changing it never invalidates stored content.
 - Reuse existing theme classes in the Blade view (the Card block prints `.about-svc-card`). Do not write a second set of card or button styles for blocks.
-- Core blocks get theme classes from the `render_block` filter in `app/blocks.php`, on block pages only. A new mapping goes there, with the matching editor rule in `resources/css/editor.css`.
+- Core blocks get theme classes from the `render_block` filter in `app/blocks.php`, on block pages only. A new mapping goes there and in the `themeClassFor()` table in `resources/js/editor-theme.jsx`, which adds the same classes on the editor canvas.
+- Core block styles (every block WordPress ships) live in `resources/css/blocks.css`, loaded last by `app.css` and `editor.css`. Colors are the `--mh-*` tokens at the top of that file (light at `:root`, dark under `html.mh-dark`). Do not restyle a core block in `editor.css`; the canvas reads `blocks.css`.
+- The editor canvas follows the visitor's light/dark choice (`mh-theme` in localStorage, dark by default) and has a "Dark mode" item in the options menu. This relies on the iframed canvas (WordPress 6.3+ with API v3 blocks; always on 7.1+): `html.mh-dark` rules apply inside the iframe. Tailwind `@theme` tokens are in `resources/css/theme-tokens.css`, shared by both stylesheets; `vite.config.js` still reads them from `app.css` (compiled, imports inlined) for `theme.json`.
 - Data sections (project grid, journal list, GitHub, résumé, contact form) become PHP-rendered blocks in the PR that converts their page. No Custom HTML blocks.
 - Converting a page: build markup with the `mh_blocks_*` helpers from the page's saved fields, call `mh_save_page_blocks()`, leave the `mh_f_*` meta in place as the backup.
 - Retiring a template: once a converted page is confirmed on live, move its old `template-*.blade.php` to `resources/archive/views/` (outside `resources/views/`, so WordPress stops listing it as a page template) in the next PR. Switch the page to the Block page template in the same conversion, or it loses its template when the file moves. The archive folder is deleted when every page is done.
+
+## Editor’s notes (3.7.7 SEO box)
+
+- The SEO box is `app/modules/mh-seo/includes/class-meta-box.php` with `assets/meta-box.js` and `assets/meta-box.css`. They are plain files with no build step. The SEO sidebar is still the compiled `build/index.js`; its source is in the MH SEO plugin repository, not here.
+- A new per-post field needs four things: a key in `Meta::keys()` (and `Meta::flag_keys()` for a checkbox), a branch in `Meta::sanitize()` when it is not plain text, a name in `Meta_Box::text_fields()`, and a field in one of the `render_*` methods. The script picks it up from the config, so the sidebar sync needs no change.
+- Field ids start with `mh-seo-field-`. WordPress 7.1 gives the box heading the id `mh-seo-title`.
+- Robots choices travel as `robots_advanced` from `Context` through `Document_Builder::build()` to `Head::merge_robots()`. Core prints the tag.
+- FAQ and HowTo schema read the rendered content (`Schema::faq_items()`, `Schema::howto_steps()`), so they only describe what is visible on the page. They are off unless ticked on a post.
+- These changes are in the bundled module only. Copy them to the standalone MH SEO plugin before its next release, or the plugin copy will win and hide them.
 
 ## Editor’s notes (3.6.62 polish)
 
@@ -51,7 +77,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `/now/` → `/about/#now` (same `template_redirect` as Hire/Code). The Now section reads `now_h1`, `now_lede`, `now_updated`, `now_items`, `now_life_p1`, `now_posts_empty` as About page fields; defaults in `mh_now_items_defaults()`. `mh_now_updated()` uses About's edit date, then the old Now page. Do not recreate `template-now`, `partials/now-activity`, `partials/now-note`, or `resources/js/now-desk.js`.
 - Menu items whose path is `hire`, `code`, `now`, or `uses` are hidden by a `wp_nav_menu_objects` filter (portfolio.php, priority 21; `footer_bottom_navigation` renders via `wp_get_nav_menu_items()` and is not covered); `mh_sync_nav_menus()` no longer seeds them. The items may still exist in Appearance → Menus until Matt deletes them.
-- Header: one CTA. `.header-avail` ("Available now", → `/contact/`) while `mh_is_hireable()`, else `.btn-hire` Say hello. Do not show both. Resources and Contact are primary menu items (`mh_primary_menu_resources_contact_v1` appends them once with an `add_option()` claim; `mh_sync_nav_menus` includes them). Footer `.footer-avail` matches.
+- Header: one CTA. Since 3.7.18 it is the **Get updates** pill (`partials/header-updates.blade.php`: mail icon, navy fill, blue→cyan→lime brand ring, → `/get-updates/`) with a hover/chevron preview panel of what a subscriber gets (`resources/js/updates-preview.js`, `aria-expanded`, Escape closes; ≥900px only). It shows for everyone; `.btn-hire` Say hello (→ `/contact/`) is added only while GitHub says not hireable. The mobile menu CTA mirrors it; the footer pill (`.footer-avail`) was removed in 3.7.21. The pulse dot (`partials/avail-mark`) no longer appears in the header or footer; it stays in the availability blocks. Do not show both. Resources and Contact are primary menu items (`mh_primary_menu_resources_contact_v1` appends them once with an `add_option()` claim; `mh_sync_nav_menus` includes them). Footer `.footer-avail` matches.
 - `mh_retire_merged_pages_v1` drafts the published Hire/Code/Now/Uses pages after the two copy one-shots have run. Never delete them.
 - `/uses/` → `/resources/#uses`. `template-resources.blade.php` renders `mh_resources_catalog()` then `mh_uses_sections()` (app/affiliate.php). `uses_intro_h2` / `uses_intro_p` are Resources page fields. Do not recreate `template-uses`. Footer Work column is Projects, For agencies, Handoff checklist, Support; Site column has no Now.
 - "Studio" is gone from visitor copy (Projects intro, thank-you, project archive, Resources, resume defaults, Now checklist). `mh_studio_*` function names and the `.mh-slip` cart ("Studio slip") are internal and unchanged.
@@ -119,31 +145,10 @@ What the 3.x Sage theme does, and where it lives.
 - The theme does not write that file. PHP errors stay in the host error log.
 - `*fatal*.txt` and `*.log` stay out of git and out of the theme zip.
 
-## Editor’s notes (3.6.39 unsubscribe and preferences)
+## Editor’s notes (3.6.38 – 3.6.39 Get updates)
 
-- `template-get-updates.blade.php` titles `/unsubscribe/` as Unsubscribe and `/email-preferences/` as Manage preferences. Get updates still uses the page fields.
-- Those pages and the letter layout live in `plugins/matthummel-newsletter/` (1.11.1). Do not add Mailchimp, HubSpot, or another ESP.
-- 1.11.0 provisions those pages only on activation or in wp-admin, stores the page IDs, and locks the insert. Unsubscribe, email preferences, and thank-you stay noindex with Rank Math.
-- 1.11.1 leaves a draft, a child page, or a page with its own content in place when the slug matches. Only an extra top-level shortcode copy is removed.
-- `[mhn_signup source="post"]` sits at the end of a single post. The welcome letter can add a checklist button when the checklist link setting is an https URL. It is empty by default.
-- 1.10.0 adds the `matthummel-newsletter/signup` block and `POST matthummel-newsletter/v1/subscribe`. Both call `subscribe_address()`. The block form still posts to `admin-post.php` when JavaScript is off. The route allows 5 requests per IP in 10 minutes. The page form limit is unchanged.
-
-## Editor’s notes (3.6.38 Get updates)
-
-- Newsletter behavior lives in `plugins/matthummel-newsletter/`. Do not add Mailchimp, HubSpot, or another ESP.
-- Theme `app/newsletter.php` is the fallback when `MHN_VERSION` is not defined. The footer calls `mhn_render_footer_form()` when the plugin is active.
-- Visitor hero copy for the page is `upd_kicker`, `upd_h1`, `upd_lede` on template `template-get-updates.blade.php`.
-- Legacy footer rows are copied once into the plugin list as subscribed `legacy_single`. New signups are double opt-in. Auto-send stays off.
-- **Create newsletter** (`admin.php?page=mhn-wizard`) is the guided path. It autosaves a draft `newsletter_issue` and edits the same post as the block editor.
-- Templates live in `email_templates()` (`mhn_email_templates`). Blog update, blog digest, and custom message each use one editor body (`_mhn_body`, `_mhn_body_v`). Patterns `mhn/blog-update`, `mhn/blog-digest`, and `mhn/custom` still seed the block editor.
-- Layouts live in `layouts()` (`includes/layouts.php`): Standard, Welcome, Plain, Feature, Blog post. The choice is post meta `_mhn_layout` (default `standard`). Reusable intro, sign-off, welcome subject, and welcome body are keys on `mhn_settings`. Letter style is `letter_style`, `letter_masthead`, and `letter_button` on that same option (`card` / `left` / `solid` by default). One issue can override them with post meta `_mhn_letter_style`. Welcome is not auto-sent. Dashboard and picker previews use `#` links and do not call the tracker. The wizard email frame (`assets/emulator.js`, `mhn_emulator_preview`) updates from the draft without a reload, including a letter-style change. Desktop is 600px and Mobile is 375px. `_mhn_editor` is `simple` or `advanced`. Advanced block text is the `_mhn_blocks` array. Simple issues ignore that array.
-- Letter CSS is `assets/email.css`. `email_css()` injects it in a `<style>` block, and the same colors are inlined on the shell, because the preview iframe is `sandbox=""` `srcdoc` and many clients drop `<style>`. Do not put the letter design in `admin.css`. Admin CSS and `emulator.js` are enqueued with `MHN_VERSION`.
-- Publishing a post drafts a blog update. The letter starts with `Hi {first_name|there},`, the post, and a Read more button. It does not send. Owner steps: `docs/NEWSLETTER.md`.
-- The confirm page collects optional first and last name (`sanitize_text_field`, 80 characters). Columns ship through `mhn_db_version` 2 (`ensure_subscriber_columns()`), so plugin 1.0.0 can add `last_name` without a version bump. Merge tags `{first_name}`, `{last_name}`, and `{full_name}` escape HTML and accept a fallback (`{first_name|there}`). The wizard preview uses sample names Ada Lovelace.
-- The wizard content step is one `wp_editor()` body. A blog update starter includes the featured image, linked to the post, at most 600px wide, with width, height, and a fluid style. Digest cards use a 280px thumbnail. Alt text is the attachment alt, then the post title. No featured image means no image in that block. Changing the selected posts asks before it inserts or refreshes those blocks. An old draft is migrated once from the note, the posts, and the P.S. The same letter is what an automatic send would use.
-- Email accessibility checks live in `includes/a11y.php`. CI runs `php plugins/matthummel-newsletter/bin/check-email.php`. Send and schedule are blocked when a content image has no alt text. A leftover name merge tag is an error.
-- Click and open links use a tracking token, not the unsubscribe token. A click is honored only when tracking is on and the destination was signed. Signup limits are per IP, and each address can get one confirmation email every 30 minutes.
-- A finished send inserts one row in `wp_mhn_archive` (`mhn_db_version` 3). The row stores the unmerged HTML and plain text, subject, preheader, From, template, start and finish times, sender id, counts, list label, and plugin version. Later edits do not update that row. Sent issues are read-only; **Duplicate as new draft** copies the issue into a new draft. **Sent archive** (`admin.php?page=mhn-archive`) lists, filters, and pages those rows, and shows one in a sandboxed iframe. HTML, EML, and metadata CSV exports require `manage_options` and a nonce. `_mhn_archived` hides an issue from the main lists and keeps the row. Delete is a confirmed administrator action. There is no public archive page. A public web archive setting is noted for later and stays off; it is not built.
+- The self-hosted newsletter plugin and the theme's own footer list from these releases were removed in 3.7.15. The newsletter is Hostinger Reach; see the 3.7.15 note at the top.
+- Visitor hero copy for the Get updates page is still `upd_kicker`, `upd_h1`, `upd_lede` on `template-get-updates.blade.php`. The page body holds the Reach form block.
 
 ## Editor’s notes (3.6.37 projects listing)
 
@@ -225,9 +230,8 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.22 footer signup / simple heroes)
 
-- Footer signup is first-party (`app/newsletter.php`). Do not add Mailchimp, FluentCRM, or another ESP unless Matt asks.
+- Footer signup was first-party (`app/newsletter.php`) from 3.6.22 to 3.7.14. Removed in 3.7.15; the footer form is Hostinger Reach.
 - Copy keys: `footer_signup_label`, `footer_signup_lede`, `footer_signup_button` on Home. Button chrome default is **Sign up**. Heading default is **Get updates**.
-- Admin: **Get updates** (`mh-newsletter`) + Export CSV. Table `{prefix}mh_newsletter`.
 - `partials/page-hero.blade.php` renders `$split` / `$aside` again (3.6.29). Keep glow/orbs off.
 - Keep On this page arrows (`page-nav-track` + `initPageNavTrack()`). Do not restore a visible scrollbar or the About mobile `<details>` dropdown.
 - Hover/focus color for links and primary buttons is `--blue-400` (`#4f8fd4`), not `--blue-700`.
@@ -244,7 +248,7 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.6.19 footer social / hover)
 
-- Footer social lives in `.footer-brand-social` (under Open for work). Icon-only `.soc-link` has no circle and no hover fill.
+- Footer social lives in `.footer-brand-social` (under the blurb; the footer Get updates pill was removed in 3.7.21). Since 3.7.19 every `.soc-link` (icon-only, labeled, cards) shares the Get updates CTA look: navy fill, blue→cyan→lime ring, cyan glyph, lime glyph + glow on hover (last block of `studio.css`).
 - Follow / RSS is the last footer column (`footer-follow`), not the brand column.
 - Hover for `.btn` and `a` must change `color` (and keep `:focus-visible`). Do not restore filled social circles.
 
@@ -288,6 +292,7 @@ What the 3.x Sage theme does, and where it lives.
 ## Editor’s notes (3.6.11 FAQ toggles)
 
 - Project Questions are `<details class="project-faq">` inside `.faq-list`. Do not restore always-open `<h3>` / `<p>` pairs.
+- Since 3.7.23 every `.faq-list details`, `.project-faq`, and `.h-faq__item` is a brand-recipe card (hairline border, cyan hover, blue→cyan→lime ring when open, cyan icon box that turns lime) via the last block of `studio.css`. The 3.6.x grey-tile rules above it zero the border with `!important`, so that block repeats `border` with `!important` on purpose; edit it there rather than adding a third generation.
 - Grey tile: `background: var(--gray-50)` (dark: `--color-surface`), `border: 0`, `box-shadow: none`. Override lives in `studio.css` so `portfolio.css` hover shadows stay off.
 - Chevron is `summary::after`. Keep native details (no JS accordion).
 
@@ -686,3 +691,28 @@ Passphrase-protected keys need `SERVER_SSH_PRIVATE_KEY_PASSPHRASE` (or an unencr
 ## Stack
 
 Sage 11.2.1 · PHP 8.3 · Tailwind v4 · Vite 8 · Acorn 6 · WordPress 6.6+ · Inter + IBM Plex Sans
+
+## Editor’s notes (3.7.24 glass surfaces)
+
+- `--glass-*` tokens (`:root` light, `html.mh-dark` dark) at the end of `studio.css` feed the scrolled header, `.mh-popout`, `.h-page-nav` and its pills, the header chips, the Get updates preview (`.header-updates__panel`), and the FAQ cards (`--glass-card`, `--glass-card-top`, `--glass-card-blur` read by the 3.7.23 block). Tune opacity, blur or tint there, not per element.
+- `@media (prefers-reduced-transparency: reduce)` and `@supports not (backdrop-filter)` reset the tokens to opaque. Keep both when touching the block; the header over photo heroes relies on the translucent surface for readability only after `.is-scrolled`.
+- Do not add `backdrop-filter` to large content cards (post/work cards): it is costly on long grids and the effect is meant for chrome.
+
+## Editor’s notes (3.7.25 section illustrations)
+
+- The home section drawings are inline SVG from `resources/views/partials/section-illustration.blade.php`, included by `blocks/section.blade.php` when the Section block's anchor is one of `inside`, `journal-posts`, `newsletter`, `uses`, `write`, `now`, `questions` (the list lives in the block view and the partial). Rename an anchor in the editor and the drawing goes away; add a case to the partial to give a new section one.
+- Layout and motion live in `resources/css/illustrations.css` (imported last in `app.css`). The section gets `.mh-block-section--illus` (`position: relative; isolation: isolate`); the SVG is `z-index: -1`, right-aligned to the content edge, `height: calc(100% - 2.5rem)` with `preserveAspectRatio="xMaxYMin meet"` so it never spills into the next section. The FAQ one is bottom-left with `xMinYMax`.
+- Colors are `--il-a/-b/-c` (blue, cyan, lime), `--il-card` (card fill) and `--il-bar` (text bars) on `:root` and `html.mh-dark`; gradient stops read them through `.il-s1/2/3`. Do not put hex back in the markup.
+- Animations are CSS classes inside the SVG (`il-draw`, `il-type`, `il-float`, `il-letter`, `il-plane`, `il-hand--min/--hour`, `il-today`, `il-chev`, …) using `transform-box: fill-box` (or `view-box` with a fixed origin for the pencil and clock hands). Every keyframe starts from the undrawn state and the default CSS is the finished drawing, so `prefers-reduced-motion` (`animation: none`) shows the complete still image.
+- Decorative only: `aria-hidden="true"`, `pointer-events: none`, hidden under 900px (FAQ under 1025px). Checked in Chromium mocks at 1440 / 1024 / 390 in light and dark; a manual pass over the live home page is still needed to confirm text contrast where headings cross the faded edge.
+
+## Editor’s notes (3.7.33 About drawings)
+
+- About's Story, What I build, Selected work, Experience, and Open source drawings are inline SVG cases in `partials/section-illustration.blade.php` (class `mh-illus--about`), rendered by `blocks/section.blade.php` only when `is_page('about')`. They replaced the 3.7.31 CSS-mask `::before` drawings, which could not animate their parts.
+- Size and placement live in `resources/css/about-page.css` (top-right, fixed 360:250 box). Motion lives in `resources/css/illustrations.css`: `il-march`, `il-milestone`, `il-ping`, `il-check`, `il-cursor`, `il-click`, `il-ripple`, with `il-step-2/3/4` (1s / 2s / 3s) sequencing on a shared 9s beat.
+- Keep the stagger helpers at the end of `illustrations.css`. Any `animation:` shorthand after them resets the delay.
+
+## Editor’s notes (3.7.34 About portrait)
+
+- About's profile photo prints in `blocks/section.blade.php` for the `story` anchor, wrapped with the drawing in `.about-story-aside`. It only shows when the page's `matthummel/hero` block has **Show profile photo** on; the caption comes from that block's **Photo caption**. `blocks/hero.blade.php` skips the portrait on `is_page('about')`.
+- Rename the Story anchor and the photo disappears from About (the hero will not bring it back). Layout lives in `resources/css/about-page.css`.

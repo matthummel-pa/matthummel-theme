@@ -4,7 +4,6 @@
 # ^\s*\\?App\\mh_svg_icon\s*\(
 ^\s*\\?(App\\)?mh_svg_icon\s*\(
 ^\s*\\?(App\\)?mh_product_fallback_markup\s*\(
-^\s*do_shortcode\(\s*'\[mhn_signup source="post"\]'\s*\)\s*$
 # JSON-LD encoded with JSON_HEX_TAG (single project page).
 ^\s*\$ldJson\s*$
 # Rendered inner blocks (WP_Block::render output) in resources/views/blocks/cta-band.blade.php.
@@ -15,3 +14,25 @@
 ^\s*\$faqJsonLd\s*$
 # Blog JSON-LD encoded with JSON_HEX_TAG, and the posts page blocks run through the_content (resources/views/index.blade.php).
 ^\s*\$(blogLdJson|journalHtml)\s*$
+# Page-field helpers that wp_kses_post() the value before returning (app/page-fields.php).
+^\s*\\?(App\\)?field_(html|rich)\s*\(
+# CollectionPage JSON-LD encoded with JSON_HEX_TAG (resources/views/woocommerce/archive-product.blade.php).
+^\s*\$collectionJsonLd\s*$
+# Captured output of App\mh_render_product_add_to_cart(), a trusted WooCommerce markup helper (resources/views/woocommerce/single-product.blade.php).
+^\s*\$cartForm\s*$
+# Product JSON-LD encoded with JSON_HEX_TAG (resources/views/woocommerce/single-product.blade.php).
+^\s*\$productJsonLd\s*$
+# TOC-enhanced copy of apply_filters('the_content', ...); App\mh_content_with_toc() only adds heading ids, it doesn't introduce new input (resources/views/partials/content-single.blade.php).
+^\s*\$bodyHtml\s*$
+# Newsletter footer signup form: fully esc_html/esc_attr/esc_url escaped and nonce-fielded in the plugin (plugins/matthummel-newsletter/includes/public.php signup_form()).
+^\s*mhn_render_footer_form\s*\(\s*\)\s*$
+# WooCommerce cart/checkout/account page content: App\mh_woocommerce_page_shortcode() returns a hardcoded shortcode, falling back to the page's own post_content (editor-authored, same trust level WordPress gives the_content/do_shortcode) (resources/views/template-woocommerce.blade.php).
+^\s*do_shortcode\(\s*\$shortcode\s*\)\s*$
+# post_class() is a WordPress core function that builds/escapes its own CSS class attribute; standard unescaped core usage (resources/views/partials/content-single-project.blade.php).
+^\s*post_class\s*\(
+# Core archive title/description: built from admin-controlled term/author names and kses'd term descriptions, same trust level as the_title() (resources/views/archive.blade.php).
+^\s*get_the_archive_(title|description)\s*\(\s*\)\s*$
+# Comments composer (app/View/Composers/Comments.php): $title is now escaped Blade output ({{ }}), not allowlisted here — it wraps mh_post_title(), which html_entity_decode()s the post title and could otherwise re-introduce markup through {!! !!}. $responses is wp_list_comments() rendered through the fully-escaped App\mh_comment_list_item callback (app/comments.php); $previous/$next are core get_previous_comments_link()/get_next_comments_link() output (resources/views/partials/comments.blade.php).
+^\s*\$responses\s*$
+^\s*\$previous\s*$
+^\s*\$next\s*$

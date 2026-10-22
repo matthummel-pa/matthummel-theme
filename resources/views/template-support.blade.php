@@ -13,7 +13,7 @@
 
 @component('partials.page-hero', ['extra' => 'page-header--support'])
   <p class="eyebrow">{{ \App\field('support_kicker', __('Support', 'sage')) }}</p>
-  <h1 class="display-title is-hero">{{ \App\field('support_h1', __('Theme & plugin documentation.', 'sage')) }}</h1>
+  <h1 class="display-title is-hero">{{ \App\field('support_h1', __('Theme & plugin documentation', 'sage')) }}</h1>
   <p class="lead">{{ \App\field('support_lede', __('HTML guides for the themes and plugins I publish. Open a page in the browser; GitHub issues stay for reproducible bugs.', 'sage')) }}</p>
   <div class="page-header-split__actions">
     <a class="btn" href="{{ esc_url($contactUrl) }}">{{ \App\field('support_contact_label', __('Say hello', 'sage')) }}</a>
@@ -36,7 +36,7 @@
 <section class="pf-section work-guide" aria-labelledby="support-intro-heading">
   <div class="container wide">
     <h2 id="support-intro-heading" class="display-title is-section">
-      {{ \App\field('support_intro_h2', __('How this works.', 'sage')) }}
+      {{ \App\field('support_intro_h2', __('How this works', 'sage')) }}
     </h2>
     <p class="lead work-guide__intro">{{ \App\field('support_intro_p', __('Each concept links to viewable HTML docs (install, Customizer, FAQ) hosted from the repo. Contact me if you want one installed or customized.', 'sage')) }}</p>
   </div>

@@ -639,6 +639,24 @@ function mh_post_title(int|\WP_Post|null $post = null): string
     return html_entity_decode((string) get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 }
 
+/**
+ * Canonical spelling for multi-word tech names that split badly word by word
+ * ("vs code" would become "Vs Code"). Returns null when the text is not one of them.
+ */
+function mh_title_label_phrase(string $text): ?string
+{
+    $key = strtolower(trim((string) preg_replace('/[\s\-_]+/', ' ', $text)));
+    $phrases = [
+        'vs code' => 'VS Code',
+        'vscode' => 'VS Code',
+        'visual studio code' => 'VS Code',
+        'power apps' => 'Power Apps',
+        'power automate' => 'Power Automate',
+    ];
+
+    return $phrases[$key] ?? null;
+}
+
 function mh_title_label(string $text): string
 {
     $text = trim((string) preg_replace('/[\-_]+/', ' ', $text));
@@ -667,6 +685,10 @@ function mh_title_label(string $text): string
         'matthummel' => 'Matt Hummel',
         'ridgesandvalleys' => 'Sage 11 theme',
     ];
+    $phrase = mh_title_label_phrase($text);
+    if ($phrase !== null) {
+        return $phrase;
+    }
     $out = [];
     foreach (explode(' ', $text) as $part) {
         $low = strtolower($part);
@@ -1325,33 +1347,44 @@ function mh_code_repo_category(array $repo): string
     $name = strtolower((string) ($repo['name'] ?? ''));
     $desc = strtolower((string) ($repo['desc'] ?? ''));
     $haystack = array_merge($stack, $tags);
+    $has = static fn (array $needles): bool => array_intersect($needles, $haystack) !== [];
 
+    // Dev tooling first: a playbook that mentions Sage is not a Sage theme.
     if (
-        in_array('sage', $haystack, true)
-        || str_contains($name, 'sage')
-        || str_contains($desc, 'sage theme')
-        || str_contains($desc, 'sage 11')
+        $has(['claude-code', 'ai-agents', 'developer-tools', 'coding-standards', 'cli', 'devtools'])
+        || str_contains($desc, 'playbook')
+        || str_contains($name, 'playbook')
     ) {
-        return __('Sage theme', 'sage');
+        return __('Dev tooling', 'sage');
+    }
+
+    $isTheme = $has(['wordpress-theme', 'block-theme', 'theme'])
+        || str_contains($desc, ' theme')
+        || str_starts_with($desc, 'theme')
+        || str_contains($name, 'theme');
+    $isSage = $has(['sage', 'sage-theme', 'roots'])
+        || str_contains($desc, 'sage');
+
+    if ($isTheme) {
+        return $isSage ? __('Sage theme', 'sage') : __('WordPress theme', 'sage');
     }
     if (
-        in_array('wordpress', $haystack, true)
-        || in_array('gutenberg', $haystack, true)
-        || str_contains($desc, 'wordpress plugin')
+        $has(['wordpress-plugin', 'gutenberg', 'gutenberg-block'])
+        || str_contains($desc, 'plugin')
         || str_contains($desc, 'gutenberg')
     ) {
         return __('WordPress plugin', 'sage');
     }
+    if ($has(['wordpress'])) {
+        return __('WordPress', 'sage');
+    }
     if (
-        in_array('react', $haystack, true)
-        || in_array('supabase', $haystack, true)
-        || in_array('next.js', $haystack, true)
-        || in_array('nextjs', $haystack, true)
+        $has(['react', 'supabase', 'next.js', 'nextjs'])
         || str_contains($desc, 'react')
     ) {
         return __('Web app', 'sage');
     }
-    if (in_array('php', $haystack, true)) {
+    if ($has(['php'])) {
         return __('PHP project', 'sage');
     }
 
@@ -1658,6 +1691,28 @@ function mh_studio_project_image_url(array $project): string
     }
 
     return '';
+}
+
+/**
+ * Sanitize a `_mh_project_image` value on save.
+ *
+ * The field holds either a full http(s) URL or a theme-relative path such as
+ * `products/acreline/featured.webp` (see mh_studio_project_image_url() above,
+ * which resolves the relative form against resources/images/*). esc_url_raw()
+ * is only safe for the URL case: on a schemeless relative path it prepends
+ * `http://`, turning `products/...` into `http://products/...` and breaking
+ * the lookup. Sanitize each form the way it is actually used.
+ */
+function mh_sanitize_project_image_value(string $raw): string
+{
+    $raw = trim($raw);
+    if ($raw === '') {
+        return '';
+    }
+
+    return preg_match('#^https?://#i', $raw) === 1
+        ? esc_url_raw($raw)
+        : sanitize_text_field($raw);
 }
 
 function mh_studio_project_categories(): array
@@ -2512,7 +2567,7 @@ function mh_save_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
-    update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', mh_sanitize_project_image_value(wp_unslash($_POST['mh_project_image'] ?? '')));
 
     for ($i = 1; $i <= 3; $i++) {
         update_post_meta($post_id, "_mh_project_m{$i}_value", sanitize_text_field(wp_unslash($_POST["mh_project_m{$i}_value"] ?? '')));
@@ -3001,8 +3056,8 @@ function mh_code_skill_group(string $name): string
         'wordpress', 'sage', 'php' => 'WordPress',
         'html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'tailwind', 'sass', 'vite' => 'Front-end',
         'git', 'github', 'vs code', 'vscode', 'node.js', 'nodejs', 'laravel' => 'Ship',
-        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint' => 'Microsoft',
-        'n8n', 'n8n.io' => 'Workflow',
+        'power apps', 'power-apps', 'power automate', 'power-automate', 'sharepoint',
+        'n8n', 'n8n.io' => 'Platforms and automation',
         default => __('More', 'sage'),
     };
 }
@@ -3016,7 +3071,7 @@ function mh_code_skill_group_icon(string $group): string
         'wordpress' => 'wordpress',
         'front-end', 'frontend' => 'code',
         'ship' => 'github',
-        'microsoft' => 'briefcase',
+        'platforms and automation', 'microsoft' => 'briefcase',
         'workflow' => 'n8n',
         default => 'globe',
     };
@@ -3613,12 +3668,14 @@ function mh_journal_is_oldest(): bool
 
 function mh_journal_sort_url(string $which): string
 {
-    $url = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+    // esc_url_raw(), not sanitize_text_field(): the latter strips %XX octets, which would
+    // corrupt an encoded query value (e.g. a search term) before add_query_arg() runs.
+    $url = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
     if ($which === 'oldest') {
-        return add_query_arg('order', 'asc', $url);
+        return esc_url(add_query_arg('order', 'asc', $url));
     }
 
-    return remove_query_arg('order', $url);
+    return esc_url(remove_query_arg('order', $url));
 }
 
 /** @return list<array{year: int, count: int, url: string}> */
@@ -4453,6 +4510,16 @@ add_action('wp_head', static function (): void {
 
 // Block-editor still needs the stylesheet synchronously (no paint delay there).
 add_action('enqueue_block_editor_assets', static function (): void {
+    wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
+}, 5);
+
+// The editor canvas is an iframe (WordPress 6.3+ when every block is API v3, always on 7.1+).
+// Only styles enqueued on enqueue_block_assets are copied into it, so the fonts go here too
+// or the canvas falls back to system type while the page uses Inter / IBM Plex.
+add_action('enqueue_block_assets', static function (): void {
+    if (! is_admin()) {
+        return;
+    }
     wp_enqueue_style('mh-fonts', mh_font_stylesheet(), [], null);
 }, 5);
 
@@ -5321,9 +5388,9 @@ if (defined('WP_CLI') && WP_CLI) {
     ]);
 }
 
-add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'matthummel'));
-add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply within one business day (ET).', 'matthummel'));
-add_filter('matthummel/cta_label', fn () => __('Get in touch', 'matthummel'));
+add_filter('matthummel/cta_heading', fn () => __('Have a small project in mind?', 'sage'));
+add_filter('matthummel/cta_text', fn () => __('I take on full-stack web applications, custom WordPress work, plugins, integrations, and agency overflow. Write a short note and I will reply within one business day (ET).', 'sage'));
+add_filter('matthummel/cta_label', fn () => __('Get in touch', 'sage'));
 
 /**
  * Default service cards for the About page.

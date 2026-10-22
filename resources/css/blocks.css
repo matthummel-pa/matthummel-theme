@@ -1,0 +1,687 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.7.9 · Core blocks, one look everywhere
+   Every block that ships with WordPress takes the same recipe on posts, default
+   pages, block pages, and the editor canvas. Colors come from the theme tokens
+   in portfolio.css / studio.css, so light and dark (html.mh-dark) follow the
+   site. Loaded last by app.css and editor.css: it wins over earlier rounds.
+
+   Scope: `--mh-content` below is the list of places block content lives.
+   The editor canvas (.editor-styles-wrapper) is one of them, so there is no
+   second copy of these rules for the edit screen.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Block tokens ───────────────────────────────────────────────────────── */
+:root {
+  --mh-link: var(--blue-600);
+  --mh-link-hover: var(--blue-500);
+  --mh-link-underline: color-mix(in srgb, var(--blue-600) 45%, transparent);
+  --mh-quote-bg: var(--violet-50);
+  --mh-quote-rule: var(--violet-400);
+  /* Inline code: the VS Code chip posts already use (code-blocks.css) */
+  --mh-code-bg: #1e1e1e;
+  --mh-code-border: #1e1e1e;
+  --mh-code-text: #ce9178;
+  --mh-pre-bg: #0b1220;
+  --mh-pre-text: #e6edf7;
+  --mh-media-border: var(--color-border);
+  --mh-media-bg: var(--color-surface);
+  --mh-caption: var(--color-text-muted);
+  --mh-table-head: var(--gray-50);
+  --mh-table-stripe: color-mix(in srgb, var(--gray-50) 60%, transparent);
+  --mh-table-border: var(--color-border);
+  --mh-rule: var(--color-border);
+  --mh-marker: var(--lime-700);
+  --mh-chip-bg: var(--violet-50);
+  --mh-chip-border: var(--violet-100);
+  --mh-chip-text: var(--violet-900);
+  --mh-field-bg: #fff;
+  --mh-field-border: var(--gray-300);
+  --mh-cover-wash: linear-gradient(180deg, rgba(5, 13, 28, .35) 0%, rgba(5, 13, 28, .7) 100%);
+  --mh-selection: rgba(29, 95, 214, .18);
+}
+
+html.mh-dark {
+  --mh-link: var(--blue-300);
+  --mh-link-hover: var(--lime-300);
+  --mh-link-underline: rgba(96, 165, 250, .5);
+  --mh-quote-bg: rgba(139, 92, 246, .1);
+  --mh-quote-rule: var(--violet-400);
+  --mh-code-bg: #111827;
+  --mh-code-border: #1f2937;
+  --mh-code-text: #ce9178;
+  --mh-pre-bg: #02070f;
+  --mh-pre-text: #e6edf7;
+  --mh-media-border: var(--color-border);
+  --mh-media-bg: var(--color-surface);
+  --mh-caption: var(--color-text-muted);
+  --mh-table-head: var(--color-surface);
+  --mh-table-stripe: rgba(255, 255, 255, .03);
+  --mh-table-border: var(--color-border);
+  --mh-rule: var(--color-border);
+  --mh-marker: var(--lime-300);
+  --mh-chip-bg: rgba(139, 92, 246, .16);
+  --mh-chip-border: rgba(167, 139, 250, .4);
+  --mh-chip-text: var(--violet-300);
+  --mh-field-bg: var(--color-surface);
+  --mh-field-border: var(--color-border);
+  --mh-cover-wash: linear-gradient(180deg, rgba(2, 7, 15, .45) 0%, rgba(2, 7, 15, .8) 100%);
+  --mh-selection: rgba(190, 242, 100, .22);
+}
+
+/* ─── Text ───────────────────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) ::selection { background: var(--mh-selection); }
+
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-paragraph.has-drop-cap:not(:focus)::first-letter {
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--color-text);
+  margin: .1em .1em 0 0;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-paragraph.is-style-lead,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) p.lead {
+  font-size: var(--type-lead);
+  line-height: 1.62;
+  letter-spacing: -0.015em;
+  color: var(--color-text-secondary);
+}
+
+/* Links. Buttons and theme components keep their own colors. */
+:where(.entry-content, .post-prose, .prose, .mh-block-section) a:where(:not(.btn):not(.wp-block-button__link):not(.h-text-arrow):not([class*="card"]):not(.pill):not(.soc-link):not(.wp-block-social-link-anchor)),
+.editor-styles-wrapper :is(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-pullquote, .wp-block-table, .wp-block-details, .wp-block-verse, .wp-block-footnotes, figcaption) a:where(:not(.btn):not(.wp-block-button__link)) {
+  color: var(--mh-link);
+  text-decoration: underline;
+  text-decoration-color: var(--mh-link-underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color .12s, text-decoration-color .12s;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section) a:where(:not(.btn):not(.wp-block-button__link):not(.h-text-arrow):not([class*="card"]):not(.pill):not(.soc-link):not(.wp-block-social-link-anchor)):is(:hover, :focus-visible),
+.editor-styles-wrapper :is(.wp-block-paragraph, .wp-block-list, .wp-block-quote, .wp-block-pullquote, .wp-block-table, .wp-block-details, .wp-block-verse, .wp-block-footnotes, figcaption) a:where(:not(.btn):not(.wp-block-button__link)):is(:hover, :focus-visible) {
+  color: var(--mh-link-hover);
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1.5px;
+}
+
+/* Inline formats (core/format-library) */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) mark,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .has-inline-color.has-background {
+  background: var(--lime-100);
+  color: var(--lime-900);
+  padding: .05em .25em;
+  border-radius: 3px;
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) mark { background: rgba(163, 230, 53, .22); color: var(--lime-300); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) kbd {
+  font: 500 .85em/1 var(--font-mono);
+  padding: .2em .45em;
+  border: 1px solid var(--mh-code-border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--mh-code-bg);
+  color: var(--mh-code-text);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) sup.fn a { text-decoration: none; font-weight: 700; }
+
+/* ─── Headings ─── sizes live in portfolio.css; this keeps the editor on the
+   same scale when a heading sits inside a page block. */
+.editor-styles-wrapper :is(h1, h2, h3, h4, h5, h6).wp-block-heading { color: var(--color-text); }
+.editor-styles-wrapper h1.wp-block-heading:not(.display-title) { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.02; }
+.editor-styles-wrapper h2.wp-block-heading:not(.display-title) { font-size: var(--type-h2); line-height: 1.18; }
+.editor-styles-wrapper h3.wp-block-heading { font-size: var(--type-h3); line-height: 1.22; }
+.editor-styles-wrapper h4.wp-block-heading { font-size: var(--type-h4); line-height: 1.25; }
+.editor-styles-wrapper h5.wp-block-heading { font-size: var(--type-h5); line-height: 1.28; }
+.editor-styles-wrapper h6.wp-block-heading { font-size: var(--type-h6); line-height: 1.3; }
+
+/* ─── Lists ─── posts and default pages already draw the round blue check
+   markers (studio.css 3.6.14, scoped to .post-prose / .entry-content). The
+   core List block takes the same markers inside page Sections and on the
+   editor canvas, so a list reads the same wherever it is written. Lists inside
+   a Card keep the disc style set in 3.7.2. */
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list:not(.is-style-checklist):not(.mh-card *) {
+  list-style: none;
+  margin: 0 0 1.45em;
+  padding-inline-start: 0;
+}
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list:not(.is-style-checklist):not(.mh-card *) > li {
+  --mh-check: 1.2rem;
+  position: relative;
+  display: block;
+  margin: 0 0 .4em;
+  padding-inline-start: calc(var(--mh-check) + .55rem);
+}
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list:not(.is-style-checklist):not(.mh-card *) > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-block-start: .18em;
+  margin-block-start: max(0px, calc((1lh - 1.2rem) / 2));
+  box-sizing: border-box;
+  border: 1.5px solid var(--color-spark, #1a6bb5);
+  border-radius: 50%;
+  background-color: var(--color-spark, #1a6bb5);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: .78rem .78rem;
+}
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list ul.wp-block-list > li::before { background-color: transparent; background-image: none; }
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list ul.wp-block-list ul.wp-block-list > li::before {
+  width: .72em;
+  height: 2px;
+  margin-block-start: calc(1lh / 2 - 1px);
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-spark, #1a6bb5);
+  background-image: none;
+}
+html.mh-dark :is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list:not(.is-style-checklist):not(.mh-card *) > li::before { border-color: var(--blue-400); background-color: var(--blue-400); }
+html.mh-dark :is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list ul.wp-block-list > li::before { background-color: transparent; background-image: none; }
+html.mh-dark :is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list ul.wp-block-list ul.wp-block-list > li::before { background: var(--blue-400); border: 0; }
+:is(.mh-block-section, .editor-styles-wrapper) ul.wp-block-list ul.wp-block-list { margin: .35em 0 0; }
+/* Ordered lists keep the numbered badges from journal-blocks.css (3.6.9), which
+   now also cover page Sections; the item box they expect is set here. Lists
+   inside a Card keep the disc style (3.7.2). */
+.mh-block-section ol.wp-block-list:not(.mh-ship-pipe):not(.process-list):not(.mh-card *) {
+  list-style: none;
+  margin: 0 0 1.45em;
+  padding-inline-start: 0;
+}
+.mh-block-section ol.wp-block-list:not(.mh-ship-pipe):not(.process-list):not(.mh-card *) > li {
+  position: relative;
+  display: block;
+  margin: 0 0 .45em;
+  padding-inline-start: 1.85em;
+}
+.mh-block-section ol.wp-block-list:not(.mh-ship-pipe):not(.process-list):not(.mh-card *) > li::marker { content: none; }
+.mh-block-section ol.wp-block-list ol.wp-block-list { margin-block: .4em 0; }
+.mh-card ul.wp-block-list:not(.is-style-checklist) > li { display: list-item; padding-inline-start: .15em; }
+.mh-card ul.wp-block-list:not(.is-style-checklist) > li::before { content: none; }
+
+/* ─── Quote / pullquote / verse ──────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-quote {
+  margin: 0 0 1.45em;
+  padding: .9rem 1.35rem;
+  border: 0;
+  border-left: 3px solid var(--mh-quote-rule);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--mh-quote-bg);
+  color: var(--color-text-secondary);
+  font-style: normal;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-quote p { margin: 0 0 .6em; font-size: 1em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-quote p:last-of-type { margin-bottom: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-quote cite,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-pullquote cite {
+  display: block;
+  margin-top: .65rem;
+  font: 600 .8125rem/1.4 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--mh-caption);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-quote.is-style-plain {
+  background: transparent;
+  border-left: 0;
+  padding: 0;
+  color: var(--color-text);
+  font-size: 1.1em;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-pullquote {
+  margin: 2rem 0;
+  padding: 1.75rem 0;
+  border: 0;
+  border-top: 2px solid var(--lime-400);
+  border-bottom: 2px solid var(--lime-400);
+  text-align: left;
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-pullquote { border-color: rgba(163, 230, 53, .4); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-pullquote p {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  color: var(--color-text);
+  margin: 0;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-verse {
+  font-family: var(--font-body);
+  white-space: pre-wrap;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--mh-quote-rule);
+  background: var(--mh-quote-bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ─── Code / preformatted ────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: .88em;
+  padding: .15em .4em;
+  border-radius: 4px;
+  background: var(--mh-code-bg);
+  border: 1px solid var(--mh-code-border);
+  color: var(--mh-code-text);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-code, .wp-block-preformatted):not(.snippet) {
+  margin: 0 0 1.45em;
+  padding: 1rem 1.25rem;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--mh-pre-bg);
+  color: var(--mh-pre-text);
+  border: 1px solid rgba(96, 165, 250, .22);
+  border-radius: var(--radius);
+  font: 400 .9rem/1.65 var(--font-mono);
+  tab-size: 2;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-code code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  white-space: pre;
+}
+
+/* ─── Separator / spacer ─────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-separator {
+  border: 0;
+  border-top: 1px solid var(--mh-rule);
+  margin: 2.5rem auto;
+  width: 100%;
+  max-width: none;
+  opacity: 1;
+  background: none;
+  height: 0;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-separator:not(.is-style-wide):not(.is-style-dots):not(.alignwide):not(.alignfull) { max-width: 6rem; border-top-width: 2px; border-color: var(--lime-400); }
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-separator:not(.is-style-wide):not(.is-style-dots):not(.alignwide):not(.alignfull) { border-color: rgba(163, 230, 53, .5); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-separator.is-style-dots {
+  border: 0;
+  text-align: center;
+  line-height: 1;
+  height: auto;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-separator.is-style-dots::before {
+  content: "···";
+  color: var(--mh-marker);
+  font: 900 2rem/1 var(--font-display);
+  letter-spacing: 1.2em;
+  padding-left: 1.2em;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-spacer { clear: both; }
+
+/* ─── Media: image, gallery, cover, media & text, audio, video, embed, file ── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-image, .wp-block-gallery, .wp-block-video, .wp-block-audio, .wp-block-embed, .wp-block-file, .wp-block-media-text, .wp-block-cover) { margin: 0 0 1.45em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-image img,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-gallery .wp-block-image img,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-media-text__media img,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-video video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--mh-media-border);
+  background: var(--mh-media-bg);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-image.is-style-rounded img { border-radius: 999px; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-image :is(.alignleft, .alignright) { margin-top: .35em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-image.alignleft { margin-right: 1.5rem; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-image.alignright { margin-left: 1.5rem; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) figcaption,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-element-caption {
+  margin: .55rem 0 0;
+  font: 500 .875rem/1.5 var(--font-body);
+  color: var(--mh-caption);
+  text-align: left;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-gallery figcaption.wp-element-caption { color: #fff; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-cover {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  min-height: 24rem;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-cover .wp-block-cover__background:not(.has-background-gradient) { background: var(--mh-cover-wash); opacity: 1; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-cover .wp-block-cover__inner-container { color: #fff; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-cover :is(h1, h2, h3, h4, p) { color: #fff; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-media-text {
+  border: 1px solid var(--mh-media-border);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  overflow: hidden;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-media-text__media img { border: 0; border-radius: 0; height: 100%; object-fit: cover; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-media-text__content { padding: clamp(1.25rem, 3vw, 2rem); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-embed__wrapper { border-radius: var(--radius); overflow: hidden; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-audio audio { width: 100%; border-radius: 999px; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  padding: .9rem 1.1rem;
+  border: 1px solid var(--mh-media-border);
+  border-radius: var(--radius);
+  background: var(--color-card);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-file > a:first-child { font-weight: 600; }
+
+/* ─── Table ──────────────────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table { margin: 0 0 1.45em; overflow-x: auto; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--mh-table-border);
+  border-radius: var(--radius);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table :is(th, td) {
+  padding: .6rem .85rem;
+  border: 1px solid var(--mh-table-border);
+  text-align: left;
+  vertical-align: top;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table th,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table thead td {
+  background: var(--mh-table-head);
+  font: 700 .8125rem/1.4 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table.is-style-stripes table { border: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table.is-style-stripes :is(th, td) { border-inline: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table.is-style-stripes tbody tr:nth-child(odd) { background: var(--mh-table-stripe); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-table figcaption { text-align: left; }
+
+/* ─── Details ────────────────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details {
+  margin: 0 0 .75rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--lime-400);
+  border-radius: var(--radius);
+  background: var(--color-card);
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details { border-color: rgba(163, 230, 53, .34); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details:is(:hover, [open]) { border-color: var(--lime-500); }
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details:is(:hover, [open]) { border-color: var(--lime-300); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+  padding: .75rem 0;
+  cursor: pointer;
+  list-style: none;
+  font: 700 1.05rem/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details > summary::-webkit-details-marker { display: none; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: .55rem;
+  height: .55rem;
+  border-right: 2px solid var(--mh-marker);
+  border-bottom: 2px solid var(--mh-marker);
+  transform: rotate(45deg);
+  translate: 0 -2px;
+  transition: transform .15s ease;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details[open] > summary::after { transform: rotate(225deg); translate: 0 2px; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-details > :not(summary) { margin: 0 0 1rem; color: var(--color-text-secondary); }
+
+/* ─── Buttons ─── the theme's `.btn` recipe (lime fill, violet type) on core
+   buttons everywhere. On block pages PHP also adds `.btn`; on posts, pages and
+   the editor canvas the core class is enough. Arrow style is a text link. */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .wp-block-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--card-gap-tight, .75rem); margin: 1.5rem 0 0; }
+:where(.entry-content, .post-prose, .prose) .wp-block-buttons { margin-bottom: 1.45em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .wp-block-buttons .wp-block-button { margin: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .wp-block-button__link:not(.h-text-arrow) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45em;
+  min-height: 48px;
+  padding: .8rem 1.3rem;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--lime-500);
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  color: var(--violet-900) !important; /* beats the long :not() link chain in studio.css (dark links) */
+  -webkit-text-fill-color: currentColor;
+  font: 700 1rem/1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset, 0 12px 26px -12px rgba(132, 204, 22, .6);
+  transition: background .15s, border-color .15s, color .15s, transform .15s, box-shadow .15s;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .wp-block-button__link:not(.h-text-arrow):is(:hover, :focus-visible) {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  border-color: var(--violet-700);
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, .35), 0 1px 0 rgba(255, 255, 255, .15) inset, 0 14px 30px -12px rgba(109, 40, 217, .6);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .wp-block-button__link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+/* Outline / ghost: white with a violet line on light, lime line on dark and on dark panels */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link {
+  background: #fff;
+  border-color: var(--violet-400);
+  color: var(--violet-900) !important;
+  box-shadow: none;
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link,
+:where(.mh-block-hero, .mh-block-cta, .cta-band, .page-header) :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link {
+  background: transparent;
+  border-color: var(--lime-400);
+  color: var(--lime-300) !important;
+  -webkit-text-fill-color: currentColor;
+  box-shadow: none;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) :is(.is-style-outline, .is-style-ghost) > .wp-block-button__link:is(:hover, :focus-visible) {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  border-color: var(--violet-700);
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+}
+/* Arrow style: a text link with an arrow, not a button */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: none;
+  border: 0;
+  padding: .35rem 0;
+  min-height: 44px;
+  border-radius: 4px;
+  box-shadow: none;
+  font: 600 1.05rem/1.3 var(--font-display);
+  color: var(--mh-link) !important;
+  -webkit-text-fill-color: currentColor;
+  text-decoration: none;
+  transform: none;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link::after,
+/* Skip the CSS arrow when the link already carries one in markup (avoids "→ →"). */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow:not(:has(> [aria-hidden="true"]))::after { content: "→"; transition: translate .15s; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link:is(:hover, :focus-visible),
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta) .h-text-arrow:is(:hover, :focus-visible) {
+  background: none;
+  color: var(--mh-link-hover) !important;
+  -webkit-text-fill-color: currentColor;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transform: none;
+  box-shadow: none;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .mh-block-hero, .mh-block-cta, .editor-styles-wrapper) .is-style-arrow > .wp-block-button__link:is(:hover, :focus-visible)::after { translate: 3px 0; }
+:where(.mh-block-hero, .mh-block-cta, .cta-band, .page-header) .is-style-arrow > .wp-block-button__link,
+:where(.mh-block-hero, .mh-block-cta, .cta-band, .page-header) .h-text-arrow { color: var(--blue-300) !important; }
+:where(.mh-block-hero, .mh-block-cta, .cta-band, .page-header) .is-style-arrow > .wp-block-button__link:is(:hover, :focus-visible),
+:where(.mh-block-hero, .mh-block-cta, .cta-band, .page-header) .h-text-arrow:is(:hover, :focus-visible) { color: var(--lime-300) !important; }
+
+/* ─── Layout blocks: columns, group, row, stack, grid ────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-columns { margin: 0 0 1.45em; gap: var(--card-gap); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-column > :last-child { margin-bottom: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-group.has-background {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--radius-card);
+}
+/* "Card" group style: the theme card recipe on a plain Group block */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-group.is-style-card {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--lime-400);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--brand-shadow-card, none);
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-group.is-style-card { border-color: rgba(163, 230, 53, .34); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-group.is-style-card > :last-child { margin-bottom: 0; }
+
+/* ─── Site and query blocks that print lists of links ────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts, .wp-block-categories, .wp-block-archives, .wp-block-page-list, .wp-block-latest-comments, .wp-block-rss):is(ul, ol, .wp-block-latest-posts__list) {
+  list-style: none;
+  margin: 0 0 1.45em;
+  padding: 0;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts, .wp-block-categories, .wp-block-archives, .wp-block-page-list, .wp-block-latest-comments, .wp-block-rss) > li {
+  padding: .7rem 0;
+  border-top: 1px solid var(--mh-rule);
+  margin: 0;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts, .wp-block-categories, .wp-block-archives, .wp-block-page-list, .wp-block-latest-comments, .wp-block-rss) > li:first-child { border-top: 0; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts, .wp-block-latest-comments, .wp-block-rss) > li > a { font: 700 1.05rem/1.3 var(--font-display); letter-spacing: -0.02em; color: var(--color-text); text-decoration: none; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts, .wp-block-latest-comments, .wp-block-rss) > li > a:is(:hover, :focus-visible) { color: var(--mh-link-hover); text-decoration: underline; text-underline-offset: 3px; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-latest-posts__post-date, .wp-block-latest-posts__post-author, .wp-block-rss__item-publish-date, .wp-block-rss__item-author, .wp-block-latest-comments__comment-date) {
+  display: block;
+  margin-top: .2rem;
+  font: 500 .8125rem/1.4 var(--font-mono);
+  letter-spacing: .04em;
+  color: var(--mh-caption);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-latest-posts__post-excerpt { margin: .35rem 0 0; color: var(--color-text-secondary); font-size: .95rem; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-latest-posts.is-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: var(--card-gap); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-latest-posts.is-grid > li { padding: 1.25rem; border: 1px solid var(--lime-400); border-radius: var(--radius-card); background: var(--color-card); }
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-latest-posts.is-grid > li { border-color: rgba(163, 230, 53, .34); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-latest-posts__featured-image img { border-radius: var(--radius); border: 1px solid var(--mh-media-border); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-tag-cloud { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.45em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-tag-cloud a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: .3rem .7rem;
+  border-radius: 999px;
+  border: 1px solid var(--mh-chip-border);
+  background: var(--mh-chip-bg);
+  color: var(--mh-chip-text);
+  font: 600 .8125rem/1 var(--font-display);
+  letter-spacing: .02em;
+  text-decoration: none;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-tag-cloud a:is(:hover, :focus-visible) { border-color: var(--lime-400); color: var(--color-text); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) :is(.wp-block-categories-dropdown, .wp-block-archives-dropdown) select,
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-search__input {
+  min-height: 48px;
+  padding: .6rem .9rem;
+  border: 1px solid var(--mh-field-border);
+  border-radius: var(--radius-btn);
+  background: var(--mh-field-bg);
+  color: var(--color-text);
+  font: 500 1rem/1.3 var(--font-body);
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-search__input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-color: var(--color-focus); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-search__label { font: 700 .875rem/1.4 var(--font-display); color: var(--color-text); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-search__button {
+  min-height: 48px;
+  padding: .6rem 1.1rem;
+  border: 1px solid var(--lime-500);
+  border-radius: var(--radius-btn);
+  background: linear-gradient(180deg, var(--lime-300) 0%, var(--lime-400) 100%);
+  color: var(--violet-900);
+  font: 700 1rem/1.2 var(--font-display);
+  cursor: pointer;
+}
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-search__button:is(:hover, :focus-visible) { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); border-color: var(--violet-700); color: #fff; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-calendar table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-calendar :is(th, td) { padding: .4rem; text-align: center; border: 1px solid var(--mh-table-border); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-calendar th { background: var(--mh-table-head); font: 700 .75rem/1.4 var(--font-display); text-transform: uppercase; letter-spacing: .06em; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-calendar caption { font: 700 .9rem/1.4 var(--font-display); color: var(--color-text); padding: .4rem; }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-calendar td a { color: var(--mh-link); font-weight: 700; }
+
+/* ─── Social links (core) match the theme's round lime icons ─────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-social-links:not(.is-style-logos-only) .wp-block-social-link {
+  background: var(--color-card);
+  border: 1px solid var(--lime-400);
+  color: var(--color-text);
+  border-radius: 999px;
+}
+html.mh-dark :where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-social-links:not(.is-style-logos-only) .wp-block-social-link { border-color: rgba(163, 230, 53, .34); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-social-links:not(.is-style-logos-only) .wp-block-social-link:is(:hover, :focus-within) { border-color: var(--lime-300); background: rgba(163, 230, 53, .14); transform: translateY(-1px); }
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-social-links .wp-block-social-link-anchor { padding: .5rem; }
+
+/* ─── Footnotes ──────────────────────────────────────────────────────────── */
+:where(.entry-content, .post-prose, .prose, .mh-block-section, .editor-styles-wrapper) .wp-block-footnotes {
+  margin: 2rem 0 0;
+  padding: 1.25rem 0 0 1.25rem;
+  border-top: 1px solid var(--mh-rule);
+  font-size: .9rem;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Alignment helpers inside page sections (the section already has a container) ── */
+:where(.mh-block-section) :is(.alignwide, .alignfull) { max-width: none; width: auto; margin-inline: 0; }
+
+/* ═══ Editor canvas ═════════════════════════════════════════════════════════
+   The canvas is the front end: same body background, type, and tokens. The
+   editor's `mh-dark` class is set on the canvas by resources/js/editor-theme.js
+   from the same localStorage key the header toggle writes, so every
+   `html.mh-dark` rule above applies in the editor as well. */
+.editor-styles-wrapper {
+  background: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+  -webkit-font-smoothing: auto;
+}
+html.mh-dark .editor-styles-wrapper {
+  background:
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, .08), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(99, 102, 241, .07), transparent 60%),
+    var(--color-canvas);
+}
+.editor-styles-wrapper .editor-post-title,
+.editor-styles-wrapper .editor-post-title__input,
+.editor-styles-wrapper .wp-block-post-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: var(--color-text);
+  font-size: clamp(2.4rem, 5.6vw, 3.8rem);
+  line-height: 1.02;
+}
+/* Dark panels (hero, closing band): white headings and light copy, as on the page. */
+.editor-styles-wrapper :is(.mh-block-hero, .mh-block-cta) :is(h1, h2, h3).wp-block-heading { color: #fff; }
+.editor-styles-wrapper .mh-block-cta :is(p, .wp-block-paragraph) { color: #cbd5e1; }
+/* Core prints a dark fill on button links in the canvas; the theme recipe above wins, this keeps the placeholder readable. */
+.editor-styles-wrapper .wp-block-button__link [data-rich-text-placeholder]::after { color: inherit; opacity: .7; }
+/* Block appender and empty-list hints read on both canvases */
+.editor-styles-wrapper .block-editor-default-block-appender__content,
+.editor-styles-wrapper .block-list-appender .block-editor-inserter__toggle { color: var(--color-text-muted); }
+.editor-styles-wrapper .block-list-appender .block-editor-inserter__toggle { background: var(--color-card); border: 1px dashed var(--lime-400); }
+/* Selected-block outline in the brand violet instead of admin blue */
+.editor-styles-wrapper .block-editor-block-list__block.is-selected::after { outline-color: var(--violet-500); }
+html.mh-dark .editor-styles-wrapper .block-editor-block-list__block.is-selected::after { outline-color: var(--lime-400); }

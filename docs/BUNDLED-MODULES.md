@@ -4,8 +4,8 @@ Hummel Ops and MH SEO are part of the theme. They live in `app/modules/` and loa
 
 | Module | Folder | Version | Purpose |
 |---|---|---|---|
-| Hummel Ops | `app/modules/hummel-ops/` | 2.2.0 | wp-admin hub: Today, Tasks, Workflows, Files, WP Releases, Integrations |
-| MH SEO | `app/modules/mh-seo/` | 1.1.1 | Titles, descriptions, schema, sitemaps, redirects, writing score |
+| Hummel Ops | `app/modules/hummel-ops/` | 2.5.0 | wp-admin hub: Today, Tasks, Workflows, Files, WP Releases, Integrations |
+| MH SEO | `app/modules/mh-seo/` | 1.2.0 | Titles, descriptions, schema, sitemaps, redirects, writing score |
 
 ## Switching from the standalone plugins
 1. Deploy a theme build that contains these folders.

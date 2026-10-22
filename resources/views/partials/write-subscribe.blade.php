@@ -5,7 +5,7 @@
 <section class="write-subscribe" aria-labelledby="write-sub-h">
   <div>
     <h2 id="write-sub-h" class="display-title is-section">{{ \App\field('write_subscribe_h2', __('Follow with RSS', 'sage'), $writeId) }}</h2>
-    <p class="sec-intro">{{ \App\field('write_subscribe_lede', __('There is no email list. Copy the feed URL into Feedly, NetNewsWire, or another reader you already use.', 'sage'), $writeId) }}</p>
+    <p class="sec-intro">{{ \App\field('write_subscribe_lede', __('Copy the feed URL into Feedly, NetNewsWire, or another reader you already use. Email updates are on the Get updates page.', 'sage'), $writeId) }}</p>
   </div>
   <div class="write-subscribe-row">
     <code class="write-rss-url">{{ esc_html($rss) }}</code>

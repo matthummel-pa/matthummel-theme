@@ -1075,7 +1075,7 @@ function mh_save_wc_product_project_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_place', sanitize_text_field(wp_unslash($_POST['mh_project_place'] ?? '')));
     update_post_meta($post_id, '_mh_project_blurb', sanitize_textarea_field(wp_unslash($_POST['mh_project_blurb'] ?? '')));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
-    update_post_meta($post_id, '_mh_project_image', sanitize_text_field(wp_unslash($_POST['mh_project_image'] ?? '')));
+    update_post_meta($post_id, '_mh_project_image', mh_sanitize_project_image_value(wp_unslash($_POST['mh_project_image'] ?? '')));
 
     $productType = sanitize_key((string) wp_unslash($_POST['mh_project_product_type'] ?? 'theme'));
     if (! in_array($productType, ['theme', 'plugin', 'app', 'service', 'concept'], true)) {

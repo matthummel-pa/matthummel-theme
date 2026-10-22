@@ -1,0 +1,141 @@
+/* ==========================================================================
+   About page (3.7.31): layout polish + decorative section illustrations.
+   Scoped with .mh-page-about (body class from app/filters.php, built from the
+   page slug), so it survives a database move where the page ID changes.
+   3.7.33: the drawings are inline, animated SVG from
+   partials/section-illustration (story, build, work, resume, code), styled
+   and animated in illustrations.css. This file only sizes and places them.
+   ========================================================================== */
+
+/* Readable line length for section intros and story copy */
+.mh-page-about .pf-section > .container > p.wp-block-paragraph {
+  max-width: 62ch;
+}
+
+/* Story: a little air before the "How I work" cards */
+.mh-page-about #story .container > h3.wp-block-heading {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+/* Experience: space the skills block off the resume timeline */
+.mh-page-about #resume .container > h3.wp-block-heading {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+/* Keep jump links clear of the sticky header + on-page nav. Desktop only:
+   under 901px the header is not sticky and portfolio.css keeps 1rem. The
+   :is() list carries ID weight so it beats portfolio.css's #story/#build/#faq. */
+@media (width >= 901px) {
+  .mh-page-about :is(.pf-section[id], #story, #build, #faq) {
+    scroll-margin-top: 7.5rem;
+  }
+}
+
+@media (width >= 900px) {
+  /* Leave room on the right for the illustration */
+  .mh-page-about :is(#story, #build, #work, #resume, #code) > .container > :is(p.wp-block-paragraph, h2) {
+    max-width: min(62ch, 58%);
+  }
+
+  /* Top-right of the section, aligned to the content edge, a fixed 360:250
+     box instead of the home drawings' full-height frame. */
+  .mh-page-about .mh-illus--about {
+    top: clamp(2rem, 4vw, 3rem);
+    right: max(var(--page-gutter, 1.5rem), calc((100% - var(--page-max, 1120px)) / 2));
+    width: min(40%, 500px);
+    height: auto;
+    aspect-ratio: 360 / 250;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 22%);
+  }
+
+  .mh-page-about #story .mh-illus--about { width: min(46%, 580px); }
+  /* Work and Experience have short intros; keep the drawing clear of the cards below. */
+  .mh-page-about :is(#work, #resume) .mh-illus--about { width: min(32%, 400px); }
+  .mh-page-about #story > .container > :is(p.wp-block-paragraph, h2) { max-width: min(62ch, 52%); }
+}
+
+/* Story (3.7.34): profile photo under the drawing. Mobile: a photo + caption
+   row above the intro. Desktop: drawing and photo share one right column. */
+.mh-page-about .about-story-aside {
+  width: min(100% - 2 * var(--page-gutter, 1.5rem), var(--page-max, 1120px));
+  margin: 0 auto 1.5rem;
+}
+
+.mh-page-about .about-portrait--story {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.mh-page-about .about-portrait--story .about-portrait__img { border-radius: 18px; }
+.mh-page-about .about-portrait--story .about-portrait__caption { margin-top: 0; }
+/* The hero caption colors are for a dark photo; this one sits on the page surface. */
+.mh-page-about .about-portrait--story .about-portrait__name { color: var(--color-text); }
+.mh-page-about .about-portrait--story .about-portrait__meta { color: var(--color-text-muted); }
+
+@media (width >= 900px) {
+  .mh-page-about .about-story-aside {
+    position: absolute;
+    top: clamp(2rem, 4vw, 3rem);
+    right: max(var(--page-gutter, 1.5rem), calc((100% - var(--page-max, 1120px)) / 2));
+    width: min(46%, 580px);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  /* The drawing flows in the column instead of pinning to the section corner. */
+  /* #story in the selector so it beats the section-level width rule above. */
+  .mh-page-about #story .about-story-aside .mh-illus--about {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+  }
+
+  .mh-page-about .about-portrait--story {
+    display: block;
+    width: clamp(12rem, 20vw, 17rem);
+  }
+
+  .mh-page-about .about-portrait--story .about-portrait__caption {
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
+
+/* FAQ: heading and intro on the left, questions on the right. About's FAQ
+   section is #faq today; #questions is covered too. The list spans every row
+   the left column uses, so extra intro paragraphs never push it down. */
+@media (width >= 1025px) {
+  .mh-page-about :is(#faq, #questions) > .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.85fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .mh-page-about :is(#faq, #questions) > .container > :not(.faq-list) { grid-column: 1; }
+
+  .mh-page-about :is(#faq, #questions) > .container > .faq-list {
+    grid-column: 2;
+    grid-row: 1 / span 12;
+    margin-top: 0;
+  }
+
+  /* If the section has the Questions drawing, keep it in the left column's
+     empty lower corner instead of a fixed offset from the top. */
+  .mh-page-about #questions .mh-illus--questions {
+    left: calc(var(--il-edge) + var(--page-gutter, 1.5rem));
+    width: min(28%, 360px);
+    height: auto;
+    aspect-ratio: 360 / 250;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}

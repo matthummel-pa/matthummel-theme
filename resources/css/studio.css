@@ -311,7 +311,7 @@ body {
   box-shadow: var(--studio-shadow);
 }
 
-.work-card--featured h2 a:hover,
+.work-card--featured :is(h2, h3) a:hover,
 .work-card--featured h3 a:hover {
   color: var(--blue-200);
 }
@@ -1121,7 +1121,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) {
   counter-reset: mh-ol;
 }
 
@@ -1136,7 +1136,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li {
   counter-increment: mh-ol;
 }
 
@@ -1151,7 +1151,7 @@ html.mh-dark .project-stage__shot img {
 }
 
 :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li::before {
   content: counter(mh-ol);
   position: absolute;
   inset-inline-start: 0;
@@ -1307,7 +1307,7 @@ html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-secti
 }
 
 html.mh-dark :is(.post-prose, .about-story__body, .concept-story, .concept-section, .project-detail-block, .project-features, .entry-content)
-  ol:not(.mh-ship-pipe):not(.process-list) > li::before {
+  ol:not(.mh-ship-pipe):not(.process-list):not(.resume-timeline) > li::before {
   background: var(--blue-600);
   color: #fff;
 }
@@ -2857,12 +2857,6 @@ html.mh-dark .project-feat-grid > .project-feat::before {
   max-width: 40rem;
   padding-block: clamp(2.5rem, 6vw, 4.5rem);
 }
-.updates-wrap .mhn-signup:not(.mhn-signup-compact) {
-  max-width: none;
-}
-.footer-follow .mhn-signup-compact .mhn-compose .btn {
-  width: 100%;
-}
 
 /* ── 3.6.44 — Project landing page (hero proof, sections, story rail, under the hood) ── */
 .project-stage--landing {
@@ -3280,7 +3274,7 @@ html.mh-dark .single .tocguide__link {
 .work-grid--roomy .work-body {
   padding: 1.25rem 1.35rem 1.4rem;
 }
-.work-grid--roomy .work-card h2,
+.work-grid--roomy .work-card :is(h2, h3),
 .work-grid--roomy .work-card h3 {
   font-size: clamp(1.2rem, 1.7vw, 1.45rem);
   letter-spacing: -.04em;
@@ -4343,7 +4337,7 @@ html.mh-dark .post-prose a,
 html.mh-dark .about-story__body a,
 html.mh-dark .sec-intro a,
 html.mh-dark .about-services-note a,
-html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
+html.mh-dark a:not(.btn):not(.h-text-arrow):not(.header-avail):not(.h-page-nav__pill):not(.filter-pill):not(.pill):not(.soc-link):not(.side-author__btn):not(.side-subscribe__btn):not(.skip-link):not(.write-sort-btn):not(.page-numbers):not(.project-cat-pill):not(.mhrw-banner a):not(.mhrw-rundown a) { color: var(--blue-300); text-decoration-color: rgba(96, 165, 250, .5); }
 html.mh-dark .btn-outline { background: transparent; color: var(--blue-300); border-color: rgba(96, 165, 250, .4); }
 html.mh-dark .btn-outline:hover { background: rgba(59, 130, 246, .14); color: #fff; border-color: var(--blue-400); }
 html.mh-dark .contact-form input,
@@ -5037,7 +5031,7 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
 
 /* ── Card titles are links with an animated gradient underline; nav hover gets a gradient ── */
 @keyframes mh-underline-flow { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
@@ -5060,25 +5054,25 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
   -webkit-background-clip: text, padding-box;
   transition: background-size .35s cubic-bezier(.2, .7, .2, 1);
 }
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
 .h-project-card__title a,
 .resources-card__name a { background-size: 100% 100%, 0% 3px; }
-.work-card h2 a:hover,
+.work-card :is(h2, h3) a:hover,
 .work-body h2 a:hover,
 .post-card-title a:hover,
 .h-journal-item__title a:hover,
 .h-project-card__title a:hover,
 .resources-card__name a:hover,
-.work-card h2 a:focus-visible,
+.work-card :is(h2, h3) a:focus-visible,
 .work-body h2 a:focus-visible,
 .post-card-title a:focus-visible,
 .h-journal-item__title a:focus-visible,
 .h-project-card__title a:focus-visible,
 .resources-card__name a:focus-visible,
-.work-card h2 a:active,
+.work-card :is(h2, h3) a:active,
 .post-card-title a:active,
 .h-journal-item__title a:active,
 .work-card:hover h2 a,
@@ -5091,7 +5085,7 @@ html:not(.mh-dark) .pill-row .pill.pill--more { background: var(--violet-50); bo
   text-decoration: none;
   outline-offset: 4px;
 }
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
@@ -5127,7 +5121,7 @@ html.mh-dark .site-header .header-nav-list a[aria-current="page"] {
 .site-header .header-nav-list .current-menu-item > a:hover,
 .site-header .header-nav-list a[aria-current="page"]:hover { background: linear-gradient(90deg, var(--blue-500) 0%, var(--violet-400) 100%); }
 @media (prefers-reduced-motion: reduce) {
-  .work-card h2 a, .post-card-title a, .h-journal-item__title a, .h-project-card__title a, .resources-card__name a { animation: none !important; transition: none; }
+  .work-card :is(h2, h3) a, .post-card-title a, .h-journal-item__title a, .h-project-card__title a, .resources-card__name a { animation: none !important; transition: none; }
 }
 
 /* ── Site title: bold caps with the brand gradient ─────────────────────── */
@@ -5304,13 +5298,13 @@ html:not(.mh-dark) .soc-list--labeled .soc-link { width: auto; padding: 0 1.05re
 .soc-list--labeled .soc-link__label { color: inherit; }
 
 /* ── Title underline as a pseudo-element (the two-layer background got clipped to the glyphs) ── */
-.work-card h2 a,
+.work-card :is(h2, h3) a,
 .work-body h2 a,
 .post-card-title a,
 .h-journal-item__title a,
 .h-project-card__title a,
 .resources-card__name a,
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
@@ -5328,13 +5322,13 @@ html:not(.mh-dark) .resources-card__name a {
   animation: none;
   transition: none;
 }
-html:not(.mh-dark) .work-card h2 a,
+html:not(.mh-dark) .work-card :is(h2, h3) a,
 html:not(.mh-dark) .work-body h2 a,
 html:not(.mh-dark) .post-card-title a,
 html:not(.mh-dark) .h-journal-item__title a,
 html:not(.mh-dark) .h-project-card__title a,
 html:not(.mh-dark) .resources-card__name a { background-image: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); }
-.work-card h2 a::after,
+.work-card :is(h2, h3) a::after,
 .work-body h2 a::after,
 .post-card-title a::after,
 .h-journal-item__title a::after,
@@ -5351,23 +5345,23 @@ html:not(.mh-dark) .resources-card__name a { background-image: linear-gradient(9
   background-size: 200% 100%;
   transition: width .35s cubic-bezier(.2, .7, .2, 1);
 }
-html:not(.mh-dark) .work-card h2 a::after,
+html:not(.mh-dark) .work-card :is(h2, h3) a::after,
 html:not(.mh-dark) .post-card-title a::after,
 html:not(.mh-dark) .h-journal-item__title a::after,
 html:not(.mh-dark) .h-project-card__title a::after,
 html:not(.mh-dark) .resources-card__name a::after { background: linear-gradient(90deg, var(--blue-600), var(--violet-500), var(--lime-500), var(--blue-600)); background-size: 200% 100%; }
-.work-card h2 a:hover::after,
+.work-card :is(h2, h3) a:hover::after,
 .work-body h2 a:hover::after,
 .post-card-title a:hover::after,
 .h-journal-item__title a:hover::after,
 .h-project-card__title a:hover::after,
 .resources-card__name a:hover::after,
-.work-card h2 a:focus-visible::after,
+.work-card :is(h2, h3) a:focus-visible::after,
 .post-card-title a:focus-visible::after,
 .h-journal-item__title a:focus-visible::after,
 .h-project-card__title a:focus-visible::after,
 .resources-card__name a:focus-visible::after,
-.work-card h2 a:active::after,
+.work-card :is(h2, h3) a:active::after,
 .post-card-title a:active::after,
 .work-card:hover h2 a::after,
 .post-card:hover .post-card-title a::after,
@@ -5377,11 +5371,11 @@ html:not(.mh-dark) .resources-card__name a::after { background: linear-gradient(
 .work-card:hover h2 a,
 .post-card:hover .post-card-title a,
 .h-journal-item:hover .h-journal-item__title a,
-.work-card h2 a:hover,
+.work-card :is(h2, h3) a:hover,
 .post-card-title a:hover,
 .h-journal-item__title a:hover { background-image: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .work-card h2 a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after { animation: none !important; transition: none; }
+  .work-card :is(h2, h3) a::after, .post-card-title a::after, .h-journal-item__title a::after, .h-project-card__title a::after, .resources-card__name a::after { animation: none !important; transition: none; }
 }
 
 /* ── Header height is intrinsic; --header-h is only read by body padding, heroes, and the page nav ── */
@@ -5963,8 +5957,6 @@ html.mh-dark .post-share-btn:focus-visible { background: rgba(59, 130, 246, .14)
 html.mh-dark .about-story__links a.btn:hover,
 html.mh-dark .about-story__links a.btn:focus-visible { color: #fff !important; } /* the 3.6.54 lime link-hover rule is !important */
 html.mh-dark .mh-popout .mh-popout-cta { color: var(--violet-900); }
-html.mh-dark .mhn-signup-block__form button:hover,
-html.mh-dark .mhn-signup-block__button:hover { color: var(--blue-900); }
 
 /* ── 3.6.60 · Dark mode: every card on one recipe ──────────────────────────
    Lime border, lime index and count numbers, body copy one step lighter.
@@ -5976,7 +5968,7 @@ html.mh-dark :is(
   .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
   .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
   .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
-  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block
+  .post-author-bio, .post-share-bottom
 ) { border-color: rgba(163, 230, 53, .34) !important; }
 /* Two recipes sit at higher specificity; match them rather than out-rank them elsewhere. */
 html.mh-dark .work-grid .work-card,
@@ -5997,7 +5989,7 @@ html.mh-dark :is(
   .code-recent, .code-langs, .uses-item, .uses-section, .support-product,
   .a11y-standard-card, .a11y-limit-card, .a11y-contact-card, .contact-info-card,
   .priv-collect-card, .legal-data-card, .legal-right-card, .legal-prose,
-  .post-author-bio, .post-share-bottom, .mhn-signup, .mhn-signup-block,
+  .post-author-bio, .post-share-bottom,
   .about-aside-card, .about-svc-card, .about-work-type, .h-glance__card, .h-glance__fact,
   .h-process__step, .h-fit__col, .about-approach__item, .code-pulse__stat, .repo-card,
   .code-skills-group, .code-skills__tile, .side-card, .write-aside-card,
@@ -6482,3 +6474,551 @@ html.mh-dark .work-context__note { background: var(--color-surface); border-colo
   .contact-write > .container { display: block; }
 }
 @media (max-width: 900px) { #write, #tips, #next, #questions { scroll-margin-top: 1rem; } }
+
+/* ── Footer widget areas (3.7.11) ──
+   Block widgets reuse the hard-coded footer's classes (set under Advanced → Additional CSS class):
+   Heading → footer-nav-label, List → footer-nav footer-nav--split, legal List → footer-legal-links,
+   credit Paragraph → footer-stack, signup lede → footer-follow__lede. */
+.site-footer .footer-widget > :first-child { margin-top: 0; }
+.site-footer .footer-widget > :last-child { margin-bottom: 0; }
+.site-footer h2.footer-nav-label { margin-top: 0; }
+.site-footer .footer-blurb.footer-widgets p { margin: 0; }
+.site-footer ul.wp-block-list.footer-nav { padding-left: 0; margin-top: 0; list-style: none; }
+/* Bottom bar: the Legal nav holds the link list and credit line in one row next to the copyright.
+   No display: contents here, it would drop the nav landmark in some screen readers. */
+.footer-bottom .footer-legal { flex: 1 1 32rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-legal-links) { flex: 1 1 12rem; display: flex; justify-content: center; }
+.footer-bottom .footer-legal .footer-widget:has(.footer-stack) { flex: 0 1 20rem; }
+.footer-bottom ul.footer-legal-links { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; margin: 0; padding: 0; list-style: none; }
+.footer-bottom ul.footer-legal-links li + li::before { content: "·"; content: "·" / ""; margin-right: .5rem; }
+
+/* ── Footer signup via Hostinger Reach (3.7.13) ──
+   The "classic Reach form" block prints real HTML. app/blocks.php gives its button `.btn` and its inputs
+   `.footer-follow__email`, so the field and button recipes above apply; this block covers the rest.
+   A Reach *builder* form is an iframe from reach-forms.hostingerusercontent.com — theme CSS cannot reach
+   inside it, so style that one in Reach itself or switch the block to "Use classic Reach Form". */
+.site-footer .hostinger-reach-block-subscription-form-wrapper { margin-top: .15rem; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields { display: flex; flex-direction: column; gap: .65rem; align-items: stretch; grid-template-columns: none; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline { flex-direction: row; align-items: end; flex-wrap: wrap; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-field { margin-top: 0; flex: none; min-width: 0; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .hostinger-reach-block-form-field { flex: 1 1 12rem; }
+.site-footer .hostinger-reach-block-subscription-form label {
+  display: block;
+  margin: 0 0 .3rem;
+  padding: 0;
+  font: 600 .8125rem/1.3 var(--font-display);
+  letter-spacing: .02em;
+  text-transform: none;
+  color: #c9d9ef;
+}
+.site-footer .hostinger-reach-block-subscription-form label .required { color: var(--lime-300); }
+.site-footer .hostinger-reach-block-subscription-form .mh-reach-submit { width: fit-content; margin-top: .2rem; }
+.site-footer .hostinger-reach-block-subscription-form .mh-reach-submit[disabled] { opacity: .65; cursor: progress; transform: none; }
+.site-footer .hostinger-reach-block-subscription-form .hostinger-reach-block-form-fields--inline .mh-reach-submit { margin-top: 0; flex: none; min-width: 0; }
+.site-footer .reach-subscription-message {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .6rem;
+  padding: .6rem .75rem;
+  border-radius: var(--radius);
+  font: 600 .95rem/1.4 var(--font-display);
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+}
+.site-footer .reach-subscription-message.is-success { background: rgba(190, 242, 100, .16); }
+.site-footer .reach-subscription-message.is-error { background: rgba(234, 71, 104, .2); }
+.site-footer .reach-subscription-message svg { width: 1.25rem; height: 1.25rem; flex: none; }
+.site-footer .reach-subscription-message svg path { fill: currentColor; }
+html:not(.mh-dark) .site-footer .hostinger-reach-block-subscription-form label { color: var(--gray-700); }
+html:not(.mh-dark) .site-footer .hostinger-reach-block-subscription-form label .required { color: var(--violet-700); }
+html:not(.mh-dark) .site-footer .reach-subscription-message { color: var(--color-text); background: #fff; border: 1px solid var(--violet-100); }
+html:not(.mh-dark) .site-footer .reach-subscription-message.is-success { background: rgba(163, 230, 53, .22); border-color: transparent; }
+html:not(.mh-dark) .site-footer .reach-subscription-message.is-error { background: rgba(234, 71, 104, .12); border-color: transparent; color: #a10223; }
+/* A footer widget Heading is a column label, whatever classes it arrives with. */
+.site-footer .footer-nav-label.display-title,
+.site-footer h2.footer-nav-label {
+  font: 800 1.05rem/1.2 var(--font-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  max-width: none;
+}
+/* A Reach builder form (iframe) sits a little off the lede; the card itself is styled in Reach. */
+.site-footer [data-reach-form] { margin-top: .35rem; }
+
+/* ── 3.7.18 · Header "Get updates" CTA: navy pill with the blue→cyan→lime brand ring, plus a preview panel ──
+   Later than every green/violet .header-avail rule above, so it wins; the few !important flags match the
+   hover rules at ~5432 and ~5569 that would otherwise paint the old violet gradient over it. */
+.header-updates {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  --hu-line: #1c3358;
+  --hu-ink: #f1f5fb;
+  --hu-soft: #b7c6dc;
+  --hu-muted: #7d8fb0;
+  --hu-cyan: #22d3ee;
+  --hu-lime: #a3e635;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+}
+.site-footer .header-updates__link { --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%); --hu-navy: #0a1a33; --hu-ink: #f1f5fb; --hu-cyan: #22d3ee; --hu-lime: #a3e635; }
+
+html .header-updates__link.header-avail,
+html .site-footer .header-updates__link.header-avail {
+  gap: .45rem;
+  padding: .5rem .95rem .5rem .8rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box;
+  color: var(--hu-ink);
+  -webkit-text-fill-color: var(--hu-ink);
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .10), 0 10px 22px -12px rgba(59, 130, 246, .9);
+  transition: box-shadow .18s ease, transform .18s ease, background .18s ease;
+}
+html .header-updates__link.header-avail .header-avail__label,
+html .site-footer .header-updates__link.header-avail .header-avail__label { color: var(--hu-ink); -webkit-text-fill-color: var(--hu-ink); }
+.header-updates__icon { display: inline-flex; color: var(--hu-cyan); transition: color .18s ease, transform .18s ease; }
+.header-updates__icon svg { display: block; width: 16px; height: 16px; }
+
+html .header-updates__link.header-avail:hover,
+html .header-updates__link.header-avail:focus-visible,
+html .site-footer .header-updates__link.header-avail:hover,
+html .site-footer .header-updates__link.header-avail:focus-visible,
+.header-updates.is-open .header-updates__link.header-avail {
+  background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 28px rgba(163, 230, 53, .35), 0 14px 30px -12px rgba(59, 130, 246, .9) !important;
+  transform: translateY(-1px);
+}
+html .header-updates__link.header-avail:hover .header-updates__icon,
+html .header-updates__link.header-avail:focus-visible .header-updates__icon,
+.header-updates.is-open .header-updates__icon { color: var(--hu-lime); transform: translateY(-1px) rotate(-6deg); }
+html .header-updates__link.header-avail:active { transform: translateY(0); }
+html .header-updates__link.header-avail:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
+
+/* Chevron: opens the preview for keyboard and touch. */
+.header-updates__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--blue-600);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.header-updates__toggle:hover,
+.header-updates__toggle:focus-visible,
+.header-updates.is-open .header-updates__toggle { background: var(--hu-navy); border-color: var(--hu-line); color: var(--hu-cyan); }
+.header-updates__toggle:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 2px; }
+.header-updates__chevron { transition: transform .18s ease; }
+.header-updates.is-open .header-updates__chevron { transform: rotate(180deg); }
+html.mh-dark .header-updates__toggle { border-color: var(--hu-line); color: var(--hu-cyan); }
+
+/* Preview panel: brand card, line border, cyan highlight, lime CTA. */
+.header-updates__panel {
+  position: absolute;
+  top: calc(100% + .6rem);
+  right: 0;
+  z-index: 5;
+  width: 300px;
+  padding: 1rem 1rem .9rem;
+  border: 1.5px solid var(--hu-line);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, .08) 0%, rgba(59, 130, 246, .05) 45%, rgba(163, 230, 53, .06) 100%), linear-gradient(180deg, rgba(14, 33, 64, .86) 0%, rgba(8, 21, 39, .86) 100%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  color: var(--hu-soft);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, .18), 0 0 0 6px rgba(59, 130, 246, .08), inset 0 1px 0 rgba(103, 232, 249, .08), 0 30px 60px -24px rgba(2, 6, 14, .9);
+  text-align: left;
+  animation: hu-rise .18s cubic-bezier(.2, .8, .2, 1) both;
+}
+.header-updates__panel[hidden] { display: none; }
+.header-updates__panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--hu-grad);
+}
+@keyframes hu-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.header-updates__kicker {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 0 .75rem;
+  font: 600 .6875rem/1 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--hu-cyan);
+}
+.header-updates__kicker::before { content: ""; width: 24px; height: 2px; border-radius: 999px; background: var(--hu-grad); }
+.header-updates__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.header-updates__item { display: flex; align-items: flex-start; gap: .65rem; }
+.header-updates__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(34, 211, 238, .08);
+  border: 1px solid rgba(34, 211, 238, .28);
+  color: var(--hu-cyan);
+}
+.header-updates__ico svg { width: 16px; height: 16px; }
+/* The check icon is a stroke path; filled it is a sliver. */
+.header-updates__ico [data-icon="check"] { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.header-updates__copy { display: grid; gap: .1rem; }
+.header-updates__title { font: 700 .875rem/1.25 var(--font-display); color: var(--hu-ink); }
+.header-updates__text { font-size: .78rem; line-height: 1.4; color: var(--hu-soft); }
+.header-updates__foot { margin: .8rem 0 .65rem; font-size: .72rem; line-height: 1.4; color: var(--hu-muted); }
+html .header-updates__cta,
+html .header-updates__cta:visited {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #c3f05a 0%, #a3e635 100%);
+  color: var(--hu-navy);
+  -webkit-text-fill-color: var(--hu-navy);
+  font: 700 .8125rem/1 var(--font-display);
+  letter-spacing: .02em;
+  text-decoration: none;
+  box-shadow: 0 0 24px rgba(163, 230, 53, .35);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+html .header-updates__cta:hover,
+html .header-updates__cta:focus-visible { color: var(--hu-navy); -webkit-text-fill-color: var(--hu-navy); box-shadow: 0 0 34px rgba(163, 230, 53, .55); transform: translateY(-1px); text-decoration: none; }
+html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
+
+@media (min-width: 900px) {
+  .header-updates__toggle { display: inline-flex; }
+}
+@media (max-width: 899px) {
+  .header-updates__panel { display: none !important; }
+  html .header-updates__link.header-avail { padding: .5rem .7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-updates__panel { animation: none; }
+  html .header-updates__link.header-avail:hover,
+  html .header-updates__link.header-avail:focus-visible,
+  .header-updates__icon,
+  html .header-updates__cta:hover { transform: none; }
+}
+
+/* ── 3.7.19 · Social icons share the Get updates CTA look: navy fill, brand ring, cyan glyph → lime glow ──
+   The 3.6.x block above sets the lime round buttons with (0,4,1) light-mode selectors; the tripled
+   .soc-list class here ties or beats them without !important. */
+html .soc-list.soc-list.soc-list .soc-link,
+html .site-footer .soc-list.soc-list.soc-list .soc-link {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box;
+  color: #22d3ee;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 8px 18px -12px rgba(59, 130, 246, .9);
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .soc-list.soc-list.soc-list .soc-link svg { fill: currentColor; transition: transform .18s ease; }
+html .soc-list.soc-list.soc-list .soc-link:hover,
+html .soc-list.soc-list.soc-list .soc-link:focus-visible,
+html .site-footer .soc-list.soc-list.soc-list .soc-link:hover,
+html .site-footer .soc-list.soc-list.soc-list .soc-link:focus-visible {
+  background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box;
+  border-color: transparent;
+  color: #a3e635;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 24px rgba(163, 230, 53, .35), 0 12px 26px -12px rgba(59, 130, 246, .9);
+}
+html .soc-list.soc-list.soc-list .soc-link:hover svg { transform: translateY(-1px) rotate(-6deg); }
+html .soc-list.soc-list.soc-list .soc-link:active { transform: translateY(0); }
+html .soc-list.soc-list.soc-list .soc-link:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; }
+/* Compact rows (footer, mobile menu): ringed buttons need air, not the hairline separators. */
+html .soc-list--compact.soc-list.soc-list { gap: .5rem; }
+html .soc-list--compact.soc-list.soc-list li + li::before { display: none; }
+/* Labeled pills and the card rows: ink label, soft note, same ring. */
+html .soc-list.soc-list.soc-list .soc-link__label { color: #f1f5fb; }
+html .soc-list.soc-list.soc-list .soc-link__note { color: #b7c6dc; }
+html .soc-list--cards.soc-list.soc-list .soc-link { border-radius: 14px; }
+html .soc-list--cards.soc-list.soc-list .soc-link:hover .soc-link__note { color: #b7c6dc; }
+@media (prefers-reduced-motion: reduce) {
+  html .soc-list.soc-list.soc-list .soc-link:hover,
+  html .soc-list.soc-list.soc-list .soc-link:hover svg { transform: none; }
+}
+
+/* ── 3.7.20 · Reach "Subscribe" button (footer widget and block pages) matches the Get updates pill ──
+   The .btn hover rules at ~5165 / ~5432 / ~5569 paint lime or violet with !important; the flags here
+   are the minimum needed to keep the navy fill, brand ring, and lime text on hover. */
+html .btn.mh-reach-submit,
+html .site-footer .btn.mh-reach-submit {
+  --hu-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --hu-navy: #0a1a33;
+  --hu-navy-deep: #081527;
+  border: 1.5px solid transparent !important;
+  border-radius: 999px;
+  background: linear-gradient(var(--hu-navy), var(--hu-navy)) padding-box, var(--hu-grad) border-box !important;
+  color: #f1f5fb !important;
+  -webkit-text-fill-color: #f1f5fb;
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .10), 0 10px 22px -12px rgba(59, 130, 246, .9);
+  transition: box-shadow .18s ease, transform .18s ease, color .18s ease, background .18s ease;
+}
+html .btn.mh-reach-submit:hover,
+html .btn.mh-reach-submit:focus-visible,
+html .site-footer .btn.mh-reach-submit:hover,
+html .site-footer .btn.mh-reach-submit:focus-visible {
+  background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box !important;
+  border-color: transparent !important;
+  color: #a3e635 !important;
+  -webkit-text-fill-color: #a3e635;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .18), 0 0 28px rgba(163, 230, 53, .35), 0 14px 30px -12px rgba(59, 130, 246, .9) !important;
+  transform: translateY(-1px);
+}
+html .btn.mh-reach-submit:active { transform: translateY(0); }
+html .btn.mh-reach-submit:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; }
+html .btn.mh-reach-submit[disabled] { opacity: .65; cursor: progress; transform: none; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  html .btn.mh-reach-submit:hover { transform: none; }
+}
+
+/* ── 3.7.23 · FAQ accordions: roomier cards in the brand recipe ──
+   Native details/summary (the FAQ block, project and services FAQs, and the older .h-faq items).
+   The 3.6.x tile rules above zero the border and shadow with !important, so the flags here are
+   the minimum needed to put a card border, a ring on the open item, and the icon box back. */
+.faq-list,
+.h-faq__list { gap: .8rem; }
+html .faq-list details,
+html .faq-list .project-faq,
+html .post-prose .faq-list details,
+html .h-faq__item {
+  --fq-grad: linear-gradient(90deg, #3b82f6 0%, #22d3ee 52%, #a3e635 100%);
+  --fq-line: var(--color-border);
+  --fq-surface: var(--glass-card, #fff);
+  --fq-cyan: #22d3ee;
+  --fq-navy: #0a1a33;
+  position: relative;
+  -webkit-backdrop-filter: blur(var(--glass-card-blur, 0px)) saturate(150%);
+  backdrop-filter: blur(var(--glass-card-blur, 0px)) saturate(150%);
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--fq-line) !important;
+  border-radius: 18px;
+  background: var(--fq-surface) !important;
+  box-shadow: inset 0 1px 0 var(--glass-hi, rgba(255, 255, 255, .7)), 0 1px 0 rgba(10, 26, 51, .03), 0 10px 24px -20px rgba(10, 26, 51, .35) !important;
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+html .faq-list details:hover,
+html .post-prose .faq-list details:hover,
+html .h-faq__item:hover {
+  border: 1.5px solid rgba(34, 211, 238, .55) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 14px 28px -20px rgba(10, 26, 51, .45) !important;
+}
+html .faq-list details[open],
+html .post-prose .faq-list details[open],
+html .h-faq__item[open] {
+  border: 1.5px solid transparent !important;
+  background: linear-gradient(var(--fq-surface), var(--fq-surface)) padding-box, var(--fq-grad) border-box !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .10), 0 18px 36px -22px rgba(59, 130, 246, .55) !important;
+}
+html .faq-list summary,
+html .h-faq__q {
+  min-height: 0;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem 1.15rem 1.35rem;
+  font: 700 1.08rem/1.4 var(--font-display);
+  letter-spacing: -.012em;
+}
+html .faq-list details[open] > summary,
+html .h-faq__item[open] > .h-faq__q { padding-bottom: .95rem; }
+html .faq-list summary:focus-visible,
+html .h-faq__q:focus-visible { outline: 2px solid var(--fq-cyan); outline-offset: -4px; border-radius: 14px; }
+/* Chevron sits in a cyan icon box; the open item flips it onto a lime fill. */
+html .faq-list summary::after,
+html .h-faq__q::after {
+  content: "" !important;
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  border: 1px solid rgba(34, 211, 238, .32) !important;
+  border-radius: 10px;
+  background: rgba(34, 211, 238, .08) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e7490' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat !important;
+  transform: none;
+  transform-origin: center;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+html .faq-list details[open] > summary::after,
+html .h-faq__item[open] > .h-faq__q::after {
+  border-color: transparent !important;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a1a33' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat, linear-gradient(180deg, #c3f05a 0%, #a3e635 100%) !important;
+  background-blend-mode: normal;
+  box-shadow: 0 0 18px rgba(163, 230, 53, .35);
+  transform: rotate(180deg);
+}
+/* Answer: hairline rule, then roomy copy. Blocks inside the Details block, not only <p>. */
+html .faq-list details > :not(summary),
+html .h-faq__a {
+  margin: 0 1.35rem 0 1.35rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--fq-line);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  animation: fq-rise .22s cubic-bezier(.2, .8, .2, 1) both;
+}
+html .faq-list details > :not(summary) ~ :not(summary) { border-top: 0; padding-top: .6rem; }
+html .faq-list details > :not(summary):last-child,
+html .h-faq__a { padding-bottom: 1.3rem; }
+html .faq-list details > :not(summary) a { color: var(--color-accent); }
+@keyframes fq-rise { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+html.mh-dark .faq-list details,
+html.mh-dark .faq-list .project-faq,
+html.mh-dark .post-prose .faq-list details,
+html.mh-dark .h-faq__item {
+  --fq-line: #1c3358;
+  --fq-surface: var(--glass-card, #0b1b35);
+  border: 1.5px solid var(--fq-line) !important;
+  box-shadow: inset 0 1px 0 rgba(103, 232, 249, .06), 0 14px 30px -22px rgba(2, 6, 14, .9) !important;
+}
+html.mh-dark .faq-list details:hover,
+html.mh-dark .post-prose .faq-list details:hover,
+html.mh-dark .h-faq__item:hover {
+  border: 1.5px solid rgba(34, 211, 238, .55) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .08), 0 14px 30px -22px rgba(2, 6, 14, .9) !important;
+}
+html.mh-dark .faq-list details[open],
+html.mh-dark .post-prose .faq-list details[open],
+html.mh-dark .h-faq__item[open] {
+  border: 1.5px solid transparent !important;
+  background: linear-gradient(180deg, var(--glass-card-top, #0e2140) 0%, var(--glass-card, #0b1b35) 100%) padding-box, var(--fq-grad) border-box !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .12), 0 0 32px rgba(59, 130, 246, .18), inset 0 1px 0 rgba(103, 232, 249, .06) !important;
+}
+html.mh-dark .faq-list summary::after,
+html.mh-dark .h-faq__q::after {
+  background: rgba(34, 211, 238, .08) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat !important;
+}
+html.mh-dark .faq-list details[open] > summary::after,
+html.mh-dark .h-faq__item[open] > .h-faq__q::after {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a1a33' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") center / 15px no-repeat, linear-gradient(180deg, #c3f05a 0%, #a3e635 100%) !important;
+}
+html.mh-dark .faq-list details > :not(summary),
+html.mh-dark .h-faq__a { color: #b7c6dc; }
+
+@media (max-width: 640px) {
+  html .faq-list summary,
+  html .h-faq__q { padding: 1rem 1rem 1rem 1.1rem; font-size: 1.02rem; gap: .75rem; }
+  html .faq-list details > :not(summary),
+  html .h-faq__a { margin-left: 1.1rem; margin-right: 1.1rem; }
+  html .faq-list summary::after,
+  html .h-faq__q::after { width: 30px; height: 30px; border-radius: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .faq-list details > :not(summary),
+  html .h-faq__a { animation: none; }
+  html .faq-list summary::after,
+  html .h-faq__q::after { transition: none; }
+}
+
+/* ── 3.7.24 · Glass: translucent chrome with blur, saturation, a top highlight and a faint brand tint ──
+   Tokens on :root / html.mh-dark; the recipe lands on the scrolled header, the mobile menu, the
+   "On this page" bar, the header chips, the Get updates preview, and the FAQ cards (via --glass-card).
+   Reduced-transparency users and browsers without backdrop-filter get the opaque surfaces back. */
+:root {
+  --glass-bg: rgba(255, 255, 255, .58);
+  --glass-bg-strong: rgba(255, 255, 255, .74);
+  --glass-card: rgba(255, 255, 255, .72);
+  --glass-card-top: rgba(255, 255, 255, .82);
+  --glass-card-blur: 14px;
+  --glass-edge: rgba(10, 26, 51, .10);
+  --glass-hi: rgba(255, 255, 255, .85);
+  --glass-tint: linear-gradient(135deg, rgba(34, 211, 238, .10) 0%, rgba(59, 130, 246, .06) 45%, rgba(163, 230, 53, .08) 100%);
+  --glass-blur: 20px;
+  --glass-shadow: 0 10px 30px -18px rgba(10, 26, 51, .35);
+}
+html.mh-dark {
+  --glass-bg: rgba(8, 21, 39, .52);
+  --glass-bg-strong: rgba(8, 21, 39, .72);
+  --glass-card: rgba(11, 27, 53, .62);
+  --glass-card-top: rgba(14, 33, 64, .78);
+  --glass-edge: rgba(103, 232, 249, .18);
+  --glass-hi: rgba(103, 232, 249, .12);
+  --glass-tint: linear-gradient(135deg, rgba(59, 130, 246, .10) 0%, rgba(34, 211, 238, .06) 45%, rgba(163, 230, 53, .06) 100%);
+  --glass-blur: 22px;
+  --glass-shadow: 0 16px 40px -22px rgba(2, 6, 14, .9);
+}
+/* Scrolled header */
+.site-header.is-scrolled,
+html.mh-dark .site-header.is-scrolled {
+  background: var(--glass-tint), var(--glass-bg);
+  border-bottom: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+}
+/* Header chips: theme toggle, menu button, preview chevron */
+.site-header.is-scrolled .theme-toggle,
+.site-header.is-scrolled .menu-toggle,
+.site-header .header-updates__toggle,
+html.mh-dark .site-header.is-scrolled .theme-toggle,
+html.mh-dark .site-header.is-scrolled .menu-toggle,
+html.mh-dark .site-header .header-updates__toggle {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-hi);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+}
+html.mh-dark .header-updates.is-open .header-updates__toggle,
+html.mh-dark .site-header .header-updates__toggle:hover { background: rgba(10, 26, 51, .9); }
+/* Mobile menu panel */
+.mh-popout,
+html.mh-dark .mh-popout {
+  background: var(--glass-tint), var(--glass-bg-strong);
+  border-left: 1px solid var(--glass-edge);
+  box-shadow: inset 1px 0 0 var(--glass-hi), -8px 0 48px rgba(2, 6, 14, .22);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(170%);
+  backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(170%);
+}
+/* "On this page" bar and its pills */
+.h-page-nav,
+html.mh-dark .h-page-nav {
+  background: var(--glass-tint), var(--glass-bg);
+  border-block: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-hi);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+}
+.h-page-nav__pill:not(.is-active):not([aria-current="true"]) { background: var(--glass-bg-strong); border-color: var(--glass-edge); }
+html.mh-dark .h-page-nav__pill:not(.is-active):not([aria-current="true"]) { background: rgba(255, 255, 255, .05); border-color: var(--glass-edge); }
+/* Opaque fallbacks */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass-bg: #fff; --glass-bg-strong: #fff; --glass-card: #fff; --glass-card-top: #fff; --glass-card-blur: 0px; --glass-tint: none; }
+  html.mh-dark { --glass-bg: #081527; --glass-bg-strong: #081527; --glass-card: #0b1b35; --glass-card-top: #0e2140; --glass-tint: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass-bg: rgba(255, 255, 255, .96); --glass-bg-strong: #fff; --glass-card: #fff; --glass-card-top: #fff; --glass-card-blur: 0px; }
+  html.mh-dark { --glass-bg: rgba(8, 21, 39, .96); --glass-bg-strong: #081527; --glass-card: #0b1b35; --glass-card-top: #0e2140; }
+}

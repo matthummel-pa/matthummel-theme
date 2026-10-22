@@ -171,6 +171,7 @@ class Context
             'view' => $view,
             'post_type' => $post instanceof \WP_Post ? $post->post_type : '',
             'post_id' => $post_id,
+            'post_slug' => $post instanceof \WP_Post ? (string) $post->post_name : '',
             'document_name' => $document_name,
             'custom_title' => $this->meta_string($post_id, '_mh_seo_title'),
             'rank_math_title' => $this->meta_string($post_id, 'rank_math_title'),
@@ -198,6 +199,17 @@ class Context
             'section' => $section,
             'tags' => $this->tag_names($post),
             'word_count' => count(Text::words(Text::plain(Text::prose_html($content)))),
+            'content_html' => $content,
+            'og_title' => $this->meta_string($post_id, '_mh_seo_og_title'),
+            'og_description' => $this->meta_string($post_id, '_mh_seo_og_description'),
+            'twitter_title' => $this->meta_string($post_id, '_mh_seo_twitter_title'),
+            'twitter_description' => $this->meta_string($post_id, '_mh_seo_twitter_description'),
+            'twitter_card' => $this->meta_string($post_id, '_mh_seo_twitter_card'),
+            'twitter_image' => $this->image_data($post_id > 0 ? (int) get_post_meta($post_id, '_mh_seo_twitter_image', true) : 0),
+            'robots_advanced' => $this->robots_advanced($post_id),
+            'schema_type' => $this->meta_string($post_id, '_mh_seo_schema_type'),
+            'schema_faq' => $this->meta_string($post_id, '_mh_seo_schema_faq') === '1',
+            'schema_howto' => $this->meta_string($post_id, '_mh_seo_schema_howto') === '1',
         ];
     }
 
@@ -362,6 +374,28 @@ class Context
     }
 
     /**
+     * Per-post robots choices beyond noindex.
+     *
+     * Flags are true only when the box was ticked. Limits are empty strings when
+     * the post keeps the site default.
+     *
+     * @param  int  $post_id  Post id.
+     * @return array<string, bool|string>
+     */
+    private function robots_advanced(int $post_id): array
+    {
+        return [
+            'nofollow' => $this->meta_string($post_id, '_mh_seo_nofollow') === '1',
+            'noarchive' => $this->meta_string($post_id, '_mh_seo_noarchive') === '1',
+            'nosnippet' => $this->meta_string($post_id, '_mh_seo_nosnippet') === '1',
+            'noimageindex' => $this->meta_string($post_id, '_mh_seo_noimageindex') === '1',
+            'max-snippet' => Meta::sanitize_limit($this->meta_string($post_id, '_mh_seo_max_snippet')),
+            'max-image-preview' => $this->meta_string($post_id, '_mh_seo_max_image_preview'),
+            'max-video-preview' => Meta::sanitize_limit($this->meta_string($post_id, '_mh_seo_max_video_preview')),
+        ];
+    }
+
+    /**
      * Whether Rank Math stored noindex for this post.
      *
      * @param  int  $post_id  Post id.
@@ -459,13 +493,6 @@ class Context
      */
     private function image(int $post_id): array
     {
-        $empty = [
-            'url' => '',
-            'width' => 0,
-            'height' => 0,
-            'alt' => '',
-            'mime' => '',
-        ];
         $image_id = $post_id > 0 ? (int) get_post_meta($post_id, '_mh_seo_og_image', true) : 0;
         if ($image_id < 1 && $post_id > 0) {
             $image_id = (int) get_post_thumbnail_id($post_id);
@@ -473,6 +500,25 @@ class Context
         if ($image_id < 1) {
             $image_id = (int) (Settings::get()['default_og_image'] ?? 0);
         }
+
+        return $this->image_data($image_id);
+    }
+
+    /**
+     * Url, size, alt text, and type for one attachment.
+     *
+     * @param  int  $image_id  Attachment id.
+     * @return array<string, mixed>
+     */
+    private function image_data(int $image_id): array
+    {
+        $empty = [
+            'url' => '',
+            'width' => 0,
+            'height' => 0,
+            'alt' => '',
+            'mime' => '',
+        ];
         if ($image_id < 1) {
             return $empty;
         }
@@ -561,8 +607,9 @@ class Context
                     'url' => is_string($archive) ? $archive : home_url('/projects/'),
                 ];
             }
+            $own = $this->meta_string((int) $post->ID, '_mh_seo_breadcrumb_title');
             $crumbs[] = [
-                'name' => get_the_title($post),
+                'name' => $own !== '' ? $own : get_the_title($post),
                 'url' => (string) get_permalink($post),
             ];
 

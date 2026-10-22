@@ -9,7 +9,6 @@ parameters:
     paths:
         - app
         - functions.php
-        - plugins
         - mu-plugins
     # WooCommerce + WP-CLI aren't in the WordPress stubs. wp-cli-stubs is on dev-master because its
     # last tag only supports wordpress-stubs 6.x; composer.lock pins the exact commit.

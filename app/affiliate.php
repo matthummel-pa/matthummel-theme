@@ -308,7 +308,7 @@ function mh_uses_sections(): array
             'title' => __('Hosting and deploy', 'sage'),
             'icon' => 'server',
             'items' => [
-                ['Hostinger', __('Managed WordPress hosting for this site. LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub theme-latest zip.', 'sage'), 'https://www.hostinger.com'],
+                ['Hostinger', __('Managed WordPress hosting for this site. LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub theme-latest zip.', 'sage'), 'https://www.hostinger.com', true],
                 ['GitHub Releases', __('Theme deployment method for this site. CI builds a zip, publishes it as a release, and wp-admin pulls it over HTTPS. No FTP.', 'sage'), null],
                 ['WordPress Studio / SQLite', __('Local WordPress for development. No MySQL required, no Docker overhead.', 'sage'), null],
             ],

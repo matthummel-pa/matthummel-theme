@@ -16,6 +16,8 @@ import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 import { initWooDesk } from './woo-desk.js';
 import { initBrandUi } from './brand-ui.js';
+import { initReleaseWatch } from './release-watch.js';
+import { initUpdatesPreview } from './updates-preview.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -486,6 +488,7 @@ function initPresenceReveal() {
 document.addEventListener('DOMContentLoaded', () => {
   initBrandUi();
   initPopoutMenu();
+  initUpdatesPreview();
   initShareButtons();
   initReadingProgress();
   initTocSpy();
@@ -507,4 +510,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();
+  initReleaseWatch();
 });

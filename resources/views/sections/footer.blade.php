@@ -3,9 +3,10 @@
   $footerName  = ($gh['name'] ?? '') ?: 'Matt Hummel';
   $writing     = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
   $footerHomeId = (int) get_option('page_on_front');
+  $privacyUrl  = \App\mh_privacy_policy_url();
   $footerBlurb = \App\field(
     'footer_blurb',
-    __('Full-stack and WordPress developer. Concept work, public GitHub, and tools I recommend — with clear affiliate disclosure when a link is compensated.', 'sage'),
+    \App\mh_footer_blurb_default(),
     $footerHomeId > 0 ? $footerHomeId : null
   );
 @endphp
@@ -17,18 +18,14 @@
       <a class="footer-brand-link" href="{{ home_url('/') }}" rel="home">
         <span class="brand-name footer-brand">{{ $footerName }}</span>
       </a>
-      <p class="footer-blurb">{{ $footerBlurb }}</p>
+      @if (is_active_sidebar('footer-about'))
+        <div class="footer-blurb footer-widgets">
+          @php dynamic_sidebar('footer-about'); @endphp
+        </div>
+      @else
+        <p class="footer-blurb">{{ $footerBlurb }}</p>
+      @endif
       <div class="footer-brand-meta">
-        @if (\App\mh_is_hireable($gh))
-          <a
-            class="header-avail footer-avail"
-            href="{{ esc_url(home_url('/contact/')) }}"
-            aria-label="{{ __('Available now — say hello', 'sage') }}"
-          >
-            @include('partials.avail-mark', ['gh' => $gh])
-            <span class="header-avail__label">{{ __('Available now', 'sage') }}</span>
-          </a>
-        @endif
         <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
           @include('partials.social', ['compact' => true])
         </nav>
@@ -37,6 +34,9 @@
 
     {{-- Site: one link column (the Work column was folded in here in 3.6.62) --}}
     <nav class="footer-nav-col" aria-label="{{ esc_attr__('Site', 'sage') }}">
+      @if (is_active_sidebar('footer-links'))
+        @php dynamic_sidebar('footer-links'); @endphp
+      @else
       <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
       <ul class="footer-nav footer-nav--split">
         <li><a href="{{ esc_url(home_url('/about/')) }}">{{ __('About', 'sage') }}</a></li>
@@ -54,65 +54,25 @@
         <li><a href="{{ esc_url(home_url('/changelog/')) }}">{{ __('Changelog', 'sage') }}</a></li>
         <li><a href="{{ esc_url(home_url('/contact/')) }}">{{ __('Contact', 'sage') }}</a></li>
       </ul>
+      @endif
     </nav>
 
-    {{-- Get updates --}}
-    @php
-      $signupStatus = isset($_GET['signup']) ? sanitize_key(wp_unslash($_GET['signup'])) : '';
-      $privacyUrl = \App\mh_privacy_policy_url();
-    @endphp
-    <div class="footer-nav-col footer-follow" id="footer-signup">
-      <p class="footer-nav-label">{{ \App\field('footer_signup_label', __('Get updates', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</p>
-      <p class="footer-follow__lede">{{ \App\field(
-        'footer_signup_lede',
-        __('Occasional notes on WordPress work and new posts. No daily blast.', 'sage'),
-        $footerHomeId > 0 ? $footerHomeId : null
-      ) }}</p>
-      @if (function_exists('mhn_render_footer_form'))
-        {!! mhn_render_footer_form() !!}
-        <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
-      @else
-      @if ($signupStatus === 'ok')
-        <p class="footer-follow__status" role="status">{{ __('You are on the list. Thanks.', 'sage') }}</p>
-      @elseif ($signupStatus === 'confirm')
-        <p class="footer-follow__status" role="status">{{ __('Check your email to confirm.', 'sage') }}</p>
-      @elseif ($signupStatus === 'dup')
-        <p class="footer-follow__status" role="status">{{ __('That address is already signed up.', 'sage') }}</p>
-      @elseif ($signupStatus === 'wait')
-        <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Please wait a while, then try again.', 'sage') }}</p>
-      @elseif ($signupStatus === 'error')
-        <p class="footer-follow__status footer-follow__status--error" role="alert">{{ __('Use a valid email, then try again.', 'sage') }}</p>
-      @endif
-      <form class="footer-follow__form" method="post" action="{{ esc_url(home_url('/')) }}">
-        <input type="hidden" name="action" value="mh_newsletter">
-        {!! wp_nonce_field('mh_newsletter', 'mh_newsletter_nonce', true, false) !!}
-        <p class="visually-hidden" aria-hidden="true">
-          <label for="mh-nl-hp">{{ __('Leave blank', 'sage') }}</label>
-          <input id="mh-nl-hp" type="text" name="mh_nl_hp" value="" tabindex="-1" autocomplete="off">
-        </p>
-        <div class="footer-follow__row">
-          <label class="visually-hidden" for="mh-nl-email">{{ __('Email', 'sage') }}</label>
-          <input
-            id="mh-nl-email"
-            class="footer-follow__email"
-            type="email"
-            name="mh_nl_email"
-            required
-            autocomplete="email"
-            placeholder="{{ esc_attr__('you@example.com', 'sage') }}"
-          >
-          <button type="submit" class="btn">{{ \App\field('footer_signup_button', __('Sign up', 'sage'), $footerHomeId > 0 ? $footerHomeId : null) }}</button>
-        </div>
-        <p class="footer-follow__note">{{ __('I keep the address on this site. I do not send it to a newsletter service.', 'sage') }} <a href="{{ esc_url($privacyUrl) }}">{{ __('Privacy', 'sage') }}</a></p>
-      </form>
-      @endif
-    </div>
-
+    {{-- Updates: the Hostinger Reach signup form lives in the Footer updates widget area. --}}
+    @if (is_active_sidebar('footer-updates'))
+      <div class="footer-nav-col footer-follow" id="footer-signup">
+        @php dynamic_sidebar('footer-updates'); @endphp
+      </div>
+    @endif
   </div>
 
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
-    @php
+    @if (is_active_sidebar('footer-legal'))
+      <nav class="footer-legal footer-widgets" aria-label="{{ esc_attr__('Legal', 'sage') }}">
+        @php dynamic_sidebar('footer-legal'); @endphp
+      </nav>
+    @else
+@php
       $bottomMenuItems = has_nav_menu('footer_bottom_navigation')
         ? wp_get_nav_menu_items(get_nav_menu_locations()['footer_bottom_navigation'] ?? 0) ?: []
         : [];
@@ -136,5 +96,6 @@
       </nav>
     @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://cursor.com" rel="noopener" target="_blank">Cursor AI<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
+    @endif
   </div>
 </footer>

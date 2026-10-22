@@ -5,7 +5,7 @@
   "title": "Questions",
   "category": "matthummel",
   "icon": "editor-help",
-  "description": "A list of questions. Each one is a Details block: the question is the summary, the answer goes inside.",
+  "description": "A list of questions. Each one is a Details block: the question is the summary, the answer goes inside. The questions are added to the page's FAQPage structured data.",
   "textdomain": "sage",
   "attributes": {
     "schema": {

@@ -96,6 +96,7 @@ function HeroEdit({ attributes, setAttributes }) {
           <ToggleControl
             __nextHasNoMarginBottom
             label={__('Show profile photo', 'sage')}
+            help={__('On the About page the photo shows under the Story drawing instead of in the hero.', 'sage')}
             checked={showPortrait}
             onChange={(value) => setAttributes({ showPortrait: value })}
           />
@@ -292,26 +293,12 @@ const FAQ_TEMPLATE = [
   ['core/details', { summary: __('Question', 'sage') }, [['core/paragraph', { placeholder: __('Answer in one to three sentences.', 'sage') }]]],
 ]
 
-function FaqEdit({ attributes, setAttributes }) {
+function FaqEdit() {
+  // FAQPage data now comes from every Questions block on the page (MH SEO), so there is no toggle.
   const blockProps = useBlockProps({ className: 'faq-list mh-block-faq' })
   const inner = useInnerBlocksProps(blockProps, { template: FAQ_TEMPLATE, allowedBlocks: ['core/details'] })
 
-  return (
-    <>
-      <InspectorControls>
-        <PanelBody title={__('Questions', 'sage')}>
-          <ToggleControl
-            __nextHasNoMarginBottom
-            label={__('Add FAQ structured data', 'sage')}
-            checked={!!attributes.schema}
-            onChange={(value) => setAttributes({ schema: value })}
-            help={__('Prints FAQPage JSON-LD for search engines. Use it on one question list per page.', 'sage')}
-          />
-        </PanelBody>
-      </InspectorControls>
-      <div {...inner} />
-    </>
-  )
+  return <div {...inner} />
 }
 
 registerBlockType(faqMeta, { edit: FaqEdit, save: saveInner })

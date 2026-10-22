@@ -326,7 +326,7 @@ Credentials are resolved in this order (first match wins):
 
 1. WP-CLI `--ssh-host`, `--ssh-port`, `--ssh-user`, `--ssh-path` flags
 2. `MH_SSH_HOST`, `MH_SSH_PORT`, `MH_SSH_USER`, `MH_SSH_WP_PATH` constants in `wp-config.php`
-3. `SERVER_IP` / `SITEGROUND_HOST`, `SERVER_SSH_PORT` / `SITEGROUND_PORT`, `SERVER_USER` / `SITEGROUND_USER`, `SERVER_DESTINATION_PATH` environment variables
+3. `SERVER_IP`, `SERVER_SSH_PORT`, `SERVER_USER`, and `SERVER_DESTINATION_PATH` environment variables
 
 ---
 

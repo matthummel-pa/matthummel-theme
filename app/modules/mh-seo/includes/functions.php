@@ -33,7 +33,7 @@ function mh_seo_rank_math_is_active(): bool
  */
 function mh_seo_post_types(): array
 {
-    $types = ['post', 'page', 'project', 'newsletter_issue'];
+    $types = ['post', 'page', 'project'];
     $filtered = apply_filters('mh_seo_post_types', $types);
     if (! is_array($filtered)) {
         return $types;
