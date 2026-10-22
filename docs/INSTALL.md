@@ -1,12 +1,14 @@
 # Install the theme in WordPress
 
-Do this **after** files are on the server (Update Theme in wp-admin, a `main` push, or a manual upload).
+**Every step in this guide runs on the staging site**, `https://matthummel-com-524423.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Nobody installs or activates the theme on live. Live (**[matthummel.com](https://matthummel.com)**) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish), which copies files and database together.
+
+Do this **after** files are on the staging server (Update Theme in wp-admin, a `main` push, or a manual upload).
 
 ## 0. PHP 8.3+ on Hostinger (required)
 
-Sage fatals on 8.2. In Hostinger hPanel, set `matthummel.com` to **PHP 8.3** or newer. Then purge LiteSpeed cache.
+Sage fatals on 8.2. In Hostinger hPanel, set the **staging site** to **PHP 8.3** or newer, and confirm live matches before publishing. Then purge LiteSpeed cache.
 
-Production is **[matthummel.com](https://matthummel.com)**. Theme folder is `wp-content/themes/matthummel/`.
+Theme folder is `wp-content/themes/matthummel/` on both sites.
 
 ## 1. Folder name
 
@@ -37,9 +39,9 @@ Then upload everything **except** `node_modules`.
 
 If you see `Vite manifest not found`, the build step did not run.
 
-## 3. Activate
+## 3. Activate (staging)
 
-**wp-admin:** Appearance → Themes → **Matt Hummel** → Activate.
+**wp-admin on staging:** Appearance → Themes → **Matt Hummel** → Activate.
 
 **WP-CLI:**
 

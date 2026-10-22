@@ -79,7 +79,7 @@ Rules:
 
 - Use the WordPress / WPVibe connection for pages, posts, settings, users, media, plugins, themes, and site inspection.
 - Treat WordPress content and custom code as different assets.
-- Do not edit plugin or theme files directly in production unless there is no safer deployment path. Prefer a PR in this repo, then the built `theme-latest` zip.
+- Never edit plugin or theme files on production. Theme changes go PR → `theme-latest` zip → install on the **staging site**; Matt publishes staging → live from hPanel. If something can only be fixed by hand, do it on staging and show the diff.
 - Do not modify WordPress core files.
 - Before changing a plugin, theme, permalink setting, database schema, or major option, verify compatibility and confirm a rollback path.
 - Never delete users, pages, posts, media, plugins, themes, or settings in bulk without listing the exact items first.
