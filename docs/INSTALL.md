@@ -94,10 +94,10 @@ Host matthummel-staging
 Deploy to staging after the `Deploy Roots Production Ecosystem` run is green:
 
 ```bash
-ssh matthummel-staging 'cd ~/websites/*/public_html && wp mh theme-update && wp litespeed-purge all'
+ssh matthummel-staging 'set -- ~/websites/*/public_html; [ "$#" -eq 1 ] || { echo "expected one site root, found $#: $*" >&2; exit 1; }; cd "$1" && wp mh theme-update && wp litespeed-purge all'
 ```
 
-- WordPress on Hostinger shared hosting lives at `~/websites/<site-id>/public_html`; the glob resolves it so the id is not written down here.
+- WordPress on Hostinger shared hosting lives at `~/websites/<site-id>/public_html`; the glob resolves it so the id is not written down here. The `set --` / `$#` check refuses to run if the glob matches more than one directory (a second site on the same account), instead of handing `cd` an ambiguous list.
 - `wp mh theme-update` is the theme's own command (`app/theme-updater.php`). It needs the GitHub token: `MH_GITHUB_TOKEN` in `wp-config.php`, or the token saved on the Update Theme screen. "No GitHub token is set" means neither is there.
 - `wp litespeed-purge all` is the LiteSpeed Cache plugin's command, so cached HTML stops pointing at old Vite hashes.
 - The login shell on Hostinger shared hosting is `ksh`, and WP-CLI is at `/usr/local/bin/wp`. Nothing to install.
