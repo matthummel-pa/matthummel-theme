@@ -96,6 +96,7 @@ function HeroEdit({ attributes, setAttributes }) {
           <ToggleControl
             __nextHasNoMarginBottom
             label={__('Show profile photo', 'sage')}
+            help={__('On the About page the photo shows under the Story drawing instead of in the hero.', 'sage')}
             checked={showPortrait}
             onChange={(value) => setAttributes({ showPortrait: value })}
           />

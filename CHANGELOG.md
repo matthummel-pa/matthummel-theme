@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.34 — About: profile photo moves under the Story drawing
+
+- On About, the profile photo and caption leave the hero and sit in the Story section's right column, centered under the animated 2011-to-now drawing. The hero is copy only now.
+- Still controlled from the hero block: **Show profile photo** turns it on or off and **Photo caption** sets the line under the name (the toggle's help text says where it shows on About). The Story section reads those attributes from the page's hero block.
+- The photo is below the fold now, so it lazy-loads instead of using `fetchpriority="high"`.
+- Under 900px the photo shows as a small photo + caption row above the Story intro.
+- New shared `partials/about-portrait.blade.php`, used by the hero (other pages) and the Story section.
+
 ## 3.7.33 — About drawings: bigger, inline, animated
 
 - The five About section drawings (Story, What I build, Selected work, Experience, Open source) are now inline SVG from `partials/section-illustration.blade.php` instead of static CSS masks, so each part can move. The Section block only renders them on the About page (`is_page('about')`), since Home has its own `#work` section.
