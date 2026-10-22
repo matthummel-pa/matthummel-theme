@@ -68,7 +68,7 @@
   <div class="footer-bottom container wide">
     <p class="footer-copy">&copy; {{ date('Y') }} {{ $footerName }}.</p>
     @if (is_active_sidebar('footer-legal'))
-      <nav class="footer-legal footer-widgets" aria-label="{{ esc_attr__('Legal', 'sage') }}">
+      <nav class="footer-legal footer-widgets" aria-label="{{ __('Legal', 'sage') }}">
         @php dynamic_sidebar('footer-legal'); @endphp
       </nav>
     @else
@@ -78,14 +78,14 @@
         : [];
     @endphp
     @if ($bottomMenuItems)
-      <nav class="footer-legal-links" aria-label="{{ esc_attr__('Legal', 'sage') }}">
+      <nav class="footer-legal-links" aria-label="{{ __('Legal', 'sage') }}">
         @foreach ($bottomMenuItems as $i => $item)
           @if ($i > 0)<span aria-hidden="true">·</span>@endif
           <a href="{{ esc_url($item->url) }}"{{ $item->target ? ' target="'.esc_attr($item->target).'" rel="noopener"' : '' }}>{{ esc_html($item->title) }}</a>
         @endforeach
       </nav>
     @else
-      <nav class="footer-legal-links" aria-label="{{ esc_attr__('Legal', 'sage') }}">
+      <nav class="footer-legal-links" aria-label="{{ __('Legal', 'sage') }}">
         <a href="{{ esc_url(\App\mh_privacy_policy_url()) }}">{{ __('Privacy', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ esc_url(\App\mh_terms_url()) }}">{{ __('Terms', 'sage') }}</a>
