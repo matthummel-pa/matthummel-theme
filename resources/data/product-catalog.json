@@ -199,7 +199,7 @@
     "demo": "https://cobbleandcandle.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-cobbleandcandle",
     "version": "0.1.0",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.1)",
+    "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [
       "cobbleandcandle.zip (theme with Cobble & Candle Core bundled)",
@@ -503,7 +503,7 @@
     "demo": "https://acreline.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-acreline",
     "version": "1.5.9",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 7.0.1)",
+    "compatible": "WordPress 6.6+ (tested up to 7.0.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
@@ -712,7 +712,7 @@
     "demo": "https://walkridge.matthummel.com/",
     "github": "https://github.com/matthummel-pa/wp-walkridge",
     "version": "1.7.2",
-    "compatible": "WordPress 6.6+, PHP 8.3+ (tested up to 6.8)",
+    "compatible": "WordPress 6.6+ (tested up to 6.8), PHP 8.3+",
     "license": "GPLv2 or later",
     "guarantee": "Download today. If the zip won’t install on WP 6.6+/PHP 8.3, I’ll make it right.",
     "download": {
@@ -875,7 +875,7 @@
     "demo": "https://matthummel-pa.github.io/tocguide/",
     "github": "https://github.com/matthummel-pa/tocguide",
     "version": "1.6.15",
-    "compatible": "WordPress 6.4+, PHP 7.4+ (tested up to 7.1)",
+    "compatible": "WordPress 6.4+ (tested up to 7.1), PHP 7.4+",
     "license": "GPLv2 or later",
     "download": {
       "github_repo": "matthummel-pa/tocguide",
