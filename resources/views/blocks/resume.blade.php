@@ -17,8 +17,37 @@
 
   <ol class="resume-timeline">
     @foreach ($jobs as $job)
-      @php $current = strcasecmp((string) ($job['period'] ?? ''), 'Current') === 0; @endphp
-      <li>
+      @php
+        $period = trim((string) ($job['period'] ?? ''));
+        $current = strcasecmp($period, 'Current') === 0;
+        // 3.7.35: "Mar 2025 – Jul 2026" becomes two calendar chips on the line, end on top
+        // (newest first, so time runs down the rail). "Current" is a single "Now" chip.
+        $parts = $current ? [] : array_values(array_filter(array_map('trim', preg_split('/\s+[–—-]\s+/u', $period) ?: [])));
+        $toChip = static function (string $label): array {
+            $bits = preg_split('/\s+/', trim($label)) ?: [];
+            $year = (string) array_pop($bits);
+
+            return ['m' => implode(' ', $bits), 'y' => $year];
+        };
+        $end = $current ? ['m' => '', 'y' => __('Now', 'sage')] : ($parts !== [] ? $toChip((string) end($parts)) : null);
+        $start = count($parts) > 1 ? $toChip((string) $parts[0]) : null;
+      @endphp
+      <li class="resume-item{{ $current ? ' is-current' : '' }}">
+        @if ($end)
+          <div class="resume-when">
+            <span class="visually-hidden">{{ $period }}</span>
+            <span class="resume-cal resume-cal--end" aria-hidden="true">
+              @if ($end['m'] !== '')<span class="resume-cal__m">{{ $end['m'] }}</span>@endif
+              <span class="resume-cal__y">{{ $end['y'] }}</span>
+            </span>
+            @if ($start)
+              <span class="resume-cal resume-cal--start" aria-hidden="true">
+                @if ($start['m'] !== '')<span class="resume-cal__m">{{ $start['m'] }}</span>@endif
+                <span class="resume-cal__y">{{ $start['y'] }}</span>
+              </span>
+            @endif
+          </div>
+        @endif
         <article class="resume-card{{ $current ? ' is-current' : '' }}" itemscope itemtype="https://schema.org/OrganizationRole">
           <header class="resume-head">
             <div class="resume-who">
@@ -38,9 +67,7 @@
               @endif
             </div>
             <p class="resume-tags">
-              @if (($job['period'] ?? '') !== '')
-                <span class="resume-tag{{ $current ? ' is-now' : '' }}">{{ $job['period'] }}</span>
-              @endif
+              {{-- Dates moved to the calendar chips on the timeline (3.7.35). --}}
               @if (($job['type'] ?? '') !== '')
                 <span class="resume-tag">{{ $job['type'] }}</span>
               @endif

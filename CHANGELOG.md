@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.35 — Resume: dates on the timeline, no numbers
+
+- The resume timeline no longer shows 1–5 numbers. They came from the prose ordered-list counter, which also matched the Resume block's `<ol>` once About became a block page; `.resume-timeline` is now excluded from those rules (`studio.css`, `journal-blocks.css`).
+- Each role's dates sit on the line as calendar chips (small month, bold year): end date at the top of the role, start date at the bottom, with an accent bar between them showing how long it ran. Newest first, so time runs down. The current role gets one lime **Now** chip and a bar that fades out.
+- The date pill is gone from each card (the chips carry it); the full period is still in the markup as visually hidden text for screen readers. The type pill stays.
+- New `resources/css/resume-timeline.css`, imported last in `app.css`. Markup in `blocks/resume.blade.php` parses periods written as "Mon YYYY – Mon YYYY" or "Current".
+
 ## 3.7.34 — About: profile photo moves under the Story drawing
 
 - On About, the profile photo and caption leave the hero and sit in the Story section's right column, centered under the animated 2011-to-now drawing. The hero is copy only now.
