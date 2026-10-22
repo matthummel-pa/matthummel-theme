@@ -7,6 +7,7 @@
 - A page with no dark hero (Thank you) paints the header's scrolled state at once (`brand-ui.js`) instead of white nav text on the light canvas.
 - `/thank-you/` is `noindex, follow` through `wp_robots` (it was indexable and listed in the sitemap).
 - i18n: every visible string and `aria-label` in `partials/content-single.blade.php` and the footer legal nav goes through `__()` / `esc_attr__()` with the `sage` text domain.
+- Copy that lives in the theme, from the content pass: one reply promise everywhere ("I usually reply within one business day (ET)" on project pages, the Start checklist, and the thank-you meta); Start says "You approve a written scope before I build" (the site's one brand-"we"); the Contact facts default reads "contract", not "part-time"; Support and Start meta descriptions are first person; catalog: TOCguide is 1.6.15 (the repo's release), Cobble & Candle lists get Oxford commas and US spellings, "ask about this" matches the button on project FAQs, Acreline's FAQ says office instead of agency, and its description names listings and the map.
 - Audit notes: the live pages already had one h1, clean heading order, alt text, canonicals, Open Graph and Twitter tags, and JSON-LD on every URL. What is left is content (one title and four descriptions over the length caps) and lives in WordPress, not the theme.
 ## 3.7.37 — Deploy notes: cache purge that works on staging
 
