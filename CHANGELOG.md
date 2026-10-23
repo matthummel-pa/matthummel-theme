@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.41 — Journal cards: smaller category pills and meta line
+
+- Category pills on Journal post cards drop to 12px type with tighter padding and gap; the meta line under the photo (date, reading time, Code badge) goes from 14px to 13px. Pills keep the 24px minimum target and 12px label floor. Scoped to `.post-card`, so filter pills, Work cards and the post page are unchanged.
+
 ## 3.7.40 — Journal: three columns, scroll-to-load, whole images, button read-more
 
 - Journal grid is three columns (two under 1000px, one under 640px). The main query returns nine posts per load (`mh_journal_per_page()`).
