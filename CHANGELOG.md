@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.60 — Fix: home hero image loads right away
+
+- On the live site LiteSpeed Cache lazy-loaded the home hero photo, the largest image above the fold. It swapped the real `src` for a placeholder and dropped `fetchpriority="high"`, so the photo waited for JavaScript. The hero image now carries `skip-lazy`, `data-no-lazy`, and `loading="eager"`, the same markers the featured work card already uses.
+- Verify after install: the hero `<img>` in the page source shows its real `src` and no `data-lazyloaded` attribute. Purge LiteSpeed first.
+
 ## 3.7.58 — Fix: redirect targets keep their trailing slash
 
 - A redirect target on this site lost its trailing slash, query string, and `#section` when it was saved from the Redirects form or a CSV import. WordPress then added the slash with a second redirect, so every such redirect took two hops. Targets now keep the slash, query, and fragment as written.
