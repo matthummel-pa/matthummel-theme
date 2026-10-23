@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.47 — Projects grid: fluid cards, side-by-side buttons, roomier pills
+
+- Columns are 3 on desktop (1024px and up), 2 on tablet (640–1023px) and 1 on mobile.
+- Each card is a size container, so its title, blurb, pills, date line, padding and buttons scale with the card's own width, in any column count. Floors keep body text at 15px and labels at 12px.
+- "View project" and "Live demo" sit side by side at every width, share the row equally, and have a hairline above them.
+- The type, industry and place pills get more space between them and below them, and the tool pills a little more room.
+
 ## 3.7.46 — Projects grid: sort, tool filter, shareable filters, Journal-style cards
 
 - Sort by Newest, Oldest or A–Z beside the Grid/List toggle. Sorting and filtering work without JavaScript (`?sort=`, `?cat=`, `?tech=`) and in place with it.
