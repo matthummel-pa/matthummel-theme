@@ -7108,3 +7108,22 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   line-height: 1.22;
   text-wrap: balance;
 }
+
+/* === 3.7.45 · Journal cards: excerpt capped at three lines ===
+   Cards in a row already stretch to the same height; the excerpt was what made one row taller
+   than the next. Three lines are clamped with an ellipsis (the full excerpt stays in the DOM)
+   and the space is reserved, so a one-line excerpt doesn't leave a short card. Title length
+   still varies by a line, which is the only height difference left. */
+.post-card .post-card-excerpt {
+  line-height: 1.55;
+  min-height: calc(1.55em * 3);
+}
+.post-card .post-card-excerpt p {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.post-card .post-card-excerpt p ~ p { display: none; }
