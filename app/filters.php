@@ -782,13 +782,13 @@ function mh_primary_category(array $cats, int $postId): ?\WP_Term
 function mh_post_updated(int $postId): ?array
 {
     $published = (int) get_post_time('U', true, $postId);
-    $modified  = (int) get_post_modified_time('U', true, $postId);
+    $modified = (int) get_post_modified_time('U', true, $postId);
     if ($published <= 0 || $modified - $published < 14 * DAY_IN_SECONDS) {
         return null;
     }
 
     return [
-        'iso'   => (string) get_post_modified_time('c', true, $postId),
+        'iso' => (string) get_post_modified_time('c', true, $postId),
         'label' => (string) get_the_modified_date('', $postId),
     ];
 }
