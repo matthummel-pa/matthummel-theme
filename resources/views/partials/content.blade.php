@@ -35,14 +35,15 @@
       @if ($hasCode)
         <span class="post-badge">{{ __('Code', 'sage') }}</span>
       @endif
-      @if ($journalCats !== [])
-        <span class="post-cats project-type-row" aria-label="{{ __('Categories', 'sage') }}">
-          @foreach ($journalCats as $cat)
-            <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
-          @endforeach
-        </span>
-      @endif
     </p>
+
+    @if ($journalCats !== [])
+      <div class="post-cats project-type-row" role="group" aria-label="{{ __('Categories', 'sage') }}">
+        @foreach ($journalCats as $cat)
+          <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
+        @endforeach
+      </div>
+    @endif
 
     <h2 class="post-card-title"><a href="{{ esc_url(get_permalink()) }}">{{ $title }}</a></h2>
 

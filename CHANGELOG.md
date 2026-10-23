@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.42 — Journal cards: category pills on their own row
+
+- On Journal post cards the category pills move out of the meta line into their own row: meta (date, read time, Code badge) sits above a hairline, the pills get a 14px gap above the title, and the date reads in the body text colour so it leads the line. Same pills, same links, same 24px targets; the group is now `role="group"` with the "Categories" label.
+
 ## 3.7.41 — Journal cards: smaller category pills and meta line
 
 - Category pills on Journal post cards drop to 12px type with tighter padding and gap; the meta line under the photo (date, reading time, Code badge) goes from 14px to 13px. Pills keep the 24px minimum target and 12px label floor. Scoped to `.post-card`, so filter pills, Work cards and the post page are unchanged.
