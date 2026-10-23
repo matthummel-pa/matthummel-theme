@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.44 — Journal cards: one gap above the title
+
+- The gap between the category pill and the card title was about 24px: the pills row added 14px and the older `.post-card-title` `margin-top: .6rem !important` rule added its own. The title now owns the gap (14px after the pill, 12px straight after the meta line when a post has no category), and the meta line and pills row no longer add bottom margin.
+
 ## 3.7.43 — Journal cards: title size scales with the screen
 
 - Journal card titles go from a near-fixed 17–18px to one fluid step: about 18px on phones, 21px on tablets, 22px on desktop, with `text-wrap: balance` so short titles don't leave a one-word last line. Scoped to `.post-card`; the single-post `h1` already scaled and is unchanged.

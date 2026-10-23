@@ -7083,7 +7083,7 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
    wrapping row, so pills sat flush against the date and crowded the title. They are
    now two rows with a fixed rhythm: meta, 12px, pills, 14px, title. */
 .post-card .post-meta {
-  margin: 0 0 .75rem;
+  margin: 0;
   padding-bottom: .65rem;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-muted);
@@ -7093,9 +7093,12 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   display: flex;
   flex-wrap: wrap;
   gap: .4rem;
-  margin: 0 0 .875rem;
+  margin: .75rem 0 0;
 }
-.post-card .post-cats.project-type-row + .post-card-title { margin-top: 0; }
+/* The title owns the gap above it. The older `margin-top: .6rem !important` rule (prose-spacing
+   override) is what sets it, so these two out-rank it by one selector. */
+.post-list .post-card .post-meta + .post-card-title { margin-top: .75rem !important; }
+.post-list .post-card .post-cats + .post-card-title { margin-top: .875rem !important; }
 
 /* === 3.7.43 · Journal cards: title scales with the viewport ===
    One fluid step instead of a near-fixed 17-18px: about 18px on phones, 21px on tablets,
