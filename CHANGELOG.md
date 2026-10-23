@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.48 — Projects "Inside each one": text off the drawing, checklist as a card
+
+- From 900px the heading, lead, checklist and note in this section stop at the drawing's left edge instead of running across it.
+- The checklist is a card with round check badges. A list item can start with a bold lead line and carry one short detail after it.
+- Copy: the section's text lives in the page's block content, so the new wording is edited on the page, not shipped in the theme.
+
 ## 3.7.47 — Projects grid: fluid cards, side-by-side buttons, roomier pills
 
 - Columns are 3 on desktop (1024px and up), 2 on tablet (640–1023px) and 1 on mobile.
