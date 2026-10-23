@@ -3661,6 +3661,12 @@ function mh_is_devto_post(int $postId): bool
     return ($catId > 0 && has_category($catId, $postId)) || has_category('dev-to', $postId);
 }
 
+/** Posts per Journal load: three rows of the three-column grid. */
+function mh_journal_per_page(): int
+{
+    return 9;
+}
+
 function mh_journal_is_oldest(): bool
 {
     return strtolower((string) get_query_var('order')) === 'asc';
@@ -3746,6 +3752,9 @@ add_action('pre_get_posts', function (\WP_Query $query): void {
 
     // Journal lists posts chronologically — no sticky “Latest” hero.
     $query->set('ignore_sticky_posts', true);
+
+    // Nine per load (three rows of three); writing-tools.js appends the next page on scroll.
+    $query->set('posts_per_page', mh_journal_per_page());
 
     if (strtolower((string) $query->get('order')) !== 'asc') {
         return;

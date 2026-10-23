@@ -25,6 +25,23 @@
       @includeFirst(['partials.content-' . get_post_type(), 'partials.content'])
     @endwhile
   </div>
+  @if ($paged < $pages)
+    {{-- Scroll-to-load: hidden until writing-tools.js arms it; the page links below stay as the no-JS fallback. --}}
+    <div
+      class="posts-more"
+      data-journal-more
+      data-next="{{ esc_url(get_pagenum_link($paged + 1)) }}"
+      data-label-loading="{{ esc_attr__('Loading more posts…', 'sage') }}"
+      {{-- translators: %d: number of posts just added to the list. --}}
+      data-label-added="{{ esc_attr__('Loaded %d more posts.', 'sage') }}"
+      data-label-end="{{ esc_attr__('That is every post.', 'sage') }}"
+      data-label-error="{{ esc_attr__('Could not load more posts. Try again.', 'sage') }}"
+      hidden
+    >
+      <p class="posts-more__status" role="status" data-journal-more-status></p>
+      <button type="button" class="btn btn-outline posts-more__btn" data-journal-more-btn>{{ __('Load more posts', 'sage') }}</button>
+    </div>
+  @endif
   @if ($pages > 1)
     <div class="posts-nav">
       {{-- translators: 1: current page number, 2: total pages. --}}
