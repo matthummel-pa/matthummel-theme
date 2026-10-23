@@ -115,9 +115,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
-@media (min-width: 1100px) {
-  .code-repos-grid--pinned:has(> li:nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
 
 /* Repo card: release + archived */
 .repo-card__archived {
@@ -503,3 +500,73 @@ html.mh-dark .gh-lastpush__dot { background: var(--lime-300); box-shadow: 0 0 0 
 }
 .gh-mix__foot p { margin: 0; }
 .gh-mix__legend { margin-bottom: 1.25rem; }
+
+/* ==========================================================================
+   Pinned repo cards (3.7.54)
+   Mobile: one column. Tablet: two, a lone last card spans. Desktop: six tracks, so
+   1-6 cards fill their rows (3 across; a short last row splits evenly).
+   ========================================================================== */
+.code-repos-grid--pinned { gap: var(--card-gap-roomy, 1.5rem); }
+@media (min-width: 720px) {
+  .code-repos-grid--pinned > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (min-width: 1100px) {
+  .code-repos-grid--pinned { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .code-repos-grid--pinned > li { grid-column: span 2; }
+  .code-repos-grid--pinned > li:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
+  .code-repos-grid--pinned > li:last-child:nth-child(3n + 2),
+  .code-repos-grid--pinned > li:nth-last-child(2):nth-child(3n + 1) { grid-column: span 3; }
+}
+@media (max-width: 719px) {
+  .code-repos-grid--pinned > li { grid-column: auto; }
+}
+
+.code-repos-grid--pinned .repo-card {
+  padding: 1.35rem 1.35rem 0;
+  border-radius: 16px;
+}
+.code-repos-grid--pinned .repo-card--featured { padding-right: 3rem; }
+.code-repos-grid--pinned .repo-card__desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  font-size: .9375rem;
+}
+.code-repos-grid--pinned .repo-card__stack { margin-top: .9rem; gap: .4rem; }
+
+/* Stats, release and buttons ride the bottom, so a row of cards shares one baseline. */
+.code-repos-grid--pinned .repo-card__stats {
+  margin-top: auto;
+  padding-top: 1.1rem;
+  gap: .4rem 1rem;
+  align-items: center;
+}
+.repo-card__stats .repo-lang { font-weight: 600; color: var(--color-text); }
+.repo-stat { display: inline-flex; align-items: center; gap: .35rem; }
+.repo-stat svg { flex: none; color: var(--color-accent); }
+.repo-stat--when { color: var(--color-text-muted); }
+
+.code-repos-grid--pinned .repo-card__release { margin-top: .8rem; }
+.repo-card__release a { padding: .25rem .65rem .25rem .3rem; gap: .55rem; }
+.repo-card__release-tag {
+  padding: .2rem .5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+}
+.repo-card__release-when { color: var(--color-text-muted); font-size: .8125rem; }
+
+.code-repos-grid--pinned .repo-card__foot { margin-top: 1rem; padding: .9rem 0 1.1rem; }
+
+/* Version badge leads the stats line, so titles and stats line up across a row. */
+.repo-card__ver {
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+  font: 700 .75rem/1.3 var(--font-mono);
+  text-decoration: none;
+}
+.repo-card__ver:hover, .repo-card__ver:focus-visible { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }

@@ -53,14 +53,28 @@
     <p class="repo-card__desc">{{ $r['desc'] }}</p>
   @endif
   @if ($stack)
+    @php
+      $stackShown = array_slice($stack, 0, 4);
+      $stackRest = array_slice($stack, 4);
+    @endphp
     <p class="pill-row repo-card__stack" aria-label="{{ __('Built with', 'sage') }}">
-      @foreach (array_slice($stack, 0, $variant === 'live' ? 4 : 6) as $t)
+      @foreach ($stackShown as $t)
         <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ is_string($t) ? \App\mh_title_label($t) : $t }}</span>
       @endforeach
+      @if ($variant !== 'live' && $stackRest !== [])
+        <span class="pill pill--more" title="{{ esc_attr(implode(', ', array_map(static fn ($t) => is_string($t) ? \App\mh_title_label($t) : (string) $t, $stackRest))) }}">+{{ count($stackRest) }}<span class="visually-hidden"> {{ __('more', 'sage') }}</span></span>
+      @endif
     </p>
   @endif
-  @if (! empty($r['stars']) || ! empty($r['forks']) || $lang !== '' || $license !== '' || ($variant === 'featured' && $pushed !== ''))
+  @php $hasRelease = $variant === 'featured' && $release !== '' && $releaseUrl !== ''; @endphp
+  @if ($hasRelease || ! empty($r['stars']) || ! empty($r['forks']) || $lang !== '' || $license !== '' || ($variant === 'featured' && $pushed !== ''))
     <p class="pf-meta repo-stats repo-card__stats">
+      @if ($hasRelease)
+        @php $releasedAgo = $releaseDate !== '' ? sprintf(__('released %s', 'sage'), \App\mh_github_ago($releaseDate)) : ''; @endphp
+        <a class="repo-card__ver" href="{{ esc_url($releaseUrl) }}" rel="noopener" target="_blank" @if ($releasedAgo !== '') title="{{ esc_attr($releasedAgo) }}" @endif>
+          {{ $release }}<span class="visually-hidden"> {{ $releasedAgo }} {{ __('(opens in a new window)', 'sage') }}</span>
+        </a>
+      @endif
       @if ($lang !== '')
         <span class="repo-lang">
           <span class="repo-lang__dot" style="--lang-color: {{ esc_attr($langColor) }}" aria-hidden="true"></span>
@@ -68,32 +82,20 @@
         </span>
       @endif
       @if (! empty($r['stars']))
-        <span>{{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
+        <span class="repo-stat">{!! \App\mh_svg_icon('star', 13) !!} {{ sprintf(_n('%s star', '%s stars', (int) $r['stars'], 'sage'), number_format_i18n((int) $r['stars'])) }}</span>
       @endif
       @if (! empty($r['forks']))
-        <span>{{ sprintf(_n('%s fork', '%s forks', (int) $r['forks'], 'sage'), number_format_i18n((int) $r['forks'])) }}</span>
+        <span class="repo-stat">{{ sprintf(_n('%s fork', '%s forks', (int) $r['forks'], 'sage'), number_format_i18n((int) $r['forks'])) }}</span>
       @endif
       @if ($commits > 0)
-        <span>{{ sprintf(_n('%s commit', '%s commits', $commits, 'sage'), number_format_i18n($commits)) }}</span>
+        <span class="repo-stat">{{ sprintf(_n('%s commit', '%s commits', $commits, 'sage'), number_format_i18n($commits)) }}</span>
       @endif
       @if ($license !== '')
         <span class="repo-card__license" title="{{ esc_attr__('License', 'sage') }}">{{ $license }}</span>
       @endif
       @if ($variant === 'featured' && $pushed !== '')
-        <span>{{ sprintf(__('Pushed %s', 'sage'), \App\mh_github_ago($pushed)) }}</span>
+        <span class="repo-stat repo-stat--when">{!! \App\mh_svg_icon('calendar', 13) !!} {{ sprintf(__('Pushed %s', 'sage'), \App\mh_github_ago($pushed)) }}</span>
       @endif
-    </p>
-  @endif
-  @if ($variant === 'featured' && $release !== '' && $releaseUrl !== '')
-    <p class="repo-card__release">
-      <a href="{{ esc_url($releaseUrl) }}" rel="noopener" target="_blank">
-        {!! \App\mh_svg_icon('download', 13) !!}
-        <span class="repo-card__release-tag">{{ $release }}</span>
-        @if ($releaseDate !== '')
-          <span class="repo-card__release-when">{{ sprintf(__('released %s', 'sage'), \App\mh_github_ago($releaseDate)) }}</span>
-        @endif
-        <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
-      </a>
     </p>
   @endif
   <div class="repo-card__foot">
