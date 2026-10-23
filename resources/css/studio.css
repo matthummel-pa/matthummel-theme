@@ -7216,7 +7216,9 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
    one on mobile. With seven items, a lone last box spans its row. Each box is a badge, a bold
    lead line and one short detail (<strong> first in the list item). */
 @media (min-width: 900px) {
-  #inside > .container > :is(h2, p.is-style-lead) { max-width: min(36rem, calc(50% - 2.75rem)); }
+  /* The drawing is a little narrower here so the heading and lead can run wider beside it. */
+  #inside .mh-illus { width: min(38%, 480px); }
+  #inside > .container > :is(h2, p.is-style-lead) { max-width: min(44rem, calc(62% - 2.75rem)); }
 }
 #inside ul.is-style-checklist {
   display: grid;
