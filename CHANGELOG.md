@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.40 — Journal: three columns, scroll-to-load, whole images, button read-more
+
+- Journal grid is three columns (two under 1000px, one under 640px). The main query returns nine posts per load (`mh_journal_per_page()`).
+- `writing-tools.js` appends the next nine when the end of the list scrolls into view (IntersectionObserver, 400px early). A "Load more posts" button is the fallback when the observer is missing or a load fails; the numbered page links stay in the HTML for no-JS visitors and crawlers. A polite status line announces what loaded. Topic pills, category chips, sort and search still swap results in place and reset the list to page one.
+- Feature images sit in a fixed 16:10 frame and scale to fit (`object-fit: contain`) instead of cropping, so nothing is cut off and the grid does not shift.
+- Read more is the standard `.btn btn-outline` pill. The link text reads "Read article: Post title" (title visually hidden) so the anchor has context for crawlers and screen readers.
+
 ## 3.7.39 — Admin bar: header state and anchor padding while logged in
 
 - `brand-ui.js` compares the hero's top edge to the header's bottom edge in viewport coordinates, so the admin bar (which pushes the fixed header down 32/46px) and a non-zero scroll position at load no longer make a page with a hero start in the scrolled header state.

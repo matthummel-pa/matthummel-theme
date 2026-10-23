@@ -1842,19 +1842,13 @@ html.mh-dark .h-hero-illu__status {
 .post-card-title a:hover, .post-card:hover .post-card-title { color: var(--color-accent); }
 .post-meta { font: 500 .875rem/1 var(--font-display); letter-spacing: .04em; color: var(--color-text-muted); margin: 0 0 .5rem; }
 .post-card-more {
-  display: inline-flex;
-  align-items: center;
-  gap: .2rem;
+  align-self: flex-start;
   margin-top: auto;
-  padding-top: .65rem;
-  font: 600 .9375rem/1 var(--font-display);
-  color: var(--color-accent);
-  text-decoration: none;
-  position: relative;
-  z-index: 2;
+  font-size: .9375rem;
+  padding: .5rem 1.1rem;
+  min-height: 44px;
 }
-.post-card-more:hover { text-decoration: underline; }
-.post-card-more::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.post-card-excerpt { margin-bottom: 1rem; }
 .post-card:focus-within { outline: 2px solid var(--color-focus); outline-offset: 3px; }
 
 .post-cats { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 .6rem; }

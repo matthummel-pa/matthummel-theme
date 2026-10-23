@@ -87,12 +87,92 @@ function initJournalSwap() {
   const search = document.querySelector('.js-mh-search')
   const form = search?.closest('form')
   const homeUrl = hub.getAttribute('data-journal-home') || window.location.href
-  // The host page's own list classes (two-up on the journal home, one column beside the archive aside).
+  // The host page's own list classes (three-up on the journal home, one column beside the archive aside).
   const listClass = hub.getAttribute('data-journal-list') || 'post-list'
   let controller = null
   let timer = 0
+  let observer = null
+  let loadingMore = false
 
   namePosts(hub)
+
+  const postKey = (card) => card.className.match(/\bpost-\d+\b/)?.[0] || ''
+
+  /** Scroll-to-load: append the next page's cards when the end of the list comes into view. */
+  async function loadMore(more) {
+    const url = more.getAttribute('data-next')
+    const list = hub.querySelector('[data-post-list]')
+    const status = more.querySelector('[data-journal-more-status]')
+    const button = more.querySelector('[data-journal-more-btn]')
+    if (loadingMore || !url || !list) return
+
+    loadingMore = true
+    more.setAttribute('aria-busy', 'true')
+    button.disabled = true
+    status.textContent = more.getAttribute('data-label-loading')
+
+    try {
+      const response = await fetch(url, { credentials: 'same-origin' })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const doc = new DOMParser().parseFromString(await response.text(), 'text/html')
+      const incoming = doc.querySelector('[data-post-list]')
+      if (!incoming) throw new Error('No post list')
+
+      const have = new Set([...list.querySelectorAll('.post-card')].map(postKey))
+      let added = 0
+      incoming.querySelectorAll(':scope > .post-card').forEach((card) => {
+        const key = postKey(card)
+        if (key && have.has(key)) return
+        list.appendChild(document.importNode(card, true))
+        added += 1
+      })
+      namePosts(hub)
+
+      const next = doc.querySelector('[data-journal-more]')?.getAttribute('data-next')
+      if (next) {
+        more.setAttribute('data-next', next)
+        status.textContent = (more.getAttribute('data-label-added') || '').replace('%d', String(added))
+        button.disabled = false
+        // Watch again: if the end is still in view, the observer fires for the next page.
+        if (observer) {
+          observer.unobserve(more)
+          observer.observe(more)
+        }
+      } else {
+        more.removeAttribute('data-next')
+        status.textContent = more.getAttribute('data-label-end')
+        button.hidden = true
+        observer?.disconnect()
+      }
+    } catch (error) {
+      // Stay quiet until the visitor presses the button; no retry loop.
+      status.textContent = more.getAttribute('data-label-error')
+      button.disabled = false
+      observer?.unobserve(more)
+    } finally {
+      loadingMore = false
+      more.removeAttribute('aria-busy')
+    }
+  }
+
+  /** Turn the page links into scroll-to-load whenever the results have a next page. */
+  function armMore() {
+    observer?.disconnect()
+    observer = null
+    const more = hub.querySelector('[data-journal-more]')
+    hub.classList.toggle('is-infinite', Boolean(more))
+    if (!more) return
+
+    more.hidden = false
+    more.querySelector('[data-journal-more-btn]').addEventListener('click', () => loadMore(more))
+    if (typeof window.IntersectionObserver !== 'function') return // the button still works
+    observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) loadMore(more)
+    }, { rootMargin: '0px 0px 400px 0px' })
+    observer.observe(more)
+  }
+
+  armMore()
 
   async function load(url, { push = false, rich = false, scroll = false, refocus = '' } = {}) {
     controller?.abort()
@@ -133,6 +213,7 @@ function initJournalSwap() {
         setView(fresh, storedView())
       }
       namePosts(hub)
+      armMore()
     }, { rich })
 
     hub.removeAttribute('aria-busy')

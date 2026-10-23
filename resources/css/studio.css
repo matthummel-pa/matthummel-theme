@@ -3396,10 +3396,13 @@ html.mh-dark .project-page .pf-product-gallery__stage {
   box-shadow: none;
 }
 
-/* ── Journal uses the Projects layout: two-up roomy cards, no sidebar ── */
+/* ── Journal uses the Projects layout: three-up roomy cards, no sidebar ── */
 .post-list--roomy:not(.is-list) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.75rem;
+}
+@media (max-width: 1000px) {
+  .post-list--roomy:not(.is-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .post-list--roomy:not(.is-list) { grid-template-columns: 1fr; }
@@ -5458,8 +5461,6 @@ html.mh-dark .about-aside-card__link:hover,
 html.mh-dark .about-aside-card__link:focus-visible,
 html.mh-dark .about-story__links a:hover,
 html.mh-dark .about-story__links a:focus-visible,
-html.mh-dark .post-card-more:hover,
-html.mh-dark .post-card-more:focus-visible,
 html.mh-dark .h-text-arrow:hover,
 html.mh-dark .h-text-arrow:focus-visible,
 html.mh-dark .ty-browse-card__link:hover,
@@ -7022,3 +7023,39 @@ html.mh-dark .h-page-nav__pill:not(.is-active):not([aria-current="true"]) { back
   :root { --glass-bg: rgba(255, 255, 255, .96); --glass-bg-strong: #fff; --glass-card: #fff; --glass-card-top: #fff; --glass-card-blur: 0px; }
   html.mh-dark { --glass-bg: rgba(8, 21, 39, .96); --glass-bg-strong: #081527; --glass-card: #0b1b35; --glass-card-top: #0e2140; }
 }
+
+/* === 3.7.40 · Journal: whole feature images, scroll-to-load ===
+   The frame keeps one ratio so the grid stays even and nothing shifts while images load; the
+   image scales to fit inside it (contain), so a tall or wide featured image is never cropped. */
+.post-list .post-shot {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  background: var(--gray-100);
+}
+.post-list .post-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.post-list--roomy.is-list .post-shot img { object-fit: contain; object-position: center; }
+html.mh-dark .post-list .post-shot { background: #0b1b35; }
+
+/* Scroll-to-load replaces the page links once writing-tools.js arms it (is-infinite). */
+.write-hub.is-infinite .posts-nav { display: none; }
+.posts-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+  margin-top: 2.5rem;
+  min-height: 6rem; /* room to trigger the load before the button is reached */
+}
+.posts-more[hidden] { display: none; }
+.posts-more__status {
+  margin: 0;
+  font: 600 .875rem/1.4 var(--font-display);
+  color: var(--color-text-muted);
+}
+.posts-more__status:empty { display: none; }
