@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.57 — Fix: redirect CSV import stalled on a header row
+
+- Importing a redirects CSV that starts with a `source,target,...` header row, or that has a short or blank row, imported nothing: the loop skipped its "read the next row" step on those rows, re-checked the same row until the 500-line cap, and then reported success. The next row is now read in the loop condition, so header and invalid rows are skipped and the rest import.
+
 ## 3.7.56 — About: no GitHub logo on pinned repo cards
 
 - The GitHub mark in the top-left of each pinned repo card is gone, so the category label, title and repo path start at the card's left edge. Other repo card variants keep it. The card heads are top-aligned, so the category chip and title start at the same height across a row.
