@@ -39,6 +39,10 @@
       @else
       <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
       <ul class="footer-nav footer-nav--split">
+        {{-- Shown once the Services page is published, so the footer never links to a draft. --}}
+        @if (\App\mh_is_published_path('/services/'))
+          <li><a href="{{ esc_url(home_url('/services/')) }}">{{ __('Services', 'sage') }}</a></li>
+        @endif
         <li><a href="{{ esc_url(home_url('/about/')) }}">{{ __('About', 'sage') }}</a></li>
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ esc_url($writing) }}">{{ __('Journal', 'sage') }}</a></li>
