@@ -36,11 +36,16 @@ add_filter('body_class', function (array $classes): array {
 
 /**
  * The contact form's thank-you page is a receipt, not a landing page: keep it out of
- * search results. MH SEO and core both print the tag through wp_robots, so this holds
- * whichever one is managing the head. Runs after MH SEO (priority 10).
+ * search results. Core prints the tag through wp_robots. Yoast prints its own and passes
+ * the finished string through wpseo_robots.
  */
+function mh_is_thankyou_page(): bool
+{
+    return is_page() && page_template_key((int) get_queried_object_id()) === 'template-thankyou.blade.php';
+}
+
 add_filter('wp_robots', function (array $robots): array {
-    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+    if (! mh_is_thankyou_page()) {
         return $robots;
     }
     unset($robots['index'], $robots['nofollow']);
@@ -48,6 +53,10 @@ add_filter('wp_robots', function (array $robots): array {
     $robots['follow'] = true;
 
     return $robots;
+}, 20);
+
+add_filter('wpseo_robots', function ($robots) {
+    return mh_is_thankyou_page() ? 'noindex, follow' : $robots;
 }, 20);
 
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
@@ -84,25 +93,12 @@ add_filter('wpseo_breadcrumb_output', function ($html) {
 add_action('wp_head', __NAMESPACE__.'\\mh_print_meta_description', 1);
 
 /**
- * Whether the MH SEO plugin is printing the title and description for this request.
- */
-function mh_seo_plugin_manages_head(): bool
-{
-    return defined('MH_SEO_ACTIVE') && MH_SEO_ACTIVE
-        && function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head();
-}
-
-/**
  * Whether a known SEO plugin is active and will print its own meta description.
  *
  * @since 3.1.0
  */
 function mh_seo_plugin_prints_description(): bool
 {
-    if (mh_seo_plugin_manages_head()) {
-        return true;
-    }
-
     return defined('WPSEO_VERSION')
         || defined('RANK_MATH_VERSION')
         || defined('AIOSEO_VERSION')
@@ -611,9 +607,6 @@ function mh_seo_meta_description(): string
  */
 function mh_filter_document_title($title)
 {
-    if (mh_seo_plugin_manages_head()) {
-        return $title;
-    }
     if (is_admin() || ! is_string($title)) {
         return $title;
     }
@@ -634,9 +627,6 @@ function mh_filter_document_title($title)
  */
 function mh_filter_meta_description($desc)
 {
-    if (mh_seo_plugin_manages_head()) {
-        return $desc;
-    }
     if (is_admin() || ! is_string($desc)) {
         return $desc;
     }
@@ -654,9 +644,6 @@ function mh_filter_meta_description($desc)
  */
 function mh_print_meta_description(): void
 {
-    if (mh_seo_plugin_manages_head()) {
-        return;
-    }
     if (is_admin() || mh_seo_plugin_prints_description()) {
         return;
     }
@@ -744,7 +731,7 @@ add_action('template_redirect', function (): void {
 }, 3);
 
 /**
- * The category to show for a post: the MH SEO primary term when set, otherwise the
+ * The category to show for a post: the Yoast primary category when set, otherwise the
  * first category that is not a cross-post source label (DEV.to), otherwise the first.
  *
  * get_the_category() sorts by name, so without this "DEV.to" wins on cross-posted posts.
@@ -757,7 +744,7 @@ function mh_primary_category(array $cats, int $postId): ?\WP_Term
     if ($cats === []) {
         return null;
     }
-    $primaryId = (int) get_post_meta($postId, '_mh_seo_primary_term', true);
+    $primaryId = (int) get_post_meta($postId, '_yoast_wpseo_primary_category', true);
     foreach ($cats as $cat) {
         if ($cat instanceof \WP_Term && $primaryId > 0 && (int) $cat->term_id === $primaryId) {
             return $cat;
@@ -794,7 +781,7 @@ function mh_post_updated(int $postId): ?array
 }
 
 /**
- * Meta query that leaves out posts marked noindex in MH SEO (the archived Power Apps notes).
+ * Meta query that leaves out posts marked noindex in Yoast (the archived Power Apps notes).
  *
  * @return array<int|string, mixed>
  */
@@ -802,8 +789,8 @@ function mh_exclude_noindex_meta_query(): array
 {
     return [
         'relation' => 'OR',
-        ['key' => '_mh_seo_noindex', 'compare' => 'NOT EXISTS'],
-        ['key' => '_mh_seo_noindex', 'value' => '1', 'compare' => '!='],
+        ['key' => '_yoast_wpseo_meta-robots-noindex', 'compare' => 'NOT EXISTS'],
+        ['key' => '_yoast_wpseo_meta-robots-noindex', 'value' => '1', 'compare' => '!='],
     ];
 }
 
@@ -822,34 +809,6 @@ add_action('pre_get_posts', function (\WP_Query $query): void {
     $meta[] = mh_exclude_noindex_meta_query();
     $query->set('meta_query', $meta);
 });
-
-/**
- * Core sitemap (wp-sitemap.xml) is the live one, so make it follow MH SEO's robots rules:
- * no posts marked noindex or excluded, and no tag or author lists (both are noindex).
- */
-add_filter('wp_sitemaps_posts_query_args', function (array $args, string $postType): array {
-    unset($postType);
-    $meta = isset($args['meta_query']) && is_array($args['meta_query']) ? $args['meta_query'] : [];
-    $meta[] = mh_exclude_noindex_meta_query();
-    $meta[] = [
-        'relation' => 'OR',
-        ['key' => '_mh_seo_sitemap_exclude', 'compare' => 'NOT EXISTS'],
-        ['key' => '_mh_seo_sitemap_exclude', 'value' => '1', 'compare' => '!='],
-    ];
-    $args['meta_query'] = $meta;
-
-    return $args;
-}, 10, 2);
-
-add_filter('wp_sitemaps_taxonomies', function (array $taxonomies): array {
-    unset($taxonomies['post_tag']);
-
-    return $taxonomies;
-});
-
-add_filter('wp_sitemaps_add_provider', function ($provider, string $name) {
-    return $name === 'users' ? false : $provider;
-}, 10, 2);
 
 /**
  * Author archives are noindex and show a username in the URL (/author/admin/).

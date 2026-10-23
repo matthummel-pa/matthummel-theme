@@ -72,7 +72,7 @@ When writing a **post or long project narrative**, use this order. Skip layers t
 
 ## Strict on-page SEO limits
 
-- **Title tags:** under **60 characters**. When setting a document title: `[Service or topic] | Matt Hummel` (skill-first; no city stuffing). If the title already says Matt Hummel, drop the `| Matt Hummel` suffix — the name appears once (MH SEO also strips a repeated suffix). The About page may name Gettysburg, PA once. Short page H1s (`Work`, `About`) stay as they are; do not rename every H1 into a keyword string.
+- **Title tags:** under **60 characters**. When setting a document title: `[Service or topic] | Matt Hummel` (skill-first; no city stuffing). If the title already says Matt Hummel, drop the `| Matt Hummel` suffix — the name appears once. The About page may name Gettysburg, PA once. Short page H1s (`Work`, `About`) stay as they are; do not rename every H1 into a keyword string.
 - **Meta descriptions:** under **155 characters**. Spend the space on what the page offers (what I build, for whom, what you will find). Do not end on a bare `Say hello.` — a CTA is fine only when it says something specific (`Try a live demo`). First person. Not “See how we automated this workflow.”
 - **Location density:** do **not** require a city name on marketing pages. Demo places on Work cards are fine. One personal bio mention is optional, not a ranking tactic.
 - **Readability:** paragraphs **3 sentences max** on landing fields (stricter than the general 3–4 in `master-content-writer.mdc`). This file wins on landing length; the content-writer file still wins on grammar, glossary, and I/my.

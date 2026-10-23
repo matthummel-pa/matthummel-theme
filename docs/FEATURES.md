@@ -29,15 +29,6 @@ What the 3.x Sage theme does, and where it lives.
 - Converting a page: build markup with the `mh_blocks_*` helpers from the page's saved fields, call `mh_save_page_blocks()`, leave the `mh_f_*` meta in place as the backup.
 - Retiring a template: once a converted page is confirmed on live, move its old `template-*.blade.php` to `resources/archive/views/` (outside `resources/views/`, so WordPress stops listing it as a page template) in the next PR. Switch the page to the Block page template in the same conversion, or it loses its template when the file moves. The archive folder is deleted when every page is done.
 
-## Editor’s notes (3.7.7 SEO box)
-
-- The SEO box is `app/modules/mh-seo/includes/class-meta-box.php` with `assets/meta-box.js` and `assets/meta-box.css`. They are plain files with no build step. The SEO sidebar is still the compiled `build/index.js`; its source is in the MH SEO plugin repository, not here.
-- A new per-post field needs four things: a key in `Meta::keys()` (and `Meta::flag_keys()` for a checkbox), a branch in `Meta::sanitize()` when it is not plain text, a name in `Meta_Box::text_fields()`, and a field in one of the `render_*` methods. The script picks it up from the config, so the sidebar sync needs no change.
-- Field ids start with `mh-seo-field-`. WordPress 7.1 gives the box heading the id `mh-seo-title`.
-- Robots choices travel as `robots_advanced` from `Context` through `Document_Builder::build()` to `Head::merge_robots()`. Core prints the tag.
-- FAQ and HowTo schema read the rendered content (`Schema::faq_items()`, `Schema::howto_steps()`), so they only describe what is visible on the page. They are off unless ticked on a post.
-- These changes are in the bundled module only. Copy them to the standalone MH SEO plugin before its next release, or the plugin copy will win and hide them.
-
 ## Editor’s notes (3.6.62 polish)
 
 - Small type was raised in place across the stylesheets. Do not add sizes under `.8125rem`; card copy is `1rem`.
@@ -45,7 +36,6 @@ What the 3.x Sage theme does, and where it lives.
 - `resources/js/list-transition.js` animates any list that changes in place: `swapWithMotion(list, mutate, { rich })`. Use `rich: true` for clicks, leave it off for per-keystroke updates.
 - Projects filter: every card is in the HTML with `data-cat`; `?cat=` hides the rest server-side and `work-tools.js` does the same in place.
 - Journal: the home, archives, and search wrap their results in `[data-journal]` with `data-journal-region` parts (`topics`, `results`, `count`, `sort`). `writing-tools.js` fetches the normal page and swaps those regions. A new journal template needs the same regions and `partials/journal-results`.
-- SEO score for template pages comes from the rendered page (`app/seo-score-column.php`). It fetches the page over HTTP on save, so it is skipped under PHP's built-in server; `wp mh-seo score` re-scores everything.
 - Unused CSS was removed by checking every class against the views, PHP, and JS. `journal-blocks.css`, `product-landing.css`, and `code-blocks.css` were left alone because they style markup typed into posts and products.
 
 ## Editor’s notes (3.6.59 contrast and gaps)
@@ -114,7 +104,7 @@ What the 3.x Sage theme does, and where it lives.
 - `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
 - `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
 - Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
-- Catalog `seo_title` / `seo_description` exist for all four projects. They seed `_mh_seo_*` once (`mh_product_catalog_v13`); wp-admin edits win.
+- Catalog `seo_title` / `seo_description` exist for all four projects. They seed Yoast's title and description once (`mh_product_catalog_v13`); wp-admin edits win.
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)
@@ -163,7 +153,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
 - `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
-- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into MH SEO meta when empty).
+- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into Yoast meta when empty).
 
 ## Editor’s notes (3.6.35 project feedback)
 
