@@ -7059,3 +7059,21 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   color: var(--color-text-muted);
 }
 .posts-more__status:empty { display: none; }
+
+/* === 3.7.41 · Journal cards: smaller category pills and meta line ===
+   Scoped to .post-card so filter pills, Work cards and the post page keep their size.
+   Pills stay at the 12px label floor and the 24px target minimum (WCAG 2.2 · 2.5.8). */
+.post-card .post-meta {
+  gap: .3rem .45rem;
+  font-size: .8125rem;
+  letter-spacing: .03em;
+  line-height: 1.3;
+}
+.post-card .post-cats.project-type-row { gap: .35rem; }
+.post-card .post-cat.project-cat-pill {
+  padding: .2rem .6rem;
+  min-height: 24px;
+  font-size: .75rem;
+  letter-spacing: .05em;
+  line-height: 1.2;
+}

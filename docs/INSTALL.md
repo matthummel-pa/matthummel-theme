@@ -1,6 +1,6 @@
 # Install the theme in WordPress
 
-**Every step in this guide runs on the staging site**, `https://matthummel-com-524423.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Nobody installs or activates the theme on live. Live (**[matthummel.com](https://matthummel.com)**) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish), which copies files and database together.
+**Every step in this guide runs on the staging site**, `https://matthummel-com-623249.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Nobody installs or activates the theme on live. Live (**[matthummel.com](https://matthummel.com)**) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish), which copies files and database together.
 
 Do this **after** files are on the staging server (Update Theme in wp-admin, a `main` push, or a manual upload).
 
@@ -73,7 +73,7 @@ Keep a default theme (Twenty Twenty-Five) installed so WordPress has a fallback.
 
 ## 7. Later deploys (staging first)
 
-Theme updates go to the **staging site** — `https://matthummel-com-524423.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Check the change there. Live (`matthummel.com`) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish). Nobody installs the theme on live directly.
+Theme updates go to the **staging site** — `https://matthummel-com-623249.hostingersite.com/` ("hummel-dev"), Hostinger's staging copy of matthummel.com. Check the change there. Live (`matthummel.com`) only changes when Matt publishes staging → live in hPanel (Websites → Staging → Publish). Nobody installs the theme on live directly.
 
 On staging: Appearance → **Update Theme** → Update theme from GitHub. Token setup is one-time (see `docs/sage/deployment.md`). Then clear the cache: hPanel → the staging site → **Clear cache** (or the Hostinger API `agency-hosting_cache_clear-website`). Staging does not run the LiteSpeed Cache plugin; live does.
 
