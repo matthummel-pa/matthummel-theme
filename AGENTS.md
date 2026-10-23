@@ -23,7 +23,7 @@ Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinge
 `wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
 `.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
 
-Staging first: **[matthummel-com-524423.hostingersite.com](https://matthummel-com-524423.hostingersite.com/)**
+Staging first: **[matthummel-com-623249.hostingersite.com](https://matthummel-com-623249.hostingersite.com/)**
 ("hummel-dev") is Hostinger's staging copy of the site. Every design or dev change is installed
 and checked there. Agents never deploy to, install on, or edit `matthummel.com`; Matt publishes
 staging → live from hPanel.
