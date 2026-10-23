@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.61 — Fix: keep the Power Platform category out of search
+
+- `/category/power-platform/` was indexable and listed in the core sitemap, even though every post in it is already noindex. The category page now prints `noindex, follow` and is left out of `wp-sitemap.xml`. The post URLs and the redirects are unchanged.
+- The slug list lives in `mh_noindex_category_slugs()` in `app/filters.php`, so another archived category is a one-line change.
+- Verify after install: view source on `/category/power-platform/` for `noindex`, and check that `/wp-sitemap-taxonomies-category-1.xml` no longer lists it. Purge LiteSpeed first.
+
 ## 3.7.58 — Fix: redirect targets keep their trailing slash
 
 - A redirect target on this site lost its trailing slash, query string, and `#section` when it was saved from the Redirects form or a CSV import. WordPress then added the slash with a second redirect, so every such redirect took two hops. Targets now keep the slash, query, and fragment as written.

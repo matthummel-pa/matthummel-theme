@@ -852,6 +852,56 @@ add_filter('wp_sitemaps_add_provider', function ($provider, string $name) {
 }, 10, 2);
 
 /**
+ * Category archives for the archived Power Platform writing (see the archive routine in
+ * bespoke.php). The posts are noindex, so their category page stays out of search too.
+ *
+ * @return list<string> Category slugs.
+ */
+function mh_noindex_category_slugs(): array
+{
+    return ['power-platform'];
+}
+
+/**
+ * Noindex those category archives. Runs after MH SEO (priority 10), like the thank-you page.
+ */
+add_filter('wp_robots', function (array $robots): array {
+    if (! is_category(mh_noindex_category_slugs())) {
+        return $robots;
+    }
+    unset($robots['index'], $robots['nofollow']);
+    $robots['noindex'] = true;
+    $robots['follow'] = true;
+
+    return $robots;
+}, 20);
+
+/**
+ * Keep the same category archives out of the core sitemap.
+ *
+ * @param  array<string, mixed>  $args  get_terms() arguments for the sitemap query.
+ * @param  string  $taxonomy  Taxonomy name.
+ * @return array<string, mixed>
+ */
+add_filter('wp_sitemaps_taxonomies_query_args', function (array $args, string $taxonomy): array {
+    if ($taxonomy !== 'category') {
+        return $args;
+    }
+    $ids = [];
+    foreach (mh_noindex_category_slugs() as $slug) {
+        $term = get_term_by('slug', $slug, 'category');
+        if ($term instanceof \WP_Term) {
+            $ids[] = (int) $term->term_id;
+        }
+    }
+    if ($ids !== []) {
+        $args['exclude'] = array_merge((array) ($args['exclude'] ?? []), $ids);
+    }
+
+    return $args;
+}, 10, 2);
+
+/**
  * Author archives are noindex and show a username in the URL (/author/admin/).
  * There is one author, so send them to About.
  */
