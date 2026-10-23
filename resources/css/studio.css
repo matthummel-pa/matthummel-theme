@@ -7209,3 +7209,59 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   padding: .55em clamp(.6rem, 3cqi, 1.1rem);
 }
 .work-grid--roomy .work-card .work-meta + .work-actions { margin-top: .9rem; }
+
+/* === 3.7.48 · Projects "Inside each one": text stays off the drawing, checklist as a card ===
+   The line-art drawing is pinned behind the right half of the section, but the lead and the
+   checklist ran the full container width and crossed it. From 900px (where the drawing shows) the
+   text column stops at the drawing's left edge. The checklist becomes a card with round check
+   badges; an item may start with a bold lead line (<strong>) and carry one short detail after it. */
+@media (min-width: 900px) {
+  #inside > .container > :is(h2, p, ul) { max-width: min(36rem, calc(50% - 1.5rem)); }
+}
+#inside ul.is-style-checklist {
+  margin: 1.75rem 0;
+  padding: .35rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+#inside ul.is-style-checklist > li {
+  padding: .95rem 0 .95rem 2.75rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+#inside ul.is-style-checklist > li > strong:first-child {
+  display: block;
+  margin-bottom: .1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+/* Badge: a ring for the circle, the check cut from a mask so it follows the theme colour. */
+#inside ul.is-style-checklist > li::before {
+  left: 0;
+  top: 1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1.5px solid var(--lime-700);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--lime-700) 12%, transparent);
+  transform: none;
+}
+#inside ul.is-style-checklist > li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--lime-700);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9'/%3E%3C/svg%3E") center / 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+html.mh-dark #inside ul.is-style-checklist > li::before { border-color: var(--lime-300); }
+html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-300); }
+html.mh-dark #inside ul.is-style-checklist { border-color: rgba(167, 139, 250, .22); }
+@media (max-width: 639px) {
+  #inside ul.is-style-checklist { padding-inline: 1rem; }
+  #inside ul.is-style-checklist > li { padding-left: 2.5rem; }
+}
