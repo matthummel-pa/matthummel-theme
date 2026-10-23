@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.59 — Footer: link to Services
+
+- The footer's Site list links to Services, first in the list like the header menu. The link appears only once the Services page is published, the same way the agencies and handoff checklist links already work, so the footer never points at a draft.
+
 ## 3.7.58 — Fix: redirect targets keep their trailing slash
 
 - A redirect target on this site lost its trailing slash, query string, and `#section` when it was saved from the Redirects form or a CSV import. WordPress then added the slash with a second redirect, so every such redirect took two hops. Targets now keep the slash, query, and fragment as written.
