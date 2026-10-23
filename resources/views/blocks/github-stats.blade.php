@@ -19,6 +19,16 @@
   $heatTotal = (int) ($snap['calendar90']['total'] ?? 0);
   $byDay = (array) ($snap['events_by_day'] ?? []);
   $showHeat = ! empty($attributes['showHeatmap']) && $heatWeeks !== [];
+  // Days with a date and days with at least one contribution, for the line under the mix.
+  $days90 = 0;
+  $active90 = 0;
+  foreach ($heatWeeks as $week) {
+      foreach ($week as $day) {
+          if (($day['date'] ?? '') === '') continue;
+          $days90++;
+          if ((int) ($day['count'] ?? 0) > 0) $active90++;
+      }
+  }
 
   // Mix: what the 12 months of contributions were made of.
   $mixParts = [
@@ -171,6 +181,25 @@
               </li>
             @endforeach
           </ul>
+          @if ($days90 > 0)
+            <div class="gh-mix__foot">
+              <p>{{ sprintf(
+                  /* translators: 1: days with contributions, 2: days in the window */
+                  __('Active on %1$s of the last %2$s days.', 'sage'),
+                  number_format_i18n($active90),
+                  number_format_i18n($days90)
+              ) }}</p>
+              @if ($bestDay && (int) ($bestDay['count'] ?? 0) > 0)
+                @php $bestTs2 = strtotime(((string) $bestDay['date']).' UTC'); @endphp
+                <p>{{ sprintf(
+                    /* translators: 1: contribution count, 2: date */
+                    __('Busiest day in 12 months: %1$s contributions on %2$s.', 'sage'),
+                    number_format_i18n((int) $bestDay['count']),
+                    $bestTs2 ? date_i18n('M j', $bestTs2) : (string) $bestDay['date']
+                ) }}</p>
+              @endif
+            </div>
+          @endif
         </section>
       @endif
   </div>
