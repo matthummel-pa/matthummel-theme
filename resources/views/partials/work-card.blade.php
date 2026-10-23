@@ -19,6 +19,8 @@
     implode(' ', $p['tech'] ?? []),
     $p['product_type'] ?? '',
   ]))));
+  $techKey = '|'.implode('|', array_map(static fn ($t) => strtolower(trim((string) $t)), (array) ($p['tech'] ?? []))).'|';
+  $publishedTs = ! empty($p['published']) ? strtotime((string) $p['published']) : false;
 @endphp
 <article
   class="work-card{{ $featured ? ' work-card--featured' : '' }}"
@@ -26,6 +28,10 @@
   data-work-card
   data-cat="{{ esc_attr((string) ($p['cat'] ?? '')) }}"
   data-search="{{ esc_attr($haystack) }}"
+  data-tech="{{ esc_attr($techKey) }}"
+  data-title="{{ esc_attr(strtolower($title)) }}"
+  data-date="{{ esc_attr($publishedTs ? gmdate('c', $publishedTs) : '') }}"
+  data-order="{{ (int) ($order ?? 0) }}"
   @if (! empty($isHidden)) hidden @endif
 >
   @if ($shot !== '')
@@ -53,7 +59,7 @@
     @include('partials.project-type-row', ['p' => $p])
     {{-- H3: cards always sit under a section H2 (project browser, More projects). --}}
     <h3><a href="{{ esc_url($conceptUrl) }}">{{ $title }}</a></h3>
-    <p>{{ $p['blurb'] }}</p>
+    <p class="work-blurb">{{ $p['blurb'] }}</p>
     @if (! empty($p['tech']))
       @php
         $techAll = array_values(array_filter(array_map('strval', (array) $p['tech'])));
@@ -68,6 +74,12 @@
           {{-- translators: %s is a comma-separated list of tool names. --}}
           <span class="pill pill--more" title="{{ esc_attr(implode(', ', array_slice($techAll, 4))) }}">+{{ $techRest }}<span class="visually-hidden"> {{ sprintf(_n('more tool: %s', 'more tools: %s', $techRest, 'sage'), implode(', ', array_slice($techAll, 4))) }}</span></span>
         @endif
+      </p>
+    @endif
+    @if ($publishedTs)
+      <p class="work-meta">
+        {{-- translators: %s is a <time> element holding a month and year, e.g. Oct 2026. --}}
+        {!! wp_kses(sprintf(esc_html__('Added %s', 'sage'), '<time datetime="'.esc_attr(gmdate('c', $publishedTs)).'">'.esc_html(wp_date('M Y', $publishedTs)).'</time>'), ['time' => ['datetime' => true]]) !!}
       </p>
     @endif
     <div class="work-actions">

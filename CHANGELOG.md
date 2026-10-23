@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.46 — Projects grid: sort, tool filter, shareable filters, Journal-style cards
+
+- Sort by Newest, Oldest or A–Z beside the Grid/List toggle. Sorting and filtering work without JavaScript (`?sort=`, `?cat=`, `?tech=`) and in place with it.
+- A "Built with" row filters by the tools two or more projects use (up to eight, most used first), alongside the type pills. Type, tool, search and sort combine.
+- Filters are shareable: type, tool, sort and the search box are kept in the address bar (`?cat=&tech=&sort=&q=`), and Back/Forward step through them. "Clear filters" resets all four.
+- Cards: three across from 1100px, titles scale with the screen, the blurb is capped at three lines with its height reserved so rows stay even, and each card shows "Added {Month Year}" from the project's publish date (hidden when a project has none).
+
 ## 3.7.45 — Journal cards: excerpts capped at three lines
 
 - Card excerpts clamp to three lines with an ellipsis and reserve that height, so one row of the grid is no taller than the next because of excerpt length. Only the first paragraph shows; the full excerpt stays in the page. Card titles can still differ by a line.

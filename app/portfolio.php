@@ -1854,6 +1854,7 @@ function mh_project_post_to_card(\WP_Post $post): array
         'url' => mh_concept_page_url($post->post_name, $post_id),
         'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
+        'published' => (string) get_post_time('c', true, $post),
         'product_id' => function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0,
         'product_type' => $productType,
         'buy_url' => $buyUrl,

@@ -7127,3 +7127,43 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   overflow: hidden;
 }
 .post-card .post-card-excerpt p ~ p { display: none; }
+
+/* === 3.7.46 · Projects grid: Journal-style cards, tool row, date line ===
+   Three across from 1100px (two below, one under 720px). Titles scale with the screen, the blurb is
+   capped at three lines with its height reserved so rows stay even, and the tool pills sit on a
+   fixed gap. The tool filter row reuses .filter-row / .filter-pill. */
+@media (min-width: 1100px) {
+  .work-grid--roomy:not(.is-list) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.work-grid--roomy .work-card :is(h2, h3),
+.work-grid--roomy .work-card h3 {
+  font-size: clamp(1.1875rem, .9rem + 1vw, 1.5rem);
+  text-wrap: balance;
+}
+.work-grid--roomy .work-card .work-blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  margin: 0;
+  min-height: calc(1.6em * 3);
+}
+.work-grid--roomy.is-list .work-card .work-blurb { min-height: 0; }
+.work-card .pill-row { margin-top: .75rem; }
+.work-card .work-meta {
+  margin: .75rem 0 0;
+  font-size: .8125rem;
+  letter-spacing: .03em;
+  line-height: 1.3;
+  color: var(--color-text-muted);
+}
+.work-card .work-meta time { font-weight: 600; color: var(--color-text); }
+.filter-row--tech { margin-top: -1rem; align-items: center; }
+.filter-row__label {
+  font: 600 .8125rem/1 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-right: .25rem;
+}
