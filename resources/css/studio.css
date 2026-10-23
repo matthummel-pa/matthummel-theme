@@ -7132,9 +7132,6 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
    Three across from 1100px (two below, one under 720px). Titles scale with the screen, the blurb is
    capped at three lines with its height reserved so rows stay even, and the tool pills sit on a
    fixed gap. The tool filter row reuses .filter-row / .filter-pill. */
-@media (min-width: 1100px) {
-  .work-grid--roomy:not(.is-list) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
 .work-grid--roomy .work-card :is(h2, h3),
 .work-grid--roomy .work-card h3 {
   font-size: clamp(1.1875rem, .9rem + 1vw, 1.5rem);
@@ -7167,3 +7164,48 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   color: var(--color-text-muted);
   margin-right: .25rem;
 }
+
+/* === 3.7.47 · Projects grid: fluid cards, side-by-side buttons, roomier pills ===
+   Columns: 3 on desktop (1024px+), 2 on tablet (640-1023px), 1 on mobile. Every card is a size
+   container, so type, padding and buttons follow the card's own width (cqi) and stay right
+   whether the card sits in 3, 2 or 1 columns. Floors keep body text at 15px and labels at 12px. */
+.work-grid--roomy:not(.is-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 1024px) { .work-grid--roomy:not(.is-list) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .work-grid--roomy:not(.is-list) { grid-template-columns: 1fr; } }
+
+.work-grid--roomy .work-card { container: work-card / inline-size; }
+.work-grid--roomy .work-card .work-body { padding: clamp(1rem, 5.5cqi, 1.5rem); }
+.work-grid--roomy .work-card :is(h2, h3),
+.work-grid--roomy .work-card h3 { font-size: clamp(1.1875rem, 5.4cqi, 1.75rem); }
+.work-grid--roomy .work-card p { font-size: clamp(.9375rem, 3.2cqi + .25rem, 1.0625rem); }
+
+/* Type / industry / place pills: more air between them and below them. */
+.work-card .project-type-row { gap: .5rem .55rem; margin: 0 0 .35rem; }
+.work-card .project-type-row .spec-badge,
+.work-card .project-cat-pill,
+.work-card .project-place-pill {
+  padding: .3rem .7rem;
+  font-size: clamp(.75rem, 2.7cqi, .8125rem);
+}
+.work-card .pill-row { gap: .45rem; margin-top: .9rem; }
+.work-card .pill-row .pill { font-size: clamp(.75rem, 2.7cqi, .8125rem); }
+.work-grid--roomy .work-card .work-meta { font-size: clamp(.75rem, 2.7cqi, .875rem); }
+
+/* Buttons sit side by side at every width, share the row equally, and get a hairline above them. */
+.work-grid--roomy .work-card .work-actions {
+  flex-wrap: nowrap;
+  gap: clamp(.5rem, 2.5cqi, .75rem);
+  margin-top: auto;
+  padding-top: clamp(.9rem, 4cqi, 1.15rem);
+  border-top: 1px solid var(--color-border);
+}
+.work-grid--roomy .work-card .work-actions .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(.875rem, 3.4cqi, 1rem);
+  padding: .55em clamp(.6rem, 3cqi, 1.1rem);
+}
+.work-grid--roomy .work-card .work-meta + .work-actions { margin-top: .9rem; }
