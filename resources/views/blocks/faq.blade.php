@@ -1,6 +1,5 @@
 {{-- matthummel/faq: core Details blocks inside the theme's question list.
-     FAQPage structured data for these questions is part of the page's one
-     JSON-LD graph (MH SEO, class-schema.php), so this view prints none. --}}
+     This view prints no structured data; the SEO plugin owns the page's JSON-LD. --}}
 <div class="{{ trim('faq-list mh-block-faq '.($attributes['className'] ?? '')) }}">
   {!! $content !!}
 </div>
