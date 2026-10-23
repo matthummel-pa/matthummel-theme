@@ -17,6 +17,7 @@
   $release = (string) ($r['release'] ?? '');
   $releaseUrl = (string) ($r['release_url'] ?? '');
   $releaseDate = (string) ($r['release_date'] ?? '');
+  $license = (string) ($r['license'] ?? '');
 @endphp
 <article class="repo-card repo-card--{{ $variant }}">
   @if ($variant === 'featured' && $index > 0)
@@ -58,7 +59,7 @@
       @endforeach
     </p>
   @endif
-  @if (! empty($r['stars']) || ! empty($r['forks']) || $lang !== '' || ($variant === 'featured' && $pushed !== ''))
+  @if (! empty($r['stars']) || ! empty($r['forks']) || $lang !== '' || $license !== '' || ($variant === 'featured' && $pushed !== ''))
     <p class="pf-meta repo-stats repo-card__stats">
       @if ($lang !== '')
         <span class="repo-lang">
@@ -74,6 +75,9 @@
       @endif
       @if ($commits > 0)
         <span>{{ sprintf(_n('%s commit', '%s commits', $commits, 'sage'), number_format_i18n($commits)) }}</span>
+      @endif
+      @if ($license !== '')
+        <span class="repo-card__license" title="{{ esc_attr__('License', 'sage') }}">{{ $license }}</span>
       @endif
       @if ($variant === 'featured' && $pushed !== '')
         <span>{{ sprintf(__('Pushed %s', 'sage'), \App\mh_github_ago($pushed)) }}</span>

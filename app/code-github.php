@@ -234,9 +234,20 @@ function mh_code_gh_derive(array $snap): array
  */
 function mh_code_gh_featured(array $pinned, array $repos): array
 {
+    // GraphQL pins carry no license; the REST list does, so match by name.
+    $licenseByName = [];
+    foreach ($repos as $repo) {
+        if (($repo['license'] ?? '') !== '') {
+            $licenseByName[strtolower((string) $repo['name'])] = (string) $repo['license'];
+        }
+    }
+
     $out = [];
     foreach ($pinned as $r) {
         if (! mh_github_is_hidden_repo((string) ($r['name'] ?? ''))) {
+            if (($r['license'] ?? '') === '') {
+                $r['license'] = $licenseByName[strtolower((string) ($r['name'] ?? ''))] ?? '';
+            }
             $out[] = mh_code_gh_card($r);
         }
     }

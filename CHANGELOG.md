@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.52 — About: a fuller GitHub section
+
+- Stats are six tiles with icons: public repos, contributions (12 months), active days with the average per active day, current streak with the best, stars earned and followers. A "Last push to {repo}, {time}" line sits under them.
+- New: a 90-day contribution heatmap with a legend and a text summary (including the busiest day in 12 months), the contribution mix (commits, pull requests, reviews, issues) as one bar with counts, and a recent-activity feed. Each has its own toggle on the GitHub stats block, on by default, so the saved page picks them up without an edit.
+- Pinned repos get a "Most starred" strip (top three by stars; toggle on the GitHub repos block). Repo cards show the license when GitHub reports one. The language bar sits in a panel with a thicker bar and a column-filling legend.
+- All of it comes from the hourly GitHub snapshot the site already stores, so there are no new API calls.
+
 ## 3.7.51 — Projects "Inside each one": lead line larger than its detail
 
 - In the item boxes the detail text inherited the section's larger size and read bigger than the bold lead line above it. The detail is now 15px and the lead line 18px.

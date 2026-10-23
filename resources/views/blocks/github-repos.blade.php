@@ -8,6 +8,10 @@
   $gh = \App\Github::fetchUser($login);
   $ghUrl = ($gh['url'] ?? '') ?: 'https://github.com/'.$login;
   $showAll = ! empty($attributes['showAllLink']);
+  // Most-starred repos, pinned list only: the star counts live in the snapshot already.
+  $starred = (! $isRecent && ! empty($attributes['showStarred']))
+    ? array_slice(array_values(array_filter((array) ($snap['star_repos'] ?? []), static fn ($s) => (int) ($s['stars'] ?? 0) > 0)), 0, 3)
+    : [];
 @endphp
 <div class="{{ trim('mh-data mh-github-repos '.($attributes['className'] ?? '')) }}" id="{{ $isRecent ? 'gh-updated' : 'gh-featured' }}">
   @if ($showAll)
@@ -63,5 +67,21 @@
         </li>
       @endforeach
     </ol>
+    @if ($starred !== [])
+      <div class="gh-starred">
+        <h4 class="gh-starred__title">{{ __('Most starred', 'sage') }}</h4>
+        <ul class="gh-starred__list">
+          @foreach ($starred as $s)
+            <li>
+              <a class="gh-starred__item" href="{{ esc_url($s['url']) }}" rel="noopener" target="_blank">
+                <span class="gh-starred__name">{{ \App\mh_title_label((string) $s['name']) }}</span>
+                <span class="gh-starred__stars">{!! \App\mh_svg_icon('star', 13) !!} {{ number_format_i18n((int) $s['stars']) }}</span>
+                <span class="visually-hidden"> {{ sprintf(_n('%s star', '%s stars', (int) $s['stars'], 'sage'), number_format_i18n((int) $s['stars'])) }} {{ __('(opens in a new window)', 'sage') }}</span>
+              </a>
+            </li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
   @endif
 </div>

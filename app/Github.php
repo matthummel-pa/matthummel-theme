@@ -540,7 +540,7 @@ GQL;
      */
     public static function fetchOwnerRepos(string $user): array
     {
-        $key = 'mh_ghown1_'.md5($user);
+        $key = 'mh_ghown2_'.md5($user);
         if (($d = self::cached($key)) !== false && is_array($d)) {
             return $d;
         }
@@ -564,6 +564,7 @@ GQL;
                     continue;
                 }
                 $topics = $j['topics'] ?? [];
+                $spdx = (string) ($j['license']['spdx_id'] ?? '');
                 $out[] = [
                     'name' => $name,
                     'full' => (string) ($j['full_name'] ?? $user.'/'.$name),
@@ -576,6 +577,7 @@ GQL;
                     'topics' => is_array($topics) ? array_values(array_map('strval', $topics)) : [],
                     'pushed' => (string) ($j['pushed_at'] ?? ''),
                     'archived' => ! empty($j['archived']),
+                    'license' => ($spdx !== '' && $spdx !== 'NOASSERTION') ? $spdx : '',
                 ];
             }
             if (count($batch) < 100) {
