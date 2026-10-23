@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.54 — About: pinned repo cards
+
+- Pinned repos are three across from 1100px, two on tablet and one on mobile. Leftover cards share their row (five cards are 3 + 2), so none sits alone at half width.
+- Each card keeps its stats, release and buttons at the bottom, so footers line up across a row. Stats are an icon row (language, stars, forks, commits, license, last push). The release is a version badge that leads the stats line (the date is its tooltip), so titles, stats and footers line up across a row. Tags show four, then a "+N" chip; descriptions stop at four lines.
+
 ## 3.7.53 — About GitHub: a footer on the mix panel
 
 - The contribution-mix panel stretched to the heatmap's height and left empty space under its legend. It now ends with two facts: how many of the last 90 days had a contribution, and the busiest day in 12 months.
