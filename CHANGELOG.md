@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.45 — Journal cards: excerpts capped at three lines
+
+- Card excerpts clamp to three lines with an ellipsis and reserve that height, so one row of the grid is no taller than the next because of excerpt length. Only the first paragraph shows; the full excerpt stays in the page. Card titles can still differ by a line.
+
 ## 3.7.44 — Journal cards: one gap above the title
 
 - The gap between the category pill and the card title was about 24px: the pills row added 14px and the older `.post-card-title` `margin-top: .6rem !important` rule added its own. The title now owns the gap (14px after the pill, 12px straight after the meta line when a post has no category), and the meta line and pills row no longer add bottom margin.
