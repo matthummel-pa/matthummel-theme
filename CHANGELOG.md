@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.53 — About GitHub: a footer on the mix panel
+
+- The contribution-mix panel stretched to the heatmap's height and left empty space under its legend. It now ends with two facts: how many of the last 90 days had a contribution, and the busiest day in 12 months.
+
 ## 3.7.52 — About: a fuller GitHub section
 
 - Stats are six tiles with icons: public repos, contributions (12 months), active days with the average per active day, current streak with the best, stars earned and followers. A "Last push to {repo}, {time}" line sits under them.
