@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.58 — Fix: redirect targets keep their trailing slash
+
+- A redirect target on this site lost its trailing slash, query string, and `#section` when it was saved from the Redirects form or a CSV import. WordPress then added the slash with a second redirect, so every such redirect took two hops. Targets now keep the slash, query, and fragment as written.
+- The automatic redirect created when a post or page slug changes now stores the new permalink as WordPress prints it, so it is one hop too.
+- Sources are matched exactly as before. Redirects already saved without a slash keep working; edit them in Tools → Redirects to remove the extra hop.
+
 ## 3.7.57 — Fix: redirect CSV import stalled on a header row
 
 - Importing a redirects CSV that starts with a `source,target,...` header row, or that has a short or blank row, imported nothing: the loop skipped its "read the next row" step on those rows, re-checked the same row until the 500-line cap, and then reported success. The next row is now read in the loop condition, so header and invalid rows are skipped and the rest import.

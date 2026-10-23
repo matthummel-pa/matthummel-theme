@@ -224,7 +224,8 @@ class Redirects
         }
         // The new slug is live now, so any older row that redirects away from it is stale.
         $this->delete_by_source($target);
-        $this->insert_if_missing($source, $target, 301, 'exact');
+        // Store the permalink as WordPress prints it, trailing slash included, so the redirect is one hop.
+        $this->insert_if_missing($source, Paths::normalize_target($new), 301, 'exact');
     }
 
     /**
@@ -691,7 +692,9 @@ class Redirects
             return '';
         }
         if (str_starts_with($target, '/')) {
-            return Paths::normalize_source($target);
+            $local = Paths::normalize_target($target);
+
+            return $local === '' ? '' : esc_url_raw($local);
         }
         $url = esc_url_raw($target);
         if ($url === '' || ! wp_http_validate_url($url)) {
