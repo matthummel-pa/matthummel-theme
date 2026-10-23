@@ -416,8 +416,8 @@ class Redirects
             exit;
         }
         $line = 0;
-        $row = fgetcsv($handle);
-        while ($row !== false) {
+        // Read the next row in the loop condition so a skipped header or bad row still advances.
+        while (($row = fgetcsv($handle)) !== false) {
             $line++;
             if ($line > 500) {
                 break;
@@ -439,7 +439,6 @@ class Redirects
                 $match = 'exact';
             }
             $this->upsert($source, $target, $code, $match);
-            $row = fgetcsv($handle);
         }
         fclose($handle); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         wp_safe_redirect(admin_url('tools.php?page=mh-seo-redirects&mh-seo-saved=1'));
