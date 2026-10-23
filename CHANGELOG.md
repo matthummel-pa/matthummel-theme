@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.51 — Projects "Inside each one": lead line larger than its detail
+
+- In the item boxes the detail text inherited the section's larger size and read bigger than the bold lead line above it. The detail is now 15px and the lead line 18px.
+- The heading and lead can run wider (up to 44rem, 62% of the column): the drawing beside them is narrower (38%, max 480px) to make room, still with a gutter between them.
+
 ## 3.7.50 — Projects "Inside each one": every item in its own box
 
 - The checklist is now a grid of boxes under the heading and lead: three across on desktop, two on tablet, one on mobile, so the section no longer leaves a tall empty column beside the drawing. A lone last box spans its row.
