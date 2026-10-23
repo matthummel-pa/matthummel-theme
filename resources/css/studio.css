@@ -7216,7 +7216,7 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
    text column stops at the drawing's left edge. The checklist becomes a card with round check
    badges; an item may start with a bold lead line (<strong>) and carry one short detail after it. */
 @media (min-width: 900px) {
-  #inside > .container > :is(h2, p, ul) { max-width: min(36rem, calc(50% - 1.5rem)); }
+  #inside > .container > :is(h2, p, ul) { max-width: min(36rem, calc(50% - 2.75rem)); }
 }
 #inside ul.is-style-checklist {
   margin: 1.75rem 0;

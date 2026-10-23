@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.49 — Projects "Inside each one": a gutter between the text and the drawing
+
+- The text column in this section now ends 2.75rem before the drawing's box instead of 1.5rem, so the lead and the checklist card no longer touch the drawing's first line at 1600px wide.
+
 ## 3.7.48 — Projects "Inside each one": text off the drawing, checklist as a card
 
 - From 900px the heading, lead, checklist and note in this section stop at the drawing's left edge instead of running across it.
