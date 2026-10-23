@@ -570,3 +570,102 @@ html.mh-dark .gh-lastpush__dot { background: var(--lime-300); box-shadow: 0 0 0 
   text-decoration: none;
 }
 .repo-card__ver:hover, .repo-card__ver:focus-visible { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+
+/* ==========================================================================
+   Pinned repo cards (3.7.55): title area and a meta panel
+   The title uses the same card-title gradient as project and post cards (blue to cyan to
+   lime in dark, blue to violet in light). The head sits above a hairline; stats, version,
+   license and last push live in one tinted panel instead of a loose run of text.
+   ========================================================================== */
+.code-repos-grid--pinned .repo-card__head {
+  align-items: center;
+  gap: .85rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.code-repos-grid--pinned .repo-card__mark { width: 2.6rem; height: 2.6rem; border-radius: 12px; }
+.code-repos-grid--pinned .repo-card__title-wrap { display: grid; gap: .3rem; min-width: 0; }
+.code-repos-grid--pinned .repo-card__slug {
+  font-size: .75rem;
+  line-height: 1.2;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html .code-repos-grid.code-repos-grid--pinned .repo-card h3 {
+  margin: 0;
+  background: none;
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.2;
+  width: auto;
+  -webkit-text-fill-color: initial;
+}
+html .code-repos-grid.code-repos-grid--pinned .repo-card h3 a {
+  display: inline-block;
+  max-width: 100%;
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+html.mh-dark .code-repos-grid.code-repos-grid--pinned .repo-card h3 a {
+  background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 55%, var(--lime-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html .code-repos-grid.code-repos-grid--pinned .repo-card:hover h3 a {
+  background: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html:not(.mh-dark) .code-repos-grid.code-repos-grid--pinned .repo-card:hover h3 a {
+  background: linear-gradient(90deg, var(--violet-700) 0%, var(--blue-600) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.code-repos-grid--pinned .repo-card__desc { margin: 0; }
+.code-repos-grid--pinned .repo-card__stack { margin: .9rem 0 1.1rem; }
+
+/* Meta panel: items flow in a wrapping row; the last push is its own row under a hairline. */
+.code-repos-grid--pinned .repo-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.1rem;
+  align-items: center;
+  margin-top: auto;
+  padding: .85rem 1rem;
+  background: color-mix(in srgb, var(--color-text) 4%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: .875rem;
+}
+.code-repos-grid--pinned .repo-card__stats .repo-card__license {
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+}
+.code-repos-grid--pinned .repo-stat--when {
+  flex: 1 0 100%;
+  padding-top: .6rem;
+  border-top: 1px solid var(--color-border);
+}
+.code-repos-grid--pinned .repo-card__foot { margin-top: 1.1rem; }
+
+/* In the narrow three-across cards a two-line title would push that card's text lower than its
+   neighbours', so the head reserves room for two lines there (side-by-side cards only; a single column has no neighbours). */
+.code-repos-grid--pinned .repo-card { container: repo-card / inline-size; }
+@media (min-width: 720px) {
+  @container repo-card (max-width: 26rem) {
+    .repo-card__head { min-height: 7.4rem; }
+  }
+}
