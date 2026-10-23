@@ -29,7 +29,9 @@
     </p>
   @endif
   <div class="repo-card__head">
-    <span class="repo-card__mark" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
+    @if ($variant !== 'featured')
+      <span class="repo-card__mark" aria-hidden="true">{!! \App\mh_svg_icon('github', 16) !!}</span>
+    @endif
     <div class="repo-card__title-wrap">
       <span class="repo-card__kind">
         {{ $category }}

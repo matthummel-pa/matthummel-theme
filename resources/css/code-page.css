@@ -669,3 +669,6 @@ html:not(.mh-dark) .code-repos-grid.code-repos-grid--pinned .repo-card:hover h3 
     .repo-card__head { min-height: 7.4rem; }
   }
 }
+
+/* No logo any more: top-align the head so the kind chip and title start at the same height in every card. */
+.code-repos-grid--pinned .repo-card__head { align-items: flex-start; }

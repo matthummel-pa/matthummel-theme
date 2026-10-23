@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.56 — About: no GitHub logo on pinned repo cards
+
+- The GitHub mark in the top-left of each pinned repo card is gone, so the category label, title and repo path start at the card's left edge. Other repo card variants keep it. The card heads are top-aligned, so the category chip and title start at the same height across a row.
+
 ## 3.7.55 — About: pinned repo cards, title area and meta panel
 
 - Titles use the same card-title gradient as project and post cards (blue to cyan to lime in dark mode, blue to violet in light mode) instead of the white-to-blue heading fill. The head is larger, with the repo name in a muted line under it, and sits above a hairline. In side-by-side cards it reserves two title lines, so descriptions start at the same height across a row.
