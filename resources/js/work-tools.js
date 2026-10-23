@@ -51,36 +51,68 @@ export function initWorkTools() {
     event.preventDefault();
   });
 
-  // Type pills and the search box filter the same cards, in place.
-  const pills = [...hub.querySelectorAll('[data-work-cat]')];
+  // Type pills, tool pills, sort and the search box all drive the same cards, in place.
+  // State lives in the URL (?cat=&tech=&sort=&q=) so a filtered view can be shared and Back works.
+  const catPills = [...hub.querySelectorAll('[data-work-cat]')];
+  const techPills = [...hub.querySelectorAll('[data-work-tech]')];
+  const sortLinks = [...hub.querySelectorAll('[data-work-sort]')];
   const reset = hub.querySelector('[data-work-reset]');
   const labelOne = count?.getAttribute('data-label-one') || '%d project';
   const labelMany = count?.getAttribute('data-label-many') || '%d projects';
-  const state = {
-    cat: pills.find((pill) => pill.classList.contains('is-active'))?.getAttribute('data-work-cat') || '',
-    q: '',
+  const SORTS = ['newest', 'oldest', 'az'];
+  const byOrder = (a, b) => Number(a.dataset.order) - Number(b.dataset.order);
+  const comparators = {
+    newest: (a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || '') || byOrder(a, b),
+    oldest: (a, b) => (a.dataset.date || '').localeCompare(b.dataset.date || '') || byOrder(b, a),
+    az: (a, b) => (a.dataset.title || '').localeCompare(b.dataset.title || ''),
   };
+
+  const readUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const sort = params.get('sort');
+    return {
+      cat: params.get('cat') || '',
+      tech: (params.get('tech') || '').toLowerCase(),
+      sort: SORTS.includes(sort) ? sort : 'newest',
+      qRaw: (params.get('q') || '').trim(),
+    };
+  };
+  const initial = readUrl();
+  const state = { cat: initial.cat, tech: initial.tech, sort: initial.sort, q: initial.qRaw.toLowerCase() };
+  if (filter && initial.qRaw) {
+    filter.value = initial.qRaw;
+  }
   nameItems(cards, (card) => `work-${card.id}`);
+
+  const markActive = (items, attr, value) => {
+    items.forEach((item) => {
+      const on = item.getAttribute(attr) === value;
+      item.classList.toggle('is-active', on);
+      if (on) {
+        item.setAttribute('aria-current', 'true');
+      } else {
+        item.removeAttribute('aria-current');
+      }
+    });
+  };
 
   const render = () => {
     let visible = 0;
     cards.forEach((card) => {
       const inCat = state.cat === '' || card.getAttribute('data-cat') === state.cat;
+      const inTech = state.tech === '' || (card.getAttribute('data-tech') || '').includes(`|${state.tech}|`);
       const inSearch = state.q === '' || (card.getAttribute('data-search') || '').includes(state.q);
-      card.hidden = !(inCat && inSearch);
+      card.hidden = !(inCat && inTech && inSearch);
       if (!card.hidden) {
         visible += 1;
       }
     });
-    pills.forEach((pill) => {
-      const on = pill.getAttribute('data-work-cat') === state.cat;
-      pill.classList.toggle('is-active', on);
-      if (on) {
-        pill.setAttribute('aria-current', 'true');
-      } else {
-        pill.removeAttribute('aria-current');
-      }
-    });
+    if (grid) {
+      [...cards].sort(comparators[state.sort]).forEach((card) => grid.appendChild(card));
+    }
+    markActive(catPills, 'data-work-cat', state.cat);
+    markActive(techPills, 'data-work-tech', state.tech);
+    markActive(sortLinks, 'data-work-sort', state.sort);
     if (count) {
       count.textContent = (visible === 1 ? labelOne : labelMany).replace('%d', String(visible));
     }
@@ -89,46 +121,69 @@ export function initWorkTools() {
     }
   };
 
-  const setCat = (cat) => {
-    if (cat === state.cat) {
-      return;
-    }
-    state.cat = cat;
-    swapWithMotion(grid, render, { rich: true });
+  // Writes the state to the address bar. Pills and sort add a history entry; typing replaces it.
+  const writeUrl = (push) => {
     const url = new URL(window.location.href);
-    if (cat === '') {
-      url.searchParams.delete('cat');
-    } else {
-      url.searchParams.set('cat', cat);
-    }
-    window.history.replaceState(null, '', url);
+    const set = (key, value) => (value === '' ? url.searchParams.delete(key) : url.searchParams.set(key, value));
+    set('cat', state.cat);
+    set('tech', state.tech);
+    set('sort', state.sort === 'newest' ? '' : state.sort);
+    set('q', filter ? filter.value.trim() : '');
+    window.history[push ? 'pushState' : 'replaceState'](null, '', url);
   };
 
-  pills.forEach((pill) => {
-    pill.addEventListener('click', (event) => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
-        return;
-      }
-      event.preventDefault();
-      setCat(pill.getAttribute('data-work-cat') || '');
+  const change = (patch, rich) => {
+    Object.assign(state, patch);
+    swapWithMotion(grid, render, rich ? { rich: true } : undefined);
+    writeUrl(true);
+  };
+
+  const onPlainClick = (items, attr, key) => {
+    items.forEach((item) => {
+      item.addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+          return;
+        }
+        event.preventDefault();
+        const value = item.getAttribute(attr) || '';
+        if (value !== state[key]) {
+          change({ [key]: value }, key !== 'sort');
+        }
+      });
     });
-  });
+  };
+  onPlainClick(catPills, 'data-work-cat', 'cat');
+  onPlainClick(techPills, 'data-work-tech', 'tech');
+  onPlainClick(sortLinks, 'data-work-sort', 'sort');
 
   reset?.addEventListener('click', (event) => {
     event.preventDefault();
     if (filter) {
       filter.value = '';
     }
-    state.q = '';
-    state.cat = '';
+    Object.assign(state, { cat: '', tech: '', q: '', sort: 'newest' });
     swapWithMotion(grid, render, { rich: true });
-    window.history.replaceState(null, '', reset.getAttribute('href') || window.location.pathname);
+    writeUrl(true);
   });
 
   filter?.addEventListener('input', () => {
     state.q = filter.value.trim().toLowerCase();
     swapWithMotion(grid, render);
+    writeUrl(false);
   });
+
+  // Back / Forward: read the address bar again and redraw.
+  window.addEventListener('popstate', () => {
+    const next = readUrl();
+    Object.assign(state, { cat: next.cat, tech: next.tech, sort: next.sort, q: next.qRaw.toLowerCase() });
+    if (filter) {
+      filter.value = next.qRaw;
+    }
+    swapWithMotion(grid, render, { rich: true });
+  });
+
+  // The server already drew the ?cat / ?tech / ?sort view; this only applies ?q and the button states.
+  render();
 
   const hash = window.location.hash.replace('#', '');
   if (hash) {
