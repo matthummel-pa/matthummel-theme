@@ -7077,3 +7077,22 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   letter-spacing: .05em;
   line-height: 1.2;
 }
+
+/* === 3.7.42 · Journal cards: pills on their own row, meta line with structure ===
+   The meta line (date · read time · Code) and the category pills used to flow as one
+   wrapping row, so pills sat flush against the date and crowded the title. They are
+   now two rows with a fixed rhythm: meta, 12px, pills, 14px, title. */
+.post-card .post-meta {
+  margin: 0 0 .75rem;
+  padding-bottom: .65rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+.post-card .post-meta time { color: var(--color-text); font-weight: 600; }
+.post-card .post-cats.project-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0 0 .875rem;
+}
+.post-card .post-cats.project-type-row + .post-card-title { margin-top: 0; }

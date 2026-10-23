@@ -773,6 +773,27 @@ function mh_primary_category(array $cats, int $postId): ?\WP_Term
 }
 
 /**
+ * Updated date for a post card, or null when the edit is too close to publishing to matter.
+ *
+ * Edits within 14 days of the publish date are treated as proofreading, not a revision.
+ *
+ * @return array{iso: string, label: string}|null
+ */
+function mh_post_updated(int $postId): ?array
+{
+    $published = (int) get_post_time('U', true, $postId);
+    $modified = (int) get_post_modified_time('U', true, $postId);
+    if ($published <= 0 || $modified - $published < 14 * DAY_IN_SECONDS) {
+        return null;
+    }
+
+    return [
+        'iso' => (string) get_post_modified_time('c', true, $postId),
+        'label' => (string) get_the_modified_date('', $postId),
+    ];
+}
+
+/**
  * Meta query that leaves out posts marked noindex in MH SEO (the archived Power Apps notes).
  *
  * @return array<int|string, mixed>

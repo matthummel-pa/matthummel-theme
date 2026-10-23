@@ -16,6 +16,9 @@
     }
   }
   $hasCode = \App\mh_post_has_code(get_the_ID());
+  $updated = \App\mh_post_updated(get_the_ID());
+  // One pill per card; the rest of the categories live on the post page.
+  $cardCat = \App\mh_primary_category($journalCats, (int) get_the_ID());
 @endphp
 <article @php(post_class(['post-card']))>
   @if ($thumb !== '')
@@ -32,17 +35,20 @@
       <time datetime="{{ get_post_time('c', true) }}">{{ get_the_date() }}</time>
       <span aria-hidden="true"> · </span>
       {{ sprintf(_n('%d min read', '%d min read', $minutes, 'sage'), $minutes) }}
+      @if ($updated)
+        <span aria-hidden="true"> · </span>
+        <span class="post-updated">{{ __('Updated', 'sage') }} <time datetime="{{ $updated['iso'] }}">{{ $updated['label'] }}</time></span>
+      @endif
       @if ($hasCode)
         <span class="post-badge">{{ __('Code', 'sage') }}</span>
       @endif
-      @if ($journalCats !== [])
-        <span class="post-cats project-type-row" aria-label="{{ __('Categories', 'sage') }}">
-          @foreach ($journalCats as $cat)
-            <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cat)) }}">{{ $cat->name }}</a>
-          @endforeach
-        </span>
-      @endif
     </p>
+
+    @if ($cardCat)
+      <div class="post-cats project-type-row">
+        <a class="post-cat project-cat-pill" href="{{ esc_url(get_category_link($cardCat)) }}">{{ $cardCat->name }}</a>
+      </div>
+    @endif
 
     <h2 class="post-card-title"><a href="{{ esc_url(get_permalink()) }}">{{ $title }}</a></h2>
 
