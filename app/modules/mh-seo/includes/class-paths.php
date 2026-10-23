@@ -44,6 +44,37 @@ class Paths
     }
 
     /**
+     * Clean a redirect target that points at this site, keeping what a target needs.
+     *
+     * Unlike a source, a target keeps its trailing slash, query string, and fragment. WordPress
+     * adds the slash to page URLs itself, so a target without one costs visitors a second redirect.
+     *
+     * @param  string  $target  Raw target that starts with a slash.
+     * @return string Empty when the value is not a usable path.
+     */
+    public static function normalize_target(string $target): string
+    {
+        $target = trim($target);
+        if ($target === '') {
+            return '';
+        }
+        $fragment = '';
+        if (str_contains($target, '#')) {
+            [$target, $fragment] = explode('#', $target, 2);
+        }
+        $query = '';
+        if (str_contains($target, '?')) {
+            [$target, $query] = explode('?', $target, 2);
+        }
+        $path = (string) preg_replace('#/+#', '/', '/'.ltrim($target, '/'));
+        if (str_contains($path, '..')) {
+            return '';
+        }
+
+        return $path.($query !== '' ? '?'.$query : '').($fragment !== '' ? '#'.$fragment : '');
+    }
+
+    /**
      * Whether a path is one of Rank Math's old sitemap URLs.
      *
      * @param  string  $path  Request path.
