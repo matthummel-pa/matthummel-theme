@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.50 — Projects "Inside each one": every item in its own box
+
+- The checklist is now a grid of boxes under the heading and lead: three across on desktop, two on tablet, one on mobile, so the section no longer leaves a tall empty column beside the drawing. A lone last box spans its row.
+- Each box is a round check badge, a bold lead line and one short detail. The heading and lead still stop short of the drawing.
+
 ## 3.7.49 — Projects "Inside each one": a gutter between the text and the drawing
 
 - The text column in this section now ends 2.75rem before the drawing's box instead of 1.5rem, so the lead and the checklist card no longer touch the drawing's first line at 1600px wide.
