@@ -15,7 +15,8 @@
   <section class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }} mh-block-hero">
     @if ($heroImage !== '')
       <div class="h-hero__media" aria-hidden="true">
-        <img class="h-hero__bg" src="{{ esc_url($heroImage) }}" alt="" width="1600" height="900" decoding="async" fetchpriority="high">
+        {{-- LCP image: skip-lazy + data-no-lazy keep LiteSpeed from swapping src for a placeholder and dropping fetchpriority (same pattern as the featured work card). --}}
+        <img class="h-hero__bg skip-lazy" data-no-lazy="1" src="{{ esc_url($heroImage) }}" alt="" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
         <div class="h-hero__wash"></div>
       </div>
     @endif
