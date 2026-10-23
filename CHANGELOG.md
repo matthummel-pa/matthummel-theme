@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.43 — Journal cards: title size scales with the screen
+
+- Journal card titles go from a near-fixed 17–18px to one fluid step: about 18px on phones, 21px on tablets, 22px on desktop, with `text-wrap: balance` so short titles don't leave a one-word last line. Scoped to `.post-card`; the single-post `h1` already scaled and is unchanged.
+
 ## 3.7.42 — Journal cards: category pills on their own row
 
 - On Journal post cards the category pills move out of the meta line into their own row: meta (date, read time, Code badge) sits above a hairline, the pills get a 14px gap above the title, and the date reads in the body text colour so it leads the line. Each card shows one pill, the post's primary category (MH SEO primary term, else the first category); the rest stay on the post page. A card also shows "Updated {date}" when the post was edited 14 or more days after it was published, so proofreading fixes don't read as revisions.

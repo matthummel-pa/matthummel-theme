@@ -7096,3 +7096,12 @@ html.mh-dark .post-list .post-shot { background: #0b1b35; }
   margin: 0 0 .875rem;
 }
 .post-card .post-cats.project-type-row + .post-card-title { margin-top: 0; }
+
+/* === 3.7.43 · Journal cards: title scales with the viewport ===
+   One fluid step instead of a near-fixed 17-18px: about 18px on phones, 21px on tablets,
+   22px from about 840px up. Wins over .post-list--roomy by source order. */
+.post-card .post-card-title {
+  font-size: clamp(1.125rem, .85rem + 1vw, 1.375rem);
+  line-height: 1.22;
+  text-wrap: balance;
+}
