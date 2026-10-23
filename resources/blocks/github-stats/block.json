@@ -5,7 +5,7 @@
   "title": "GitHub stats",
   "category": "matthummel",
   "icon": "chart-bar",
-  "description": "Counts from the GitHub profile: public repos, contributions, streak, stars and followers.",
+  "description": "Counts from the GitHub profile (repos, contributions, active days, streak, stars, followers), the last push, a 90-day heatmap, the contribution mix and recent activity.",
   "keywords": [
     "github",
     "stats",
@@ -16,11 +16,32 @@
     "showSync": {
       "type": "boolean",
       "default": true
+    },
+    "showHeatmap": {
+      "type": "boolean",
+      "default": true
+    },
+    "showMix": {
+      "type": "boolean",
+      "default": true
+    },
+    "showActivity": {
+      "type": "boolean",
+      "default": true
     }
   },
   "mhControls": {
     "showSync": {
       "label": "Show when the numbers were last synced"
+    },
+    "showHeatmap": {
+      "label": "Show the 90-day contribution heatmap"
+    },
+    "showMix": {
+      "label": "Show the commits / pull requests / reviews mix"
+    },
+    "showActivity": {
+      "label": "Show recent activity"
     }
   },
   "supports": {

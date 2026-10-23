@@ -253,3 +253,239 @@
   .code-block__cta { width: 100%; justify-content: center; }
   .code-sync { white-space: normal; }
 }
+
+/* ==========================================================================
+   GitHub section on About (3.7.52): tiles, last push, 90-day heatmap, contribution mix,
+   activity feed, most-starred strip, license on repo cards, languages as a panel.
+   New gh- classes only; colours come from the theme tokens, so dark mode follows.
+   ========================================================================== */
+.gh-stats { display: grid; gap: var(--card-gap-roomy, 1.75rem); }
+.gh-stats > .code-sync { justify-self: start; }
+
+.gh-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--card-gap, 1rem);
+  margin: 0;
+}
+@media (min-width: 900px) { .gh-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.gh-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: .35rem;
+  padding: 1.15rem 1.25rem 1.2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+.gh-tile__icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+.gh-tile dt {
+  max-width: calc(100% - 2.75rem);
+  font-size: .875rem;
+  line-height: 1.3;
+  color: var(--color-text-muted);
+}
+.gh-tile dd {
+  margin: 0;
+  font: 800 clamp(1.6rem, 3.2vw, 2.2rem)/1.05 var(--font-display);
+  letter-spacing: -.035em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.gh-tile dd small {
+  display: block;
+  margin-top: .3rem;
+  font: 600 .8125rem/1.2 var(--font-display);
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+}
+
+.gh-lastpush {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  margin: 0;
+  font-size: .9375rem;
+  color: var(--color-text-secondary);
+}
+.gh-lastpush__dot {
+  width: .55rem;
+  height: .55rem;
+  border-radius: 50%;
+  background: var(--lime-700);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime-700) 18%, transparent);
+}
+.gh-lastpush a { font-weight: 700; }
+
+/* Panels */
+.gh-pair { display: grid; gap: var(--card-gap, 1rem); align-items: stretch; }
+@media (min-width: 900px) { .gh-pair:has(> .gh-heat):has(> .gh-mix) { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
+.gh-panel {
+  margin: 0;
+  padding: 1.25rem 1.35rem 1.35rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+.gh-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem 1rem;
+  margin: 0 0 1rem;
+}
+.gh-panel__title { margin: 0; font: 700 1.0625rem/1.3 var(--font-display); color: var(--color-text); }
+.gh-panel__note { margin: 0; font-size: .875rem; color: var(--color-text-muted); }
+.gh-panel__link { font-size: .875rem; font-weight: 600; }
+
+/* 90-day heatmap: columns are weeks, rows are weekdays (Sun at the top) */
+.gh-heat__scroll { overflow-x: auto; padding-bottom: .25rem; }
+.gh-heat__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--weeks), minmax(.9rem, 1fr));
+  grid-template-rows: repeat(7, auto);
+  gap: 5px;
+  max-width: 30rem;
+  min-width: calc(var(--weeks) * 1.15rem);
+}
+.gh-heat__day {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--color-text) 9%, transparent);
+}
+.gh-heat__day[data-level="1"] { background: color-mix(in srgb, var(--blue-600) 28%, transparent); }
+.gh-heat__day[data-level="2"] { background: color-mix(in srgb, var(--blue-600) 50%, transparent); }
+.gh-heat__day[data-level="3"] { background: color-mix(in srgb, var(--blue-600) 75%, transparent); }
+.gh-heat__day[data-level="4"] { background: var(--blue-600); }
+.gh-heat__legend {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  margin: .9rem 0 0;
+  font-size: .8125rem;
+  color: var(--color-text-muted);
+}
+.gh-heat__legend .gh-heat__day { width: .85rem; height: .85rem; aspect-ratio: auto; border-radius: 3px; }
+.gh-heat__legend span:first-child { margin-right: .2rem; }
+.gh-heat__legend span:last-child { margin-left: .2rem; }
+
+/* Contribution mix */
+.gh-mix__bar { display: flex; gap: 2px; height: .9rem; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, var(--color-text) 9%, transparent); }
+.gh-mix__seg { flex: var(--n, 1) 0 0; min-width: 4px; }
+.gh-mix__seg--commits { background: var(--blue-600); }
+.gh-mix__seg--prs { background: var(--violet-700); }
+.gh-mix__seg--reviews { background: var(--lime-700); }
+.gh-mix__seg--issues { background: var(--gray-500); }
+.gh-mix__legend { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: .55rem; }
+.gh-mix__legend li { display: grid; grid-template-columns: auto 1fr auto 3.25rem; align-items: center; gap: .6rem; font-size: .9375rem; }
+.gh-mix__dot { flex: none; width: .75rem; height: .75rem; border-radius: 50%; }
+.gh-mix__legend .gh-mix__dot { min-width: 0; }
+.gh-mix__name { font-weight: 600; color: var(--color-text); }
+.gh-mix__n { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text); }
+.gh-mix__pct { text-align: right; font-size: .8125rem; font-variant-numeric: tabular-nums; color: var(--color-text-muted); }
+
+/* Recent activity */
+.gh-feed__list { list-style: none; margin: 0; padding: 0; }
+.gh-feed__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .75rem;
+  padding: .7rem 0;
+  border-top: 1px solid var(--color-border);
+}
+.gh-feed__item:first-child { border-top: 0; padding-top: 0; }
+.gh-feed__item:last-child { padding-bottom: 0; }
+.gh-feed__icon {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 8px;
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+.gh-feed__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9375rem; color: var(--color-text); }
+a.gh-feed__text { text-decoration: none; }
+a.gh-feed__text:hover, a.gh-feed__text:focus-visible { text-decoration: underline; }
+.gh-feed__when { font-size: .8125rem; white-space: nowrap; color: var(--color-text-muted); }
+@media (max-width: 639px) {
+  .gh-feed__item { grid-template-columns: auto minmax(0, 1fr); }
+  .gh-feed__text { white-space: normal; }
+  .gh-feed__when { grid-column: 2; }
+}
+
+/* Most starred, under the pinned repos */
+.gh-starred { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: 1.5rem; }
+.gh-starred__title { margin: 0; font: 700 .8125rem/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-muted); }
+.gh-starred__list { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.gh-starred__item {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 2.25rem;
+  padding: .35rem .85rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: .9375rem;
+  text-decoration: none;
+}
+.gh-starred__name { font-weight: 600; color: var(--color-text); }
+.gh-starred__stars { display: inline-flex; align-items: center; gap: .25rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text-secondary); }
+.gh-starred__item:hover, .gh-starred__item:focus-visible { border-color: var(--color-accent); }
+
+/* License on repo cards */
+.repo-card__license {
+  padding: .1rem .45rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+/* Languages: a panel, a thicker bar, a legend that fills columns */
+.mh-github-languages {
+  padding: 1.25rem 1.35rem 1.35rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+.mh-github-languages .code-langs__bar { height: .9rem; margin: 0 0 1.1rem; }
+.mh-github-languages .code-langs__legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: .6rem 1.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gh-starred__item { transition: border-color .15s ease; }
+}
+
+/* Dark: lift the series colours that sit on the navy surface */
+html.mh-dark .gh-mix__seg--commits { background: var(--blue-400); }
+html.mh-dark .gh-mix__seg--prs { background: var(--violet-300); }
+html.mh-dark .gh-mix__seg--reviews { background: var(--lime-300); }
+html.mh-dark .gh-mix__seg--issues { background: var(--gray-400); }
+html.mh-dark .gh-heat__day[data-level="1"] { background: color-mix(in srgb, var(--blue-400) 30%, transparent); }
+html.mh-dark .gh-heat__day[data-level="2"] { background: color-mix(in srgb, var(--blue-400) 52%, transparent); }
+html.mh-dark .gh-heat__day[data-level="3"] { background: color-mix(in srgb, var(--blue-400) 76%, transparent); }
+html.mh-dark .gh-heat__day[data-level="4"] { background: var(--blue-400); }
+html.mh-dark .gh-lastpush__dot { background: var(--lime-300); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime-300) 20%, transparent); }

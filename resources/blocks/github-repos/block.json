@@ -28,6 +28,10 @@
     "showAllLink": {
       "type": "boolean",
       "default": false
+    },
+    "showStarred": {
+      "type": "boolean",
+      "default": true
     }
   },
   "mhControls": {
@@ -45,6 +49,9 @@
     },
     "showAllLink": {
       "label": "Show the link to all repos"
+    },
+    "showStarred": {
+      "label": "Show the most-starred repos (pinned list only)"
     }
   },
   "supports": {
