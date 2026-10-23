@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.55 — About: pinned repo cards, title area and meta panel
+
+- Titles use the same card-title gradient as project and post cards (blue to cyan to lime in dark mode, blue to violet in light mode) instead of the white-to-blue heading fill. The head is larger, with the repo name in a muted line under it, and sits above a hairline. In side-by-side cards it reserves two title lines, so descriptions start at the same height across a row.
+- Stats, version badge, license and last push move into one tinted panel at the bottom of the card, with the last push on its own row under a hairline.
+
 ## 3.7.54 — About: pinned repo cards
 
 - Pinned repos are three across from 1100px, two on tablet and one on mobile. Leftover cards share their row (five cards are 3 + 2), so none sits alone at half width.
