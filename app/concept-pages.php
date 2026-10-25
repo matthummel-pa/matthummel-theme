@@ -1399,8 +1399,8 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 
     mh_seed_project_concept_narrative($postId, $seed, $force);
 
-    // Search title and description for Yoast. Seeded once: edits made in wp-admin are never overwritten.
-    foreach (['seo_title' => '_yoast_wpseo_title', 'seo_description' => '_yoast_wpseo_metadesc'] as $field => $metaKey) {
+    // Search title and description for Rank Math. Seeded once: edits made in wp-admin are never overwritten.
+    foreach (['seo_title' => 'rank_math_title', 'seo_description' => 'rank_math_description'] as $field => $metaKey) {
         $value = trim((string) ($seed[$field] ?? ''));
         if ($value !== '' && trim((string) get_post_meta($postId, $metaKey, true)) === '') {
             update_post_meta($postId, $metaKey, sanitize_text_field($value));

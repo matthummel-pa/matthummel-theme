@@ -104,7 +104,7 @@ What the 3.x Sage theme does, and where it lives.
 - `pack-theme.sh` excludes lock files and build configs. `composer.json` ships because Acorn reads it.
 - `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
 - Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
-- Catalog `seo_title` / `seo_description` exist for all four projects. They seed Yoast's title and description once (`mh_product_catalog_v13`); wp-admin edits win.
+- Catalog `seo_title` / `seo_description` exist for all four projects. They seed Rank Math's title and description once (`mh_product_catalog_v13`); wp-admin edits win.
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)
@@ -153,7 +153,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - `_mh_project_screenshots` stores theme-relative paths (`products/slug/file.webp|caption`). Do not write full site URLs at seed time.
 - `mh_product_media_url()` and `mh_project_page_slides()` rewrite baked `/themes/{folder}/resources/images/` URLs so local and Hostinger hosts both work.
-- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into Yoast meta when empty).
+- Catalog bump is `mh_product_catalog_v11` (adds Cobble & Candle; seeds `seo_title` / `seo_description` into Rank Math meta when empty).
 
 ## Editor’s notes (3.6.35 project feedback)
 

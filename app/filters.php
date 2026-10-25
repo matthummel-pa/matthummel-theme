@@ -36,16 +36,15 @@ add_filter('body_class', function (array $classes): array {
 
 /**
  * The contact form's thank-you page is a receipt, not a landing page: keep it out of
- * search results. Core prints the tag through wp_robots. Yoast prints its own and passes
- * the finished string through wpseo_robots.
+ * search results. Core prints the tag through wp_robots. Rank Math prints its own and
+ * exposes rank_math/frontend/robots, where each directive is a string under its own key.
+ *
+ * @param  array<string, bool|string>  $robots  Directives for this request.
+ * @return array<string, bool|string>
  */
-function mh_is_thankyou_page(): bool
+function mh_noindex_thankyou_robots(array $robots): array
 {
-    return is_page() && page_template_key((int) get_queried_object_id()) === 'template-thankyou.blade.php';
-}
-
-add_filter('wp_robots', function (array $robots): array {
-    if (! mh_is_thankyou_page()) {
+    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
         return $robots;
     }
     unset($robots['index'], $robots['nofollow']);
@@ -53,10 +52,17 @@ add_filter('wp_robots', function (array $robots): array {
     $robots['follow'] = true;
 
     return $robots;
-}, 20);
+}
+add_filter('wp_robots', __NAMESPACE__.'\mh_noindex_thankyou_robots', 20);
 
-add_filter('wpseo_robots', function ($robots) {
-    return mh_is_thankyou_page() ? 'noindex, follow' : $robots;
+add_filter('rank_math/frontend/robots', function (array $robots): array {
+    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+        return $robots;
+    }
+    $robots['index'] = 'noindex';
+    $robots['follow'] = 'follow';
+
+    return $robots;
 }, 20);
 
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
@@ -731,7 +737,7 @@ add_action('template_redirect', function (): void {
 }, 3);
 
 /**
- * The category to show for a post: the Yoast primary category when set, otherwise the
+ * The category to show for a post: the Rank Math primary category when set, otherwise the
  * first category that is not a cross-post source label (DEV.to), otherwise the first.
  *
  * get_the_category() sorts by name, so without this "DEV.to" wins on cross-posted posts.
@@ -744,7 +750,7 @@ function mh_primary_category(array $cats, int $postId): ?\WP_Term
     if ($cats === []) {
         return null;
     }
-    $primaryId = (int) get_post_meta($postId, '_yoast_wpseo_primary_category', true);
+    $primaryId = (int) get_post_meta($postId, 'rank_math_primary_category', true);
     foreach ($cats as $cat) {
         if ($cat instanceof \WP_Term && $primaryId > 0 && (int) $cat->term_id === $primaryId) {
             return $cat;
@@ -781,7 +787,7 @@ function mh_post_updated(int $postId): ?array
 }
 
 /**
- * Meta query that leaves out posts marked noindex in Yoast (the archived Power Apps notes).
+ * Meta query that leaves out posts marked noindex in Rank Math (the archived Power Apps notes).
  *
  * @return array<int|string, mixed>
  */
@@ -789,8 +795,8 @@ function mh_exclude_noindex_meta_query(): array
 {
     return [
         'relation' => 'OR',
-        ['key' => '_yoast_wpseo_meta-robots-noindex', 'compare' => 'NOT EXISTS'],
-        ['key' => '_yoast_wpseo_meta-robots-noindex', 'value' => '1', 'compare' => '!='],
+        ['key' => 'rank_math_robots', 'compare' => 'NOT EXISTS'],
+        ['key' => 'rank_math_robots', 'value' => 'noindex', 'compare' => 'NOT LIKE'],
     ];
 }
 

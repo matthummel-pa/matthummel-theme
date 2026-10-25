@@ -1,8 +1,8 @@
 # Changelog
 
-## 3.8.0 — Remove MH SEO; Yoast SEO handles SEO
+## 3.8.0 — Remove MH SEO; Rank Math handles SEO
 
-MH SEO is gone from the theme. Yoast SEO prints the title, description, canonical, robots tag, schema, and sitemap.
+MH SEO is gone from the theme. Rank Math SEO prints the title, description, canonical, robots tag, schema, sitemap, and redirects again.
 
 **What was removed**
 - `app/modules/mh-seo/` (head, schema, sitemap, redirects, IndexNow, SEO box, writing score, WP-CLI commands) and its entry in `app/bundled-plugins.php`.
@@ -10,15 +10,15 @@ MH SEO is gone from the theme. Yoast SEO prints the title, description, canonica
 - The theme's core-sitemap filters, the `_mh_seo_noindex` robots filter, and the `MH_SEO_ACTIVE` checks.
 
 **What changed**
-- The post list/search filter that hides noindexed posts now reads Yoast's `_yoast_wpseo_meta-robots-noindex`. The primary category reads `_yoast_wpseo_primary_category`.
-- The thank-you page noindex also hooks `wpseo_robots`.
-- Catalog seeding writes `_yoast_wpseo_title` and `_yoast_wpseo_metadesc`. The archive routine also sets Yoast's noindex on archived posts.
-- The theme's own title and description fallbacks stay. They step aside when Yoast is active.
+- The post list/search filter that hides noindexed posts now reads Rank Math's `rank_math_robots`. The primary category reads `rank_math_primary_category`.
+- The thank-you page noindex also hooks `rank_math/frontend/robots`.
+- Catalog seeding writes `rank_math_title` and `rank_math_description`.
+- The theme's own title and description fallbacks stay. They step aside when Rank Math is active.
 
 **Before you deploy (data is not touched by this release)**
-1. Redirects: Yoast SEO free has no redirect manager. Use Yoast Premium's Redirects, the Redirection plugin, or server rules, and import the CSV exported from Tools → Redirects. The old MH SEO tables stay in the database but stop working.
-2. Any title, description, noindex, canonical, focus keyword, or primary category saved in `_mh_seo_*` post meta (or the old `rank_math_*` keys) is not read any more. Copy those values to the `_yoast_wpseo_*` keys first.
-3. Install and activate Yoast SEO, run its first-time setup, then purge LiteSpeed.
+1. Export redirects from Tools → Redirects (CSV) and import them in Rank Math → Redirections. The old MH SEO tables stay in the database but stop working.
+2. Any title, description, noindex, canonical, or primary category saved only in MH SEO (`_mh_seo_*` post meta) is not read any more. Copy those values to the `rank_math_*` keys first.
+3. Install and activate Rank Math, set it up (or import its old settings), then purge LiteSpeed.
 4. In Search Console, submit `sitemap_index.xml` and remove `wp-sitemap.xml`.
 5. FAQPage structured data from the Questions block was MH SEO's. It is not printed now.
 6. To clean up later, delete the `mh_seo_*` options and the MH SEO redirect tables by hand.

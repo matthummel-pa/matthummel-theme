@@ -22,4 +22,4 @@ If the standalone plugin is still active, its copy wins and the bundled one stay
 `add_filter( 'mh/bundled_modules', fn ( $m ) => array_diff( $m, [ 'hummel-ops' ] ) );`
 
 ## SEO
-SEO is handled by Yoast SEO. The theme's own title and description fallbacks in `app/filters.php` step aside when it is active. MH SEO was removed in 3.8.0; see `CHANGELOG.md` for the data you need to carry over.
+SEO is handled by Rank Math SEO. The theme's own title and description fallbacks in `app/filters.php` step aside when it is active. MH SEO was removed in 3.8.0; see `CHANGELOG.md` for the data you need to carry over.

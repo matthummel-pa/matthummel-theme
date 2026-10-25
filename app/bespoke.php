@@ -3592,7 +3592,6 @@ add_action('init', function (): void {
 
         wp_set_post_categories($post->ID, [$termId], true);
         update_post_meta($post->ID, 'rank_math_robots', ['noindex', 'follow']);
-        update_post_meta($post->ID, '_yoast_wpseo_meta-robots-noindex', '1');
     }
 
     update_option('mh_archived_power_platform_posts_v1', [
@@ -4390,7 +4389,7 @@ add_action('init', function (): void {
         ],
     ];
 
-    // Meta descriptions, wherever one is stored: the Yoast key, the old Rank Math key, or the theme field.
+    // Meta descriptions, wherever one is stored: the Rank Math key or the theme field.
     $descriptions = [
         'Full-stack developer and WordPress specialist building maintainable web platforms, applications, plugins, and integrations. Based in Gettysburg.' => 'WordPress developer and full-stack engineer building maintainable sites, plugins, and web apps for shops and agencies. Say hello.',
         'Full-stack developer and WordPress specialist with 15+ years building accessible, maintainable web software from Gettysburg, Pennsylvania.' => 'About Matt Hummel, a WordPress developer and full-stack engineer who builds accessible, maintainable sites and web apps. Say hello.',
@@ -4398,7 +4397,7 @@ add_action('init', function (): void {
         'Practical notes on WordPress, PHP, JavaScript, React, APIs, and tools from real projects. Most posts include code you can adapt.' => 'WordPress development notes from real projects: PHP, JavaScript, React, APIs, and tools. Most posts include code you can adapt.',
         'Start a conversation about a web application, WordPress platform, plugin, integration, role, or development partnership.' => 'Contact a WordPress developer about a site, plugin, web app, role, or agency overflow work. I reply within one business day (ET).',
     ];
-    $descriptionKeys = ['_yoast_wpseo_metadesc', 'rank_math_description', 'mh_f_seo_desc'];
+    $descriptionKeys = ['rank_math_description', 'mh_f_seo_desc'];
 
     $pages = get_posts([
         'post_type' => 'page',
@@ -4466,8 +4465,8 @@ add_action('init', function (): void {
  * The CTA cost about 11 of the ~155 characters a description gets and told
  * searchers nothing about the page. Each stored value is replaced only while
  * it still holds the exact text listed here; anything Matt rewrote stays.
- * Looks at every key a title or description can live in: the Yoast keys,
- * the old Rank Math keys, and the theme fields. The About title and the two About
+ * Looks at every key a title or description can live in: the Rank Math
+ * keys and the theme fields. The About title and the two About
  * descriptions apply only to the page with slug `about`.
  */
 add_action('init', function (): void {
@@ -4480,7 +4479,7 @@ add_action('init', function (): void {
         'About Matt Hummel, WordPress Developer | Matt Hummel' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
         'About Matt Hummel, WordPress Developer' => 'About Matt Hummel, WordPress Developer in Gettysburg, PA',
     ];
-    $titleKeys = ['_yoast_wpseo_title', 'rank_math_title', 'mh_f_seo_title'];
+    $titleKeys = ['rank_math_title', 'mh_f_seo_title'];
 
     $descriptions = [
         'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.' => 'About Matt Hummel, a WordPress and full-stack developer in Gettysburg, PA. Sage themes, custom plugins, and accessible web apps for shops and agencies.',
@@ -4493,7 +4492,7 @@ add_action('init', function (): void {
         'Browse WordPress themes and plugins with live demos. Buy a pack from the shop or hire me to adapt one. Say hello.' => 'Browse WordPress themes and plugins with live demos. Buy a pack from the shop, or hire me to adapt one to your site and content.',
         'WordPress project brief: scope, stack, and handoff for shops and agencies. Say hello to start.' => 'A short WordPress project brief for shops and agencies: what you need built, the stack, and how the handoff should work.',
     ];
-    $descriptionKeys = ['_yoast_wpseo_metadesc', 'rank_math_description', 'mh_f_seo_desc', 'mh_f_seo_description'];
+    $descriptionKeys = ['rank_math_description', 'mh_f_seo_desc', 'mh_f_seo_description'];
     // These rewrite to About-specific copy, so they only apply on the About page itself.
     $aboutDescriptions = array_flip([
         'About WordPress developer Matt Hummel: what I build, how to hire me, resume, and open-source code on GitHub.',

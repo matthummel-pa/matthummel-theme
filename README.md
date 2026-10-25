@@ -104,7 +104,7 @@ A personal site is the one project where the developer is also the client, the c
 <details open>
 <summary><strong>SEO, social meta, and structured data</strong></summary>
 
-- Title and description pipeline with defaults per landing page and term-archive fallbacks. It steps aside when Yoast SEO (or another SEO plugin) is active.
+- Title and description pipeline with defaults per landing page and term-archive fallbacks. It steps aside when Rank Math (or another SEO plugin) is active.
 - Open Graph and Twitter cards with image dimensions and alt; JSON-LD (`WebSite`, `Person`, `WebPage`, `BreadcrumbList`, `BlogPosting`, `FAQPage`, `SoftwareApplication` with `Offer` when for sale).
 - Legacy URL redirects, `/journal/` → `/blog/`, canonical control, noindex per page, sitemap exclusion.
 </details>
@@ -267,7 +267,7 @@ public/build/             Vite output — built by CI, never committed
 | [wp-acreline](https://github.com/matthummel-pa/wp-acreline) | Sage 11 real-estate theme with 21 Gutenberg blocks and a setup wizard |
 | [wp-walkridge](https://github.com/matthummel-pa/wp-walkridge) | Sage 11 tour-shop theme with WooCommerce bookings |
 | [tocguide](https://github.com/matthummel-pa/tocguide) | Server-rendered Table of Contents block (free, GPLv2+) |
-| [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/) | The SEO plugin that prints this site's head, schema, and sitemap |
+| [Rank Math SEO](https://wordpress.org/plugins/seo-by-rank-math/) | The SEO plugin that prints this site's head, schema, sitemap, and redirects |
 | [wp-dev-kit](https://github.com/matthummel-pa/wp-dev-kit) | `wp-review`, review checklist, and the Claude/Cursor rules used on every repo |
 | [matthummel-pa](https://github.com/matthummel-pa/matthummel-pa) | Profile README that pulls projects and posts from this site |
 
