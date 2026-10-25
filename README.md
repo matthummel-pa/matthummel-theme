@@ -223,7 +223,7 @@ wp rewrite structure '/%postname%/'
 | `npm run dev` | Vite with HMR |
 | `npm run build` | Compile to `public/build/` (gitignored; CI builds it for release) |
 | `vendor/bin/pint` / `--test` | Fix / check PHP style |
-| `wp-review --base origin/main` | WordPress Coding Standards on changed lines (`.github/scripts/wp-review`) |
+| `python3 .github/scripts/wp-review --base origin/main` | WordPress Coding Standards on changed lines |
 | `wp acorn view:clear` | Clear compiled Blade after template edits |
 | `wp mh theme-update` | Install the `theme-latest` zip on any WordPress install |
 
