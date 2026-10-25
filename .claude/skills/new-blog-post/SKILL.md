@@ -117,9 +117,9 @@ Use standard Gutenberg block comments around major sections:
 
 Write and publish the post on the **staging site**, `https://matthummel-com-623249.hostingersite.com/` (default host; the same steps work there). Do not log in to or edit `matthummel.com`. Matt publishes staging → live from hPanel.
 
-Options (choose one):
+Publish with option A. Option B is a local preview only and does not publish anything.
 
-**A) Manual paste (most reliable):**
+**A) Manual paste on the staging site (required to publish):**
 1. Go to wp-admin → Posts → Add New.
 2. Set title, slug, category (use existing categories — do not create new ones without Matt's approval).
 3. Switch to Code Editor and paste the HTML from `docs/posts/`.
@@ -127,8 +127,8 @@ Options (choose one):
 5. Add tags (3-5 max) and a featured image (1200×630 px).
 6. Publish.
 
-**B) WP-CLI import:**
-Use the import script: `python3 .github/scripts/import-docs-posts.py` — check that script for current usage before running.
+**B) Local preview only (WP-CLI import):**
+The import script writes to the local WordPress at `~/wp-site`, not to staging or `matthummel.com`. Use it to preview a draft locally, then still do option A on the staging site. Check the script for current usage before running: `python3 .github/scripts/import-docs-posts.py`.
 
 ---
 
