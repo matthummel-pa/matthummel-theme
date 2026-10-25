@@ -238,13 +238,6 @@ function mh_resources_catalog(): array
                     'badge' => __('AI', 'sage'),
                 ],
                 [
-                    'name' => 'Cursor',
-                    'blurb' => __('AI-assisted editor I use daily for Sage, PHP, and front-end work.', 'sage'),
-                    'url' => 'https://cursor.com',
-                    'affiliate' => false,
-                    'badge' => __('Editor', 'sage'),
-                ],
-                [
                     'name' => 'Hostinger',
                     'blurb' => __('Managed WordPress hosting for this site: LiteSpeed cache, PHP 8.3+, hPanel backups, and SSH.', 'sage'),
                     // Swap in the referral URL and set 'affiliate' => true only after joining Hostinger's program.
@@ -296,8 +289,7 @@ function mh_uses_sections(): array
             'title' => __('Editor and tools', 'sage'),
             'icon' => 'code',
             'items' => [
-                ['Cursor', __('My primary editor. VS Code-compatible with an AI layer that helps rather than gets in the way. This site was planned and built with it and Claude.', 'sage'), 'https://cursor.com'],
-                ['Claude Code', __('Terminal agent for planning, refactors, and reviews. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
+                ['Claude Code', __('Terminal agent for planning, refactors, and reviews on this site. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
                 ['GitHub', __('Version control and CI/CD trigger. Every project lives in a GitHub repo. Pushes to main kick off builds and deploys automatically.', 'sage'), 'https://github.com'],
                 ['GitHub Actions', __('Automated build and deploy pipeline. Runs Composer, npm, and the release zip on every push. Zero manual uploads.', 'sage'), 'https://github.com/features/actions'],
                 ['TablePlus', __('Database GUI for local MySQL and SQLite. Useful for inspecting WordPress tables without writing raw SQL.', 'sage'), 'https://tableplus.com'],

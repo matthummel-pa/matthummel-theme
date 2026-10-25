@@ -43,7 +43,7 @@
       'desc'  => __('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage'),
     ],
     [
-      'icon'  => 'cursor-ai',
+      'icon'  => 'claude',
       'title' => __('AI-assisted work', 'sage'),
       'desc'  => __('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage'),
     ],

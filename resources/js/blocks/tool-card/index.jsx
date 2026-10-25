@@ -4,7 +4,7 @@ import { PanelBody, TextControl, SelectControl } from '@wordpress/components'
 import { __ } from '@wordpress/i18n'
 
 const MARK_OPTIONS = [
-  { label: 'Cu — Cursor', value: 'Cu' },
+  { label: 'Cu — Cursor (legacy)', value: 'Cu' },
   { label: 'GPT — ChatGPT', value: 'GPT' },
   { label: 'Cl — Claude', value: 'Cl' },
   { label: 'Ge — Gemini', value: 'Ge' },

@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.7.59 — Content: Cursor replaced by Claude Code
+
+- Uses page and tools list: the Cursor entries are gone, and the Claude Code row now says it is the agent I use for planning, refactors, and reviews on this site.
+- Now page and "AI drafts. I ship the review": they name Claude Code, Claude, and ChatGPT instead of Cursor.
+- The "AI-assisted work" card uses the Claude icon. The `cursor-ai` icon stays registered so saved posts and cards keep rendering.
+- Tool grid block: the default first card is Claude Code. The tool card keeps a "Cu — Cursor (legacy)" option for older cards.
+- Journal post "What actually gets faster with AI" (`docs/posts`): a dated note says I moved from Cursor to Claude Code; the comparison itself is unchanged. `docs/THEME.md` and `docs/FEATURES.md` match.
+- Source edits only: the live pages and the journal post change when this is installed on staging and the post is updated in the block editor.
+
 ## 3.7.58 — Fix: redirect targets keep their trailing slash
 
 - A redirect target on this site lost its trailing slash, query string, and `#section` when it was saved from the Redirects form or a CSV import. WordPress then added the slash with a second redirect, so every such redirect took two hops. Targets now keep the slash, query, and fragment as written.

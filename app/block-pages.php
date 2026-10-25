@@ -619,7 +619,7 @@ function mh_journal_blocks_markup(int $id): string
             ['icon' => 'javascript', 'title' => __('JavaScript', 'sage'), 'body' => esc_html__('Front-end behavior, forms, and small modules from real WordPress projects.', 'sage')],
             ['icon' => 'tailwind', 'title' => __('CSS & layout', 'sage'), 'body' => esc_html__('Readable layouts, fluid type, and styles that hold up on phones and wide screens.', 'sage')],
             ['icon' => 'vite', 'title' => __('Build & deploy', 'sage'), 'body' => esc_html__('Shipping themes safely — builds, updates, and notes so launch is not a fire drill.', 'sage')],
-            ['icon' => 'cursor-ai', 'title' => __('AI-assisted work', 'sage'), 'body' => esc_html__('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage')],
+            ['icon' => 'claude', 'title' => __('AI-assisted work', 'sage'), 'body' => esc_html__('Using AI on the repeatable parts, then reviewing every line before it ships.', 'sage')],
         ])
     );
 

@@ -13,10 +13,10 @@ const TEMPLATE = [
   [
     'matthummel/tool-card',
     {
-      icon: 'cursor-ai',
-      mark: 'Cu',
-      name: 'Cursor',
-      role: 'Primary editor',
+      icon: 'claude',
+      mark: 'Cl',
+      name: 'Claude Code',
+      role: 'Primary agent in the repo',
       nameHeadingLevel: 3,
     },
   ],
