@@ -1,12 +1,11 @@
 <?php
 
 /**
- * Social and structured-data meta: Open Graph, Twitter cards, JSON-LD, and
- * the MH SEO noindex flag.
+ * Social and structured-data meta: Open Graph, Twitter cards, and JSON-LD.
  *
  * Uses the same title and description the theme already prints, so share
- * previews match search results. Steps aside when MH SEO manages the head or
- * another SEO plugin (Yoast, Rank Math, AIOSEO, SEOPress) is active.
+ * previews match search results. Steps aside when an SEO plugin (Yoast, Rank Math,
+ * AIOSEO, SEOPress) is active.
  */
 
 namespace App;
@@ -15,9 +14,6 @@ namespace App;
 function mh_social_meta_enabled(): bool
 {
     if (is_admin() || is_feed() || is_404() || mh_seo_plugin_prints_description()) {
-        return false;
-    }
-    if (function_exists('mh_seo_is_managing_head') && mh_seo_is_managing_head()) {
         return false;
     }
 
@@ -213,16 +209,3 @@ add_action('wp_head', function (): void {
         .wp_json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)
         ."</script>\n";
 }, 3);
-
-/** Honor the MH SEO "noindex" checkbox while the theme prints the head. */
-add_filter('wp_robots', function (array $robots): array {
-    if (! mh_social_meta_enabled() || ! is_singular()) {
-        return $robots;
-    }
-    if ((string) get_post_meta((int) get_queried_object_id(), '_mh_seo_noindex', true) === '1') {
-        $robots['noindex'] = true;
-        $robots['follow'] = true;
-    }
-
-    return $robots;
-});

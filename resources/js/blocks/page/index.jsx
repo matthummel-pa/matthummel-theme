@@ -294,7 +294,7 @@ const FAQ_TEMPLATE = [
 ]
 
 function FaqEdit() {
-  // FAQPage data now comes from every Questions block on the page (MH SEO), so there is no toggle.
+  // The SEO plugin owns structured data, so the Questions block has no schema toggle.
   const blockProps = useBlockProps({ className: 'faq-list mh-block-faq' })
   const inner = useInnerBlocksProps(blockProps, { template: FAQ_TEMPLATE, allowedBlocks: ['core/details'] })
 
