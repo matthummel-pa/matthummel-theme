@@ -4583,7 +4583,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_now_items', $items);
+                update_post_meta($id, 'mh_f_now_items', wp_slash($items));
             }
         } elseif (is_string($items) && $items !== '') {
             $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
@@ -4595,7 +4595,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_now_items', implode("\n", $lines));
+                update_post_meta($id, 'mh_f_now_items', wp_slash(implode("\n", $lines)));
             }
         }
 
@@ -4610,7 +4610,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_about_approach', $rows);
+                update_post_meta($id, 'mh_f_about_approach', wp_slash($rows));
             }
         }
     }
