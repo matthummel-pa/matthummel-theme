@@ -4538,7 +4538,6 @@ add_action('init', function (): void {
     update_option('mh_seo_copy_v2', true);
 }, 78);
 
-
 /**
  * One-time: replace the old Cursor wording in saved Now and About copy.
  *
