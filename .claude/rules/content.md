@@ -1,7 +1,10 @@
 ---
-description: Where visitor-facing copy lives (block content, not theme fields) and the voice it uses. Load for any copy, block, or page-content task.
-globs: resources/blocks/**,resources/views/blocks/**,resources/js/blocks/**,app/blocks.php,docs/**/*.md
-alwaysApply: false
+paths:
+  - "resources/blocks/**"
+  - "resources/views/blocks/**"
+  - "resources/js/blocks/**"
+  - "app/blocks.php"
+  - "docs/**/*.md"
 ---
 
 # Content: where copy lives, and how it sounds
@@ -27,7 +30,7 @@ Pages not yet converted (3.7.0 migration, see `docs/FEATURES.md`) still read **P
 
 - A copy change is an edit in the block editor (staging first), not a PR. A PR touches copy only to seed a page, change a block's default template, or fix UI chrome.
 - Posts: block editor. Put the language class on `<code>` (`language-php`, `language-js`) so highlight.js runs.
-- Titles and meta come from the WordPress document title and Yoast. Title under 60 characters, `Topic | Matt Hummel` (drop the suffix if the title already says Matt Hummel). Meta under 155 characters, first person, says what the page offers. Never a second `<title>` stack in Blade.
+- Titles and meta come from the WordPress document title and Rank Math. Title under 60 characters, `Topic | Matt Hummel` (drop the suffix if the title already says Matt Hummel). Meta under 155 characters, first person, says what the page offers. Never a second `<title>` stack in Blade.
 
 ## Voice
 

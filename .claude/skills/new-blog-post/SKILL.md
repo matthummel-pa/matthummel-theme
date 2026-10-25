@@ -1,4 +1,9 @@
-# Skill: Write and Publish a New Blog Post
+---
+name: new-blog-post
+description: "Draft, review, or publish a journal post on matthummel.com (docs/posts drafts, block editor HTML, SEO fields). Use when Matt asks for a blog post."
+---
+
+# Write and Publish a New Blog Post
 
 Use this skill when Matt asks to draft, review, or publish a blog post on matthummel.com/journal.
 
@@ -108,7 +113,9 @@ Use standard Gutenberg block comments around major sections:
 
 ---
 
-## Step 6 — Publish on the live site
+## Step 6 — Publish on the staging site
+
+Write and publish the post on the **staging site**, `https://matthummel-com-623249.hostingersite.com/` (default host; the same steps work there). Do not log in to or edit `matthummel.com`. Matt publishes staging → live from hPanel.
 
 Options (choose one):
 
@@ -127,7 +134,7 @@ Use the import script: `python3 .github/scripts/import-docs-posts.py` — check 
 
 ## Step 7 — Cross-post distribution
 
-After publishing:
+Only after Matt has published staging → live, so the canonical URL is the live one. After that:
 
 | Channel | Action | When |
 |---|---|---|
@@ -146,5 +153,5 @@ After publishing:
 | `resources/views/single.blade.php` | Single post template |
 | `resources/views/partials/content-single.blade.php` | Post body render |
 | `app/rank-math-fields.php` | Rank Math integration |
-| `.cursor/rules/master-content-writer.mdc` | Voice and editing rules |
-| `.cursor/rules/portfolio-seo-playbook.mdc` | Keyword and content layout rules |
+| `.claude/rules/master-content-writer.md` | Voice and editing rules |
+| `.claude/rules/portfolio-seo-playbook.md` | Keyword and content layout rules |

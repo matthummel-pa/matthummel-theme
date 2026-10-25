@@ -6,12 +6,12 @@ Tailwind v4, Vite, and Acorn. The repo root *is* the theme folder.
 A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Github.php`,
 `app/page-fields.php`, `resources/css/portfolio.css`, and the `template-*.blade.php` views.
 Page copy is block content edited in the block editor, not hardcoded in Blade. Rules:
-`.cursor/rules/content.mdc`. Pages are moving to blocks one template at a time (3.7.0): page
+`.claude/rules/content.md`. Pages are moving to blocks one template at a time (3.7.0): page
 blocks live in `resources/blocks/` (block.json), `resources/views/blocks/` (Blade render), and
 `resources/js/blocks/page/` (editor). A converted page has no theme fields. Pages not yet
 converted keep their frozen **Page content (theme)** fields; add no new keys.
 
-Sage docs (also listed in `.cursor/docs.json`):
+Sage docs:
 
 - https://roots.io/sage/docs/
 - https://roots.io/sage/docs/theme-templates/
@@ -22,7 +22,7 @@ Sage docs (also listed in `.cursor/docs.json`):
 
 Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinger (theme folder
 `wp-content/themes/matthummel/`). Hosting, DNS, and WPVibe safety live in
-`.cursor/rules/hostinger-github-wordpress-workflow.mdc`.
+`.claude/rules/hostinger-github-wordpress-workflow.md`.
 
 Staging first: **[matthummel-com-623249.hostingersite.com](https://matthummel-com-623249.hostingersite.com/)**
 ("hummel-dev") is Hostinger's staging copy of the site. Every design or dev change is installed
@@ -37,15 +37,9 @@ WP-CLI: `wp mh theme-update` (install zip), `wp mh theme-build` (rebuild on GitH
 
 Theme zip products (Acreline, WalkRidge): see `docs/SHOP-DOWNLOADS.md`.
 
-## Cursor Cloud specific instructions
+## Local development and deploy notes
 
-The base environment already has PHP 8.3, Composer, Node 22, and WP-CLI. The update script
-runs `composer install` and `npm install`. Services are not auto-started.
-
-Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/` so it
-matches the live Hostinger folder name (`wp-content/themes/matthummel`). Local WordPress
-must use that same directory name (symlink `/workspace` to
-`~/wp-site/wp-content/themes/matthummel`), not `matthummel-theme`.
+Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/` so it matches the live Hostinger folder name (`wp-content/themes/matthummel`). A local WordPress must use that same theme directory name (`matthummel`), not `matthummel-theme`. Local setup recipes (WordPress Studio, or Linux with SQLite): `docs/INSTALL.md`.
 
 ### Standard commands
 
@@ -53,30 +47,6 @@ must use that same directory name (symlink `/workspace` to
   before expecting styled pages.
 - Dev/HMR: `npm run dev`.
 - PHP style: `vendor/bin/pint --test` (check) / `vendor/bin/pint` (fix).
-
-### Running the site
-
-WordPress lives **outside the repo** at `~/wp-site` (SQLite, no MySQL). Symlink:
-
-```bash
-ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel
-cd ~/wp-site && wp theme activate matthummel
-cd ~/wp-site && wp server --host=0.0.0.0 --port=8080
-```
-
-Preferred local URL: `http://matthummel-theme.local:8080` (add
-`127.0.0.1 matthummel-theme.local` to `/etc/hosts` on the machine that
-resolves the name). `http://localhost:8080` and `http://127.0.0.1:8080`
-still work. Cloud Simple Browser uses the forwarded port (`127.0.0.1:8080`)
-unless that hostname is in the client hosts file. PHP `wp server` is HTTP,
-not Herd HTTPS on `:443`. Admin: `admin` / `password`. Acreline, when present,
-is `~/wp-acreline-site` on port **8081**. Bind `wp server` to `0.0.0.0`, not
-`127.0.0.1` only.
-
-Cloud Simple Browser is isolated from VM localhost. Declaring
-`.cursor/environment.json` `ports` (8080 / 8081) is what lets Cursor
-forward them. After that file is on the branch, Save the Cloud environment
-(or Ports panel) so the tunnel exists; this VM cannot inject it by itself.
 
 ### Local WordPress isolation (one install per product)
 
@@ -90,46 +60,29 @@ Each product gets its own site directory, theme symlink (folder name = that repo
 | Acreline / wp-acreline | `~/wp-acreline-site` | usually `acreline` | **8081** |
 | Next new WP project | `~/wp-<slug>-site` | match Vite `base` | **8082+** (next free) |
 
-Run both at once in separate tmux sessions (`wp server --host=0.0.0.0 --port=<port>`). Do not `pkill -f`. Local admin is `admin` / `password` unless already set. SQLite drop-in still goes in **before** `wp core install` (gotcha below). Do not mix `theme-latest` zips between sites.
-
-User skill: `sage-docs` (Cursor user skills store).
+Run each product on its own site and port. Do not `pkill -f`. Do not mix `theme-latest` zips between sites.
 
 Gotchas:
 
 - After editing Blade templates, clear compiled views:
-  `cd ~/wp-site && wp acorn view:clear`.
-- `wp_mail` does not deliver here (no mail server). The contact form still redirects.
-- If `~/wp-site` is missing, recreate WordPress with SQLite, symlink as `matthummel`,
-  activate the theme, then `wp rewrite structure '/%postname%/'`. There is no MySQL,
-  so the SQLite drop-in must be placed **before** any WP bootstrap: `wp core download`,
-  `wp config create --skip-check`, then manually unzip the `sqlite-database-integration`
-  plugin into `wp-content/plugins/` and copy its `db.copy` to `wp-content/db.php`
-  (replacing the `{SQLITE_IMPLEMENTATION_FOLDER_PATH}` / `{SQLITE_PLUGIN}` placeholders).
-  Do **not** `wp plugin install` first — WP-CLI needs the mysqli extension to bootstrap
-  and errors out until `db.php` is in place. Only then run `wp core install`.
-  The repo checkout may live at `/agent/repos/matthummel-theme` (not `/workspace`);
-  symlink from wherever the repo actually is.
+  `studio wp acorn view:clear`.
+- `wp_mail` does not deliver locally (no mail server). The contact form still redirects.
 - Portfolio pages seed once via `mh_seed_portfolio_pages()` (`mh_portfolio_seeded_v2`).
   Existing posts and categories are never deleted.
 - Edit visitor-facing copy in the block editor (**Pages -> [page]**), on staging first. Do not
   add keys to `app/page-fields.php`; unconverted pages keep their existing fields until their
-  conversion PR (`.cursor/rules/content.mdc`).
+  conversion PR (`.claude/rules/content.md`).
 - Deploy from WordPress (**staging site only**): Appearance → Update Theme. Needs a
   fine-grained GitHub PAT (Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
   That **installs the GitHub zip** over HTTPS. Optional: Actions read/write to click
-  “Rebuild zip on GitHub”. WP-CLI: `wp mh theme-update`. The Cursor Cloud `gh` token
+  “Rebuild zip on GitHub”. WP-CLI: `wp mh theme-update`. The agent's `gh` token
   cannot create releases or dispatch workflows (403); use Matt’s PAT on the staging
   site, not the agent token. Live (`matthummel.com`) only changes when Matt publishes
   staging from hPanel.
-- WPVibe MCP URL is `https://mcp.wpvibe.ai/mcp` (API endpoint — a browser tab
-  is usually a blank page). `.cursor/mcp.json` uses native HTTP (`url`), not
-  `mcp-remote`. Cursor Cloud Agents do not support SSE or `mcp-remote`.
-- Desktop Cursor: Settings → MCP should pick up `wpvibe` from the project file.
-  First use opens a WPVibe email sign-in (6-digit code in the subject line).
-- Cloud Agents: add the same HTTP URL once at https://cursor.com/agents
-  (MCP dropdown → custom HTTP server, no client ID/secret), then complete
-  OAuth. Project `.cursor/mcp.json` is not loaded in Cloud Agent VMs.
-  Plugin is on the live site (`vibe-ai`). Theme **files** still ship as the
+- WPVibe MCP URL is `https://mcp.wpvibe.ai/mcp` (API endpoint — a browser tab is usually
+  a blank page). Use native HTTP (`url`), not `mcp-remote`. First use opens a WPVibe email
+  sign-in (6-digit code in the subject line).
+- The plugin is on the live site (`vibe-ai`). Theme **files** still ship as the
   `theme-latest` zip into `wp-content/themes/matthummel/` (not the parent `themes/` folder).
   WPVibe then connects, lists themes, and activates — it cannot replace
   `npm run build` / Composer for Sage. Theme edits on a connected site: draft →

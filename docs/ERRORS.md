@@ -20,7 +20,7 @@ define('WP_DEBUG_DISPLAY', false);
 ### Read
 
 ```bash
-# Cursor Cloud / local
+# Local (Linux)
 tail -f ~/wp-site/wp-content/debug.log
 
 # WP-CLI
@@ -77,7 +77,7 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Form submits but no email arrives | No mail server (local or Cursor Cloud) | Expected; add an SMTP plugin on the live site |
+| Form submits but no email arrives | No mail server (local) | Expected; add an SMTP plugin on the live site |
 | `403 Forbidden` on submit | Nonce expired (>12 h old page) | User refreshes the page — nonce is regenerated |
 | Redirect loop on submit | `wp_safe_redirect` destination blocked | Check `allowed_redirect_hosts` filter in `app/contact.php` |
 | Honeypot field filled (spam) | Bot filled `mh_website` hidden field | Form silently discards and redirects — this is correct behavior |
@@ -128,7 +128,7 @@ wp eval 'foreach(["mh_github_profile","mh_github_repos","mh_github_events","mh_g
 
 ---
 
-## SQLite (Cursor Cloud local only)
+## SQLite (Linux local only)
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |

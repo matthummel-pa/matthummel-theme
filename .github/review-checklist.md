@@ -1,7 +1,6 @@
 # WordPress / Sage code review checklist
 
-The rules below come from the WordPress Developer Handbook and the Sage docs. Claude,
-Cursor, and humans use the same list. `wp-review` automates the parts marked **[auto]**.
+The rules below come from the WordPress Developer Handbook and the Sage docs. Claude and humans use the same list. `wp-review` automates the parts marked **[auto]**.
 
 Severity: **Blocker** = must fix before merge · **Should fix** = fix in this PR unless
 there is a reason · **Nit** = optional.

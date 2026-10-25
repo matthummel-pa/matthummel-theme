@@ -1,4 +1,9 @@
-# Skill: Add a New Product to the Shop
+---
+name: add-product
+description: "Add a new WordPress theme, plugin, or web app to the matthummel.com shop catalog (product-catalog.json, product page, deploy). Use when Matt asks to add a product."
+---
+
+# Add a New Product to the Shop
 
 Use this skill when Matt asks to add a new WordPress theme, plugin, or web app to the matthummel.com shop catalog.
 
@@ -100,7 +105,7 @@ Open `resources/data/product-catalog.json`. Each product is an object keyed by `
 
 ## Step 3 — Sync catalog meta via WP-CLI
 
-On the live server, run the seed WP-CLI command so the `_mh_project_*` meta is written from JSON to the WC product:
+On the **staging site** (default host; Matt publishes staging → live from hPanel), run the seed WP-CLI command so the `_mh_project_*` meta is written from JSON to the WC product:
 
 ```bash
 # In wp-admin PHP or WP-CLI eval:
