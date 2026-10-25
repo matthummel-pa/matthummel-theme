@@ -4569,6 +4569,8 @@ function mh_apply_cursor_to_claude_copy_v1(): void
         ],
     ]);
 
+    $failed = false;
+
     foreach ($pages as $id) {
         $id = (int) $id;
 
@@ -4583,7 +4585,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_now_items', wp_slash($items));
+                $failed = update_post_meta($id, 'mh_f_now_items', wp_slash($items)) === false || $failed;
             }
         } elseif (is_string($items) && $items !== '') {
             $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
@@ -4595,7 +4597,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_now_items', wp_slash(implode("\n", $lines)));
+                $failed = update_post_meta($id, 'mh_f_now_items', wp_slash(implode("\n", $lines))) === false || $failed;
             }
         }
 
@@ -4610,12 +4612,15 @@ function mh_apply_cursor_to_claude_copy_v1(): void
                 }
             }
             if ($changed) {
-                update_post_meta($id, 'mh_f_about_approach', wp_slash($rows));
+                $failed = update_post_meta($id, 'mh_f_about_approach', wp_slash($rows)) === false || $failed;
             }
         }
     }
 
-    update_option('mh_cursor_to_claude_copy_v1', true);
+    // Leave the flag unset if any write failed, so the routine tries again.
+    if (! $failed) {
+        update_option('mh_cursor_to_claude_copy_v1', true);
+    }
 }
 
 add_action('init', __NAMESPACE__.'\mh_apply_cursor_to_claude_copy_v1', 79);
