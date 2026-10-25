@@ -3,8 +3,7 @@
 /**
  * Page SEO helpers left from the Rank Math setup.
  *
- * - Focus keyword defaults per page template (also used for the MH SEO score,
- *   see app/seo-score-column.php).
+ * - Focus keyword defaults per page template.
  * - One-time repair of field values that were saved with their label prefixed.
  * - Rank Math only: drops page tests that cannot apply and feeds the page
  *   fields to its analyzer. Both are no-ops when Rank Math is not active.
