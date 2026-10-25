@@ -104,10 +104,9 @@ A personal site is the one project where the developer is also the client, the c
 <details open>
 <summary><strong>SEO, social meta, and structured data</strong></summary>
 
-- Title and description pipeline with defaults per landing page, term-archive fallbacks, and a hand-off to the [MH SEO](https://github.com/matthummel-pa/mh-seo) plugin when it manages the head.
+- Title and description pipeline with defaults per landing page and term-archive fallbacks. It steps aside when Rank Math (or another SEO plugin) is active.
 - Open Graph and Twitter cards with image dimensions and alt; JSON-LD (`WebSite`, `Person`, `WebPage`, `BreadcrumbList`, `BlogPosting`, `FAQPage`, `SoftwareApplication` with `Offer` when for sale).
 - Legacy URL redirects, `/journal/` → `/blog/`, canonical control, noindex per page, sitemap exclusion.
-- Admin **SEO score column** on post lists, fed by MH SEO.
 </details>
 
 <details open>
@@ -268,7 +267,7 @@ public/build/             Vite output — built by CI, never committed
 | [wp-acreline](https://github.com/matthummel-pa/wp-acreline) | Sage 11 real-estate theme with 21 Gutenberg blocks and a setup wizard |
 | [wp-walkridge](https://github.com/matthummel-pa/wp-walkridge) | Sage 11 tour-shop theme with WooCommerce bookings |
 | [tocguide](https://github.com/matthummel-pa/tocguide) | Server-rendered Table of Contents block (free, GPLv2+) |
-| [mh-seo](https://github.com/matthummel-pa/mh-seo) | The SEO plugin this theme hands its head output to |
+| [Rank Math SEO](https://wordpress.org/plugins/seo-by-rank-math/) | The SEO plugin that prints this site's head, schema, sitemap, and redirects |
 | [ai-dev-standards-playbook](https://github.com/matthummel-pa/ai-dev-standards-playbook) | Claude Code rules, skills, and `/pb:*` commands used on every repo |
 | [matthummel-pa](https://github.com/matthummel-pa/matthummel-pa) | Profile README that pulls projects and posts from this site |
 
