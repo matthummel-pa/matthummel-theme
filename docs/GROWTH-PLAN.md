@@ -241,7 +241,7 @@ Do not install Google Analytics, PostHog, or Mixpanel unless there is a specific
 | Write a blog post | `.claude/skills/new-blog-post/SKILL.md` |
 | Monthly site review | `.claude/skills/site-review/SKILL.md` |
 | Sync a product from its repo | `.claude/rules/product-theme-sync.md` |
-| Edit WooCommerce product page standards | `.claude/rules/woocommerce-product.md` |
+| Edit WooCommerce product page standards | `.claude/skills/woocommerce-product/SKILL.md` |
 | Voice and grammar | `.claude/rules/content.md` |
 | SEO and keyword strategy | `.claude/rules/portfolio-seo-playbook.md` |
 | Deploy | `.github/workflows/deploy.yml`, `docs/INSTALL.md` |

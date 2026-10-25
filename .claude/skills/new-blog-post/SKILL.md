@@ -9,7 +9,7 @@ Use this skill when Matt asks to draft, review, or publish a blog post on matthu
 
 ## Overview
 
-Posts live as WordPress Gutenberg posts at `/journal/`. Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post body is pasted into the WP editor on the live site.
+Posts live as WordPress Gutenberg posts at `/journal/`. Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post body is pasted into the WP editor on the staging site (default host); Matt publishes staging to live from hPanel.
 
 Voice: first person, plain, specific. No fake metrics. "I" not "we."
 Audience: shops/agencies first, developers second, learners third.
@@ -153,5 +153,5 @@ Only after Matt has published staging → live, so the canonical URL is the live
 | `resources/views/single.blade.php` | Single post template |
 | `resources/views/partials/content-single.blade.php` | Post body render |
 | `app/rank-math-fields.php` | Rank Math integration |
-| `.claude/rules/master-content-writer.md` | Voice and editing rules |
+| `.claude/rules/content.md` | Voice and editing rules |
 | `.claude/rules/portfolio-seo-playbook.md` | Keyword and content layout rules |

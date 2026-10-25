@@ -13,7 +13,7 @@ Dual-audience layout, post structure and on-page limits: the `portfolio-seo` ski
 
 This is the **matthummel** Sage 11 theme, not a generic agency case-study site. Map the playbook onto files that already ship. If it conflicts with `agency-core.md`, **shipping patterns win** until Matt asks to migrate.
 
-- **Voice:** first-person **I / my**. Glossary: **shops**, **agencies**, **developers**, **learners**. Do not switch to “we/our” or “clients” (`master-content-writer.md`).
+- **Voice:** first-person **I / my**. Glossary: **shops**, **agencies**, **developers**, **learners**. Do not switch to “we/our” or “clients” (`content.md`).
 - **Copy location:** block content and posts, not hardcoded Blade except UI chrome (`content.md`).
 - **Location:** marketing and SEO copy is **skill-first** (WordPress, plugins, web apps) — do **not** stuff city names into titles, meta, kickers, or every landing paragraph. Demo project **place** labels on Work cards may stay factual. Legal/privacy jurisdiction lines may name Pennsylvania when needed. Only reintroduce local SEO if Matt asks.
 - **Work:** `/projects/` is studio **example sites**, not a case-study CPT. Do not invent fake results, testimonials, revenue lifts, or client names (`docs/FEATURES.md`).

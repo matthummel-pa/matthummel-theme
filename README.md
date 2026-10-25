@@ -168,7 +168,7 @@ Design tokens are CSS custom properties in [`resources/css/app.css`](resources/c
 
 **Working method.** Each change starts with a one-line goal and a short plan, lands as a small PR named after the change, and gets reviewed before merge — by me and by a second tool (a security-review agent for anything touching input, output, or credentials). After every visible change I audit the live page: Lighthouse, axe-core, a crawl of titles/descriptions/links, keyboard pass. Findings become the next PR. The [FEATURES](docs/FEATURES.md) file carries an "editor's note" per release so a future change does not undo a deliberate decision.
 
-**AI as a pair, not an author.** Claude scaffolds first drafts and run the audits; I read, run, and test every line that ships, and the AI never has write access to the live site. The commit history is the honest record — 629 reviewable commits, not one generated dump.
+**AI as a pair, not an author.** Claude scaffolds first drafts and runs the audits; I read, run, and test every line that ships, and the AI never has write access to the live site. The commit history is the honest record — 629 reviewable commits, not one generated dump.
 
 ## Engineering practices
 
@@ -223,7 +223,7 @@ wp rewrite structure '/%postname%/'
 | `npm run dev` | Vite with HMR |
 | `npm run build` | Compile to `public/build/` (gitignored; CI builds it for release) |
 | `vendor/bin/pint` / `--test` | Fix / check PHP style |
-| `wp-review --base origin/main` | WordPress Coding Standards on changed lines (from [wp-dev-kit](https://github.com/matthummel-pa/wp-dev-kit)) |
+| `wp-review --base origin/main` | WordPress Coding Standards on changed lines (`.github/scripts/wp-review`) |
 | `wp acorn view:clear` | Clear compiled Blade after template edits |
 | `wp mh theme-update` | Install the `theme-latest` zip on any WordPress install |
 

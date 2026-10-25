@@ -49,7 +49,7 @@ Prefer **code + README + BRAND** over a stale listing file when they disagree. I
 
 ### 2. Map into `product-catalog.json`
 
-Update only the product’s object under `resources/data/product-catalog.json`. Keep first-person / plain voice on matthummel (`master-content-writer.md`). Shop glossary: shops, agencies, developers, learners — not “clients” unless Matt already used it.
+Update only the product’s object under `resources/data/product-catalog.json`. Keep first-person / plain voice on matthummel (`content.md`). Shop glossary: shops, agencies, developers, learners — not “clients” unless Matt already used it.
 
 Required fields to re-check every sync:
 

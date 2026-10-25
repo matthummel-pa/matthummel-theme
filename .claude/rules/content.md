@@ -1,8 +1,10 @@
 ---
 paths:
+  - "resources/views/**"
   - "resources/blocks/**"
   - "resources/views/blocks/**"
   - "resources/js/blocks/**"
+  - "app/page-fields.php"
   - "app/blocks.php"
   - "docs/**/*.md"
 ---

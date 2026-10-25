@@ -16,7 +16,7 @@ ACF-in-PHP registry, Customizer dark-mode default, branch hygiene and security s
 
 This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the directives below **without ripping out what already works** unless Matt asks.
 
-- **Fields:** visitor copy is block content (`content.md`). `app/page-fields.php` is frozen legacy for unconverted pages. Do not install ACF Pro or add `app/Fields/` until Matt asks. When he does, use the abstract registry in section 1.
+- **Fields:** visitor copy is block content (`content.md`). `app/page-fields.php` is frozen legacy for unconverted pages. Do not install ACF Pro or add `app/Fields/` until Matt asks. When he does, use the `sage-architecture` skill.
 - **Dark mode today:** runtime class is `html.mh-dark` (header toggle + `prefers-color-scheme`). CSS in `resources/css/portfolio.css` keys off that class. If adding a Customizer default (`sage-architecture` skill), map `system|light|dark` into that class; do not switch the whole theme to `[data-theme]` and abandon `.mh-dark`.
 - **Tailwind v4:** `@tailwindcss/vite` in `vite.config.js`. Front-end tokens live in CSS `@theme` (`resources/css/app.css`). `tailwind.config.js` is only the Gutenberg / `wordpressThemeJson` map. Do not add `@config` unless Matt migrates off CSS tokens.
 - **Deploy today:** `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`) builds on the runner and publishes GitHub Release `theme-latest`. Production is `matthummel.com` on Hostinger. Theme path is `wp-content/themes/matthummel/`. PHP 8.3, Node 22, npm (not yarn, not `web/app/themes/sage`). No SiteGround FTP or SSH.
