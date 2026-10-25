@@ -73,7 +73,7 @@ Target Rank Math score: **80+** per product.
 
 ## 3. Archive (shop) page standards
 
-The shop listing at `/shop/` is a WooCommerce archive routed through `archive-product.blade.php`. Its editable copy is on the WooCommerce "Shop" page in wp-admin via **Page content (theme)** fields.
+The shop listing at `/shop/` is a WooCommerce archive routed through `archive-product.blade.php`. Its editable copy is on the WooCommerce "Shop" page in wp-admin. That page still reads legacy **Page content (theme)** fields (`template-woocommerce`); it moves to blocks with its conversion PR (`content.mdc`).
 
 Required schema on the shop page:
 - `CollectionPage` with `hasPart` array of product URLs (auto-output)

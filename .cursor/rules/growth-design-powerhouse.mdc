@@ -11,7 +11,7 @@ This file establishes strict guidelines, expert personas, and technical guardrai
 
 This is the **matthummel** Sage 11 theme, not a Next.js/shadcn app. Blend the personas below with `agency-core.mdc`. If they conflict, **shipping patterns win** until Matt asks to migrate.
 
-- **Copy:** visitor-facing sentences live in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`). Do not hardcode landing-page prose in Blade. Do not invent fake testimonials, revenue claims, or security-badge theater (`docs/FEATURES.md`).
+- **Copy:** visitor-facing copy is block content. `content.mdc` owns copy location and voice. Do not hardcode landing-page prose in Blade. Do not invent fake testimonials, revenue claims, or security-badge theater (`docs/FEATURES.md`).
 - **CTA:** existing primary action is **Say hello** → `/contact/` (header + home). Keep one clear primary CTA; do not add competing “Sign up / Checkout” funnels.
 - **Design tokens:** Tailwind v4 `@theme` in `resources/css/app.css` plus `resources/css/portfolio.css`. Navy/blue/gray, Inter + IBM Plex. `tailwind.config.js` is Gutenberg/theme.json only. Never invent random hex or spacing.
 - **Icons:** existing `App\mh_svg_icon()` / inline SVG with `currentColor`. Do not add icon-font packs or raster icons.

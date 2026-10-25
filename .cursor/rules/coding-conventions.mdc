@@ -39,8 +39,8 @@ Matt is a marketer who prefers working directly in code. Keep diffs small, copy 
 ## Blade, templates, and WordPress
 
 - Follow the WordPress template hierarchy. Chrome lives in `resources/views/sections/`; reusable chunks in `partials/`; named pages in `template-*.blade.php`.
-- Visitor-facing sentences belong in **Page content (theme)** via `app/page-fields.php` and `\App\field()`, not hardcoded in Blade.
-- Do not add Kadence, page builders, a theme-options screen, or extra `app/*.php` modules unless Matt asks. Portfolio logic stays in `app/portfolio.php`, `app/contact.php`, `app/Github.php`, `app/page-fields.php`.
+- Visitor-facing copy is block content, not hardcoded in Blade. No new field calls. `content.mdc` owns copy location and voice.
+- Do not add Kadence, page builders, a theme-options screen, or extra `app/*.php` modules unless Matt asks. Portfolio logic stays in `app/portfolio.php`, `app/contact.php`, `app/Github.php`. `app/page-fields.php` is frozen legacy.
 - After Blade edits in Cloud, run `cd ~/wp-site && wp acorn view:clear`.
 - Prefer server-rendered HTML. Keep `resources/js/` small and for Web APIs (dark mode, copy, search filters). Do not fetch page content in JS when PHP/Blade can render it.
 

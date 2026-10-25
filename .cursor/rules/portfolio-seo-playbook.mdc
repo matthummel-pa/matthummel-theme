@@ -12,13 +12,13 @@ This rulebook balances friendly shop-owner copy with technical precision. Use it
 This is the **matthummel** Sage 11 theme, not a generic agency case-study site. Map the playbook onto files that already ship. If it conflicts with `agency-core.mdc`, **shipping patterns win** until Matt asks to migrate.
 
 - **Voice:** first-person **I / my**. Glossary: **shops**, **agencies**, **developers**, **learners**. Do not switch to “we/our” or “clients” (`master-content-writer.mdc`).
-- **Copy location:** visitor sentences live in **Page content (theme)** (`app/page-fields.php`, `\App\field()`), posts, and comments — not hardcoded Blade except UI chrome.
+- **Copy location:** block content and posts, not hardcoded Blade except UI chrome (`content.mdc`).
 - **Location:** marketing and SEO copy is **skill-first** (WordPress, plugins, web apps) — do **not** stuff city names into titles, meta, kickers, or every landing paragraph. Demo project **place** labels on Work cards may stay factual. Legal/privacy jurisdiction lines may name Pennsylvania when needed. Only reintroduce local SEO if Matt asks.
 - **Work:** `/projects/` is studio **example sites**, not a case-study CPT. Do not invent fake results, testimonials, revenue lifts, or client names (`docs/FEATURES.md`).
 - **Proof that ships:** GitHub repos, writing, live concept URLs, profile photo. Not AggregateRating JSON-LD unless Matt asks.
 - **Titles/meta:** WordPress document title and Yoast (or theme `document` helpers). Do not hardcode a second `<title>` stack in Blade. Format *when writing a title* as below.
 - **Snippets:** blog posts and the Code page use existing highlight.js / `.snippet` windows. Do not add Markdown fences in Blade. Language class belongs on `<code>` in post HTML.
-- **ACF:** do not treat “custom advanced custom fields theme development” as a reason to install ACF. Theme fields are `mh_f_*` in `app/page-fields.php`.
+- **ACF:** do not treat “custom advanced custom fields theme development” as a reason to install ACF. Copy is block content; legacy `mh_f_*` fields are frozen (`content.mdc`).
 - **CTA:** one primary **Say hello** → `/contact/`. Local SEO copy must not add a second conversion funnel.
 - **Layout:** do not force a 30/40/30 case-study template onto every Work card. Use that hierarchy when writing a **post** about a build, or if Matt asks for a long project page.
 

@@ -30,7 +30,7 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 ## Who Matt is
 
 - Marketer who prefers working directly in code: create, debug, iterate.
-- Visitor-facing sentences belong in wp-admin **Page content (theme)** (`app/page-fields.php`, `\App\field()`), not hardcoded marketing copy in Blade.
+- Visitor-facing copy is block content, not Blade and not new theme fields. `content.mdc` owns copy location and voice.
 - Speak plainly. No fake growth metrics, testimonials, or page-builder modules.
 
 ## Delivery
@@ -46,7 +46,7 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 ## Hard no’s
 
 - No Kadence, no child themes of this theme, no extra theme-options admin, no block patterns or page builders.
-- **Pages are moving to blocks (Matt asked, 3.7.0).** A converted page keeps its copy in `post_content` as blocks: core blocks inside the theme's page blocks (`resources/blocks/`, `resources/views/blocks/`, editor code in `resources/js/blocks/page/`). No Custom HTML blocks and no new `mh_f_*` fields. Pages not converted yet still use **Page content (theme)** until their PR lands; see `docs/FEATURES.md` (3.7.0).
+- **Pages are moving to blocks (Matt asked, 3.7.0).** A converted page keeps its copy in `post_content` as blocks: core blocks inside the theme's page blocks (`resources/blocks/`, `resources/views/blocks/`, editor code in `resources/js/blocks/page/`). No Custom HTML blocks and no new `mh_f_*` fields. Pages not converted yet keep their frozen legacy fields until their PR lands (list in `content.mdc`; see `docs/FEATURES.md` 3.7.0).
 - No installing ACF, WooCommerce, or new `app/*.php` modules unless Matt asks.
 - No rewriting dark mode off `html.mh-dark` unless Matt asks.
 - Do not add a second production deploy workflow. Edit `.github/workflows/deploy.yml` in place. Production is `matthummel.com` on Hostinger. Live theme path is `wp-content/themes/matthummel/`. No SiteGround FTP or SSH.
@@ -62,4 +62,4 @@ Do not follow Next.js, Supabase, Shadcn, or generic “agency starter” stacks 
 
 ## When Matt pastes a large spec
 
-Implement against **this repo**. Map new ideas (ACF classes, Customizer `data-theme`, rsync SSH) onto existing files first. Ask before a stack migration. Prefer extending `app/page-fields.php`, `resources/css/portfolio.css`, and `template-*.blade.php`.
+Implement against **this repo**. Map new ideas (ACF classes, Customizer `data-theme`, rsync SSH) onto existing files first. Ask before a stack migration. Prefer extending `resources/blocks/`, `resources/css/portfolio.css`, and existing templates. Do not extend `app/page-fields.php`.

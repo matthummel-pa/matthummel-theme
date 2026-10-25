@@ -5,10 +5,11 @@ Tailwind v4, Vite, and Acorn. The repo root *is* the theme folder.
 
 A thin portfolio layer lives in `app/portfolio.php`, `app/contact.php`, `app/Github.php`,
 `app/page-fields.php`, `resources/css/portfolio.css`, and the `template-*.blade.php` views.
-Page copy is edited in wp-admin (**Page content (theme)**), not hardcoded in Blade.
-Pages are moving to the block editor one template at a time (3.7.0): page blocks live in
-`resources/blocks/` (block.json), `resources/views/blocks/` (Blade render), and
-`resources/js/blocks/page/` (editor). A converted page has no theme fields.
+Page copy is block content edited in the block editor, not hardcoded in Blade. Rules:
+`.cursor/rules/content.mdc`. Pages are moving to blocks one template at a time (3.7.0): page
+blocks live in `resources/blocks/` (block.json), `resources/views/blocks/` (Blade render), and
+`resources/js/blocks/page/` (editor). A converted page has no theme fields. Pages not yet
+converted keep their frozen **Page content (theme)** fields; add no new keys.
 
 Sage docs (also listed in `.cursor/docs.json`):
 
@@ -110,8 +111,9 @@ Gotchas:
   symlink from wherever the repo actually is.
 - Portfolio pages seed once via `mh_seed_portfolio_pages()` (`mh_portfolio_seeded_v2`).
   Existing posts and categories are never deleted.
-- Edit visitor-facing sentences in **Pages → [page] → Page content (theme)**. Add new
-  keys in `app/page-fields.php`, then `\App\field()` in the template.
+- Edit visitor-facing copy in the block editor (**Pages -> [page]**), on staging first. Do not
+  add keys to `app/page-fields.php`; unconverted pages keep their existing fields until their
+  conversion PR (`.cursor/rules/content.mdc`).
 - Deploy from WordPress (**staging site only**): Appearance → Update Theme. Needs a
   fine-grained GitHub PAT (Contents read) saved on that screen or as `MH_GITHUB_TOKEN`.
   That **installs the GitHub zip** over HTTPS. Optional: Actions read/write to click

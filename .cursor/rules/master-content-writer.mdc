@@ -1,6 +1,7 @@
 ---
-description: Editorial voice, readability, and multi-pass editing for Matt Hummel’s Sage site copy.
-alwaysApply: true
+description: Multi-pass editing workflow and readability audit for Matt Hummel’s site copy. Voice and copy location live in content.mdc.
+globs: resources/blocks/**,docs/**/*.md
+alwaysApply: false
 ---
 
 # Cursor AI Rule File: The Master Content Writer & Editor
@@ -9,13 +10,13 @@ This file establishes strict editorial guidelines, formatting standards, and rea
 
 ## This repository (do not ignore)
 
-Matt writes as **one person** (first-person singular **I / my / me**), not a brand “we.” Copy lives in **Page content (theme)** (`app/page-fields.php`, `\App\field()`), posts, and comments — not hardcoded Blade except UI chrome.
+Matt writes as **one person** (first-person singular **I / my / me**), not a brand “we.” Copy lives in block content and posts, not hardcoded Blade except UI chrome. `content.mdc` owns copy location and voice; this file keeps the multi-pass editing workflow.
 
 - **Voice:** plain, technical, specific. Full-stack developer. WordPress, plugins, other web apps. No fake testimonials, no “3x revenue,” no corporate fluff (`agency-core.mdc`, `docs/FEATURES.md`).
 - **Glossary:** **shops** (businesses), **agencies**, **developers**, **learners**. Do not swap in “customers / users / clients” unless Matt uses that word in the field you are editing.
 - **UI labels (shipped):** sentence case — `Say hello`, `Journal`, `View code`, `Live demo`. Do not Title-Case buttons or nav to match a generic agency style guide.
 - **Headings:** page H1s are short titles (`About`, `Work`, `Now`). Section H2s may be Title Case when they are labels. H3 and body stay sentence case. Match the surrounding page.
-- **Bold:** use sparingly in post HTML / `field_html`. Do not wrap every keyword in `<strong>` on marketing pages.
+- **Bold:** use sparingly in post and block content. Do not wrap every keyword in `<strong>` on marketing pages.
 - **Growth rules:** `growth-design-powerhouse.mdc` still applies (one primary CTA, benefit-led). Local SEO layout and title/meta caps: `portfolio-seo-playbook.mdc` (3-sentence landings, Gettysburg). This file wins on **voice, grammar, and scanability**.
 
 ---
