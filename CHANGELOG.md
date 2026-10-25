@@ -7,6 +7,7 @@
 - The "AI-assisted work" card uses the Claude icon. The `cursor-ai` icon stays registered so saved posts and cards keep rendering.
 - Tool grid block: the default first card is Claude Code. The tool card keeps a "Cu — Cursor (legacy)" option for older cards.
 - Journal post "What actually gets faster with AI" (`docs/posts`): a dated note says I moved from Cursor to Claude Code; the comparison itself is unchanged. `docs/THEME.md` and `docs/FEATURES.md` match.
+- A one-time routine (`mh_cursor_to_claude_copy_v1`, runs on `init`) swaps the old Cursor wording in saved Now items and About principles. Only values that exactly match the previous defaults change; edited copy is left alone.
 - Source edits only: the live pages and the journal post change when this is installed on staging and the post is updated in the block editor.
 
 ## 3.7.58 — Fix: redirect targets keep their trailing slash

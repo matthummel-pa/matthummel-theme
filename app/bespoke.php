@@ -4537,3 +4537,86 @@ add_action('init', function (): void {
 
     update_option('mh_seo_copy_v2', true);
 }, 78);
+
+
+/**
+ * One-time: replace the old Cursor wording in saved Now and About copy.
+ *
+ * Only values that exactly match the previous defaults change, so copy that was
+ * edited in wp-admin is left alone. Pages that never saved these fields already
+ * show the new defaults.
+ */
+function mh_apply_cursor_to_claude_copy_v1(): void
+{
+    if (get_option('mh_cursor_to_claude_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $nowFrom = 'Using Cursor AI and Claude to build faster, reviewing every line before it ships.';
+    $nowTo = 'Using Claude Code to build faster, reviewing every line before it ships.';
+    $bodyFrom = 'Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.';
+    $bodyTo = 'Claude and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_query' => [
+            'relation' => 'OR',
+            ['key' => 'mh_f_now_items', 'compare' => 'EXISTS'],
+            ['key' => 'mh_f_about_approach', 'compare' => 'EXISTS'],
+        ],
+    ]);
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+
+        // Now items are stored as an array or as one item per line.
+        $items = get_post_meta($id, 'mh_f_now_items', true);
+        if (is_array($items)) {
+            $changed = false;
+            foreach ($items as $i => $item) {
+                if (trim((string) $item) === $nowFrom) {
+                    $items[$i] = $nowTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_now_items', $items);
+            }
+        } elseif (is_string($items) && $items !== '') {
+            $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
+            $changed = false;
+            foreach ($lines as $i => $line) {
+                if (trim($line) === $nowFrom) {
+                    $lines[$i] = $nowTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_now_items', implode("\n", $lines));
+            }
+        }
+
+        // About principles are repeater rows with icon, title, and body.
+        $rows = get_post_meta($id, 'mh_f_about_approach', true);
+        if (is_array($rows)) {
+            $changed = false;
+            foreach ($rows as $i => $row) {
+                if (is_array($row) && isset($row['body']) && trim((string) $row['body']) === $bodyFrom) {
+                    $rows[$i]['body'] = $bodyTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                update_post_meta($id, 'mh_f_about_approach', $rows);
+            }
+        }
+    }
+
+    update_option('mh_cursor_to_claude_copy_v1', true);
+}
+
+add_action('init', __NAMESPACE__.'\mh_apply_cursor_to_claude_copy_v1', 79);
