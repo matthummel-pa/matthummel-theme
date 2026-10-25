@@ -4577,7 +4577,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
         if (is_array($items)) {
             $changed = false;
             foreach ($items as $i => $item) {
-                if (trim((string) $item) === $nowFrom) {
+                if ((string) $item === $nowFrom) {
                     $items[$i] = $nowTo;
                     $changed = true;
                 }
@@ -4589,7 +4589,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
             $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
             $changed = false;
             foreach ($lines as $i => $line) {
-                if (trim($line) === $nowFrom) {
+                if ($line === $nowFrom) {
                     $lines[$i] = $nowTo;
                     $changed = true;
                 }
@@ -4604,7 +4604,7 @@ function mh_apply_cursor_to_claude_copy_v1(): void
         if (is_array($rows)) {
             $changed = false;
             foreach ($rows as $i => $row) {
-                if (is_array($row) && isset($row['body']) && trim((string) $row['body']) === $bodyFrom) {
+                if (is_array($row) && isset($row['body']) && (string) $row['body'] === $bodyFrom) {
                     $rows[$i]['body'] = $bodyTo;
                     $changed = true;
                 }
