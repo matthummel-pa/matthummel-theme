@@ -16,6 +16,7 @@ function mh_social_meta_enabled(): bool
     if (is_admin() || is_feed() || is_404() || mh_seo_plugin_prints_description()) {
         return false;
     }
+
     return (bool) apply_filters('mh/social_meta', true);
 }
 
