@@ -91,6 +91,8 @@ Open `resources/data/product-catalog.json`. Each product is an object keyed by `
 
 ## Step 2 — Create the WooCommerce product in wp-admin
 
+Do this in the **staging site's** wp-admin (the default host), never on `matthummel.com`. Matt publishes staging → live from hPanel.
+
 1. Go to **Products → Add New**.
 2. Set the product title to match `name` in the JSON.
 3. Set permalink slug to match `slug` in the JSON (e.g. `my-new-product`).
@@ -98,8 +100,8 @@ Open `resources/data/product-catalog.json`. Each product is an object keyed by `
 5. Set the **price**. Free products: leave price blank or set to `0`.
 6. Upload a **Featured image** (1200×750 px for themes; 1200×600 for plugins). Rank Math picks this up for the `image` schema field.
 7. **Do not** fill in the product short or long description — these come from the JSON file.
-8. Publish. Note the product ID.
-9. Add a `download` object on the catalog entry (GitHub repo + release + asset or `latest`). After deploy, run `wp mh shop-downloads --slug=my-new-product` so the zip attaches. Buyers then get the file on My account → Downloads and an email when that zip version increases.
+8. On the staging site, publish the product. Note the product ID.
+9. Add a `download` object on the catalog entry (GitHub repo + release + asset or `latest`). After the staging install, run `wp mh shop-downloads --slug=my-new-product` so the zip attaches. Buyers then get the file on My account → Downloads and an email when that zip version increases.
 
 ---
 
@@ -129,7 +131,7 @@ Reference the filename in `screenshots` array in the JSON (no leading slash; rel
 
 ## Step 5 — Set Rank Math focus keyword on the product
 
-In wp-admin, open the product edit screen → Rank Math panel → set:
+In the staging wp-admin, open the product edit screen → Rank Math panel → set:
 
 - **Focus keyphrase**: the primary search phrase (e.g. `WordPress real estate theme`).
 - **Meta description**: paste the `blurb` value.
@@ -154,7 +156,7 @@ Add an internal link to the new product page from:
 ```bash
 npm run build
 vendor/bin/pint
-# commit + push → GitHub Actions builds and deploys
+# commit + push → merge builds the theme-latest zip; install it on the staging site (Appearance → Update Theme)
 ```
 
 ---
