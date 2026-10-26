@@ -17,6 +17,14 @@ What the 3.x Sage theme does, and where it lives.
 - `mh_in_widget_area()` (dynamic_sidebar before/after counts) gates the core-block class filter. Anything that should not restyle footer widgets goes behind it.
 - Styles: end of `studio.css` ("Footer signup via Hostinger Reach"). Light-mode footer colors are the violet set, dark is lime on navy, same as the rest of the footer.
 
+## Editor’s notes (3.8.1 home hero code collage)
+
+- The hero block’s `background` attribute has a third value, `collage` (block.json enum: `photo`, `scene`, `collage`). On the Home layout the Blade view prints `partials/hero-collage` in place of `.h-hero__media` + photo, adds `.h-hero--collage`, and forces `.h-hero--center` (the collage is symmetrical; Customize → Home hero → alignment is ignored for it). On the page layout `collage` behaves like `scene`.
+- Styles live in `resources/css/hero-collage.css`, imported last by `app.css` so its centred-copy rules win over the hero rounds in `studio.css`. Cards, watermarks, and dots are positioned in percentages of the hero; `.is-optional` cards hide under 1100px and only `--php` and `--today` stay under 760px.
+- Colours are the brand tokens (`--blue-*`, `--cyan-300/400`, `--lime-300`) with `color-mix()` for the watermark tints. No new hex beyond the card surface. Headings stay one solid white (3.6.62) — the gradient word from the social cover was not carried over.
+- The role paragraph (second, non-lead paragraph) is styled as the mono tagline (uppercase, letter-spaced, cyan rules). Set its text in the editor, e.g. “Code. Ship. Automate.”
+- The partial is markup only and `aria-hidden`; the snippets are set dressing, not copy. Do not put real words or links in it.
+
 ## Editor’s notes (3.7.0 page blocks)
 
 - A page is "block-built" when it uses the Block page template or has the `_mh_block_page` meta (`App\mh_page_uses_blocks()`). Converted templates render `partials.block-page` for those pages and keep their field markup for the rest.
