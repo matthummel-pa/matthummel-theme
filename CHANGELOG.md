@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.8.9 — Home: the hiring FAQ gets a two-column layout
+
+- The "Hiring a WordPress developer: common questions" section on Home now puts the heading and intro on the left and the six questions on the right, like the About FAQ. At 1025px and wider.
+- The section is about 180px shorter at 1440 wide (about 1025px to 841px).
+- The question drawing sits in the left column under the intro. It used to be drawn behind the question rows and overlapped them.
+- Under 1025px nothing changes: one column, no drawing.
+- CSS only. The About FAQ rules in `about-page.css` now also match `.mh-page-home`. Nothing needs re-picking in the editor.
+
 ## 3.8.8 — Home hero: MCP replaces Vite in the background words, nudged left
 
 - The big faint word at the upper left of the Code collage now reads **MCP** with a plug icon, instead of **Vite** with a bolt. MCP ties to the AI and Claude Code story and to the MCP posts on the site. The rotation and tint are unchanged.

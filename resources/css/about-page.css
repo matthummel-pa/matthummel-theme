@@ -109,20 +109,20 @@
   }
 }
 
-/* FAQ: heading and intro on the left, questions on the right. About's FAQ
-   section is #faq today; #questions is covered too. The list spans every row
-   the left column uses, so extra intro paragraphs never push it down. */
+/* FAQ: heading and intro on the left, questions on the right (About and Home).
+   About's FAQ section is #faq today; #questions is covered too. The list spans every
+   row the left column uses, so extra intro paragraphs never push it down. */
 @media (width >= 1025px) {
-  .mh-page-about :is(#faq, #questions) > .container {
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.85fr);
     column-gap: clamp(2.5rem, 5vw, 4.5rem);
     align-items: start;
   }
 
-  .mh-page-about :is(#faq, #questions) > .container > :not(.faq-list) { grid-column: 1; }
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container > :not(.faq-list) { grid-column: 1; }
 
-  .mh-page-about :is(#faq, #questions) > .container > .faq-list {
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container > .faq-list {
     grid-column: 2;
     grid-row: 1 / span 12;
     margin-top: 0;
@@ -130,7 +130,7 @@
 
   /* If the section has the Questions drawing, keep it in the left column's
      empty lower corner instead of a fixed offset from the top. */
-  .mh-page-about #questions .mh-illus--questions {
+  :is(.mh-page-about, .mh-page-home) #questions .mh-illus--questions {
     left: calc(var(--il-edge) + var(--page-gutter, 1.5rem));
     width: min(28%, 360px);
     height: auto;
