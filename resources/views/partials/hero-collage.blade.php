@@ -28,10 +28,10 @@
 
   <div class="h-collage__card h-collage__card--blade is-lime">
     <div class="h-collage__bar"><i></i><i></i><i></i><span>single.blade.php</span></div>
-    <div><span class="t-at">@extends</span><span class="t-pl">(</span><span class="t-str">'layouts.app'</span><span class="t-pl">)</span></div>
-    <div><span class="t-at">@section</span><span class="t-pl">(</span><span class="t-str">'content'</span><span class="t-pl">)</span></div>
+    <div><span class="t-at">@@extends</span><span class="t-pl">(</span><span class="t-str">'layouts.app'</span><span class="t-pl">)</span></div>
+    <div><span class="t-at">@@section</span><span class="t-pl">(</span><span class="t-str">'content'</span><span class="t-pl">)</span></div>
     <div>&nbsp;&nbsp;<span class="t-pl">&lt;h1&gt;</span><span class="t-kw">&#123;&#123; $title &#125;&#125;</span><span class="t-pl">&lt;/h1&gt;</span></div>
-    <div><span class="t-at">@endsection</span></div>
+    <div><span class="t-at">@@endsection</span></div>
   </div>
 
   <div class="h-collage__card h-collage__card--json is-blue is-optional">
@@ -51,8 +51,8 @@
 
   <div class="h-collage__card h-collage__card--css is-cyan">
     <div class="h-collage__bar"><i></i><i></i><i></i><span>app.css</span></div>
-    <div><span class="t-at">@import</span> <span class="t-str">"tailwindcss"</span><span class="t-pl">;</span></div>
-    <div><span class="t-at">@theme</span> <span class="t-pl">{</span></div>
+    <div><span class="t-at">@@import</span> <span class="t-str">"tailwindcss"</span><span class="t-pl">;</span></div>
+    <div><span class="t-at">@@theme</span> <span class="t-pl">{</span></div>
     <div>&nbsp;&nbsp;<span class="t-fn">--color-navy</span><span class="t-pl">: </span><span class="t-kw">#0a1c3a</span><span class="t-pl">;</span></div>
     <div><span class="t-pl">}</span></div>
   </div>
