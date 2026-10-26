@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.8.7 — Home hero: Vite replaces SEO in the background words
+
+- The big faint word at the upper left of the Code collage now reads **Vite** with a lightning-bolt icon, instead of **SEO** with a magnifier. Vite is part of the stack this site is built on. The position, rotation, and tint are unchanged.
+- The CSS modifier is renamed from `h-collage__wm--seo` to `h-collage__wm--vite` in the partial and in `hero-collage.css` (desktop and phone rules), so nothing is left under the old name.
+- Markup and CSS only. Nothing needs re-picking in the editor.
+
 ## 3.8.6 — Footer: "Planned with Claude Code"
 
 - The footer credit line now reads "Built with Sage, WordPress, and PHP. Planned with Claude Code." and links to Claude Code instead of Cursor, to match the Uses page and the rest of the site copy.
