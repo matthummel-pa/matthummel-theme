@@ -579,7 +579,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - New journal post lives in `docs/posts/`, not Blade. Local import: `.github/scripts/import-docs-posts.py`. Production still needs a wp-admin paste (this repo cannot publish matthummel.com).
 - Infographic is HTML+CSS in the post body. Classes: `mh-tool-grid`, `mh-tool-card`, `mh-ship-pipe`, `mh-ship-note`. FAQ reuses `.faq-list`.
-- Tools named are only ones already on Uses / Home / contact: Cursor, ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, Vite. No fake time savings.
+- Tools named (current list; the dated comparison post keeps its Cursor card as history) are only ones already on Uses / Home / contact: ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, Vite. No fake time savings.
 
 ## Editor’s notes (3.1.50 adjacent work)
 

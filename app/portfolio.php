@@ -179,7 +179,7 @@ function mh_now_items_defaults(): array
     return [
         __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
         __('Writing short posts on WordPress development — code you can paste in.', 'sage'),
-        __('Using Cursor AI and Claude to build faster, reviewing every line before it ships.', 'sage'),
+        __('Using Claude Code to build faster, reviewing every line before it ships.', 'sage'),
         __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
         __('Working Eastern Time, available for remote and local clients.', 'sage'),
     ];
@@ -5476,7 +5476,7 @@ function mh_about_approach_defaults(): array
         [
             'icon' => 'code',
             'title' => __('AI drafts. I ship the review', 'sage'),
-            'body' => __('Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.', 'sage'),
+            'body' => __('Claude and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.', 'sage'),
         ],
         [
             'icon' => 'plugins',

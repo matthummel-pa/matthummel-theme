@@ -706,7 +706,7 @@ function mh_block_page_nav_pills(?int $post_id = null): array
  */
 function mh_page_block_icon_choices(): array
 {
-    $keys = ['wordpress', 'plugins', 'code', 'sage', 'php', 'javascript', 'tailwind', 'vite', 'git', 'github', 'mail', 'pen', 'check', 'briefcase', 'globe', 'map', 'calendar', 'users', 'chart-bar', 'star', 'cursor-ai'];
+    $keys = ['wordpress', 'plugins', 'code', 'sage', 'php', 'javascript', 'tailwind', 'vite', 'git', 'github', 'mail', 'pen', 'check', 'briefcase', 'globe', 'map', 'calendar', 'users', 'chart-bar', 'star', 'cursor-ai', 'claude'];
     $out = [];
     foreach ($keys as $key) {
         $svg = mh_svg_icon($key, 18);
