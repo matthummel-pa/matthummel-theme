@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.6 — Footer: "Planned with Claude Code"
+
+- The footer credit line now reads "Built with Sage, WordPress, and PHP. Planned with Claude Code." and links to Claude Code instead of Cursor, to match the Uses page and the rest of the site copy.
+- Only that one link changed (`resources/views/sections/footer.blade.php`). The "(opens in a new window)" hint for screen readers is unchanged.
+
 ## 3.8.5 — Home hero: gradient heading, WordPress moves to the bottom centre
 
 - The Code collage heading uses the brand blue → cyan → lime gradient (the same recipe as the pinned repo titles). `studio.css` switches hero heading gradients off with a rule of specificity (0,3,0), so the collage rule is one element heavier to win.
