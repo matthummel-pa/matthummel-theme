@@ -6,8 +6,8 @@
   <div class="h-collage__wm h-collage__wm--wp">
     <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M5.5 8.5l3 9 3-7 3 7 3-9"/></svg>WordPress
   </div>
-  <div class="h-collage__wm h-collage__wm--vite">
-    <svg viewBox="0 0 24 24" focusable="false"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12L13 2z"/></svg>Vite
+  <div class="h-collage__wm h-collage__wm--mcp">
+    <svg viewBox="0 0 24 24" focusable="false"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0V7zM12 17v5"/></svg>MCP
   </div>
   <div class="h-collage__wm h-collage__wm--ai">
     <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/></svg>AI

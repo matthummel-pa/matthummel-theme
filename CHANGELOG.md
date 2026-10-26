@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.8 — Home hero: MCP replaces Vite in the background words
+
+- The big faint word at the upper left of the Code collage now reads **MCP** with a plug icon, instead of **Vite** with a bolt. MCP ties to the AI and Claude Code story and to the MCP posts on the site. The position, rotation, and tint are unchanged.
+- The CSS modifier is renamed from `h-collage__wm--vite` to `h-collage__wm--mcp` in the partial and in `hero-collage.css` (desktop and phone rules).
+- Note: MCP is about as wide as Vite was (about 215px with its icon at full size), so it sits as close to the headline as Vite did. To give the headline more room, move it left in `.h-collage__wm--mcp` or pick a narrower word.
+- Markup and CSS only. Nothing needs re-picking in the editor.
+
 ## 3.8.7 — Home hero: Vite replaces SEO in the background words
 
 - The big faint word at the upper left of the Code collage now reads **Vite** with a lightning-bolt icon, instead of **SEO** with a magnifier. Vite is part of the stack this site is built on. The position, rotation, and tint are unchanged.
