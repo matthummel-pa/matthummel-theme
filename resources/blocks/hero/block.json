@@ -24,7 +24,8 @@
       "type": "string",
       "enum": [
         "photo",
-        "scene"
+        "scene",
+        "collage"
       ],
       "default": "photo"
     },
