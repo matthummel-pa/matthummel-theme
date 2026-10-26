@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.3 — Fix: Home returned a 500 error with the Code collage hero
+
+- The Code collage background (3.8.1) prints sample Blade code in its decorative cards. Literal `@extends`, `@section`, and `@endsection` in that text were compiled as real Blade directives, and `@extends` with no arguments produced invalid PHP, so any page using the collage fataled with "There has been a critical error on this website". The five `@` words in `resources/views/partials/hero-collage.blade.php` are now escaped (`@@extends`), so they print as text.
+- Install this on the staging site and the Home page loads again. No setting changes are needed; the hero keeps whichever background is selected.
+
 ## 3.8.2 — Content: Cursor replaced by Claude Code
 
 - Uses page and tools list: the Cursor entries are gone, and the Claude Code row now says it is the agent I use for planning, refactors, and reviews on this site.
