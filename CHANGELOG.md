@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.8.4 — Home hero: quieter code cards, dot waves are back
+
+- The Code collage's cards are dimmer so they blend in with the page text instead of competing with the headline: about half opacity, a softer shadow, a thinner top rule, and a quieter static dot grid. One knob controls it: `--collage-card-opacity` in `resources/css/hero-collage.css` (default `.5`; lower is quieter).
+- The two drifting, breathing dot bands from the photo hero are back behind the collage. They reuse the hero's wave masks (`--mh-wave1` and `--mh-wave2` now also apply to `.h-collage`) and the shared `mh-drift` motion, with their own dimmer breathe keyframes so they stay faint. With reduced motion on, the bands stay still.
+- Only CSS changed. After installing on staging, nothing needs re-picking in the editor.
+
 ## 3.8.3 — Fix: Home returned a 500 error with the Code collage hero
 
 - The Code collage background (3.8.1) prints sample Blade code in its decorative cards. Literal `@extends`, `@section`, and `@endsection` in that text were compiled as real Blade directives, and `@extends` with no arguments produced invalid PHP, so any page using the collage fataled with "There has been a critical error on this website". The five `@` words in `resources/views/partials/hero-collage.blade.php` are now escaped (`@@extends`), so they print as text.

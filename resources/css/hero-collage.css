@@ -11,6 +11,8 @@
   --collage-mute: #7f97bb;
   --collage-card: rgba(10, 26, 51, .94);
   --collage-line: rgba(143, 189, 240, .22);
+  /* How present the code cards are. Lower = quieter, closer to the page text. */
+  --collage-card-opacity: .5;
   /* The header is fixed; the hero starts under it, so the top row clears it. */
   --collage-top: calc(var(--header-h, 4.75rem) + 1.25rem);
   background:
@@ -32,8 +34,35 @@
 .h-collage__grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(140, 180, 255, .16) 1px, transparent 1.2px);
+  background-image: radial-gradient(rgba(140, 180, 255, .11) 1px, transparent 1.2px);
   background-size: 22px 22px;
+}
+/* Two soft dot bands drift across the grid and breathe, like the photo hero's waves. Kept faint. */
+.h-collage__grid::before,
+.h-collage__grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform-origin: 50% 50%;
+}
+.h-collage__grid::before {
+  background: radial-gradient(rgba(186, 246, 253, 1) 1.3px, transparent 1.75px) 0 0 / 22px 22px;
+  -webkit-mask-image: var(--mh-wave1);
+  mask-image: var(--mh-wave1);
+  -webkit-mask-size: 45% 100%;
+  mask-size: 45% 100%;
+  opacity: .3;
+}
+.h-collage__grid::after {
+  background: radial-gradient(rgba(190, 242, 100, .75) 1.1px, transparent 1.5px) 0 0 / 22px 22px;
+  -webkit-mask-image: var(--mh-wave2);
+  mask-image: var(--mh-wave2);
+  -webkit-mask-size: 35% 100%;
+  mask-size: 35% 100%;
+  opacity: .2;
 }
 /* Dark centre under the copy so the headline never fights a card. */
 .h-collage::after {
@@ -87,10 +116,11 @@
   z-index: 1;
   padding: .75rem 1rem .85rem;
   border: 1px solid var(--collage-line);
-  border-top: 2px solid var(--blue-400, #60a5fa);
+  border-top: 1px solid var(--blue-400, #60a5fa);
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(14, 32, 62, .96), var(--collage-card));
-  box-shadow: 0 18px 50px rgba(0, 0, 0, .55), 0 1px 0 rgba(255, 255, 255, .06) inset;
+  background: linear-gradient(180deg, rgba(14, 32, 62, .7), rgba(10, 26, 51, .6));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+  opacity: var(--collage-card-opacity, .5);
   white-space: nowrap;
 }
 .h-collage__card.is-cyan { border-top-color: var(--cyan-400, #22d3ee); }
@@ -267,6 +297,14 @@
   .h-hero--collage .h-hero__role::after { width: 1.25rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
+  .h-collage__grid::before {
+    will-change: transform, opacity;
+    animation: mh-drift 26s ease-in-out infinite alternate, h-collage-breathe 8s ease-in-out infinite alternate;
+  }
+  .h-collage__grid::after {
+    will-change: transform, opacity;
+    animation: mh-drift 34s ease-in-out -12s infinite alternate-reverse, h-collage-breathe-soft 8s ease-in-out -4s infinite alternate;
+  }
   .h-collage__dot { animation: h-collage-pulse 4s ease-in-out infinite alternate; }
   .h-collage__dot--2 { animation-delay: -1.3s; }
   .h-collage__dot--3 { animation-delay: -2.1s; }
@@ -275,4 +313,13 @@
 @keyframes h-collage-pulse {
   from { opacity: .55; }
   to { opacity: 1; }
+}
+/* The hero's own breathe keyframes are too bright here, so the collage has quieter copies. mh-drift is shared. */
+@keyframes h-collage-breathe {
+  from { opacity: .12; transform: scale(.96); }
+  to { opacity: .42; transform: scale(1.04); }
+}
+@keyframes h-collage-breathe-soft {
+  from { opacity: .06; transform: scale(.97); }
+  to { opacity: .28; transform: scale(1.03); }
 }
