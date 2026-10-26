@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.8.1 — Home hero: Code collage background
+
+- The Page hero block has a third Background option, **Code collage**. On the Home layout it replaces the featured image with tilted code cards (PHP, Blade, block.json, Tailwind, terminal, git, REST, a "Today" checklist), faint WordPress / SEO / AI / Tailwind / Sage watermarks, and a dark centre so the copy stays readable. The copy is centred and the second paragraph (the role line) prints as a mono tagline with a rule each side.
+- Cards drop out on narrower screens (two stay on phones). Nothing in the collage is read by assistive tech; it is `aria-hidden`.
+- Pick it on the staging site: Pages → Home → select the hero block → Background → Code collage. Heading, paragraphs, and buttons stay editable as before.
+
 ## 3.8.0 — Remove MH SEO; Rank Math handles SEO
 
 MH SEO is gone from the theme. Rank Math SEO prints the title, description, canonical, robots tag, schema, sitemap, and redirects again.

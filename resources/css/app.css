@@ -12,6 +12,7 @@
 @import "./illustrations.css"; /* animated section line art (after site-extras so its positioning wins) */
 @import "./about-page.css"; /* About layout + section masks (after illustrations so its FAQ overrides win) */
 @import "./resume-timeline.css"; /* resume dates as calendar chips on the line (3.7.35) */
+@import "./hero-collage.css"; /* Home hero "Code collage" background (3.8.1) */
 
 /* Light mode default. Dark visitors still use html.mh-dark. */
 :root { color-scheme: light; }

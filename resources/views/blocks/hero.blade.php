@@ -10,10 +10,14 @@
   {{-- Home: the full-height photo hero. Size, alignment and accent come from Customize → Home hero. --}}
   @php
     $hero = \App\mh_home_hero();
-    $heroImage = \App\mh_hero_background_url();
+    // Code collage (3.8.1): tilted code cards instead of the photo, copy centred.
+    $isCollage = ($attributes['background'] ?? 'photo') === 'collage';
+    $heroImage = $isCollage ? '' : \App\mh_hero_background_url();
   @endphp
-  <section class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $hero['align'] }} h-hero--pad-{{ $hero['pad'] }} mh-block-hero">
-    @if ($heroImage !== '')
+  <section class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $isCollage ? 'center' : $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}{{ $isCollage ? ' h-hero--collage' : '' }} mh-block-hero">
+    @if ($isCollage)
+      @include('partials.hero-collage')
+    @elseif ($heroImage !== '')
       <div class="h-hero__media" aria-hidden="true">
         <img class="h-hero__bg" src="{{ esc_url($heroImage) }}" alt="" width="1600" height="900" decoding="async" fetchpriority="high">
         <div class="h-hero__wash"></div>
@@ -32,7 +36,7 @@
     @include('partials.hero-wave')
   </section>
 @else
-@component('partials.page-hero', ['useScene' => ($attributes['background'] ?? 'photo') === 'scene', 'extra' => trim('mh-block-hero '.($showPortrait ? 'about-hero ' : '').($attributes['className'] ?? ''))])
+@component('partials.page-hero', ['useScene' => in_array($attributes['background'] ?? 'photo', ['scene', 'collage'], true), 'extra' => trim('mh-block-hero '.($showPortrait ? 'about-hero ' : '').($attributes['className'] ?? ''))])
   @if ($showPortrait)
     <div class="about-hero__grid">
       <div class="about-hero__copy">
