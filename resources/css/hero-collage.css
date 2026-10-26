@@ -104,7 +104,7 @@
 .h-collage__wm--sage { color: color-mix(in srgb, var(--lime-300, #bef264) 10%, transparent); }
 .h-collage__wm--ai svg,
 .h-collage__wm--sage svg { stroke: color-mix(in srgb, var(--lime-300, #bef264) 14%, transparent); }
-.h-collage__wm--wp { left: 36%; top: calc(var(--collage-top) + 10%); rotate: -2deg; }
+.h-collage__wm--wp { left: 50%; top: 80%; translate: -50% 0; rotate: -2deg; }
 .h-collage__wm--seo { left: 6%; top: calc(var(--collage-top) + 16%); rotate: -4deg; }
 .h-collage__wm--ai { right: 5%; top: calc(var(--collage-top) + 14%); rotate: 4deg; }
 .h-collage__wm--tw { left: 12%; top: 63%; rotate: -2deg; }
@@ -200,8 +200,6 @@
 .h-collage__card--css { left: clamp(-1.75rem, calc(50% - 45rem), 3.75rem); top: 41%; rotate: -7deg; }
 .h-collage__card--rest { right: clamp(-6.5rem, calc(50% - 45rem), 3.75rem); top: 42%; rotate: 6deg; }
 .h-collage__card--git { left: 2.5%; bottom: 7%; rotate: -3deg; }
-.h-collage__card--js { left: 27%; bottom: 5%; rotate: 2deg; }
-.h-collage__card--view { left: 54%; bottom: 6%; rotate: -2deg; }
 .h-collage__card--today { right: 3.5%; bottom: 5%; rotate: -3deg; }
 
 /* Accent dots */
@@ -248,6 +246,19 @@
 .h-hero--collage .h-hero__lede { max-width: none; margin-inline: auto; }
 .h-hero--collage .h-hero__name { text-wrap: balance; }
 .h-hero--collage .h-hero__name::after { margin-inline: auto; }
+/* Heading: the brand blue → cyan → lime gradient (same recipe as the pinned repo titles). studio.css switches
+   hero heading gradients off with a (0,3,0) rule, so this selector is one element heavier to win. The text-fill
+   line beats the white colour; the bottom padding keeps descenders inside the painted box. */
+html .h-hero--collage .h-hero__panel .h-hero__name {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: .14em;
+  background: linear-gradient(90deg, var(--blue-400, #60a5fa) 0%, var(--cyan-400, #22d3ee) 55%, var(--lime-300, #bef264) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
 .h-hero--collage .h-hero__lede { max-width: 46ch; }
 
 /* The role line becomes the mono tagline with a rule each side (CODE. · SHIP. · AUTOMATE.). */
@@ -278,7 +289,6 @@
 @media (max-width: 1100px) {
   .h-collage__card.is-optional { display: none; }
   .h-collage__card--blade { left: 30%; }
-  .h-collage__card--js { left: 32%; }
 }
 @media (max-width: 760px) {
   .h-collage__card { display: none; }
@@ -287,7 +297,7 @@
   .h-collage__card--php { left: -2%; top: calc(var(--collage-top) - .5rem); }
   .h-collage__card--today { right: -1%; bottom: 3%; }
   .h-collage__wm { font-size: 2rem; }
-  .h-collage__wm--wp { left: 30%; top: calc(var(--collage-top) + 4rem); }
+  .h-collage__wm--wp { left: 30%; top: calc(var(--collage-top) + 4rem); translate: none; }
   .h-collage__wm--ai { top: calc(var(--collage-top) + 8rem); }
   .h-collage__wm--seo { top: 70%; left: 4%; }
   .h-collage__wm--tw { display: none; }

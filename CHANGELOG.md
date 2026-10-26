@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.8.5 — Home hero: gradient heading, WordPress moves to the bottom centre
+
+- The Code collage heading uses the brand blue → cyan → lime gradient (the same recipe as the pinned repo titles). `studio.css` switches hero heading gradients off with a rule of specificity (0,3,0), so the collage rule is one element heavier to win.
+- The WordPress watermark moves from the top middle to the bottom centre, under the Tailwind and Sage row.
+- The two code cards under the copy (`app.js` and `hero.blade.php`) are gone, which leaves room for it. Eight cards remain. Their position rules are removed from `hero-collage.css`.
+- Phones keep the watermark where it was; only the centring shift is reset there.
+- Only the partial and CSS changed. Nothing needs re-picking in the editor.
+
 ## 3.8.4 — Home hero: quieter code cards, dot waves are back
 
 - The Code collage's cards are dimmer so they blend in with the page text instead of competing with the headline: about half opacity, a softer shadow, a thinner top rule, and a quieter static dot grid. One knob controls it: `--collage-card-opacity` in `resources/css/hero-collage.css` (default `.5`; lower is quieter).
