@@ -70,19 +70,6 @@
     <div><span class="t-pr">$</span><span class="t-pl">git push origin main</span><span class="t-cur"></span></div>
   </div>
 
-  <div class="h-collage__card h-collage__card--js is-cyan">
-    <div class="h-collage__bar"><i></i><i></i><i></i><span>app.js</span></div>
-    <div><span class="t-kw">import</span> <span class="t-pl">{ </span><span class="t-fn">initNav</span><span class="t-pl"> } </span><span class="t-kw">from</span> <span class="t-str">'./nav'</span></div>
-    <div><span class="t-fn">initNav</span><span class="t-pl">({ root: </span><span class="t-str">'[data-nav]'</span><span class="t-pl"> })</span></div>
-  </div>
-
-  <div class="h-collage__card h-collage__card--view is-blue is-optional">
-    <div class="h-collage__bar"><i></i><i></i><i></i><span>hero.blade.php</span></div>
-    <div><span class="t-pl">&lt;section </span><span class="t-fn">class</span><span class="t-pl">=</span><span class="t-str">"grid gap-6"</span><span class="t-pl">&gt;</span></div>
-    <div>&nbsp;&nbsp;<span class="t-kw">&#123;!! $content !!&#125;</span></div>
-    <div><span class="t-pl">&lt;/section&gt;</span></div>
-  </div>
-
   <div class="h-collage__card h-collage__card--today is-lime">
     <div class="h-collage__bar h-collage__bar--label">Today</div>
     <ul class="h-collage__list">
