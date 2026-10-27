@@ -11,7 +11,12 @@ if (process.platform === 'win32') {
   register(`data:text/javascript,${encodeURIComponent(`
     import { pathToFileURL } from 'node:url'
     export async function resolve(specifier, context, nextResolve) {
-      return nextResolve(/^[a-zA-Z]:/.test(specifier) ? pathToFileURL(specifier).href : specifier, context)
+      if (!/^[a-zA-Z]:/.test(specifier)) return nextResolve(specifier, context)
+      // Keep the ?t= cache-buster the plugin adds to *.theme.js partials; Windows paths never contain "?".
+      const q = specifier.indexOf('?')
+      const url = pathToFileURL(q < 0 ? specifier : specifier.slice(0, q))
+      if (q >= 0) url.search = specifier.slice(q)
+      return nextResolve(url.href, context)
     }
   `)}`)
 }
