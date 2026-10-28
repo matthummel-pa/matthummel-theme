@@ -165,7 +165,7 @@ function mh_support_hub_products(): array
             'docs' => $docs,
             'project_url' => function_exists(__NAMESPACE__.'\\mh_concept_page_url')
                 ? mh_concept_page_url($slug)
-                : home_url('/projects/'.$slug.'/'),
+                : home_url('/themes/'.$slug.'/'),
         ];
     }
 
