@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.2 — Project pages show their docs links
+
+- The docs links saved on a project (Owner guide, Support guide, Buyer guide, and so on) now show in the **Specs** list under "Under the hood", each marked "Read online". They were saved but never displayed. Cobble & Candle, Acreline, WalkRidge, and TOCguide all get them.
+
 ## 3.9.1 — Cobble & Candle copy reaches existing sites on update
 
 - A one-time migration (`mh_product_catalog_v14`) refreshes the Cobble & Candle project post from the catalog, so the 3.9.0 pricing copy and docs links show up after a theme update without running anything by hand. Other products are not touched.

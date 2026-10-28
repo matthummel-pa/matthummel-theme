@@ -34,7 +34,7 @@
   }
   $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
   $proof = \App\mh_project_proof_facts($metrics, $slides, $features, $gh);
-  $specRows = \App\mh_project_spec_rows($card, $gh, $demo, $github);
+  $specRows = \App\mh_project_spec_rows($card, $gh, $demo, $github, \App\mh_project_docs_pairs($postId));
   $heroImage = (string) ($slides[0]['src'] ?? '');
   $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
   $palette = function_exists('\\App\\mh_project_brand_palette_pairs')
