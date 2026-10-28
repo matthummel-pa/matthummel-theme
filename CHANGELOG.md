@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10.1 — Fix: 3.10.0 crashed the site on load
+
+- 3.10.0 added a function with the same name as an existing one (`mh_filter_product_permalink`), which is a fatal error in PHP. The new one is now `mh_filter_plugin_permalink`. Skip 3.10.0 and install this release.
+
 ## 3.10.0 — Product pages move to /themes/ and /plugins/
 
 - Product pages now live at `/themes/{slug}/` (Cobble & Candle, Acreline, WalkRidge) and `/plugins/{slug}/` (TOCguide). They used to share `/projects/{slug}/` with the portfolio. `/projects/` stays as the Projects page.

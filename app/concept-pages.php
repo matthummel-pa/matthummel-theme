@@ -71,7 +71,7 @@ function mh_product_url_base(int $post_id): string
 /**
  * Point plugin products at /plugins/{slug}/ (the post type itself registers /themes/{slug}/).
  */
-function mh_filter_product_permalink(string $link, \WP_Post $post): string
+function mh_filter_plugin_permalink(string $link, \WP_Post $post): string
 {
     if ($post->post_type !== mh_project_post_type() || $post->post_name === '') {
         return $link;
@@ -1824,7 +1824,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
 add_action('init', __NAMESPACE__.'\\mh_add_plugin_product_rewrite', 11);
-add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
+add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_plugin_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
