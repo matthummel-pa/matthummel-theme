@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.9.0 — Cobble & Candle: buy it on the page with Freemius, plus an account page
+
+- Cobble & Candle's project page now has a **Pricing** section with three yearly plans (1 site, 5 sites, unlimited). Each Buy button opens Freemius checkout in an overlay. There is no cart and no WooCommerce product. Freemius is the merchant of record and sends the receipt and license key.
+- The Freemius checkout script loads when a visitor hovers, focuses, or clicks a Buy button. Pages without one load nothing extra.
+- After a purchase the buyer lands on `/account/`. A new **Account** page template (hero from page fields, body from the editor) links to the Freemius Customer Portal. Create a page named Account, pick the template, and leave it out of search results.
+- Plans and prices live in `resources/data/product-catalog.json` under `freemius` (store, product, plan, tiers). The helper is `mh_project_freemius()` in `app/shop.php`.
+- Staging can run test purchases. Define `MH_FREEMIUS_SANDBOX_TOKEN` and `MH_FREEMIUS_SANDBOX_CTX` in `wp-config.php` (values from the Freemius dashboard). They are ignored on matthummel.com.
+- Cobble & Candle copy no longer says "not yet". The Can I buy answer now describes the plans and the refund.
+- Fix: the catalog linked Cobble & Candle's code, owner guide, support guide, and brand kit to the private theme repo, so those links 404ed. They now point to the public docs repo, and the View code link and brand kit link are gone.
+- Not changed: the WooCommerce shop for Acreline and WalkRidge, and `for_sale` stays false for Cobble & Candle so nothing tries to sync a WooCommerce product from the private repo.
+
 ## 3.8.9 — Home: the hiring FAQ gets a two-column layout
 
 - The "Hiring a WordPress developer: common questions" section on Home now puts the heading and intro on the left and the six questions on the right, like the About FAQ. At 1025px and wider.
