@@ -18,6 +18,7 @@ import { initWooDesk } from './woo-desk.js';
 import { initBrandUi } from './brand-ui.js';
 import { initReleaseWatch } from './release-watch.js';
 import { initUpdatesPreview } from './updates-preview.js';
+import { initFreemiusCheckout } from './freemius-checkout.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -511,4 +512,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagneticButtons();
   initCardTilt();
   initReleaseWatch();
+  initFreemiusCheckout();
 });

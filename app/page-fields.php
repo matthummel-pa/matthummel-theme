@@ -662,6 +662,18 @@ function page_field_map(): array
                 ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. Unsubscribe any time from the link in each one.', 'sage')],
             ],
         ],
+        'template-account.blade.php' => [
+            __('Intro', 'sage') => [
+                ['acct_kicker', __('Kicker', 'sage'), 'text', __('Account', 'sage')],
+                ['acct_h1', __('Heading', 'sage'), 'text', __('Your licenses and downloads', 'sage')],
+                ['acct_lede', __('Intro', 'sage'), 'textarea', __('Sign in with the email you used at checkout to download the theme, see your license key, move a site, or get an invoice.', 'sage')],
+            ],
+            __('Portal', 'sage') => [
+                ['acct_portal_label', __('Button label', 'sage'), 'text', __('Open your account', 'sage')],
+                ['acct_portal_url', __('Customer Portal URL', 'sage'), 'text', 'https://customers.freemius.com/store/21514/'],
+                ['acct_help', __('Help line', 'sage'), 'textarea', __('Lost your license email, or need to change plans? Write to me and I will sort it out.', 'sage')],
+            ],
+        ],
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],

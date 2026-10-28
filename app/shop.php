@@ -1152,6 +1152,64 @@ function mh_project_buy_url(int $project_id): string
     return (string) $payload['add_to_cart_url'];
 }
 
+/**
+ * Freemius checkout settings for a catalog product, or null when it is not sold through Freemius.
+ *
+ * Freemius is the merchant of record, so these products skip WooCommerce entirely. The sandbox
+ * token and ctx come from wp-config constants (never the repo) and only exist on staging.
+ *
+ * @return array{store_id: string, product_id: string, plan_id: string, public_key: string, account_url: string, tiers: list<array{label: string, licenses: int, price: string}>, sandbox: array{token: string, ctx: string}|null}|null
+ */
+function mh_project_freemius(string $slug): ?array
+{
+    $entry = mh_product_catalog_seed_data()[sanitize_key($slug)]['freemius'] ?? null;
+    if (! is_array($entry)) {
+        return null;
+    }
+
+    $productId = preg_replace('/\D/', '', (string) ($entry['product_id'] ?? ''));
+    $planId = preg_replace('/\D/', '', (string) ($entry['plan_id'] ?? ''));
+    $publicKey = (string) ($entry['public_key'] ?? '');
+    if ($productId === '' || $planId === '' || ! str_starts_with($publicKey, 'pk_')) {
+        return null;
+    }
+
+    $tiers = [];
+    foreach ((array) ($entry['tiers'] ?? []) as $tier) {
+        if (! is_array($tier) || empty($tier['label'])) {
+            continue;
+        }
+        $tiers[] = [
+            'label' => sanitize_text_field((string) $tier['label']),
+            'licenses' => max(0, (int) ($tier['licenses'] ?? 1)),
+            'price' => sanitize_text_field((string) ($tier['price'] ?? '')),
+        ];
+    }
+    if ($tiers === []) {
+        return null;
+    }
+
+    $sandbox = null;
+    // Never on the live domain, even if the constants are copied over by a staging publish.
+    $isLive = in_array(wp_parse_url(home_url(), PHP_URL_HOST), ['matthummel.com', 'www.matthummel.com'], true);
+    if (! $isLive && defined('MH_FREEMIUS_SANDBOX_TOKEN') && defined('MH_FREEMIUS_SANDBOX_CTX')) {
+        $sandbox = [
+            'token' => (string) constant('MH_FREEMIUS_SANDBOX_TOKEN'),
+            'ctx' => (string) constant('MH_FREEMIUS_SANDBOX_CTX'),
+        ];
+    }
+
+    return [
+        'store_id' => preg_replace('/\D/', '', (string) ($entry['store_id'] ?? '')),
+        'product_id' => $productId,
+        'plan_id' => $planId,
+        'public_key' => $publicKey,
+        'account_url' => home_url('/account/'),
+        'tiers' => $tiers,
+        'sandbox' => $sandbox,
+    ];
+}
+
 /** Plain-text price for work cards (e.g. "$149"). */
 function mh_project_price_label(int $project_id): string
 {
