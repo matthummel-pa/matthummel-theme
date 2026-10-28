@@ -83,8 +83,8 @@ function mh_filter_product_permalink(string $link, \WP_Post $post): string
     }
 
     return str_replace(
-        '/'.mh_concept_rewrite_slug().'/'.$post->post_name.'/',
-        '/'.$base.'/'.$post->post_name.'/',
+        '/'.mh_concept_rewrite_slug().'/'.$post->post_name,
+        '/'.$base.'/'.$post->post_name,
         $link
     );
 }
@@ -1779,6 +1779,10 @@ function mh_redirect_acreline_legacy_paths(): void
 
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
         $target = mh_concept_page_url('walkridge');
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
         wp_safe_redirect($target, 301);
         exit;
     }
