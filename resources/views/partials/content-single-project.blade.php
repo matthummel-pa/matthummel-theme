@@ -50,6 +50,8 @@
   $fs = \App\mh_project_freemius($projectSlug);
   // Free products (TOCguide) link straight to the public release zip: no cart, no login.
   $freeUrl = \App\mh_project_free_download_url($projectSlug);
+  // Catalog products waiting on their Freemius product: no Buy button, a badge instead.
+  $soon = \App\mh_project_is_coming_soon($projectSlug);
   $storySteps = array_values(array_filter([
     ['title' => __('Why I built it', 'sage'), 'text' => (string) ($story['challenge'] ?? '')],
     ['title' => __('What I did', 'sage'), 'text' => (string) ($story['approach'] ?? '')],
@@ -82,6 +84,10 @@
           </li>
         @endforeach
       </ul>
+    @endif
+
+    @if ($soon)
+      <p class="project-type-row"><span class="spec-badge">{{ __('Coming soon', 'sage') }}</span></p>
     @endif
 
     <div class="concept-hero-actions project-hero-actions">

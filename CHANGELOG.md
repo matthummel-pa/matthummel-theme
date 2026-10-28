@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.11.0 — Shop pages: /shop/, /themes/, /plugins/
+
+- New **Shop** page template. One template, three pages: `/shop/` lists everything, `/themes/` lists themes, `/plugins/` lists plugins. Browse by type with plain links (no script), each card shows a price line, one action, and the demo link.
+- Card actions: **Choose a plan** for Freemius themes, **Download free** for free plugins, and a **Coming soon** badge with no buy button for products not on sale yet. Prices come from the catalog; nothing is typed in twice.
+- Acreline and WalkRidge are marked `coming_soon` in the catalog and show a Coming soon badge on their pages. Their eyebrows, and TOCguide's, no longer say "Sample". A one-time sync (`mh_product_catalog_v15`) updates those three products only.
+- Product types are one list (`mh_product_types()`): themes, plugins, and documents for later. A new type gets its own URL prefix, rewrite rule and shop tab by adding one entry and a catalog item. Tabs only show types that have something listed.
+- A product opened under the wrong prefix (`/themes/tocguide/`) now 301s to its own (`/plugins/tocguide/`).
+- The old rule that sent `/shop/` to Projects and hid shop links from menus now lets the Shop page through. Cart and checkout links are still hidden.
+- Copy on the shop pages (intro, how buying works, four questions) is editable in wp-admin under Page content (theme). The defaults are drafts to review.
+
 ## 3.10.1 — Fix: 3.10.0 crashed the site on load
 
 - 3.10.0 added a function with the same name as an existing one (`mh_filter_product_permalink`), which is a fatal error in PHP. The new one is now `mh_filter_plugin_permalink`. Skip 3.10.0 and install this release.

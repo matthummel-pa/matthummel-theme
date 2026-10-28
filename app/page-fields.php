@@ -674,6 +674,29 @@ function page_field_map(): array
                 ['acct_help', __('Help line', 'sage'), 'textarea', __('Lost your license email, or need to change plans? Write to me and I will sort it out.', 'sage')],
             ],
         ],
+        'template-shop.blade.php' => [
+            __('Intro', 'sage') => [
+                ['shop_kicker', __('Kicker', 'sage'), 'text', __('Shop', 'sage')],
+                ['shop_h1', __('Heading (leave empty for the default)', 'sage'), 'text', ''],
+                ['shop_lede', __('Intro (leave empty for the default)', 'sage'), 'textarea', ''],
+                ['shop_empty', __('Line shown when nothing is listed', 'sage'), 'text', __('Nothing is listed here yet. Say hello if you are looking for something specific.', 'sage')],
+            ],
+            __('How buying works', 'sage') => [
+                ['shop_how_h2', __('Heading', 'sage'), 'text', __('How buying works', 'sage')],
+                ['shop_how', __('Steps (basic HTML ok)', 'sage'), 'html', '<ol><li>Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.</li><li>Your receipt, license key, and download arrive by email. Your account page keeps them.</li><li>Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.</li><li>If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.</li><li>Plugins are free. Download the zip from the plugin page.</li></ol>'],
+            ],
+            __('Questions', 'sage') => [
+                ['shop_faq_h2', __('Heading', 'sage'), 'text', __('Questions', 'sage')],
+                ['shop_faq_q1', __('Question 1', 'sage'), 'text', __('Can I try a theme before I buy?', 'sage')],
+                ['shop_faq_a1', __('Answer 1', 'sage'), 'textarea', __('Yes. Theme pages link to a live demo where there is one. Cobble & Candle has three demos you can click through.', 'sage')],
+                ['shop_faq_q2', __('Question 2', 'sage'), 'text', __('What happens when my license expires?', 'sage')],
+                ['shop_faq_a2', __('Answer 2', 'sage'), 'textarea', __('The theme keeps working on your site. You stop getting updates and email support until you renew.', 'sage')],
+                ['shop_faq_q3', __('Question 3', 'sage'), 'text', __('Can I use a theme on client sites?', 'sage')],
+                ['shop_faq_a3', __('Answer 3', 'sage'), 'textarea', __('For Cobble & Candle, the 5-site and unlimited-site plans are meant for that. The unlimited plan is white-label, so you can ship it under your own name.', 'sage')],
+                ['shop_faq_q4', __('Question 4', 'sage'), 'text', __('Who do I ask if something breaks?', 'sage')],
+                ['shop_faq_a4', __('Answer 4', 'sage'), 'textarea', __('Write to hello@matthummel.com. Support is by email, and I reply within one business day (ET).', 'sage')],
+            ],
+        ],
         'template-contact.blade.php' => [
             __('Intro', 'sage') => [
                 ['cnt_kicker', __('Kicker', 'sage'), 'text', __('Contact', 'sage')],

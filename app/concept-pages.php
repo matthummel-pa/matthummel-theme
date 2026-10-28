@@ -59,19 +59,37 @@ function mh_concept_rewrite_slug(): string
 }
 
 /**
- * URL prefix for one product: plugins live at /plugins/{slug}/, everything else at /themes/{slug}/.
+ * The kinds of product the shop can list, keyed by the catalog `product_type`.
+ *
+ * `prefix` is the URL base for the product pages and for the listing page of that type
+ * (/themes/, /plugins/, /documents/). Adding a kind of product later means adding an entry here
+ * and a catalog item of that type; the shop tabs and URLs follow.
+ *
+ * @return array<string, array{singular: string, plural: string, prefix: string}>
+ */
+function mh_product_types(): array
+{
+    return [
+        'theme' => ['singular' => __('Theme', 'sage'), 'plural' => __('Themes', 'sage'), 'prefix' => 'themes'],
+        'plugin' => ['singular' => __('Plugin', 'sage'), 'plural' => __('Plugins', 'sage'), 'prefix' => 'plugins'],
+        'document' => ['singular' => __('Document', 'sage'), 'plural' => __('Documents', 'sage'), 'prefix' => 'documents'],
+    ];
+}
+
+/**
+ * URL prefix for one product, from its type (see mh_product_types). Unknown types use /themes/.
  */
 function mh_product_url_base(int $post_id): string
 {
     $type = sanitize_key((string) get_post_meta($post_id, '_mh_project_product_type', true));
 
-    return $type === 'plugin' ? 'plugins' : mh_concept_rewrite_slug();
+    return mh_product_types()[$type]['prefix'] ?? mh_concept_rewrite_slug();
 }
 
 /**
- * Point plugin products at /plugins/{slug}/ (the post type itself registers /themes/{slug}/).
+ * Point products at their type's prefix (the post type itself registers /themes/{slug}/).
  */
-function mh_filter_plugin_permalink(string $link, \WP_Post $post): string
+function mh_filter_product_type_permalink(string $link, \WP_Post $post): string
 {
     if ($post->post_type !== mh_project_post_type() || $post->post_name === '') {
         return $link;
@@ -89,10 +107,40 @@ function mh_filter_plugin_permalink(string $link, \WP_Post $post): string
     );
 }
 
-/** Serve /plugins/{slug}/ from the same post type. */
-function mh_add_plugin_product_rewrite(): void
+/** Serve /plugins/{slug}/, /documents/{slug}/ and so on from the same post type. */
+function mh_add_product_type_rewrites(): void
 {
-    add_rewrite_rule('^plugins/([^/]+)/?$', 'index.php?'.mh_project_post_type().'=$matches[1]', 'top');
+    foreach (mh_product_types() as $type) {
+        if ($type['prefix'] === mh_concept_rewrite_slug()) {
+            continue;
+        }
+        add_rewrite_rule('^'.$type['prefix'].'/([^/]+)/?$', 'index.php?'.mh_project_post_type().'=$matches[1]', 'top');
+    }
+}
+
+/**
+ * A product opened under the wrong prefix (/themes/tocguide/) 301s to its own (/plugins/tocguide/).
+ */
+function mh_redirect_wrong_product_prefix(): void
+{
+    if (! is_singular(mh_project_post_type()) || is_preview() || get_post_status() !== 'publish') {
+        return;
+    }
+
+    $expected = get_permalink();
+    if (! is_string($expected) || $expected === '') {
+        return;
+    }
+
+    $path = (string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+    $expectedPath = (string) wp_parse_url($expected, PHP_URL_PATH);
+    if ($path === '' || $expectedPath === '' || untrailingslashit($path) === untrailingslashit($expectedPath)) {
+        return;
+    }
+
+    $query = (string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_QUERY);
+    wp_safe_redirect($query !== '' ? $expected.'?'.$query : $expected, 301);
+    exit;
 }
 
 /**
@@ -1715,6 +1763,29 @@ function mh_apply_product_catalog_v14(): void
 }
 
 /**
+ * One-time: Acreline, WalkRidge and TOCguide drop "Sample" from their eyebrows. Upserts only those three.
+ */
+function mh_apply_product_catalog_v15(): void
+{
+    if (get_option('mh_product_catalog_v15') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    $slugs = ['acreline', 'walkridge', 'tocguide'];
+    $done = 0;
+    foreach ($slugs as $slug) {
+        if (is_array($catalog[$slug] ?? null) && mh_upsert_catalog_product($slug, $catalog[$slug], true) > 0) {
+            $done++;
+        }
+    }
+
+    if ($done === count($slugs)) {
+        update_option('mh_product_catalog_v15', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1823,9 +1894,11 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
-add_action('init', __NAMESPACE__.'\\mh_add_plugin_product_rewrite', 11);
-add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_plugin_permalink', 10, 2);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v15', 46);
+add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
+add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_wrong_product_prefix', 5);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
