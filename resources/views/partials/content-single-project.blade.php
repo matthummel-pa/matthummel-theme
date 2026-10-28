@@ -48,6 +48,8 @@
   $priceLabel = (string) ($card['price_label'] ?? '');
   // Freemius products skip WooCommerce: the plan picker below opens Freemius checkout in an overlay.
   $fs = \App\mh_project_freemius($projectSlug);
+  // Free products (TOCguide) link straight to the public release zip: no cart, no login.
+  $freeUrl = \App\mh_project_free_download_url($projectSlug);
   $storySteps = array_values(array_filter([
     ['title' => __('Why I built it', 'sage'), 'text' => (string) ($story['challenge'] ?? '')],
     ['title' => __('What I did', 'sage'), 'text' => (string) ($story['approach'] ?? '')],
@@ -87,6 +89,18 @@
         <a class="btn" href="#buy">
           {!! \App\mh_svg_icon('cart', 15) !!}
           {{ __('Buy the theme', 'sage') }}
+        </a>
+        @if ($demo !== '')
+          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('globe', 15) !!}
+            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+          </a>
+        @endif
+        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
+      @elseif ($freeUrl !== '')
+        <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">
+          {!! \App\mh_svg_icon('download', 15) !!}
+          {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span>
         </a>
         @if ($demo !== '')
           <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">

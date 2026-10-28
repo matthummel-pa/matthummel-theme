@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10.0 — Product pages move to /themes/ and /plugins/
+
+- Product pages now live at `/themes/{slug}/` (Cobble & Candle, Acreline, WalkRidge) and `/plugins/{slug}/` (TOCguide). They used to share `/projects/{slug}/` with the portfolio. `/projects/` stays as the Projects page.
+- Old URLs redirect with a 301: `/projects/{slug}/`, `/concept/{slug}/`, and the legacy shop and product paths all land on the new address, with any query string kept.
+- TOCguide has a **Download free** button that links to the latest `tocguide.zip` on its public GitHub release. No cart or login. The link is built from the catalog `download` entry and only for products priced at 0.
+- Rewrite rules flush once on update (`mh_project_rewrite_flushed_v3`).
+- Not in this release: the `/themes/` and `/plugins/` hub pages. Until they exist, those two addresses show a 404, so link to the product pages directly.
+
 ## 3.9.2 — Project pages show their docs links
 
 - The docs links saved on a project (Owner guide, Support guide, Buyer guide, and so on) now show in the **Specs** list under "Under the hood", each marked "Read online". They were saved but never displayed. Cobble & Candle, Acreline, WalkRidge, and TOCguide all get them.

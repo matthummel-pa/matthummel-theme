@@ -113,6 +113,7 @@ What the 3.x Sage theme does, and where it lives.
 - `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
 - Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
 - Catalog `seo_title` / `seo_description` exist for all four projects. They seed Rank Math's title and description once (`mh_product_catalog_v13`); wp-admin edits win.
+- Product URLs: themes at `/themes/{slug}/`, plugins at `/plugins/{slug}/` (`mh_product_url_base()`); old `/projects/{slug}/` URLs 301. Free products with a catalog `download` get a Download free button (`mh_project_free_download_url()`).
 - Cobble & Candle copy refreshes once on update (`mh_product_catalog_v14`, that product only).
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 

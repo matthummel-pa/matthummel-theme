@@ -46,14 +46,53 @@ function mh_concept_pages_seed_data(): array
 }
 
 /**
- * Public rewrite base for project singles.
+ * Public rewrite base for product singles.
  *
- * Shares the /projects/ prefix with the Work listing page. CPT has_archive is
- * false so the page owns /projects/ and singles own /projects/{slug}/.
+ * Product pages live under /themes/{slug}/. CPT has_archive is false, so a
+ * normal page owns /themes/ and the singles own /themes/{slug}/. Plugin products
+ * use /plugins/{slug}/ (mh_product_url_base). The old
+ * /projects/{slug}/ URLs 301 to the new ones (mh_redirect_legacy_concept_urls).
  */
 function mh_concept_rewrite_slug(): string
 {
-    return 'projects';
+    return 'themes';
+}
+
+/**
+ * URL prefix for one product: plugins live at /plugins/{slug}/, everything else at /themes/{slug}/.
+ */
+function mh_product_url_base(int $post_id): string
+{
+    $type = sanitize_key((string) get_post_meta($post_id, '_mh_project_product_type', true));
+
+    return $type === 'plugin' ? 'plugins' : mh_concept_rewrite_slug();
+}
+
+/**
+ * Point plugin products at /plugins/{slug}/ (the post type itself registers /themes/{slug}/).
+ */
+function mh_filter_product_permalink(string $link, \WP_Post $post): string
+{
+    if ($post->post_type !== mh_project_post_type() || $post->post_name === '') {
+        return $link;
+    }
+
+    $base = mh_product_url_base($post->ID);
+    if ($base === mh_concept_rewrite_slug()) {
+        return $link;
+    }
+
+    return str_replace(
+        '/'.mh_concept_rewrite_slug().'/'.$post->post_name.'/',
+        '/'.$base.'/'.$post->post_name.'/',
+        $link
+    );
+}
+
+/** Serve /plugins/{slug}/ from the same post type. */
+function mh_add_plugin_product_rewrite(): void
+{
+    add_rewrite_rule('^plugins/([^/]+)/?$', 'index.php?'.mh_project_post_type().'=$matches[1]', 'top');
 }
 
 /**
@@ -73,7 +112,10 @@ function mh_concept_page_url(string $slug = '', ?int $post_id = null): string
         return home_url('/projects/');
     }
 
-    return home_url('/'.mh_concept_rewrite_slug().'/'.$slug.'/');
+    $post = get_page_by_path($slug, OBJECT, mh_project_post_type());
+    $base = $post instanceof \WP_Post ? mh_product_url_base($post->ID) : mh_concept_rewrite_slug();
+
+    return home_url('/'.$base.'/'.$slug.'/');
 }
 
 /**
@@ -1023,22 +1065,22 @@ function mh_seed_concept_fields_admin_v1(): void
     update_option('mh_concept_fields_admin_v1', true);
 }
 
-/** Flush rewrite rules once after the public slug becomes /projects/{slug}/. */
+/** Flush rewrite rules once after the public slug becomes /themes/{slug}/. */
 function mh_maybe_flush_concept_rewrites(): void
 {
-    if (get_option('mh_project_rewrite_flushed_v2')) {
+    if (get_option('mh_project_rewrite_flushed_v3')) {
         return;
     }
     flush_rewrite_rules(false);
-    update_option('mh_project_rewrite_flushed_v2', true);
+    update_option('mh_project_rewrite_flushed_v3', true);
 }
 
 /**
  * 301 redirects for retired URL prefixes.
  *
  * - /concept/         → /projects/
- * - /concept/{slug}/  → /projects/{slug}/
- * /projects/ and /projects/{slug}/ stay on the Projects page and CPT.
+ * - /concept/{slug}/  → /themes/{slug}/ (or /plugins/{slug}/ for plugins)
+ * - /projects/{slug}/ → the same (product pages moved; /projects/ stays the Projects page)
  */
 function mh_redirect_legacy_concept_urls(): void
 {
@@ -1056,8 +1098,24 @@ function mh_redirect_legacy_concept_urls(): void
         $requestPath = substr($requestPath, strlen($homePath) + 1);
     }
 
-    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/')) {
+    $isProjectSingle = str_starts_with($requestPath, 'projects/')
+        && substr_count(trim($requestPath, '/'), '/') === 1;
+    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/') && ! $isProjectSingle) {
         return;
+    }
+
+    if ($isProjectSingle) {
+        $slug = sanitize_title(substr(trim($requestPath, '/'), strlen('projects/')));
+        if ($slug === '' || ! get_page_by_path($slug, OBJECT, mh_project_post_type())) {
+            return;
+        }
+        $target = mh_concept_page_url($slug);
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= '?'.$query;
+        }
+        wp_safe_redirect($target, 301);
+        exit;
     }
 
     $rest = $requestPath === 'concept' ? '' : trim(substr($requestPath, strlen('concept/')), '/');
@@ -1075,7 +1133,7 @@ function mh_redirect_legacy_concept_urls(): void
 
     $target = $rest === ''
         ? home_url('/projects/')
-        : home_url('/projects/'.$rest.'/');
+        : mh_concept_page_url($rest);
     $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
     if ($query !== '') {
         $target .= (str_contains($target, '?') ? '&' : '?').$query;
@@ -1720,13 +1778,13 @@ function mh_redirect_acreline_legacy_paths(): void
     ];
 
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
-        $target = home_url('/projects/walkridge/');
+        $target = mh_concept_page_url('walkridge');
         wp_safe_redirect($target, 301);
         exit;
     }
 
     if (in_array($requestPath, $legacyTocguidePaths, true)) {
-        $target = home_url('/projects/tocguide/');
+        $target = mh_concept_page_url('tocguide');
         $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
         if ($query !== '') {
             $target .= (str_contains($target, '?') ? '&' : '?').$query;
@@ -1739,7 +1797,7 @@ function mh_redirect_acreline_legacy_paths(): void
         return;
     }
 
-    $target = home_url('/projects/acreline/');
+    $target = mh_concept_page_url('acreline');
 
     $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
     if ($query !== '') {
@@ -1761,6 +1819,8 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
+add_action('init', __NAMESPACE__.'\\mh_add_plugin_product_rewrite', 11);
+add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);

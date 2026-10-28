@@ -1153,6 +1153,29 @@ function mh_project_buy_url(int $project_id): string
 }
 
 /**
+ * Direct download URL for a free catalog product (price 0) that ships as a fixed GitHub release asset.
+ *
+ * No cart, no login: the link points at the public release, e.g. TOCguide's tocguide.zip. Returns
+ * an empty string for paid products or when the catalog has no fixed repo and asset name.
+ */
+function mh_project_free_download_url(string $slug): string
+{
+    $entry = mh_product_catalog_seed_data()[sanitize_key($slug)] ?? null;
+    if (! is_array($entry) || (float) ($entry['price'] ?? 1) > 0) {
+        return '';
+    }
+
+    $download = is_array($entry['download'] ?? null) ? $entry['download'] : [];
+    $repo = trim((string) ($download['github_repo'] ?? ''));
+    $asset = trim((string) ($download['asset'] ?? ''));
+    if (! preg_match('#^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$#', $repo) || ! preg_match('/^[A-Za-z0-9_.-]+\.zip$/', $asset)) {
+        return '';
+    }
+
+    return 'https://github.com/'.$repo.'/releases/latest/download/'.$asset;
+}
+
+/**
  * Freemius checkout settings for a catalog product, or null when it is not sold through Freemius.
  *
  * Freemius is the merchant of record, so these products skip WooCommerce entirely. The sandbox
