@@ -714,7 +714,7 @@ function mh_project_release_label(array $gh): string
  * @param  array<string, mixed>  $gh  from mh_project_github_facts()
  * @return list<array{label: string, value: string, href: string, pills: list<string>}>
  */
-function mh_project_spec_rows(array $card, array $gh, string $demo, string $github): array
+function mh_project_spec_rows(array $card, array $gh, string $demo, string $github, array $docs = []): array
 {
     $rows = [];
     $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
@@ -748,6 +748,15 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
     }
     if ($demo !== '') {
         $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
+    }
+
+    // Docs links saved on the project (Label|||URL pairs), e.g. Owner guide and Support guide.
+    foreach ($docs as $pair) {
+        $url = (string) ($pair[1] ?? '');
+        if (! str_starts_with($url, 'http')) {
+            continue;
+        }
+        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url);
     }
 
     return $rows;
