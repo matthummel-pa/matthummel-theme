@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.1 — Cobble & Candle copy reaches existing sites on update
+
+- A one-time migration (`mh_product_catalog_v14`) refreshes the Cobble & Candle project post from the catalog, so the 3.9.0 pricing copy and docs links show up after a theme update without running anything by hand. Other products are not touched.
+
 ## 3.9.0 — Cobble & Candle: buy it on the page with Freemius, plus an account page
 
 - Cobble & Candle's project page now has a **Pricing** section with three yearly plans (1 site, 5 sites, unlimited). Each Buy button opens Freemius checkout in an overlay. There is no cart and no WooCommerce product. Freemius is the merchant of record and sends the receipt and license key.

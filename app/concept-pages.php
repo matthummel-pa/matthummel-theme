@@ -1628,6 +1628,26 @@ function mh_apply_product_catalog_v13(): void
 }
 
 /**
+ * One-time: Cobble & Candle goes on sale through Freemius (pricing copy, public docs links).
+ * Upserts only that product so edits to the other catalog entries are left alone.
+ */
+function mh_apply_product_catalog_v14(): void
+{
+    if (get_option('mh_product_catalog_v14') || wp_installing()) {
+        return;
+    }
+
+    $seed = mh_product_catalog_seed_data()['cobbleandcandle'] ?? null;
+    if (! is_array($seed)) {
+        return;
+    }
+
+    if (mh_upsert_catalog_product('cobbleandcandle', $seed, true) > 0) {
+        update_option('mh_product_catalog_v14', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1731,6 +1751,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
