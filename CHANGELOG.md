@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.13.0 — WooCommerce code removed from the theme (stage 3 of 3: code and CSS)
+
+The theme no longer contains any WooCommerce code. Products are sold through Freemius, and there are no orders.
+
+- Removed the WooCommerce branches from the SEO title and description filters (shop, product, cart, checkout and account pages), the hero image picker, the social meta check, and the Rank Math focus keyword and field-map lookups.
+- Removed the Sage WooCommerce service provider from `functions.php`.
+- Removed `mh_public_shop_enabled()`, `mh_shop_page_id()` and `mh_project_product_id()`, which had no callers left.
+- Removed the one-time migration that deleted shop, cart and buy items from the primary menu, and the menu filter that hid shop links. The Shop link in the menu is now an ordinary menu item.
+- Removed the migration that rewrote the old WooCommerce shop page description.
+- The Resources page "Theme shop" link points at `/shop/`, and its WooCommerce row in the tools list is gone. The Services page add-on defaults no longer mention WooCommerce.
+- Removed about 2,800 lines of CSS for the cart, checkout, my-account, order desk, cart drawer, shop archive and single-product screens. A rule was only removed when every selector in it needed a WooCommerce class that no template, script or PHP file uses. `portfolio.css` goes from 12,173 to 9,424 lines.
+- Removed the PHPStan baseline entries for the deleted `app/woocommerce.php`.
+- Not changed: the `generoi/sage-woocommerce` and `php-stubs/woocommerce-stubs` packages in `composer.json` (removing them needs `composer.lock` regenerated), and WalkRidge's own product copy about WooCommerce tour booking.
+
 ## 3.12.2 — shop.php no longer contains any WooCommerce code (stage 2b of 3)
 
 `app/shop.php` goes from 3,867 lines to 730 across this and the last stage. What is left is the catalog, the Freemius helpers, the shop listing and the copy defaults.

@@ -321,60 +321,6 @@ function mh_seo_term_description(\WP_Term $term): string
 
 function mh_seo_document_title(): string
 {
-    if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
-        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-        $label = function_exists('woocommerce_page_title')
-            ? wp_strip_all_tags((string) woocommerce_page_title(false))
-            : __('Shop', 'sage');
-        if ($label === '') {
-            $label = __('Shop', 'sage');
-        }
-        $built = is_shop()
-            ? __('WordPress Themes, Plugins & Web Apps', 'sage').' | '.$brand
-            : $label.' | '.__('Shop', 'sage').' | '.$brand;
-
-        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
-    }
-
-    if (function_exists('is_product') && is_product()) {
-        $post_id = (int) get_queried_object_id();
-        $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
-        if ($pluginTitle === false) {
-            return '';
-        }
-        if ($pluginTitle !== '') {
-            return $pluginTitle;
-        }
-        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-        $title = trim(get_the_title($post_id));
-        if ($title === '') {
-            return '';
-        }
-        $productTypeLabel = mh_product_type_chrome(mh_resolve_product_type($post_id))['seo'];
-        $built = $title.' | '.$productTypeLabel.' | '.$brand;
-
-        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
-    }
-
-    if (function_exists('is_cart') && is_cart()) {
-        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-        $built = __('Cart', 'sage').' | '.$brand;
-
-        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
-    }
-    if (function_exists('is_checkout') && is_checkout()) {
-        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-        $built = __('Checkout', 'sage').' | '.$brand;
-
-        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
-    }
-    if (function_exists('is_account_page') && is_account_page()) {
-        $brand = trim((string) get_bloginfo('name', 'display')) ?: 'Matt Hummel';
-        $built = __('My account', 'sage').' | '.$brand;
-
-        return mh_seo_len($built) > 60 ? mh_seo_clip($built, 60) : $built;
-    }
-
     if (is_singular(mh_project_post_type())) {
         $post_id = (int) get_queried_object_id();
         $pluginTitle = mh_seo_plugin_meta($post_id, ['rank_math_title', '_yoast_wpseo_title']);
@@ -487,57 +433,6 @@ function mh_seo_plugin_meta(int $post_id, array $keys): string|false
  */
 function mh_seo_meta_description(): string
 {
-    if (function_exists('is_shop') && is_shop()) {
-        $desc = __('WordPress themes, plugins, and web apps for sale. Browse demos, buy a ready-made pack, or say hello for a custom build.', 'sage');
-
-        return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
-    }
-    if (function_exists('is_product') && is_product()) {
-        $post_id = (int) get_queried_object_id();
-        $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);
-        if ($pluginDesc === false) {
-            return '';
-        }
-        if ($pluginDesc !== '') {
-            return $pluginDesc;
-        }
-        $desc = wp_strip_all_tags((string) (get_the_excerpt($post_id) ?: get_the_title($post_id)));
-        $desc = wp_trim_words($desc, 28, '');
-        if ($desc !== '' && ! str_ends_with($desc, '.')) {
-            $desc .= '.';
-        }
-        if ($desc === '') {
-            $type = mh_resolve_product_type($post_id);
-            $productTypeLabel = strtolower(mh_product_type_chrome($type)['eyebrow']);
-            $desc = $type === 'service'
-                ? sprintf(
-                    __('Book this %s or say hello for a custom scope. Clear deliverables, one-time price.', 'sage'),
-                    $productTypeLabel
-                )
-                : sprintf(
-                    __('Buy this %s or say hello for a custom adaptation. Instant download, GPL-licensed, includes demo.', 'sage'),
-                    $productTypeLabel
-                );
-        }
-
-        return mh_seo_len($desc) > 155 ? mh_seo_clip($desc, 155) : $desc;
-    }
-    if (function_exists('is_cart') && is_cart()) {
-        $desc = __('Review digital products in your cart, update quantities, and continue to secure checkout.', 'sage');
-
-        return $desc;
-    }
-    if (function_exists('is_checkout') && is_checkout()) {
-        $desc = __('Secure checkout for digital WordPress products. Download links and access details arrive by email after payment.', 'sage');
-
-        return $desc;
-    }
-    if (function_exists('is_account_page') && is_account_page()) {
-        $desc = __('View orders, downloads, and account details for your WordPress product purchases.', 'sage');
-
-        return $desc;
-    }
-
     if (is_singular(mh_project_post_type())) {
         $post_id = (int) get_queried_object_id();
         $pluginDesc = mh_seo_plugin_meta($post_id, ['rank_math_description', '_yoast_wpseo_metadesc']);

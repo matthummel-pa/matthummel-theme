@@ -247,14 +247,6 @@ function mh_project_product_type(int $post_id): string
 }
 
 /**
- * Linked WooCommerce product ID (0 when unset).
- */
-function mh_project_product_id(int $post_id): int
-{
-    return max(0, (int) get_post_meta($post_id, '_mh_project_product_id', true));
-}
-
-/**
  * FAQ pairs from `Question|||Answer` lines.
  *
  * @return list<array{0: string, 1: string}>
@@ -1537,7 +1529,7 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
 
 /**
  * Apply the bundled product catalog: demote non-catalog projects off the shop,
- * then force-upsert every catalog entry (copy, screenshots, Woo sync).
+ * then force-upsert every catalog entry (copy and screenshots).
  *
  * @return bool True when every catalog slug was processed.
  */
@@ -1630,7 +1622,7 @@ function mh_apply_product_catalog_v4(): void
 
 /**
  * One-time: relabel Acreline as a Real estate theme (not Land & farms) and
- * refresh catalog meta/Woo copy after theme update.
+ * refresh catalog meta and copy after theme update.
  */
 function mh_apply_product_catalog_v5(): void
 {
@@ -1645,7 +1637,7 @@ function mh_apply_product_catalog_v5(): void
 
 /**
  * One-time: keep Acreline labeled Real estate after marketplace copy drift,
- * and refresh Woo/project meta from product-catalog.json.
+ * and refresh project meta from product-catalog.json.
  */
 function mh_apply_product_catalog_v6(): void
 {
@@ -1883,7 +1875,7 @@ function mh_redirect_acreline_legacy_paths(): void
     exit;
 }
 
-// Catalog reseed hooks (project CPT may still exist on older DBs; Woo products are canonical).
+// Catalog reseed hooks (the project CPT may still exist on older DBs).
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
