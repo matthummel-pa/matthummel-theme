@@ -50,6 +50,8 @@
   $fs = \App\mh_project_freemius($projectSlug);
   // Free products (TOCguide) link straight to the public release zip: no cart, no login.
   $freeUrl = \App\mh_project_free_download_url($projectSlug);
+  // Catalog products waiting on their Freemius product: no Buy button, a badge instead.
+  $soon = \App\mh_project_is_coming_soon($projectSlug);
   $storySteps = array_values(array_filter([
     ['title' => __('Why I built it', 'sage'), 'text' => (string) ($story['challenge'] ?? '')],
     ['title' => __('What I did', 'sage'), 'text' => (string) ($story['approach'] ?? '')],
@@ -82,6 +84,10 @@
           </li>
         @endforeach
       </ul>
+    @endif
+
+    @if ($soon)
+      <p class="project-type-row"><span class="spec-badge">{{ __('Coming soon', 'sage') }}</span></p>
     @endif
 
     <div class="concept-hero-actions project-hero-actions">
@@ -429,7 +435,8 @@
         'license' => trim((string) get_post_meta($postId, '_mh_project_license', true)) ?: null,
         'author' => ['@type' => 'Person', 'name' => 'Matt Hummel', 'url' => home_url('/')],
         'sameAs' => array_values(array_filter([$github, $demo])),
-        'offers' => \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
+        // No offer (so no "InStock") for products that are coming soon.
+        'offers' => ! $soon && \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
           ? ['@type' => 'Offer', 'price' => $ldPrice, 'priceCurrency' => 'USD', 'availability' => 'https://schema.org/InStock', 'url' => get_permalink($postId)]
           : null,
       ], static fn ($value) => $value !== null && $value !== '' && $value !== []);

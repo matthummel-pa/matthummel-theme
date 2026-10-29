@@ -232,7 +232,7 @@ function mh_filter_product_permalink(string $permalink, $product): string
  */
 function mh_redirect_shop_to_projects(): void
 {
-    if (mh_public_shop_enabled()) {
+    if (mh_public_shop_enabled() || mh_shop_page_id() > 0) {
         return;
     }
 
@@ -1173,6 +1173,121 @@ function mh_project_free_download_url(string $slug): string
     }
 
     return 'https://github.com/'.$repo.'/releases/latest/download/'.$asset;
+}
+
+/** True for catalog products still waiting on their Freemius product: no Buy button yet. */
+function mh_project_is_coming_soon(string $slug): bool
+{
+    $entry = mh_product_catalog_seed_data()[sanitize_key($slug)] ?? null;
+
+    return is_array($entry) && ! empty($entry['coming_soon']);
+}
+
+/**
+ * Default heading ('h1') and intro ('lede') for a shop page. $scope is 'all' or a key from
+ * mh_product_types(). The page fields (shop_{scope}_h1, shop_{scope}_lede) override these.
+ */
+function mh_shop_copy_default(string $scope, string $part): string
+{
+    $copy = [
+        'all' => [
+            'h1' => __('Themes and plugins for WordPress', 'sage'),
+            'lede' => __('WordPress themes and plugins I build, sell, and support. Browse by type, open a live demo, and buy a yearly license through Freemius. Plugins are free to download.', 'sage'),
+        ],
+        'theme' => [
+            'h1' => __('WordPress themes', 'sage'),
+            'lede' => __('Block themes I build and support. Each one has a live demo where there is one, a yearly license for updates and email support, and a 30-day refund if I cannot fix a problem.', 'sage'),
+        ],
+        'plugin' => [
+            'h1' => __('Free WordPress plugins', 'sage'),
+            'lede' => __('Plugins I build and maintain. They are free: download the zip from the plugin page.', 'sage'),
+        ],
+    ];
+    if (isset($copy[$scope][$part])) {
+        return $copy[$scope][$part];
+    }
+
+    $plural = (string) (mh_product_types()[$scope]['plural'] ?? '');
+
+    /* translators: %s: plural product type, lower case, e.g. documents */
+    return $part === 'h1' ? $plural : sprintf(__('Browse the %s I offer.', 'sage'), strtolower($plural));
+}
+
+/**
+ * ID of the Shop page (/shop/), or 0 when it has not been created. Lets the shop link through the
+ * old "storefront is off" redirect and nav filters.
+ */
+function mh_shop_page_id(): int
+{
+    $page = get_page_by_path('shop');
+
+    return ($page instanceof \WP_Post && get_page_template_slug($page) === 'template-shop.blade.php')
+        ? (int) $page->ID
+        : 0;
+}
+
+/**
+ * Rows for the shop listing: live products of any known type (see mh_product_types), each with a status the card can show.
+ *
+ * status: buy (Freemius plans), free (direct download), soon (not for sale yet), details (anything else).
+ * Prices come from the catalog; nothing is invented here.
+ *
+ * @param  string  $type  'all' or a key from mh_product_types().
+ * @return list<array{slug: string, title: string, blurb: string, url: string, image: string, demo: string, type: string, status: string, price: string, free_url: string}>
+ */
+function mh_shop_items(string $type = 'all'): array
+{
+    $items = [];
+    foreach (mh_query_project_cards(['live_only' => true]) as $card) {
+        $slug = (string) ($card['slug'] ?? '');
+        $kind = (string) ($card['product_type'] ?? '');
+        if ($slug === '' || ! isset(mh_product_types()[$kind]) || ($type !== 'all' && $kind !== $type)) {
+            continue;
+        }
+
+        $status = 'details';
+        $price = '';
+        $freeUrl = mh_project_free_download_url($slug);
+        $fs = mh_project_freemius($slug);
+        if ($fs !== null) {
+            $status = 'buy';
+            $lowest = null;
+            foreach ($fs['tiers'] as $tier) {
+                $amount = (float) preg_replace('/[^0-9.]/', '', $tier['price']);
+                if ($amount > 0 && ($lowest === null || $amount < $lowest['amount'])) {
+                    $lowest = ['amount' => $amount, 'label' => $tier['price']];
+                }
+            }
+            if ($lowest !== null) {
+                /* translators: %s: lowest yearly price, e.g. $59 */
+                $price = sprintf(__('From %s per year', 'sage'), $lowest['label']);
+            }
+        } elseif ($freeUrl !== '') {
+            $status = 'free';
+            $price = __('Free', 'sage');
+        } elseif (mh_project_is_coming_soon($slug)) {
+            $status = 'soon';
+            $price = __('Coming soon', 'sage');
+        }
+
+        $items[] = [
+            'slug' => $slug,
+            'title' => (string) ($card['title'] ?? ''),
+            'blurb' => (string) ($card['blurb'] ?? ''),
+            'url' => (string) ($card['url'] ?? ''),
+            'image' => (string) ($card['image'] ?? ''),
+            'demo' => (string) ($card['demo'] ?? ''),
+            'type' => $kind,
+            'status' => $status,
+            'price' => $price,
+            'free_url' => $freeUrl,
+        ];
+    }
+
+    $rank = ['buy' => 0, 'free' => 1, 'soon' => 2, 'details' => 3];
+    usort($items, static fn (array $a, array $b): int => $rank[$a['status']] <=> $rank[$b['status']]);
+
+    return $items;
 }
 
 /**

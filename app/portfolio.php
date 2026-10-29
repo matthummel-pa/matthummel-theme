@@ -4596,6 +4596,10 @@ add_filter('wp_nav_menu_objects', function (array $items, $args): array {
     return array_values(array_filter($items, static function ($item): bool {
         $title = strtolower(trim((string) ($item->title ?? '')));
         $url = strtolower((string) ($item->url ?? ''));
+        // The Shop page (Shop template) is the one shop link that stays.
+        if (function_exists(__NAMESPACE__.'\mh_shop_page_id') && mh_shop_page_id() > 0 && (int) ($item->object_id ?? 0) === mh_shop_page_id()) {
+            return true;
+        }
         if (in_array($title, ['shop', 'cart', 'checkout', 'buy', 'store'], true)) {
             return false;
         }
