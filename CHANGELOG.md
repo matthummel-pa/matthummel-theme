@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.11.3 — Plugins page gets its own steps
+
+- `/plugins/` no longer shows the theme buying steps (plans, license, refund). Its section is now "How to get a plugin": download the zip, upload it under Plugins, Add Plugin, Upload Plugin, then activate. Heading and steps are editable on the Plugins page under Page content (theme). `/shop/` and `/themes/` are unchanged.
+
 ## 3.11.2 — Plugins page gets its own short questions
 
 - `/plugins/` no longer shows the theme questions (licenses, client sites). It has three of its own: are the plugins free, where to get help, and whether they collect data. They are editable in Page content (theme) on the Plugins page. `/shop/` and `/themes/` are unchanged.
