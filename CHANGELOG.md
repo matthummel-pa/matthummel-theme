@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.15.1 — Shop pages: fix gradient headings, small tidy-ups
+
+- Fix: the gradient headings on the shop pages painted as solid colour boxes with no readable text. The theme deliberately switches gradient text off for `.display-title.is-section` (heavier in dark mode), and the hero rule used the `background` shorthand, which resets the text clipping. Both are fixed: the headings are gradient text again in light and dark mode, and fall back to plain text in high-contrast mode.
+- The "How buying works" step text is body size, not oversized.
+- The share card no longer stretches to match the docs card.
+- "Read first" no longer lists brand kits.
+
 ## 3.15.0 — Shop pages: design pass (gradients, cards, compare, steps, accordion, drawings, docs and sharing)
 
 - **Headings.** The page heading is white, to blue, to green on the dark hero. Section headings are dark blue, to blue, to green on light pages and white, to blue, to green in dark mode, so they stay readable on both. In high-contrast mode they fall back to plain text.
