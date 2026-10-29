@@ -501,7 +501,6 @@ function mh_project_page_slides(int $post_id, array $card): array
 
     $add((string) ($card['image'] ?? ''), '');
 
-
     if ($slides === [] && $post_id > 0 && has_post_thumbnail($post_id)) {
         $thumbId = (int) get_post_thumbnail_id($post_id);
         $src = (string) wp_get_attachment_image_url($thumbId, 'large');
