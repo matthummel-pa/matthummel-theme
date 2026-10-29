@@ -677,13 +677,17 @@ function page_field_map(): array
         'template-shop.blade.php' => [
             __('Intro', 'sage') => [
                 ['shop_kicker', __('Kicker', 'sage'), 'text', __('Shop', 'sage')],
-                ['shop_h1', __('Heading (leave empty for the default)', 'sage'), 'text', ''],
-                ['shop_lede', __('Intro (leave empty for the default)', 'sage'), 'textarea', ''],
+                ['shop_all_h1', __('Heading on /shop/', 'sage'), 'text', mh_shop_copy_default('all', 'h1')],
+                ['shop_all_lede', __('Intro on /shop/', 'sage'), 'textarea', mh_shop_copy_default('all', 'lede')],
+                ['shop_theme_h1', __('Heading on /themes/', 'sage'), 'text', mh_shop_copy_default('theme', 'h1')],
+                ['shop_theme_lede', __('Intro on /themes/', 'sage'), 'textarea', mh_shop_copy_default('theme', 'lede')],
+                ['shop_plugin_h1', __('Heading on /plugins/', 'sage'), 'text', mh_shop_copy_default('plugin', 'h1')],
+                ['shop_plugin_lede', __('Intro on /plugins/', 'sage'), 'textarea', mh_shop_copy_default('plugin', 'lede')],
                 ['shop_empty', __('Line shown when nothing is listed', 'sage'), 'text', __('Nothing is listed here yet. Say hello if you are looking for something specific.', 'sage')],
             ],
             __('How buying works', 'sage') => [
                 ['shop_how_h2', __('Heading', 'sage'), 'text', __('How buying works', 'sage')],
-                ['shop_how', __('Steps (basic HTML ok)', 'sage'), 'html', '<ol><li>Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.</li><li>Your receipt, license key, and download arrive by email. Your account page keeps them.</li><li>Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.</li><li>If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.</li><li>Plugins are free. Download the zip from the plugin page.</li></ol>'],
+                ['shop_how', __('Steps (basic HTML ok)', 'sage'), 'html', '<ol><li>'.__('Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.', 'sage').'</li><li>'.__('Your receipt, license key, and download arrive by email. Your account page keeps them.', 'sage').'</li><li>'.__('Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.', 'sage').'</li><li>'.__('If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.', 'sage').'</li><li>'.__('Plugins are free. Download the zip from the plugin page.', 'sage').'</li></ol>'],
             ],
             __('Questions', 'sage') => [
                 ['shop_faq_h2', __('Heading', 'sage'), 'text', __('Questions', 'sage')],

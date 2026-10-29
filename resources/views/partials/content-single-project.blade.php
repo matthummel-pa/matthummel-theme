@@ -435,7 +435,8 @@
         'license' => trim((string) get_post_meta($postId, '_mh_project_license', true)) ?: null,
         'author' => ['@type' => 'Person', 'name' => 'Matt Hummel', 'url' => home_url('/')],
         'sameAs' => array_values(array_filter([$github, $demo])),
-        'offers' => \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
+        // No offer (so no "InStock") for products that are coming soon.
+        'offers' => ! $soon && \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
           ? ['@type' => 'Offer', 'price' => $ldPrice, 'priceCurrency' => 'USD', 'availability' => 'https://schema.org/InStock', 'url' => get_permalink($postId)]
           : null,
       ], static fn ($value) => $value !== null && $value !== '' && $value !== []);

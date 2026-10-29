@@ -132,13 +132,14 @@ function mh_redirect_wrong_product_prefix(): void
         return;
     }
 
-    $path = (string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+    $uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    $path = (string) wp_parse_url($uri, PHP_URL_PATH);
     $expectedPath = (string) wp_parse_url($expected, PHP_URL_PATH);
     if ($path === '' || $expectedPath === '' || untrailingslashit($path) === untrailingslashit($expectedPath)) {
         return;
     }
 
-    $query = (string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_QUERY);
+    $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
     wp_safe_redirect($query !== '' ? $expected.'?'.$query : $expected, 301);
     exit;
 }
@@ -1113,14 +1114,14 @@ function mh_seed_concept_fields_admin_v1(): void
     update_option('mh_concept_fields_admin_v1', true);
 }
 
-/** Flush rewrite rules once after the public slug becomes /themes/{slug}/. */
+/** Flush rewrite rules once after the product URL prefixes change (/themes/, /plugins/, /documents/). */
 function mh_maybe_flush_concept_rewrites(): void
 {
-    if (get_option('mh_project_rewrite_flushed_v3')) {
+    if (get_option('mh_project_rewrite_flushed_v4')) {
         return;
     }
     flush_rewrite_rules(false);
-    update_option('mh_project_rewrite_flushed_v3', true);
+    update_option('mh_project_rewrite_flushed_v4', true);
 }
 
 /**

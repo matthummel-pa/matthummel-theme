@@ -31,14 +31,6 @@
       $groups[$key] = $rows;
     }
   }
-  $defaults = [
-    'all' => [__('Themes and plugins for WordPress', 'sage'), __('WordPress themes and plugins I build, sell, and support. Browse by type, open a live demo, and buy a yearly license through Freemius. Plugins are free to download.', 'sage')],
-    'theme' => [__('WordPress themes', 'sage'), __('Block themes I build and support. Each one has a live demo where there is one, a yearly license for updates and email support, and a 30-day refund if I cannot fix a problem.', 'sage')],
-    'plugin' => [__('Free WordPress plugins', 'sage'), __('Plugins I build and maintain. They are free: download the zip from the plugin page.', 'sage')],
-  ][$scope] ?? [
-    $types[$scope]['plural'],
-    sprintf(__('Browse the %s I offer.', 'sage'), strtolower($types[$scope]['plural'])),
-  ];
   $faq = [];
   foreach ([1, 2, 3, 4] as $n) {
     $q = trim(\App\field('shop_faq_q'.$n, '', $pageId));
@@ -52,8 +44,8 @@
 
 @component('partials.page-hero')
   <p class="eyebrow">{{ \App\field('shop_kicker', __('Shop', 'sage'), $pageId) }}</p>
-  <h1 class="display-title is-hero">{{ \App\field('shop_h1', $defaults[0], $pageId) }}</h1>
-  <p class="lead">{{ \App\field('shop_lede', $defaults[1], $pageId) }}</p>
+  <h1 class="display-title is-hero">{{ \App\field('shop_'.$scope.'_h1', \App\mh_shop_copy_default($scope, 'h1'), $pageId) }}</h1>
+  <p class="lead">{{ \App\field('shop_'.$scope.'_lede', \App\mh_shop_copy_default($scope, 'lede'), $pageId) }}</p>
 @endcomponent
 
 <section class="project-section" aria-labelledby="shop-browse-heading">

@@ -8,7 +8,9 @@
 - Product types are one list (`mh_product_types()`): themes, plugins, and documents for later. A new type gets its own URL prefix, rewrite rule and shop tab by adding one entry and a catalog item. Tabs only show types that have something listed.
 - A product opened under the wrong prefix (`/themes/tocguide/`) now 301s to its own (`/plugins/tocguide/`).
 - The old rule that sent `/shop/` to Projects and hid shop links from menus now lets the Shop page through. Cart and checkout links are still hidden.
-- Copy on the shop pages (intro, how buying works, four questions) is editable in wp-admin under Page content (theme). The defaults are drafts to review.
+- Copy on the shop pages (a heading and intro per page, how buying works, four questions) is editable in wp-admin under Page content (theme). The defaults are drafts to review.
+- Fix: a product that is coming soon no longer gets a schema.org Offer marked "InStock" in its page markup.
+- Rewrite rules flush once more on update (`mh_project_rewrite_flushed_v4`) so the `/plugins/` and `/documents/` product URLs resolve without a manual flush.
 
 ## 3.10.1 — Fix: 3.10.0 crashed the site on load
 

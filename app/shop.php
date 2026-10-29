@@ -1184,6 +1184,36 @@ function mh_project_is_coming_soon(string $slug): bool
 }
 
 /**
+ * Default heading ('h1') and intro ('lede') for a shop page. $scope is 'all' or a key from
+ * mh_product_types(). The page fields (shop_{scope}_h1, shop_{scope}_lede) override these.
+ */
+function mh_shop_copy_default(string $scope, string $part): string
+{
+    $copy = [
+        'all' => [
+            'h1' => __('Themes and plugins for WordPress', 'sage'),
+            'lede' => __('WordPress themes and plugins I build, sell, and support. Browse by type, open a live demo, and buy a yearly license through Freemius. Plugins are free to download.', 'sage'),
+        ],
+        'theme' => [
+            'h1' => __('WordPress themes', 'sage'),
+            'lede' => __('Block themes I build and support. Each one has a live demo where there is one, a yearly license for updates and email support, and a 30-day refund if I cannot fix a problem.', 'sage'),
+        ],
+        'plugin' => [
+            'h1' => __('Free WordPress plugins', 'sage'),
+            'lede' => __('Plugins I build and maintain. They are free: download the zip from the plugin page.', 'sage'),
+        ],
+    ];
+    if (isset($copy[$scope][$part])) {
+        return $copy[$scope][$part];
+    }
+
+    $plural = (string) (mh_product_types()[$scope]['plural'] ?? '');
+
+    /* translators: %s: plural product type, lower case, e.g. documents */
+    return $part === 'h1' ? $plural : sprintf(__('Browse the %s I offer.', 'sage'), strtolower($plural));
+}
+
+/**
  * ID of the Shop page (/shop/), or 0 when it has not been created. Lets the shop link through the
  * old "storefront is off" redirect and nav filters.
  */
