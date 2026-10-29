@@ -16,11 +16,11 @@
     "for_sale": false,
     "live": true,
     "price": "",
-    "eyebrow": "Theme in progress · Restaurants, taverns & inns",
-    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is not in the shop yet.",
+    "eyebrow": "Pro theme · Restaurants, taverns & inns",
+    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is sold as a Pro theme with a yearly license for updates and support.",
     "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
     "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
-    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is not for sale yet; say hello if you want it for your place or want me to set it up.",
+    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
     "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
     "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
@@ -169,7 +169,7 @@
       ],
       [
         "Can I buy Cobble & Candle?",
-        "Not yet. It is finished and running on the live demo, and I am getting it ready for the shop. Say hello if you want it for your restaurant, bar or inn sooner, or want me to set it up."
+        "Yes. Pick a plan for 1 site, 5 sites or unlimited sites and check out on this page. Each plan is a yearly license that includes updates and email support. If it has a bug or problem I can't resolve, you get a refund within 30 days."
       ],
       [
         "Does it handle rooms for a B&B or inn?",
@@ -197,7 +197,18 @@
       ]
     ],
     "demo": "https://cobbleandcandle.matthummel.com/",
-    "github": "https://github.com/matthummel-pa/wp-cobbleandcandle",
+    "freemius": {
+      "store_id": "21514",
+      "product_id": "42939",
+      "plan_id": "74742",
+      "public_key": "pk_773f209ba80bce933bf3a9c0233fa",
+      "tiers": [
+        { "label": "1 site", "licenses": 1, "price": "$59" },
+        { "label": "5 sites", "licenses": 5, "price": "$99" },
+        { "label": "Unlimited sites", "licenses": 0, "price": "$199" }
+      ]
+    },
+    "github": "",
     "version": "0.1.0",
     "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
@@ -209,18 +220,14 @@
     "docs": [
       [
         "Owner guide",
-        "https://github.com/matthummel-pa/wp-cobbleandcandle/tree/main/docs/guide"
+        "https://github.com/matthummel-pa/wp-cobbleandcandle-docs"
       ],
       [
         "Support guide",
-        "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/SUPPORT.md"
-      ],
-      [
-        "Brand kit",
-        "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/BRAND.md"
+        "https://github.com/matthummel-pa/wp-cobbleandcandle-docs/blob/main/support.md"
       ]
     ],
-    "support": "https://github.com/matthummel-pa/wp-cobbleandcandle/blob/main/SUPPORT.md",
+    "support": "https://github.com/matthummel-pa/wp-cobbleandcandle-docs/blob/main/support.md",
     "topics": "wordpress-theme, restaurant, bar, inn, bed-and-breakfast, booking, block-theme, sage, gutenberg, full-site-editing",
     "languages": "PHP, Blade, CSS, JavaScript",
     "brand_tagline": "Restaurant · tavern · inn",
@@ -328,10 +335,11 @@
       "Customizer"
     ],
     "product_type": "theme",
+    "coming_soon": true,
     "for_sale": true,
     "live": true,
     "price": "79",
-    "eyebrow": "Sample theme · Real estate",
+    "eyebrow": "Theme · Real estate",
     "summary": "Acreline is a WordPress theme for solo agents and small teams. Featured homes, agent bios, and showing requests sit on Gutenberg marketing pages. I built it so an office can set it up in WordPress without a page builder.",
     "challenge": "Real estate agents need listings, a map, and showing requests that look like their office, not a luxury MLS portal. Most ready-made themes hide the houses behind tools agents will not use.",
     "approach": "I built a setup wizard for name, colors, and sample listings, plus Appearance → Acreline Settings for listing, agent, and booking extras. Marketing pages use normal WordPress blocks. Brokers edit listings and agents in wp-admin. No page builder.",
@@ -594,10 +602,11 @@
       "Customizer"
     ],
     "product_type": "theme",
+    "coming_soon": true,
     "for_sale": true,
     "live": true,
     "price": "59",
-    "eyebrow": "Sample theme · Tour shops",
+    "eyebrow": "Theme · Tour shops",
     "summary": "WalkRidge is a WordPress theme for licensed-guide tour shops. Visitors browse tours, meet guides, and book online. Operators change brand, phone, and hours in Theme Settings. No code.",
     "challenge": "Tour shops need schedules, guide bios, and checkout in one place. Most options are a bare store or a heavy travel kit they will not use.",
     "approach": "I built marketing pages with WordPress blocks and booking through WooCommerce. Brand, phone, hours, and the header button live in Appearance → Theme Settings. Operators never touch code.",
@@ -801,7 +810,7 @@
     "price": "0",
     "is_free": true,
     "is_product": true,
-    "eyebrow": "Sample plugin · Long posts",
+    "eyebrow": "Free plugin · Long posts",
     "summary": "TOCguide is a WordPress plugin that builds a table of contents from the headings in a post. The outline is in the first HTML. An optional Reading Guide adds section previews, read time, and study tools. No accounts, no tracking.",
     "challenge": "Long posts need a jump list. Many plugins add extra blocks or hide the outline from search engines and screen readers.",
     "approach": "I built a light plugin that reads headings and prints the list on the first page load. Reading Guide, citations, and study tools stay opt-in. Nothing phones home.",

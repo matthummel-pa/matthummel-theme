@@ -34,7 +34,7 @@
   }
   $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
   $proof = \App\mh_project_proof_facts($metrics, $slides, $features, $gh);
-  $specRows = \App\mh_project_spec_rows($card, $gh, $demo, $github);
+  $specRows = \App\mh_project_spec_rows($card, $gh, $demo, $github, \App\mh_project_docs_pairs($postId));
   $heroImage = (string) ($slides[0]['src'] ?? '');
   $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
   $palette = function_exists('\\App\\mh_project_brand_palette_pairs')
@@ -46,6 +46,12 @@
   $buyUrl = (string) ($card['buy_url'] ?? '');
   $buyLabel = (string) ($card['buy_label'] ?? '');
   $priceLabel = (string) ($card['price_label'] ?? '');
+  // Freemius products skip WooCommerce: the plan picker below opens Freemius checkout in an overlay.
+  $fs = \App\mh_project_freemius($projectSlug);
+  // Free products (TOCguide) link straight to the public release zip: no cart, no login.
+  $freeUrl = \App\mh_project_free_download_url($projectSlug);
+  // Catalog products waiting on their Freemius product: no Buy button, a badge instead.
+  $soon = \App\mh_project_is_coming_soon($projectSlug);
   $storySteps = array_values(array_filter([
     ['title' => __('Why I built it', 'sage'), 'text' => (string) ($story['challenge'] ?? '')],
     ['title' => __('What I did', 'sage'), 'text' => (string) ($story['approach'] ?? '')],
@@ -80,8 +86,36 @@
       </ul>
     @endif
 
+    @if ($soon)
+      <p class="project-type-row"><span class="spec-badge">{{ __('Coming soon', 'sage') }}</span></p>
+    @endif
+
     <div class="concept-hero-actions project-hero-actions">
-      @if ($buyUrl !== '')
+      @if ($fs !== null)
+        <a class="btn" href="#buy">
+          {!! \App\mh_svg_icon('cart', 15) !!}
+          {{ __('Buy the theme', 'sage') }}
+        </a>
+        @if ($demo !== '')
+          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('globe', 15) !!}
+            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+          </a>
+        @endif
+        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
+      @elseif ($freeUrl !== '')
+        <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">
+          {!! \App\mh_svg_icon('download', 15) !!}
+          {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span>
+        </a>
+        @if ($demo !== '')
+          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+            {!! \App\mh_svg_icon('globe', 15) !!}
+            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+          </a>
+        @endif
+        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
+      @elseif ($buyUrl !== '')
         <a class="btn" href="{{ esc_url($buyUrl) }}">
           {!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!}
           {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}
@@ -129,6 +163,9 @@
   $projectPills = [];
   if ($slides !== []) {
     $projectPills[] = ['screenshots', __('Screenshots', 'sage')];
+  }
+  if ($fs !== null) {
+    $projectPills[] = ['buy', __('Pricing', 'sage')];
   }
   if ($hasWhatYouGet) {
     $projectPills[] = ['project-what-you-get', __('What you get', 'sage')];
@@ -219,6 +256,10 @@
           @endif
         </div>
       </section>
+    @endif
+
+    @if ($fs !== null)
+      @include('partials.freemius-buy', ['fs' => $fs, 'title' => $title])
     @endif
 
     @if ($hasWhatYouGet)
@@ -394,7 +435,8 @@
         'license' => trim((string) get_post_meta($postId, '_mh_project_license', true)) ?: null,
         'author' => ['@type' => 'Person', 'name' => 'Matt Hummel', 'url' => home_url('/')],
         'sameAs' => array_values(array_filter([$github, $demo])),
-        'offers' => \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
+        // No offer (so no "InStock") for products that are coming soon.
+        'offers' => ! $soon && \App\mh_project_is_for_sale($postId) && is_numeric($ldPrice)
           ? ['@type' => 'Offer', 'price' => $ldPrice, 'priceCurrency' => 'USD', 'availability' => 'https://schema.org/InStock', 'url' => get_permalink($postId)]
           : null,
       ], static fn ($value) => $value !== null && $value !== '' && $value !== []);

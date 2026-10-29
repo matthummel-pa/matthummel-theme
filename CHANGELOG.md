@@ -1,5 +1,183 @@
 # Changelog
 
+## 3.13.1 — Docs and rules match the new shop (no WooCommerce)
+
+Docs, config and AI rules only. No theme behavior changes.
+
+- `docs/SHOP-DOWNLOADS.md` is rewritten: how paid themes are sold and released through Freemius, how free plugins are downloaded from a GitHub release, and what "coming soon" means. It used to describe the WooCommerce download shop.
+- The WooCommerce product rule is replaced by the `.claude/skills/product-pages/SKILL.md` skill: catalog schema (`freemius`, `download`, `coming_soon`), product page and shop page standards, pricing and SEO rules.
+- The add-product skill is rewritten for the real flow: catalog entry, a scoped one-time migration, images, Rank Math, internal links, then staging only.
+- The product-sync rule points at `/themes/{slug}/` and `/plugins/{slug}/`, Freemius checkout, and scoped migrations.
+- `docs/FEATURES.md`: removed the per-release notes about the WooCommerce cart, checkout, My Account desk, shop archive, downloads and Services add-ons, and updated the feature table. README, `readme.txt`, MARKETING, MARKETPLACE and GROWTH-PLAN no longer describe a WooCommerce shop.
+- `.wp-env.json` no longer installs WooCommerce for local environments.
+- Not changed: `composer.json` still lists `generoi/sage-woocommerce` and `php-stubs/woocommerce-stubs` (needs `composer.lock` regenerated), and release-history rows that name the old shop.
+
+## 3.13.0 — WooCommerce code removed from the theme (stage 3 of 3: code and CSS)
+
+The theme no longer contains any WooCommerce code. Products are sold through Freemius, and there are no orders.
+
+- Removed the WooCommerce branches from the SEO title and description filters (shop, product, cart, checkout and account pages), the hero image picker, the social meta check, and the Rank Math focus keyword and field-map lookups.
+- Removed the Sage WooCommerce service provider from `functions.php`.
+- Removed `mh_public_shop_enabled()`, `mh_shop_page_id()` and `mh_project_product_id()`, which had no callers left.
+- Removed the one-time migration that deleted shop, cart and buy items from the primary menu, and the menu filter that hid shop links. The Shop link in the menu is now an ordinary menu item.
+- Removed the migration that rewrote the old WooCommerce shop page description.
+- The Resources page "Theme shop" link points at `/shop/`, and its WooCommerce row in the tools list is gone. The Services page add-on defaults no longer mention WooCommerce.
+- Removed about 2,800 lines of CSS for the cart, checkout, my-account, order desk, cart drawer, shop archive and single-product screens. A rule was only removed when every selector in it needed a WooCommerce class that no template, script or PHP file uses. `portfolio.css` goes from 12,173 to 9,424 lines.
+- Removed the PHPStan baseline entries for the deleted `app/woocommerce.php`.
+- Not changed: the `generoi/sage-woocommerce` and `php-stubs/woocommerce-stubs` packages in `composer.json` (removing them needs `composer.lock` regenerated), and WalkRidge's own product copy about WooCommerce tour booking.
+
+## 3.12.2 — shop.php no longer contains any WooCommerce code (stage 2b of 3)
+
+`app/shop.php` goes from 3,867 lines to 730 across this and the last stage. What is left is the catalog, the Freemius helpers, the shop listing and the copy defaults.
+
+- Removed the project-to-shop-product link: product sync (`mh_sync_project_product`), the product payload behind the old buy button, the cart count and cart URL, the shop-product category helpers, the WooCommerce "Product fields" meta box, the product download and buyer-notification code, and the `mh shop-downloads` / `mh shop-notify-updates` WP-CLI commands.
+- Removed the callers of that code: the sync calls in the catalog upsert and `mh_set_project_live`, the product payload read in the project narrative, the linked-product screenshots, the "WooCommerce product ID" field on the project screen, and the shop product list on the Work page.
+- Removed the cart buttons from the header and the pop-out menu.
+- Removed three dead Services-page helpers (`mh_acreline_addon_catalog`, `mh_acreline_addon_products`, `mh_services_acreline_theme`) that nothing called.
+- `mh_product_catalog_data()` and `mh_resolve_product_type()` keep working without the WooCommerce branches (project slug and project meta only).
+- `mh_upsert_project_from_catalog_entry()` no longer takes a product ID.
+- Project cards keep their `buy_url`, `buy_label` and `price_label` keys, now always empty, so templates keep working.
+- Still to come (stage 3): inert `function_exists('is_cart')`-style guards in the SEO filters and a few other files, the Sage WooCommerce service provider in `functions.php`, about 420 lines of CSS, and the docs and rules.
+
+## 3.12.1 — Remove the WooCommerce hooks and sync code from shop.php (stage 2a of 3)
+
+- Removed 38 functions and 37 hook registrations (about 1,400 lines) from `app/shop.php` that only existed to talk to WooCommerce: product and download syncing, buyer update emails, account download banners, order and loop hooks, store seeding and the one-time resync migrations.
+- The shop redirect for `/shop/` is gone with them, so `/shop/` is now just the Shop page.
+- Old `/product/{slug}/` URLs still 301 to the product page, through a new redirect that does not depend on WooCommerce (`mh_redirect_legacy_product_urls`).
+- Kept for stage 2b: 21 functions that still use WooCommerce but have callers in code that stays (the product sync entry points, the cart chip in the header, the product payload used by the buy button). Those need hand edits.
+
+## 3.12.0 — Remove the WooCommerce cart, checkout and account screens (stage 1 of 3)
+
+Products are sold through Freemius now, so the theme no longer carries its own cart and checkout.
+
+- Removed `app/woocommerce.php` (35 functions: cart, checkout and order-notes helpers, WooCommerce page seeding, the install-brief form) and its `woocommerce` entry in `functions.php`.
+- Removed the WooCommerce templates: `template-woocommerce.blade.php`, `resources/views/woocommerce/` (shop archive, single product, my-account, login) and the four partials they used (cart drawer, two order-desk sidebars, breadcrumb).
+- Removed the four scripts that only served them (`shop-filter`, `woo-sticky-bar`, `studio-cart`, `woo-desk`) and their calls in `app.js`.
+- Removed the `template-woocommerce` SEO defaults in `filters.php` and the WooCommerce page skip in `bespoke.php`.
+- If WooCommerce is still active, its cart, checkout and account pages now use the plain page template. There are no orders to affect.
+- Not in this stage: the WooCommerce code inside `app/shop.php`, the leftover CSS, and the docs. Those are stages 2 and 3.
+
+## 3.11.4 — Themes page drops the plugins step
+
+- The "How buying works" list on `/themes/` no longer ends with "Plugins are free. Download the zip from the plugin page." It stays on `/shop/`, which lists both. If the steps were saved in the page fields before, the saved text still wins; edit or clear it there.
+
+## 3.11.3 — Plugins page gets its own steps
+
+- `/plugins/` no longer shows the theme buying steps (plans, license, refund). Its section is now "How to get a plugin": download the zip, upload it under Plugins, Add Plugin, Upload Plugin, then activate. Heading and steps are editable on the Plugins page under Page content (theme). `/shop/` and `/themes/` are unchanged.
+
+## 3.11.2 — Plugins page gets its own short questions
+
+- `/plugins/` no longer shows the theme questions (licenses, client sites). It has three of its own: are the plugins free, where to get help, and whether they collect data. They are editable in Page content (theme) on the Plugins page. `/shop/` and `/themes/` are unchanged.
+
+## 3.11.1 — Shop pages show their How buying works and Questions sections
+
+- The Shop pages read their steps and questions with an empty fallback, so both sections stayed hidden until someone saved the fields. The defaults now live in `mh_shop_how_default()` and `mh_shop_faq_defaults()`, and the page fields and the template both read them.
+
+## 3.11.0 — Shop pages: /shop/, /themes/, /plugins/
+
+- New **Shop** page template. One template, three pages: `/shop/` lists everything, `/themes/` lists themes, `/plugins/` lists plugins. Browse by type with plain links (no script), each card shows a price line, one action, and the demo link.
+- Card actions: **Choose a plan** for Freemius themes, **Download free** for free plugins, and a **Coming soon** badge with no buy button for products not on sale yet. Prices come from the catalog; nothing is typed in twice.
+- Acreline and WalkRidge are marked `coming_soon` in the catalog and show a Coming soon badge on their pages. Their eyebrows, and TOCguide's, no longer say "Sample". A one-time sync (`mh_product_catalog_v15`) updates those three products only.
+- Product types are one list (`mh_product_types()`): themes, plugins, and documents for later. A new type gets its own URL prefix, rewrite rule and shop tab by adding one entry and a catalog item. Tabs only show types that have something listed.
+- A product opened under the wrong prefix (`/themes/tocguide/`) now 301s to its own (`/plugins/tocguide/`).
+- The old rule that sent `/shop/` to Projects and hid shop links from menus now lets the Shop page through. Cart and checkout links are still hidden.
+- Copy on the shop pages (a heading and intro per page, how buying works, four questions) is editable in wp-admin under Page content (theme). The defaults are drafts to review.
+- Fix: a product that is coming soon no longer gets a schema.org Offer marked "InStock" in its page markup.
+- Rewrite rules flush once more on update (`mh_project_rewrite_flushed_v4`) so the `/plugins/` and `/documents/` product URLs resolve without a manual flush.
+
+## 3.10.1 — Fix: 3.10.0 crashed the site on load
+
+- 3.10.0 added a function with the same name as an existing one (`mh_filter_product_permalink`), which is a fatal error in PHP. The new one is now `mh_filter_plugin_permalink`. Skip 3.10.0 and install this release.
+
+## 3.10.0 — Product pages move to /themes/ and /plugins/
+
+- Product pages now live at `/themes/{slug}/` (Cobble & Candle, Acreline, WalkRidge) and `/plugins/{slug}/` (TOCguide). They used to share `/projects/{slug}/` with the portfolio. `/projects/` stays as the Projects page.
+- Old URLs redirect with a 301: `/projects/{slug}/`, `/concept/{slug}/`, and the legacy shop and product paths all land on the new address, with any query string kept.
+- TOCguide has a **Download free** button that links to the latest `tocguide.zip` on its public GitHub release. No cart or login. The link is built from the catalog `download` entry and only for products priced at 0.
+- Rewrite rules flush once on update (`mh_project_rewrite_flushed_v3`).
+- Not in this release: the `/themes/` and `/plugins/` hub pages. Until they exist, those two addresses show a 404, so link to the product pages directly.
+
+## 3.9.2 — Project pages show their docs links
+
+- The docs links saved on a project (Owner guide, Support guide, Buyer guide, and so on) now show in the **Specs** list under "Under the hood", each marked "Read online". They were saved but never displayed. Cobble & Candle, Acreline, WalkRidge, and TOCguide all get them.
+
+## 3.9.1 — Cobble & Candle copy reaches existing sites on update
+
+- A one-time migration (`mh_product_catalog_v14`) refreshes the Cobble & Candle project post from the catalog, so the 3.9.0 pricing copy and docs links show up after a theme update without running anything by hand. Other products are not touched.
+
+## 3.9.0 — Cobble & Candle: buy it on the page with Freemius, plus an account page
+
+- Cobble & Candle's project page now has a **Pricing** section with three yearly plans (1 site, 5 sites, unlimited). Each Buy button opens Freemius checkout in an overlay. There is no cart and no WooCommerce product. Freemius is the merchant of record and sends the receipt and license key.
+- The Freemius checkout script loads when a visitor hovers, focuses, or clicks a Buy button. Pages without one load nothing extra.
+- After a purchase the buyer lands on `/account/`. A new **Account** page template (hero from page fields, body from the editor) links to the Freemius Customer Portal. Create a page named Account, pick the template, and leave it out of search results.
+- Plans and prices live in `resources/data/product-catalog.json` under `freemius` (store, product, plan, tiers). The helper is `mh_project_freemius()` in `app/shop.php`.
+- Staging can run test purchases. Define `MH_FREEMIUS_SANDBOX_TOKEN` and `MH_FREEMIUS_SANDBOX_CTX` in `wp-config.php` (values from the Freemius dashboard). They are ignored on matthummel.com.
+- Cobble & Candle copy no longer says "not yet". The Can I buy answer now describes the plans and the refund.
+- Fix: the catalog linked Cobble & Candle's code, owner guide, support guide, and brand kit to the private theme repo, so those links 404ed. They now point to the public docs repo, and the View code link and brand kit link are gone.
+- Not changed: the WooCommerce shop for Acreline and WalkRidge, and `for_sale` stays false for Cobble & Candle so nothing tries to sync a WooCommerce product from the private repo.
+
+## 3.8.9 — Home: the hiring FAQ gets a two-column layout
+
+- The "Hiring a WordPress developer: common questions" section on Home now puts the heading and intro on the left and the six questions on the right, like the About FAQ. At 1025px and wider.
+- The section is about 180px shorter at 1440 wide (about 1025px to 841px).
+- The question drawing sits in the left column under the intro. It used to be drawn behind the question rows and overlapped them.
+- Under 1025px nothing changes: one column, no drawing.
+- CSS only. The About FAQ rules in `about-page.css` now also match `.mh-page-home`. Nothing needs re-picking in the editor.
+
+## 3.8.8 — Home hero: MCP replaces Vite in the background words, nudged left
+
+- The big faint word at the upper left of the Code collage now reads **MCP** with a plug icon, instead of **Vite** with a bolt. MCP ties to the AI and Claude Code story and to the MCP posts on the site. The rotation and tint are unchanged.
+- It also moves left, from `left: 6%` to `left: 4%` (about 29px at 1440 wide), so it clears the headline. The phone rule was already at 4%.
+- The CSS modifier is renamed from `h-collage__wm--vite` to `h-collage__wm--mcp` in the partial and in `hero-collage.css` (desktop and phone rules).
+- MCP is about as wide as Vite was (about 215px with its icon at full size), which is why it needed the nudge. A narrower word (API, UX) would also help.
+- Markup and CSS only. Nothing needs re-picking in the editor.
+
+## 3.8.7 — Home hero: Vite replaces SEO in the background words
+
+- The big faint word at the upper left of the Code collage now reads **Vite** with a lightning-bolt icon, instead of **SEO** with a magnifier. Vite is part of the stack this site is built on. The position, rotation, and tint are unchanged.
+- The CSS modifier is renamed from `h-collage__wm--seo` to `h-collage__wm--vite` in the partial and in `hero-collage.css` (desktop and phone rules), so nothing is left under the old name.
+- Markup and CSS only. Nothing needs re-picking in the editor.
+
+## 3.8.6 — Footer: "Planned with Claude Code"
+
+- The footer credit line now reads "Built with Sage, WordPress, and PHP. Planned with Claude Code." and links to Claude Code instead of Cursor, to match the Uses page and the rest of the site copy.
+- Only that one link changed (`resources/views/sections/footer.blade.php`). The "(opens in a new window)" hint for screen readers is unchanged.
+
+## 3.8.5 — Home hero: gradient heading, WordPress moves to the bottom centre
+
+- The Code collage heading uses the brand blue → cyan → lime gradient (the same recipe as the pinned repo titles). `studio.css` switches hero heading gradients off with a rule of specificity (0,3,0), so the collage rule is one element heavier to win.
+- The WordPress watermark moves from the top middle to the bottom centre, under the Tailwind and Sage row.
+- The two code cards under the copy (`app.js` and `hero.blade.php`) are gone, which leaves room for it. Eight cards remain. Their position rules are removed from `hero-collage.css`.
+- Phones keep the watermark where it was; only the centring shift is reset there.
+- Only the partial and CSS changed. Nothing needs re-picking in the editor.
+
+## 3.8.4 — Home hero: quieter code cards, dot waves are back
+
+- The Code collage's cards are dimmer so they blend in with the page text instead of competing with the headline: about half opacity, a softer shadow, a thinner top rule, and a quieter static dot grid. One knob controls it: `--collage-card-opacity` in `resources/css/hero-collage.css` (default `.5`; lower is quieter).
+- The two drifting, breathing dot bands from the photo hero are back behind the collage. They reuse the hero's wave masks (`--mh-wave1` and `--mh-wave2` now also apply to `.h-collage`) and the shared `mh-drift` motion, with their own dimmer breathe keyframes so they stay faint. With reduced motion on, the bands stay still.
+- Only CSS changed. After installing on staging, nothing needs re-picking in the editor.
+
+## 3.8.3 — Fix: Home returned a 500 error with the Code collage hero
+
+- The Code collage background (3.8.1) prints sample Blade code in its decorative cards. Literal `@extends`, `@section`, and `@endsection` in that text were compiled as real Blade directives, and `@extends` with no arguments produced invalid PHP, so any page using the collage fataled with "There has been a critical error on this website". The five `@` words in `resources/views/partials/hero-collage.blade.php` are now escaped (`@@extends`), so they print as text.
+- Install this on the staging site and the Home page loads again. No setting changes are needed; the hero keeps whichever background is selected.
+
+## 3.8.2 — Content: Cursor replaced by Claude Code
+
+- Uses page and tools list: the Cursor entries are gone, and the Claude Code row now says it is the agent I use for planning, refactors, and reviews on this site.
+- Now page and "AI drafts. I ship the review": they name Claude Code, Claude, and ChatGPT instead of Cursor.
+- The "AI-assisted work" card uses the Claude icon. The `cursor-ai` icon stays registered so saved posts and cards keep rendering.
+- Tool grid block: the default first card is Claude Code. The tool card keeps a "Cu — Cursor (legacy)" option for older cards.
+- Journal post "What actually gets faster with AI" (`docs/posts`): a dated note says I moved from Cursor to Claude Code; the comparison itself is unchanged. `docs/THEME.md` and `docs/FEATURES.md` match.
+- A one-time routine (`mh_cursor_to_claude_copy_v1`, runs on `init`) swaps the old Cursor wording in saved Now items and About principles. Only values that exactly match the previous defaults change; edited copy is left alone.
+- Source edits only: the live pages and the journal post change when this is installed on staging and the post is updated in the block editor.
+
+## 3.8.1 — Home hero: Code collage background
+
+- The Page hero block has a third Background option, **Code collage**. On the Home layout it replaces the featured image with tilted code cards (PHP, Blade, block.json, Tailwind, terminal, git, REST, a "Today" checklist), faint WordPress / SEO / AI / Tailwind / Sage watermarks, and a dark centre so the copy stays readable. The copy is centred and the second paragraph (the role line) prints as a mono tagline with a rule each side.
+- Cards drop out on narrower screens (two stay on phones). Nothing in the collage is read by assistive tech; it is `aria-hidden`.
+- Pick it on the staging site: Pages → Home → select the hero block → Background → Code collage. Heading, paragraphs, and buttons stay editable as before.
+
 ## 3.8.0 — Remove MH SEO; Rank Math handles SEO
 
 MH SEO is gone from the theme. Rank Math SEO prints the title, description, canonical, robots tag, schema, sitemap, and redirects again.

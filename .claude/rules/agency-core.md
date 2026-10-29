@@ -18,7 +18,7 @@ Generic standards load from the `ai-dev-standards-playbook` (`~/.claude/rules/pl
 | `portfolio-seo-playbook.md` | Skill-first keywords, project SEO facts |
 | `seo-ai-search.md`, `seo-ai-search-blog.md` | Repo facts for GEO and blog drafts |
 | `product-theme-sync.md` | Sync sellable products into `product-catalog.json` |
-| Skills: `woocommerce-product`, `add-product`, `new-blog-post`, `site-review` | On request |
+| Skills: `product-pages`, `add-product`, `new-blog-post`, `site-review` | On request |
 
 Do not follow Next.js, Supabase, Shadcn, or generic "agency starter" stacks in this repository.
 

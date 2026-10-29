@@ -41,7 +41,7 @@ The site is intentionally simple: no page builders, no JavaScript frameworks on 
 
 ## How this was planned
 
-This site was built entirely with [Cursor AI](https://cursor.com) as the planning and development environment.
+This site was built entirely with [Cursor AI](https://cursor.com) as the planning and development environment. Since October 2026 the repo is maintained with Claude Code.
 
 ### Planning process
 
@@ -78,7 +78,7 @@ This site was built entirely with [Cursor AI](https://cursor.com) as the plannin
 | CI/CD | GitHub Actions | — |
 | Hosting | Hostinger (`matthummel.com`) | — |
 | Local DB | SQLite (dev only) | — |
-| Editor | Cursor AI | — |
+| Editor | Claude Code (earlier work: Cursor AI) | — |
 
 ### Fonts
 

@@ -219,7 +219,7 @@ function mh_resources_catalog(): array
                 [
                     'name' => __('Theme shop', 'sage'),
                     'blurb' => __('The short list of themes for sale. Each product links back to its project page.', 'sage'),
-                    'url' => function_exists('wc_get_page_permalink') ? (string) wc_get_page_permalink('shop') : home_url('/shop/'),
+                    'url' => home_url('/shop/'),
                     'affiliate' => false,
                     'badge' => __('Paid', 'sage'),
                 ],
@@ -236,13 +236,6 @@ function mh_resources_catalog(): array
                     'url' => 'https://claude.com/product/claude-code',
                     'affiliate' => false,
                     'badge' => __('AI', 'sage'),
-                ],
-                [
-                    'name' => 'Cursor',
-                    'blurb' => __('AI-assisted editor I use daily for Sage, PHP, and front-end work.', 'sage'),
-                    'url' => 'https://cursor.com',
-                    'affiliate' => false,
-                    'badge' => __('Editor', 'sage'),
                 ],
                 [
                     'name' => 'Hostinger',
@@ -289,15 +282,13 @@ function mh_uses_sections(): array
                 ['Block editor (Gutenberg)', __('Pages are built from core blocks plus custom blocks registered with block.json. No Custom HTML blocks.', 'sage'), 'https://developer.wordpress.org/block-editor/'],
                 ['PHPCS + WordPress Coding Standards', __('Checks escaping, sanitizing, nonces, i18n, and prepared SQL on every changed line, in CI and after each edit.', 'sage'), 'https://github.com/WordPress/WordPress-Coding-Standards'],
                 ['PHPStan', __('Static analysis at level 5 with WordPress and WooCommerce stubs. Catches type bugs before a reviewer does.', 'sage'), 'https://phpstan.org'],
-                ['WooCommerce', __('The theme shop, cart, checkout, and downloadable zips, rendered through Blade templates.', 'sage'), 'https://woocommerce.com'],
             ],
         ],
         [
             'title' => __('Editor and tools', 'sage'),
             'icon' => 'code',
             'items' => [
-                ['Cursor', __('My primary editor. VS Code-compatible with an AI layer that helps rather than gets in the way. This site was planned and built with it and Claude.', 'sage'), 'https://cursor.com'],
-                ['Claude Code', __('Terminal agent for planning, refactors, and reviews. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
+                ['Claude Code', __('Terminal agent for planning, refactors, and reviews on this site. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
                 ['GitHub', __('Version control and CI/CD trigger. Every project lives in a GitHub repo. Pushes to main kick off builds and deploys automatically.', 'sage'), 'https://github.com'],
                 ['GitHub Actions', __('Automated build and deploy pipeline. Runs Composer, npm, and the release zip on every push. Zero manual uploads.', 'sage'), 'https://github.com/features/actions'],
                 ['TablePlus', __('Database GUI for local MySQL and SQLite. Useful for inspecting WordPress tables without writing raw SQL.', 'sage'), 'https://tableplus.com'],

@@ -1,0 +1,335 @@
+/* ── Home hero: "Code collage" background (3.8.1) ───────────────────────────
+   Picked with Background → Code collage on the Page hero block (Home layout).
+   The collage replaces the featured-image layer: tilted code cards around the
+   edges, faint topic watermarks, and a dark centre so the copy stays readable.
+   Markup: resources/views/partials/hero-collage.blade.php (aria-hidden).
+   Tokens come from the brand layer in studio.css (--blue-*, --cyan-*, --lime-*).
+   Loaded after studio.css so the centred-copy rules below win. */
+
+.h-hero--collage {
+  --collage-ink: #d7e3f7;
+  --collage-mute: #7f97bb;
+  --collage-card: rgba(10, 26, 51, .94);
+  --collage-line: rgba(143, 189, 240, .22);
+  /* How present the code cards are. Lower = quieter, closer to the page text. */
+  --collage-card-opacity: .5;
+  /* The header is fixed; the hero starts under it, so the top row clears it. */
+  --collage-top: calc(var(--header-h, 4.75rem) + 1.25rem);
+  background:
+    radial-gradient(ellipse 45% 55% at 10% 12%, rgba(29, 111, 224, .28), transparent 70%),
+    radial-gradient(ellipse 45% 55% at 92% 90%, rgba(14, 138, 124, .22), transparent 70%),
+    linear-gradient(160deg, var(--blue-800, #0a1a33) 0%, var(--blue-900, #050d1c) 60%, #040b18 100%);
+}
+
+/* The collage layer sits where the photo would. */
+.h-collage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  font: 500 .8125rem/1.6 var(--font-mono, ui-monospace, monospace);
+  color: var(--collage-ink);
+}
+.h-collage__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(140, 180, 255, .11) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+}
+/* Two soft dot bands drift across the grid and breathe, like the photo hero's waves. Kept faint. */
+.h-collage__grid::before,
+.h-collage__grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform-origin: 50% 50%;
+}
+.h-collage__grid::before {
+  background: radial-gradient(rgba(186, 246, 253, 1) 1.3px, transparent 1.75px) 0 0 / 22px 22px;
+  -webkit-mask-image: var(--mh-wave1);
+  mask-image: var(--mh-wave1);
+  -webkit-mask-size: 45% 100%;
+  mask-size: 45% 100%;
+  opacity: .3;
+}
+.h-collage__grid::after {
+  background: radial-gradient(rgba(190, 242, 100, .75) 1.1px, transparent 1.5px) 0 0 / 22px 22px;
+  -webkit-mask-image: var(--mh-wave2);
+  mask-image: var(--mh-wave2);
+  -webkit-mask-size: 35% 100%;
+  mask-size: 35% 100%;
+  opacity: .2;
+}
+/* Dark centre under the copy so the headline never fights a card. */
+.h-collage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(ellipse 46% 44% at 50% 50%, rgba(5, 13, 28, .96) 32%, rgba(5, 13, 28, .74) 62%, transparent 100%);
+}
+
+/* ── Topic watermarks: big, bold, barely there ── */
+.h-collage__wm {
+  position: absolute;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: .22em;
+  font: 900 clamp(2.5rem, 5.4vw, 4rem)/1 var(--font-display);
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--blue-300, #8fbdf0) 12%, transparent);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--blue-300, #8fbdf0) 8%, transparent);
+}
+.h-collage__wm svg {
+  width: .85em;
+  height: .85em;
+  fill: none;
+  stroke: color-mix(in srgb, var(--blue-300, #8fbdf0) 16%, transparent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.h-collage__wm--wp,
+.h-collage__wm--tw { color: color-mix(in srgb, var(--cyan-300, #67e8f9) 11%, transparent); }
+.h-collage__wm--wp svg,
+.h-collage__wm--tw svg { stroke: color-mix(in srgb, var(--cyan-300, #67e8f9) 15%, transparent); }
+.h-collage__wm--ai,
+.h-collage__wm--sage { color: color-mix(in srgb, var(--lime-300, #bef264) 10%, transparent); }
+.h-collage__wm--ai svg,
+.h-collage__wm--sage svg { stroke: color-mix(in srgb, var(--lime-300, #bef264) 14%, transparent); }
+.h-collage__wm--wp { left: 50%; top: 80%; translate: -50% 0; rotate: -2deg; }
+.h-collage__wm--mcp { left: 4%; top: calc(var(--collage-top) + 16%); rotate: -4deg; }
+.h-collage__wm--ai { right: 5%; top: calc(var(--collage-top) + 14%); rotate: 4deg; }
+.h-collage__wm--tw { left: 12%; top: 63%; rotate: -2deg; }
+.h-collage__wm--sage { right: 14%; top: 63%; rotate: 3deg; }
+
+/* ── Code cards ── */
+.h-collage__card {
+  position: absolute;
+  z-index: 1;
+  padding: .75rem 1rem .85rem;
+  border: 1px solid var(--collage-line);
+  border-top: 1px solid var(--blue-400, #60a5fa);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(14, 32, 62, .7), rgba(10, 26, 51, .6));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+  opacity: var(--collage-card-opacity, .5);
+  white-space: nowrap;
+}
+.h-collage__card.is-cyan { border-top-color: var(--cyan-400, #22d3ee); }
+.h-collage__card.is-lime { border-top-color: var(--lime-300, #bef264); }
+.h-collage__bar {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-bottom: .35rem;
+  font-size: .8125rem;
+  letter-spacing: .02em;
+  color: var(--collage-mute);
+}
+.h-collage__bar i {
+  display: inline-block;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: #2c4a78;
+}
+.h-collage__bar span { margin-left: .35rem; }
+.h-collage__bar--label { letter-spacing: .22em; text-transform: uppercase; }
+.t-fn { color: var(--cyan-300, #67e8f9); }
+.t-str { color: var(--lime-300, #bef264); }
+.t-kw { color: var(--blue-200, #bfd9f7); }
+.t-pl { color: var(--collage-ink); }
+.t-cm { color: #5f7aa3; }
+.t-at { color: #ff8ad8; }
+.t-ok { color: var(--lime-300, #bef264); }
+.t-pr { color: var(--lime-300, #bef264); margin-right: .5rem; }
+.t-cur {
+  display: inline-block;
+  width: .5rem;
+  height: .95em;
+  margin-left: .15rem;
+  vertical-align: -.1em;
+  background: var(--cyan-400, #22d3ee);
+}
+.h-collage__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 700 1.05rem/1.2 var(--font-display);
+  color: #f4f7fb;
+}
+.h-collage__list li {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .2rem 0;
+}
+.h-collage__check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--lime-300, #bef264);
+  border-radius: 5px;
+  background: #0d2a24;
+}
+.h-collage__check svg {
+  width: .75rem;
+  height: .75rem;
+  fill: none;
+  stroke: var(--lime-300, #bef264);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Positions (percentages of the hero, so they ride with the viewport). */
+.h-collage__card--php { left: 2%; top: var(--collage-top); rotate: -4deg; }
+.h-collage__card--blade { left: 26%; top: calc(var(--collage-top) - .5rem); rotate: 2deg; }
+.h-collage__card--json { left: 52%; top: calc(var(--collage-top) + .5rem); rotate: -2deg; }
+.h-collage__card--term { right: 3%; top: var(--collage-top); rotate: 3deg; }
+.h-collage__card--css { left: clamp(-1.75rem, calc(50% - 45rem), 3.75rem); top: 41%; rotate: -7deg; }
+.h-collage__card--rest { right: clamp(-6.5rem, calc(50% - 45rem), 3.75rem); top: 42%; rotate: 6deg; }
+.h-collage__card--git { left: 2.5%; bottom: 7%; rotate: -3deg; }
+.h-collage__card--today { right: 3.5%; bottom: 5%; rotate: -3deg; }
+
+/* Accent dots */
+.h-collage__dot {
+  position: absolute;
+  z-index: 1;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--lime-300, #bef264);
+  box-shadow: 0 0 12px var(--lime-300, #bef264);
+}
+.h-collage__dot--2,
+.h-collage__dot--3 {
+  background: var(--cyan-400, #22d3ee);
+  box-shadow: 0 0 12px var(--cyan-400, #22d3ee);
+}
+.h-collage__dot--1 { left: 25%; top: 25%; }
+.h-collage__dot--2 { left: 70%; top: 24%; }
+.h-collage__dot--3 { left: 17%; top: 74%; }
+.h-collage__dot--4 { left: 83%; top: 67%; }
+
+/* ── Copy: centred lockup over the dark centre ── */
+.h-hero--collage .h-hero__inner { display: block; }
+.h-hero--collage .h-hero__panel { width: 100%; max-width: 60rem; margin-inline: auto; }
+.h-hero--collage .h-hero__panel::before {
+  inset: -20% -12% -24% -12%;
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 100%, rgba(59, 130, 246, .32), transparent 70%),
+    radial-gradient(ellipse 45% 50% at 50% 0%, rgba(34, 211, 238, .14), transparent 70%);
+}
+.h-hero--collage .h-hero__copy {
+  max-width: 54rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.h-hero--collage .h-hero__kicker {
+  align-self: center;
+  margin-inline: auto;
+  justify-content: center;
+}
+.h-hero--collage .h-hero__actions { justify-content: center; }
+.h-hero--collage .h-hero__name,
+.h-hero--collage .h-hero__lede { max-width: none; margin-inline: auto; }
+.h-hero--collage .h-hero__name { text-wrap: balance; }
+.h-hero--collage .h-hero__name::after { margin-inline: auto; }
+/* Heading: the brand blue → cyan → lime gradient (same recipe as the pinned repo titles). studio.css switches
+   hero heading gradients off with a (0,3,0) rule, so this selector is one element heavier to win. The text-fill
+   line beats the white colour; the bottom padding keeps descenders inside the painted box. */
+html .h-hero--collage .h-hero__panel .h-hero__name {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: .14em;
+  background: linear-gradient(90deg, var(--blue-400, #60a5fa) 0%, var(--cyan-400, #22d3ee) 55%, var(--lime-300, #bef264) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.h-hero--collage .h-hero__lede { max-width: 46ch; }
+
+/* The role line becomes the mono tagline with a rule each side (CODE. · SHIP. · AUTOMATE.). */
+.h-hero--collage .h-hero__role {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .9rem;
+  max-width: none;
+  margin: .9rem auto .35rem;
+  font: 500 clamp(.875rem, 1.3vw, 1.1rem)/1.4 var(--font-mono, ui-monospace, monospace) !important;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--cyan-300, #67e8f9) !important;
+}
+.h-hero--collage .h-hero__role::before,
+.h-hero--collage .h-hero__role::after {
+  content: "";
+  flex: none;
+  width: clamp(2rem, 4vw, 3.5rem);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-300, #67e8f9));
+}
+.h-hero--collage .h-hero__role::after { background: linear-gradient(90deg, var(--cyan-300, #67e8f9), transparent); }
+
+/* ── Smaller screens: fewer cards, same centre ── */
+@media (max-width: 1100px) {
+  .h-collage__card.is-optional { display: none; }
+  .h-collage__card--blade { left: 30%; }
+}
+@media (max-width: 760px) {
+  .h-collage__card { display: none; }
+  .h-collage__card--php,
+  .h-collage__card--today { display: block; scale: .85; }
+  .h-collage__card--php { left: -2%; top: calc(var(--collage-top) - .5rem); }
+  .h-collage__card--today { right: -1%; bottom: 3%; }
+  .h-collage__wm { font-size: 2rem; }
+  .h-collage__wm--wp { left: 30%; top: calc(var(--collage-top) + 4rem); translate: none; }
+  .h-collage__wm--ai { top: calc(var(--collage-top) + 8rem); }
+  .h-collage__wm--mcp { top: 70%; left: 4%; }
+  .h-collage__wm--tw { display: none; }
+  .h-collage__wm--sage { top: 80%; right: 30%; }
+  .h-hero--collage .h-hero__role { letter-spacing: .18em; }
+  .h-hero--collage .h-hero__role::before,
+  .h-hero--collage .h-hero__role::after { width: 1.25rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .h-collage__grid::before {
+    will-change: transform, opacity;
+    animation: mh-drift 26s ease-in-out infinite alternate, h-collage-breathe 8s ease-in-out infinite alternate;
+  }
+  .h-collage__grid::after {
+    will-change: transform, opacity;
+    animation: mh-drift 34s ease-in-out -12s infinite alternate-reverse, h-collage-breathe-soft 8s ease-in-out -4s infinite alternate;
+  }
+  .h-collage__dot { animation: h-collage-pulse 4s ease-in-out infinite alternate; }
+  .h-collage__dot--2 { animation-delay: -1.3s; }
+  .h-collage__dot--3 { animation-delay: -2.1s; }
+  .h-collage__dot--4 { animation-delay: -3s; }
+}
+@keyframes h-collage-pulse {
+  from { opacity: .55; }
+  to { opacity: 1; }
+}
+/* The hero's own breathe keyframes are too bright here, so the collage has quieter copies. mh-drift is shared. */
+@keyframes h-collage-breathe {
+  from { opacity: .12; transform: scale(.96); }
+  to { opacity: .42; transform: scale(1.04); }
+}
+@keyframes h-collage-breathe-soft {
+  from { opacity: .06; transform: scale(.97); }
+  to { opacity: .28; transform: scale(1.03); }
+}

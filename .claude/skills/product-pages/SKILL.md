@@ -1,0 +1,133 @@
+---
+name: product-pages
+description: "Standards for product pages, the product catalog JSON, and the shop listing on matthummel.com"
+---
+
+# Product pages
+
+This repo lists WordPress themes and plugins on matthummel.com. Apply these rules whenever touching product pages, the shop listing, catalog JSON, or product SEO. There is no WooCommerce: paid themes check out through Freemius on the product page, and free plugins are a direct download.
+
+## This repository (do not ignore)
+
+- **Data source:** `resources/data/product-catalog.json` is the ground truth. `_mh_project_*` post meta on the project post wins over JSON when set.
+- **Loader:** `mh_product_entry(int $project_id)` in `app/shop.php` merges both sources.
+- **Product pages** are Project posts: `resources/views/partials/content-single-project.blade.php`. URLs follow the product type (`mh_product_types()` in `app/concept-pages.php`): `/themes/{slug}/`, `/plugins/{slug}/`, `/documents/{slug}/`.
+- **Shop listing:** `resources/views/template-shop.blade.php` renders `/shop/` (everything), `/themes/` and `/plugins/`. The page slug picks the scope. Cards are `partials/shop-card.blade.php`.
+- **Copy:** visitor-facing copy lives in `product-catalog.json`, `_mh_project_*` meta and **Page content (theme)** fields, not hardcoded in Blade.
+- **Skill:** see `.claude/skills/add-product/SKILL.md` for the full flow to add a product.
+
+---
+
+## 1. Catalog JSON schema
+
+Each product entry is keyed by slug. At minimum:
+
+```json
+{
+  "title": "Human-readable product name",
+  "product_type": "theme|plugin|document",
+  "blurb": "2-3 sentence hook. Feeds the card and the meta description.",
+  "live": true,
+  "for_sale": true,
+  "price": "59"
+}
+```
+
+**How a product is sold** decides what the card and the product page show (checked in this order):
+
+1. **`freemius`**: a Freemius product with a yearly license. The page gets a Pricing section (`#buy`) and the card says **Choose a plan**.
+
+   ```json
+   "freemius": {
+     "store_id": "…", "product_id": "…", "plan_id": "…", "public_key": "pk_…",
+     "tiers": [{ "label": "1 site", "licenses": 1, "price": "$59" }]
+   }
+   ```
+
+   `licenses: 0` means unlimited. The public key is public; the secret key never goes in the repo.
+2. **`download`** with `price` 0: a free zip served from a public GitHub release. The card and page say **Download free**. The asset must be a fixed `.zip` name, no cart and no login.
+
+   ```json
+   "download": { "github_repo": "owner/repo", "release": "latest", "asset": "name.zip", "label": "name.zip" }
+   ```
+3. **`coming_soon: true`**: no buy button, a **Coming soon** badge, and no schema.org Offer.
+
+Do not commit zips. Do not use `product_type: "concept"` for a product on sale.
+
+**`product_type`** drives the URL prefix, the shop tab, the eyebrow label and `SoftwareApplication.applicationCategory`. A new kind of product is one entry in `mh_product_types()` plus a catalog item.
+
+---
+
+## 2. SEO standards per product page
+
+Every live product page must have:
+
+- [ ] Rank Math focus keyphrase set in wp-admin (not auto-generated)
+- [ ] Rank Math title and description: catalog `seo_title` / `seo_description` seed them once (`mh_product_catalog_v13`); anything saved in wp-admin wins. Title under 60 characters, description under 155
+- [ ] Screenshots under `resources/images/products/{slug}/` (WebP); `featured.webp` is the card image
+- [ ] At least one internal link from another page (About, Now, or a blog post)
+- [ ] FAQPage JSON-LD (output by `content-single-project.blade.php` when `faq` is non-empty)
+- [ ] SoftwareApplication JSON-LD (same file). It carries an Offer only for products on sale with a price and not coming soon
+
+Target Rank Math score: **80+** per product.
+
+---
+
+## 3. Shop pages (`/shop/`, `/themes/`, `/plugins/`)
+
+- One template, `template-shop.blade.php`. Create a page with the **Shop** template and the slug `shop`, `themes` or `plugins`.
+- Intros, "how buying works" and questions are **Page content (theme)** fields (`shop_*`). Defaults live in `mh_shop_copy_default()`, `mh_shop_how_default()` and `mh_shop_faq_defaults()`, per scope.
+- Tabs come from `mh_product_types()` once a type has a live item.
+- Set a Rank Math title (under 60) and description (under 155) on each page.
+- No JSON-LD on these pages unless Matt asks for a specific type.
+
+---
+
+## 4. Product page layout order
+
+Do not reorder these sections without a strong reason:
+
+1. Hero: title, summary, at-a-glance facts, then **Buy the theme** / **Download free** / **Live demo** / **Ask about this**
+2. "On this page" pills
+3. Screenshots
+4. Pricing (`#buy`), only for Freemius products
+5. What you get
+6. Story: why I built it, what I did, what you can use
+7. Under the hood: specs, docs links, architecture, handoff
+8. Questions (FAQ)
+9. Feedback
+
+One primary call to action per page. The Freemius overlay opens in place, so there is no cart page.
+
+---
+
+## 5. `mh_product_entry()`: adding a new field
+
+When you need a field not in the JSON catalog, follow this pattern in `app/shop.php`:
+
+1. Add the key to the JSON catalog under the product.
+2. In `mh_product_entry()`, read it from `$entry` (already merged from JSON + meta).
+3. In the Blade template, extract it from `$entry` at the top `@php` block.
+4. Do NOT hardcode copy in the template.
+
+Do not install ACF or add a new metabox for product fields. Use `_mh_project_*` meta (written by the catalog migration) or `mh_product_entry()`.
+
+---
+
+## 6. Pricing rules
+
+- Prices and tiers live in the catalog (`freemius.tiers`). **Matt sets every number.** Do not invent, change, or restate a price on his behalf.
+- Paid themes are yearly licenses sold through Freemius (updates and email support for the year). Free plugins have `price` 0.
+- The refund terms are set in the Freemius dashboard. Keep page copy in line with them.
+- Do not create coupon logic, upsell popups, or "limited time" countdowns without Matt's approval.
+- Freemius checkout is the only purchase flow. Do not add Stripe or Paddle SDKs directly.
+
+---
+
+## 7. SEO title format
+
+Built in `app/filters.php → mh_seo_document_title()` for a product page:
+
+- `[Product name] — [place] | [Brand]`, or `[Product name] | [Brand]` when there is no place.
+- Clipped at 60 characters.
+- A Rank Math title saved in wp-admin wins automatically.

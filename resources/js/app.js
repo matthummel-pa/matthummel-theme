@@ -7,17 +7,14 @@ import { initCodeBlocks } from './code-blocks.js';
 import { initWritingTools } from './writing-tools.js';
 import { initWorkTools } from './work-tools.js';
 import { initDiscoveryForm } from './discovery-form.js';
-import { initShopFilter } from './shop-filter.js';
-import { initStickyBar } from './woo-sticky-bar.js';
 import { initProductGallery } from './product-gallery.js';
 import { initProjectFeedback } from './project-feedback.js';
 import { initSectionNav } from './section-nav.js';
-import { initStudioCart } from './studio-cart.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
-import { initWooDesk } from './woo-desk.js';
 import { initBrandUi } from './brand-ui.js';
 import { initReleaseWatch } from './release-watch.js';
 import { initUpdatesPreview } from './updates-preview.js';
+import { initFreemiusCheckout } from './freemius-checkout.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -498,17 +495,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initWritingTools();
   initWorkTools();
   initDiscoveryForm();
-  initShopFilter();
-  initStickyBar();
   initProductGallery();
   initProjectFeedback();
   initSectionNav();
-  initStudioCart();
   initCheckoutInstallNotes();
   initCopyBrief();
-  initWooDesk();
   initPresenceReveal();
   initMagneticButtons();
   initCardTilt();
   initReleaseWatch();
+  initFreemiusCheckout();
 });

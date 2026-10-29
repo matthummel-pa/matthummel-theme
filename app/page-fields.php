@@ -616,8 +616,8 @@ function page_field_map(): array
             ],
             __('Acreline add-ons', 'sage') => [
                 ['svc_addons_h2', __('Heading', 'sage'), 'text', __('Acreline add-ons.', 'sage')],
-                ['svc_addons_intro', __('Intro', 'sage'), 'textarea', __('Live shop products with checkout. Prices below come from WooCommerce when the product exists.', 'sage')],
-                ['svc_theme_note', __('Acreline note (basic HTML ok)', 'sage'), 'html', __('Need the theme first? <a href="/product/acreline/">Acreline</a> is the listing theme. <a href="https://acreline.matthummel.com/">See the demo</a>.', 'sage')],
+                ['svc_addons_intro', __('Intro', 'sage'), 'textarea', mh_adjacent_range_copy()],
+                ['svc_theme_note', __('Acreline note (basic HTML ok)', 'sage'), 'html', __('Need the theme first? <a href="/themes/acreline/">Acreline</a> is the listing theme. <a href="https://acreline.matthummel.com/">See the demo</a>.', 'sage')],
             ],
             __('Custom work', 'sage') => [
                 ['svc_price_h2', __('Heading', 'sage'), 'text', __('Custom WordPress.', 'sage')],
@@ -660,6 +660,53 @@ function page_field_map(): array
                 ['upd_kicker', __('Kicker', 'sage'), 'text', __('Get updates', 'sage')],
                 ['upd_h1', __('Heading', 'sage'), 'text', __('Notes when I publish', 'sage')],
                 ['upd_lede', __('Intro', 'sage'), 'textarea', __('Occasional notes on WordPress and new posts. Unsubscribe any time from the link in each one.', 'sage')],
+            ],
+        ],
+        'template-account.blade.php' => [
+            __('Intro', 'sage') => [
+                ['acct_kicker', __('Kicker', 'sage'), 'text', __('Account', 'sage')],
+                ['acct_h1', __('Heading', 'sage'), 'text', __('Your licenses and downloads', 'sage')],
+                ['acct_lede', __('Intro', 'sage'), 'textarea', __('Sign in with the email you used at checkout to download the theme, see your license key, move a site, or get an invoice.', 'sage')],
+            ],
+            __('Portal', 'sage') => [
+                ['acct_portal_label', __('Button label', 'sage'), 'text', __('Open your account', 'sage')],
+                ['acct_portal_url', __('Customer Portal URL', 'sage'), 'text', 'https://customers.freemius.com/store/21514/'],
+                ['acct_help', __('Help line', 'sage'), 'textarea', __('Lost your license email, or need to change plans? Write to me and I will sort it out.', 'sage')],
+            ],
+        ],
+        'template-shop.blade.php' => [
+            __('Intro', 'sage') => [
+                ['shop_kicker', __('Kicker', 'sage'), 'text', __('Shop', 'sage')],
+                ['shop_all_h1', __('Heading on /shop/', 'sage'), 'text', mh_shop_copy_default('all', 'h1')],
+                ['shop_all_lede', __('Intro on /shop/', 'sage'), 'textarea', mh_shop_copy_default('all', 'lede')],
+                ['shop_theme_h1', __('Heading on /themes/', 'sage'), 'text', mh_shop_copy_default('theme', 'h1')],
+                ['shop_theme_lede', __('Intro on /themes/', 'sage'), 'textarea', mh_shop_copy_default('theme', 'lede')],
+                ['shop_plugin_h1', __('Heading on /plugins/', 'sage'), 'text', mh_shop_copy_default('plugin', 'h1')],
+                ['shop_plugin_lede', __('Intro on /plugins/', 'sage'), 'textarea', mh_shop_copy_default('plugin', 'lede')],
+                ['shop_empty', __('Line shown when nothing is listed', 'sage'), 'text', __('Nothing is listed here yet. Say hello if you are looking for something specific.', 'sage')],
+            ],
+            __('How buying works', 'sage') => [
+                ['shop_how_h2', __('Heading', 'sage'), 'text', mh_shop_copy_default('all', 'how_h2')],
+                ['shop_how', __('Steps (basic HTML ok)', 'sage'), 'html', mh_shop_how_default()],
+                ['shop_plugin_how_h2', __('Plugins page, heading', 'sage'), 'text', mh_shop_copy_default('plugin', 'how_h2')],
+                ['shop_plugin_how', __('Plugins page, steps (basic HTML ok)', 'sage'), 'html', mh_shop_how_default('plugin')],
+            ],
+            __('Questions', 'sage') => [
+                ['shop_faq_h2', __('Heading', 'sage'), 'text', __('Questions', 'sage')],
+                ['shop_faq_q1', __('Question 1', 'sage'), 'text', mh_shop_faq_defaults()[0][0]],
+                ['shop_faq_a1', __('Answer 1', 'sage'), 'textarea', mh_shop_faq_defaults()[0][1]],
+                ['shop_faq_q2', __('Question 2', 'sage'), 'text', mh_shop_faq_defaults()[1][0]],
+                ['shop_faq_a2', __('Answer 2', 'sage'), 'textarea', mh_shop_faq_defaults()[1][1]],
+                ['shop_faq_q3', __('Question 3', 'sage'), 'text', mh_shop_faq_defaults()[2][0]],
+                ['shop_faq_a3', __('Answer 3', 'sage'), 'textarea', mh_shop_faq_defaults()[2][1]],
+                ['shop_faq_q4', __('Question 4', 'sage'), 'text', mh_shop_faq_defaults()[3][0]],
+                ['shop_faq_a4', __('Answer 4', 'sage'), 'textarea', mh_shop_faq_defaults()[3][1]],
+                ['shop_plugin_faq_q1', __('Plugins page, question 1', 'sage'), 'text', mh_shop_faq_defaults('plugin')[0][0]],
+                ['shop_plugin_faq_a1', __('Plugins page, answer 1', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[0][1]],
+                ['shop_plugin_faq_q2', __('Plugins page, question 2', 'sage'), 'text', mh_shop_faq_defaults('plugin')[1][0]],
+                ['shop_plugin_faq_a2', __('Plugins page, answer 2', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[1][1]],
+                ['shop_plugin_faq_q3', __('Plugins page, question 3', 'sage'), 'text', mh_shop_faq_defaults('plugin')[2][0]],
+                ['shop_plugin_faq_a3', __('Plugins page, answer 3', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[2][1]],
             ],
         ],
         'template-contact.blade.php' => [
@@ -1348,150 +1395,6 @@ function mh_services_pricing(?int $post_id = null): array
 }
 
 /**
- * Acreline add-on products shown on Services (slug + fallback price/copy).
- *
- * @return list<array{slug: string, title: string, price: string, suffix: string, icon: string, blurb: string}>
- */
-function mh_acreline_addon_catalog(): array
-{
-    return [
-        [
-            'slug' => 'acreline-express-install',
-            'title' => __('Express Install', 'sage'),
-            'price' => '$99',
-            'suffix' => '',
-            'icon' => 'download',
-            'blurb' => __('I install Acreline on your WordPress site and leave the basics ready.', 'sage'),
-        ],
-        [
-            'slug' => 'acreline-setup-launch',
-            'title' => __('Setup & Launch', 'sage'),
-            'price' => '$349',
-            'suffix' => '',
-            'icon' => 'wordpress',
-            'blurb' => __('Theme setup, identity, and a launch-ready Acreline site you can edit.', 'sage'),
-        ],
-        [
-            'slug' => 'listing-population-10-listings',
-            'title' => __('Listing Population ×10', 'sage'),
-            'price' => '$199',
-            'suffix' => '',
-            'icon' => 'home',
-            'blurb' => __('I add ten listings so the site looks real on day one.', 'sage'),
-        ],
-        [
-            'slug' => 'listing-population-25-listings',
-            'title' => __('Listing Population ×25', 'sage'),
-            'price' => '$449',
-            'suffix' => '',
-            'icon' => 'home',
-            'blurb' => __('Twenty-five listings entered and checked against your source data.', 'sage'),
-        ],
-        [
-            'slug' => 'marketing-content-pack',
-            'title' => __('Marketing Content Pack', 'sage'),
-            'price' => '$499',
-            'suffix' => '',
-            'icon' => 'plugins',
-            'blurb' => __('Page copy and listing language written to match the Acreline layout.', 'sage'),
-        ],
-        [
-            'slug' => 'acreline-site-care',
-            'title' => __('Site Care', 'sage'),
-            'price' => '$99',
-            'suffix' => '/mo',
-            'icon' => 'calendar',
-            'blurb' => __('Monthly updates and light care so Acreline stays current.', 'sage'),
-        ],
-    ];
-}
-
-/**
- * Services add-on cards: live Woo product when the slug exists, else fallbacks.
- *
- * @return list<array{slug: string, id: int, title: string, price: string, blurb: string, icon: string, permalink: string, add_to_cart_url: string}>
- */
-function mh_acreline_addon_products(): array
-{
-    $out = [];
-    foreach (mh_acreline_addon_catalog() as $item) {
-        $id = function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')
-            ? mh_product_id_by_slug($item['slug'])
-            : 0;
-        $payload = $id > 0 ? mh_shop_product_payload($id) : null;
-        $title = $item['title'];
-        $blurb = $item['blurb'];
-        $permalink = home_url('/product/'.$item['slug'].'/');
-        $cart = '';
-        $price = $item['price'].$item['suffix'];
-
-        if (is_array($payload)) {
-            if (($payload['name'] ?? '') !== '') {
-                $title = html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            }
-            if (($payload['short_description'] ?? '') !== '') {
-                $blurb = html_entity_decode((string) $payload['short_description'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            }
-            if (($payload['permalink'] ?? '') !== '') {
-                $permalink = (string) $payload['permalink'];
-            }
-            $cart = (string) ($payload['add_to_cart_url'] ?? '');
-            $live = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
-            $live = trim(preg_replace('/\s+/', ' ', $live) ?? $live);
-            if ($live !== '') {
-                $price = preg_replace('/\.00\b/', '', $live) ?? $live;
-                $suffix = $item['suffix'];
-                if ($suffix !== '' && ! str_contains(strtolower($price), 'mo') && ! str_contains($price, '/')) {
-                    $price .= $suffix;
-                }
-            }
-        }
-
-        $out[] = [
-            'slug' => $item['slug'],
-            'id' => $id,
-            'title' => $title,
-            'price' => $price,
-            'blurb' => $blurb,
-            'icon' => $item['icon'],
-            'permalink' => $permalink,
-            'add_to_cart_url' => $cart,
-        ];
-    }
-
-    return $out;
-}
-
-/**
- * Acreline theme + demo links for the Services hero / band.
- *
- * @return array{title: string, permalink: string, demo: string, price: string}
- */
-function mh_services_acreline_theme(): array
-{
-    $id = function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')
-        ? mh_product_id_by_slug('acreline')
-        : 0;
-    $payload = $id > 0 ? mh_shop_product_payload($id) : null;
-    $price = '';
-    if (is_array($payload)) {
-        $price = html_entity_decode(wp_strip_all_tags((string) ($payload['price_html'] ?? '')), ENT_QUOTES, 'UTF-8');
-        $price = trim(preg_replace('/\s+/', ' ', $price) ?? $price);
-    }
-
-    return [
-        'title' => is_array($payload) && ($payload['name'] ?? '') !== ''
-            ? html_entity_decode((string) $payload['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8')
-            : __('Acreline', 'sage'),
-        'permalink' => is_array($payload) && ($payload['permalink'] ?? '') !== ''
-            ? (string) $payload['permalink']
-            : home_url('/product/acreline/'),
-        'demo' => 'https://acreline.matthummel.com/',
-        'price' => $price,
-    ];
-}
-
-/**
  * Default FAQ items for the Services page.
  *
  * @return list<array{title: string, text: string}>
@@ -1731,13 +1634,6 @@ function mh_work_page_items(?int $post_id = null): array
         }
     }
 
-    if (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
-        $wc = mh_wc_products_for_work();
-        if ($wc !== []) {
-            return $wc;
-        }
-    }
-
     // Fallback: admin-editable repeater on the Work/Projects page, then static catalog.
     $defaults = [];
     foreach (mh_studio_projects() as $p) {
@@ -1876,15 +1772,6 @@ function render_page_fields_box(\WP_Post $post): void
 {
     $key = page_template_key($post->ID);
 
-    // Shop can still reuse work_* fields if someone edits Pages → Shop.
-    // The Projects page owns those keys again.
-    if ($key === '' || $key === 'default') {
-        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-        if ($shopId > 0 && $post->ID === $shopId) {
-            $key = 'template-projects.blade.php';
-        }
-    }
-
     $map = page_field_map();
 
     if (empty($map[$key])) {
@@ -2012,14 +1899,6 @@ add_action('save_post_page', function ($post_id) {
     $key = page_template_key((int) $post_id);
     if (isset($_POST['page_template']) && $_POST['page_template'] !== 'default') {
         $key = sanitize_text_field(wp_unslash($_POST['page_template']));
-    }
-
-    // WooCommerce shop page reuses the work_* catalog fields.
-    if ($key === '' || $key === 'default') {
-        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-        if ($shopId > 0 && (int) $post_id === $shopId) {
-            $key = 'template-projects.blade.php';
-        }
     }
 
     $map = page_field_map();
@@ -2160,10 +2039,7 @@ add_action('init', function (): void {
     $frontId = (int) get_option('page_on_front');
     $homeId = mh_page_id_by_template('template-home.blade.php') ?: $frontId;
     $hireId = mh_page_id_by_template('template-hire.blade.php');
-    $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-    if ($shopId <= 0) {
-        $shopId = mh_page_id_by_template('template-projects.blade.php');
-    }
+    $shopId = mh_page_id_by_template('template-projects.blade.php');
 
     $swaps = [
         [$homeId, 'home_about_text', [

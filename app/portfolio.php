@@ -179,7 +179,7 @@ function mh_now_items_defaults(): array
     return [
         __('Open for full-time, contract, and freelance WordPress / full-stack work.', 'sage'),
         __('Writing short posts on WordPress development — code you can paste in.', 'sage'),
-        __('Using Cursor AI and Claude to build faster, reviewing every line before it ships.', 'sage'),
+        __('Using Claude Code to build faster, reviewing every line before it ships.', 'sage'),
         __('Raising kids — nights and weekends stay with family. Weekdays I take hireable work.', 'sage'),
         __('Working Eastern Time, available for remote and local clients.', 'sage'),
     ];
@@ -1826,14 +1826,10 @@ function mh_project_post_to_card(\WP_Post $post): array
     $techRaw = (string) get_post_meta($post_id, '_mh_project_tech', true);
     $tech = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
 
-    $buyUrl = function_exists(__NAMESPACE__.'\\mh_project_buy_url') ? mh_project_buy_url($post_id) : '';
-    $priceLabel = function_exists(__NAMESPACE__.'\\mh_project_price_label') ? mh_project_price_label($post_id) : '';
-    $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('View details', 'sage');
-    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && ! mh_public_shop_enabled()) {
-        $buyUrl = '';
-        $priceLabel = '';
-        $buyLabel = '';
-    }
+    // Checkout lives on the product page (Freemius overlay): cards carry no cart link, price, or buy label.
+    $buyUrl = '';
+    $priceLabel = '';
+    $buyLabel = '';
     $productType = function_exists(__NAMESPACE__.'\\mh_project_product_type')
         ? mh_project_product_type($post_id)
         : 'theme';
@@ -1855,7 +1851,6 @@ function mh_project_post_to_card(\WP_Post $post): array
         'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
         'published' => (string) get_post_time('c', true, $post),
-        'product_id' => function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0,
         'product_type' => $productType,
         'buy_url' => $buyUrl,
         'buy_label' => $buyLabel,
@@ -1921,7 +1916,7 @@ function mh_projects_live_for_work(): array
 /**
  * Featured Projects CPT cards for the home listing.
  *
- * Prefers live project posts. Does not prioritize Woo sale flags.
+ * Prefers live project posts.
  *
  * @since 3.6.0
  *
@@ -2136,11 +2131,11 @@ function mh_project_faq_to_meta($faq): string
 }
 
 /**
- * Create or update a project post from a catalog (or Woo-mapped) entry.
+ * Create or update a project post from a catalog entry.
  *
- * Skips service add-ons. Used to convert sold themes/plugins into portfolio projects.
+ * Skips service add-ons. Used to turn catalog themes and plugins into project pages.
  */
-function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $product_id = 0, int $menu_order = 0): int
+function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $menu_order = 0): int
 {
     $slug = sanitize_title($slug);
     if ($slug === '') {
@@ -2165,12 +2160,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
     ]);
 
     $title = (string) ($entry['title'] ?? $slug);
-    if ($product_id > 0 && function_exists('wc_get_product')) {
-        $product = wc_get_product($product_id);
-        if ($product instanceof \WC_Product && $product->get_name() !== '') {
-            $title = wp_specialchars_decode((string) $product->get_name(), ENT_QUOTES);
-        }
-    }
 
     $postarr = [
         'post_type' => mh_project_post_type(),
@@ -2229,10 +2218,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
         mh_project_live_meta_key() => '1',
     ];
 
-    if ($product_id > 0) {
-        $meta['_mh_project_product_id'] = (string) $product_id;
-    }
-
     $metrics = is_array($entry['metrics'] ?? null) ? $entry['metrics'] : [];
     for ($i = 1; $i <= 3; $i++) {
         $row = is_array($metrics[$i - 1] ?? null) ? $metrics[$i - 1] : [];
@@ -2242,16 +2227,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
 
     foreach ($meta as $key => $value) {
         update_post_meta($post_id, $key, $value);
-    }
-
-    if ($product_id > 0) {
-        update_post_meta($product_id, '_mh_product_project_id', $post_id);
-        if (has_post_thumbnail($product_id) && ! has_post_thumbnail($post_id)) {
-            $thumb = (int) get_post_thumbnail_id($product_id);
-            if ($thumb > 0) {
-                set_post_thumbnail($post_id, $thumb);
-            }
-        }
     }
 
     return $post_id;
@@ -2318,7 +2293,7 @@ function mh_ensure_projects_listing_page(): void
 /**
  * One-shot: convert theme/plugin/app products into live project posts.
  *
- * WooCommerce stays installed. Service add-ons are skipped. Studio demo
+ * Service add-ons are skipped. Studio demo
  * imports stay off unless Matt asks.
  */
 function mh_sync_products_to_project_cpt(): void
@@ -2340,22 +2315,7 @@ function mh_sync_products_to_project_cpt(): void
             if (! is_array($entry)) {
                 continue;
             }
-            $productId = 0;
-            if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
-                $productId = mh_product_id_by_slug((string) $slug);
-            }
-            if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
-                $order++;
-            }
-        }
-    } elseif (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
-        foreach (mh_wc_products_for_work() as $card) {
-            $slug = sanitize_title((string) ($card['slug'] ?? ''));
-            $type = sanitize_key((string) ($card['product_type'] ?? 'theme'));
-            if ($slug === '' || $type === 'service') {
-                continue;
-            }
-            if (mh_upsert_project_from_catalog_entry($slug, $card, (int) ($card['product_id'] ?? 0), $order) > 0) {
+            if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $order) > 0) {
                 $order++;
             }
         }
@@ -2401,7 +2361,6 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     if ($productType === '') {
         $productType = 'theme';
     }
-    $productId = (string) get_post_meta($post->ID, '_mh_project_product_id', true);
     $price = (string) get_post_meta($post->ID, '_mh_project_price', true);
     $forSale = get_post_meta($post->ID, '_mh_project_for_sale', true) === '1';
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
@@ -2423,7 +2382,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
     mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('City, State', 'sage'));
     mh_project_admin_field_row(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
-    mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
+    mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, Tailwind', 'sage'));
     mh_project_admin_field_row(
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
@@ -2432,10 +2391,9 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Linked product', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Optional WooCommerce product this project was converted from. Public pages do not sell.', 'sage').'</p>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('For sale', 'sage').'</h3>';
     echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
-    echo esc_html__('Marked for sale (hidden while the public shop is off)', 'sage').'</label></p>';
+    echo esc_html__('Marked for sale', 'sage').'</label></p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Project type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
@@ -2459,7 +2417,6 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         $price,
         function_exists(__NAMESPACE__.'\\mh_default_theme_price') ? mh_default_theme_price() : '149'
     );
-    mh_project_admin_field_row(__('WooCommerce product ID', 'sage'), 'mh_project_product_id', $productId, __('Auto-filled. Override only to point at a different product.', 'sage'));
     mh_project_admin_field_row(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
     mh_project_admin_field_row(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
     echo '</tbody></table>';
@@ -2564,7 +2521,6 @@ function mh_save_project_meta(int $post_id): void
         $price = '';
     }
     update_post_meta($post_id, '_mh_project_price', $price);
-    update_post_meta($post_id, '_mh_project_product_id', (string) max(0, (int) ($_POST['mh_project_product_id'] ?? 0)));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
@@ -2582,9 +2538,6 @@ function mh_set_project_live(int $post_id, bool $live): void
         return;
     }
     update_post_meta($post_id, mh_project_live_meta_key(), $live ? '1' : '0');
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
-        mh_sync_project_product($post_id);
-    }
 }
 
 /** Distinct meta values for admin filters (category / place). */
@@ -4374,18 +4327,6 @@ function mh_hero_scene_url(?int $post_id = null): string
         return $url !== '' && ! mh_is_profile_hero_url($url) ? $url : mh_first_work_hero_url();
     }
 
-    if (function_exists('is_product') && is_product()) {
-        $id = (int) get_queried_object_id();
-        if ($id > 0 && has_post_thumbnail($id)) {
-            $src = get_the_post_thumbnail_url($id, 'full');
-            if (is_string($src) && $src !== '' && ! mh_is_profile_hero_url($src)) {
-                return $src;
-            }
-        }
-
-        return mh_theme_image_uri('products/acreline/featured.webp');
-    }
-
     if (is_home() && ! is_front_page()) {
         $latest = get_posts([
             'post_type' => 'post',
@@ -4422,10 +4363,6 @@ function mh_hero_scene_url(?int $post_id = null): string
 
     if (is_front_page() || $template === 'template-home.blade.php') {
         return mh_theme_image_uri($scenes['template-home.blade.php']);
-    }
-
-    if (function_exists('is_shop') && is_shop()) {
-        return mh_theme_image_uri('products/walkridge/01-homepage.webp');
     }
 
     if ($template !== '' && isset($scenes[$template])) {
@@ -4546,65 +4483,6 @@ add_action('init', function (): void {
     mh_ensure_projects_listing_page();
     update_option('mh_projects_listing_page_v1', '1', false);
 }, 36);
-
-/**
- * One-shot: drop Shop / Cart / Buy labels from the primary menu.
- *
- * Theme cannot delete WordPress pages. This only edits the assigned Primary menu.
- *
- * @since 3.6.0
- */
-function mh_strip_shop_from_primary_nav(): void
-{
-    $locations = get_theme_mod('nav_menu_locations', []);
-    $menuId = (int) ($locations['primary_navigation'] ?? 0);
-    if ($menuId < 1) {
-        return;
-    }
-
-    $items = wp_get_nav_menu_items($menuId);
-    if (! is_array($items)) {
-        return;
-    }
-
-    $dropTitles = ['shop', 'cart', 'checkout', 'buy', 'store', 'themes & plugins', 'themes and plugins'];
-    foreach ($items as $item) {
-        $title = strtolower(trim((string) $item->title));
-        $url = strtolower((string) $item->url);
-        $isShopTitle = in_array($title, $dropTitles, true);
-        $isShopUrl = str_contains($url, '/shop') || str_contains($url, '/cart') || str_contains($url, '/checkout');
-        if (! $isShopTitle && ! $isShopUrl) {
-            continue;
-        }
-        wp_delete_post((int) $item->ID, true);
-    }
-}
-
-add_action('init', function (): void {
-    if (get_option('mh_strip_shop_nav_v1') || wp_installing()) {
-        return;
-    }
-    mh_strip_shop_from_primary_nav();
-    update_option('mh_strip_shop_nav_v1', '1', false);
-}, 41);
-
-add_filter('wp_nav_menu_objects', function (array $items, $args): array {
-    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && mh_public_shop_enabled()) {
-        return $items;
-    }
-
-    return array_values(array_filter($items, static function ($item): bool {
-        $title = strtolower(trim((string) ($item->title ?? '')));
-        $url = strtolower((string) ($item->url ?? ''));
-        if (in_array($title, ['shop', 'cart', 'checkout', 'buy', 'store'], true)) {
-            return false;
-        }
-
-        return ! str_contains($url, '/shop')
-            && ! str_contains($url, '/cart')
-            && ! str_contains($url, '/checkout');
-    }));
-}, 20, 2);
 
 // Hire, Code, and Now are sections on About; Uses is on Resources. Menu items that still point at the old pages stay out of wp_nav_menu() output.
 add_filter('wp_nav_menu_objects', function (array $items): array {
@@ -4788,11 +4666,7 @@ function mh_apply_projects_readable_copy(): void
         if (! is_array($entry)) {
             continue;
         }
-        $productId = 0;
-        if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
-            $productId = mh_product_id_by_slug((string) $slug);
-        }
-        if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
+        if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $order) > 0) {
             $order++;
         }
     }
@@ -5476,7 +5350,7 @@ function mh_about_approach_defaults(): array
         [
             'icon' => 'code',
             'title' => __('AI drafts. I ship the review', 'sage'),
-            'body' => __('Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.', 'sage'),
+            'body' => __('Claude and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.', 'sage'),
         ],
         [
             'icon' => 'plugins',

@@ -52,8 +52,8 @@ The product page now ships with:
 - Challenge / approach narrative
 - 7-question FAQ with "Is Acreline a real estate agency theme?" as the first question (targets the primary keyword)
 - SoftwareApplication + FAQPage JSON-LD schema (Rank Math detects both)
-- WooCommerce short_description = blurb (feeds Rank Math product tab)
-- WooCommerce long_description = full rich HTML (challenge, approach, benefits, deliverables, audience, architecture, handoff)
+- Catalog `blurb` = the card text and the meta description
+- The page tells the story in sections: challenge, approach, benefits, deliverables, audience, architecture, handoff
 
 Rank Math target score: 80+. Key actions to reach it on the product page:
 1. Set the focus keyphrase in Rank Math to "WordPress real estate agency theme".
@@ -107,7 +107,7 @@ Secondary: `Gutenberg TOC block`, `accessible table of contents WordPress`, `ser
 #### Product page (matthummel.com/shop/tocflow)
 - FAQ schema with "Is TOCflow really free?" as the first question (targets price-intent queries).
 - SoftwareApplication schema with price: 0.
-- Rich description in WooCommerce covering: what it does, how it works (server-rendered), what is included, who it is for.
+- A page covering: what it does, how it works (server-rendered), what is included, who it is for.
 
 Rank Math target score: 75+. Focus keyphrase: "WordPress table of contents plugin".
 
@@ -144,7 +144,7 @@ Product pages link to each other (related products). Blog posts about Acreline l
 No Google Analytics client bundle (per `agency-core.md`). Track:
 - Rank Math SEO score in wp-admin (target 80+ per product)
 - GitHub release download counts
-- WooCommerce order count
+- Freemius sales and downloads (Freemius dashboard)
 - Contact form inquiries mentioning the product by name
 
 ---

@@ -466,9 +466,6 @@ body {
 .about-hero::before,
 .mh-shop .page-header--shop::before,
 .mh-shop .page-header--product::before,
-.mh-shop .page-header--woo::before,
-.mh-shop .page-header--cart::before,
-.mh-shop .page-header--checkout::before,
 .mh-shop .page-header--account::before {
   display: none;
 }
@@ -7284,3 +7281,49 @@ html.mh-dark #inside ul.is-style-checklist > li { border-color: rgba(167, 139, 2
 html.mh-dark #inside ul.is-style-checklist > li:first-child { border-top-color: rgba(167, 139, 250, .22); }
 html.mh-dark #inside ul.is-style-checklist > li::before { border-color: var(--lime-300); }
 html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-300); }
+
+/* ── Freemius plan picker (project page) ── */
+.fs-tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fs-tier {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .6rem;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: .75rem;
+  background: var(--color-surface);
+}
+.fs-tier__name {
+  margin: 0;
+  font: 750 1.05rem/1.2 var(--font-display);
+  letter-spacing: -.03em;
+}
+.fs-tier__price {
+  display: flex;
+  align-items: baseline;
+  gap: .35rem;
+  margin: 0 0 .4rem;
+  color: var(--color-text-secondary);
+}
+.fs-tier__price strong {
+  font: 800 1.9rem/1 var(--font-display);
+  letter-spacing: -.04em;
+  color: var(--color-text);
+}
+.fs-buy__note {
+  max-width: 44rem;
+  margin: 1rem 0 0;
+  color: var(--color-text-secondary);
+}
+.fs-buy__note[hidden] {
+  display: none;
+}

@@ -46,14 +46,132 @@ function mh_concept_pages_seed_data(): array
 }
 
 /**
- * Public rewrite base for project singles.
+ * Public rewrite base for product singles.
  *
- * Shares the /projects/ prefix with the Work listing page. CPT has_archive is
- * false so the page owns /projects/ and singles own /projects/{slug}/.
+ * Product pages live under /themes/{slug}/. CPT has_archive is false, so a
+ * normal page owns /themes/ and the singles own /themes/{slug}/. Plugin products
+ * use /plugins/{slug}/ (mh_product_url_base). The old
+ * /projects/{slug}/ URLs 301 to the new ones (mh_redirect_legacy_concept_urls).
  */
 function mh_concept_rewrite_slug(): string
 {
-    return 'projects';
+    return 'themes';
+}
+
+/**
+ * The kinds of product the shop can list, keyed by the catalog `product_type`.
+ *
+ * `prefix` is the URL base for the product pages and for the listing page of that type
+ * (/themes/, /plugins/, /documents/). Adding a kind of product later means adding an entry here
+ * and a catalog item of that type; the shop tabs and URLs follow.
+ *
+ * @return array<string, array{singular: string, plural: string, prefix: string}>
+ */
+function mh_product_types(): array
+{
+    return [
+        'theme' => ['singular' => __('Theme', 'sage'), 'plural' => __('Themes', 'sage'), 'prefix' => 'themes'],
+        'plugin' => ['singular' => __('Plugin', 'sage'), 'plural' => __('Plugins', 'sage'), 'prefix' => 'plugins'],
+        'document' => ['singular' => __('Document', 'sage'), 'plural' => __('Documents', 'sage'), 'prefix' => 'documents'],
+    ];
+}
+
+/**
+ * URL prefix for one product, from its type (see mh_product_types). Unknown types use /themes/.
+ */
+function mh_product_url_base(int $post_id): string
+{
+    $type = sanitize_key((string) get_post_meta($post_id, '_mh_project_product_type', true));
+
+    return mh_product_types()[$type]['prefix'] ?? mh_concept_rewrite_slug();
+}
+
+/**
+ * Point products at their type's prefix (the post type itself registers /themes/{slug}/).
+ */
+function mh_filter_product_type_permalink(string $link, \WP_Post $post): string
+{
+    if ($post->post_type !== mh_project_post_type() || $post->post_name === '') {
+        return $link;
+    }
+
+    $base = mh_product_url_base($post->ID);
+    if ($base === mh_concept_rewrite_slug()) {
+        return $link;
+    }
+
+    return str_replace(
+        '/'.mh_concept_rewrite_slug().'/'.$post->post_name,
+        '/'.$base.'/'.$post->post_name,
+        $link
+    );
+}
+
+/** Serve /plugins/{slug}/, /documents/{slug}/ and so on from the same post type. */
+function mh_add_product_type_rewrites(): void
+{
+    foreach (mh_product_types() as $type) {
+        if ($type['prefix'] === mh_concept_rewrite_slug()) {
+            continue;
+        }
+        add_rewrite_rule('^'.$type['prefix'].'/([^/]+)/?$', 'index.php?'.mh_project_post_type().'=$matches[1]', 'top');
+    }
+}
+
+/**
+ * Old shop product URLs (/product/{slug}/) 301 to the product page, whether or not a shop plugin is active.
+ */
+function mh_redirect_legacy_product_urls(): void
+{
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return;
+    }
+
+    $uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    $path = trim((string) wp_parse_url($uri, PHP_URL_PATH), '/');
+    $home = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home !== '' && str_starts_with($path, $home.'/')) {
+        $path = substr($path, strlen($home) + 1);
+    }
+    if (! preg_match('#^product/([^/]+)$#', $path, $match)) {
+        return;
+    }
+
+    $slug = sanitize_title($match[1]);
+    if ($slug === '' || ! get_page_by_path($slug, OBJECT, mh_project_post_type())) {
+        return;
+    }
+
+    $target = mh_concept_page_url($slug);
+    $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
+    wp_safe_redirect($query !== '' ? $target.'?'.$query : $target, 301);
+    exit;
+}
+
+/**
+ * A product opened under the wrong prefix (/themes/tocguide/) 301s to its own (/plugins/tocguide/).
+ */
+function mh_redirect_wrong_product_prefix(): void
+{
+    if (! is_singular(mh_project_post_type()) || is_preview() || get_post_status() !== 'publish') {
+        return;
+    }
+
+    $expected = get_permalink();
+    if (! is_string($expected) || $expected === '') {
+        return;
+    }
+
+    $uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    $path = (string) wp_parse_url($uri, PHP_URL_PATH);
+    $expectedPath = (string) wp_parse_url($expected, PHP_URL_PATH);
+    if ($path === '' || $expectedPath === '' || untrailingslashit($path) === untrailingslashit($expectedPath)) {
+        return;
+    }
+
+    $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
+    wp_safe_redirect($query !== '' ? $expected.'?'.$query : $expected, 301);
+    exit;
 }
 
 /**
@@ -73,7 +191,10 @@ function mh_concept_page_url(string $slug = '', ?int $post_id = null): string
         return home_url('/projects/');
     }
 
-    return home_url('/'.mh_concept_rewrite_slug().'/'.$slug.'/');
+    $post = get_page_by_path($slug, OBJECT, mh_project_post_type());
+    $base = $post instanceof \WP_Post ? mh_product_url_base($post->ID) : mh_concept_rewrite_slug();
+
+    return home_url('/'.$base.'/'.$slug.'/');
 }
 
 /**
@@ -123,22 +244,6 @@ function mh_project_product_type(int $post_id): string
     }
 
     return $type;
-}
-
-/**
- * Linked WooCommerce product ID (0 when unset).
- */
-function mh_project_product_id(int $post_id): int
-{
-    return max(0, (int) get_post_meta($post_id, '_mh_project_product_id', true));
-}
-
-/**
- * Whether this project should render as a sellable product landing.
- */
-function mh_project_is_product_landing(int $post_id): bool
-{
-    return mh_project_product_id($post_id) > 0 && mh_shop_ready();
 }
 
 /**
@@ -233,13 +338,10 @@ function mh_project_concept_narrative(int $post_id): array
         $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
     }
 
+    // Checkout lives on the product page (Freemius), so there is no shop product payload to read here.
     $productType = mh_project_product_type($post_id);
-    $productId = mh_project_product_id($post_id);
-    $product = $productId > 0 ? mh_shop_product_payload($productId) : null;
-    $isProduct = is_array($product);
-    if ($isProduct && $productType === 'concept') {
-        $productType = 'theme';
-    }
+    $product = null;
+    $isProduct = false;
 
     return [
         'eyebrow' => trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true)),
@@ -390,16 +492,6 @@ function mh_project_page_slides(int $post_id, array $card): array
     }
 
     $add((string) ($card['image'] ?? ''), '');
-
-    $productId = function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0;
-    if ($productId > 0 && function_exists(__NAMESPACE__.'\\mh_product_entry')) {
-        $entry = mh_product_entry($productId);
-        $shots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
-        foreach ($shots as $shot) {
-            $add((string) ($shot[0] ?? ''), (string) ($shot[1] ?? ''));
-        }
-        $add((string) ($entry['image'] ?? ''), '');
-    }
 
     if ($slides === [] && $post_id > 0 && has_post_thumbnail($post_id)) {
         $thumbId = (int) get_post_thumbnail_id($post_id);
@@ -714,7 +806,7 @@ function mh_project_release_label(array $gh): string
  * @param  array<string, mixed>  $gh  from mh_project_github_facts()
  * @return list<array{label: string, value: string, href: string, pills: list<string>}>
  */
-function mh_project_spec_rows(array $card, array $gh, string $demo, string $github): array
+function mh_project_spec_rows(array $card, array $gh, string $demo, string $github, array $docs = []): array
 {
     $rows = [];
     $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
@@ -748,6 +840,15 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
     }
     if ($demo !== '') {
         $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
+    }
+
+    // Docs links saved on the project (Label|||URL pairs), e.g. Owner guide and Support guide.
+    foreach ($docs as $pair) {
+        $url = (string) ($pair[1] ?? '');
+        if (! str_starts_with($url, 'http')) {
+            continue;
+        }
+        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url);
     }
 
     return $rows;
@@ -1014,22 +1115,22 @@ function mh_seed_concept_fields_admin_v1(): void
     update_option('mh_concept_fields_admin_v1', true);
 }
 
-/** Flush rewrite rules once after the public slug becomes /projects/{slug}/. */
+/** Flush rewrite rules once after the product URL prefixes change (/themes/, /plugins/, /documents/). */
 function mh_maybe_flush_concept_rewrites(): void
 {
-    if (get_option('mh_project_rewrite_flushed_v2')) {
+    if (get_option('mh_project_rewrite_flushed_v4')) {
         return;
     }
     flush_rewrite_rules(false);
-    update_option('mh_project_rewrite_flushed_v2', true);
+    update_option('mh_project_rewrite_flushed_v4', true);
 }
 
 /**
  * 301 redirects for retired URL prefixes.
  *
  * - /concept/         → /projects/
- * - /concept/{slug}/  → /projects/{slug}/
- * /projects/ and /projects/{slug}/ stay on the Projects page and CPT.
+ * - /concept/{slug}/  → /themes/{slug}/ (or /plugins/{slug}/ for plugins)
+ * - /projects/{slug}/ → the same (product pages moved; /projects/ stays the Projects page)
  */
 function mh_redirect_legacy_concept_urls(): void
 {
@@ -1047,8 +1148,24 @@ function mh_redirect_legacy_concept_urls(): void
         $requestPath = substr($requestPath, strlen($homePath) + 1);
     }
 
-    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/')) {
+    $isProjectSingle = str_starts_with($requestPath, 'projects/')
+        && substr_count(trim($requestPath, '/'), '/') === 1;
+    if ($requestPath !== 'concept' && ! str_starts_with($requestPath, 'concept/') && ! $isProjectSingle) {
         return;
+    }
+
+    if ($isProjectSingle) {
+        $slug = sanitize_title(substr(trim($requestPath, '/'), strlen('projects/')));
+        if ($slug === '' || ! get_page_by_path($slug, OBJECT, mh_project_post_type())) {
+            return;
+        }
+        $target = mh_concept_page_url($slug);
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= '?'.$query;
+        }
+        wp_safe_redirect($target, 301);
+        exit;
     }
 
     $rest = $requestPath === 'concept' ? '' : trim(substr($requestPath, strlen('concept/')), '/');
@@ -1066,7 +1183,7 @@ function mh_redirect_legacy_concept_urls(): void
 
     $target = $rest === ''
         ? home_url('/projects/')
-        : home_url('/projects/'.$rest.'/');
+        : mh_concept_page_url($rest);
     $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
     if ($query !== '') {
         $target .= (str_contains($target, '?') ? '&' : '?').$query;
@@ -1407,19 +1524,12 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
         }
     }
 
-    // A project that is not for sale yet gets no WooCommerce product (a private one would still turn the
-    // page into a product landing with a buy button). Existing products keep syncing as before.
-    $hasProduct = mh_project_product_id($postId) > 0;
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product') && (! empty($seed['for_sale']) || $hasProduct)) {
-        mh_sync_project_product($postId);
-    }
-
     return $postId;
 }
 
 /**
  * Apply the bundled product catalog: demote non-catalog projects off the shop,
- * then force-upsert every catalog entry (copy, screenshots, Woo sync).
+ * then force-upsert every catalog entry (copy and screenshots).
  *
  * @return bool True when every catalog slug was processed.
  */
@@ -1445,9 +1555,6 @@ function mh_apply_product_catalog(bool $demoteNonCatalog = true): bool
             $type = sanitize_key((string) get_post_meta($id, '_mh_project_product_type', true));
             if ($type === '' || $type === 'theme') {
                 update_post_meta($id, '_mh_project_product_type', 'concept');
-            }
-            if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
-                mh_sync_project_product($id);
             }
         }
     }
@@ -1515,7 +1622,7 @@ function mh_apply_product_catalog_v4(): void
 
 /**
  * One-time: relabel Acreline as a Real estate theme (not Land & farms) and
- * refresh catalog meta/Woo copy after theme update.
+ * refresh catalog meta and copy after theme update.
  */
 function mh_apply_product_catalog_v5(): void
 {
@@ -1530,7 +1637,7 @@ function mh_apply_product_catalog_v5(): void
 
 /**
  * One-time: keep Acreline labeled Real estate after marketplace copy drift,
- * and refresh Woo/project meta from product-catalog.json.
+ * and refresh project meta from product-catalog.json.
  */
 function mh_apply_product_catalog_v6(): void
 {
@@ -1628,6 +1735,49 @@ function mh_apply_product_catalog_v13(): void
 }
 
 /**
+ * One-time: Cobble & Candle goes on sale through Freemius (pricing copy, public docs links).
+ * Upserts only that product so edits to the other catalog entries are left alone.
+ */
+function mh_apply_product_catalog_v14(): void
+{
+    if (get_option('mh_product_catalog_v14') || wp_installing()) {
+        return;
+    }
+
+    $seed = mh_product_catalog_seed_data()['cobbleandcandle'] ?? null;
+    if (! is_array($seed)) {
+        return;
+    }
+
+    if (mh_upsert_catalog_product('cobbleandcandle', $seed, true) > 0) {
+        update_option('mh_product_catalog_v14', true);
+    }
+}
+
+/**
+ * One-time: Acreline, WalkRidge and TOCguide drop "Sample" from their eyebrows. Upserts only those three.
+ */
+function mh_apply_product_catalog_v15(): void
+{
+    if (get_option('mh_product_catalog_v15') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    $slugs = ['acreline', 'walkridge', 'tocguide'];
+    $done = 0;
+    foreach ($slugs as $slug) {
+        if (is_array($catalog[$slug] ?? null) && mh_upsert_catalog_product($slug, $catalog[$slug], true) > 0) {
+            $done++;
+        }
+    }
+
+    if ($done === count($slugs)) {
+        update_option('mh_product_catalog_v15', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1691,13 +1841,17 @@ function mh_redirect_acreline_legacy_paths(): void
     ];
 
     if (in_array($requestPath, $legacyWalkridgePaths, true)) {
-        $target = home_url('/projects/walkridge/');
+        $target = mh_concept_page_url('walkridge');
+        $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
+        if ($query !== '') {
+            $target .= (str_contains($target, '?') ? '&' : '?').$query;
+        }
         wp_safe_redirect($target, 301);
         exit;
     }
 
     if (in_array($requestPath, $legacyTocguidePaths, true)) {
-        $target = home_url('/projects/tocguide/');
+        $target = mh_concept_page_url('tocguide');
         $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
         if ($query !== '') {
             $target .= (str_contains($target, '?') ? '&' : '?').$query;
@@ -1710,7 +1864,7 @@ function mh_redirect_acreline_legacy_paths(): void
         return;
     }
 
-    $target = home_url('/projects/acreline/');
+    $target = mh_concept_page_url('acreline');
 
     $query = (string) (parse_url($uri, PHP_URL_QUERY) ?? '');
     if ($query !== '') {
@@ -1721,7 +1875,7 @@ function mh_redirect_acreline_legacy_paths(): void
     exit;
 }
 
-// Catalog reseed hooks (project CPT may still exist on older DBs; Woo products are canonical).
+// Catalog reseed hooks (the project CPT may still exist on older DBs).
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v5', 40);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v6', 41);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v7', 42);
@@ -1731,7 +1885,13 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v10', 45);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v11', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v15', 46);
+add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
+add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_product_urls', 1);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_wrong_product_prefix', 5);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');

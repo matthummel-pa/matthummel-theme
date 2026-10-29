@@ -89,9 +89,10 @@ function HeroEdit({ attributes, setAttributes }) {
             options={[
               { value: 'photo', label: __('Featured image', 'sage') },
               { value: 'scene', label: __('Project scene', 'sage') },
+              { value: 'collage', label: __('Code collage (no photo)', 'sage') },
             ]}
             onChange={(value) => setAttributes({ background: value })}
-            help={__('The hero uses the page’s featured image. Set it in the Page sidebar.', 'sage')}
+            help={__('Featured image comes from the Page sidebar. Code collage draws tilted code cards instead of a photo (Home layout).', 'sage')}
           />
           <ToggleControl
             __nextHasNoMarginBottom

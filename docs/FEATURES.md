@@ -2,6 +2,8 @@
 
 What the 3.x Sage theme does, and where it lives.
 
+WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product page, and the shop listing is `template-shop.blade.php`. Notes below about the WooCommerce cart, checkout, My Account desk, shop archive and download delivery were removed with the code.
+
 ## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
 
 - The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.
@@ -16,6 +18,14 @@ What the 3.x Sage theme does, and where it lives.
 - `mh_reach_form_block_html()` (`render_block_hostinger-reach/subscription`, `app/blocks.php`) swaps the plugin's button classes for `.btn.mh-reach-submit` in widget areas and on block pages — the same places the theme maps core buttons to `.btn` — and, inside a widget area, adds `.footer-follow__email` to the inputs. Elsewhere the block keeps the plugin's own classes. Keep the `hostinger-reach-block-subscription-form` form class and `.reach-subscription-message`; the plugin script keys on them. Since 3.7.20 `.btn.mh-reach-submit` wears the Get updates pill look (navy fill, brand ring, lime text on hover; last block of `studio.css`). Since 3.7.27 every `.btn`, core button block link, and the search submit wears that pill (last block of `site-extras.css`); outline/ghost keep the ring on the page surface.
 - `mh_in_widget_area()` (dynamic_sidebar before/after counts) gates the core-block class filter. Anything that should not restyle footer widgets goes behind it.
 - Styles: end of `studio.css` ("Footer signup via Hostinger Reach"). Light-mode footer colors are the violet set, dark is lime on navy, same as the rest of the footer.
+
+## Editor’s notes (3.8.1 home hero code collage)
+
+- The hero block’s `background` attribute has a third value, `collage` (block.json enum: `photo`, `scene`, `collage`). On the Home layout the Blade view prints `partials/hero-collage` in place of `.h-hero__media` + photo, adds `.h-hero--collage`, and forces `.h-hero--center` (the collage is symmetrical; Customize → Home hero → alignment is ignored for it). On the page layout `collage` behaves like `scene`.
+- Styles live in `resources/css/hero-collage.css`, imported last by `app.css` so its centred-copy rules win over the hero rounds in `studio.css`. Cards, watermarks, and dots are positioned in percentages of the hero; `.is-optional` cards hide under 1100px and only `--php` and `--today` stay under 760px.
+- Colours are the brand tokens (`--blue-*`, `--cyan-300/400`, `--lime-300`) with `color-mix()` for the watermark tints. No new hex beyond the card surface. Headings stay one solid white (3.6.62) — the gradient word from the social cover was not carried over.
+- The role paragraph (second, non-lead paragraph) is styled as the mono tagline (uppercase, letter-spaced, cyan rules). Set its text in the editor, e.g. “Code. Ship. Automate.”
+- The partial is markup only and `aria-hidden`; the snippets are set dressing, not copy. Do not put real words or links in it.
 
 ## Editor’s notes (3.7.0 page blocks)
 
@@ -105,6 +115,9 @@ What the 3.x Sage theme does, and where it lives.
 - `/journal/` → `/blog/` lives in `app/filters.php` (`template_redirect`, 404 only). Do not create a Journal page.
 - Footer “Work” and “Site” columns carry the sitemap pages that had no inbound link (agency page, handoff checklist, support, resources, changelog). Keep every sitemap page reachable from the footer or a nav.
 - Catalog `seo_title` / `seo_description` exist for all four projects. They seed Rank Math's title and description once (`mh_product_catalog_v13`); wp-admin edits win.
+- Shop: `template-shop.blade.php` renders /shop/, /themes/, /plugins/ from `mh_shop_items()`; product kinds live in `mh_product_types()`. Catalog `coming_soon` hides Buy and shows a badge.
+- Product URLs: themes at `/themes/{slug}/`, plugins at `/plugins/{slug}/` (`mh_product_url_base()`); old `/projects/{slug}/` URLs 301. Free products with a catalog `download` get a Download free button (`mh_project_free_download_url()`).
+- Cobble & Candle copy refreshes once on update (`mh_product_catalog_v14`, that product only).
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)
@@ -358,11 +371,6 @@ What the 3.x Sage theme does, and where it lives.
 
 - Canonical WordPress is `https://matthummel.com`. WPVibe `site_url` defaults there. `hummelwp.com` is a separate install — do not use it as the default for content, theme update, or deploy notes.
 
-## Editor’s notes (3.5.32 Woo notice icons)
-
-- WooCommerce notices keep an in-flow CSS-mask icon. Do not restore extra left padding for the WooCommerce icon font (`::before` was overlapping the first letter).
-- Empty payment-methods copy lives inside `#payment` — flatten the inner `.woocommerce-info` / notice banner there so it is not a nested card.
-
 ## Editor’s notes (3.5.31 minimal blue)
 
 - Visual system is cool paper + navy/blue accents (`#0d2e57` family). Edit `resources/css/studio.css` for the skin; `portfolio.css` owns layout.
@@ -383,9 +391,9 @@ What the 3.x Sage theme does, and where it lives.
 
 ## Editor’s notes (3.5.28 Projects CPT)
 
-- Public work lives on the **Projects** CPT (`/projects/`, `/projects/{slug}/`). Do not send that listing back to WooCommerce.
+- Public work lives on the **Projects** CPT (`/projects/`). Product pages moved to `/themes/{slug}/` and `/plugins/{slug}/` in 3.10.
 - Convert theme/plugin/app products once (`mh_products_synced_to_projects_v1`). Skip service add-ons. Do not re-import the old studio demo set unless Matt asks.
-- Copy is standard portfolio (I/my, Hire me / Say hello). Keep `mh_public_shop_enabled()` false until Matt asks to sell again.
+- Copy is standard portfolio (I/my, Hire me / Say hello).
 - Home secondary CTA is Browse projects → `/projects/`.
 
 ## Editor’s notes (3.5.27 portfolio home)
@@ -394,28 +402,15 @@ What the 3.x Sage theme does, and where it lives.
 - Keep one primary home button (hero Hire me, closing Say hello). Do not restore the pathway trio, discovery brief, or extra Browse products bars unless Matt asks.
 - Do not reintroduce a product-offer H1 or Buy Acreline as the primary home CTA unless Matt asks.
 - `mh_home_sales_hero_v1` / `v2` are no-ops. `mh_home_portfolio_hero_v1` rewrites only the 3.5.26 sales strings.
-- Product pages still exist in WooCommerce; public visitors are sent to the linked project.
 
 ## Editor’s notes (3.5.26 shop-first sales)
 
 - Superseded by 3.5.27 for the homepage. Product guarantee copy: catalog `guarantee` or `mh_product_guarantee_copy()`. Do not invent testimonials or “limited time” language.
-- Single product article no longer renders Overview + benefits + story + Woo description. Hidden CSS dumps are gone; the purchase widget calls `mh_render_product_add_to_cart()`.
-- Sticky bar still uses `#pf-sticky-bar` + `woo-sticky-bar.js`. Trust chips hide under 640px so Add to cart stays reachable.
 
 ## Editor’s notes (3.5.25 About story WYSIWYG)
 
 - About story body is one `about_story` WYSIWYG (`mh_f_about_story`). Do not restore `about_p1`–`about_p4` inputs. Legacy meta migrates into the new field on theme load, then those four keys are removed from the edit screen.
 - Front end renders with `mh_about_story_html()` (`wpautop` + `wp_kses_post`). Style paragraphs via `.about-story__body`, not four hardcoded `<p>` tags.
-
-## Editor’s notes (3.5.24 shop catalog padding)
-
-- Shop catalog uses `padding-block` on `.woo-catalog-shell`. Do not set horizontal padding to `0` on that shell — `.container` gutters keep cards off the viewport edge.
-
-## Editor’s notes (3.5.22 My Account desk)
-
-- Account mirrors cart/checkout desk (`woo-desk--account` / `woo-desk--login`): main left, sticky nav + tools right. Do not restore the old full-width pill nav above content.
-- Endpoint title/lead/tools come from `mh_account_desk_header()` and `mh_account_desk_tools()`. Keep copy honest (downloads, update email, GPL) — no fake urgency.
-- Blade overrides: `woocommerce/myaccount/my-account.blade.php`, `form-login.blade.php`, `partials/woo-account-aside.blade.php`.
 
 ## Editor’s notes (3.5.21 About section nav)
 
@@ -433,7 +428,7 @@ What the 3.x Sage theme does, and where it lives.
 - Hero name is deliberately smaller so role + CTAs clear the first viewport; proof strip uses `home_proof_*` fields.
 - If an old long `home_h1` is saved in Page content (theme), clear it so the shorter default (`Matt Hummel`) applies — or edit it in wp-admin.
 - Pathways (`#start`) and Receive (`#receive`) are field-driven. Optional `home_receive_video` swaps the mock walkthrough for a real captioned clip.
-- Work case cards prefer Acreline → WalkRidge → TOCflow via `mh_home_case_study_cards()`, pulling `challenge` / `approach` / screenshots from the Woo catalog card shape.
+- Work case cards prefer Acreline → WalkRidge → TOCflow via `mh_home_case_study_cards()`, pulling `challenge` / `approach` / screenshots from the catalog card shape.
 
 ## Editor’s notes (3.5.17 home section pills)
 
@@ -450,46 +445,8 @@ What the 3.x Sage theme does, and where it lives.
 - Blog body is `.pf-product-article` / `.container.narrow` (~42rem). Keep long copy there — not in the buy box.
 - Hero gallery is the screenshot surface; lightbox still opens from thumbs. Do not restore the full `#screenshots` grid without Matt asking.
 
-## Editor’s notes (3.5.14 downloadable zips)
-
-- Catalog `download` on a product is the GitHub release spec. `mh_apply_catalog_download_file()` attaches it. Do not put zips in the theme repo.
-- Account Downloads version column compares `_mh_download_version` on the product with `_mh_purchased_version` on the order line. Downloading the current zip updates the line so the badge clears.
-- Buyer update mail is Woo email id `mh_customer_download_update`. Enabled by `mh_seed_download_update_notifications()`. Trigger only when the zip version increases. First attach does not email. `_mh_notified_version` on the line item prevents duplicates.
-- GitHub release hosts are added to WooCommerce approved download directories (`mh_approve_product_download_url()`). Without that, attaching a zip fatals and buyers never get the update mail.
-- CLI: `wp mh shop-downloads [--force] [--localize] [--no-notify] [--slug=acreline]` and `wp mh shop-notify-updates [--slug=acreline] [--resend]`.
-- Live shop host is **matthummel.com**. Full operator guide: `docs/SHOP-DOWNLOADS.md`.
-
-
-## Editor’s notes (3.5.21 cart/checkout desk)
-
-- Desk layout mirrors journal posts (`woo-desk__main` + sticky `woo-desk__aside`). Do not put order tools back in a full-width trust strip above the form.
-- Sidebar FAQ / next-steps / add-ons come from `mh_checkout_sidebar_faq()`, `mh_checkout_next_steps()`, and `mh_cart_sidebar_addons()` — keep them optional and honest (no fake urgency).
-- Cart line meta uses `woocommerce_after_cart_item_name` (not the name filter) so screen-reader product names stay clean.
-
-## Editor’s notes (3.5.13 checkout ease)
-
-- Cart/checkout trust lines switch when the cart is services-only (`mh_cart_is_services_only()`). Do not put GPL/zip copy on a Site Care cart.
-- Email field stays first. No coupons, countdowns, or fake urgency.
-- Empty-cart “Easy start” cards come from live slugs via `mh_checkout_start_here_products()`.
-- Install wants: Woo `order_comments` plus `_mh_install_wants` / `_mh_install_note` / `_mh_install_site`. Chip keys are allowlisted in `mh_install_want_catalog()`. Cart suggestions from `mh_cart_suggested_want_keys()`. Optional, never required. Do not add a second funnel.
-
-## Editor’s notes (3.5.11 shop a11y)
-
-- Sale `del` must stay opaque (`--color-text-muted`). Type badges are solid light chips so they read on navy `.mh-product-fallback` plates.
-- Sticky buy bar uses `inert` + `aria-hidden` while off-screen. JS moves `#pf-sticky-bar` onto `document.body` so `position: fixed` is not trapped by `html`/`body` `overflow-x: clip`. Gallery thumbs are a roving tablist; Enter selects, the stage button opens the dialog.
-- Dual-tone `.btn:focus-visible` (white ring + navy halo) so primary CTAs are visible on `#0d2e57`. Lightbox controls use `#93c5fd`.
-- Do not drop `_mh_project_*` metrics, `#buy`, upsells/related, or the Rank Math Services skip.
-
-## Editor’s notes (3.5.10 Services add-ons)
-
-- Services is product-led: `mh_acreline_addon_products()` + `template-services.blade.php`. Do not put the old SEO lede or 4-pillar cards back in the hero.
-- `mh_page_skips_seo_analysis_body()` keeps Rank Math from rewriting Services `post_content`. One-shot `mh_services_acreline_page_v1` clears stuffed TOC HTML and exact prior field defaults only.
-- Custom floors stay in `svc_price*` fields. Add-on prices come from Woo when the slug exists.
-
 ## Editor’s notes (3.5.9 product shop UI)
 
-- Product hero is gallery left / buy box right. Do not put the H1 back in a separate left column or hide the Woo add-to-cart widget in `#buy`.
-- Empty product images use `.mh-product-fallback`, not the Woo placeholder PNG. Service type is first-class (`mh_resolve_product_type()`).
 - Gallery JS is `resources/js/product-gallery.js`. Lightbox is a native `<dialog>`. Honor `prefers-reduced-motion` on the sticky bar (show it; skip the slide).
 
 ## Editor’s notes (3.5.7 dark glossy blue)
@@ -536,14 +493,14 @@ What the 3.x Sage theme does, and where it lives.
 | Home | Full-viewport featured-image hero (white copy panel + wave); recruiter glance; section anchors; skills ticker; audience cards; Hire me primary CTA | `resources/views/partials/home.blade.php`, `partials/recruiter-glance.blade.php`, `App\Github` |
 | Marketing pages | Featured-image hero, white copy panel, wavy blend via `partials/page-hero.blade.php` | `template-*.blade.php`, `partials/page-hero.blade.php`, `mh_hero_background_url()` |
 | About | Story body is one Page content WYSIWYG (`about_story`); other About sections stay discrete fields | `template-about.blade.php`, `mh_about_story_html()`, `app/page-fields.php` |
-| SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides; Woo shop titles | `app/filters.php`, `app/page-fields.php` |
+| SEO | Per-template `mh_seo_landing_defaults()` titles/descriptions; page fields for overrides | `app/filters.php`, `app/page-fields.php` |
 | Shared CTA | Sitewide closing band above the footer on marketing + utility pages: mesh/grid atmosphere, high-contrast type, primary + ghost action, trust note, light scroll reveal | `partials/cta-band.blade.php`, `.cta-band` in `portfolio.css` |
 | Typography | Fluid Inter display + IBM Plex body, optical letter-spacing, pretty wrapping, comfortable long-form measure | `resources/css/portfolio.css`, `app.css` @theme |
 | Now | Section on About (3.6.50): checklist, life note, last-updated date, three recent posts. `/now/` redirects there | `template-about.blade.php` (`#now`), `mh_now_items_defaults()`, `mh_now_updated()`, `mh_latest_posts()` |
 | Projects | Featured project, search, type counts, Grid/List; context + audience + how-to + FAQ; **View details** + **Live demo**; **Projects CPT**; singles have screenshot lightbox, palette, like/star, visitor notes, compact contact | `template-projects.blade.php`, `partials/content-single-project.blade.php`, `partials/project-react.blade.php`, `partials/contact-form.blade.php`, `mh_work_page_fit/how/faq()`, `partials/work-card.blade.php`, `resources/js/work-tools.js`, `resources/js/project-feedback.js` |
 | Uses | Stack section on Resources (3.6.50); `/uses/` redirects there | `template-resources.blade.php` (`#uses`), `mh_uses_sections()` |
 | Resources | Catalog with Page content fields; disclosed affiliate links | `template-resources.blade.php`, `mh_resources_catalog()`, `app/page-fields.php` |
-| Services | Acreline add-on card grid (live Woo slugs/prices), theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_acreline_addon_products()`, `mh_services_pricing()` |
+| Services | Theme + demo links, shorter custom/hire floors, FAQ | `template-services.blade.php`, `mh_services_pricing()` |
 | Code | Open-source GitHub showcase (profile, followers + stargazers thank-you, earned badges, 90-day contrib grid + tips, activity feed, featured/recent repos), practice cards, skills panel, docs cards, hire CTA | `template-code.blade.php`, `App\Github`, `partials/repo-card.blade.php` |
 | Hire | Conversion page with LinkedIn profile panel, resume timeline, skills, process, handoff | `template-hire.blade.php`, `App\LinkedIn`, `partials/resume-timeline.blade.php` |
 | Journal | Hero search, newest/oldest sort, Grid/List (`data-post-list` on `.post-list`), topics, years, tags, most discussed, numbered pagination, RSS; unique Read more links; source posts in `docs/posts/` as Gutenberg block markup; single-post hero shows featured image beside title/meta; **Tool Blocks** (`matthummel/tool-grid` + `tool-card` with icon/mark/labels) plus `ship-pipe` / `ship-step` | `index.blade.php`, `archive.blade.php`, `partials/content-single.blade.php`, `resources/js/blocks/`, `app/blocks.php`, `resources/css/journal-blocks.css`, `resources/css/editor.css`, `docs/posts/` |
@@ -559,7 +516,7 @@ What the 3.x Sage theme does, and where it lives.
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| WooCommerce | Optional. Theme support + gallery; Blade shop/product templates with gallery+buy layout, section pills + article under the gallery column (same width), crumbs, empty-image fallbacks, related cards; Cart / Checkout / My Account desk (post-style main + sticky tools aside); login desk; SEO titles/meta; a11y focus/notices/tables; compact in-flow notice icons; seed when active (`mh_woocommerce_pages_seeded_v1`); projects sync to virtual products (`mh_woocommerce_project_products_seeded_v1`); header cart when ready; shop grid 3/2/1 without WC float CSS; catalog GitHub zips as downloadable files; Downloads version/update UI; buyer update email | `app/woocommerce.php`, `app/shop.php`, `app/filters.php`, `resources/views/woocommerce/`, `partials/woocommerce-crumb.blade.php`, `partials/woo-desk-aside.blade.php`, `partials/woo-account-aside.blade.php`, `template-woocommerce.blade.php`, `resources/js/product-gallery.js`, `resources/js/section-nav.js`, `resources/js/woo-desk.js`, `portfolio.css`, `generoi/sage-woocommerce` |
+| Shop | `/shop/`, `/themes/`, `/plugins/` from `template-shop.blade.php`; cards show a price line, one action and a demo link; Freemius plan picker on paid theme pages; free zip download for plugins; Coming soon state; product kinds in `mh_product_types()`. WooCommerce (cart, checkout, My Account, product sync, download delivery) was removed in 3.12 and 3.13 | `template-shop.blade.php`, `partials/shop-card.blade.php`, `partials/freemius-buy.blade.php`, `app/shop.php`, `app/concept-pages.php` |
 
 ## Editor’s notes (3.1.52 AI comparison UX)
 
@@ -571,7 +528,7 @@ What the 3.x Sage theme does, and where it lives.
 
 - New journal post lives in `docs/posts/`, not Blade. Local import: `.github/scripts/import-docs-posts.py`. Production still needs a wp-admin paste (this repo cannot publish matthummel.com).
 - Infographic is HTML+CSS in the post body. Classes: `mh-tool-grid`, `mh-tool-card`, `mh-ship-pipe`, `mh-ship-note`. FAQ reuses `.faq-list`.
-- Tools named are only ones already on Uses / Home / contact: Cursor, ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, Vite. No fake time savings.
+- Tools named (current list; the dated comparison post keeps its Cursor card as history) are only ones already on Uses / Home / contact: ChatGPT, Claude, Gemini, VS Code, n8n, MCP, GitHub Actions, Vite. No fake time savings.
 
 ## Editor’s notes (3.1.50 adjacent work)
 
@@ -620,7 +577,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; singles own `/projects/{slug}/`. Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Linked Woo products 301 to the project permalink. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
+| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; product singles live at `/themes/{slug}/` and `/plugins/{slug}/` (3.10). Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Old `/product/{slug}/` URLs 301 to the product page. Service add-ons stay out of the list. Sync playbook: `.claude/rules/product-theme-sync.md` |
 | Support docs | `/support/` hub (`template-support.blade.php`) lists sellable products with **HTML-viewable** guides (jsDelivr CDN of GitHub `docs/marketplace/*.html`, same files as the seller Documentation pack); footer link; Acreline catalog docs point at the rendered hub |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |

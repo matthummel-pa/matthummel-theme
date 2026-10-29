@@ -16,9 +16,6 @@
     <div id="app">
       <a class="skip-link" href="#main">{{ __('Skip to main content', 'sage') }}</a>
       @include('sections.header')
-      @if (\App\mh_public_shop_enabled())
-        @include('partials.studio-cart')
-      @endif
       <main id="main" class="main" tabindex="-1">
         @yield('content')
       </main>

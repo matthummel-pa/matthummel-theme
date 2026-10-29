@@ -1,7 +1,6 @@
 <?php
 
 use App\Providers\ThemeServiceProvider;
-use Genero\Sage\WooCommerce\WooCommerceServiceProvider;
 use Roots\Acorn\Application;
 
 /*
@@ -125,7 +124,6 @@ unset($mhRankMathRestMeta);
 Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
-        WooCommerceServiceProvider::class,
     ])
     ->boot();
 
@@ -141,7 +139,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'code-github', 'shop', 'concept-pages', 'support', 'woocommerce', 'icons', 'page-fields', 'rank-math-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'seo-social', 'bluesky-share', 'social-share', 'featured-image', 'blocks', 'block-pages', 'release-watch'])
+collect(['setup', 'filters', 'cache-headers', 'contact', 'portfolio', 'code-github', 'shop', 'concept-pages', 'support', 'icons', 'page-fields', 'rank-math-fields', 'affiliate', 'theme-updater', 'db-migrate', 'bespoke', 'comments', 'devto-export', 'seo-social', 'bluesky-share', 'social-share', 'featured-image', 'blocks', 'block-pages', 'release-watch'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

@@ -68,9 +68,9 @@ function mh_clear_page_block_content(): void
         return;
     }
 
-    $skip = array_filter(array_merge([
+    $skip = array_filter([
         (int) get_option('wp_page_for_privacy_policy'),
-    ], array_values(mh_woocommerce_page_ids())));
+    ]);
 
     $pages = get_posts([
         'post_type' => 'page',
@@ -3493,21 +3493,6 @@ add_action('init', function (): void {
         }
     }
 
-    $shopId = (int) get_option('woocommerce_shop_page_id');
-    if ($shopId > 0) {
-        $desc = (string) get_post_field('post_content', $shopId);
-        $legacyShop = [
-            'Studio WordPress themes from Work projects. Read the concept page first, buy the pack here, or hire me for a custom build.',
-            'Studio WordPress themes with concept pages for context. Buy the pack here or say hello for a custom Gettysburg build.',
-        ];
-        if (in_array(trim(wp_strip_all_tags($desc)), array_map(static fn ($s) => wp_strip_all_tags($s), $legacyShop), true) || trim($desc) === '') {
-            wp_update_post([
-                'ID' => $shopId,
-                'post_content' => '<!-- wp:paragraph --><p>WordPress themes and plugins ready for checkout. Browse demos and product details on <a href="/projects/">Projects</a>, then buy the pack here — or hire me for a custom build.</p><!-- /wp:paragraph -->',
-            ]);
-        }
-    }
-
     update_option('mh_projects_catalog_seo_v1', true);
 }, 86);
 
@@ -4537,3 +4522,90 @@ add_action('init', function (): void {
 
     update_option('mh_seo_copy_v2', true);
 }, 78);
+
+/**
+ * One-time: replace the old Cursor wording in saved Now and About copy.
+ *
+ * Only values that exactly match the previous defaults change, so copy that was
+ * edited in wp-admin is left alone. Pages that never saved these fields already
+ * show the new defaults.
+ */
+function mh_apply_cursor_to_claude_copy_v1(): void
+{
+    if (get_option('mh_cursor_to_claude_copy_v1') || wp_installing()) {
+        return;
+    }
+
+    $nowFrom = 'Using Cursor AI and Claude to build faster, reviewing every line before it ships.';
+    $nowTo = 'Using Claude Code to build faster, reviewing every line before it ships.';
+    $bodyFrom = 'Cursor, Claude, and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.';
+    $bodyTo = 'Claude and ChatGPT help with scaffolding and first-pass PHP. I still read, test, and own every line that reaches production — Vite builds, PHP 8.3, and GitHub Actions included.';
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'no_found_rows' => true,
+        'fields' => 'ids',
+        'meta_query' => [
+            'relation' => 'OR',
+            ['key' => 'mh_f_now_items', 'compare' => 'EXISTS'],
+            ['key' => 'mh_f_about_approach', 'compare' => 'EXISTS'],
+        ],
+    ]);
+
+    $failed = false;
+
+    foreach ($pages as $id) {
+        $id = (int) $id;
+
+        // Now items are stored as an array or as one item per line.
+        $items = get_post_meta($id, 'mh_f_now_items', true);
+        if (is_array($items)) {
+            $changed = false;
+            foreach ($items as $i => $item) {
+                if ((string) $item === $nowFrom) {
+                    $items[$i] = $nowTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                $failed = update_post_meta($id, 'mh_f_now_items', wp_slash($items)) === false || $failed;
+            }
+        } elseif (is_string($items) && $items !== '') {
+            $lines = preg_split('/\r\n|\r|\n/', $items) ?: [];
+            $changed = false;
+            foreach ($lines as $i => $line) {
+                if ($line === $nowFrom) {
+                    $lines[$i] = $nowTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                $failed = update_post_meta($id, 'mh_f_now_items', wp_slash(implode("\n", $lines))) === false || $failed;
+            }
+        }
+
+        // About principles are repeater rows with icon, title, and body.
+        $rows = get_post_meta($id, 'mh_f_about_approach', true);
+        if (is_array($rows)) {
+            $changed = false;
+            foreach ($rows as $i => $row) {
+                if (is_array($row) && isset($row['body']) && (string) $row['body'] === $bodyFrom) {
+                    $rows[$i]['body'] = $bodyTo;
+                    $changed = true;
+                }
+            }
+            if ($changed) {
+                $failed = update_post_meta($id, 'mh_f_about_approach', wp_slash($rows)) === false || $failed;
+            }
+        }
+    }
+
+    // Leave the flag unset if any write failed, so the routine tries again.
+    if (! $failed) {
+        update_option('mh_cursor_to_claude_copy_v1', true);
+    }
+}
+
+add_action('init', __NAMESPACE__.'\mh_apply_cursor_to_claude_copy_v1', 79);

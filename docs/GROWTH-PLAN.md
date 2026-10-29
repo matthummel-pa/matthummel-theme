@@ -111,7 +111,7 @@ Target: **2 posts per month**. Write one technical post (developer audience) and
 
 ### Weekly (15 minutes)
 
-- [ ] Check WooCommerce orders and email any buyers personally if they are the first or tenth buyer of a product
+- [ ] Check Freemius sales and email any buyers personally if they are the first or tenth buyer of a product
 - [ ] Reply to any GitHub issues on product repos (Acreline, TOCflow)
 - [ ] Post one short update on Bluesky: a code snippet, a WIP screenshot, or a shipping note
 
@@ -223,7 +223,7 @@ Check these in wp-admin monthly:
 
 | Metric | Where |
 |---|---|
-| WooCommerce order count | WooCommerce → Orders |
+| Freemius sales | Freemius dashboard → Sales |
 | Product Rank Math scores | Edit product → Rank Math panel |
 | GitHub repo stars + followers | github.com/matthummel-pa |
 | Contact form inquiries mentioning a product | Emails / n8n CRM webhook |
@@ -241,7 +241,7 @@ Do not install Google Analytics, PostHog, or Mixpanel unless there is a specific
 | Write a blog post | `.claude/skills/new-blog-post/SKILL.md` |
 | Monthly site review | `.claude/skills/site-review/SKILL.md` |
 | Sync a product from its repo | `.claude/rules/product-theme-sync.md` |
-| Edit WooCommerce product page standards | `.claude/skills/woocommerce-product/SKILL.md` |
+| Edit product page standards | `.claude/skills/product-pages/SKILL.md` |
 | Voice and grammar | `.claude/rules/content.md` |
 | SEO and keyword strategy | `.claude/rules/portfolio-seo-playbook.md` |
 | Deploy | `.github/workflows/deploy.yml`, `docs/INSTALL.md` |
