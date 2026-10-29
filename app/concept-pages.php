@@ -119,6 +119,36 @@ function mh_add_product_type_rewrites(): void
 }
 
 /**
+ * Old shop product URLs (/product/{slug}/) 301 to the product page, whether or not a shop plugin is active.
+ */
+function mh_redirect_legacy_product_urls(): void
+{
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return;
+    }
+
+    $uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    $path = trim((string) wp_parse_url($uri, PHP_URL_PATH), '/');
+    $home = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home !== '' && str_starts_with($path, $home.'/')) {
+        $path = substr($path, strlen($home) + 1);
+    }
+    if (! preg_match('#^product/([^/]+)$#', $path, $match)) {
+        return;
+    }
+
+    $slug = sanitize_title($match[1]);
+    if ($slug === '' || ! get_page_by_path($slug, OBJECT, mh_project_post_type())) {
+        return;
+    }
+
+    $target = mh_concept_page_url($slug);
+    $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
+    wp_safe_redirect($query !== '' ? $target.'?'.$query : $target, 301);
+    exit;
+}
+
+/**
  * A product opened under the wrong prefix (/themes/tocguide/) 301s to its own (/plugins/tocguide/).
  */
 function mh_redirect_wrong_product_prefix(): void
@@ -1901,5 +1931,6 @@ add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink',
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
 add_action('wp', __NAMESPACE__.'\\mh_redirect_acreline_legacy_paths', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_concept_urls', 0);
+add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_legacy_product_urls', 1);
 add_action('template_redirect', __NAMESPACE__.'\\mh_redirect_wrong_product_prefix', 5);
 add_action('template_redirect', __NAMESPACE__.'\\mh_gate_concept_page_access');
