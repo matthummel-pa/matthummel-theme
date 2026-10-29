@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.12.2 — shop.php no longer contains any WooCommerce code (stage 2b of 3)
+
+`app/shop.php` goes from 3,867 lines to 730 across this and the last stage. What is left is the catalog, the Freemius helpers, the shop listing and the copy defaults.
+
+- Removed the project-to-shop-product link: product sync (`mh_sync_project_product`), the product payload behind the old buy button, the cart count and cart URL, the shop-product category helpers, the WooCommerce "Product fields" meta box, the product download and buyer-notification code, and the `mh shop-downloads` / `mh shop-notify-updates` WP-CLI commands.
+- Removed the callers of that code: the sync calls in the catalog upsert and `mh_set_project_live`, the product payload read in the project narrative, the linked-product screenshots, the "WooCommerce product ID" field on the project screen, and the shop product list on the Work page.
+- Removed the cart buttons from the header and the pop-out menu.
+- Removed three dead Services-page helpers (`mh_acreline_addon_catalog`, `mh_acreline_addon_products`, `mh_services_acreline_theme`) that nothing called.
+- `mh_product_catalog_data()` and `mh_resolve_product_type()` keep working without the WooCommerce branches (project slug and project meta only).
+- `mh_upsert_project_from_catalog_entry()` no longer takes a product ID.
+- Project cards keep their `buy_url`, `buy_label` and `price_label` keys, now always empty, so templates keep working.
+- Still to come (stage 3): inert `function_exists('is_cart')`-style guards in the SEO filters and a few other files, the Sage WooCommerce service provider in `functions.php`, about 420 lines of CSS, and the docs and rules.
+
 ## 3.12.1 — Remove the WooCommerce hooks and sync code from shop.php (stage 2a of 3)
 
 - Removed 38 functions and 37 hook registrations (about 1,400 lines) from `app/shop.php` that only existed to talk to WooCommerce: product and download syncing, buyer update emails, account download banners, order and loop hooks, store seeding and the one-time resync migrations.

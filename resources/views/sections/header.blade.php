@@ -56,21 +56,6 @@
       @endphp
       @include('partials.header-updates')
 
-      @if (\App\mh_public_shop_enabled() && \App\mh_shop_ready() && function_exists('wc_get_cart_url'))
-        @php $cartCount = \App\mh_cart_count(); @endphp
-        <button
-          type="button"
-          class="header-cart"
-          data-mh-slip-open
-          aria-controls="mh-slip"
-          aria-label="{{ $cartCount > 0 ? sprintf(__('Open cart, %d items', 'sage'), $cartCount) : __('Open cart', 'sage') }}"
-        >
-          {!! \App\mh_svg_icon('cart', 18) !!}
-          @if ($cartCount > 0)
-            <span class="header-cart__count" aria-hidden="true">{{ $cartCount }}</span>
-          @endif
-        </button>
-      @endif
 
       @unless ($isHireable)
         <a class="btn btn-hire" href="{{ esc_url(home_url('/contact/')) }}">{{ __('Say hello', 'sage') }}</a>
@@ -152,16 +137,6 @@
     <p class="mh-popout-kicker mh-popout-kicker--quiet">{{ __('Elsewhere', 'sage') }}</p>
     @include('partials.social', ['compact' => true])
   </div>
-
-  @if (\App\mh_public_shop_enabled() && \App\mh_shop_ready() && function_exists('wc_get_cart_url'))
-    <button type="button" class="btn btn-outline mh-popout-cart" data-mh-slip-open aria-controls="mh-slip">
-      {!! \App\mh_svg_icon('cart', 15) !!}
-      {{ __('Cart', 'sage') }}
-      @if (\App\mh_cart_count() > 0)
-        ({{ \App\mh_cart_count() }})
-      @endif
-    </button>
-  @endif
 
   <a class="btn mh-popout-cta" href="{{ esc_url(home_url('/get-updates/')) }}">
     {!! \App\mh_svg_icon('mail', 15) !!} {{ __('Get updates', 'sage') }}

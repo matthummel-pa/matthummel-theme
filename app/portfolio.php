@@ -1826,14 +1826,10 @@ function mh_project_post_to_card(\WP_Post $post): array
     $techRaw = (string) get_post_meta($post_id, '_mh_project_tech', true);
     $tech = array_values(array_filter(array_map('trim', explode(',', $techRaw))));
 
-    $buyUrl = function_exists(__NAMESPACE__.'\\mh_project_buy_url') ? mh_project_buy_url($post_id) : '';
-    $priceLabel = function_exists(__NAMESPACE__.'\\mh_project_price_label') ? mh_project_price_label($post_id) : '';
-    $buyLabel = function_exists(__NAMESPACE__.'\\mh_project_buy_label') ? mh_project_buy_label($post_id) : __('View details', 'sage');
-    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && ! mh_public_shop_enabled()) {
-        $buyUrl = '';
-        $priceLabel = '';
-        $buyLabel = '';
-    }
+    // Checkout lives on the product page (Freemius overlay): cards carry no cart link, price, or buy label.
+    $buyUrl = '';
+    $priceLabel = '';
+    $buyLabel = '';
     $productType = function_exists(__NAMESPACE__.'\\mh_project_product_type')
         ? mh_project_product_type($post_id)
         : 'theme';
@@ -1855,7 +1851,6 @@ function mh_project_post_to_card(\WP_Post $post): array
         'image' => mh_project_card_image_url($post_id),
         'post_id' => $post_id,
         'published' => (string) get_post_time('c', true, $post),
-        'product_id' => function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0,
         'product_type' => $productType,
         'buy_url' => $buyUrl,
         'buy_label' => $buyLabel,
@@ -2136,11 +2131,11 @@ function mh_project_faq_to_meta($faq): string
 }
 
 /**
- * Create or update a project post from a catalog (or Woo-mapped) entry.
+ * Create or update a project post from a catalog entry.
  *
- * Skips service add-ons. Used to convert sold themes/plugins into portfolio projects.
+ * Skips service add-ons. Used to turn catalog themes and plugins into project pages.
  */
-function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $product_id = 0, int $menu_order = 0): int
+function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $menu_order = 0): int
 {
     $slug = sanitize_title($slug);
     if ($slug === '') {
@@ -2165,12 +2160,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
     ]);
 
     $title = (string) ($entry['title'] ?? $slug);
-    if ($product_id > 0 && function_exists('wc_get_product')) {
-        $product = wc_get_product($product_id);
-        if ($product instanceof \WC_Product && $product->get_name() !== '') {
-            $title = wp_specialchars_decode((string) $product->get_name(), ENT_QUOTES);
-        }
-    }
 
     $postarr = [
         'post_type' => mh_project_post_type(),
@@ -2229,10 +2218,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
         mh_project_live_meta_key() => '1',
     ];
 
-    if ($product_id > 0) {
-        $meta['_mh_project_product_id'] = (string) $product_id;
-    }
-
     $metrics = is_array($entry['metrics'] ?? null) ? $entry['metrics'] : [];
     for ($i = 1; $i <= 3; $i++) {
         $row = is_array($metrics[$i - 1] ?? null) ? $metrics[$i - 1] : [];
@@ -2242,16 +2227,6 @@ function mh_upsert_project_from_catalog_entry(string $slug, array $entry, int $p
 
     foreach ($meta as $key => $value) {
         update_post_meta($post_id, $key, $value);
-    }
-
-    if ($product_id > 0) {
-        update_post_meta($product_id, '_mh_product_project_id', $post_id);
-        if (has_post_thumbnail($product_id) && ! has_post_thumbnail($post_id)) {
-            $thumb = (int) get_post_thumbnail_id($product_id);
-            if ($thumb > 0) {
-                set_post_thumbnail($post_id, $thumb);
-            }
-        }
     }
 
     return $post_id;
@@ -2340,22 +2315,7 @@ function mh_sync_products_to_project_cpt(): void
             if (! is_array($entry)) {
                 continue;
             }
-            $productId = 0;
-            if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
-                $productId = mh_product_id_by_slug((string) $slug);
-            }
-            if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
-                $order++;
-            }
-        }
-    } elseif (function_exists(__NAMESPACE__.'\\mh_wc_products_for_work')) {
-        foreach (mh_wc_products_for_work() as $card) {
-            $slug = sanitize_title((string) ($card['slug'] ?? ''));
-            $type = sanitize_key((string) ($card['product_type'] ?? 'theme'));
-            if ($slug === '' || $type === 'service') {
-                continue;
-            }
-            if (mh_upsert_project_from_catalog_entry($slug, $card, (int) ($card['product_id'] ?? 0), $order) > 0) {
+            if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $order) > 0) {
                 $order++;
             }
         }
@@ -2401,7 +2361,6 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     if ($productType === '') {
         $productType = 'theme';
     }
-    $productId = (string) get_post_meta($post->ID, '_mh_project_product_id', true);
     $price = (string) get_post_meta($post->ID, '_mh_project_price', true);
     $forSale = get_post_meta($post->ID, '_mh_project_for_sale', true) === '1';
     $image = (string) get_post_meta($post->ID, '_mh_project_image', true);
@@ -2459,7 +2418,6 @@ function mh_project_admin_meta_box(\WP_Post $post): void
         $price,
         function_exists(__NAMESPACE__.'\\mh_default_theme_price') ? mh_default_theme_price() : '149'
     );
-    mh_project_admin_field_row(__('WooCommerce product ID', 'sage'), 'mh_project_product_id', $productId, __('Auto-filled. Override only to point at a different product.', 'sage'));
     mh_project_admin_field_row(__('Benefits (one per line)', 'sage'), 'mh_project_benefits', $benefits, '', 'textarea');
     mh_project_admin_field_row(__('FAQ (Question|||Answer per line)', 'sage'), 'mh_project_faq', $faq, '', 'textarea');
     echo '</tbody></table>';
@@ -2564,7 +2522,6 @@ function mh_save_project_meta(int $post_id): void
         $price = '';
     }
     update_post_meta($post_id, '_mh_project_price', $price);
-    update_post_meta($post_id, '_mh_project_product_id', (string) max(0, (int) ($_POST['mh_project_product_id'] ?? 0)));
     update_post_meta($post_id, '_mh_project_tech', sanitize_text_field(wp_unslash($_POST['mh_project_tech'] ?? '')));
     update_post_meta($post_id, '_mh_project_demo', esc_url_raw(wp_unslash($_POST['mh_project_demo'] ?? '')));
     update_post_meta($post_id, '_mh_project_concept', esc_url_raw(wp_unslash($_POST['mh_project_concept'] ?? '')));
@@ -2582,9 +2539,6 @@ function mh_set_project_live(int $post_id, bool $live): void
         return;
     }
     update_post_meta($post_id, mh_project_live_meta_key(), $live ? '1' : '0');
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
-        mh_sync_project_product($post_id);
-    }
 }
 
 /** Distinct meta values for admin filters (category / place). */
@@ -4792,11 +4746,7 @@ function mh_apply_projects_readable_copy(): void
         if (! is_array($entry)) {
             continue;
         }
-        $productId = 0;
-        if (function_exists(__NAMESPACE__.'\\mh_product_id_by_slug')) {
-            $productId = mh_product_id_by_slug((string) $slug);
-        }
-        if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $productId, $order) > 0) {
+        if (mh_upsert_project_from_catalog_entry((string) $slug, $entry, $order) > 0) {
             $order++;
         }
     }
