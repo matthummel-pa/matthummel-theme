@@ -340,6 +340,21 @@ function mh_shop_copy_default(string $scope, string $part): string
         'cta_h2' => __('Need something that is not here?', 'sage'),
         'cta_text' => __('I build custom WordPress themes and plugins for shops and agencies. Tell me what you need and I will write back.', 'sage'),
         'cta_label' => __('Say hello', 'sage'),
+        'cta_eyebrow' => __('Custom work', 'sage'),
+        'avail_eyebrow' => __('Ready to use', 'sage'),
+        'soon_eyebrow' => __('Next up', 'sage'),
+        'compare_eyebrow' => __('Side by side', 'sage'),
+        'how_eyebrow' => __('Simple steps', 'sage'),
+        'faq_eyebrow' => __('Questions', 'sage'),
+        'faq_h2' => __('Quick answers', 'sage'),
+        'help_h3' => __('Still have a question?', 'sage'),
+        'help_text' => __('Ask me and I will write back. I reply within one business day (ET).', 'sage'),
+        'help_label' => __('Ask me directly', 'sage'),
+        'share_eyebrow' => __('Docs and sharing', 'sage'),
+        'share_h2' => __('Read first, then share', 'sage'),
+        'share_intro' => __('Guides for each product, and an easy way to pass this page to a teammate or a client.', 'sage'),
+        'docs_h3' => __('Read first', 'sage'),
+        'share_h3' => __('Share this page', 'sage'),
     ];
 
     $copy = [
@@ -348,18 +363,21 @@ function mh_shop_copy_default(string $scope, string $part): string
             'lede' => __('Made so the people who own the site can run it. Open a live demo, pick a yearly license, and get updates and email support from the developer who wrote the code. Plugins are free.', 'sage'),
             'primary' => __('See what is available', 'sage'),
             'how_h2' => __('How buying works', 'sage'),
+            'faq_intro' => __('Short answers about licenses, support, and refunds.', 'sage'),
         ],
         'theme' => [
             'h1' => __('WordPress themes you can run yourself', 'sage'),
             'lede' => __('Block themes with a live demo and an owner guide for each. A yearly license covers updates and email support, and there is a 30-day refund if I cannot fix a problem.', 'sage'),
             'primary' => __('See the themes', 'sage'),
             'how_h2' => __('How buying works', 'sage'),
+            'faq_intro' => __('Short answers about licenses, support, and refunds.', 'sage'),
         ],
         'plugin' => [
             'h1' => __('Free WordPress plugins', 'sage'),
             'lede' => __('Small, focused plugins I build and maintain. Download the zip, upload it in WordPress, and read the docs before you install.', 'sage'),
             'primary' => __('See the plugins', 'sage'),
             'how_h2' => __('How to get a plugin', 'sage'),
+            'faq_intro' => __('Short answers about downloading, data, and getting help.', 'sage'),
         ],
     ];
     if (isset($copy[$scope][$part])) {
@@ -458,7 +476,7 @@ function mh_shop_faq_defaults(string $scope = 'all'): array
  * Prices come from the catalog; nothing is invented here.
  *
  * @param  string  $type  'all' or a key from mh_product_types().
- * @return list<array{slug: string, title: string, blurb: string, url: string, image: string, demo: string, type: string, status: string, price: string, free_url: string, place: string, facts: list<string>, points: list<string>, version: string, works_with: string, docs_url: string, docs_label: string, source_url: string}>
+ * @return list<array{slug: string, title: string, blurb: string, url: string, image: string, demo: string, type: string, status: string, price: string, free_url: string, place: string, facts: list<string>, points: list<string>, version: string, works_with: string, docs_url: string, docs_label: string, docs: list<array{0: string, 1: string}>, source_url: string}>
  */
 function mh_shop_items(string $type = 'all'): array
 {
@@ -520,12 +538,14 @@ function mh_shop_items(string $type = 'all'): array
 
         $docsUrl = '';
         $docsLabel = '';
+        $docs = [];
         foreach ((array) ($entry['docs'] ?? []) as $doc) {
-            if (is_array($doc) && str_starts_with((string) ($doc[1] ?? ''), 'http')) {
-                $docsLabel = trim((string) ($doc[0] ?? ''));
-                $docsUrl = (string) $doc[1];
-                break;
+            if (is_array($doc) && str_starts_with((string) ($doc[1] ?? ''), 'http') && trim((string) ($doc[0] ?? '')) !== '') {
+                $docs[] = [trim((string) $doc[0]), (string) $doc[1]];
             }
+        }
+        if ($docs !== []) {
+            [$docsLabel, $docsUrl] = $docs[0];
         }
 
         $source = (string) ($entry['github'] ?? '');
@@ -548,6 +568,7 @@ function mh_shop_items(string $type = 'all'): array
             'works_with' => trim((string) preg_replace('/\s*\([^)]*\)/', '', (string) ($entry['compatible'] ?? ''))),
             'docs_url' => $docsUrl,
             'docs_label' => $docsLabel,
+            'docs' => $docs,
             'source_url' => str_starts_with($source, 'http') ? $source : '',
         ];
     }
