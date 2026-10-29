@@ -491,7 +491,7 @@
       ],
       [
         "What do I get when I buy Acreline?",
-        "The marketplace pack: acreline.zip (upload in Appearance → Themes), optional child theme, Acreline Core plugin, and HTML documentation. Instant download after checkout. The theme includes the setup wizard. Hire me if you want branded installation or inventory import."
+        "The marketplace pack: acreline.zip (upload in Appearance → Themes), optional child theme, Acreline Core plugin, and HTML documentation. When Acreline goes on sale, you get an instant download after checkout. The theme includes the setup wizard. Hire me if you want branded installation or inventory import."
       ],
       [
         "Is Acreline a live MLS or IDX theme?",
@@ -550,6 +550,10 @@
       [
         "Brand kit",
         "https://github.com/matthummel-pa/wp-acreline/blob/main/BRAND.md"
+      ],
+      [
+        "Read the story",
+        "https://matthummel.com/acreline-wordpress-real-estate-theme-for-agents-and-brokers/"
       ]
     ],
     "support": "https://cdn.jsdelivr.net/gh/matthummel-pa/wp-acreline@main/docs/marketplace/support.html",
@@ -705,7 +709,7 @@
       ],
       [
         "What do I get when I buy WalkRidge?",
-        "The marketplace pack: walkridge.zip (upload in Appearance → Themes), a child theme starter, and HTML documentation. Optional companion plugins. Walkridge Bookings and Walkridge Field Map. Are sold separately. Instant download after checkout."
+        "The marketplace pack: walkridge.zip (upload in Appearance → Themes), a child theme starter, and HTML documentation. Optional companion plugins. Walkridge Bookings and Walkridge Field Map. Are sold separately. When WalkRidge goes on sale, you get an instant download after checkout."
       ],
       [
         "How do I add my tour company's branding?",
