@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.17.4 — Shop pages: plainer default copy
+
+- Six default lines on /shop/, /themes/ and /plugins/ are plainer and name who is acting: the shop lede ("I build these so…"), the Coming soon intro, the Compare intro, the plugins lede, buying step 4, and the "How it works" eyebrow (was "Simple steps").
+- These are defaults only. A value saved in Page content (theme) for any of these keys still wins, so a page that has its own text will not change.
+- Page titles and meta descriptions are not touched: Rank Math owns them.
+
 ## 3.17.3 — About: heading levels in the GitHub section
 
 - Fix: the panel titles in the GitHub section (Last 90 days, What the contributions are, Recent activity, Most starred) were H4s straight under an H2, which skips a level. They are H3s now. They look the same: the titles are sized by class, not by tag.
