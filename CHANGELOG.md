@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.17.1 — Shop cards: vertical again, two columns, tabs above the cards
+
+- Product cards are vertical again (image on top). Desktop shows two per row; phones and tablets show one full-width card.
+- The All products / Themes / Plugins buttons and the product count moved from the top of the page to right above the first product cards (new `partials/shop-tabs.blade.php`). If nothing is listed they keep a small section of their own.
+
 ## 3.17.0 — Shop cards: horizontal layout
 
 - Product cards on /shop/, /themes/ and /plugins/ are one per row from tablet width up: preview image on the left, content on the right. On a phone they stay vertical, image on top. The quality stats fill the wider body in a row.

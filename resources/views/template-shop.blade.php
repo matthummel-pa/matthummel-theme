@@ -103,27 +103,15 @@
 
 @include('partials.page-nav', ['pills' => $pills])
 
-<section class="project-section shop-section shop-section--toolbar" aria-labelledby="shop-browse-heading">
-  <div class="container wide">
-    <h2 id="shop-browse-heading" class="visually-hidden">{{ __('Browse products', 'sage') }}</h2>
-
-    {{-- Plain links, no script: each view is its own page, so it works without JavaScript and can be shared. --}}
-    <nav class="shop-tabs" aria-label="{{ __('Product types', 'sage') }}">
-      <ul>
-        @foreach ($tabs as [$key, $label, $url])
-          <li>
-            <a class="btn{{ $key === $scope ? '' : ' btn-outline' }}" href="{{ esc_url($url) }}"@if ($key === $scope) aria-current="page"@endif>{{ $label }}</a>
-          </li>
-        @endforeach
-      </ul>
-      <p class="shop-tabs__count">{{ sprintf(_n('%d product', '%d products', count($items), 'sage'), count($items)) }}</p>
-    </nav>
-
-    @if ($items === [])
+{{-- The type tabs sit right above the first product cards. Only when nothing is listed do they get a section of their own. --}}
+@if ($items === [])
+  <section class="project-section shop-section shop-section--toolbar" aria-label="{{ __('Browse products', 'sage') }}">
+    <div class="container wide">
+      @include('partials.shop-tabs', ['tabs' => $tabs, 'scope' => $scope, 'count' => 0])
       <p>{{ \App\field('shop_empty', __('Nothing is listed here yet. Say hello if you are looking for something specific.', 'sage'), $pageId) }}</p>
-    @endif
-  </div>
-</section>
+    </div>
+  </section>
+@endif
 
 @if ($available !== [])
   <section class="project-section shop-section mh-block-section--illus" id="shop-available" aria-labelledby="shop-available-heading">
@@ -132,6 +120,7 @@
       <p class="eyebrow">{{ $copy('avail_eyebrow') }}</p>
       <h2 id="shop-available-heading" class="display-title is-section">{{ $copy('avail_h2') }}</h2>
       <p class="shop-section__intro">{{ $copy('avail_intro') }}</p>
+      @include('partials.shop-tabs', ['tabs' => $tabs, 'scope' => $scope, 'count' => count($items)])
       <div class="work-grid shop-grid">
         @foreach ($available as $item)
           @include('partials.shop-card', ['item' => $item])
@@ -151,6 +140,9 @@
         {{ $copy('soon_intro') }}
         <a href="{{ esc_url(home_url('/get-updates/')) }}">{{ __('Get updates', 'sage') }}</a>
       </p>
+      @if ($available === [])
+        @include('partials.shop-tabs', ['tabs' => $tabs, 'scope' => $scope, 'count' => count($items)])
+      @endif
       <div class="work-grid shop-grid">
         @foreach ($soonItems as $item)
           @include('partials.shop-card', ['item' => $item])
