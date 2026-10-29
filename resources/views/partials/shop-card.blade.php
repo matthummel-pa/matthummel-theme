@@ -48,6 +48,16 @@
         @endforeach
       </ul>
     @endif
+    @if (! $isSoon && $item['quality'] !== [])
+      <dl class="shop-card__quality" aria-label="{{ __('Quality checks', 'sage') }}">
+        @foreach ($item['quality'] as [$statValue, $statLabel])
+          <div>
+            <dt>{{ $statValue }}</dt>
+            <dd>{{ $statLabel }}</dd>
+          </div>
+        @endforeach
+      </dl>
+    @endif
 
     @if (! $isSoon && $item['price'] !== '')
       <p class="shop-card__price"><strong>{{ $item['price'] }}</strong></p>

@@ -536,6 +536,18 @@ function mh_shop_items(string $type = 'all'): array
             (array) ($entry['benefits'] ?? [])
         ))), 0, 2);
 
+        // Quality stats buyers look for (accessibility, speed scores and the like). Only what the catalog states:
+        // a value and a short label each, at most four.
+        $quality = [];
+        foreach ((array) ($entry['quality'] ?? []) as $stat) {
+            $statValue = trim((string) ($stat[0] ?? ''));
+            $statLabel = trim((string) ($stat[1] ?? ''));
+            if ($statValue !== '' && $statLabel !== '') {
+                $quality[] = [$statValue, $statLabel];
+            }
+        }
+        $quality = array_slice($quality, 0, 4);
+
         $docsUrl = '';
         $docsLabel = '';
         $docs = [];
@@ -564,6 +576,7 @@ function mh_shop_items(string $type = 'all'): array
             'place' => trim((string) ($entry['place'] ?? '')),
             'facts' => $facts,
             'points' => $points,
+            'quality' => $quality,
             'version' => trim((string) ($entry['version'] ?? '')),
             'works_with' => trim((string) preg_replace('/\s*\([^)]*\)/', '', (string) ($entry['compatible'] ?? ''))),
             'docs_url' => $docsUrl,
