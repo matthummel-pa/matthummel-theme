@@ -6,7 +6,6 @@
 
 namespace App;
 
-
 /**
  * Whether WooCommerce is available for product landings.
  */
@@ -30,7 +29,6 @@ function mh_work_listing_url(): string
 {
     return home_url('/projects/');
 }
-
 
 /**
  * Absolute add-to-cart URL for a product (skips single product page).
@@ -146,7 +144,6 @@ function mh_product_landing_url(int $product_id): string
     return is_string($url) ? $url : '';
 }
 
-
 /**
  * Declare WooCommerce theme support + hide shipping UI for digital catalog.
  */
@@ -159,7 +156,6 @@ function mh_shop_theme_support(): void
 }
 
 add_action('after_setup_theme', __NAMESPACE__.'\\mh_shop_theme_support', 25);
-
 
 /**
  * Decoded product-catalog.json keyed by slug.
@@ -491,7 +487,6 @@ function mh_cart_count(): int
 
     return (int) $cart->get_cart_contents_count();
 }
-
 
 /**
  * Map a published WooCommerce product to the Work card array shape.
@@ -1472,7 +1467,6 @@ function mh_product_install_help_copy(): string
     return __('Need it installed & branded? Get help', 'sage');
 }
 
-
 /**
  * Theme-relative path under resources/images/ when $src is a catalog path
  * or a baked theme URL (any host/port). Empty for truly external URLs.
@@ -1524,7 +1518,6 @@ function mh_product_media_url(string $src): string
 
     return get_theme_file_uri('resources/images/'.ltrim($src, '/'));
 }
-
 
 /** Primary buy label for a project (theme vs plugin). */
 function mh_project_buy_label(int $project_id): string
@@ -1820,7 +1813,6 @@ function mh_sync_project_product_unchecked(int $project_id): int
     return $saved;
 }
 
-
 /**
  * Catalog `download` object, or null when this entry is not a zip product.
  *
@@ -1854,7 +1846,6 @@ function mh_catalog_download_spec(array $entry): ?array
         'label' => trim((string) ($download['label'] ?? '')),
     ];
 }
-
 
 /**
  * Pick a GitHub release zip from a catalog download spec.
@@ -1987,7 +1978,6 @@ function mh_approve_product_download_url(string $fileUrl): bool
         return false;
     }
 }
-
 
 /**
  * Mark a catalog product virtual+downloadable and attach the GitHub zip.
@@ -2194,7 +2184,6 @@ function mh_catalog_download_product_ids(): array
     return $ids;
 }
 
-
 /**
  * Admin warning when a for-sale theme/plugin has no downloadable file.
  */
@@ -2234,7 +2223,6 @@ function mh_wc_product_download_admin_notice(int $product_id, bool $forSale, str
     echo '</p></div>';
 }
 
-
 /**
  * Semver from a zip filename such as acreline-1.5.4.zip.
  */
@@ -2261,7 +2249,6 @@ function mh_product_download_version(int $product_id): string
 
     return trim((string) ($entry['version'] ?? ''));
 }
-
 
 /**
  * Paid orders that include a catalog download product.
@@ -2353,7 +2340,6 @@ function mh_notify_buyers_of_download_update(int $product_id, string $new_versio
     return $sent;
 }
 
-
 if (defined('WP_CLI') && WP_CLI) {
     \WP_CLI::add_command('mh shop-downloads', function ($args, array $assoc): void {
         unset($args);
@@ -2416,7 +2402,6 @@ if (defined('WP_CLI') && WP_CLI) {
     });
 }
 
-
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'mh_product_project_fields',
@@ -2436,5 +2421,3 @@ add_action('save_post_product', function (int $post_id): void {
 }, 20);
 
 add_filter('loop_shop_columns', fn (): int => 3);
-
-
