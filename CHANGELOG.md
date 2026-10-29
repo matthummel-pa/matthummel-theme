@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.18.0 — Motion pass: drawer, nav indicators, press states, FAQ
+
+- The mobile menu opens with a spring curve and its rows (title, pages, Elsewhere, Get updates) land one after another instead of arriving as a block. The overlay blurs the page behind it. On phones under 480px the panel rises from below rather than sliding in from the side, so nothing can push the page sideways. Closing is faster than opening.
+- The header nav and the sticky "On this page" pills get a sliding indicator: one capsule moves between items instead of each item switching its background on and off. In the header it follows the pointer and settles back on the current page; on the pills it follows the active section as you scroll. Without JavaScript, or with reduced motion on, the old static highlight stays.
+- Buttons, pills, the menu rows, the theme and menu toggles press down slightly (scale .97) on click and tap. Cards get the same press on touch screens only; hover devices already lift them.
+- FAQ answers slide open and fade in instead of popping. The height tween uses `::details-content` where the browser has it (Chromium 131+); other browsers still get the fade.
+- All of it is in one new file, `resources/css/motion.css` (loaded last), plus `resources/js/nav-indicator.js`. Nothing in portfolio.css or studio.css changed. Everything is off under prefers-reduced-motion.
+
+## 3.17.6 — Catalog refresh for Acreline and WalkRidge
+
+- Fix: the 3.17.5 catalog edits (FAQ wording on Acreline and WalkRidge, the Acreline "Read the story" link) did not show on existing product pages. Product pages are seeded from `product-catalog.json` once per version, and nobody bumped the version. A one-time refresh (`mh_product_catalog_v17`) now upserts Acreline and WalkRidge only, the same way v15 did.
+- Other products and the shop pages are not touched.
+
+
 ## 3.17.5 — Acreline and WalkRidge: FAQ matches Coming soon, one story link
 
 - The Acreline FAQ no longer promises an "Instant download after checkout" while the theme is Coming soon. It now reads "When Acreline goes on sale, you get an instant download after checkout."

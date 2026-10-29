@@ -1797,6 +1797,32 @@ function mh_apply_product_catalog_v15(): void
 }
 
 /**
+ * One-time: Acreline and WalkRidge pick up the FAQ wording that matches Coming soon, and Acreline gets its
+ * "Read the story" docs link (3.17.5). Upserts only those two.
+ *
+ * @since 3.17.6
+ */
+function mh_apply_product_catalog_v17(): void
+{
+    if (get_option('mh_product_catalog_v17') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    $slugs = ['acreline', 'walkridge'];
+    $done = 0;
+    foreach ($slugs as $slug) {
+        if (is_array($catalog[$slug] ?? null) && mh_upsert_catalog_product($slug, $catalog[$slug], true) > 0) {
+            $done++;
+        }
+    }
+
+    if ($done === count($slugs)) {
+        update_option('mh_product_catalog_v17', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1907,6 +1933,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v15', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v16', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v17', 46);
 add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
 add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
