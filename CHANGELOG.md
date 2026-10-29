@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.16.0 — Gradient headings across the whole site
+
+- Every main heading now uses the shop-page gradient: dark blue, to blue, to green on light backgrounds; white, to blue, to green on dark backgrounds (dark mode, photo heroes, post heroes, the CTA band, the contact aside, navy sections).
+- Covers `.display-title` (hero and section), the home and about section titles, and page and post hero H1s. New file `resources/css/heading-gradients.css`, loaded after `studio.css`, which had switched the older two-tone gradient off.
+- High-contrast mode falls back to plain system-colour text.
+
 ## 3.15.1 — Shop pages: fix gradient headings, small tidy-ups
 
 - Fix: the gradient headings on the shop pages painted as solid colour boxes with no readable text. The theme deliberately switches gradient text off for `.display-title.is-section` (heavier in dark mode), and the hero rule used the `background` shorthand, which resets the text clipping. Both are fixed: the headings are gradient text again in light and dark mode, and fall back to plain text in high-contrast mode.
