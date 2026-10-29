@@ -1,9 +1,11 @@
-{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(). Uses the existing work-card styles. --}}
+{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(). Builds on the work-card styles. --}}
 @php
   $status = (string) $item['status'];
+  $isSoon = $status === 'soon';
   $typeLabel = \App\mh_product_types()[$item['type']]['singular'] ?? '';
+  $titleId = $item['slug'].'-title';
 @endphp
-<article class="work-card" id="{{ esc_attr($item['slug']) }}">
+<article class="work-card shop-card shop-card--{{ esc_attr($status) }}" id="{{ esc_attr($item['slug']) }}" aria-labelledby="{{ esc_attr($titleId) }}">
   @if ($item['image'] !== '')
     {{-- The image link is hidden from assistive tech: the title link below goes to the same page. --}}
     <a class="work-shot" href="{{ esc_url($item['url']) }}" aria-hidden="true" tabindex="-1">
@@ -20,36 +22,81 @@
   <div class="work-body">
     <p class="project-type-row">
       <span class="spec-badge">{{ $typeLabel }}</span>
-      @if ($status === 'soon')
+      @if ($isSoon)
         <span class="spec-badge">{{ __('Coming soon', 'sage') }}</span>
       @endif
     </p>
-    <h3><a href="{{ esc_url($item['url']) }}">{{ $item['title'] }}</a></h3>
+    <h3 id="{{ esc_attr($titleId) }}"><a href="{{ esc_url($item['url']) }}">{{ $item['title'] }}</a></h3>
+    @if ($item['place'] !== '')
+      <p class="shop-card__for"><span>{{ __('Best for', 'sage') }}</span> {{ $item['place'] }}</p>
+    @endif
     @if ($item['blurb'] !== '')
       <p class="work-blurb">{{ $item['blurb'] }}</p>
     @endif
-    @if ($item['price'] !== '' && $status !== 'soon')
-      <p class="work-meta"><strong>{{ $item['price'] }}</strong></p>
+
+    @if (! $isSoon && $item['facts'] !== [])
+      <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">
+        @foreach ($item['facts'] as $fact)
+          <li>{{ $fact }}</li>
+        @endforeach
+      </ul>
     @endif
-    @if (in_array($status, ['buy', 'free'], true) || $item['demo'] !== '')
-      <p class="concept-hero-actions">
-        @if ($status === 'buy')
-          <a class="btn" href="{{ esc_url($item['url']) }}#buy">
-            {!! \App\mh_svg_icon('cart', 15) !!}
-            {{ __('Choose a plan', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('for %s', 'sage'), $item['title']) }}</span>
-          </a>
-        @elseif ($status === 'free')
-          <a class="btn" href="{{ esc_url($item['free_url']) }}" rel="noopener">
-            {!! \App\mh_svg_icon('download', 15) !!}
-            {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $item['title']) }}</span>
-          </a>
+    @if (! $isSoon && $item['points'] !== [])
+      <ul class="shop-card__points">
+        @foreach ($item['points'] as $point)
+          <li>{{ $point }}</li>
+        @endforeach
+      </ul>
+    @endif
+
+    @if (! $isSoon && $item['price'] !== '')
+      <p class="shop-card__price"><strong>{{ $item['price'] }}</strong></p>
+    @endif
+    @if (! $isSoon && ($item['version'] !== '' || $item['works_with'] !== ''))
+      <p class="shop-card__meta">
+        @if ($item['version'] !== '')
+          {{ sprintf(__('Version %s', 'sage'), $item['version']) }}
         @endif
-        @if ($item['demo'] !== '')
-          <a class="{{ in_array($status, ['buy', 'free'], true) ? 'h-text-arrow' : 'btn btn-outline' }}" href="{{ esc_url($item['demo']) }}" rel="noopener" target="_blank">
-            {{ $item['type'] === 'plugin' ? __('Docs and demo', 'sage') : __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $item['title']) }}</span> <span aria-hidden="true">↗</span>
-          </a>
+        @if ($item['version'] !== '' && $item['works_with'] !== '')
+          <span aria-hidden="true">·</span>
+        @endif
+        @if ($item['works_with'] !== '')
+          {{ $item['works_with'] }}
         @endif
       </p>
     @endif
+
+    <p class="shop-card__actions">
+      @if ($status === 'buy')
+        <a class="btn" href="{{ esc_url($item['url']) }}#buy">
+          {!! \App\mh_svg_icon('cart', 15) !!}
+          {{ __('Choose a plan', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('for %s', 'sage'), $item['title']) }}</span>
+        </a>
+      @elseif ($status === 'free')
+        <a class="btn" href="{{ esc_url($item['free_url']) }}" rel="noopener">
+          {!! \App\mh_svg_icon('download', 15) !!}
+          {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $item['title']) }}</span>
+        </a>
+      @elseif ($isSoon)
+        <a class="btn btn-outline" href="{{ esc_url(home_url('/get-updates/')) }}">
+          {!! \App\mh_svg_icon('mail', 15) !!}
+          {{ __('Get updates', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('to hear when %s is ready', 'sage'), $item['title']) }}</span>
+        </a>
+      @else
+        <a class="btn btn-outline" href="{{ esc_url($item['url']) }}">
+          {{ __('View details', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('for %s', 'sage'), $item['title']) }}</span>
+        </a>
+      @endif
+      @if ($item['demo'] !== '')
+        <a class="h-text-arrow" href="{{ esc_url($item['demo']) }}" rel="noopener" target="_blank">
+          {{ $item['type'] === 'plugin' ? __('Docs and demo', 'sage') : __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $item['title']) }}</span> <span aria-hidden="true">↗</span>
+        </a>
+      @endif
+      @if (! $isSoon && $item['docs_url'] !== '' && $item['docs_label'] !== '')
+        <a class="h-text-arrow" href="{{ esc_url($item['docs_url']) }}" rel="noopener" target="_blank">
+          {{ $item['docs_label'] }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $item['title']) }}</span> <span aria-hidden="true">↗</span>
+        </a>
+      @endif
+    </p>
   </div>
 </article>

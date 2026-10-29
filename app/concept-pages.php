@@ -1755,6 +1755,25 @@ function mh_apply_product_catalog_v14(): void
 }
 
 /**
+ * One-time: Cobble & Candle's version in the catalog was 0.1.0; the released theme is 1.0.0. Upserts only that product.
+ */
+function mh_apply_product_catalog_v16(): void
+{
+    if (get_option('mh_product_catalog_v16') || wp_installing()) {
+        return;
+    }
+
+    $seed = mh_product_catalog_seed_data()['cobbleandcandle'] ?? null;
+    if (! is_array($seed)) {
+        return;
+    }
+
+    if (mh_upsert_catalog_product('cobbleandcandle', $seed, true) > 0) {
+        update_option('mh_product_catalog_v16', true);
+    }
+}
+
+/**
  * One-time: Acreline, WalkRidge and TOCguide drop "Sample" from their eyebrows. Upserts only those three.
  */
 function mh_apply_product_catalog_v15(): void
@@ -1887,6 +1906,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v12', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v13', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v15', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v16', 46);
 add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
 add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
