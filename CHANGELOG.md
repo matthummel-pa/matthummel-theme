@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.16.2 — Shop cards: category pills under the title
+
+- The Theme / Plugin / Coming soon pills now sit between the product title and its blurb instead of above the title.
+
 ## 3.16.1 — Shop cards: more space, quality stats
 
 - Available now cards have more room between the type pills, title, blurb, highlight pills, list, stats and price.

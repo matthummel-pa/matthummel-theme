@@ -20,13 +20,13 @@
     </a>
   @endif
   <div class="work-body">
+    <h3 id="{{ esc_attr($titleId) }}"><a href="{{ esc_url($item['url']) }}">{{ $item['title'] }}</a></h3>
     <p class="project-type-row">
       <span class="spec-badge">{{ $typeLabel }}</span>
       @if ($isSoon)
         <span class="spec-badge">{{ __('Coming soon', 'sage') }}</span>
       @endif
     </p>
-    <h3 id="{{ esc_attr($titleId) }}"><a href="{{ esc_url($item['url']) }}">{{ $item['title'] }}</a></h3>
     @if ($item['place'] !== '')
       <p class="shop-card__for"><span>{{ __('Best for', 'sage') }}</span> {{ $item['place'] }}</p>
     @endif

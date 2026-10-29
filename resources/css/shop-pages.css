@@ -172,12 +172,9 @@ html.mh-dark body .shop-section h2.display-title.is-section {
 .shop-card .work-body > * {
   margin-block: 0;
 }
-/* The type pill row, the title and the "best for" line read as one group; the blurb, pills, list, stats and
-   price each get their own breathing room. */
-.shop-card .project-type-row {
-  margin-bottom: -.3rem;
-}
-.shop-card h3 + .shop-card__for {
+/* The title and its category pills read as one group; the "best for" line, blurb, highlight pills, list, stats
+   and price each get their own breathing room. */
+.shop-card h3 + .project-type-row {
   margin-top: -.55rem;
 }
 .shop-card h3 {
