@@ -1,8 +1,9 @@
 # Changelog
 
-## 3.17.5 — Acreline: one story on the product page
+## 3.17.5 — Acreline and WalkRidge: FAQ matches Coming soon, one story link
 
 - The Acreline FAQ no longer promises an "Instant download after checkout" while the theme is Coming soon. It now reads "When Acreline goes on sale, you get an instant download after checkout."
+- The WalkRidge FAQ had the same promise and now reads "When WalkRidge goes on sale, you get an instant download after checkout."
 - The Acreline page lists a "Read the story" link to the journal post, which now links back to the theme page.
 
 
