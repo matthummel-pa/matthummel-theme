@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.11.4 — Themes page drops the plugins step
+
+- The "How buying works" list on `/themes/` no longer ends with "Plugins are free. Download the zip from the plugin page." It stays on `/shop/`, which lists both. If the steps were saved in the page fields before, the saved text still wins; edit or clear it there.
+
 ## 3.11.3 — Plugins page gets its own steps
 
 - `/plugins/` no longer shows the theme buying steps (plans, license, refund). Its section is now "How to get a plugin": download the zip, upload it under Plugins, Add Plugin, Upload Plugin, then activate. Heading and steps are editable on the Plugins page under Page content (theme). `/shop/` and `/themes/` are unchanged.

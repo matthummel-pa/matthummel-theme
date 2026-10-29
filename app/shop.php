@@ -1221,7 +1221,7 @@ function mh_shop_copy_default(string $scope, string $part): string
 
 /**
  * Default steps for the shop pages (HTML list). The plugins page gets a short "how to get it" list;
- * every other scope ('all', 'theme') shares the buying steps.
+ * 'theme' gets the buying steps only, and 'all' adds a line about free plugins.
  */
 function mh_shop_how_default(string $scope = 'all'): string
 {
@@ -1233,13 +1233,18 @@ function mh_shop_how_default(string $scope = 'all'): string
         ]).'</li></ol>';
     }
 
-    return '<ol><li>'.implode('</li><li>', [
+    $steps = [
         __('Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.', 'sage'),
         __('Your receipt, license key, and download arrive by email. Your account page keeps them.', 'sage'),
         __('Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.', 'sage'),
         __('If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.', 'sage'),
-        __('Plugins are free. Download the zip from the plugin page.', 'sage'),
-    ]).'</li></ol>';
+    ];
+    // The plugin line only belongs on pages that list plugins ('all'); the themes page leaves it out.
+    if ($scope !== 'theme') {
+        $steps[] = __('Plugins are free. Download the zip from the plugin page.', 'sage');
+    }
+
+    return '<ol><li>'.implode('</li><li>', $steps).'</li></ol>';
 }
 
 /**
