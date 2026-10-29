@@ -7,6 +7,7 @@
 @import "./code-blocks.css";
 @import "./studio.css";
 @import "./shop-pages.css"; /* /shop/, /themes/, /plugins/ (3.14.0) */
+@import "./heading-gradients.css"; /* site-wide gradient headings (3.16.0); after studio.css so it wins */
 @import "./blocks.css";
 @import "./release-watch.css";
 @import "./site-extras.css"; /* formerly Additional CSS; keep last */
