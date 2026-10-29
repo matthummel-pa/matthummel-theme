@@ -185,10 +185,6 @@ function mh_seo_landing_defaults(?int $post_id = null): array
             'title' => __('Terms of Use', 'sage').' | '.$brand,
             'desc' => __('Terms of use for matthummel.com and related WordPress products. Read before you buy or reuse code.', 'sage'),
         ],
-        'template-woocommerce.blade.php' => [
-            'title' => '',
-            'desc' => __('Cart, checkout, and account for digital WordPress products. Download links arrive by email after payment.', 'sage'),
-        ],
         'template-contact.blade.php' => [
             'title' => __('Contact WordPress Developer', 'sage').' | '.$brand,
             'desc' => __('Contact WordPress developer Matt Hummel about themes, plugins, or a site your shop can edit.', 'sage'),

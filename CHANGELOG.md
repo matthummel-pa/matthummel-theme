@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.12.0 — Remove the WooCommerce cart, checkout and account screens (stage 1 of 3)
+
+Products are sold through Freemius now, so the theme no longer carries its own cart and checkout.
+
+- Removed `app/woocommerce.php` (35 functions: cart, checkout and order-notes helpers, WooCommerce page seeding, the install-brief form) and its `woocommerce` entry in `functions.php`.
+- Removed the WooCommerce templates: `template-woocommerce.blade.php`, `resources/views/woocommerce/` (shop archive, single product, my-account, login) and the four partials they used (cart drawer, two order-desk sidebars, breadcrumb).
+- Removed the four scripts that only served them (`shop-filter`, `woo-sticky-bar`, `studio-cart`, `woo-desk`) and their calls in `app.js`.
+- Removed the `template-woocommerce` SEO defaults in `filters.php` and the WooCommerce page skip in `bespoke.php`.
+- If WooCommerce is still active, its cart, checkout and account pages now use the plain page template. There are no orders to affect.
+- Not in this stage: the WooCommerce code inside `app/shop.php`, the leftover CSS, and the docs. Those are stages 2 and 3.
+
 ## 3.11.4 — Themes page drops the plugins step
 
 - The "How buying works" list on `/themes/` no longer ends with "Plugins are free. Download the zip from the plugin page." It stays on `/shop/`, which lists both. If the steps were saved in the page fields before, the saved text still wins; edit or clear it there.

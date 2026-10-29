@@ -68,9 +68,9 @@ function mh_clear_page_block_content(): void
         return;
     }
 
-    $skip = array_filter(array_merge([
+    $skip = array_filter([
         (int) get_option('wp_page_for_privacy_policy'),
-    ], array_values(mh_woocommerce_page_ids())));
+    ]);
 
     $pages = get_posts([
         'post_type' => 'page',
