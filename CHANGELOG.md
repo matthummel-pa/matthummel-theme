@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.11.1 — Shop pages show their How buying works and Questions sections
+
+- The Shop pages read their steps and questions with an empty fallback, so both sections stayed hidden until someone saved the fields. The defaults now live in `mh_shop_how_default()` and `mh_shop_faq_defaults()`, and the page fields and the template both read them.
+
 ## 3.11.0 — Shop pages: /shop/, /themes/, /plugins/
 
 - New **Shop** page template. One template, three pages: `/shop/` lists everything, `/themes/` lists themes, `/plugins/` lists plugins. Browse by type with plain links (no script), each card shows a price line, one action, and the demo link.

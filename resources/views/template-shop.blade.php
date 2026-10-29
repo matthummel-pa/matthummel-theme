@@ -33,13 +33,13 @@
   }
   $faq = [];
   foreach ([1, 2, 3, 4] as $n) {
-    $q = trim(\App\field('shop_faq_q'.$n, '', $pageId));
-    $a = trim(\App\field('shop_faq_a'.$n, '', $pageId));
+    $q = trim(\App\field('shop_faq_q'.$n, \App\mh_shop_faq_defaults()[$n - 1][0], $pageId));
+    $a = trim(\App\field('shop_faq_a'.$n, \App\mh_shop_faq_defaults()[$n - 1][1], $pageId));
     if ($q !== '' && $a !== '') {
       $faq[] = [$q, $a];
     }
   }
-  $how = trim(\App\field_html('shop_how', '', $pageId));
+  $how = trim(\App\field_html('shop_how', \App\mh_shop_how_default(), $pageId));
 @endphp
 
 @component('partials.page-hero')

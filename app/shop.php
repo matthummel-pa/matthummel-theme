@@ -1213,6 +1213,33 @@ function mh_shop_copy_default(string $scope, string $part): string
     return $part === 'h1' ? $plural : sprintf(__('Browse the %s I offer.', 'sage'), strtolower($plural));
 }
 
+/** Default "How buying works" steps for the shop pages (HTML list). */
+function mh_shop_how_default(): string
+{
+    return '<ol><li>'.implode('</li><li>', [
+        __('Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.', 'sage'),
+        __('Your receipt, license key, and download arrive by email. Your account page keeps them.', 'sage'),
+        __('Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.', 'sage'),
+        __('If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.', 'sage'),
+        __('Plugins are free. Download the zip from the plugin page.', 'sage'),
+    ]).'</li></ol>';
+}
+
+/**
+ * Default questions and answers for the shop pages.
+ *
+ * @return list<array{0: string, 1: string}> Question, answer.
+ */
+function mh_shop_faq_defaults(): array
+{
+    return [
+        [__('Can I try a theme before I buy?', 'sage'), __('Yes. Theme pages link to a live demo where there is one. Cobble & Candle has three demos you can click through.', 'sage')],
+        [__('What happens when my license expires?', 'sage'), __('The theme keeps working on your site. You stop getting updates and email support until you renew.', 'sage')],
+        [__('Can I use a theme on client sites?', 'sage'), __('For Cobble & Candle, the 5-site and unlimited-site plans are meant for that. The unlimited plan is white-label, so you can ship it under your own name.', 'sage')],
+        [__('Who do I ask if something breaks?', 'sage'), __('Write to hello@matthummel.com. Support is by email, and I reply within one business day (ET).', 'sage')],
+    ];
+}
+
 /**
  * ID of the Shop page (/shop/), or 0 when it has not been created. Lets the shop link through the
  * old "storefront is off" redirect and nav filters.
