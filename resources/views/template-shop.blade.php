@@ -31,10 +31,13 @@
       $groups[$key] = $rows;
     }
   }
+  // The plugins page has its own short set; every other page uses the theme questions.
+  $faqKey = $scope === 'plugin' ? 'shop_plugin_faq' : 'shop_faq';
+  $faqDefaults = \App\mh_shop_faq_defaults($scope);
   $faq = [];
-  foreach ([1, 2, 3, 4] as $n) {
-    $q = trim(\App\field('shop_faq_q'.$n, \App\mh_shop_faq_defaults()[$n - 1][0], $pageId));
-    $a = trim(\App\field('shop_faq_a'.$n, \App\mh_shop_faq_defaults()[$n - 1][1], $pageId));
+  foreach ($faqDefaults as $i => [$defaultQ, $defaultA]) {
+    $q = trim(\App\field($faqKey.'_q'.($i + 1), $defaultQ, $pageId));
+    $a = trim(\App\field($faqKey.'_a'.($i + 1), $defaultA, $pageId));
     if ($q !== '' && $a !== '') {
       $faq[] = [$q, $a];
     }

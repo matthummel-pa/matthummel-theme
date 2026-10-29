@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.11.2 — Plugins page gets its own short questions
+
+- `/plugins/` no longer shows the theme questions (licenses, client sites). It has three of its own: are the plugins free, where to get help, and whether they collect data. They are editable in Page content (theme) on the Plugins page. `/shop/` and `/themes/` are unchanged.
+
 ## 3.11.1 — Shop pages show their How buying works and Questions sections
 
 - The Shop pages read their steps and questions with an empty fallback, so both sections stayed hidden until someone saved the fields. The defaults now live in `mh_shop_how_default()` and `mh_shop_faq_defaults()`, and the page fields and the template both read them.
