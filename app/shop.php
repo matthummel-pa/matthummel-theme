@@ -556,8 +556,13 @@ function mh_shop_items(string $type = 'all'): array
                 $docs[] = [trim((string) $doc[0]), (string) $doc[1]];
             }
         }
-        if ($docs !== []) {
-            [$docsLabel, $docsUrl] = $docs[0];
+        // The card's own demo link already opens this page (TOCguide's docs site is its demo), so
+        // the card's docs link is the first docs entry that goes somewhere else.
+        foreach ($docs as [$label, $url]) {
+            if (untrailingslashit($url) !== untrailingslashit((string) ($card['demo'] ?? ''))) {
+                [$docsLabel, $docsUrl] = [$label, $url];
+                break;
+            }
         }
 
         $source = (string) ($entry['github'] ?? '');

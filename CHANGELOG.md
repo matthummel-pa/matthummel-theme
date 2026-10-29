@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.2 — Shop cards: no duplicate TOCguide link
+
+- Fix: the TOCguide card showed "Docs and demo" and "Docs site", both pointing to the same page. The card's docs link now skips any docs entry that matches its demo link, so TOCguide shows one docs link and the Support entry stays in the docs list.
+
 ## 3.17.1 — Shop cards: vertical again, two columns, tabs above the cards
 
 - Product cards are vertical again (image on top). Desktop shows two per row; phones and tablets show one full-width card.
