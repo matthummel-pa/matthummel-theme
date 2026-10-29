@@ -77,7 +77,10 @@ Target Rank Math score: **80+** per product.
 
 - One template, `template-shop.blade.php`. Create a page with the **Shop** template and the slug `shop`, `themes` or `plugins`.
 - Intros, "how buying works" and questions are **Page content (theme)** fields (`shop_*`). Defaults live in `mh_shop_copy_default()`, `mh_shop_how_default()` and `mh_shop_faq_defaults()`, per scope.
-- Sections, in order: hero with breadcrumb, primary button and trust row; **Available now**; **Coming soon**; compare table (themes, when there are two or more); how buying works; questions; closing call to action. A section is skipped when it has nothing to show.
+- Sections, in order: hero with breadcrumb, primary button and trust row; **Available now**; **Coming soon**; compare table (themes as columns, when there are two or more); how buying works; **Questions** (Home FAQ layout: heading, drawing and help card left, `.faq-list` accordion right, `id="questions"`); **Docs and sharing**; closing call to action. A section is skipped when it has nothing to show.
+- Each section carries one of the animated drawings from `partials/section-illustration` (work, now, uses, newsletter, questions, journal-posts, write). Add `mh-block-section--illus` to the section and include the partial; use a different anchor per drawing on one page.
+- Card layout: button on its own full-width row, plain links (`.shop-link`) on one line below it.
+- Headings use the blue-to-green gradient from `shop-pages.css` (white-to-blue-to-green on dark). Keep the forced-colors fallback.
 - Tabs come from `mh_product_types()` once a type has a live item.
 - Cards read the catalog: `place`, the first two `metrics` (a release number is skipped), the first two `benefits`, `version`, `compatible` and the first `docs` link.
 - Only put things that are true in the trust row and the copy. No reviews, ratings, sales counters, countdowns or scarcity badges unless there is real data behind them.

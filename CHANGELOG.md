@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.15.0 — Shop pages: design pass (gradients, cards, compare, steps, accordion, drawings, docs and sharing)
+
+- **Headings.** The page heading is white, to blue, to green on the dark hero. Section headings are dark blue, to blue, to green on light pages and white, to blue, to green in dark mode, so they stay readable on both. In high-contrast mode they fall back to plain text.
+- **Cards.** Blue-to-green gradient borders. The button now has its own full-width row. The plain links (live demo, docs) sit on one line below it, as underline-on-hover links with a small gradient ring arrow. Spacing and type are tightened. Coming-soon cards stay dashed and quieter.
+- **Compare.** Rebuilt with themes as columns and the things to compare as rows (best for, price, works with, live demo, get it). The available theme's column has a gradient top bar and a light tint, the first column sticks while scrolling, and each column ends in a button.
+- **How buying works.** Larger gradient-bordered cards, each with a dark blue number badge with a blue-to-green ring sitting on its top edge.
+- **Questions.** Now the Home layout: heading, intro, the animated accordion drawing and a "Still have a question?" card on the left, your `.faq-list` accordion on the right. The first question is open.
+- **Drawings.** Each section gets one of the existing animated blue and green drawings, picked to match what the section is on other pages: the browser (Available now), the calendar and clock (Coming soon), the stacked tiers (Compare), the envelope and check (How buying works), the accordion (Questions), the stacked posts (Docs and sharing), and the paper plane (closing call to action). They stop under reduced motion and hide on small screens, like the rest of the site.
+- **New: Docs and sharing.** A "Read first" block listing the guides from the catalog for each product, and a share block (Bluesky, LinkedIn, Facebook, Reddit, email, copy link) using the same buttons and helper as the journal posts.
+- **New: ask a question.** The Questions help card has an "Ask me directly" button to the contact page and the email address. Small labels above each heading (for example "Ready to use", "Side by side") are editable.
+- All new copy is editable under Page content (theme). The new stylesheet rules are in `shop-pages.css`.
+
 ## 3.14.0 — Shop, Themes and Plugins pages: layout, copy, SEO and accessibility
 
 - **Layout.** Cards are grouped by availability: an **Available now** section first, then a quieter **Coming soon** section (dashed cards, a Get updates link, no price). Each card now shows who it is for, two facts from the catalog (for example "28 custom blocks"), two benefits, the price line, the version and what it works with, and one primary action, plus links to the demo and the docs. The Themes and All pages get a **compare table** (theme, best for, price, works with, demo). The page ends with a "need something custom?" call to action.

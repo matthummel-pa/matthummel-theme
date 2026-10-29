@@ -692,6 +692,15 @@ function page_field_map(): array
                 ['shop_trust', __('Short list under the intro (basic HTML ok)', 'sage'), 'html', mh_shop_trust_default()],
                 ['shop_plugin_trust', __('Plugins page, short list', 'sage'), 'html', mh_shop_trust_default('plugin')],
             ],
+            __('Section labels', 'sage') => [
+                ['shop_avail_eyebrow', __('Available now, small label', 'sage'), 'text', mh_shop_copy_default('all', 'avail_eyebrow')],
+                ['shop_soon_eyebrow', __('Coming soon, small label', 'sage'), 'text', mh_shop_copy_default('all', 'soon_eyebrow')],
+                ['shop_compare_eyebrow', __('Compare table, small label', 'sage'), 'text', mh_shop_copy_default('all', 'compare_eyebrow')],
+                ['shop_how_eyebrow', __('How buying works, small label', 'sage'), 'text', mh_shop_copy_default('all', 'how_eyebrow')],
+                ['shop_faq_eyebrow', __('Questions, small label', 'sage'), 'text', mh_shop_copy_default('all', 'faq_eyebrow')],
+                ['shop_share_eyebrow', __('Docs and sharing, small label', 'sage'), 'text', mh_shop_copy_default('all', 'share_eyebrow')],
+                ['shop_cta_eyebrow', __('Closing call to action, small label', 'sage'), 'text', mh_shop_copy_default('all', 'cta_eyebrow')],
+            ],
             __('Product sections', 'sage') => [
                 ['shop_avail_h2', __('Available now, heading', 'sage'), 'text', mh_shop_copy_default('all', 'avail_h2')],
                 ['shop_avail_intro', __('Available now, intro', 'sage'), 'textarea', mh_shop_copy_default('all', 'avail_intro')],
@@ -707,7 +716,12 @@ function page_field_map(): array
                 ['shop_plugin_how', __('Plugins page, steps (basic HTML ok)', 'sage'), 'html', mh_shop_how_default('plugin')],
             ],
             __('Questions', 'sage') => [
-                ['shop_faq_h2', __('Heading', 'sage'), 'text', __('Questions', 'sage')],
+                ['shop_faq_h2', __('Heading', 'sage'), 'text', mh_shop_copy_default('all', 'faq_h2')],
+                ['shop_all_faq_intro', __('Intro on /shop/ and /themes/', 'sage'), 'textarea', mh_shop_copy_default('all', 'faq_intro')],
+                ['shop_plugin_faq_intro', __('Intro on /plugins/', 'sage'), 'textarea', mh_shop_copy_default('plugin', 'faq_intro')],
+                ['shop_help_h3', __('Help card, heading', 'sage'), 'text', mh_shop_copy_default('all', 'help_h3')],
+                ['shop_help_text', __('Help card, text', 'sage'), 'textarea', mh_shop_copy_default('all', 'help_text')],
+                ['shop_help_label', __('Help card, button', 'sage'), 'text', mh_shop_copy_default('all', 'help_label')],
                 ['shop_faq_q1', __('Question 1', 'sage'), 'text', mh_shop_faq_defaults()[0][0]],
                 ['shop_faq_a1', __('Answer 1', 'sage'), 'textarea', mh_shop_faq_defaults()[0][1]],
                 ['shop_faq_q2', __('Question 2', 'sage'), 'text', mh_shop_faq_defaults()[1][0]],
@@ -726,6 +740,12 @@ function page_field_map(): array
                 ['shop_plugin_faq_a2', __('Plugins page, answer 2', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[1][1]],
                 ['shop_plugin_faq_q3', __('Plugins page, question 3', 'sage'), 'text', mh_shop_faq_defaults('plugin')[2][0]],
                 ['shop_plugin_faq_a3', __('Plugins page, answer 3', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[2][1]],
+            ],
+            __('Docs and sharing', 'sage') => [
+                ['shop_share_h2', __('Heading', 'sage'), 'text', mh_shop_copy_default('all', 'share_h2')],
+                ['shop_share_intro', __('Intro', 'sage'), 'textarea', mh_shop_copy_default('all', 'share_intro')],
+                ['shop_docs_h3', __('Docs block, heading', 'sage'), 'text', mh_shop_copy_default('all', 'docs_h3')],
+                ['shop_share_h3', __('Share block, heading', 'sage'), 'text', mh_shop_copy_default('all', 'share_h3')],
             ],
             __('Closing call to action', 'sage') => [
                 ['shop_cta_h2', __('Heading', 'sage'), 'text', mh_shop_copy_default('all', 'cta_h2')],
