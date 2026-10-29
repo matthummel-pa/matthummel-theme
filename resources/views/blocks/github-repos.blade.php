@@ -69,7 +69,7 @@
     </ol>
     @if ($starred !== [])
       <div class="gh-starred">
-        <h4 class="gh-starred__title">{{ __('Most starred', 'sage') }}</h4>
+        <h3 class="gh-starred__title">{{ __('Most starred', 'sage') }}</h3>
         <ul class="gh-starred__list">
           @foreach ($starred as $s)
             <li>

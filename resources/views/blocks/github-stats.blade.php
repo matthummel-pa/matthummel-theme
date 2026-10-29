@@ -132,7 +132,7 @@
     @endphp
     <figure class="gh-panel gh-heat">
       <figcaption class="gh-panel__head">
-        <h4 class="gh-panel__title">{{ __('Last 90 days', 'sage') }}</h4>
+        <h3 class="gh-panel__title">{{ __('Last 90 days', 'sage') }}</h3>
         <p class="gh-panel__note">{{ $heatSummary }}</p>
       </figcaption>
       <div class="gh-heat__scroll">
@@ -162,7 +162,7 @@
       @if ($showMix)
         <section class="gh-panel gh-mix" aria-labelledby="gh-mix-title">
           <div class="gh-panel__head">
-            <h4 class="gh-panel__title" id="gh-mix-title">{{ __('What the contributions are', 'sage') }}</h4>
+            <h3 class="gh-panel__title" id="gh-mix-title">{{ __('What the contributions are', 'sage') }}</h3>
             <p class="gh-panel__note">{{ __('Last 12 months', 'sage') }}</p>
           </div>
           <div class="gh-mix__bar" aria-hidden="true">
@@ -208,7 +208,7 @@
   @if ($showFeed)
         <section class="gh-panel gh-feed" aria-labelledby="gh-feed-title">
           <div class="gh-panel__head">
-            <h4 class="gh-panel__title" id="gh-feed-title">{{ __('Recent activity', 'sage') }}</h4>
+            <h3 class="gh-panel__title" id="gh-feed-title">{{ __('Recent activity', 'sage') }}</h3>
             <a class="gh-panel__link" href="{{ esc_url($profileUrl) }}" rel="noopener" target="_blank">{{ __('On GitHub', 'sage') }} →<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>
           </div>
           <ol class="gh-feed__list">
