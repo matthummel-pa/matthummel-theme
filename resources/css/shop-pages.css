@@ -166,11 +166,19 @@ html.mh-dark body .shop-section h2.display-title.is-section {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: .7rem;
-  padding: 1.35rem 1.4rem 1.5rem;
+  gap: 1.15rem;
+  padding: 1.6rem 1.65rem 1.75rem;
 }
 .shop-card .work-body > * {
   margin-block: 0;
+}
+/* The type pill row, the title and the "best for" line read as one group; the blurb, pills, list, stats and
+   price each get their own breathing room. */
+.shop-card .project-type-row {
+  margin-bottom: -.3rem;
+}
+.shop-card h3 + .shop-card__for {
+  margin-top: -.55rem;
 }
 .shop-card h3 {
   font-size: clamp(1.3rem, 1.7vw, 1.5rem);
@@ -196,7 +204,7 @@ html.mh-dark body .shop-section h2.display-title.is-section {
 .shop-card__facts {
   display: flex;
   flex-wrap: wrap;
-  gap: .45rem;
+  gap: .55rem;
   padding: 0;
   list-style: none;
 }
@@ -213,12 +221,12 @@ html.mh-dark body .shop-section h2.display-title.is-section {
 }
 .shop-card__points {
   display: grid;
-  gap: .5rem;
+  gap: .8rem;
   padding: 0;
   list-style: none;
   color: var(--color-text-secondary);
   font-size: .95rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 .shop-card__points li {
   position: relative;
@@ -233,8 +241,46 @@ html.mh-dark body .shop-section h2.display-title.is-section {
   font-weight: 700;
   color: var(--shop-green);
 }
+/* Quality stats: accessibility, speed and the like. Value on top, plain label under it. */
+.shop-card__quality {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--color-border);
+}
+.shop-card__quality > div {
+  display: grid;
+  gap: .15rem;
+  padding: .7rem .85rem;
+  border: 1px solid var(--blue-100);
+  border-radius: 12px;
+  background: var(--blue-50);
+}
+.shop-card__quality dt {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--blue-800);
+}
+.shop-card__quality dd {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+}
+html.mh-dark .shop-card__quality > div,
+html.mh-dark .shop-card__facts li {
+  border-color: color-mix(in srgb, var(--shop-blue) 40%, transparent);
+  background: color-mix(in srgb, var(--shop-blue) 14%, transparent);
+}
+html.mh-dark .shop-card__quality dt,
+html.mh-dark .shop-card__facts li {
+  color: var(--color-text);
+}
 .shop-card__price {
-  margin-top: .4rem;
+  margin-top: .3rem;
   font-size: 1.45rem;
   line-height: 1.2;
   letter-spacing: -.02em;
@@ -249,9 +295,9 @@ html.mh-dark body .shop-section h2.display-title.is-section {
 /* The button gets its own full-width row; the plain links sit on one line below it. */
 .shop-card__cta {
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   margin-top: auto;
-  padding-top: 1.1rem;
+  padding-top: 1.35rem;
 }
 .shop-card__button {
   width: 100%;

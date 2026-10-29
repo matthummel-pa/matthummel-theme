@@ -162,6 +162,12 @@
         "AA tested"
       ]
     ],
+    "quality": [
+      ["WCAG 2.2 AA", "tested"],
+      ["44 px", "touch targets"],
+      ["RTL", "languages supported"],
+      ["Reduced", "motion respected"]
+    ],
     "faq": [
       [
         "Is Cobble & Candle a WordPress restaurant theme?",
@@ -854,6 +860,11 @@
         "GPLv2",
         "or later"
       ]
+    ],
+    "quality": [
+      ["No", "tracking"],
+      ["SEO", "server-rendered HTML"],
+      ["GPLv2", "or later"]
     ],
     "faq": [
       [
