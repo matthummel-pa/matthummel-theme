@@ -6,16 +6,6 @@
 
 namespace App;
 
-/**
- * Whether the public storefront (cart, prices, buy CTAs) is shown.
- *
- * Always false: checkout runs through Freemius on each product page, not a cart. Kept until the last callers are cleaned up.
- */
-function mh_public_shop_enabled(): bool
-{
-    return false;
-}
-
 /** Public Projects listing URL. */
 function mh_work_listing_url(): string
 {
@@ -419,19 +409,6 @@ function mh_shop_faq_defaults(string $scope = 'all'): array
         [__('Can I use a theme on client sites?', 'sage'), __('For Cobble & Candle, the 5-site and unlimited-site plans are meant for that. The unlimited plan is white-label, so you can ship it under your own name.', 'sage')],
         [__('Who do I ask if something breaks?', 'sage'), __('Write to hello@matthummel.com. Support is by email, and I reply within one business day (ET).', 'sage')],
     ];
-}
-
-/**
- * ID of the Shop page (/shop/), or 0 when it has not been created. Lets the shop link through the
- * old "storefront is off" redirect and nav filters.
- */
-function mh_shop_page_id(): int
-{
-    $page = get_page_by_path('shop');
-
-    return ($page instanceof \WP_Post && get_page_template_slug($page) === 'template-shop.blade.php')
-        ? (int) $page->ID
-        : 0;
 }
 
 /**

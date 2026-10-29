@@ -136,7 +136,7 @@ add_action('wp_head', function (): void {
 
 /** JSON-LD: BlogPosting on posts, WebSite + Person on the front page, WebPage on other pages. */
 add_action('wp_head', function (): void {
-    if (! mh_social_meta_enabled() || is_home() || (function_exists('is_woocommerce') && is_woocommerce())) {
+    if (! mh_social_meta_enabled() || is_home()) {
         return;
     }
 

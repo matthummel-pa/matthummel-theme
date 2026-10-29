@@ -55,35 +55,17 @@ function mh_page_focus_keyword(int $post_id): string
         $key = 'front-page.blade.php';
     }
 
-    // Shop page: use the digital products keyword if no explicit RM meta is saved.
-    if (function_exists('wc_get_page_id')) {
-        $shopId = (int) wc_get_page_id('shop');
-        if ($shopId > 0 && $post_id === $shopId) {
-            return 'WordPress themes plugins';
-        }
-    }
-
     $defaults = mh_page_focus_keyword_defaults();
 
     return $defaults[$key] ?? 'WordPress';
 }
 
 /**
- * Resolve the effective page_field_map key for a post, including the WooCommerce
- * shop page which has no Blade template assigned but reuses the work_* field set.
+ * Resolve the effective page_field_map key for a post (its page template).
  */
 function mh_effective_field_map_key(int $post_id): string
 {
-    $key = page_template_key($post_id);
-
-    if (($key === '' || $key === 'default') && function_exists('wc_get_page_id')) {
-        $shopId = (int) wc_get_page_id('shop');
-        if ($shopId > 0 && $post_id === $shopId) {
-            return 'template-projects.blade.php';
-        }
-    }
-
-    return $key;
+    return page_template_key($post_id);
 }
 
 /**

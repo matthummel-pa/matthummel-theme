@@ -3493,21 +3493,6 @@ add_action('init', function (): void {
         }
     }
 
-    $shopId = (int) get_option('woocommerce_shop_page_id');
-    if ($shopId > 0) {
-        $desc = (string) get_post_field('post_content', $shopId);
-        $legacyShop = [
-            'Studio WordPress themes from Work projects. Read the concept page first, buy the pack here, or hire me for a custom build.',
-            'Studio WordPress themes with concept pages for context. Buy the pack here or say hello for a custom Gettysburg build.',
-        ];
-        if (in_array(trim(wp_strip_all_tags($desc)), array_map(static fn ($s) => wp_strip_all_tags($s), $legacyShop), true) || trim($desc) === '') {
-            wp_update_post([
-                'ID' => $shopId,
-                'post_content' => '<!-- wp:paragraph --><p>WordPress themes and plugins ready for checkout. Browse demos and product details on <a href="/projects/">Projects</a>, then buy the pack here — or hire me for a custom build.</p><!-- /wp:paragraph -->',
-            ]);
-        }
-    }
-
     update_option('mh_projects_catalog_seo_v1', true);
 }, 86);
 

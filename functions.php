@@ -1,7 +1,6 @@
 <?php
 
 use App\Providers\ThemeServiceProvider;
-use Genero\Sage\WooCommerce\WooCommerceServiceProvider;
 use Roots\Acorn\Application;
 
 /*
@@ -125,7 +124,6 @@ unset($mhRankMathRestMeta);
 Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
-        WooCommerceServiceProvider::class,
     ])
     ->boot();
 

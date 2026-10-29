@@ -616,8 +616,8 @@ function page_field_map(): array
             ],
             __('Acreline add-ons', 'sage') => [
                 ['svc_addons_h2', __('Heading', 'sage'), 'text', __('Acreline add-ons.', 'sage')],
-                ['svc_addons_intro', __('Intro', 'sage'), 'textarea', __('Live shop products with checkout. Prices below come from WooCommerce when the product exists.', 'sage')],
-                ['svc_theme_note', __('Acreline note (basic HTML ok)', 'sage'), 'html', __('Need the theme first? <a href="/product/acreline/">Acreline</a> is the listing theme. <a href="https://acreline.matthummel.com/">See the demo</a>.', 'sage')],
+                ['svc_addons_intro', __('Intro', 'sage'), 'textarea', mh_adjacent_range_copy()],
+                ['svc_theme_note', __('Acreline note (basic HTML ok)', 'sage'), 'html', __('Need the theme first? <a href="/themes/acreline/">Acreline</a> is the listing theme. <a href="https://acreline.matthummel.com/">See the demo</a>.', 'sage')],
             ],
             __('Custom work', 'sage') => [
                 ['svc_price_h2', __('Heading', 'sage'), 'text', __('Custom WordPress.', 'sage')],
@@ -1772,15 +1772,6 @@ function render_page_fields_box(\WP_Post $post): void
 {
     $key = page_template_key($post->ID);
 
-    // Shop can still reuse work_* fields if someone edits Pages → Shop.
-    // The Projects page owns those keys again.
-    if ($key === '' || $key === 'default') {
-        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-        if ($shopId > 0 && $post->ID === $shopId) {
-            $key = 'template-projects.blade.php';
-        }
-    }
-
     $map = page_field_map();
 
     if (empty($map[$key])) {
@@ -1908,14 +1899,6 @@ add_action('save_post_page', function ($post_id) {
     $key = page_template_key((int) $post_id);
     if (isset($_POST['page_template']) && $_POST['page_template'] !== 'default') {
         $key = sanitize_text_field(wp_unslash($_POST['page_template']));
-    }
-
-    // WooCommerce shop page reuses the work_* catalog fields.
-    if ($key === '' || $key === 'default') {
-        $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-        if ($shopId > 0 && (int) $post_id === $shopId) {
-            $key = 'template-projects.blade.php';
-        }
     }
 
     $map = page_field_map();
@@ -2056,10 +2039,7 @@ add_action('init', function (): void {
     $frontId = (int) get_option('page_on_front');
     $homeId = mh_page_id_by_template('template-home.blade.php') ?: $frontId;
     $hireId = mh_page_id_by_template('template-hire.blade.php');
-    $shopId = function_exists('wc_get_page_id') ? (int) wc_get_page_id('shop') : 0;
-    if ($shopId <= 0) {
-        $shopId = mh_page_id_by_template('template-projects.blade.php');
-    }
+    $shopId = mh_page_id_by_template('template-projects.blade.php');
 
     $swaps = [
         [$homeId, 'home_about_text', [

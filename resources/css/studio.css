@@ -466,9 +466,6 @@ body {
 .about-hero::before,
 .mh-shop .page-header--shop::before,
 .mh-shop .page-header--product::before,
-.mh-shop .page-header--woo::before,
-.mh-shop .page-header--cart::before,
-.mh-shop .page-header--checkout::before,
 .mh-shop .page-header--account::before {
   display: none;
 }

@@ -1916,7 +1916,7 @@ function mh_projects_live_for_work(): array
 /**
  * Featured Projects CPT cards for the home listing.
  *
- * Prefers live project posts. Does not prioritize Woo sale flags.
+ * Prefers live project posts.
  *
  * @since 3.6.0
  *
@@ -2293,7 +2293,7 @@ function mh_ensure_projects_listing_page(): void
 /**
  * One-shot: convert theme/plugin/app products into live project posts.
  *
- * WooCommerce stays installed. Service add-ons are skipped. Studio demo
+ * Service add-ons are skipped. Studio demo
  * imports stay off unless Matt asks.
  */
 function mh_sync_products_to_project_cpt(): void
@@ -2382,7 +2382,7 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     mh_project_admin_field_row(__('Category', 'sage'), 'mh_project_cat', $cat, __('Tours, Hotels, Restaurants…', 'sage'));
     mh_project_admin_field_row(__('Place', 'sage'), 'mh_project_place', $place, __('City, State', 'sage'));
     mh_project_admin_field_row(__('Card blurb', 'sage'), 'mh_project_blurb', $blurb, '', 'textarea');
-    mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, WooCommerce', 'sage'));
+    mh_project_admin_field_row(__('Tech (comma separated)', 'sage'), 'mh_project_tech', $tech, __('WordPress, Sage, Tailwind', 'sage'));
     mh_project_admin_field_row(
         __('Screenshot file or URL', 'sage'),
         'mh_project_image',
@@ -2391,10 +2391,9 @@ function mh_project_admin_meta_box(\WP_Post $post): void
     );
     echo '</tbody></table>';
 
-    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('Linked product', 'sage').'</h3>';
-    echo '<p class="description">'.esc_html__('Optional WooCommerce product this project was converted from. Public pages do not sell.', 'sage').'</p>';
+    echo '<h3 style="margin:1.25rem 0 .5rem">'.esc_html__('For sale', 'sage').'</h3>';
     echo '<p><label><input type="checkbox" name="mh_project_for_sale" value="1" '.checked($forSale, true, false).'> ';
-    echo esc_html__('Marked for sale (hidden while the public shop is off)', 'sage').'</label></p>';
+    echo esc_html__('Marked for sale', 'sage').'</label></p>';
     echo '<table class="form-table" role="presentation"><tbody>';
     echo '<tr><th scope="row"><label for="mh_project_product_type">'.esc_html__('Project type', 'sage').'</label></th><td>';
     echo '<select id="mh_project_product_type" name="mh_project_product_type">';
@@ -4328,18 +4327,6 @@ function mh_hero_scene_url(?int $post_id = null): string
         return $url !== '' && ! mh_is_profile_hero_url($url) ? $url : mh_first_work_hero_url();
     }
 
-    if (function_exists('is_product') && is_product()) {
-        $id = (int) get_queried_object_id();
-        if ($id > 0 && has_post_thumbnail($id)) {
-            $src = get_the_post_thumbnail_url($id, 'full');
-            if (is_string($src) && $src !== '' && ! mh_is_profile_hero_url($src)) {
-                return $src;
-            }
-        }
-
-        return mh_theme_image_uri('products/acreline/featured.webp');
-    }
-
     if (is_home() && ! is_front_page()) {
         $latest = get_posts([
             'post_type' => 'post',
@@ -4376,10 +4363,6 @@ function mh_hero_scene_url(?int $post_id = null): string
 
     if (is_front_page() || $template === 'template-home.blade.php') {
         return mh_theme_image_uri($scenes['template-home.blade.php']);
-    }
-
-    if (function_exists('is_shop') && is_shop()) {
-        return mh_theme_image_uri('products/walkridge/01-homepage.webp');
     }
 
     if ($template !== '' && isset($scenes[$template])) {
@@ -4500,69 +4483,6 @@ add_action('init', function (): void {
     mh_ensure_projects_listing_page();
     update_option('mh_projects_listing_page_v1', '1', false);
 }, 36);
-
-/**
- * One-shot: drop Shop / Cart / Buy labels from the primary menu.
- *
- * Theme cannot delete WordPress pages. This only edits the assigned Primary menu.
- *
- * @since 3.6.0
- */
-function mh_strip_shop_from_primary_nav(): void
-{
-    $locations = get_theme_mod('nav_menu_locations', []);
-    $menuId = (int) ($locations['primary_navigation'] ?? 0);
-    if ($menuId < 1) {
-        return;
-    }
-
-    $items = wp_get_nav_menu_items($menuId);
-    if (! is_array($items)) {
-        return;
-    }
-
-    $dropTitles = ['shop', 'cart', 'checkout', 'buy', 'store', 'themes & plugins', 'themes and plugins'];
-    foreach ($items as $item) {
-        $title = strtolower(trim((string) $item->title));
-        $url = strtolower((string) $item->url);
-        $isShopTitle = in_array($title, $dropTitles, true);
-        $isShopUrl = str_contains($url, '/shop') || str_contains($url, '/cart') || str_contains($url, '/checkout');
-        if (! $isShopTitle && ! $isShopUrl) {
-            continue;
-        }
-        wp_delete_post((int) $item->ID, true);
-    }
-}
-
-add_action('init', function (): void {
-    if (get_option('mh_strip_shop_nav_v1') || wp_installing()) {
-        return;
-    }
-    mh_strip_shop_from_primary_nav();
-    update_option('mh_strip_shop_nav_v1', '1', false);
-}, 41);
-
-add_filter('wp_nav_menu_objects', function (array $items, $args): array {
-    if (function_exists(__NAMESPACE__.'\\mh_public_shop_enabled') && mh_public_shop_enabled()) {
-        return $items;
-    }
-
-    return array_values(array_filter($items, static function ($item): bool {
-        $title = strtolower(trim((string) ($item->title ?? '')));
-        $url = strtolower((string) ($item->url ?? ''));
-        // The Shop page (Shop template) is the one shop link that stays.
-        if (function_exists(__NAMESPACE__.'\mh_shop_page_id') && mh_shop_page_id() > 0 && (int) ($item->object_id ?? 0) === mh_shop_page_id()) {
-            return true;
-        }
-        if (in_array($title, ['shop', 'cart', 'checkout', 'buy', 'store'], true)) {
-            return false;
-        }
-
-        return ! str_contains($url, '/shop')
-            && ! str_contains($url, '/cart')
-            && ! str_contains($url, '/checkout');
-    }));
-}, 20, 2);
 
 // Hire, Code, and Now are sections on About; Uses is on Resources. Menu items that still point at the old pages stay out of wp_nav_menu() output.
 add_filter('wp_nav_menu_objects', function (array $items): array {
