@@ -334,9 +334,9 @@ function mh_shop_copy_default(string $scope, string $part): string
         'avail_h2' => __('Available now', 'sage'),
         'avail_intro' => __('Ready to use today. Each one has a live demo or docs you can open first.', 'sage'),
         'soon_h2' => __('Coming soon', 'sage'),
-        'soon_intro' => __('Built, with live demos, and waiting on licensing. Want to hear when they are ready?', 'sage'),
+        'soon_intro' => __('They have live demos. I am finishing licensing, then they go on sale. Want an email when they do?', 'sage'),
         'compare_h2' => __('Compare the themes', 'sage'),
-        'compare_intro' => __('A quick side by side. Open a demo to see the real thing.', 'sage'),
+        'compare_intro' => __('Compare the themes side by side, then open a demo and click through one.', 'sage'),
         'cta_h2' => __('Need something that is not here?', 'sage'),
         'cta_text' => __('I build custom WordPress themes and plugins for shops and agencies. Tell me what you need and I will write back.', 'sage'),
         'cta_label' => __('Say hello', 'sage'),
@@ -344,7 +344,7 @@ function mh_shop_copy_default(string $scope, string $part): string
         'avail_eyebrow' => __('Ready to use', 'sage'),
         'soon_eyebrow' => __('Next up', 'sage'),
         'compare_eyebrow' => __('Side by side', 'sage'),
-        'how_eyebrow' => __('Simple steps', 'sage'),
+        'how_eyebrow' => __('How it works', 'sage'),
         'faq_eyebrow' => __('Questions', 'sage'),
         'faq_h2' => __('Quick answers', 'sage'),
         'help_h3' => __('Still have a question?', 'sage'),
@@ -360,7 +360,7 @@ function mh_shop_copy_default(string $scope, string $part): string
     $copy = [
         'all' => [
             'h1' => __('WordPress themes and plugins I build and support', 'sage'),
-            'lede' => __('Made so the people who own the site can run it. Open a live demo, pick a yearly license, and get updates and email support from the developer who wrote the code. Plugins are free.', 'sage'),
+            'lede' => __('I build these so the people who own the site can run it. Open a live demo, pick a yearly license, and get updates and email support from the developer who wrote the code. Plugins are free.', 'sage'),
             'primary' => __('See what is available', 'sage'),
             'how_h2' => __('How buying works', 'sage'),
             'faq_intro' => __('Short answers about licenses, support, and refunds.', 'sage'),
@@ -374,7 +374,7 @@ function mh_shop_copy_default(string $scope, string $part): string
         ],
         'plugin' => [
             'h1' => __('Free WordPress plugins', 'sage'),
-            'lede' => __('Small, focused plugins I build and maintain. Download the zip, upload it in WordPress, and read the docs before you install.', 'sage'),
+            'lede' => __('Free plugins I build and maintain. Download the zip, upload it in WordPress, and read the docs first.', 'sage'),
             'primary' => __('See the plugins', 'sage'),
             'how_h2' => __('How to get a plugin', 'sage'),
             'faq_intro' => __('Short answers about downloading, data, and getting help.', 'sage'),
@@ -411,7 +411,7 @@ function mh_shop_how_default(string $scope = 'all'): string
         __('Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.', 'sage'),
         __('Your receipt, license key, and download arrive by email. Your account page keeps them.', 'sage'),
         __('Updates and email support run for the year you paid for. If you do not renew, the theme keeps working; updates and support stop.', 'sage'),
-        __('If a theme has a bug or problem I cannot resolve, you get a refund within 30 days.', 'sage'),
+        __('If I cannot fix a bug or problem, you get a refund within 30 days.', 'sage'),
     ];
     // The plugin line only belongs on pages that list plugins ('all'); the themes page leaves it out.
     if ($scope !== 'theme') {
