@@ -1,5 +1,59 @@
 # Changelog
 
+## 3.17.1 — Shop cards: vertical again, two columns, tabs above the cards
+
+- Product cards are vertical again (image on top). Desktop shows two per row; phones and tablets show one full-width card.
+- The All products / Themes / Plugins buttons and the product count moved from the top of the page to right above the first product cards (new `partials/shop-tabs.blade.php`). If nothing is listed they keep a small section of their own.
+
+## 3.17.0 — Shop cards: horizontal layout
+
+- Product cards on /shop/, /themes/ and /plugins/ are one per row from tablet width up: preview image on the left, content on the right. On a phone they stay vertical, image on top. The quality stats fill the wider body in a row.
+
+## 3.16.2 — Shop cards: category pills under the title
+
+- The Theme / Plugin / Coming soon pills now sit between the product title and its blurb instead of above the title.
+
+## 3.16.1 — Shop cards: more space, quality stats
+
+- Available now cards have more room between the type pills, title, blurb, highlight pills, list, stats and price.
+- New quality stats grid on each card (up to four tiles, from `quality` in `product-catalog.json`). Cobble & Candle shows WCAG 2.2 AA tested, 44 px touch targets, RTL languages supported and reduced motion respected. TOCguide shows no tracking, server-rendered HTML and GPLv2 or later. Every figure comes from claims already in the catalog. Speed scores are not shown until measured numbers are added to `quality`.
+
+## 3.16.0 — Gradient headings across the whole site
+
+- Every main heading now uses the shop-page gradient: dark blue, to blue, to green on light backgrounds; white, to blue, to green on dark backgrounds (dark mode, photo heroes, post heroes, the CTA band, the contact aside, navy sections).
+- Covers `.display-title` (hero and section), the home and about section titles, and page and post hero H1s. New file `resources/css/heading-gradients.css`, loaded after `studio.css`, which had switched the older two-tone gradient off.
+- High-contrast mode falls back to plain system-colour text.
+
+## 3.15.1 — Shop pages: fix gradient headings, small tidy-ups
+
+- Fix: the gradient headings on the shop pages painted as solid colour boxes with no readable text. The theme deliberately switches gradient text off for `.display-title.is-section` (heavier in dark mode), and the hero rule used the `background` shorthand, which resets the text clipping. Both are fixed: the headings are gradient text again in light and dark mode, and fall back to plain text in high-contrast mode.
+- The "How buying works" step text is body size, not oversized.
+- The share card no longer stretches to match the docs card.
+- "Read first" no longer lists brand kits.
+
+## 3.15.0 — Shop pages: design pass (gradients, cards, compare, steps, accordion, drawings, docs and sharing)
+
+- **Headings.** The page heading is white, to blue, to green on the dark hero. Section headings are dark blue, to blue, to green on light pages and white, to blue, to green in dark mode, so they stay readable on both. In high-contrast mode they fall back to plain text.
+- **Cards.** Blue-to-green gradient borders. The button now has its own full-width row. The plain links (live demo, docs) sit on one line below it, as underline-on-hover links with a small gradient ring arrow. Spacing and type are tightened. Coming-soon cards stay dashed and quieter.
+- **Compare.** Rebuilt with themes as columns and the things to compare as rows (best for, price, works with, live demo, get it). The available theme's column has a gradient top bar and a light tint, the first column sticks while scrolling, and each column ends in a button.
+- **How buying works.** Larger gradient-bordered cards, each with a dark blue number badge with a blue-to-green ring sitting on its top edge.
+- **Questions.** Now the Home layout: heading, intro, the animated accordion drawing and a "Still have a question?" card on the left, your `.faq-list` accordion on the right. The first question is open.
+- **Drawings.** Each section gets one of the existing animated blue and green drawings, picked to match what the section is on other pages: the browser (Available now), the calendar and clock (Coming soon), the stacked tiers (Compare), the envelope and check (How buying works), the accordion (Questions), the stacked posts (Docs and sharing), and the paper plane (closing call to action). They stop under reduced motion and hide on small screens, like the rest of the site.
+- **New: Docs and sharing.** A "Read first" block listing the guides from the catalog for each product, and a share block (Bluesky, LinkedIn, Facebook, Reddit, email, copy link) using the same buttons and helper as the journal posts.
+- **New: ask a question.** The Questions help card has an "Ask me directly" button to the contact page and the email address. Small labels above each heading (for example "Ready to use", "Side by side") are editable.
+- All new copy is editable under Page content (theme). The new stylesheet rules are in `shop-pages.css`.
+
+## 3.14.0 — Shop, Themes and Plugins pages: layout, copy, SEO and accessibility
+
+- **Layout.** Cards are grouped by availability: an **Available now** section first, then a quieter **Coming soon** section (dashed cards, a Get updates link, no price). Each card now shows who it is for, two facts from the catalog (for example "28 custom blocks"), two benefits, the price line, the version and what it works with, and one primary action, plus links to the demo and the docs. The Themes and All pages get a **compare table** (theme, best for, price, works with, demo). The page ends with a "need something custom?" call to action.
+- **Trust row under the intro**, with only things that are true: a live demo for every theme, the 30-day refund, updates and email support for the year, GPLv2-or-later code. The plugins page has its own row.
+- **Copy rewritten** for the intro, the section headings and the buttons, in plain first person. The theme questions grow from four to six (what a block theme is, what a license covers). Everything is editable under Page content (theme), and the defaults are drafts to review.
+- **SEO.** A visible breadcrumb, a `CollectionPage` with an `ItemList` of the products, and a `FAQPage` that matches the visible questions, all in one JSON-LD block. Section headings describe what is in them. Titles and descriptions for the three pages are set in Rank Math.
+- **Accessibility.** Each section is labelled by its heading, the compare table has a caption and column and row headers and scrolls by keyboard, status is always text (not colour alone), and the hero breadcrumb and trust row are light on the dark hero.
+- **Interest-building, honestly.** There are no reviews, ratings, sales counters, countdowns or scarcity badges, because there is nothing real to put in them. A "Get updates" link on coming-soon products points at the existing newsletter signup.
+- Data fix: Cobble & Candle's catalog version was `0.1.0`; the released theme is `1.0.0`. A one-time sync (`mh_product_catalog_v16`) updates that product only.
+- New stylesheet `resources/css/shop-pages.css`.
+
 ## 3.13.1 — Docs and rules match the new shop (no WooCommerce)
 
 Docs, config and AI rules only. No theme behavior changes.

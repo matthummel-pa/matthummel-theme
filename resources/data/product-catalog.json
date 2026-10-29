@@ -162,6 +162,12 @@
         "AA tested"
       ]
     ],
+    "quality": [
+      ["WCAG 2.2 AA", "tested"],
+      ["44 px", "touch targets"],
+      ["RTL", "languages supported"],
+      ["Reduced", "motion respected"]
+    ],
     "faq": [
       [
         "Is Cobble & Candle a WordPress restaurant theme?",
@@ -209,7 +215,7 @@
       ]
     },
     "github": "",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [
@@ -854,6 +860,11 @@
         "GPLv2",
         "or later"
       ]
+    ],
+    "quality": [
+      ["No", "tracking"],
+      ["SEO", "server-rendered HTML"],
+      ["GPLv2", "or later"]
     ],
     "faq": [
       [

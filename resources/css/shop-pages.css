@@ -1,0 +1,585 @@
+/* Shop pages: /shop/, /themes/, /plugins/ (template-shop.blade.php and the shop-* partials).
+   Colours follow the section drawings (--il-a blue, --il-b teal, --il-c green, set in illustrations.css for light
+   and dark), so the page reads as one blue-to-green look. Body colours use the theme tokens, so dark mode follows.
+   The hero is always the dark photo hero, so the breadcrumb and trust row in it are light-on-dark. */
+
+.shop-hero,
+.shop-section {
+  --shop-blue: var(--il-a, #2563eb);
+  --shop-teal: var(--il-b, #0891b2);
+  --shop-green: var(--il-c, #65a30d);
+  --shop-ink: #0a2446;
+  --shop-line: linear-gradient(135deg, var(--shop-blue) 0%, var(--shop-teal) 55%, var(--shop-green) 100%);
+  --shop-panel: linear-gradient(var(--color-card), var(--color-card));
+}
+
+/* ── Hero: breadcrumb, gradient heading, trust row ───────── */
+.shop-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .4rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+  font-size: .9rem;
+  line-height: 1.4;
+  color: #c9d9ef;
+}
+.shop-crumbs li + li::before {
+  content: "/";
+  margin-right: .4rem;
+  opacity: .7;
+}
+.shop-crumbs a {
+  color: var(--blue-200);
+}
+
+/* White, to blue, to green. Beats the hero's white heading rule (studio.css). */
+html .page-header.shop-hero .page-header__panel .display-title {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: .12em;
+  background-image: linear-gradient(90deg, #ffffff 0%, #bfdbfe 24%, #60a5fa 50%, #22d3ee 72%, #4ade80 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-wrap: balance;
+}
+
+.shop-trust ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem .7rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.shop-trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  padding: .45rem .9rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(rgba(10, 36, 70, .72), rgba(10, 36, 70, .72)) padding-box,
+    linear-gradient(135deg, #60a5fa, #22d3ee 55%, #4ade80) border-box;
+  color: #e6effb;
+  font-size: .92rem;
+  line-height: 1.3;
+}
+.shop-trust li::before {
+  content: "\2713";
+  content: "\2713" / "";
+  font-weight: 700;
+  color: #4ade80;
+}
+
+/* ── Sections: rhythm and type ───────────────────────────── */
+.shop-section {
+  padding-block: clamp(3.5rem, 7vw, 5.75rem);
+}
+.shop-section--toolbar {
+  padding-block: clamp(1.75rem, 3.5vw, 2.5rem) 0;
+}
+.shop-section--soon {
+  background: var(--color-surface);
+}
+.shop-section .eyebrow {
+  margin: 0 0 .85rem;
+}
+
+/* Section headings: dark blue, to blue, to green on light; white, to blue, to green on dark. The theme turns
+   gradient text off for .display-title.is-section (studio.css, heavier in dark mode), so this selector is heavier
+   still and the painting properties are important. */
+.shop-section h2.display-title {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: .12em;
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -.028em;
+  text-wrap: balance;
+}
+html body .shop-section h2.display-title.is-section {
+  background-image: linear-gradient(90deg, var(--shop-ink) 0%, var(--shop-blue) 55%, #15803d 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+html.mh-dark body .shop-section h2.display-title.is-section {
+  background-image: linear-gradient(90deg, #ffffff 0%, #93c5fd 36%, #38bdf8 62%, #4ade80 100%) !important;
+}
+.shop-section__intro {
+  max-width: 62ch;
+  margin: 1rem 0 0;
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+}
+
+/* ── Type tabs + count ──────────────────────────────────── */
+.shop-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.5rem;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+}
+.shop-tabs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shop-tabs__count {
+  margin: 0 0 0 auto;
+  color: var(--color-text-secondary);
+  font-size: .95rem;
+}
+
+/* ── Product cards ──────────────────────────────────────── */
+.work-grid.shop-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.8vw, 2rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.work-card.shop-card {
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--shop-panel) padding-box, var(--shop-line) border-box;
+  box-shadow: 0 1px 2px rgba(10, 36, 70, .06), 0 18px 38px -26px rgba(10, 36, 70, .5);
+}
+.work-card.shop-card:hover {
+  box-shadow: 0 1px 2px rgba(10, 36, 70, .08), 0 24px 44px -24px rgba(10, 36, 70, .6);
+}
+.shop-card .work-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding: 1.6rem 1.65rem 1.75rem;
+}
+.shop-card .work-body > * {
+  margin-block: 0;
+}
+/* The title and its category pills read as one group; the "best for" line, blurb, highlight pills, list, stats
+   and price each get their own breathing room. */
+.shop-card h3 + .project-type-row {
+  margin-top: -.55rem;
+}
+.shop-card h3 {
+  font-size: clamp(1.3rem, 1.7vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+.shop-card__for {
+  color: var(--color-text-secondary);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+.shop-card__for span {
+  margin-right: .4rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.shop-card .work-blurb {
+  line-height: 1.65;
+}
+.shop-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  padding: 0;
+  list-style: none;
+}
+.shop-card__facts li {
+  margin: 0;
+  padding: .22rem .7rem;
+  border: 1px solid var(--blue-100);
+  border-radius: 999px;
+  background: var(--blue-50);
+  color: var(--blue-800);
+  font-size: .85rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.shop-card__points {
+  display: grid;
+  gap: .8rem;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-secondary);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.shop-card__points li {
+  position: relative;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+.shop-card__points li::before {
+  content: "\2713";
+  content: "\2713" / "";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: var(--shop-green);
+}
+/* Quality stats: accessibility, speed and the like. Value on top, plain label under it. */
+.shop-card__quality {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--color-border);
+}
+.shop-card__quality > div {
+  display: grid;
+  gap: .15rem;
+  padding: .7rem .85rem;
+  border: 1px solid var(--blue-100);
+  border-radius: 12px;
+  background: var(--blue-50);
+}
+.shop-card__quality dt {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--blue-800);
+}
+.shop-card__quality dd {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+}
+html.mh-dark .shop-card__quality > div,
+html.mh-dark .shop-card__facts li {
+  border-color: color-mix(in srgb, var(--shop-blue) 40%, transparent);
+  background: color-mix(in srgb, var(--shop-blue) 14%, transparent);
+}
+html.mh-dark .shop-card__quality dt,
+html.mh-dark .shop-card__facts li {
+  color: var(--color-text);
+}
+.shop-card__price {
+  margin-top: .3rem;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  color: var(--color-text);
+}
+.shop-card__meta {
+  color: var(--color-text-muted);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+/* The button gets its own full-width row; the plain links sit on one line below it. */
+.shop-card__cta {
+  display: grid;
+  gap: 1.15rem;
+  margin-top: auto;
+  padding-top: 1.35rem;
+}
+.shop-card__button {
+  width: 100%;
+  justify-content: center;
+}
+.shop-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem 1.2rem;
+  margin: 0;
+  padding-top: .95rem;
+  border-top: 1px solid var(--color-border);
+  font-size: .9rem;
+  line-height: 1.3;
+}
+.shop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding-bottom: .15rem;
+  background: linear-gradient(90deg, var(--shop-blue), var(--shop-green)) left bottom / 0% 2px no-repeat;
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-size .2s ease;
+}
+.shop-link:hover,
+.shop-link:focus-visible {
+  background-size: 100% 2px;
+  color: var(--color-text);
+}
+.shop-link__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: var(--shop-panel) padding-box, var(--shop-line) border-box;
+  color: var(--shop-blue);
+  font-size: .75rem;
+  line-height: 1;
+}
+/* Cards stay vertical (image on top). One full-width column on phones and tablets, two columns on desktop. */
+@media (min-width: 64rem) {
+  .work-grid.shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Not for sale yet: quieter, and dashed so the difference is not colour alone. */
+.work-card.shop-card--soon {
+  border: 1px dashed var(--color-border);
+  background: var(--color-card);
+  box-shadow: none;
+}
+
+/* ── Compare table: themes as columns ───────────────────── */
+.shop-compare {
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  overflow-x: auto;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: var(--shop-panel) padding-box, var(--shop-line) border-box;
+  box-shadow: 0 18px 38px -28px rgba(10, 36, 70, .5);
+}
+.shop-compare:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+.shop-compare__table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .98rem;
+  line-height: 1.55;
+}
+.shop-compare__table th,
+.shop-compare__table td {
+  padding: 1.05rem 1.25rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+}
+.shop-compare__table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+.shop-compare__table thead th {
+  padding-block: 1.35rem 1.1rem;
+  background: var(--color-surface);
+}
+.shop-compare__col--buy,
+.shop-compare__col--free {
+  background: linear-gradient(90deg, var(--shop-blue), var(--shop-teal), var(--shop-green)) top / 100% 4px no-repeat, var(--color-surface) !important;
+}
+.shop-compare__state {
+  display: block;
+  margin-bottom: .45rem;
+  font: 700 .72rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.shop-compare__col--buy .shop-compare__state,
+.shop-compare__col--free .shop-compare__state {
+  color: var(--color-accent);
+}
+.shop-compare__col a {
+  color: var(--color-text);
+  font: 800 1.2rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+  text-decoration: none;
+}
+.shop-compare__col a:hover,
+.shop-compare__col a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shop-compare__table tbody th {
+  width: 9.5rem;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.shop-compare__table thead .shop-compare__corner,
+.shop-compare__table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+.shop-compare__cell--buy,
+.shop-compare__cell--free {
+  background: rgba(37, 99, 235, .05);
+}
+.shop-compare__table td strong {
+  font-size: 1.15rem;
+  letter-spacing: -.01em;
+}
+
+/* ── How buying works: numbered steps ───────────────────── */
+.shop-steps ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  gap: 2.6rem 1.25rem;
+  margin: clamp(2.5rem, 4.5vw, 3.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: shop-step;
+}
+.shop-steps li {
+  position: relative;
+  margin: 0;
+  padding: 2rem 1.3rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--shop-panel) padding-box, var(--shop-line) border-box;
+  box-shadow: 0 18px 38px -28px rgba(10, 36, 70, .5);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.65;
+  counter-increment: shop-step;
+}
+/* Dark blue number badge with a blue-to-green ring, sitting on the card's top edge. */
+.shop-steps li::before {
+  content: counter(shop-step);
+  position: absolute;
+  top: -1.3rem;
+  left: 1.2rem;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: linear-gradient(var(--shop-ink), var(--shop-ink)) padding-box, var(--shop-line) border-box;
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+  box-shadow: 0 8px 18px -8px rgba(10, 36, 70, .7);
+}
+
+/* ── Questions: heading and help card left, accordion right ── */
+.shop-faq-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .shop-faq-layout {
+    grid-template-columns: 1fr;
+  }
+}
+#questions .faq-help-card .faq-help-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  margin: 0;
+}
+
+/* ── Docs to read first + sharing ───────────────────────── */
+.shop-extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.shop-extras__card {
+  padding: 1.6rem 1.6rem 1.75rem;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--shop-panel) padding-box, var(--shop-line) border-box;
+  box-shadow: 0 18px 38px -28px rgba(10, 36, 70, .5);
+}
+.shop-extras__title {
+  margin: 0 0 1.1rem;
+  font: 750 1.2rem/1.3 var(--font-display);
+  letter-spacing: -.02em;
+  color: var(--color-text);
+}
+.shop-docs {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shop-docs li {
+  margin: 0;
+}
+.shop-docs__product {
+  margin: 0 0 .4rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.shop-docs .shop-card__links {
+  padding-top: 0;
+  border-top: 0;
+}
+.shop-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+
+/* ── Closing call to action ─────────────────────────────── */
+.shop-cta .concept-hero-actions {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .shop-tabs__count {
+    margin-left: 0;
+    width: 100%;
+  }
+  .shop-card .work-body {
+    padding: 1.15rem 1.15rem 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-link {
+    transition: none;
+  }
+}
+
+/* High-contrast mode drops background images, which would leave gradient text invisible. */
+@media (forced-colors: active) {
+  html .page-header.shop-hero .page-header__panel .display-title,
+  html body .shop-section h2.display-title.is-section {
+    background-image: none !important;
+    color: CanvasText !important;
+    -webkit-text-fill-color: CanvasText !important;
+  }
+  .work-card.shop-card,
+  .shop-compare,
+  .shop-steps li,
+  .shop-extras__card,
+  .shop-trust li {
+    border-color: CanvasText;
+  }
+}
