@@ -516,7 +516,7 @@ WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product pa
 | Code snippets | VS Code Dark+ windows, highlight.js, copy button on post `pre` and `.snippet` | `resources/js/code-blocks.js`, `resources/css/code-blocks.css` |
 | Block editor off on pages | Gutenberg disabled on pages; posts keep the block editor; core patterns stripped | `app/bespoke.php` |
 | SVG icons | `mh_svg_icon()` — inline SVG with `currentColor` for brand icons | `app/icons.php` |
-| Shop | `/shop/`, `/themes/`, `/plugins/` from `template-shop.blade.php`; cards show a price line, one action and a demo link; Freemius plan picker on paid theme pages; free zip download for plugins; Coming soon state; product kinds in `mh_product_types()`. WooCommerce (cart, checkout, My Account, product sync, download delivery) was removed in 3.12 and 3.13 | `template-shop.blade.php`, `partials/shop-card.blade.php`, `partials/freemius-buy.blade.php`, `app/shop.php`, `app/concept-pages.php` |
+| Shop | `/shop/`, `/themes/`, `/plugins/` from `template-shop.blade.php`; cards show who it is for, two catalog facts, two benefits, the price line, version and compatibility, one action and demo and docs links; Available now and Coming soon groups; a compare table for themes; a trust row; CollectionPage, ItemList and FAQPage JSON-LD (`mh_shop_jsonld()`); Freemius plan picker on paid theme pages; free zip download for plugins; Coming soon state; product kinds in `mh_product_types()`. WooCommerce (cart, checkout, My Account, product sync, download delivery) was removed in 3.12 and 3.13 | `template-shop.blade.php`, `partials/shop-card.blade.php`, `partials/freemius-buy.blade.php`, `app/shop.php`, `app/concept-pages.php` |
 
 ## Editor’s notes (3.1.52 AI comparison UX)
 

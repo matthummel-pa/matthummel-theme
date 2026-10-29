@@ -79,9 +79,12 @@ Target Rank Math score: **80+** per product.
 
 - One template, `template-shop.blade.php`. Create a page with the **Shop** template and the slug `shop`, `themes` or `plugins`.
 - Intros, "how buying works" and questions are **Page content (theme)** fields (`shop_*`). Defaults live in `mh_shop_copy_default()`, `mh_shop_how_default()` and `mh_shop_faq_defaults()`, per scope.
+- Sections, in order: hero with breadcrumb, primary button and trust row; **Available now**; **Coming soon**; compare table (themes, when there are two or more); how buying works; questions; closing call to action. A section is skipped when it has nothing to show.
 - Tabs come from `mh_product_types()` once a type has a live item.
+- Cards read the catalog: `place`, the first two `metrics` (a release number is skipped), the first two `benefits`, `version`, `compatible` and the first `docs` link.
+- Only put things that are true in the trust row and the copy. No reviews, ratings, sales counters, countdowns or scarcity badges unless there is real data behind them.
+- JSON-LD is built by `mh_shop_jsonld()`: a CollectionPage with an ItemList, and a FAQPage that must match the visible questions.
 - Set a Rank Math title (under 60) and description (under 155) on each page.
-- No JSON-LD on these pages unless Matt asks for a specific type.
 
 ---
 

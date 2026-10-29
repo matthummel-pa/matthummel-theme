@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.14.0 — Shop, Themes and Plugins pages: layout, copy, SEO and accessibility
+
+- **Layout.** Cards are grouped by availability: an **Available now** section first, then a quieter **Coming soon** section (dashed cards, a Get updates link, no price). Each card now shows who it is for, two facts from the catalog (for example "28 custom blocks"), two benefits, the price line, the version and what it works with, and one primary action, plus links to the demo and the docs. The Themes and All pages get a **compare table** (theme, best for, price, works with, demo). The page ends with a "need something custom?" call to action.
+- **Trust row under the intro**, with only things that are true: a live demo for every theme, the 30-day refund, updates and email support for the year, GPLv2-or-later code. The plugins page has its own row.
+- **Copy rewritten** for the intro, the section headings and the buttons, in plain first person. The theme questions grow from four to six (what a block theme is, what a license covers). Everything is editable under Page content (theme), and the defaults are drafts to review.
+- **SEO.** A visible breadcrumb, a `CollectionPage` with an `ItemList` of the products, and a `FAQPage` that matches the visible questions, all in one JSON-LD block. Section headings describe what is in them. Titles and descriptions for the three pages are set in Rank Math.
+- **Accessibility.** Each section is labelled by its heading, the compare table has a caption and column and row headers and scrolls by keyboard, status is always text (not colour alone), and the hero breadcrumb and trust row are light on the dark hero.
+- **Interest-building, honestly.** There are no reviews, ratings, sales counters, countdowns or scarcity badges, because there is nothing real to put in them. A "Get updates" link on coming-soon products points at the existing newsletter signup.
+- Data fix: Cobble & Candle's catalog version was `0.1.0`; the released theme is `1.0.0`. A one-time sync (`mh_product_catalog_v16`) updates that product only.
+- New stylesheet `resources/css/shop-pages.css`.
+
 ## 3.13.1 — Docs and rules match the new shop (no WooCommerce)
 
 Docs, config and AI rules only. No theme behavior changes.

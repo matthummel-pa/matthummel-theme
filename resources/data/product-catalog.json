@@ -209,7 +209,7 @@
       ]
     },
     "github": "",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [

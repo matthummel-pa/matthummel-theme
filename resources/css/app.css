@@ -6,6 +6,7 @@
 @import "./product-landing.css";
 @import "./code-blocks.css";
 @import "./studio.css";
+@import "./shop-pages.css"; /* /shop/, /themes/, /plugins/ (3.14.0) */
 @import "./blocks.css";
 @import "./release-watch.css";
 @import "./site-extras.css"; /* formerly Additional CSS; keep last */

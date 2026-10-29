@@ -329,28 +329,44 @@ function mh_project_is_coming_soon(string $slug): bool
  */
 function mh_shop_copy_default(string $scope, string $part): string
 {
+    // Parts that are the same on every shop page.
+    $shared = [
+        'avail_h2' => __('Available now', 'sage'),
+        'avail_intro' => __('Ready to use today. Each one has a live demo or docs you can open first.', 'sage'),
+        'soon_h2' => __('Coming soon', 'sage'),
+        'soon_intro' => __('Built, with live demos, and waiting on licensing. Want to hear when they are ready?', 'sage'),
+        'compare_h2' => __('Compare the themes', 'sage'),
+        'compare_intro' => __('A quick side by side. Open a demo to see the real thing.', 'sage'),
+        'cta_h2' => __('Need something that is not here?', 'sage'),
+        'cta_text' => __('I build custom WordPress themes and plugins for shops and agencies. Tell me what you need and I will write back.', 'sage'),
+        'cta_label' => __('Say hello', 'sage'),
+    ];
+
     $copy = [
         'all' => [
-            'h1' => __('Themes and plugins for WordPress', 'sage'),
-            'lede' => __('WordPress themes and plugins I build, sell, and support. Browse by type, open a live demo, and buy a yearly license through Freemius. Plugins are free to download.', 'sage'),
+            'h1' => __('WordPress themes and plugins I build and support', 'sage'),
+            'lede' => __('Made so the people who own the site can run it. Open a live demo, pick a yearly license, and get updates and email support from the developer who wrote the code. Plugins are free.', 'sage'),
+            'primary' => __('See what is available', 'sage'),
             'how_h2' => __('How buying works', 'sage'),
         ],
         'theme' => [
-            'h1' => __('WordPress themes', 'sage'),
-            'lede' => __('Block themes I build and support. Each one has a live demo where there is one, a yearly license for updates and email support, and a 30-day refund if I cannot fix a problem.', 'sage'),
+            'h1' => __('WordPress themes you can run yourself', 'sage'),
+            'lede' => __('Block themes with a live demo and an owner guide for each. A yearly license covers updates and email support, and there is a 30-day refund if I cannot fix a problem.', 'sage'),
+            'primary' => __('See the themes', 'sage'),
             'how_h2' => __('How buying works', 'sage'),
         ],
         'plugin' => [
             'h1' => __('Free WordPress plugins', 'sage'),
-            'lede' => __('Plugins I build and maintain. They are free: download the zip from the plugin page.', 'sage'),
+            'lede' => __('Small, focused plugins I build and maintain. Download the zip, upload it in WordPress, and read the docs before you install.', 'sage'),
+            'primary' => __('See the plugins', 'sage'),
             'how_h2' => __('How to get a plugin', 'sage'),
         ],
     ];
     if (isset($copy[$scope][$part])) {
         return $copy[$scope][$part];
     }
-    if ($part === 'how_h2') {
-        return __('How buying works', 'sage');
+    if (isset($shared[$part])) {
+        return $shared[$part];
     }
 
     $plural = (string) (mh_product_types()[$scope]['plural'] ?? '');
@@ -388,6 +404,28 @@ function mh_shop_how_default(string $scope = 'all'): string
 }
 
 /**
+ * Default trust row for a shop page: a short HTML list of things that are true of every product shown.
+ * The plugins page gets its own list.
+ */
+function mh_shop_trust_default(string $scope = 'all'): string
+{
+    $items = $scope === 'plugin'
+        ? [
+            __('Free, no account', 'sage'),
+            __('GPLv2 or later code', 'sage'),
+            __('Docs linked on the plugin page', 'sage'),
+        ]
+        : [
+            __('A live demo for every theme', 'sage'),
+            __('30-day refund if I cannot fix a problem', 'sage'),
+            __('Updates and email support for the year', 'sage'),
+            __('GPLv2 or later code', 'sage'),
+        ];
+
+    return '<ul><li>'.implode('</li><li>', $items).'</li></ul>';
+}
+
+/**
  * Default questions and answers for a shop page. The plugins page gets its own short set;
  * every other scope ('all', 'theme') shares the theme questions.
  *
@@ -405,6 +443,8 @@ function mh_shop_faq_defaults(string $scope = 'all'): array
 
     return [
         [__('Can I try a theme before I buy?', 'sage'), __('Yes. Theme pages link to a live demo where there is one. Cobble & Candle has three demos you can click through.', 'sage')],
+        [__('What is a block theme?', 'sage'), __('A block theme is built with the WordPress block editor and site editor. You change layouts and styles inside WordPress, without editing code and without a page builder plugin.', 'sage')],
+        [__('What does a license cover?', 'sage'), __('A yearly license covers updates and email support for the number of sites on your plan: one site, five sites, or unlimited. The theme keeps working on your site if you do not renew.', 'sage')],
         [__('What happens when my license expires?', 'sage'), __('The theme keeps working on your site. You stop getting updates and email support until you renew.', 'sage')],
         [__('Can I use a theme on client sites?', 'sage'), __('For Cobble & Candle, the 5-site and unlimited-site plans are meant for that. The unlimited plan is white-label, so you can ship it under your own name.', 'sage')],
         [__('Who do I ask if something breaks?', 'sage'), __('Write to hello@matthummel.com. Support is by email, and I reply within one business day (ET).', 'sage')],
@@ -418,10 +458,11 @@ function mh_shop_faq_defaults(string $scope = 'all'): array
  * Prices come from the catalog; nothing is invented here.
  *
  * @param  string  $type  'all' or a key from mh_product_types().
- * @return list<array{slug: string, title: string, blurb: string, url: string, image: string, demo: string, type: string, status: string, price: string, free_url: string}>
+ * @return list<array{slug: string, title: string, blurb: string, url: string, image: string, demo: string, type: string, status: string, price: string, free_url: string, place: string, facts: list<string>, points: list<string>, version: string, works_with: string, docs_url: string, docs_label: string, source_url: string}>
  */
 function mh_shop_items(string $type = 'all'): array
 {
+    $catalog = mh_product_catalog_seed_data();
     $items = [];
     foreach (mh_query_project_cards(['live_only' => true]) as $card) {
         $slug = (string) ($card['slug'] ?? '');
@@ -455,6 +496,40 @@ function mh_shop_items(string $type = 'all'): array
             $price = __('Coming soon', 'sage');
         }
 
+        $entry = is_array($catalog[$slug] ?? null) ? $catalog[$slug] : [];
+
+        // Two short facts from the catalog metrics (block counts and the like). A release number is skipped:
+        // the version shows on its own line.
+        $facts = [];
+        foreach ((array) ($entry['metrics'] ?? []) as $metric) {
+            $value = trim((string) ($metric[0] ?? ''));
+            $label = trim((string) ($metric[1] ?? ''));
+            if ($value === '' || preg_match('/release/i', $label)) {
+                continue;
+            }
+            $facts[] = trim($value.' '.$label);
+            if (count($facts) === 2) {
+                break;
+            }
+        }
+
+        $points = array_slice(array_values(array_filter(array_map(
+            static fn ($point): string => trim((string) $point),
+            (array) ($entry['benefits'] ?? [])
+        ))), 0, 2);
+
+        $docsUrl = '';
+        $docsLabel = '';
+        foreach ((array) ($entry['docs'] ?? []) as $doc) {
+            if (is_array($doc) && str_starts_with((string) ($doc[1] ?? ''), 'http')) {
+                $docsLabel = trim((string) ($doc[0] ?? ''));
+                $docsUrl = (string) $doc[1];
+                break;
+            }
+        }
+
+        $source = (string) ($entry['github'] ?? '');
+
         $items[] = [
             'slug' => $slug,
             'title' => (string) ($card['title'] ?? ''),
@@ -466,6 +541,14 @@ function mh_shop_items(string $type = 'all'): array
             'status' => $status,
             'price' => $price,
             'free_url' => $freeUrl,
+            'place' => trim((string) ($entry['place'] ?? '')),
+            'facts' => $facts,
+            'points' => $points,
+            'version' => trim((string) ($entry['version'] ?? '')),
+            'works_with' => trim((string) preg_replace('/\s*\([^)]*\)/', '', (string) ($entry['compatible'] ?? ''))),
+            'docs_url' => $docsUrl,
+            'docs_label' => $docsLabel,
+            'source_url' => str_starts_with($source, 'http') ? $source : '',
         ];
     }
 
@@ -473,6 +556,56 @@ function mh_shop_items(string $type = 'all'): array
     usort($items, static fn (array $a, array $b): int => $rank[$a['status']] <=> $rank[$b['status']]);
 
     return $items;
+}
+
+/**
+ * JSON-LD for a shop page: a CollectionPage with an ItemList of the products shown, plus a FAQPage that
+ * matches the visible questions. Returns an empty string when there is nothing to describe.
+ *
+ * @param  list<array<string, mixed>>  $items  Rows from mh_shop_items().
+ * @param  list<array{0: string, 1: string}>  $faq  Visible question and answer pairs.
+ */
+function mh_shop_jsonld(array $items, array $faq, string $name, string $description): string
+{
+    $url = (string) get_permalink();
+    if ($url === '') {
+        return '';
+    }
+
+    $page = [
+        '@type' => 'CollectionPage',
+        '@id' => $url.'#collection',
+        'url' => $url,
+        'name' => wp_strip_all_tags($name),
+        'description' => wp_strip_all_tags($description),
+    ];
+    if ($items !== []) {
+        $list = [];
+        foreach (array_values($items) as $i => $item) {
+            $list[] = [
+                '@type' => 'ListItem',
+                'position' => $i + 1,
+                'url' => (string) $item['url'],
+                'name' => wp_strip_all_tags((string) $item['title']),
+            ];
+        }
+        $page['mainEntity'] = ['@type' => 'ItemList', 'numberOfItems' => count($list), 'itemListElement' => $list];
+    }
+    $graph = [$page];
+
+    $questions = [];
+    foreach ($faq as [$question, $answer]) {
+        $questions[] = [
+            '@type' => 'Question',
+            'name' => wp_strip_all_tags((string) $question),
+            'acceptedAnswer' => ['@type' => 'Answer', 'text' => wp_strip_all_tags((string) $answer)],
+        ];
+    }
+    if ($questions !== []) {
+        $graph[] = ['@type' => 'FAQPage', '@id' => $url.'#faq', 'mainEntity' => $questions];
+    }
+
+    return (string) wp_json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
 }
 
 /**
