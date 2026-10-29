@@ -3,7 +3,7 @@ Contributors: matthummel
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 3.13.0
+Stable tag: 3.13.1
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 Tags: blog, custom-menu, featured-images, threaded-comments, translation-ready
@@ -12,7 +12,7 @@ Sage 11 theme for matthummel.com — portfolio, journal, and services. Not a Wor
 
 == Description ==
 
-This is the live theme for [matthummel.com](https://matthummel.com). It is a Sage 11 (Blade, Acorn, Vite, Tailwind v4) site theme: named page templates, Projects CPT, contact and project-brief forms, GitHub / DEV.to helpers, and optional WooCommerce wrappers.
+This is the live theme for [matthummel.com](https://matthummel.com). It is a Sage 11 (Blade, Acorn, Vite, Tailwind v4) site theme: named page templates, Projects CPT, contact and project-brief forms, GitHub / DEV.to helpers, and a shop for themes and plugins.
 
 **Do not upload this zip to WordPress.org or ThemeForest.** Those directories reject site-specific themes with plugin-territory features (forms, custom post types, remote APIs, auto-seeded pages). The product theme for those channels is [Acreline](https://github.com/matthummel-pa/wp-acreline). See `docs/MARKETPLACE.md`.
 

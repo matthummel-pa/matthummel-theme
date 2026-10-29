@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.13.1 — Docs and rules match the new shop (no WooCommerce)
+
+Docs, config and AI rules only. No theme behavior changes.
+
+- `docs/SHOP-DOWNLOADS.md` is rewritten: how paid themes are sold and released through Freemius, how free plugins are downloaded from a GitHub release, and what "coming soon" means. It used to describe the WooCommerce download shop.
+- The WooCommerce product rule and its Claude mirror are replaced by `.cursor/rules/product-pages.mdc` and `.claude/skills/product-pages/SKILL.md`: catalog schema (`freemius`, `download`, `coming_soon`), product page and shop page standards, pricing and SEO rules.
+- The add-product skill is rewritten for the real flow: catalog entry, a scoped one-time migration, images, Rank Math, internal links, then staging only.
+- The product-sync rule points at `/themes/{slug}/` and `/plugins/{slug}/`, Freemius checkout, and scoped migrations.
+- `docs/FEATURES.md`: removed the per-release notes about the WooCommerce cart, checkout, My Account desk, shop archive, downloads and Services add-ons, and updated the feature table. README, `readme.txt`, MARKETING, MARKETPLACE and GROWTH-PLAN no longer describe a WooCommerce shop.
+- `.wp-env.json` no longer installs WooCommerce for local environments.
+- Not changed: `composer.json` still lists `generoi/sage-woocommerce` and `php-stubs/woocommerce-stubs` (needs `composer.lock` regenerated), and release-history rows that name the old shop.
+
 ## 3.13.0 — WooCommerce code removed from the theme (stage 3 of 3: code and CSS)
 
 The theme no longer contains any WooCommerce code. Products are sold through Freemius, and there are no orders.

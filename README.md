@@ -64,7 +64,7 @@ A personal site is the one project where the developer is also the client, the c
 
 - **Copy belongs to the editor, not the template.** Every visitor-facing sentence is a field in wp-admin (**Page content (theme)**) with a sensible default in code. The site can be re-worded without a deploy, and templates stay free of prose.
 - **Core Gutenberg is enough.** Pages use named Blade templates; posts use the block editor. No page builder, no ACF, no premium plugin lock-in.
-- **A real content model.** Projects are a custom post type seeded from a versioned JSON catalog, with their own landing pages, GitHub facts, screenshots, FAQ, structured data, and (when for sale) a WooCommerce product.
+- **A real content model.** Projects are a custom post type seeded from a versioned JSON catalog, with their own landing pages, GitHub facts, screenshots, FAQ, structured data, and a Freemius checkout or a free download.
 - **Ship like a product.** Semver releases, a changelog visitors can read, CI that builds the artifact, and a one-click updater in wp-admin. Git is the source of truth; the live server is never edited by hand.
 - **Accessible and fast by default.** WCAG 2.1 AA target, keyboard paths, 0 CLS, server-rendered HTML, small JS modules that only run where they are needed.
 
@@ -74,7 +74,7 @@ A personal site is the one project where the developer is also the client, the c
 <summary><strong>Content and editing</strong></summary>
 
 - **Page content (theme)** meta box on every named template: 362 keys (text, textarea, HTML, repeaters) registered in [`app/page-fields.php`](app/page-fields.php) and read with `\App\field('key', 'Default')`. Blank field → default in code.
-- **22 named Blade templates**: Home, About, Hire, Services, Projects, Code, Contact, Start (project brief), Now, Uses, Resources, Support, Changelog, Get updates, Thank you, Accessibility, Privacy, Terms, Affiliate disclosure, WooCommerce, Blog, Custom.
+- **Named Blade templates**: Home, About, Hire, Services, Projects, Code, Contact, Start (project brief), Now, Uses, Resources, Support, Changelog, Get updates, Thank you, Accessibility, Privacy, Terms, Affiliate disclosure, Account, Shop, Blog, Custom.
 - **Projects custom post type** with admin meta boxes (summary, story, deliverables, benefits, metrics, screenshots, FAQ, GitHub repo, demo URL, version, license, compatible, brand palette) and a versioned catalog seeder (`resources/data/product-catalog.json`) that fills empty fields and never overwrites edits.
 - **Block editor off on marketing pages** (classic editor + fields); posts keep Gutenberg with theme blocks (Tool Blocks, ship pipeline).
 - **Customizer**: hero, booking link, GitHub/Bluesky/DEV.to/Facebook credentials, social defaults — 35 settings, secrets stored as `password` controls or wp-config constants.
@@ -85,7 +85,7 @@ A personal site is the one project where the developer is also the client, the c
 
 - **Project landing pages** at `/projects/{slug}/`: hero with proof strip and one primary action, screenshot gallery with lightbox, "what you get" checklist (deduplicated), three-step story, spec table beside architecture notes, FAQ, visitor like/star, comments, and an ask form — see [3.6.44](CHANGELOG.md).
 - **Projects listing** with search, type filters, grid/list toggle, and `FAQPage` JSON-LD.
-- **WooCommerce digital shop** for theme and plugin packs: Blade product templates, classic Cart/Checkout pages, sticky buy bar, post-purchase zip delivery, update emails, My Account desk (`app/shop.php`, `app/woocommerce.php`).
+- **Shop pages** for themes and plugins: `/shop/`, `/themes/` and `/plugins/` from one Shop template; product pages with a Freemius plan picker or a free download; an account page that links to the Freemius customer portal (`app/shop.php`, `template-shop.blade.php`).
 - **Support hub** rendering product guides from GitHub docs as HTML pages.
 - **Live GitHub board** on `/code/`: profile, 90-day contribution calendar, activity feed, repo cards — fetched through `App\Github` and cached in transients with a token read from wp-config or the Customizer.
 </details>
@@ -247,7 +247,7 @@ A merged PR is **not live** until the zip is installed. Credentials: a fine-grai
 
 ```text
 app/                      PHP modules, one concern each (fields, SEO, forms, shop, GitHub, social, updater, CLI)
-resources/views/          Blade: layouts/, sections/ (header, footer), partials/, template-*.blade.php, woocommerce/
+resources/views/          Blade: layouts/, sections/ (header, footer), partials/, template-*.blade.php
 resources/css/            app.css (@theme tokens) · portfolio.css · studio.css (last-win) · journal-blocks.css · code-page.css
 resources/js/             Small modules: nav, section spy, galleries, forms, share cards, admin helpers
 resources/data/           product-catalog.json, concept-pages.json (versioned seeds)

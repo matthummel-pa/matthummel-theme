@@ -1,113 +1,41 @@
-# Theme download shop (WooCommerce)
+# Product delivery
 
-How Acreline, WalkRidge, and other zip products get into buyers’ hands on **[matthummel.com](https://matthummel.com)**.
+How a product reaches a buyer or a visitor. WooCommerce was removed from the theme in 3.12 and 3.13; before that this file described the WooCommerce download shop. Products are now sold through Freemius or downloaded for free from a public GitHub release.
 
-## How it works
+Rule for every product: **do not commit theme or plugin zips to this (matthummel) repo.** Zips live in the product's own repo releases or in Freemius.
 
-```text
-Product repo (wp-acreline / wp-walkridge)
-  → GitHub Release zip (theme-latest or a version tag)
-  → catalog `download` in resources/data/product-catalog.json
-  → wp mh shop-downloads
-  → WooCommerce product: Virtual + Downloadable
-  → buyer pays (WooPayments)
-  → receipt email + My account → Downloads
+## Paid themes: Freemius
+
+Cobble & Candle is the first one. Freemius is the merchant of record: it takes the payment, handles sales tax and VAT, issues the license key, sends the receipt, delivers the zip and the updates.
+
+```
+Product page /themes/{slug}/
+  → Pricing section (#buy), plan picker from the catalog `freemius` block
+  → Freemius checkout opens in an overlay (no cart page)
+  → receipt + license key by email, download and updates from Freemius
+  → buyer lands on /account/, which links to the Freemius Customer Portal
 ```
 
-Do **not** commit theme zips into this (matthummel) repo. The shop product points at the GitHub asset URL (or a copy under `uploads/woocommerce_uploads/` if you run `--localize`).
+- **Catalog:** the `freemius` block in `resources/data/product-catalog.json` (store, product, plan, public key, tiers). Prices are set in the Freemius dashboard and mirrored in the catalog by Matt. `mh_project_freemius()` reads it.
+- **Refunds, renewals, white-label:** configured in the Freemius dashboard, not in code. Keep page copy in line with them.
+- **Releasing a new version:** bump `Version:` in the theme's `style.css`, push a tag `vX.Y.Z` in the product repo. Its `release-freemius.yml` builds the zip, attaches it to a GitHub Release and uploads it to Freemius as **pending**. It needs the repo secret `FREEMIUS_API_TOKEN` and the variable `FREEMIUS_PRODUCT_ID`; without them it builds and attaches the zip and skips the upload. Matt sets the version to **Released** in the Freemius Developer Dashboard → Deployment. That keeps a person between a tag and a paid update.
+- **Testing a purchase on staging:** define `MH_FREEMIUS_SANDBOX_TOKEN` and `MH_FREEMIUS_SANDBOX_CTX` in the staging `wp-config.php` (values from the Freemius dashboard). They are ignored on matthummel.com. Never commit them.
 
-## Catalog `download` block
+## Free plugins: GitHub release
 
-Each for-sale theme/plugin in `resources/data/product-catalog.json` needs:
+TOCguide is the first one. There is no cart and no login.
 
-```json
-"download": {
-  "github_repo": "matthummel-pa/wp-acreline",
-  "release": "theme-latest",
-  "asset": "latest",
-  "asset_prefix": "acreline-",
-  "label": "acreline.zip"
-}
+```
+Product page /plugins/{slug}/
+  → Download free  →  https://github.com/{owner}/{repo}/releases/latest/download/{asset}.zip
 ```
 
-| Field | Meaning |
-| --- | --- |
-| `github_repo` | `owner/repo` that publishes the zip |
-| `release` | Tag name (`theme-latest`) or `latest` for GitHub’s latest release |
-| `asset` | Exact zip filename, or `latest` to pick the highest `asset_prefix` + semver |
-| `asset_prefix` | e.g. `acreline-` matches `acreline-1.5.4.zip` |
-| `label` | Name shown to the buyer (usually `acreline.zip`) |
+The link is built by `mh_project_free_download_url()` from the catalog `download` block (`github_repo` and a fixed `asset` name), and only for products with `price` 0. Publish a new release in the plugin's repo and the link serves it.
 
-## Publish a new theme zip (Acreline pattern)
+## Not on sale yet
 
-1. In the **product** repo, build the installable pack (`bin/build-theme-zip.sh` or your marketplace pack script).
-2. Attach it to GitHub Release **`theme-latest`** as `acreline-X.Y.Z.zip` (versioned name required for update emails).
-3. On the shop site (after this theme is deployed at ≥ 3.5.14):
+`coming_soon: true` in the catalog. The product page and the card show a **Coming soon** badge, no buy button, and no schema.org Offer. Acreline and WalkRidge are in this state until they have Freemius products.
 
-```bash
-wp mh shop-downloads --force --slug=acreline
-```
+## What this replaced
 
-Buyers who already purchased get the **Product download update** email when the version increases. First attach does not email.
-
-WalkRidge must use the same pattern once a built zip exists. Until then, keep the WalkRidge product **draft** or **out of stock** so nobody pays for an empty Downloads page.
-
-## One-time shop settings (digital goods)
-
-Seeded by `mh_seed_digital_download_store()` when WooCommerce is active:
-
-| Setting | Value |
-| --- | --- |
-| Shipping | Disabled |
-| Guest checkout | On (account signup offered) |
-| Download method | Force (PHP serves the file) |
-| Grant access after payment | Yes |
-| Require login to download | No (receipt link works) |
-| Reviews | Off |
-
-Payments on matthummel.com: **WooPayments** (card + Apple Pay / Google Pay). No need for a separate Stripe plugin. If WooCommerce is still only active on a second install (`hummelwp.com`), run shop-download commands there until the catalog is moved.
-
-Also keep **WooCommerce → Settings → Products → Approved download directories** allowing `https://github.com/matthummel-pa/` (the theme adds these automatically).
-
-## Canonical products on matthummel.com
-
-| Product | SKU | Price | Download source |
-| --- | --- | --- | --- |
-| Acreline | `theme-acreline` | $79 | `wp-acreline` → `theme-latest` → `acreline-*.zip` |
-| WalkRidge | `theme-walkridge` | $59 | Needs a built GitHub zip first |
-| TOCflow | `plugin-tocflow` | $0 | `tocflow` release zip |
-
-Use the SKU’d products (`/product/acreline/`, `/product/walkridge/`, `/product/tocflow/`). Hide or trash SKU-less stubs (`acreline-2`, etc.) so the shop grid stays clean.
-
-## Buyer path after purchase
-
-1. Checkout with email (guest OK).
-2. Order completes → Woo grants download permission.
-3. Completed-order email includes the download link.
-4. **My account → Downloads** lists the zip; version badge updates when you ship a newer release.
-
-## CLI cheat sheet
-
-```bash
-# Attach / refresh GitHub zips for all for-sale catalog products
-wp mh shop-downloads
-
-# One product, re-fetch even if a file exists
-wp mh shop-downloads --force --slug=acreline
-
-# Copy remote zip into uploads/woocommerce_uploads (optional)
-wp mh shop-downloads --force --localize --slug=acreline
-
-# Resend update mail to prior buyers
-wp mh shop-notify-updates --slug=acreline
-```
-
-## Checklist before you sell a theme
-
-- [ ] GitHub Release has a versioned `.zip` buyers can install via Appearance → Themes
-- [ ] Catalog `download` points at that repo/release/prefix
-- [ ] `wp mh shop-downloads --slug=…` reports `attached` or `already attached`
-- [ ] Product is Virtual + Downloadable with at least one file in wp-admin
-- [ ] WooPayments is live (not test) if you want real charges
-- [ ] Test order: free product or test mode → confirm My account → Downloads
-- [ ] No SKU-less duplicate products visible in `/shop/`
+The WooCommerce shop (Cart, Checkout, My Account, product syncing, download delivery, update emails, the `wp mh shop-downloads` commands) is gone. Old WooCommerce product posts, orders and the `_mh_*` meta that may still sit in an old database are ignored by the theme. Old `/product/{slug}/` URLs 301 to the product page.

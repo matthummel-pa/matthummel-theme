@@ -17,9 +17,9 @@ If this file conflicts with `agency-core.mdc` or shipping patterns, **shipping p
 
 | Surface | Source of truth on matthummel.com |
 | --- | --- |
-| Project + Woo product copy | `resources/data/product-catalog.json` → `mh_upsert_catalog_product()` |
-| Public URL | `/projects/{slug}/` (e.g. `/projects/acreline/`) |
-| Checkout | WooCommerce product linked via `_mh_product_project_id` |
+| Project and product copy | `resources/data/product-catalog.json` → `mh_upsert_catalog_product()` |
+| Public URL | `/themes/{slug}/` or `/plugins/{slug}/` by product type (e.g. `/themes/acreline/`) |
+| Checkout | Freemius overlay (`freemius` block), a free GitHub download (`download` block), or Coming soon (`coming_soon`) |
 | Screenshots | Theme files under `resources/images/products/{slug}/` |
 
 Do **not** hardcode buyer copy in Blade. Do **not** invent metrics, IDX claims, or ThemeForest approval.
@@ -29,9 +29,9 @@ Do **not** hardcode buyer copy in Blade. Do **not** invent metrics, IDX claims, 
 | Catalog slug | GitHub | Demo | Notes |
 | --- | --- | --- | --- |
 | `acreline` | `matthummel-pa/wp-acreline` | https://acreline.matthummel.com/ | Theme pack; Core + child; Gutenberg blocks |
-| `walkridge` | `matthummel-pa/wp-walkridge` | — | Theme pack; needs a GitHub release zip before Woo can attach a download |
+| `walkridge` | `matthummel-pa/wp-walkridge` | — | Theme pack; **coming soon** until it has a Freemius product |
 | `tocflow` | `matthummel-pa/tocflow` | GitHub Pages docs | Free plugin |
-| `cobbleandcandle` | `matthummel-pa/wp-cobbleandcandle` | https://cobbleandcandle.matthummel.com/ | Theme + bundled Core plugin; **not for sale yet** (`for_sale: false`, no Woo product). Docs in `docs/guide/`, screenshots in `docs/marketplace/screenshots/` |
+| `cobbleandcandle` | `matthummel-pa/wp-cobbleandcandle` | https://cobbleandcandle.matthummel.com/ | Theme + bundled Core plugin; sold through Freemius (`freemius` block in the catalog). Docs in `docs/guide/`, screenshots in `docs/marketplace/screenshots/` |
 
 Add a new row here when a new sellable product lands in the catalog JSON.
 
@@ -78,7 +78,7 @@ Keep `files_included` aligned with the marketplace pack (theme zip, child, Core,
 Catalog JSON alone does not update published project meta after an earlier migration ran.
 
 1. Bump a one-shot option in `app/concept-pages.php` (e.g. `mh_product_catalog_vN`).
-2. Call `mh_apply_product_catalog(...)` (or the shared helper) with **force upsert** so meta + Woo sync refresh.
+2. Add a scoped migration like `mh_apply_product_catalog_v14` that calls `mh_upsert_catalog_product($slug, $seed, true)` for only that product, so project meta refreshes and other products are left alone.
 3. Wait until `mh_product_catalog_seed_data()` is non-empty before setting the option (in-place theme swap safety — same pattern as v2).
 4. Prefer demoting non-catalog projects only on the first marketplace migration; later refreshes can upsert catalog slugs only.
 
@@ -107,7 +107,7 @@ ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel
 cd ~/wp-site && wp theme activate matthummel
 # Delete the new option once if re-testing: wp option delete mh_product_catalog_vN
 cd ~/wp-site && wp eval 'do_action("init"); echo get_option("mh_product_catalog_vN") ? "ok" : "pending";'
-# Or hit /projects/{slug}/ and confirm version, benefits, FAQ, demo URL
+# Or hit /themes/{slug}/ (or /plugins/{slug}/) and confirm version, benefits, FAQ, demo URL
 vendor/bin/pint --test
 ```
 
