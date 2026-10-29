@@ -255,14 +255,6 @@ function mh_project_product_id(int $post_id): int
 }
 
 /**
- * Whether this project should render as a sellable product landing.
- */
-function mh_project_is_product_landing(int $post_id): bool
-{
-    return mh_project_product_id($post_id) > 0 && mh_shop_ready();
-}
-
-/**
  * FAQ pairs from `Question|||Answer` lines.
  *
  * @return list<array{0: string, 1: string}>
@@ -354,13 +346,10 @@ function mh_project_concept_narrative(int $post_id): array
         $summary = trim((string) get_post_meta($post_id, '_mh_project_blurb', true));
     }
 
+    // Checkout lives on the product page (Freemius), so there is no shop product payload to read here.
     $productType = mh_project_product_type($post_id);
-    $productId = mh_project_product_id($post_id);
-    $product = $productId > 0 ? mh_shop_product_payload($productId) : null;
-    $isProduct = is_array($product);
-    if ($isProduct && $productType === 'concept') {
-        $productType = 'theme';
-    }
+    $product = null;
+    $isProduct = false;
 
     return [
         'eyebrow' => trim((string) get_post_meta($post_id, '_mh_project_eyebrow', true)),
@@ -512,15 +501,6 @@ function mh_project_page_slides(int $post_id, array $card): array
 
     $add((string) ($card['image'] ?? ''), '');
 
-    $productId = function_exists(__NAMESPACE__.'\\mh_project_product_id') ? mh_project_product_id($post_id) : 0;
-    if ($productId > 0 && function_exists(__NAMESPACE__.'\\mh_product_entry')) {
-        $entry = mh_product_entry($productId);
-        $shots = is_array($entry['screenshots'] ?? null) ? $entry['screenshots'] : [];
-        foreach ($shots as $shot) {
-            $add((string) ($shot[0] ?? ''), (string) ($shot[1] ?? ''));
-        }
-        $add((string) ($entry['image'] ?? ''), '');
-    }
 
     if ($slides === [] && $post_id > 0 && has_post_thumbnail($post_id)) {
         $thumbId = (int) get_post_thumbnail_id($post_id);
@@ -1553,13 +1533,6 @@ function mh_upsert_catalog_product(string $slug, array $seed, bool $force = true
         }
     }
 
-    // A project that is not for sale yet gets no WooCommerce product (a private one would still turn the
-    // page into a product landing with a buy button). Existing products keep syncing as before.
-    $hasProduct = mh_project_product_id($postId) > 0;
-    if (function_exists(__NAMESPACE__.'\\mh_sync_project_product') && (! empty($seed['for_sale']) || $hasProduct)) {
-        mh_sync_project_product($postId);
-    }
-
     return $postId;
 }
 
@@ -1591,9 +1564,6 @@ function mh_apply_product_catalog(bool $demoteNonCatalog = true): bool
             $type = sanitize_key((string) get_post_meta($id, '_mh_project_product_type', true));
             if ($type === '' || $type === 'theme') {
                 update_post_meta($id, '_mh_project_product_type', 'concept');
-            }
-            if (function_exists(__NAMESPACE__.'\\mh_sync_project_product')) {
-                mh_sync_project_product($id);
             }
         }
     }
