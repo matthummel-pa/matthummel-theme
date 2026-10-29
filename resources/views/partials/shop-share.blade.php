@@ -10,6 +10,7 @@
             <p class="shop-docs__product">{{ $productTitle }}</p>
             <p class="shop-card__links">
               @foreach ($links as [$label, $url])
+                @continue(preg_match('/brand kit/i', $label))
                 <a class="shop-link" href="{{ esc_url($url) }}" rel="noopener" target="_blank">
                   {{ $label }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $productTitle) }}</span>
                   <span class="shop-link__icon" aria-hidden="true">↗</span>
