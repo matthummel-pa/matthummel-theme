@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.15.2 — Shop cards: more space, quality stats
+
+- Available now cards have more room between the type pills, title, blurb, highlight pills, list, stats and price.
+- New quality stats grid on each card (up to four tiles, from `quality` in `product-catalog.json`). Cobble & Candle shows WCAG 2.2 AA tested, 44 px touch targets, RTL languages supported and reduced motion respected. TOCguide shows no tracking, server-rendered HTML and GPLv2 or later. Every figure comes from claims already in the catalog. Speed scores are not shown until measured numbers are added to `quality`.
+
 ## 3.15.1 — Shop pages: fix gradient headings, small tidy-ups
 
 - Fix: the gradient headings on the shop pages painted as solid colour boxes with no readable text. The theme deliberately switches gradient text off for `.display-title.is-section` (heavier in dark mode), and the hero rule used the `background` shorthand, which resets the text clipping. Both are fixed: the headings are gradient text again in light and dark mode, and fall back to plain text in high-contrast mode.
