@@ -59,7 +59,7 @@
 Docs, config and AI rules only. No theme behavior changes.
 
 - `docs/SHOP-DOWNLOADS.md` is rewritten: how paid themes are sold and released through Freemius, how free plugins are downloaded from a GitHub release, and what "coming soon" means. It used to describe the WooCommerce download shop.
-- The WooCommerce product rule and its Claude mirror are replaced by `.cursor/rules/product-pages.mdc` and `.claude/skills/product-pages/SKILL.md`: catalog schema (`freemius`, `download`, `coming_soon`), product page and shop page standards, pricing and SEO rules.
+- The WooCommerce product rule is replaced by the `.claude/skills/product-pages/SKILL.md` skill: catalog schema (`freemius`, `download`, `coming_soon`), product page and shop page standards, pricing and SEO rules.
 - The add-product skill is rewritten for the real flow: catalog entry, a scoped one-time migration, images, Rank Math, internal links, then staging only.
 - The product-sync rule points at `/themes/{slug}/` and `/plugins/{slug}/`, Freemius checkout, and scoped migrations.
 - `docs/FEATURES.md`: removed the per-release notes about the WooCommerce cart, checkout, My Account desk, shop archive, downloads and Services add-ons, and updated the feature table. README, `readme.txt`, MARKETING, MARKETPLACE and GROWTH-PLAN no longer describe a WooCommerce shop.

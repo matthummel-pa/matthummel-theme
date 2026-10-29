@@ -1,4 +1,9 @@
-# Skill: Monthly Site Review
+---
+name: site-review
+description: "Monthly site review: performance, SEO, accessibility, and content checks with a numbered findings list. Use when Matt asks for a site review, performance check, or SEO audit."
+---
+
+# Monthly Site Review
 
 Use this skill when Matt asks for a site review, performance check, or SEO audit.
 

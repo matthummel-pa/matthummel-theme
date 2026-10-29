@@ -41,7 +41,8 @@
       "WebFetch(domain:make.wordpress.org)",
       "WebFetch(domain:roots.io)",
       "WebFetch(domain:tailwindcss.com)",
-      "WebFetch(domain:vite.dev)"
+      "WebFetch(domain:vite.dev)",
+      "WebFetch(domain:matthummel-com-623249.hostingersite.com)"
     ],
     "ask": [
       "Bash(git push:*)",

@@ -1,6 +1,6 @@
 name: WP Review
 
-# WordPress Handbook checks on the lines a PR changes (wp-dev-kit).
+# WordPress Handbook checks on the lines a PR changes (.github/scripts/wp-review).
 # Errors on changed lines fail the check; legacy code elsewhere is not reported.
 
 on:

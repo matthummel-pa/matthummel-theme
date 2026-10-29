@@ -1,4 +1,9 @@
-# Skill: Add a New Product to the Shop
+---
+name: add-product
+description: "Add a new WordPress theme, plugin, or web app to the matthummel.com shop catalog (product-catalog.json, product page, deploy). Use when Matt asks to add a product."
+---
+
+# Add a New Product to the Shop
 
 Use this skill when Matt asks to add a new WordPress theme, plugin, or (later) document to the matthummel.com shop.
 

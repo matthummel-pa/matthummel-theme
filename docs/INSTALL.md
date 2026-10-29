@@ -125,7 +125,7 @@ cp /workspace/mu-plugins/rank-math-rest-meta.php ~/wp-site/wp-content/mu-plugins
 # Copy to: public_html/wp-content/mu-plugins/rank-math-rest-meta.php
 ```
 
-## Local Cursor Cloud
+## Local (Linux, SQLite)
 
 ```bash
 ln -sfn /workspace ~/wp-site/wp-content/themes/matthummel

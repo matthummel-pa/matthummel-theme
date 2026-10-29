@@ -578,7 +578,7 @@ Above-the-fold is copy left + illustration right. Stats (repos, followers, Remot
 | Feature | Behavior |
 | --- | --- |
 | Page seed | Creates the standard pages and Primary menu once (`mh_portfolio_seeded_v2`) |
-| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; product singles live at `/themes/{slug}/` and `/plugins/{slug}/` (3.10). Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Old `/product/{slug}/` URLs 301 to the product page. Service add-ons stay out of the list. Sync playbook: `.cursor/rules/product-theme-sync.mdc` |
+| Projects CPT | Restored in 3.5.28. Theme/plugin/app products sync once (`mh_products_synced_to_projects_v1`). Listing page owns `/projects/`; product singles live at `/themes/{slug}/` and `/plugins/{slug}/` (3.10). Admin fields, On site toggle, category/place filters. `/concept/` 301s to Projects. Old `/product/{slug}/` URLs 301 to the product page. Service add-ons stay out of the list. Sync playbook: `.claude/rules/product-theme-sync.md` |
 | Support docs | `/support/` hub (`template-support.blade.php`) lists sellable products with **HTML-viewable** guides (jsDelivr CDN of GitHub `docs/marketplace/*.html`, same files as the seller Documentation pack); footer link; Acreline catalog docs point at the rendered hub |
 | Social defaults | GitHub, LinkedIn, DEV.to, Bluesky, Reddit, RSS |
 | DEV.to | RSS cached 3 hours; Journal sidebar thanks followers (API key or curated list); `DEV.to` category; hourly auto-import; export journal → Markdown / DEV.to draft (`wp mh devto-export`) |

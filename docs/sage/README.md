@@ -10,4 +10,3 @@ Official documentation for this theme’s starter. Prefer these over generic Wor
 | Compiling assets | https://roots.io/sage/docs/compiling-assets/ | `npm run build` / `npm run dev` |
 | Deployment | https://roots.io/sage/docs/deployment/ | [deployment.md](./deployment.md) |
 
-Cursor indexes the same URLs from `.cursor/docs.json`.

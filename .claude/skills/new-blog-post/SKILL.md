@@ -1,10 +1,15 @@
-# Skill: Write and Publish a New Blog Post
+---
+name: new-blog-post
+description: "Draft, review, or publish a journal post on matthummel.com (docs/posts drafts, block editor HTML, SEO fields). Use when Matt asks for a blog post."
+---
+
+# Write and Publish a New Blog Post
 
 Use this skill when Matt asks to draft, review, or publish a blog post on matthummel.com/journal.
 
 ## Overview
 
-Posts live as WordPress Gutenberg posts at `/journal/`. Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post body is pasted into the WP editor on the live site.
+Posts live as WordPress Gutenberg posts at `/journal/`. Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post body is pasted into the WP editor on the staging site (default host); Matt publishes staging to live from hPanel.
 
 Voice: first person, plain, specific. No fake metrics. "I" not "we."
 Audience: shops/agencies first, developers second, learners third.
@@ -108,11 +113,13 @@ Use standard Gutenberg block comments around major sections:
 
 ---
 
-## Step 6 — Publish on the live site
+## Step 6 — Publish on the staging site
 
-Options (choose one):
+Write and publish the post on the **staging site**, `https://matthummel-com-623249.hostingersite.com/` (default host; the same steps work there). Do not log in to or edit `matthummel.com`. Matt publishes staging → live from hPanel.
 
-**A) Manual paste (most reliable):**
+Publish with option A. Option B is a local preview only and does not publish anything.
+
+**A) Manual paste on the staging site (required to publish):**
 1. Go to wp-admin → Posts → Add New.
 2. Set title, slug, category (use existing categories — do not create new ones without Matt's approval).
 3. Switch to Code Editor and paste the HTML from `docs/posts/`.
@@ -120,14 +127,14 @@ Options (choose one):
 5. Add tags (3-5 max) and a featured image (1200×630 px).
 6. Publish.
 
-**B) WP-CLI import:**
-Use the import script: `python3 .github/scripts/import-docs-posts.py` — check that script for current usage before running.
+**B) Local preview only (WP-CLI import):**
+The import script writes to the local WordPress at `~/wp-site`, not to staging or `matthummel.com`. Use it to preview a draft locally, then still do option A on the staging site. Check the script for current usage before running: `python3 .github/scripts/import-docs-posts.py`.
 
 ---
 
 ## Step 7 — Cross-post distribution
 
-After publishing:
+Only after Matt has published staging → live, so the canonical URL is the live one. After that:
 
 | Channel | Action | When |
 |---|---|---|
@@ -146,5 +153,5 @@ After publishing:
 | `resources/views/single.blade.php` | Single post template |
 | `resources/views/partials/content-single.blade.php` | Post body render |
 | `app/rank-math-fields.php` | Rank Math integration |
-| `.cursor/rules/master-content-writer.mdc` | Voice and editing rules |
-| `.cursor/rules/portfolio-seo-playbook.mdc` | Keyword and content layout rules |
+| `.claude/rules/content.md` | Voice and editing rules |
+| `.claude/rules/portfolio-seo-playbook.md` | Keyword and content layout rules |

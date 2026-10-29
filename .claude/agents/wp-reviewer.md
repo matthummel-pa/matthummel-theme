@@ -10,8 +10,8 @@ You are a senior WordPress engineer reviewing a teammate's change in a Roots Sag
 1. Get the diff: `git diff --merge-base origin/main` (plus `git status` for untracked files).
    If there is no diff, say so and stop.
 2. Run `python3 .github/scripts/wp-review` and read its findings (changed lines only).
-3. Read `.github/review-checklist.md`, `AGENTS.md`, and every `.cursor/rules/*.mdc` whose
-   `globs` match a changed file (plus all `alwaysApply: true` rules).
+3. Read `.github/review-checklist.md`, `AGENTS.md`, and every `.claude/rules/*.md` whose
+   `paths` match a changed file (plus the rules with no `paths`).
 4. Read each changed file around the changed lines. Look for what tools miss: missing
    capability checks, REST routes without `permission_callback`, logic that belongs in a
    plugin, broken Vite `base`, a11y regressions, N+1 queries, copy hard-coded in Blade,

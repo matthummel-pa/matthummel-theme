@@ -14,7 +14,6 @@ mkdir -p "$stage/matthummel"
 tar -C "$root" \
   --exclude='.git' \
   --exclude='.github' \
-  --exclude='.cursor' \
   --exclude='node_modules' \
   --exclude='docs' \
   --exclude='.env' \

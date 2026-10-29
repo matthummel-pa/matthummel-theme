@@ -41,7 +41,7 @@ _Last updated: September 2026._
 - Plumbing/HVAC local service (evergreen local SEO)
 
 **To add a product:**
-Read `.cursor/skills/add-product/add-product.md` — full flow from JSON to deploy.
+Read `.claude/skills/add-product/SKILL.md` — full flow from JSON to deploy.
 
 ### Next plugin to build
 
@@ -103,7 +103,7 @@ Target: **2 posts per month**. Write one technical post (developer audience) and
 - First paragraph must answer the headline directly (BLUF).
 - Every post links to at least one product page.
 - Cross-post to DEV.to the same day (set canonical URL).
-- Use `.cursor/skills/new-blog-post/new-blog-post.md` for the full workflow.
+- Use `.claude/skills/new-blog-post/SKILL.md` for the full workflow.
 
 ---
 
@@ -120,7 +120,7 @@ Target: **2 posts per month**. Write one technical post (developer audience) and
 - [ ] Publish 2 blog posts (from the content calendar above)
 - [ ] Cross-post both to DEV.to
 - [ ] Check Rank Math scores on both product pages (target 80+)
-- [ ] Run `.cursor/skills/site-review/site-review.md` checklist
+- [ ] Run `.claude/skills/site-review/SKILL.md` checklist
 - [ ] Update `docs/MARKETING.md` if strategy changes
 - [ ] Check GitHub release download counts (Acreline, TOCflow)
 
@@ -237,11 +237,11 @@ Do not install Google Analytics, PostHog, or Mixpanel unless there is a specific
 
 | Task | Use |
 |---|---|
-| Add a new product | `.cursor/skills/add-product/add-product.md` |
-| Write a blog post | `.cursor/skills/new-blog-post/new-blog-post.md` |
-| Monthly site review | `.cursor/skills/site-review/site-review.md` |
-| Sync a product from its repo | `.cursor/rules/product-theme-sync.mdc` |
-| Edit product page standards | `.cursor/rules/product-pages.mdc` |
-| Voice and grammar | `.cursor/rules/master-content-writer.mdc` |
-| SEO and keyword strategy | `.cursor/rules/portfolio-seo-playbook.mdc` |
+| Add a new product | `.claude/skills/add-product/SKILL.md` |
+| Write a blog post | `.claude/skills/new-blog-post/SKILL.md` |
+| Monthly site review | `.claude/skills/site-review/SKILL.md` |
+| Sync a product from its repo | `.claude/rules/product-theme-sync.md` |
+| Edit product page standards | `.claude/skills/product-pages/SKILL.md` |
+| Voice and grammar | `.claude/rules/content.md` |
+| SEO and keyword strategy | `.claude/rules/portfolio-seo-playbook.md` |
 | Deploy | `.github/workflows/deploy.yml`, `docs/INSTALL.md` |

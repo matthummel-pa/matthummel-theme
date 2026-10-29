@@ -167,7 +167,7 @@ Design tokens are CSS custom properties in [`resources/css/app.css`](resources/c
 
 **Working method.** Each change starts with a one-line goal and a short plan, lands as a small PR named after the change, and gets reviewed before merge — by me and by a second tool (a security-review agent for anything touching input, output, or credentials). After every visible change I audit the live page: Lighthouse, axe-core, a crawl of titles/descriptions/links, keyboard pass. Findings become the next PR. The [FEATURES](docs/FEATURES.md) file carries an "editor's note" per release so a future change does not undo a deliberate decision.
 
-**AI as a pair, not an author.** Cursor and Claude scaffold first drafts and run the audits; I read, run, and test every line that ships, and the AI never has write access to the live site. The commit history is the honest record — 629 reviewable commits, not one generated dump.
+**AI as a pair, not an author.** Claude scaffolds first drafts and runs the audits; I read, run, and test every line that ships, and the AI never has write access to the live site. The commit history is the honest record — 629 reviewable commits, not one generated dump.
 
 ## Engineering practices
 
@@ -222,7 +222,7 @@ wp rewrite structure '/%postname%/'
 | `npm run dev` | Vite with HMR |
 | `npm run build` | Compile to `public/build/` (gitignored; CI builds it for release) |
 | `vendor/bin/pint` / `--test` | Fix / check PHP style |
-| `wp-review --base origin/main` | WordPress Coding Standards on changed lines (from [wp-dev-kit](https://github.com/matthummel-pa/wp-dev-kit)) |
+| `python3 .github/scripts/wp-review --base origin/main` | WordPress Coding Standards on changed lines |
 | `wp acorn view:clear` | Clear compiled Blade after template edits |
 | `wp mh theme-update` | Install the `theme-latest` zip on any WordPress install |
 
@@ -268,7 +268,7 @@ public/build/             Vite output — built by CI, never committed
 | [wp-walkridge](https://github.com/matthummel-pa/wp-walkridge) | Sage 11 tour-shop theme with WooCommerce bookings |
 | [tocguide](https://github.com/matthummel-pa/tocguide) | Server-rendered Table of Contents block (free, GPLv2+) |
 | [Rank Math SEO](https://wordpress.org/plugins/seo-by-rank-math/) | The SEO plugin that prints this site's head, schema, sitemap, and redirects |
-| [wp-dev-kit](https://github.com/matthummel-pa/wp-dev-kit) | `wp-review`, review checklist, and the Claude/Cursor rules used on every repo |
+| [ai-dev-standards-playbook](https://github.com/matthummel-pa/ai-dev-standards-playbook) | Claude Code rules, skills, and `/pb:*` commands used on every repo |
 | [matthummel-pa](https://github.com/matthummel-pa/matthummel-pa) | Profile README that pulls projects and posts from this site |
 
 ## Credits and license

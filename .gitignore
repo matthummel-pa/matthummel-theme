@@ -1,13 +1,3 @@
-# Cursor local MCP and caches; keep committed rule files
-.cursor/*
-!.cursor/rules/
-!.cursor/rules/**
-!.cursor/skills/
-!.cursor/skills/**
-!.cursor/docs.json
-!.cursor/mcp.json
-!.cursor/environment.json
-
 # GitHub Actions stay in git (un-ignore workflows and scripts)
 .github/*
 !.github/workflows/
@@ -96,7 +86,7 @@ debug.log
 # Claude Code personal settings
 .claude/settings.local.json
 
-# wp-dev-kit files that must be committed
+# Review tooling files that must be committed
 !.github/review-checklist.md
 !.github/pull_request_template.md
 

@@ -141,7 +141,7 @@ Product pages link to each other (related products). Blog posts about Acreline l
 - [ ] At least 2 internal links from other pages
 
 ### Measurement
-No Google Analytics client bundle (per `agency-core.mdc`). Track:
+No Google Analytics client bundle (per `agency-core.md`). Track:
 - Rank Math SEO score in wp-admin (target 80+ per product)
 - GitHub release download counts
 - Freemius sales and downloads (Freemius dashboard)
