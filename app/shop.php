@@ -1226,12 +1226,21 @@ function mh_shop_how_default(): string
 }
 
 /**
- * Default questions and answers for the shop pages.
+ * Default questions and answers for a shop page. The plugins page gets its own short set;
+ * every other scope ('all', 'theme') shares the theme questions.
  *
  * @return list<array{0: string, 1: string}> Question, answer.
  */
-function mh_shop_faq_defaults(): array
+function mh_shop_faq_defaults(string $scope = 'all'): array
 {
+    if ($scope === 'plugin') {
+        return [
+            [__('Are the plugins really free?', 'sage'), __('Yes. Download the zip from the plugin page. There is nothing to buy and no account to make.', 'sage')],
+            [__('Where do I get help?', 'sage'), __('Start with the docs linked on the plugin page. For a bug, or a question the docs do not answer, write to hello@matthummel.com.', 'sage')],
+            [__('Do the plugins collect data?', 'sage'), __('TOCguide does not. It has no accounts and no tracking.', 'sage')],
+        ];
+    }
+
     return [
         [__('Can I try a theme before I buy?', 'sage'), __('Yes. Theme pages link to a live demo where there is one. Cobble & Candle has three demos you can click through.', 'sage')],
         [__('What happens when my license expires?', 'sage'), __('The theme keeps working on your site. You stop getting updates and email support until you renew.', 'sage')],

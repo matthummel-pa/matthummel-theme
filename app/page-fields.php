@@ -699,6 +699,12 @@ function page_field_map(): array
                 ['shop_faq_a3', __('Answer 3', 'sage'), 'textarea', mh_shop_faq_defaults()[2][1]],
                 ['shop_faq_q4', __('Question 4', 'sage'), 'text', mh_shop_faq_defaults()[3][0]],
                 ['shop_faq_a4', __('Answer 4', 'sage'), 'textarea', mh_shop_faq_defaults()[3][1]],
+                ['shop_plugin_faq_q1', __('Plugins page, question 1', 'sage'), 'text', mh_shop_faq_defaults('plugin')[0][0]],
+                ['shop_plugin_faq_a1', __('Plugins page, answer 1', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[0][1]],
+                ['shop_plugin_faq_q2', __('Plugins page, question 2', 'sage'), 'text', mh_shop_faq_defaults('plugin')[1][0]],
+                ['shop_plugin_faq_a2', __('Plugins page, answer 2', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[1][1]],
+                ['shop_plugin_faq_q3', __('Plugins page, question 3', 'sage'), 'text', mh_shop_faq_defaults('plugin')[2][0]],
+                ['shop_plugin_faq_a3', __('Plugins page, answer 3', 'sage'), 'textarea', mh_shop_faq_defaults('plugin')[2][1]],
             ],
         ],
         'template-contact.blade.php' => [
