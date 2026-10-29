@@ -1,138 +1,114 @@
 # Skill: Add a New Product to the Shop
 
-Use this skill when Matt asks to add a new WordPress theme, plugin, or web app to the matthummel.com shop catalog.
+Use this skill when Matt asks to add a new WordPress theme, plugin, or (later) document to the matthummel.com shop.
+
+There is no WooCommerce. A product is a catalog entry that becomes a Project post. Paid themes check out through Freemius on the product page. Free plugins are a direct download from a public GitHub release. Nothing is deployed to production by an agent: everything lands on staging (hummel-dev) and Matt publishes staging to live from hPanel.
 
 ## Overview
 
-Products live in two places that must stay in sync:
-
 | Location | Purpose |
 |---|---|
-| `resources/data/product-catalog.json` | Ground truth for copy, schema, screenshots, features |
-| WooCommerce product (wp-admin) | Price, cart, purchase flow |
-| `_mh_project_*` post meta | Admin overrides that win over JSON |
+| `resources/data/product-catalog.json` | Ground truth for copy, schema, screenshots, how it is sold |
+| `app/concept-pages.php` | One-time migration that writes the entry into the Project post |
+| `_mh_project_*` post meta | Admin edits on the Project post; they win over the JSON |
+| `resources/images/products/{slug}/` | Screenshots and the card image |
 
-The PHP function `mh_product_entry(int $product_id)` in `app/shop.php` merges both sources; the WC meta wins on any key it defines.
+`mh_product_entry()` in `app/shop.php` merges the JSON and the post meta. The Project post gets its URL from the product type: `/themes/{slug}/`, `/plugins/{slug}/`, `/documents/{slug}/` (`mh_product_types()`). It shows up on `/shop/` and on its type's listing page by itself.
 
 ---
 
-## Step 1 — Add the entry to product-catalog.json
+## Step 1: Add the entry to product-catalog.json
 
-Open `resources/data/product-catalog.json`. Each product is an object keyed by `slug`. Copy an existing entry and edit:
+Open `resources/data/product-catalog.json`. Each product is an object keyed by slug. Copy an existing entry and edit it:
 
 ```json
 {
   "my-new-product": {
-    "name": "My New Product",
-    "slug": "my-new-product",
+    "title": "My New Product",
     "product_type": "theme",
-    "eyebrow": "WordPress theme",
-    "tagline": "One sentence that hooks a buyer.",
-    "blurb": "Two or three sentences. Appears in Rank Math meta description.",
-    "summary": "Longer overview paragraph shown before screenshots on the product page.",
+    "eyebrow": "Theme · Restaurants",
+    "blurb": "Two or three sentences. Feeds the card and the meta description.",
+    "summary": "Longer overview shown at the top of the product page.",
     "challenge": "What problem this solves.",
-    "approach": "How I built or architected it.",
+    "approach": "How I built it.",
     "result": "What you walk away with.",
     "audience": "Who it is for.",
-    "handoff": "What you receive after purchase.",
     "architecture": "Stack sentence or two.",
-    "version": "1.0.0",
-    "compatible": "WordPress 6.5+",
-    "license": "GPL-2.0-or-later",
-    "demo": "https://my-new-product.matthummel.com",
-    "github": "https://github.com/matthummel-pa/my-new-product",
-    "support": "https://matthummel.com/support/#my-new-product",
-    "benefits": [
-      "Benefit one",
-      "Benefit two"
-    ],
-    "deliverables": [
-      "Theme .zip (install under Appearance → Themes)",
-      "Child theme starter",
-      "Documentation"
-    ],
+    "handoff": "What you receive and how you edit it.",
+    "benefits": ["Benefit one", "Benefit two"],
+    "deliverables": ["Theme .zip", "Documentation"],
     "tech": ["WordPress", "Sage", "Tailwind", "Vite"],
-    "blocks": ["Block One", "Block Two"],
-    "screenshots": [
-      ["resources/images/my-new-product-hero.webp", "Homepage hero"],
-      ["resources/images/my-new-product-listing.webp", "Listing page"]
-    ],
-    "docs": [
-      ["Install guide", "https://cdn.jsdelivr.net/gh/matthummel-pa/my-new-product@main/docs/install.html"],
-      ["Customizer guide", "https://cdn.jsdelivr.net/gh/matthummel-pa/my-new-product@main/docs/customizer.html"]
-    ],
-    "files_included": ["theme.zip", "child-theme.zip", "docs/"],
-    "brand_tagline": "Tagline for the brand card.",
-    "brand_palette": [
-      ["Primary", "#1a2e4a"],
-      ["Accent", "#3b82f6"]
-    ],
-    "faq": [
-      ["Is this a real estate theme?", "Answer here."],
-      ["Does it include demo content?", "Yes — one-click import via the Getting Started wizard."]
-    ],
-    "metrics": [],
-    "is_product": true,
+    "version": "1.0.0",
+    "compatible": "WordPress 6.5+, PHP 8.3+",
+    "license": "GPL-2.0-or-later",
+    "demo": "https://my-new-product.matthummel.com/",
+    "github": "https://github.com/matthummel-pa/my-new-product",
+    "docs": [["Owner guide", "https://example.com/guide"]],
+    "image": "products/my-new-product/featured.webp",
+    "screenshots": [["products/my-new-product/featured.webp", "What this screen shows"]],
+    "faq": [["Question?", "Answer."]],
+    "seo_title": "Under 60 characters",
+    "seo_description": "Under 155 characters",
+    "live": true,
     "for_sale": true
   }
 }
 ```
 
-**Required** fields for a buyable product: `name`, `slug`, `product_type` (`theme`|`plugin`|`app`), `blurb`, `is_product: true`, `for_sale: true`.
+Only claim what is true: real features, real demos, real numbers. No invented metrics, testimonials or client names.
 
-**`product_type`** controls the hero eyebrow label, `SoftwareApplication.applicationCategory`, and the buy/download button label. Use `plugin` for WordPress plugins and `app` for non-WordPress web apps.
+### How it is sold (pick one)
 
----
-
-## Step 2 — Create the WooCommerce product in wp-admin
-
-1. Go to **Products → Add New**.
-2. Set the product title to match `name` in the JSON.
-3. Set permalink slug to match `slug` in the JSON (e.g. `my-new-product`).
-4. Set the **Product category** to `themes` or `plugins` (matches the shop catalog filter).
-5. Set the **price**. Free products: leave price blank or set to `0`.
-6. Upload a **Featured image** (1200×750 px for themes; 1200×600 for plugins). Rank Math picks this up for the `image` schema field.
-7. **Do not** fill in the product short or long description — these come from the JSON file.
-8. Publish. Note the product ID.
-9. Add a `download` object on the catalog entry (GitHub repo + release + asset or `latest`). After deploy, run `wp mh shop-downloads --slug=my-new-product` so the zip attaches. Buyers then get the file on My account → Downloads and an email when that zip version increases.
+- **Paid theme through Freemius:** add a `freemius` block (`store_id`, `product_id`, `plan_id`, `public_key`, `tiers`). Matt creates the product, plan and prices in the Freemius dashboard, and every price comes from him. The page then gets a Pricing section and the card says **Choose a plan**.
+- **Free zip:** set `"price": "0"` and add `"download": { "github_repo": "owner/repo", "release": "latest", "asset": "name.zip", "label": "name.zip" }`. The asset must be a fixed `.zip` name. The card and page say **Download free**.
+- **Not on sale yet:** set `"coming_soon": true`. No buy button, a **Coming soon** badge, no Offer in the page markup.
 
 ---
 
-## Step 3 — Sync catalog meta via WP-CLI
+## Step 2: Add a one-time migration
 
-On the live server, run the seed WP-CLI command so the `_mh_project_*` meta is written from JSON to the WC product:
+The JSON alone does not update posts that already exist. In `app/concept-pages.php`, copy the newest `mh_apply_product_catalog_vNN` function, bump the number, and upsert only your slug so edits to other products are left alone:
 
-```bash
-# In wp-admin PHP or WP-CLI eval:
-wp eval 'App\mh_seed_product_catalog_entry("my-new-product");'
+```php
+function mh_apply_product_catalog_v16(): void
+{
+    if (get_option('mh_product_catalog_v16') || wp_installing()) {
+        return;
+    }
+
+    $seed = mh_product_catalog_seed_data()['my-new-product'] ?? null;
+    if (! is_array($seed)) {
+        return;
+    }
+
+    if (mh_upsert_catalog_product('my-new-product', $seed, true) > 0) {
+        update_option('mh_product_catalog_v16', true);
+    }
+}
 ```
 
-Or trigger the one-shot seed function by bumping the `mh_product_catalog_v*` option key in `app/shop.php` — find the latest `mh_product_catalog_v{N}` option check and increment `N` by one.
+Register it next to the others (`add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v16', 46);`). Before adding any function, check the name is not already defined in `app/`.
 
 ---
 
-## Step 4 — Add a featured image to resources/images/
+## Step 3: Images
 
-Place optimized WebP screenshots in `resources/images/`. Recommended sizes:
+Put optimized WebP files in `resources/images/products/{slug}/`:
 
-- Hero screenshot: `1200×750` px, ≤150 KB
-- Gallery screenshots: `1200×750` px, ≤120 KB each
+- `featured.webp`: the card and hero image, 1200×750 px, ≤150 KB
+- gallery screenshots: 1200×750 px, ≤120 KB each
 
-Reference the filename in `screenshots` array in the JSON (no leading slash; relative to `resources/images/`).
-
----
-
-## Step 5 — Set Rank Math focus keyword on the product
-
-In wp-admin, open the product edit screen → Rank Math panel → set:
-
-- **Focus keyphrase**: the primary search phrase (e.g. `WordPress real estate theme`).
-- **Meta description**: paste the `blurb` value.
-- The theme auto-fills `post_content` with analysis HTML on first save, so the score should climb to 70+ immediately. Tweak the focus phrase, H1, and meta description to push above 80.
+Reference them in the JSON relative to `resources/images/`. Alt text describes what the screen shows.
 
 ---
 
-## Step 6 — Internal linking checklist
+## Step 4: Rank Math
+
+The catalog `seo_title` and `seo_description` seed the Rank Math title and description once; anything saved in wp-admin wins. In wp-admin, open the product's Project post and set the **focus keyphrase** (the primary search phrase). Target score 80+.
+
+---
+
+## Step 5: Internal links
 
 Add an internal link to the new product page from:
 
@@ -140,17 +116,15 @@ Add an internal link to the new product page from:
 - [ ] Now page (currently shipping section)
 - [ ] At least one existing blog post
 - [ ] Support page product listing
-- [ ] `product-catalog.json` related product cross-links (if you add a `related` key)
 
 ---
 
-## Step 7 — Build and deploy
+## Step 6: Check, ship to staging
 
-```bash
-npm run build
-vendor/bin/pint
-# commit + push → GitHub Actions builds and deploys
-```
+1. `php -l` on changed PHP, `python3 .github/scripts/wp-review`, Pint, and `npm run build` (say what you could not run).
+2. Branch, small PR, CHANGELOG line and a `style.css` / `readme.txt` version bump.
+3. After merge, install on **staging only** (`wp mh theme-update` over SSH, or Appearance → Update Theme), flush caches, then open `/shop/`, the listing for its type, and the product page.
+4. Matt publishes staging to live from hPanel. Do not install on or edit `matthummel.com`.
 
 ---
 
@@ -159,7 +133,9 @@ vendor/bin/pint
 | File | What it does |
 |---|---|
 | `resources/data/product-catalog.json` | Catalog JSON |
-| `app/shop.php` | `mh_product_entry()`, `mh_shop_product_payload()`, seed hooks |
-| `resources/views/woocommerce/single-product.blade.php` | Product landing page template |
-| `resources/views/woocommerce/archive-product.blade.php` | Shop listing template |
-| `app/filters.php` | SEO title/meta for products and shop |
+| `app/concept-pages.php` | `mh_product_types()`, `mh_upsert_catalog_product()`, catalog migrations |
+| `app/shop.php` | `mh_product_entry()`, `mh_shop_items()`, `mh_project_freemius()`, `mh_project_free_download_url()` |
+| `resources/views/partials/content-single-project.blade.php` | Product page template |
+| `resources/views/partials/freemius-buy.blade.php` | Pricing section and Freemius overlay |
+| `resources/views/template-shop.blade.php` | `/shop/`, `/themes/`, `/plugins/` listing |
+| `app/filters.php` | SEO title and meta for product pages |

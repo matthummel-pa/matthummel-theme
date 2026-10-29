@@ -23,7 +23,7 @@ This file is for the **matthummel.com** theme. Product themes (Acreline) keep th
 ## PHP
 
 - Laravel Pint (dev), MIT
-- generoi/sage-woocommerce, MIT (WooCommerce Blade wrappers; unused unless WooCommerce is active)
+- generoi/sage-woocommerce, MIT (WooCommerce Blade wrappers; installed but no longer loaded, since WooCommerce was removed from the theme in 3.12 and 3.13)
 
 ## Images
 

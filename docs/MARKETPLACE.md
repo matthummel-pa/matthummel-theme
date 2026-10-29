@@ -10,7 +10,7 @@ Audit of **this** theme (`matthummel`) against [WordPress.org theme requirements
 
 | Channel | Upload | Do not upload |
 | --- | --- | --- |
-| **Own site / WooCommerce** | This theme (already live) plus product zips you sell | Nothing from this repo as a “generic theme” |
+| **Own site / Freemius** | This theme (already live) plus product zips you sell | Nothing from this repo as a “generic theme” |
 | **ThemeForest** | Acreline outer pack from `bin/build-marketplace-pack.sh` | `matthummel.zip` / `theme-latest` |
 | **WordPress.org** | Acreline **theme zip only**, later, as a lite listing — see Acreline `docs/marketplace/wordpress-org.md` | This theme, Acreline’s outer pack, or any plugin zip inside a theme |
 
@@ -25,9 +25,9 @@ Themes with **three or more distinct issues** are closed as not-approved. This t
 | Requirement | This theme |
 | --- | --- |
 | No custom post types | Projects CPT (`project`) |
-| No shortcodes / plugin territory | Contact + `/start/` forms, WooCommerce shortcodes, theme updater, GitHub/DEV.to/Bluesky/OpenAI, n8n webhook |
+| No shortcodes / plugin territory | Contact + `/start/` forms, theme updater, GitHub/DEV.to/Bluesky/OpenAI, n8n webhook |
 | No remote data without consent | Google Fonts (allowed exception), GitHub API, CRM webhook, optional AI |
-| No auto-inserting pages | `mh_seed_portfolio_pages()` / WooCommerce page seed |
+| No auto-inserting pages | `mh_seed_portfolio_pages()` |
 | `readme.txt` + `screenshot.png` 1200×900 | Added in 3.1.31 for Appearance → Themes and Theme Check hygiene — **not** a green light to upload |
 | Text domain = folder slug | Folder `matthummel`, text domain `sage` (Sage default; do not rename on the live site) |
 | License | MIT (GPL-compatible). Directory strongly prefers **GPLv2 or later** stated |
