@@ -148,9 +148,8 @@ html.mh-dark body .shop-section h2.display-title.is-section {
 /* ── Product cards ──────────────────────────────────────── */
 .work-grid.shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 27rem));
-  justify-content: start;
-  gap: clamp(1.1rem, 2.5vw, 1.75rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.8vw, 2rem);
   margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
 }
 .work-card.shop-card {
@@ -340,6 +339,34 @@ html.mh-dark .shop-card__facts li {
   font-size: .75rem;
   line-height: 1;
 }
+/* Wide screens: one card per row, preview image on the left, content on the right. On a phone the card stays
+   vertical (image on top). A card with no image lets the content take the full width. */
+@media (min-width: 48rem) {
+  .work-card.shop-card {
+    display: grid;
+    grid-template-columns: minmax(15rem, 2fr) minmax(0, 3fr);
+    align-items: stretch;
+  }
+  .work-card.shop-card:not(:has(.work-shot)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .shop-card .work-shot {
+    height: 100%;
+    min-height: 16rem;
+    aspect-ratio: auto;
+  }
+  .shop-card .work-shot img {
+    position: absolute;
+    inset: 0;
+  }
+  .shop-card .work-shot {
+    position: relative;
+  }
+  .shop-card__quality {
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  }
+}
+
 /* Not for sale yet: quieter, and dashed so the difference is not colour alone. */
 .work-card.shop-card--soon {
   border: 1px dashed var(--color-border);

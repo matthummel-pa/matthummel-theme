@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.0 — Shop cards: horizontal layout
+
+- Product cards on /shop/, /themes/ and /plugins/ are one per row from tablet width up: preview image on the left, content on the right. On a phone they stay vertical, image on top. The quality stats fill the wider body in a row.
+
 ## 3.16.2 — Shop cards: category pills under the title
 
 - The Theme / Plugin / Coming soon pills now sit between the product title and its blurb instead of above the title.
