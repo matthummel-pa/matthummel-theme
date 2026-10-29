@@ -1184,7 +1184,7 @@ function mh_project_is_coming_soon(string $slug): bool
 }
 
 /**
- * Default heading ('h1') and intro ('lede') for a shop page. $scope is 'all' or a key from
+ * Default heading ('h1'), intro ('lede') and steps heading ('how_h2') for a shop page. $scope is 'all' or a key from
  * mh_product_types(). The page fields (shop_{scope}_h1, shop_{scope}_lede) override these.
  */
 function mh_shop_copy_default(string $scope, string $part): string
@@ -1193,18 +1193,24 @@ function mh_shop_copy_default(string $scope, string $part): string
         'all' => [
             'h1' => __('Themes and plugins for WordPress', 'sage'),
             'lede' => __('WordPress themes and plugins I build, sell, and support. Browse by type, open a live demo, and buy a yearly license through Freemius. Plugins are free to download.', 'sage'),
+            'how_h2' => __('How buying works', 'sage'),
         ],
         'theme' => [
             'h1' => __('WordPress themes', 'sage'),
             'lede' => __('Block themes I build and support. Each one has a live demo where there is one, a yearly license for updates and email support, and a 30-day refund if I cannot fix a problem.', 'sage'),
+            'how_h2' => __('How buying works', 'sage'),
         ],
         'plugin' => [
             'h1' => __('Free WordPress plugins', 'sage'),
             'lede' => __('Plugins I build and maintain. They are free: download the zip from the plugin page.', 'sage'),
+            'how_h2' => __('How to get a plugin', 'sage'),
         ],
     ];
     if (isset($copy[$scope][$part])) {
         return $copy[$scope][$part];
+    }
+    if ($part === 'how_h2') {
+        return __('How buying works', 'sage');
     }
 
     $plural = (string) (mh_product_types()[$scope]['plural'] ?? '');
@@ -1213,9 +1219,20 @@ function mh_shop_copy_default(string $scope, string $part): string
     return $part === 'h1' ? $plural : sprintf(__('Browse the %s I offer.', 'sage'), strtolower($plural));
 }
 
-/** Default "How buying works" steps for the shop pages (HTML list). */
-function mh_shop_how_default(): string
+/**
+ * Default steps for the shop pages (HTML list). The plugins page gets a short "how to get it" list;
+ * every other scope ('all', 'theme') shares the buying steps.
+ */
+function mh_shop_how_default(string $scope = 'all'): string
 {
+    if ($scope === 'plugin') {
+        return '<ol><li>'.implode('</li><li>', [
+            __('Download the zip from the plugin page. There is nothing to buy.', 'sage'),
+            __('In WordPress, go to Plugins, then Add Plugin, then Upload Plugin, and choose the zip.', 'sage'),
+            __('Activate it. The docs linked on the plugin page cover setup.', 'sage'),
+        ]).'</li></ol>';
+    }
+
     return '<ol><li>'.implode('</li><li>', [
         __('Pick a plan on the theme page. Checkout opens right there, and Freemius takes the payment.', 'sage'),
         __('Your receipt, license key, and download arrive by email. Your account page keeps them.', 'sage'),

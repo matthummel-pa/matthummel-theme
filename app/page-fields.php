@@ -686,8 +686,10 @@ function page_field_map(): array
                 ['shop_empty', __('Line shown when nothing is listed', 'sage'), 'text', __('Nothing is listed here yet. Say hello if you are looking for something specific.', 'sage')],
             ],
             __('How buying works', 'sage') => [
-                ['shop_how_h2', __('Heading', 'sage'), 'text', __('How buying works', 'sage')],
+                ['shop_how_h2', __('Heading', 'sage'), 'text', mh_shop_copy_default('all', 'how_h2')],
                 ['shop_how', __('Steps (basic HTML ok)', 'sage'), 'html', mh_shop_how_default()],
+                ['shop_plugin_how_h2', __('Plugins page, heading', 'sage'), 'text', mh_shop_copy_default('plugin', 'how_h2')],
+                ['shop_plugin_how', __('Plugins page, steps (basic HTML ok)', 'sage'), 'html', mh_shop_how_default('plugin')],
             ],
             __('Questions', 'sage') => [
                 ['shop_faq_h2', __('Heading', 'sage'), 'text', __('Questions', 'sage')],

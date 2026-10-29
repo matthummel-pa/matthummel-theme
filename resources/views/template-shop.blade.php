@@ -42,7 +42,8 @@
       $faq[] = [$q, $a];
     }
   }
-  $how = trim(\App\field_html('shop_how', \App\mh_shop_how_default(), $pageId));
+  $howKey = $scope === 'plugin' ? 'shop_plugin_how' : 'shop_how';
+  $how = trim(\App\field_html($howKey, \App\mh_shop_how_default($scope), $pageId));
 @endphp
 
 @component('partials.page-hero')
@@ -88,7 +89,7 @@
 @if ($how !== '')
   <section class="project-section" aria-labelledby="shop-how-heading">
     <div class="container wide">
-      <h2 id="shop-how-heading" class="display-title is-section">{{ \App\field('shop_how_h2', __('How buying works', 'sage'), $pageId) }}</h2>
+      <h2 id="shop-how-heading" class="display-title is-section">{{ \App\field($howKey.'_h2', \App\mh_shop_copy_default($scope, 'how_h2'), $pageId) }}</h2>
       {!! wp_kses_post($how) !!}
     </div>
   </section>
