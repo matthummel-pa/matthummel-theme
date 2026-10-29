@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.12.1 — Remove the WooCommerce hooks and sync code from shop.php (stage 2a of 3)
+
+- Removed 38 functions and 37 hook registrations (about 1,400 lines) from `app/shop.php` that only existed to talk to WooCommerce: product and download syncing, buyer update emails, account download banners, order and loop hooks, store seeding and the one-time resync migrations.
+- The shop redirect for `/shop/` is gone with them, so `/shop/` is now just the Shop page.
+- Old `/product/{slug}/` URLs still 301 to the product page, through a new redirect that does not depend on WooCommerce (`mh_redirect_legacy_product_urls`).
+- Kept for stage 2b: 21 functions that still use WooCommerce but have callers in code that stays (the product sync entry points, the cart chip in the header, the product payload used by the buy button). Those need hand edits.
+
 ## 3.12.0 — Remove the WooCommerce cart, checkout and account screens (stage 1 of 3)
 
 Products are sold through Freemius now, so the theme no longer carries its own cart and checkout.
