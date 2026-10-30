@@ -7445,16 +7445,12 @@ html.mh-still .h-collage__dot { display: none; }
 .h-collage__grid::before,
 .h-collage__grid::after { display: none; }
 
-/* 3.21.0 · Home hero "Featured theme": a calm gradient and one theme card beside the copy. */
+/* 3.21.0 · Home hero "Featured theme": a calm gradient and one theme card beside the copy.
+   3.21.5: navy in light mode too. The hero's heading gradient, kicker, lede, links and the floating header
+   are all light-on-dark; a pale gradient put them at 1.1 to 1.4:1. Same as the site's other dark heroes. */
 .h-hero__calm {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 60% 70% at 100% 0%, color-mix(in srgb, var(--color-spark) 16%, transparent), transparent 60%),
-    radial-gradient(ellipse 50% 60% at 0% 100%, color-mix(in srgb, var(--color-accent-bright) 14%, transparent), transparent 58%),
-    linear-gradient(180deg, #f4f7fb 0%, #e8eff8 100%);
-}
-html.mh-dark .h-hero__calm {
   background:
     radial-gradient(ellipse 60% 70% at 100% 0%, color-mix(in srgb, var(--color-spark) 14%, transparent), transparent 60%),
     linear-gradient(180deg, #0f1c2e 0%, #16263d 100%);

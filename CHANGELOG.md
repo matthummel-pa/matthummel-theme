@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.21.5 — Home hero is readable in light mode
+
+- The Home hero's calm gradient was pale in light mode, which put the header links, heading, kicker, intro text and the "Browse themes" link (all made for a dark background) at about 1.1 to 1.4:1 contrast. The gradient is now navy in both modes, like the other hero backgrounds. Text now measures 5:1 or better against a deliberately light worst case.
+
 ## 3.21.3 — Header fits on phones
 
 - On phones the header ran off the right edge and clipped the Menu button, since the pause button joined it. Under 480px the "Menu" word is dropped (the button is still named for screen readers), the dark mode and pause buttons are 36px, spacing is tighter, and the logo scales down on the smallest screens. Checked at 320, 360, 390 and 412px.
