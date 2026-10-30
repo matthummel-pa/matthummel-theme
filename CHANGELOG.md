@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.19.1 — Changelog page shows product versions, not rolling tags
+
+- The "Latest releases" list on the Changelog page showed Acreline as "theme-latest", because its GitHub release is replaced in place. A rolling release now shows the version from the catalog (for example v1.5.9) and no date. Releases with a real tag are unchanged.
+
 ## 3.19.0 — The changelog page updates itself
 
 - Two new blocks for the Changelog page. **Theme changelog** (`matthummel/changelog-feed`) reads the theme's own `CHANGELOG.md`, which ships in the zip, and shows the newest releases with their notes. A new release appears on the page by itself. **GitHub activity** (`matthummel/github-activity`) lists my recent public activity across every repo, plus the latest release of each product in the catalog. GitHub calls are cached and fail soft.
