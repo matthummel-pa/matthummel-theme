@@ -2,6 +2,24 @@
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin'
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
+import { register } from 'node:module'
+
+// Windows only: @roots/vite-plugin imports tailwind.config.js by absolute path (C:\...),
+// which Node's ESM loader rejects. This resolve hook turns drive-letter paths into
+// file:// URLs. It runs before the plugin loads the config, and does nothing on Linux/CI.
+if (process.platform === 'win32') {
+  register(`data:text/javascript,${encodeURIComponent(`
+    import { pathToFileURL } from 'node:url'
+    export async function resolve(specifier, context, nextResolve) {
+      if (!/^[a-zA-Z]:/.test(specifier)) return nextResolve(specifier, context)
+      // Keep the ?t= cache-buster the plugin adds to *.theme.js partials; Windows paths never contain "?".
+      const q = specifier.indexOf('?')
+      const url = pathToFileURL(q < 0 ? specifier : specifier.slice(0, q))
+      if (q >= 0) url.search = specifier.slice(q)
+      return nextResolve(url.href, context)
+    }
+  `)}`)
+}
 
 // Set APP_URL if it doesn't exist for Laravel Vite plugin
 if (! process.env.APP_URL) {
