@@ -48,6 +48,16 @@
   $priceLabel = (string) ($card['price_label'] ?? '');
   // Freemius products skip WooCommerce: the plan picker below opens Freemius checkout in an overlay.
   $fs = \App\mh_project_freemius($projectSlug);
+  // Cheapest plan, so the hero can say "From $59 per year" next to Buy without a hardcoded price.
+  $fromPrice = '';
+  $fromAmount = null;
+  foreach ((array) ($fs['tiers'] ?? []) as $tier) {
+    $amount = (float) preg_replace('/[^\d.]/', '', (string) ($tier['price'] ?? ''));
+    if ($amount > 0 && ($fromAmount === null || $amount < $fromAmount)) {
+      $fromAmount = $amount;
+      $fromPrice = (string) $tier['price'];
+    }
+  }
   // Free products (TOCguide) link straight to the public release zip: no cart, no login.
   $freeUrl = \App\mh_project_free_download_url($projectSlug);
   // Catalog products waiting on their Freemius product: no Buy button, a badge instead.
@@ -64,6 +74,13 @@
 
 <article {!! post_class('concept-page project-page') !!}>
   @component('partials.page-hero', ['extra' => 'page-header--project', 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
+    @if ($heroImage !== '')
+      @slot('aside')
+        <figure class="project-hero-shot">
+          <img src="{{ esc_url($heroImage) }}" alt="{{ esc_attr($heroImageAlt) }}" width="1600" height="900" decoding="async" fetchpriority="high">
+        </figure>
+      @endslot
+    @endif
     <div class="project-hero-head">
       @include('partials.project-type-row', ['p' => $card])
       <h1 class="display-title is-hero">{{ $title }}</h1>
@@ -96,6 +113,9 @@
           {!! \App\mh_svg_icon('cart', 15) !!}
           {{ __('Buy the theme', 'sage') }}
         </a>
+        @if ($fromPrice !== '')
+          <span class="project-hero-price">{{ sprintf(__('From %s per year', 'sage'), $fromPrice) }}</span>
+        @endif
         @if ($demo !== '')
           <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
             {!! \App\mh_svg_icon('globe', 15) !!}

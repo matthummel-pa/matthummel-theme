@@ -31,6 +31,10 @@
     <div class="page-header__panel">
       {{ $slot }}
     </div>
+    {{-- Optional framed preview beside the copy (desktop only). Pass it as @slot('aside'). --}}
+    @if (! empty($aside))
+      <div class="page-header__aside">{{ $aside }}</div>
+    @endif
   </div>
   @include('partials.hero-wave')
 </{{ $tag }}>

@@ -7337,3 +7337,31 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
 .fs-buy__note[hidden] {
   display: none;
 }
+
+/* ── 3.19.4 Product hero: framed theme preview beside the copy, price next to Buy ── */
+.project-hero-price {
+  color: #c9d9ef;
+  font-size: .95rem;
+  font-weight: 600;
+}
+.page-header__aside { display: none; }
+@media (min-width: 960px) {
+  .page-header--project .page-header-inner { position: relative; }
+  .page-header--project .page-header__aside {
+    display: block;
+    position: absolute;
+    inset-inline-end: var(--page-gutter);
+    top: 50%;
+    width: min(44%, 36rem);
+    transform: translateY(-50%);
+  }
+  .project-hero-shot {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(201, 217, 239, .28);
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(2, 8, 20, .55);
+    background: #0a1a33;
+  }
+  .project-hero-shot img { display: block; width: 100%; height: auto; }
+}

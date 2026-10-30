@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.19.4 — Project hero shows the theme and the price
+
+- The project hero put its first screenshot behind a 95% dark scrim, so a buyer saw almost none of the theme above the fold. On screens 960px and wider, the hero now shows that screenshot in a framed figure beside the copy. Phones are unchanged.  `partials/page-hero` takes an optional `aside` slot for it.
+- Freemius products show "From $59 per year" beside the Buy button. It reads the cheapest plan from the catalog, so a price change in `product-catalog.json` updates it.
+
 ## 3.19.3 — Post follow line is smaller
 
 - The follow line added in 3.19.2 rendered at body-text size (22px) under the share buttons. It now sits on its own row at .95rem in the muted text color, so it reads as a quiet prompt, not a second heading.
