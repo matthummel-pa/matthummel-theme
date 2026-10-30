@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.21.2 — Coming soon themes in the Latest themes block
+
+- The Latest themes block has a new "Show coming soon themes" switch (off by default). When it is on, themes marked Coming soon follow the ones on sale.
+
 ## 3.21.1 — Shop page accessibility and layout pass
 
 From a browser and screen reader check of the shop pages on staging.
