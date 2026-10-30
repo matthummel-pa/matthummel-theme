@@ -6492,9 +6492,8 @@ html.mh-dark .journal-topic-card {
     linear-gradient(165deg, color-mix(in srgb, var(--blue-50) 55%, transparent) 0%, transparent 42%);
 }
 
-/* Section title accent — calm brand mark */
-.pf-section > .container > .sec-head .display-title::after,
-.page-header .display-title.is-hero::after {
+/* Section title accent — calm brand mark. Hero h1s have no underline bar (removed in 3.21.2). */
+.pf-section > .container > .sec-head .display-title::after {
   content: "";
   display: block;
   width: 2.5rem;

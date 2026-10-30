@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.21.4 — Pause button removed, no bar under hero titles
+
+- The pause-animations button is gone from the header, along with its script and styles. With the button gone, the phone header has more room, and the "Get updates" icon-only range is back to 901 to 1099px.
+- Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
 ## 3.21.3 — Header fits on phones
 
 - On phones the header ran off the right edge and clipped the Menu button, since the pause button joined it. Under 480px the "Menu" word is dropped (the button is still named for screen readers), the dark mode and pause buttons are 36px, spacing is tighter, and the logo scales down on the smallest screens. Checked at 320, 360, 390 and 412px.
