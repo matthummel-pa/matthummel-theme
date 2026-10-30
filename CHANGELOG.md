@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.22.1 — Light mode post headers
+
+- On blog posts in light mode, the author, date, read time, "Share" label and share buttons were pale text on the new pale header. They are now dark and measure 8.9:1 or better.
+
 ## 3.22.0 — Light mode headers
 
 - In light mode, page headers and the Home hero are pale and neutral with dark text, instead of navy with white text. The header's logo, links, Menu button and toggles turn dark while it floats over a pale hero. Hero buttons are charcoal. Badges and stat chips in product headers are neutral gray. The text in these headers measured 4.5:1 or better. Dark mode is unchanged.
