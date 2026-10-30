@@ -7516,3 +7516,42 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 }
 /* Card links ("Live demo", "Owner guide") were 23px tall, one pixel under the 24px target size (WCAG 2.5.8). */
 .shop-card__links .shop-link { display: inline-flex; align-items: center; min-height: 24px; }
+
+/* 3.22.0 · Light mode: page headers and the Home hero are pale and neutral, with dark text. They were navy with
+   white text. Header nav, logo and toggles go dark while the header floats over a pale hero (it turns white
+   with dark text once scrolled, as before). Dark mode is untouched. Charcoal (#111827) replaces navy on
+   buttons inside heroes. Every text colour below was measured at 4.5:1 or better on #ECEFF3, the darker end of
+   the gradient. */
+html:not(.mh-dark) body .page-header,
+html:not(.mh-dark) body .h-hero,
+html:not(.mh-dark) body .post-hero { background: linear-gradient(180deg, #f8f9fb 0%, #eceff3 100%) !important; color: #111827; }
+html:not(.mh-dark) body .page-header::before,
+html:not(.mh-dark) body .h-hero::before,
+html:not(.mh-dark) body .post-hero::before { display: none !important; }
+html:not(.mh-dark) body .page-header::after,
+html:not(.mh-dark) body .h-hero::after,
+html:not(.mh-dark) body .post-hero::after { background: #d3d8df !important; }
+html:not(.mh-dark) body .page-header__wash,
+html:not(.mh-dark) body .h-hero__wash { display: none !important; }
+html:not(.mh-dark) body .h-hero__calm { background: linear-gradient(180deg, #f8f9fb 0%, #eceff3 100%) !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.eyebrow, .h-hero__kicker) { color: #3d4654 !important; -webkit-text-fill-color: #3d4654 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(h1, .display-title, .h-hero__name) { background: none !important; color: #111827 !important; -webkit-text-fill-color: #111827 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.lead, .is-style-lead, .h-hero__lede, .h-hero__role, p) { color: #374151 !important; -webkit-text-fill-color: #374151 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.h-text-arrow, a:not(.btn):not(.wp-block-button__link)) { color: #1e3a8a; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.wp-block-button:not(.is-style-arrow) .wp-block-button__link, .btn:not(.btn-outline)) { background: #111827 !important; background-image: none !important; color: #fff !important; -webkit-text-fill-color: #fff !important; border-color: #111827 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.wp-block-button:not(.is-style-arrow) .wp-block-button__link, .btn:not(.btn-outline)):hover { background: #1f2937 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) :is(.is-style-arrow .wp-block-button__link, .h-text-arrow) { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; background: none !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) .spec-badge { background: #e5e7eb !important; background-image: none !important; color: #111827 !important; -webkit-text-fill-color: #111827 !important; border-color: #c7ccd4 !important; }
+html:not(.mh-dark) body :is(.page-header, .h-hero, .post-hero) .project-place-pill { background: #eef0f3 !important; color: #374151 !important; border-color: #c7ccd4 !important; }
+html:not(.mh-dark) body .project-proof__item strong { color: #111827 !important; -webkit-text-fill-color: #111827 !important; }
+html:not(.mh-dark) body .project-proof__item span { color: #4b5563 !important; -webkit-text-fill-color: #4b5563 !important; }
+html:not(.mh-dark) body .project-hero-shot { background: #e5e7eb !important; }
+html:not(.mh-dark) body .page-header .shop-crumbs :is(li, span, [aria-current]) { color: #374151 !important; -webkit-text-fill-color: #374151 !important; }
+html:not(.mh-dark) body .page-header .shop-crumbs a { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+html:not(.mh-dark) body .page-header .shop-trust { background: rgba(255, 255, 255, .72) !important; border-color: #c7ccd4 !important; }
+html:not(.mh-dark) body .page-header .shop-trust li { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; }
+html:not(.mh-dark) body .site-header:not(.is-scrolled) :is(.header-nav-list a, .menu-toggle, .theme-toggle) { color: #1f2937 !important; }
+html:not(.mh-dark) body .site-header:not(.is-scrolled) .brand-name { background: none !important; color: #111827 !important; -webkit-text-fill-color: #111827 !important; }
+html:not(.mh-dark) body .site-header:not(.is-scrolled) :is(.menu-toggle, .theme-toggle) { border-color: rgba(17, 24, 39, .3) !important; background: rgba(17, 24, 39, .04) !important; }
+html:not(.mh-dark) body .site-header:not(.is-scrolled) .header-nav-list a:hover { background: rgba(17, 24, 39, .08); color: #111827 !important; }
+html:not(.mh-dark) body .site-header:not(.is-scrolled) .header-nav-list :is(.current-menu-item > a, a[aria-current="page"]) { background: rgba(17, 24, 39, .08); color: #111827 !important; box-shadow: inset 0 0 0 1px rgba(17, 24, 39, .25); }
