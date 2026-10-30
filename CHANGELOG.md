@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.21.0 — Featured theme hero and a latest-themes block
+
+- New hero background for the Home layout, "Calm gradient + featured theme": a quiet gradient with a card for the newest theme (screenshot, name, one-line blurb, price and link) beside the heading. The code collage is still there as an option.
+- New "Latest themes" block: the newest themes from the shop as cards, with an optional link to all themes. Nothing on the live page uses either yet.
+
 ## 3.20.2 — Drifting dot wash removed
 
 - The slowly drifting dot pattern behind the hero and page headers, and the matching layers inside the home collage, are gone. The glint layer and the collage cards are unchanged.

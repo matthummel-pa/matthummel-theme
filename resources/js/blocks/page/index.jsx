@@ -90,6 +90,7 @@ function HeroEdit({ attributes, setAttributes }) {
               { value: 'photo', label: __('Featured image', 'sage') },
               { value: 'scene', label: __('Project scene', 'sage') },
               { value: 'collage', label: __('Code collage (no photo)', 'sage') },
+              { value: 'featured', label: __('Calm gradient + featured theme (Home layout)', 'sage') },
             ]}
             onChange={(value) => setAttributes({ background: value })}
             help={__('Featured image comes from the Page sidebar. Code collage draws tilted code cards instead of a photo (Home layout).', 'sage')}
