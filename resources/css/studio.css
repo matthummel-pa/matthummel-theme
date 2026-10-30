@@ -7555,3 +7555,12 @@ html:not(.mh-dark) body .site-header:not(.is-scrolled) .brand-name { background:
 html:not(.mh-dark) body .site-header:not(.is-scrolled) :is(.menu-toggle, .theme-toggle) { border-color: rgba(17, 24, 39, .3) !important; background: rgba(17, 24, 39, .04) !important; }
 html:not(.mh-dark) body .site-header:not(.is-scrolled) .header-nav-list a:hover { background: rgba(17, 24, 39, .08); color: #111827 !important; }
 html:not(.mh-dark) body .site-header:not(.is-scrolled) .header-nav-list :is(.current-menu-item > a, a[aria-current="page"]) { background: rgba(17, 24, 39, .08); color: #111827 !important; box-shadow: inset 0 0 0 1px rgba(17, 24, 39, .25); }
+
+/* 3.22.1 · Light mode post headers: author, date, read time, share label and share buttons were still pale text on
+   the pale header (1.1 to 1.2:1). Now 8.9:1 or better; the dot separators are 7:1. */
+html:not(.mh-dark) body .post-hero-meta__author { color: #111827 !important; -webkit-text-fill-color: #111827 !important; }
+html:not(.mh-dark) body .post-hero-meta :is(.post-hero-meta__date, .post-hero-meta__read),
+html:not(.mh-dark) body .post-hero-share__label { color: #374151 !important; -webkit-text-fill-color: #374151 !important; }
+html:not(.mh-dark) body .post-hero-meta__sep { color: #4b5563 !important; }
+html:not(.mh-dark) body .post-hero .post-share-btn { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; background: rgba(17, 24, 39, .04) !important; border-color: rgba(17, 24, 39, .3) !important; }
+html:not(.mh-dark) body .post-hero .post-share-btn:hover { background: rgba(17, 24, 39, .1) !important; color: #111827 !important; }
