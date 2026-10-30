@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.4 — Signup fallback works where the form really is
+
+- 3.18.3 put the fallback in the old Get updates template, but the page now uses the block template, so it never showed. The fallback now lives in a `render_block` filter (`mh_reach_form_fallback()` in `app/blocks.php`). If the Hostinger Reach plugin is off, any place that holds its form block (the Get updates page and the footer column) shows a short message, a "Say hello" button and an RSS link instead of nothing. With the plugin on, nothing changes.
+- The old template is back to what it was before 3.18.3.
+
 ## 3.18.3 — Get updates still works without the Reach form
 
 - `/get-updates/` used to show only its heading if the Hostinger Reach plugin was off or its form had been removed from the page. It now shows a short message with a "Say hello" button and an RSS link instead. When the form is there, nothing changes.
