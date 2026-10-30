@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.19.8 — Shop trust list has a group role
+
+- The shop's "What you can count on" box had an `aria-label` on a plain `div`, which screen readers ignore. It is now a `role="group"`, so the label is announced.
+
 ## 3.19.7 — Fixes from an axe pass on staging
 
 - In-sentence links (the Freemius buy note, the shop intro, the subscribe box, the comment form's "logged in as" line) were set apart by color only. They are now underlined.
