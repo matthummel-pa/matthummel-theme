@@ -7,8 +7,9 @@
     $seen = [];
     foreach ($cats as $cat) {
       $slug = strtolower((string) $cat->slug);
-      $name = trim((string) $cat->name);
-      if ($name === '' || $slug === 'uncategorized' || isset($seen[$slug])) {
+      // Not $name: partials.read-more reads $name as the post title for its screen-reader text.
+      $catName = trim((string) $cat->name);
+      if ($catName === '' || $slug === 'uncategorized' || isset($seen[$slug])) {
         continue;
       }
       $seen[$slug] = true;

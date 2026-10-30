@@ -40,6 +40,8 @@
       <p class="footer-nav-label">{{ __('Site', 'sage') }}</p>
       <ul class="footer-nav footer-nav--split">
         <li><a href="{{ esc_url(home_url('/about/')) }}">{{ __('About', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/services/')) }}">{{ __('Services', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/shop/')) }}">{{ __('Shop', 'sage') }}</a></li>
         <li><a href="{{ esc_url(\App\mh_work_listing_url()) }}">{{ __('Projects', 'sage') }}</a></li>
         <li><a href="{{ esc_url($writing) }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ esc_url(home_url('/resources/')) }}">{{ __('Resources', 'sage') }}</a></li>

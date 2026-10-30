@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.19.2 — Journal cards name the post, posts end with a follow prompt, shop count and footer links
+
+- The "Read article" button on journal cards read "Read article: WordPress" or "Read article: AI" because the card's category loop reused the `$name` variable that `partials/read-more` treats as the post title. The loop now uses `$catName`, so the hidden link text names the post again.
+- Each post now ends with one line under the share buttons: "Want the next one? Get new posts by email or follow the RSS feed." The email link goes to Get updates, where the form lives.
+- The Shop page's product count sat under "Available now" but counted the coming-soon cards too ("4 products" with two on sale). It now counts only what is on sale.
+- The default footer "Site" list now links to Services and Shop. This default only shows when the Footer: links widget area is empty. On staging that widget is hand-built, so add the two links there.
+
 ## 3.19.1 — Changelog page shows product versions, not rolling tags
 
 - The "Latest releases" list on the Changelog page showed Acreline as "theme-latest", because its GitHub release is replaced in place. A rolling release now shows the version from the catalog (for example v1.5.9) and no date. Releases with a real tag are unchanged.

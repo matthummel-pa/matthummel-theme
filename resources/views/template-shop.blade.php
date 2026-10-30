@@ -120,7 +120,8 @@
       <p class="eyebrow">{{ $copy('avail_eyebrow') }}</p>
       <h2 id="shop-available-heading" class="display-title is-section">{{ $copy('avail_h2') }}</h2>
       <p class="shop-section__intro">{{ $copy('avail_intro') }}</p>
-      @include('partials.shop-tabs', ['tabs' => $tabs, 'scope' => $scope, 'count' => count($items)])
+      {{-- Count what is on sale under "Available now", not the coming-soon cards listed further down. --}}
+      @include('partials.shop-tabs', ['tabs' => $tabs, 'scope' => $scope, 'count' => count($available)])
       <div class="work-grid shop-grid">
         @foreach ($available as $item)
           @include('partials.shop-card', ['item' => $item])

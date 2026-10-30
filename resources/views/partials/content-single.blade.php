@@ -201,6 +201,13 @@
               {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
             </button>
           </div>
+          {{-- Follow prompt at the end of the post, where a reader is most likely to subscribe. The email form lives on Get updates. --}}
+          <p class="post-share-bottom__follow">
+            {{ __('Want the next one?', 'sage') }}
+            <a href="{{ esc_url(home_url('/get-updates/')) }}">{{ __('Get new posts by email', 'sage') }}</a>
+            {{ __('or', 'sage') }}
+            <a href="{{ esc_url(get_feed_link('rss2')) }}" rel="alternate" type="application/rss+xml">{{ __('follow the RSS feed', 'sage') }}</a>.
+          </p>
         </div>
 
         {{-- Snippet / extra code note --}}
