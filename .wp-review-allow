@@ -36,3 +36,5 @@
 ^\s*\$responses\s*$
 ^\s*\$previous\s*$
 ^\s*\$next\s*$
+# Escaped by esc_html() before the few Markdown marks (code, bold, link) are turned into tags.
+^\s*\\?(App\\)?mh_changelog_inline\s*\(

@@ -979,3 +979,163 @@ function mh_convert_page_to_blocks(int $post_id, string $markup, string $from): 
 
     return false;
 }
+
+/**
+ * Inline Markdown from CHANGELOG.md as safe HTML: `code`, **bold**, and [text](url) links. Everything else is escaped.
+ *
+ * @since 3.19.0
+ */
+function mh_changelog_inline(string $text): string
+{
+    $html = esc_html($text);
+    $html = (string) preg_replace('/`([^`]+)`/', '<code>$1</code>', $html);
+    $html = (string) preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $html);
+
+    return (string) preg_replace_callback('/\[([^\]]+)\]\(([^)\s]+)\)/', static function (array $m): string {
+        $url = esc_url(html_entity_decode($m[2], ENT_QUOTES));
+
+        return $url !== '' ? '<a href="'.esc_url($url).'">'.$m[1].'</a>' : $m[1];
+    }, $html);
+}
+
+/**
+ * The newest releases from the theme's own CHANGELOG.md (it ships in the theme zip), newest first.
+ *
+ * Headings are `## 3.18.5 — Title` (newer) or `## 3.1.33 — 2026-08-31` (older, a date instead of a title). Bullets
+ * become changes. A bullet starting "Fix:", "Add:", or "Remove:" sets its type; a `### Added` style subheading sets the
+ * default for the bullets under it. Nothing here touches the network.
+ *
+ * @since 3.19.0
+ *
+ * @param  int  $limit  Releases to return (1 to 60).
+ * @return list<array{version: string, title: string, date: string, changes: list<array{0: string, 1: string}>}>
+ */
+function mh_theme_changelog(int $limit = 20): array
+{
+    $limit = max(1, min(60, $limit));
+    $file = get_theme_file_path('CHANGELOG.md');
+    $lines = is_readable($file) ? file($file, FILE_IGNORE_NEW_LINES) : false;
+    if (! is_array($lines)) {
+        return [];
+    }
+
+    $entries = [];
+    $current = null;
+    $sectionType = 'changed';
+
+    foreach ($lines as $line) {
+        $line = rtrim((string) $line);
+
+        if (preg_match('/^##\s+v?(\d+(?:\.\d+)+)(?:\s+[—–-]+\s+(.+))?$/u', $line, $m)) {
+            if ($current !== null) {
+                $entries[] = $current;
+            }
+            if (count($entries) >= $limit) {
+                $current = null;
+                break;
+            }
+            $title = trim((string) ($m[2] ?? ''));
+            $date = '';
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $title)) {
+                $date = $title;
+                $title = '';
+            }
+            $current = ['version' => $m[1], 'title' => $title, 'date' => $date, 'changes' => []];
+            $sectionType = 'changed';
+
+            continue;
+        }
+
+        if ($current === null) {
+            continue;
+        }
+
+        if (preg_match('/^##\s+/', $line)) {
+            // Some other level 2 heading (Unreleased, a note): stop collecting under the last release.
+            $entries[] = $current;
+            $current = null;
+
+            continue;
+        }
+
+        if (preg_match('/^###\s+(Added|Changed|Fixed|Removed)\b/i', $line, $m)) {
+            $sectionType = strtolower($m[1]);
+
+            continue;
+        }
+
+        if (preg_match('/^[-*]\s+(.+)$/', $line, $m)) {
+            $text = trim($m[1]);
+            $type = $sectionType;
+            if (preg_match('/^(Fix(?:ed)?|Add(?:ed)?|New|Remove(?:d)?|Drop(?:ped)?)\b\s*:\s*(.*)$/i', $text, $t) && $t[2] !== '') {
+                $type = match (strtolower(substr($t[1], 0, 3))) {
+                    'fix' => 'fixed',
+                    'add', 'new' => 'added',
+                    default => 'removed',
+                };
+                $text = $t[2];
+            }
+            $current['changes'][] = [$type, $text];
+
+            continue;
+        }
+
+        // A wrapped line belongs to the bullet above it.
+        if (preg_match('/^\s{2,}\S/', $line) && $current['changes'] !== []) {
+            $last = count($current['changes']) - 1;
+            $current['changes'][$last][1] .= ' '.trim($line);
+        }
+    }
+
+    if ($current !== null && count($entries) < $limit) {
+        $entries[] = $current;
+    }
+
+    return $entries;
+}
+
+/**
+ * Recent public GitHub activity for the changelog page: every public repo, no stars or other noise.
+ *
+ * @since 3.19.0
+ *
+ * @param  int  $count  Items to return (1 to 40).
+ * @return list<array<string, string>> Items from App\Github::fetchEvents(), empty when GitHub is not answering.
+ */
+function mh_github_activity(int $count = 20): array
+{
+    $count = max(1, min(40, $count));
+    $events = Github::fetchEvents(mh_github_login(), min(100, $count + 20));
+    $events = array_values(array_filter($events, static fn ($e) => ! in_array($e['type'] ?? '', ['WatchEvent', 'ForkEvent'], true)));
+
+    return array_slice($events, 0, $count);
+}
+
+/**
+ * The latest release of each product repo in the catalog (Acreline, WalkRidge, TOCguide, and so on).
+ *
+ * @since 3.19.0
+ *
+ * @return list<array{name: string, tag: string, url: string, date: string}>
+ */
+function mh_product_latest_releases(): array
+{
+    $out = [];
+    foreach (mh_product_catalog_seed_data() as $product) {
+        if (! is_array($product) || ! preg_match('#^https://github\.com/([^/]+)/([^/]+?)/?$#', (string) ($product['github'] ?? ''), $m)) {
+            continue;
+        }
+        $release = Github::fetchReleases($m[1], $m[2], 1)[0] ?? null;
+        if (! is_array($release) || ($release['url'] ?? '') === '' || ($release['tag'] ?? '') === '') {
+            continue;
+        }
+        $out[] = [
+            'name' => (string) ($product['title'] ?? $m[2]),
+            'tag' => (string) $release['tag'],
+            'url' => (string) $release['url'],
+            'date' => (string) ($release['date'] ?? ''),
+        ];
+    }
+
+    return $out;
+}
