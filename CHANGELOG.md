@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.20.2 — Drifting dot wash removed
+
+- The slowly drifting dot pattern behind the hero and page headers, and the matching layers inside the home collage, are gone. The glint layer and the collage cards are unchanged.
+
 ## 3.20.1 — Calmer paused state
 
 - With animations paused, the hero no longer jumps to a brighter frame. The drifting dot washes and glint are hidden (the same as for reduced motion), the collage layers rest at the middle of their range, and the pulsing collage dots are hidden.
