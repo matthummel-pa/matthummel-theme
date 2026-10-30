@@ -23,7 +23,7 @@ Single source for copy location and voice. Other rules point here; do not restat
 
 ## Legacy fields (frozen)
 
-Pages not yet converted (3.7.0 migration, see `docs/FEATURES.md`) still read **Page content (theme)** through `\App\field()` and `app/page-fields.php`. As of this rule, these templates still call `field()`: `template-get-updates`, `template-portfolio`, `template-services`, `template-start`, `template-support`, `template-woocommerce`, plus a few partials and block views.
+Pages not yet converted (3.7.0 migration, see `docs/FEATURES.md`) still read **Page content (theme)** through `\App\field()` and `app/page-fields.php`. As of this rule, these templates still call `field()`: `template-get-updates`, `template-portfolio`, `template-services`, `template-start`, `template-support`, plus a few partials and block views. (A page that uses the Block page template does not run its old template: on staging Get updates is block-built, so check the page's template before assuming a change to its `template-*.blade.php` shows. `template-woocommerce` no longer exists.)
 
 - **Do not add new `mh_f_*` keys or new `\App\field()` calls.** Fix existing copy in place only until that page's conversion PR lands.
 - Converting a page deletes its fields in the same PR. Follow the 3.7.0 notes in `docs/FEATURES.md`.
