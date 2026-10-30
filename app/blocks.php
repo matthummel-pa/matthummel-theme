@@ -1129,11 +1129,23 @@ function mh_product_latest_releases(): array
         if (! is_array($release) || ($release['url'] ?? '') === '' || ($release['tag'] ?? '') === '') {
             continue;
         }
+        $tag = (string) $release['tag'];
+        $date = (string) ($release['date'] ?? '');
+        // A rolling release (`theme-latest`) is replaced in place: its tag says nothing and its date is old.
+        // Show the catalog version instead and leave the date out.
+        if (str_contains($tag, 'latest')) {
+            $version = trim((string) ($product['version'] ?? ''));
+            if ($version === '') {
+                continue;
+            }
+            $tag = 'v'.ltrim($version, 'v');
+            $date = '';
+        }
         $out[] = [
             'name' => (string) ($product['title'] ?? $m[2]),
-            'tag' => (string) $release['tag'],
+            'tag' => $tag,
             'url' => (string) $release['url'],
-            'date' => (string) ($release['date'] ?? ''),
+            'date' => $date,
         ];
     }
 
