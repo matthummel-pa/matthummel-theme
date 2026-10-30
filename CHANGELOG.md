@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.18.5 — Footer links to Your account
+
+- The default footer "Site" list now has a "Your account" link to `/account/` (licenses, downloads and invoices in the Freemius portal), after Support. This default only shows when the Footer: links widget area is empty. On staging that widget already has the link, added by hand.
+
 ## 3.18.4 — Signup fallback works where the form really is
 
 - 3.18.3 put the fallback in the old Get updates template, but the page now uses the block template, so it never showed. The fallback now lives in a `render_block` filter (`mh_reach_form_fallback()` in `app/blocks.php`). If the Hostinger Reach plugin is off, any place that holds its form block (the Get updates page and the footer column) shows a short message, a "Say hello" button and an RSS link instead of nothing. With the plugin on, nothing changes.

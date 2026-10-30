@@ -44,6 +44,7 @@
         <li><a href="{{ esc_url($writing) }}">{{ __('Journal', 'sage') }}</a></li>
         <li><a href="{{ esc_url(home_url('/resources/')) }}">{{ __('Resources', 'sage') }}</a></li>
         <li><a href="{{ esc_url(home_url('/support/')) }}">{{ __('Support', 'sage') }}</a></li>
+        <li><a href="{{ esc_url(home_url('/account/')) }}">{{ __('Your account', 'sage') }}</a></li>
         {{-- These two are written in wp-admin; each link shows once its page is published. --}}
         @if (\App\mh_is_published_path('/agency-white-label-wordpress/'))
           <li><a href="{{ esc_url(home_url('/agency-white-label-wordpress/')) }}">{{ __('For agencies', 'sage') }}</a></li>
