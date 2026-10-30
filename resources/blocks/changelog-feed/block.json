@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/changelog-feed",
+  "title": "Theme changelog",
+  "category": "matthummel",
+  "icon": "list-view",
+  "description": "The newest releases from the theme's CHANGELOG.md. It updates itself with every release.",
+  "keywords": [
+    "changelog",
+    "releases",
+    "updates"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "count": {
+      "type": "number",
+      "default": 20
+    },
+    "notes": {
+      "type": "number",
+      "default": 4
+    }
+  },
+  "mhControls": {
+    "count": {
+      "label": "Releases to show",
+      "min": 1,
+      "max": 60
+    },
+    "notes": {
+      "label": "Notes to show per release",
+      "min": 1,
+      "max": 12
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

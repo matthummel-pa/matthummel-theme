@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.19.0 — The changelog page updates itself
+
+- Two new blocks for the Changelog page. **Theme changelog** (`matthummel/changelog-feed`) reads the theme's own `CHANGELOG.md`, which ships in the zip, and shows the newest releases with their notes. A new release appears on the page by itself. **GitHub activity** (`matthummel/github-activity`) lists my recent public activity across every repo, plus the latest release of each product in the catalog. GitHub calls are cached and fail soft.
+- The old Changelog template was a hardcoded list that stopped at 3.1.x. It stays in the theme for now, and the page moves to the Block page template with these blocks.
+- Helpers: `mh_theme_changelog()`, `mh_changelog_inline()`, `mh_github_activity()`, `mh_product_latest_releases()` in `app/blocks.php`. Public events only, so nothing from a private repo can show.
+
 ## 3.18.5 — Footer links to Your account
 
 - The default footer "Site" list now has a "Your account" link to `/account/` (licenses, downloads and invoices in the Freemius portal), after Support. This default only shows when the Footer: links widget area is empty. On staging that widget already has the link, added by hand.

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "matthummel/github-activity",
+  "title": "GitHub activity",
+  "category": "matthummel",
+  "icon": "backup",
+  "description": "Recent public GitHub activity across every repo, plus the latest release of each product.",
+  "keywords": [
+    "github",
+    "activity",
+    "releases"
+  ],
+  "textdomain": "sage",
+  "attributes": {
+    "count": {
+      "type": "number",
+      "default": 20
+    },
+    "showReleases": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "mhControls": {
+    "count": {
+      "label": "Activity items to show",
+      "min": 1,
+      "max": 40
+    },
+    "showReleases": {
+      "label": "Show the latest release of each product"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": false,
+    "className": true,
+    "reusable": false
+  }
+}

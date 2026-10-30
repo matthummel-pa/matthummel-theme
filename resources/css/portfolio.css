@@ -2855,6 +2855,10 @@ html.mh-dark .h-page-nav__pill[aria-current="true"] {
 .cl-change--changed .cl-change__badge { background: var(--blue-50); color: var(--color-accent); border: 1px solid var(--blue-100); }
 .cl-change--fixed   .cl-change__badge { background: #fefce8; color: #854d0e; border: 1px solid #fef08a; }
 .cl-change--removed .cl-change__badge { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+.cl-entry__title { margin: .85rem 0 0; font: 700 1.2rem/1.25 var(--font-display); letter-spacing: -.02em; }
+.cl-entry__more { margin: .85rem 0 0; font-size: .95rem; }
+.cl-sub { margin: 2rem 0 .75rem; font: 700 1.1rem/1.25 var(--font-display); }
+.cl-sub:first-child { margin-top: 0; }
 .cl-footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); font-size: 1rem; color: var(--color-text-muted); }
 .cl-footer a { color: var(--color-accent); }
 @media (max-width: 480px) { .cl-date { margin-left: 0; width: 100%; } }
