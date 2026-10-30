@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.19.6 — Footer links meet the 24px target size
+
+- Footer list links (Site column, Footer: links widget, and the Sage / Claude Code credit links) measured 18–20px tall, under the WCAG 2.2 minimum of 24px (2.5.8). They now have a 24px minimum height.
+
 ## 3.19.5 — Project hero copy no longer runs under the screenshot
 
 - On staging at 1600px wide, the intro paragraph in the 3.19.4 project hero ran about 45px under the screenshot. The copy column now stops short of the figure on screens 960px and wider.

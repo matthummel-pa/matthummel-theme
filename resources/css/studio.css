@@ -7369,3 +7369,13 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
   }
   .project-hero-shot img { display: block; width: 100%; height: auto; }
 }
+
+/* 3.19.6 · WCAG 2.2 target size (2.5.8): footer list links were 18–20px tall.
+   Covers the default list and the Footer: links widget (wp-block-list). */
+.site-footer .footer-nav-col :is(ul, ol) a,
+.site-footer .footer-bottom :is(ul, ol) a,
+.site-footer .footer-bottom p a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
