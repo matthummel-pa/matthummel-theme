@@ -2850,6 +2850,12 @@ html.mh-dark .project-feat-grid > .project-feat::before {
 }
 
 /* ── 3.6.38 Get updates page ─────────────────────────────────────────────── */
+.updates-fallback__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1rem;
+}
 .updates-wrap {
   max-width: 40rem;
   padding-block: clamp(2.5rem, 6vw, 4.5rem);
