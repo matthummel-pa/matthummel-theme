@@ -177,8 +177,9 @@
 @endif
 
 @if ($faq !== [])
-  {{-- Same two-column layout as the Home FAQ (id="questions" brings its styles): heading, drawing and help card on
-       the left, the accordion on the right. --}}
+  {{-- Same two-column look as the Home FAQ (id="questions" brings its styles): heading and drawing on the left, the
+       accordion on the right. The help card comes after the accordion in the source, so a screen reader reads the
+       questions first; on wide screens grid placement (shop-pages.css) puts it back under the intro on the left. --}}
   <section class="project-section shop-section shop-section--faq" id="questions" aria-labelledby="shop-faq-heading">
     <div class="container wide">
       <div class="faq-layout shop-faq-layout">
@@ -187,17 +188,6 @@
           <h2 id="shop-faq-heading" class="display-title is-section">{{ $copy('faq_h2') }}</h2>
           <p>{{ $faqIntro }}</p>
           @include('partials.section-illustration', ['anchor' => 'questions'])
-          <div class="faq-help-card">
-            <h3>{{ $copy('help_h3') }}</h3>
-            <p>{{ $copy('help_text') }}</p>
-            <p class="faq-help-card__actions">
-              <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">
-                {!! \App\mh_svg_icon('mail', 15) !!}
-                {{ $copy('help_label') }}
-              </a>
-              <a class="shop-link" href="{{ esc_url('mailto:hello@matthummel.com') }}">hello@matthummel.com</a>
-            </p>
-          </div>
         </div>
         <div class="faq-main">
           <div class="faq-list">
@@ -208,6 +198,17 @@
               </details>
             @endforeach
           </div>
+        </div>
+        <div class="faq-help-card">
+          <h3>{{ $copy('help_h3') }}</h3>
+          <p>{{ $copy('help_text') }}</p>
+          <p class="faq-help-card__actions">
+            <a class="btn" href="{{ esc_url(home_url('/contact/')) }}">
+              {!! \App\mh_svg_icon('mail', 15) !!}
+              {{ $copy('help_label') }}
+            </a>
+            <a class="shop-link" href="{{ esc_url('mailto:hello@matthummel.com') }}">hello@matthummel.com</a>
+          </p>
         </div>
       </div>
     </div>

@@ -11,8 +11,9 @@
         <th scope="col" class="shop-compare__corner"><span class="visually-hidden">{{ __('What to compare', 'sage') }}</span></th>
         @foreach ($themes as $theme)
           <th scope="col" class="shop-compare__col shop-compare__col--{{ esc_attr($theme['status']) }}">
-            <span class="shop-compare__state">{{ $theme['status'] === 'soon' ? __('Coming soon', 'sage') : __('Available now', 'sage') }}</span>
+            {{-- Name first, state badge under it, so a screen reader says "WalkRidge, Coming soon". --}}
             <a href="{{ esc_url($theme['url']) }}">{{ $theme['title'] }}</a>
+            <span class="shop-compare__state">{{ $theme['status'] === 'soon' ? __('Coming soon', 'sage') : __('Available now', 'sage') }}</span>
           </th>
         @endforeach
       </tr>

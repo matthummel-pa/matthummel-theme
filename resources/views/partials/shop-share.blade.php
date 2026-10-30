@@ -41,9 +41,11 @@
       <a class="post-share-btn" href="{{ esc_url('mailto:?subject='.rawurlencode($share['title']).'&body='.rawurlencode($share['url'])) }}">
         {!! \App\mh_svg_icon('mail', 15) !!} {{ __('Email', 'sage') }}
       </a>
-      <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($share['url']) }}" aria-label="{{ __('Copy link', 'sage') }}">
+      {{-- No aria-label: the visible text names the button, and it changes to "Copied!". The status span announces the result. --}}
+      <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($share['url']) }}">
         {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
       </button>
+      <span class="visually-hidden" role="status" data-copy-status></span>
     </div>
   </div>
 </div>

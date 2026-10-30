@@ -370,22 +370,44 @@ function initComments() {
   });
 }
 
+/**
+ * Copy-link buttons. The visible <span> names the button and flips to "Copied!", but a screen reader
+ * does not announce a change inside a focused button. So the result also goes to a polite live region
+ * (role="status") right after the button. The templates print that region; one is added here if not.
+ */
 function initShareButtons() {
   document.querySelectorAll('.post-copy-link').forEach((btn) => {
+    const label = btn.querySelector('span');
+    const original = label ? label.textContent : 'Copy link';
+    let status = btn.nextElementSibling?.matches('[data-copy-status]') ? btn.nextElementSibling : null;
+    let timer = 0;
+    if (!status) {
+      status = document.createElement('span');
+      status.className = 'visually-hidden';
+      status.setAttribute('role', 'status');
+      status.setAttribute('data-copy-status', '');
+      btn.after(status);
+    }
     btn.addEventListener('click', async () => {
       const url = btn.getAttribute('data-copy') || window.location.href;
-      const span = btn.querySelector('span');
-      const orig = span ? span.textContent : 'Copy link';
+      let ok = true;
       try {
         await navigator.clipboard.writeText(url);
-        if (span) span.textContent = 'Copied!';
         btn.classList.add('is-copied');
       } catch {
-        if (span) span.textContent = 'Copy failed';
+        ok = false;
       }
-      setTimeout(() => {
-        if (span) span.textContent = orig;
+      if (label) label.textContent = ok ? 'Copied!' : 'Copy failed';
+      // Empty first, then fill on the next frame, so a second click is announced again.
+      status.textContent = '';
+      requestAnimationFrame(() => {
+        status.textContent = ok ? 'Link copied' : 'Copy failed. Select the address bar and copy the link.';
+      });
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (label) label.textContent = original;
         btn.classList.remove('is-copied');
+        status.textContent = '';
       }, 2000);
     });
   });

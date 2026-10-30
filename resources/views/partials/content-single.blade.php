@@ -130,9 +130,10 @@
         <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Reddit', 'sage') }}">
           {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
         </a>
-        <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="{{ __('Copy link', 'sage') }}">
+        <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}">
           {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
         </button>
+        <span class="visually-hidden" role="status" data-copy-status></span>
       </div>
     </div>
   </header>
@@ -197,9 +198,10 @@
             <a class="post-share-btn" href="{{ esc_url($shareReddit) }}" rel="noopener" target="_blank" aria-label="{{ __('Share on Reddit', 'sage') }}">
               {!! \App\mh_svg_icon('reddit', 15) !!} Reddit
             </a>
-            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}" aria-label="{{ __('Copy link', 'sage') }}">
+            <button class="post-share-btn post-copy-link" type="button" data-copy="{{ esc_attr($postUrl) }}">
               {!! \App\mh_svg_icon('share', 15) !!} <span>{{ __('Copy link', 'sage') }}</span>
             </button>
+            <span class="visually-hidden" role="status" data-copy-status></span>
           </div>
           {{-- Follow prompt at the end of the post, where a reader is most likely to subscribe. The email form lives on Get updates. --}}
           <p class="post-share-bottom__follow">

@@ -81,6 +81,15 @@ html .page-header.shop-hero .page-header__panel .display-title {
 .shop-section {
   padding-block: clamp(3.5rem, 7vw, 5.75rem);
 }
+/* Jump links (the "On this page" pills) land below the fixed header (73px) and the sticky pill bar (56px).
+   Up to 900px, site-extras.css already pads the scroll container by those heights, so this is desktop only.
+   #questions has its own scroll-margin-top in studio.css, and an ID beats a class, so it is named too. */
+@media (min-width: 901px) {
+  .shop-section,
+  #questions.shop-section {
+    scroll-margin-top: 9rem;
+  }
+}
 .shop-section--toolbar {
   padding-block: clamp(1.75rem, 3.5vw, 2.5rem) 0;
 }
@@ -394,7 +403,7 @@ html.mh-dark .shop-card__facts li {
 }
 .shop-compare__state {
   display: block;
-  margin-bottom: .45rem;
+  margin-top: .45rem; /* sits under the theme name; it follows the name in the source */
   font: 700 .72rem/1 var(--font-display);
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -490,6 +499,32 @@ html.mh-dark .shop-card__facts li {
 @media (max-width: 1024px) {
   .shop-faq-layout {
     grid-template-columns: 1fr;
+  }
+}
+/* The help card follows the accordion in the source (reading order). On wide screens it goes back under the
+   intro in the left column; the accordion spans both rows and the second row takes the spare height, so the
+   card sits right below the drawing. One column, it simply follows the accordion. */
+#questions .shop-faq-layout > .faq-help-card {
+  margin-top: 0; /* beats the ID rules in site-extras.css that give the card its own top margin */
+}
+@media (min-width: 1025px) {
+  /* The ID and two classes beat the `#questions .faq-layout { gap }` rule in site-extras.css, which loads later. */
+  #questions .faq-layout.shop-faq-layout {
+    grid-template-rows: auto 1fr;
+    row-gap: 0;
+  }
+  .shop-faq-layout > .faq-aside {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .shop-faq-layout > .faq-main {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  #questions .shop-faq-layout > .faq-help-card {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 1rem;
   }
 }
 #questions .faq-help-card .faq-help-card__actions {

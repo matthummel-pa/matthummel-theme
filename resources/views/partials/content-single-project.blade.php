@@ -486,6 +486,7 @@
           {!! \App\mh_svg_icon('share', 14) !!}
           <span>{{ __('Copy link', 'sage') }}</span>
         </button>
+        <span class="visually-hidden" role="status" data-copy-status></span>
       </div>
       <div class="project-talk__grid">
         <div class="project-talk__notes">
