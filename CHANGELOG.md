@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.3 — Get updates still works without the Reach form
+
+- `/get-updates/` used to show only its heading if the Hostinger Reach plugin was off or its form had been removed from the page. It now shows a short message with a "Say hello" button and an RSS link instead. When the form is there, nothing changes.
+- The RSS link in the blog sidebar and the feed `<link>` in the page head were already in place, so no change there.
+
 ## 3.18.2 — /start/ speaks in first person
 
 - The project brief page heading is now "Send me your project brief" (was "Prepare for our first meeting"). The intro, the step 1 line, the notes placeholder, the thank-you page and the form callout (shared partial) no longer say "we" or "our": the site speaks as I.
