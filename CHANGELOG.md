@@ -1,9 +1,13 @@
 # Changelog
 
-## 3.21.2 — Pause button removed, no bar under hero titles
+## 3.21.3 — Pause button removed, no bar under hero titles
 
 - The pause-animations button is gone from the header, along with its script and styles. The header fits again on phones (the Menu button was cut off) and the "Get updates" icon-only range is back to 901 to 1099px.
 - Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
+## 3.21.2 — Coming soon themes in the Latest themes block
+
+- The Latest themes block has a new "Show coming soon themes" switch (off by default). When it is on, themes marked Coming soon follow the ones on sale.
 
 ## 3.21.1 — Shop page accessibility and layout pass
 

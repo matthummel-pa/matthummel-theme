@@ -17,6 +17,10 @@
       "type": "number",
       "default": 3
     },
+    "showSoon": {
+      "type": "boolean",
+      "default": false
+    },
     "linkText": {
       "type": "string",
       "default": "Browse all themes"
@@ -27,6 +31,10 @@
       "label": "Themes to show",
       "min": 1,
       "max": 6
+    },
+    "showSoon": {
+      "label": "Show coming soon themes",
+      "help": "Adds themes marked Coming soon after the ones on sale."
     },
     "linkText": {
       "label": "Link to all themes",
