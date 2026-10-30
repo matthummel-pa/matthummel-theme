@@ -7460,3 +7460,33 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 .hero-feat__title a:hover { text-decoration: underline; }
 .hero-feat__blurb { margin: 0 0 .8rem; font-size: 1rem; line-height: 1.5; }
 .hero-feat__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0; }
+
+/* 3.21.3 · Phone header. Logo, the toggles (the pause toggle was removed in 3.21.4), the updates bell and the Menu button needed about
+   375px of a 390px screen and ran off the right edge. Under 480px: drop the "Menu" word (the button keeps its
+   aria-label), shrink the two toggles to 36px, tighten the gaps and scale the logo on the smallest phones.
+   Tested at 320, 360, 390 and 412px. */
+@media (max-width: 480px) {
+  .site-header-inner { padding-inline: .75rem; gap: .5rem; }
+  .header-actions { margin-left: 0; gap: .25rem; }
+  .header-actions .theme-toggle { width: 36px; height: 36px; min-width: 36px; min-height: 36px; }
+  .menu-toggle { padding: 0; }
+  .menu-toggle__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@media (max-width: 400px) {
+  html .site-header .brand-name { font-size: .9rem; }
+}
+@media (max-width: 340px) {
+  html .site-header .brand-name { font-size: .78rem; }
+  .site-header-inner { gap: .25rem; }
+}
+/* Card links ("Live demo", "Owner guide") were 23px tall, one pixel under the 24px target size (WCAG 2.5.8). */
+.shop-card__links .shop-link { display: inline-flex; align-items: center; min-height: 24px; }
