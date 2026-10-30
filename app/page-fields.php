@@ -644,8 +644,8 @@ function page_field_map(): array
         'template-start.blade.php' => [
             __('Intro', 'sage') => [
                 ['start_kicker', __('Kicker', 'sage'), 'text', __('Project brief', 'sage')],
-                ['start_h1', __('Heading', 'sage'), 'text', __('Prepare for our first meeting', 'sage')],
-                ['start_lede', __('Intro', 'sage'), 'textarea', __('Four short steps for shops and agencies. I read every brief before we talk so the first call is useful — not a blank page.', 'sage')],
+                ['start_h1', __('Heading', 'sage'), 'text', __('Send me your project brief', 'sage')],
+                ['start_lede', __('Intro', 'sage'), 'textarea', __('Four short steps for shops and agencies. I read every brief before the first call, so it starts with your project, not a blank page.', 'sage')],
             ],
             __('Form', 'sage') => [
                 ['start_form_h2', __('Form heading', 'sage'), 'text', __('Start the brief', 'sage')],

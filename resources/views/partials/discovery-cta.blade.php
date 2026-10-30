@@ -31,7 +31,7 @@
   <div class="disc-cta__copy">
     <p class="disc-cta__eyebrow" id="disc-cta-heading">Quick start</p>
     <p class="disc-cta__title">{{ $title ?? __('Start a project brief.', 'sage') }}</p>
-    <p class="disc-cta__body">{{ $body ?? __('A short stepped form agencies and shops use in discovery. Takes about five minutes. I use it to prepare for our first meeting — so we skip the blank-page call.', 'sage') }}</p>
+    <p class="disc-cta__body">{{ $body ?? __('A short stepped form agencies and shops use in discovery. Takes about five minutes. I use it to prepare for the first meeting, so the call does not start blank.', 'sage') }}</p>
   </div>
 
   <div class="disc-cta__actions">

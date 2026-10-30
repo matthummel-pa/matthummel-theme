@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.2 — /start/ speaks in first person
+
+- The project brief page heading is now "Send me your project brief" (was "Prepare for our first meeting"). The intro, the step 1 line, the notes placeholder, the thank-you page and the form callout (shared partial) no longer say "we" or "our": the site speaks as I.
+- These are the code defaults for the frozen Start fields. A value saved in Page content (theme) would still win; staging has none.
+
 ## 3.18.1 — Acreline links to its story
 
 - The Acreline product page shows a "Read the full story" link under the "How it came together" steps, pointing to the post about why I built it. It works while the theme is Coming soon. Any product can use it with an optional `story_url` in `product-catalog.json`.

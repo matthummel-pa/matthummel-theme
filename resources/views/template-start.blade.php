@@ -37,10 +37,10 @@
 @component('partials.page-hero', ['extra' => 'start-hero'])
   <p class="eyebrow">{{ \App\field('start_kicker', __('Project brief', 'sage')) }}</p>
   <h1 class="display-title is-hero">
-    {{ \App\field('start_h1', __('Prepare for our first meeting', 'sage')) }}
+    {{ \App\field('start_h1', __('Send me your project brief', 'sage')) }}
   </h1>
   <p class="lead">
-    {{ \App\field('start_lede', __('Four short steps for shops and agencies. I read every brief before we talk so the first call is useful — not a blank page.', 'sage')) }}
+    {{ \App\field('start_lede', __('Four short steps for shops and agencies. I read every brief before the first call, so it starts with your project, not a blank page.', 'sage')) }}
   </p>
   <ul class="start-hero-proof" aria-label="{{ __('What happens next', 'sage') }}">
     <li>{{ rtrim(\App\mh_reply_sla(), '.') }}</li>
@@ -177,7 +177,7 @@
           <span class="discovery-step__eyebrow">Step 3 of 4</span>
           Goals and constraints
         </legend>
-        <p class="discovery-step__intro">What success looks like, and what I should know before we scope.</p>
+        <p class="discovery-step__intro">What success looks like, and what I should know before I scope.</p>
 
         <div class="field">
           <label for="df-success">What does a win look like? <span class="field-req" aria-hidden="true">*</span></label>
@@ -221,7 +221,7 @@
 
         <div class="field">
           <label for="df-notes">Other notes <span class="field-opt">(optional)</span></label>
-          <textarea id="df-notes" name="mh_notes" rows="4" placeholder="NDA needed? Preferred kickoff week? Context I should read before we talk.">{{ $v('notes') }}</textarea>
+          <textarea id="df-notes" name="mh_notes" rows="4" placeholder="NDA needed? Preferred kickoff week? Context I should read before the first call.">{{ $v('notes') }}</textarea>
         </div>
 
         <div class="discovery-review" data-discovery-review hidden>
