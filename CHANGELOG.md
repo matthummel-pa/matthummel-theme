@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.19.5 — Project hero copy no longer runs under the screenshot
+
+- On staging at 1600px wide, the intro paragraph in the 3.19.4 project hero ran about 45px under the screenshot. The copy column now stops short of the figure on screens 960px and wider.
+
 ## 3.19.4 — Project hero shows the theme and the price
 
 - The project hero put its first screenshot behind a 95% dark scrim, so a buyer saw almost none of the theme above the fold. On screens 960px and wider, the hero now shows that screenshot in a framed figure beside the copy. Phones are unchanged.  `partials/page-hero` takes an optional `aside` slot for it.
