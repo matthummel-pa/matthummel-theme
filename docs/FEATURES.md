@@ -7,7 +7,7 @@ WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product pa
 ## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
 
 - The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.
-- Signup surfaces: the Reach form block in the **Footer: Get updates** widget area (styled by `mh_reach_form_block_html()`, 3.7.13) and in the body of the Get updates page (`template-get-updates.blade.php` prints the hero fields, then `the_content()`). When the footer widget area is empty, the column prints the label, the lede, and a Sign up link to that page; there is no theme form.
+- Signup surfaces: the Reach form block in the **Footer: Get updates** widget area (styled by `mh_reach_form_block_html()`, 3.7.13) and in the body of the Get updates page. On staging that page is block-built (Block page template, checked 3.18.4): the hero and the form are blocks, and `template-get-updates.blade.php` only serves a copy of the page that has not been converted. If the plugin is off, `mh_reach_form_fallback()` (`render_block`, `app/blocks.php`, 3.18.4) prints a short message with a Say hello button and an RSS link wherever the form block sits, so the page and the footer are never blank. When the footer widget area is empty, the column prints the label, the lede, and a Sign up link to that page; there is no theme form.
 - The end-of-post signup, the `mhn_*` CSS hooks, and the `newsletter_issue` post type special cases (block patterns, SEO panel) are removed. Posts end with the author bio and the Say hello band.
 - Copy no longer claims "I keep the address on this site". `upd_lede` and the journal subscribe lede defaults changed; `mh_f_write_subscribe_lede` rewrites the old defaults in `app/bespoke.php`.
 - Live data: `wp_mh_newsletter` and the `wp_mhn_*` tables stay on the server until the old plugin is deleted. Export them into Reach first (`docs/INSTALL.md`).
@@ -151,7 +151,7 @@ WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product pa
 ## Editor’s notes (3.6.38 – 3.6.39 Get updates)
 
 - The self-hosted newsletter plugin and the theme's own footer list from these releases were removed in 3.7.15. The newsletter is Hostinger Reach; see the 3.7.15 note at the top.
-- Visitor hero copy for the Get updates page is still `upd_kicker`, `upd_h1`, `upd_lede` on `template-get-updates.blade.php`. The page body holds the Reach form block.
+- Visitor hero copy for the Get updates page was `upd_kicker`, `upd_h1`, `upd_lede` on `template-get-updates.blade.php`. On staging the page is now block-built, so that copy is block content in the page editor; the fields apply only to a copy still on the old template. The page body holds the Reach form block.
 
 ## Editor’s notes (3.6.37 projects listing)
 
