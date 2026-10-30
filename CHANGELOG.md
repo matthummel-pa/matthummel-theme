@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.19.9 — Shop page accessibility and layout pass
+## 3.20.3 — Shop page accessibility and layout pass
 
 From a browser and screen reader check of the shop pages on staging.
 
@@ -8,8 +8,20 @@ From a browser and screen reader check of the shop pages on staging.
 - Jump links on the shop pages land below the fixed header and the "On this page" bar instead of under them (desktop; phones already did).
 - The active "On this page" pill keeps white text on hover and focus. A global link-hover color was turning it blue on its own gradient.
 - Quick answers: the "Still have a question?" card now comes after the questions in the page source. On wide screens it still sits under the intro on the left.
-- Header "Get updates" no longer runs off the right edge between 900px and 1100px. It shows only the icon there, and the nav is a little tighter. The link now has an accessible name at every width (it had none on phones).
+- Header "Get updates" no longer runs off the right edge between 900px and 1140px. It shows only the icon there, and the nav is a little tighter. The link now has an accessible name at every width (it had none on phones).
 - Compare table: each column header reads the theme name first, then its state ("WalkRidge, Coming soon"). The state label now sits under the name.
+
+## 3.20.2 — Drifting dot wash removed
+
+- The slowly drifting dot pattern behind the hero and page headers, and the matching layers inside the home collage, are gone. The glint layer and the collage cards are unchanged.
+
+## 3.20.1 — Calmer paused state
+
+- With animations paused, the hero no longer jumps to a brighter frame. The drifting dot washes and glint are hidden (the same as for reduced motion), the collage layers rest at the middle of their range, and the pulsing collage dots are hidden.
+
+## 3.20.0 — Pause animations button
+
+- A pause button sits next to the dark mode toggle in the header. It stops the looping animations (the illustrations, hero collage and pulsing dots), which WCAG 2.2.2 asks for when motion runs on its own for more than 5 seconds. The choice is saved in this browser. Visitors whose system asks for reduced motion already got this; the button is for everyone else.
 
 ## 3.19.8 — Shop trust list has a group role
 
