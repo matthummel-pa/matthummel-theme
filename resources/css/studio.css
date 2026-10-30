@@ -7355,6 +7355,10 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
     width: min(44%, 36rem);
     transform: translateY(-50%);
   }
+  /* Keep the copy column clear of the absolutely placed screenshot. */
+  .page-header--project:has(.page-header__aside) .page-header__panel {
+    max-width: calc(100% - min(44%, 36rem) - 2.5rem);
+  }
   .project-hero-shot {
     margin: 0;
     overflow: hidden;
