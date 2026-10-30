@@ -3077,6 +3077,10 @@ html.mh-dark .project-feat-grid > .project-feat::before {
   line-height: 1.7;
   color: var(--color-text-secondary);
 }
+.project-story__more {
+  margin: 1.5rem 0 0;
+  font-weight: 600;
+}
 @media (min-width: 801px) {
   .project-story__steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));

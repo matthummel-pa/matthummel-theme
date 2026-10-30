@@ -309,6 +309,9 @@
             </li>
           @endforeach
         </ol>
+        @if (! empty($story['story_url']))
+          <p class="project-story__more"><a href="{{ esc_url($story['story_url']) }}">{{ __('Read the full story', 'sage') }} <span aria-hidden="true">&rarr;</span></a></p>
+        @endif
       </section>
     @endif
 

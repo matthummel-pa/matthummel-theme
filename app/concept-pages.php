@@ -293,6 +293,7 @@ function mh_project_faq_pairs(int $post_id): array
  *   faq: list<array{0: string, 1: string}>,
  *   metrics: list<array{0: string, 1: string}>,
  *   demo: string,
+ *   story_url: string,
  *   product_type: string,
  *   is_product: bool,
  *   product: array<string, mixed>|null
@@ -311,6 +312,7 @@ function mh_project_concept_narrative(int $post_id): array
         'faq' => [],
         'metrics' => [],
         'demo' => '',
+        'story_url' => '',
         'product_type' => 'concept',
         'is_product' => false,
         'product' => null,
@@ -354,6 +356,7 @@ function mh_project_concept_narrative(int $post_id): array
         'faq' => mh_project_faq_pairs($post_id),
         'metrics' => $metrics,
         'demo' => mh_project_demo_url($post_id),
+        'story_url' => esc_url_raw(trim((string) get_post_meta($post_id, '_mh_project_story_url', true))),
         'product_type' => $productType,
         'is_product' => $isProduct,
         'product' => $product,
@@ -1015,6 +1018,7 @@ function mh_seed_project_concept_narrative(int $post_id, array $seed, bool $forc
         '_mh_project_architecture' => (string) ($seed['architecture'] ?? ''),
         '_mh_project_handoff' => (string) ($seed['handoff'] ?? ''),
         '_mh_project_demo' => (string) ($seed['demo'] ?? ''),
+        '_mh_project_story_url' => esc_url_raw((string) ($seed['story_url'] ?? '')),
     ];
 
     foreach ($map as $key => $value) {
@@ -1823,6 +1827,23 @@ function mh_apply_product_catalog_v17(): void
 }
 
 /**
+ * One-time: Acreline gets its "Read the full story" link under the story steps (3.18.1). Upserts only Acreline.
+ *
+ * @since 3.18.1
+ */
+function mh_apply_product_catalog_v18(): void
+{
+    if (get_option('mh_product_catalog_v18') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    if (is_array($catalog['acreline'] ?? null) && mh_upsert_catalog_product('acreline', $catalog['acreline'], true) > 0) {
+        update_option('mh_product_catalog_v18', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1934,6 +1955,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v14', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v15', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v16', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v17', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v18', 46);
 add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
 add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
