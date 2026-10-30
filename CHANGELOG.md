@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.1 — Acreline links to its story
+
+- The Acreline product page shows a "Read the full story" link under the "How it came together" steps, pointing to the post about why I built it. It works while the theme is Coming soon. Any product can use it with an optional `story_url` in `product-catalog.json`.
+- A one-time refresh (`mh_product_catalog_v18`) updates Acreline only.
+
 ## 3.18.0 — Motion pass: drawer, nav indicators, press states, FAQ
 
 - The mobile menu opens with a spring curve and its rows (title, pages, Elsewhere, Get updates) land one after another instead of arriving as a block. The overlay blurs the page behind it. On phones under 480px the panel rises from below rather than sliding in from the side, so nothing can push the page sideways. Closing is faster than opening.
