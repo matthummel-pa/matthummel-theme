@@ -5613,6 +5613,10 @@ html.mh-dark .h-page-nav__pill.is-active,
 html.mh-dark .h-page-nav__pill[aria-current="true"],
 html.mh-dark .h-page-nav__pill.is-active:hover,
 html.mh-dark .h-page-nav__pill.is-active:focus-visible { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); border-color: transparent; color: #fff; } /* violet-700 keeps white type at 7:1 */
+/* The global a:hover:not(...) link colour is (0,7,1) and beat every rule above, so the active pill's text turned
+   blue/violet on its own gradient when hovered or focused. !important is the fix the nav rules at ~2450 use too. */
+html .h-page-nav__pill.is-active:is(:hover, :focus-visible),
+html .h-page-nav__pill[aria-current="true"]:is(:hover, :focus-visible) { color: #fff !important; }
 html:not(.mh-dark) .h-page-nav__arrow:hover:not(:disabled),
 html:not(.mh-dark) .h-page-nav__arrow:focus-visible:not(:disabled) { color: var(--violet-900); border-color: var(--violet-400); background: var(--violet-50); }
 html.mh-dark .h-page-nav__arrow { background: rgba(76, 29, 149, .32); border-color: rgba(167, 139, 250, .38); color: #ede9fe; }
@@ -6724,6 +6728,26 @@ html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); out
 @media (max-width: 899px) {
   .header-updates__panel { display: none !important; }
   html .header-updates__link.header-avail { padding: .5rem .7rem; }
+}
+/* 900 to 1100px: the full header (logo, six links, theme toggle, Get updates pill and chevron) is about 1100px wide,
+   so the pill ran off the right edge. Show only its icon (the aria-label names it) and tighten the nav gaps. */
+@media (min-width: 901px) and (max-width: 1099px) {
+  .site-header-inner { gap: .75rem; padding-inline: 1rem; }
+  .header-actions { margin-left: 0; gap: .25rem; }
+  html .site-header .header-nav-list { gap: .125rem; }
+  html .site-header .header-nav-list a { padding-inline: .5rem; }
+  html .site-header .header-updates__link.header-avail { gap: 0; padding: .5rem .65rem; }
+  .site-header .header-updates__link .header-avail__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .header-updates__panel { animation: none; }

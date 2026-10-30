@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.19.9 — Shop page accessibility and layout pass
+
+From a browser and screen reader check of the shop pages on staging.
+
+- Copy link: the button no longer has an `aria-label` that hid the "Copied!" text change. A status region now announces "Link copied" (or "Copy failed") after it. Same fix on posts and project pages.
+- Jump links on the shop pages land below the fixed header and the "On this page" bar instead of under them (desktop; phones already did).
+- The active "On this page" pill keeps white text on hover and focus. A global link-hover color was turning it blue on its own gradient.
+- Quick answers: the "Still have a question?" card now comes after the questions in the page source. On wide screens it still sits under the intro on the left.
+- Header "Get updates" no longer runs off the right edge between 900px and 1100px. It shows only the icon there, and the nav is a little tighter. The link now has an accessible name at every width (it had none on phones).
+- Compare table: each column header reads the theme name first, then its state ("WalkRidge, Coming soon"). The state label now sits under the name.
+
 ## 3.19.8 — Shop trust list has a group role
 
 - The shop's "What you can count on" box had an `aria-label` on a plain `div`, which screen readers ignore. It is now a `role="group"`, so the label is announced.
