@@ -25,7 +25,8 @@
       "enum": [
         "photo",
         "scene",
-        "collage"
+        "collage",
+        "featured"
       ],
       "default": "photo"
     },

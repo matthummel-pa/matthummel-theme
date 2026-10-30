@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.20.3 — Shop page accessibility and layout pass
+## 3.21.1 — Shop page accessibility and layout pass
 
 From a browser and screen reader check of the shop pages on staging.
 
@@ -10,6 +10,11 @@ From a browser and screen reader check of the shop pages on staging.
 - Quick answers: the "Still have a question?" card now comes after the questions in the page source. On wide screens it still sits under the intro on the left.
 - Header "Get updates" no longer runs off the right edge between 900px and 1140px. It shows only the icon there, and the nav is a little tighter. The link now has an accessible name at every width (it had none on phones).
 - Compare table: each column header reads the theme name first, then its state ("WalkRidge, Coming soon"). The state label now sits under the name.
+
+## 3.21.0 — Featured theme hero and a latest-themes block
+
+- New hero background for the Home layout, "Calm gradient + featured theme": a quiet gradient with a card for the newest theme (screenshot, name, one-line blurb, price and link) beside the heading. The code collage is still there as an option.
+- New "Latest themes" block: the newest themes from the shop as cards, with an optional link to all themes. Nothing on the live page uses either yet.
 
 ## 3.20.2 — Drifting dot wash removed
 
