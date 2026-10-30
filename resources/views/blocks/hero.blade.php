@@ -12,11 +12,15 @@
     $hero = \App\mh_home_hero();
     // Code collage (3.8.1): tilted code cards instead of the photo, copy centred.
     $isCollage = ($attributes['background'] ?? 'photo') === 'collage';
-    $heroImage = $isCollage ? '' : \App\mh_hero_background_url();
+    // Featured theme (3.21.0): a calm gradient and one theme card beside the copy.
+    $isFeatured = ($attributes['background'] ?? 'photo') === 'featured';
+    $heroImage = ($isCollage || $isFeatured) ? '' : \App\mh_hero_background_url();
   @endphp
-  <section class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $isCollage ? 'center' : $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}{{ $isCollage ? ' h-hero--collage' : '' }} mh-block-hero">
+  <section class="h-hero h-hero--photo h-hero--viewport{{ $hero['accent'] ? ' h-hero--accent' : '' }} h-hero--{{ $isCollage ? 'center' : $hero['align'] }} h-hero--pad-{{ $hero['pad'] }}{{ $isCollage ? ' h-hero--collage' : '' }}{{ $isFeatured ? ' h-hero--feat' : '' }} mh-block-hero">
     @if ($isCollage)
       @include('partials.hero-collage')
+    @elseif ($isFeatured)
+      <div class="h-hero__media h-hero__calm" aria-hidden="true"></div>
     @elseif ($heroImage !== '')
       <div class="h-hero__media" aria-hidden="true">
         <img class="h-hero__bg" src="{{ esc_url($heroImage) }}" alt="" width="1600" height="900" decoding="async" fetchpriority="high">
@@ -32,6 +36,9 @@
           {!! $content !!}
         </div>
       </div>
+      @if ($isFeatured)
+        @include('partials.hero-featured')
+      @endif
     </div>
     @include('partials.hero-wave')
   </section>
