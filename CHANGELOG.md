@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.19.3 — Post follow line is smaller
+
+- The follow line added in 3.19.2 rendered at body-text size (22px) under the share buttons. It now sits on its own row at .95rem in the muted text color, so it reads as a quiet prompt, not a second heading.
+
 ## 3.19.2 — Journal cards name the post, posts end with a follow prompt, shop count and footer links
 
 - The "Read article" button on journal cards read "Read article: WordPress" or "Read article: AI" because the card's category loop reused the `$name` variable that `partials/read-more` treats as the post title. The loop now uses `$catName`, so the hidden link text names the post again.
