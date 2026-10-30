@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.20.0 — Pause animations button
+
+- A pause button sits next to the dark mode toggle in the header. It stops the looping animations (the illustrations, hero collage and pulsing dots), which WCAG 2.2.2 asks for when motion runs on its own for more than 5 seconds. The choice is saved in this browser. Visitors whose system asks for reduced motion already got this; the button is for everyone else.
+
 ## 3.19.8 — Shop trust list has a group role
 
 - The shop's "What you can count on" box had an `aria-label` on a plain `div`, which screen readers ignore. It is now a `role="group"`, so the label is announced.
