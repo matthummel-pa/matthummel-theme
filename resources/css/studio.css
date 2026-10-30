@@ -7388,3 +7388,19 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* 3.20.0 · Pause animations (WCAG 2.2.2). html.mh-still is set by the header button and
+   restored from localStorage before paint. Loops end after one near-instant pass; finite
+   entrances jump to their end state. Hover and focus transitions are left alone. */
+.motion-toggle__icon { display: none; line-height: 0; }
+.motion-toggle__icon--pause { display: inline-flex; }
+html.mh-still .motion-toggle__icon--pause { display: none; }
+html.mh-still .motion-toggle__icon--play { display: inline-flex; }
+.motion-toggle__icon svg { width: 1rem; height: 1rem; fill: currentColor; }
+html.mh-still *,
+html.mh-still *::before,
+html.mh-still *::after {
+  animation-duration: .01ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+}

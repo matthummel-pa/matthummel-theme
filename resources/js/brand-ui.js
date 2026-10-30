@@ -34,6 +34,35 @@ function initThemeToggle() {
   });
 }
 
+function initMotionToggle() {
+  // WCAG 2.2.2: looping animation can be stopped. html.mh-still turns the loops off (studio.css);
+  // the early <script> in layouts/app.blade.php re-applies the saved choice before paint.
+  const buttons = document.querySelectorAll('[data-motion-toggle]');
+  if (!buttons.length) {
+    return;
+  }
+  const sync = () => {
+    const still = document.documentElement.classList.contains('mh-still');
+    buttons.forEach((button) => button.setAttribute('aria-pressed', still ? 'true' : 'false'));
+  };
+  sync();
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const still = document.documentElement.classList.toggle('mh-still');
+      try {
+        if (still) {
+          localStorage.setItem('mh-motion', 'still');
+        } else {
+          localStorage.removeItem('mh-motion');
+        }
+      } catch (e) {
+        /* private mode: the choice lasts for this page only */
+      }
+      sync();
+    });
+  });
+}
+
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
   if (!header) {
@@ -143,6 +172,7 @@ function initRevealFallback() {
 
 export function initBrandUi() {
   initThemeToggle();
+  initMotionToggle();
   initHeaderScroll();
   initSectionReveal();
   initRevealFallback();
