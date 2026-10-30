@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.22.0 — Light mode headers
+
+- In light mode, page headers and the Home hero are pale and neutral with dark text, instead of navy with white text. The header's logo, links, Menu button and toggles turn dark while it floats over a pale hero. Hero buttons are charcoal. Badges and stat chips in product headers are neutral gray. The text in these headers measured 4.5:1 or better. Dark mode is unchanged.
+
 ## 3.21.3 — Header fits on phones
 
 - On phones the header ran off the right edge and clipped the Menu button, since the pause button joined it. Under 480px the "Menu" word is dropped (the button is still named for screen readers), the dark mode and pause buttons are 36px, spacing is tighter, and the logo scales down on the smallest screens. Checked at 320, 360, 390 and 412px.
