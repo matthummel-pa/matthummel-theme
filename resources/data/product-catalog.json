@@ -20,8 +20,8 @@
     "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is sold as a Pro theme with a yearly license for updates and support.",
     "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
     "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
-    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
-    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
+    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room from their phone. The live demo is at cobbleandcandle.matthummel.com with made-up content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
+    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that build hospitality sites for their clients.",
     "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
     "benefits": [
@@ -172,6 +172,14 @@
       [
         "Is Cobble & Candle a WordPress restaurant theme?",
         "Yes. It is a WordPress block theme for restaurants, taverns, and inns, with menus, live opening hours, table bookings, events, private dining, and rooms to stay, built without a page builder."
+      ],
+      [
+        "Do I need a page builder or extra plugins?",
+        "No. It is a block theme, so you change the design in the Site Editor and edit prices and hours in short field panels. Menus, hours, and bookings come from the bundled Cobble & Candle Core plugin. There is no page builder and no ACF."
+      ],
+      [
+        "Can I set it up myself?",
+        "Yes. Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency, and clock. It imports the demo or your first location and builds the pages and menus. No command line needed."
       ],
       [
         "Can I buy Cobble & Candle?",
@@ -326,8 +334,8 @@
       "WordPress block theme for restaurants"
     ],
     "is_product": false,
-    "seo_title": "Cobble & Candle: WordPress Inn Theme | Matt Hummel",
-    "seo_description": "WordPress block theme for restaurants, taverns, and inns: live hours, diet-filtered menus, table and room bookings with Airbnb sync, and a setup wizard."
+    "seo_title": "Cobble & Candle: Restaurant WordPress Theme | Matt Hummel",
+    "seo_description": "My WordPress theme for restaurants, taverns, and inns: live open-now hours, diet-filtered menus, table and room bookings, and a setup wizard."
   },
   "acreline": {
     "title": "Acreline",
@@ -350,7 +358,7 @@
     "challenge": "Real estate agents need listings, a map, and showing requests that look like their office, not a luxury MLS portal. Most ready-made themes hide the houses behind tools agents will not use.",
     "approach": "I built a setup wizard for name, colors, and sample listings, plus Appearance → Acreline Settings for listing, agent, and booking extras. Marketing pages use normal WordPress blocks. Brokers edit listings and agents in wp-admin. No page builder.",
     "result": "An agent can install the theme, run the wizard, and start listing properties. Hire me to brand it or load real inventory.",
-    "audience": "Solo real estate agents and small teams that need listings, a map, and showing requests. Also hiring managers who want to see a full theme I shipped.",
+    "audience": "Solo real estate agents and small teams that need listings, a map, and showing requests.",
     "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Setup wizard under Appearance → Acreline Setup. Gutenberg marketing blocks (Block Generator + Migrate to Blocks) plus Appearance → Acreline Settings for listing, agent, booking, and display toggles. Listings, agents, and bookings as post types (optional Acreline Core so they survive a theme switch). Compliance slots for Fair Housing, MLS/IDX disclaimers, and showing-form consent. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
     "handoff": "You get the theme zip and a short guide. Run the setup wizard, then edit pages in WordPress. Hire me to load your listings or set the brand.",
     "benefits": [
@@ -507,11 +515,11 @@
       ],
       [
         "Do I need Elementor or ACF for Acreline?",
-        "No. Marketing pages use the included Gutenberg blocks. Listings and agents use metaboxes. Identity lives in the Customizer and the setup wizard. Do not install a page builder. It adds no value and conflicts with the block architecture."
+        "No. Marketing pages use the included Gutenberg blocks, listings and agents use metaboxes, and your identity lives in the Customizer and the setup wizard. You do not need a page builder, and one can fight the block layouts."
       ],
       [
         "Can you install or customize Acreline for my real estate office?",
-        "Yes. Buy the pack for self-serve, or ask about this and I brand it, import your listings, and hand off wp-admin editing to your brokers. I can also wire a real MLS feed or build custom listing filters for your market."
+        "Yes. Buy the pack to do it yourself, or write to me and I will brand it, import your listings, and show your brokers how to edit in wp-admin. I can also connect a real MLS feed or build listing filters for your market."
       ]
     ],
     "demo": "https://acreline.matthummel.com/",
@@ -621,8 +629,8 @@
     "summary": "WalkRidge is a WordPress theme for licensed-guide tour shops. Visitors browse tours, meet guides, and book online. Operators change brand, phone, and hours in Theme Settings. No code.",
     "challenge": "Tour shops need schedules, guide bios, and checkout in one place. Most options are a bare store or a heavy travel kit they will not use.",
     "approach": "I built marketing pages with WordPress blocks and booking through WooCommerce. Brand, phone, hours, and the header button live in Appearance → Theme Settings. Operators never touch code.",
-    "result": "A tour shop can show the work, introduce the guides, and take bookings. The live concept is at walkridge.matthummel.com. Hire me to brand it or set up the shop.",
-    "audience": "Tour shops and agencies that need tours, guides, and checkout in one site. Also hiring managers who want to see a WooCommerce theme I shipped.",
+    "result": "A tour shop can show its tours, introduce the guides, and take bookings. The live concept is at walkridge.matthummel.com. Hire me to brand it or set up the shop.",
+    "audience": "Tour shops and agencies that need tours, guides, and checkout in one site.",
     "architecture": "Sage 11 + Blade + Tailwind v4 + Vite 8. Gutenberg blocks for Home, Tours, Guides, Area, Contact, and Refund Policy (Block Generator for custom layouts). WooCommerce optional. Marketing site, contact form, and blog run without it. Appearance → Theme Settings for brand, phone, email, address, hours, header CTA, social URLs. Light is the default; dark is a visitor toggle. WCAG 2.2 contrast and 44px targets on chrome. Native SEO tags yield to Yoast / Rank Math / SEOPress / AIOSEO.",
     "handoff": "You get the theme zip and a short guide. Set the brand in Theme Settings, then add tours in WooCommerce. Hire me to load your tours or change the layout.",
     "benefits": [
@@ -702,7 +710,7 @@
     "faq": [
       [
         "Is WalkRidge a WordPress tour theme?",
-        "Yes. WalkRidge is a WordPress theme built for licensed-guide tour companies: bookable tour products in WooCommerce, guide bios, an area context page, and a contact desk. Without a page builder."
+        "Yes. WalkRidge is a WordPress theme built for licensed-guide tour companies: bookable tour products in WooCommerce, guide bios, an area page, and a contact page. It does not need a page builder."
       ],
       [
         "Do I need WooCommerce to use WalkRidge?",
@@ -710,7 +718,7 @@
       ],
       [
         "What do I get when I buy WalkRidge?",
-        "The marketplace pack: walkridge.zip (upload in Appearance → Themes), a child theme starter, and HTML documentation. Optional companion plugins. Walkridge Bookings and Walkridge Field Map. Are sold separately. When WalkRidge goes on sale, you get an instant download after checkout."
+        "The marketplace pack: walkridge.zip (upload in Appearance → Themes), a child theme starter, and HTML documentation. Two optional companion plugins, Walkridge Bookings and Walkridge Field Map, are sold separately. When WalkRidge goes on sale, you get an instant download after checkout."
       ],
       [
         "How do I add my tour company's branding?",
@@ -726,7 +734,7 @@
       ],
       [
         "Can you install or customize WalkRidge for my tour company?",
-        "Yes. Buy the pack for self-serve, or ask about this and I brand it, load your tour inventory, and hand off wp-admin editing to your team."
+        "Yes. Buy the pack to do it yourself, or write to me and I will brand it, load your tours, and show your team how to edit in wp-admin."
       ]
     ],
     "demo": "https://walkridge.matthummel.com/",
@@ -802,8 +810,8 @@
       "WordPress bookable tours theme"
     ],
     "is_product": true,
-    "seo_title": "WalkRidge: WordPress Theme for Tour Guides | Matt Hummel",
-    "seo_description": "WordPress theme for guides and tour companies: browse tours, meet guides, and book in WooCommerce. Ten Gutenberg blocks and a Customizer identity panel."
+    "seo_title": "WalkRidge: WooCommerce Tour Theme | Matt Hummel",
+    "seo_description": "My WordPress theme for tour companies and licensed guides: browse tours, meet the guides, and book through WooCommerce. Ten blocks, no page builder."
   },
   "tocguide": {
     "title": "TOCguide",
@@ -826,7 +834,7 @@
     "challenge": "Long posts need a jump list. Many plugins add extra blocks or hide the outline from search engines and screen readers.",
     "approach": "I built a light plugin that reads headings and prints the list on the first page load. Reading Guide, citations, and study tools stay opt-in. Nothing phones home.",
     "result": "A publisher can add a table of contents that is easy to read and easy to find. The plugin is free. Hire me if you want it tailored.",
-    "audience": "Writers, shops, and agencies that publish long posts. Also hiring managers who want to see a small plugin I shipped.",
+    "audience": "Writers, shops, and agencies that publish long posts.",
     "architecture": "PHP block render callback (`tocguide/table-of-contents`), small editor script, optional ItemList JSON-LD. Reading Guide and study tools compute from post content or localStorage. No React runtime on the front end for the list itself. Independent slug: tocguide.",
     "handoff": "Download the zip, turn the plugin on, and add the block. Settings are under Settings → TOCguide. Source is on GitHub if you want to fork it.",
     "benefits": [
@@ -894,7 +902,7 @@
       ],
       [
         "Can you customize it for my theme?",
-        "Yes. Ask about this for sticky-header offsets, style presets that match your brand, or a private fork."
+        "Yes. Write to me for sticky-header offsets, style presets that match your brand, or a private fork."
       ]
     ],
     "demo": "https://matthummel-pa.github.io/tocguide/",

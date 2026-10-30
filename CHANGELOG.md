@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.19.4 — Plainer copy, written for theme shoppers
+
+- Rewrote the default copy that sounded machine-made: em dashes, "bespoke", a repeated "A project that…" result line, and sentence fragments like "Are sold separately." The concept project pages now say what was built in plain sentences.
+- Product pages (Cobble & Candle, Acreline, WalkRidge, TOCguide) no longer pitch to hiring managers in the "who it's for" line. They speak to the people who would buy or install the theme. Cobble & Candle gains two FAQ answers shoppers ask first (page builder, self-setup), and the "under a minute" booking claim is gone.
+- Home and Shop defaults now lead with the themes: new hero line, "Browse themes" buttons, a "Can I buy a ready-made theme?" question, and search titles built around "WordPress themes". A one-time migration (`mh_theme_buyer_copy_v1`) updates a saved field only when it still holds the old default; hand-edited copy is untouched.
+- Draft journal post: removed a leaked internal note ("Recruiters should leave thinking…"), cut the staccato lines, and rewrote the excerpt.
+
 ## 3.19.3 — Post follow line is smaller
 
 - The follow line added in 3.19.2 rendered at body-text size (22px) under the share buttons. It now sits on its own row at .95rem in the muted text color, so it reads as a quiet prompt, not a second heading.

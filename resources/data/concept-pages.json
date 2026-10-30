@@ -1,10 +1,10 @@
 {
   "hallowed-ground": {
     "eyebrow": "Project · Licensed-guide tours",
-    "summary": "A Gettysburg licensed guide website project: historical vs after-dark pathways, five tours, an OpenLayers battlefield map, and a Sage + WooCommerce handoff.",
-    "challenge": "A Gettysburg licensed guide website has to sell small-group walking, bus, hike, lantern, and private sunrise tours without looking like a food-tour sibling brand. Call-to-reserve sites lose the people who plan at night on their phones.",
-    "approach": "Working HTML as the front-end contract for a later Sage + WooCommerce theme. Home splits daylight vs lantern walks; the catalog filters five tours; The Area is an OpenLayers battlefield map.",
-    "result": "A clickable demo with a distinct identity. When WordPress ships, WooCommerce picks up the same pages.",
+    "summary": "A website project for a Gettysburg licensed guide: daytime and after-dark tour paths, five tours, an OpenLayers battlefield map, and a Sage + WooCommerce handoff.",
+    "challenge": "A licensed guide in Gettysburg sells small-group walking, bus, hike, lantern, and private sunrise tours, and the site cannot look like a food-tour sibling brand. Call-to-reserve sites lose the people who plan at night on their phones.",
+    "approach": "I built working HTML as the front-end contract for a later Sage + WooCommerce theme. Home splits daylight walks from lantern walks, the catalog filters five tours, and The Area is an OpenLayers battlefield map.",
+    "result": "A clickable demo with its own identity. When the WordPress build ships, WooCommerce picks up the same pages.",
     "deliverables": [
       "Historical / after-dark pathways",
       "Five-tour catalog + filters",
@@ -32,9 +32,9 @@
   "first-shot": {
     "eyebrow": "Project · Walking tours",
     "summary": "A walking-tour project with a calendar booking flow, add-ons, and demo payment.",
-    "challenge": "A tour with limited daily slots needs to show what's actually available — a static contact form oversells sold-out dates and frustrates guests before they even arrive.",
-    "approach": "A calendar-driven booking flow: pick an available date, see real time slots, add tickets and upgrades with a live total, and check out.",
-    "result": "A project that turns a scheduling headache into a self-serve calendar, upsells add-ons at checkout, and confirms instantly.",
+    "challenge": "A tour with limited daily slots has to show what is open. A static contact form oversells sold-out dates and frustrates guests before they arrive.",
+    "approach": "A calendar-driven booking flow: pick an open date, see real time slots, add tickets and upgrades with a live total, and check out.",
+    "result": "A demo that turns a scheduling headache into a self-serve calendar, offers add-ons at checkout, and confirms the booking instantly.",
     "deliverables": [
       "Availability calendar",
       "Slot + add-on booking",
@@ -60,12 +60,12 @@
   },
   "field-of-valor": {
     "eyebrow": "Tour · Live project",
-    "summary": "A Gettysburg tour project grown into a full bespoke website. Small groups, licensed guides, the story in order — fast, accessible, easy to run.",
-    "challenge": "A good tour deserves a site that feels as considered as the tour itself. The project needed a real multi-page home, a clear way to show seven different tours, and the trust a first-time visitor looks for — without a page builder.",
-    "approach": "An archival-heritage look built as a bespoke WordPress theme. Tours are a reusable content type with their own fields, so adding or editing one takes minutes.",
-    "result": "A fast, WCAG 2.2 AA site with seven tour pages, a booking flow, and a marketing landing page — the kind of site a real Adams County operator could own and run.",
+    "summary": "A Gettysburg tour project grown into a full custom website. Small groups, licensed guides, the story told in order. Fast, accessible, and easy to run.",
+    "challenge": "A good tour deserves a site that feels as considered as the tour. This one needed a real multi-page home, a clear way to show seven tours, and the trust a first-time visitor looks for, all without a page builder.",
+    "approach": "An archival-heritage look built as a custom WordPress theme. Tours are a reusable content type with their own fields, so adding or editing one takes minutes.",
+    "result": "A fast WCAG 2.2 AA site with seven tour pages, a booking flow, and a marketing landing page. A real Adams County operator could own and run it.",
     "deliverables": [
-      "Multi-page bespoke website",
+      "Multi-page custom website",
       "Custom WordPress theme",
       "Seven tour pages + booking flow",
       "Marketing landing page",
@@ -90,10 +90,10 @@
   },
   "keystone-homes": {
     "eyebrow": "WordPress theme · Land & farms",
-    "summary": "A Sage WordPress theme for farms, land, and historic homes: grid and map listings, acreage filters, and financing tools a broker can actually run.",
-    "challenge": "Land and farm buyers need different filters — acreage, township, lot type — and a map. A generic home-search template can't show a 40-acre parcel the way it deserves.",
+    "summary": "A Sage WordPress theme for farms, land, and historic homes: grid and map listings, acreage filters, and financing tools a broker can run.",
+    "challenge": "Land and farm buyers filter by acreage, township, and lot type, and they want a map. A generic home-search template cannot show a 40-acre parcel well.",
     "approach": "A grid-and-map listings tool built for rural property, with acreage and township filters as query args, a land-loan estimate, financing pre-qualification, and a call scheduler. Vanilla JS widgets, no page builder.",
-    "result": "A WordPress starting point that speaks land buyers' language, shows parcels on a map, and moves serious buyers from browsing to a booked call.",
+    "result": "A WordPress starting point built around how land buyers search: parcels on a map, filters that fit, and a booked call for serious buyers.",
     "audience": "Land offices, farm brokerages, and agents selling acreage or historic homes who cannot use a suburban MLS skin.",
     "architecture": "Listings render as a grid and a map, with acreage, township, and lot-type filters as query args. The land-loan estimate and pre-qualification widgets are vanilla JS. Intended production stack is Sage 11, a listing CPT or imported feed, and Rank Math for titles and schema.",
     "handoff": "You own the theme and the listing fields. Brokers edit parcels, photos, and copy in wp-admin. I document the listing schema so the next developer can extend filters without touching the template.",
@@ -124,9 +124,9 @@
   "ridgeline-realty": {
     "eyebrow": "Project · Real estate agency",
     "summary": "A realty project with filterable listings, a live mortgage calculator, and support tools.",
-    "challenge": "Buyers browse listings on their phones and bounce when a site is slow, unfilterable, or missing the numbers. Those leads go straight to Zillow — and the agency never sees them.",
+    "challenge": "Buyers browse listings on their phones and leave when a site is slow, unfilterable, or missing the numbers. Those leads go to Zillow, and the agency never sees them.",
     "approach": "A fast, filterable listings experience with a search bar, a live mortgage calculator, and easy schedule-a-showing and contact-an-agent tools.",
-    "result": "A project that holds buyers with real search and real numbers, then converts them with one-tap showing requests and direct agent contact.",
+    "result": "A demo that holds buyers with real search and real numbers, then turns them into one-tap showing requests and direct agent contact.",
     "deliverables": [
       "Filterable listings",
       "Mortgage calculator",
@@ -153,9 +153,9 @@
   "ridgeline-outfitters": {
     "eyebrow": "Project · Outdoor gear shop",
     "summary": "An outdoor gear shop project with filters, quick-view, wishlist, and a cart with a free-shipping bar.",
-    "challenge": "Outdoor shoppers compare gear across ten browser tabs. A store with no filters, sizes, or wishlist loses them to Amazon before they ever notice the local expertise.",
+    "challenge": "Outdoor shoppers compare gear across ten browser tabs. A store with no filters, sizes, or wishlist loses them to Amazon before they notice the local expertise.",
     "approach": "A gear-forward shop with category filters, quick-view, size selection, a wishlist, and a cart with a free-shipping progress bar.",
-    "result": "A project that competes with big retailers on convenience while winning on local knowledge and battlefield-trail credibility.",
+    "result": "A demo shop that competes with big retailers on convenience and wins on local knowledge and battlefield-trail credibility.",
     "deliverables": [
       "Filterable gear grid",
       "Quick-view + wishlist",
@@ -182,9 +182,9 @@
   "diamond-ridge": {
     "eyebrow": "Project · Boutique retail",
     "summary": "A downtown mercantile project with a full product shop, slide-in cart, and checkout.",
-    "challenge": "A downtown shop with foot traffic but no online store misses every visitor who wanted 'that candle' shipped home. Generic marketplace listings hid the local, handmade story entirely.",
-    "approach": "A full e-commerce storefront with a slide-in cart and clean checkout, wrapped in a brand that leads with 'locally made' — so the shop keeps selling to visitors long after they've left town.",
-    "result": "A project that opens a second register online, keeps the maker story front and center, and lets a one-time visitor become a repeat customer from anywhere.",
+    "challenge": "A downtown shop with foot traffic but no online store misses every visitor who wanted “that candle” shipped home. Generic marketplace listings hid the local, handmade story.",
+    "approach": "A full storefront with a slide-in cart and a clean checkout, in a brand that leads with “locally made.” The shop keeps selling after visitors leave town.",
+    "result": "A demo that adds an online register, keeps the maker story up front, and lets a one-time visitor become a repeat customer from anywhere.",
     "deliverables": [
       "Product shop + cart",
       "Checkout flow",
@@ -210,12 +210,12 @@
   },
   "diamonds-threads": {
     "eyebrow": "Project · Boutique & Retail",
-    "summary": "A vintage-inspired boutique website project with distinctive branding, mobile-friendly shopping, and a clear customer journey for an independent Gettysburg-area retailer.",
+    "summary": "A vintage-inspired boutique website with distinctive branding, mobile-friendly shopping, and a clear path from browsing to visiting, for an independent Gettysburg-area retailer.",
     "challenge": "Most local shop sites bury what you carry, forget to say when you're open, and cram everything onto one slow scroll. A boutique lives on foot traffic, and a phone-first shopper downtown will pick the next door if yours makes them work for the basics.",
-    "approach": "A complete, hand-authored WordPress site — no page builder — around the way people actually shop a local store. Browsable collections, a story worth the trip, and a Visit page with hours, parking, and a map.",
+    "approach": "A complete, hand-authored WordPress site with no page builder, built around how people shop a local store: browsable collections, a story worth the trip, and a Visit page with hours, parking, and a map.",
     "result": "A fast, warm, six-page site a real boutique could open with: collections to browse, a clear reason to visit in person, and local-SEO groundwork for 'boutique in Gettysburg.'",
     "deliverables": [
-      "Six-page bespoke WordPress theme",
+      "Six-page custom WordPress theme",
       "Collections & product content model",
       "Mobile-first responsive design",
       "Local-SEO + schema-ready",
@@ -240,9 +240,9 @@
   "cannon-crumb": {
     "eyebrow": "Project · Cafe & bakery",
     "summary": "An all-day cafe project with a tabbed, filterable menu and a real online-ordering cart.",
-    "challenge": "A busy cafe leaves money on the counter without online ordering — and a wall-of-text menu makes it worse. Regulars wanted to order ahead; first-timers wanted to filter for vegan and gluten-free.",
-    "approach": "An interactive, tabbed and filterable menu with a working online-ordering cart — pickup or delivery, running total, and a clean checkout — so the morning rush moves to the app, not the line.",
-    "result": "A project that captures ahead-orders, answers dietary questions instantly, and turns a static menu into a working storefront that pays for itself.",
+    "challenge": "A busy cafe leaves money on the counter without online ordering, and a wall-of-text menu makes it worse. Regulars want to order ahead. First-timers want to filter for vegan and gluten-free.",
+    "approach": "A tabbed, filterable menu with a working online-ordering cart: pickup or delivery, a running total, and a clean checkout. The morning rush moves to the phone, not the line.",
+    "result": "A demo that captures ahead-orders, answers dietary questions on the spot, and turns a static menu into a working storefront.",
     "deliverables": [
       "Tabbed, filterable menu",
       "Online-ordering cart",
@@ -269,9 +269,9 @@
   "field-musket": {
     "eyebrow": "Project · Farm-to-table tavern",
     "summary": "A seasonal tavern project with an editorial, always-current menu and a clear reservation path.",
-    "challenge": "Diners decide on their phones, and a menu trapped in a PDF or a photo is the fastest way to lose them. This tavern's seasonal menu changed faster than its old site could keep up.",
-    "approach": "An editorial, easy-to-read menu the owner can update in minutes, plus a one-tap reservation path and the farm-to-table story that justifies the price.",
-    "result": "A project where the menu is always current, reservations are a tap away, and the local-sourcing story does the selling — no PDF, no stale specials.",
+    "challenge": "Diners decide on their phones, and a menu stuck in a PDF or a photo loses them. This tavern’s seasonal menu changed faster than its old site could keep up.",
+    "approach": "An editorial, easy-to-read menu the owner can update in minutes, a one-tap reservation path, and the farm-to-table story behind the prices.",
+    "result": "A demo where the menu is always current, reservations are a tap away, and the local-sourcing story does the selling. No PDF, no stale specials.",
     "deliverables": [
       "Editorial menu system",
       "Reservations flow",
@@ -297,10 +297,10 @@
   },
   "pintfield": {
     "eyebrow": "Gettysburg creamery website design",
-    "summary": "A Gettysburg creamery website design project with a live 32-flavor Scoop Board, online ordering, three-location details, and owner-scheduled updates.",
+    "summary": "A Gettysburg creamery website with a live 32-flavor Scoop Board, online ordering, details for three locations, and owner-scheduled updates.",
     "challenge": "A multi-location creamery changes flavors every morning, but static menus and unanswered phone calls leave customers guessing what is in the case, which shops are open, and whether cakes or dairy-free options are available.",
-    "approach": "Build around a live Scoop Board: 32 daily flavors, dairy-free and no-sugar-added choices, owner scheduling, online ordering for cakes and cookies, and consistent location details for all three shops.",
-    "result": "A working project that turns everyday customer questions into fast self-service, gives the owner one place to publish flavor changes, and makes ordering or choosing a shop simple on any screen.",
+    "approach": "I built it around a live Scoop Board: 32 daily flavors, dairy-free and no-sugar-added choices, owner scheduling, online ordering for cakes and cookies, and the same details for all three shops.",
+    "result": "A working demo that turns everyday customer questions into self-service, gives the owner one place to publish flavor changes, and makes ordering or choosing a shop simple on any screen.",
     "deliverables": [
       "Live 32-flavor Scoop Board",
       "Owner flavor scheduling",
@@ -327,10 +327,10 @@
   },
   "reveille": {
     "eyebrow": "Restaurant · Live project",
-    "summary": "A full farm-to-table restaurant website — menu, reservations, private events and online ordering — built to turn a phone search into a booked table.",
-    "challenge": "Most local restaurant sites bury the menu and a way to book under slideshows and out-of-date hours. One long scroll is hard for Google to rank and harder for a hungry visitor on a phone.",
-    "approach": "A full multi-page site with a warm farm-to-table design: seasonal menu, reservations, private events, gallery, and online ordering each one tap away. Hand-built WordPress theme — no page builder.",
-    "result": "A restaurant site that looks like the room feels and works like a good host — turning dinner searches into booked tables and takeout orders.",
+    "summary": "A full farm-to-table restaurant website with a menu, reservations, private events, and online ordering, built to turn a phone search into a booked table.",
+    "challenge": "Most local restaurant sites bury the menu and the booking link under slideshows and out-of-date hours. One long scroll is hard for Google to rank and harder for a hungry visitor on a phone.",
+    "approach": "A full multi-page site with a warm farm-to-table design: seasonal menu, reservations, private events, gallery, and online ordering, each one tap away. Hand-built WordPress theme, no page builder.",
+    "result": "A restaurant site that looks like the room feels and works like a good host, turning dinner searches into booked tables and takeout orders.",
     "deliverables": [
       "Sticky Reserve bar",
       "Full seasonal menu",
@@ -338,7 +338,7 @@
       "Online ordering demo cart",
       "Private events",
       "Visit map & gallery",
-      "Bespoke WordPress theme"
+      "Custom WordPress theme"
     ],
     "metrics": [
       [
@@ -359,9 +359,9 @@
   "cupola-field": {
     "eyebrow": "Project · Modern hotel",
     "summary": "A modern boutique hotel project with a live reservation engine and concierge + guest-request tools.",
-    "challenge": "A hotel site has to answer two questions instantly: is my date open, and can someone help me right now? Most local hotel sites answer neither.",
+    "challenge": "A hotel site has to answer two questions fast: is my date open, and can someone help me right now? Most local hotel sites answer neither.",
     "approach": "A live reservation engine that recalculates nightly rate and total as guests change dates and rooms, paired with a concierge chat widget and a guest-request checklist.",
-    "result": "A project that turns browsing into booking with instant pricing, and turns questions into answers with an always-on concierge.",
+    "result": "A demo that turns browsing into booking with instant pricing, and turns questions into answers with a concierge chat.",
     "deliverables": [
       "Live reservation engine",
       "Concierge chat widget",
@@ -388,9 +388,9 @@
   "lantern-laurel": {
     "eyebrow": "Project · Boutique inn",
     "summary": "A nine-room heritage inn project with a direct booking bar and a warm forest-and-brass identity.",
-    "challenge": "Small Gettysburg inns bleed booking commission to the big travel sites — and those sites bury the property's own story. Guests couldn't even check dates without a phone call during business hours.",
+    "challenge": "Small Gettysburg inns lose booking commission to the big travel sites, and those sites bury the property’s own story. Guests could not check dates without calling during business hours.",
     "approach": "A warm, heritage-forward design that puts a direct booking bar front and center, so guests reserve on the inn's own site. Rooms, rates, and the neighborhood are one scroll away.",
-    "result": "A project that could recover commission on every direct booking, reads beautifully on a phone, and lets a first-time guest feel the welcome before they arrive.",
+    "result": "A demo that could recover commission on every direct booking, reads well on a phone, and lets a first-time guest feel the welcome before they arrive.",
     "deliverables": [
       "Direct booking bar",
       "Room & rate pages",
@@ -416,10 +416,10 @@
   },
   "willoughby": {
     "eyebrow": "Inn · Live project",
-    "summary": "A full boutique-inn website — eight rooms with rates, a real booking flow, the inn's story, a Gettysburg area guide and a gallery — built to win direct bookings.",
-    "challenge": "Small inns lose booking commission to the big travel sites — and most inn websites make it worse by burying rooms and rates behind slideshows on one long scroll.",
-    "approach": "A full multi-page site with a moody, dramatic design: eight rooms with rates, a booking flow, the inn's story, a Gettysburg area guide and a gallery. Hand-built WordPress theme — no page builder.",
-    "result": "An inn site that feels like the place and makes booking direct the obvious choice — keeping the full nightly rate with the owner.",
+    "summary": "A full boutique-inn website: eight rooms with rates, a real booking flow, the inn’s story, a Gettysburg area guide, and a gallery. Built to win direct bookings.",
+    "challenge": "Small inns lose booking commission to the big travel sites, and most inn websites make it worse by burying rooms and rates behind slideshows on one long scroll.",
+    "approach": "A full multi-page site with a moody, dramatic design: eight rooms with rates, a booking flow, the inn’s story, a Gettysburg area guide, and a gallery. Hand-built WordPress theme, no page builder.",
+    "result": "An inn site that feels like the place and makes booking direct the obvious choice, so the owner keeps the full nightly rate.",
     "deliverables": [
       "Hero booking bar",
       "Rooms overview with rates",
@@ -447,13 +447,13 @@
   },
   "herr-ridge": {
     "eyebrow": "B&B · Live project",
-    "summary": "A warm, three-room bed-and-breakfast project — built and live as a full multi-page site you can click through.",
-    "challenge": "A small B&B competes on charm and personality — which most template sites flatten into something generic.",
-    "approach": "A soft terracotta-and-sage cottage design, hand-built as a bespoke WordPress theme. Three rooms, each with its own page, plus breakfast and things-to-do sections and an easy book-a-room path.",
-    "result": "A site as inviting as the cottage itself — fast, accessible (WCAG 2.2 AA), and built to turn a weekend search into a booked stay.",
+    "summary": "A warm, three-room bed-and-breakfast website, built and live as a full multi-page site you can click through.",
+    "challenge": "A small B&B competes on charm and personality, which most template sites flatten into something generic.",
+    "approach": "A soft terracotta-and-sage cottage design, hand-built as a custom WordPress theme. Three rooms, each with its own page, plus breakfast and things-to-do sections and an easy book-a-room path.",
+    "result": "A site as inviting as the cottage itself: fast, accessible (WCAG 2.2 AA), and built to turn a weekend search into a booked stay.",
     "deliverables": [
       "Multi-page site",
-      "Bespoke WordPress theme",
+      "Custom WordPress theme",
       "3 room detail pages",
       "Booking + contact forms",
       "Local SEO + schema",
