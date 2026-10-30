@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.20.1 — Calmer paused state
+
+- With animations paused, the hero no longer jumps to a brighter frame. The drifting dot washes and glint are hidden (the same as for reduced motion), and the collage layers and pulsing dots rest at the middle of their range.
+
 ## 3.20.0 — Pause animations button
 
 - A pause button sits next to the dark mode toggle in the header. It stops the looping animations (the illustrations, hero collage and pulsing dots), which WCAG 2.2.2 asks for when motion runs on its own for more than 5 seconds. The choice is saved in this browser. Visitors whose system asks for reduced motion already got this; the button is for everyone else.

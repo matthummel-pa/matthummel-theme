@@ -7404,3 +7404,16 @@ html.mh-still *::after {
   animation-delay: 0s !important;
   animation-iteration-count: 1 !important;
 }
+
+/* 3.20.1 · Resting frame for the paused state. Stopping a loop drops it to its base style, which is
+   brighter than anything the loop shows. Mirror the reduced-motion treatment: hide the drifting dot
+   washes and glint, and hold the collage layers and dots at the middle of their range. */
+html.mh-still .h-hero__wash::before,
+html.mh-still .page-header__wash::before,
+html.mh-still .h-hero__wash::after,
+html.mh-still .page-header__wash::after,
+html.mh-still .h-hero__media::after,
+html.mh-still .page-header__media::after { display: none; }
+html.mh-still .h-collage__grid::before { opacity: .27; }
+html.mh-still .h-collage__grid::after { opacity: .17; }
+html.mh-still .h-collage__dot { opacity: .8; }
