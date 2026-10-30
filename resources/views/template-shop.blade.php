@@ -97,7 +97,7 @@
     </p>
   @endif
   @if ($trust !== '')
-    <div class="shop-trust" aria-label="{{ __('What you can count on', 'sage') }}">{!! wp_kses_post($trust) !!}</div>
+    <div class="shop-trust" role="group" aria-label="{{ esc_attr__('What you can count on', 'sage') }}">{!! wp_kses_post($trust) !!}</div>
   @endif
 @endcomponent
 
