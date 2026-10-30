@@ -7379,3 +7379,12 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
   align-items: center;
   min-height: 24px;
 }
+
+/* 3.19.7 · axe link-in-text-block: links inside a sentence were told apart by color only. */
+.fs-buy__note a,
+.shop-section__intro a,
+.side-subscribe__body a,
+.logged-in-as a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

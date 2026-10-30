@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.19.7 — Fixes from an axe pass on staging
+
+- In-sentence links (the Freemius buy note, the shop intro, the subscribe box, the comment form's "logged in as" line) were set apart by color only. They are now underlined.
+- Code blocks: the `@return`-style doc tags and regex/meta tokens were 4.08:1 on the code background. They are now 5.17:1.
+- The shop compare table's scroll region had the same name as its section, so two landmarks shared a label. It now has its own ("Comparison table").
+- Post headers no longer carry an `aria-labelledby` that a plain `header` can't use.
+
 ## 3.19.6 — Footer links meet the 24px target size
 
 - Footer list links (Site column, Footer: links widget, and the Sage / Claude Code credit links) measured 18–20px tall, under the WCAG 2.2 minimum of 24px (2.5.8). They now have a 24px minimum height.

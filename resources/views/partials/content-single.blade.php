@@ -62,7 +62,7 @@
   @if ($postCats)<meta itemprop="articleSection" content="{{ esc_attr($primaryCat->name) }}">@endif
 
   {{-- ── POST HERO ────────────────────────────────────────── --}}
-  <header @class(['post-hero', 'post-hero--has-media' => has_post_thumbnail()]) aria-labelledby="post-title-{{ $postId }}">
+  <header @class(['post-hero', 'post-hero--has-media' => has_post_thumbnail()])>
     <div class="container wide post-hero-inner">
       <div class="post-hero-main">
 

@@ -1,9 +1,9 @@
 {{-- Side-by-side comparison. Themes are the columns, the things to compare are the rows.
-     Expects $themes (rows from \App\mh_shop_items()) and $labelId (the section heading id). --}}
+     Expects $themes (rows from \App\mh_shop_items()) (the section already names itself with its h2, so the scroll region gets its own label). --}}
 @php
   $dash = '—';
 @endphp
-<div class="shop-compare" role="region" aria-labelledby="{{ esc_attr($labelId) }}" tabindex="0">
+<div class="shop-compare" role="region" aria-label="{{ esc_attr__('Comparison table', 'sage') }}" tabindex="0">
   <table class="shop-compare__table">
     <caption class="visually-hidden">{{ __('Compare the themes: who each is for, price, what it works with, the live demo, and how to get it.', 'sage') }}</caption>
     <thead>
