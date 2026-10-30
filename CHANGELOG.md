@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.21.2 — Pause button removed, no bar under hero titles
+
+- The pause-animations button is gone from the header, along with its script and styles. The header fits again on phones (the Menu button was cut off) and the "Get updates" icon-only range is back to 901 to 1099px.
+- Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
 ## 3.21.1 — Shop page accessibility and layout pass
 
 From a browser and screen reader check of the shop pages on staging.

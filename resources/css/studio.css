@@ -739,7 +739,6 @@ body {
 .page-header-split__copy .lead {
   max-width: 56rem;
 }
-.page-header .display-title.is-hero::after,
 .pf-section > .container > .sec-head .display-title::after {
   background: var(--blue-600);
 }
@@ -3994,8 +3993,6 @@ html.mh-dark .h-hero__panel {
 .page-header p,
 .h-hero__lede,
 .h-hero__panel p { color: #c9d9ef; }
-.page-header .display-title::after,
-.h-hero__name::after { background: var(--blue-400); }
 
 .page-header .eyebrow,
 .h-hero__kicker,
@@ -6729,9 +6726,9 @@ html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); out
   .header-updates__panel { display: none !important; }
   html .header-updates__link.header-avail { padding: .5rem .7rem; }
 }
-/* 901 to 1139px: the full header (logo, six links, theme and pause toggles, Get updates pill and chevron) needs about
-   1115px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
-@media (min-width: 901px) and (max-width: 1139px) {
+/* 901 to 1099px: the full header (logo, six links, theme toggle, Get updates pill and chevron) needs about
+   1100px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
+@media (min-width: 901px) and (max-width: 1099px) {
   .site-header-inner { gap: .75rem; padding-inline: 1rem; }
   .header-actions { margin-left: 0; gap: .25rem; }
   html .site-header .header-nav-list { gap: .125rem; }
@@ -7412,29 +7409,6 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-
-/* 3.20.0 · Pause animations (WCAG 2.2.2). html.mh-still is set by the header button and
-   restored from localStorage before paint. Loops end after one near-instant pass; finite
-   entrances jump to their end state. Hover and focus transitions are left alone. */
-.motion-toggle__icon { display: none; line-height: 0; }
-.motion-toggle__icon--pause { display: inline-flex; }
-html.mh-still .motion-toggle__icon--pause { display: none; }
-html.mh-still .motion-toggle__icon--play { display: inline-flex; }
-.motion-toggle__icon svg { width: 1rem; height: 1rem; fill: currentColor; }
-html.mh-still *,
-html.mh-still *::before,
-html.mh-still *::after {
-  animation-duration: .01ms !important;
-  animation-delay: 0s !important;
-  animation-iteration-count: 1 !important;
-}
-
-/* 3.20.1 · Resting frame for the paused state. Stopping a loop drops it to its base style, which is
-   brighter than anything the loop shows. Mirror the reduced-motion treatment: hide the drifting dot
-   washes and glint, and hold the collage layers at the middle of their range. The pulsing collage dots are hidden. */
-html.mh-still .h-hero__media::after,
-html.mh-still .page-header__media::after { display: none; }
-html.mh-still .h-collage__dot { display: none; }
 
 /* 3.20.2 · The drifting dot wash is gone: the hero and page-header washes and the dot layers
    inside the home collage. The glint layer and the collage's own content stay. */
