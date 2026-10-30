@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.21.3 — Header fits on phones
+
+- On phones the header ran off the right edge and clipped the Menu button, since the pause button joined it. Under 480px the "Menu" word is dropped (the button is still named for screen readers), the dark mode and pause buttons are 36px, spacing is tighter, and the logo scales down on the smallest screens. Checked at 320, 360, 390 and 412px.
+- Shop card links ("Live demo", "Owner guide") are now at least 24px tall.
+
 ## 3.21.2 — Coming soon themes in the Latest themes block
 
 - The Latest themes block has a new "Show coming soon themes" switch (off by default). When it is on, themes marked Coming soon follow the ones on sale.
