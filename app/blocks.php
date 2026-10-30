@@ -673,6 +673,39 @@ function mh_reach_form_block_html(mixed $html): mixed
 add_filter('render_block_hostinger-reach/subscription', __NAMESPACE__.'\\mh_reach_form_block_html');
 
 /**
+ * Signup fallback where the Hostinger Reach form block is placed but the plugin is not running.
+ *
+ * With the plugin off, the saved `hostinger-reach/subscription` block is not registered and prints nothing, so
+ * the page body or the footer column goes blank. This swaps in a short message with a "Say hello" button and
+ * the RSS feed. Nothing changes while the plugin is active, because the block is then registered.
+ *
+ * @since 3.18.4
+ *
+ * @param  string  $html  Rendered block.
+ * @param  array<string, mixed>  $block  Parsed block.
+ */
+function mh_reach_form_fallback(mixed $html, array $block): mixed
+{
+    if (($block['blockName'] ?? '') !== 'hostinger-reach/subscription') {
+        return $html;
+    }
+
+    if (\WP_Block_Type_Registry::get_instance()->is_registered('hostinger-reach/subscription')) {
+        return $html;
+    }
+
+    return '<div class="updates-fallback">'
+        .'<p>'.esc_html__('The email signup is not working right now. Say hello and I will add you to the list by hand, or follow the RSS feed.', 'sage').'</p>'
+        .'<p class="updates-fallback__actions">'
+        .'<a class="btn" href="'.esc_url(home_url('/contact/')).'">'.esc_html__('Say hello', 'sage').'</a> '
+        .'<a class="btn btn-outline" href="'.esc_url(get_feed_link()).'" rel="alternate" type="application/rss+xml">'.esc_html__('RSS feed', 'sage').'</a>'
+        .'</p>'
+        .'</div>';
+}
+
+add_filter('render_block', __NAMESPACE__.'\\mh_reach_form_fallback', 10, 2);
+
+/**
  * "On this page" links for a block page: every top-level Section with an anchor and a label.
  *
  * @return list<array{0: string, 1: string}>
