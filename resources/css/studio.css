@@ -8212,3 +8212,10 @@ html.mh-dark body .h-page-nav .h-page-nav__arrow {
   html:has(.admin-bar) { --mh-bar-h: var(--wp-admin--admin-bar--height, 32px); }
   html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + var(--page-nav-h, 3rem) + .5rem); }
 }
+
+/* 3.32.0 · Header overlap. The header is fixed, and `body { padding-top: var(--header-h) }` is what holds the page below
+   it (page headers, heroes and post heroes pull themselves back up under the transparent header with a negative top
+   margin and add their own top padding). WordPress's generated global styles print `body { padding-top: 0 }` after the
+   theme CSS, which won, so the first line of content (eyebrow, breadcrumb, hero label) sat under the logo and buttons.
+   One more element in the selector makes the theme's rule win. */
+html body { padding-top: var(--header-h, 4.5rem); }
