@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.26.2 — Tap targets on phones
+
+- The logo link, the two comment-form checkboxes, the comments link and comment timestamps on posts, and a few links on About and Projects were 18 to 23px tall. They are at least 24px now (the logo link is 44px).
+- On product pages at 320px, the steps list no longer runs 32px past the screen edge.
+
 ## 3.26.1 — Hover hint on the info button
 
 - The info button on a theme card shows a small "More details" pill beside it on mouse hover and keyboard focus. Escape dismisses it. Touch screens don't show it (there is no hover); the button works the same.
