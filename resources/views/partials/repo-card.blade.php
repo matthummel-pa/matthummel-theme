@@ -102,15 +102,16 @@
   @endif
   <div class="repo-card__foot">
     @if ($url !== '')
-      <a class="repo-card__hit" href="{{ esc_url($url) }}" rel="noopener" target="_blank">
-        <span class="repo-card__open">{{ __('Open repo', 'sage') }} →</span>
-        <span class="visually-hidden"> {{ $title }} {{ __('(opens in a new window)', 'sage') }}</span>
+      <a class="repo-card__hit shop-link" href="{{ esc_url($url) }}" rel="noopener" target="_blank">
+        {{ __('Open repo', 'sage') }}<span class="visually-hidden"> {{ $title }} {{ __('(opens in a new window)', 'sage') }}</span>
+        <span class="shop-link__icon" aria-hidden="true">&#8599;</span>
       </a>
     @endif
     @if ($demo !== '')
-      <a class="btn btn-outline repo-card__demo" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+      <a class="repo-card__demo shop-link" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
         {{ __('Live demo', 'sage') }}
         <span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>
+        <span class="shop-link__icon" aria-hidden="true">&#8599;</span>
       </a>
     @endif
   </div>
