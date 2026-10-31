@@ -7751,3 +7751,28 @@ html.mh-modal-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .shop-card__more-tip { transition-duration: .01ms !important; transition-delay: 0s !important; transform: translate(0, -50%) !important; }
 }
+
+/* 3.26.2 · Phone audit: tap targets under the 24px minimum (WCAG 2.5.8), found by loading every page at 390 and 320px.
+   The logo link was 22px tall on every page; the two comment-form checkboxes were 18px; the comments link, the comment
+   timestamps and a few links on About and Projects were 19 to 23px tall. */
+.site-header .brand { display: inline-flex; align-items: center; min-height: 44px; }
+.comment-form input[type="checkbox"] { flex: none; width: 1.5rem; height: 1.5rem; margin: 0 .6rem 0 0; accent-color: var(--color-accent); }
+.post-hero-meta__comments,
+.comment-time,
+.gh-panel__link,
+.resume-head a,
+.repo-card a,
+.repo-card__ver { display: inline-flex; align-items: center; min-height: 24px; }
+/* Product pages at 320px: the "how it works" steps list had an auto-sized column that grew to its widest content
+   (317px in a 280px space, 32px past the screen). One shrinkable column, and long words may break. */
+@media (max-width: 800px) {
+  .project-story__steps { grid-template-columns: minmax(0, 1fr); }
+  .project-story__step { min-width: 0; overflow-wrap: anywhere; }
+}
+/* Narrow phones: a button label that cannot wrap stretches its column. "Send accessibility feedback" was 315px wide at
+   320px and pushed the whole Accessibility contact block 30px past the screen edge. Labels may wrap and buttons never
+   exceed their column. */
+@media (max-width: 400px) {
+  .btn { max-width: 100%; white-space: normal; text-align: center; }
+  .a11y-contact-layout > * { min-width: 0; }
+}
