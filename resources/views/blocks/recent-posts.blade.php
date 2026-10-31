@@ -22,30 +22,34 @@
   @if ($posts !== [])
     <div class="h-journal-list">
       @foreach ($posts as $i => $post)
-        <article class="h-journal-item" itemscope itemtype="https://schema.org/BlogPosting">
+        <article class="post-card" itemscope itemtype="https://schema.org/BlogPosting">
           <meta itemprop="author" content="Matt Hummel">
           @if (! empty($post['thumb']))
-            <a class="h-journal-item__thumb" href="{{ esc_url($post['url']) }}" tabindex="-1" aria-hidden="true">
-              <img src="{{ esc_url($post['thumb']) }}" alt="" width="320" height="200" loading="lazy" decoding="async" itemprop="image">
+            <a class="post-shot" href="{{ esc_url($post['url']) }}" tabindex="-1" aria-hidden="true">
+              <img src="{{ esc_url($post['thumb']) }}" alt="" width="960" height="540" loading="lazy" decoding="async" itemprop="image">
             </a>
           @endif
-          <div class="h-journal-item__body">
-            <div class="h-journal-item__meta">
-              @if ($post['cat'])
-                <a class="h-journal__cat project-cat-pill" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
-              @endif
+          <div class="post-body">
+            @if ($post['cat'])
+              <div class="post-cats project-type-row">
+                <a class="post-cat project-cat-pill" href="{{ esc_url($post['cat_url'] ?? $writing) }}" itemprop="articleSection">{{ $post['cat'] }}</a>
+              </div>
+            @endif
+            <p class="post-meta">
               <time datetime="{{ esc_attr($post['date_iso'] ?? '') }}" itemprop="datePublished">{{ $post['date'] }}</time>
               @if (! empty($post['minutes']))
+                <span aria-hidden="true"> · </span>
                 {{-- translators: %s: reading time in minutes. --}}
-                <span>{{ sprintf(__('%s min', 'sage'), $post['minutes']) }}</span>
+                {{ sprintf(__('%s min read', 'sage'), $post['minutes']) }}
               @endif
-            </div>
-            <h3 class="h-journal-item__title" itemprop="headline">
+            </p>
+            <h3 class="post-card-title" itemprop="headline">
               <a href="{{ esc_url($post['url']) }}">{{ $post['title'] }}</a>
             </h3>
             @if (! empty($post['ex']))
-              <p class="h-journal-item__ex" itemprop="description">{{ $post['ex'] }}</p>
+              <div class="post-card-excerpt"><p itemprop="description">{{ $post['ex'] }}</p></div>
             @endif
+            @include('partials.read-more', ['url' => $post['url'], 'name' => $post['title']])
           </div>
         </article>
       @endforeach
