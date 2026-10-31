@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.33.2 — Boxes fit on phones
+
+- A box with a long link at its end (Get updates, Welcome, Start here, Services) no longer stretches wider than the phone screen. Long words and links break, and the gradient link buttons wrap their label on phones.
+
 ## 3.33.1 — Cards, the rest
 
 - Project cards (Projects page), repo cards and resource cards take the theme card's green-to-blue title, pills and gradient link buttons ("Open project", "Live demo", "Open repo"). The resource cards' arrows are round gradient chips.

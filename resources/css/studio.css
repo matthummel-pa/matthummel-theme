@@ -8415,3 +8415,15 @@ html body .resources-card .resources-card__go--ext::before {
 html body .resources-card:hover .resources-card__go { transform: scale(1.1); }
 @media (prefers-reduced-motion: reduce) { html body .resources-card .resources-card__go { transition-duration: .01ms; } html body .resources-card:hover .resources-card__go { transform: none; } }
 @media (forced-colors: active) { html body .resources-card .resources-card__go { background: ButtonText; color: ButtonFace; box-shadow: none; } }
+
+/* 3.33.2 · Phones: long text in a box could stretch it past the screen. A box that ended with a long link ("website basics,
+   the WordPress MCP Adapter, and my AI workflow") made its pill, which could not wrap, 481px wide and its grid column
+   534px wide inside a 350px area (found by the phone audit on Get updates, Welcome, Start here and Services). Boxes may
+   now shrink, long words and links break, and pills wrap their label on phones. */
+html body .mh-cards > * { min-width: 0; }
+html body .about-svc-card,
+html body .about-svc-card .about-svc-card__copy { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+html .shop-link.shop-link { max-width: 100%; }
+@media (max-width: 480px) {
+  html .shop-link.shop-link { white-space: normal; text-align: left; border-radius: 1.35rem; }
+}
