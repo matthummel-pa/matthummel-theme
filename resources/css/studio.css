@@ -7776,3 +7776,79 @@ html.mh-modal-open { overflow: hidden; }
   .btn { max-width: 100%; white-space: normal; text-align: center; }
   .a11y-contact-layout > * { min-width: 0; }
 }
+
+/* 3.27.0 · Demo, guide and details links (Live demo, Owner guide, Open demo, See the full details, docs links): a pill
+   with a multi-color gradient border (lime, cyan, blue, violet) that slides on hover, and an arrow in a gradient chip.
+   The arrow is an SVG mask drawn over the old text glyph (hidden with font-size: 0), so no markup changed. */
+html .shop-link.shop-link {
+  --pill-line: linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%);
+  --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E");
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 2.5rem;
+  padding: .3rem .3rem .3rem .8rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    var(--pill-line) border-box;
+  background-size: 100% 100%, 260% 260%;
+  background-position: 0 0, 0% 50%;
+  background-repeat: no-repeat;
+  box-shadow: 0 6px 16px -10px rgba(29, 95, 214, .5);
+  color: var(--color-text);
+  font: 700 .86rem/1.2 var(--font-display);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-position .7s ease, box-shadow .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html .shop-link.shop-link:hover,
+html .shop-link.shop-link:focus-visible {
+  background-size: 100% 100%, 260% 260%;
+  background-position: 0 0, 100% 50%;
+  box-shadow: 0 14px 26px -12px rgba(29, 95, 214, .65), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: var(--color-text);
+  transform: translateY(-1px);
+}
+html .shop-link.shop-link .shop-link__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 4px 10px -4px rgba(29, 95, 214, .7);
+  color: #fff;
+  font-size: 0;
+  line-height: 0;
+}
+html .shop-link.shop-link .shop-link__icon::before {
+  content: "";
+  width: .85rem;
+  height: .85rem;
+  background: currentColor;
+  -webkit-mask: var(--pill-arrow) center / contain no-repeat;
+  mask: var(--pill-arrow) center / contain no-repeat;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html .shop-link.shop-link:hover .shop-link__icon::before,
+html .shop-link.shop-link:focus-visible .shop-link__icon::before { transform: translate(.14rem, -.14rem); }
+html .shop-link.shop-card__details-link { --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E"); }
+html .shop-link.shop-card__details-link:hover .shop-link__icon::before,
+html .shop-link.shop-card__details-link:focus-visible .shop-link__icon::before { transform: translateX(.18rem); }
+.shop-card .shop-card__links { gap: .5rem .5rem; }
+html.mh-dark .shop-link.shop-link { box-shadow: 0 6px 18px -10px rgba(34, 211, 238, .5); }
+@media (forced-colors: active) {
+  html .shop-link.shop-link { border-color: LinkText; background: Canvas; }
+  html .shop-link.shop-link .shop-link__icon { background: ButtonText; color: ButtonFace; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .shop-link.shop-link,
+  html .shop-link.shop-link .shop-link__icon::before { transition-duration: .01ms; transform: none !important; }
+}
