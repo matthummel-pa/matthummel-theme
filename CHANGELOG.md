@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.31.0 — On this page bar
+
+- The "On this page" bar has a green-to-blue label, section pills 36px tall with a soft gradient edge that brightens on hover, a filled green-to-blue pill for the section you are in, matching scroll arrows, and a thin gradient line along the bar's lower edge. It replaces the violet colors.
+
 ## 3.30.0 — Gradient prices
 
 - Prices use the same gradient as the headings (green to blue on light surfaces; lime, cyan and light blue on dark ones and on the navy product header): on the theme and plugin cards, in the Home hero, in the compare table, on the product page's price line and on its three pricing tiers.
