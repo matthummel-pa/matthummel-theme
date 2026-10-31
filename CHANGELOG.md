@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.26.1 — Hover hint on the info button
+
+- The info button on a theme card shows a small "More details" pill beside it on mouse hover and keyboard focus. Escape dismisses it. Touch screens don't show it (there is no hover); the button works the same.
+
 ## 3.26.0 — Card details in a centered popup
 
 - A theme card's details now open in a standard popup in the middle of the screen, over a dimmed, blurred backdrop, instead of a box tied to the card. Open it with the info button (click, tap or keyboard). Close it with the ✕ button, a click on the backdrop or Escape; focus goes back to the button and the page behind it is locked. It keeps the green-to-blue edge, glow and fade-and-rise animation.

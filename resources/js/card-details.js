@@ -62,5 +62,10 @@ export function initCardDetails() {
     })
     dialog.querySelector('[data-card-close]')?.addEventListener('click', close)
     button.addEventListener('click', open)
+    // The hover/focus hint: Escape dismisses it until the pointer or focus leaves the button.
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') button.classList.add('is-tip-off')
+    })
+    ;['mouseleave', 'blur'].forEach((name) => button.addEventListener(name, () => button.classList.remove('is-tip-off')))
   })
 }
