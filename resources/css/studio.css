@@ -7516,3 +7516,30 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 }
 /* Card links ("Live demo", "Owner guide") were 23px tall, one pixel under the 24px target size (WCAG 2.5.8). */
 .shop-card__links .shop-link { display: inline-flex; align-items: center; min-height: 24px; }
+
+/* 3.23.0 · Light mode, off the navy surfaces (headers, hero, closing band keep navy): solid buttons are charcoal
+   (#111827) instead of navy, spec badges are neutral gray instead of blue, the compare table's buy column tint is
+   neutral, and the page canvas and gray scale lose their blue cast. Dark mode is untouched. */
+html:not(.mh-dark) {
+  --gray-50: #f6f7f9;
+  --gray-100: #eceef1;
+  --gray-200: #dcdfe5;
+  --color-canvas: #f6f7f9;
+}
+html:not(.mh-dark) body :is(.btn:not(.btn-outline), .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
+  background: #111827 !important;
+  background-image: none !important;
+  border-color: #111827 !important;
+}
+html:not(.mh-dark) body :is(.btn:not(.btn-outline), .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *):hover {
+  background: #1f2937 !important;
+  border-color: #1f2937 !important;
+}
+html:not(.mh-dark) body .spec-badge:not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
+  background: #e5e7eb !important;
+  background-image: none !important;
+  border-color: #c7ccd4 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+html:not(.mh-dark) body :is(.shop-compare__cell--buy, .shop-compare__cell--free) { background: rgba(17, 24, 39, .04); }
