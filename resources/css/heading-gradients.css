@@ -1,12 +1,12 @@
 /* Site-wide gradient headings (3.16.0). Same look as the shop pages:
-   - on light backgrounds: dark blue, to blue, to green
-   - on dark backgrounds (dark mode, photo heroes, CTA band, contact aside, navy sections): white, to blue, to green
+   - on light backgrounds: green, to blue
+   - on dark backgrounds (dark mode, photo heroes, CTA band, contact aside, navy sections): green, to sky blue
    studio.css switches the older two-tone gradient off with solid-colour rules, some !important, so these selectors
    are heavier (html body …) and the painting properties are important. Loaded after studio.css and site-extras.css. */
 
 :root {
-  --hg-light: linear-gradient(90deg, #0a2446 0%, var(--blue-600, #2563eb) 55%, #15803d 100%);
-  --hg-dark: linear-gradient(90deg, #ffffff 0%, #93c5fd 36%, #38bdf8 62%, #4ade80 100%);
+  --hg-light: linear-gradient(90deg, #15803d 0%, var(--blue-600, #1d5fd6) 100%);
+  --hg-dark: linear-gradient(90deg, #4ade80 0%, #38bdf8 50%, #93c5fd 100%);
 }
 
 /* Light-background headings */
