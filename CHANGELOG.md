@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.32.0 — Header overlap
+
+- The first line of content on most pages (the small label above a title, the breadcrumb, the hero label) sat underneath the fixed header's logo and buttons. The page now starts below the header, as the layout intends.
+
 ## 3.31.2 — Pause button removed
 
 - The pause and play button is gone from the header, with its script, styles and icons. The early script that re-applied a saved "paused" choice is gone too, so nobody stays stuck still after an earlier pause. Visitors whose device asks for reduced motion still get no looping animation.
