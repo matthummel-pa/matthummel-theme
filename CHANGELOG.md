@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.33.1 — Cards, the rest
+
+- Project cards (Projects page), repo cards and resource cards take the theme card's green-to-blue title, pills and gradient link buttons ("Open project", "Live demo", "Open repo"). The resource cards' arrows are round gradient chips.
+- The "Theme" pill on the project cards in the Services and About pages is the theme card's pill, not gray.
+
 ## 3.33.0 — One card system
 
 - Every content card matches the theme cards: the same frame, a green-to-blue title with the hover underline, and a gradient pill button for its link. This covers the Journal (Home and the Journal page), the project cards, the "What I do" style boxes, and the repo and resource cards.

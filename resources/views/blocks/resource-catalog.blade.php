@@ -40,7 +40,7 @@
             >{{ $item['name'] }}@if (\App\mh_is_external_url($item['url']))<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>@endif</a>
           </h3>
           <p class="resources-card__blurb">{{ $item['blurb'] }}</p>
-          <span class="resources-card__go" aria-hidden="true">{{ \App\mh_is_external_url($item['url']) ? '↗' : '→' }}</span>
+          <span class="resources-card__go{{ \App\mh_is_external_url($item['url']) ? ' resources-card__go--ext' : '' }}" aria-hidden="true">{{ \App\mh_is_external_url($item['url']) ? '↗' : '→' }}</span>
         </li>
       @endforeach
     </ul>
