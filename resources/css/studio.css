@@ -7769,3 +7769,10 @@ html.mh-modal-open { overflow: hidden; }
   .project-story__steps { grid-template-columns: minmax(0, 1fr); }
   .project-story__step { min-width: 0; overflow-wrap: anywhere; }
 }
+/* Narrow phones: a button label that cannot wrap stretches its column. "Send accessibility feedback" was 315px wide at
+   320px and pushed the whole Accessibility contact block 30px past the screen edge. Labels may wrap and buttons never
+   exceed their column. */
+@media (max-width: 400px) {
+  .btn { max-width: 100%; white-space: normal; text-align: center; }
+  .a11y-contact-layout > * { min-width: 0; }
+}

@@ -4,6 +4,7 @@
 
 - The logo link, the two comment-form checkboxes, the comments link and comment timestamps on posts, and a few links on About and Projects were 18 to 23px tall. They are at least 24px now (the logo link is 44px).
 - On product pages at 320px, the steps list no longer runs 32px past the screen edge.
+- On the Accessibility page at 320px, the "Send accessibility feedback" button wraps instead of pushing the contact block 30px past the screen edge. Buttons on phones under 400px wide can wrap their label.
 
 ## 3.26.1 — Hover hint on the info button
 
