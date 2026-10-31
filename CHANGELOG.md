@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.33.0 — One card system
+
+- Every content card matches the theme cards: the same frame, a green-to-blue title with the hover underline, and a gradient pill button for its link. This covers the Journal (Home and the Journal page), the project cards, the "What I do" style boxes, and the repo and resource cards.
+- Journal cards on Home are now the same card as on the Journal page, with a "Read more" button, a single tidy date row and three lines of text, so they line up.
+- The "What I do" boxes have a big round gradient icon with centered copy. A link that ended the box's text ("See theme development") now shows as a button under it.
+- The "Concept builds and plugins" section is removed from Home.
+
 ## 3.32.1 — Updates arrow removed
 
 - The small arrow next to the envelope in the header (the "Get updates" button) is gone, along with the "What you get" preview it opened. The "Get updates" button itself stays and goes to the sign-up page.

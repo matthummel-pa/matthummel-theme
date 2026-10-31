@@ -8102,3 +8102,237 @@ html.mh-dark body .h-page-nav .h-page-nav__arrow {
    theme CSS, which won, so the first line of content (eyebrow, breadcrumb, hero label) sat under the logo and buttons.
    One more element in the selector makes the theme's rule win. */
 html body { padding-top: var(--header-h, 4.5rem); }
+
+/* 3.33.0 · One card system. Every content card takes the theme card's frame (pale violet line, 14px corners, soft layered
+   shadow, tinted fill), a green-to-blue gradient title and a gradient pill for its link. Journal cards (Home and the Journal
+   page) are the same card with a "Read more" button; the "What I do" style boxes get a big round gradient icon with centered
+   copy, and a link that ended their text becomes a button under it (blocks/card.blade.php). */
+:root {
+  --mh-card-bg: linear-gradient(160deg, #f6f3ff 0%, #fff 60%);
+  --mh-card-line: #e4dcfb;
+  --mh-card-shadow: 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+  --mh-card-shadow-hover: 0 1px 2px rgba(15, 22, 35, .05), 0 26px 44px -26px rgba(29, 95, 214, .55);
+}
+html.mh-dark {
+  --mh-card-bg: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  --mh-card-line: rgba(163, 230, 53, .34);
+  --mh-card-shadow: inset 0 1px 0 rgba(196, 181, 253, .06), 0 18px 40px -28px rgba(109, 40, 217, .6);
+  --mh-card-shadow-hover: inset 0 1px 0 rgba(196, 181, 253, .08), 0 28px 48px -26px rgba(34, 211, 238, .5);
+}
+html body :is(.post-card, .h-project-card, .about-svc-card, .repo-card, .resources-card, .write-aside-card, .shop-extras__card) {
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+}
+html body :is(.post-card, .h-project-card, .about-svc-card) {
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body :is(.post-card, .h-project-card, .about-svc-card):hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+
+/* Titles: the same green-to-blue gradient as the theme cards, with the underline that draws in on hover. */
+html body .post-card .post-card-title,
+html body .h-project-card .h-project-card__title {
+  margin: .15rem 0 .1rem;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+html body :is(.post-card .post-card-title, .h-project-card .h-project-card__title) a,
+html body .about-svc-card h3 a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: .12em;
+  text-decoration: none;
+}
+html body .post-card .post-card-title a,
+html body .h-project-card .h-project-card__title a,
+html body .about-svc-card h3,
+html body :is(.repo-card, .resources-card) :is(h2, h3) {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+html.mh-dark body .post-card .post-card-title a,
+html.mh-dark body .h-project-card .h-project-card__title a,
+html.mh-dark body .about-svc-card h3,
+html.mh-dark body :is(.repo-card, .resources-card) :is(h2, h3) { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+html body :is(.repo-card, .resources-card) :is(h2, h3) a { color: inherit !important; -webkit-text-fill-color: transparent !important; text-decoration: none; }
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a):hover::after,
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a):focus-visible::after { transform: scaleX(1); }
+
+/* Journal card: image on top, then topic, date and reading time, title, three lines of text, and the button pinned to the bottom. */
+html body .post-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 0; }
+html body .post-card .post-shot { display: block; flex: none; aspect-ratio: 16 / 9; overflow: hidden; background: #1b2433; }
+html body .post-card .post-shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+html body .post-card .post-body { display: flex; flex: 1; flex-direction: column; gap: .55rem; padding: 1.4rem 1.5rem 1.6rem; }
+html body .post-card .post-body > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+html body .post-card .post-meta { padding: 0 !important; border: 0 !important; }
+html body .post-card .post-card-title { margin-top: .2rem !important; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+html body .post-card .post-cats { order: 1; }
+html body .post-card .post-meta { order: 2; color: var(--color-text-muted); font-size: .86rem; line-height: 1.4; }
+html body .post-card .post-card-title { order: 3; }
+html body .post-card .post-card-excerpt {
+  order: 4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+html body .post-card .post-card-excerpt p { margin: 0; }
+html body .post-card .post-card-more { order: 5; align-self: flex-start; margin-top: auto; }
+html body .post-card .post-body > .post-card-excerpt + .post-card-more { margin-top: auto; }
+
+/* Concept card: same body, the two links are pills. */
+html body .h-project-card { display: flex; flex-direction: column; overflow: hidden; height: 100%; }
+html body .h-project-card .h-project-card__media { display: block; flex: none; aspect-ratio: 16 / 9; overflow: hidden; }
+html body .h-project-card .h-project-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+html body .h-project-card .h-project-card__body { display: flex; flex: 1; flex-direction: column; gap: .55rem; padding: 1.4rem 1.5rem 1.6rem; }
+html body .h-project-card .h-project-card__body > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+html body .h-project-card .h-project-card__blurb { color: var(--color-text-secondary); line-height: 1.6; }
+html body .h-project-card .h-project-card__links { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; padding-top: .6rem; }
+
+/* "What I do" boxes: a big round gradient icon, centered heading and copy, the link as a button under the copy. */
+html body .about-svc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.1rem 1.6rem 1.8rem;
+  text-align: center;
+}
+html body .about-svc-card .about-svc-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  margin: 0 0 1.2rem;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 16px 30px -14px rgba(29, 95, 214, .75), 0 0 0 7px rgba(34, 211, 238, .14);
+  color: #fff;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease;
+}
+html body .about-svc-card .about-svc-card__icon svg { width: 2rem; height: 2rem; }
+html body .about-svc-card:hover .about-svc-card__icon { transform: scale(1.07); box-shadow: 0 20px 34px -14px rgba(29, 95, 214, .85), 0 0 0 9px rgba(34, 211, 238, .18); }
+html body .about-svc-card .about-svc-card__copy { display: flex; flex: 1; flex-direction: column; align-items: center; width: 100%; }
+html body .about-svc-card h3 {
+  margin: 0 0 .6rem;
+  padding-bottom: .1em;
+  font-size: clamp(1.3rem, 1.1rem + .7vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+html body .about-svc-card .about-svc-card__copy > p { margin: 0 0 .8rem; color: var(--color-text-secondary); line-height: 1.6; }
+html body .about-svc-card .about-svc-card__copy > :last-child { margin-bottom: 0; }
+html body .about-svc-card .about-svc-card__cta { margin: auto 0 0; padding-top: 1.1rem; }
+html body .about-svc-card--list .about-svc-card__copy > :is(ul, ol) { align-self: stretch; margin-block: .4rem 0; text-align: left; }
+html.mh-dark body .about-svc-card .about-svc-card__icon { box-shadow: 0 16px 30px -14px rgba(34, 211, 238, .5), 0 0 0 7px rgba(34, 211, 238, .12); }
+
+/* Older rules draw lime lines on these boxes; the theme card's line wins. */
+html body :is(.about-svc-card, .repo-card, .resources-card, .write-aside-card) { border-color: var(--mh-card-line) !important; background-image: var(--mh-card-bg) !important; }
+html body .post-card .post-card-more { margin-top: auto !important; }
+
+/* Topic pills on cards: the theme card's pill (gradient dot, tinted fill, navy label). */
+html body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill)) {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .24rem .7rem .24rem .55rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff));
+  color: #0f2a52;
+  -webkit-text-fill-color: #0f2a52;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+html body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill))::before {
+  content: "";
+  flex: none;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+}
+html.mh-dark body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill)) {
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent);
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35));
+  color: #d6ecff;
+  -webkit-text-fill-color: #d6ecff;
+}
+
+/* A box that holds a list of links (the Journal topics): each link is a row with an arrow, not a bullet and an underline. */
+html body .about-svc-card--list .about-svc-card__copy > :is(ul, ol) { display: grid; gap: .5rem; padding: 0; list-style: none; }
+html body .about-svc-card--list .about-svc-card__copy li { margin: 0; list-style: none !important; padding: 0; }
+html body .about-svc-card--list .about-svc-card__copy li::marker { content: none; }
+html body .about-svc-card--list .about-svc-card__copy li a {
+  position: relative;
+  display: block;
+  padding: .65rem 2.4rem .65rem .95rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 22%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, #3b82f6 5%, var(--color-card, #fff));
+  color: var(--color-text);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+html body .about-svc-card--list .about-svc-card__copy li a::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: .85rem;
+  width: .9rem;
+  height: .9rem;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: translateY(-50%);
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+html body .about-svc-card--list .about-svc-card__copy li a:hover,
+html body .about-svc-card--list .about-svc-card__copy li a:focus-visible { border-color: #3b82f6; box-shadow: 0 10px 20px -14px rgba(29, 95, 214, .6); transform: translateY(-1px); }
+html body .about-svc-card--list .about-svc-card__copy li a:hover::after,
+html body .about-svc-card--list .about-svc-card__copy li a:focus-visible::after { transform: translate(.2rem, -50%); }
+html.mh-dark body .about-svc-card--list .about-svc-card__copy li a { border-color: color-mix(in srgb, #22d3ee 28%, transparent); background: rgba(255, 255, 255, .05); color: #e6f0ff; }
+
+@media (forced-colors: active) {
+  html body .post-card .post-card-title a,
+  html body .h-project-card .h-project-card__title a,
+  html body .about-svc-card h3,
+  html body :is(.repo-card, .resources-card) :is(h2, h3) { background: none !important; color: CanvasText !important; -webkit-text-fill-color: CanvasText !important; }
+  html body .about-svc-card .about-svc-card__icon { background: ButtonText; color: ButtonFace; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body :is(.post-card, .h-project-card, .about-svc-card),
+  html body .about-svc-card .about-svc-card__icon { transition-duration: .01ms; }
+  html body :is(.post-card, .h-project-card, .about-svc-card):hover,
+  html body .about-svc-card:hover .about-svc-card__icon { transform: none; }
+}
