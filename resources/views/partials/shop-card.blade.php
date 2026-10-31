@@ -28,7 +28,7 @@
         {!! \App\mh_svg_icon('info', 22) !!}
         <span class="visually-hidden">{{ sprintf(__('More details about %s', 'sage'), $item['title']) }}</span>
       </button>
-      <div class="shop-card__details" id="{{ esc_attr($detailsId) }}" role="group" aria-label="{{ esc_attr(sprintf(__('Details for %s', 'sage'), $item['title'])) }}">
+      <div class="shop-card__details" id="{{ esc_attr($detailsId) }}" popover="manual" role="group" aria-label="{{ esc_attr(sprintf(__('Details for %s', 'sage'), $item['title'])) }}">
         <p class="shop-card__details-title">{{ sprintf(__('More about %s', 'sage'), $item['title']) }}</p>
       @if (! $isSoon && $item['facts'] !== [])
         <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">

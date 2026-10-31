@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.25.2 — Card details open above everything
+
+- A theme card's details panel now opens in the browser's top layer: it sits above neighboring cards, the sticky header and the page menu, is never clipped by the card, and is always placed inside the visible screen (above the button when there is more room there, scrolling inside itself if it is taller than the screen). It follows the card if you scroll while it is open.
+
 ## 3.25.1 — Details link size
 
 - The "See the full details" link in a theme card's details panel is the same size as the card's other links (it was about twice as large).
