@@ -7572,3 +7572,17 @@ html:not(.mh-dark) body .mh-popout :focus-visible:focus-visible { outline-color:
    1.7:1 on the light footer and menu panel. Same blue, matched in weight. The navy areas keep cyan. */
 html:not(.mh-dark) body .soc-list.soc-list.soc-list .soc-link:focus-visible:not(:where(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy, .site-header) *),
 html:not(.mh-dark) body .mh-popout .soc-list.soc-list.soc-list .soc-link:focus-visible { outline-color: #1d5fd6; }
+
+/* 3.24.0 · Home "Themes" cards: the compact variant drops the chips, checklist, quality tiles and version line, so a
+   card is about 640px tall instead of 1,130px and the "coming soon" cards no longer sit half empty. The blurb shows
+   three lines, and the button row sits at the bottom of every card so the three line up. */
+.shop-card--compact .work-body { display: flex; flex-direction: column; flex: 1 1 auto; }
+.shop-card--compact .work-blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.shop-card--compact .shop-card__price { margin-top: .25rem; }
+.shop-card--compact .shop-card__cta { margin-top: auto; padding-top: 1rem; }

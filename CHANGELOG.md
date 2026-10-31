@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.24.0 — Shorter theme cards on Home
+
+- The Home page's "Themes" cards no longer carry the full product detail (feature chips, checklist, quality tiles, version line). Each shows the screenshot, name, badges, "Best for", a three-line description, the price and the button with its demo links. The buy card was about 1,130px tall; the three now line up at a fraction of that. The Themes page keeps the full cards.
+
 ## 3.23.5 — Social button focus rings
 
 - In light mode, the social buttons in the footer and the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.7:1 on the light surface).
