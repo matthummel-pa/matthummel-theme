@@ -13,7 +13,6 @@ import { initSectionNav } from './section-nav.js';
 import { initCheckoutInstallNotes, initCopyBrief } from './checkout-notes.js';
 import { initBrandUi } from './brand-ui.js';
 import { initReleaseWatch } from './release-watch.js';
-import { initUpdatesPreview } from './updates-preview.js';
 import { initFreemiusCheckout } from './freemius-checkout.js';
 import { initCardDetails } from './card-details.js';
 
@@ -508,7 +507,6 @@ function initPresenceReveal() {
 document.addEventListener('DOMContentLoaded', () => {
   initBrandUi();
   initPopoutMenu();
-  initUpdatesPreview();
   initShareButtons();
   initReadingProgress();
   initTocSpy();

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.32.1 — Updates arrow removed
+
+- The small arrow next to the envelope in the header (the "Get updates" button) is gone, along with the "What you get" preview it opened. The "Get updates" button itself stays and goes to the sign-up page.
+
 ## 3.32.0 — Header overlap
 
 - The first line of content on most pages (the small label above a title, the breadcrumb, the hero label) sat underneath the fixed header's logo and buttons. The page now starts below the header, as the layout intends.
