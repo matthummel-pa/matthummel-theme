@@ -49,18 +49,6 @@
         <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">{!! \App\mh_svg_icon('moon', 16) !!}</span>
       </button>
 
-      {{-- WCAG 2.2.2: a way to stop the looping animations. Remembered in localStorage (mh-motion). --}}
-      <button
-        type="button"
-        class="theme-toggle motion-toggle"
-        data-motion-toggle
-        aria-pressed="false"
-        aria-label="{{ esc_attr__('Pause animations', 'sage') }}"
-      >
-        <span class="motion-toggle__icon motion-toggle__icon--pause" aria-hidden="true">{!! \App\mh_svg_icon('pause', 16) !!}</span>
-        <span class="motion-toggle__icon motion-toggle__icon--play" aria-hidden="true">{!! \App\mh_svg_icon('play', 16) !!}</span>
-      </button>
-
       {{-- One call to action: the Get updates pill with its preview. Say hello (→ Contact) joins it only while GitHub says not hireable. --}}
       @php
         $ghAvail = \App\Github::fetchUser(\App\mh_github_login());
