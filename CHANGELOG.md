@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.33.3 — Theme without the flash
+
+- The small script that sets light or dark is marked so the cache plugin runs it right away. Before, the cache plugin held it until the first tap, scroll or mouse move, so pages showed in light first and flipped to dark after.
+
 ## 3.33.2 — Boxes fit on phones
 
 - A box with a long link at its end (Get updates, Welcome, Start here, Services) no longer stretches wider than the phone screen. Long words and links break, and the gradient link buttons wrap their label on phones.
