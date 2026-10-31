@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.23.1 — Outline buttons stay outlined in light mode
+
+- The "Get updates" buttons on coming-soon theme cards turned charcoal with dark text in 3.23.0. Any button that is an outline button now keeps its outline style.
+
 ## 3.23.0 — Light mode: charcoal buttons, neutral surfaces
 
 - In light mode, outside the navy headers and bands, solid buttons are charcoal instead of navy, spec badges are neutral gray instead of blue, the compare table's buy column tint is neutral, and the page background and grays lose their blue tint. Dark mode is unchanged.
