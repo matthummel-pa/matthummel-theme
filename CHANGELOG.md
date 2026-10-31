@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.22.2 — Navy headers, green-to-blue headings
+
+- Page headers and the Home hero are navy again in light mode, with the original white text, nav and buttons (this undoes the pale headers from 3.22.0 and 3.22.1). The featured-theme hero uses the same navy backdrop.
+- Headings now run from green to blue. On navy they go lime to cyan to blue; on light sections, a deeper green to blue.
+
 ## 3.22.1 — Light mode post headers
 
 - On blog posts in light mode, the author, date, read time, "Share" label and share buttons were pale text on the new pale header. They are now dark and measure 8.9:1 or better.
