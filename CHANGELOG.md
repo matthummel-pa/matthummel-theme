@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.29.1 — Small labels
+
+- The small capital labels on the theme cards and the Home hero ("Best for", "Newest theme", "From", "Theme" and "Coming soon") were 9.9 to 10.9px. They are 11.5 to 12px now.
+
 ## 3.29.0 — Price and the Home hero's newest theme
 
 - Prices show "From" as a small label, the amount large and "per year" small, on the theme cards and in the Home hero.
