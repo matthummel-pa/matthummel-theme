@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.23.5 — Social button focus rings
+
+- In light mode, the social buttons in the footer and the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.7:1 on the light surface).
+
 ## 3.23.4 — Mobile menu focus rings
 
 - In light mode, the social buttons in the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.8:1 on the white panel).

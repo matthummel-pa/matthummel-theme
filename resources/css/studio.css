@@ -7566,3 +7566,9 @@ html:not(.mh-dark) body :focus-visible:focus-visible:not(:where(.page-header, .h
 /* 3.23.4 · The open mobile menu is a light panel, but it lives inside the header, which 3.23.3 treated as navy while
    the header floats over the hero. The six social buttons in it kept a cyan ring (1.8:1 on the panel). */
 html:not(.mh-dark) body .mh-popout :focus-visible:focus-visible { outline-color: #1d5fd6; }
+
+/* 3.23.5 · The social buttons (footer, open mobile menu) kept a cyan focus ring: an older rule,
+   `html .soc-list.soc-list.soc-list .soc-link:focus-visible`, is heavier than the 3.23.3 and 3.23.4 rules. Cyan is
+   1.7:1 on the light footer and menu panel. Same blue, matched in weight. The navy areas keep cyan. */
+html:not(.mh-dark) body .soc-list.soc-list.soc-list .soc-link:focus-visible:not(:where(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy, .site-header) *),
+html:not(.mh-dark) body .mh-popout .soc-list.soc-list.soc-list .soc-link:focus-visible { outline-color: #1d5fd6; }
