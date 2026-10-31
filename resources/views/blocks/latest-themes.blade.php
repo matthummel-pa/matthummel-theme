@@ -18,7 +18,7 @@
   @if ($items !== [])
     <div class="h-project-grid">
       @foreach ($items as $item)
-        @include('partials.shop-card', ['item' => $item, 'compact' => true])
+        @include('partials.shop-card', ['item' => $item])
       @endforeach
     </div>
   @else
