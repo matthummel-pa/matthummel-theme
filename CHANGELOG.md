@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.30.0 — Gradient prices
+
+- Prices use the same gradient as the headings (green to blue on light surfaces; lime, cyan and light blue on dark ones and on the navy product header): on the theme and plugin cards, in the Home hero, in the compare table, on the product page's price line and on its three pricing tiers.
+
 ## 3.29.2 — Blog posts on phones
 
 - Long links, italic or bold runs and inline code in a post break instead of running past the screen edge (a long URL link, inline code snippets and an italic run were wider than a phone). Code blocks still scroll sideways.

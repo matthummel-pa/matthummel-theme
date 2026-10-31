@@ -8092,3 +8092,34 @@ html.mh-dark body .hero-feat .hero-feat__title a { background-image: linear-grad
 .post-prose :not(pre) > code,
 .entry-content :not(pre) > code { white-space: normal; }
 .post-breadcrumb a { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; min-height: 24px; }
+
+/* 3.30.0 · Prices use the heading gradient: green to blue on light surfaces (#15803d to #1d5fd6, 5.0 to 5.7:1 on white), lime,
+   cyan and light blue on dark surfaces and on the navy product header. Covers the card and hero price, the compare table's
+   price row, the product page's price line and its three pricing tiers. */
+html body .shop-price__amount,
+html body .shop-compare__table td strong,
+html body .fs-tier__price strong {
+  padding-block: .05em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.mh-dark body .shop-price__amount,
+html.mh-dark body .shop-compare__table td strong,
+html.mh-dark body .fs-tier__price strong { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+html body .page-header .project-hero-price {
+  background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+@media (forced-colors: active) {
+  html body .shop-price__amount,
+  html body .shop-compare__table td strong,
+  html body .fs-tier__price strong,
+  html body .page-header .project-hero-price { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; }
+}
