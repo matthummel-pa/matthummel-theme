@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.27.0 — Gradient link pills
+
+- The Live demo, Owner guide, Open demo, See the full details and docs links are pills with a multi-color gradient border (lime, cyan, blue, violet) that slides on hover, a soft glow, and a sharper arrow in a green-to-blue chip that nudges forward on hover. They keep their size and wrapping on phones; reduced-motion visitors get no movement.
+
 ## 3.26.2 — Tap targets on phones
 
 - The logo link, the two comment-form checkboxes, the comments link and comment timestamps on posts, and a few links on About and Projects were 18 to 23px tall. They are at least 24px now (the logo link is 44px).
