@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.25.0 — Theme card details behind an info button
+
+- On Home and the Themes page, a theme card's feature chips, checklist, quality tiles and version line moved into a details panel. An info button on the screenshot's corner opens it on hover, keyboard focus or click (Escape closes it). The panel fades and rises in with a green-to-blue edge and a soft glow. Cards are about 640px tall instead of 1,130px. "Coming soon" cards have no panel.
+
 ## 3.24.0 — Shorter theme cards on Home
 
 - The Home page's "Themes" cards no longer carry the full product detail (feature chips, checklist, quality tiles, version line). Each shows the screenshot, name, badges, "Best for", a three-line description, the price and the button with its demo links. The buy card was about 1,130px tall; the three now line up at a fraction of that. The Themes page keeps the full cards.
