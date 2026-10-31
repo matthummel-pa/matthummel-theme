@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.22.3 — Headings run green to blue
+
+- Section headings, hero headings and shop headings now go green to blue (they ran dark blue or white to blue to green). On navy: bright green to sky blue. On light sections: green (5.0:1) to blue (5.7:1) on white.
+
 ## 3.22.2 — Navy headers, green-to-blue headings
 
 - Page headers and the Home hero are navy again in light mode, with the original white text, nav and buttons (this undoes the pale headers from 3.22.0 and 3.22.1). The featured-theme hero uses the same navy backdrop.
