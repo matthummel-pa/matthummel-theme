@@ -7562,3 +7562,7 @@ html:not(.mh-dark) body :is(.shop-compare__cell--buy, .shop-compare__cell--free)
 html:not(.mh-dark) body :focus-visible:focus-visible:not(:where(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy, .site-header:not(.is-scrolled), .site-footer) *) {
   outline-color: #1d5fd6;
 }
+
+/* 3.23.4 · The open mobile menu is a light panel, but it lives inside the header, which 3.23.3 treated as navy while
+   the header floats over the hero. The six social buttons in it kept a cyan ring (1.8:1 on the panel). */
+html:not(.mh-dark) body .mh-popout :focus-visible:focus-visible { outline-color: #1d5fd6; }
