@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.31.1 — Anchor jumps on desktop
+
+- On wide screens, a section link (such as "Buy" on a product page) no longer scrolls the section's heading under the sticky header and the "On this page" bar. It already worked on phones.
+
 ## 3.31.0 — On this page bar
 
 - The "On this page" bar has a green-to-blue label, section pills 36px tall with a soft gradient edge that brightens on hover, a filled green-to-blue pill for the section you are in, matching scroll arrows, and a thin gradient line along the bar's lower edge. It replaces the violet colors.

@@ -8226,3 +8226,12 @@ html.mh-dark body .h-page-nav .h-page-nav__arrow {
 @media (prefers-reduced-motion: reduce) {
   html body .h-page-nav .h-page-nav__pill { transition-duration: .01ms; transform: none !important; }
 }
+
+/* 3.31.1 · Anchor jumps on desktop. The sticky header and the "On this page" bar only had scroll padding under 901px, so on
+   wider screens a section whose heading sits at the very top (the product page's Buy section) scrolled under them. The same
+   padding now applies at every width. */
+@media (min-width: 901px) {
+  html { --mh-bar-h: 0px; scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + .5rem); }
+  html:has(.admin-bar) { --mh-bar-h: var(--wp-admin--admin-bar--height, 32px); }
+  html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + var(--page-nav-h, 3rem) + .5rem); }
+}
