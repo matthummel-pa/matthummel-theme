@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.22.4 — Logo runs green to blue
+
+- The logo wordmark now goes green to blue like the headings: lime to cyan to blue on navy and in dark mode, and green to blue on the white header and footer once scrolled.
+
 ## 3.22.3 — Headings run green to blue
 
 - Section headings, hero headings and shop headings now go green to blue (they ran dark blue or white to blue to green). On navy: bright green to sky blue. On light sections: green (5.0:1) to blue (5.7:1) on white.

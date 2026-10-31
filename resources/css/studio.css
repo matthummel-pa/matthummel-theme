@@ -5145,7 +5145,7 @@ html:not(.mh-dark) .site-footer .footer-brand,
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .08em;
-  background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%);
+  background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--blue-400) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent !important;
@@ -5154,10 +5154,10 @@ html:not(.mh-dark) .site-footer .footer-brand,
 }
 .site-header.is-scrolled .brand-name,
 html:not(.mh-dark) .site-footer .footer-brand,
-html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); -webkit-background-clip: text; background-clip: text; }
-html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; }
+html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg, var(--lime-700) 0%, var(--blue-600) 100%); -webkit-background-clip: text; background-clip: text; }
+html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--blue-400) 100%); -webkit-background-clip: text; background-clip: text; }
 .brand:hover .brand-name,
-.brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
+.brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
 
 /* ── Lime button hover: a notch deeper, darker purple type, soft ring ── */
 .btn:hover,
