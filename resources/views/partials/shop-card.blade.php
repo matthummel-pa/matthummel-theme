@@ -22,14 +22,19 @@
     </a>
   @endif
   @if ($hasDetails)
-    {{-- Info button on the screenshot corner; the panel covers the card. Opens on hover, focus or click (card-details.js). --}}
+    {{-- Info button on the screenshot corner. It opens the details in a centered modal dialog (card-details.js). --}}
     <div class="shop-card__more" data-card-more>
       <button type="button" class="shop-card__more-btn" aria-expanded="false" aria-controls="{{ esc_attr($detailsId) }}">
         {!! \App\mh_svg_icon('info', 22) !!}
         <span class="visually-hidden">{{ sprintf(__('More details about %s', 'sage'), $item['title']) }}</span>
       </button>
-      <div class="shop-card__details" id="{{ esc_attr($detailsId) }}" popover="manual" role="group" aria-label="{{ esc_attr(sprintf(__('Details for %s', 'sage'), $item['title'])) }}">
-        <p class="shop-card__details-title">{{ sprintf(__('More about %s', 'sage'), $item['title']) }}</p>
+      <dialog class="shop-card__details" id="{{ esc_attr($detailsId) }}" aria-labelledby="{{ esc_attr($detailsId) }}-title">
+        <button type="button" class="shop-card__details-close" data-card-close>
+          <span aria-hidden="true">&#10005;</span>
+          <span class="visually-hidden">{{ __('Close', 'sage') }}</span>
+        </button>
+        <div class="shop-card__details-body">
+        <h2 class="shop-card__details-title" id="{{ esc_attr($detailsId) }}-title">{{ sprintf(__('More about %s', 'sage'), $item['title']) }}</h2>
       @if (! $isSoon && $item['facts'] !== [])
         <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">
           @foreach ($item['facts'] as $fact)
@@ -72,7 +77,8 @@
           {{ __('See the full details', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('for %s', 'sage'), $item['title']) }}</span>
           <span class="shop-link__icon" aria-hidden="true">→</span>
         </a>
-      </div>
+        </div>
+      </dialog>
     </div>
   @endif
   <div class="work-body">
