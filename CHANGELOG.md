@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.23.0 — Light mode: charcoal buttons, neutral surfaces
+
+- In light mode, outside the navy headers and bands, solid buttons are charcoal instead of navy, spec badges are neutral gray instead of blue, the compare table's buy column tint is neutral, and the page background and grays lose their blue tint. Dark mode is unchanged.
+
 ## 3.22.4 — Logo runs green to blue
 
 - The logo wordmark now goes green to blue like the headings: lime to cyan to blue on navy and in dark mode, and green to blue on the white header and footer once scrolled.
