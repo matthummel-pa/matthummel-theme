@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.31.2 — Pause button removed
+
+- The pause and play button is gone from the header, with its script, styles and icons. The early script that re-applied a saved "paused" choice is gone too, so nobody stays stuck still after an earlier pause. Visitors whose device asks for reduced motion still get no looping animation.
+
 ## 3.31.1 — Anchor jumps on desktop
 
 - On wide screens, a section link (such as "Buy" on a product page) no longer scrolls the section's heading under the sticky header and the "On this page" bar. It already worked on phones.
