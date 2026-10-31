@@ -7866,7 +7866,7 @@ html.mh-dark .shop-link.shop-link { box-shadow: 0 6px 18px -10px rgba(34, 211, 2
   margin: .1rem 0 .15rem;
   padding: .28rem .7rem .28rem .28rem;
   border: 1px solid color-mix(in srgb, #3b82f6 22%, transparent);
-  border-radius: 999px;
+  border-radius: 1.1rem; /* still a full pill on one line (29px tall); a softer rounded rectangle when the audience wraps */
   background: color-mix(in srgb, #3b82f6 7%, var(--color-card, #fff));
   color: var(--color-text);
   font-size: .88rem;

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.27.2 — Best for tag, wrapped
+
+- When the audience in a card's "Best for" tag is long enough to wrap onto a second line (small phones), the tag is a softly rounded rectangle instead of a tall capsule. One-line tags look the same as before.
+
 ## 3.27.1 — Best for tag
 
 - On the theme cards, "Best for" is a compact tag: a green-to-blue mini label beside the audience in bold, on a softly tinted rounded strip. It hugs its text and wraps under the label if the audience is long.
