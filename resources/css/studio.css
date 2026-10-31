@@ -7619,8 +7619,16 @@ html.mh-dark .shop-card__more-btn { color: var(--blue-300, #93c5fd); }
 html.mh-dark .shop-card__more.is-open .shop-card__more-btn { color: #fff; }
 
 .shop-card__details {
-  position: absolute;
-  inset: .75rem;
+  /* Fixed and in the browser's top layer (popover): it sits above every card, header and sticky bar, and no
+     overflow or transform on the card can clip it. card-details.js sets top, left, width and max-height so it always
+     lands inside the viewport. */
+  position: fixed;
+  inset: auto;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: min(24rem, calc(100vw - 1.5rem));
+  max-height: calc(100vh - 1.5rem);
   z-index: 3;
   overflow: auto;
   overscroll-behavior: contain;
@@ -7631,12 +7639,15 @@ html.mh-dark .shop-card__more.is-open .shop-card__more-btn { color: #fff; }
     linear-gradient(180deg, color-mix(in srgb, #22d3ee 9%, var(--color-bg)) 0%, var(--color-bg) 7rem) padding-box,
     linear-gradient(135deg, #a3e635 0%, #22d3ee 48%, #3b82f6 100%) border-box;
   box-shadow: 0 0 0 4px rgba(34, 211, 238, .13), 0 22px 40px -14px rgba(29, 95, 214, .5), 0 8px 16px -10px rgba(15, 22, 35, .45);
+  color: var(--color-text);
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px) scale(.96);
-  transform-origin: 100% 0;
+  transform-origin: 50% 0;
   transition: opacity .22s ease, transform .3s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .3s;
 }
+/* A closed popover is display: none by default; keep it laid out (invisible) so the close transition can play. */
+.shop-card__details:not(:popover-open) { display: block; }
 .shop-card__more.is-open .shop-card__details {
   opacity: 1;
   visibility: visible;
@@ -7668,7 +7679,8 @@ html.mh-dark .shop-card__more.is-open .shop-card__more-btn { color: #fff; }
   -webkit-text-fill-color: transparent;
 }
 html.mh-dark .shop-card__details-title { background-image: linear-gradient(90deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
-.shop-card__details-link { align-self: start; }
+.shop-card__details-link { display: inline-flex; align-items: center; gap: .35rem; align-self: start; min-height: 24px; font: 700 .95rem/1.2 var(--font-display); }
+.shop-card__details-link .shop-link__icon { font-size: 1em; }
 @media (forced-colors: active) {
   .shop-card__details-title { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; }
   .shop-card__details { border-color: CanvasText; }

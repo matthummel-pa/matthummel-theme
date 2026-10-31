@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.25.2 — Card details open above everything
+
+- A theme card's details panel now opens in the browser's top layer: it sits above neighboring cards, the sticky header and the page menu, is never clipped by the card, and is always placed inside the visible screen (above the button when there is more room there, scrolling inside itself if it is taller than the screen). It follows the card if you scroll while it is open.
+
+## 3.25.1 — Details link size
+
+- The "See the full details" link in a theme card's details panel is the same size as the card's other links (it was about twice as large).
+
 ## 3.25.0 — Theme card details behind an info button
 
 - On Home and the Themes page, a theme card's feature chips, checklist, quality tiles and version line moved into a details panel. An info button on the screenshot's corner opens it on hover, keyboard focus or click (Escape closes it). The panel fades and rises in with a green-to-blue edge and a soft glow. Cards are about 640px tall instead of 1,130px. "Coming soon" cards have no panel.
