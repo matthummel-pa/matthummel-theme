@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.23.4 — Mobile menu focus rings
+
+- In light mode, the social buttons in the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.8:1 on the white panel).
+
 ## 3.23.3 — Light mode focus rings
 
 - In light mode, the keyboard focus ring on FAQ questions, the white header's "Get updates" pill, the theme toggle and other controls on light surfaces is blue, 5.3:1 or better. It was cyan or light violet, 1.8 to 2.7:1. Rings on the navy header, hero, closing band and footer are unchanged.
