@@ -98,7 +98,12 @@
     @endif
 
     @if (! $isSoon && $item['price'] !== '')
-      <p class="shop-card__price"><strong>{{ $item['price'] }}</strong></p>
+      @php [$priceFrom, $priceAmount, $pricePer] = $item['price_parts'] ?? ['', $item['price'], ''] @endphp
+      <p class="shop-card__price shop-price">
+        @if ($priceFrom !== '')<span class="shop-price__from">{{ $priceFrom }}</span>@endif
+        <strong class="shop-price__amount">{{ $priceAmount }}</strong>
+        @if ($pricePer !== '')<span class="shop-price__per">{{ $pricePer }}</span>@endif
+      </p>
     @endif
     {{-- The button gets its own row; the plain links sit on one line below it. --}}
     <div class="shop-card__cta">

@@ -491,6 +491,7 @@ function mh_shop_items(string $type = 'all'): array
 
         $status = 'details';
         $price = '';
+        $priceParts = ['', '', ''];
         $freeUrl = mh_project_free_download_url($slug);
         $fs = mh_project_freemius($slug);
         if ($fs !== null) {
@@ -505,10 +506,14 @@ function mh_shop_items(string $type = 'all'): array
             if ($lowest !== null) {
                 /* translators: %s: lowest yearly price, e.g. $59 */
                 $price = sprintf(__('From %s per year', 'sage'), $lowest['label']);
+                // Split the translated template so the amount can be set large: ["From", "$59", "per year"].
+                $priceTemplate = explode('%s', (string) __('From %s per year', 'sage'), 2);
+                $priceParts = [trim($priceTemplate[0]), (string) $lowest['label'], trim($priceTemplate[1] ?? '')];
             }
         } elseif ($freeUrl !== '') {
             $status = 'free';
             $price = __('Free', 'sage');
+            $priceParts = ['', $price, ''];
         } elseif (mh_project_is_coming_soon($slug)) {
             $status = 'soon';
             $price = __('Coming soon', 'sage');
@@ -577,6 +582,7 @@ function mh_shop_items(string $type = 'all'): array
             'type' => $kind,
             'status' => $status,
             'price' => $price,
+            'price_parts' => $priceParts,
             'free_url' => $freeUrl,
             'place' => trim((string) ($entry['place'] ?? '')),
             'facts' => $facts,
