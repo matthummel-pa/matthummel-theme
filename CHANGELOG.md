@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.29.0 — Price and the Home hero's newest theme
+
+- Prices show "From" as a small label, the amount large and "per year" small, on the theme cards and in the Home hero.
+- The Home hero's newest-theme card has a gradient "Newest theme" pill, a gradient frame around the screenshot, a larger green-to-blue title with the hover underline, a three-line description, and a gradient "See the theme" pill. That link was pale blue text (about 1.9:1 on the white card).
+
 ## 3.28.0 — Theme card title and pills
 
 - The theme name on a card is larger display type with tighter spacing, balanced line breaks and a green-to-blue gradient, with a gradient underline that draws in on hover or focus.

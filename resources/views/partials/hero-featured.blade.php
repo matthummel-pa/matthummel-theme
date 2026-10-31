@@ -19,11 +19,19 @@
     @if ($featured['blurb'] !== '')
       <p class="hero-feat__blurb">{{ $featured['blurb'] }}</p>
     @endif
-    <p class="hero-feat__meta">
+    <div class="hero-feat__meta">
       @if ($featured['price'] !== '')
-        <span class="spec-badge">{{ $featured['price'] }}</span>
+        @php [$priceFrom, $priceAmount, $pricePer] = $featured['price_parts'] ?? ['', $featured['price'], ''] @endphp
+        <p class="hero-feat__price shop-price">
+          @if ($priceFrom !== '')<span class="shop-price__from">{{ $priceFrom }}</span>@endif
+          <strong class="shop-price__amount">{{ $priceAmount }}</strong>
+          @if ($pricePer !== '')<span class="shop-price__per">{{ $pricePer }}</span>@endif
+        </p>
       @endif
-      <a class="h-text-arrow" href="{{ esc_url($featured['url']) }}">{{ __('See the theme', 'sage') }}</a>
-    </p>
+      <a class="shop-link shop-link--forward" href="{{ esc_url($featured['url']) }}">
+        {{ __('See the theme', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s', 'sage'), $featured['title']) }}</span>
+        <span class="shop-link__icon" aria-hidden="true">→</span>
+      </a>
+    </div>
   </aside>
 @endif

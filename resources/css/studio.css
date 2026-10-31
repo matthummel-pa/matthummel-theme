@@ -7839,9 +7839,12 @@ html .shop-link.shop-link .shop-link__icon::before {
 }
 html .shop-link.shop-link:hover .shop-link__icon::before,
 html .shop-link.shop-link:focus-visible .shop-link__icon::before { transform: translate(.14rem, -.14rem); }
-html .shop-link.shop-card__details-link { --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E"); }
+html .shop-link.shop-card__details-link,
+html .shop-link.shop-link--forward { --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E"); }
 html .shop-link.shop-card__details-link:hover .shop-link__icon::before,
-html .shop-link.shop-card__details-link:focus-visible .shop-link__icon::before { transform: translateX(.18rem); }
+html .shop-link.shop-card__details-link:focus-visible .shop-link__icon::before,
+html .shop-link.shop-link--forward:hover .shop-link__icon::before,
+html .shop-link.shop-link--forward:focus-visible .shop-link__icon::before { transform: translateX(.18rem); }
 .shop-card .shop-card__links { gap: .5rem .5rem; }
 html.mh-dark .shop-link.shop-link { box-shadow: 0 6px 18px -10px rgba(34, 211, 238, .5); }
 @media (forced-colors: active) {
@@ -7986,4 +7989,95 @@ html body .shop-card .project-type-row .spec-badge + .spec-badge::before { backg
 }
 @media (prefers-reduced-motion: reduce) {
   .shop-card .work-body h3 a::after { transition-duration: .01ms; }
+}
+
+/* 3.29.0 · Price and the Home hero's newest-theme card.
+   Price: "From" as a small label, the amount large, "per year" small, from the translated price template.
+   Hero card: a gradient "Newest theme" pill, the screenshot in a gradient frame, a larger green-to-blue title with the
+   hover underline, a three-line description, and the price beside a gradient "See the theme" pill (it was pale blue
+   text, about 1.9:1 on the white card). */
+.shop-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem .45rem; margin: 0; color: var(--color-text); }
+.shop-price__from { font: 800 .66rem/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-muted); }
+.shop-price__amount { font: 800 clamp(1.85rem, 1.5rem + 1vw, 2.2rem)/1 var(--font-display); letter-spacing: -.045em; color: var(--color-text); }
+.shop-price__per { font: 600 .88rem/1 var(--font-display); color: var(--color-text-muted); }
+.shop-card .shop-card__price { margin-top: .25rem; font-size: 1rem; letter-spacing: 0; }
+
+.hero-feat__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0 0 .85rem;
+  padding: .4rem .8rem .4rem .65rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 18px -8px rgba(29, 95, 214, .7);
+  color: #fff;
+  font: 800 .68rem/1 var(--font-display);
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.hero-feat__kicker::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, .28); }
+.hero-feat .hero-feat__shot {
+  padding: 3px;
+  border-radius: .95rem;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 28%, #3b82f6 58%, #8b5cf6 82%, #a3e635 100%);
+  box-shadow: 0 18px 36px -18px rgba(29, 95, 214, .6);
+}
+.hero-feat .hero-feat__shot img { border-radius: .72rem; }
+.hero-feat .hero-feat__title {
+  margin: 1.1rem 0 .4rem;
+  font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.hero-feat .hero-feat__title a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: .12em;
+  text-decoration: none;
+}
+html body .hero-feat .hero-feat__title a {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-decoration: none;
+}
+html.mh-dark body .hero-feat .hero-feat__title a { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+.hero-feat .hero-feat__title a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+.hero-feat .hero-feat__title a:hover::after,
+.hero-feat .hero-feat__title a:focus-visible::after { transform: scaleX(1); }
+.hero-feat .hero-feat__blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  margin: 0 0 1.1rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.hero-feat .hero-feat__meta { justify-content: space-between; gap: .85rem 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+@media (forced-colors: active) {
+  .hero-feat .hero-feat__title a { background: none; -webkit-text-fill-color: LinkText; color: LinkText; }
+  .hero-feat__kicker { background: ButtonText; color: ButtonFace; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-feat .hero-feat__title a::after { transition-duration: .01ms; }
 }
