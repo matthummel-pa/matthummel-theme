@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.26.0 — Card details in a centered popup
+
+- A theme card's details now open in a standard popup in the middle of the screen, over a dimmed, blurred backdrop, instead of a box tied to the card. Open it with the info button (click, tap or keyboard). Close it with the ✕ button, a click on the backdrop or Escape; focus goes back to the button and the page behind it is locked. It keeps the green-to-blue edge, glow and fade-and-rise animation.
+
 ## 3.25.2 — Card details open above everything
 
 - A theme card's details panel now opens in the browser's top layer: it sits above neighboring cards, the sticky header and the page menu, is never clipped by the card, and is always placed inside the visible screen (above the button when there is more room there, scrolling inside itself if it is taller than the screen). It follows the card if you scroll while it is open.

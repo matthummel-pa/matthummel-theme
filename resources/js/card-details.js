@@ -1,131 +1,66 @@
-// Shop cards: the info button opens a details panel on hover, keyboard focus or click.
-// The panel is a popover (top layer), so it sits above everything and is never clipped; it is placed
-// next to the button and kept inside the viewport. Click pins it open; Escape or a click elsewhere
-// closes it and returns focus to the button.
+// Shop cards: the info button opens the card's details in a centered modal dialog.
+// Native <dialog> + showModal() supplies the top layer, the focus trap, the inert page behind it and
+// Escape. This adds the open/close animation, a click on the backdrop to close, and page scroll lock.
 
-const GAP = 8
-const EDGE = 12
+const CLOSE_MS = 340
 
 export function initCardDetails() {
   const wraps = document.querySelectorAll('[data-card-more]')
   if (!wraps.length) return
 
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)')
-  const hasPopover = typeof HTMLElement !== 'undefined' && 'showPopover' in HTMLElement.prototype
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const root = document.documentElement
 
   wraps.forEach((wrap) => {
     const button = wrap.querySelector('.shop-card__more-btn')
-    const panel = wrap.querySelector('.shop-card__details')
-    const card = wrap.closest('.shop-card')
-    if (!button || !panel || !card) return
+    const dialog = wrap.querySelector('dialog.shop-card__details')
+    if (!button || !dialog || typeof dialog.showModal !== 'function') return
 
-    let pinned = false
-    let timer = 0
-    let hideTimer = 0
-    let frame = 0
+    let closeTimer = 0
 
-    function place() {
-      const vw = document.documentElement.clientWidth
-      const vh = window.innerHeight
-      const cardBox = card.getBoundingClientRect()
-      const btnBox = button.getBoundingClientRect()
-      const width = Math.min(Math.max(cardBox.width, 320), 384, vw - EDGE * 2)
-
-      panel.style.width = `${width}px`
-      panel.style.maxHeight = 'none'
-      const natural = panel.offsetHeight
-
-      const spaceBelow = vh - (btnBox.bottom + GAP) - EDGE
-      const spaceAbove = btnBox.top - GAP - EDGE
-      const below = spaceBelow >= Math.min(natural, 280) || spaceBelow >= spaceAbove
-      const room = Math.max(120, below ? spaceBelow : spaceAbove)
-      const height = Math.min(natural, room)
-      const top = below ? btnBox.bottom + GAP : btnBox.top - GAP - height
-      // Line the panel up with the card, then pull it back inside the viewport.
-      const left = Math.min(Math.max(cardBox.left + (cardBox.width - width) / 2, EDGE), vw - width - EDGE)
-
-      panel.style.maxHeight = `${height}px`
-      panel.style.top = `${Math.round(top)}px`
-      panel.style.left = `${Math.round(left)}px`
-    }
-
-    function onMove() {
-      if (frame) return
-      frame = window.requestAnimationFrame(() => {
-        frame = 0
-        place()
-      })
-    }
-
-    function setOpen(open) {
-      window.clearTimeout(timer)
-      window.clearTimeout(hideTimer)
-      if (open === wrap.classList.contains('is-open')) return
-
-      if (open) {
-        place()
-        if (hasPopover) {
-          try {
-            panel.showPopover()
-          } catch (error) {
-            // Already open.
-          }
-        }
-        wrap.classList.add('is-open')
-        window.addEventListener('scroll', onMove, { passive: true })
-        window.addEventListener('resize', onMove)
-      } else {
-        wrap.classList.remove('is-open')
-        pinned = false
-        window.removeEventListener('scroll', onMove)
-        window.removeEventListener('resize', onMove)
-        // Leave the top layer after the fade-out has played.
-        hideTimer = window.setTimeout(() => {
-          if (!hasPopover) return
-          try {
-            panel.hidePopover()
-          } catch (error) {
-            // Already closed.
-          }
-        }, 340)
-      }
-      button.setAttribute('aria-expanded', open ? 'true' : 'false')
-    }
-
-    function closeSoon() {
-      window.clearTimeout(timer)
-      timer = window.setTimeout(() => {
-        if (!pinned && !wrap.contains(document.activeElement)) setOpen(false)
-      }, 140)
-    }
-
-    button.addEventListener('click', () => {
-      if (wrap.classList.contains('is-open') && pinned) {
-        setOpen(false)
+    function lockScroll(lock) {
+      if (lock) {
+        const gap = window.innerWidth - root.clientWidth
+        if (gap > 0) root.style.paddingRight = `${gap}px`
+        root.classList.add('mh-modal-open')
         return
       }
-      setOpen(true)
-      pinned = true
-    })
+      root.classList.remove('mh-modal-open')
+      root.style.paddingRight = ''
+    }
 
-    wrap.addEventListener('pointerenter', (event) => {
-      if (event.pointerType === 'mouse' && canHover.matches) setOpen(true)
-    })
-    wrap.addEventListener('pointerleave', (event) => {
-      if (event.pointerType === 'mouse') closeSoon()
-    })
-    wrap.addEventListener('focusin', () => setOpen(true))
-    wrap.addEventListener('focusout', (event) => {
-      if (!wrap.contains(event.relatedTarget)) closeSoon()
-    })
-    wrap.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape' || !wrap.classList.contains('is-open')) return
-      event.stopPropagation()
-      setOpen(false)
+    function open() {
+      window.clearTimeout(closeTimer)
+      if (dialog.open) return
+      dialog.showModal()
+      lockScroll(true)
+      button.setAttribute('aria-expanded', 'true')
+      // One frame later, so the closed styles are painted and the transition runs.
+      window.requestAnimationFrame(() => dialog.classList.add('is-open'))
+    }
+
+    function close() {
+      if (!dialog.open) return
+      dialog.classList.remove('is-open')
+      window.clearTimeout(closeTimer)
+      closeTimer = window.setTimeout(() => dialog.close(), reduceMotion.matches ? 0 : CLOSE_MS)
+    }
+
+    dialog.addEventListener('close', () => {
+      lockScroll(false)
+      button.setAttribute('aria-expanded', 'false')
       button.focus()
     })
-    document.addEventListener('click', (event) => {
-      if (wrap.classList.contains('is-open') && !wrap.contains(event.target)) setOpen(false)
+    // Escape: play the fade-out instead of closing at once.
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault()
+      close()
     })
+    // A click on the backdrop lands on the dialog element itself (its content sits in the body wrapper).
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) close()
+    })
+    dialog.querySelector('[data-card-close]')?.addEventListener('click', close)
+    button.addEventListener('click', open)
   })
 }
