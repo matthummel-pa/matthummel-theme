@@ -7668,7 +7668,8 @@ html.mh-dark .shop-card__more.is-open .shop-card__more-btn { color: #fff; }
   -webkit-text-fill-color: transparent;
 }
 html.mh-dark .shop-card__details-title { background-image: linear-gradient(90deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
-.shop-card__details-link { align-self: start; }
+.shop-card__details-link { display: inline-flex; align-items: center; gap: .35rem; align-self: start; min-height: 24px; font: 700 .95rem/1.2 var(--font-display); }
+.shop-card__details-link .shop-link__icon { font-size: 1em; }
 @media (forced-colors: active) {
   .shop-card__details-title { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; }
   .shop-card__details { border-color: CanvasText; }
