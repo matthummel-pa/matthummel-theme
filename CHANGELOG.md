@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.27.1 — Best for tag
+
+- On the theme cards, "Best for" is a compact tag: a green-to-blue mini label beside the audience in bold, on a softly tinted rounded strip. It hugs its text and wraps under the label if the audience is long.
+
 ## 3.27.0 — Gradient link pills
 
 - The Live demo, Owner guide, Open demo, See the full details and docs links are pills with a multi-color gradient border (lime, cyan, blue, violet) that slides on hover, a soft glow, and a sharper arrow in a green-to-blue chip that nudges forward on hover. They keep their size and wrapping on phones; reduced-motion visitors get no movement.
