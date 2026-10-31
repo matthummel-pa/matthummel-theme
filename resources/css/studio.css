@@ -7526,12 +7526,12 @@ html:not(.mh-dark) {
   --gray-200: #dcdfe5;
   --color-canvas: #f6f7f9;
 }
-html:not(.mh-dark) body :is(.btn:not(.btn-outline), .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
+html:not(.mh-dark) body :is(.btn, .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(.btn-outline):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
   background: #111827 !important;
   background-image: none !important;
   border-color: #111827 !important;
 }
-html:not(.mh-dark) body :is(.btn:not(.btn-outline), .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *):hover {
+html:not(.mh-dark) body :is(.btn, .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(.btn-outline):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *):hover {
   background: #1f2937 !important;
   border-color: #1f2937 !important;
 }
