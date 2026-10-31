@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.28.0 — Theme card title and pills
+
+- The theme name on a card is larger display type with tighter spacing, balanced line breaks and a green-to-blue gradient, with a gradient underline that draws in on hover or focus.
+- The category pills have a small gradient dot, a tinted fill and a navy label ("Theme"); "Coming soon" is amber with an amber dot, so type and status read differently.
+
 ## 3.27.2 — Best for tag, wrapped
 
 - When the audience in a card's "Best for" tag is long enough to wrap onto a second line (small phones), the tag is a softly rounded rectangle instead of a tall capsule. One-line tags look the same as before.
