@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.23.2 — Narrow phones
+
+- At 320 to 360px wide, the Home hero's "Themes, notes, and client work" label no longer stretches the hero past the screen and cuts off the heading, and the footer's social buttons wrap instead of pushing the footer wider than the screen.
+
 ## 3.23.1 — Outline buttons stay outlined in light mode
 
 - The "Get updates" buttons on coming-soon theme cards turned charcoal with dark text in 3.23.0. Any button that is an outline button now keeps its outline style.

@@ -7543,3 +7543,14 @@ html:not(.mh-dark) body .spec-badge:not(:is(.page-header, .h-hero, .post-hero, .
   -webkit-text-fill-color: #111827 !important;
 }
 html:not(.mh-dark) body :is(.shop-compare__cell--buy, .shop-compare__cell--free) { background: rgba(17, 24, 39, .04); }
+
+/* 3.23.2 · Narrow phones (320 to 360px): the Home hero kicker was nowrap, which stretched the hero column to 336px
+   and cut off the heading, and the footer social row (6 x 44px) did not wrap, pushing the footer 19px wide. */
+@media (max-width: 480px) {
+  .h-hero__kicker { white-space: normal; max-width: 100%; }
+  .h-hero .h-hero__inner,
+  .h-hero.h-hero--feat .h-hero__inner { grid-template-columns: minmax(0, 1fr); }
+  .h-hero__panel,
+  .h-hero__copy { min-width: 0; max-width: 100%; }
+  .soc-list { flex-wrap: wrap; }
+}
