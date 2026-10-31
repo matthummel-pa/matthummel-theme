@@ -7708,3 +7708,46 @@ html.mh-modal-open { overflow: hidden; }
   .shop-card__details-close,
   .shop-card__more-btn { transition-duration: .01ms !important; transition-delay: 0s !important; transform: none !important; }
 }
+
+/* 3.26.1 · Hover hint on the card's info button: a small pill to its left that fades in on mouse hover and keyboard
+   focus. It repeats the button's accessible name, so it is hidden from assistive tech. It is part of the button (the
+   pointer can move onto it without it vanishing) and Escape dismisses it until the pointer or focus leaves. */
+.shop-card__more-tip {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + .55rem);
+  padding: .4rem .7rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 20px -8px rgba(29, 95, 214, .6);
+  color: #fff;
+  font: 700 .8rem/1 var(--font-display);
+  letter-spacing: .01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(8px, -50%);
+  transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
+}
+.shop-card__more-btn:focus-visible .shop-card__more-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+  transition-delay: 0s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shop-card__more-btn:hover .shop-card__more-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -50%);
+    transition-delay: .12s, .12s, 0s;
+  }
+}
+.shop-card__more-btn.is-tip-off .shop-card__more-tip { opacity: 0; visibility: hidden; transition-duration: .01ms; transition-delay: 0s; }
+@media (forced-colors: active) {
+  .shop-card__more-tip { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-card__more-tip { transition-duration: .01ms !important; transition-delay: 0s !important; transform: translate(0, -50%) !important; }
+}

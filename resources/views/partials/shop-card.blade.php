@@ -27,6 +27,7 @@
       <button type="button" class="shop-card__more-btn" aria-expanded="false" aria-controls="{{ esc_attr($detailsId) }}">
         {!! \App\mh_svg_icon('info', 22) !!}
         <span class="visually-hidden">{{ sprintf(__('More details about %s', 'sage'), $item['title']) }}</span>
+        <span class="shop-card__more-tip" aria-hidden="true">{{ __('More details', 'sage') }}</span>
       </button>
       <dialog class="shop-card__details" id="{{ esc_attr($detailsId) }}" aria-labelledby="{{ esc_attr($detailsId) }}-title">
         <button type="button" class="shop-card__details-close" data-card-close>
