@@ -1,11 +1,12 @@
-{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(). Builds on the work-card styles. --}}
+{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(); optional $compact drops the feature chips, checklist, quality tiles and version line (the Home "Themes" block). Builds on the work-card styles. --}}
 @php
   $status = (string) $item['status'];
   $isSoon = $status === 'soon';
   $typeLabel = \App\mh_product_types()[$item['type']]['singular'] ?? '';
   $titleId = $item['slug'].'-title';
+  $compact = ! empty($compact);
 @endphp
-<article class="work-card shop-card shop-card--{{ esc_attr($status) }}" id="{{ esc_attr($item['slug']) }}" aria-labelledby="{{ esc_attr($titleId) }}">
+<article class="work-card shop-card shop-card--{{ esc_attr($status) }}{{ $compact ? ' shop-card--compact' : '' }}" id="{{ esc_attr($item['slug']) }}" aria-labelledby="{{ esc_attr($titleId) }}">
   @if ($item['image'] !== '')
     {{-- The image link is hidden from assistive tech: the title link below goes to the same page. --}}
     <a class="work-shot" href="{{ esc_url($item['url']) }}" aria-hidden="true" tabindex="-1">
@@ -34,21 +35,21 @@
       <p class="work-blurb">{{ $item['blurb'] }}</p>
     @endif
 
-    @if (! $isSoon && $item['facts'] !== [])
+    @if (! $compact && ! $isSoon && $item['facts'] !== [])
       <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">
         @foreach ($item['facts'] as $fact)
           <li>{{ $fact }}</li>
         @endforeach
       </ul>
     @endif
-    @if (! $isSoon && $item['points'] !== [])
+    @if (! $compact && ! $isSoon && $item['points'] !== [])
       <ul class="shop-card__points">
         @foreach ($item['points'] as $point)
           <li>{{ $point }}</li>
         @endforeach
       </ul>
     @endif
-    @if (! $isSoon && $item['quality'] !== [])
+    @if (! $compact && ! $isSoon && $item['quality'] !== [])
       <dl class="shop-card__quality" aria-label="{{ __('Quality checks', 'sage') }}">
         @foreach ($item['quality'] as [$statValue, $statLabel])
           <div>
@@ -62,7 +63,7 @@
     @if (! $isSoon && $item['price'] !== '')
       <p class="shop-card__price"><strong>{{ $item['price'] }}</strong></p>
     @endif
-    @if (! $isSoon && ($item['version'] !== '' || $item['works_with'] !== ''))
+    @if (! $compact && ! $isSoon && ($item['version'] !== '' || $item['works_with'] !== ''))
       <p class="shop-card__meta">
         @if ($item['version'] !== '')
           {{ sprintf(__('Version %s', 'sage'), $item['version']) }}
