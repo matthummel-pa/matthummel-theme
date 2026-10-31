@@ -8081,3 +8081,14 @@ html.mh-dark body .hero-feat .hero-feat__title a { background-image: linear-grad
 @media (prefers-reduced-motion: reduce) {
   .hero-feat .hero-feat__title a::after { transition-duration: .01ms; }
 }
+
+/* 3.29.2 · Blog posts on phones (found by loading all 27 posts at 390 and 320px).
+   - Long links, italic or bold runs and inline code in a post no longer run past the screen edge: a URL used as link text
+     was 4px over, inline code snippets in one post were 432 to 545px wide on a 390px screen, and an italic run was 38px
+     over at 320px. They break at any point only when they would not fit; code blocks (pre) still scroll sideways.
+   - Breadcrumb links ("Journal > AI") are at least 24px wide, so a short category name is still a full-size target. */
+.post-prose :is(a, em, strong, i, b, mark, span, code):not(pre *),
+.entry-content :is(a, em, strong, i, b, mark, span, code):not(pre *) { overflow-wrap: anywhere; }
+.post-prose :not(pre) > code,
+.entry-content :not(pre) > code { white-space: normal; }
+.post-breadcrumb a { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; min-height: 24px; }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.29.2 — Blog posts on phones
+
+- Long links, italic or bold runs and inline code in a post break instead of running past the screen edge (a long URL link, inline code snippets and an italic run were wider than a phone). Code blocks still scroll sideways.
+- Breadcrumb links such as "Journal › AI" are at least 24px wide.
+
 ## 3.29.1 — Small labels
 
 - The small capital labels on the theme cards and the Home hero ("Best for", "Newest theme", "From", "Theme" and "Coming soon") were 9.9 to 10.9px. They are 11.5 to 12px now.
