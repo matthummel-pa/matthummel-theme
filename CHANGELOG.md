@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.40.0 — Resources cards under the text
+
+- On the Resources page, the starters and tools cards sit under their heading and text at full width, three to a row on wide screens, two on tablets, one on phones.
+
 ## 3.39.1 — Tool headings and tagline design
 
 - The tools group is named "Tools I use every week", and each tool has a new short tagline.
