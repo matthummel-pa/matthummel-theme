@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.43.0 — The rest of the stack
+
+- Each stack group has a round gradient icon, a gradient title with a one-line description, a round numbered count, and a chevron in a circle. Group names are plainer: Building WordPress, Editor and terminal, Hosting and shipping, Search and analytics, AI and automation, Testing and accessibility, Design and type, Power Platform.
+- Items inside a group have a gradient marker and more space, and the subheading above the groups is a gradient heading.
+
 ## 3.42.1 — Card icon spacing
 
 - The round icon on the starter and tool cards has more space above it and a bigger gap before the name.

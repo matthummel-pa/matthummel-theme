@@ -41,7 +41,12 @@
         <summary class="uses-section__head">
           <span class="uses-section__icon">{!! \App\mh_svg_icon($group['icon'], 20) !!}</span>
           <h3 id="uses-{{ \Illuminate\Support\Str::slug($group['title']) }}-heading" class="uses-section__title">{{ $group['title'] }}</h3>
-          <span class="uses-section__count">{{ number_format_i18n(count($group['items'])) }}</span>
+          @if (! empty($group['blurb']))
+            <span class="uses-section__blurb">{{ $group['blurb'] }}</span>
+          @endif
+          <span class="uses-section__count" title="{{ sprintf(_n('%s tool', '%s tools', count($group['items']), 'sage'), number_format_i18n(count($group['items']))) }}">
+            {{ number_format_i18n(count($group['items'])) }}<span class="visually-hidden"> {{ _n('tool', 'tools', count($group['items']), 'sage') }}</span>
+          </span>
           <span class="uses-section__chev" aria-hidden="true"></span>
         </summary>
         <ul class="uses-list">

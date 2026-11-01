@@ -337,7 +337,8 @@ function mh_uses_sections(): array
 {
     return [
         [
-            'title' => __('WordPress development', 'sage'),
+            'title' => __('Building WordPress', 'sage'),
+            'blurb' => __('The languages, tools, and standards behind every theme.', 'sage'),
             'icon' => 'wordpress',
             'items' => [
                 ['Sage 11', __('The Roots starter theme. Blade templates, Tailwind v4, Vite. Every site I build from scratch starts here.', 'sage'), 'https://roots.io/sage/'],
@@ -354,7 +355,8 @@ function mh_uses_sections(): array
             ],
         ],
         [
-            'title' => __('Editor and tools', 'sage'),
+            'title' => __('Editor and terminal', 'sage'),
+            'blurb' => __('Where I plan, write, and review code.', 'sage'),
             'icon' => 'code',
             'items' => [
                 ['Claude Code', __('Terminal agent for planning, refactors, and reviews on this site. Runs my shared playbook rules and a PHPCS hook after every PHP edit.', 'sage'), 'https://claude.com/product/claude-code'],
@@ -365,7 +367,8 @@ function mh_uses_sections(): array
             ],
         ],
         [
-            'title' => __('Hosting and deploy', 'sage'),
+            'title' => __('Hosting and shipping', 'sage'),
+            'blurb' => __('How a site gets from my laptop to the live server.', 'sage'),
             'icon' => 'server',
             'items' => [
                 ['Hostinger', __('Managed WordPress hosting for this site. LiteSpeed cache, PHP 8.3+, hPanel. Theme installs from the GitHub theme-latest zip.', 'sage'), 'https://www.hostinger.com', true],
@@ -374,7 +377,8 @@ function mh_uses_sections(): array
             ],
         ],
         [
-            'title' => __('Analytics and marketing', 'sage'),
+            'title' => __('Search and analytics', 'sage'),
+            'blurb' => __('Titles, tracking, and search tools.', 'sage'),
             'icon' => 'chart-bar',
             'items' => [
                 ['Google Analytics 4', __('Site traffic, page performance, and audience data. Linked through Google Tag Manager.', 'sage'), 'https://analytics.google.com'],
@@ -386,6 +390,7 @@ function mh_uses_sections(): array
         ],
         [
             'title' => __('AI and automation', 'sage'),
+            'blurb' => __('Workflows and assistants that save repeat work.', 'sage'),
             'icon' => 'n8n',
             'items' => [
                 ['n8n', __('Workflows behind the site forms and notifications, triggered by webhooks from WordPress.', 'sage'), 'https://n8n.io'],
@@ -395,6 +400,7 @@ function mh_uses_sections(): array
         ],
         [
             'title' => __('Testing and accessibility', 'sage'),
+            'blurb' => __('Checks I run before anything ships.', 'sage'),
             'icon' => 'shield',
             'items' => [
                 ['Lighthouse', __('Performance, SEO, and best-practice audits on key pages after every visible change. Target is 90+ on mobile.', 'sage'), 'https://developer.chrome.com/docs/lighthouse/'],
@@ -402,7 +408,8 @@ function mh_uses_sections(): array
             ],
         ],
         [
-            'title' => __('Design and typography', 'sage'),
+            'title' => __('Design and type', 'sage'),
+            'blurb' => __('Fonts, and design tools when a project needs them.', 'sage'),
             'icon' => 'full-stack',
             'items' => [
                 ['Inter', __('Display and heading font. Clean, reads well at both large and small sizes. The workhorse.', 'sage'), 'https://rsms.me/inter/'],
@@ -414,6 +421,7 @@ function mh_uses_sections(): array
         ],
         [
             'title' => __('Power Platform', 'sage'),
+            'blurb' => __('Microsoft tools I used in earlier roles.', 'sage'),
             'icon' => 'power',
             'items' => [
                 ['Power Apps', __('Canvas and model-driven apps for Microsoft 365 environments. Used at previous roles and on client work when it is the right tool.', 'sage'), 'https://powerapps.microsoft.com'],
