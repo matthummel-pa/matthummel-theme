@@ -8875,3 +8875,14 @@ html body .tool-card:hover .tool-card__icon {
   html body .tool-card__icon { transition-duration: .01ms; }
   html body .tool-card:hover .tool-card__icon { transform: none; }
 }
+
+/* 3.41.1 · The starters and tools headings were sized for a narrow side column. Now the heading spans the section, so it
+   takes the same size as the other section headings. */
+html body .resources-group > .container > h2.wp-block-heading {
+  max-width: none;
+  margin: 0 0 .8rem;
+  font-size: clamp(2.1rem, 1.4rem + 2.6vw, 3.25rem) !important;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
+html body .resources-group > .container > p:not(.resources-note) { font-size: 1.15rem; }
