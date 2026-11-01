@@ -8606,3 +8606,74 @@ html body .cta-band--panel .cta-band__note {
 @media (max-width: 760px) {
   html body .cta-band--panel .cta-band__actions { flex: 1 1 100%; max-width: none; width: 100%; padding: 1.25rem; }
 }
+
+/* 3.37.0 · Resources page. Stack groups fold (the first starts open), extra resource links sit behind a Show more button,
+   and the closing band's main button reads as the main button on the dark panel. */
+html body .uses-section--fold > summary.uses-section__head {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin: 0;
+  cursor: pointer;
+  list-style: none;
+}
+html body .uses-section--fold > summary.uses-section__head::-webkit-details-marker { display: none; }
+html body .uses-section--fold > summary .uses-section__title { flex: 1; margin: 0; }
+html body .uses-section--fold[open] > summary.uses-section__head { margin-bottom: 1rem; }
+html body .uses-section__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  padding: 0 .55rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff));
+  color: #0f2a52;
+  font: 800 .8rem/1 var(--font-display);
+}
+html.mh-dark body .uses-section__count { border-color: color-mix(in srgb, #22d3ee 32%, transparent); background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)); color: #d6ecff; }
+html body .uses-section__chev {
+  flex: none;
+  width: .7rem;
+  height: .7rem;
+  margin: 0 .3rem 0 .2rem;
+  border-right: 2.5px solid currentColor;
+  border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .25s ease;
+  color: var(--color-text-muted);
+}
+html body .uses-section--fold[open] > summary .uses-section__chev { transform: rotate(-135deg) translate(-2px, -2px); }
+html body .uses-section--fold > summary:focus-visible { outline: 3px solid #3b82f6; outline-offset: 4px; border-radius: 10px; }
+
+html body .resources-more { margin-top: var(--card-gap); }
+html body .resources-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.5rem;
+  padding: .3rem 1.1rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%) border-box;
+  color: var(--color-text);
+  font: 700 .9rem/1.2 var(--font-display);
+  cursor: pointer;
+  list-style: none;
+}
+html body .resources-more > summary::-webkit-details-marker { display: none; }
+html body .resources-more[open] > summary { margin-bottom: var(--card-gap); }
+html body .resources-more > summary:focus-visible { outline: 3px solid #3b82f6; outline-offset: 3px; }
+
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a {
+  border: 0;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%);
+  color: #06121f;
+  font-weight: 800;
+  box-shadow: 0 14px 30px -14px rgba(34, 211, 238, .75);
+}
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:hover,
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:focus-visible { background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%); color: #06121f; transform: translateY(-1px); }

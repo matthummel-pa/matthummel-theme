@@ -14,11 +14,14 @@
   @endif
   <div class="uses-body__grid">
     @foreach ($stack as $group)
-      <section class="uses-section" id="uses-{{ \Illuminate\Support\Str::slug($group['title']) }}" aria-labelledby="uses-{{ \Illuminate\Support\Str::slug($group['title']) }}-heading">
-        <div class="uses-section__head">
-          <div class="uses-section__icon">{!! \App\mh_svg_icon($group['icon'], 20) !!}</div>
+      {{-- Each group folds open and shut; the first one starts open so the list is not a wall of 37 items. --}}
+      <details class="uses-section uses-section--fold" id="uses-{{ \Illuminate\Support\Str::slug($group['title']) }}" @if ($loop->first) open @endif>
+        <summary class="uses-section__head">
+          <span class="uses-section__icon">{!! \App\mh_svg_icon($group['icon'], 20) !!}</span>
           <h3 id="uses-{{ \Illuminate\Support\Str::slug($group['title']) }}-heading" class="uses-section__title">{{ $group['title'] }}</h3>
-        </div>
+          <span class="uses-section__count">{{ number_format_i18n(count($group['items'])) }}</span>
+          <span class="uses-section__chev" aria-hidden="true"></span>
+        </summary>
         <ul class="uses-list">
           @foreach ($group['items'] as $row)
             @php
@@ -46,7 +49,7 @@
             </li>
           @endforeach
         </ul>
-      </section>
+      </details>
     @endforeach
   </div>
 </div>
