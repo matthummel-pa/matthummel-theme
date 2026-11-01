@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.42.1 — Card icon spacing
+
+- The round icon on the starter and tool cards has more space above it and a bigger gap before the name.
+
 ## 3.42.0 — Tools and stack in one section
 
 - The Stack list block has a "Hide the tools shown as cards" setting that leaves out entries already shown as tool cards, so Tools I use every week and the stack no longer repeat each other.

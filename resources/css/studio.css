@@ -8898,3 +8898,7 @@ html body .resources-group > .container > h3.wp-block-heading {
   line-height: 1.15;
 }
 html body .resources-group > .container > h3.wp-block-heading + p { margin: 0 0 var(--card-gap-roomy); }
+
+/* 3.42.1 · More room around the round icon on the starter and tool cards: space above it and a clear gap before the name. */
+html body .tool-card { padding-top: 1.75rem; }
+html body .tool-card__top { margin-bottom: 1.1rem; }
