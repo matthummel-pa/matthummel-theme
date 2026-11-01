@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.43.2 — Centred group numbers
+
+- The number in each stack group circle sits in the middle of the circle instead of a few pixels high.
+
 ## 3.43.1 — Stack item marker
 
 - The gradient dot beside each stack item lines up with the item name.

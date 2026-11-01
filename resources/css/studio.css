@@ -9051,3 +9051,16 @@ html.mh-dark body .uses-section__count {
   color: #fff;
   font: 800 1.05rem/1 var(--font-display);
 }
+
+/* 3.43.2 · The number in the stack group circle: the hidden "tools" label for screen readers was taking its own row and pushed
+   the digit up. Centre the digit with flex and take the label out of the flow. */
+html body .uses-section__count {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0 0;
+  line-height: 1;
+  text-align: center;
+}
+html body .uses-section__count > .visually-hidden { position: absolute; }
