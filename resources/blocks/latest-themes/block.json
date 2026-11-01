@@ -21,6 +21,10 @@
       "type": "boolean",
       "default": false
     },
+    "onlySoon": {
+      "type": "boolean",
+      "default": false
+    },
     "linkText": {
       "type": "string",
       "default": "Browse all themes"
@@ -35,6 +39,10 @@
     "showSoon": {
       "label": "Show coming soon themes",
       "help": "Adds themes marked Coming soon after the ones on sale."
+    },
+    "onlySoon": {
+      "label": "Only themes in progress",
+      "help": "Shows just the themes marked Coming soon, for a what's next row. Overrides the setting above."
     },
     "linkText": {
       "label": "Link to all themes",

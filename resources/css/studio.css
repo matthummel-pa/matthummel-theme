@@ -8427,3 +8427,45 @@ html .shop-link.shop-link { max-width: 100%; }
 @media (max-width: 480px) {
   html .shop-link.shop-link { white-space: normal; text-align: left; border-radius: 1.35rem; }
 }
+
+/* 3.34.0 · Process steps. A numbered card grid (How a project runs, agency overflow) gets a round gradient number like the
+   "What I do" icons, a line that links the steps on wide screens, and an optional "You get" line pinned to the bottom. */
+html body .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before {
+  position: static;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0 0 1.2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 14px 26px -14px rgba(29, 95, 214, .75), 0 0 0 6px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.3rem/1 var(--font-display);
+}
+html.mh-dark body .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before { color: #fff; }
+@media (min-width: 961px) {
+  html body .mh-cards--4.mh-cards--numbered > .mh-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: calc(2.1rem + 1.625rem - 1px);
+    left: calc(50% + 2.2rem);
+    width: calc(100% + var(--card-gap) - 4.4rem);
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(34, 211, 238, .75), rgba(59, 130, 246, .25));
+    pointer-events: none;
+  }
+}
+html body .about-svc-card .about-svc-card__copy > p.mh-card__get {
+  width: 100%;
+  margin: auto 0 0;
+  padding-top: .95rem;
+  border-top: 1px dashed var(--mh-card-line);
+  color: var(--color-text);
+  font: 600 .9rem/1.4 var(--font-display);
+}
+html body .about-svc-card .about-svc-card__copy > p:not(.mh-card__get) + p.mh-card__get { margin-top: 1rem; }
+html body .mh-card__get strong { color: #15803d; font-weight: 800; }
+html.mh-dark body .mh-card__get strong { color: #a3e635; }
