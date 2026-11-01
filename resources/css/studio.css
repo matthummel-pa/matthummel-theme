@@ -9039,3 +9039,15 @@ html body .uses-section--fold .uses-item__name::before {
 }
 html.mh-dark body .uses-section--fold .uses-item__name::before { background: linear-gradient(135deg, #a3e635, #22d3ee); }
 html body .uses-section--fold .uses-item__desc { padding-left: 1.1rem; }
+
+/* The group count is the same round gradient number as in "Pick what you need". */
+html body .uses-section__count,
+html.mh-dark body .uses-section__count {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .75), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+}

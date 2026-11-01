@@ -3,6 +3,7 @@
 ## 3.43.1 — Stack item marker
 
 - The gradient dot beside each stack item lines up with the item name.
+- The count on each stack group is the same solid round gradient number as in "Pick what you need".
 
 ## 3.43.0 — The rest of the stack
 
