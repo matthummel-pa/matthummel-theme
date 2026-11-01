@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.45.0 — Affiliate note buttons
+
+- The link in every affiliate note (the Resources page, tool lists, and posts that use affiliate links) is a gradient pill button with an arrow, beside the note text.
+
 ## 3.44.0 — Card fact labels
 
 - The labels on the starter and tool cards (I use it for, Good fit if, What you get, Good for) have a small round gradient chip with a spark or check icon and a brighter green label, with the answer indented under it.

@@ -9094,3 +9094,65 @@ html body .tool-card__facts > div:nth-child(1) dt { --fact-icon: url("data:image
 html body .tool-card__facts > div:nth-child(2) dt { --fact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
 html body .tool-card__facts dd { padding-left: 2.1rem; }
 @media (forced-colors: active) { html body .tool-card__facts dt::before { background: ButtonText; box-shadow: none; } }
+
+/* 3.45.0 · Affiliate notes: the link is a gradient pill button beside the note text. The note boxes (affiliate-note partial, the
+   post disclosure, and the Resources section note with the class resources-note) lay out as text plus button. */
+html body :is(.affiliate-note > p, .affiliate-disclosure, .post-extra-note.affiliate-disclosure) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  margin: 0;
+}
+html body .affiliate-note { padding: 1rem 1.25rem; }
+html body .affiliate-disclosure { padding: 1rem 1.25rem; }
+html body .affiliate-note__text { flex: 1 1 22rem; min-width: 0; }
+html body :is(.affiliate-note, .affiliate-disclosure) .shop-link { flex: none; }
+
+/* The Resources section note is a paragraph with a plain link in it, so its link gets the pill look here. */
+html body .resources-group > .container > p.resources-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: .8rem 1.1rem;
+}
+html body .resources-group > .container > p.resources-note a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.5rem;
+  padding: .3rem .4rem .3rem .9rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%) border-box;
+  box-shadow: 0 6px 16px -10px rgba(29, 95, 214, .5);
+  color: var(--color-text);
+  font: 700 .86rem/1.2 var(--font-display);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: box-shadow .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html body .resources-group > .container > p.resources-note a::after {
+  content: "";
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / .85rem .85rem no-repeat,
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 4px 10px -4px rgba(29, 95, 214, .7);
+}
+html body .resources-group > .container > p.resources-note a:is(:hover, :focus-visible) {
+  box-shadow: 0 14px 26px -12px rgba(29, 95, 214, .65), 0 0 0 4px rgba(34, 211, 238, .14);
+  transform: translateY(-1px);
+  color: var(--color-text);
+}
+@media (forced-colors: active) { html body .resources-group > .container > p.resources-note a { border-color: LinkText; background: Canvas; } }
+@media (prefers-reduced-motion: reduce) { html body .resources-group > .container > p.resources-note a { transition-duration: .01ms; transform: none; } }
