@@ -8734,3 +8734,58 @@ html body .resources-card:hover { transform: translateY(-3px); box-shadow: var(-
   .resources-overview > .container > .mh-resource-jump,
   .resources-group .mh-resource-catalog > .resources-list { grid-row: auto; }
 }
+
+/* 3.39.0 · Tool cards (Resources, "Tools I recommend"): a round brand icon, the tag pills, a name and one line, then two short
+   facts (what I use it for, who it suits) and a Visit button pinned to the bottom. */
+html body .resources-list--tools { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+html body .resources-list--tools > .tool-card:last-child:nth-child(odd) { grid-column: auto; }
+html body .tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  min-width: 0;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+  list-style: none;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .tool-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+html body .tool-card > * { margin: 0; }
+html body .tool-card__top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+html body .tool-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 12px 22px -12px rgba(29, 95, 214, .75), 0 0 0 5px rgba(34, 211, 238, .14);
+  color: #fff;
+}
+html body .tool-card__icon svg { width: 1.4rem; height: 1.4rem; }
+html body .tool-card__tags { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: flex-end; }
+html body .tool-card__name {
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: .08em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font: 800 1.45rem/1.15 var(--font-display);
+  letter-spacing: -.035em;
+}
+html.mh-dark body .tool-card__name { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+html body .tool-card__blurb { color: var(--color-text); font-weight: 600; line-height: 1.45; }
+html body .tool-card__facts { display: grid; gap: .75rem; margin: .2rem 0 .4rem; padding-top: .85rem; border-top: 1px dashed var(--mh-card-line); }
+html body .tool-card__facts > div { display: grid; gap: .15rem; }
+html body .tool-card__facts dt { color: var(--color-text-muted); font: 800 .72rem/1.2 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+html body .tool-card__facts dd { margin: 0; color: var(--color-text-secondary); font-size: .95rem; line-height: 1.55; }
+html body .tool-card__cta { align-self: flex-start; margin-top: auto; }
+@media (forced-colors: active) { html body .tool-card__name { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } html body .tool-card__icon { background: ButtonText; color: ButtonFace; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { html body .tool-card { transition-duration: .01ms; } html body .tool-card:hover { transform: none; } }

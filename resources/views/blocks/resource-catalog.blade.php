@@ -5,6 +5,7 @@
   $limit = max(0, (int) ($attributes['limit'] ?? 0));
   $shown = $limit > 0 ? array_slice($items, 0, $limit) : $items;
   $more = $limit > 0 ? array_slice($items, $limit) : [];
+  $cardView = (string) ($attributes['section'] ?? 'starters') === 'tools' ? 'partials.tool-card' : 'partials.resource-card';
   $hasAff = false;
   foreach ($items as $item) {
     $hasAff = $hasAff || ! empty($item['affiliate']);
@@ -19,9 +20,9 @@
       {{-- translators: %s: number of links in this section. --}}
       <p class="resources-section__count">{{ sprintf(_n('%s link', '%s links', count($items), 'sage'), number_format_i18n(count($items))) }}</p>
     @endif
-    <ul class="resources-list">
+    <ul class="resources-list{{ $cardView === 'partials.tool-card' ? ' resources-list--tools' : '' }}">
       @foreach ($shown as $item)
-        @include('partials.resource-card', ['item' => $item])
+        @include($cardView, ['item' => $item])
       @endforeach
     </ul>
     @if ($more !== [])
@@ -30,9 +31,9 @@
           {{-- translators: %s: number of extra links. --}}
           <span>{{ sprintf(_n('Show %s more link', 'Show %s more links', count($more), 'sage'), number_format_i18n(count($more))) }}</span>
         </summary>
-        <ul class="resources-list">
+        <ul class="resources-list{{ $cardView === 'partials.tool-card' ? ' resources-list--tools' : '' }}">
           @foreach ($more as $item)
-            @include('partials.resource-card', ['item' => $item])
+            @include($cardView, ['item' => $item])
           @endforeach
         </ul>
       </details>

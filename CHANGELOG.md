@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.39.0 — Tools I recommend
+
+- The tools group shows richer cards: an icon, what the tool is, what I use it for, who it suits, and a Visit button. Affiliate links keep their label and sponsored rel.
+- The list now has six tools: Claude Code, Hostinger, n8n, GitHub, WordPress Studio, and Rank Math.
+
 ## 3.38.1 — Resources eyebrow rows
 
 - With an eyebrow above each Resources heading, the jump list and the card lists span the extra grid row, so the count stays under the intro and the eyebrow no longer leaves a gap.
