@@ -164,9 +164,9 @@
         {{-- Article body --}}
         @if ($hasAffiliateLinks)
           <aside class="post-extra-note affiliate-disclosure" aria-label="{{ __('Affiliate disclosure', 'sage') }}">
-            <strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
-            {{ __('I may earn a commission if you buy through links in this post, at no extra cost to you. I only recommend tools I would use on a real project. The same disclosure covers Uses and Resources.', 'sage') }}
-            <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('How affiliate links work on this site.', 'sage') }}</a>
+            <span class="affiliate-note__text"><strong>{{ __('Affiliate disclosure:', 'sage') }}</strong>
+            {{ __('I may earn a commission if you buy through links in this post, at no extra cost to you. I only recommend tools I would use on a real project. The same disclosure covers Uses and Resources.', 'sage') }}</span>
+            <a class="shop-link shop-link--forward" href="{{ home_url('/affiliate-disclosure/') }}">{{ __('How affiliate links work', 'sage') }} <span class="shop-link__icon" aria-hidden="true">&rarr;</span></a>
           </aside>
         @endif
         <div class="entry-content e-content post-prose" id="post-prose" itemprop="articleBody">
