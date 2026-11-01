@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.37.0 — Resources page
+
+- The stack groups fold open and shut, with the first one open and a count on each.
+- Resource link groups can show only the first few links, with the rest behind a Show more button (new "Links to show up front" setting).
+- On the dark closing band panel, the main button is a solid lime-to-cyan button so it stands apart from the outline one.
+
 ## 3.36.0 — Closing band with steps
 
 - A CTA band block with the class `cta-band--panel` shows an ordered list with the class `cta-band__steps` as three numbered steps, and puts its buttons in a frosted panel.
