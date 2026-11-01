@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.35.1 — Upcoming card pills
+
+- The Theme and Coming soon pills on the short upcoming-theme cards use the theme card pill, and sit close to the title.
+
 ## 3.35.0 — Short upcoming-theme cards
 
 - The "Only themes in progress" setting of the Latest themes block now shows short cards (thin image, status, one line, Get updates button) instead of full shop cards.

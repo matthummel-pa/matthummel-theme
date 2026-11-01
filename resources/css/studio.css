@@ -8519,3 +8519,26 @@ html body .upcoming-card__blurb + .upcoming-card__cta, html body .upcoming-card_
 html body .upcoming-card__body > .project-type-row + .upcoming-card__title { margin-top: .1rem; }
 @media (forced-colors: active) { html body .upcoming-card__title a { background: none !important; color: LinkText !important; -webkit-text-fill-color: LinkText !important; } }
 @media (prefers-reduced-motion: reduce) { html body .upcoming-card { transition-duration: .01ms; } html body .upcoming-card:hover { transform: none; } }
+
+/* 3.35.1 · Upcoming card pills take the theme card's pill (not the plain gray or blue badge), and the row sits close to the title. */
+html body .upcoming-card .project-type-row { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }
+html body .upcoming-card .project-type-row .spec-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: .24rem .7rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent) !important;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff)) !important;
+  color: #0f2a52 !important;
+  -webkit-text-fill-color: #0f2a52 !important;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html.mh-dark body .upcoming-card .project-type-row .spec-badge {
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent) !important;
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)) !important;
+  color: #d6ecff !important;
+  -webkit-text-fill-color: #d6ecff !important;
+}
