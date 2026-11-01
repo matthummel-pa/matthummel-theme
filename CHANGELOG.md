@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.46.3 — GitHub panels on small phones
+
+- The GitHub contribution panel on the About page no longer runs past the edge on a 320px screen.
+
 ## 3.46.2 — GitHub tiles on small phones
 
 - The GitHub stat tiles on the About page no longer run past the edge on a 320px screen, and the corner icon is hidden on very narrow tiles so long numbers do not run under it.

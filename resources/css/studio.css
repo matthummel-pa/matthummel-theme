@@ -9207,3 +9207,7 @@ html body .resources-group > .container > p.resources-note a::after {
    so a long number does not run under it. */
 html body .mh-data > * { min-width: 0; }
 @media (max-width: 380px) { html body .gh-tile__icon { display: none; } }
+
+/* 3.46.3 · The GitHub panels sit in a grid (gh-pair) whose column grew to the width of the contribution heatmap, so the panel ran 12px
+   past the edge on a 320px screen. Let the panels shrink, like the data blocks around them. */
+html body .gh-pair > * { min-width: 0; }
