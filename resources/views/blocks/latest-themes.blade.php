@@ -12,7 +12,7 @@
 <div class="{{ trim('mh-data mh-latest-themes '.($attributes['className'] ?? '')) }}">
   @if ($linkText !== '')
     <div class="mh-data__meta">
-      <a class="h-text-arrow" href="{{ esc_url(home_url('/themes/')) }}">{{ $linkText }}</a>
+      <a class="shop-link shop-link--forward" href="{{ esc_url(home_url('/themes/')) }}">{{ $linkText }} <span class="shop-link__icon" aria-hidden="true">&rarr;</span></a>
     </div>
   @endif
   @if ($items !== [])
