@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.43.1 — Stack item marker
+
+- The gradient dot beside each stack item lines up with the item name.
+- The count on each stack group is the same solid round gradient number as in "Pick what you need".
+
 ## 3.43.0 — The rest of the stack
 
 - Each stack group has a round gradient icon, a gradient title with a one-line description, a round numbered count, and a chevron in a circle. Group names are plainer: Building WordPress, Editor and terminal, Hosting and shipping, Search and analytics, AI and automation, Testing and accessibility, Design and type, Power Platform.

@@ -9022,3 +9022,32 @@ html.mh-dark body .uses-section--fold .uses-item::before { background: linear-gr
 html body .uses-section--fold .uses-item__name { font-weight: 800; font-size: 1.02rem; }
 html body .uses-section--fold .uses-item__desc { margin-top: .2rem; color: var(--color-text-secondary); line-height: 1.55; }
 @media (max-width: 640px) { html body .uses-section--fold { padding: 1.1rem 1.1rem; } html body .uses-section--fold .uses-section__icon { width: 2.7rem; height: 2.7rem; } }
+
+/* 3.43.1 · The item marker sits on the item name's line instead of at a fixed offset from the item's top edge. */
+html body .uses-section--fold .uses-item { padding-left: 0; }
+html body .uses-section--fold .uses-item::before { content: none; }
+html body .uses-section--fold .uses-item__name { position: relative; padding-left: 1.1rem; }
+html body .uses-section--fold .uses-item__name::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d, #1d5fd6);
+}
+html.mh-dark body .uses-section--fold .uses-item__name::before { background: linear-gradient(135deg, #a3e635, #22d3ee); }
+html body .uses-section--fold .uses-item__desc { padding-left: 1.1rem; }
+
+/* The group count is the same round gradient number as in "Pick what you need". */
+html body .uses-section__count,
+html.mh-dark body .uses-section__count {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .75), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+}
