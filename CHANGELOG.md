@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.38.0 — Resources polish
+
+- The Resources jump list rows are cards with a round gradient number, and the last card of an odd-numbered row spans the full width instead of leaving a gap.
+- Resource cards lift a little on hover.
+- The first group is named "Free starters and open source", since it holds the GitHub profile and the playbook as well as starter themes.
+
 ## 3.37.1 — Band main button
 
 - The main button on the dark closing band panel is now the solid lime-to-cyan button it was meant to be.
