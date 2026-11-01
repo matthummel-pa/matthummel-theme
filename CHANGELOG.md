@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.36.0 — Closing band with steps
+
+- A CTA band block with the class `cta-band--panel` shows an ordered list with the class `cta-band__steps` as three numbered steps, and puts its buttons in a frosted panel.
+
 ## 3.35.2 — Upcoming card spacing
 
 - The title on the short upcoming-theme cards sits close to the pills instead of a wide gap below them.

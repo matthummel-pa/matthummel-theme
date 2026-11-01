@@ -8545,3 +8545,64 @@ html.mh-dark body .upcoming-card .project-type-row .spec-badge {
 
 /* 3.35.2 · A global heading rule gave the upcoming card title a 38px top margin. */
 html body .upcoming-card .upcoming-card__body > h3.upcoming-card__title { margin-top: .1rem !important; }
+
+/* 3.36.0 · Closing band with steps and a panel. Add the class cta-band--panel to a CTA band block: an ordered list with the class
+   cta-band__steps becomes three numbered steps under the copy, and the buttons sit in a frosted panel. */
+html body .cta-band--panel .cta-band__steps {
+  display: grid;
+  gap: .85rem;
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ctastep;
+}
+html body .cta-band--panel .cta-band__steps li {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: .85rem;
+  align-items: start;
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 1rem;
+  line-height: 1.5;
+  counter-increment: ctastep;
+}
+html body .cta-band--panel .cta-band__steps li::before {
+  content: counter(ctastep);
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .16);
+  color: #fff;
+  font: 800 .95rem/1 var(--font-display);
+}
+html body .cta-band--panel .cta-band__actions {
+  flex: 0 1 24rem;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 24rem;
+  padding: 1.6rem;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, .7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+html body .cta-band--panel .cta-band__actions .wp-block-buttons { display: flex; flex-direction: column; gap: .7rem; margin: 0; }
+html body .cta-band--panel .cta-band__actions .wp-block-button { width: 100%; margin: 0; }
+html body .cta-band--panel .cta-band__actions .wp-block-button > a { display: flex; width: 100%; align-items: center; justify-content: center; text-align: center; }
+html body .cta-band--panel .cta-band__note {
+  margin: 1rem 0 0;
+  padding-top: .9rem;
+  border-top: 1px dashed rgba(255, 255, 255, .22);
+  color: #cbd5e1;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  html body .cta-band--panel .cta-band__actions { flex: 1 1 100%; max-width: none; width: 100%; padding: 1.25rem; }
+}
