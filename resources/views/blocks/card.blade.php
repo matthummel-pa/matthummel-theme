@@ -7,12 +7,14 @@
   $body = (string) $content;
   $cta = null;
   $hasList = (bool) preg_match('/<(ul|ol)\b/i', $body);
-  if (! $hasList && preg_match('/(?:<br\s*\/?>\s*|\s+)?(<a\b[^>]*\bhref="([^"]+)"[^>]*>(.*?)<\/a>)\s*[.!]?\s*(<\/p>)\s*$/is', $body, $m, PREG_OFFSET_CAPTURE)) {
-    $label = trim(html_entity_decode(wp_strip_all_tags($m[3][0]), ENT_QUOTES));
+  if (! $hasList && preg_match('/(<p\b[^>]*>|<br\s*\/?>\s*|[.!?]\s+)(<a\b[^>]*\bhref="([^"]+)"[^>]*>((?:(?!<a\b|<\/a>).)*)<\/a>)\s*[.!]?\s*(<\/p>)\s*$/is', $body, $m, PREG_OFFSET_CAPTURE)) {
+    // Only a link that starts a sentence or a paragraph becomes the button, and only one link wide: a sentence with links in the
+    // middle of it stays as text. (3.46.1: the old pattern could swallow everything from the first link to the last.)
+    $label = trim(html_entity_decode(wp_strip_all_tags($m[4][0]), ENT_QUOTES));
     $label = rtrim($label, ". \t\n");
     if ($label !== '') {
-      $cta = ['url' => html_entity_decode($m[2][0], ENT_QUOTES), 'label' => $label, 'blank' => (bool) preg_match('/target="_blank"/i', $m[1][0])];
-      $body = substr($body, 0, $m[0][1]).$m[4][0];
+      $cta = ['url' => html_entity_decode($m[3][0], ENT_QUOTES), 'label' => $label, 'blank' => (bool) preg_match('/target="_blank"/i', $m[2][0])];
+      $body = substr($body, 0, $m[2][1]).$m[5][0];
       // A paragraph that held only the link is now empty.
       $body = preg_replace('/<p[^>]*>\s*<\/p>\s*$/i', '', $body);
     }

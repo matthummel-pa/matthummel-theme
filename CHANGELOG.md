@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.46.1 — Card links
+
+- A card paragraph with several links (the Welcome page cards) keeps them as text. Before, everything from the first link to the last turned into one long button. Only a link that starts a sentence or a paragraph becomes the button under a card.
+
 ## 3.46.0 — Arrow chips
 
 - The round arrow chip in the pill buttons is a little bigger, with a soft highlight and a ring, and the arrow is bolder. On hover the circle grows slightly and the arrow slides out and back in from the other side (not with reduced motion).
