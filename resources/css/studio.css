@@ -8825,3 +8825,25 @@ html body .resources-group > .container > p.resources-note {
   line-height: 1.5;
 }
 html.mh-dark body .resources-group > .container > p.resources-note { border-color: color-mix(in srgb, #22d3ee 30%, transparent); border-left-color: #22d3ee; background: color-mix(in srgb, #22d3ee 9%, var(--color-card, #0b1b35)); }
+
+/* 3.40.0 · Resources groups (starters, tools): the heading and text sit on top and the cards fill the full width under them,
+   three to a row on wide screens, two on tablets and one on phones, like the other sections. */
+html body .resources-group > .container { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+html body .resources-group > .container > :is(p, h2) { max-width: 46rem; }
+html body .resources-group .mh-resource-catalog > .resources-list,
+html body .resources-group .mh-resource-catalog > .resources-more > .resources-list {
+  grid-column: 1;
+  grid-row: auto;
+  margin-top: var(--card-gap-roomy);
+}
+html body .resources-group .resources-list,
+html body .resources-group .resources-list--tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html body .resources-group .resources-list > :is(.resources-card, .tool-card):last-child:nth-child(odd) { grid-column: auto; }
+@media (max-width: 1020px) {
+  html body .resources-group .resources-list,
+  html body .resources-group .resources-list--tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  html body .resources-group .resources-list,
+  html body .resources-group .resources-list--tools { grid-template-columns: minmax(0, 1fr); }
+}
