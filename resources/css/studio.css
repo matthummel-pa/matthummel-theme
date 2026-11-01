@@ -8677,3 +8677,16 @@ html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-out
 }
 html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:hover,
 html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:focus-visible { background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%); color: #06121f; transform: translateY(-1px); }
+
+/* 3.37.1 · The band's main button fill lost to an !important rule on .btn; say it again with !important. */
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+}
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:hover,
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:focus-visible {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  color: #06121f !important;
+}

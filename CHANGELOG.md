@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.37.1 — Band main button
+
+- The main button on the dark closing band panel is now the solid lime-to-cyan button it was meant to be.
+
 ## 3.37.0 — Resources page
 
 - The stack groups fold open and shut, with the first one open and a count on each.
