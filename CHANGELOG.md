@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.34.0 — Process steps and what is next
+
+- Numbered card grids (How a project runs, agency overflow) show a round gradient number, a line that links the steps on wide screens, and an optional "You get" line at the bottom of each card (give a paragraph the class `mh-card__get`).
+- The Latest themes block has an "Only themes in progress" setting that shows just the themes marked Coming soon.
+
 ## 3.33.4 — Section links as buttons
 
 - The links that end a section ("Browse all themes", "All posts", "Browse all" projects, and the post page's "All posts") are now gradient pill buttons with an arrow chip, like the card buttons. The RSS link next to the journal is a pill too.
