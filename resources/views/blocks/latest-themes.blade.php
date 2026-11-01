@@ -17,9 +17,9 @@
     </div>
   @endif
   @if ($items !== [])
-    <div class="h-project-grid">
+    <div class="{{ $onlySoon ? 'mh-upcoming-grid' : 'h-project-grid' }}">
       @foreach ($items as $item)
-        @include('partials.shop-card', ['item' => $item])
+        @include($onlySoon ? 'partials.shop-upcoming-card' : 'partials.shop-card', ['item' => $item])
       @endforeach
     </div>
   @else

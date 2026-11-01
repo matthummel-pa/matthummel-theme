@@ -8470,3 +8470,52 @@ html body .about-svc-card .about-svc-card__copy > p.mh-card__get {
 html body .about-svc-card .about-svc-card__copy > p:not(.mh-card__get) + p.mh-card__get { margin-top: 1rem; }
 html body .mh-card__get strong { color: #15803d; font-weight: 800; }
 html.mh-dark body .mh-card__get strong { color: #a3e635; }
+
+/* 3.35.0 · Upcoming theme cards (Latest themes block, "Only themes in progress"): short cards with a thin image, the status,
+   one line and the Get updates button, so a what's-next row is not two screens of scrolling on a phone. */
+.mh-upcoming-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--card-gap); }
+html body .upcoming-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .upcoming-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+html body .upcoming-card__shot { display: block; flex: none; aspect-ratio: 21 / 9; overflow: hidden; background: #1b2433; }
+html body .upcoming-card__shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+html body .upcoming-card__body { display: flex; flex: 1; flex-direction: column; gap: .5rem; padding: 1.1rem 1.3rem 1.3rem; }
+html body .upcoming-card__body > * { margin-top: 0; margin-bottom: 0; }
+html body .upcoming-card__title { font-size: clamp(1.3rem, 1.1rem + .8vw, 1.5rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; }
+html body .upcoming-card__title a {
+  display: inline-block;
+  padding-bottom: .1em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-decoration: none;
+}
+html.mh-dark body .upcoming-card__title a { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+html body .upcoming-card__for { color: var(--color-text); font-size: .92rem; line-height: 1.4; }
+html body .upcoming-card__for span { color: var(--color-text-muted); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: .72rem; margin-right: .3rem; }
+html body .upcoming-card__blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+html body .upcoming-card__cta { align-self: flex-start; margin-top: auto; }
+html body .upcoming-card__blurb + .upcoming-card__cta, html body .upcoming-card__for + .upcoming-card__cta { margin-top: auto; }
+html body .upcoming-card__body > .project-type-row + .upcoming-card__title { margin-top: .1rem; }
+@media (forced-colors: active) { html body .upcoming-card__title a { background: none !important; color: LinkText !important; -webkit-text-fill-color: LinkText !important; } }
+@media (prefers-reduced-motion: reduce) { html body .upcoming-card { transition-duration: .01ms; } html body .upcoming-card:hover { transform: none; } }

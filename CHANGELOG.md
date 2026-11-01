@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.35.0 — Short upcoming-theme cards
+
+- The "Only themes in progress" setting of the Latest themes block now shows short cards (thin image, status, one line, Get updates button) instead of full shop cards.
+
 ## 3.34.1 — Step lines reach the next number
 
 - The line between process steps now draws over the next card, so it runs from one number to the next.
