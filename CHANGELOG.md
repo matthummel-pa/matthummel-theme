@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.46.2 — GitHub tiles on small phones
+
+- The GitHub stat tiles on the About page no longer run past the edge on a 320px screen, and the corner icon is hidden on very narrow tiles so long numbers do not run under it.
+
 ## 3.46.1 — Card links
 
 - A card paragraph with several links (the Welcome page cards) keeps them as text. Before, everything from the first link to the last turned into one long button. Only a link that starts a sentence or a paragraph becomes the button under a card.

@@ -9201,3 +9201,9 @@ html body .resources-group > .container > p.resources-note a::after {
     linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
   box-shadow: 0 6px 14px -6px rgba(29, 95, 214, .8), 0 0 0 3px rgba(34, 211, 238, .16), inset 0 1px 0 rgba(255, 255, 255, .3);
 }
+
+/* 3.46.2 · Data blocks (GitHub stats and the like) are a one-column grid whose column grew to the width of its widest content, so on a
+   320px screen the stat tiles ran 12px past the edge. Let the items shrink, and drop the tiny corner icon on very narrow tiles
+   so a long number does not run under it. */
+html body .mh-data > * { min-width: 0; }
+@media (max-width: 380px) { html body .gh-tile__icon { display: none; } }
