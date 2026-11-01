@@ -9156,3 +9156,48 @@ html body .resources-group > .container > p.resources-note a:is(:hover, :focus-v
 }
 @media (forced-colors: active) { html body .resources-group > .container > p.resources-note a { border-color: LinkText; background: Canvas; } }
 @media (prefers-reduced-motion: reduce) { html body .resources-group > .container > p.resources-note a { transition-duration: .01ms; transform: none; } }
+
+/* 3.46.0 · Arrow chips in the pill buttons: a slightly bigger circle with a soft highlight and a ring, a bolder arrow, and on hover
+   the arrow slides out of the circle and back in from the other side. */
+html body .shop-link.shop-link .shop-link__icon {
+  position: relative;
+  overflow: hidden;
+  width: 1.95rem;
+  height: 1.95rem;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, .32), transparent 58%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow:
+    0 6px 14px -6px rgba(29, 95, 214, .8),
+    0 0 0 3px rgba(34, 211, 238, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .3);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .shop-link.shop-link .shop-link__icon::before { width: 1rem; height: 1rem; }
+html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon {
+  transform: scale(1.07);
+  box-shadow:
+    0 8px 16px -6px rgba(29, 95, 214, .9),
+    0 0 0 4px rgba(34, 211, 238, .24),
+    inset 0 1px 0 rgba(255, 255, 255, .3);
+}
+html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon::before { animation: mh-arrow-swap .5s cubic-bezier(.4, 0, .2, 1); transform: none; }
+html body .shop-link.shop-link:not(.shop-link--forward):not(.shop-card__details-link):is(:hover, :focus-visible) .shop-link__icon::before { animation-name: mh-arrow-swap-up; }
+@keyframes mh-arrow-swap { 0% { transform: translateX(0); } 45% { transform: translateX(160%); } 46% { transform: translateX(-160%); } 100% { transform: translateX(0); } }
+@keyframes mh-arrow-swap-up { 0% { transform: translate(0, 0); } 45% { transform: translate(160%, -160%); } 46% { transform: translate(-160%, 160%); } 100% { transform: translate(0, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  html body .shop-link.shop-link .shop-link__icon { transition-duration: .01ms; }
+  html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon { transform: none; }
+  html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon::before { animation: none; }
+}
+@media (forced-colors: active) { html body .shop-link.shop-link .shop-link__icon { box-shadow: none; } }
+html body .resources-group > .container > p.resources-note a { padding-right: .3rem; }
+html body .resources-group > .container > p.resources-note a::after {
+  width: 1.95rem;
+  height: 1.95rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / 1rem 1rem no-repeat,
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, .32), transparent 58%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 6px 14px -6px rgba(29, 95, 214, .8), 0 0 0 3px rgba(34, 211, 238, .16), inset 0 1px 0 rgba(255, 255, 255, .3);
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.46.0 — Arrow chips
+
+- The round arrow chip in the pill buttons is a little bigger, with a soft highlight and a ring, and the arrow is bolder. On hover the circle grows slightly and the arrow slides out and back in from the other side (not with reduced motion).
+
 ## 3.45.0 — Affiliate note buttons
 
 - The link in every affiliate note (the Resources page, tool lists, and posts that use affiliate links) is a gradient pill button with an arrow, beside the note text.
