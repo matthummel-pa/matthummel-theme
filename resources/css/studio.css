@@ -8724,3 +8724,13 @@ html body .resources-card:hover { transform: translateY(-3px); box-shadow: var(-
   html body .resources-card, html body .resources-jump a, html body .resources-jump__go { transition-duration: .01ms; }
   html body .resources-card:hover, html body .resources-jump a:is(:hover, :focus-visible), html body .resources-jump a:is(:hover, :focus-visible) .resources-jump__go { transform: none; }
 }
+
+/* 3.38.1 · The Resources sections now start with an eyebrow, one more row in the grid: the jump list and the card list span
+   the extra row, and the count sits under the intro again instead of below the cards. */
+.resources-overview > .container > .mh-resource-jump { grid-row: 1 / span 3; }
+.resources-group > .container { grid-template-rows: auto auto auto 1fr; }
+.resources-group .mh-resource-catalog > .resources-list { grid-row: 1 / span 4; }
+@media (max-width: 860px) {
+  .resources-overview > .container > .mh-resource-jump,
+  .resources-group .mh-resource-catalog > .resources-list { grid-row: auto; }
+}
