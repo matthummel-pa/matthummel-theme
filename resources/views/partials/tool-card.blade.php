@@ -20,10 +20,10 @@
   <p class="tool-card__blurb">{{ $item['blurb'] }}</p>
   <dl class="tool-card__facts">
     @if (($item['use'] ?? '') !== '')
-      <div><dt>{{ __('I use it for', 'sage') }}</dt><dd>{{ $item['use'] }}</dd></div>
+      <div><dt>{{ $item['use_label'] ?? __('I use it for', 'sage') }}</dt><dd>{{ $item['use'] }}</dd></div>
     @endif
     @if (($item['fit'] ?? '') !== '')
-      <div><dt>{{ __('Good fit if', 'sage') }}</dt><dd>{{ $item['fit'] }}</dd></div>
+      <div><dt>{{ $item['fit_label'] ?? __('Good fit if', 'sage') }}</dt><dd>{{ $item['fit'] }}</dd></div>
     @endif
   </dl>
   <a
@@ -33,7 +33,7 @@
     @if ($isAff) data-affiliate="true" @endif
     @if ($external) target="_blank" @endif
   >
-    {{ sprintf(__('Visit %s', 'sage'), $item['name']) }}@if ($external)<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>@endif
+    {{ $item['cta'] ?? sprintf(__('Visit %s', 'sage'), $item['name']) }}<span class="visually-hidden"> {{ $item['name'] }}</span>@if ($external)<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span>@endif
     <span class="shop-link__icon" aria-hidden="true">{{ $external ? '↗' : '→' }}</span>
   </a>
 </li>

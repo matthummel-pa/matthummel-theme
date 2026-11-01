@@ -5,7 +5,7 @@
   $limit = max(0, (int) ($attributes['limit'] ?? 0));
   $shown = $limit > 0 ? array_slice($items, 0, $limit) : $items;
   $more = $limit > 0 ? array_slice($items, $limit) : [];
-  $cardView = (string) ($attributes['section'] ?? 'starters') === 'tools' ? 'partials.tool-card' : 'partials.resource-card';
+  $cardView = in_array((string) ($attributes['section'] ?? 'starters'), ['starters', 'tools'], true) ? 'partials.tool-card' : 'partials.resource-card';
   $hasAff = false;
   foreach ($items as $item) {
     $hasAff = $hasAff || ! empty($item['affiliate']);

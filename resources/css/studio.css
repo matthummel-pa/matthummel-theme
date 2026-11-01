@@ -8847,3 +8847,31 @@ html body .resources-group .resources-list > :is(.resources-card, .tool-card):la
   html body .resources-group .resources-list,
   html body .resources-group .resources-list--tools { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* 3.41.0 · Starter and tool cards: a bigger round icon with a glow ring that grows on hover, and the normal space between the
+   Resources sections (an old rule had removed the top padding of a group that follows another group). */
+html body .resources-group + .resources-group { padding-top: var(--section-gap); }
+html body .tool-card__icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .28), transparent 55%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow:
+    0 16px 28px -14px rgba(29, 95, 214, .8),
+    0 0 0 5px rgba(34, 211, 238, .14),
+    0 0 0 6px rgba(34, 211, 238, .22);
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease;
+}
+html body .tool-card__icon svg { width: 1.65rem; height: 1.65rem; }
+html body .tool-card:hover .tool-card__icon {
+  transform: scale(1.06);
+  box-shadow:
+    0 20px 32px -14px rgba(29, 95, 214, .9),
+    0 0 0 7px rgba(34, 211, 238, .16),
+    0 0 0 8px rgba(34, 211, 238, .28);
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .tool-card__icon { transition-duration: .01ms; }
+  html body .tool-card:hover .tool-card__icon { transform: none; }
+}
