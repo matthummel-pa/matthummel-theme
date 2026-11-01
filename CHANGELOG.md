@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.42.0 — Tools and stack in one section
+
+- The Stack list block has a "Hide the tools shown as cards" setting that leaves out entries already shown as tool cards, so Tools I use every week and the stack no longer repeat each other.
+- A Resources section can hold both the tool cards and the folded stack list.
+
 ## 3.41.1 — Bigger Resources group headings
 
 - The starters and tools headings are the same size as the other section headings, and their intro text is a little larger.

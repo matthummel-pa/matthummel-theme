@@ -8886,3 +8886,15 @@ html body .resources-group > .container > h2.wp-block-heading {
   letter-spacing: -.04em;
 }
 html body .resources-group > .container > p:not(.resources-note) { font-size: 1.15rem; }
+
+/* 3.42.0 · A Resources section with both the tool cards and the folded stack list. The stack list sits under the cards with its own
+   subheading, and the groups run two to a row on wide screens. */
+html body .resources-group .mh-stack-list { margin-top: var(--card-gap-roomy); }
+html body .resources-group > .container > h3.wp-block-heading {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 .5rem;
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+html body .resources-group > .container > h3.wp-block-heading + p { margin: 0 0 var(--card-gap-roomy); }

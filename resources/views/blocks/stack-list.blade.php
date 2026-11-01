@@ -1,6 +1,28 @@
 {{-- matthummel/stack-list: the groups from App\mh_uses_sections(). Affiliate links keep their label, rel="sponsored" and data-affiliate. --}}
 @php
   $stack = \App\mh_uses_sections();
+  // Optionally leave out entries that already show as tool cards, so nothing is listed twice. An entry matches a
+  // tool when its name is the tool's name, or starts with it followed by a slash ("WordPress Studio / SQLite").
+  if (! empty($attributes['hideFeatured'])) {
+    $featured = array_map(
+      static fn (array $tool): string => mb_strtolower((string) $tool['name']),
+      (array) (\App\mh_resources_catalog_group('tools')['items'] ?? [])
+    );
+    $stack = array_values(array_filter(array_map(static function (array $group) use ($featured): array {
+      $group['items'] = array_values(array_filter($group['items'], static function (array $row) use ($featured): bool {
+        $name = mb_strtolower((string) ($row[0] ?? ''));
+        foreach ($featured as $tool) {
+          if ($name === $tool || str_starts_with($name, $tool.' /')) {
+            return false;
+          }
+        }
+
+        return true;
+      }));
+
+      return $group;
+    }, $stack), static fn (array $group): bool => $group['items'] !== []));
+  }
   $hasAff = false;
   foreach ($stack as $group) {
     foreach ($group['items'] as $row) {

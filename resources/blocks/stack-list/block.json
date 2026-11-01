@@ -12,11 +12,22 @@
     "stack"
   ],
   "textdomain": "sage",
-  "attributes": {},
+  "attributes": {
+    "hideFeatured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
   "supports": {
     "html": false,
     "align": false,
     "className": true,
     "reusable": false
+  },
+  "mhControls": {
+    "hideFeatured": {
+      "label": "Hide the tools shown as cards",
+      "help": "Leaves out stack entries that already appear in Tools I use every week, so nothing is listed twice."
+    }
   }
 }
