@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.47.0 — Page heroes
+
+- Page heroes (every page except Home): the small label above the heading is a pill with a gradient dot, the main button is a solid lime-to-cyan button and the second one an outline so the two read as different, the intro is a little larger, and a list with the class `hero-facts` becomes a row of check chips under the buttons (stacked on phones).
+
 ## 3.46.3 — GitHub panels on small phones
 
 - The GitHub contribution panel on the About page no longer runs past the edge on a 320px screen.
