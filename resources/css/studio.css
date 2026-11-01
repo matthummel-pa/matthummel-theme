@@ -8690,3 +8690,37 @@ html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-out
   background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
   color: #06121f !important;
 }
+
+/* 3.38.0 · Resources page polish. The jump list rows are cards with a round gradient number (like the process steps),
+   the last card of an odd-numbered row spans the full width instead of leaving a hole, and resource cards lift on hover. */
+html body .resources-jump a {
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  min-height: 64px;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+}
+html body .resources-jump a:is(:hover, :focus-visible) { border-color: #3b82f6; box-shadow: var(--mh-card-shadow-hover); transform: translateY(-2px); }
+html body .resources-jump__n {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .75), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+}
+html.mh-dark body .resources-jump__n { color: #fff; }
+html body .resources-jump__go { font-size: 1.25rem; transition: transform .25s ease; }
+html body .resources-jump a:is(:hover, :focus-visible) .resources-jump__go { transform: translateY(3px); }
+html body .resources-list > .resources-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (max-width: 640px) { html body .resources-list > .resources-card:last-child:nth-child(odd) { grid-column: auto; } }
+html body .resources-card { transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease; }
+html body .resources-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+@media (prefers-reduced-motion: reduce) {
+  html body .resources-card, html body .resources-jump a, html body .resources-jump__go { transition-duration: .01ms; }
+  html body .resources-card:hover, html body .resources-jump a:is(:hover, :focus-visible), html body .resources-jump a:is(:hover, :focus-visible) .resources-jump__go { transform: none; }
+}
