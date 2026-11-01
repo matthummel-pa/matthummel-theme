@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>(function(){var d=document.documentElement;try{if(localStorage.getItem('mh-theme')==='light'){d.classList.remove('mh-dark');}else{d.classList.add('mh-dark');}}catch(e){d.classList.add('mh-dark');}})();</script>
+    {{-- data-no-optimize / data-no-defer / data-cfasync: the cache plugin's JS delay would hold this until the first tap or scroll, and the page would show in light first, then flip to dark. --}}
+    <script data-no-optimize="1" data-no-defer="1" data-cfasync="false">(function(){var d=document.documentElement;try{if(localStorage.getItem('mh-theme')==='light'){d.classList.remove('mh-dark');}else{d.classList.add('mh-dark');}}catch(e){d.classList.add('mh-dark');}})();</script>
     @php(do_action('get_header'))
     @php(wp_head())
     @vite(['resources/css/app.css', 'resources/js/app.js'])
