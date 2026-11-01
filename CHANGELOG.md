@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.41.0 — Starter cards and spacing
+
+- The starters are the same cards as the tools: a larger round gradient icon, a tag, a name, a one-line tagline, what you get, who it is good for, and a button. The heading is no longer the link.
+- The round icon is bigger, with a glow ring that grows a little on hover.
+- The Resources sections have their normal space between them again (the starters and tools sections had none).
+
 ## 3.40.0 — Resources cards under the text
 
 - On the Resources page, the starters and tools cards sit under their heading and text at full width, three to a row on wide screens, two on tablets, one on phones.
