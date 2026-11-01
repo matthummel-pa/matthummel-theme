@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.35.2 — Upcoming card spacing
+
+- The title on the short upcoming-theme cards sits close to the pills instead of a wide gap below them.
+
 ## 3.35.1 — Upcoming card pills
 
 - The Theme and Coming soon pills on the short upcoming-theme cards use the theme card pill, and sit close to the title.

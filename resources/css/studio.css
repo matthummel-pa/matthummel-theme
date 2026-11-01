@@ -8542,3 +8542,6 @@ html.mh-dark body .upcoming-card .project-type-row .spec-badge {
   color: #d6ecff !important;
   -webkit-text-fill-color: #d6ecff !important;
 }
+
+/* 3.35.2 · A global heading rule gave the upcoming card title a 38px top margin. */
+html body .upcoming-card .upcoming-card__body > h3.upcoming-card__title { margin-top: .1rem !important; }
