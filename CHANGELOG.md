@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.44.0 — Card fact labels
+
+- The labels on the starter and tool cards (I use it for, Good fit if, What you get, Good for) have a small round gradient chip with a spark or check icon and a brighter green label, with the answer indented under it.
+
 ## 3.43.2 — Centred group numbers
 
 - The number in each stack group circle sits in the middle of the circle instead of a few pixels high.
