@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.38.1 — Resources eyebrow rows
+
+- With an eyebrow above each Resources heading, the jump list and the card lists span the extra grid row, so the count stays under the intro and the eyebrow no longer leaves a gap.
+
 ## 3.38.0 — Resources polish
 
 - The Resources jump list rows are cards with a round gradient number, and the last card of an odd-numbered row spans the full width instead of leaving a gap.
