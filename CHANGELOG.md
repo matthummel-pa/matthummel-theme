@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.39.1 — Tool headings and tagline design
+
+- The tools group is named "Tools I use every week", and each tool has a new short tagline.
+- The tagline is a headline with a gradient rule beside it, and a paragraph with the class `resources-note` becomes a small callout (used for the affiliate note).
+
 ## 3.39.0 — Tools I recommend
 
 - The tools group shows richer cards: an icon, what the tool is, what I use it for, who it suits, and a Visit button. Affiliate links keep their label and sponsored rel.

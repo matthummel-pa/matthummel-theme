@@ -227,12 +227,12 @@ function mh_resources_catalog(): array
         ],
         [
             'key' => 'tools',
-            'title' => __('Tools I recommend', 'sage'),
+            'title' => __('Tools I use every week', 'sage'),
             'intro' => __('The AI, editor, hosting, and automation tools I use. Affiliate links are labeled.', 'sage'),
             'items' => [
                 [
                     'name' => 'Claude Code',
-                    'blurb' => __('My pair programmer in the terminal.', 'sage'),
+                    'blurb' => __('A second pair of eyes in the terminal.', 'sage'),
                     'use' => __('Planning, refactors, reviews, and audits on every project. I read and test every line before it ships.', 'sage'),
                     'fit' => __('Developers who want a second set of eyes, not an autopilot.', 'sage'),
                     'icon' => 'claude',
@@ -242,7 +242,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'Hostinger',
-                    'blurb' => __('Managed WordPress hosting.', 'sage'),
+                    'blurb' => __('Fast, managed WordPress hosting.', 'sage'),
                     'use' => __('This site runs here: LiteSpeed cache, PHP 8.3+, backups in hPanel, SSH, and a staging copy I test on before anything goes live.', 'sage'),
                     'fit' => __('Small business sites that want fast, managed WordPress without a server to look after.', 'sage'),
                     'icon' => 'server',
@@ -253,7 +253,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'n8n',
-                    'blurb' => __('Visual workflow automation.', 'sage'),
+                    'blurb' => __('Automation without the glue code.', 'sage'),
                     'use' => __('Forms, notifications, and content jobs. It connects WordPress to the rest of my tools without custom code each time.', 'sage'),
                     'fit' => __('Anyone who keeps repeating the same task between two apps.', 'sage'),
                     'icon' => 'n8n',
@@ -263,7 +263,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'GitHub',
-                    'blurb' => __('Version control and deploys.', 'sage'),
+                    'blurb' => __('Where every project lives and ships from.', 'sage'),
                     'use' => __('Every project lives in a repo. A push to main builds the theme and publishes the release zip, so nothing is uploaded by hand.', 'sage'),
                     'fit' => __('Any project that more than one person, or one future you, will touch.', 'sage'),
                     'icon' => 'github',
@@ -273,7 +273,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'WordPress Studio',
-                    'blurb' => __('Local WordPress sites.', 'sage'),
+                    'blurb' => __('A real WordPress site on my laptop.', 'sage'),
                     'use' => __('A real WordPress site on my laptop for every project, so I can build and break things before staging sees them.', 'sage'),
                     'fit' => __('Developers who want a local site running in minutes.', 'sage'),
                     'icon' => 'wordpress',
@@ -283,7 +283,7 @@ function mh_resources_catalog(): array
                 ],
                 [
                     'name' => 'Rank Math',
-                    'blurb' => __('SEO inside WordPress.', 'sage'),
+                    'blurb' => __('Search basics your team can manage.', 'sage'),
                     'use' => __('Page titles, descriptions, schema, and redirects, set from the editor so the site team can change them without code.', 'sage'),
                     'fit' => __('Site owners who want to manage their own search basics.', 'sage'),
                     'icon' => 'search',

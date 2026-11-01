@@ -8789,3 +8789,39 @@ html body .tool-card__facts dd { margin: 0; color: var(--color-text-secondary); 
 html body .tool-card__cta { align-self: flex-start; margin-top: auto; }
 @media (forced-colors: active) { html body .tool-card__name { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } html body .tool-card__icon { background: ButtonText; color: ButtonFace; box-shadow: none; } }
 @media (prefers-reduced-motion: reduce) { html body .tool-card { transition-duration: .01ms; } html body .tool-card:hover { transform: none; } }
+
+/* 3.39.1 · Tool card tagline and the section note. The tagline is a short headline with a gradient rule beside it, and the
+   section's affiliate note (class resources-note) is a small pill-style callout instead of loose text. */
+html body .tool-card__blurb {
+  position: relative;
+  padding-left: .95rem;
+  color: var(--color-text);
+  font: 700 1.1rem/1.35 var(--font-display);
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+html body .tool-card__blurb::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .2em;
+  bottom: .2em;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #a3e635 0%, #22d3ee 55%, #3b82f6 100%);
+}
+html body .resources-group > .container > p.resources-note {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: .9rem 0 0;
+  padding: .55rem .9rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-left: 3px solid #3b82f6;
+  border-radius: 10px;
+  background: color-mix(in srgb, #3b82f6 8%, var(--color-card, #fff));
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+html.mh-dark body .resources-group > .container > p.resources-note { border-color: color-mix(in srgb, #22d3ee 30%, transparent); border-left-color: #22d3ee; background: color-mix(in srgb, #22d3ee 9%, var(--color-card, #0b1b35)); }
