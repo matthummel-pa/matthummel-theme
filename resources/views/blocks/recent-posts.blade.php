@@ -10,11 +10,11 @@
   @if ($linkText !== '' || $showRss)
     <div class="mh-data__meta">
       @if ($linkText !== '')
-        <a class="h-text-arrow" href="{{ esc_url($writing) }}">{{ $linkText }}</a>
+        <a class="shop-link shop-link--forward" href="{{ esc_url($writing) }}">{{ $linkText }} <span class="shop-link__icon" aria-hidden="true">&rarr;</span></a>
       @endif
       @if ($showRss)
-        <a class="h-journal__rss" href="{{ esc_url(home_url('/feed/')) }}" rel="alternate" type="application/rss+xml">
-          {!! \App\mh_svg_icon('rss', 14) !!} RSS
+        <a class="shop-link shop-link--forward" href="{{ esc_url(home_url('/feed/')) }}" rel="alternate" type="application/rss+xml">
+          {!! \App\mh_svg_icon('rss', 14) !!} RSS <span class="shop-link__icon" aria-hidden="true">&rarr;</span>
         </a>
       @endif
     </div>

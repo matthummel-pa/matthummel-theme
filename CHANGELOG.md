@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.33.4 — Section links as buttons
+
+- The links that end a section ("Browse all themes", "All posts", "Browse all" projects, and the post page's "All posts") are now gradient pill buttons with an arrow chip, like the card buttons. The RSS link next to the journal is a pill too.
+
 ## 3.33.3 — Theme without the flash
 
 - The small script that sets light or dark is marked so the cache plugin runs it right away. Before, the cache plugin held it until the first tap, scroll or mouse move, so pages showed in light first and flipped to dark after.

@@ -323,7 +323,7 @@
                 </article>
               @endforeach
             </div>
-            <a class="h-text-arrow" href="{{ $writing }}" style="display:inline-flex;margin-top:1.5rem">{{ __('All posts →', 'sage') }}</a>
+            <a class="shop-link shop-link--forward" href="{{ $writing }}" style="margin-top:1.5rem">{{ __('All posts', 'sage') }} <span class="shop-link__icon" aria-hidden="true">&rarr;</span></a>
           </section>
         @endif
 
