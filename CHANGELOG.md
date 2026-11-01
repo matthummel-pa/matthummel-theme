@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.34.1 — Step lines reach the next number
+
+- The line between process steps now draws over the next card, so it runs from one number to the next.
+
 ## 3.34.0 — Process steps and what is next
 
 - Numbered card grids (How a project runs, agency overflow) show a round gradient number, a line that links the steps on wide screens, and an optional "You get" line at the bottom of each card (give a paragraph the class `mh-card__get`).

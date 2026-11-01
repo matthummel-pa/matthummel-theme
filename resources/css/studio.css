@@ -8456,6 +8456,7 @@ html.mh-dark body .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::
     border-radius: 2px;
     background: linear-gradient(90deg, rgba(34, 211, 238, .75), rgba(59, 130, 246, .25));
     pointer-events: none;
+    z-index: 1;
   }
 }
 html body .about-svc-card .about-svc-card__copy > p.mh-card__get {
