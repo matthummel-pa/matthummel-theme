@@ -9267,6 +9267,41 @@ html body .page-header .wp-block-button.is-style-outline > a {
 }
 html body .page-header .wp-block-button.is-style-outline > a:is(:hover, :focus-visible) { background: rgba(255, 255, 255, .16) !important; border-color: #fff !important; }
 
+
+/* Pages built from Blade (Support, Start here) and older arrow links use classes instead of button blocks: same two looks. */
+html body .page-header a.btn:not(.btn-outline):not(.btn-ghost):not(.btn-secondary) {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  font-weight: 800;
+  box-shadow: 0 16px 32px -14px rgba(34, 211, 238, .75);
+}
+html body .page-header a.btn:not(.btn-outline):not(.btn-ghost):not(.btn-secondary):is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body .page-header :is(a.btn-outline, a.btn-ghost, a.btn-secondary, a.h-text-arrow),
+html body .page-header .wp-block-button.is-style-arrow > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 2.9rem;
+  padding: .55rem 1.35rem;
+  border: 1.5px solid rgba(255, 255, 255, .55) !important;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-weight: 800;
+  text-decoration: none;
+}
+html body .page-header :is(a.btn-outline, a.btn-ghost, a.btn-secondary, a.h-text-arrow, .wp-block-button.is-style-arrow > a):is(:hover, :focus-visible) {
+  background: rgba(255, 255, 255, .16) !important;
+  border-color: #fff !important;
+}
+
 html body .page-header ul.hero-facts {
   display: flex;
   flex-wrap: wrap;
