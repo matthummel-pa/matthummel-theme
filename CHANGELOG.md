@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.41.1 — Bigger Resources group headings
+
+- The starters and tools headings are the same size as the other section headings, and their intro text is a little larger.
+
 ## 3.41.0 — Starter cards and spacing
 
 - The starters are the same cards as the tools: a larger round gradient icon, a tag, a name, a one-line tagline, what you get, who it is good for, and a button. The heading is no longer the link.
