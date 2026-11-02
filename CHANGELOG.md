@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.48.1 — Home review
+
+- Theme cards (the Home hero card, the themes grid and the Shop list) show a short blurb that ends on a whole sentence, instead of being cut off mid-sentence with an ellipsis.
+- The Home hero and closing band use the same buttons as the inner page heroes: a solid lime-to-cyan main button and an outline second button.
+- Page copy on staging: the Questions section is in the "On this page" bar as FAQ, the full-stack card in What I do has a button to Services, and the Home buttons use relative links.
+
 ## 3.48.0 — Questions section
 
 - Every question list (Home, Services, About) has round numbered gradient badges beside each question.
