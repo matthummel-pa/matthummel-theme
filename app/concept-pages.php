@@ -1861,6 +1861,23 @@ function mh_apply_product_catalog_v19(): void
 }
 
 /**
+ * One-time: Cobble & Candle's tier prices match the Freemius plan ($59.99, $99.99 and $199.99 a year). Upserts only Cobble & Candle.
+ *
+ * @since 3.48.3
+ */
+function mh_apply_product_catalog_v20(): void
+{
+    if (get_option('mh_product_catalog_v20') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    if (is_array($catalog['cobbleandcandle'] ?? null) && mh_upsert_catalog_product('cobbleandcandle', $catalog['cobbleandcandle'], true) > 0) {
+        update_option('mh_product_catalog_v20', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -1974,6 +1991,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v16', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v17', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v18', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v19', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v20', 46);
 add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
 add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
