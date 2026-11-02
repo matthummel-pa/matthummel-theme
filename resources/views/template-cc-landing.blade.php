@@ -241,7 +241,7 @@
                 <li>{{ __('Updates and email support for the year', 'sage') }}</li>
                 <li>{{ __('Owner guide and support guide', 'sage') }}</li>
               </ul>
-              <button type="button" class="cc-btn cc-btn--dark cc-btn--wide" data-fs-buy data-licenses="{{ (int) $tier['licenses'] }}" data-cc-plan="{{ esc_attr($tier['label']) }}">
+              <button type="button" class="cc-btn cc-btn--dark cc-btn--wide" data-fs-buy data-licenses="{{ (int) $tier['licenses'] }}" data-plan-label="{{ esc_attr($tier['label']) }}" data-price="{{ esc_attr($amount($tier['price'])) }}">
                 {{ __('Buy', 'sage') }} {{ $tier['label'] }}<span class="cc-vh">, {{ $tier['price'] }} {{ __('per year', 'sage') }}</span>
               </button>
             </div>
@@ -287,6 +287,13 @@
     </div>
   </section>
 </main>
+
+@if ($lowest !== '')
+  <div class="cc-sticky" data-cc-sticky>
+    <p><strong>{{ $lowest }}</strong> <span>{{ __('a year', 'sage') }}</span></p>
+    <a class="cc-btn" href="#pricing" data-cc-track="sticky_see_plans">{{ __('See plans', 'sage') }}</a>
+  </div>
+@endif
 
 <footer class="cc-footer">
   <div class="cc-wrap cc-footer__in">

@@ -260,3 +260,29 @@
 .cc-landing { scroll-behavior: smooth; }
 html:has(.cc-landing) { scroll-padding-top: 5rem; scroll-behavior: smooth; }
 @media (forced-colors: active) { .cc-btn, .cc-btn--ghost, .cc-card, .cc-tier { border: 1px solid CanvasText; } }
+
+/* Phone call to action: a bar with the price and a See plans button once the hero has scrolled away, hidden again at the pricing. */
+.cc-sticky {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .7rem max(1rem, env(safe-area-inset-right)) calc(.7rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  border-top: 1px solid var(--cc-line);
+  background: color-mix(in srgb, var(--cc-black) 94%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  visibility: hidden;
+  transform: translateY(110%);
+  transition: transform .25s ease, visibility 0s linear .25s;
+}
+.cc-sticky.is-on { visibility: visible; transform: none; transition: transform .25s ease; }
+.cc-sticky p { margin: 0; line-height: 1.2; }
+.cc-sticky strong { font: 400 1.5rem/1 var(--cc-display); color: var(--cc-glow); }
+.cc-sticky span { color: var(--cc-muted); font-size: .9rem; }
+.cc-sticky .cc-btn { min-height: 2.6rem; padding: .5rem 1.3rem; }
+@media (max-width: 899px) { .cc-footer { padding-bottom: 6rem; } }
+@media (min-width: 900px) { .cc-sticky { display: none; } }
