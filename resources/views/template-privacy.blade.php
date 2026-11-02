@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @php
-  $updated    = '2026-08-25';
+  $updated    = '2026-11-02';
   $contactUrl = home_url('/contact/');
   $siteUrl    = 'https://matthummel.com';
 @endphp
@@ -41,6 +41,7 @@
         <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, <strong>Bing / Microsoft Analytics</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
         <li>The contact form and project brief collect your name, email, and the details you send so I can reply and prepare for a first meeting. That is all they are used for.</li>
         <li>The email signup forms send your address, and your first name if you give it, to <strong>Hostinger Reach</strong>, the service that delivers my notes. It is used only for that list, and every email has an unsubscribe link.</li>
+        <li>If you buy a theme, <strong>Freemius</strong> takes the payment and issues your license. I see your name, email address, country and license details. I never see your card number. See <a href="#priv-sharing-heading">who sees your data</a>.</li>
         <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
         <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
         <li>You can opt out of analytics tracking at any time — see the <a href="#priv-optout-heading">opt-out options</a> below.</li>
@@ -68,7 +69,7 @@
   <div class="container wide">
     <p class="eyebrow">Data collected</p>
     <h2 id="priv-data-heading">What I collect</h2>
-    <p class="sec-intro" style="max-width:52ch;margin-bottom:2rem">Four categories of data may be collected when you use this site.</p>
+    <p class="sec-intro" style="max-width:52ch;margin-bottom:2rem">Five categories of data may be collected when you use this site.</p>
     <div class="priv-collect-grid">
 
       {{-- Contact form --}}
@@ -123,6 +124,23 @@
         </div>
       </div>
 
+      {{-- Theme purchases --}}
+      <div class="priv-collect-card">
+        <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('cart', 20) !!}</div>
+        <h3 class="priv-collect-card__title">Theme purchases &amp; licenses</h3>
+        <p class="priv-collect-card__intro">If you buy a theme, Freemius processes the payment and shares with me:</p>
+        <ul class="priv-collect-card__list">
+          <li>Name and email address</li>
+          <li>Country and the plan you bought</li>
+          <li>Your license key and which sites it is activated on</li>
+        </ul>
+        <p class="priv-collect-card__intro">When you activate a license, the theme asks your permission to send Freemius your name and email, your site's URL, title and language, WordPress, PHP, theme and SDK versions, and a list of installed plugins and themes.</p>
+        <div class="priv-collect-card__trust">
+          {!! \App\mh_svg_icon('shield', 14) !!}
+          Card details go to Freemius, not to this site or to me.
+        </div>
+      </div>
+
       {{-- Server logs --}}
       <div class="priv-collect-card">
         <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('server', 20) !!}</div>
@@ -151,8 +169,8 @@
       <p class="eyebrow">Not collected</p>
       <h2 id="priv-no-collect-heading">What I do not collect</h2>
       <ul class="legal-bullets">
-        <li>No payment data — this site has no e-commerce or checkout</li>
-        <li>No account or login data — there is no user registration on this site</li>
+        <li>No card or payment details on this site — theme purchases are handled by Freemius, so your card goes to them, not to me</li>
+        <li>No account or login on this site — there is no user registration here. Buyers sign in to their Freemius account for licenses and downloads</li>
         <li>No sensitive personal data (health, financial, biometric, or similar)</li>
         <li>Analytics data is not used to build individual profiles or target you personally on this site</li>
       </ul>
@@ -273,6 +291,7 @@
         <li><strong>Meta (Facebook)</strong> — the Meta Pixel (planned) sends event data to Meta for ad measurement and reach reporting. Subject to <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta's privacy policy</a>.</li>
         <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
         <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
+        <li><strong>Freemius</strong> — the merchant of record for theme purchases and the service behind licenses, updates and the customer portal. It handles your payment and billing details and the license and activation data described above. Subject to <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">Freemius's privacy policy</a>.</li>
         <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
         <li><strong>Hostinger Reach</strong> — the email service behind the signup forms. It stores the address and first name you enter, which form you used, and whether you opened or clicked a note, and it handles unsubscribes. Subject to the same <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger privacy policy</a>.</li>
         <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the About page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
