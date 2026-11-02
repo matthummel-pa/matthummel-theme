@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.49.0 — Theme purchase terms and privacy
+
+- Terms of use has a "Theme purchases" section: who you are dealing with (Freemius as merchant of record), the license key, what updates and support cover (replies within one business day, ET), compatibility, no warranty and a 12-month liability cap. It links to the new License and Refunds pages.
+- Privacy policy names Freemius: a new "Theme purchases & licenses" card, a line in "Who sees your data", and the two statements that said the site had no checkout or accounts now say card details go to Freemius and buyers sign in there.
+- Both pages say "Last updated: November 2, 2026". Have a lawyer read the Terms and Privacy changes before they go live.
+
 ## 3.48.3 — Cobble & Candle prices
 
 - The Cobble & Candle product page and shop card show the Freemius prices: $59.99, $99.99 and $199.99 a year (they said $59, $99 and $199, which did not match what checkout charges).
