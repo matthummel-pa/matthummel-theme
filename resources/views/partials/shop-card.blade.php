@@ -94,7 +94,7 @@
       <p class="shop-card__for"><span>{{ __('Best for', 'sage') }}</span> {{ $item['place'] }}</p>
     @endif
     @if ($item['blurb'] !== '')
-      <p class="work-blurb">{{ $item['blurb'] }}</p>
+      <p class="work-blurb">{{ \App\mh_shop_blurb_short($item['blurb']) }}</p>
     @endif
 
     @if (! $isSoon && $item['price'] !== '')

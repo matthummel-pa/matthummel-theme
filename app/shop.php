@@ -444,6 +444,27 @@ function mh_shop_trust_default(string $scope = 'all'): string
 }
 
 /**
+ * Short card text: the blurb unchanged when it is short, otherwise its first sentence, cut at a colon when that
+ * sentence is still long. The cards clamp the text to a few lines, and a clamp cuts mid-sentence ("hours…").
+ *
+ * @since 3.48.1
+ */
+function mh_shop_blurb_short(string $blurb, int $max = 110): string
+{
+    $blurb = trim($blurb);
+    if (mb_strlen($blurb) <= $max) {
+        return $blurb;
+    }
+
+    $first = preg_split('/(?<=[.!?])\s+/u', $blurb, 2)[0] ?? $blurb;
+    if (mb_strlen($first) > $max && ($colon = mb_strpos($first, ':')) !== false && $colon > 20) {
+        $first = rtrim(mb_substr($first, 0, $colon), ' .:').'.';
+    }
+
+    return $first;
+}
+
+/**
  * Default questions and answers for a shop page. The plugins page gets its own short set;
  * every other scope ('all', 'theme') shares the theme questions.
  *

@@ -17,7 +17,7 @@
     </a>
     <h2 class="hero-feat__title" id="hero-feat-title"><a href="{{ esc_url($featured['url']) }}">{{ $featured['title'] }}</a></h2>
     @if ($featured['blurb'] !== '')
-      <p class="hero-feat__blurb">{{ $featured['blurb'] }}</p>
+      <p class="hero-feat__blurb">{{ \App\mh_shop_blurb_short($featured['blurb'], 170) }}</p>
     @endif
     <div class="hero-feat__meta">
       @if ($featured['price'] !== '')
