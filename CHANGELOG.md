@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.51.0 — Marketing events and a phone call-to-action bar
+
+- GA4 ecommerce events from the Freemius checkout on every product page and the Cobble & Candle landing page: `view_item` (priced at the cheapest plan), `begin_checkout` (the plan clicked) and `purchase` (the plan's list price, with the Freemius subscription or license ID as the transaction ID), sent before the buyer is moved to `/account/?purchase=complete`. They go to gtag() when Site Kit's gtag.js is on the page and no Tag Manager container is, and to the dataLayer for a container. Nothing is stored in the browser.
+- The landing page's `cc_cta_click` and `cc_buy_click` events now reach GA4 as well as the dataLayer.
+- Landing page on phones: a bar with the price and a "See plans" button appears once the hero scrolls away and hides again at the pricing.
+
 ## 3.50.0 — Cobble & Candle landing page
 
 - New page template, "Cobble & Candle landing page": a stand-alone marketing page for the theme with no matthummel.com header or footer, built for ad traffic. It uses the theme's own palette (lamp-black, brass, parchment, oxblood) and Bodoni Moda and Mulish fonts, loads its own small stylesheet and script, and reads its copy, prices and screenshots from the product catalog and the Freemius plan.
