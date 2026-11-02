@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.48.2 — Cobble & Candle version
+
+- The Cobble & Candle product page shows release 1.0.1, the version now in Freemius.
+
 ## 3.48.1 — Home review
 
 - Theme cards (the Home hero card, the themes grid and the Shop list) show a short blurb that ends on a whole sentence, instead of being cut off mid-sentence with an ellipsis.
