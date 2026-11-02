@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.48.3 — Cobble & Candle prices
+
+- The Cobble & Candle product page and shop card show the Freemius prices: $59.99, $99.99 and $199.99 a year (they said $59, $99 and $199, which did not match what checkout charges).
+
 ## 3.48.2 — Cobble & Candle version
 
 - The Cobble & Candle product page shows release 1.0.1, the version now in Freemius.

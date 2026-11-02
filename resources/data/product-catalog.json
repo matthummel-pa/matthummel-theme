@@ -209,9 +209,9 @@
       "plan_id": "74742",
       "public_key": "pk_773f209ba80bce933bf3a9c0233fa",
       "tiers": [
-        { "label": "1 site", "licenses": 1, "price": "$59" },
-        { "label": "5 sites", "licenses": 5, "price": "$99" },
-        { "label": "Unlimited sites", "licenses": 0, "price": "$199" }
+        { "label": "1 site", "licenses": 1, "price": "$59.99" },
+        { "label": "5 sites", "licenses": 5, "price": "$99.99" },
+        { "label": "Unlimited sites", "licenses": 0, "price": "$199.99" }
       ]
     },
     "github": "",
