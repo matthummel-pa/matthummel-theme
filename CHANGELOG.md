@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.51.1 — Marketing events wait for gtag
+
+- The GA4 events from 3.51.0 are held in memory until gtag() exists. The cache plugin delays Site Kit's gtag.js until the first tap or scroll, so an event at page load (view_item) found no gtag and was lost. Events now wait up to 30 seconds, then are dropped; nothing is stored in the browser.
+
 ## 3.51.0 — Marketing events and a phone call-to-action bar
 
 - GA4 ecommerce events from the Freemius checkout on every product page and the Cobble & Candle landing page: `view_item` (priced at the cheapest plan), `begin_checkout` (the plan clicked) and `purchase` (the plan's list price, with the Freemius subscription or license ID as the transaction ID), sent before the buyer is moved to `/account/?purchase=complete`. They go to gtag() when Site Kit's gtag.js is on the page and no Tag Manager container is, and to the dataLayer for a container. Nothing is stored in the browser.
