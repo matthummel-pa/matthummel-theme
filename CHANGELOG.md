@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.49.1 — Footer fallback links
+
+- The built-in footer legal links (used when no Footer Bottom Navigation menu is assigned) now include License and Refunds, so a fresh install matches the site.
+
 ## 3.49.0 — Theme purchase terms and privacy
 
 - Terms of use has a "Theme purchases" section: who you are dealing with (Freemius as merchant of record), the license key, what updates and support cover (replies within one business day, ET), compatibility, no warranty and a 12-month liability cap. It links to the new License and Refunds pages.
