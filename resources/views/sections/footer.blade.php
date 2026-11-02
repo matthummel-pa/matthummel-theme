@@ -93,6 +93,10 @@
         <span aria-hidden="true">·</span>
         <a href="{{ esc_url(\App\mh_terms_url()) }}">{{ __('Terms', 'sage') }}</a>
         <span aria-hidden="true">·</span>
+        <a href="{{ home_url('/license/') }}">{{ __('License', 'sage') }}</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ home_url('/refunds/') }}">{{ __('Refunds', 'sage') }}</a>
+        <span aria-hidden="true">·</span>
         <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ home_url('/accessibility/') }}">{{ __('Accessibility', 'sage') }}</a>
