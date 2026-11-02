@@ -82,8 +82,11 @@ export function initFreemiusCheckout() {
           licenses: licenses === 0 ? 'unlimited' : licenses,
           billing_cycle: 'annual',
           success: () => {
-            // The buyer's license, download, and invoices live in the account page.
-            window.location.assign(root.dataset.account || '/account/')
+            // The buyer's license, download, and invoices live in the account page. The purchase=complete flag
+            // gives ad and analytics tags a page to count as a finished purchase.
+            const account = new URL(root.dataset.account || '/account/', window.location.origin)
+            account.searchParams.set('purchase', 'complete')
+            window.location.assign(account.toString())
           },
         })
       } catch (error) {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.50.0 — Cobble & Candle landing page
+
+- New page template, "Cobble & Candle landing page": a stand-alone marketing page for the theme with no matthummel.com header or footer, built for ad traffic. It uses the theme's own palette (lamp-black, brass, parchment, oxblood) and Bodoni Moda and Mulish fonts, loads its own small stylesheet and script, and reads its copy, prices and screenshots from the product catalog and the Freemius plan.
+- Sections: hero with price and two calls to action, quality strip, six feature cards, screenshots, the four styles, three setup steps, who it is for, pricing with Buy buttons (Freemius overlay), FAQ, closing band and a footer with the legal links, support email and seller line.
+- Cobble & Candle logo set (SVG): crest, horizontal and stacked lockups for dark and light backgrounds, and an app icon. Fonts are bundled with their licenses.
+- Click events for Google Tag Manager: `cc_cta_click` (with `cc_cta`) and `cc_buy_click` (with `cc_plan` and `cc_licenses`).
+- After a finished Freemius checkout, every product page now sends the buyer to `/account/?purchase=complete`, so ad and analytics tags can count a purchase.
+
 ## 3.49.1 — Footer fallback links
 
 - The built-in footer legal links (used when no Footer Bottom Navigation menu is assigned) now include License and Refunds, so a fresh install matches the site.
