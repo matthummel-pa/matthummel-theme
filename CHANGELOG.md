@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.48.0 — Questions section
+
+- Every question list (Home, Services, About) has round numbered gradient badges beside each question.
+- The Home "Hiring a WordPress developer" section fills its left column with four check chips (one price per project, written scope first, you own the site, reply within one business day) and a "Not on the list?" card with an "Ask me a question" button and a "See the services" button. The drawing that used to sit there is hidden when the card is present.
+- On wide screens the left column keeps its spacing when the question list is long, and on phones the card comes after the questions.
+- Page copy on staging: the list went from 6 to 10 questions (cost, how long, taking over a site, agencies) with links to the contact form, handoff checklist and Projects page.
+
 ## 3.47.0 — Page heroes
 
 - Page heroes (every page except Home): the small label above the heading is a pill with a gradient dot, the main button is a solid lime-to-cyan button and the second one an outline so the two read as different, the intro is a little larger, and a list with the class `hero-facts` becomes a row of check chips under the buttons (stacked on phones). Pages built from Blade (Support) and older arrow links get the same two button looks.

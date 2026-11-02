@@ -9338,3 +9338,137 @@ html body .page-header ul.hero-facts li::before {
   html body .page-header .wp-block-button > a { width: 100%; justify-content: center; text-align: center; }
 }
 @media (forced-colors: active) { html body .page-header .wp-block-button > a { forced-color-adjust: auto; } }
+
+/* 3.48.0 · Questions section. The question list gets numbered gradient badges (every FAQ block), the Home and About
+   layouts give the list a row-stretching last track so the left column never gets pulled apart, and the Home section fills its
+   left column with check chips and an "Ask me" card. The drawing there is hidden since the card now takes that space. */
+html body .mh-block-faq { counter-reset: faq; }
+html body .mh-block-faq details { counter-increment: faq; }
+html body .mh-block-faq details > summary { align-items: center; }
+html body .mh-block-faq details > summary::before {
+  content: counter(faq);
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 16px -10px rgba(29, 95, 214, .8);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  font: 800 .92rem/1 var(--font-display);
+  letter-spacing: 0;
+}
+html.mh-dark body .mh-block-faq details > summary::before {
+  background: linear-gradient(135deg, #a3e635 0%, #22d3ee 100%);
+  color: #06121f;
+  -webkit-text-fill-color: #06121f;
+}
+
+html body ul.faq-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+html body .mh-block-section ul.wp-block-list.faq-points > li {
+  position: static;
+  display: inline-flex !important;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 !important;
+  padding: .4rem .85rem .4rem .45rem !important;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 999px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+  color: var(--color-text);
+  font: 600 .9rem/1.25 var(--font-body, inherit);
+}
+html body .mh-block-section ul.wp-block-list.faq-points > li::before {
+  content: "";
+  position: static !important;
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / .75rem .75rem no-repeat,
+    linear-gradient(135deg, #15803d, #1d5fd6) !important;
+}
+html.mh-dark body .mh-block-section ul.wp-block-list.faq-points > li::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306121f' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / .75rem .75rem no-repeat,
+    linear-gradient(135deg, #a3e635, #22d3ee) !important;
+}
+
+html body .faq-ask {
+  position: relative;
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.5rem 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 18px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+}
+html body .faq-ask::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #22d3ee, #a3e635);
+}
+html body .faq-ask > h3 {
+  margin: 0 0 .45rem;
+  font: 800 1.3rem/1.2 var(--font-display);
+  letter-spacing: -.025em;
+}
+html body .faq-ask > p { margin: 0; color: var(--color-text-secondary); font-size: 1rem; line-height: 1.6; max-width: none; }
+html body .faq-ask .wp-block-buttons { gap: .7rem; margin-top: 1.1rem; }
+html body .faq-ask .wp-block-button > a {
+  min-height: 2.75rem;
+  padding: .5rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+}
+html body .faq-ask .wp-block-buttons .wp-block-button:not(.is-style-outline) > a.wp-block-button__link {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  box-shadow: 0 14px 28px -14px rgba(34, 211, 238, .8);
+}
+html body .faq-ask .wp-block-buttons .wp-block-button:not(.is-style-outline) > a.wp-block-button__link:is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body .faq-ask .wp-block-buttons .wp-block-button.is-style-outline > a.wp-block-button__link {
+  border: 1.5px solid var(--mh-card-line) !important;
+  background: transparent !important;
+  color: var(--color-text) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+html body .faq-ask .wp-block-buttons .wp-block-button.is-style-outline > a.wp-block-button__link:is(:hover, :focus-visible) { border-color: #22d3ee !important; box-shadow: 0 0 0 4px rgba(34, 211, 238, .14); }
+
+@media (width >= 1025px) {
+  /* The last row takes the spare height, so a tall question list does not stretch the gaps between left-column items. */
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container { grid-template-rows: repeat(11, auto) 1fr; }
+  .mh-page-home #questions:has(.faq-ask) > .mh-illus--questions { display: none; }
+}
+@media (width < 1025px) {
+  /* One column: the question list comes before the card. */
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container { display: flex; flex-direction: column; }
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container > .faq-ask { order: 2; }
+}
+@media (max-width: 640px) {
+  html body ul.faq-points { flex-direction: column; align-items: flex-start; }
+  html body .mh-block-faq details > summary::before { width: 1.9rem; height: 1.9rem; font-size: .85rem; }
+}
+@media (forced-colors: active) { html body .faq-ask .wp-block-button > a { forced-color-adjust: auto; } }
