@@ -7884,6 +7884,29 @@ html body :is(.shop-card, .work-card) .project-type-row .spec-badge + .spec-badg
   box-shadow: 0 18px 36px -18px rgba(29, 95, 214, .6);
 }
 .hero-feat .hero-feat__shot img { border-radius: .72rem; }
+/* 3.54.0 · The frame's gradient spins around the screenshot like the About photo ring
+   (--mh-ring-* and mh-ring-spin live in about-page.css; both are global). Hover or focus
+   shifts the colors; with reduced motion it stays still. The card gets the same
+   lime-to-blue background as the About photo card. */
+.hero-feat .hero-feat__shot {
+  --mh-ring-a: #a3e635;
+  --mh-ring-b: #22d3ee;
+  --mh-ring-c: #3b82f6;
+  background: conic-gradient(from var(--mh-ring-angle), var(--mh-ring-a), var(--mh-ring-b), var(--mh-ring-c), #8b5cf6, var(--mh-ring-a));
+}
+.hero-feat:is(:hover, :focus-within) .hero-feat__shot {
+  --mh-ring-a: #3b82f6;
+  --mh-ring-b: #8b5cf6;
+  --mh-ring-c: #a3e635;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-feat .hero-feat__shot {
+    animation: mh-ring-spin 6s linear infinite;
+    transition: --mh-ring-a .4s, --mh-ring-b .4s, --mh-ring-c .4s;
+  }
+}
+.hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 18%, #fff) 0%, #fff 45%, color-mix(in srgb, #3b82f6 16%, #fff) 100%); }
+html.mh-dark .hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 12%, #16263d) 0%, #16263d 45%, color-mix(in srgb, #3b82f6 30%, #16263d) 100%); }
 .hero-feat .hero-feat__title {
   margin: 1.1rem 0 .4rem;
   font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.1rem);

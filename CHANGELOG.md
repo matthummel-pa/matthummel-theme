@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.54.0 — Spinning frame on the home hero theme card
+
+- Home hero "Newest theme" card: the gradient frame around the screenshot now spins like the About photo ring (one turn every 6 seconds) and shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The card has the same lime-to-blue gradient background as the About photo card, with a dark-mode version.
+
 ## 3.53.0 — Spinning photo ring and card gradient
 
 - About profile photo: the green-to-blue ring now spins around the photo (one turn every 6 seconds) and still shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
