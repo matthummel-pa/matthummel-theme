@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.53.0 — Spinning photo ring and card gradient
+
+- About profile photo: the green-to-blue ring now spins around the photo (one turn every 6 seconds) and still shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The photo card has a soft gradient background: a lime tint at the top left fading through the card color to a blue tint at the bottom right, with a deeper navy version in dark mode.
+
 ## 3.52.0 — About profile photo card
 
 - The About profile photo (the Image block with the `about-portrait-inline` class) sits in a card: a green-to-blue gradient ring around the photo, a centered caption, and the social icons under it in the same box. On hover or keyboard focus the ring turns and shifts to blue, violet and lime; with reduced motion the colors change without the turn.
