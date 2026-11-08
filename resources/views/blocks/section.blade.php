@@ -17,6 +17,17 @@
     $content = substr_replace($content, $illustration, $m[0][1], 0);
     $illustration = '';
   }
+  // Signup under a post grid (3.55.0): the heading, text and email form that follow the
+  // Recent posts block sit together in one brand card. The form styles come from .mh-newsletter.
+  $postsAt = strpos($content, 'mh-recent-posts');
+  $formAt = strpos($content, 'hostinger-reach-block-subscription-form-wrapper');
+  if ($postsAt !== false && $formAt !== false && $formAt > $postsAt) {
+    $headAt = strrpos(substr($content, 0, $formAt), '<h3');
+    $start = ($headAt !== false && $headAt > $postsAt) ? $headAt : strrpos(substr($content, 0, $formAt), '<div');
+    if ($start !== false && $start > $postsAt) {
+      $content = substr($content, 0, $start).'<div class="mh-signup-card mh-newsletter">'.substr($content, $start).'</div>';
+    }
+  }
   // About Story (3.7.34): the profile photo sits in the right column under the
   // drawing. It follows the hero block's "Show profile photo" toggle and caption.
   $portrait = null;
