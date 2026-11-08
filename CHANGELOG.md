@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.55.0 — Signup card under the home post grid
+
+- Home "What's new": the email signup under the post grid now sits in its own card, well spaced from the posts. The card has the brand gradient border (lime, cyan, blue, violet), a soft lime-to-blue background, a gradient heading, a pill email field and a lime-to-cyan Subscribe button. On wide screens the text is on the left and the form on the right.
+- The card is added when the section renders (`blocks/section.blade.php`), so page content is unchanged, and it reuses the Journal newsletter form styles.
+
 ## 3.54.0 — Spinning frame on the home hero theme card
 
 - Home hero "Newest theme" card: the gradient frame around the screenshot now spins like the About photo ring (one turn every 6 seconds) and shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
