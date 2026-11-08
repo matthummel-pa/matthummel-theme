@@ -166,7 +166,8 @@ html.mh-dark .mh-page-about :is(.h-glance__fact, .resume-card:not(.is-current), 
 
 /* About profile photo card (3.52.0): the Image block with class "about-portrait-inline".
    app/blocks.php wraps the photo in .about-portrait__ring and adds the social icons
-   inside the figure. The ring is a green-to-blue gradient that turns and shifts on hover. */
+   inside the figure. The ring is a green-to-blue gradient that spins around the photo
+   (3.53.0) and shifts to blue, violet and lime on hover; it stays still with reduced motion. */
 @property --mh-ring-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 @property --mh-ring-a { syntax: "<color>"; inherits: false; initial-value: #a3e635; }
 @property --mh-ring-b { syntax: "<color>"; inherits: false; initial-value: #22d3ee; }
@@ -179,9 +180,12 @@ html.mh-dark .mh-page-about :is(.h-glance__fact, .resume-card:not(.is-current), 
   padding: 1.5rem 1.75rem 1.25rem;
   border: 1px solid var(--color-border);
   border-radius: 20px;
-  background: var(--color-card, #fff);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--lime-400, #a3e635) 26%, var(--color-card, #fff)) 0%, var(--color-card, #fff) 45%, color-mix(in srgb, var(--blue-500, #3b82f6) 24%, var(--color-card, #fff)) 100%);
   box-shadow: 0 1px 2px rgba(15, 22, 35, .04), 0 18px 40px -28px rgba(37, 99, 235, .35);
   text-align: center;
+}
+html.mh-dark .wp-block-image.about-portrait-inline {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--lime-400, #a3e635) 16%, var(--color-card)) 0%, var(--color-card) 45%, color-mix(in srgb, var(--blue-500, #3b82f6) 34%, var(--color-card)) 100%);
 }
 .about-portrait-inline .about-portrait__ring {
   --mh-ring-a: var(--lime-400, #a3e635);
@@ -202,10 +206,13 @@ html.mh-dark .mh-page-about :is(.h-glance__fact, .resume-card:not(.is-current), 
   --mh-ring-a: var(--blue-500, #3b82f6);
   --mh-ring-b: var(--violet-500, #6366f1);
   --mh-ring-c: var(--lime-400, #a3e635);
-  --mh-ring-angle: 180deg;
 }
+@keyframes mh-ring-spin { to { --mh-ring-angle: 360deg; } }
 @media (prefers-reduced-motion: no-preference) {
-  .about-portrait-inline .about-portrait__ring { transition: --mh-ring-angle .7s ease, --mh-ring-a .4s, --mh-ring-b .4s, --mh-ring-c .4s; }
+  .about-portrait-inline .about-portrait__ring {
+    animation: mh-ring-spin 6s linear infinite;
+    transition: --mh-ring-a .4s, --mh-ring-b .4s, --mh-ring-c .4s;
+  }
 }
 .wp-block-image.about-portrait-inline.aligncenter > figcaption,
 .wp-block-image.about-portrait-inline > figcaption { display: block; margin: .85rem 0 0; text-align: center; }
