@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.52.0 — About profile photo card
+
+- The About profile photo (the Image block with the `about-portrait-inline` class) sits in a card: a green-to-blue gradient ring around the photo, a centered caption, and the social icons under it in the same box. On hover or keyboard focus the ring turns and shifts to blue, violet and lime; with reduced motion the colors change without the turn.
+- The ring and icons are added when the block renders (`app/blocks.php`), so the page content is unchanged.
+
 ## 3.51.2 — About page card hierarchy
 
 - About page only: glance facts, past resume roles and skill tiles now use a quiet hairline border that turns lime on hover. Lime stays on the main cards (services, How I work, the current role, skill groups), so the page has a clear focus and skill tiles no longer show a lime border inside a lime group.
