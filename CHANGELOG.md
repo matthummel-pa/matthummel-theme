@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.51.2 — About page card hierarchy
+
+- About page only: glance facts, past resume roles and skill tiles now use a quiet hairline border that turns lime on hover. Lime stays on the main cards (services, How I work, the current role, skill groups), so the page has a clear focus and skill tiles no longer show a lime border inside a lime group.
+
 ## 3.51.1 — Marketing events wait for gtag
 
 - The GA4 events from 3.51.0 are held in memory until gtag() exists. The cache plugin delays Site Kit's gtag.js until the first tap or scroll, so an event at page load (view_item) found no gtag and was lost. Events now wait up to 30 seconds, then are dropped; nothing is stored in the browser.
