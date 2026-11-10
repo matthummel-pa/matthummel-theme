@@ -21,8 +21,8 @@
     "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
     "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
     "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
-    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
-    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
+    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites.",
+    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 33 server-rendered blocks, 13 patterns, 15 templates and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
     "benefits": [
       "Live “open now” and holiday hours per location, correct on cached pages",
@@ -41,13 +41,13 @@
       "No page builder, no ACF, fonts bundled locally"
     ],
     "deliverables": [
-      "Cobble & Candle block theme (28 custom blocks, 4 style variations)",
+      "Cobble & Candle block theme (33 custom blocks, 13 patterns, 4 style variations)",
       "Cobble & Candle Core plugin (bundled, one-click install)",
       "Room booking engine with iCal import and export",
       "Setup wizard and demo content",
       "Menu CSV import / export",
       "Messages inbox, Status & logs screen",
-      "Owner guide (11 pages), FAQ, developer hook reference",
+      "Owner guide, FAQ, developer hook reference",
       "Screenshot, readme, licenses, and changelog"
     ],
     "blocks": [
@@ -150,7 +150,7 @@
     ],
     "metrics": [
       [
-        "28",
+        "33",
         "custom blocks"
       ],
       [
@@ -215,7 +215,7 @@
       ]
     },
     "github": "",
-    "version": "1.0.1",
+    "version": "1.5.1",
     "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [
