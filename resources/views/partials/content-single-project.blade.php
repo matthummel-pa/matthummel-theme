@@ -73,12 +73,12 @@
   $hasHood = $specRows !== [] || $architecture !== '' || $handoff !== '' || $palette !== [];
   $askUrl = '#project-ask';
   $video = \App\mh_project_video($postId);
+  $hasPrimary = $fs !== null || $freeUrl !== '' || $buyUrl !== '';
 @endphp
 
 <article {!! post_class('concept-page project-page') !!}>
   @component('partials.page-hero', ['extra' => 'page-header--project', 'calm' => true, 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
-    @if ($heroImage !== '' || $video !== [] || $proof !== [])
-      @slot('aside')
+    @slot('aside')
         {{-- Framed media with a slow gradient ring. A video shows its poster with a play button; it never autoplays. --}}
         @if ($heroImage !== '' || $video !== [])
         <figure class="project-hero-media{{ $video !== [] ? ' has-video' : '' }}"{!! $video !== [] ? ' data-project-video' : '' !!}>
@@ -96,6 +96,18 @@
           </div>
         </figure>
         @endif
+        <div class="project-hero-links">
+          @if ($demo !== '')
+            <a class="btn{{ $hasPrimary ? ' btn-outline' : '' }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+              {!! \App\mh_svg_icon('globe', 15) !!}
+              {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+            </a>
+          @endif
+          <a class="btn btn-outline" href="{{ $askUrl }}">
+            {!! \App\mh_svg_icon('mail', 15) !!}
+            {{ __('Ask about this', 'sage') }}
+          </a>
+        </div>
         @if ($proof !== [])
           <div class="project-hero-stats">
             <ul class="project-proof" aria-label="{{ __('At a glance', 'sage') }}">
@@ -109,7 +121,6 @@
           </div>
         @endif
       @endslot
-    @endif
     <div class="project-hero-head">
       @include('partials.project-type-row', ['p' => $card])
       <h1 class="display-title is-hero">{{ $title }}</h1>
@@ -125,67 +136,35 @@
       <p class="project-type-row"><span class="spec-badge">{{ __('Coming soon', 'sage') }}</span></p>
     @endif
 
-    <div class="concept-hero-actions project-hero-actions">
-      @if ($fs !== null)
-        <a class="btn" href="#buy">
-          {!! \App\mh_svg_icon('cart', 15) !!}
-          {{ __('Buy the theme', 'sage') }}
-        </a>
-        @if ($fromPrice !== '')
-          <span class="project-hero-price">{{ sprintf(__('From %s per year', 'sage'), $fromPrice) }}</span>
-        @endif
-        @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('globe', 15) !!}
-            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+    @if ($hasPrimary || $hasGithub)
+      {{-- Live demo and Ask about this sit under the video (hero aside), so the copy keeps one primary action. --}}
+      <div class="concept-hero-actions project-hero-actions">
+        @if ($fs !== null)
+          <a class="btn" href="#buy">
+            {!! \App\mh_svg_icon('cart', 15) !!}
+            {{ __('Buy the theme', 'sage') }}
+          </a>
+          @if ($fromPrice !== '')
+            <span class="project-hero-price">{{ sprintf(__('From %s per year', 'sage'), $fromPrice) }}</span>
+          @endif
+        @elseif ($freeUrl !== '')
+          <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">
+            {!! \App\mh_svg_icon('download', 15) !!}
+            {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span>
+          </a>
+        @elseif ($buyUrl !== '')
+          <a class="btn" href="{{ esc_url($buyUrl) }}">
+            {!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!}
+            {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}
           </a>
         @endif
-        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
-      @elseif ($freeUrl !== '')
-        <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">
-          {!! \App\mh_svg_icon('download', 15) !!}
-          {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span>
-        </a>
-        @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('globe', 15) !!}
-            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
+        @if ($hasGithub)
+          <a class="h-text-arrow" href="{{ esc_url($github) }}" rel="noopener" target="_blank">
+            {{ __('View code', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
           </a>
         @endif
-        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
-      @elseif ($buyUrl !== '')
-        <a class="btn" href="{{ esc_url($buyUrl) }}">
-          {!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!}
-          {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}
-        </a>
-        @if ($demo !== '')
-          <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-            {!! \App\mh_svg_icon('globe', 15) !!}
-            {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
-          </a>
-        @endif
-        <a class="h-text-arrow" href="{{ $askUrl }}">{{ __('Ask about this', 'sage') }} <span aria-hidden="true">→</span></a>
-      @elseif ($demo !== '')
-        <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-          {!! \App\mh_svg_icon('globe', 15) !!}
-          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
-        </a>
-        <a class="btn btn-outline" href="{{ $askUrl }}">
-          {!! \App\mh_svg_icon('mail', 15) !!}
-          {{ __('Ask about this', 'sage') }}
-        </a>
-      @else
-        <a class="btn" href="{{ $askUrl }}">
-          {!! \App\mh_svg_icon('mail', 15) !!}
-          {{ __('Ask about this', 'sage') }}
-        </a>
-      @endif
-      @if ($hasGithub)
-        <a class="h-text-arrow" href="{{ esc_url($github) }}" rel="noopener" target="_blank">
-          {{ __('View code', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span>
-        </a>
-      @endif
-    </div>
+      </div>
+    @endif
 
     <p class="project-hero-meta">
       @if ($gh['repo'] !== '')

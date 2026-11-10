@@ -904,7 +904,7 @@ function mh_project_chunk_text(string $text, int $max = 190): array
             $count = 0;
         }
         $current = $current === '' ? $sentence : $current.' '.$sentence;
-        ++$count;
+        $count++;
     }
     if ($current !== '') {
         $chunks[] = $current;

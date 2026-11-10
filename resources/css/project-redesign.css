@@ -453,3 +453,19 @@ html.mh-dark .project-faq-section .project-faq { background: #16263d; }
     scrollbar-width: thin;
   }
 }
+
+/* Live demo + Ask about this, directly under the video (3.58.0). */
+.project-hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1rem;
+}
+.project-hero-links .btn { flex: 1 1 10rem; justify-content: center; }
+.page-header--project .project-hero-links .btn-outline {
+  color: #fff;
+  border-color: rgba(201, 217, 239, .45);
+}
+.page-header--project .project-hero-links .btn-outline:hover {
+  background: rgba(255, 255, 255, .1);
+}

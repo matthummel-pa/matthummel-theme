@@ -8,6 +8,7 @@
 - Story steps now read as a one-line lead plus short points. The Handoff text is split the same way. The words are not rewritten, only broken at sentence ends.
 - Reading width is capped near 62 characters, with more space between sections.
 - The at-a-glance stats moved out of the hero copy into a box under the video.
+- "Live demo" and "Ask about this" moved from the hero copy to directly under the video; the copy keeps the one primary action (buy or download) and "View code".
 - Screenshots: the thumbnails sit in a scrolling rail to the left of the big image (under it on phones), with a green-to-blue scrollbar. Firefox gets a flat green one, since it cannot draw a gradient scrollbar.
 - Lower sections follow a landing-page rhythm: centred section heads, features as three-column cards with a check badge, one dark call-to-action band (same wording as the hero button) before the story, alternating full-width bands, lifted story and spec cards, and a plus/minus FAQ accordion.
 - New `resources/css/project-redesign.css` (imported just before `polish.css`) and `resources/js/project-video.js`.
