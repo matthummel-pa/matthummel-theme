@@ -62,6 +62,8 @@
   $freeUrl = \App\mh_project_free_download_url($projectSlug);
   // Catalog products waiting on their Freemius product: no Buy button, a badge instead.
   $soon = \App\mh_project_is_coming_soon($projectSlug);
+  // On sale now (Freemius plan picker shows): the page speaks to buyers, so the portfolio wording steps aside.
+  $isOnSale = $fs !== null && ! $soon;
   $storySteps = array_values(array_filter([
     ['title' => __('Why I built it', 'sage'), 'text' => (string) ($story['challenge'] ?? '')],
     ['title' => __('What I did', 'sage'), 'text' => (string) ($story['approach'] ?? '')],
@@ -173,7 +175,7 @@
       @if ($gh['repo'] !== '')
         <span class="project-hero-meta__repo">{!! \App\mh_svg_icon('github', 13) !!} {{ $gh['owner'] }}/{{ $gh['repo'] }}</span>
       @endif
-      @if (! empty($case['notice']))
+      @if (! $isOnSale && ! empty($case['notice']))
         <span class="project-hero-meta__note" role="note">{!! \App\mh_svg_icon('shield', 13) !!} {{ $case['notice'] }}</span>
       @endif
     </p>
@@ -479,8 +481,13 @@
       <div class="sec-head">
         <div>
           <p class="eyebrow">{{ __('Feedback', 'sage') }}</p>
-          <h2 id="project-talk-heading" class="display-title is-section">{{ __('What would you change?', 'sage') }}</h2>
-          <p class="sec-intro">{{ __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
+          @if ($isOnSale)
+            <h2 id="project-talk-heading" class="display-title is-section">{{ __('Questions before you buy', 'sage') }}</h2>
+            <p class="sec-intro">{{ __('Leave a public note or write me privately. I read every reply.', 'sage') }}</p>
+          @else
+            <h2 id="project-talk-heading" class="display-title is-section">{{ __('What would you change?', 'sage') }}</h2>
+            <p class="sec-intro">{{ __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
+          @endif
         </div>
         <button type="button" class="h-text-arrow post-copy-link project-talk__copy" data-copy="{{ esc_url($permalink) }}">
           {!! \App\mh_svg_icon('share', 14) !!}
@@ -496,7 +503,7 @@
           @php comments_template(); @endphp
         </div>
         <div class="project-talk__ask" id="project-ask">
-          <h2 class="display-title is-section">{{ __('Ask about this project', 'sage') }}</h2>
+          <h2 class="display-title is-section">{{ $isOnSale ? sprintf(__('Ask about %s', 'sage'), $title) : __('Ask about this project', 'sage') }}</h2>
           <p class="sec-intro">{{ __('Name, email, and a few sentences. This goes straight to my inbox.', 'sage') }}</p>
           @include('partials.contact-form', [
             'compact' => true,
@@ -522,15 +529,26 @@
     </section>
   @endif
 
-  @include('partials.cta-band', [
-    'kicker' => __('Work with me', 'sage'),
-    'title' => sprintf(__('Like %s?', 'sage'), $title),
-    'text' => __('Tell me what you would change, or write about a role.', 'sage').' '.\App\mh_reply_sla(),
-    'label' => __('Ask about this', 'sage'),
-    'href' => $askUrl,
-    'secondary' => __('Hire me', 'sage'),
-    'secondaryHref' => home_url('/about/#hire'),
-  ])
+  @if ($isOnSale)
+    {{-- A buyer gets one next step (the setup offer), not the hiring pitch. --}}
+    @include('partials.cta-band', [
+      'kicker' => __('Done for you', 'sage'),
+      'title' => __('Want it set up for you?', 'sage'),
+      'text' => __('Send me a note about your site and I will reply with what a setup involves.', 'sage').' '.\App\mh_reply_sla(),
+      'label' => __('Ask about setup', 'sage'),
+      'href' => $askUrl,
+    ])
+  @else
+    @include('partials.cta-band', [
+      'kicker' => __('Work with me', 'sage'),
+      'title' => sprintf(__('Like %s?', 'sage'), $title),
+      'text' => __('Tell me what you would change, or write about a role.', 'sage').' '.\App\mh_reply_sla(),
+      'label' => __('Ask about this', 'sage'),
+      'href' => $askUrl,
+      'secondary' => __('Hire me', 'sage'),
+      'secondaryHref' => home_url('/about/#hire'),
+    ])
+  @endif
 </article>
 
 @if ($slides !== [])

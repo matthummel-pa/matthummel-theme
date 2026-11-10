@@ -30,6 +30,8 @@ export function initProjectFeedback() {
     }
     if (countEl) {
       countEl.textContent = String(count)
+      // A bare 0 reads as "nobody liked this", so the number only shows once there is one.
+      countEl.hidden = Number(count) === 0
     }
   }
 
