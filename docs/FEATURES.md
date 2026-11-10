@@ -4,6 +4,12 @@ What the 3.x Sage theme does, and where it lives.
 
 WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product page, and the shop listing is `template-shop.blade.php`. Notes below about the WooCommerce cart, checkout, My Account desk, shop archive and download delivery were removed with the code.
 
+## Editor’s notes (3.57.0 motion pass)
+
+- `resources/css/motion.css` is the motion layer and is imported in `app.css` just before `polish.css`. Add new transitions there rather than in portfolio.css/studio.css. Transform and opacity only; the FAQ `block-size` tween is the one opt-in exception (`interpolate-size: allow-keywords`). Every rule has a counterpart in the `prefers-reduced-motion` block at the bottom.
+- `resources/js/nav-indicator.js` mounts one sliding capsule per rail listed in `RAILS`. To give another rail the effect, add a row (list selector, item selector, active selector, `followHover`) and style `.your-rail .mh-nav-indicator` in motion.css. The rail gets `.has-nav-indicator` so the static active styles can be turned off only when the capsule exists.
+- Press states use `--press-scale` (.97). Cards press on `(hover: none)` only.
+
 ## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
 
 - The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.

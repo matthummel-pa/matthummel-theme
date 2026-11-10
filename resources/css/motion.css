@@ -1,0 +1,228 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.57.0 — Motion pass
+   Drawer choreography, sliding nav indicators, press states, FAQ open/close.
+   Loaded just before polish.css so it layers on portfolio.css / studio.css without edits there.
+   Transform + opacity only (the FAQ block-size interpolation is the one
+   opt-in exception). Everything here is off under prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Tight structural spring: fast start, soft landing. Stands in for stiffness 400 / damping 30. */
+  --ease-spring: cubic-bezier(.32, .72, 0, 1);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --dur-fast: .12s;
+  --dur-base: .28s;
+  --dur-drawer: .42s;
+  --press-scale: .97;
+  /* Lets `block-size: auto` animate in browsers that support it (FAQ panels). */
+  interpolate-size: allow-keywords;
+}
+
+/* ─── M0 · Drawer choreography ────────────────────────────────────────────── */
+
+.mh-popout-overlay {
+  background: rgba(6, 15, 34, .42);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: opacity var(--dur-base) ease;
+}
+
+.mh-popout {
+  /* Closing is quicker than opening so the page comes back right away.
+     pointer-events: the closed panel is full-bleed on phones and must not catch taps while faded out. */
+  transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-fast) linear var(--dur-fast);
+  opacity: 0;
+  pointer-events: none;
+}
+body.mh-popout-open .mh-popout {
+  opacity: 1;
+  pointer-events: auto;
+  transition: transform var(--dur-drawer) var(--ease-spring), opacity var(--dur-fast) linear;
+}
+
+/* Contents land a beat after the panel: a short lift, staggered by row. */
+.mh-popout-head,
+.mh-popout-menu > li,
+.mh-popout-elsewhere,
+.mh-popout-cta {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition: opacity .2s ease, transform .2s ease;
+}
+body.mh-popout-open :is(.mh-popout-head, .mh-popout-menu > li, .mh-popout-elsewhere, .mh-popout-cta) {
+  opacity: 1;
+  transform: none;
+  transition: opacity .32s var(--ease-out) var(--stagger, .08s), transform .42s var(--ease-spring) var(--stagger, .08s);
+}
+body.mh-popout-open .mh-popout-head { --stagger: .06s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(1) { --stagger: .10s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(2) { --stagger: .14s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(3) { --stagger: .18s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(4) { --stagger: .22s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(5) { --stagger: .26s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(6) { --stagger: .30s; }
+body.mh-popout-open .mh-popout-menu > li:nth-child(n + 7) { --stagger: .33s; }
+body.mh-popout-open .mh-popout-elsewhere { --stagger: .36s; }
+body.mh-popout-open .mh-popout-cta { --stagger: .40s; }
+
+/* Phones: the panel is full-bleed, so a side slide reads as a page swap.
+   Rise from below instead; the x offset is dropped so nothing can overflow sideways. */
+@media (max-width: 480px) {
+  .mh-popout { transform: translate3d(0, 28px, 0); }
+  body.mh-popout-open .mh-popout { transform: none; }
+}
+
+/* ─── M1 · Sliding nav indicators (nav-indicator.js) ──────────────────────── */
+
+.has-nav-indicator { position: relative; }
+.has-nav-indicator > a,
+.has-nav-indicator > li { position: relative; z-index: 1; }
+
+.has-nav-indicator > .mh-nav-indicator {
+  position: absolute;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, width;
+  transform-origin: left center;
+}
+/* Width is the one non-transform property here. The capsule is out of flow, so
+   changing it never reflows the rail; it only repaints the capsule itself. */
+.mh-nav-indicator.is-settled {
+  transition: transform var(--dur-drawer) var(--ease-spring), width var(--dur-drawer) var(--ease-spring), opacity var(--dur-fast) ease;
+}
+
+/* Header nav: the capsule carries the pill; items go transparent while it rides under them. */
+.header-nav-list .mh-nav-indicator {
+  border-radius: var(--radius, 8px);
+  background: var(--blue-600);
+}
+.header-nav-list.has-nav-indicator a {
+  transition: color .18s ease, background .18s ease;
+}
+html .header-nav-list.has-nav-indicator a:hover,
+html .header-nav-list.has-nav-indicator a:focus-visible {
+  background: transparent;
+  color: #fff;
+}
+/* The resting (current page) item keeps its white text while the capsule visits a hovered item. */
+html .header-nav-list.has-nav-indicator .current-menu-item > a,
+html .header-nav-list.has-nav-indicator a[aria-current="page"] {
+  background: transparent;
+  transition-delay: .06s;
+}
+.header-nav-list.has-nav-indicator:hover .current-menu-item > a:not(:hover),
+.header-nav-list.has-nav-indicator:hover a[aria-current="page"]:not(:hover) {
+  color: var(--color-text);
+  transition-delay: 0s;
+}
+.header-nav-list.has-nav-indicator .current-menu-item > a::after,
+.header-nav-list.has-nav-indicator a[aria-current="page"]::after { display: none; }
+
+/* On this page pills: the capsule carries the active gradient. */
+[data-page-nav-scroller] .mh-nav-indicator {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--violet-700) 0%, var(--violet-900) 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+html.mh-dark [data-page-nav-scroller] .mh-nav-indicator {
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%);
+}
+html [data-page-nav-scroller].has-nav-indicator .h-page-nav__pill.is-active,
+html [data-page-nav-scroller].has-nav-indicator .h-page-nav__pill[aria-current="true"] {
+  background: transparent;
+  border-color: transparent;
+  transition: color .2s ease .08s, border-color .2s ease;
+}
+
+/* ─── M2 · Press states (touch-safe, no hover required) ───────────────────── */
+
+.btn:active {
+  transform: translate3d(var(--btn-mx, 0px), var(--btn-my, 0px), 0) scale(var(--press-scale));
+  transition-duration: .08s;
+}
+.h-page-nav__pill:active,
+.filter-pill:active,
+.mh-popout-close:active,
+.theme-toggle:active,
+.menu-toggle:active,
+.h-page-nav__arrow:active {
+  transform: scale(var(--press-scale));
+  transition: transform .08s ease;
+}
+.mh-popout-menu a:active {
+  transform: translate3d(2px, 0, 0) scale(.985);
+  transition: transform .08s ease;
+}
+/* Cards only get a press state on touch: hover devices already lift and tilt them. */
+@media (hover: none) {
+  .lift-card:active,
+  .work-card:active,
+  .who-card:active,
+  .repo-card:active,
+  .post-card:active,
+  .h-work-card-v2:active {
+    transform: scale(.985);
+    transition: transform .1s ease;
+  }
+}
+
+/* ─── M3 · FAQ open/close ─────────────────────────────────────────────────── */
+
+/* Height tween where `::details-content` + interpolate-size exist (Chromium 131+);
+   everywhere else the panel still gets the content fade below. */
+.faq-list details::details-content,
+.h-faq__item::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size var(--dur-base) var(--ease-out), content-visibility var(--dur-base) allow-discrete;
+}
+.faq-list details[open]::details-content,
+.h-faq__item[open]::details-content {
+  block-size: auto;
+}
+.faq-list details[open] > :not(summary),
+.h-faq__item[open] > :not(summary) {
+  animation: mh-faq-in .32s var(--ease-out) both;
+}
+.faq-list summary::after {
+  transition: border-color .15s, color .15s, background .15s, transform var(--dur-base) var(--ease-spring);
+}
+.faq-list details[open] > summary::after { transform: rotate(180deg); }
+
+@keyframes mh-faq-in {
+  from { opacity: 0; transform: translate3d(0, -6px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ─── Reduced motion: everything above is off ─────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  :root { interpolate-size: numeric-only; }
+  .mh-popout { transition: none; opacity: 1; transform: translateX(110%); }
+  body.mh-popout-open .mh-popout { transition: none; transform: none; }
+  .mh-popout-overlay { transition: none; }
+  .mh-popout-head,
+  .mh-popout-menu > li,
+  .mh-popout-elsewhere,
+  .mh-popout-cta { opacity: 1; transform: none; transition: none; }
+  .mh-nav-indicator.is-settled { transition: none; }
+  .btn:active,
+  .h-page-nav__pill:active,
+  .filter-pill:active,
+  .mh-popout-menu a:active,
+  .mh-popout-close:active,
+  .theme-toggle:active,
+  .menu-toggle:active,
+  .h-page-nav__arrow:active { transform: none; }
+  .faq-list details::details-content,
+  .h-faq__item::details-content { transition: none; }
+  .faq-list details[open] > :not(summary),
+  .h-faq__item[open] > :not(summary) { animation: none; }
+  .faq-list summary::after { transition: none; }
+}
