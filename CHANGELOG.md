@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.57.0 — Motion pass: sliding nav indicators, press states, FAQ tween
+
+- New `resources/css/motion.css` (drawer stagger, press states, FAQ open/close) and `resources/js/nav-indicator.js`. One sliding capsule per rail moves between items in the header nav (follows hover, rests on the current page) and the sticky "On this page" pills (follows the active section).
+- Transform and opacity only; the FAQ `block-size` tween is the one opt-in exception. Every rule has a `prefers-reduced-motion` counterpart, and the script does not run for those visitors, so they keep the static styles.
+- `motion.css` is imported just before `polish.css`, which stays last.
+
 ## 3.56.1 — Pause button removed, no bar under hero titles
 
 - The pause-animations button is gone from the header, along with its script and styles. With the button gone, the phone header has more room, and the "Get updates" icon-only range is back to 901 to 1099px.
