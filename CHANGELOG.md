@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.55.1 — Cobble & Candle page speaks to buyers
+
+- A product on sale no longer shows the "sample work I built in public" note in its hero. Projects that are not for sale keep it.
+- On a product on sale, the Feedback heading is "Questions before you buy", the form heading names the product, and the closing band offers a setup instead of "Hire me".
+- Like and star buttons hide their number while it is 0, on every project page. The number appears with the first like or star.
+- Cobble & Candle catalog entry matches release 1.5.1: 33 blocks (was 28), 13 patterns, 15 templates, version 1.5.1 (was 1.0.1). The audience line no longer mentions hiring managers. One-time reseed `mh_product_catalog_v21` updates only this product.
+
 ## 3.55.0 — Signup card under the home post grid
 
 - Home "What's new": the email signup under the post grid now sits in its own card, well spaced from the posts. The card has the brand gradient border (lime, cyan, blue, violet), a soft lime-to-blue background, a gradient heading, a pill email field and a lime-to-cyan Subscribe button. On wide screens the text is on the left and the form on the right.
