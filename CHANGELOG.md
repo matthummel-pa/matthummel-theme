@@ -8,6 +8,8 @@
 - Story steps now read as a one-line lead plus short points. The Handoff text is split the same way. The words are not rewritten, only broken at sentence ends.
 - Reading width is capped near 62 characters, with more space between sections.
 - The at-a-glance stats moved out of the hero copy into a box under the video.
+- Check circles and bullet dots are brighter (lime to cyan to blue, with a soft glow). Story steps have numbered boxes joined by a green-to-blue line: it draws in as the section scrolls into view, badges pop in one after another, and a light pulse keeps travelling along it. Reduced motion shows it still; phones get a vertical line.
+- Every box on the project page (features, story, specs, architecture, handoff, palette, pricing tiers, FAQ, screenshots, stats, call-to-action band) now has the same green-to-blue gradient border. Under the hood is rebuilt as separate boxes: spec tiles with the label above the value, and one box per architecture or handoff point.
 - "Live demo" and "Ask about this" moved from the hero copy to directly under the video; the copy keeps the one primary action (buy or download) and "View code".
 - Screenshots: the thumbnails sit in a scrolling rail to the left of the big image (under it on phones), with a green-to-blue scrollbar. Firefox gets a flat green one, since it cannot draw a gradient scrollbar.
 - Lower sections follow a landing-page rhythm: centred section heads, features as three-column cards with a check badge, one dark call-to-action band (same wording as the hero button) before the story, alternating full-width bands, lifted story and spec cards, and a plus/minus FAQ accordion.
