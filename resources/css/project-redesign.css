@@ -175,3 +175,281 @@ html.mh-dark .project-story__lead { color: #f4f7fb; }
 .project-page .project-section__head {
   margin-block-end: 1.5rem;
 }
+
+/* ─── Stats box under the video (3.58.0) ──────────────────────────────────── */
+.project-hero-stats {
+  margin-top: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(201, 217, 239, .24);
+  border-radius: 1rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+  box-shadow: 0 14px 36px rgba(2, 8, 20, .35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.project-hero-stats .project-proof {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.25rem, 1fr));
+  gap: .85rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.project-hero-stats .project-proof__item + .project-proof__item {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 1px solid rgba(201, 217, 239, .2);
+}
+@media (max-width: 520px) {
+  .project-hero-stats .project-proof__item + .project-proof__item {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+}
+@media (min-width: 960px) {
+  /* Room for the video plus the stats box so the aside never spills over the wave. */
+  .page-header--project .page-header-inner:has(.page-header__aside) {
+    min-height: 31rem;
+  }
+}
+
+/* ─── Landing-page rhythm for the lower sections ──────────────────────────── */
+
+/* Section heads: centred, bigger, with a short lead. */
+.project-page .project-section__head {
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.project-page .project-section__head .display-title.is-section {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.1;
+}
+.project-page .project-section__intro {
+  margin-inline: auto;
+}
+
+/* Alternate full-bleed bands so each section reads as its own beat. */
+.project-section--band {
+  position: relative;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+  box-shadow: 0 0 0 100vmax var(--band-bg, #f2f6fc);
+  clip-path: inset(0 -100vmax);
+  background: var(--band-bg, #f2f6fc);
+}
+html.mh-dark .project-section--band {
+  --band-bg: #122238;
+}
+
+/* Features: three columns of cards with a check badge. */
+.project-feat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 960px) {
+  .project-feat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .project-feat-grid { grid-template-columns: 1fr; }
+}
+.project-feat-grid > .project-feat {
+  position: relative;
+  padding: 1.1rem 1.15rem 1.1rem 3.1rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(15, 28, 46, .05);
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease, border-color .2s ease;
+}
+.project-feat-grid > .project-feat::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: 1.2rem;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='m5.5 10.5 3 3 6-6.5'/%3E%3C/svg%3E") center / 80% no-repeat,
+    linear-gradient(135deg, #65a30d, #3b82f6);
+}
+@media (hover: hover) {
+  .project-feat-grid > .project-feat:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, #3b82f6 45%, var(--color-border));
+    box-shadow: 0 14px 30px rgba(15, 28, 46, .1);
+  }
+}
+html.mh-dark .project-feat-grid > .project-feat {
+  background: #16263d;
+  color: #e6edf7;
+}
+
+/* One clear next step between the features and the story. */
+.project-offer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-block: clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 1.25rem;
+  color: #f4f7fb;
+  background:
+    radial-gradient(ellipse 50% 90% at 90% 0%, rgba(59, 130, 246, .42), transparent 65%),
+    radial-gradient(ellipse 40% 70% at 0% 100%, rgba(163, 230, 53, .16), transparent 65%),
+    linear-gradient(135deg, #050d1c 0%, #0a1a33 100%);
+  box-shadow: 0 22px 50px rgba(5, 13, 28, .28);
+}
+.project-offer__title {
+  margin: 0;
+  font: 800 clamp(1.4rem, 2.6vw, 1.9rem)/1.15 var(--font-display);
+  letter-spacing: -.03em;
+  color: #fff;
+}
+.project-offer__note {
+  margin: .4rem 0 0;
+  color: #c9d9ef;
+  font-weight: 600;
+}
+.project-offer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+}
+.project-offer .h-text-arrow { color: #93c5fd; }
+
+/* Story and specs: lifted cards instead of a flat rule-lined table. */
+.project-story__steps {
+  gap: 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.project-story__step {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html.mh-dark .project-story__steps { background: transparent; }
+html.mh-dark .project-story__step { background: #16263d; }
+.project-hood__col {
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: #fff;
+}
+html.mh-dark .project-hood__col { background: #16263d; }
+
+/* FAQ: a tidy accordion with a plus that turns into a minus. */
+.project-faq-section .faq-list {
+  max-inline-size: 52rem;
+  margin-inline: auto;
+}
+.project-faq-section .project-faq {
+  border-radius: 1rem;
+  background: #fff;
+}
+html.mh-dark .project-faq-section .project-faq { background: #16263d; }
+.project-faq-section .project-faq summary {
+  position: relative;
+  padding-inline-end: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.project-faq-section .project-faq summary::-webkit-details-marker { display: none; }
+.project-faq-section .project-faq summary::after {
+  content: "+";
+  position: absolute;
+  inset-inline-end: .25rem;
+  top: 50%;
+  translate: 0 -50%;
+  font: 500 1.6rem/1 var(--font-display);
+  color: #3b82f6;
+}
+.project-faq-section .project-faq[open] summary::after { content: "\2212"; }
+.project-faq-section .project-faq p {
+  max-inline-size: 62ch;
+  line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-feat-grid > .project-feat { transition: none; }
+  .project-feat-grid > .project-feat:hover { transform: none; }
+}
+
+/* ─── Screenshots: thumbnails in a rail left of the big image (3.58.0) ─────── */
+@media (min-width: 761px) {
+  .project-page .project-stage__gallery {
+    display: grid;
+    grid-template-columns: 7.75rem minmax(0, 1fr);
+    grid-template-areas:
+      "thumbs stage"
+      ".      caption";
+    column-gap: 1rem;
+    align-items: start;
+  }
+  .project-page .project-stage__gallery .pf-product-gallery__stage { grid-area: stage; }
+  .project-page .project-stage__gallery .project-stage__caption { grid-area: caption; }
+  .project-page .project-stage__gallery .pf-product-gallery__thumbs {
+    grid-area: thumbs;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: .65rem;
+    margin: 0;
+    padding: 0 .35rem 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Zero intrinsic height, stretched to the big image: the rail scrolls instead of growing the row. */
+    block-size: 0;
+    min-block-size: 100%;
+    align-self: stretch;
+    overscroll-behavior: contain;
+  }
+  .project-page .project-stage__gallery .pf-product-gallery__thumb {
+    flex: 0 0 auto;
+    inline-size: 100%;
+  }
+}
+
+/* Active thumb picks up the same green-to-blue as the ring. */
+.project-page .pf-product-gallery__thumb[aria-selected="true"],
+.project-page .pf-product-gallery__thumb.is-active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #65a30d 40%, transparent), 0 6px 16px rgba(59, 130, 246, .25);
+}
+
+/* Green-to-blue scrollbar. Chromium, Safari and Edge take the gradient; Firefox gets a flat green fallback
+   (it ignores ::-webkit-scrollbar when scrollbar-color is set, so that is gated behind @supports). */
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar {
+  inline-size: .55rem;
+  block-size: .55rem;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-track {
+  background: color-mix(in srgb, #3b82f6 10%, transparent);
+  border-radius: 999px;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a3e635, #3b82f6);
+  border-radius: 999px;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #84cc16, #2563eb);
+}
+@media (max-width: 760px) {
+  /* Narrow screens keep one horizontal row under the image, so the gradient runs left to right. */
+  .project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #a3e635, #3b82f6);
+  }
+  .project-page .pf-product-gallery__thumbs { padding-bottom: .5rem; }
+}
+@supports not selector(::-webkit-scrollbar) {
+  .project-page .pf-product-gallery__thumbs {
+    scrollbar-color: #65a30d color-mix(in srgb, #3b82f6 12%, transparent);
+    scrollbar-width: thin;
+  }
+}

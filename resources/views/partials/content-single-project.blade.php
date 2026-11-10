@@ -77,9 +77,10 @@
 
 <article {!! post_class('concept-page project-page') !!}>
   @component('partials.page-hero', ['extra' => 'page-header--project', 'calm' => true, 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
-    @if ($heroImage !== '' || $video !== [])
+    @if ($heroImage !== '' || $video !== [] || $proof !== [])
       @slot('aside')
         {{-- Framed media with a slow gradient ring. A video shows its poster with a play button; it never autoplays. --}}
+        @if ($heroImage !== '' || $video !== [])
         <figure class="project-hero-media{{ $video !== [] ? ' has-video' : '' }}"{!! $video !== [] ? ' data-project-video' : '' !!}>
           <div class="project-hero-media__frame">
             @if ($video !== [])
@@ -94,6 +95,19 @@
             @endif
           </div>
         </figure>
+        @endif
+        @if ($proof !== [])
+          <div class="project-hero-stats">
+            <ul class="project-proof" aria-label="{{ __('At a glance', 'sage') }}">
+              @foreach ($proof as $fact)
+                <li class="project-proof__item">
+                  <strong>{{ $fact[0] }}</strong>
+                  <span>{{ $fact[1] }}</span>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
       @endslot
     @endif
     <div class="project-hero-head">
@@ -105,17 +119,6 @@
     @endif
     @if ($summary !== '')
       <p class="lead">{{ $summary }}</p>
-    @endif
-
-    @if ($proof !== [])
-      <ul class="project-proof" aria-label="{{ __('At a glance', 'sage') }}">
-        @foreach ($proof as $fact)
-          <li class="project-proof__item">
-            <strong>{{ $fact[0] }}</strong>
-            <span>{{ $fact[1] }}</span>
-          </li>
-        @endforeach
-      </ul>
     @endif
 
     @if ($soon)
@@ -329,8 +332,34 @@
       </section>
     @endif
 
+    @if (! $soon && ($fs !== null || $freeUrl !== '' || $buyUrl !== '' || $demo !== ''))
+      {{-- One next step, same wording as the hero button (the Rule of One). --}}
+      <section class="project-offer" aria-labelledby="project-offer-heading">
+        <div class="project-offer__copy">
+          <h2 id="project-offer-heading" class="project-offer__title">{{ $isOnSale ? sprintf(__('Ready to put %s on your site?', 'sage'), $title) : sprintf(__('See %s for yourself', 'sage'), $title) }}</h2>
+          @if ($fs !== null && $fromPrice !== '')
+            <p class="project-offer__note">{{ sprintf(__('From %s per year.', 'sage'), $fromPrice) }}</p>
+          @endif
+        </div>
+        <div class="project-offer__actions">
+          @if ($fs !== null)
+            <a class="btn" href="#buy">{!! \App\mh_svg_icon('cart', 15) !!} {{ __('Buy the theme', 'sage') }}</a>
+          @elseif ($freeUrl !== '')
+            <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">{!! \App\mh_svg_icon('download', 15) !!} {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span></a>
+          @elseif ($buyUrl !== '')
+            <a class="btn" href="{{ esc_url($buyUrl) }}">{!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!} {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}</a>
+          @else
+            <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('globe', 15) !!} {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
+          @endif
+          @if ($demo !== '' && ($fs !== null || $freeUrl !== '' || $buyUrl !== ''))
+            <a class="h-text-arrow" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
+          @endif
+        </div>
+      </section>
+    @endif
+
     @if ($storySteps !== [])
-      <section class="project-section project-story" id="project-story" aria-labelledby="project-story-heading">
+      <section class="project-section project-story project-section--band" id="project-story" aria-labelledby="project-story-heading">
         <div class="project-section__head">
           <p class="eyebrow">{{ __('Story', 'sage') }}</p>
           <h2 id="project-story-heading" class="display-title is-section">{{ __('How it came together', 'sage') }}</h2>
@@ -437,7 +466,7 @@
     @endif
 
     @if ($faq !== [])
-      <section class="project-section project-detail-block" id="project-faq" aria-labelledby="project-faq-heading">
+      <section class="project-section project-detail-block project-faq-section project-section--band" id="project-faq" aria-labelledby="project-faq-heading">
         <div class="project-section__head">
           <p class="eyebrow">{{ __('Questions', 'sage') }}</p>
           <h2 id="project-faq-heading" class="display-title is-section">{{ __('Common questions', 'sage') }}</h2>
