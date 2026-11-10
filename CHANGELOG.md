@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.56.0 — Page polish: green-to-blue edges and easier reading
+
+- New `resources/css/polish.css`, imported last in `app.css`. It adds colors, edges and small type only; nothing moves except a 1px hairline.
+- Privacy and Terms: section headings (`.legal-prose > h2`) take the same green-to-blue gradient as the section titles and page titles, with a short gradient rule under them that stretches when the heading is the jump target. They were flat black beside gradient page titles. Print and high-contrast modes fall back to plain text.
+- Privacy and Terms: the card gets a gradient top edge in light and dark mode, the dash markers become green-to-blue dots, and "Last updated" is a quiet pill.
+- Jumps from the "On this page" rail now land with the card's top edge and eyebrow in view (`scroll-margin-top: 5.5rem` on legal headings). They cleared the sticky bars by 8px before, with the card's top cut off.
+- Alternate sections (`.pf-section--alt`) get a faded green-to-blue hairline on their top edge, using `border-image` so the light and dark fills are untouched.
+- Supporting lines (`.pf-meta`, `.cta-band__note`, `.gh-panel__note`, `.code-sync`) go from 14px to 15px with a little more leading.
+- Not changed on purpose: the violet accents (quotes, chips, link hover) are part of the lime-and-violet system in `studio.css`, so they stay. Card hover shadows stay as they are because `shop-pages.css` sets its own at higher specificity.
+
 ## 3.55.3 — Plainer copy on the Resources page
 
 - Every tool card and stack line on the Resources page is rewritten in plain language for site owners: what the tool does and why I use it, without jargon like CI, IoC container, or cache-busting. Tool names, links and affiliate flags are unchanged.
