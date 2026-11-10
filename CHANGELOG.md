@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.58.0 — Project pages: Home-style hero, commercial video, shorter reading blocks
+
+- The project hero now uses the same calm gradient as the Home hero, with the framed media beside the copy. The media also shows on phones, under the copy.
+- A project can show a commercial in the hero: a poster with a play button inside a frame with a slow animated gradient ring. It never autoplays and nothing downloads until the visitor presses play; then the native controls (keyboard, fullscreen) take over. Reduced-motion visitors get a still ring.
+- The video comes from the new "Hero video URL" field on the project, else a video attached to the project, else a video in the media library whose name contains the project slug. No video means the screenshot shows as before.
+- Story steps now read as a one-line lead plus short points. The Handoff text is split the same way. The words are not rewritten, only broken at sentence ends.
+- Reading width is capped near 62 characters, with more space between sections.
+- New `resources/css/project-redesign.css` (imported just before `polish.css`) and `resources/js/project-video.js`.
+
 ## 3.57.0 — Motion pass: sliding nav indicators, press states, FAQ tween
 
 - New `resources/css/motion.css` (drawer stagger, press states, FAQ open/close) and `resources/js/nav-indicator.js`. One sliding capsule per rail moves between items in the header nav (follows hover, rests on the current page) and the sticky "On this page" pills (follows the active section).

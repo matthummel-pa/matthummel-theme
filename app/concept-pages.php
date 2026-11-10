@@ -875,6 +875,86 @@ function mh_project_prose_paragraphs(string $text): array
 }
 
 /**
+ * Break one long paragraph into short, scannable pieces (3.58.0).
+ *
+ * Splits on sentence ends, then groups so no piece runs past about two sentences
+ * or $max characters. Nothing is rewritten: the words stay exactly as stored.
+ *
+ * @return list<string>
+ */
+function mh_project_chunk_text(string $text, int $max = 190): array
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text) ?? '');
+    if ($text === '') {
+        return [];
+    }
+
+    $sentences = preg_split('/(?<=[.!?])\s+(?=[A-Z0-9"\x{201C}\x{2018}(])/u', $text) ?: [$text];
+    $chunks = [];
+    $current = '';
+    $count = 0;
+    foreach ($sentences as $sentence) {
+        $sentence = trim($sentence);
+        if ($sentence === '') {
+            continue;
+        }
+        if ($current !== '' && ($count >= 2 || mb_strlen($current.' '.$sentence) > $max)) {
+            $chunks[] = $current;
+            $current = '';
+            $count = 0;
+        }
+        $current = $current === '' ? $sentence : $current.' '.$sentence;
+        ++$count;
+    }
+    if ($current !== '') {
+        $chunks[] = $current;
+    }
+
+    return $chunks;
+}
+
+/**
+ * Hero video for a project page: the stored URL, else a video attached to the
+ * project, else a video in the media library named after the project slug.
+ *
+ * @return array{src: string, type: string}|array{}
+ */
+function mh_project_video(int $post_id): array
+{
+    $url = trim((string) get_post_meta($post_id, '_mh_project_video_url', true));
+    if ($url === '') {
+        $cache = 'mh_project_video_'.$post_id;
+        $cached = get_transient($cache);
+        if (is_string($cached)) {
+            $url = $cached;
+        } else {
+            $query = [
+                'post_type' => 'attachment',
+                'post_status' => 'inherit',
+                'post_mime_type' => 'video',
+                'numberposts' => 1,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'no_found_rows' => true,
+            ];
+            $found = get_posts($query + ['post_parent' => $post_id]);
+            if ($found === []) {
+                $slug = (string) get_post_field('post_name', $post_id);
+                $found = $slug === '' ? [] : get_posts($query + ['s' => $slug]);
+            }
+            $url = $found !== [] ? (string) wp_get_attachment_url($found[0]->ID) : '';
+            set_transient($cache, $url, HOUR_IN_SECONDS);
+        }
+    }
+    if ($url === '' || ! str_starts_with($url, 'http')) {
+        return [];
+    }
+    $type = wp_check_filetype((string) strtok($url, '?'))['type'] ?: 'video/mp4';
+
+    return ['src' => $url, 'type' => $type];
+}
+
+/**
  * Split architecture notes into list items without inventing copy.
  *
  * Prefers one item per blank-line paragraph (then single newlines).

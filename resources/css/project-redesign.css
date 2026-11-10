@@ -1,0 +1,177 @@
+/* 3.58.0 · Project pages: Home-style hero, framed video with a gradient ring, shorter reading blocks.
+   Imported just before polish.css. Transform and opacity only for motion; reduced motion turns it all off. */
+
+/* ─── Hero: the same calm gradient as the Home hero ───────────────────────── */
+.page-header--project .page-header__calm {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 45% 55% at 82% 18%, rgba(59, 130, 246, .38), transparent 62%),
+    radial-gradient(ellipse 40% 50% at 8% 92%, rgba(99, 102, 241, .28), transparent 64%),
+    linear-gradient(135deg, #050d1c 0%, #081527 50%, #0a1a33 100%);
+}
+html.mh-dark .page-header--project .page-header__calm {
+  background:
+    radial-gradient(ellipse 60% 70% at 100% 0%, color-mix(in srgb, var(--color-spark) 14%, transparent), transparent 60%),
+    linear-gradient(180deg, #0f1c2e 0%, #16263d 100%);
+}
+
+/* The framed media shows on phones too; the older rule only showed it from 960px. */
+.page-header--project .page-header__aside {
+  display: block;
+  margin-top: 1.75rem;
+}
+@media (min-width: 960px) {
+  .page-header--project .page-header__aside { margin-top: 0; }
+}
+
+/* ─── Framed media with a slow gradient ring ──────────────────────────────── */
+@property --mh-ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.project-hero-media {
+  --ring-w: 3px;
+  --ring-r: 1.15rem;
+  position: relative;
+  margin: 0;
+  padding: var(--ring-w);
+  border-radius: var(--ring-r);
+  background: conic-gradient(from var(--mh-ring-angle), #a3e635, #3b82f6, #6366f1, #22d3ee, #a3e635);
+  box-shadow: 0 24px 60px rgba(2, 8, 20, .55), 0 0 70px rgba(59, 130, 246, .28);
+  animation: mh-ring-spin 9s linear infinite;
+}
+@keyframes mh-ring-spin {
+  to { --mh-ring-angle: 360deg; }
+}
+.project-hero-media__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--ring-r) - var(--ring-w));
+  background: #0a1a33;
+  aspect-ratio: 16 / 9;
+  line-height: 0;
+}
+.project-hero-media__frame :is(img, video) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Play button: centred, large target, never autoplays. */
+.project-hero-media__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 4.75rem;
+  block-size: 4.75rem;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0 .2rem;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #0a1a33;
+  cursor: pointer;
+  box-shadow: 0 10px 34px rgba(2, 8, 20, .5);
+  transition: transform .2s var(--ease-out, ease), opacity .2s ease;
+}
+.project-hero-media__play::before {
+  content: "";
+  position: absolute;
+  inset: -.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .55);
+  animation: mh-play-pulse 2.4s ease-out infinite;
+}
+@keyframes mh-play-pulse {
+  from { transform: scale(.85); opacity: .9; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+.project-hero-media__play:hover { transform: scale(1.07); }
+.project-hero-media__play:focus-visible {
+  outline: 3px solid #a3e635;
+  outline-offset: 4px;
+}
+.project-hero-media.is-playing .project-hero-media__play {
+  opacity: 0;
+  pointer-events: none;
+}
+.project-hero-media.has-video .project-hero-media__frame::after {
+  /* A soft scrim so the white button reads on any poster. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(5, 13, 28, .38), transparent 62%);
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+.project-hero-media.is-playing .project-hero-media__frame::after { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-hero-media { animation: none; }
+  .project-hero-media__play::before { animation: none; display: none; }
+  .project-hero-media__play { transition: none; }
+}
+
+/* ─── Reading flow: shorter measure, short points instead of walls of text ── */
+.project-section__intro,
+.project-story__lead,
+.project-points li,
+.project-story__points li {
+  max-inline-size: 62ch;
+}
+.project-section__intro {
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+/* Story steps read as cards: number, a one-line lead, then short points. */
+.project-story__step {
+  gap: .15rem;
+}
+.project-story__lead {
+  margin: 0 0 .75rem;
+  font-size: 1.12rem;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+.project-story__points,
+.project-points {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-story__points li,
+.project-points li {
+  position: relative;
+  padding-inline-start: 1.35rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.project-story__points li::before,
+.project-points li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .62em;
+  inline-size: .6rem;
+  block-size: .6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a3e635, #3b82f6);
+}
+html.mh-dark .project-story__lead { color: #f4f7fb; }
+
+/* Rhythm: more air between sections so each one reads as its own beat. */
+.project-page .project-section + .project-section {
+  margin-block-start: clamp(2.5rem, 6vw, 4.5rem);
+}
+.project-page .project-section__head {
+  margin-block-end: 1.5rem;
+}

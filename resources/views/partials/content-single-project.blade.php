@@ -72,14 +72,27 @@
   $hasWhatYouGet = $features !== [] || $audience !== '';
   $hasHood = $specRows !== [] || $architecture !== '' || $handoff !== '' || $palette !== [];
   $askUrl = '#project-ask';
+  $video = \App\mh_project_video($postId);
 @endphp
 
 <article {!! post_class('concept-page project-page') !!}>
-  @component('partials.page-hero', ['extra' => 'page-header--project', 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
-    @if ($heroImage !== '')
+  @component('partials.page-hero', ['extra' => 'page-header--project', 'calm' => true, 'image' => $heroImage, 'imageAlt' => $heroImageAlt])
+    @if ($heroImage !== '' || $video !== [])
       @slot('aside')
-        <figure class="project-hero-shot">
-          <img src="{{ esc_url($heroImage) }}" alt="{{ esc_attr($heroImageAlt) }}" width="1600" height="900" decoding="async" fetchpriority="high">
+        {{-- Framed media with a slow gradient ring. A video shows its poster with a play button; it never autoplays. --}}
+        <figure class="project-hero-media{{ $video !== [] ? ' has-video' : '' }}"{!! $video !== [] ? ' data-project-video' : '' !!}>
+          <div class="project-hero-media__frame">
+            @if ($video !== [])
+              <video class="project-hero-media__video" preload="none" playsinline{!! $heroImage !== '' ? ' poster="'.esc_url($heroImage).'"' : '' !!} aria-label="{{ esc_attr(sprintf(__('%s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES))) }}">
+                <source src="{{ esc_url($video['src']) }}" type="{{ esc_attr($video['type']) }}">
+              </video>
+              <button type="button" class="project-hero-media__play" data-project-video-play aria-label="{{ esc_attr(sprintf(__('Play the %s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES))) }}">
+                <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z"/></svg>
+              </button>
+            @else
+              <img src="{{ esc_url($heroImage) }}" alt="{{ esc_attr($heroImageAlt) }}" width="1600" height="900" decoding="async" fetchpriority="high">
+            @endif
+          </div>
         </figure>
       @endslot
     @endif
@@ -327,7 +340,15 @@
             <li class="project-story__step">
               <span class="project-story__num" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
               <h3 class="project-story__title">{{ $step['title'] }}</h3>
-              <p class="project-story__body">{{ $step['text'] }}</p>
+              @php $bits = \App\mh_project_chunk_text($step['text']); $lead = array_shift($bits); @endphp
+              <p class="project-story__lead">{{ $lead }}</p>
+              @if ($bits !== [])
+                <ul class="project-story__points">
+                  @foreach ($bits as $bit)
+                    <li>{{ $bit }}</li>
+                  @endforeach
+                </ul>
+              @endif
             </li>
           @endforeach
         </ol>
@@ -387,9 +408,13 @@
             @if ($handoff !== '')
               <div class="project-hood__col project-detail-block" id="project-handoff">
                 <h3 class="project-hood__title">{{ __('Handoff', 'sage') }}</h3>
-                @foreach (\App\mh_project_prose_paragraphs($handoff) as $para)
-                  <p>{{ $para }}</p>
-                @endforeach
+                <ul class="project-points">
+                  @foreach (\App\mh_project_prose_paragraphs($handoff) as $para)
+                    @foreach (\App\mh_project_chunk_text($para) as $bit)
+                      <li>{{ $bit }}</li>
+                    @endforeach
+                  @endforeach
+                </ul>
               </div>
             @endif
             @if ($palette !== [])
