@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.55.2 — Plainer copy on the Resources page
+
+- Every tool card and stack line on the Resources page is rewritten in plain language for site owners: what the tool does and why I use it, without jargon like CI, IoC container, or cache-busting. Tool names, links and affiliate flags are unchanged.
+- Stack group names are friendlier ("Where I write code", "Hosting and going live", "Design and fonts"), and the jump link reads "More tools" instead of "Stack groups".
+- The page intro, section leads and call-to-action text (block content on the Resources page) were reworded to match.
+
 ## 3.55.1 — Resources stack list matches what ships
 
 - Search and analytics: Google Tag Manager is replaced by Site Kit by Google, which is what loads GA4 today (`resources/js/track.js` says there is no Tag Manager container). The GA4 line no longer says it runs through Tag Manager and mentions the product page events from 3.51.0.
