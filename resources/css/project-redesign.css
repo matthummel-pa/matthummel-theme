@@ -205,12 +205,6 @@ html.mh-dark .project-story__lead { color: #f4f7fb; }
     border-inline-start: 0;
   }
 }
-@media (min-width: 960px) {
-  /* Room for the video plus the stats box so the aside never spills over the wave. */
-  .page-header--project .page-header-inner:has(.page-header__aside) {
-    min-height: 31rem;
-  }
-}
 
 /* ─── Landing-page rhythm for the lower sections ──────────────────────────── */
 
@@ -787,3 +781,78 @@ html.mh-dark .project-page .project-story__steps .project-story__num { color: #d
     transition: none;
   }
 }
+
+/* ─── Hero content centred, equal space above and below (3.58.0) ─────────────
+   The wave covers the bottom of the header, so the bottom padding is the same
+   top padding plus the wave's height: the visible gap above and below matches. */
+.page-header.page-header--photo.page-header--project {
+  --hero-pad: clamp(3rem, 6vw, 4.5rem);
+  --hero-wave: clamp(3.4rem, 8vw, 5.75rem);
+  padding-block: var(--hero-pad) calc(var(--hero-pad) + var(--hero-wave));
+}
+.page-header.page-header--photo.page-header--project .page-header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: center;
+  justify-items: stretch;
+}
+.page-header.page-header--photo.page-header--project .page-header__aside {
+  position: static;
+  inset: auto;
+  width: auto;
+  max-width: 36rem;
+  margin: 0;
+  transform: none;
+}
+.page-header.page-header--photo.page-header--project:has(.page-header__aside) .page-header__panel {
+  max-width: none;
+}
+@media (min-width: 960px) {
+  .page-header.page-header--photo.page-header--project .page-header-inner {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .page-header.page-header--photo.page-header--project .page-header__aside {
+    justify-self: end;
+    inline-size: 100%;
+  }
+}
+
+/* ─── Image description under the gallery (3.58.0) ──────────────────────────── */
+.project-page .project-stage__caption {
+  display: flex;
+  align-items: stretch;
+  gap: .8rem;
+  margin: 1rem 0 0;
+  padding: .75rem 1rem .75rem .85rem;
+  border-radius: .9rem;
+  background: color-mix(in srgb, #3b82f6 7%, transparent);
+  font: 600 1.02rem/1.45 var(--font-display);
+  letter-spacing: -.012em;
+  color: var(--color-text);
+  text-wrap: pretty;
+}
+.project-page .project-stage__caption::before {
+  content: "";
+  flex: none;
+  inline-size: .3rem;
+  border-radius: 999px;
+  background: var(--gb);
+}
+.project-page .project-stage__caption:empty { display: none; }
+html.mh-dark .project-page .project-stage__caption {
+  background: color-mix(in srgb, #3b82f6 14%, transparent);
+  color: #e6edf7;
+}
+
+/* Section heads: eyebrow, title and intro all centre together (the pricing head had a left-aligned title). */
+.project-page .project-section__head > * {
+  margin-inline: auto;
+  text-align: center;
+}
+.project-page .project-section__head .eyebrow {
+  display: flex;
+  justify-content: center;
+}
+.project-page .project-section__head .display-title { max-inline-size: none; }
