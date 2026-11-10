@@ -83,12 +83,14 @@
       </p>
     @endif
     <div class="work-actions">
-      <a class="btn" href="{{ esc_url($conceptUrl) }}">
+      <a class="shop-link shop-link--forward" href="{{ esc_url($conceptUrl) }}">
         {{ \App\field('work_cta_view', \App\mh_projects_listing_default('cta_view')) }}<span class="visually-hidden">{{ sprintf(__(': %s', 'sage'), $title) }}</span>
+        <span class="shop-link__icon" aria-hidden="true">&rarr;</span>
       </a>
       @if ($demo !== '')
-        <a class="{{ $ghost }}" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
+        <a class="shop-link" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span>
+          <span class="shop-link__icon" aria-hidden="true">&#8599;</span>
         </a>
       @endif
     </div>

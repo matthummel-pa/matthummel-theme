@@ -1,11 +1,13 @@
-{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(). Builds on the work-card styles. --}}
+{{-- One product in the shop listing. Expects $item from \App\mh_shop_items(). Builds on the work-card styles. The feature chips, checklist, quality tiles and version line live in a details panel that an info button opens (hover, focus or click; js: card-details.js). --}}
 @php
   $status = (string) $item['status'];
   $isSoon = $status === 'soon';
   $typeLabel = \App\mh_product_types()[$item['type']]['singular'] ?? '';
   $titleId = $item['slug'].'-title';
+  $detailsId = $item['slug'].'-details';
+  $hasDetails = ! $isSoon && ($item['facts'] !== [] || $item['points'] !== [] || $item['quality'] !== [] || $item['version'] !== '' || $item['works_with'] !== '');
 @endphp
-<article class="work-card shop-card shop-card--{{ esc_attr($status) }}" id="{{ esc_attr($item['slug']) }}" aria-labelledby="{{ esc_attr($titleId) }}">
+<article class="work-card shop-card shop-card--{{ esc_attr($status) }} shop-card--compact" id="{{ esc_attr($item['slug']) }}" aria-labelledby="{{ esc_attr($titleId) }}">
   @if ($item['image'] !== '')
     {{-- The image link is hidden from assistive tech: the title link below goes to the same page. --}}
     <a class="work-shot" href="{{ esc_url($item['url']) }}" aria-hidden="true" tabindex="-1">
@@ -19,6 +21,67 @@
       >
     </a>
   @endif
+  @if ($hasDetails)
+    {{-- Info button on the screenshot corner. It opens the details in a centered modal dialog (card-details.js). --}}
+    <div class="shop-card__more" data-card-more>
+      <button type="button" class="shop-card__more-btn" aria-expanded="false" aria-controls="{{ esc_attr($detailsId) }}">
+        {!! \App\mh_svg_icon('info', 22) !!}
+        <span class="visually-hidden">{{ sprintf(__('More details about %s', 'sage'), $item['title']) }}</span>
+        <span class="shop-card__more-tip" aria-hidden="true">{{ __('More details', 'sage') }}</span>
+      </button>
+      <dialog class="shop-card__details" id="{{ esc_attr($detailsId) }}" aria-labelledby="{{ esc_attr($detailsId) }}-title">
+        <button type="button" class="shop-card__details-close" data-card-close>
+          <span aria-hidden="true">&#10005;</span>
+          <span class="visually-hidden">{{ __('Close', 'sage') }}</span>
+        </button>
+        <div class="shop-card__details-body">
+        <h2 class="shop-card__details-title" id="{{ esc_attr($detailsId) }}-title">{{ sprintf(__('More about %s', 'sage'), $item['title']) }}</h2>
+      @if (! $isSoon && $item['facts'] !== [])
+        <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">
+          @foreach ($item['facts'] as $fact)
+            <li>{{ $fact }}</li>
+          @endforeach
+        </ul>
+      @endif
+      @if (! $isSoon && $item['points'] !== [])
+        <ul class="shop-card__points">
+          @foreach ($item['points'] as $point)
+            <li>{{ $point }}</li>
+          @endforeach
+        </ul>
+      @endif
+      @if (! $isSoon && $item['quality'] !== [])
+        <dl class="shop-card__quality" aria-label="{{ __('Quality checks', 'sage') }}">
+          @foreach ($item['quality'] as [$statValue, $statLabel])
+            <div>
+              <dt>{{ $statValue }}</dt>
+              <dd>{{ $statLabel }}</dd>
+            </div>
+          @endforeach
+        </dl>
+      @endif
+
+      @if (! $isSoon && ($item['version'] !== '' || $item['works_with'] !== ''))
+        <p class="shop-card__meta">
+          @if ($item['version'] !== '')
+            {{ sprintf(__('Version %s', 'sage'), $item['version']) }}
+          @endif
+          @if ($item['version'] !== '' && $item['works_with'] !== '')
+            <span aria-hidden="true">·</span>
+          @endif
+          @if ($item['works_with'] !== '')
+            {{ $item['works_with'] }}
+          @endif
+        </p>
+      @endif
+        <a class="shop-link shop-card__details-link" href="{{ esc_url($item['url']) }}">
+          {{ __('See the full details', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('for %s', 'sage'), $item['title']) }}</span>
+          <span class="shop-link__icon" aria-hidden="true">→</span>
+        </a>
+        </div>
+      </dialog>
+    </div>
+  @endif
   <div class="work-body">
     <h3 id="{{ esc_attr($titleId) }}"><a href="{{ esc_url($item['url']) }}">{{ $item['title'] }}</a></h3>
     <p class="project-type-row">
@@ -31,51 +94,17 @@
       <p class="shop-card__for"><span>{{ __('Best for', 'sage') }}</span> {{ $item['place'] }}</p>
     @endif
     @if ($item['blurb'] !== '')
-      <p class="work-blurb">{{ $item['blurb'] }}</p>
-    @endif
-
-    @if (! $isSoon && $item['facts'] !== [])
-      <ul class="shop-card__facts" aria-label="{{ __('Highlights', 'sage') }}">
-        @foreach ($item['facts'] as $fact)
-          <li>{{ $fact }}</li>
-        @endforeach
-      </ul>
-    @endif
-    @if (! $isSoon && $item['points'] !== [])
-      <ul class="shop-card__points">
-        @foreach ($item['points'] as $point)
-          <li>{{ $point }}</li>
-        @endforeach
-      </ul>
-    @endif
-    @if (! $isSoon && $item['quality'] !== [])
-      <dl class="shop-card__quality" aria-label="{{ __('Quality checks', 'sage') }}">
-        @foreach ($item['quality'] as [$statValue, $statLabel])
-          <div>
-            <dt>{{ $statValue }}</dt>
-            <dd>{{ $statLabel }}</dd>
-          </div>
-        @endforeach
-      </dl>
+      <p class="work-blurb">{{ \App\mh_shop_blurb_short($item['blurb']) }}</p>
     @endif
 
     @if (! $isSoon && $item['price'] !== '')
-      <p class="shop-card__price"><strong>{{ $item['price'] }}</strong></p>
-    @endif
-    @if (! $isSoon && ($item['version'] !== '' || $item['works_with'] !== ''))
-      <p class="shop-card__meta">
-        @if ($item['version'] !== '')
-          {{ sprintf(__('Version %s', 'sage'), $item['version']) }}
-        @endif
-        @if ($item['version'] !== '' && $item['works_with'] !== '')
-          <span aria-hidden="true">·</span>
-        @endif
-        @if ($item['works_with'] !== '')
-          {{ $item['works_with'] }}
-        @endif
+      @php [$priceFrom, $priceAmount, $pricePer] = $item['price_parts'] ?? ['', $item['price'], ''] @endphp
+      <p class="shop-card__price shop-price">
+        @if ($priceFrom !== '')<span class="shop-price__from">{{ $priceFrom }}</span>@endif
+        <strong class="shop-price__amount">{{ $priceAmount }}</strong>
+        @if ($pricePer !== '')<span class="shop-price__per">{{ $pricePer }}</span>@endif
       </p>
     @endif
-
     {{-- The button gets its own row; the plain links sit on one line below it. --}}
     <div class="shop-card__cta">
       @if ($status === 'buy')

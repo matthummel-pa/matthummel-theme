@@ -114,7 +114,7 @@ html .page-header.shop-hero .page-header__panel .display-title {
   text-wrap: balance;
 }
 html body .shop-section h2.display-title.is-section {
-  background-image: linear-gradient(90deg, var(--shop-ink) 0%, var(--shop-blue) 55%, #15803d 100%) !important;
+  background-image: linear-gradient(90deg, #15803d 0%, var(--shop-blue) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   color: transparent !important;

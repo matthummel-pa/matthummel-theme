@@ -25,6 +25,10 @@
     "showCount": {
       "type": "boolean",
       "default": true
+    },
+    "limit": {
+      "type": "number",
+      "default": 0
     }
   },
   "mhControls": {
@@ -38,6 +42,12 @@
     },
     "showCount": {
       "label": "Show how many links there are"
+    },
+    "limit": {
+      "label": "Links to show up front",
+      "min": 0,
+      "max": 24,
+      "help": "The rest go behind a Show more button. 0 shows them all."
     }
   },
   "supports": {

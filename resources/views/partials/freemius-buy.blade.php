@@ -25,7 +25,7 @@
           <strong>{{ $tier['price'] }}</strong>
           <span>{{ __('per year', 'sage') }}</span>
         </p>
-        <button type="button" class="btn" data-fs-buy data-licenses="{{ (int) $tier['licenses'] }}">
+        <button type="button" class="btn" data-fs-buy data-licenses="{{ (int) $tier['licenses'] }}" data-plan-label="{{ esc_attr($tier['label']) }}" data-price="{{ esc_attr(number_format((float) preg_replace('/[^0-9.]/', '', $tier['price']), 2, '.', '')) }}">
           {!! \App\mh_svg_icon('cart', 15) !!}
           {{ __('Buy', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%1$s, %2$s per year', 'sage'), $tier['label'], $tier['price']) }}</span>
         </button>

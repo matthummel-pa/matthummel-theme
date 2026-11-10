@@ -31,10 +31,10 @@
       <p class="h-project-card__blurb">{{ wp_trim_words($blurb, 28, '…') }}</p>
     @endif
     <p class="h-project-card__links">
-      <a class="h-text-arrow" href="{{ $url }}">{{ __('Open project', 'sage') }} <span aria-hidden="true">→</span></a>
+      <a class="shop-link shop-link--forward" href="{{ $url }}">{{ __('Open project', 'sage') }}<span class="visually-hidden"> {{ $title }}</span> <span class="shop-link__icon" aria-hidden="true">&rarr;</span></a>
       @if ($demo !== '')
-        <a class="h-text-arrow h-text-arrow--quiet" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
-          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span aria-hidden="true">↗</span>
+        <a class="shop-link" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">
+          {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ sprintf(__(' for %s (opens in a new window)', 'sage'), $title) }}</span> <span class="shop-link__icon" aria-hidden="true">&#8599;</span>
         </a>
       @endif
     </p>

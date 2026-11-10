@@ -4071,8 +4071,8 @@ html.mh-dark .h-hero__actions .h-text-arrow { background: rgba(255, 255, 255, .0
   --color-spark: var(--blue-500);
   --color-focus: var(--blue-500);
   --grad-brand: linear-gradient(90deg, var(--blue-500) 0%, var(--cyan-400) 55%, var(--violet-400) 100%);
-  --grad-head-dark: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, var(--blue-400) 54%, var(--cyan-400) 100%);
-  --grad-head-light: linear-gradient(180deg, var(--blue-800) 0%, var(--blue-700) 44%, var(--blue-600) 62%, var(--blue-500) 100%);
+  --grad-head-dark: linear-gradient(100deg, var(--lime-400) 0%, var(--cyan-400) 48%, var(--blue-400) 100%);
+  --grad-head-light: linear-gradient(100deg, var(--lime-700) 0%, var(--blue-600) 100%);
 }
 
 /* Two-tone headings */
@@ -4541,8 +4541,8 @@ html.mh-dark .h-hero__panel {
   --teal-100: var(--lime-100);
   --teal-700: var(--lime-700);
   --grad-brand: linear-gradient(90deg, var(--blue-500) 0%, var(--cyan-400) 45%, var(--lime-400) 72%, var(--violet-400) 100%);
-  --grad-head-dark: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, var(--blue-400) 54%, var(--cyan-400) 84%, var(--violet-300) 100%);
-  --grad-head-light: linear-gradient(180deg, var(--blue-800) 0%, var(--blue-700) 44%, var(--blue-600) 64%, var(--violet-700) 100%);
+  --grad-head-dark: linear-gradient(100deg, var(--lime-400) 0%, var(--cyan-400) 48%, var(--blue-400) 100%);
+  --grad-head-light: linear-gradient(100deg, var(--lime-700) 0%, var(--blue-600) 100%);
 }
 
 /* Availability pill: lime with dark text (≥ 7:1), in header, footer, and mobile */
@@ -5142,7 +5142,7 @@ html:not(.mh-dark) .site-footer .footer-brand,
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .08em;
-  background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%);
+  background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--blue-400) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent !important;
@@ -5151,10 +5151,10 @@ html:not(.mh-dark) .site-footer .footer-brand,
 }
 .site-header.is-scrolled .brand-name,
 html:not(.mh-dark) .site-footer .footer-brand,
-html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg, var(--blue-600) 0%, var(--violet-700) 100%); -webkit-background-clip: text; background-clip: text; }
-html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--blue-400) 0%, var(--cyan-400) 50%, var(--lime-300) 100%); -webkit-background-clip: text; background-clip: text; }
+html:not(.mh-dark) .site-footer .brand-name { background: linear-gradient(90deg, var(--lime-700) 0%, var(--blue-600) 100%); -webkit-background-clip: text; background-clip: text; }
+html.mh-dark .site-header.is-scrolled .brand-name { background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--blue-400) 100%); -webkit-background-clip: text; background-clip: text; }
 .brand:hover .brand-name,
-.brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--cyan-400) 0%, var(--lime-300) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
+.brand:focus-visible .brand-name { background: linear-gradient(90deg, var(--lime-300) 0%, var(--cyan-400) 50%, var(--violet-300) 100%); -webkit-background-clip: text; background-clip: text; }
 
 /* ── Lime button hover: a notch deeper, darker purple type, soft ring ── */
 .btn:hover,
@@ -6598,8 +6598,7 @@ html .site-footer .header-updates__link.header-avail .header-avail__label { colo
 html .header-updates__link.header-avail:hover,
 html .header-updates__link.header-avail:focus-visible,
 html .site-footer .header-updates__link.header-avail:hover,
-html .site-footer .header-updates__link.header-avail:focus-visible,
-.header-updates.is-open .header-updates__link.header-avail {
+html .site-footer .header-updates__link.header-avail:focus-visible {
   background: linear-gradient(var(--hu-navy-deep), var(--hu-navy-deep)) padding-box, var(--hu-grad) border-box !important;
   border-color: transparent !important;
   color: #fff !important;
@@ -6608,122 +6607,12 @@ html .site-footer .header-updates__link.header-avail:focus-visible,
   transform: translateY(-1px);
 }
 html .header-updates__link.header-avail:hover .header-updates__icon,
-html .header-updates__link.header-avail:focus-visible .header-updates__icon,
-.header-updates.is-open .header-updates__icon { color: var(--hu-lime); transform: translateY(-1px) rotate(-6deg); }
+html .header-updates__link.header-avail:focus-visible .header-updates__icon { color: var(--hu-lime); transform: translateY(-1px) rotate(-6deg); }
 html .header-updates__link.header-avail:active { transform: translateY(0); }
 html .header-updates__link.header-avail:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
-
-/* Chevron: opens the preview for keyboard and touch. */
-.header-updates__toggle {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1.5px solid var(--color-border);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--blue-600);
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
-}
-.header-updates__toggle:hover,
-.header-updates__toggle:focus-visible,
-.header-updates.is-open .header-updates__toggle { background: var(--hu-navy); border-color: var(--hu-line); color: var(--hu-cyan); }
-.header-updates__toggle:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 2px; }
-.header-updates__chevron { transition: transform .18s ease; }
-.header-updates.is-open .header-updates__chevron { transform: rotate(180deg); }
-html.mh-dark .header-updates__toggle { border-color: var(--hu-line); color: var(--hu-cyan); }
-
-/* Preview panel: brand card, line border, cyan highlight, lime CTA. */
-.header-updates__panel {
-  position: absolute;
-  top: calc(100% + .6rem);
-  right: 0;
-  z-index: 5;
-  width: 300px;
-  padding: 1rem 1rem .9rem;
-  border: 1.5px solid var(--hu-line);
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(34, 211, 238, .08) 0%, rgba(59, 130, 246, .05) 45%, rgba(163, 230, 53, .06) 100%), linear-gradient(180deg, rgba(14, 33, 64, .86) 0%, rgba(8, 21, 39, .86) 100%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  backdrop-filter: blur(24px) saturate(170%);
-  color: var(--hu-soft);
-  box-shadow: 0 0 0 1px rgba(34, 211, 238, .18), 0 0 0 6px rgba(59, 130, 246, .08), inset 0 1px 0 rgba(103, 232, 249, .08), 0 30px 60px -24px rgba(2, 6, 14, .9);
-  text-align: left;
-  animation: hu-rise .18s cubic-bezier(.2, .8, .2, 1) both;
-}
-.header-updates__panel[hidden] { display: none; }
-.header-updates__panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 1rem;
-  right: 1rem;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--hu-grad);
-}
 @keyframes hu-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.header-updates__kicker {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  margin: 0 0 .75rem;
-  font: 600 .6875rem/1 var(--font-mono, ui-monospace, monospace);
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--hu-cyan);
-}
-.header-updates__kicker::before { content: ""; width: 24px; height: 2px; border-radius: 999px; background: var(--hu-grad); }
-.header-updates__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
-.header-updates__item { display: flex; align-items: flex-start; gap: .65rem; }
-.header-updates__ico {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 34px;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(34, 211, 238, .08);
-  border: 1px solid rgba(34, 211, 238, .28);
-  color: var(--hu-cyan);
-}
-.header-updates__ico svg { width: 16px; height: 16px; }
 /* The check icon is a stroke path; filled it is a sliver. */
-.header-updates__ico [data-icon="check"] { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.header-updates__copy { display: grid; gap: .1rem; }
-.header-updates__title { font: 700 .875rem/1.25 var(--font-display); color: var(--hu-ink); }
-.header-updates__text { font-size: .78rem; line-height: 1.4; color: var(--hu-soft); }
-.header-updates__foot { margin: .8rem 0 .65rem; font-size: .72rem; line-height: 1.4; color: var(--hu-muted); }
-html .header-updates__cta,
-html .header-updates__cta:visited {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 40px;
-  padding: .5rem 1rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #c3f05a 0%, #a3e635 100%);
-  color: var(--hu-navy);
-  -webkit-text-fill-color: var(--hu-navy);
-  font: 700 .8125rem/1 var(--font-display);
-  letter-spacing: .02em;
-  text-decoration: none;
-  box-shadow: 0 0 24px rgba(163, 230, 53, .35);
-  transition: box-shadow .18s ease, transform .18s ease;
-}
-html .header-updates__cta:hover,
-html .header-updates__cta:focus-visible { color: var(--hu-navy); -webkit-text-fill-color: var(--hu-navy); box-shadow: 0 0 34px rgba(163, 230, 53, .55); transform: translateY(-1px); text-decoration: none; }
-html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); outline-offset: 3px; }
-
-@media (min-width: 900px) {
-  .header-updates__toggle { display: inline-flex; }
-}
 @media (max-width: 899px) {
-  .header-updates__panel { display: none !important; }
   html .header-updates__link.header-avail { padding: .5rem .7rem; }
 }
 /* 901 to 1099px: the full header (logo, six links, theme toggle, Get updates pill and chevron) needs about
@@ -6747,11 +6636,9 @@ html .header-updates__cta:focus-visible { outline: 2px solid var(--hu-cyan); out
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .header-updates__panel { animation: none; }
   html .header-updates__link.header-avail:hover,
-  html .header-updates__link.header-avail:focus-visible,
-  .header-updates__icon,
-  html .header-updates__cta:hover { transform: none; }
+html .header-updates__link.header-avail:focus-visible,
+.header-updates__icon { transform: none; }
 }
 
 /* ── 3.7.19 · Social icons share the Get updates CTA look: navy fill, brand ring, cyan glyph → lime glow ──
@@ -7010,18 +6897,14 @@ html.mh-dark .site-header.is-scrolled {
 /* Header chips: theme toggle, menu button, preview chevron */
 .site-header.is-scrolled .theme-toggle,
 .site-header.is-scrolled .menu-toggle,
-.site-header .header-updates__toggle,
 html.mh-dark .site-header.is-scrolled .theme-toggle,
-html.mh-dark .site-header.is-scrolled .menu-toggle,
-html.mh-dark .site-header .header-updates__toggle {
+html.mh-dark .site-header.is-scrolled .menu-toggle {
   background: var(--glass-bg-strong);
   border-color: var(--glass-edge);
   box-shadow: inset 0 1px 0 var(--glass-hi);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
   backdrop-filter: blur(12px) saturate(160%);
 }
-html.mh-dark .header-updates.is-open .header-updates__toggle,
-html.mh-dark .site-header .header-updates__toggle:hover { background: rgba(10, 26, 51, .9); }
 /* Mobile menu panel */
 .mh-popout,
 html.mh-dark .mh-popout {
@@ -7424,9 +7307,9 @@ html.mh-dark #inside ul.is-style-checklist > li::after { background: var(--lime-
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 70% at 100% 0%, color-mix(in srgb, var(--color-spark) 16%, transparent), transparent 60%),
-    radial-gradient(ellipse 50% 60% at 0% 100%, color-mix(in srgb, var(--color-accent-bright) 14%, transparent), transparent 58%),
-    linear-gradient(180deg, #f4f7fb 0%, #e8eff8 100%);
+    radial-gradient(ellipse 45% 55% at 82% 18%, rgba(59, 130, 246, .38), transparent 62%),
+    radial-gradient(ellipse 40% 50% at 8% 92%, rgba(99, 102, 241, .28), transparent 64%),
+    linear-gradient(135deg, #050d1c 0%, #081527 50%, #0a1a33 100%);
 }
 html.mh-dark .h-hero__calm {
   background:
@@ -7490,3 +7373,2149 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 }
 /* Card links ("Live demo", "Owner guide") were 23px tall, one pixel under the 24px target size (WCAG 2.5.8). */
 .shop-card__links .shop-link { display: inline-flex; align-items: center; min-height: 24px; }
+
+/* 3.23.0 · Light mode, off the navy surfaces (headers, hero, closing band keep navy): solid buttons are charcoal
+   (#111827) instead of navy, spec badges are neutral gray instead of blue, the compare table's buy column tint is
+   neutral, and the page canvas and gray scale lose their blue cast. Dark mode is untouched. */
+html:not(.mh-dark) {
+  --gray-50: #f6f7f9;
+  --gray-100: #eceef1;
+  --gray-200: #dcdfe5;
+  --color-canvas: #f6f7f9;
+}
+html:not(.mh-dark) body :is(.btn, .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(.btn-outline):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
+  background: #111827 !important;
+  background-image: none !important;
+  border-color: #111827 !important;
+}
+html:not(.mh-dark) body :is(.btn, .shop-card__button, .mh-reach-submit, .soc-link, .mh-popout-cta):not(.btn-outline):not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *):hover {
+  background: #1f2937 !important;
+  border-color: #1f2937 !important;
+}
+html:not(.mh-dark) body .spec-badge:not(:is(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy) *) {
+  background: #e5e7eb !important;
+  background-image: none !important;
+  border-color: #c7ccd4 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+html:not(.mh-dark) body :is(.shop-compare__cell--buy, .shop-compare__cell--free) { background: rgba(17, 24, 39, .04); }
+
+/* 3.23.2 · Narrow phones (320 to 360px): the Home hero kicker was nowrap, which stretched the hero column to 336px
+   and cut off the heading, and the footer social row (6 x 44px) did not wrap, pushing the footer 19px wide. */
+@media (max-width: 480px) {
+  .h-hero__kicker { white-space: normal; max-width: 100%; }
+  .h-hero .h-hero__inner,
+  .h-hero.h-hero--feat .h-hero__inner { grid-template-columns: minmax(0, 1fr); }
+  .h-hero__panel,
+  .h-hero__copy { min-width: 0; max-width: 100%; }
+  .soc-list { flex-wrap: wrap; }
+}
+
+/* 3.23.3 · Light mode keyboard focus: the FAQ question rows and the white (scrolled) header's "Get updates" pill used a
+   cyan ring (1.8:1 on white), and the theme toggle and anything else on the global violet ring had 2.5 to 2.7:1.
+   On light surfaces the ring is blue (#1d5fd6: 5.7:1 on white, 5.3:1 on the canvas). The navy areas (headers over the
+   hero, hero, closing band, contact aside, footer) keep their cyan and violet rings, which read on navy. */
+html:not(.mh-dark) body :focus-visible:focus-visible:not(:where(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy, .site-header:not(.is-scrolled), .site-footer) *) {
+  outline-color: #1d5fd6;
+}
+
+/* 3.23.4 · The open mobile menu is a light panel, but it lives inside the header, which 3.23.3 treated as navy while
+   the header floats over the hero. The six social buttons in it kept a cyan ring (1.8:1 on the panel). */
+html:not(.mh-dark) body .mh-popout :focus-visible:focus-visible { outline-color: #1d5fd6; }
+
+/* 3.23.5 · The social buttons (footer, open mobile menu) kept a cyan focus ring: an older rule,
+   `html .soc-list.soc-list.soc-list .soc-link:focus-visible`, is heavier than the 3.23.3 and 3.23.4 rules. Cyan is
+   1.7:1 on the light footer and menu panel. Same blue, matched in weight. The navy areas keep cyan. */
+html:not(.mh-dark) body .soc-list.soc-list.soc-list .soc-link:focus-visible:not(:where(.page-header, .h-hero, .post-hero, .cta-band, .contact-aside, .pf-section--navy, .site-header) *),
+html:not(.mh-dark) body .mh-popout .soc-list.soc-list.soc-list .soc-link:focus-visible { outline-color: #1d5fd6; }
+
+/* 3.24.0 · Home "Themes" cards: the compact variant drops the chips, checklist, quality tiles and version line, so a
+   card is about 640px tall instead of 1,130px and the "coming soon" cards no longer sit half empty. The blurb shows
+   three lines, and the button row sits at the bottom of every card so the three line up. */
+.shop-card--compact .work-body { display: flex; flex-direction: column; flex: 1 1 auto; }
+.shop-card--compact .work-blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.shop-card--compact .shop-card__price { margin-top: .25rem; }
+.shop-card--compact .shop-card__cta { margin-top: auto; padding-top: 1rem; }
+
+/* 3.25.0 · Theme cards (Home and Themes): the removed detail lives behind an info button on the screenshot corner. The
+   panel opens on hover, keyboard focus or click, fades and rises in with a gradient edge and a soft glow, and its rows
+   follow one after another. Reduced-motion visitors get it without the movement. */
+.shop-card__more-btn {
+  position: absolute;
+  top: .65rem;
+  right: .65rem;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-accent);
+  box-shadow: 0 6px 18px -6px rgba(15, 22, 35, .38);
+  cursor: pointer;
+  transition: transform .28s cubic-bezier(.2, .8, .2, 1), box-shadow .28s ease, background .28s ease, color .28s ease, border-color .28s ease;
+}
+.shop-card__more-btn:hover { transform: scale(1.08); box-shadow: 0 10px 24px -8px rgba(29, 95, 214, .55); }
+html.mh-dark .shop-card__more-btn { color: var(--blue-300, #93c5fd); }
+
+/* The details are a modal dialog: centered in the viewport over a dimmed, blurred backdrop, opened by the info button
+   (click, tap or keyboard). Native <dialog> + showModal() gives the focus trap, the inert page behind it and Escape;
+   card-details.js adds the animation, closes on a backdrop click and locks page scroll. */
+.shop-card__details {
+  width: min(34rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: min(46rem, calc(100vh - 2rem));
+  max-height: min(46rem, calc(100dvh - 2rem));
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #22d3ee 9%, var(--color-bg)) 0%, var(--color-bg) 9rem) padding-box,
+    linear-gradient(135deg, #a3e635 0%, #22d3ee 48%, #3b82f6 100%) border-box;
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, .14), 0 36px 80px -20px rgba(29, 95, 214, .6), 0 14px 28px -12px rgba(5, 13, 28, .55);
+  color: var(--color-text);
+  opacity: 0;
+  transform: translateY(22px) scale(.95);
+  transition: opacity .26s ease, transform .38s cubic-bezier(.2, .8, .2, 1);
+}
+.shop-card__details.is-open { opacity: 1; transform: none; }
+.shop-card__details::backdrop {
+  background: rgba(5, 13, 28, .6);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.shop-card__details.is-open::backdrop { opacity: 1; }
+.shop-card__details-body {
+  max-height: inherit;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem 1.6rem 1.6rem;
+}
+.shop-card__details-body > * {
+  margin: 0 0 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.shop-card__details-body > :last-child { margin-bottom: 0; }
+.shop-card__details.is-open .shop-card__details-body > * { opacity: 1; transform: none; transition: opacity .38s ease, transform .46s cubic-bezier(.2, .8, .2, 1); }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(1) { transition-delay: .08s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(2) { transition-delay: .12s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(3) { transition-delay: .16s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(4) { transition-delay: .2s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(5) { transition-delay: .24s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(6) { transition-delay: .28s; }
+.shop-card__details.is-open .shop-card__details-body > :nth-child(7) { transition-delay: .32s; }
+.shop-card__details-close {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1), background .25s ease, color .25s ease, border-color .25s ease;
+}
+.shop-card__details-close:hover { transform: rotate(90deg) scale(1.06); border-color: var(--color-accent); color: var(--color-accent); }
+.shop-card__details .shop-card__details-title {
+  margin-right: 3.25rem;
+  font: 800 1.3rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+  background: linear-gradient(90deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.mh-dark .shop-card__details .shop-card__details-title { background-image: linear-gradient(90deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+.shop-card__details-link { display: inline-flex; align-items: center; gap: .35rem; min-height: 24px; font: 700 .95rem/1.2 var(--font-display); }
+.shop-card__details-link .shop-link__icon { font-size: 1em; }
+html.mh-modal-open { overflow: hidden; }
+@media (forced-colors: active) {
+  .shop-card__details .shop-card__details-title { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; }
+  .shop-card__details { border-color: CanvasText; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-card__details,
+  .shop-card__details::backdrop,
+  .shop-card__details-body > *,
+  .shop-card__details-close,
+  .shop-card__more-btn { transition-duration: .01ms !important; transition-delay: 0s !important; transform: none !important; }
+}
+
+/* 3.26.1 · Hover hint on the card's info button: a small pill to its left that fades in on mouse hover and keyboard
+   focus. It repeats the button's accessible name, so it is hidden from assistive tech. It is part of the button (the
+   pointer can move onto it without it vanishing) and Escape dismisses it until the pointer or focus leaves. */
+.shop-card__more-tip {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + .55rem);
+  padding: .4rem .7rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 20px -8px rgba(29, 95, 214, .6);
+  color: #fff;
+  font: 700 .8rem/1 var(--font-display);
+  letter-spacing: .01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(8px, -50%);
+  transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
+}
+.shop-card__more-btn:focus-visible .shop-card__more-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+  transition-delay: 0s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shop-card__more-btn:hover .shop-card__more-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -50%);
+    transition-delay: .12s, .12s, 0s;
+  }
+}
+.shop-card__more-btn.is-tip-off .shop-card__more-tip { opacity: 0; visibility: hidden; transition-duration: .01ms; transition-delay: 0s; }
+@media (forced-colors: active) {
+  .shop-card__more-tip { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-card__more-tip { transition-duration: .01ms !important; transition-delay: 0s !important; transform: translate(0, -50%) !important; }
+}
+
+/* 3.26.2 · Phone audit: tap targets under the 24px minimum (WCAG 2.5.8), found by loading every page at 390 and 320px.
+   The logo link was 22px tall on every page; the two comment-form checkboxes were 18px; the comments link, the comment
+   timestamps and a few links on About and Projects were 19 to 23px tall. */
+.site-header .brand { display: inline-flex; align-items: center; min-height: 44px; }
+.comment-form input[type="checkbox"] { flex: none; width: 1.5rem; height: 1.5rem; margin: 0 .6rem 0 0; accent-color: var(--color-accent); }
+.post-hero-meta__comments,
+.comment-time,
+.gh-panel__link,
+.resume-head a,
+.repo-card a,
+.repo-card__ver { display: inline-flex; align-items: center; min-height: 24px; }
+/* Product pages at 320px: the "how it works" steps list had an auto-sized column that grew to its widest content
+   (317px in a 280px space, 32px past the screen). One shrinkable column, and long words may break. */
+@media (max-width: 800px) {
+  .project-story__steps { grid-template-columns: minmax(0, 1fr); }
+  .project-story__step { min-width: 0; overflow-wrap: anywhere; }
+}
+/* Narrow phones: a button label that cannot wrap stretches its column. "Send accessibility feedback" was 315px wide at
+   320px and pushed the whole Accessibility contact block 30px past the screen edge. Labels may wrap and buttons never
+   exceed their column. */
+@media (max-width: 400px) {
+  .btn { max-width: 100%; white-space: normal; text-align: center; }
+  .a11y-contact-layout > * { min-width: 0; }
+}
+
+/* 3.27.0 · Demo, guide and details links (Live demo, Owner guide, Open demo, See the full details, docs links): a pill
+   with a multi-color gradient border (lime, cyan, blue, violet) that slides on hover, and an arrow in a gradient chip.
+   The arrow is an SVG mask drawn over the old text glyph (hidden with font-size: 0), so no markup changed. */
+html .shop-link.shop-link {
+  --pill-line: linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%);
+  --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E");
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 2.5rem;
+  padding: .3rem .3rem .3rem .8rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    var(--pill-line) border-box;
+  background-size: 100% 100%, 260% 260%;
+  background-position: 0 0, 0% 50%;
+  background-repeat: no-repeat;
+  box-shadow: 0 6px 16px -10px rgba(29, 95, 214, .5);
+  color: var(--color-text);
+  font: 700 .86rem/1.2 var(--font-display);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-position .7s ease, box-shadow .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html .shop-link.shop-link:hover,
+html .shop-link.shop-link:focus-visible {
+  background-size: 100% 100%, 260% 260%;
+  background-position: 0 0, 100% 50%;
+  box-shadow: 0 14px 26px -12px rgba(29, 95, 214, .65), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: var(--color-text);
+  transform: translateY(-1px);
+}
+html .shop-link.shop-link .shop-link__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 4px 10px -4px rgba(29, 95, 214, .7);
+  color: #fff;
+  font-size: 0;
+  line-height: 0;
+}
+html .shop-link.shop-link .shop-link__icon::before {
+  content: "";
+  width: .85rem;
+  height: .85rem;
+  background: currentColor;
+  -webkit-mask: var(--pill-arrow) center / contain no-repeat;
+  mask: var(--pill-arrow) center / contain no-repeat;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html .shop-link.shop-link:hover .shop-link__icon::before,
+html .shop-link.shop-link:focus-visible .shop-link__icon::before { transform: translate(.14rem, -.14rem); }
+html .shop-link.shop-card__details-link,
+html .shop-link.shop-link--forward { --pill-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E"); }
+html .shop-link.shop-card__details-link:hover .shop-link__icon::before,
+html .shop-link.shop-card__details-link:focus-visible .shop-link__icon::before,
+html .shop-link.shop-link--forward:hover .shop-link__icon::before,
+html .shop-link.shop-link--forward:focus-visible .shop-link__icon::before { transform: translateX(.18rem); }
+.shop-card .shop-card__links { gap: .5rem .5rem; }
+html.mh-dark .shop-link.shop-link { box-shadow: 0 6px 18px -10px rgba(34, 211, 238, .5); }
+@media (forced-colors: active) {
+  html .shop-link.shop-link { border-color: LinkText; background: Canvas; }
+  html .shop-link.shop-link .shop-link__icon { background: ButtonText; color: ButtonFace; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .shop-link.shop-link,
+  html .shop-link.shop-link .shop-link__icon::before { transition-duration: .01ms; transform: none !important; }
+}
+
+/* 3.27.1 · "Best for" on theme cards: a compact tag. The label is a green-to-blue mini pill (white on #15803d to #1d5fd6,
+   5.0 to 5.7:1) and the audience is bold on a softly tinted, rounded strip that hugs its content and wraps under the
+   label when it is long. */
+.shop-card .shop-card__for {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .25rem .5rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: .1rem 0 .15rem;
+  padding: .28rem .7rem .28rem .28rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 22%, transparent);
+  border-radius: 1.1rem; /* still a full pill on one line (29px tall); a softer rounded rectangle when the audience wraps */
+  background: color-mix(in srgb, #3b82f6 7%, var(--color-card, #fff));
+  color: var(--color-text);
+  font-size: .86rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.shop-card .shop-card__for span {
+  flex: none;
+  margin: 0;
+  padding: .24rem .5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 4px 10px -5px rgba(29, 95, 214, .7);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+html.mh-dark .shop-card .shop-card__for {
+  border-color: color-mix(in srgb, #22d3ee 28%, transparent);
+  background: color-mix(in srgb, #22d3ee 9%, var(--color-card, #0b1b35));
+}
+@media (forced-colors: active) {
+  .shop-card .shop-card__for { border-color: CanvasText; }
+  .shop-card .shop-card__for span { background: ButtonText; color: ButtonFace; box-shadow: none; }
+}
+
+/* 3.28.0 · Theme card title and category pills.
+   Title: larger display type with tighter tracking and balanced wrapping, a green-to-blue gradient to match the headings,
+   and a gradient underline that draws in on hover or focus.
+   Pills: a small gradient dot, a tinted fill and a navy label for the type ("Theme"); the status ("Coming soon") is amber
+   with an amber dot so the two read differently at a glance. Label contrast is 9:1 or better on the tint. */
+:is(.shop-card, .work-card) .work-body h3 {
+  margin-bottom: .1rem;
+  font-size: clamp(1.45rem, 1.15rem + 1.1vw, 1.7rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+:is(.shop-card, .work-card) .work-body h3 a {
+  position: relative;
+  padding-bottom: .12em;
+}
+html body :is(.shop-card, .work-card) .work-body h3 a {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+html.mh-dark body :is(.shop-card, .work-card) .work-body h3 a { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+:is(.shop-card, .work-card) .work-body h3 a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+:is(.shop-card, .work-card) .work-body h3 a:hover::after,
+:is(.shop-card, .work-card) .work-body h3 a:focus-visible::after { transform: scaleX(1); }
+
+:is(.shop-card, .work-card) .project-type-row { gap: .4rem; }
+html body :is(.shop-card, .work-card) .project-type-row .spec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .24rem .7rem .24rem .55rem;
+  border-radius: 999px;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html body :is(.shop-card, .work-card) .project-type-row .spec-badge::before {
+  content: "";
+  flex: none;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+}
+html:not(.mh-dark) body :is(.shop-card, .work-card) .project-type-row .spec-badge {
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff)) !important;
+  border-color: color-mix(in srgb, #3b82f6 28%, transparent) !important;
+  color: #0f2a52 !important;
+  -webkit-text-fill-color: #0f2a52 !important;
+}
+html:not(.mh-dark) body :is(.shop-card, .work-card) .project-type-row .spec-badge + .spec-badge {
+  background: color-mix(in srgb, #f59e0b 15%, var(--color-card, #fff)) !important;
+  border-color: color-mix(in srgb, #f59e0b 45%, transparent) !important;
+  color: #5c3500 !important;
+  -webkit-text-fill-color: #5c3500 !important;
+}
+html.mh-dark body :is(.shop-card, .work-card) .project-type-row .spec-badge {
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)) !important;
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent) !important;
+  color: #d6ecff !important;
+  -webkit-text-fill-color: #d6ecff !important;
+}
+html.mh-dark body :is(.shop-card, .work-card) .project-type-row .spec-badge + .spec-badge {
+  background: color-mix(in srgb, #f59e0b 14%, var(--color-card, #0b1b35)) !important;
+  border-color: color-mix(in srgb, #f59e0b 45%, transparent) !important;
+  color: #fcd98a !important;
+  -webkit-text-fill-color: #fcd98a !important;
+}
+html body :is(.shop-card, .work-card) .project-type-row .spec-badge + .spec-badge::before { background: #f59e0b; }
+@media (forced-colors: active) {
+  .shop-card .work-body h3 a { background: none; -webkit-text-fill-color: LinkText; color: LinkText; }
+  .shop-card .project-type-row .spec-badge { border-color: CanvasText !important; }
+  .shop-card .project-type-row .spec-badge::before { background: CanvasText; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.shop-card, .work-card) .work-body h3 a::after { transition-duration: .01ms; }
+}
+
+/* 3.29.0 · Price and the Home hero's newest-theme card.
+   Price: "From" as a small label, the amount large, "per year" small, from the translated price template.
+   Hero card: a gradient "Newest theme" pill, the screenshot in a gradient frame, a larger green-to-blue title with the
+   hover underline, a three-line description, and the price beside a gradient "See the theme" pill (it was pale blue
+   text, about 1.9:1 on the white card). */
+.shop-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem .45rem; margin: 0; color: var(--color-text); }
+.shop-price__from { font: 800 .72rem/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-muted); }
+.shop-price__amount { font: 800 clamp(1.85rem, 1.5rem + 1vw, 2.2rem)/1 var(--font-display); letter-spacing: -.045em; color: var(--color-text); }
+.shop-price__per { font: 600 .88rem/1 var(--font-display); color: var(--color-text-muted); }
+.shop-card .shop-card__price { margin-top: .25rem; font-size: 1rem; letter-spacing: 0; }
+
+.hero-feat__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0 0 .85rem;
+  padding: .4rem .8rem .4rem .65rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 18px -8px rgba(29, 95, 214, .7);
+  color: #fff;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.hero-feat__kicker::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, .28); }
+.hero-feat .hero-feat__shot {
+  padding: 3px;
+  border-radius: .95rem;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 28%, #3b82f6 58%, #8b5cf6 82%, #a3e635 100%);
+  box-shadow: 0 18px 36px -18px rgba(29, 95, 214, .6);
+}
+.hero-feat .hero-feat__shot img { border-radius: .72rem; }
+/* 3.54.0 · The frame's gradient spins around the screenshot like the About photo ring
+   (--mh-ring-* and mh-ring-spin live in about-page.css; both are global). Hover or focus
+   shifts the colors; with reduced motion it stays still. The card gets the same
+   lime-to-blue background as the About photo card. */
+.hero-feat .hero-feat__shot {
+  --mh-ring-a: #a3e635;
+  --mh-ring-b: #22d3ee;
+  --mh-ring-c: #3b82f6;
+  background: conic-gradient(from var(--mh-ring-angle), var(--mh-ring-a), var(--mh-ring-b), var(--mh-ring-c), #8b5cf6, var(--mh-ring-a));
+}
+.hero-feat:is(:hover, :focus-within) .hero-feat__shot {
+  --mh-ring-a: #3b82f6;
+  --mh-ring-b: #8b5cf6;
+  --mh-ring-c: #a3e635;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-feat .hero-feat__shot {
+    animation: mh-ring-spin 6s linear infinite;
+    transition: --mh-ring-a .4s, --mh-ring-b .4s, --mh-ring-c .4s;
+  }
+}
+.hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 18%, #fff) 0%, #fff 45%, color-mix(in srgb, #3b82f6 16%, #fff) 100%); }
+html.mh-dark .hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 12%, #16263d) 0%, #16263d 45%, color-mix(in srgb, #3b82f6 30%, #16263d) 100%); }
+.hero-feat .hero-feat__title {
+  margin: 1.1rem 0 .4rem;
+  font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.hero-feat .hero-feat__title a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: .12em;
+  text-decoration: none;
+}
+html body .hero-feat .hero-feat__title a {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-decoration: none;
+}
+html.mh-dark body .hero-feat .hero-feat__title a { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+.hero-feat .hero-feat__title a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+.hero-feat .hero-feat__title a:hover::after,
+.hero-feat .hero-feat__title a:focus-visible::after { transform: scaleX(1); }
+.hero-feat .hero-feat__blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  margin: 0 0 1.1rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.hero-feat .hero-feat__meta { justify-content: space-between; gap: .85rem 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+@media (forced-colors: active) {
+  .hero-feat .hero-feat__title a { background: none; -webkit-text-fill-color: LinkText; color: LinkText; }
+  .hero-feat__kicker { background: ButtonText; color: ButtonFace; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-feat .hero-feat__title a::after { transition-duration: .01ms; }
+}
+
+/* 3.29.2 · Blog posts on phones (found by loading all 27 posts at 390 and 320px).
+   - Long links, italic or bold runs and inline code in a post no longer run past the screen edge: a URL used as link text
+     was 4px over, inline code snippets in one post were 432 to 545px wide on a 390px screen, and an italic run was 38px
+     over at 320px. They break at any point only when they would not fit; code blocks (pre) still scroll sideways.
+   - Breadcrumb links ("Journal > AI") are at least 24px wide, so a short category name is still a full-size target. */
+.post-prose :is(a, em, strong, i, b, mark, span, code):not(pre *),
+.entry-content :is(a, em, strong, i, b, mark, span, code):not(pre *) { overflow-wrap: anywhere; }
+.post-prose :not(pre) > code,
+.entry-content :not(pre) > code { white-space: normal; }
+.post-breadcrumb a { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; min-height: 24px; }
+
+/* 3.30.0 · Prices use the heading gradient: green to blue on light surfaces (#15803d to #1d5fd6, 5.0 to 5.7:1 on white), lime,
+   cyan and light blue on dark surfaces and on the navy product header. Covers the card and hero price, the compare table's
+   price row, the product page's price line and its three pricing tiers. */
+html body .shop-price__amount,
+html body .shop-compare__table td strong,
+html body .fs-tier__price strong {
+  padding-block: .05em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.mh-dark body .shop-price__amount,
+html.mh-dark body .shop-compare__table td strong,
+html.mh-dark body .fs-tier__price strong { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+html body .page-header .project-hero-price {
+  background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+@media (forced-colors: active) {
+  html body .shop-price__amount,
+  html body .shop-compare__table td strong,
+  html body .fs-tier__price strong,
+  html body .page-header .project-hero-price { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; }
+}
+
+/* 3.31.0 · "On this page" bar: the label is a green-to-blue mini pill, the section pills are 36px tall with a soft gradient
+   edge that brightens on hover and a filled green-to-blue pill for the section you are in, and the scroll arrows match.
+   The bar keeps its frosted glass and gains a thin gradient line along its lower edge. White text on the active fill is
+   5.0 to 5.7:1. Replaces the older violet palette. */
+html body .h-page-nav {
+  border-block-color: transparent;
+  box-shadow: inset 0 1px 0 var(--glass-hi, rgba(255, 255, 255, .6)), 0 14px 24px -22px rgba(29, 95, 214, .55);
+  background-image: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, .55) 20%, rgba(59, 130, 246, .55) 55%, rgba(139, 92, 246, .45) 80%, transparent 100%);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+}
+html body .h-page-nav .h-page-nav__label {
+  padding: .4rem .75rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 6px 14px -8px rgba(29, 95, 214, .7);
+  color: #fff;
+  font: 800 .72rem/1 var(--font-display);
+  letter-spacing: .09em;
+}
+html body .h-page-nav .h-page-nav__pill {
+  --pill-line: linear-gradient(120deg, #a3e635 0%, #22d3ee 28%, #3b82f6 58%, #8b5cf6 82%, #a3e635 100%);
+  min-height: 2.25rem;
+  padding: .3rem 1rem;
+  border: 1.5px solid transparent !important;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(color-mix(in srgb, #3b82f6 26%, transparent), color-mix(in srgb, #3b82f6 26%, transparent)) border-box !important;
+  color: var(--color-text) !important;
+  font: 700 .9rem/1 var(--font-display);
+  transition: background-position .6s ease, box-shadow .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1), color .2s ease;
+}
+html body .h-page-nav .h-page-nav__pill:hover,
+html body .h-page-nav .h-page-nav__pill:focus-visible {
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    var(--pill-line) border-box !important;
+  background-size: 100% 100%, 240% 240% !important;
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .6);
+  color: var(--color-text) !important;
+  transform: translateY(-1px);
+}
+html body .h-page-nav .h-page-nav__pill.is-active,
+html body .h-page-nav .h-page-nav__pill[aria-current="true"],
+html body .h-page-nav .h-page-nav__pill.is-active:hover,
+html body .h-page-nav .h-page-nav__pill[aria-current="true"]:hover,
+html body .h-page-nav .h-page-nav__pill.is-active:focus-visible,
+html body .h-page-nav .h-page-nav__pill[aria-current="true"]:focus-visible {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%) !important;
+  box-shadow: 0 10px 22px -10px rgba(29, 95, 214, .8);
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+}
+html.mh-dark body .h-page-nav .h-page-nav__pill:not(.is-active):not([aria-current="true"]) {
+  background:
+    linear-gradient(#10213b, #10213b) padding-box,
+    linear-gradient(color-mix(in srgb, #22d3ee 30%, transparent), color-mix(in srgb, #22d3ee 30%, transparent)) border-box !important;
+  color: #e6f0ff !important;
+}
+html.mh-dark body .h-page-nav .h-page-nav__pill:not(.is-active):not([aria-current="true"]):hover,
+html.mh-dark body .h-page-nav .h-page-nav__pill:not(.is-active):not([aria-current="true"]):focus-visible {
+  background:
+    linear-gradient(#0b1b35, #0b1b35) padding-box,
+    var(--pill-line) border-box !important;
+  background-size: 100% 100%, 240% 240% !important;
+  color: #fff !important;
+}
+html body .h-page-nav .h-page-nav__arrow {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1.5px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(color-mix(in srgb, #3b82f6 26%, transparent), color-mix(in srgb, #3b82f6 26%, transparent)) border-box;
+  color: var(--color-text);
+}
+html body .h-page-nav .h-page-nav__arrow:hover:not(:disabled),
+html body .h-page-nav .h-page-nav__arrow:focus-visible:not(:disabled) {
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(120deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%) border-box;
+  color: var(--color-text);
+}
+html.mh-dark body .h-page-nav .h-page-nav__arrow {
+  background:
+    linear-gradient(#10213b, #10213b) padding-box,
+    linear-gradient(color-mix(in srgb, #22d3ee 30%, transparent), color-mix(in srgb, #22d3ee 30%, transparent)) border-box;
+  color: #e6f0ff;
+}
+@media (forced-colors: active) {
+  html body .h-page-nav .h-page-nav__label { background: ButtonText; color: ButtonFace; box-shadow: none; }
+  html body .h-page-nav .h-page-nav__pill { border-color: CanvasText !important; background: Canvas !important; color: CanvasText !important; }
+  html body .h-page-nav .h-page-nav__pill[aria-current="true"],
+  html body .h-page-nav .h-page-nav__pill.is-active { background: Highlight !important; color: HighlightText !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .h-page-nav .h-page-nav__pill { transition-duration: .01ms; transform: none !important; }
+}
+
+/* 3.31.1 · Anchor jumps on desktop. The sticky header and the "On this page" bar only had scroll padding under 901px, so on
+   wider screens a section whose heading sits at the very top (the product page's Buy section) scrolled under them. The same
+   padding now applies at every width. */
+@media (min-width: 901px) {
+  html { --mh-bar-h: 0px; scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + .5rem); }
+  html:has(.admin-bar) { --mh-bar-h: var(--wp-admin--admin-bar--height, 32px); }
+  html:has(.h-page-nav) { scroll-padding-top: calc(var(--header-h, 4.5rem) + var(--mh-bar-h) + var(--page-nav-h, 3rem) + .5rem); }
+}
+
+/* 3.32.0 · Header overlap. The header is fixed, and `body { padding-top: var(--header-h) }` is what holds the page below
+   it (page headers, heroes and post heroes pull themselves back up under the transparent header with a negative top
+   margin and add their own top padding). WordPress's generated global styles print `body { padding-top: 0 }` after the
+   theme CSS, which won, so the first line of content (eyebrow, breadcrumb, hero label) sat under the logo and buttons.
+   One more element in the selector makes the theme's rule win. */
+html body { padding-top: var(--header-h, 4.5rem); }
+
+/* 3.33.0 · One card system. Every content card takes the theme card's frame (pale violet line, 14px corners, soft layered
+   shadow, tinted fill), a green-to-blue gradient title and a gradient pill for its link. Journal cards (Home and the Journal
+   page) are the same card with a "Read more" button; the "What I do" style boxes get a big round gradient icon with centered
+   copy, and a link that ended their text becomes a button under it (blocks/card.blade.php). */
+:root {
+  --mh-card-bg: linear-gradient(160deg, #f6f3ff 0%, #fff 60%);
+  --mh-card-line: #e4dcfb;
+  --mh-card-shadow: 0 1px 2px rgba(15, 22, 35, .04), 0 14px 32px -26px rgba(109, 40, 217, .35);
+  --mh-card-shadow-hover: 0 1px 2px rgba(15, 22, 35, .05), 0 26px 44px -26px rgba(29, 95, 214, .55);
+}
+html.mh-dark {
+  --mh-card-bg: linear-gradient(160deg, #2a2160 0%, #1d1c52 40%, #122043 100%);
+  --mh-card-line: rgba(163, 230, 53, .34);
+  --mh-card-shadow: inset 0 1px 0 rgba(196, 181, 253, .06), 0 18px 40px -28px rgba(109, 40, 217, .6);
+  --mh-card-shadow-hover: inset 0 1px 0 rgba(196, 181, 253, .08), 0 28px 48px -26px rgba(34, 211, 238, .5);
+}
+html body :is(.post-card, .h-project-card, .about-svc-card, .repo-card, .resources-card, .write-aside-card, .shop-extras__card) {
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+}
+html body :is(.post-card, .h-project-card, .about-svc-card) {
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body :is(.post-card, .h-project-card, .about-svc-card):hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+
+/* Titles: the same green-to-blue gradient as the theme cards, with the underline that draws in on hover. */
+html body .post-card .post-card-title,
+html body .h-project-card .h-project-card__title {
+  margin: .15rem 0 .1rem;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+html body :is(.post-card .post-card-title, .h-project-card .h-project-card__title) a,
+html body .about-svc-card h3 a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: .12em;
+  text-decoration: none;
+}
+html body .post-card .post-card-title a,
+html body .h-project-card .h-project-card__title a,
+html body .about-svc-card h3,
+html body :is(.repo-card, .resources-card) :is(h2, h3) {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+html.mh-dark body .post-card .post-card-title a,
+html.mh-dark body .h-project-card .h-project-card__title a,
+html.mh-dark body .about-svc-card h3,
+html.mh-dark body :is(.repo-card, .resources-card) :is(h2, h3) { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+html body :is(.repo-card, .resources-card) :is(h2, h3) a { color: inherit !important; -webkit-text-fill-color: transparent !important; text-decoration: none; }
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a3e635 0%, #22d3ee 35%, #3b82f6 70%, #8b5cf6 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a):hover::after,
+html body :is(.post-card .post-card-title a, .h-project-card .h-project-card__title a):focus-visible::after { transform: scaleX(1); }
+
+/* Journal card: image on top, then topic, date and reading time, title, three lines of text, and the button pinned to the bottom. */
+html body .post-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 0; }
+html body .post-card .post-shot { display: block; flex: none; aspect-ratio: 16 / 9; overflow: hidden; background: #1b2433; }
+html body .post-card .post-shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+html body .post-card .post-body { display: flex; flex: 1; flex-direction: column; gap: .55rem; padding: 1.4rem 1.5rem 1.6rem; }
+html body .post-card .post-body > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+html body .post-card .post-meta { padding: 0 !important; border: 0 !important; }
+html body .post-card .post-card-title { margin-top: .2rem !important; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+html body .post-card .post-cats { order: 1; }
+html body .post-card .post-meta { order: 2; color: var(--color-text-muted); font-size: .86rem; line-height: 1.4; }
+html body .post-card .post-card-title { order: 3; }
+html body .post-card .post-card-excerpt {
+  order: 4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+html body .post-card .post-card-excerpt p { margin: 0; }
+html body .post-card .post-card-more { order: 5; align-self: flex-start; margin-top: auto; }
+html body .post-card .post-body > .post-card-excerpt + .post-card-more { margin-top: auto; }
+
+/* Concept card: same body, the two links are pills. */
+html body .h-project-card { display: flex; flex-direction: column; overflow: hidden; height: 100%; }
+html body .h-project-card .h-project-card__media { display: block; flex: none; aspect-ratio: 16 / 9; overflow: hidden; }
+html body .h-project-card .h-project-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+html body .h-project-card .h-project-card__body { display: flex; flex: 1; flex-direction: column; gap: .55rem; padding: 1.4rem 1.5rem 1.6rem; }
+html body .h-project-card .h-project-card__body > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+html body .h-project-card .h-project-card__blurb { color: var(--color-text-secondary); line-height: 1.6; }
+html body .h-project-card .h-project-card__links { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; padding-top: .6rem; }
+
+/* "What I do" boxes: a big round gradient icon, centered heading and copy, the link as a button under the copy. */
+html body .about-svc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.1rem 1.6rem 1.8rem;
+  text-align: center;
+}
+html body .about-svc-card .about-svc-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  margin: 0 0 1.2rem;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 16px 30px -14px rgba(29, 95, 214, .75), 0 0 0 7px rgba(34, 211, 238, .14);
+  color: #fff;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease;
+}
+html body .about-svc-card .about-svc-card__icon svg { width: 2rem; height: 2rem; }
+html body .about-svc-card:hover .about-svc-card__icon { transform: scale(1.07); box-shadow: 0 20px 34px -14px rgba(29, 95, 214, .85), 0 0 0 9px rgba(34, 211, 238, .18); }
+html body .about-svc-card .about-svc-card__copy { display: flex; flex: 1; flex-direction: column; align-items: center; width: 100%; }
+html body .about-svc-card h3 {
+  margin: 0 0 .6rem;
+  padding-bottom: .1em;
+  font-size: clamp(1.3rem, 1.1rem + .7vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+html body .about-svc-card .about-svc-card__copy > p { margin: 0 0 .8rem; color: var(--color-text-secondary); line-height: 1.6; }
+html body .about-svc-card .about-svc-card__copy > :last-child { margin-bottom: 0; }
+html body .about-svc-card .about-svc-card__cta { margin: auto 0 0; padding-top: 1.1rem; }
+html body .about-svc-card--list .about-svc-card__copy > :is(ul, ol) { align-self: stretch; margin-block: .4rem 0; text-align: left; }
+html.mh-dark body .about-svc-card .about-svc-card__icon { box-shadow: 0 16px 30px -14px rgba(34, 211, 238, .5), 0 0 0 7px rgba(34, 211, 238, .12); }
+
+/* Older rules draw lime lines on these boxes; the theme card's line wins. */
+html body :is(.about-svc-card, .repo-card, .resources-card, .write-aside-card) { border-color: var(--mh-card-line) !important; background-image: var(--mh-card-bg) !important; }
+html body .post-card .post-card-more { margin-top: auto !important; }
+
+/* Topic pills on cards: the theme card's pill (gradient dot, tinted fill, navy label). */
+html body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill)) {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .24rem .7rem .24rem .55rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff));
+  color: #0f2a52;
+  -webkit-text-fill-color: #0f2a52;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+html body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill))::before {
+  content: "";
+  flex: none;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+}
+html.mh-dark body :is(.post-card .post-cats .project-cat-pill, .h-project-card .project-type-row :is(.spec-badge, .project-cat-pill, .project-place-pill)) {
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent);
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35));
+  color: #d6ecff;
+  -webkit-text-fill-color: #d6ecff;
+}
+
+/* A box that holds a list of links (the Journal topics): each link is a row with an arrow, not a bullet and an underline. */
+html body .about-svc-card--list .about-svc-card__copy > :is(ul, ol) { display: grid; gap: .5rem; padding: 0; list-style: none; }
+html body .about-svc-card--list .about-svc-card__copy li { margin: 0; list-style: none !important; padding: 0; }
+html body .about-svc-card--list .about-svc-card__copy li::marker { content: none; }
+html body .about-svc-card--list .about-svc-card__copy li a {
+  position: relative;
+  display: block;
+  padding: .65rem 2.4rem .65rem .95rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 22%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, #3b82f6 5%, var(--color-card, #fff));
+  color: var(--color-text);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+html body .about-svc-card--list .about-svc-card__copy li a::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: .85rem;
+  width: .9rem;
+  height: .9rem;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: translateY(-50%);
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+html body .about-svc-card--list .about-svc-card__copy li a:hover,
+html body .about-svc-card--list .about-svc-card__copy li a:focus-visible { border-color: #3b82f6; box-shadow: 0 10px 20px -14px rgba(29, 95, 214, .6); transform: translateY(-1px); }
+html body .about-svc-card--list .about-svc-card__copy li a:hover::after,
+html body .about-svc-card--list .about-svc-card__copy li a:focus-visible::after { transform: translate(.2rem, -50%); }
+html.mh-dark body .about-svc-card--list .about-svc-card__copy li a { border-color: color-mix(in srgb, #22d3ee 28%, transparent); background: rgba(255, 255, 255, .05); color: #e6f0ff; }
+
+@media (forced-colors: active) {
+  html body .post-card .post-card-title a,
+  html body .h-project-card .h-project-card__title a,
+  html body .about-svc-card h3,
+  html body :is(.repo-card, .resources-card) :is(h2, h3) { background: none !important; color: CanvasText !important; -webkit-text-fill-color: CanvasText !important; }
+  html body .about-svc-card .about-svc-card__icon { background: ButtonText; color: ButtonFace; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body :is(.post-card, .h-project-card, .about-svc-card),
+  html body .about-svc-card .about-svc-card__icon { transition-duration: .01ms; }
+  html body :is(.post-card, .h-project-card, .about-svc-card):hover,
+  html body .about-svc-card:hover .about-svc-card__icon { transform: none; }
+}
+
+/* 3.33.1 · The rest of the cards. Project cards (/projects/), repo cards and resource cards take the theme card's title,
+   pills and link buttons; the concept card's type pill loses its old gray fill. */
+html body :is(.repo-card .repo-card__title-wrap h3 a, .resources-card .resources-card__name a) {
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-decoration: none;
+}
+html.mh-dark body :is(.repo-card .repo-card__title-wrap h3 a, .resources-card .resources-card__name a) { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+html body :is(.repo-card .repo-card__title-wrap h3, .resources-card .resources-card__name) { font-weight: 800; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; }
+html body .repo-card .repo-card__foot { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+html body .repo-card .repo-card__hit:hover { text-decoration: none; }
+@media (max-width: 480px) { html body .repo-card .repo-card__foot .shop-link { width: 100%; justify-content: center; } }
+html body .work-card .work-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto !important; padding-top: .9rem; }
+html body .h-project-card .h-project-card__links { margin-top: auto !important; }
+
+/* Kind and badge tags: the theme card's pill. */
+html body :is(.repo-card__kind, .resources-card__badge, .h-project-card .project-type-row .spec-badge) {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  width: fit-content;
+  padding: .24rem .7rem .24rem .55rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent) !important;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff)) !important;
+  color: #0f2a52 !important;
+  -webkit-text-fill-color: #0f2a52 !important;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html body :is(.repo-card__kind, .resources-card__badge)::before {
+  content: "";
+  flex: none;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+}
+html.mh-dark body :is(.repo-card__kind, .resources-card__badge, .h-project-card .project-type-row .spec-badge) {
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent) !important;
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)) !important;
+  color: #d6ecff !important;
+  -webkit-text-fill-color: #d6ecff !important;
+}
+
+/* Resource card arrow: a gradient chip, like the link buttons. */
+html body .resources-card .resources-card__go {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 16px -8px rgba(29, 95, 214, .7);
+  color: #fff;
+  font-size: 0;
+  line-height: 0;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html body .resources-card .resources-card__go::before {
+  content: "";
+  width: .9rem;
+  height: .9rem;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+html body .resources-card .resources-card__go--ext::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E");
+}
+html body .resources-card:hover .resources-card__go { transform: scale(1.1); }
+@media (prefers-reduced-motion: reduce) { html body .resources-card .resources-card__go { transition-duration: .01ms; } html body .resources-card:hover .resources-card__go { transform: none; } }
+@media (forced-colors: active) { html body .resources-card .resources-card__go { background: ButtonText; color: ButtonFace; box-shadow: none; } }
+
+/* 3.33.2 · Phones: long text in a box could stretch it past the screen. A box that ended with a long link ("website basics,
+   the WordPress MCP Adapter, and my AI workflow") made its pill, which could not wrap, 481px wide and its grid column
+   534px wide inside a 350px area (found by the phone audit on Get updates, Welcome, Start here and Services). Boxes may
+   now shrink, long words and links break, and pills wrap their label on phones. */
+html body .mh-cards > * { min-width: 0; }
+html body .about-svc-card,
+html body .about-svc-card .about-svc-card__copy { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+html .shop-link.shop-link { max-width: 100%; }
+@media (max-width: 480px) {
+  html .shop-link.shop-link { white-space: normal; text-align: left; border-radius: 1.35rem; }
+}
+
+/* 3.34.0 · Process steps. A numbered card grid (How a project runs, agency overflow) gets a round gradient number like the
+   "What I do" icons, a line that links the steps on wide screens, and an optional "You get" line pinned to the bottom. */
+html body .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before {
+  position: static;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0 0 1.2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 14px 26px -14px rgba(29, 95, 214, .75), 0 0 0 6px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.3rem/1 var(--font-display);
+}
+html.mh-dark body .mh-cards--numbered > .mh-card:not(:has(.about-svc-card__n))::before { color: #fff; }
+@media (min-width: 961px) {
+  html body .mh-cards--4.mh-cards--numbered > .mh-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: calc(2.1rem + 1.625rem - 1px);
+    left: calc(50% + 2.2rem);
+    width: calc(100% + var(--card-gap) - 4.4rem);
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(34, 211, 238, .75), rgba(59, 130, 246, .25));
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+html body .about-svc-card .about-svc-card__copy > p.mh-card__get {
+  width: 100%;
+  margin: auto 0 0;
+  padding-top: .95rem;
+  border-top: 1px dashed var(--mh-card-line);
+  color: var(--color-text);
+  font: 600 .9rem/1.4 var(--font-display);
+}
+html body .about-svc-card .about-svc-card__copy > p:not(.mh-card__get) + p.mh-card__get { margin-top: 1rem; }
+html body .mh-card__get strong { color: #15803d; font-weight: 800; }
+html.mh-dark body .mh-card__get strong { color: #a3e635; }
+
+/* 3.35.0 · Upcoming theme cards (Latest themes block, "Only themes in progress"): short cards with a thin image, the status,
+   one line and the Get updates button, so a what's-next row is not two screens of scrolling on a phone. */
+.mh-upcoming-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--card-gap); }
+html body .upcoming-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .upcoming-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+html body .upcoming-card__shot { display: block; flex: none; aspect-ratio: 21 / 9; overflow: hidden; background: #1b2433; }
+html body .upcoming-card__shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+html body .upcoming-card__body { display: flex; flex: 1; flex-direction: column; gap: .5rem; padding: 1.1rem 1.3rem 1.3rem; }
+html body .upcoming-card__body > * { margin-top: 0; margin-bottom: 0; }
+html body .upcoming-card__title { font-size: clamp(1.3rem, 1.1rem + .8vw, 1.5rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; }
+html body .upcoming-card__title a {
+  display: inline-block;
+  padding-bottom: .1em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-decoration: none;
+}
+html.mh-dark body .upcoming-card__title a { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%) !important; }
+html body .upcoming-card__for { color: var(--color-text); font-size: .92rem; line-height: 1.4; }
+html body .upcoming-card__for span { color: var(--color-text-muted); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: .72rem; margin-right: .3rem; }
+html body .upcoming-card__blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+html body .upcoming-card__cta { align-self: flex-start; margin-top: auto; }
+html body .upcoming-card__blurb + .upcoming-card__cta, html body .upcoming-card__for + .upcoming-card__cta { margin-top: auto; }
+html body .upcoming-card__body > .project-type-row + .upcoming-card__title { margin-top: .1rem; }
+@media (forced-colors: active) { html body .upcoming-card__title a { background: none !important; color: LinkText !important; -webkit-text-fill-color: LinkText !important; } }
+@media (prefers-reduced-motion: reduce) { html body .upcoming-card { transition-duration: .01ms; } html body .upcoming-card:hover { transform: none; } }
+
+/* 3.35.1 · Upcoming card pills take the theme card's pill (not the plain gray or blue badge), and the row sits close to the title. */
+html body .upcoming-card .project-type-row { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }
+html body .upcoming-card .project-type-row .spec-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: .24rem .7rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent) !important;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff)) !important;
+  color: #0f2a52 !important;
+  -webkit-text-fill-color: #0f2a52 !important;
+  font: 800 .75rem/1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html.mh-dark body .upcoming-card .project-type-row .spec-badge {
+  border-color: color-mix(in srgb, #22d3ee 32%, transparent) !important;
+  background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)) !important;
+  color: #d6ecff !important;
+  -webkit-text-fill-color: #d6ecff !important;
+}
+
+/* 3.35.2 · A global heading rule gave the upcoming card title a 38px top margin. */
+html body .upcoming-card .upcoming-card__body > h3.upcoming-card__title { margin-top: .1rem !important; }
+
+/* 3.36.0 · Closing band with steps and a panel. Add the class cta-band--panel to a CTA band block: an ordered list with the class
+   cta-band__steps becomes three numbered steps under the copy, and the buttons sit in a frosted panel. */
+html body .cta-band--panel .cta-band__steps {
+  display: grid;
+  gap: .85rem;
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ctastep;
+}
+html body .cta-band--panel .cta-band__steps li {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: .85rem;
+  align-items: start;
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 1rem;
+  line-height: 1.5;
+  counter-increment: ctastep;
+}
+html body .cta-band--panel .cta-band__steps li::before {
+  content: counter(ctastep);
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .16);
+  color: #fff;
+  font: 800 .95rem/1 var(--font-display);
+}
+html body .cta-band--panel .cta-band__actions {
+  flex: 0 1 24rem;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 24rem;
+  padding: 1.6rem;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, .7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+html body .cta-band--panel .cta-band__actions .wp-block-buttons { display: flex; flex-direction: column; gap: .7rem; margin: 0; }
+html body .cta-band--panel .cta-band__actions .wp-block-button { width: 100%; margin: 0; }
+html body .cta-band--panel .cta-band__actions .wp-block-button > a { display: flex; width: 100%; align-items: center; justify-content: center; text-align: center; }
+html body .cta-band--panel .cta-band__note {
+  margin: 1rem 0 0;
+  padding-top: .9rem;
+  border-top: 1px dashed rgba(255, 255, 255, .22);
+  color: #cbd5e1;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  html body .cta-band--panel .cta-band__actions { flex: 1 1 100%; max-width: none; width: 100%; padding: 1.25rem; }
+}
+
+/* 3.37.0 · Resources page. Stack groups fold (the first starts open), extra resource links sit behind a Show more button,
+   and the closing band's main button reads as the main button on the dark panel. */
+html body .uses-section--fold > summary.uses-section__head {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin: 0;
+  cursor: pointer;
+  list-style: none;
+}
+html body .uses-section--fold > summary.uses-section__head::-webkit-details-marker { display: none; }
+html body .uses-section--fold > summary .uses-section__title { flex: 1; margin: 0; }
+html body .uses-section--fold[open] > summary.uses-section__head { margin-bottom: 1rem; }
+html body .uses-section__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  padding: 0 .55rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, var(--color-card, #fff));
+  color: #0f2a52;
+  font: 800 .8rem/1 var(--font-display);
+}
+html.mh-dark body .uses-section__count { border-color: color-mix(in srgb, #22d3ee 32%, transparent); background: color-mix(in srgb, #22d3ee 10%, var(--color-card, #0b1b35)); color: #d6ecff; }
+html body .uses-section__chev {
+  flex: none;
+  width: .7rem;
+  height: .7rem;
+  margin: 0 .3rem 0 .2rem;
+  border-right: 2.5px solid currentColor;
+  border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .25s ease;
+  color: var(--color-text-muted);
+}
+html body .uses-section--fold[open] > summary .uses-section__chev { transform: rotate(-135deg) translate(-2px, -2px); }
+html body .uses-section--fold > summary:focus-visible { outline: 3px solid #3b82f6; outline-offset: 4px; border-radius: 10px; }
+
+html body .resources-more { margin-top: var(--card-gap); }
+html body .resources-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.5rem;
+  padding: .3rem 1.1rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%) border-box;
+  color: var(--color-text);
+  font: 700 .9rem/1.2 var(--font-display);
+  cursor: pointer;
+  list-style: none;
+}
+html body .resources-more > summary::-webkit-details-marker { display: none; }
+html body .resources-more[open] > summary { margin-bottom: var(--card-gap); }
+html body .resources-more > summary:focus-visible { outline: 3px solid #3b82f6; outline-offset: 3px; }
+
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a {
+  border: 0;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%);
+  color: #06121f;
+  font-weight: 800;
+  box-shadow: 0 14px 30px -14px rgba(34, 211, 238, .75);
+}
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:hover,
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:focus-visible { background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%); color: #06121f; transform: translateY(-1px); }
+
+/* 3.37.1 · The band's main button fill lost to an !important rule on .btn; say it again with !important. */
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+}
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:hover,
+html body .cta-band--panel .cta-band__actions .wp-block-button:not(.is-style-outline):not(.is-style-ghost) > a:focus-visible {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  color: #06121f !important;
+}
+
+/* 3.38.0 · Resources page polish. The jump list rows are cards with a round gradient number (like the process steps),
+   the last card of an odd-numbered row spans the full width instead of leaving a hole, and resource cards lift on hover. */
+html body .resources-jump a {
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  min-height: 64px;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+}
+html body .resources-jump a:is(:hover, :focus-visible) { border-color: #3b82f6; box-shadow: var(--mh-card-shadow-hover); transform: translateY(-2px); }
+html body .resources-jump__n {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .75), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+}
+html.mh-dark body .resources-jump__n { color: #fff; }
+html body .resources-jump__go { font-size: 1.25rem; transition: transform .25s ease; }
+html body .resources-jump a:is(:hover, :focus-visible) .resources-jump__go { transform: translateY(3px); }
+html body .resources-list > .resources-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (max-width: 640px) { html body .resources-list > .resources-card:last-child:nth-child(odd) { grid-column: auto; } }
+html body .resources-card { transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease; }
+html body .resources-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+@media (prefers-reduced-motion: reduce) {
+  html body .resources-card, html body .resources-jump a, html body .resources-jump__go { transition-duration: .01ms; }
+  html body .resources-card:hover, html body .resources-jump a:is(:hover, :focus-visible), html body .resources-jump a:is(:hover, :focus-visible) .resources-jump__go { transform: none; }
+}
+
+/* 3.38.1 · The Resources sections now start with an eyebrow, one more row in the grid: the jump list and the card list span
+   the extra row, and the count sits under the intro again instead of below the cards. */
+.resources-overview > .container > .mh-resource-jump { grid-row: 1 / span 3; }
+.resources-group > .container { grid-template-rows: auto auto auto 1fr; }
+.resources-group .mh-resource-catalog > .resources-list { grid-row: 1 / span 4; }
+@media (max-width: 860px) {
+  .resources-overview > .container > .mh-resource-jump,
+  .resources-group .mh-resource-catalog > .resources-list { grid-row: auto; }
+}
+
+/* 3.39.0 · Tool cards (Resources, "Tools I recommend"): a round brand icon, the tag pills, a name and one line, then two short
+   facts (what I use it for, who it suits) and a Visit button pinned to the bottom. */
+html body .resources-list--tools { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+html body .resources-list--tools > .tool-card:last-child:nth-child(odd) { grid-column: auto; }
+html body .tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  min-width: 0;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+  list-style: none;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .tool-card:hover { transform: translateY(-3px); box-shadow: var(--mh-card-shadow-hover); }
+html body .tool-card > * { margin: 0; }
+html body .tool-card__top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+html body .tool-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 12px 22px -12px rgba(29, 95, 214, .75), 0 0 0 5px rgba(34, 211, 238, .14);
+  color: #fff;
+}
+html body .tool-card__icon svg { width: 1.4rem; height: 1.4rem; }
+html body .tool-card__tags { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: flex-end; }
+html body .tool-card__name {
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: .08em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font: 800 1.45rem/1.15 var(--font-display);
+  letter-spacing: -.035em;
+}
+html.mh-dark body .tool-card__name { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+html body .tool-card__blurb { color: var(--color-text); font-weight: 600; line-height: 1.45; }
+html body .tool-card__facts { display: grid; gap: .75rem; margin: .2rem 0 .4rem; padding-top: .85rem; border-top: 1px dashed var(--mh-card-line); }
+html body .tool-card__facts > div { display: grid; gap: .15rem; }
+html body .tool-card__facts dt { color: var(--color-text-muted); font: 800 .72rem/1.2 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+html body .tool-card__facts dd { margin: 0; color: var(--color-text-secondary); font-size: .95rem; line-height: 1.55; }
+html body .tool-card__cta { align-self: flex-start; margin-top: auto; }
+@media (forced-colors: active) { html body .tool-card__name { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } html body .tool-card__icon { background: ButtonText; color: ButtonFace; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { html body .tool-card { transition-duration: .01ms; } html body .tool-card:hover { transform: none; } }
+
+/* 3.39.1 · Tool card tagline and the section note. The tagline is a short headline with a gradient rule beside it, and the
+   section's affiliate note (class resources-note) is a small pill-style callout instead of loose text. */
+html body .tool-card__blurb {
+  position: relative;
+  padding-left: .95rem;
+  color: var(--color-text);
+  font: 700 1.1rem/1.35 var(--font-display);
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+html body .tool-card__blurb::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .2em;
+  bottom: .2em;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #a3e635 0%, #22d3ee 55%, #3b82f6 100%);
+}
+html body .resources-group > .container > p.resources-note {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: .9rem 0 0;
+  padding: .55rem .9rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 28%, transparent);
+  border-left: 3px solid #3b82f6;
+  border-radius: 10px;
+  background: color-mix(in srgb, #3b82f6 8%, var(--color-card, #fff));
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+html.mh-dark body .resources-group > .container > p.resources-note { border-color: color-mix(in srgb, #22d3ee 30%, transparent); border-left-color: #22d3ee; background: color-mix(in srgb, #22d3ee 9%, var(--color-card, #0b1b35)); }
+
+/* 3.40.0 · Resources groups (starters, tools): the heading and text sit on top and the cards fill the full width under them,
+   three to a row on wide screens, two on tablets and one on phones, like the other sections. */
+html body .resources-group > .container { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+html body .resources-group > .container > :is(p, h2) { max-width: 46rem; }
+html body .resources-group .mh-resource-catalog > .resources-list,
+html body .resources-group .mh-resource-catalog > .resources-more > .resources-list {
+  grid-column: 1;
+  grid-row: auto;
+  margin-top: var(--card-gap-roomy);
+}
+html body .resources-group .resources-list,
+html body .resources-group .resources-list--tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html body .resources-group .resources-list > :is(.resources-card, .tool-card):last-child:nth-child(odd) { grid-column: auto; }
+@media (max-width: 1020px) {
+  html body .resources-group .resources-list,
+  html body .resources-group .resources-list--tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  html body .resources-group .resources-list,
+  html body .resources-group .resources-list--tools { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 3.41.0 · Starter and tool cards: a bigger round icon with a glow ring that grows on hover, and the normal space between the
+   Resources sections (an old rule had removed the top padding of a group that follows another group). */
+html body .resources-group + .resources-group { padding-top: var(--section-gap); }
+html body .tool-card__icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .28), transparent 55%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow:
+    0 16px 28px -14px rgba(29, 95, 214, .8),
+    0 0 0 5px rgba(34, 211, 238, .14),
+    0 0 0 6px rgba(34, 211, 238, .22);
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease;
+}
+html body .tool-card__icon svg { width: 1.65rem; height: 1.65rem; }
+html body .tool-card:hover .tool-card__icon {
+  transform: scale(1.06);
+  box-shadow:
+    0 20px 32px -14px rgba(29, 95, 214, .9),
+    0 0 0 7px rgba(34, 211, 238, .16),
+    0 0 0 8px rgba(34, 211, 238, .28);
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .tool-card__icon { transition-duration: .01ms; }
+  html body .tool-card:hover .tool-card__icon { transform: none; }
+}
+
+/* 3.41.1 · The starters and tools headings were sized for a narrow side column. Now the heading spans the section, so it
+   takes the same size as the other section headings. */
+html body .resources-group > .container > h2.wp-block-heading {
+  max-width: none;
+  margin: 0 0 .8rem;
+  font-size: clamp(2.1rem, 1.4rem + 2.6vw, 3.25rem) !important;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
+html body .resources-group > .container > p:not(.resources-note) { font-size: 1.15rem; }
+
+/* 3.42.0 · A Resources section with both the tool cards and the folded stack list. The stack list sits under the cards with its own
+   subheading, and the groups run two to a row on wide screens. */
+html body .resources-group .mh-stack-list { margin-top: var(--card-gap-roomy); }
+html body .resources-group > .container > h3.wp-block-heading {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 .5rem;
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+html body .resources-group > .container > h3.wp-block-heading + p { margin: 0 0 var(--card-gap-roomy); }
+
+/* 3.42.1 · More room around the round icon on the starter and tool cards: space above it and a clear gap before the name. */
+html body .tool-card { padding-top: 1.75rem; }
+html body .tool-card__top { margin-bottom: 1.1rem; }
+
+/* 3.43.0 · The rest of the stack. Round gradient group icons, gradient group titles with a one-line description, round numbered
+   counts and a chevron in a circle; items get a gradient marker. The subheading above the groups is a gradient heading. */
+html body .resources-group > .container > h3.wp-block-heading {
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: .08em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.6rem);
+}
+html.mh-dark body .resources-group > .container > h3.wp-block-heading { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+
+html body .uses-section--fold {
+  background: var(--mh-card-bg);
+  border: 1px solid var(--mh-card-line);
+  border-radius: 14px;
+  box-shadow: var(--mh-card-shadow);
+  padding: 1.25rem 1.4rem;
+  transition: box-shadow .3s ease;
+}
+html body .uses-section--fold:hover { box-shadow: var(--mh-card-shadow-hover); }
+html body .uses-section--fold .uses-section__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .26), transparent 55%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 12px 22px -12px rgba(29, 95, 214, .8), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+}
+html body .uses-section--fold .uses-section__icon svg { width: 1.4rem; height: 1.4rem; }
+html body .uses-section--fold > summary.uses-section__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "icon title count chev" "icon blurb count chev";
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: .1rem;
+}
+html body .uses-section--fold .uses-section__icon { grid-area: icon; }
+html body .uses-section--fold .uses-section__title { grid-area: title; margin: 0; justify-self: start; }
+html body .uses-section__blurb { grid-area: blurb; }
+html body .uses-section__count { grid-area: count; }
+html body .uses-section__chev { grid-area: chev; }
+html body .uses-section--fold .uses-section__title {
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: .06em;
+  background-image: linear-gradient(100deg, #15803d 0%, #1d5fd6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font: 800 1.3rem/1.15 var(--font-display);
+  letter-spacing: -.03em;
+}
+html.mh-dark body .uses-section--fold .uses-section__title { background-image: linear-gradient(100deg, #a3e635 0%, #22d3ee 55%, #93c5fd 100%); }
+html body .uses-section__blurb { color: var(--color-text-secondary); font-size: .92rem; line-height: 1.4; }
+html body .uses-section__count {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  min-width: 0;
+  padding: 0;
+  border: 1.5px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(135deg, #15803d, #1d5fd6) border-box;
+  color: var(--color-text);
+  font: 800 .95rem/1 var(--font-display);
+}
+html.mh-dark body .uses-section__count { background: linear-gradient(#0b1b35, #0b1b35) padding-box, linear-gradient(135deg, #a3e635, #22d3ee) border-box; color: #fff; }
+html body .uses-section__chev {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 50%;
+  transform: none;
+}
+html body .uses-section__chev::before {
+  content: "";
+  width: .5rem;
+  height: .5rem;
+  border-right: 2.5px solid currentColor;
+  border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform .25s ease;
+}
+html body .uses-section--fold[open] > summary .uses-section__chev { transform: none; }
+html body .uses-section--fold[open] > summary .uses-section__chev::before { transform: rotate(-135deg) translate(-1px, -1px); }
+html body .uses-section--fold .uses-item { position: relative; padding-left: 1.1rem; }
+html body .uses-section--fold .uses-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55rem;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d, #1d5fd6);
+}
+html.mh-dark body .uses-section--fold .uses-item::before { background: linear-gradient(135deg, #a3e635, #22d3ee); }
+html body .uses-section--fold .uses-item__name { font-weight: 800; font-size: 1.02rem; }
+html body .uses-section--fold .uses-item__desc { margin-top: .2rem; color: var(--color-text-secondary); line-height: 1.55; }
+@media (max-width: 640px) { html body .uses-section--fold { padding: 1.1rem 1.1rem; } html body .uses-section--fold .uses-section__icon { width: 2.7rem; height: 2.7rem; } }
+
+/* 3.43.1 · The item marker sits on the item name's line instead of at a fixed offset from the item's top edge. */
+html body .uses-section--fold .uses-item { padding-left: 0; }
+html body .uses-section--fold .uses-item::before { content: none; }
+html body .uses-section--fold .uses-item__name { position: relative; padding-left: 1.1rem; }
+html body .uses-section--fold .uses-item__name::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d, #1d5fd6);
+}
+html.mh-dark body .uses-section--fold .uses-item__name::before { background: linear-gradient(135deg, #a3e635, #22d3ee); }
+html body .uses-section--fold .uses-item__desc { padding-left: 1.1rem; }
+
+/* The group count is the same round gradient number as in "Pick what you need". */
+html body .uses-section__count,
+html.mh-dark body .uses-section__count {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 10px 20px -12px rgba(29, 95, 214, .75), 0 0 0 4px rgba(34, 211, 238, .14);
+  color: #fff;
+  font: 800 1.05rem/1 var(--font-display);
+}
+
+/* 3.43.2 · The number in the stack group circle: the hidden "tools" label for screen readers was taking its own row and pushed
+   the digit up. Centre the digit with flex and take the label out of the flow. */
+html body .uses-section__count {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0 0;
+  line-height: 1;
+  text-align: center;
+}
+html body .uses-section__count > .visually-hidden { position: absolute; }
+
+/* 3.44.0 · "I use it for" / "Good fit if" (and "What you get" / "Good for") labels: a small round gradient chip with an icon and a
+   brighter label, with the answer under it. The first label gets a spark, the second a check. */
+html body .tool-card__facts { gap: 1rem; }
+html body .tool-card__facts > div { gap: .45rem; }
+html body .tool-card__facts dt {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: #15803d;
+  font: 800 .8rem/1 var(--font-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+html.mh-dark body .tool-card__facts dt { color: #a3e635; }
+html body .tool-card__facts dt::before {
+  content: "";
+  flex: none;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 50%;
+  background:
+    var(--fact-icon) center / .85rem .85rem no-repeat,
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 6px 12px -6px rgba(29, 95, 214, .75), 0 0 0 3px rgba(34, 211, 238, .14);
+}
+html body .tool-card__facts > div:nth-child(1) dt { --fact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z'/%3E%3C/svg%3E"); }
+html body .tool-card__facts > div:nth-child(2) dt { --fact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
+html body .tool-card__facts dd { padding-left: 2.1rem; }
+@media (forced-colors: active) { html body .tool-card__facts dt::before { background: ButtonText; box-shadow: none; } }
+
+/* 3.45.0 · Affiliate notes: the link is a gradient pill button beside the note text. The note boxes (affiliate-note partial, the
+   post disclosure, and the Resources section note with the class resources-note) lay out as text plus button. */
+html body :is(.affiliate-note > p, .affiliate-disclosure, .post-extra-note.affiliate-disclosure) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  margin: 0;
+}
+html body .affiliate-note { padding: 1rem 1.25rem; }
+html body .affiliate-disclosure { padding: 1rem 1.25rem; }
+html body .affiliate-note__text { flex: 1 1 22rem; min-width: 0; }
+html body :is(.affiliate-note, .affiliate-disclosure) .shop-link { flex: none; }
+
+/* The Resources section note is a paragraph with a plain link in it, so its link gets the pill look here. */
+html body .resources-group > .container > p.resources-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: .8rem 1.1rem;
+}
+html body .resources-group > .container > p.resources-note a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.5rem;
+  padding: .3rem .4rem .3rem .9rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--color-card, #fff), var(--color-card, #fff)) padding-box,
+    linear-gradient(120deg, #a3e635 0%, #22d3ee 26%, #3b82f6 56%, #8b5cf6 80%, #a3e635 100%) border-box;
+  box-shadow: 0 6px 16px -10px rgba(29, 95, 214, .5);
+  color: var(--color-text);
+  font: 700 .86rem/1.2 var(--font-display);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: box-shadow .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+html body .resources-group > .container > p.resources-note a::after {
+  content: "";
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / .85rem .85rem no-repeat,
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 4px 10px -4px rgba(29, 95, 214, .7);
+}
+html body .resources-group > .container > p.resources-note a:is(:hover, :focus-visible) {
+  box-shadow: 0 14px 26px -12px rgba(29, 95, 214, .65), 0 0 0 4px rgba(34, 211, 238, .14);
+  transform: translateY(-1px);
+  color: var(--color-text);
+}
+@media (forced-colors: active) { html body .resources-group > .container > p.resources-note a { border-color: LinkText; background: Canvas; } }
+@media (prefers-reduced-motion: reduce) { html body .resources-group > .container > p.resources-note a { transition-duration: .01ms; transform: none; } }
+
+/* 3.46.0 · Arrow chips in the pill buttons: a slightly bigger circle with a soft highlight and a ring, a bolder arrow, and on hover
+   the arrow slides out of the circle and back in from the other side. */
+html body .shop-link.shop-link .shop-link__icon {
+  position: relative;
+  overflow: hidden;
+  width: 1.95rem;
+  height: 1.95rem;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, .32), transparent 58%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow:
+    0 6px 14px -6px rgba(29, 95, 214, .8),
+    0 0 0 3px rgba(34, 211, 238, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .3);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+html body .shop-link.shop-link .shop-link__icon::before { width: 1rem; height: 1rem; }
+html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon {
+  transform: scale(1.07);
+  box-shadow:
+    0 8px 16px -6px rgba(29, 95, 214, .9),
+    0 0 0 4px rgba(34, 211, 238, .24),
+    inset 0 1px 0 rgba(255, 255, 255, .3);
+}
+html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon::before { animation: mh-arrow-swap .5s cubic-bezier(.4, 0, .2, 1); transform: none; }
+html body .shop-link.shop-link:not(.shop-link--forward):not(.shop-card__details-link):is(:hover, :focus-visible) .shop-link__icon::before { animation-name: mh-arrow-swap-up; }
+@keyframes mh-arrow-swap { 0% { transform: translateX(0); } 45% { transform: translateX(160%); } 46% { transform: translateX(-160%); } 100% { transform: translateX(0); } }
+@keyframes mh-arrow-swap-up { 0% { transform: translate(0, 0); } 45% { transform: translate(160%, -160%); } 46% { transform: translate(-160%, 160%); } 100% { transform: translate(0, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  html body .shop-link.shop-link .shop-link__icon { transition-duration: .01ms; }
+  html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon { transform: none; }
+  html body .shop-link.shop-link:is(:hover, :focus-visible) .shop-link__icon::before { animation: none; }
+}
+@media (forced-colors: active) { html body .shop-link.shop-link .shop-link__icon { box-shadow: none; } }
+html body .resources-group > .container > p.resources-note a { padding-right: .3rem; }
+html body .resources-group > .container > p.resources-note a::after {
+  width: 1.95rem;
+  height: 1.95rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / 1rem 1rem no-repeat,
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, .32), transparent 58%),
+    linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 6px 14px -6px rgba(29, 95, 214, .8), 0 0 0 3px rgba(34, 211, 238, .16), inset 0 1px 0 rgba(255, 255, 255, .3);
+}
+
+/* 3.46.2 · Data blocks (GitHub stats and the like) are a one-column grid whose column grew to the width of its widest content, so on a
+   320px screen the stat tiles ran 12px past the edge. Let the items shrink, and drop the tiny corner icon on very narrow tiles
+   so a long number does not run under it. */
+html body .mh-data > * { min-width: 0; }
+@media (max-width: 380px) { html body .gh-tile__icon { display: none; } }
+
+/* 3.46.3 · The GitHub panels sit in a grid (gh-pair) whose column grew to the width of the contribution heatmap, so the panel ran 12px
+   past the edge on a 320px screen. Let the panels shrink, like the data blocks around them. */
+html body .gh-pair > * { min-width: 0; }
+
+/* 3.47.0 · Inner page heroes. The eyebrow is a pill with a gradient dot, the main button is a solid lime-to-cyan button and the second
+   one an outline, a list with the class hero-facts becomes a row of check chips, and the intro is a little larger and tighter. */
+html body .page-header .page-header__panel .eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: .55rem;
+  width: fit-content;
+  margin: 0 0 1rem;
+  padding: .4rem .95rem .4rem .75rem !important;
+  border: 1px solid rgba(147, 197, 253, .38) !important;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, .5) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #bfdbfe !important;
+  font: 800 .78rem/1 var(--font-display) !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase;
+}
+html body .page-header .page-header__panel .eyebrow::before {
+  content: "";
+  flex: none;
+  display: block;
+  width: .55rem !important;
+  height: .55rem !important;
+  margin: 0 !important;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a3e635, #22d3ee) !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .22);
+}
+
+html body .page-header .lead,
+html body .page-header .is-style-lead { max-width: 40rem; font-size: clamp(1.1rem, 1rem + .5vw, 1.3rem); line-height: 1.6; }
+
+html body .page-header .wp-block-buttons { gap: .8rem 1rem; margin-top: 1.6rem; }
+html body .page-header .wp-block-button:not(.is-style-outline):not(.is-style-ghost):not(.is-style-arrow) > a {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  font-weight: 800;
+  box-shadow: 0 16px 32px -14px rgba(34, 211, 238, .75);
+}
+html body .page-header .wp-block-button:not(.is-style-outline):not(.is-style-ghost):not(.is-style-arrow) > a:is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body .page-header .wp-block-button.is-style-outline > a {
+  border: 1.5px solid rgba(255, 255, 255, .55) !important;
+  background: rgba(255, 255, 255, .06) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+html body .page-header .wp-block-button.is-style-outline > a:is(:hover, :focus-visible) { background: rgba(255, 255, 255, .16) !important; border-color: #fff !important; }
+
+
+/* Pages built from Blade (Support, Start here) and older arrow links use classes instead of button blocks: same two looks. */
+html body .page-header a.btn:not(.btn-outline):not(.btn-ghost):not(.btn-secondary) {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  font-weight: 800;
+  box-shadow: 0 16px 32px -14px rgba(34, 211, 238, .75);
+}
+html body .page-header a.btn:not(.btn-outline):not(.btn-ghost):not(.btn-secondary):is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body .page-header :is(a.btn-outline, a.btn-ghost, a.btn-secondary, a.h-text-arrow),
+html body .page-header .wp-block-button.is-style-arrow > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 2.9rem;
+  padding: .55rem 1.35rem;
+  border: 1.5px solid rgba(255, 255, 255, .55) !important;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-weight: 800;
+  text-decoration: none;
+}
+html body .page-header :is(a.btn-outline, a.btn-ghost, a.btn-secondary, a.h-text-arrow, .wp-block-button.is-style-arrow > a):is(:hover, :focus-visible) {
+  background: rgba(255, 255, 255, .16) !important;
+  border-color: #fff !important;
+}
+
+html body .page-header ul.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+html body .page-header ul.hero-facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0;
+  padding: .45rem .9rem .45rem .55rem;
+  border: 1px solid rgba(163, 230, 53, .4);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, .5);
+  color: #e2e8f0;
+  font: 600 .92rem/1.25 var(--font-body, inherit);
+}
+html body .page-header ul.hero-facts li::before {
+  content: "";
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / .75rem .75rem no-repeat,
+    linear-gradient(135deg, #15803d, #1d5fd6);
+}
+@media (max-width: 640px) {
+  html body .page-header ul.hero-facts { flex-direction: column; align-items: flex-start; }
+  html body .page-header .wp-block-buttons { flex-direction: column; align-items: stretch; }
+  html body .page-header .wp-block-button > a { width: 100%; justify-content: center; text-align: center; }
+}
+@media (forced-colors: active) { html body .page-header .wp-block-button > a { forced-color-adjust: auto; } }
+
+/* 3.48.0 · Questions section. The question list gets numbered gradient badges (every FAQ block), the Home and About
+   layouts give the list a row-stretching last track so the left column never gets pulled apart, and the Home section fills its
+   left column with check chips and an "Ask me" card. The drawing there is hidden since the card now takes that space. */
+html body .mh-block-faq { counter-reset: faq; }
+html body .mh-block-faq details { counter-increment: faq; }
+html body .mh-block-faq details > summary { align-items: center; }
+html body .mh-block-faq details > summary::before {
+  content: counter(faq);
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d 0%, #1d5fd6 100%);
+  box-shadow: 0 8px 16px -10px rgba(29, 95, 214, .8);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  font: 800 .92rem/1 var(--font-display);
+  letter-spacing: 0;
+}
+html.mh-dark body .mh-block-faq details > summary::before {
+  background: linear-gradient(135deg, #a3e635 0%, #22d3ee 100%);
+  color: #06121f;
+  -webkit-text-fill-color: #06121f;
+}
+
+html body ul.faq-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+html body .mh-block-section ul.wp-block-list.faq-points > li {
+  position: static;
+  display: inline-flex !important;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 !important;
+  padding: .4rem .85rem .4rem .45rem !important;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 999px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+  color: var(--color-text);
+  font: 600 .9rem/1.25 var(--font-body, inherit);
+}
+html body .mh-block-section ul.wp-block-list.faq-points > li::before {
+  content: "";
+  position: static !important;
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / .75rem .75rem no-repeat,
+    linear-gradient(135deg, #15803d, #1d5fd6) !important;
+}
+html.mh-dark body .mh-block-section ul.wp-block-list.faq-points > li::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306121f' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / .75rem .75rem no-repeat,
+    linear-gradient(135deg, #a3e635, #22d3ee) !important;
+}
+
+html body .faq-ask {
+  position: relative;
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.5rem 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--mh-card-line);
+  border-radius: 18px;
+  background: var(--mh-card-bg);
+  box-shadow: var(--mh-card-shadow);
+}
+html body .faq-ask::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #22d3ee, #a3e635);
+}
+html body .faq-ask > h3 {
+  margin: 0 0 .45rem;
+  font: 800 1.3rem/1.2 var(--font-display);
+  letter-spacing: -.025em;
+}
+html body .faq-ask > p { margin: 0; color: var(--color-text-secondary); font-size: 1rem; line-height: 1.6; max-width: none; }
+html body .faq-ask .wp-block-buttons { gap: .7rem; margin-top: 1.1rem; }
+html body .faq-ask .wp-block-button > a {
+  min-height: 2.75rem;
+  padding: .5rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+}
+html body .faq-ask .wp-block-buttons .wp-block-button:not(.is-style-outline) > a.wp-block-button__link {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  box-shadow: 0 14px 28px -14px rgba(34, 211, 238, .8);
+}
+html body .faq-ask .wp-block-buttons .wp-block-button:not(.is-style-outline) > a.wp-block-button__link:is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body .faq-ask .wp-block-buttons .wp-block-button.is-style-outline > a.wp-block-button__link {
+  border: 1.5px solid var(--mh-card-line) !important;
+  background: transparent !important;
+  color: var(--color-text) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+html body .faq-ask .wp-block-buttons .wp-block-button.is-style-outline > a.wp-block-button__link:is(:hover, :focus-visible) { border-color: #22d3ee !important; box-shadow: 0 0 0 4px rgba(34, 211, 238, .14); }
+
+@media (width >= 1025px) {
+  /* The last row takes the spare height, so a tall question list does not stretch the gaps between left-column items. */
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container { grid-template-rows: repeat(11, auto) 1fr; }
+  .mh-page-home #questions:has(.faq-ask) > .mh-illus--questions { display: none; }
+}
+@media (width < 1025px) {
+  /* One column: the question list comes before the card. */
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container { display: flex; flex-direction: column; }
+  :is(.mh-page-about, .mh-page-home) :is(#faq, #questions) > .container > .faq-ask { order: 2; }
+}
+@media (max-width: 640px) {
+  html body ul.faq-points { flex-direction: column; align-items: flex-start; }
+  html body .mh-block-faq details > summary::before { width: 1.9rem; height: 1.9rem; font-size: .85rem; }
+}
+@media (forced-colors: active) { html body .faq-ask .wp-block-button > a { forced-color-adjust: auto; } }
+
+/* 3.48.1 · Home hero and closing bands use the same two button looks as the inner page heroes: a solid lime-to-cyan main
+   button and an outline second button (the arrow style on the Home hero becomes the outline). */
+html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:not(.is-style-outline):not(.is-style-ghost):not(.is-style-arrow) > a {
+  border: 0 !important;
+  background: linear-gradient(120deg, #a3e635 0%, #22d3ee 100%) !important;
+  color: #06121f !important;
+  -webkit-text-fill-color: #06121f !important;
+  font-weight: 800;
+  box-shadow: 0 16px 32px -14px rgba(34, 211, 238, .75);
+}
+html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:not(.is-style-outline):not(.is-style-ghost):not(.is-style-arrow) > a:is(:hover, :focus-visible) {
+  background: linear-gradient(120deg, #bef264 0%, #67e8f9 100%) !important;
+  transform: translateY(-1px);
+}
+html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:is(.is-style-outline, .is-style-arrow) > a {
+  border: 1.5px solid rgba(255, 255, 255, .55) !important;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-weight: 800;
+}
+html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:is(.is-style-outline, .is-style-arrow) > a:is(:hover, :focus-visible) {
+  background: rgba(255, 255, 255, .16) !important;
+  border-color: #fff !important;
+}

@@ -1,9 +1,387 @@
 # Changelog
 
-## 3.21.4 — Pause button removed, no bar under hero titles
+## 3.56.1 — Pause button removed, no bar under hero titles
 
 - The pause-animations button is gone from the header, along with its script and styles. With the button gone, the phone header has more room, and the "Get updates" icon-only range is back to 901 to 1099px.
 - Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
+## 3.56.0 — Page polish: green-to-blue edges and easier reading
+
+- New `resources/css/polish.css`, imported last in `app.css`. It adds colors, edges and small type only; nothing moves except a 1px hairline.
+- Privacy and Terms: section headings (`.legal-prose > h2`) take the same green-to-blue gradient as the section titles and page titles, with a short gradient rule under them that stretches when the heading is the jump target. They were flat black beside gradient page titles. Print and high-contrast modes fall back to plain text.
+- Privacy and Terms: the card gets a gradient top edge in light and dark mode, the dash markers become green-to-blue dots, and "Last updated" is a quiet pill.
+- Jumps from the "On this page" rail now land with the card's top edge and eyebrow in view (`scroll-margin-top: 5.5rem` on legal headings). They cleared the sticky bars by 8px before, with the card's top cut off.
+- Alternate sections (`.pf-section--alt`) get a faded green-to-blue hairline on their top edge, using `border-image` so the light and dark fills are untouched.
+- Supporting lines (`.pf-meta`, `.cta-band__note`, `.gh-panel__note`, `.code-sync`) go from 14px to 15px with a little more leading.
+- Not changed on purpose: the violet accents (quotes, chips, link hover) are part of the lime-and-violet system in `studio.css`, so they stay. Card hover shadows stay as they are because `shop-pages.css` sets its own at higher specificity.
+
+## 3.55.3 — Plainer copy on the Resources page
+
+- Every tool card and stack line on the Resources page is rewritten in plain language for site owners: what the tool does and why I use it, without jargon like CI, IoC container, or cache-busting. Tool names, links and affiliate flags are unchanged.
+- Stack group names are friendlier ("Where I write code", "Hosting and going live", "Design and fonts"), and the jump link reads "More tools" instead of "Stack groups".
+- The page intro, section leads and call-to-action text (block content on the Resources page) were reworded to match.
+
+## 3.55.2 — Resources stack list matches what ships
+
+- Search and analytics: Google Tag Manager is replaced by Site Kit by Google, which is what loads GA4 today (`resources/js/track.js` says there is no Tag Manager container). The GA4 line no longer says it runs through Tag Manager and mentions the product page events from 3.51.0.
+- "Microsoft Clarity / Bing" is now "Bing Webmaster Tools". Nothing in the theme loads Clarity or the UET tag, so the line no longer names them.
+- Hosting and shipping: adds Freemius, the checkout and license keys for the themes for sale (3.12 onward).
+- AI and automation: adds WPVibe, the WordPress connection for posts, pages and settings.
+- Links that redirected now point at the final address: Vite, WP-CLI, Laravel Pint, Power Apps, Power Automate, and Google Analytics.
+
+## 3.55.1 — Cobble & Candle page speaks to buyers
+
+- A product on sale no longer shows the "sample work I built in public" note in its hero. Projects that are not for sale keep it.
+- On a product on sale, the Feedback heading is "Questions before you buy", the form heading names the product, and the closing band offers a setup instead of "Hire me".
+- Like and star buttons hide their number while it is 0, on every project page. The number appears with the first like or star.
+- Cobble & Candle catalog entry matches release 1.5.1: 33 blocks (was 28), 13 patterns, 15 templates, version 1.5.1 (was 1.0.1). The audience line no longer mentions hiring managers. One-time reseed `mh_product_catalog_v21` updates only this product.
+
+## 3.55.0 — Signup card under the home post grid
+
+- Home "What's new": the email signup under the post grid now sits in its own card, well spaced from the posts. The card has the brand gradient border (lime, cyan, blue, violet), a soft lime-to-blue background, a gradient heading, a pill email field and a lime-to-cyan Subscribe button. On wide screens the text is on the left and the form on the right.
+- The card is added when the section renders (`blocks/section.blade.php`), so page content is unchanged, and it reuses the Journal newsletter form styles.
+
+## 3.54.0 — Spinning frame on the home hero theme card
+
+- Home hero "Newest theme" card: the gradient frame around the screenshot now spins like the About photo ring (one turn every 6 seconds) and shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The card has the same lime-to-blue gradient background as the About photo card, with a dark-mode version.
+
+## 3.53.0 — Spinning photo ring and card gradient
+
+- About profile photo: the green-to-blue ring now spins around the photo (one turn every 6 seconds) and still shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The photo card has a soft gradient background: a lime tint at the top left fading through the card color to a blue tint at the bottom right, with a deeper navy version in dark mode.
+
+## 3.52.0 — About profile photo card
+
+- The About profile photo (the Image block with the `about-portrait-inline` class) sits in a card: a green-to-blue gradient ring around the photo, a centered caption, and the social icons under it in the same box. On hover or keyboard focus the ring turns and shifts to blue, violet and lime; with reduced motion the colors change without the turn.
+- The ring and icons are added when the block renders (`app/blocks.php`), so the page content is unchanged.
+
+## 3.51.2 — About page card hierarchy
+
+- About page only: glance facts, past resume roles and skill tiles now use a quiet hairline border that turns lime on hover. Lime stays on the main cards (services, How I work, the current role, skill groups), so the page has a clear focus and skill tiles no longer show a lime border inside a lime group.
+
+## 3.51.1 — Marketing events wait for gtag
+
+- The GA4 events from 3.51.0 are held in memory until gtag() exists. The cache plugin delays Site Kit's gtag.js until the first tap or scroll, so an event at page load (view_item) found no gtag and was lost. Events now wait up to 30 seconds, then are dropped; nothing is stored in the browser.
+
+## 3.51.0 — Marketing events and a phone call-to-action bar
+
+- GA4 ecommerce events from the Freemius checkout on every product page and the Cobble & Candle landing page: `view_item` (priced at the cheapest plan), `begin_checkout` (the plan clicked) and `purchase` (the plan's list price, with the Freemius subscription or license ID as the transaction ID), sent before the buyer is moved to `/account/?purchase=complete`. They go to gtag() when Site Kit's gtag.js is on the page and no Tag Manager container is, and to the dataLayer for a container. Nothing is stored in the browser.
+- The landing page's `cc_cta_click` and `cc_buy_click` events now reach GA4 as well as the dataLayer.
+- Landing page on phones: a bar with the price and a "See plans" button appears once the hero scrolls away and hides again at the pricing.
+
+## 3.50.0 — Cobble & Candle landing page
+
+- New page template, "Cobble & Candle landing page": a stand-alone marketing page for the theme with no matthummel.com header or footer, built for ad traffic. It uses the theme's own palette (lamp-black, brass, parchment, oxblood) and Bodoni Moda and Mulish fonts, loads its own small stylesheet and script, and reads its copy, prices and screenshots from the product catalog and the Freemius plan.
+- Sections: hero with price and two calls to action, quality strip, six feature cards, screenshots, the four styles, three setup steps, who it is for, pricing with Buy buttons (Freemius overlay), FAQ, closing band and a footer with the legal links, support email and seller line.
+- Cobble & Candle logo set (SVG): crest, horizontal and stacked lockups for dark and light backgrounds, and an app icon. Fonts are bundled with their licenses.
+- Click events for Google Tag Manager: `cc_cta_click` (with `cc_cta`) and `cc_buy_click` (with `cc_plan` and `cc_licenses`).
+- After a finished Freemius checkout, every product page now sends the buyer to `/account/?purchase=complete`, so ad and analytics tags can count a purchase.
+
+## 3.49.1 — Footer fallback links
+
+- The built-in footer legal links (used when no Footer Bottom Navigation menu is assigned) now include License and Refunds, so a fresh install matches the site.
+
+## 3.49.0 — Theme purchase terms and privacy
+
+- Terms of use has a "Theme purchases" section: who you are dealing with (Freemius as merchant of record), the license key, what updates and support cover (replies within one business day, ET), compatibility, no warranty and a 12-month liability cap. It links to the new License and Refunds pages.
+- Privacy policy names Freemius: a new "Theme purchases & licenses" card, a line in "Who sees your data", and the two statements that said the site had no checkout or accounts now say card details go to Freemius and buyers sign in there.
+- Both pages say "Last updated: November 2, 2026". Have a lawyer read the Terms and Privacy changes before they go live.
+
+## 3.48.3 — Cobble & Candle prices
+
+- The Cobble & Candle product page and shop card show the Freemius prices: $59.99, $99.99 and $199.99 a year (they said $59, $99 and $199, which did not match what checkout charges).
+
+## 3.48.2 — Cobble & Candle version
+
+- The Cobble & Candle product page shows release 1.0.1, the version now in Freemius.
+
+## 3.48.1 — Home review
+
+- Theme cards (the Home hero card, the themes grid and the Shop list) show a short blurb that ends on a whole sentence, instead of being cut off mid-sentence with an ellipsis.
+- The Home hero and closing band use the same buttons as the inner page heroes: a solid lime-to-cyan main button and an outline second button.
+- Page copy on staging: the Questions section is in the "On this page" bar as FAQ, the full-stack card in What I do has a button to Services, and the Home buttons use relative links.
+
+## 3.48.0 — Questions section
+
+- Every question list (Home, Services, About) has round numbered gradient badges beside each question.
+- The Home "Hiring a WordPress developer" section fills its left column with four check chips (one price per project, written scope first, you own the site, reply within one business day) and a "Not on the list?" card with an "Ask me a question" button and a "See the services" button. The drawing that used to sit there is hidden when the card is present.
+- On wide screens the left column keeps its spacing when the question list is long, and on phones the card comes after the questions.
+- Page copy on staging: the list went from 6 to 10 questions (cost, how long, taking over a site, agencies) with links to the contact form, handoff checklist and Projects page.
+
+## 3.47.0 — Page heroes
+
+- Page heroes (every page except Home): the small label above the heading is a pill with a gradient dot, the main button is a solid lime-to-cyan button and the second one an outline so the two read as different, the intro is a little larger, and a list with the class `hero-facts` becomes a row of check chips under the buttons (stacked on phones). Pages built from Blade (Support) and older arrow links get the same two button looks.
+
+## 3.46.3 — GitHub panels on small phones
+
+- The GitHub contribution panel on the About page no longer runs past the edge on a 320px screen.
+
+## 3.46.2 — GitHub tiles on small phones
+
+- The GitHub stat tiles on the About page no longer run past the edge on a 320px screen, and the corner icon is hidden on very narrow tiles so long numbers do not run under it.
+
+## 3.46.1 — Card links
+
+- A card paragraph with several links (the Welcome page cards) keeps them as text. Before, everything from the first link to the last turned into one long button. Only a link that starts a sentence or a paragraph becomes the button under a card.
+
+## 3.46.0 — Arrow chips
+
+- The round arrow chip in the pill buttons is a little bigger, with a soft highlight and a ring, and the arrow is bolder. On hover the circle grows slightly and the arrow slides out and back in from the other side (not with reduced motion).
+
+## 3.45.0 — Affiliate note buttons
+
+- The link in every affiliate note (the Resources page, tool lists, and posts that use affiliate links) is a gradient pill button with an arrow, beside the note text.
+
+## 3.44.0 — Card fact labels
+
+- The labels on the starter and tool cards (I use it for, Good fit if, What you get, Good for) have a small round gradient chip with a spark or check icon and a brighter green label, with the answer indented under it.
+
+## 3.43.2 — Centred group numbers
+
+- The number in each stack group circle sits in the middle of the circle instead of a few pixels high.
+
+## 3.43.1 — Stack item marker
+
+- The gradient dot beside each stack item lines up with the item name.
+- The count on each stack group is the same solid round gradient number as in "Pick what you need".
+
+## 3.43.0 — The rest of the stack
+
+- Each stack group has a round gradient icon, a gradient title with a one-line description, a round numbered count, and a chevron in a circle. Group names are plainer: Building WordPress, Editor and terminal, Hosting and shipping, Search and analytics, AI and automation, Testing and accessibility, Design and type, Power Platform.
+- Items inside a group have a gradient marker and more space, and the subheading above the groups is a gradient heading.
+
+## 3.42.1 — Card icon spacing
+
+- The round icon on the starter and tool cards has more space above it and a bigger gap before the name.
+
+## 3.42.0 — Tools and stack in one section
+
+- The Stack list block has a "Hide the tools shown as cards" setting that leaves out entries already shown as tool cards, so Tools I use every week and the stack no longer repeat each other.
+- A Resources section can hold both the tool cards and the folded stack list.
+
+## 3.41.1 — Bigger Resources group headings
+
+- The starters and tools headings are the same size as the other section headings, and their intro text is a little larger.
+
+## 3.41.0 — Starter cards and spacing
+
+- The starters are the same cards as the tools: a larger round gradient icon, a tag, a name, a one-line tagline, what you get, who it is good for, and a button. The heading is no longer the link.
+- The round icon is bigger, with a glow ring that grows a little on hover.
+- The Resources sections have their normal space between them again (the starters and tools sections had none).
+
+## 3.40.0 — Resources cards under the text
+
+- On the Resources page, the starters and tools cards sit under their heading and text at full width, three to a row on wide screens, two on tablets, one on phones.
+
+## 3.39.1 — Tool headings and tagline design
+
+- The tools group is named "Tools I use every week", and each tool has a new short tagline.
+- The tagline is a headline with a gradient rule beside it, and a paragraph with the class `resources-note` becomes a small callout (used for the affiliate note).
+
+## 3.39.0 — Tools I recommend
+
+- The tools group shows richer cards: an icon, what the tool is, what I use it for, who it suits, and a Visit button. Affiliate links keep their label and sponsored rel.
+- The list now has six tools: Claude Code, Hostinger, n8n, GitHub, WordPress Studio, and Rank Math.
+
+## 3.38.1 — Resources eyebrow rows
+
+- With an eyebrow above each Resources heading, the jump list and the card lists span the extra grid row, so the count stays under the intro and the eyebrow no longer leaves a gap.
+
+## 3.38.0 — Resources polish
+
+- The Resources jump list rows are cards with a round gradient number, and the last card of an odd-numbered row spans the full width instead of leaving a gap.
+- Resource cards lift a little on hover.
+- The first group is named "Free starters and open source", since it holds the GitHub profile and the playbook as well as starter themes.
+
+## 3.37.1 — Band main button
+
+- The main button on the dark closing band panel is now the solid lime-to-cyan button it was meant to be.
+
+## 3.37.0 — Resources page
+
+- The stack groups fold open and shut, with the first one open and a count on each.
+- Resource link groups can show only the first few links, with the rest behind a Show more button (new "Links to show up front" setting).
+- On the dark closing band panel, the main button is a solid lime-to-cyan button so it stands apart from the outline one.
+
+## 3.36.0 — Closing band with steps
+
+- A CTA band block with the class `cta-band--panel` shows an ordered list with the class `cta-band__steps` as three numbered steps, and puts its buttons in a frosted panel.
+
+## 3.35.2 — Upcoming card spacing
+
+- The title on the short upcoming-theme cards sits close to the pills instead of a wide gap below them.
+
+## 3.35.1 — Upcoming card pills
+
+- The Theme and Coming soon pills on the short upcoming-theme cards use the theme card pill, and sit close to the title.
+
+## 3.35.0 — Short upcoming-theme cards
+
+- The "Only themes in progress" setting of the Latest themes block now shows short cards (thin image, status, one line, Get updates button) instead of full shop cards.
+
+## 3.34.1 — Step lines reach the next number
+
+- The line between process steps now draws over the next card, so it runs from one number to the next.
+
+## 3.34.0 — Process steps and what is next
+
+- Numbered card grids (How a project runs, agency overflow) show a round gradient number, a line that links the steps on wide screens, and an optional "You get" line at the bottom of each card (give a paragraph the class `mh-card__get`).
+- The Latest themes block has an "Only themes in progress" setting that shows just the themes marked Coming soon.
+
+## 3.33.4 — Section links as buttons
+
+- The links that end a section ("Browse all themes", "All posts", "Browse all" projects, and the post page's "All posts") are now gradient pill buttons with an arrow chip, like the card buttons. The RSS link next to the journal is a pill too.
+
+## 3.33.3 — Theme without the flash
+
+- The small script that sets light or dark is marked so the cache plugin runs it right away. Before, the cache plugin held it until the first tap, scroll or mouse move, so pages showed in light first and flipped to dark after.
+
+## 3.33.2 — Boxes fit on phones
+
+- A box with a long link at its end (Get updates, Welcome, Start here, Services) no longer stretches wider than the phone screen. Long words and links break, and the gradient link buttons wrap their label on phones.
+
+## 3.33.1 — Cards, the rest
+
+- Project cards (Projects page), repo cards and resource cards take the theme card's green-to-blue title, pills and gradient link buttons ("Open project", "Live demo", "Open repo"). The resource cards' arrows are round gradient chips.
+- The "Theme" pill on the project cards in the Services and About pages is the theme card's pill, not gray.
+
+## 3.33.0 — One card system
+
+- Every content card matches the theme cards: the same frame, a green-to-blue title with the hover underline, and a gradient pill button for its link. This covers the Journal (Home and the Journal page), the project cards, the "What I do" style boxes, and the repo and resource cards.
+- Journal cards on Home are now the same card as on the Journal page, with a "Read more" button, a single tidy date row and three lines of text, so they line up.
+- The "What I do" boxes have a big round gradient icon with centered copy. A link that ended the box's text ("See theme development") now shows as a button under it.
+- The "Concept builds and plugins" section is removed from Home.
+
+## 3.32.1 — Updates arrow removed
+
+- The small arrow next to the envelope in the header (the "Get updates" button) is gone, along with the "What you get" preview it opened. The "Get updates" button itself stays and goes to the sign-up page.
+
+## 3.32.0 — Header overlap
+
+- The first line of content on most pages (the small label above a title, the breadcrumb, the hero label) sat underneath the fixed header's logo and buttons. The page now starts below the header, as the layout intends.
+
+## 3.31.2 — Pause button removed
+
+- The pause and play button is gone from the header, with its script, styles and icons. The early script that re-applied a saved "paused" choice is gone too, so nobody stays stuck still after an earlier pause. Visitors whose device asks for reduced motion still get no looping animation.
+
+## 3.31.1 — Anchor jumps on desktop
+
+- On wide screens, a section link (such as "Buy" on a product page) no longer scrolls the section's heading under the sticky header and the "On this page" bar. It already worked on phones.
+
+## 3.31.0 — On this page bar
+
+- The "On this page" bar has a green-to-blue label, section pills 36px tall with a soft gradient edge that brightens on hover, a filled green-to-blue pill for the section you are in, matching scroll arrows, and a thin gradient line along the bar's lower edge. It replaces the violet colors.
+
+## 3.30.0 — Gradient prices
+
+- Prices use the same gradient as the headings (green to blue on light surfaces; lime, cyan and light blue on dark ones and on the navy product header): on the theme and plugin cards, in the Home hero, in the compare table, on the product page's price line and on its three pricing tiers.
+
+## 3.29.2 — Blog posts on phones
+
+- Long links, italic or bold runs and inline code in a post break instead of running past the screen edge (a long URL link, inline code snippets and an italic run were wider than a phone). Code blocks still scroll sideways.
+- Breadcrumb links such as "Journal › AI" are at least 24px wide.
+
+## 3.29.1 — Small labels
+
+- The small capital labels on the theme cards and the Home hero ("Best for", "Newest theme", "From", "Theme" and "Coming soon") were 9.9 to 10.9px. They are 11.5 to 12px now.
+
+## 3.29.0 — Price and the Home hero's newest theme
+
+- Prices show "From" as a small label, the amount large and "per year" small, on the theme cards and in the Home hero.
+- The Home hero's newest-theme card has a gradient "Newest theme" pill, a gradient frame around the screenshot, a larger green-to-blue title with the hover underline, a three-line description, and a gradient "See the theme" pill. That link was pale blue text (about 1.9:1 on the white card).
+
+## 3.28.0 — Theme card title and pills
+
+- The theme name on a card is larger display type with tighter spacing, balanced line breaks and a green-to-blue gradient, with a gradient underline that draws in on hover or focus.
+- The category pills have a small gradient dot, a tinted fill and a navy label ("Theme"); "Coming soon" is amber with an amber dot, so type and status read differently.
+
+## 3.27.2 — Best for tag, wrapped
+
+- When the audience in a card's "Best for" tag is long enough to wrap onto a second line (small phones), the tag is a softly rounded rectangle instead of a tall capsule. One-line tags look the same as before.
+
+## 3.27.1 — Best for tag
+
+- On the theme cards, "Best for" is a compact tag: a green-to-blue mini label beside the audience in bold, on a softly tinted rounded strip. It hugs its text and wraps under the label if the audience is long.
+
+## 3.27.0 — Gradient link pills
+
+- The Live demo, Owner guide, Open demo, See the full details and docs links are pills with a multi-color gradient border (lime, cyan, blue, violet) that slides on hover, a soft glow, and a sharper arrow in a green-to-blue chip that nudges forward on hover. They keep their size and wrapping on phones; reduced-motion visitors get no movement.
+
+## 3.26.2 — Tap targets on phones
+
+- The logo link, the two comment-form checkboxes, the comments link and comment timestamps on posts, and a few links on About and Projects were 18 to 23px tall. They are at least 24px now (the logo link is 44px).
+- On product pages at 320px, the steps list no longer runs 32px past the screen edge.
+- On the Accessibility page at 320px, the "Send accessibility feedback" button wraps instead of pushing the contact block 30px past the screen edge. Buttons on phones under 400px wide can wrap their label.
+
+## 3.26.1 — Hover hint on the info button
+
+- The info button on a theme card shows a small "More details" pill beside it on mouse hover and keyboard focus. Escape dismisses it. Touch screens don't show it (there is no hover); the button works the same.
+
+## 3.26.0 — Card details in a centered popup
+
+- A theme card's details now open in a standard popup in the middle of the screen, over a dimmed, blurred backdrop, instead of a box tied to the card. Open it with the info button (click, tap or keyboard). Close it with the ✕ button, a click on the backdrop or Escape; focus goes back to the button and the page behind it is locked. It keeps the green-to-blue edge, glow and fade-and-rise animation.
+
+## 3.25.2 — Card details open above everything
+
+- A theme card's details panel now opens in the browser's top layer: it sits above neighboring cards, the sticky header and the page menu, is never clipped by the card, and is always placed inside the visible screen (above the button when there is more room there, scrolling inside itself if it is taller than the screen). It follows the card if you scroll while it is open.
+
+## 3.25.1 — Details link size
+
+- The "See the full details" link in a theme card's details panel is the same size as the card's other links (it was about twice as large).
+
+## 3.25.0 — Theme card details behind an info button
+
+- On Home and the Themes page, a theme card's feature chips, checklist, quality tiles and version line moved into a details panel. An info button on the screenshot's corner opens it on hover, keyboard focus or click (Escape closes it). The panel fades and rises in with a green-to-blue edge and a soft glow. Cards are about 640px tall instead of 1,130px. "Coming soon" cards have no panel.
+
+## 3.24.0 — Shorter theme cards on Home
+
+- The Home page's "Themes" cards no longer carry the full product detail (feature chips, checklist, quality tiles, version line). Each shows the screenshot, name, badges, "Best for", a three-line description, the price and the button with its demo links. The buy card was about 1,130px tall; the three now line up at a fraction of that. The Themes page keeps the full cards.
+
+## 3.23.5 — Social button focus rings
+
+- In light mode, the social buttons in the footer and the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.7:1 on the light surface).
+
+## 3.23.4 — Mobile menu focus rings
+
+- In light mode, the social buttons in the open mobile menu have a blue focus ring (5.7:1) instead of cyan (1.8:1 on the white panel).
+
+## 3.23.3 — Light mode focus rings
+
+- In light mode, the keyboard focus ring on FAQ questions, the white header's "Get updates" pill, the theme toggle and other controls on light surfaces is blue, 5.3:1 or better. It was cyan or light violet, 1.8 to 2.7:1. Rings on the navy header, hero, closing band and footer are unchanged.
+
+## 3.23.2 — Narrow phones
+
+- At 320 to 360px wide, the Home hero's "Themes, notes, and client work" label no longer stretches the hero past the screen and cuts off the heading, and the footer's social buttons wrap instead of pushing the footer wider than the screen.
+
+## 3.23.1 — Outline buttons stay outlined in light mode
+
+- The "Get updates" buttons on coming-soon theme cards turned charcoal with dark text in 3.23.0. Any button that is an outline button now keeps its outline style.
+
+## 3.23.0 — Light mode: charcoal buttons, neutral surfaces
+
+- In light mode, outside the navy headers and bands, solid buttons are charcoal instead of navy, spec badges are neutral gray instead of blue, the compare table's buy column tint is neutral, and the page background and grays lose their blue tint. Dark mode is unchanged.
+
+## 3.22.4 — Logo runs green to blue
+
+- The logo wordmark now goes green to blue like the headings: lime to cyan to blue on navy and in dark mode, and green to blue on the white header and footer once scrolled.
+
+## 3.22.3 — Headings run green to blue
+
+- Section headings, hero headings and shop headings now go green to blue (they ran dark blue or white to blue to green). On navy: bright green to sky blue. On light sections: green (5.0:1) to blue (5.7:1) on white.
+
+## 3.22.2 — Navy headers, green-to-blue headings
+
+- Page headers and the Home hero are navy again in light mode, with the original white text, nav and buttons (this undoes the pale headers from 3.22.0 and 3.22.1). The featured-theme hero uses the same navy backdrop.
+- Headings now run from green to blue. On navy they go lime to cyan to blue; on light sections, a deeper green to blue.
+
+## 3.22.1 — Light mode post headers
+
+- On blog posts in light mode, the author, date, read time, "Share" label and share buttons were pale text on the new pale header. They are now dark and measure 8.9:1 or better.
+
+## 3.22.0 — Light mode headers
+
+- In light mode, page headers and the Home hero are pale and neutral with dark text, instead of navy with white text. The header's logo, links, Menu button and toggles turn dark while it floats over a pale hero. Hero buttons are charcoal. Badges and stat chips in product headers are neutral gray. The text in these headers measured 4.5:1 or better. Dark mode is unchanged.
 
 ## 3.21.3 — Header fits on phones
 

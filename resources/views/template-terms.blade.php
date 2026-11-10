@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @php
-  $updated    = '2026-08-25';
+  $updated    = '2026-11-02';
   $contactUrl = home_url('/contact/');
   $privacyUrl = \App\mh_privacy_policy_url();
   $siteUrl    = 'https://matthummel.com';
@@ -22,6 +22,7 @@
   'pills' => [
     ['terms-overview-heading', __('Overview', 'sage')],
     ['terms-ip-heading', __('IP', 'sage')],
+    ['terms-store-heading', __('Theme purchases', 'sage')],
     ['terms-use-heading', __('Acceptable use', 'sage')],
     ['terms-disclaimer-heading', __('No warranty', 'sage')],
     ['terms-liability-heading', __('Liability', 'sage')],
@@ -40,6 +41,7 @@
         <li>Code snippets and examples on this site are free to copy and use in your own projects.</li>
         <li>Written content (articles, posts, page copy) is © Matt Hummel — please link rather than republish in full.</li>
         <li>Example projects shown on the <a href="{{ home_url('/projects/') }}">Work page</a> are demonstrations only — they represent fictional businesses.</li>
+        <li>Themes I sell are covered by <a href="#terms-store-heading">Theme purchases</a> below, the <a href="{{ home_url('/license/') }}">license</a> and the <a href="{{ home_url('/refunds/') }}">refund policy</a>, not by the free-to-copy code line above.</li>
         <li>This site is provided as-is with no warranty.</li>
         <li>Use of this site for scraping, spam, or abuse is not permitted.</li>
       </ul>
@@ -89,8 +91,39 @@
   </div>
 </section>
 
+{{-- ── THEME PURCHASES ─────────────────────────────────── --}}
+<section class="pf-section" aria-labelledby="terms-store-heading">
+  <div class="container wide">
+    <p class="eyebrow">Store</p>
+    <h2 id="terms-store-heading">Theme purchases</h2>
+    <div class="legal-prose">
+      <p>These terms apply when you buy a theme from this site, such as Cobble &amp; Candle. They sit alongside the <a href="{{ home_url('/license/') }}">license</a> and the <a href="{{ home_url('/refunds/') }}">refund policy</a>. By buying or using a theme you agree to all three.</p>
+
+      <h3>Who you are dealing with</h3>
+      <p>The themes are made and supported by Matt Hummel, a sole proprietor in Gettysburg, Pennsylvania. Purchases are processed by <strong>Freemius, Inc.</strong>, which is the merchant of record: it takes the payment, issues the license key, and collects any sales tax or VAT. <a href="https://freemius.com/terms/" rel="noopener" target="_blank">Freemius's terms</a> and <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">privacy policy</a> apply to checkout and billing.</p>
+
+      <h3>Your license key</h3>
+      <p>Keep your license key and your Freemius login private. A key activates the theme on the number of sites your plan allows. If you reach the limit, deactivate an old site in your account before you activate a new one.</p>
+
+      <h3>Updates and support</h3>
+      <ul class="legal-bullets">
+        <li>Updates and email support are included for the length of your plan. If it lapses, your sites keep working and you stop getting updates and support until you renew.</li>
+        <li>Support covers installing and setting up the theme, bugs in the theme, and questions the docs do not answer.</li>
+        <li>It does not cover custom development, conflicts with third-party plugins beyond pointing you to the plugin's own support, or hosting problems.</li>
+        <li>I reply to support emails within one business day, Eastern Time.</li>
+      </ul>
+
+      <h3>Compatibility</h3>
+      <p>Each theme lists the WordPress and PHP versions it needs and was tested on, in its readme and on its product page. Anything outside those versions may work, but it is not guaranteed.</p>
+
+      <h3>No warranty, and a cap on liability</h3>
+      <p>Themes are provided as-is, as GPL software is. I fix the bugs I can reproduce, but I do not promise a theme will meet every need or work with every plugin. To the extent the law allows, my total liability for anything related to a theme purchase is limited to the amount you paid in the past 12 months.</p>
+    </div>
+  </div>
+</section>
+
 {{-- ── ACCEPTABLE USE ────────────────────────────────────── --}}
-<section class="pf-section" aria-labelledby="terms-use-heading">
+<section class="pf-section pf-section--alt" aria-labelledby="terms-use-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Acceptable use</p>
@@ -109,7 +142,7 @@
 </section>
 
 {{-- ── DISCLAIMERS ──────────────────────────────────────── --}}
-<section class="pf-section pf-section--alt" aria-labelledby="terms-disclaimer-heading">
+<section class="pf-section" aria-labelledby="terms-disclaimer-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Disclaimers</p>
@@ -126,7 +159,7 @@
 </section>
 
 {{-- ── LIMITATION OF LIABILITY ──────────────────────────── --}}
-<section class="pf-section" aria-labelledby="terms-liability-heading">
+<section class="pf-section pf-section--alt" aria-labelledby="terms-liability-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Liability</p>
@@ -138,7 +171,7 @@
 </section>
 
 {{-- ── GOVERNING LAW ────────────────────────────────────── --}}
-<section class="pf-section pf-section--alt" aria-labelledby="terms-law-heading">
+<section class="pf-section" aria-labelledby="terms-law-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Jurisdiction</p>
@@ -149,7 +182,7 @@
 </section>
 
 {{-- ── CHANGES ──────────────────────────────────────────── --}}
-<section class="pf-section" aria-labelledby="terms-changes-heading">
+<section class="pf-section pf-section--alt" aria-labelledby="terms-changes-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Updates</p>
@@ -160,7 +193,7 @@
 </section>
 
 {{-- ── CONTACT ──────────────────────────────────────────── --}}
-<section class="pf-section pf-section--alt" aria-labelledby="terms-contact-heading">
+<section class="pf-section" aria-labelledby="terms-contact-heading">
   <div class="container wide">
     <div class="legal-prose">
       <p class="eyebrow">Questions</p>

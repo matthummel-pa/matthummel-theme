@@ -479,9 +479,6 @@ html .page-header .page-header__panel p:not(.eyebrow):not(.h-badge) { max-width:
 html:not(.mh-dark) :is(.btn.btn, .wp-block-button__link.wp-block-button__link, .search-form.search-form button, .hostinger-reach-block-submit):not(:is(.cta-band, .post-hero, .h-hero, .page-header, .post-cta, .mh-block-hero) *):focus-visible { outline-color: var(--hu-navy, #0a1a33); }
 /* On-this-page pills: studio's violet-100 hover border was 2.7:1; this sits on top of the --color-focus ring from #293. */
 html:not(.mh-dark) .h-page-nav__pill:focus-visible { outline: 2px solid var(--violet-700, #6d28d9); outline-offset: 2px; }
-/* Header "Get updates" chevron over the dark hero: blue-600 was 2.5–3.4:1 on the hero wash. */
-html:not(.mh-dark) .site-header:not(.is-scrolled) .header-updates__toggle { color: var(--hu-cyan, #22d3ee); border-color: rgba(255, 255, 255, .35); }
-html:not(.mh-dark) .site-header.is-scrolled .header-updates__toggle:focus-visible { outline-color: var(--blue-500, #3b82f6); }
 /* Form fields: studio.css replaced the outline with a 25% alpha glow (1.4:1). A solid ring on top. */
 html .contact-form :is(input, textarea, select):focus-visible,
 html .comment-form :is(input, textarea):focus-visible,
