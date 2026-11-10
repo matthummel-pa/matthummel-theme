@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.55.1 — Resources stack list matches what ships
+
+- Search and analytics: Google Tag Manager is replaced by Site Kit by Google, which is what loads GA4 today (`resources/js/track.js` says there is no Tag Manager container). The GA4 line no longer says it runs through Tag Manager and mentions the product page events from 3.51.0.
+- "Microsoft Clarity / Bing" is now "Bing Webmaster Tools". Nothing in the theme loads Clarity or the UET tag, so the line no longer names them.
+- Hosting and shipping: adds Freemius, the checkout and license keys for the themes for sale (3.12 onward).
+- AI and automation: adds WPVibe, the WordPress connection for posts, pages and settings.
+- Links that redirected now point at the final address: Vite, WP-CLI, Laravel Pint, Power Apps, Power Automate, and Google Analytics.
+
 ## 3.55.0 — Signup card under the home post grid
 
 - Home "What's new": the email signup under the post grid now sits in its own card, well spaced from the posts. The card has the brand gradient border (lime, cyan, blue, violet), a soft lime-to-blue background, a gradient heading, a pill email field and a lime-to-cyan Subscribe button. On wide screens the text is on the left and the form on the right.
