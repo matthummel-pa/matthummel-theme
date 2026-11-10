@@ -739,7 +739,6 @@ body {
 .page-header-split__copy .lead {
   max-width: 56rem;
 }
-.page-header .display-title.is-hero::after,
 .pf-section > .container > .sec-head .display-title::after {
   background: var(--blue-600);
 }
@@ -3994,8 +3993,6 @@ html.mh-dark .h-hero__panel {
 .page-header p,
 .h-hero__lede,
 .h-hero__panel p { color: #c9d9ef; }
-.page-header .display-title::after,
-.h-hero__name::after { background: var(--blue-400); }
 
 .page-header .eyebrow,
 .h-hero__kicker,
@@ -6618,9 +6615,9 @@ html .header-updates__link.header-avail:focus-visible { outline: 2px solid var(-
 @media (max-width: 899px) {
   html .header-updates__link.header-avail { padding: .5rem .7rem; }
 }
-/* 901 to 1139px: the full header (logo, six links, theme and pause toggles, Get updates pill and chevron) needs about
-   1115px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
-@media (min-width: 901px) and (max-width: 1139px) {
+/* 901 to 1099px: the full header (logo, six links, theme toggle, Get updates pill and chevron) needs about
+   1100px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
+@media (min-width: 901px) and (max-width: 1099px) {
   .site-header-inner { gap: .75rem; padding-inline: 1rem; }
   .header-actions { margin-left: 0; gap: .25rem; }
   html .site-header .header-nav-list { gap: .125rem; }
@@ -7347,7 +7344,7 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 .hero-feat__blurb { margin: 0 0 .8rem; font-size: 1rem; line-height: 1.5; }
 .hero-feat__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0; }
 
-/* 3.21.3 · Phone header. Logo, dark mode and pause toggles, the updates bell and the Menu button needed about
+/* 3.21.3 · Phone header. Logo, the toggles (the pause toggle was removed in 3.21.4), the updates bell and the Menu button needed about
    375px of a 390px screen and ran off the right edge. Under 480px: drop the "Menu" word (the button keeps its
    aria-label), shrink the two toggles to 36px, tighten the gaps and scale the logo on the smallest phones.
    Tested at 320, 360, 390 and 412px. */

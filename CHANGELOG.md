@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.56.1 — Pause button removed, no bar under hero titles
+
+- The pause-animations button is gone from the header, along with its script and styles. With the button gone, the phone header has more room, and the "Get updates" icon-only range is back to 901 to 1099px.
+- Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
 ## 3.56.0 — Page polish: green-to-blue edges and easier reading
 
 - New `resources/css/polish.css`, imported last in `app.css`. It adds colors, edges and small type only; nothing moves except a 1px hairline.
