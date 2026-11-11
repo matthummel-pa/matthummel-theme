@@ -852,7 +852,282 @@ html.mh-dark .project-page .project-stage__caption {
   text-align: center;
 }
 .project-page .project-section__head .eyebrow {
-  display: flex;
-  justify-content: center;
+  display: block;
+  inline-size: fit-content;
 }
 .project-page .project-section__head .display-title { max-inline-size: none; }
+
+/* ─── Choose a plan: three cards, one clear button each (3.58.0) ───────────── */
+.project-page .fs-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (max-width: 900px) {
+  .project-page .fs-tiers { grid-template-columns: minmax(0, 1fr); max-inline-size: 30rem; margin-inline: auto; }
+}
+.project-page .fs-tier {
+  position: relative;
+  align-items: stretch;
+  gap: .5rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: 1.15rem;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+@media (hover: hover) {
+  .project-page .fs-tier:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px rgba(15, 28, 46, .16);
+  }
+}
+.project-page .fs-tier.is-best {
+  box-shadow: 0 22px 50px rgba(34, 211, 238, .22), 0 0 0 4px rgba(74, 222, 128, .14);
+}
+.project-page .fs-tier__badge {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  padding: .3rem .85rem;
+  border-radius: 999px;
+  background: var(--gb-bright);
+  color: #04101f;
+  font: 800 .72rem/1.2 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(34, 211, 238, .4);
+}
+.project-page .fs-tier__name {
+  font: 800 1.25rem/1.2 var(--font-display);
+  letter-spacing: -.03em;
+  color: var(--color-text);
+}
+.project-page .fs-tier__for {
+  min-block-size: 2.9em;
+  margin: 0;
+  font-size: .98rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.project-page .fs-tier__price {
+  margin: .5rem 0 0;
+  align-items: baseline;
+}
+.project-page .fs-tier__price strong {
+  font: 800 clamp(2.2rem, 4vw, 2.75rem)/1 var(--font-display);
+  letter-spacing: -.05em;
+  background: var(--gb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.project-page .fs-tier__price span {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.project-page .fs-tier__per {
+  margin: 0;
+  font: 700 .85rem/1.3 var(--font-display);
+  color: #4d7c0f;
+}
+html.mh-dark .project-page .fs-tier__per { color: #a3e635; }
+.project-page .fs-tier__list {
+  display: grid;
+  gap: .55rem;
+  margin: .9rem 0 1.25rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+.project-page .fs-tier__list li {
+  position: relative;
+  padding-inline-start: 1.9rem;
+  font-size: .98rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+.project-page .fs-tier__list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .08em;
+  inline-size: 1.3rem;
+  block-size: 1.3rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' d='m5.5 10.5 3 3 6-6.5'/%3E%3C/svg%3E") center / 78% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, .18), 0 3px 10px rgba(34, 211, 238, .4);
+}
+.project-page .fs-tier__buy {
+  margin-top: auto;
+  inline-size: 100%;
+}
+.project-page .fs-buy__note {
+  max-inline-size: 44rem;
+  margin: 1.5rem auto 0;
+  text-align: center;
+}
+
+/* ─── Buttons: one family across the project page (3.58.0) ─────────────────── */
+html .project-page .btn {
+  min-height: 3rem;
+  padding: .75rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(110deg, #bef264 0%, #4ade80 28%, #22d3ee 62%, #3b82f6 100%) 0% 0% / 220% 100%;
+  color: #04101f;
+  font: 800 1rem/1.15 var(--font-display);
+  letter-spacing: -.015em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    0 10px 24px rgba(34, 211, 238, .32);
+  transition: background-position .5s var(--ease-out, ease), transform .18s ease, box-shadow .2s ease;
+}
+html .project-page .btn:hover {
+  background: linear-gradient(110deg, #bef264 0%, #4ade80 28%, #22d3ee 62%, #3b82f6 100%) 100% 0% / 220% 100%;
+  color: #04101f;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .6),
+    0 14px 30px rgba(34, 211, 238, .46);
+}
+html .project-page .btn:active { box-shadow: inset 0 2px 6px rgba(4, 16, 31, .25); }
+html .project-page .btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #3b82f6;
+}
+html .project-page .btn .mh-ico { transition: transform .2s ease; }
+html .project-page .btn:hover .mh-ico { transform: translateX(2px) scale(1.08); }
+
+/* Outline: gradient edge on the surface colour. */
+html .project-page .btn.btn-outline,
+html .project-page .btn.btn-ghost {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  color: var(--color-text);
+  box-shadow: none;
+}
+html .project-page .btn.btn-outline:hover,
+html .project-page .btn.btn-ghost:hover {
+  background:
+    linear-gradient(110deg, #bef264, #4ade80 30%, #22d3ee 65%, #3b82f6) padding-box,
+    var(--gb) border-box;
+  color: #04101f;
+  box-shadow: 0 10px 24px rgba(34, 211, 238, .3);
+}
+/* On the dark hero, the dark offer band and the dark CTA band. */
+html .page-header--project .btn.btn-outline,
+html .project-offer .btn.btn-outline,
+html .project-page .cta-band .btn.btn-ghost {
+  background:
+    linear-gradient(#0b1930, #0b1930) padding-box,
+    var(--gb) border-box;
+  color: #fff;
+}
+html .page-header--project .btn.btn-outline:hover,
+html .project-offer .btn.btn-outline:hover,
+html .project-page .cta-band .btn.btn-ghost:hover {
+  background:
+    linear-gradient(110deg, #bef264, #4ade80 30%, #22d3ee 65%, #3b82f6) padding-box,
+    var(--gb) border-box;
+  color: #04101f;
+}
+html .project-page .btn.btn-on-dark {
+  /* Already a bright pill on a dark band: keep the gradient fill from the base rule above. */
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .btn,
+  html .project-page .btn .mh-ico,
+  .project-page .fs-tier { transition: none; }
+  .project-page .fs-tier:hover { transform: none; }
+}
+
+/* ─── Under the hood: no wrapper backgrounds, numbered architecture (3.58.0) ── */
+.project-page .project-hood,
+.project-page .project-hood__grid,
+.project-page .project-hood__col,
+.project-page .project-hood .project-detail-block,
+.project-page .project-hood .project-spec-block {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding-inline: 0;
+}
+.project-page .project-hood__grid { align-items: start; }
+
+.project-page .project-arch-list { counter-reset: arch; gap: .8rem; }
+.project-page .project-arch-list > li {
+  counter-increment: arch;
+  padding: .9rem 1.05rem .95rem 3.5rem;
+}
+.project-page .project-arch-list > li::before {
+  content: counter(arch);
+  display: grid;
+  place-items: center;
+  inset-inline-start: .85rem;
+  top: .8rem;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: .6rem;
+  background: var(--gb-bright);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .4);
+  font: 800 .85rem/1 var(--font-display);
+  color: #04101f;
+}
+/* A thin line joins one number to the next. */
+.project-page .project-arch-list > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: calc(.85rem + .875rem - 1px);
+  top: calc(.8rem + 1.75rem);
+  inline-size: 2px;
+  block-size: calc(100% + .8rem - 2.55rem + .8rem);
+  border-radius: 999px;
+  background: var(--gb-bright);
+  opacity: .65;
+}
+
+/* ─── Small labels above headings: green-to-blue text; pills: green-to-blue fill ── */
+.project-page {
+  --gb-text: linear-gradient(90deg, #4d7c0f 0%, #0e7490 52%, #1d4ed8 100%);
+}
+.project-page .eyebrow {
+  background: var(--gb-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+/* Dark surfaces (dark mode, the hero, the dark bands) use the bright version. */
+html.mh-dark .project-page .eyebrow,
+.project-page .eyebrow--on-dark,
+.project-page .page-header--project .eyebrow,
+.project-page .project-offer .eyebrow {
+  background: var(--gb-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.project-page :is(.spec-badge, .project-cat-pill, .project-place-pill) {
+  border: 0;
+  background: var(--gb-bright);
+  color: #04101f;
+  font-weight: 800;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 14px rgba(34, 211, 238, .35);
+}
+.project-page :is(.spec-badge, .project-cat-pill, .project-place-pill) .mh-ico { color: #04101f; }
