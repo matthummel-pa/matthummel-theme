@@ -1273,3 +1273,10 @@ html .project-page .concept-brand-palette li {
   background: none;
   box-shadow: none;
 }
+
+/* "Already bought?" is an outline button under the plans (3.58.0). */
+.project-page .fs-buy__account {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 0;
+}

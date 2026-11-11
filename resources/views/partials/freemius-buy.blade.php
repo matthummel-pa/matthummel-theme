@@ -75,8 +75,11 @@
   </ul>
 
   <p class="fs-buy__note" role="status" data-fs-status hidden></p>
-  <p class="fs-buy__note">
-    {{ __('If it has a bug or problem I can’t resolve, you get a refund within 30 days.', 'sage') }}
-    <a href="{{ esc_url($fs['account_url']) }}">{{ __('Already bought? Open your account.', 'sage') }}</a>
+  <p class="fs-buy__note">{{ __('If it has a bug or problem I can’t resolve, you get a refund within 30 days.', 'sage') }}</p>
+  <p class="fs-buy__account">
+    <a class="btn btn-outline" href="{{ esc_url($fs['account_url']) }}">
+      {!! \App\mh_svg_icon('user', 15) !!}
+      {{ __('Already bought? Open your account', 'sage') }}
+    </a>
   </p>
 </section>
