@@ -421,7 +421,16 @@
               <h3 class="project-hood__title">{{ __('Architecture', 'sage') }}</h3>
               <ul class="project-arch-list">
                 @foreach (\App\mh_project_prose_list_items($architecture) as $item)
-                  <li>{{ $item }}</li>
+                  {{-- "Label: detail" reads as a bold label over its detail; anything else stays one line. --}}
+                  @php $archParts = preg_match('/^([^:]{3,48}):\s+(.+)$/su', $item, $m) ? [$m[1], $m[2]] : [null, $item]; @endphp
+                  <li>
+                    @if ($archParts[0] !== null)
+                      <strong class="project-arch__label">{{ $archParts[0] }}</strong>
+                      <span class="project-arch__text">{{ $archParts[1] }}</span>
+                    @else
+                      <span class="project-arch__text">{{ $archParts[1] }}</span>
+                    @endif
+                  </li>
                 @endforeach
               </ul>
             </div>
@@ -528,22 +537,24 @@
 
   <section class="pf-section pf-section--alt project-talk" id="project-feedback" aria-labelledby="project-talk-heading">
     <div class="container wide">
-      <div class="sec-head">
-        <div>
+      <div class="sec-head project-talk__head">
+        <div class="project-talk__titles">
           <p class="eyebrow">{{ __('Feedback', 'sage') }}</p>
           @if ($isOnSale)
             <h2 id="project-talk-heading" class="display-title is-section">{{ __('Questions before you buy', 'sage') }}</h2>
-            <p class="sec-intro">{{ __('Leave a public note or write me privately. I read every reply.', 'sage') }}</p>
           @else
             <h2 id="project-talk-heading" class="display-title is-section">{{ __('What would you change?', 'sage') }}</h2>
-            <p class="sec-intro">{{ __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
           @endif
         </div>
-        <button type="button" class="h-text-arrow post-copy-link project-talk__copy" data-copy="{{ esc_url($permalink) }}">
-          {!! \App\mh_svg_icon('share', 14) !!}
-          <span>{{ __('Copy link', 'sage') }}</span>
-        </button>
-        <span class="visually-hidden" role="status" data-copy-status></span>
+        {{-- A line under the heading, then the blurb and the copy link side by side. --}}
+        <div class="project-talk__sub">
+          <p class="sec-intro">{{ $isOnSale ? __('Leave a public note or write me privately. I read every reply.', 'sage') : __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
+          <button type="button" class="h-text-arrow post-copy-link project-talk__copy" data-copy="{{ esc_url($permalink) }}">
+            {!! \App\mh_svg_icon('share', 14) !!}
+            <span>{{ __('Copy link', 'sage') }}</span>
+          </button>
+          <span class="visually-hidden" role="status" data-copy-status></span>
+        </div>
       </div>
       <div class="project-talk__grid">
         <div class="project-talk__notes">

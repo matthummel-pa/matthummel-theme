@@ -1288,3 +1288,359 @@ html .project-page .concept-brand-palette li {
   gap: .75rem;
   margin-top: 1.1rem;
 }
+
+/* ─── Under the hood, round two (3.58.0). These use `.project-hood` so they beat the older rules. ── */
+
+/* Containers have no fill, border or shadow; only the boxes inside do. */
+html .project-page .project-hood :is(.project-spec-block, .project-spec-list, .project-hood__col, .project-hood__grid, .project-detail-block, .project-hood__palette) {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Architecture: gradient-edged numbered boxes, no bottom rule, label over detail. */
+html .project-page .project-hood .project-arch-list { gap: .85rem; }
+html .project-page .project-hood .project-arch-list > li {
+  position: relative;
+  display: grid;
+  gap: .2rem;
+  padding: 1.1rem 1.35rem 1.2rem 4.1rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+html .project-page .project-hood .project-arch-list > li::before {
+  inset-inline-start: 1.1rem;
+  top: 1.05rem;
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  border-radius: .7rem;
+  font-size: 1rem;
+}
+html .project-page .project-hood .project-arch-list > li:not(:last-child)::after {
+  inset-inline-start: calc(1.1rem + 1.05rem - 1px);
+  top: calc(1.05rem + 2.1rem);
+  block-size: calc(100% - 1.15rem + .85rem);
+}
+.project-page .project-arch__label {
+  font: 800 1.05rem/1.25 var(--font-display);
+  letter-spacing: -.02em;
+  color: var(--color-text);
+}
+.project-page .project-arch__text { font-size: 1rem; }
+@media (hover: hover) {
+  html .project-page .project-hood .project-arch-list > li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(15, 28, 46, .12);
+  }
+}
+
+/* Handoff: roomier boxes, clear space around the dot. */
+html .project-page .project-hood .project-points { gap: 1rem; }
+html .project-page .project-hood .project-points li {
+  padding: 1.5rem 1.75rem 1.5rem 4rem;
+  line-height: 1.7;
+}
+html .project-page .project-hood .project-points li::before {
+  inset-inline-start: 1.6rem;
+  top: 2rem;
+  inline-size: .8rem;
+  block-size: .8rem;
+}
+
+/* Palette: no box around each colour either. */
+html .project-page .project-hood__palette.concept-brand-palette { gap: .5rem 1.5rem; }
+html .project-page .project-hood__palette.concept-brand-palette li {
+  padding: .3rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* ─── Questions before you buy: a line under the heading, then blurb + copy link ── */
+html .project-page .project-talk .project-talk__sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1.5rem;
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin: 1.1rem auto 0;
+  padding-top: 1.15rem;
+  background: var(--gb) top left / 100% 2px no-repeat;
+  text-align: start;
+}
+html .project-page .project-talk .project-talk__sub .sec-intro {
+  flex: 1 1 18rem;
+  inline-size: auto;
+  max-inline-size: none;
+  margin: 0;
+  text-align: start;
+}
+@media (max-width: 600px) {
+  html .project-page .project-talk .project-talk__sub {
+    justify-content: center;
+    text-align: center;
+  }
+  html .project-page .project-talk .project-talk__sub .sec-intro { text-align: center; }
+}
+
+/* ─── "Ask about ..." heading in the contact box: smaller ── */
+html .project-page .project-talk__ask .display-title {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .project-hood .project-arch-list > li { transition: none; }
+  html .project-page .project-hood .project-arch-list > li:hover { transform: none; }
+}
+
+/* ─── Contact box: name and email stacked, each the full width of the box ── */
+html .project-page .project-talk__ask .contact-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+html .project-page .project-talk__ask .contact-form .field,
+html .project-page .project-talk__ask .contact-form :is(input, textarea, select) {
+  inline-size: 100%;
+  max-inline-size: none;
+  box-sizing: border-box;
+}
+
+/* ─── Comments / visitor notes (3.58.0) ──────────────────────────────────────── */
+html .project-page .comments {
+  max-inline-size: none;
+  margin: 2rem 0 0;
+}
+
+/* Head: title with a gradient rule, jump link as an outline pill, sort as a segmented control. */
+html .project-page .comments-head {
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  background: var(--gb) bottom left / 100% 2px no-repeat;
+}
+html .project-page .comments-title {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  font: 800 clamp(1.25rem, 2.2vw, 1.55rem)/1.15 var(--font-display);
+  letter-spacing: -.03em;
+  text-align: start;
+  max-inline-size: none;
+  margin-inline: 0;
+  inline-size: auto;
+}
+html .project-page .comments-title::before {
+  content: "";
+  flex: none;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border-radius: .8rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2304101f' d='M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6.2L8 21v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'/%3E%3C/svg%3E") center / 56% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 6px 16px rgba(34, 211, 238, .4);
+}
+html .project-page .comments-jump {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  color: var(--color-text);
+  font: 800 .9rem/1 var(--font-display);
+  text-decoration: none;
+  transition: box-shadow .2s ease, transform .18s ease;
+}
+html .project-page .comments-jump:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(34, 211, 238, .3);
+  text-decoration: none;
+}
+html .project-page .comment-sort {
+  padding: .2rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+}
+html .project-page .comment-sort-btn {
+  min-height: 2.1rem;
+  padding: 0 .95rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font: 700 .85rem/1 var(--font-display);
+}
+html .project-page .comment-sort-btn.is-active {
+  background: var(--gb-bright);
+  color: #04101f;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .35);
+}
+
+/* Empty state: a speech-bubble graphic over a dashed gradient frame. */
+html .project-page .comments-empty {
+  display: grid;
+  justify-items: center;
+  gap: .9rem;
+  margin: 0 0 1.5rem;
+  padding: 2rem 1.5rem;
+  border: 2px dashed color-mix(in srgb, #3b82f6 40%, transparent);
+  border-radius: 1.15rem;
+  background: color-mix(in srgb, #3b82f6 5%, transparent);
+  text-align: center;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+html .project-page .comments-empty::before {
+  content: "";
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 1.1rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2304101f' d='M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6.2L8 21v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'/%3E%3Cpath fill='%23fff' d='M7.5 8.2h9v1.6h-9zm0 3h6v1.6h-6z'/%3E%3C/svg%3E") center / 60% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 10px 24px rgba(34, 211, 238, .4);
+}
+
+/* Comment cards. */
+html .project-page .comment-list > .comment { margin: 0 0 1.1rem; }
+html .project-page .comment-body {
+  padding: 1.15rem 1.3rem 1rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html .project-page .comment-meta { align-items: center; gap: .85rem; margin-bottom: .8rem; }
+html .project-page .comment-avatar {
+  inline-size: 3rem;
+  block-size: 3rem;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--gb-bright);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .35);
+}
+html .project-page .comment-author {
+  font: 800 1.05rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+}
+html .project-page .comment-author a { color: var(--color-text); text-decoration: none; }
+html .project-page .comment-metadata {
+  gap: .3rem .75rem;
+  margin-top: .15rem;
+  font-size: .85rem;
+}
+html .project-page .comment-time {
+  padding: .1rem .55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 10%, transparent);
+}
+html .project-page .comment-content {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  max-inline-size: 62ch;
+}
+html .project-page .comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .9rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--color-border);
+}
+html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) {
+  min-height: 2.1rem;
+  padding: 0 .85rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+  color: #1d4ed8;
+  font: 700 .82rem/1 var(--font-display);
+  transition: background .18s ease, color .18s ease;
+}
+html.mh-dark .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) { color: #93c5fd; }
+html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a):hover {
+  background: var(--gb-bright);
+  color: #04101f;
+  text-decoration: none;
+}
+
+/* Replies hang off a green-to-blue connector line. */
+html .project-page .comment-list .children {
+  position: relative;
+  margin: .9rem 0 0 1.4rem;
+  padding-left: 1.6rem;
+  border-left: 0;
+}
+html .project-page .comment-list .children::before {
+  content: "";
+  position: absolute;
+  inset-block: 0 1.4rem;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #a3e635, #3b82f6);
+  opacity: .7;
+}
+
+/* Comment form: one gradient-edged box, clear fields, a bright submit. */
+html .project-page .comment-respond {
+  margin-top: 1.75rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html .project-page .comment-reply-title {
+  margin: 0 0 .5rem;
+  font: 800 1.3rem/1.2 var(--font-display);
+  letter-spacing: -.03em;
+  text-align: start;
+  max-inline-size: none;
+  margin-inline: 0;
+}
+html .project-page .comment-notes { color: var(--color-text-secondary); font-size: .95rem; line-height: 1.55; }
+html .project-page .comment-form label { font: 700 .9rem/1.2 var(--font-display); letter-spacing: -.01em; }
+html .project-page .comment-form :is(input[type="text"], input[type="email"], input[type="url"], textarea) {
+  border: 2px solid var(--color-border);
+  border-radius: .85rem;
+  background: var(--gb-bg);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+html .project-page .comment-form :is(input[type="text"], input[type="email"], input[type="url"], textarea):focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .25);
+  outline: none;
+}
+html .project-page .comment-form .comment-form-submit { margin-bottom: 0; }
+html .project-page .comment-form input[type="checkbox"] { accent-color: #22c55e; }
+
+@media (max-width: 560px) {
+  html .project-page .comments-head { justify-content: center; text-align: center; }
+  html .project-page .comment-list .children { margin-left: .5rem; padding-left: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .comments-jump,
+  html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) { transition: none; }
+  html .project-page .comments-jump:hover { transform: none; }
+}

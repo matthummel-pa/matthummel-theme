@@ -841,9 +841,6 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
     if ($github !== '' && str_starts_with($github, 'http')) {
         $add(__('Repository', 'sage'), $repoLabel !== '' ? $repoLabel : $github, $github);
     }
-    if ($demo !== '') {
-        $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
-    }
 
     // Docs links saved on the project (Label|||URL pairs), e.g. Owner guide and Support guide.
     foreach ($docs as $pair) {

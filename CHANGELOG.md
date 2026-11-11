@@ -9,6 +9,8 @@
 - Reading width is capped near 62 characters, with more space between sections.
 - The at-a-glance stats moved out of the hero copy into a box under the video.
 - All section headings are centred, including Feedback, Ask, Comments and More projects.
+- Comments: gradient rule under the head with a speech-bubble badge, a pill-shaped "Leave feedback" link and sort control, a graphic empty state, gradient-edged comment cards with ringed avatars, pill-shaped reply and copy-link buttons, replies on a green-to-blue connector line, and the comment form in one gradient-edged box with a clear focus ring. The name and email fields in the contact box are stacked at full width.
+- Specs: "Live demo" is no longer a spec (it is a button under the video). The spec container has no fill, only the gradient boxes do. Architecture boxes lose the grey bottom rule, get bigger numbers, and show "Label: detail" as a bold label over its detail. Handoff boxes have more room around the dot, and the palette has no boxes. Under "Questions before you buy" there is a gradient line, then the blurb and the Copy link link side by side. The "Ask about..." heading in the contact box is smaller.
 - The Owner guide and Support guide links are outline buttons labelled "Owner guide" and "Support" under the spec tiles, instead of tiles that said "Read online".
 - "Already bought? Open your account" under the plans is an outline button instead of a text link.
 - Specs only have a background on the boxes themselves (the Stack and Languages rows are a label above square boxes). Handoff boxes have more padding. The palette has no box or fill, just swatch, name and code.
