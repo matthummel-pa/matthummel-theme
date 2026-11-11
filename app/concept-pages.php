@@ -812,18 +812,18 @@ function mh_project_release_label(array $gh): string
 function mh_project_spec_rows(array $card, array $gh, string $demo, string $github, array $docs = []): array
 {
     $rows = [];
-    $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
+    $add = static function (string $label, string $value, string $href = '', array $pills = [], string $kind = '') use (&$rows): void {
         if ($value === '' && $pills === []) {
             return;
         }
-        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills];
+        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills, 'kind' => $kind];
     };
 
     $tech = is_array($card['tech'] ?? null) ? array_values(array_filter(array_map('strval', $card['tech']))) : [];
-    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech);
+    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech, 'stack');
 
     $languages = is_array($gh['languages'] ?? null) ? array_slice(array_map('strval', $gh['languages']), 0, 6) : [];
-    $add(__('Languages', 'sage'), implode(' · ', $languages));
+    $add(__('Languages', 'sage'), implode(' · ', $languages), '', $languages, 'languages');
     $add(__('Compatible', 'sage'), trim((string) ($gh['compatible'] ?? '')));
     $add(__('License', 'sage'), trim((string) ($gh['license'] ?? '')));
     $add(__('Release', 'sage'), mh_project_release_label($gh), (string) ($gh['release_url'] ?? ''));
@@ -841,9 +841,6 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
     if ($github !== '' && str_starts_with($github, 'http')) {
         $add(__('Repository', 'sage'), $repoLabel !== '' ? $repoLabel : $github, $github);
     }
-    if ($demo !== '') {
-        $add(__('Live demo', 'sage'), (string) preg_replace('#^https?://#', '', rtrim($demo, '/')), $demo);
-    }
 
     // Docs links saved on the project (Label|||URL pairs), e.g. Owner guide and Support guide.
     foreach ($docs as $pair) {
@@ -851,7 +848,7 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
         if (! str_starts_with($url, 'http')) {
             continue;
         }
-        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url);
+        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url, [], 'doc');
     }
 
     return $rows;
@@ -872,6 +869,143 @@ function mh_project_prose_paragraphs(string $text): array
     $parts = preg_split('/\R{2,}/', $text) ?: [];
 
     return array_values(array_filter(array_map('trim', $parts)));
+}
+
+/**
+ * Break one long paragraph into short, scannable pieces (3.58.0).
+ *
+ * Splits on sentence ends, then groups so no piece runs past about two sentences
+ * or $max characters. Nothing is rewritten: the words stay exactly as stored.
+ *
+ * @return list<string>
+ */
+function mh_project_chunk_text(string $text, int $max = 190): array
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text) ?? '');
+    if ($text === '') {
+        return [];
+    }
+
+    $sentences = preg_split('/(?<=[.!?])\s+(?=[A-Z0-9"\x{201C}\x{2018}(])/u', $text) ?: [$text];
+    $chunks = [];
+    $current = '';
+    $count = 0;
+    foreach ($sentences as $sentence) {
+        $sentence = trim($sentence);
+        if ($sentence === '') {
+            continue;
+        }
+        if ($current !== '' && ($count >= 2 || mb_strlen($current.' '.$sentence) > $max)) {
+            $chunks[] = $current;
+            $current = '';
+            $count = 0;
+        }
+        $current = $current === '' ? $sentence : $current.' '.$sentence;
+        $count++;
+    }
+    if ($current !== '') {
+        $chunks[] = $current;
+    }
+
+    return $chunks;
+}
+
+/**
+ * Numbered install and setup steps for a product, from its own docs (3.58.0).
+ * Only products whose steps are written down in their getting-started guide are listed here.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_project_setup_steps(string $slug): array
+{
+    if ($slug !== 'cobbleandcandle') {
+        return [];
+    }
+
+    return [
+        [
+            'title' => __('Check the basics', 'sage'),
+            'text' => __('You need WordPress 6.6 or newer and PHP 8.3 or newer; most hosts offer 8.3. Set Post name permalinks and your city timezone in Settings → General. Make sure your site can send email. WP Mail SMTP helps if your host’s mail is unreliable.', 'sage'),
+        ],
+        [
+            'title' => __('Upload and activate the theme', 'sage'),
+            'text' => __('In WordPress, go to Appearance → Themes → Add New → Upload Theme. Choose cobbleandcandle.zip, then Install and Activate.', 'sage'),
+        ],
+        [
+            'title' => __('Enter your license key', 'sage'),
+            'text' => __('The first time you activate the theme, enter the key from your purchase email on the license screen. Updates and support come with an active license. If it expires, your site keeps working.', 'sage'),
+        ],
+        [
+            'title' => __('Let Cobble & Candle Core install', 'sage'),
+            'text' => __('The core plugin is bundled inside the theme and installs itself the first time you open the dashboard. It holds your locations, menus, events, rooms and bookings, so they survive a theme change. If your host blocks the automatic install, click Install & activate Cobble & Candle Core.', 'sage'),
+        ],
+        [
+            'title' => __('Run the setup wizard', 'sage'),
+            'text' => __('Settings → Theme Settings walks you through Brand, Look, Fonts, Content, Pages & menus and a Checklist. Import the demo to see everything working, or start with your own location. You can stop and come back; re-running a step never duplicates pages.', 'sage'),
+        ],
+        [
+            'title' => __('Make it yours', 'sage'),
+            'text' => __('Set opening hours for each location, import your menu from a spreadsheet, upload your logo, and send a test email from Tools → Cobble & Candle status. Then replace the demo photos and delete the demo content you do not need.', 'sage'),
+        ],
+    ];
+}
+
+/**
+ * Turn stored handoff prose into numbered guide steps: one step per sentence group.
+ *
+ * @return list<array{title: string, text: string}>
+ */
+function mh_project_guide_steps(string $handoff): array
+{
+    $steps = [];
+    foreach (mh_project_prose_paragraphs($handoff) as $para) {
+        foreach (mh_project_chunk_text($para, 160) as $bit) {
+            $steps[] = ['title' => $bit, 'text' => ''];
+        }
+    }
+
+    return $steps;
+}
+
+/**
+ * Hero video for a project page: the stored URL, else a video attached to the
+ * project, else a video in the media library named after the project slug.
+ *
+ * @return array{src: string, type: string}|array{}
+ */
+function mh_project_video(int $post_id): array
+{
+    $url = trim((string) get_post_meta($post_id, '_mh_project_video_url', true));
+    if ($url === '') {
+        $cache = 'mh_project_video_'.$post_id;
+        $cached = get_transient($cache);
+        if (is_string($cached)) {
+            $url = $cached;
+        } else {
+            $query = [
+                'post_type' => 'attachment',
+                'post_status' => 'inherit',
+                'post_mime_type' => 'video',
+                'numberposts' => 1,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'no_found_rows' => true,
+            ];
+            $found = get_posts($query + ['post_parent' => $post_id]);
+            if ($found === []) {
+                $slug = (string) get_post_field('post_name', $post_id);
+                $found = $slug === '' ? [] : get_posts($query + ['s' => $slug]);
+            }
+            $url = $found !== [] ? (string) wp_get_attachment_url($found[0]->ID) : '';
+            set_transient($cache, $url, HOUR_IN_SECONDS);
+        }
+    }
+    if ($url === '' || ! str_starts_with($url, 'http')) {
+        return [];
+    }
+    $type = wp_check_filetype((string) strtok($url, '?'))['type'] ?: 'video/mp4';
+
+    return ['src' => $url, 'type' => $type];
 }
 
 /**

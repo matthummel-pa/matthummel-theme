@@ -1,0 +1,2048 @@
+/* 3.58.0 · Project pages: Home-style hero, framed video with a gradient ring, shorter reading blocks.
+   Imported just before polish.css. Transform and opacity only for motion; reduced motion turns it all off. */
+
+/* ─── Hero: the same calm gradient as the Home hero ───────────────────────── */
+.page-header--project .page-header__calm {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 45% 55% at 82% 18%, rgba(59, 130, 246, .38), transparent 62%),
+    radial-gradient(ellipse 40% 50% at 8% 92%, rgba(99, 102, 241, .28), transparent 64%),
+    linear-gradient(135deg, #050d1c 0%, #081527 50%, #0a1a33 100%);
+}
+html.mh-dark .page-header--project .page-header__calm {
+  background:
+    radial-gradient(ellipse 60% 70% at 100% 0%, color-mix(in srgb, var(--color-spark) 14%, transparent), transparent 60%),
+    linear-gradient(180deg, #0f1c2e 0%, #16263d 100%);
+}
+
+/* The framed media shows on phones too; the older rule only showed it from 960px. */
+.page-header--project .page-header__aside {
+  display: block;
+  margin-top: 1.75rem;
+}
+@media (min-width: 960px) {
+  .page-header--project .page-header__aside { margin-top: 0; }
+}
+
+/* ─── Framed media with a slow gradient ring ──────────────────────────────── */
+@property --mh-ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.project-hero-media {
+  --ring-w: 3px;
+  --ring-r: 1.15rem;
+  position: relative;
+  margin: 0;
+  padding: var(--ring-w);
+  border-radius: var(--ring-r);
+  background: conic-gradient(from var(--mh-ring-angle), #a3e635, #3b82f6, #6366f1, #22d3ee, #a3e635);
+  box-shadow: 0 24px 60px rgba(2, 8, 20, .55), 0 0 70px rgba(59, 130, 246, .28);
+  animation: mh-ring-spin 9s linear infinite;
+}
+@keyframes mh-ring-spin {
+  to { --mh-ring-angle: 360deg; }
+}
+.project-hero-media__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--ring-r) - var(--ring-w));
+  background: #0a1a33;
+  aspect-ratio: 16 / 9;
+  line-height: 0;
+}
+.project-hero-media__frame :is(img, video) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Play button: centred, large target, never autoplays. */
+.project-hero-media__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 4.75rem;
+  block-size: 4.75rem;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0 .2rem;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #0a1a33;
+  cursor: pointer;
+  box-shadow: 0 10px 34px rgba(2, 8, 20, .5);
+  transition: transform .2s var(--ease-out, ease), opacity .2s ease;
+}
+.project-hero-media__play::before {
+  content: "";
+  position: absolute;
+  inset: -.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .55);
+  animation: mh-play-pulse 2.4s ease-out infinite;
+}
+@keyframes mh-play-pulse {
+  from { transform: scale(.85); opacity: .9; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+.project-hero-media__play:hover { transform: scale(1.07); }
+.project-hero-media__play:focus-visible {
+  outline: 3px solid #a3e635;
+  outline-offset: 4px;
+}
+.project-hero-media.is-playing .project-hero-media__play {
+  opacity: 0;
+  pointer-events: none;
+}
+.project-hero-media.has-video .project-hero-media__frame::after {
+  /* A soft scrim so the white button reads on any poster. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(5, 13, 28, .38), transparent 62%);
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+.project-hero-media.is-playing .project-hero-media__frame::after { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-hero-media { animation: none; }
+  .project-hero-media__play::before { animation: none; display: none; }
+  .project-hero-media__play { transition: none; }
+}
+
+/* ─── Reading flow: shorter measure, short points instead of walls of text ── */
+.project-section__intro,
+.project-story__lead,
+.project-points li,
+.project-story__points li {
+  max-inline-size: 62ch;
+}
+.project-section__intro {
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+/* Story steps read as cards: number, a one-line lead, then short points. */
+.project-story__step {
+  gap: .15rem;
+}
+.project-story__lead {
+  margin: 0 0 .75rem;
+  font-size: 1.12rem;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+.project-story__points,
+.project-points {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-story__points li,
+.project-points li {
+  position: relative;
+  padding-inline-start: 1.35rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.project-story__points li::before,
+.project-points li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .62em;
+  inline-size: .6rem;
+  block-size: .6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a3e635, #3b82f6);
+}
+html.mh-dark .project-story__lead { color: #f4f7fb; }
+
+/* Rhythm: more air between sections so each one reads as its own beat. */
+.project-page .project-section + .project-section {
+  margin-block-start: clamp(2.5rem, 6vw, 4.5rem);
+}
+.project-page .project-section__head {
+  margin-block-end: 1.5rem;
+}
+
+/* ─── Stats box under the video (3.58.0) ──────────────────────────────────── */
+.project-hero-stats {
+  margin-top: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(201, 217, 239, .24);
+  border-radius: 1rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+  box-shadow: 0 14px 36px rgba(2, 8, 20, .35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.project-hero-stats .project-proof {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.25rem, 1fr));
+  gap: .85rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.project-hero-stats .project-proof__item + .project-proof__item {
+  padding-inline-start: 1.25rem;
+  border-inline-start: 1px solid rgba(201, 217, 239, .2);
+}
+@media (max-width: 520px) {
+  .project-hero-stats .project-proof__item + .project-proof__item {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+}
+
+/* ─── Landing-page rhythm for the lower sections ──────────────────────────── */
+
+/* Section heads: centred, bigger, with a short lead. */
+.project-page .project-section__head {
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.project-page .project-section__head .display-title.is-section {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.1;
+}
+.project-page .project-section__intro {
+  margin-inline: auto;
+}
+
+/* Alternate full-bleed bands so each section reads as its own beat. */
+.project-section--band {
+  position: relative;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+  box-shadow: 0 0 0 100vmax var(--band-bg, #f2f6fc);
+  clip-path: inset(0 -100vmax);
+  background: var(--band-bg, #f2f6fc);
+}
+html.mh-dark .project-section--band {
+  --band-bg: #122238;
+}
+
+/* Features: three columns of cards with a check badge. */
+.project-feat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 960px) {
+  .project-feat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .project-feat-grid { grid-template-columns: 1fr; }
+}
+.project-feat-grid > .project-feat {
+  position: relative;
+  padding: 1.1rem 1.15rem 1.1rem 3.1rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(15, 28, 46, .05);
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease, border-color .2s ease;
+}
+.project-feat-grid > .project-feat::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: 1.2rem;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='m5.5 10.5 3 3 6-6.5'/%3E%3C/svg%3E") center / 80% no-repeat,
+    linear-gradient(135deg, #65a30d, #3b82f6);
+}
+@media (hover: hover) {
+  .project-feat-grid > .project-feat:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, #3b82f6 45%, var(--color-border));
+    box-shadow: 0 14px 30px rgba(15, 28, 46, .1);
+  }
+}
+html.mh-dark .project-feat-grid > .project-feat {
+  background: #16263d;
+  color: #e6edf7;
+}
+
+/* One clear next step between the features and the story. */
+.project-offer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-block: clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 1.25rem;
+  color: #f4f7fb;
+  background:
+    radial-gradient(ellipse 50% 90% at 90% 0%, rgba(59, 130, 246, .42), transparent 65%),
+    radial-gradient(ellipse 40% 70% at 0% 100%, rgba(163, 230, 53, .16), transparent 65%),
+    linear-gradient(135deg, #050d1c 0%, #0a1a33 100%);
+  box-shadow: 0 22px 50px rgba(5, 13, 28, .28);
+}
+.project-offer__title {
+  margin: 0;
+  font: 800 clamp(1.4rem, 2.6vw, 1.9rem)/1.15 var(--font-display);
+  letter-spacing: -.03em;
+  color: #fff;
+}
+.project-offer__note {
+  margin: .4rem 0 0;
+  color: #c9d9ef;
+  font-weight: 600;
+}
+.project-offer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+}
+.project-offer .h-text-arrow { color: #93c5fd; }
+
+/* Story and specs: lifted cards instead of a flat rule-lined table. */
+.project-story__steps {
+  gap: 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.project-story__step {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html.mh-dark .project-story__steps { background: transparent; }
+html.mh-dark .project-story__step { background: #16263d; }
+.project-hood__col {
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: #fff;
+}
+html.mh-dark .project-hood__col { background: #16263d; }
+
+/* FAQ: a tidy accordion with a plus that turns into a minus. */
+.project-faq-section .faq-list {
+  max-inline-size: 52rem;
+  margin-inline: auto;
+}
+.project-faq-section .project-faq {
+  border-radius: 1rem;
+  background: #fff;
+}
+html.mh-dark .project-faq-section .project-faq { background: #16263d; }
+.project-faq-section .project-faq summary {
+  position: relative;
+  padding-inline-end: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.project-faq-section .project-faq summary::-webkit-details-marker { display: none; }
+.project-faq-section .project-faq summary::after {
+  content: "+";
+  position: absolute;
+  inset-inline-end: .25rem;
+  top: 50%;
+  translate: 0 -50%;
+  font: 500 1.6rem/1 var(--font-display);
+  color: #3b82f6;
+}
+.project-faq-section .project-faq[open] summary::after { content: "\2212"; }
+.project-faq-section .project-faq p {
+  max-inline-size: 62ch;
+  line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-feat-grid > .project-feat { transition: none; }
+  .project-feat-grid > .project-feat:hover { transform: none; }
+}
+
+/* ─── Screenshots: thumbnails in a rail left of the big image (3.58.0) ─────── */
+@media (min-width: 761px) {
+  .project-page .project-stage__gallery {
+    display: grid;
+    grid-template-columns: 7.75rem minmax(0, 1fr);
+    grid-template-areas:
+      "thumbs stage"
+      ".      caption";
+    column-gap: 1rem;
+    align-items: start;
+  }
+  .project-page .project-stage__gallery .pf-product-gallery__stage { grid-area: stage; }
+  .project-page .project-stage__gallery .project-stage__caption { grid-area: caption; }
+  .project-page .project-stage__gallery .pf-product-gallery__thumbs {
+    grid-area: thumbs;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: .65rem;
+    margin: 0;
+    padding: 0 .35rem 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Zero intrinsic height, stretched to the big image: the rail scrolls instead of growing the row. */
+    block-size: 0;
+    min-block-size: 100%;
+    align-self: stretch;
+    overscroll-behavior: contain;
+  }
+  .project-page .project-stage__gallery .pf-product-gallery__thumb {
+    flex: 0 0 auto;
+    inline-size: 100%;
+  }
+}
+
+/* Active thumb picks up the same green-to-blue as the ring. */
+.project-page .pf-product-gallery__thumb[aria-selected="true"],
+.project-page .pf-product-gallery__thumb.is-active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #65a30d 40%, transparent), 0 6px 16px rgba(59, 130, 246, .25);
+}
+
+/* Green-to-blue scrollbar. Chromium, Safari and Edge take the gradient; Firefox gets a flat green fallback
+   (it ignores ::-webkit-scrollbar when scrollbar-color is set, so that is gated behind @supports). */
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar {
+  inline-size: .55rem;
+  block-size: .55rem;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-track {
+  background: color-mix(in srgb, #3b82f6 10%, transparent);
+  border-radius: 999px;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a3e635, #3b82f6);
+  border-radius: 999px;
+}
+.project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #84cc16, #2563eb);
+}
+@media (max-width: 760px) {
+  /* Narrow screens keep one horizontal row under the image, so the gradient runs left to right. */
+  .project-page .pf-product-gallery__thumbs::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #a3e635, #3b82f6);
+  }
+  .project-page .pf-product-gallery__thumbs { padding-bottom: .5rem; }
+}
+@supports not selector(::-webkit-scrollbar) {
+  .project-page .pf-product-gallery__thumbs {
+    scrollbar-color: #65a30d color-mix(in srgb, #3b82f6 12%, transparent);
+    scrollbar-width: thin;
+  }
+}
+
+/* Live demo + Ask about this, directly under the video (3.58.0). */
+.project-hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1rem;
+}
+.project-hero-links .btn { flex: 1 1 10rem; justify-content: center; }
+.page-header--project .project-hero-links .btn-outline {
+  color: #fff;
+  border-color: rgba(201, 217, 239, .45);
+}
+.page-header--project .project-hero-links .btn-outline:hover {
+  background: rgba(255, 255, 255, .1);
+}
+
+/* ─── One look for every box: the green-to-blue gradient border (3.58.0) ───── */
+.project-page {
+  --gb: linear-gradient(135deg, #a3e635 0%, #22c55e 28%, #3b82f6 100%);
+  --gb-bg: #fff;
+  --gb-w: 2px;
+}
+html.mh-dark .project-page { --gb-bg: #16263d; }
+
+.project-page :is(
+  .project-feat-grid > .project-feat,
+  .project-story__step,
+  .project-faq-section .project-faq,
+  .project-spec-list > li,
+  .project-arch-list > li,
+  .project-hood .project-points li,
+  .concept-brand-palette li,
+  .fs-tier,
+  .project-page .pf-product-gallery__stage
+) {
+  border: var(--gb-w) solid transparent;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+.project-page .pf-product-gallery__stage {
+  border: var(--gb-w) solid transparent;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+}
+/* Rounded edge on the stage image so the gradient reads all the way round. */
+.project-page .pf-product-gallery__stage { border-radius: 1rem; }
+
+/* Stats box under the video and the dark offer band: same gradient edge on a dark fill. */
+.project-page .project-hero-stats {
+  border: var(--gb-w) solid transparent;
+  background:
+    linear-gradient(#0b1930, #0b1930) padding-box,
+    var(--gb) border-box;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.project-page .project-offer {
+  border: var(--gb-w) solid transparent;
+  background:
+    radial-gradient(ellipse 50% 90% at 90% 0%, rgba(59, 130, 246, .42), transparent 65%) padding-box,
+    radial-gradient(ellipse 40% 70% at 0% 100%, rgba(163, 230, 53, .16), transparent 65%) padding-box,
+    linear-gradient(135deg, #050d1c 0%, #0a1a33 100%) padding-box,
+    var(--gb) border-box;
+}
+
+/* ─── Under the hood: spec tiles, architecture and handoff as separate boxes ── */
+.project-page .project-hood__col {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.project-page .project-hood__title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 0 1rem;
+  font: 800 1.15rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+}
+.project-page .project-hood__title::before {
+  content: "";
+  inline-size: 1.6rem;
+  block-size: .35rem;
+  border-radius: 999px;
+  background: var(--gb);
+}
+
+/* Specs: a grid of tiles, label above value. */
+.project-page .project-spec-block {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.project-page .project-spec-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  gap: .85rem;
+}
+.project-page .project-spec-list > li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .35rem;
+  padding: .95rem 1.1rem 1.05rem;
+  border-radius: .9rem;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+.project-page .project-spec-block .project-spec-label {
+  font: 700 .72rem/1.2 var(--font-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #4d7c0f;
+}
+html.mh-dark .project-page .project-spec-block .project-spec-label { color: #a3e635; }
+.project-page .project-spec-block .project-spec-value {
+  font: 600 1.05rem/1.4 var(--font-display);
+  color: var(--color-text);
+}
+.project-page .project-spec-list a.project-spec-value {
+  color: var(--blue-600);
+  font-weight: 600;
+}
+html.mh-dark .project-page .project-spec-list a.project-spec-value { color: #93c5fd; }
+.project-page .project-spec-pills { gap: .35rem; }
+
+/* Architecture and handoff: one box per point, with a gradient dot. */
+.project-page .project-arch-list,
+.project-page .project-hood .project-points {
+  display: grid;
+  gap: .7rem;
+}
+.project-page .project-arch-list > li,
+.project-page .project-hood .project-points li {
+  position: relative;
+  padding: .85rem 1rem .85rem 2.4rem;
+  border-radius: .9rem;
+  line-height: 1.55;
+  max-inline-size: none;
+  color: var(--color-text-secondary);
+}
+.project-page .project-arch-list > li::before,
+.project-page .project-hood .project-points li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: 1.2rem;
+  inline-size: .65rem;
+  block-size: .65rem;
+  border-radius: 50%;
+  background: var(--gb);
+}
+
+/* Palette: swatch tiles. */
+.project-page .concept-brand-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: .7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-page .concept-brand-palette li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .6rem;
+  padding: .7rem .85rem;
+  border-radius: .9rem;
+}
+
+/* Pricing tiers in the same family. */
+.project-page .fs-tier { border-radius: 1rem; }
+
+@media (hover: hover) {
+  .project-page .project-spec-list > li:hover,
+  .project-page .project-story__step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(15, 28, 46, .12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-page .project-spec-list > li { transition: none; }
+  .project-page .project-spec-list > li:hover,
+  .project-page .project-story__step:hover { transform: none; }
+}
+
+/* ─── Brighter check circles and dots (3.58.0) ────────────────────────────── */
+.project-page {
+  --gb-bright: linear-gradient(135deg, #d9f99d 0%, #4ade80 38%, #22d3ee 72%, #3b82f6 100%);
+}
+.project-page .project-feat-grid > .project-feat {
+  padding-inline-start: 3.5rem;
+}
+.project-page .project-feat-grid > .project-feat::before {
+  inset-inline-start: 1rem;
+  top: 1.05rem;
+  inline-size: 1.65rem;
+  block-size: 1.65rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' d='m5.5 10.5 3 3 6-6.5'/%3E%3C/svg%3E") center / 78% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, .2), 0 4px 14px rgba(34, 211, 238, .5);
+}
+.project-page :is(.project-arch-list > li, .project-hood .project-points li, .project-story__points li)::before {
+  background: var(--gb-bright);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, .18), 0 2px 8px rgba(34, 211, 238, .45);
+}
+
+/* ─── Story steps: numbered boxes joined by an animated line (3.58.0) ───────── */
+.project-page .project-story__steps {
+  --num: 3.5rem;
+  --pad-x: 1.5rem;
+  --pad-y: 1.6rem;
+  --link-y: calc(var(--pad-y) + var(--num) / 2);
+  --link-x: calc(var(--pad-x) + var(--num) / 2);
+}
+.project-page .project-story__step {
+  position: relative;
+  padding: var(--pad-y) var(--pad-x) 1.75rem;
+}
+html .project-page .project-story__steps .project-story__num {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  inline-size: var(--num);
+  block-size: var(--num);
+  margin: 0 0 1rem;
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb-bright) border-box;
+  box-shadow: 0 8px 20px rgba(34, 211, 238, .28);
+  font: 800 1.35rem/1 var(--font-display);
+  letter-spacing: -.04em;
+  color: #0b1930;
+}
+html.mh-dark .project-page .project-story__steps .project-story__num { color: #d9f99d; }
+
+/* The joining line: from this badge's centre to the next badge's centre. */
+.project-page .project-story__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--link-y) - 2px);
+  inset-inline-start: var(--link-x);
+  inline-size: calc(100% + 1rem);
+  block-size: 4px;
+  border-radius: 999px;
+  /* A bright pulse travels along the line, on top of the green-to-blue track. */
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, .95) 50%, transparent) -40% 0 / 40% 100% no-repeat,
+    var(--gb-bright);
+  transform-origin: left center;
+  animation: mh-link-flow 2.8s ease-in-out infinite;
+}
+@keyframes mh-link-flow {
+  from { background-position: -40% 0, 0 0; }
+  to { background-position: 140% 0, 0 0; }
+}
+
+/* Armed by project-story.js: the line draws in, then the badges pop, step by step. */
+.project-story__steps.js-link .project-story__step:not(:last-child)::after {
+  transform: scaleX(0);
+  animation: none;
+}
+.project-story__steps.js-link .project-story__num {
+  opacity: .35;
+  transform: scale(.82);
+}
+.project-story__steps.is-linked .project-story__step:not(:last-child)::after {
+  transform: scaleX(1);
+  transition: transform .7s var(--ease-out, ease);
+  animation: mh-link-flow 2.8s ease-in-out .7s infinite;
+}
+.project-story__steps.is-linked .project-story__num {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity .4s ease, transform .5s var(--ease-spring, cubic-bezier(.32, .72, 0, 1));
+}
+.project-story__steps.is-linked .project-story__step:nth-child(1) .project-story__num { transition-delay: 0s; }
+.project-story__steps.is-linked .project-story__step:nth-child(1)::after { transition-delay: .25s; }
+.project-story__steps.is-linked .project-story__step:nth-child(2) .project-story__num { transition-delay: .85s; }
+.project-story__steps.is-linked .project-story__step:nth-child(2)::after { transition-delay: 1.1s; }
+.project-story__steps.is-linked .project-story__step:nth-child(3) .project-story__num { transition-delay: 1.7s; }
+
+/* One column on phones and tablets: the line runs down between the badges. */
+@media (max-width: 800px) {
+  .project-page .project-story__step:not(:last-child)::after {
+    top: var(--link-y);
+    inline-size: 4px;
+    block-size: calc(100% + 1rem);
+    inset-inline-start: calc(var(--link-x) - 2px);
+    transform-origin: center top;
+    background:
+      linear-gradient(180deg, transparent, rgba(255, 255, 255, .95) 50%, transparent) 0 -40% / 100% 40% no-repeat,
+      var(--gb-bright);
+    animation-name: mh-link-flow-y;
+  }
+  .project-story__steps.js-link .project-story__step:not(:last-child)::after { transform: scaleY(0); }
+  .project-story__steps.is-linked .project-story__step:not(:last-child)::after {
+    transform: scaleY(1);
+    animation-name: mh-link-flow-y;
+  }
+}
+@keyframes mh-link-flow-y {
+  from { background-position: 0 -40%, 0 0; }
+  to { background-position: 0 140%, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-page .project-story__step:not(:last-child)::after,
+  .project-story__steps.is-linked .project-story__step:not(:last-child)::after {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+  .project-story__steps.js-link .project-story__num,
+  .project-story__steps.is-linked .project-story__num {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ─── Hero content centred, equal space above and below (3.58.0) ─────────────
+   The wave covers the bottom of the header, so the bottom padding is the same
+   top padding plus the wave's height: the visible gap above and below matches. */
+.page-header.page-header--photo.page-header--project {
+  --hero-pad: clamp(3rem, 6vw, 4.5rem);
+  --hero-wave: clamp(3.4rem, 8vw, 5.75rem);
+  padding-block: var(--hero-pad) calc(var(--hero-pad) + var(--hero-wave));
+}
+.page-header.page-header--photo.page-header--project .page-header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: center;
+  justify-items: stretch;
+}
+.page-header.page-header--photo.page-header--project .page-header__aside {
+  position: static;
+  inset: auto;
+  width: auto;
+  max-width: 36rem;
+  margin: 0;
+  transform: none;
+}
+.page-header.page-header--photo.page-header--project:has(.page-header__aside) .page-header__panel {
+  max-width: none;
+}
+@media (min-width: 960px) {
+  .page-header.page-header--photo.page-header--project .page-header-inner {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .page-header.page-header--photo.page-header--project .page-header__aside {
+    justify-self: end;
+    inline-size: 100%;
+  }
+}
+
+/* ─── Image description under the gallery (3.58.0) ──────────────────────────── */
+.project-page .project-stage__caption {
+  display: flex;
+  align-items: stretch;
+  gap: .8rem;
+  margin: 1rem 0 0;
+  padding: .75rem 1rem .75rem .85rem;
+  border-radius: .9rem;
+  background: color-mix(in srgb, #3b82f6 7%, transparent);
+  font: 600 1.02rem/1.45 var(--font-display);
+  letter-spacing: -.012em;
+  color: var(--color-text);
+  text-wrap: pretty;
+}
+.project-page .project-stage__caption::before {
+  content: "";
+  flex: none;
+  inline-size: .3rem;
+  border-radius: 999px;
+  background: var(--gb);
+}
+.project-page .project-stage__caption:empty { display: none; }
+html.mh-dark .project-page .project-stage__caption {
+  background: color-mix(in srgb, #3b82f6 14%, transparent);
+  color: #e6edf7;
+}
+
+/* Section heads: eyebrow, title and intro all centre together (the pricing head had a left-aligned title). */
+.project-page .project-section__head > * {
+  margin-inline: auto;
+  text-align: center;
+}
+.project-page .project-section__head .eyebrow {
+  display: block;
+  inline-size: fit-content;
+}
+.project-page .project-section__head .display-title { max-inline-size: none; }
+
+/* ─── Choose a plan: three cards, one clear button each (3.58.0) ───────────── */
+.project-page .fs-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (max-width: 900px) {
+  .project-page .fs-tiers { grid-template-columns: minmax(0, 1fr); max-inline-size: 30rem; margin-inline: auto; }
+}
+.project-page .fs-tier {
+  position: relative;
+  align-items: stretch;
+  gap: .5rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: 1.15rem;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+@media (hover: hover) {
+  .project-page .fs-tier:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px rgba(15, 28, 46, .16);
+  }
+}
+.project-page .fs-tier.is-best {
+  box-shadow: 0 22px 50px rgba(34, 211, 238, .22), 0 0 0 4px rgba(74, 222, 128, .14);
+}
+.project-page .fs-tier__badge {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  padding: .3rem .85rem;
+  border-radius: 999px;
+  background: var(--gb-bright);
+  color: #04101f;
+  font: 800 .72rem/1.2 var(--font-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(34, 211, 238, .4);
+}
+.project-page .fs-tier__name {
+  font: 800 1.25rem/1.2 var(--font-display);
+  letter-spacing: -.03em;
+  color: var(--color-text);
+}
+.project-page .fs-tier__for {
+  min-block-size: 2.9em;
+  margin: 0;
+  font-size: .98rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.project-page .fs-tier__price {
+  margin: .5rem 0 0;
+  align-items: baseline;
+}
+.project-page .fs-tier__price strong {
+  font: 800 clamp(2.2rem, 4vw, 2.75rem)/1 var(--font-display);
+  letter-spacing: -.05em;
+  background: var(--gb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.project-page .fs-tier__price span {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.project-page .fs-tier__per {
+  margin: 0;
+  font: 700 .85rem/1.3 var(--font-display);
+  color: #4d7c0f;
+}
+html.mh-dark .project-page .fs-tier__per { color: #a3e635; }
+.project-page .fs-tier__list {
+  display: grid;
+  gap: .55rem;
+  margin: .9rem 0 1.25rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+.project-page .fs-tier__list li {
+  position: relative;
+  padding-inline-start: 1.9rem;
+  font-size: .98rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+.project-page .fs-tier__list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .08em;
+  inline-size: 1.3rem;
+  block-size: 1.3rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' d='m5.5 10.5 3 3 6-6.5'/%3E%3C/svg%3E") center / 78% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, .18), 0 3px 10px rgba(34, 211, 238, .4);
+}
+.project-page .fs-tier__buy {
+  margin-top: auto;
+  inline-size: 100%;
+}
+.project-page .fs-buy__note {
+  max-inline-size: 44rem;
+  margin: 1.5rem auto 0;
+  text-align: center;
+}
+
+/* ─── Buttons: one family across the project page (3.58.0) ─────────────────── */
+html .project-page .btn {
+  min-height: 3rem;
+  padding: .75rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(110deg, #bef264 0%, #4ade80 28%, #22d3ee 62%, #3b82f6 100%) 0% 0% / 220% 100%;
+  color: #04101f;
+  font: 800 1rem/1.15 var(--font-display);
+  letter-spacing: -.015em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    0 10px 24px rgba(34, 211, 238, .32);
+  transition: background-position .5s var(--ease-out, ease), transform .18s ease, box-shadow .2s ease;
+}
+html .project-page .btn:hover {
+  background: linear-gradient(110deg, #bef264 0%, #4ade80 28%, #22d3ee 62%, #3b82f6 100%) 100% 0% / 220% 100%;
+  color: #04101f;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .6),
+    0 14px 30px rgba(34, 211, 238, .46);
+}
+html .project-page .btn:active { box-shadow: inset 0 2px 6px rgba(4, 16, 31, .25); }
+html .project-page .btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #3b82f6;
+}
+html .project-page .btn .mh-ico { transition: transform .2s ease; }
+html .project-page .btn:hover .mh-ico { transform: translateX(2px) scale(1.08); }
+
+/* Outline: gradient edge on the surface colour. */
+html .project-page .btn.btn-outline,
+html .project-page .btn.btn-ghost {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  color: var(--color-text);
+  box-shadow: none;
+}
+html .project-page .btn.btn-outline:hover,
+html .project-page .btn.btn-ghost:hover {
+  background:
+    linear-gradient(110deg, #bef264, #4ade80 30%, #22d3ee 65%, #3b82f6) padding-box,
+    var(--gb) border-box;
+  color: #04101f;
+  box-shadow: 0 10px 24px rgba(34, 211, 238, .3);
+}
+/* On the dark hero, the dark offer band and the dark CTA band. */
+html .page-header--project .btn.btn-outline,
+html .project-offer .btn.btn-outline,
+html .project-page .cta-band .btn.btn-ghost {
+  background:
+    linear-gradient(#0b1930, #0b1930) padding-box,
+    var(--gb) border-box;
+  color: #fff;
+}
+html .page-header--project .btn.btn-outline:hover,
+html .project-offer .btn.btn-outline:hover,
+html .project-page .cta-band .btn.btn-ghost:hover {
+  background:
+    linear-gradient(110deg, #bef264, #4ade80 30%, #22d3ee 65%, #3b82f6) padding-box,
+    var(--gb) border-box;
+  color: #04101f;
+}
+html .project-page .btn.btn-on-dark {
+  /* Already a bright pill on a dark band: keep the gradient fill from the base rule above. */
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .btn,
+  html .project-page .btn .mh-ico,
+  .project-page .fs-tier { transition: none; }
+  .project-page .fs-tier:hover { transform: none; }
+}
+
+/* ─── Under the hood: no wrapper backgrounds, numbered architecture (3.58.0) ── */
+.project-page .project-hood,
+.project-page .project-hood__grid,
+.project-page .project-hood__col,
+.project-page .project-hood .project-detail-block,
+.project-page .project-hood .project-spec-block {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding-inline: 0;
+}
+.project-page .project-hood__grid { align-items: start; }
+
+.project-page .project-arch-list { counter-reset: arch; gap: .8rem; }
+.project-page .project-arch-list > li {
+  counter-increment: arch;
+  padding: .9rem 1.05rem .95rem 3.5rem;
+}
+.project-page .project-arch-list > li::before {
+  content: counter(arch);
+  display: grid;
+  place-items: center;
+  inset-inline-start: .85rem;
+  top: .8rem;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: .6rem;
+  background: var(--gb-bright);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .4);
+  font: 800 .85rem/1 var(--font-display);
+  color: #04101f;
+}
+/* A thin line joins one number to the next. */
+.project-page .project-arch-list > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: calc(.85rem + .875rem - 1px);
+  top: calc(.8rem + 1.75rem);
+  inline-size: 2px;
+  block-size: calc(100% + .8rem - 2.55rem + .8rem);
+  border-radius: 999px;
+  background: var(--gb-bright);
+  opacity: .65;
+}
+
+/* ─── Small labels above headings: green-to-blue text; pills: green-to-blue fill ── */
+.project-page {
+  --gb-text: linear-gradient(90deg, #4d7c0f 0%, #0e7490 52%, #1d4ed8 100%);
+}
+.project-page .eyebrow {
+  background: var(--gb-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+/* Dark surfaces (dark mode, the hero, the dark bands) use the bright version. */
+html.mh-dark .project-page .eyebrow,
+.project-page .eyebrow--on-dark,
+.project-page .page-header--project .eyebrow,
+.project-page .project-offer .eyebrow {
+  background: var(--gb-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.project-page :is(.spec-badge, .project-cat-pill, .project-place-pill) {
+  border: 0;
+  background: var(--gb-bright);
+  color: #04101f;
+  font-weight: 800;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 14px rgba(34, 211, 238, .35);
+}
+.project-page :is(.spec-badge, .project-cat-pill, .project-place-pill) .mh-ico { color: #04101f; }
+
+/* ─── Specs: square icon tiles for stack and languages, tidy tiles for the rest (3.58.0) ── */
+@media (min-width: 1000px) {
+  .project-page .project-hood__grid:first-of-type {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+.project-page .project-spec-list {
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+}
+/* Stack and languages sit on top, full width; their tiles are squares. */
+.project-page .project-spec-list > li.project-spec--chips {
+  grid-column: 1 / -1;
+  order: -1;
+  align-items: stretch;
+  gap: .8rem;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.project-page .project-spec-list > li.project-spec--languages { order: -1; }
+.project-page .project-spec-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
+  gap: .7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-page .project-spec-list > li.project-spec--chips .spec-chip {
+  /* Reset the tile box rules above: a chip is its own small square. */
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  aspect-ratio: 1;
+  padding: .6rem .4rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: .9rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 6px 16px rgba(15, 28, 46, .06);
+  text-align: center;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+.project-page .project-spec-list > li.project-spec--chips .spec-chip::before { content: none; }
+.project-page .spec-chip__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border-radius: .7rem;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+  color: #0e7490;
+}
+html.mh-dark .project-page .spec-chip__icon { color: #a5f3fc; background: color-mix(in srgb, #3b82f6 22%, transparent); }
+.project-page .spec-chip__icon svg { inline-size: 1.6rem; block-size: 1.6rem; }
+.project-page .spec-chip__name {
+  font: 700 .82rem/1.2 var(--font-display);
+  letter-spacing: -.01em;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) {
+  .project-page .spec-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 26px rgba(34, 211, 238, .25);
+  }
+}
+/* Link rows (repository, live demo) get more room; the rest are compact. */
+.project-page .project-spec-list > li.project-spec--link { grid-column: span 2; }
+@media (max-width: 520px) {
+  .project-page .project-spec-list > li.project-spec--link { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-page .spec-chip { transition: none; }
+  .project-page .spec-chip:hover { transform: none; }
+}
+
+/* ─── Every section heading centred (3.58.0) ──────────────────────────────────
+   The h2 box was shrinking to its max-width and sitting left, so it gets full width. */
+html .project-page .project-section__head {
+  display: block;
+  text-align: center;
+}
+html .project-page .project-section__head > .display-title,
+html .project-page .project-section__head > .project-section__intro {
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+html .project-page .project-section__head > .project-section__intro { max-inline-size: 40rem; }
+
+/* Feedback, ask, comments and related projects. */
+html .project-page .project-talk .sec-head {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+html .project-page .project-talk .sec-head > div { inline-size: 100%; }
+html .project-page :is(.project-talk .display-title, .project-talk .sec-intro, .comments-title, .comment-reply-title, #related-projects) {
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+html .project-page .project-talk .eyebrow { margin-inline: auto; inline-size: fit-content; }
+
+/* ─── Specs: a background only on the boxes; roomier handoff boxes; plain palette (3.58.0) ── */
+/* The Stack and Languages rows are just a label above square boxes, so the row itself has no fill. */
+html .project-page .project-spec-list > li.project-spec--chips {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+html .project-page .project-spec-list > li.project-spec--chips:hover { box-shadow: none; transform: none; }
+
+/* Handoff: more padding inside each box. */
+html .project-page .project-hood .project-points { gap: .9rem; }
+html .project-page .project-hood .project-points li {
+  padding: 1.3rem 1.5rem 1.3rem 3.1rem;
+  line-height: 1.65;
+}
+html .project-page .project-hood .project-points li::before {
+  inset-inline-start: 1.3rem;
+  top: 1.65rem;
+}
+
+/* Palette: no box, no fill. Just the swatch, the name and the code. */
+html .project-page .concept-brand-palette li {
+  padding: .35rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* "Already bought?" is an outline button under the plans (3.58.0). */
+.project-page .fs-buy__account {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 0;
+}
+
+/* Owner guide / Support: plain buttons under the spec tiles (3.58.0). */
+.project-page .project-spec-docs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1.1rem;
+}
+
+/* ─── Under the hood, round two (3.58.0). These use `.project-hood` so they beat the older rules. ── */
+
+/* Containers have no fill, border or shadow; only the boxes inside do. */
+html .project-page .project-hood :is(.project-spec-block, .project-spec-list, .project-hood__col, .project-hood__grid, .project-detail-block, .project-hood__palette) {
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Architecture: gradient-edged numbered boxes, no bottom rule, label over detail. */
+html .project-page .project-hood .project-arch-list { gap: .85rem; }
+html .project-page .project-hood .project-arch-list > li {
+  position: relative;
+  display: grid;
+  gap: .2rem;
+  padding: 1.1rem 1.35rem 1.2rem 4.1rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+html .project-page .project-hood .project-arch-list > li::before {
+  inset-inline-start: 1.1rem;
+  top: 1.05rem;
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  border-radius: .7rem;
+  font-size: 1rem;
+}
+html .project-page .project-hood .project-arch-list > li:not(:last-child)::after {
+  inset-inline-start: calc(1.1rem + 1.05rem - 1px);
+  top: calc(1.05rem + 2.1rem);
+  block-size: calc(100% - 1.15rem + .85rem);
+}
+.project-page .project-arch__label {
+  font: 800 1.05rem/1.25 var(--font-display);
+  letter-spacing: -.02em;
+  color: var(--color-text);
+}
+.project-page .project-arch__text { font-size: 1rem; }
+@media (hover: hover) {
+  html .project-page .project-hood .project-arch-list > li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(15, 28, 46, .12);
+  }
+}
+
+/* Handoff: roomier boxes, clear space around the dot. */
+html .project-page .project-hood .project-points { gap: 1rem; }
+html .project-page .project-hood .project-points li {
+  padding: 1.5rem 1.75rem 1.5rem 4rem;
+  line-height: 1.7;
+}
+html .project-page .project-hood .project-points li::before {
+  inset-inline-start: 1.6rem;
+  top: 2rem;
+  inline-size: .8rem;
+  block-size: .8rem;
+}
+
+/* Palette: no box around each colour either. */
+html .project-page .project-hood__palette.concept-brand-palette { gap: .5rem 1.5rem; }
+html .project-page .project-hood__palette.concept-brand-palette li {
+  padding: .3rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* ─── Questions before you buy: a line under the heading, then blurb + copy link ── */
+html .project-page .project-talk .project-talk__sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1.5rem;
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin: 1.1rem auto 0;
+  padding-top: 1.15rem;
+  background: var(--gb) top left / 100% 2px no-repeat;
+  text-align: start;
+}
+html .project-page .project-talk .project-talk__sub .sec-intro {
+  flex: 1 1 18rem;
+  inline-size: auto;
+  max-inline-size: none;
+  margin: 0;
+  text-align: start;
+}
+@media (max-width: 600px) {
+  html .project-page .project-talk .project-talk__sub {
+    justify-content: center;
+    text-align: center;
+  }
+  html .project-page .project-talk .project-talk__sub .sec-intro { text-align: center; }
+}
+
+/* ─── "Ask about ..." heading in the contact box: smaller ── */
+html .project-page .project-talk__ask .display-title {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .project-hood .project-arch-list > li { transition: none; }
+  html .project-page .project-hood .project-arch-list > li:hover { transform: none; }
+}
+
+/* ─── Contact box: name and email stacked, each the full width of the box ── */
+html .project-page .project-talk__ask .contact-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+html .project-page .project-talk__ask .contact-form .field,
+html .project-page .project-talk__ask .contact-form :is(input, textarea, select) {
+  inline-size: 100%;
+  max-inline-size: none;
+  box-sizing: border-box;
+}
+
+/* ─── Comments / visitor notes (3.58.0) ──────────────────────────────────────── */
+html .project-page .comments {
+  max-inline-size: none;
+  margin: 2rem 0 0;
+}
+
+/* Head: title with a gradient rule, jump link as an outline pill, sort as a segmented control. */
+html .project-page .comments-head {
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  background: var(--gb) bottom left / 100% 2px no-repeat;
+}
+html .project-page .comments-title {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  font: 800 clamp(1.25rem, 2.2vw, 1.55rem)/1.15 var(--font-display);
+  letter-spacing: -.03em;
+  text-align: start;
+  max-inline-size: none;
+  margin-inline: 0;
+  inline-size: auto;
+}
+html .project-page .comments-title::before {
+  content: "";
+  flex: none;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border-radius: .8rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2304101f' d='M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6.2L8 21v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'/%3E%3C/svg%3E") center / 56% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 6px 16px rgba(34, 211, 238, .4);
+}
+html .project-page .comments-jump {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  color: var(--color-text);
+  font: 800 .9rem/1 var(--font-display);
+  text-decoration: none;
+  transition: box-shadow .2s ease, transform .18s ease;
+}
+html .project-page .comments-jump:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(34, 211, 238, .3);
+  text-decoration: none;
+}
+html .project-page .comment-sort {
+  padding: .2rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+}
+html .project-page .comment-sort-btn {
+  min-height: 2.1rem;
+  padding: 0 .95rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font: 700 .85rem/1 var(--font-display);
+}
+html .project-page .comment-sort-btn.is-active {
+  background: var(--gb-bright);
+  color: #04101f;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .35);
+}
+
+/* Empty state: a speech-bubble graphic over a dashed gradient frame. */
+html .project-page .comments-empty {
+  display: grid;
+  justify-items: center;
+  gap: .9rem;
+  margin: 0 0 1.5rem;
+  padding: 2rem 1.5rem;
+  border: 2px dashed color-mix(in srgb, #3b82f6 40%, transparent);
+  border-radius: 1.15rem;
+  background: color-mix(in srgb, #3b82f6 5%, transparent);
+  text-align: center;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+html .project-page .comments-empty::before {
+  content: "";
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 1.1rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2304101f' d='M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6.2L8 21v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'/%3E%3Cpath fill='%23fff' d='M7.5 8.2h9v1.6h-9zm0 3h6v1.6h-6z'/%3E%3C/svg%3E") center / 60% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 10px 24px rgba(34, 211, 238, .4);
+}
+
+/* Comment cards. */
+html .project-page .comment-list > .comment { margin: 0 0 1.1rem; }
+html .project-page .comment-body {
+  padding: 1.15rem 1.3rem 1rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html .project-page .comment-meta { align-items: center; gap: .85rem; margin-bottom: .8rem; }
+html .project-page .comment-avatar {
+  inline-size: 3rem;
+  block-size: 3rem;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--gb-bright);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, .35);
+}
+html .project-page .comment-author {
+  font: 800 1.05rem/1.2 var(--font-display);
+  letter-spacing: -.02em;
+}
+html .project-page .comment-author a { color: var(--color-text); text-decoration: none; }
+html .project-page .comment-metadata {
+  gap: .3rem .75rem;
+  margin-top: .15rem;
+  font-size: .85rem;
+}
+html .project-page .comment-time {
+  padding: .1rem .55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 10%, transparent);
+}
+html .project-page .comment-content {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  max-inline-size: 62ch;
+}
+html .project-page .comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .9rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--color-border);
+}
+html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) {
+  min-height: 2.1rem;
+  padding: 0 .85rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+  color: #1d4ed8;
+  font: 700 .82rem/1 var(--font-display);
+  transition: background .18s ease, color .18s ease;
+}
+html.mh-dark .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) { color: #93c5fd; }
+html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a):hover {
+  background: var(--gb-bright);
+  color: #04101f;
+  text-decoration: none;
+}
+
+/* Replies hang off a green-to-blue connector line. */
+html .project-page .comment-list .children {
+  position: relative;
+  margin: .9rem 0 0 1.4rem;
+  padding-left: 1.6rem;
+  border-left: 0;
+}
+html .project-page .comment-list .children::before {
+  content: "";
+  position: absolute;
+  inset-block: 0 1.4rem;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #a3e635, #3b82f6);
+  opacity: .7;
+}
+
+/* Comment form: one gradient-edged box, clear fields, a bright submit. */
+html .project-page .comment-respond {
+  margin-top: 1.75rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+}
+html .project-page .comment-reply-title {
+  margin: 0 0 .5rem;
+  font: 800 1.3rem/1.2 var(--font-display);
+  letter-spacing: -.03em;
+  text-align: start;
+  max-inline-size: none;
+  margin-inline: 0;
+}
+html .project-page .comment-notes { color: var(--color-text-secondary); font-size: .95rem; line-height: 1.55; }
+html .project-page .comment-form label { font: 700 .9rem/1.2 var(--font-display); letter-spacing: -.01em; }
+html .project-page .comment-form :is(input[type="text"], input[type="email"], input[type="url"], textarea) {
+  border: 2px solid var(--color-border);
+  border-radius: .85rem;
+  background: var(--gb-bg);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+html .project-page .comment-form :is(input[type="text"], input[type="email"], input[type="url"], textarea):focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, .25);
+  outline: none;
+}
+html .project-page .comment-form .comment-form-submit { margin-bottom: 0; }
+html .project-page .comment-form input[type="checkbox"] { accent-color: #22c55e; }
+
+@media (max-width: 560px) {
+  html .project-page .comments-head { justify-content: center; text-align: center; }
+  html .project-page .comment-list .children { margin-left: .5rem; padding-left: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .project-page .comments-jump,
+  html .project-page :is(.comment-copy-link, .comment-reply-link, .comment-edit a) { transition: none; }
+  html .project-page .comments-jump:hover { transform: none; }
+}
+
+/* ═══ Round three (3.58.0) ═══════════════════════════════════════════════════════ */
+
+/* ─── Space under the hero and the page nav; nav buttons no longer clip on hover ── */
+.page-header.page-header--photo.page-header--project {
+  --hero-pad: clamp(3.5rem, 7vw, 5.5rem);
+}
+.project-page .project-stage--landing {
+  padding-top: clamp(3rem, 6vw, 4.75rem);
+}
+.project-page [data-page-nav-scroller] {
+  padding-block: .65rem;
+}
+
+/* ─── Buttons: icon on the right, in a round blue badge; arrows are round too ───── */
+html .project-page .btn {
+  gap: .8rem;
+  min-height: 3.25rem;
+  padding: .45rem .55rem .45rem 1.5rem;
+}
+html .project-page .btn .mh-ico,
+html .project-page .btn > span[aria-hidden="true"] {
+  order: 2;
+  flex: none;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: .58rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, .45);
+}
+html .project-page .btn > span[aria-hidden="true"] {
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+/* A button that already has an icon does not also need an arrow. */
+html .project-page .btn:has(.mh-ico) > span[aria-hidden="true"] { display: none; }
+html .project-page .btn:hover .mh-ico { transform: scale(1.08); }
+
+/* ─── Plan cards: the number of sites pops ─────────────────────────────────────── */
+.project-page .fs-tier__name {
+  /* The count badge shows the same words; keep the heading for screen readers. */
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.project-page .fs-tier__count {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin: .25rem 0 .35rem;
+}
+.project-page .fs-tier__count strong {
+  display: grid;
+  place-items: center;
+  inline-size: 4.25rem;
+  block-size: 4.25rem;
+  border-radius: 50%;
+  background: var(--gb-bright);
+  color: #04101f;
+  font: 800 2.1rem/1 var(--font-display);
+  letter-spacing: -.04em;
+  box-shadow: 0 0 0 7px rgba(74, 222, 128, .18), 0 14px 28px rgba(34, 211, 238, .45);
+  transition: transform .25s var(--ease-spring, cubic-bezier(.32, .72, 0, 1));
+}
+.project-page .fs-tier__count span {
+  font: 800 1.05rem/1.1 var(--font-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+@media (hover: hover) {
+  .project-page .fs-tier:hover .fs-tier__count strong { transform: scale(1.1) rotate(-4deg); }
+}
+.project-page .fs-tier.is-best .fs-tier__count strong {
+  box-shadow: 0 0 0 7px rgba(74, 222, 128, .28), 0 16px 34px rgba(34, 211, 238, .6);
+}
+
+/* ─── "Put it on your site" band: new type ──────────────────────────────────────── */
+.project-offer__kicker {
+  margin: 0 0 .6rem;
+  background: var(--gb-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font: 800 .78rem/1 var(--font-display);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.project-offer .project-offer__title {
+  font: 800 clamp(1.8rem, 3.6vw, 2.5rem)/1.1 var(--font-display);
+  letter-spacing: -.04em;
+}
+.project-offer__text {
+  max-inline-size: 34rem;
+  margin: .8rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #d6e3f5;
+}
+.project-offer .project-offer__note {
+  margin: 1rem 0 0;
+}
+.project-offer .project-offer__note span {
+  display: inline-block;
+  padding: .3rem .85rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(#0b1930, #0b1930) padding-box,
+    var(--gb) border-box;
+  color: #fff;
+  font: 700 .9rem/1.2 var(--font-display);
+}
+
+/* ─── Less bold, bigger gradient headings ──────────────────────────────────────── */
+html .project-page .project-section__intro { font-weight: 400; }
+html .project-page .project-story__lead { font-weight: 500; font-size: 1.05rem; }
+html .project-page .project-spec-block .project-spec-value { font-weight: 400; font-size: 1.02rem; }
+html .project-page .project-spec-list a.project-spec-value { font-weight: 500; }
+html .project-page .project-spec-block .project-spec-label { font-weight: 600; }
+.project-page .spec-chip__name { font-weight: 500; }
+.project-page .project-feat { font-weight: 400; }
+.project-page .project-faq-section .project-faq summary { font-weight: 600; }
+.project-page .fs-tier__for,
+.project-page .fs-tier__list li { font-weight: 400; }
+.project-page .project-arch__label { font-weight: 700; }
+.project-page .project-arch__text { font-weight: 400; }
+
+html .project-page :is(.project-section__head > .display-title, .project-talk__titles .display-title, #related-projects) {
+  background: var(--gb-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.04em;
+  padding-bottom: .08em;
+}
+html.mh-dark .project-page :is(.project-section__head > .display-title, .project-talk__titles .display-title, #related-projects) {
+  background: var(--gb-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ─── Story: circle numbers, and a side-by-side layout on phones ───────────────── */
+html .project-page .project-story__steps .project-story__num { border-radius: 50%; }
+@media (max-width: 800px) {
+  .project-page .project-story__steps {
+    --num: 3rem;
+    --pad-x: 1.1rem;
+    --pad-y: 1.2rem;
+  }
+  .project-page .project-story__step {
+    display: grid;
+    grid-template-columns: var(--num) minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: start;
+    padding-bottom: 1.35rem;
+  }
+  html .project-page .project-story__steps .project-story__num {
+    grid-column: 1;
+    grid-row: 1 / span 6;
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .project-page .project-story__step > :not(.project-story__num) { grid-column: 2; }
+  .project-page .project-story__title { margin-top: .1rem; }
+}
+
+/* ─── Architecture: no connector lines, circle numbers, calmer cards ───────────── */
+html .project-page .project-hood .project-arch-list > li:not(:last-child)::after {
+  content: none;
+  display: none;
+}
+html .project-page .project-hood .project-arch-list > li::before { border-radius: 50%; }
+html .project-page .project-hood .project-arch-list > li {
+  padding: 1.05rem 1.3rem 1.1rem 4.1rem;
+}
+@media (max-width: 560px) {
+  html .project-page .project-hood .project-arch-list > li { padding: .95rem 1rem 1rem 3.5rem; }
+  html .project-page .project-hood .project-arch-list > li::before {
+    inset-inline-start: .85rem;
+    top: .95rem;
+    inline-size: 1.9rem;
+    block-size: 1.9rem;
+    font-size: .9rem;
+  }
+}
+
+/* ─── Install and set up: a numbered guide ─────────────────────────────────────── */
+.project-guide__steps {
+  display: grid;
+  gap: 1rem;
+  max-inline-size: 52rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.project-guide__step {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+  padding: 1.35rem 1.5rem 1.4rem 1.25rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 10px 26px rgba(15, 28, 46, .07);
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+@media (hover: hover) {
+  .project-guide__step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(15, 28, 46, .12);
+  }
+}
+.project-guide__num {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 50%;
+  background: var(--gb-bright);
+  color: #04101f;
+  font: 800 1.2rem/1 var(--font-display);
+  box-shadow: 0 8px 20px rgba(34, 211, 238, .35);
+}
+.project-guide__title {
+  margin: .15rem 0 0;
+  font: 700 1.12rem/1.35 var(--font-display);
+  letter-spacing: -.015em;
+  color: var(--color-text);
+}
+.project-guide__text {
+  max-inline-size: 62ch;
+  margin: .4rem 0 0;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+@media (max-width: 560px) {
+  .project-guide__step {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: .85rem;
+    padding: 1.1rem 1rem 1.15rem .9rem;
+  }
+  .project-guide__num { inline-size: 2.5rem; block-size: 2.5rem; font-size: 1rem; }
+}
+
+/* ─── Palette: a box and border around each colour again, plus a note ───────────── */
+html .project-page .project-hood__palette.concept-brand-palette { gap: .7rem; }
+html .project-page .project-hood__palette.concept-brand-palette li {
+  padding: .45rem 1rem .45rem .5rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 6px 16px rgba(15, 28, 46, .06);
+}
+.project-page .project-hood__note {
+  margin: 1.1rem 0 0;
+  font-size: .95rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+/* ─── One feedback box: likes, stars, notes and the note form together ─────────── */
+html .project-page .project-talk__notes {
+  padding: 1.6rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 1.3rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 18px 40px rgba(15, 28, 46, .1);
+}
+html .project-page .project-react {
+  gap: 1.1rem;
+  padding: 0 0 1.4rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.project-page .project-react__head { display: grid; gap: .35rem; }
+html .project-page .project-react__label {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin: 0;
+  font: 800 1.5rem/1.15 var(--font-display);
+  letter-spacing: -.035em;
+  text-transform: none;
+  color: var(--color-text);
+}
+html .project-page .project-react__label::before {
+  content: "";
+  flex: none;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2304101f' d='M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6.2L8 21v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'/%3E%3C/svg%3E") center / 52% no-repeat,
+    var(--gb-bright);
+  box-shadow: 0 8px 20px rgba(34, 211, 238, .45);
+}
+.project-page .project-react__sub {
+  margin: 0;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+html .project-page .project-react__row { display: flex; flex-wrap: wrap; gap: .7rem; }
+html .project-page .project-react__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 3rem;
+  padding: 0 1.2rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  color: var(--color-text);
+  font: 700 .95rem/1 var(--font-display);
+  box-shadow: 0 6px 16px rgba(15, 28, 46, .06);
+  transition: transform .18s ease, box-shadow .2s ease;
+}
+html .project-page .project-react__btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(34, 211, 238, .28); }
+html .project-page .project-react__btn .mh-ico { order: 3; }
+html .project-page .project-react__btn.is-on {
+  background: var(--gb-bright);
+  color: #04101f;
+  border-color: transparent;
+}
+html .project-page .project-react__count {
+  order: 2;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 14%, transparent);
+  font-weight: 700;
+}
+html .project-page .project-react__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 2.6rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+  color: #1d4ed8;
+  font: 700 .88rem/1 var(--font-display);
+  text-decoration: none;
+}
+html.mh-dark .project-page .project-react__jump { color: #93c5fd; }
+html .project-page .project-react__jump .mh-ico { order: 3; }
+html .project-page .project-react__jump:hover { background: var(--gb-bright); color: #04101f; }
+html .project-page .project-talk__notes .comments { margin-top: 1.5rem; }
+/* The card already has its own title, so the notes list does not add a second one. */
+html .project-page .comments--project .comments-head {
+  margin: 0 0 1.1rem;
+  padding: 0;
+  background: none;
+  justify-content: flex-end;
+}
+html .project-page .comments--project .comments-jump { display: none; }
+html .project-page .comments--project .comments-head:not(:has(.comment-sort)) { display: none; }
+html .project-page .project-talk__notes .comment-body { box-shadow: none; }
+
+/* ─── Questions before you buy: no line; Share project button; smaller form heading ── */
+html .project-page .project-talk .project-talk__sub {
+  padding-top: 0;
+  background: none;
+}
+html .project-page .project-talk__copy { min-height: 2.9rem; }
+html body .project-page .project-talk__ask h2.display-title {
+  background: none;
+  color: var(--color-text);
+  -webkit-text-fill-color: currentColor;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+html .project-page .project-talk__ask .sec-intro { font-weight: 400; }
