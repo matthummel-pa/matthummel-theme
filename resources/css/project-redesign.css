@@ -1210,3 +1210,66 @@ html.mh-dark .project-page .spec-chip__icon { color: #a5f3fc; background: color-
   .project-page .spec-chip { transition: none; }
   .project-page .spec-chip:hover { transform: none; }
 }
+
+/* ─── Every section heading centred (3.58.0) ──────────────────────────────────
+   The h2 box was shrinking to its max-width and sitting left, so it gets full width. */
+html .project-page .project-section__head {
+  display: block;
+  text-align: center;
+}
+html .project-page .project-section__head > .display-title,
+html .project-page .project-section__head > .project-section__intro {
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+html .project-page .project-section__head > .project-section__intro { max-inline-size: 40rem; }
+
+/* Feedback, ask, comments and related projects. */
+html .project-page .project-talk .sec-head {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+html .project-page .project-talk .sec-head > div { inline-size: 100%; }
+html .project-page :is(.project-talk .display-title, .project-talk .sec-intro, .comments-title, .comment-reply-title, #related-projects) {
+  inline-size: 100%;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+html .project-page .project-talk .eyebrow { margin-inline: auto; inline-size: fit-content; }
+
+/* ─── Specs: a background only on the boxes; roomier handoff boxes; plain palette (3.58.0) ── */
+/* The Stack and Languages rows are just a label above square boxes, so the row itself has no fill. */
+html .project-page .project-spec-list > li.project-spec--chips {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+html .project-page .project-spec-list > li.project-spec--chips:hover { box-shadow: none; transform: none; }
+
+/* Handoff: more padding inside each box. */
+html .project-page .project-hood .project-points { gap: .9rem; }
+html .project-page .project-hood .project-points li {
+  padding: 1.3rem 1.5rem 1.3rem 3.1rem;
+  line-height: 1.65;
+}
+html .project-page .project-hood .project-points li::before {
+  inset-inline-start: 1.3rem;
+  top: 1.65rem;
+}
+
+/* Palette: no box, no fill. Just the swatch, the name and the code. */
+html .project-page .concept-brand-palette li {
+  padding: .35rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}

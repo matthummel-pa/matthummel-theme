@@ -8,6 +8,8 @@
 - Story steps now read as a one-line lead plus short points. The Handoff text is split the same way. The words are not rewritten, only broken at sentence ends.
 - Reading width is capped near 62 characters, with more space between sections.
 - The at-a-glance stats moved out of the hero copy into a box under the video.
+- All section headings are centred, including Feedback, Ask, Comments and More projects.
+- Specs only have a background on the boxes themselves (the Stack and Languages rows are a label above square boxes). Handoff boxes have more padding. The palette has no box or fill, just swatch, name and code.
 - Specs: Stack and Languages are rows of square tiles with the icon above the name. The other facts are compact tiles in a grid, and repository and demo links get double-width tiles.
 - Under the hood loses its extra backgrounds, so only the individual boxes show. Architecture points are numbered boxes joined by a thin line. The small labels above headings are green-to-blue gradient text, and the pills above the hero title (type, category, place) are filled with the gradient.
 - "Choose a plan" is three cards: plan name, who it fits, a large price, the per-site price worked out from the plan, what every plan includes (a year of updates, email support, the 30-day refund the page already promised), and a full-width Buy button. The plan with the lowest price per site is labelled; nothing is labelled "popular". The intro is plainer. All buttons on the project page now share one look: a green-to-blue gradient pill that shifts on hover, gradient-edged outline buttons, and a clear focus ring.
