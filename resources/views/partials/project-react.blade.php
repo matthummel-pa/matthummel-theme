@@ -13,7 +13,10 @@
   data-ajax="{{ esc_url($ajax) }}"
   data-nonce="{{ esc_attr($nonce) }}"
 >
-  <p class="project-react__label">{{ __('Visitor feedback', 'sage') }}</p>
+  <div class="project-react__head">
+    <p class="project-react__label">{{ __('Visitor feedback', 'sage') }}</p>
+    <p class="project-react__sub">{{ __('Like or star this project, or leave a note below.', 'sage') }}</p>
+  </div>
   <div class="project-react__row" role="group" aria-label="{{ __('Like or star this project', 'sage') }}">
     <button
       type="button"

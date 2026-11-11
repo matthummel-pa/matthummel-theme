@@ -4,7 +4,7 @@
   @endphp
   <section id="comments" class="comments{{ $isProject ? ' comments--project' : '' }}">
     <header class="comments-head">
-      <h2 class="comments-title" id="comments-title">
+      <h2 class="comments-title{{ $isProject ? ' visually-hidden' : '' }}" id="comments-title">
         @if ($responses())
           {{ $title }}
         @elseif ($isProject)

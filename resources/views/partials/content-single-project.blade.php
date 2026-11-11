@@ -73,7 +73,11 @@
     ['title' => __('What you can use', 'sage'), 'text' => (string) ($story['result'] ?? '')],
   ], static fn ($step) => trim($step['text']) !== ''));
   $hasWhatYouGet = $features !== [] || $audience !== '';
-  $hasHood = $specRows !== [] || $architecture !== '' || $handoff !== '' || $palette !== [];
+  $hasHood = $specRows !== [] || $architecture !== '' || $palette !== [];
+  // Install and setup guide: the product's own steps, else the stored handoff text as numbered steps.
+  $setupSteps = \App\mh_project_setup_steps($projectSlug);
+  $guideSteps = $setupSteps !== [] ? $setupSteps : \App\mh_project_guide_steps($handoff);
+  $hasGuide = $guideSteps !== [];
   $askUrl = '#project-ask';
   $video = \App\mh_project_video($postId);
   $hasPrimary = $fs !== null || $freeUrl !== '' || $buyUrl !== '';
@@ -195,6 +199,9 @@
   }
   if ($hasHood) {
     $projectPills[] = ['project-under-hood', __('Under the hood', 'sage')];
+  }
+  if ($hasGuide) {
+    $projectPills[] = ['project-setup', $setupSteps !== [] ? __('Setup', 'sage') : __('Handoff', 'sage')];
   }
   if ($faq !== []) {
     $projectPills[] = ['project-faq', __('Questions', 'sage')];
@@ -318,23 +325,31 @@
       {{-- One next step, same wording as the hero button (the Rule of One). --}}
       <section class="project-offer" aria-labelledby="project-offer-heading">
         <div class="project-offer__copy">
-          <h2 id="project-offer-heading" class="project-offer__title">{{ $isOnSale ? sprintf(__('Ready to put %s on your site?', 'sage'), $title) : sprintf(__('See %s for yourself', 'sage'), $title) }}</h2>
+          <p class="project-offer__kicker">{{ $isOnSale ? __('Ready when you are', 'sage') : __('Take a look', 'sage') }}</p>
+          <h2 id="project-offer-heading" class="project-offer__title">{{ $isOnSale ? sprintf(__('Put %s on your site', 'sage'), $title) : sprintf(__('See %s for yourself', 'sage'), $title) }}</h2>
+          <p class="project-offer__text">
+            @if ($isOnSale)
+              {{ __('Pick a plan, upload the theme, and follow the setup steps below.', 'sage') }}@if ($demo !== '') {{ __('Want to look around first? Open the live demo.', 'sage') }}@endif
+            @else
+              {{ __('Open the live demo, or read how it is built.', 'sage') }}
+            @endif
+          </p>
           @if ($fs !== null && $fromPrice !== '')
-            <p class="project-offer__note">{{ sprintf(__('From %s per year.', 'sage'), $fromPrice) }}</p>
+            <p class="project-offer__note"><span>{{ sprintf(__('From %s per year', 'sage'), $fromPrice) }}</span></p>
           @endif
         </div>
         <div class="project-offer__actions">
           @if ($fs !== null)
-            <a class="btn" href="#buy">{!! \App\mh_svg_icon('cart', 15) !!} {{ __('Buy the theme', 'sage') }}</a>
+            <a class="btn" href="#buy">{{ __('Buy the theme', 'sage') }} {!! \App\mh_svg_icon('cart', 15) !!}</a>
           @elseif ($freeUrl !== '')
-            <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">{!! \App\mh_svg_icon('download', 15) !!} {{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span></a>
+            <a class="btn" href="{{ esc_url($freeUrl) }}" rel="noopener">{{ __('Download free', 'sage') }}<span class="visually-hidden"> {{ sprintf(__('%s (zip)', 'sage'), $title) }}</span> {!! \App\mh_svg_icon('download', 15) !!}</a>
           @elseif ($buyUrl !== '')
-            <a class="btn" href="{{ esc_url($buyUrl) }}">{!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!} {{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }}</a>
+            <a class="btn" href="{{ esc_url($buyUrl) }}">{{ $buyLabel !== '' ? $buyLabel : __('Get the pack', 'sage') }} {!! \App\mh_svg_icon($priceLabel === __('Free', 'sage') ? 'download' : 'cart', 15) !!}</a>
           @else
-            <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{!! \App\mh_svg_icon('globe', 15) !!} {{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
+            <a class="btn" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> {!! \App\mh_svg_icon('globe', 15) !!}</a>
           @endif
           @if ($demo !== '' && ($fs !== null || $freeUrl !== '' || $buyUrl !== ''))
-            <a class="h-text-arrow" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> <span aria-hidden="true">↗</span></a>
+            <a class="btn btn-outline" href="{{ esc_url($demo) }}" rel="noopener" target="_blank">{{ __('Live demo', 'sage') }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span> {!! \App\mh_svg_icon('globe', 15) !!}</a>
           @endif
         </div>
       </section>
@@ -437,36 +452,48 @@
           @endif
         </div>
 
-        @if ($palette !== [] || $handoff !== '')
+        @if ($palette !== [])
           <div class="project-hood__grid project-hood__grid--extra">
-            @if ($handoff !== '')
-              <div class="project-hood__col project-detail-block" id="project-handoff">
-                <h3 class="project-hood__title">{{ __('Handoff', 'sage') }}</h3>
-                <ul class="project-points">
-                  @foreach (\App\mh_project_prose_paragraphs($handoff) as $para)
-                    @foreach (\App\mh_project_chunk_text($para) as $bit)
-                      <li>{{ $bit }}</li>
-                    @endforeach
-                  @endforeach
-                </ul>
-              </div>
-            @endif
-            @if ($palette !== [])
-              <div class="project-hood__col" id="project-palette">
-                <h3 class="project-hood__title">{{ __('Palette', 'sage') }}</h3>
-                <ul class="concept-brand-palette project-hood__palette">
-                  @foreach ($palette as $swatch)
-                    <li>
-                      <span class="concept-brand-swatch" style="--swatch: {{ esc_attr($swatch[1]) }}"></span>
-                      <span>{{ $swatch[0] }}</span>
-                      <code>{{ $swatch[1] }}</code>
-                    </li>
-                  @endforeach
-                </ul>
-              </div>
-            @endif
+            <div class="project-hood__col" id="project-palette">
+              <h3 class="project-hood__title">{{ __('Palette', 'sage') }}</h3>
+              <ul class="concept-brand-palette project-hood__palette">
+                @foreach ($palette as $swatch)
+                  <li>
+                    <span class="concept-brand-swatch" style="--swatch: {{ esc_attr($swatch[1]) }}"></span>
+                    <span>{{ $swatch[0] }}</span>
+                    <code>{{ $swatch[1] }}</code>
+                  </li>
+                @endforeach
+              </ul>
+              <p class="project-hood__note">{{ __('These are the theme’s default colors. You can change them in the theme settings.', 'sage') }}</p>
+            </div>
           </div>
         @endif
+      </section>
+    @endif
+
+    @if ($hasGuide)
+      <section class="project-section project-guide" id="project-setup" aria-labelledby="project-setup-heading">
+        <div class="project-section__head">
+          <p class="eyebrow">{{ $setupSteps !== [] ? __('Setup', 'sage') : __('Handoff', 'sage') }}</p>
+          <h2 id="project-setup-heading" class="display-title is-section">{{ $setupSteps !== [] ? __('Install and set up', 'sage') : __('How handoff works', 'sage') }}</h2>
+          @if ($setupSteps !== [])
+            <p class="project-section__intro">{{ sprintf(__('%d steps from the zip file to a site that is ready to open.', 'sage'), count($guideSteps)) }}</p>
+          @endif
+        </div>
+        <ol class="project-guide__steps">
+          @foreach ($guideSteps as $i => $step)
+            <li class="project-guide__step">
+              <span class="project-guide__num" aria-hidden="true">{{ $i + 1 }}</span>
+              <div class="project-guide__body">
+                <h3 class="project-guide__title">{{ $step['title'] }}</h3>
+                @if ($step['text'] !== '')
+                  <p class="project-guide__text">{{ $step['text'] }}</p>
+                @endif
+              </div>
+            </li>
+          @endforeach
+        </ol>
       </section>
     @endif
 
@@ -549,9 +576,10 @@
         {{-- A line under the heading, then the blurb and the copy link side by side. --}}
         <div class="project-talk__sub">
           <p class="sec-intro">{{ $isOnSale ? __('Leave a public note or write me privately. I read every reply.', 'sage') : __('Like or star this sample, leave a public note, or write me privately. I read every reply.', 'sage') }}</p>
-          <button type="button" class="h-text-arrow post-copy-link project-talk__copy" data-copy="{{ esc_url($permalink) }}">
-            {!! \App\mh_svg_icon('share', 14) !!}
-            <span>{{ __('Copy link', 'sage') }}</span>
+          {{-- data-copy is the URL the button copies; app.js handles the click and the "copied" message. --}}
+          <button type="button" class="btn btn-outline post-copy-link project-talk__copy" data-copy="{{ esc_url($permalink) }}">
+            <span>{{ __('Share project', 'sage') }}</span>
+            {!! \App\mh_svg_icon('share', 15) !!}
           </button>
           <span class="visually-hidden" role="status" data-copy-status></span>
         </div>
