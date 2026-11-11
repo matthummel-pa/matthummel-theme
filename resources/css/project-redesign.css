@@ -1131,3 +1131,82 @@ html.mh-dark .project-page .eyebrow,
   box-shadow: 0 4px 14px rgba(34, 211, 238, .35);
 }
 .project-page :is(.spec-badge, .project-cat-pill, .project-place-pill) .mh-ico { color: #04101f; }
+
+/* ─── Specs: square icon tiles for stack and languages, tidy tiles for the rest (3.58.0) ── */
+@media (min-width: 1000px) {
+  .project-page .project-hood__grid:first-of-type {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+.project-page .project-spec-list {
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+}
+/* Stack and languages sit on top, full width; their tiles are squares. */
+.project-page .project-spec-list > li.project-spec--chips {
+  grid-column: 1 / -1;
+  order: -1;
+  align-items: stretch;
+  gap: .8rem;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.project-page .project-spec-list > li.project-spec--languages { order: -1; }
+.project-page .project-spec-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
+  gap: .7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-page .project-spec-list > li.project-spec--chips .spec-chip {
+  /* Reset the tile box rules above: a chip is its own small square. */
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  aspect-ratio: 1;
+  padding: .6rem .4rem;
+  border: var(--gb-w) solid transparent;
+  border-radius: .9rem;
+  background:
+    linear-gradient(var(--gb-bg), var(--gb-bg)) padding-box,
+    var(--gb) border-box;
+  box-shadow: 0 6px 16px rgba(15, 28, 46, .06);
+  text-align: center;
+  transition: transform .2s var(--ease-out, ease), box-shadow .2s ease;
+}
+.project-page .project-spec-list > li.project-spec--chips .spec-chip::before { content: none; }
+.project-page .spec-chip__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border-radius: .7rem;
+  background: color-mix(in srgb, #3b82f6 9%, transparent);
+  color: #0e7490;
+}
+html.mh-dark .project-page .spec-chip__icon { color: #a5f3fc; background: color-mix(in srgb, #3b82f6 22%, transparent); }
+.project-page .spec-chip__icon svg { inline-size: 1.6rem; block-size: 1.6rem; }
+.project-page .spec-chip__name {
+  font: 700 .82rem/1.2 var(--font-display);
+  letter-spacing: -.01em;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) {
+  .project-page .spec-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 26px rgba(34, 211, 238, .25);
+  }
+}
+/* Link rows (repository, live demo) get more room; the rest are compact. */
+.project-page .project-spec-list > li.project-spec--link { grid-column: span 2; }
+@media (max-width: 520px) {
+  .project-page .project-spec-list > li.project-spec--link { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-page .spec-chip { transition: none; }
+  .project-page .spec-chip:hover { transform: none; }
+}

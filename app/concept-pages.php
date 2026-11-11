@@ -812,18 +812,18 @@ function mh_project_release_label(array $gh): string
 function mh_project_spec_rows(array $card, array $gh, string $demo, string $github, array $docs = []): array
 {
     $rows = [];
-    $add = static function (string $label, string $value, string $href = '', array $pills = []) use (&$rows): void {
+    $add = static function (string $label, string $value, string $href = '', array $pills = [], string $kind = '') use (&$rows): void {
         if ($value === '' && $pills === []) {
             return;
         }
-        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills];
+        $rows[] = ['label' => $label, 'value' => $value, 'href' => $href, 'pills' => $pills, 'kind' => $kind];
     };
 
     $tech = is_array($card['tech'] ?? null) ? array_values(array_filter(array_map('strval', $card['tech']))) : [];
-    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech);
+    $add(__('Stack', 'sage'), implode(' · ', $tech), '', $tech, 'stack');
 
     $languages = is_array($gh['languages'] ?? null) ? array_slice(array_map('strval', $gh['languages']), 0, 6) : [];
-    $add(__('Languages', 'sage'), implode(' · ', $languages));
+    $add(__('Languages', 'sage'), implode(' · ', $languages), '', $languages, 'languages');
     $add(__('Compatible', 'sage'), trim((string) ($gh['compatible'] ?? '')));
     $add(__('License', 'sage'), trim((string) ($gh['license'] ?? '')));
     $add(__('Release', 'sage'), mh_project_release_label($gh), (string) ($gh['release_url'] ?? ''));

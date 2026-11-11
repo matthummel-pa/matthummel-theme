@@ -379,14 +379,17 @@
               <div class="project-spec-block">
                 <ul class="project-spec-list">
                   @foreach ($specRows as $row)
-                    <li>
+                    <li class="{{ $row['pills'] !== [] ? 'project-spec--chips project-spec--'.($row['kind'] ?? '') : ($row['href'] !== '' ? 'project-spec--link' : '') }}">
                       <span class="project-spec-label">{{ $row['label'] }}</span>
                       @if ($row['pills'] !== [])
-                        <span class="project-spec-value pill-row project-spec-pills">
+                        <ul class="project-spec-value project-spec-chips">
                           @foreach ($row['pills'] as $t)
-                            <span class="pill">{!! \App\mh_svg_icon($t, 14) !!} {{ $t }}</span>
+                            <li class="spec-chip">
+                              <span class="spec-chip__icon" aria-hidden="true">{!! \App\mh_svg_icon($t, 28) !!}</span>
+                              <span class="spec-chip__name">{{ $t }}</span>
+                            </li>
                           @endforeach
-                        </span>
+                        </ul>
                       @elseif ($row['href'] !== '')
                         <a class="project-spec-value" href="{{ esc_url($row['href']) }}" rel="noopener" target="_blank">{{ $row['value'] }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span></a>
                       @else
