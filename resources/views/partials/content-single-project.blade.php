@@ -35,6 +35,9 @@
   $metrics = is_array($story['metrics'] ?? null) ? $story['metrics'] : [];
   $proof = \App\mh_project_proof_facts($metrics, $slides, $features, $gh);
   $specRows = \App\mh_project_spec_rows($card, $gh, $demo, $github, \App\mh_project_docs_pairs($postId));
+  // Owner guide / Support guide links are buttons under the spec tiles, not tiles.
+  $specDocs = array_values(array_filter($specRows, static fn ($row) => ($row['kind'] ?? '') === 'doc'));
+  $specFacts = array_values(array_filter($specRows, static fn ($row) => ($row['kind'] ?? '') !== 'doc'));
   $heroImage = (string) ($slides[0]['src'] ?? '');
   $heroImageAlt = (string) ($slides[0]['alt'] ?? sprintf(__('Screenshot of %s', 'sage'), $title));
   $palette = function_exists('\\App\\mh_project_brand_palette_pairs')
@@ -378,7 +381,7 @@
               <h3 class="project-hood__title">{{ __('Specs', 'sage') }}</h3>
               <div class="project-spec-block">
                 <ul class="project-spec-list">
-                  @foreach ($specRows as $row)
+                  @foreach ($specFacts as $row)
                     <li class="{{ $row['pills'] !== [] ? 'project-spec--chips project-spec--'.($row['kind'] ?? '') : ($row['href'] !== '' ? 'project-spec--link' : '') }}">
                       <span class="project-spec-label">{{ $row['label'] }}</span>
                       @if ($row['pills'] !== [])
@@ -399,6 +402,17 @@
                   @endforeach
                 </ul>
               </div>
+              @if ($specDocs !== [])
+                <div class="project-spec-docs">
+                  @foreach ($specDocs as $doc)
+                    @php $docLabel = preg_match('/^support guide$/i', (string) $doc['label']) ? __('Support', 'sage') : (string) $doc['label']; @endphp
+                    <a class="btn btn-outline" href="{{ esc_url($doc['href']) }}" rel="noopener" target="_blank">
+                      {!! \App\mh_svg_icon('book-open', 15) !!}
+                      {{ $docLabel }}<span class="visually-hidden">{{ __(' (opens in a new window)', 'sage') }}</span>
+                    </a>
+                  @endforeach
+                </div>
+              @endif
             </div>
           @endif
 

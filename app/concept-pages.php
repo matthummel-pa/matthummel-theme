@@ -851,7 +851,7 @@ function mh_project_spec_rows(array $card, array $gh, string $demo, string $gith
         if (! str_starts_with($url, 'http')) {
             continue;
         }
-        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url);
+        $add((string) ($pair[0] ?? ''), __('Read online', 'sage'), $url, [], 'doc');
     }
 
     return $rows;

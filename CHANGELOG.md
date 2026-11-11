@@ -9,6 +9,7 @@
 - Reading width is capped near 62 characters, with more space between sections.
 - The at-a-glance stats moved out of the hero copy into a box under the video.
 - All section headings are centred, including Feedback, Ask, Comments and More projects.
+- The Owner guide and Support guide links are outline buttons labelled "Owner guide" and "Support" under the spec tiles, instead of tiles that said "Read online".
 - "Already bought? Open your account" under the plans is an outline button instead of a text link.
 - Specs only have a background on the boxes themselves (the Stack and Languages rows are a label above square boxes). Handoff boxes have more padding. The palette has no box or fill, just swatch, name and code.
 - Specs: Stack and Languages are rows of square tiles with the icon above the name. The other facts are compact tiles in a grid, and repository and demo links get double-width tiles.

@@ -1280,3 +1280,11 @@ html .project-page .concept-brand-palette li {
   justify-content: center;
   margin: 1rem 0 0;
 }
+
+/* Owner guide / Support: plain buttons under the spec tiles (3.58.0). */
+.project-page .project-spec-docs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1.1rem;
+}
