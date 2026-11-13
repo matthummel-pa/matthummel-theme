@@ -1,72 +1,131 @@
-name: Deploy Roots Production Ecosystem
+name: Deploy to production
+
+# Needs repo variables SITE_URL (https://matthummel.com) and THEME_SLUG (matthummel).
+# Merge to main → build → ship over SSH to the live site → health check → auto-rollback on failure.
+# Manual run (Actions → Deploy → Run workflow) redeploys any commit or tag: use it to roll back.
+# Secrets live in the GitHub environment "production": HOSTINGER_SSH_HOST, HOSTINGER_SSH_PORT,
+# HOSTINGER_SSH_USER, HOSTINGER_SSH_KEY, HOSTINGER_WP_PATH. Do not commit them.
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - '.claude/**'
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit SHA, tag or branch to deploy (blank = main)'
+        required: false
+        default: ''
 
 concurrency:
-  group: hostinger-theme-release
-  cancel-in-progress: true
+  group: production-deploy
+  cancel-in-progress: false
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
-    name: Build Assets & Publish Theme Zip
+  build:
+    name: Check & build
     runs-on: ubuntu-latest
-
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
-      - name: Setup PHP Environment
-        uses: shivammathur/setup-php@v2
+      - id: meta
+        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           coverage: none
           tools: composer
 
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: package.json
 
-      - name: Install Composer Dependencies (Production Mode)
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.lock') }}
 
-      - name: Install Theme Dependencies & Compile Production Assets
+      - run: composer install --no-interaction --prefer-dist
+      - run: vendor/bin/pint --test
+
+      - run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+      - run: npm ci && npm run build
+      - run: bash .github/scripts/pack-theme.sh "$GITHUB_WORKSPACE/theme.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: theme-build
+          path: theme.zip
+          retention-days: 30
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy over SSH
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: theme-build
+
+      - name: Load SSH key
         run: |
-          npm ci
-          npm run build
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          ssh-keyscan -p "${{ secrets.HOSTINGER_SSH_PORT }}" -H "${{ secrets.HOSTINGER_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Pack WordPress theme zip
-        run: bash .github/scripts/pack-theme.sh "$GITHUB_WORKSPACE/matthummel.zip"
+      - name: Upload zip and swap theme
+        env:
+          SSH: ssh -i ~/.ssh/deploy -p ${{ secrets.HOSTINGER_SSH_PORT }} ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}
+          SCP: scp -i ~/.ssh/deploy -P ${{ secrets.HOSTINGER_SSH_PORT }}
+          TARGET: ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}
+          WP_PATH: ${{ secrets.HOSTINGER_WP_PATH }}
+          SHA: ${{ needs.build.outputs.sha }}
+        run: |
+          $SCP theme.zip .github/scripts/server-deploy.sh "$TARGET:~/"
+          $SSH "bash ~/server-deploy.sh '$WP_PATH' '$SHA' deploy '${{ vars.THEME_SLUG }}'"
 
-      - name: Publish GitHub Release (theme-latest)
+      - name: Health check (homepage, REST, CSS)
+        id: health
+        run: bash .github/scripts/health-check.sh "${{ vars.SITE_URL }}" "${{ vars.THEME_SLUG }}"
+
+      - name: Roll back on failed health check
+        if: failure() && steps.health.outcome == 'failure'
+        env:
+          SSH: ssh -i ~/.ssh/deploy -p ${{ secrets.HOSTINGER_SSH_PORT }} ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}
+          WP_PATH: ${{ secrets.HOSTINGER_WP_PATH }}
+        run: |
+          $SSH "bash ~/server-deploy.sh '$WP_PATH' '-' rollback '${{ vars.THEME_SLUG }}'"
+          bash .github/scripts/health-check.sh "${{ vars.SITE_URL }}" "${{ vars.THEME_SLUG }}"
+
+      - name: Keep the build as a release (rollback copy)
+        if: success()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: theme-latest
           name: Latest theme build
-          body: |
-            Built Sage theme (Composer vendor + Vite `public/build`).
-            Commit: ${{ github.sha }}
-            Install on the STAGING site (hummel-dev) only — URLs and SSH alias are in docs/INSTALL.md §7:
-            wp-admin → Appearance → Update Theme, or `wp mh theme-update`.
-            Do not install on the live site — Matt publishes staging → live from hPanel.
-            Unzip into `wp-content/themes/matthummel/` via Hostinger File Manager if needed.
-          files: matthummel.zip
-          fail_on_unmatched_files: true
+          body: 'Deployed ${{ needs.build.outputs.sha }} to ${{ vars.SITE_URL }}.'
+          files: theme.zip
           make_latest: true
           target_commitish: ${{ github.sha }}
-
-      - name: Upload zip artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: matthummel-theme
-          path: matthummel.zip
-          if-no-files-found: error
