@@ -1,28 +1,27 @@
-# Hostinger, staging and WPVibe (this repo)
+# Hostinger and WPVibe (this repo)
 
-Staging first, production read-only for agents. Generic standards load from the playbook.
+Local first, then SSH to the live site. Generic standards load from the playbook.
 
 ## This repository (do not ignore)
 
 This is the **matthummel** Sage 11 theme. Map these workflow rules onto files and hosts that already ship. If they conflict with `agency-core.md` or what already ships, **this file wins on production host and domain**; shipping theme patterns still win on Sage, Blade, Vite, and “do not rip out what works.”
 
-- **Staging site (hummel-dev) is the default host for theme updates and writing posts:** `https://matthummel-com-623249.hostingersite.com/` — Hostinger's staging copy of matthummel.com. **Every design or dev change lands here first.** Install the theme here, test here, point WPVibe here. Theme folder is `wp-content/themes/matthummel/` on both sites.
-- **Production site:** `https://matthummel.com` on Hostinger. **Agents do not deploy to, install on, or edit production.** Live changes only when Matt publishes staging → live from hPanel (Websites → Staging → Publish). Not `hummelwp.com`.
+- **Local site is where design and development happen.** WordPress Studio, theme folder `matthummel`. Check the change there before a merge.
+- **Live site:** `https://matthummel.com` on Hostinger. Merging to `main` deploys the theme over SSH (`.github/workflows/deploy.yml`). Do not install a zip on a Hostinger staging copy, and do not publish staging → live from hPanel. Theme folder is `wp-content/themes/matthummel/`. Not `hummelwp.com`.
 - **Source of truth for custom code:** this GitHub repo. Do not treat live theme-file edits as canonical.
 - **WordPress connection:** WPVibe (`vibe-ai` plugin + `https://mcp.wpvibe.ai/mcp`) for posts, pages, settings, plugins, and site inspection.
 - **Hostinger connection:** Hostinger MCP (`hosting_`, `domains_`, `DNS_`, `billing_`) for hosting, DNS, PHP, databases, and account infrastructure — not `curl` against the Hostinger API, SSH, or `dig` as the first read.
 - **This theme is already custom.** Do not add a child theme of `matthummel`. Do not edit WordPress core or third-party plugin files on the server.
 - **Git branches:** `main` is the released theme; work on `feat/…`, `fix/…`, `chore/…`. Do not invent a git `staging` branch — staging is a Hostinger *site*, not a branch.
-- **Deploy today:** `.github/workflows/deploy.yml` builds the GitHub Release zip (`theme-latest`). Install it on the **staging site** with Appearance → **Update Theme**, `wp mh theme-update`, or the SSH one-liner in `docs/INSTALL.md` §7, then purge LiteSpeed there. Matt publishes staging → live from hPanel. No SiteGround FTP or SSH. Do not add a second deploy workflow.
-- **Copy vs code:** visitor copy is block content edited in the block editor on staging (`content.md`). Keep content PRs/edits separate from theme/plugin/infrastructure PRs.
+- **Deploy today:** `.github/workflows/deploy.yml` builds the theme and swaps it over SSH on the live site. The GitHub Release `theme-latest` is the rollback copy of that deploy. Do not add a second deploy workflow.
+- **Copy vs code:** visitor copy is block content edited in the block editor (`content.md`). Keep content PRs/edits separate from theme/plugin/infrastructure PRs.
 
 ## Environment separation
 
-Use three environments whenever possible:
+Use local and the live site:
 
-- **Local:** WordPress Studio (`studio wp …`; see `CLAUDE.md`), theme folder `matthummel`. Product themes (Acreline, etc.) get a **separate** local site (`AGENTS.md` isolation). Never activate them on this install.
-- **Staging (hummel-dev):** `https://matthummel-com-623249.hostingersite.com/`, Hostinger's staging copy of matthummel.com. This is where theme installs, design work, and content experiments happen. Do not invent a git `staging` branch.
-- **Production:** `matthummel.com`. Read-only for agents; Matt publishes staging → live from hPanel. `hummelwp.com` is a separate Hostinger install (do not treat it as the default).
+- **Local:** WordPress Studio (`studio wp …`; see `CLAUDE.md`), theme folder `matthummel`. Product themes (Acreline, Cobble & Candle, and the rest) get a **separate** local site. Never activate them on this install.
+- **Production:** `matthummel.com`. A merge to `main` deploys the theme over SSH. `hummelwp.com` is a separate Hostinger install (do not treat it as the default). Do not invent a git `staging` branch.
 
 Rules:
 
@@ -58,7 +57,7 @@ Rules:
 ## Deployment rules
 
 - Deploy from a reviewed Git commit, not from untracked local files.
-- Confirm the destination before deployment: local or the staging site. `matthummel.com` is only ever updated by Matt publishing staging from hPanel.
+- Confirm the destination before deployment: local, or the live SSH deploy that runs on merge to `main`. Do not publish a Hostinger staging copy from hPanel.
 - Never deploy secrets or development configuration.
 - Prefer atomic or easily reversible deployments (built `theme-latest` zip over partial `public/` copies).
 - Do not run database migrations automatically against production without approval and a backup.
