@@ -87,3 +87,9 @@ Gotchas:
   WPVibe then connects, lists themes, and activates — it cannot replace
   `npm run build` / Composer for Sage. Theme edits on a connected site: draft →
   preview → publish.
+
+## Cursor Cloud specific instructions
+
+Standards come from the Cursor playbook plugin (matthummel-pa/ai-dev-standards-playbook). Do not copy those rules into this repo. When a playbook rule and a project rule disagree, follow this repo for the text domain, local commands, target size, theme switch, and deploy.
+
+The Build runs the playbook `cloud-install.sh`, then `composer install` and `npm ci`. Studio is not on the image. Run the checks this repo already documents. Do not install WordPress unless the task asks. The facts above stay in force.
