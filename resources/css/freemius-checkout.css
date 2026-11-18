@@ -1,0 +1,95 @@
+/**
+ * Freemius hosted checkout skin for Cobble & Candle (store 21514, theme 42939).
+ * Freemius loads this file from an HTTPS URL set in Plans → Customization.
+ * It is not imported by the theme bundle. Do not put secrets in this file.
+ *
+ * Colors and type match the theme: navy #0d2e57, blue #4f8fd4, gray scale,
+ * Inter for headings, IBM Plex Sans for body. Dark colors follow html.mh-dark
+ * and, on checkout.freemius.com where that class is absent, the OS dark scheme.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@600;700;800;900&display=swap");
+
+:root {
+  color-scheme: light;
+  --fs-ds-theme-primary-accent-color: #0d2e57;
+  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
+  --fs-ds-freemius-100: #dceaf8;
+  --fs-ds-freemius-200: #bdd6f0;
+  --fs-ds-freemius-300: #93c5fd;
+  --fs-ds-freemius-400: #4f8fd4;
+  --fs-ds-freemius-500: #1a6bb5;
+  --fs-ds-freemius-600: #0d2e57;
+  --fs-ds-freemius-700: #0a2446;
+  --fs-ds-freemius-800: #0d2e57;
+  --fs-ds-freemius-900: #060f22;
+  --fs-ds-blue-100: #dceaf8;
+  --fs-ds-blue-200: #bdd6f0;
+  --fs-ds-blue-300: #93c5fd;
+  --fs-ds-blue-400: #4f8fd4;
+  --fs-ds-blue-500: #1a6bb5;
+  --fs-ds-blue-600: #0d2e57;
+  --fs-ds-blue-700: #0a2446;
+  --fs-ds-blue-800: #0d2e57;
+  --fs-ds-blue-900: #060f22;
+  --fs-ds-neutral-10: #eef3f9;
+  --fs-ds-neutral-100: #e2eaf3;
+  --fs-ds-neutral-200: #cfd9e6;
+  --fs-ds-neutral-300: #a8b6c8;
+  --fs-ds-neutral-400: #6e7c8e;
+  --fs-ds-neutral-500: #4f5c6e;
+  --fs-ds-neutral-600: #3a4554;
+  --fs-ds-neutral-700: #243041;
+  --fs-ds-neutral-800: #141c28;
+  --fs-ds-neutral-900: #0b1220;
+  --fs-ds-white-100: #ffffff;
+  --fs-ds-appearance-radius: 6px;
+  --fs-ds-appearance-border-radius: 6px;
+  --fs-ds-typography-font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  --fs-ds-typography-font-family-body: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  --fs-ds-typography-font-family-heading: Inter, system-ui, sans-serif;
+  font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
+}
+
+:where(h1, h2, h3, h4, h5, h6, button) {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+html.mh-dark {
+  color-scheme: dark;
+  --fs-ds-theme-primary-accent-color: #93c5fd;
+  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
+  --fs-ds-neutral-10: #172233;
+  --fs-ds-neutral-100: #243041;
+  --fs-ds-neutral-200: #3a4554;
+  --fs-ds-neutral-300: #6e7c8e;
+  --fs-ds-neutral-400: #a8b4c4;
+  --fs-ds-neutral-500: #c5d0de;
+  --fs-ds-neutral-600: #c5d0de;
+  --fs-ds-neutral-700: #e2eaf3;
+  --fs-ds-neutral-800: #eef3f9;
+  --fs-ds-neutral-900: #eef3f9;
+  --fs-ds-white-100: #0b1220;
+  background-color: #0b1220;
+  color: #eef3f9;
+}
+
+/* checkout.freemius.com does not get the html.mh-dark class, so follow the OS there. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --fs-ds-theme-primary-accent-color: #93c5fd;
+    --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
+    --fs-ds-neutral-10: #172233;
+    --fs-ds-neutral-100: #243041;
+    --fs-ds-neutral-200: #3a4554;
+    --fs-ds-neutral-300: #6e7c8e;
+    --fs-ds-neutral-400: #a8b4c4;
+    --fs-ds-neutral-500: #c5d0de;
+    --fs-ds-neutral-600: #c5d0de;
+    --fs-ds-neutral-700: #e2eaf3;
+    --fs-ds-neutral-800: #eef3f9;
+    --fs-ds-neutral-900: #eef3f9;
+    --fs-ds-white-100: #0b1220;
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.58.1 — Freemius checkout colors and a payment recovery template
+
+- Checkout custom CSS for the Cobble & Candle plan lives in `resources/css/freemius-checkout.css`. Freemius loads that file from an HTTPS URL (Plans → Customization). It is not part of the site bundle. Colors follow the navy, blue, and gray palette. Headings use Inter and body text uses IBM Plex Sans. Dark colors apply under `html.mh-dark` and, on the Freemius checkout host, when the operating system is in dark mode.
+- New page template, Payment recovery. Assign it to the page Freemius uses for failed-payment emails. The template loads `https://checkout.freemius.com/js/v1/` so the card form can open. The words on the page stay in the page body.
+- Checkout success redirection stays off.
+
 ## 3.58.0 — Project pages: Home-style hero, commercial video, shorter reading blocks
 
 - The project hero now uses the same calm gradient as the Home hero, with the framed media beside the copy. The media also shows on phones, under the copy.

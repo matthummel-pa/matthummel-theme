@@ -20,6 +20,8 @@ Product page /themes/{slug}/
 - **Refunds, renewals, white-label:** configured in the Freemius dashboard, not in code. Keep page copy in line with them.
 - **Releasing a new version:** bump `Version:` in the theme's `style.css`, push a tag `vX.Y.Z` in the product repo. Its `release-freemius.yml` builds the zip, attaches it to a GitHub Release and uploads it to Freemius as **pending**. It needs the repo secret `FREEMIUS_API_TOKEN` and the variable `FREEMIUS_PRODUCT_ID`; without them it builds and attaches the zip and skips the upload. Matt sets the version to **Released** in the Freemius Developer Dashboard → Deployment. That keeps a person between a tag and a paid update.
 - **Testing a purchase on staging:** define `MH_FREEMIUS_SANDBOX_TOKEN` and `MH_FREEMIUS_SANDBOX_CTX` in the staging `wp-config.php` (values from the Freemius dashboard). They are ignored on matthummel.com. Never commit them.
+- **Checkout skin:** `resources/css/freemius-checkout.css`. After this theme is installed, the public file is `https://<site>/wp-content/themes/matthummel/resources/css/freemius-checkout.css`. Paste that HTTPS URL into Freemius → Plans → Customization → Custom Checkout CSS file. The file has no secrets.
+- **Failed payments:** a page on the Payment recovery template. Freemius → Plans → Customization → Customize Payment Recovery URL points at that page. The template loads `https://checkout.freemius.com/js/v1/`. Leave Checkout Success Redirection off.
 
 ## Free plugins: GitHub release
 
