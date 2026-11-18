@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" fill="none" role="img" aria-labelledby="mhLogoDarkTitle">
+  <title id="mhLogoDarkTitle">Matt Hummel</title>
+  <defs>
+    <linearGradient id="mhLogoDarkLine" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="0.55" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#a3e635"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 4) scale(0.875)">
+    <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke="url(#mhLogoDarkLine)" stroke-width="1.75"/>
+    <path d="M14 46V22l9.5 12 9.5-12v24" stroke="url(#mhLogoDarkLine)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 22v24M52 22v24M40 34h12" stroke="url(#mhLogoDarkLine)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="72" y="41" fill="#e7eef8" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.045em">Matt Hummel</text>
+</svg>

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.58.4 — Line logo
+
+- The MH mark and the Matt Hummel lockup (`resources/images/logo-mark.svg`, `logo.svg`) are line drawings. The stroke runs blue to teal to green, the same stops as the page illustrations. `logo-dark.svg` uses the brighter dark-mode stops and light type, for a dark background. The header is still the text wordmark.
+
 ## 3.58.3 — Payment recovery script is not delayed
 
 - LiteSpeed was rewriting the Freemius checkout script on the payment recovery page into a delayed tag, so the card form would not open on load. The script now uses the same `data-no-optimize` and `data-no-defer` marks as the dark-mode script.

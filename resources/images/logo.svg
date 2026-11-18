@@ -1,15 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 56" fill="none" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" fill="none" role="img" aria-labelledby="mhLogoTitle">
+  <title id="mhLogoTitle">Matt Hummel</title>
   <defs>
-    <linearGradient id="mhLogoGrad" x1="4" y1="2" x2="50" y2="52" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#E5E7EB"/>
-      <stop offset=".42" stop-color="#D1D5DB"/>
-      <stop offset="1" stop-color="#93C5FD"/>
+    <linearGradient id="mhLogoLine" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="0.55" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#65a30d"/>
     </linearGradient>
   </defs>
-  <rect x="2" y="4" width="48" height="48" rx="14" fill="url(#mhLogoGrad)"/>
-  <g transform="translate(2 4) scale(.75)">
-    <path fill="#111827" d="M7.5 50.5V13.5h8.7l4.3 19 4.3-19h8.7v37h-6.9V29L20.5 48 14.4 29v21.5H7.5Z"/>
-    <path fill="#111827" d="M36.5 50.5V13.5h7.3v14.7h6.4V13.5h7.3v37h-7.3V35.8h-6.4v14.7h-7.3Z"/>
+  <g transform="translate(4 4) scale(0.875)">
+    <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke="url(#mhLogoLine)" stroke-width="1.75"/>
+    <path d="M14 46V22l9.5 12 9.5-12v24" stroke="url(#mhLogoLine)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 22v24M52 22v24M40 34h12" stroke="url(#mhLogoLine)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <text x="64" y="37" fill="#111827" font-family="Inter, 'Arial Black', 'Helvetica Neue', system-ui, sans-serif" font-size="26" font-weight="800" letter-spacing="-1.35">Matt Hummel</text>
+  <text x="72" y="41" fill="#0d2e57" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.045em">Matt Hummel</text>
 </svg>
