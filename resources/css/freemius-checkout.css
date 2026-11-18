@@ -3,93 +3,340 @@
  * Freemius loads this file from an HTTPS URL set in Plans → Customization.
  * It is not imported by the theme bundle. Do not put secrets in this file.
  *
- * Colors and type match the theme: navy #0d2e57, blue #4f8fd4, gray scale,
+ * Brand: navy #0d2e57, blue #2563eb, teal #0891b2, green #65a30d,
  * Inter for headings, IBM Plex Sans for body. Dark colors follow html.mh-dark
  * and, on checkout.freemius.com where that class is absent, the OS dark scheme.
+ *
+ * The checkout uses one token for two jobs (neutral-800 is both heading text
+ * and the dark footer; white-10 is both the page and the text on a dark panel).
+ * Theme tokens below are real colors, so a dark scheme cannot turn the words
+ * light and leave the page white.
+ *
+ * White type on the logo teal (#0891b2, 3.68:1) and green (#65a30d, 3.09:1)
+ * fails WCAG 2.2 AA. The pay button fill stays blue, which passes with white
+ * type. The blue–teal–green line is a 3px stripe, not a text background.
  */
 
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@600;700;800;900&display=swap");
 
 :root {
   color-scheme: light;
-  --fs-ds-theme-primary-accent-color: #0d2e57;
-  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-  --fs-ds-freemius-100: #dceaf8;
-  --fs-ds-freemius-200: #bdd6f0;
-  --fs-ds-freemius-300: #93c5fd;
-  --fs-ds-freemius-400: #4f8fd4;
-  --fs-ds-freemius-500: #1a6bb5;
-  --fs-ds-freemius-600: #0d2e57;
-  --fs-ds-freemius-700: #0a2446;
-  --fs-ds-freemius-800: #0d2e57;
-  --fs-ds-freemius-900: #060f22;
-  --fs-ds-blue-100: #dceaf8;
-  --fs-ds-blue-200: #bdd6f0;
-  --fs-ds-blue-300: #93c5fd;
-  --fs-ds-blue-400: #4f8fd4;
-  --fs-ds-blue-500: #1a6bb5;
-  --fs-ds-blue-600: #0d2e57;
-  --fs-ds-blue-700: #0a2446;
-  --fs-ds-blue-800: #0d2e57;
-  --fs-ds-blue-900: #060f22;
+  --fs-ds-white-10: #ffffff;
+  --fs-ds-white-100: #ffffff;
   --fs-ds-neutral-10: #eef3f9;
+  --fs-ds-neutral-50: #e2eaf3;
   --fs-ds-neutral-100: #e2eaf3;
-  --fs-ds-neutral-200: #cfd9e6;
-  --fs-ds-neutral-300: #a8b6c8;
-  --fs-ds-neutral-400: #6e7c8e;
-  --fs-ds-neutral-500: #4f5c6e;
+  --fs-ds-neutral-200: #c5d0de;
+  --fs-ds-neutral-300: #5c6b7e;
+  --fs-ds-neutral-400: #3a4554;
+  --fs-ds-neutral-500: #3a4554;
   --fs-ds-neutral-600: #3a4554;
   --fs-ds-neutral-700: #243041;
-  --fs-ds-neutral-800: #141c28;
+  --fs-ds-neutral-800: #0d2e57;
   --fs-ds-neutral-900: #0b1220;
-  --fs-ds-white-100: #ffffff;
+  --fs-ds-neutral-900-fade-60: rgba(11, 18, 32, 0.6);
+  --fs-ds-neutral-900-fade-92: rgba(11, 18, 32, 0.08);
+  --fs-ds-blue-10: #eef4fb;
+  --fs-ds-blue-50: #dbe7f8;
+  --fs-ds-blue-100: #c5d8f6;
+  --fs-ds-blue-200: #93b4ef;
+  --fs-ds-blue-300: #2563eb;
+  --fs-ds-blue-400: #1d4ed8;
+  --fs-ds-blue-500: #2563eb;
+  --fs-ds-blue-600: #1d4ed8;
+  --fs-ds-blue-700: #1e40af;
+  --fs-ds-blue-800: #0d2e57;
+  --fs-ds-blue-900: #060f22;
+  --fs-ds-freemius-100: #dbe7f8;
+  --fs-ds-freemius-200: #93b4ef;
+  --fs-ds-freemius-300: #2563eb;
+  --fs-ds-freemius-400: #1d4ed8;
+  --fs-ds-freemius-500: #2563eb;
+  --fs-ds-freemius-600: #1d4ed8;
+  --fs-ds-freemius-700: #1e40af;
+  --fs-ds-freemius-800: #0d2e57;
+  --fs-ds-freemius-900: #060f22;
+  --fs-ds-theme-primary-accent-color: #1d4ed8;
+  --fs-ds-theme-primary-accent-color-hover: #0d2e57;
+  --fs-ds-theme-background-color: #ffffff;
+  --fs-ds-theme-background-shade: #eef4fb;
+  --fs-ds-theme-background-accented: #e2eaf3;
+  --fs-ds-theme-background-hover: #e2eaf3;
+  --fs-ds-theme-background-dark: #0d2e57;
+  --fs-ds-theme-background-darkest: #0b1220;
+  --fs-ds-theme-text-color: #0b1220;
+  --fs-ds-theme-heading-text-color: #0d2e57;
+  --fs-ds-theme-muted-text-color: #3a4554;
+  --fs-ds-theme-dark-background-text-color: #ffffff;
+  --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+  --fs-ds-theme-divider-color: #e2eaf3;
+  --fs-ds-theme-border-color: #3d5a80;
+  --fs-ds-theme-control-border-color: #3d5a80;
+  --fs-ds-theme-control-border-hover-color: #1d4ed8;
+  --fs-ds-theme-control-border-active-color: #1d4ed8;
+  --fs-ds-theme-control-placeholder-color: #3a4554;
+  --fs-ds-theme-control-background-color: #ffffff;
+  --fs-ds-theme-control-text-color: #0b1220;
+  --fs-ds-theme-control-disabled-background-color: #e2eaf3;
+  --fs-ds-theme-control-disabled-color: #3a4554;
+  --fs-ds-theme-control-readonly-background-color: #eef4fb;
+  --fs-ds-theme-control-readonly-color: #3a4554;
+  --fs-ds-theme-button-background-color: #eef4fb;
+  --fs-ds-theme-button-background-hover-color: #dbe7f8;
+  --fs-ds-theme-button-background-active-color: #dbe7f8;
+  --fs-ds-theme-button-text-color: #0d2e57;
+  --fs-ds-theme-footer-background-color: #0d2e57;
+  --fs-ds-theme-footer-text-color: #e2eaf3;
+  --fs-ds-theme-footer-link-color: #dceaf8;
+  --fs-ds-theme-footer-control-border: #8aa0b8;
+  --fs-ds-theme-footer-control-border-hover: #dceaf8;
+  --fs-ds-theme-badge-color: #0d2e57;
+  --fs-ds-theme-badge-background-color: #e2eaf3;
+  --fs-ds-theme-switch-background-color: #e2eaf3;
+  --fs-ds-theme-switch-knob-color: #ffffff;
+  --fs-ds-theme-switch-border-color: #3d5a80;
+  --fs-ds-theme-upsell-text-color: #3a4554;
+  --fs-ds-theme-cart-header-background-color: #eef4fb;
+  --fs-ds-theme-cart-header-border-color: #3d5a80;
+  --fs-ds-theme-cart-header-footer-background-color: #e2eaf3;
+  --fs-ds-theme-error-color: #9f1239;
+  --fs-ds-theme-success-color: #3f6212;
   --fs-ds-appearance-radius: 6px;
   --fs-ds-appearance-border-radius: 6px;
+  --fs-ds-appearance-control-height: 44px;
+  --fs-ds-appearance-control-height-lg: 48px;
+  --fs-ds-appearance-control-height-sm: 44px;
+  --fs-ds-appearance-control-height-xs: 32px;
+  --fs-ds-appearance-signal-bar-button-size: 44px;
   --fs-ds-typography-font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
   --fs-ds-typography-font-family-body: "IBM Plex Sans", Inter, system-ui, sans-serif;
   --fs-ds-typography-font-family-heading: Inter, system-ui, sans-serif;
   font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  background-color: var(--fs-ds-theme-background-color);
+  color: var(--fs-ds-theme-text-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fs-ds-appearance-section-animation-duration: 0s;
+  }
 }
 
 :where(h1, h2, h3, h4, h5, h6, button) {
   font-family: Inter, system-ui, sans-serif;
+  color: var(--fs-ds-theme-heading-text-color);
+}
+
+h1 {
+  padding-bottom: 0.35rem;
+  border-bottom: 3px solid #2563eb;
+  border-image: linear-gradient(90deg, #2563eb 0%, #0891b2 55%, #65a30d 100%) 1;
+}
+
+a {
+  color: var(--fs-ds-theme-primary-accent-color);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--fs-ds-theme-primary-accent-color-hover);
+}
+
+input,
+select,
+textarea {
+  background-color: var(--fs-ds-theme-control-background-color);
+  color: var(--fs-ds-theme-control-text-color);
+  border-color: var(--fs-ds-theme-control-border-color);
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--fs-ds-theme-control-placeholder-color);
+  opacity: 1;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: #1d4ed8;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+button {
+  background-color: var(--fs-ds-theme-button-background-color);
+  color: var(--fs-ds-theme-button-text-color);
+  min-height: 44px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
 }
 
 html.mh-dark {
   color-scheme: dark;
+  --fs-ds-white-10: #ffffff;
+  --fs-ds-white-100: #ffffff;
   --fs-ds-theme-primary-accent-color: #93c5fd;
-  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-  --fs-ds-neutral-10: #172233;
-  --fs-ds-neutral-100: #243041;
-  --fs-ds-neutral-200: #3a4554;
-  --fs-ds-neutral-300: #6e7c8e;
-  --fs-ds-neutral-400: #a8b4c4;
-  --fs-ds-neutral-500: #c5d0de;
-  --fs-ds-neutral-600: #c5d0de;
-  --fs-ds-neutral-700: #e2eaf3;
-  --fs-ds-neutral-800: #eef3f9;
-  --fs-ds-neutral-900: #eef3f9;
-  --fs-ds-white-100: #0b1220;
+  --fs-ds-theme-primary-accent-color-hover: #dceaf8;
+  --fs-ds-theme-background-color: #0b1220;
+  --fs-ds-theme-background-shade: #141c28;
+  --fs-ds-theme-background-accented: #1c2838;
+  --fs-ds-theme-background-hover: #243041;
+  --fs-ds-theme-background-dark: #060f22;
+  --fs-ds-theme-background-darkest: #060f22;
+  --fs-ds-theme-text-color: #eef3f9;
+  --fs-ds-theme-heading-text-color: #ffffff;
+  --fs-ds-theme-muted-text-color: #c5d0de;
+  --fs-ds-theme-dark-background-text-color: #ffffff;
+  --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+  --fs-ds-theme-divider-color: #243041;
+  --fs-ds-theme-border-color: #8aa0b8;
+  --fs-ds-theme-control-border-color: #8aa0b8;
+  --fs-ds-theme-control-border-hover-color: #93c5fd;
+  --fs-ds-theme-control-border-active-color: #93c5fd;
+  --fs-ds-theme-control-placeholder-color: #c5d0de;
+  --fs-ds-theme-control-background-color: #141c28;
+  --fs-ds-theme-control-text-color: #eef3f9;
+  --fs-ds-theme-control-disabled-background-color: #1c2838;
+  --fs-ds-theme-control-disabled-color: #c5d0de;
+  --fs-ds-theme-control-readonly-background-color: #141c28;
+  --fs-ds-theme-control-readonly-color: #c5d0de;
+  --fs-ds-theme-button-background-color: #1c2838;
+  --fs-ds-theme-button-background-hover-color: #243041;
+  --fs-ds-theme-button-background-active-color: #243041;
+  --fs-ds-theme-button-text-color: #eef3f9;
+  --fs-ds-theme-footer-background-color: #0d2e57;
+  --fs-ds-theme-footer-text-color: #e2eaf3;
+  --fs-ds-theme-footer-link-color: #dceaf8;
+  --fs-ds-theme-footer-control-border: #8aa0b8;
+  --fs-ds-theme-footer-control-border-hover: #dceaf8;
+  --fs-ds-theme-badge-color: #eef3f9;
+  --fs-ds-theme-badge-background-color: #1c2838;
+  --fs-ds-theme-switch-background-color: #1c2838;
+  --fs-ds-theme-switch-knob-color: #eef3f9;
+  --fs-ds-theme-switch-border-color: #8aa0b8;
+  --fs-ds-theme-upsell-text-color: #c5d0de;
+  --fs-ds-theme-cart-header-background-color: #141c28;
+  --fs-ds-theme-cart-header-border-color: #8aa0b8;
+  --fs-ds-theme-cart-header-footer-background-color: #1c2838;
+  --fs-ds-theme-error-color: #fecaca;
+  --fs-ds-theme-success-color: #a3e635;
   background-color: #0b1220;
   color: #eef3f9;
+}
+
+html.mh-dark input:focus-visible,
+html.mh-dark select:focus-visible,
+html.mh-dark textarea:focus-visible,
+html.mh-dark button:focus-visible,
+html.mh-dark a:focus-visible {
+  outline-color: #93c5fd;
 }
 
 /* checkout.freemius.com does not get the html.mh-dark class, so follow the OS there. */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
+    --fs-ds-white-10: #ffffff;
+    --fs-ds-white-100: #ffffff;
     --fs-ds-theme-primary-accent-color: #93c5fd;
-    --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-    --fs-ds-neutral-10: #172233;
-    --fs-ds-neutral-100: #243041;
-    --fs-ds-neutral-200: #3a4554;
-    --fs-ds-neutral-300: #6e7c8e;
-    --fs-ds-neutral-400: #a8b4c4;
-    --fs-ds-neutral-500: #c5d0de;
-    --fs-ds-neutral-600: #c5d0de;
-    --fs-ds-neutral-700: #e2eaf3;
-    --fs-ds-neutral-800: #eef3f9;
-    --fs-ds-neutral-900: #eef3f9;
-    --fs-ds-white-100: #0b1220;
+    --fs-ds-theme-primary-accent-color-hover: #dceaf8;
+    --fs-ds-theme-background-color: #0b1220;
+    --fs-ds-theme-background-shade: #141c28;
+    --fs-ds-theme-background-accented: #1c2838;
+    --fs-ds-theme-background-hover: #243041;
+    --fs-ds-theme-background-dark: #060f22;
+    --fs-ds-theme-background-darkest: #060f22;
+    --fs-ds-theme-text-color: #eef3f9;
+    --fs-ds-theme-heading-text-color: #ffffff;
+    --fs-ds-theme-muted-text-color: #c5d0de;
+    --fs-ds-theme-dark-background-text-color: #ffffff;
+    --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+    --fs-ds-theme-divider-color: #243041;
+    --fs-ds-theme-border-color: #8aa0b8;
+    --fs-ds-theme-control-border-color: #8aa0b8;
+    --fs-ds-theme-control-border-hover-color: #93c5fd;
+    --fs-ds-theme-control-border-active-color: #93c5fd;
+    --fs-ds-theme-control-placeholder-color: #c5d0de;
+    --fs-ds-theme-control-background-color: #141c28;
+    --fs-ds-theme-control-text-color: #eef3f9;
+    --fs-ds-theme-control-disabled-background-color: #1c2838;
+    --fs-ds-theme-control-disabled-color: #c5d0de;
+    --fs-ds-theme-control-readonly-background-color: #141c28;
+    --fs-ds-theme-control-readonly-color: #c5d0de;
+    --fs-ds-theme-button-background-color: #1c2838;
+    --fs-ds-theme-button-background-hover-color: #243041;
+    --fs-ds-theme-button-background-active-color: #243041;
+    --fs-ds-theme-button-text-color: #eef3f9;
+    --fs-ds-theme-footer-background-color: #0d2e57;
+    --fs-ds-theme-footer-text-color: #e2eaf3;
+    --fs-ds-theme-footer-link-color: #dceaf8;
+    --fs-ds-theme-footer-control-border: #8aa0b8;
+    --fs-ds-theme-footer-control-border-hover: #dceaf8;
+    --fs-ds-theme-badge-color: #eef3f9;
+    --fs-ds-theme-badge-background-color: #1c2838;
+    --fs-ds-theme-switch-background-color: #1c2838;
+    --fs-ds-theme-switch-knob-color: #eef3f9;
+    --fs-ds-theme-switch-border-color: #8aa0b8;
+    --fs-ds-theme-upsell-text-color: #c5d0de;
+    --fs-ds-theme-cart-header-background-color: #141c28;
+    --fs-ds-theme-cart-header-border-color: #8aa0b8;
+    --fs-ds-theme-cart-header-footer-background-color: #1c2838;
+    --fs-ds-theme-error-color: #fecaca;
+    --fs-ds-theme-success-color: #a3e635;
+    background-color: #0b1220;
+    color: #eef3f9;
   }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline-color: #93c5fd;
+  }
+}
+
+/*
+ * Pay button. White on #2563eb is 5.17:1 and white on #1d4ed8 is 6.70:1.
+ * The stripe uses the illustration gradient and does not sit under the label.
+ * Selectors match Freemius so a later hover cannot swap in the light link color.
+ */
+button.fs-cta.fs-cta--appearance-primary:not(:disabled),
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover:not(:disabled),
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus:not(:disabled),
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):active:not(:disabled) {
+  background-color: #1d4ed8;
+  background-image:
+    linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%),
+    linear-gradient(90deg, #2563eb 0%, #0891b2 55%, #65a30d 100%);
+  background-repeat: no-repeat;
+  background-size: 100% calc(100% - 3px), 100% 3px;
+  background-position: bottom, top;
+  color: #ffffff;
+  border-color: #1d4ed8;
+}
+
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover:not(:disabled),
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus:not(:disabled) {
+  background-color: #1e40af;
+  background-image:
+    linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%),
+    linear-gradient(90deg, #2563eb 0%, #0891b2 55%, #65a30d 100%);
+  border-color: #1e40af;
+  color: #ffffff;
+}
+
+button.fs-cta.fs-cta--appearance-primary:not(:disabled) span {
+  background-color: transparent;
+  background-image: none;
+  color: #ffffff;
 }
