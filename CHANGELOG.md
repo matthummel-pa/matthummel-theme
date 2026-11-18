@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.58.3 — Payment recovery script is not delayed
+
+- LiteSpeed was rewriting the Freemius checkout script on the payment recovery page into a delayed tag, so the card form would not open on load. The script now uses the same `data-no-optimize` and `data-no-defer` marks as the dark-mode script.
+
 ## 3.58.2 — Payment recovery page no longer hangs
 
 - The Payment recovery template called `the_post()` with `@php()` and then opened a second `@php` block. Blade left the loop pointer unmoved, so the public page never finished. One `@php` block now advances the post and decides the copy.
