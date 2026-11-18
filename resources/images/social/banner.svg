@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
+  <title id="mhTitle">Matt Hummel</title>
+  <desc>X header. The lockup is centered so side crops still keep the name. 1500 by 500.</desc>
+  <style>
+      svg { max-width: 100%; height: auto; }
+      </style>
+  <defs>
+    <linearGradient id="mhLight" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="0.55" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#65a30d"/>
+    </linearGradient>
+  </defs>
+  <g><rect width="1500" height="500" fill="#f4f7fb"/>
+    <g transform="translate(423.2 140.0) scale(3.4375)"><g stroke="url(#mhLight)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke-width="1.75"/>
+      <path d="M14 46V22l9.5 12 9.5-12v24" stroke-width="2.25"/>
+      <path d="M40 22v24M52 22v24M40 34h12" stroke-width="2.25"/>
+    </g></g>
+    <text x="683.2" y="271.76" fill="#0d2e57" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="800" letter-spacing="-0.045em">Matt Hummel</text></g>
+</svg>
+

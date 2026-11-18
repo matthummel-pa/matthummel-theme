@@ -2,7 +2,8 @@
 
 ## 3.58.4 — Line logo
 
-- The MH mark and the Matt Hummel lockup (`resources/images/logo-mark.svg`, `logo.svg`) are line drawings. The stroke runs blue to teal to green, the same stops as the page illustrations. `logo-dark.svg` uses the brighter dark-mode stops and light type, for a dark background. The header is still the text wordmark.
+- The MH mark and the Matt Hummel lockup (`resources/images/logo-mark.svg`, `logo.svg`) are line drawings that scale with their box. The stroke runs blue to teal to green, the same stops as the page illustrations. In a browser they switch to the brighter dark-mode stops when the system is in dark mode. `logo-dark.svg` is that dark lockup with no color-scheme query.
+- Social files are in `resources/images/social/`. They keep a fixed aspect ratio and scale down the same way. `avatar.svg` is the square profile, drawn inside the circle crop, for GitHub, X, Instagram, LinkedIn, and Facebook. `share.svg` is 1200×630 for a link preview. `banner.svg` is 1500×500 for an X header. `cover.svg` is 1584×396 for a LinkedIn or Facebook cover. Each has a `-dark.svg` twin for a dark profile. The header is still the text wordmark.
 
 ## 3.58.3 — Payment recovery script is not delayed
 

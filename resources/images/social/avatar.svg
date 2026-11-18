@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
+  <title id="mhTitle">Matt Hummel</title>
+  <desc>Profile image for GitHub, X, Instagram, LinkedIn, and Facebook. The mark sits inside the circle crop. 1:1.</desc>
+  <style>
+      svg { max-width: 100%; height: auto; }
+      </style>
+  <defs>
+    <linearGradient id="mhLight" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="0.55" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#65a30d"/>
+    </linearGradient>
+  </defs>
+  <g><rect width="1080" height="1080" fill="#f4f7fb"/>
+    <g transform="translate(190.0 190.0) scale(10.9375)"><g stroke="url(#mhLight)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke-width="1.75"/>
+      <path d="M14 46V22l9.5 12 9.5-12v24" stroke-width="2.25"/>
+      <path d="M40 22v24M52 22v24M40 34h12" stroke-width="2.25"/>
+    </g></g></g>
+</svg>
+
