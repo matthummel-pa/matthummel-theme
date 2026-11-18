@@ -17,9 +17,28 @@
     @endphp
     @include('partials.page-header')
     <div class="container measure page-block">
+      <p id="mh-recovery-status" role="status" hidden data-done="{{ __('Your card is saved. Freemius will try the charge again and email you the result.', 'sage') }}"></p>
+      {{-- This has to run before the checkout script, including a script pasted into the page body. --}}
+      <script>
+        window.FS = window.FS || {};
+        window.FS.paymentMethodUpdateEvents = {
+          success: function () {
+            var note = document.getElementById('mh-recovery-status');
+            if (!note) {
+              return;
+            }
+            note.hidden = false;
+            note.textContent = note.getAttribute('data-done') || '';
+          }
+        };
+      </script>
       @if ($recoveryVisible === '')
-        <p>{{ __('This page is for a theme payment that did not go through. The form lets you update your card. I never see the card number.', 'sage') }}</p>
-        <p>{{ __('If the form does not open, write to me at hello@matthummel.com. I reply within one business day, Eastern Time.', 'sage') }}</p>
+        <p>{{ __('This license payment did not go through. The form puts a new card on file. I never see the card number.', 'sage') }}</p>
+        <p>{{ __('Freemius will try the charge again with the new card and email you the result.', 'sage') }}</p>
+        <p>
+          {{ __('If the form does not open, email me. I reply within one business day, Eastern Time.', 'sage') }}
+          <a href="{{ esc_url('mailto:hello@matthummel.com') }}">hello@matthummel.com</a>
+        </p>
       @else
         @include('partials.content-page')
       @endif

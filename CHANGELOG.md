@@ -2,7 +2,10 @@
 
 ## 3.58.4 — Checkout text is readable
 
-- Freemius checkout type, buttons, fields, and links keep WCAG 2.2 AA contrast in the light checkout and in dark mode. The dark scheme was painting near-white words on a white page, because one token is both the page color and the text on a dark panel. Navy, blue, Inter, and IBM Plex stay.
+- Freemius checkout type, buttons, fields, and links keep WCAG 2.2 AA contrast in the light checkout and in dark mode. The dark scheme was painting near-white words on a white page, because one token is both the page color and the text on a dark panel.
+- The form uses navy, blue, Inter, and IBM Plex. The pay button is blue with white type. A thin blue-to-teal-to-green stripe sits on the button. Teal and green are not used as text colors, because white type on those fills fails contrast.
+- Checkout tells the buyer it is a yearly license, that Freemius emails the receipt and key, and that the renewal total and the existing 30-day defect refund are shown. Prices, trials, and the success redirect are unchanged.
+- The payment recovery page says the charge failed, that a new card is saved, and that Freemius retries and emails the result. A saved card shows a short confirmation. The fallback email is hello@matthummel.com.
 
 ## 3.58.3 — Payment recovery script is not delayed
 
