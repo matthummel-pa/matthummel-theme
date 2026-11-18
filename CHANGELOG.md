@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.58.2 — Payment recovery page no longer hangs
+
+- The Payment recovery template called `the_post()` with `@php()` and then opened a second `@php` block. Blade left the loop pointer unmoved, so the public page never finished. One `@php` block now advances the post and decides the copy.
+
 ## 3.58.1 — Freemius checkout colors and a payment recovery template
 
 - Checkout custom CSS for the Cobble & Candle plan lives in `resources/css/freemius-checkout.css`. Freemius loads that file from an HTTPS URL (Plans → Customization). It is not part of the site bundle. Colors follow the navy, blue, and gray palette. Headings use Inter and body text uses IBM Plex Sans. Dark colors apply under `html.mh-dark` and, on the Freemius checkout host, when the operating system is in dark mode.
