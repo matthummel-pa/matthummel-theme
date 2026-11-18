@@ -1,22 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500.0 500.0" width="1500.0" height="500.0" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
   <title id="mhTitle">Matt Hummel</title>
-  <desc>X header. The lockup is centered so side crops still keep the name. 1500 by 500.</desc>
+  <desc>X header, 1500 by 500. The name stays centered.</desc>
   <style>
       svg { max-width: 100%; height: auto; }
-      </style>
+    </style>
   <defs>
-    <linearGradient id="mhLight" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+    <linearGradient id="mhLight" x1="0" y1="0" x2="668.0" y2="0" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#2563eb"/>
       <stop offset="0.55" stop-color="#0891b2"/>
       <stop offset="1" stop-color="#65a30d"/>
     </linearGradient>
   </defs>
-  <g><rect width="1500" height="500" fill="#f4f7fb"/>
-    <g transform="translate(423.2 140.0) scale(3.4375)"><g stroke="url(#mhLight)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke-width="1.75"/>
-      <path d="M14 46V22l9.5 12 9.5-12v24" stroke-width="2.25"/>
-      <path d="M40 22v24M52 22v24M40 34h12" stroke-width="2.25"/>
+  <rect width="1500" height="500" fill="#f4f7fb"/>
+  <g transform="translate(225.0 161.98) scale(1.57)"><g fill="none" stroke="url(#mhLight)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 18.0 96 V 16 L 44.0 56 L 70.0 16 V 96"/>
+      <path d="M 140.0 44.0 V 96"/>
+      <path d="M 140.0 64.0 A 20 20 0 1 0 140.0 64.02"/>
+      <path d="M 158.0 50 H 222.0"/>
+      <path d="M 174.0 24 V 82 Q 174.0 96 188.0 96"/>
+      <path d="M 206.0 24 V 82 Q 206.0 96 220.0 96"/>
+      <path d="M 258.0 16 V 96"/>
+      <path d="M 302.0 16 V 96"/>
+      <path d="M 258.0 62 H 302.0"/>
+      <path d="M 330.0 44 V 72 Q 330.0 96 350.0 96 Q 370.0 96 370.0 72 V 44"/>
+      <path d="M 394.0 96 V 52.0 Q 394.0 44 408.0 44 Q 422.0 44 422.0 62.0 V 96 M 422.0 64.0 Q 422.0 44 436.0 44 Q 450.0 44 450.0 62.0 V 96"/>
+      <path d="M 474.0 96 V 52.0 Q 474.0 44 488.0 44 Q 502.0 44 502.0 62.0 V 96 M 502.0 64.0 Q 502.0 44 516.0 44 Q 530.0 44 530.0 62.0 V 96"/>
+      <path d="M 562 44 V 96 M 562 44 H 600 M 562 70 H 618 M 562 96 H 604"/>
+      <path d="M 634.0 16 V 82 Q 634.0 96 648.0 96"/>
     </g></g>
-    <text x="683.2" y="271.76" fill="#0d2e57" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="800" letter-spacing="-0.045em">Matt Hummel</text></g>
 </svg>
-

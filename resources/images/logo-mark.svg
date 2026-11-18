@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 308.0 180.0" width="308.0" height="180.0" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mhTitle">
   <title id="mhTitle">Matt Hummel</title>
-  <desc>Square MH mark. Scales with its box. Brighter strokes when the system is in dark mode.</desc>
+  <desc>MH in the same drawn letters as the name.</desc>
   <style>
       svg { max-width: 100%; height: auto; }
       .mh-on-dark { display: none; }
@@ -10,25 +10,27 @@
       }
     </style>
   <defs>
-    <linearGradient id="mhLight" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+    <linearGradient id="mhLight" x1="0" y1="0" x2="308.0" y2="0" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#2563eb"/>
       <stop offset="0.55" stop-color="#0891b2"/>
       <stop offset="1" stop-color="#65a30d"/>
     </linearGradient>
-    <linearGradient id="mhDark" x1="6" y1="8" x2="58" y2="56" gradientUnits="userSpaceOnUse">
+    <linearGradient id="mhDark" x1="0" y1="0" x2="308.0" y2="0" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#3b82f6"/>
       <stop offset="0.55" stop-color="#22d3ee"/>
       <stop offset="1" stop-color="#a3e635"/>
     </linearGradient>
   </defs>
-  <g class="mh-on-light"><g stroke="url(#mhLight)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke-width="1.75"/>
-      <path d="M14 46V22l9.5 12 9.5-12v24" stroke-width="2.25"/>
-      <path d="M40 22v24M52 22v24M40 34h12" stroke-width="2.25"/>
+  <g class="mh-on-light"><g fill="none" stroke="url(#mhLight)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 22 156 V 24 L 86 98 L 150 24 V 156"/>
+      <path d="M 186 24 V 156"/>
+      <path d="M 286 24 V 156"/>
+      <path d="M 186 90 H 286"/>
     </g></g>
-  <g class="mh-on-dark"><g stroke="url(#mhDark)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="16" stroke-width="1.75"/>
-      <path d="M14 46V22l9.5 12 9.5-12v24" stroke-width="2.25"/>
-      <path d="M40 22v24M52 22v24M40 34h12" stroke-width="2.25"/>
+  <g class="mh-on-dark"><g fill="none" stroke="url(#mhDark)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 22 156 V 24 L 86 98 L 150 24 V 156"/>
+      <path d="M 186 24 V 156"/>
+      <path d="M 286 24 V 156"/>
+      <path d="M 186 90 H 286"/>
     </g></g>
 </svg>
