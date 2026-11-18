@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.58.4 — Checkout text is readable
+
+- Freemius checkout type, buttons, fields, and links keep WCAG 2.2 AA contrast in the light checkout and in dark mode. The dark scheme was painting near-white words on a white page, because one token is both the page color and the text on a dark panel. Navy, blue, Inter, and IBM Plex stay.
+
 ## 3.58.3 — Payment recovery script is not delayed
 
 - LiteSpeed was rewriting the Freemius checkout script on the payment recovery page into a delayed tag, so the card form would not open on load. The script now uses the same `data-no-optimize` and `data-no-defer` marks as the dark-mode script.

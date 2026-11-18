@@ -4,7 +4,7 @@ What the 3.x Sage theme does, and where it lives.
 
 WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product page, and the shop listing is `template-shop.blade.php`. Notes below about the WooCommerce cart, checkout, My Account desk, shop archive and download delivery were removed with the code.
 
-Freemius checkout colors (3.58.1) live in `resources/css/freemius-checkout.css` (navy, blue, gray, Inter, IBM Plex, `html.mh-dark`). Freemius loads that file by URL. It is not imported into `app.css`. The Payment recovery template (`template-payment-recovery.blade.php`) is the page for failed-payment emails and prints `https://checkout.freemius.com/js/v1/` when the page body does not already include it.
+Freemius checkout colors live in `resources/css/freemius-checkout.css` (navy, blue, gray, Inter, IBM Plex, `html.mh-dark`). Text, buttons, fields, and links stay readable in the light checkout and in dark mode (3.58.4). Freemius loads that file by URL. It is not imported into `app.css`. The Payment recovery template (`template-payment-recovery.blade.php`) is the page for failed-payment emails and prints `https://checkout.freemius.com/js/v1/` when the page body does not already include it.
 
 ## Editor’s notes (3.57.0 motion pass)
 

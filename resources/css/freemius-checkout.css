@@ -6,90 +6,278 @@
  * Colors and type match the theme: navy #0d2e57, blue #4f8fd4, gray scale,
  * Inter for headings, IBM Plex Sans for body. Dark colors follow html.mh-dark
  * and, on checkout.freemius.com where that class is absent, the OS dark scheme.
+ *
+ * The checkout uses one token for two jobs (neutral-800 is both heading text
+ * and the dark footer; white-10 is both the page and the text on a dark panel).
+ * Theme tokens below are real colors, so a dark scheme cannot turn the words
+ * light and leave the page white.
  */
 
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@600;700;800;900&display=swap");
 
 :root {
   color-scheme: light;
-  --fs-ds-theme-primary-accent-color: #0d2e57;
-  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-  --fs-ds-freemius-100: #dceaf8;
-  --fs-ds-freemius-200: #bdd6f0;
-  --fs-ds-freemius-300: #93c5fd;
-  --fs-ds-freemius-400: #4f8fd4;
-  --fs-ds-freemius-500: #1a6bb5;
-  --fs-ds-freemius-600: #0d2e57;
-  --fs-ds-freemius-700: #0a2446;
-  --fs-ds-freemius-800: #0d2e57;
-  --fs-ds-freemius-900: #060f22;
-  --fs-ds-blue-100: #dceaf8;
-  --fs-ds-blue-200: #bdd6f0;
-  --fs-ds-blue-300: #93c5fd;
-  --fs-ds-blue-400: #4f8fd4;
-  --fs-ds-blue-500: #1a6bb5;
-  --fs-ds-blue-600: #0d2e57;
-  --fs-ds-blue-700: #0a2446;
-  --fs-ds-blue-800: #0d2e57;
-  --fs-ds-blue-900: #060f22;
+  --fs-ds-white-10: #ffffff;
+  --fs-ds-white-100: #ffffff;
   --fs-ds-neutral-10: #eef3f9;
+  --fs-ds-neutral-50: #e2eaf3;
   --fs-ds-neutral-100: #e2eaf3;
-  --fs-ds-neutral-200: #cfd9e6;
-  --fs-ds-neutral-300: #a8b6c8;
-  --fs-ds-neutral-400: #6e7c8e;
-  --fs-ds-neutral-500: #4f5c6e;
+  --fs-ds-neutral-200: #c5d0de;
+  --fs-ds-neutral-300: #5c6b7e;
+  --fs-ds-neutral-400: #3a4554;
+  --fs-ds-neutral-500: #3a4554;
   --fs-ds-neutral-600: #3a4554;
   --fs-ds-neutral-700: #243041;
   --fs-ds-neutral-800: #141c28;
   --fs-ds-neutral-900: #0b1220;
-  --fs-ds-white-100: #ffffff;
+  --fs-ds-neutral-900-fade-60: rgba(11, 18, 32, 0.6);
+  --fs-ds-neutral-900-fade-92: rgba(11, 18, 32, 0.08);
+  --fs-ds-blue-10: #eef4fb;
+  --fs-ds-blue-50: #d4e4f5;
+  --fs-ds-blue-100: #b7d0ee;
+  --fs-ds-blue-200: #8bb8e4;
+  --fs-ds-blue-300: #4f8fd4;
+  --fs-ds-blue-400: #1a5cad;
+  --fs-ds-blue-500: #0d2e57;
+  --fs-ds-blue-600: #1a5cad;
+  --fs-ds-blue-700: #0a2446;
+  --fs-ds-blue-800: #081c36;
+  --fs-ds-blue-900: #060f22;
+  --fs-ds-freemius-100: #dceaf8;
+  --fs-ds-freemius-200: #b7d0ee;
+  --fs-ds-freemius-300: #4f8fd4;
+  --fs-ds-freemius-400: #1a5cad;
+  --fs-ds-freemius-500: #0d2e57;
+  --fs-ds-freemius-600: #0a2446;
+  --fs-ds-freemius-700: #081c36;
+  --fs-ds-freemius-800: #0d2e57;
+  --fs-ds-freemius-900: #060f22;
+  --fs-ds-theme-primary-accent-color: #0d2e57;
+  --fs-ds-theme-primary-accent-color-hover: #1a5cad;
+  --fs-ds-theme-background-color: #ffffff;
+  --fs-ds-theme-background-shade: #eef3f9;
+  --fs-ds-theme-background-accented: #e2eaf3;
+  --fs-ds-theme-background-hover: #e2eaf3;
+  --fs-ds-theme-background-dark: #0d2e57;
+  --fs-ds-theme-background-darkest: #0b1220;
+  --fs-ds-theme-text-color: #0b1220;
+  --fs-ds-theme-heading-text-color: #141c28;
+  --fs-ds-theme-muted-text-color: #3a4554;
+  --fs-ds-theme-dark-background-text-color: #ffffff;
+  --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+  --fs-ds-theme-divider-color: #e2eaf3;
+  --fs-ds-theme-border-color: #5f7590;
+  --fs-ds-theme-control-border-color: #5f7590;
+  --fs-ds-theme-control-border-hover-color: #0d2e57;
+  --fs-ds-theme-control-border-active-color: #0d2e57;
+  --fs-ds-theme-control-placeholder-color: #3a4554;
+  --fs-ds-theme-control-background-color: #ffffff;
+  --fs-ds-theme-control-text-color: #0b1220;
+  --fs-ds-theme-control-disabled-background-color: #e2eaf3;
+  --fs-ds-theme-control-disabled-color: #3a4554;
+  --fs-ds-theme-control-readonly-background-color: #eef3f9;
+  --fs-ds-theme-control-readonly-color: #3a4554;
+  --fs-ds-theme-button-background-color: #e2eaf3;
+  --fs-ds-theme-button-background-hover-color: #c5d0de;
+  --fs-ds-theme-button-background-active-color: #c5d0de;
+  --fs-ds-theme-button-text-color: #0b1220;
+  --fs-ds-theme-footer-background-color: #0d2e57;
+  --fs-ds-theme-footer-text-color: #e2eaf3;
+  --fs-ds-theme-footer-link-color: #dceaf8;
+  --fs-ds-theme-footer-control-border: #8aa0b8;
+  --fs-ds-theme-footer-control-border-hover: #dceaf8;
+  --fs-ds-theme-badge-color: #0b1220;
+  --fs-ds-theme-badge-background-color: #e2eaf3;
+  --fs-ds-theme-switch-background-color: #e2eaf3;
+  --fs-ds-theme-switch-knob-color: #ffffff;
+  --fs-ds-theme-switch-border-color: #5f7590;
+  --fs-ds-theme-upsell-text-color: #3a4554;
+  --fs-ds-theme-cart-header-background-color: #eef3f9;
+  --fs-ds-theme-cart-header-border-color: #5f7590;
+  --fs-ds-theme-cart-header-footer-background-color: #e2eaf3;
   --fs-ds-appearance-radius: 6px;
   --fs-ds-appearance-border-radius: 6px;
   --fs-ds-typography-font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
   --fs-ds-typography-font-family-body: "IBM Plex Sans", Inter, system-ui, sans-serif;
   --fs-ds-typography-font-family-heading: Inter, system-ui, sans-serif;
   font-family: "IBM Plex Sans", Inter, system-ui, sans-serif;
+  background-color: var(--fs-ds-theme-background-color);
+  color: var(--fs-ds-theme-text-color);
 }
 
 :where(h1, h2, h3, h4, h5, h6, button) {
   font-family: Inter, system-ui, sans-serif;
+  color: var(--fs-ds-theme-heading-text-color);
+}
+
+a {
+  color: var(--fs-ds-theme-primary-accent-color);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--fs-ds-theme-primary-accent-color-hover);
+}
+
+input,
+select,
+textarea {
+  background-color: var(--fs-ds-theme-control-background-color);
+  color: var(--fs-ds-theme-control-text-color);
+  border-color: var(--fs-ds-theme-control-border-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--fs-ds-theme-control-placeholder-color);
+  opacity: 1;
+}
+
+button {
+  background-color: var(--fs-ds-theme-button-background-color);
+  color: var(--fs-ds-theme-button-text-color);
+}
+
+button.fs-cta.fs-cta--appearance-primary:not(:disabled),
+button.fs-cta.fs-cta--appearance-primary:not(:disabled) span {
+  background-color: var(--fs-ds-theme-primary-accent-color);
+  color: var(--fs-ds-theme-dark-background-text-color);
+}
+
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover,
+button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus-visible {
+  background-color: var(--fs-ds-theme-primary-accent-color-hover);
+  color: #ffffff;
 }
 
 html.mh-dark {
   color-scheme: dark;
+  --fs-ds-white-10: #ffffff;
+  --fs-ds-white-100: #ffffff;
   --fs-ds-theme-primary-accent-color: #93c5fd;
-  --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-  --fs-ds-neutral-10: #172233;
-  --fs-ds-neutral-100: #243041;
-  --fs-ds-neutral-200: #3a4554;
-  --fs-ds-neutral-300: #6e7c8e;
-  --fs-ds-neutral-400: #a8b4c4;
-  --fs-ds-neutral-500: #c5d0de;
-  --fs-ds-neutral-600: #c5d0de;
-  --fs-ds-neutral-700: #e2eaf3;
-  --fs-ds-neutral-800: #eef3f9;
-  --fs-ds-neutral-900: #eef3f9;
-  --fs-ds-white-100: #0b1220;
+  --fs-ds-theme-primary-accent-color-hover: #dceaf8;
+  --fs-ds-theme-background-color: #0b1220;
+  --fs-ds-theme-background-shade: #141c28;
+  --fs-ds-theme-background-accented: #1c2838;
+  --fs-ds-theme-background-hover: #243041;
+  --fs-ds-theme-background-dark: #060f22;
+  --fs-ds-theme-background-darkest: #060f22;
+  --fs-ds-theme-text-color: #eef3f9;
+  --fs-ds-theme-heading-text-color: #ffffff;
+  --fs-ds-theme-muted-text-color: #c5d0de;
+  --fs-ds-theme-dark-background-text-color: #eef3f9;
+  --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+  --fs-ds-theme-divider-color: #243041;
+  --fs-ds-theme-border-color: #8aa0b8;
+  --fs-ds-theme-control-border-color: #8aa0b8;
+  --fs-ds-theme-control-border-hover-color: #93c5fd;
+  --fs-ds-theme-control-border-active-color: #93c5fd;
+  --fs-ds-theme-control-placeholder-color: #c5d0de;
+  --fs-ds-theme-control-background-color: #141c28;
+  --fs-ds-theme-control-text-color: #eef3f9;
+  --fs-ds-theme-control-disabled-background-color: #1c2838;
+  --fs-ds-theme-control-disabled-color: #c5d0de;
+  --fs-ds-theme-control-readonly-background-color: #141c28;
+  --fs-ds-theme-control-readonly-color: #c5d0de;
+  --fs-ds-theme-button-background-color: #1c2838;
+  --fs-ds-theme-button-background-hover-color: #243041;
+  --fs-ds-theme-button-background-active-color: #243041;
+  --fs-ds-theme-button-text-color: #eef3f9;
+  --fs-ds-theme-footer-background-color: #060f22;
+  --fs-ds-theme-footer-text-color: #e2eaf3;
+  --fs-ds-theme-footer-link-color: #dceaf8;
+  --fs-ds-theme-footer-control-border: #8aa0b8;
+  --fs-ds-theme-footer-control-border-hover: #dceaf8;
+  --fs-ds-theme-badge-color: #eef3f9;
+  --fs-ds-theme-badge-background-color: #1c2838;
+  --fs-ds-theme-switch-background-color: #1c2838;
+  --fs-ds-theme-switch-knob-color: #eef3f9;
+  --fs-ds-theme-switch-border-color: #8aa0b8;
+  --fs-ds-theme-upsell-text-color: #c5d0de;
+  --fs-ds-theme-cart-header-background-color: #141c28;
+  --fs-ds-theme-cart-header-border-color: #8aa0b8;
+  --fs-ds-theme-cart-header-footer-background-color: #1c2838;
   background-color: #0b1220;
   color: #eef3f9;
+}
+
+/* The pay button must stay a solid blue with light type. The link color is a lighter blue, and sharing that token would put light type on a light button. */
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled),
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled) span,
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover,
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus-visible {
+  background-color: #1a5cad;
+  color: #ffffff;
+}
+
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover,
+html.mh-dark button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus-visible {
+  background-color: #0552b5;
 }
 
 /* checkout.freemius.com does not get the html.mh-dark class, so follow the OS there. */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
+    --fs-ds-white-10: #ffffff;
+    --fs-ds-white-100: #ffffff;
     --fs-ds-theme-primary-accent-color: #93c5fd;
-    --fs-ds-theme-primary-accent-color-hover: #4f8fd4;
-    --fs-ds-neutral-10: #172233;
-    --fs-ds-neutral-100: #243041;
-    --fs-ds-neutral-200: #3a4554;
-    --fs-ds-neutral-300: #6e7c8e;
-    --fs-ds-neutral-400: #a8b4c4;
-    --fs-ds-neutral-500: #c5d0de;
-    --fs-ds-neutral-600: #c5d0de;
-    --fs-ds-neutral-700: #e2eaf3;
-    --fs-ds-neutral-800: #eef3f9;
-    --fs-ds-neutral-900: #eef3f9;
-    --fs-ds-white-100: #0b1220;
+    --fs-ds-theme-primary-accent-color-hover: #dceaf8;
+    --fs-ds-theme-background-color: #0b1220;
+    --fs-ds-theme-background-shade: #141c28;
+    --fs-ds-theme-background-accented: #1c2838;
+    --fs-ds-theme-background-hover: #243041;
+    --fs-ds-theme-background-dark: #060f22;
+    --fs-ds-theme-background-darkest: #060f22;
+    --fs-ds-theme-text-color: #eef3f9;
+    --fs-ds-theme-heading-text-color: #ffffff;
+    --fs-ds-theme-muted-text-color: #c5d0de;
+    --fs-ds-theme-dark-background-text-color: #eef3f9;
+    --fs-ds-theme-dark-background-muted-text-color: #c5d0de;
+    --fs-ds-theme-divider-color: #243041;
+    --fs-ds-theme-border-color: #8aa0b8;
+    --fs-ds-theme-control-border-color: #8aa0b8;
+    --fs-ds-theme-control-border-hover-color: #93c5fd;
+    --fs-ds-theme-control-border-active-color: #93c5fd;
+    --fs-ds-theme-control-placeholder-color: #c5d0de;
+    --fs-ds-theme-control-background-color: #141c28;
+    --fs-ds-theme-control-text-color: #eef3f9;
+    --fs-ds-theme-control-disabled-background-color: #1c2838;
+    --fs-ds-theme-control-disabled-color: #c5d0de;
+    --fs-ds-theme-control-readonly-background-color: #141c28;
+    --fs-ds-theme-control-readonly-color: #c5d0de;
+    --fs-ds-theme-button-background-color: #1c2838;
+    --fs-ds-theme-button-background-hover-color: #243041;
+    --fs-ds-theme-button-background-active-color: #243041;
+    --fs-ds-theme-button-text-color: #eef3f9;
+    --fs-ds-theme-footer-background-color: #060f22;
+    --fs-ds-theme-footer-text-color: #e2eaf3;
+    --fs-ds-theme-footer-link-color: #dceaf8;
+    --fs-ds-theme-footer-control-border: #8aa0b8;
+    --fs-ds-theme-footer-control-border-hover: #dceaf8;
+    --fs-ds-theme-badge-color: #eef3f9;
+    --fs-ds-theme-badge-background-color: #1c2838;
+    --fs-ds-theme-switch-background-color: #1c2838;
+    --fs-ds-theme-switch-knob-color: #eef3f9;
+    --fs-ds-theme-switch-border-color: #8aa0b8;
+    --fs-ds-theme-upsell-text-color: #c5d0de;
+    --fs-ds-theme-cart-header-background-color: #141c28;
+    --fs-ds-theme-cart-header-border-color: #8aa0b8;
+    --fs-ds-theme-cart-header-footer-background-color: #1c2838;
+    background-color: #0b1220;
+    color: #eef3f9;
+  }
+
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled),
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled) span,
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover,
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus-visible {
+    background-color: #1a5cad;
+    color: #ffffff;
+  }
+
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled):hover,
+  button.fs-cta.fs-cta--appearance-primary:not(:disabled):focus-visible {
+    background-color: #0552b5;
   }
 }
