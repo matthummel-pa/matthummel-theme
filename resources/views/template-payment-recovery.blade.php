@@ -24,7 +24,8 @@
         @include('partials.content-page')
       @endif
       @if (! $recoveryHasScript)
-        <script src="https://checkout.freemius.com/js/v1/"></script>
+        {{-- data-no-optimize / data-no-defer: LiteSpeed would otherwise hold this until a tap, and the card form would not open. --}}
+        <script src="https://checkout.freemius.com/js/v1/" data-no-optimize="1" data-no-defer="1" data-cfasync="false"></script>
       @endif
     </div>
   @endwhile
