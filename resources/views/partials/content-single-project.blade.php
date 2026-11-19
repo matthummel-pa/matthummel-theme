@@ -45,6 +45,10 @@
     : [];
   $tagline = trim((string) get_post_meta($postId, '_mh_project_brand_tagline', true));
   $projectSlug = (string) ($card['slug'] ?? get_post_field('post_name', $postId));
+  $product = \App\mh_product_entry($postId);
+  $demoTasks = (array) ($product['demo_tasks'] ?? []);
+  $setupGuidePath = (string) ($product['setup_guide_path'] ?? '');
+  $setupGuideUrl = $setupGuidePath !== '' ? home_url($setupGuidePath) : '';
   $permalink = (string) get_permalink($postId);
   $buyUrl = (string) ($card['buy_url'] ?? '');
   $buyLabel = (string) ($card['buy_label'] ?? '');
@@ -115,6 +119,16 @@
             {{ __('Ask about this', 'sage') }}
           </a>
         </div>
+        @if ($demo !== '' && $demoTasks !== [])
+          <div class="project-hero-stats">
+            <p><strong>{{ __('Try these in the demo', 'sage') }}</strong></p>
+            <ul>
+              @foreach ($demoTasks as $task)
+                <li>{{ $task }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
         @if ($proof !== [])
           <div class="project-hero-stats">
             <ul class="project-proof" aria-label="{{ __('At a glance', 'sage') }}">
@@ -494,6 +508,11 @@
             </li>
           @endforeach
         </ol>
+        @if ($setupGuideUrl !== '')
+          <p class="project-section__intro">
+            <a href="{{ esc_url($setupGuideUrl) }}">{{ __('Read the full setup guide', 'sage') }}</a>
+          </p>
+        @endif
       </section>
     @endif
 
