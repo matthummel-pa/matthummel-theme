@@ -203,6 +203,12 @@
       ]
     ],
     "demo": "https://cobbleandcandle.matthummel.com/",
+    "demo_tasks": [
+      "Check today's hours and see when the restaurant opens next.",
+      "Open the menu and try a dietary filter.",
+      "Open the table request form and look through the available times."
+    ],
+    "setup_guide_path": "/cobble-candle-setup-guide/",
     "freemius": {
       "store_id": "21514",
       "product_id": "42939",
