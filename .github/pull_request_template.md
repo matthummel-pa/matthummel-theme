@@ -25,4 +25,4 @@
 
 ## After merge
 
-Merge publishes `theme-latest`. Live site updates only after **Appearance → Update Theme** and a cache purge.
+Merge deploys over SSH to https://matthummel.com (health check, rollback). Do not install the zip on a staging copy.

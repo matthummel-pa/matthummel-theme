@@ -12,41 +12,18 @@ PHP on the build runner must be 8.3 (see `composer.json`). Production Hostinger 
 
 Optional on the server after install: `wp acorn view:clear`.
 
-## How this repo ships (no FTP)
+## How this repo ships
 
-GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`:
+GitHub Actions (`.github/workflows/deploy.yml`) on a push to `main` that changes the theme:
 
-1. Builds Sage (Composer + Vite)
-2. Zips the theme as `matthummel.zip` (folder `matthummel/` at the zip root)
-3. Publishes it to the GitHub Release **`theme-latest`**
+1. Builds Sage (Composer + Vite) and runs Pint
+2. Packs the theme (folder `matthummel/` at the zip root, `vendor/` and `public/build/` included)
+3. Copies the zip over SSH and swaps `wp-content/themes/matthummel/` on the live site
+4. Checks the homepage, REST API, and theme CSS, and swaps the previous folder back if that fails
+5. Publishes the same zip to the GitHub Release **`theme-latest`** as the rollback copy
 
-Production WordPress is **[matthummel.com](https://matthummel.com)** on Hostinger.
+The live site is **[matthummel.com](https://matthummel.com)**. Database, posts, and uploads stay put. PHP **8.3+** is required. Sage 11 / Acorn 6 fatals on 8.2.
 
-### Install on the live site (HTTPS)
+A deploy in progress is not cancelled (`concurrency: production-deploy`).
 
-On matthummel.com wp-admin:
-
-1. Fine-grained PAT scoped to `matthummel-theme` with **Contents: Read**
-2. Appearance → Update Theme → paste token → Save
-3. **Install latest zip from GitHub**
-
-WordPress downloads the zip and overwrites `wp-content/themes/matthummel/`. Database, posts, and uploads stay put.
-
-WP-CLI: `wp mh theme-update` (install zip). Rebuild only: `wp mh theme-build`.
-
-Optional constant: `MH_GITHUB_TOKEN` in wp-config.php.
-
-After install, purge LiteSpeed cache in hPanel (or Hostinger MCP) so HTML is not stuck on old Vite hashes.
-
-### Hostinger File Manager (also no FTP)
-
-If the updater PHP is not on the server yet:
-
-1. Open the [theme-latest release](https://github.com/matthummel-pa/matthummel-theme/releases/tag/theme-latest)
-2. Download `matthummel.zip`
-3. hPanel → File Manager → `wp-content/themes/`
-4. Upload and extract so `matthummel/style.css` sits in that folder (replace the old theme files)
-
-PHP **8.3+** is required. Sage 11 / Acorn 6 fatals on 8.2.
-
-A second in-progress deploy is cancelled (`concurrency: hostinger-theme-release`).
+SSH host, port, user, key, and the WordPress path are GitHub `production` environment secrets. Repo variables are `SITE_URL` and `THEME_SLUG`. Do not put those values in the repo, and do not install the zip through hPanel or a staging copy.
