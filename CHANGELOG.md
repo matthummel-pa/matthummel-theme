@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.58.6 — Footer signup panel, no footer RSS icon
+
+- The Get updates form in the footer sits in its own panel with more padding, a clearer heading and intro, a larger label, a full-width pill email field, and a full-width Subscribe button. The success and error message use the same panel style. Contrast stays above 4.5:1 for text and 3:1 for the field border.
+- The footer social row no longer shows the RSS icon. The feed is still linked in the header and on posts.
+
 ## 3.58.5 — Payment recovery page stays out of search
 
 - The Payment recovery page is a card-update screen that Freemius links from failed-payment emails. It was indexable, in the sitemap, and linked from nowhere on the site. It now gets `noindex, follow` the same way the thank-you page does, through core `wp_robots` and Rank Math's `rank_math/frontend/robots`. The two templates share one list, `MH_NOINDEX_TEMPLATES`, in `app/filters.php`, and the old `mh_noindex_thankyou_robots()` is now `mh_noindex_utility_robots()`.

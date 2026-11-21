@@ -9530,3 +9530,90 @@ html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:is(.is-
   background: rgba(255, 255, 255, .16) !important;
   border-color: #fff !important;
 }
+
+/* === Footer signup panel =============================================================================
+   The Get updates form in the footer (widget area "footer-updates": heading, lede, Hostinger Reach form).
+   Gives it a quiet panel with more room, a clearer type scale, and one full-width field and button.
+   The footer is navy in light and dark mode, so these colors do not branch. Scoped to .footer-follow. */
+html body .site-footer .footer-follow {
+  padding: 1.5rem 1.5rem 1.6rem;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .045);
+}
+html body .site-footer .footer-follow .footer-nav-label {
+  margin: 0 0 .6rem;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+html body .site-footer .footer-follow .footer-follow__lede {
+  max-width: 34ch;
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #c9d9ef;
+  text-wrap: pretty;
+}
+html body .site-footer .footer-follow .hostinger-reach-block-subscription-form-wrapper { margin: 0; }
+html body .site-footer .footer-follow .hostinger-reach-block-form-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: .85rem;
+}
+html body .site-footer .footer-follow .hostinger-reach-block-form-field { margin: 0; min-width: 0; }
+html body .site-footer .footer-follow label {
+  display: block;
+  margin: 0 0 .4rem;
+  padding: 0;
+  font: 600 .875rem/1.3 var(--font-display);
+  letter-spacing: .01em;
+  text-transform: none;
+  color: #e2ecf9;
+}
+html body .site-footer .footer-follow label .required { color: var(--lime-300); }
+html body .site-footer .footer-follow .footer-follow__email {
+  box-sizing: border-box;
+  width: 100%;
+  height: 3rem;
+  min-height: 3rem;
+  padding: .7rem 1.1rem;
+  border: 1.5px solid #8fa6c4;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+html body .site-footer .footer-follow .footer-follow__email:hover { border-color: #c9d9ef; }
+html body .site-footer .footer-follow .footer-follow__email:focus,
+html body .site-footer .footer-follow .footer-follow__email:focus-visible {
+  border-color: #fff;
+  background: rgba(255, 255, 255, .12);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+html body .site-footer .footer-follow .mh-reach-submit {
+  width: 100%;
+  min-height: 3rem;
+  margin: .15rem 0 0;
+  justify-content: center;
+  text-align: center;
+}
+html body .site-footer .footer-follow .reach-subscription-message {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .85rem 0 0;
+  padding: .65rem .8rem;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .08);
+  font: 600 .9375rem/1.4 var(--font-display);
+  color: #fff;
+}
+html body .site-footer .footer-follow .reach-subscription-message svg { flex: none; width: 1.25rem; height: 1.25rem; }
+html body .site-footer .footer-follow .reach-subscription-message svg path { fill: currentColor; }
+@media (max-width: 480px) {
+  html body .site-footer .footer-follow { padding: 1.2rem 1.15rem 1.3rem; border-radius: 14px; }
+}
+/* === /Footer signup panel ============================================================================ */
