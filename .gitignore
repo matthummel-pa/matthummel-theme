@@ -1,3 +1,6 @@
+# growth/ and scripts/ stay in git. pack-theme.sh excludes both so they
+# never ship inside wp-content/themes/matthummel/ on staging or live.
+
 # GitHub Actions stay in git (un-ignore workflows and scripts)
 .github/*
 !.github/workflows/
@@ -92,3 +95,6 @@ debug.log
 
 # Local QA reports (Lighthouse)
 lighthouse-report*
+
+# Local research and wireframes. Do not deploy.
+blueprint/
