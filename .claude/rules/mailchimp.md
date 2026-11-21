@@ -13,7 +13,7 @@ Applies to any Mailchimp template, campaign copy, signup form, automation or API
 ## 1. Brand identity and design tokens
 
 - **Brand:** Matt Hummel (`matthummel.com`). **Sender name:** Matt Hummel.
-- **Reply-to / support:** `hello@matthummel.com`.
+- **Reply-to / support:** `matt@matthummel.com`.
 - **Footer address:** Gettysburg, PA (required for CAN-SPAM).
 - **Light mode only.** Never generate a dark-background email shell.
 - **Type stacks (email-safe fallbacks):**

@@ -5,7 +5,7 @@ How newsletter signup is wired on the live site. Most of this lives in WordPress
 ## Mailchimp
 
 - **Data center / audience:** `us21`, audience **Matt Hummel**, id `922cd65ed4` (web id 318116).
-- **From / reply-to:** Matt Hummel, `hello@matthummel.com`.
+- **From / reply-to:** Matt Hummel, `matt@matthummel.com`.
 - **Footer (CAN-SPAM):** PO Box in Gettysburg, PA 17325. The box number is a placeholder (`PO Box 1`) until the real one is set in Audience, Settings, Required email footer content.
 - **Opt-in:** double opt-in.
 - **Merge fields:** `FNAME`, `COMPANY`, `WEBSITE`, `WORKING` (What are you working on).
