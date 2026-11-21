@@ -52,15 +52,15 @@ Page forms rely on the CSS in the footer widget. If that widget is removed, the 
 
 The header **Get updates** link opens the pop-up on click. Without JavaScript it goes to `/get-updates/`.
 
-## Email subject lines (custom-coded mode)
+## Email subject lines (standard mode)
 
-These are the subjects saved while code mode was on. With code mode off, Mailchimp shows its standard subjects until they are edited in the form builder.
+Set in the form builder (Signup forms, Settings, Form builder, pick the email, Build it). From name and from/reply-to follow the audience defaults (`matt@matthummel.com`).
 
 - Opt-in confirmation: "Confirm your email to join the list"
-- Final welcome: "You are on the list: your update checklist"
 - Goodbye: "You are unsubscribed"
+- Welcome: Mailchimp's standard mode has no final welcome email in the form builder. A welcome message needs a "Welcome new subscribers" automation (not set up yet). The branded HTML welcome email from custom-coded mode is saved but inactive.
 
-In that mode the plain-text versions of the welcome and goodbye emails matched the HTML versions.
+(The custom-coded subjects were "You are on the list: your update checklist" for the welcome email, and the same two as above.)
 
 ## Branded Mailchimp-hosted pages
 
