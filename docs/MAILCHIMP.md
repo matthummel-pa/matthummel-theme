@@ -82,3 +82,7 @@ Earlier, "Code system forms from scratch" was on. That gave the site look with g
 ## Site newsletter pages
 
 The Bluesky cover (media id 1613) sits under the hero on `/newsletter-profile/`, `/get-updates/`, `/subscribed/`, `/welcome/` and `/unsubscribed/`. `/welcome/` also has a "Meet Matt" section with the family photo (media id 1566).
+
+## Journal email template
+
+Saved template "Journal - Light update" (template id 10574778) is the light-mode base for journal-post emails. It matches the welcome email: Bluesky cover banner, blue/cyan/lime stripe, icon chips, profile-photo sign-off. Reader aids: date and "View in browser" bar, a "Short version" box (what changed, who it affects, what to do), a reading-time eyebrow, "Try this week", three numbered "More to read" rows, a fixed "Keep these handy" list (release-prep checklist PDF, handoff checklist, release tracker), an "Ask me" reply prompt, and a footer with forward, update-preferences, unsubscribe and address. Editable regions (`mc:edit`): eyebrow, headline, body, short_version, button, try_this_week, post1-3, signoff. "Journal - Newsletter" and "Journal - Welcome email" are older dark templates and are not updated.
