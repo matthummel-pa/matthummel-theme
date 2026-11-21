@@ -64,6 +64,15 @@ The header **Get updates** link opens the pop-up on click. Without JavaScript it
 
 The plain-text versions of the welcome and goodbye emails match the HTML versions.
 
+## Branded Mailchimp-hosted pages
+
+With "Code system forms from scratch" on, these pages carry the site look (navy card, gradient wordmark and heading, lime-to-blue gradient-line button, `MATT HUMMEL` wordmark, link back to matthummel.com). Edit them under Signup forms, Settings, Customize your pages and emails:
+
+- **Unsubscribe form** (`/unsubscribe`). Keeps Mailchimp's `u`, `id` and `*|HTML:EMAILERROR|*` tags.
+- **Signup form** (`/subscribe`). Shown for validation errors and direct visits.
+
+Not brandable in this mode: the **"Confirm Humanity"** CAPTCHA page. It stays Mailchimp's default grey page. Branding it means turning off "Code system forms from scratch" and using the visual designer, which would also undo the three redirects above.
+
 ## Known gaps
 
 - The privacy page text still lists HubSpot and the Meta Pixel as carried over from the old template. Confirm they are in use.
