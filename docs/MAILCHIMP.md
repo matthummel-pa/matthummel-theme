@@ -58,7 +58,7 @@ Set in the form builder (Signup forms, Settings, Form builder, pick the email, B
 
 - Opt-in confirmation: "Confirm your email to join the list"
 - Goodbye: "You are unsubscribed"
-- Welcome: Mailchimp's standard mode has no final welcome email in the form builder. The welcome message is an automation: "Welcome new contacts" (flow id 6321), trigger "Contact signs up to Matt Hummel", one email "Welcome email" sent as soon as possible from Matt Hummel <matt@matthummel.com>. Subject "You are on the list: your update checklist", preview text "Your WordPress release-prep checklist, plus three posts worth reading first." Built on the saved "Journal - Light update" template (light mode, merge-tag footer with unsubscribe and update-preferences). It was turned on November 21, 2026 after a test send, and is **active**. Pause it from Automations to stop sends. The checklist PDF link is in the "Try this week" box. The older dark "Journal - Welcome email" template is unused.
+- Welcome: Mailchimp's standard mode has no final welcome email in the form builder. The welcome message is an automation: "Welcome new contacts" (flow id 6321), trigger "Contact signs up to Matt Hummel", one email "Welcome email" sent as soon as possible from Matt Hummel <matt@matthummel.com>. Subject "You are on the list: your update checklist", preview text "Your WordPress release-prep checklist, plus three posts worth reading first." Body is custom-pasted HTML (light mode, 600px): Bluesky cover banner, blue/cyan/lime stripe, free-PDF card, three numbered posts, "Meet Matt" with the family photo, what-to-expect box, social links, and a footer with `*|UPDATE_PROFILE|*`, `*|UNSUB|*` and `*|LIST:ADDRESSLINE|*`. Images are the site WebP files (Outlook desktop will not show them; alt text covers it). Source copy: scratchpad `welcome-email.html`. To edit it, pause the flow first (a live flow locks its email).  The older dark "Journal - Welcome email" template is unused.
 
 (The custom-coded subjects were "You are on the list: your update checklist" for the welcome email, and the same two as above.)
 
@@ -78,3 +78,7 @@ Earlier, "Code system forms from scratch" was on. That gave the site look with g
 - The privacy page text still lists HubSpot and the Meta Pixel as carried over from the old template. Confirm they are in use.
 - `template-privacy.blade.php` is no longer used by any page.
 - With code mode off, the opt-in confirmation, welcome and goodbye emails use Mailchimp standard text, not the branded HTML. The audience from/reply-to is `matt@matthummel.com`. After a confirm click or an unsubscribe, visitors see Mailchimp pages, not `/welcome/` or `/unsubscribed/`.
+
+## Site newsletter pages
+
+The Bluesky cover (media id 1613) sits under the hero on `/newsletter-profile/`, `/get-updates/`, `/subscribed/`, `/welcome/` and `/unsubscribed/`. `/welcome/` also has a "Meet Matt" section with the family photo (media id 1566).
