@@ -56,6 +56,14 @@ Page forms rely on the CSS in the footer widget. If that widget is removed, the 
 
 The header **Get updates** link opens the pop-up on click. Without JavaScript it goes to `/get-updates/`.
 
+## Email subject lines
+
+- Opt-in confirmation: "Confirm your email to join the list"
+- Final welcome: "You are on the list: your update checklist"
+- Goodbye: "You are unsubscribed"
+
+The plain-text versions of the welcome and goodbye emails match the HTML versions.
+
 ## Known gaps
 
 - The privacy page text still lists HubSpot and the Meta Pixel as carried over from the old template. Confirm they are in use.
