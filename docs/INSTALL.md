@@ -63,9 +63,9 @@ To use a different headshot: Appearance → Customize → Profile photo. Leave i
 
 ## 5. Edit page copy
 
-Each portfolio page has a **Page content (theme)** box. Leave a field blank to keep the built-in default. Repeaters restore the built-in list if you remove every row.
+Page copy lives in the block editor, on the staging site first. Theme blocks in `resources/blocks/` own the layout. Core blocks inside them own the words. A wording change is an edit in wp-admin, not a pull request, unless it seeds a page, changes a block's default template, or fixes a UI label.
 
-Do not hardcode new sentences in Blade — add a row in `app/page-fields.php` and read it with `\App\field('key', __('Default', 'sage'))`.
+Pages that are not converted yet still have a **Page content (theme)** box. Leave a field blank to keep the built-in default. Repeaters restore the built-in list if you remove every row. `app/page-fields.php` is frozen: do not add keys or new `\App\field()` calls. See `.claude/rules/content.md`.
 
 ## 6. Fallback
 
