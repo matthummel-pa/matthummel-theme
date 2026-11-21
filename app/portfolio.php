@@ -3580,6 +3580,62 @@ function mh_post_card_image(int $post_id): string
     return is_string($src) ? $src : '';
 }
 
+/**
+ * Up to three posts that share a category with this one, newest first.
+ *
+ * @param  array<int, \WP_Term>  $categories
+ * @return list<array{title: string, url: string, date: string, cat: string, thumb: string, mins: int, ex: string}>
+ */
+function mh_related_journal_posts(int $postId, array $categories): array
+{
+    if ($postId < 1 || $categories === []) {
+        return [];
+    }
+
+    $termIds = array_values(array_filter(array_map(
+        static fn ($category): int => $category instanceof \WP_Term ? (int) $category->term_id : 0,
+        $categories
+    )));
+    if ($termIds === []) {
+        return [];
+    }
+
+    $query = new \WP_Query([
+        'post_type' => 'post',
+        'posts_per_page' => 3,
+        'post__not_in' => [$postId],
+        'category__in' => $termIds,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'no_found_rows' => true,
+        'meta_query' => mh_exclude_noindex_meta_query(),
+    ]);
+
+    $related = [];
+    foreach ($query->posts as $relatedPost) {
+        if (! $relatedPost instanceof \WP_Post) {
+            continue;
+        }
+        $relatedCats = get_the_category($relatedPost->ID);
+        $excerpt = get_the_excerpt($relatedPost);
+        $catName = (is_array($relatedCats) && isset($relatedCats[0]->name))
+            ? (string) $relatedCats[0]->name
+            : '';
+        $related[] = [
+            'title' => mh_post_title($relatedPost),
+            'url' => (string) get_permalink($relatedPost),
+            'date' => (string) get_the_date('M j, Y', $relatedPost),
+            'cat' => $catName,
+            'thumb' => mh_post_card_image((int) $relatedPost->ID),
+            'mins' => mh_reading_minutes($relatedPost),
+            'ex' => is_string($excerpt) ? wp_trim_words($excerpt, 14) : '',
+        ];
+    }
+    wp_reset_postdata();
+
+    return $related;
+}
+
 function mh_post_has_code(\WP_Post|int $post): bool
 {
     $post = get_post($post);
