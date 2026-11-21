@@ -35,16 +35,32 @@ add_filter('body_class', function (array $classes): array {
 });
 
 /**
- * The contact form's thank-you page is a receipt, not a landing page: keep it out of
- * search results. Core prints the tag through wp_robots. Rank Math prints its own and
- * exposes rank_math/frontend/robots, where each directive is a string under its own key.
+ * Page templates that are utilities, not landing pages: keep them out of search results.
+ * The contact form's thank-you page is a receipt. The payment recovery page is the card-update
+ * screen that Freemius links from its failed-payment emails.
+ *
+ * @var list<string>
+ */
+const MH_NOINDEX_TEMPLATES = ['template-thankyou.blade.php', 'template-payment-recovery.blade.php'];
+
+/**
+ * Whether the page being viewed uses a utility template that must not be indexed.
+ */
+function mh_is_noindex_template(): bool
+{
+    return is_page() && in_array(page_template_key((int) get_queried_object_id()), MH_NOINDEX_TEMPLATES, true);
+}
+
+/**
+ * Core prints the tag through wp_robots. Rank Math prints its own and exposes
+ * rank_math/frontend/robots, where each directive is a string under its own key.
  *
  * @param  array<string, bool|string>  $robots  Directives for this request.
  * @return array<string, bool|string>
  */
-function mh_noindex_thankyou_robots(array $robots): array
+function mh_noindex_utility_robots(array $robots): array
 {
-    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+    if (! mh_is_noindex_template()) {
         return $robots;
     }
     unset($robots['index'], $robots['nofollow']);
@@ -53,10 +69,10 @@ function mh_noindex_thankyou_robots(array $robots): array
 
     return $robots;
 }
-add_filter('wp_robots', __NAMESPACE__.'\mh_noindex_thankyou_robots', 20);
+add_filter('wp_robots', __NAMESPACE__.'\mh_noindex_utility_robots', 20);
 
 add_filter('rank_math/frontend/robots', function (array $robots): array {
-    if (! is_page() || page_template_key((int) get_queried_object_id()) !== 'template-thankyou.blade.php') {
+    if (! mh_is_noindex_template()) {
         return $robots;
     }
     $robots['index'] = 'noindex';
