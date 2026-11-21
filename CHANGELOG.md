@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.58.5 — Payment recovery page stays out of search
+
+- The Payment recovery page is a card-update screen that Freemius links from failed-payment emails. It was indexable, in the sitemap, and linked from nowhere on the site. It now gets `noindex, follow` the same way the thank-you page does, through core `wp_robots` and Rank Math's `rank_math/frontend/robots`. The two templates share one list, `MH_NOINDEX_TEMPLATES`, in `app/filters.php`, and the old `mh_noindex_thankyou_robots()` is now `mh_noindex_utility_robots()`.
+
 ## 3.58.4 — Checkout text is readable
 
 - Freemius checkout type, buttons, fields, and links keep WCAG 2.2 AA contrast in the light checkout and in dark mode. The dark scheme was painting near-white words on a white page, because one token is both the page color and the text on a dark panel.
