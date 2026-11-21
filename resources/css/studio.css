@@ -8444,6 +8444,17 @@ html body .mh-cards > * { min-width: 0; }
 html body .about-svc-card,
 html body .about-svc-card .about-svc-card__copy { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 html .shop-link.shop-link { max-width: 100%; }
+/* Card buttons ("How I can help" and the other service cards): the label wraps at every width, not just on phones,
+   so a long label can't run past the pill or the card in the 2- and 3-column grids. */
+html body .about-svc-card .about-svc-card__cta { max-width: 100%; min-width: 0; }
+html body .about-svc-card .about-svc-card__cta .shop-link.shop-link {
+  box-sizing: border-box;
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  border-radius: 1.35rem;
+  overflow-wrap: anywhere;
+}
 @media (max-width: 480px) {
   html .shop-link.shop-link { white-space: normal; text-align: left; border-radius: 1.35rem; }
 }
