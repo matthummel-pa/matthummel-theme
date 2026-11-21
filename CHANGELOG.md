@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.60.0 — Mailchimp newsletter from the post edit screen
+
+- A **Mailchimp newsletter** box on the journal post editor (side column). Three steps, all by hand: **Create draft**, **Send me a test**, **Send to subscribers**. Nothing is sent when a post is published or saved. Send asks for a confirmation, runs Mailchimp's send checklist first, and a post can only be sent once.
+- The draft is a short, plain email: featured image, title, a summary, and one button to the post, with the unsubscribe link and address Mailchimp requires. The subject is the post title.
+- Set up in `wp-config.php`: `MH_MAILCHIMP_API_KEY` and `MH_MAILCHIMP_LIST_ID`. Optional: `MH_MAILCHIMP_FROM_NAME`, `MH_MAILCHIMP_REPLY_TO`, `MH_MAILCHIMP_SERVER`. The key is never stored in the database or the repo. Without the two required constants the box says it is not set up.
+- The site's own newsletter signup is still Hostinger Reach. The Mailchimp audience has to be the list you want to email.
+
 ## 3.59.2 — Roomier footer signup
 
 - The footer signup box has more padding inside (2.25rem on desktop, 1.5rem on phones), more space between the field, the button and the text above them, and the Subscribe button sits above anything near it.
