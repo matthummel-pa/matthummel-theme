@@ -60,4 +60,4 @@ The header **Get updates** link opens the pop-up on click. Without JavaScript it
 
 - The privacy page text still lists HubSpot and the Meta Pixel as carried over from the old template. Confirm they are in use.
 - `template-privacy.blade.php` is no longer used by any page.
-- The double opt-in confirmation email still has Mailchimp's default wording.
+- The goodbye email and the welcome email still use Mailchimp's defaults. The opt-in confirmation email is branded (light mode, Inter and IBM Plex, one "Confirm my email" button) and keeps Mailchimp's `*|UNIQID|*` confirm link.
