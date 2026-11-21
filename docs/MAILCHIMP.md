@@ -10,11 +10,7 @@ How newsletter signup is wired on the live site. Most of this lives in WordPress
 - **Opt-in:** double opt-in.
 - **Merge fields:** `FNAME`, `COMPANY`, `WEBSITE`, `WORKING` (What are you working on).
 - **Embedded form record:** "Website signup (custom styled)", `f_id` `00ca9ee6f0`. The live forms are custom HTML that post to the same endpoint.
-- **System forms:** "Code system forms from scratch" is on. These pages are small redirects:
-  - Signup thank you page redirects to `/subscribed/`
-  - Confirmation thank you page redirects to `/welcome/`
-  - Unsubscribe success page redirects to `/unsubscribed/`
-  - To undo: Signup forms, Settings, Advanced settings, turn off "Code system forms from scratch" (Mailchimp restores its default pages).
+- **System forms:** "Code system forms from scratch" is **off**, so Mailchimp uses its standard forms styled by the visual designer (Signup forms, Settings, Form builder, Design it). The code written earlier is saved by Mailchimp and returns if you turn code mode back on (see "Custom-coded mode" below).
 
 ## Tag ids
 
@@ -56,25 +52,29 @@ Page forms rely on the CSS in the footer widget. If that widget is removed, the 
 
 The header **Get updates** link opens the pop-up on click. Without JavaScript it goes to `/get-updates/`.
 
-## Email subject lines
+## Email subject lines (custom-coded mode)
+
+These are the subjects saved while code mode was on. With code mode off, Mailchimp shows its standard subjects until they are edited in the form builder.
 
 - Opt-in confirmation: "Confirm your email to join the list"
 - Final welcome: "You are on the list: your update checklist"
 - Goodbye: "You are unsubscribed"
 
-The plain-text versions of the welcome and goodbye emails match the HTML versions.
+In that mode the plain-text versions of the welcome and goodbye emails matched the HTML versions.
 
 ## Branded Mailchimp-hosted pages
 
-With "Code system forms from scratch" on, these pages carry the site look (navy card, gradient wordmark and heading, lime-to-blue gradient-line button, `MATT HUMMEL` wordmark, link back to matthummel.com). Edit them under Signup forms, Settings, Customize your pages and emails:
+The visual designer styles every hosted page at once (global, colors and basic fonts only; no gradients, no custom CSS). Current values: page background `#f1f5f9`, card `#0b1b35`, body text `#b7c6dc`, links `#67e8f9`, buttons lime `#a3e635` with navy `#0a1a33` text (hover `#bef264`), labels `#f1f5fb`, field text `#0f172a`, required `#22d3ee`, help `#9fb2cf`, errors `#fbbf24`.
 
-- **Unsubscribe form** (`/unsubscribe`). Keeps Mailchimp's `u`, `id` and `*|HTML:EMAILERROR|*` tags.
-- **Signup form** (`/subscribe`). Shown for validation errors and direct visits.
+- The page header ("MattHummel.com") has no color setting and renders black, so the page background stays light so it can be read. A dark page background makes it invisible.
+- Applies to the "Confirm Humanity" CAPTCHA page, the unsubscribe page, the confirmation thank-you page, and the signup form.
 
-Not brandable in this mode: the **"Confirm Humanity"** CAPTCHA page. It stays Mailchimp's default grey page. Branding it means turning off "Code system forms from scratch" and using the visual designer, which would also undo the three redirects above.
+### Custom-coded mode (turned off)
+
+Earlier, "Code system forms from scratch" was on. That gave the site look with gradients, plus three redirects: signup thank-you to `/subscribed/`, confirmation thank-you to `/welcome/`, unsubscribe success to `/unsubscribed/`. It also carried branded HTML versions of the confirmation, welcome and goodbye emails. Mailchimp says the code is saved. Turning it back on restores that, but it cannot style the "Confirm Humanity" page, so the two are a trade-off. The `/subscribed/` redirect after a normal footer signup still works either way, because the site script handles it.
 
 ## Known gaps
 
 - The privacy page text still lists HubSpot and the Meta Pixel as carried over from the old template. Confirm they are in use.
 - `template-privacy.blade.php` is no longer used by any page.
-- The opt-in confirmation, final welcome and goodbye emails are branded (light mode, Inter and IBM Plex, one navy button). The confirmation and welcome emails keep Mailchimp's confirm and unsubscribe/update-profile links. The goodbye email links back to `/get-updates/#signup` to rejoin. The Mailchimp "Signup form" and "Update profile" pages are still Mailchimp defaults.
+- With code mode off, the opt-in confirmation, welcome and goodbye emails use Mailchimp standard text, not the branded HTML. The audience from/reply-to is `matt@matthummel.com`. After a confirm click or an unsubscribe, visitors see Mailchimp pages, not `/welcome/` or `/unsubscribed/`.
