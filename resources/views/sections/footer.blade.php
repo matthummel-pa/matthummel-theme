@@ -27,7 +27,8 @@
       @endif
       <div class="footer-brand-meta">
         <nav class="footer-brand-social" aria-label="{{ __('Elsewhere', 'sage') }}">
-          @include('partials.social', ['compact' => true])
+          {{-- The feed stays in the header and on posts; the footer row has no RSS icon. --}}
+          @include('partials.social', ['compact' => true, 'links' => array_values(array_filter(\App\mh_social_links(), static fn ($s) => ($s['key'] ?? '') !== 'rss'))])
         </nav>
       </div>
     </div>
