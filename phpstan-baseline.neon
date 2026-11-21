@@ -25,7 +25,7 @@ parameters:
 			path: app/Github.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between non\-empty\-array\<non\-falsy\-string, array\{date\: non\-falsy\-string, count\: int, level\: int\<0, 4\>\}\> and array\{\} will always evaluate to false\.$#'
+			message: '#^Strict comparison using \=\=\= between non\-empty\-array\<non\-falsy\-string, array\{date\: non\-falsy\-string, count\: int, level\: int\}\> and array\{\} will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Github.php
@@ -67,6 +67,12 @@ parameters:
 			path: app/affiliate.php
 
 		-
+			message: '#^Offset ''innerBlocks'' on array\{blockName\: ''matthummel/section'', attrs\: array, innerBlocks\: array\<array\>, innerHTML\: string, innerContent\: array\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/affiliate.php
+
+		-
 			message: '#^Parameter \#1 \$query of method WP_HTML_Tag_Processor\:\:next_tag\(\) expects array\{tag_name\?\: string\|null, match_offset\?\: int\|null, class_name\?\: string\|null, tag_closers\?\: string\|null\}\|null, ''a'' given\.$#'
 			identifier: argument.type
 			count: 1
@@ -103,10 +109,76 @@ parameters:
 			path: app/bespoke.php
 
 		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Offset ''text'' on array\{text\: string, url\: string, style\?\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Offset ''text'' on array\{title\: string, text\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Offset ''title'' on array\{title\: string, text\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Offset ''type'' on array\{type\: string, repo\: string, url\: string, text\: string, when\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/blocks.php
+
+		-
+			message: '#^Offset ''url'' on array\{text\: string, url\: string, style\?\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/blocks.php
+
+		-
 			message: '#^Parameter \#2 \$args of function register_block_type expects array\{api_version\?\: string, title\?\: string, category\?\: string\|null, parent\?\: array\<string\>\|null, ancestor\?\: array\<string\>\|null, allowed_blocks\?\: array\<string\>\|null, icon\?\: string\|null, description\?\: string, \.\.\.\}, array\{title\: string, description\: string, category\: ''matthummel'', icon\: ''editor\-ol''\|''grid\-view''\|''index\-card''\|''marker'', supports\: array\{html\: false, align\?\: false, className\: true\}\|array\{html\: false, reusable\: false, className\: true\}, attributes\?\: array\{ariaLabel\: array\{type\: ''string'', default\: ''Comparison of tools…''\}\}\|array\{icon\: array\{type\: ''string'', default\: ''''\}, mark\: array\{type\: ''string'', default\: ''Cu''\}, name\: array\{type\: ''string'', default\: ''''\}, role\: array\{type\: ''string'', default\: ''''\}, bestForLabel\: array\{type\: ''string'', default\: ''Best for''\}, weakAtLabel\: array\{type\: ''string'', default\: ''Weak at''\}, humanRequiredLabel\: array\{type\: ''string'', default\: ''Human still required''\}, bestFor\: array\{type\: ''string'', default\: ''''\}, \.\.\.\}\|array\{title\: array\{type\: ''string'', default\: ''''\}, body\: array\{type\: ''string'', default\: ''''\}\}, parent\?\: array\{''matthummel/ship\-pipe''\}\|array\{''matthummel/tool\-grid''\}, render_callback\?\: ''App\\\\mh_render_tool…'', \.\.\.\} given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/blocks.php
+
+		-
+			message: '#^Action callback returns array\<string, mixed\> but should not return anything\.$#'
+			identifier: return.void
+			count: 2
+			path: app/code-github.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\{total\: int, weeks\: array\<int, array\<int, array\{date\: string, count\: int, level\: int\}\>\>\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/code-github.php
+
+		-
+			message: '#^Offset ''breakdown'' on array\{total\: int, weeks\: array\<int, array\<int, array\{date\: string, count\: int, level\: int\}\>\>\} in empty\(\) does not exist\.$#'
+			identifier: empty.offset
+			count: 1
+			path: app/code-github.php
+
+		-
+			message: '#^Offset ''login'' on array\{login\: string, name\: string, avatar\: string, url\: string, repo\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/code-github.php
 
 		-
 			message: '#^Offset ''comment_author'' on array\{comment_author\: string, comment_author_email\: string, comment_author_url\: string\} on left side of \?\? always exists and is not nullable\.$#'
@@ -249,13 +321,13 @@ parameters:
 		-
 			message: '#^Offset 0 on array\{string, string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 2
+			count: 3
 			path: app/concept-pages.php
 
 		-
 			message: '#^Offset 1 on array\{string, string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 2
+			count: 3
 			path: app/concept-pages.php
 
 		-
@@ -263,6 +335,12 @@ parameters:
 			identifier: booleanOr.alwaysFalse
 			count: 3
 			path: app/concept-pages.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between non\-falsy\-string and '''' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/concept-sidebar.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between non\-empty\-string and '''' will always evaluate to false\.$#'
@@ -319,10 +397,40 @@ parameters:
 			path: app/featured-image.php
 
 		-
+			message: '#^Instanceof between WP_Term and WP_Term will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 3
+			path: app/filters.php
+
+		-
 			message: '#^Strict comparison using \!\=\= between non\-empty\-string and '''' will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: app/filters.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: app/modules/hummel-ops/includes/class-n8n-viz.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between mixed~\(0\|0\.0\|''''\|''0''\|array\{\}\|false\|null\) and ''0'' will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/modules/hummel-ops/includes/class-n8n.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/modules/hummel-ops/includes/class-pipeline.php
+
+		-
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
+			count: 1
+			path: app/modules/hummel-ops/includes/class-wprel.php
 
 		-
 			message: '#^Call to function is_array\(\) with array\<mixed\> will always evaluate to true\.$#'
@@ -331,39 +439,21 @@ parameters:
 			path: app/page-fields.php
 
 		-
-			message: '#^Offset ''add_to_cart_url'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/page-fields.php
-
-		-
-			message: '#^Offset ''name'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: app/page-fields.php
-
-		-
-			message: '#^Offset ''permalink'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: app/page-fields.php
-
-		-
-			message: '#^Offset ''price_html'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: app/page-fields.php
-
-		-
-			message: '#^Offset ''short_description'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/page-fields.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
+			path: app/portfolio.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<WP_Term\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/portfolio.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<int, array\{date\: string, count\: int, level\: int\}\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: app/portfolio.php
 
 		-
@@ -375,13 +465,19 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 3
+			count: 5
+			path: app/portfolio.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\{date\: string, count\: int, level\: int\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: app/portfolio.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
+			count: 2
 			path: app/portfolio.php
 
 		-
@@ -397,12 +493,6 @@ parameters:
 			path: app/portfolio.php
 
 		-
-			message: '#^Call to function is_wp_error\(\) with non\-empty\-array\<WP_Post\> will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/portfolio.php
-
-		-
 			message: '#^Call to function is_wp_error\(\) with non\-empty\-array\<WP_Term\> will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -412,6 +502,12 @@ parameters:
 			message: '#^Instanceof between WP_Post and WP_Post will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 2
+			path: app/portfolio.php
+
+		-
+			message: '#^Instanceof between WP_Term and WP_Term will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
 			path: app/portfolio.php
 
 		-
@@ -427,7 +523,31 @@ parameters:
 			path: app/portfolio.php
 
 		-
-			message: '#^Offset ''login'' on array\{login\: string, name\: string, avatar\: string, url\: string, repo\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''count'' on array\{date\: string, count\: int, level\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/portfolio.php
+
+		-
+			message: '#^Offset ''count'' on array\{date\: string, count\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/portfolio.php
+
+		-
+			message: '#^Offset ''date'' on array\{date\: string, count\: int, level\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/portfolio.php
+
+		-
+			message: '#^Offset ''date'' on array\{date\: string, count\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/portfolio.php
+
+		-
+			message: '#^Offset ''level'' on array\{date\: string, count\: int, level\: int\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: app/portfolio.php
@@ -441,7 +561,7 @@ parameters:
 		-
 			message: '#^Offset ''total'' on array\{total\: int, repos\: list\<array\{name\: string, stars\: int, url\: string\}\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 2
+			count: 1
 			path: app/portfolio.php
 
 		-
@@ -499,22 +619,52 @@ parameters:
 			path: app/portfolio.php
 
 		-
-			message: '#^Comparison operation "\<" between int\<15, max\> and 1 is always false\.$#'
-			identifier: smaller.alwaysFalse
-			count: 1
-			path: app/rank-math-fields.php
+			message: '#^Action callback returns array\<string, mixed\>\|WP_Error but should not return anything\.$#'
+			identifier: return.void
+			count: 2
+			path: app/release-watch.php
 
 		-
-			message: '#^Offset ''desc'' on array\{title\: string, desc\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
 			count: 1
-			path: app/rank-math-fields.php
+			path: app/release-watch.php
 
 		-
-			message: '#^Offset ''title'' on array\{title\: string, desc\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: app/release-watch.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and null will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: app/release-watch.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/release-watch.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type DOMNodeList\<DOMNameSpaceNode\|DOMNode\>\|false\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/release-watch.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, int, int, bool\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
-			path: app/rank-math-fields.php
+			path: app/seo-social.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, int, int, bool\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/seo-social.php
 
 		-
 			message: '#^Function public_path not found\.$#'
@@ -523,392 +673,38 @@ parameters:
 			path: app/setup.php
 
 		-
-			message: '#^Access to property \$customer_email on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$description on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$enabled on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$heading on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$id on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$new_version on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$object on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$old_version on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$placeholders on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 9
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$product_id on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 3
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$recipient on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$sent on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 5
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$subject on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Access to property \$title on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Call to an undefined method WC_Order_Item\:\:get_product_id\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_array\(\) with array\<string, WC_Email\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 3
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_array\(\) with array\{name\: non\-empty\-string, url\: non\-empty\-string, size\: int\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_object\(\) with Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_object\(\) with WC_Emails will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function is_object\(\) with WC_Product will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function method_exists\(\) with WC_Emails and ''get_emails'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function method_exists\(\) with WC_Emails and ''wrap_message'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function method_exists\(\) with WC_Order_Item and ''get_name'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to function method_exists\(\) with WC_Product and ''get_id'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method add_approved_directory\(\) on an unknown class Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method enable_by_id\(\) on an unknown class Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method format_html_body\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_additional_content\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_attachments\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_by_url\(\) on an unknown class Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_content\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_content_plain\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_email_type\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_headers\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_heading\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_option\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_recipient\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Call to method get_subject\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method is_enabled\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/shop.php
-
-		-
-			message: '#^Call to method is_valid_path\(\) on an unknown class Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method matching_item_id\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method restore_locale\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method send\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method setup_locale\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method style_inline\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Call to method trigger\(\) on an unknown class App\\Email_Customer_Download_Update\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Class App\\Email_Customer_Download_Update not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Class Automattic\\WooCommerce\\Internal\\ProductDownloads\\ApprovedDirectories\\Register not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Instanceof between WC_Order and WC_Order will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Instantiated class App\\Email_Customer_Download_Update not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Offset ''add_to_cart_url'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Offset ''permalink'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Offset ''price_html'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Offset ''regular_price'' on array\{id\: int, name\: string, price\: string, price_html\: string, regular_price\: string, is_free\: bool, purchasable\: bool, permalink\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Offset ''term_id'' on array\{term_id\: int, term_taxonomy_id\: int\|numeric\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Parameter \#2 \$value of method WC_Data\:\:update_meta_data\(\) expects array\|string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Regex pattern is invalid\: Unknown modifier ''\]'' in pattern\: \#github\\\.com/\(\[\^/\]\+/\[\^/\?\#\]\+\)\#$#'
-			identifier: regexp.pattern
+			message: '#^Parameter \#1 \$array \(non\-empty\-list\<array\<string, mixed\>\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
 			count: 1
 			path: app/shop.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
-			count: 4
+			count: 3
 			path: app/shop.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between array\{\} and array\{\} will always evaluate to true\.$#'
+			message: '#^Parameter \#2 \$src of function wp_register_script expects non\-empty\-string\|false, '''' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/social-ai.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between ''grok'' and ''grok'' will always evaluate to true\.$#'
 			identifier: identical.alwaysTrue
 			count: 1
-			path: app/shop.php
+			path: app/social-ai.php
 
 		-
-			message: '#^Undefined variable\: \$catalog$#'
-			identifier: variable.undefined
+			message: '#^Offset ''steps'' on array\{title\: string, steps\: array\{''\<a href\="https\:/…'', ''Choose \<strong\>Add…'', ''Paste it below with…'', ''Save\. Publish a…''\}\|array\{''\<a href\="https\:/…'', ''Enter a description…'', ''Paste the key below…''\}\|array\{''\<a href\="https\:/…'', ''Open the \<a href\=…'', ''Exchange it for a …'', ''Run \<code\>me…''\}\|array\{''\<a href\="https\:/…'', ''Open the \<a href\=…'', ''Paste the access…''\}, intro\: string, rows\: Closure\(array\)\: void\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
 			count: 1
-			path: app/shop.php
-
-		-
-			message: '#^Variable \$catalog in isset\(\) is never defined\.$#'
-			identifier: isset.variable
-			count: 1
-			path: app/shop.php
+			path: app/social-settings.php
 
 		-
 			message: '#^Call to function is_array\(\) with list\<string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/social-share.php
-
-		-
-			message: '#^Offset ''bluesky''\|''facebook''\|''linkedin''\|''reddit'' on array\{bluesky\: string, linkedin\: string, facebook\: string, reddit\: string, url\: string, title\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
 			count: 1
 			path: app/social-share.php
 
@@ -1007,27 +803,3 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: app/theme-updater.php
-
-		-
-			message: '#^Offset ''file'' on array\{type\: int, message\: string, file\: string, line\: int\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: mu-plugins/mh-fatal-probe.php
-
-		-
-			message: '#^Offset ''line'' on array\{type\: int, message\: string, file\: string, line\: int\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: mu-plugins/mh-fatal-probe.php
-
-		-
-			message: '#^Offset ''message'' on array\{type\: int, message\: string, file\: string, line\: int\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: mu-plugins/mh-fatal-probe.php
-
-		-
-			message: '#^Offset ''type'' on array\{type\: int, message\: string, file\: string, line\: int\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: mu-plugins/mh-fatal-probe.php
