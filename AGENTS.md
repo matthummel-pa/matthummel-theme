@@ -47,6 +47,7 @@ Vite `base` in `vite.config.js` is `/wp-content/themes/matthummel/public/build/`
   before expecting styled pages.
 - Dev/HMR: `npm run dev`.
 - PHP style: `vendor/bin/pint --test` (check) / `vendor/bin/pint` (fix).
+- PHP types: `composer analyse` (PHPStan level 5, baseline in `phpstan-baseline.neon`). CI runs this on pull requests.
 
 ### Local WordPress isolation (one install per product)
 

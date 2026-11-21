@@ -14,7 +14,7 @@ Rules live in `.claude/rules/` (always-on, or path-scoped with `paths:`) and ski
 
 - `/pb:plan <idea>` — think it through before coding.
 - `/pb:review [PR#]` — senior WordPress review. This repo's `wp-reviewer` agent overrides the playbook's and reads `.claude/rules/`.
-- `/pb:fix <bug>` and `/pb:ship` — fix, or finish: checks, commit, push, PR. Checks this repo needs: `vendor/bin/pint`, `python3 .github/scripts/wp-review`, and `npm run build` when CSS/JS/Blade changed.
+- `/pb:fix <bug>` and `/pb:ship` — fix, or finish: checks, commit, push, PR. Checks this repo needs: `vendor/bin/pint`, `composer analyse`, `python3 .github/scripts/wp-review`, and `npm run build` when CSS/JS/Blade changed.
 - Merging to `main` only publishes the `theme-latest` zip on GitHub. Install it on the staging site (Appearance → Update Theme), then purge LiteSpeed; Matt publishes staging → live from hPanel.
 - `wp-review` — WordPress Handbook checks on changed lines (CI: `python3 .github/scripts/wp-review`). Checklist: `.github/review-checklist.md`.
 - Local WordPress: WordPress Studio (`studio wp …`, never plain `wp` against a Studio site). Clear Blade cache with `studio wp acorn view:clear` after template edits.
