@@ -21,8 +21,8 @@
     "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. People now ask AI assistants “is it open tonight?” and “where can I get a vegan dinner?”, and an assistant that finds hours in an image or a PDF menu has to guess. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
     "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. The same data is published for machines as well as people: schema.org structured data, a public JSON menu feed, an llms.txt summary that rebuilds when you edit, robots.txt rules for the published AI crawlers, and five read-only WordPress Abilities (WordPress 6.9 and newer) that an AI assistant can call for hours, the menu, events, rooms and room availability. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
     "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute, and gives AI search and assistants the same answers in a form they can read. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
-    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
-    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. AI search layer in the Core plugin: /llms.txt and /llms-full.txt generated from live data (cached an hour, rebuilt on edit), a robots.txt policy for the published AI crawlers (welcome all, welcome search and assistant crawlers only, or leave alone), and five read-only WordPress Abilities for the MCP Adapter (hours and open now, menu with diet and allergen filters, events, rooms, room availability). No AI service is called and no data leaves the site. WCAG 2.2 AA, right-to-left languages, translation-ready.",
+    "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites.",
+    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 33 server-rendered blocks, 13 patterns, 15 templates and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. AI search layer in the Core plugin: /llms.txt and /llms-full.txt generated from live data (cached an hour, rebuilt on edit), a robots.txt policy for the published AI crawlers (welcome all, welcome search and assistant crawlers only, or leave alone), and five read-only WordPress Abilities for the MCP Adapter (hours and open now, menu with diet and allergen filters, events, rooms, room availability). No AI service is called and no data leaves the site. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
     "benefits": [
       "Live “open now” and holiday hours per location, correct on cached pages",
@@ -44,14 +44,14 @@
       "robots.txt rules for the published AI crawlers: welcome all, welcome search and assistants only, or leave it alone"
     ],
     "deliverables": [
-      "Cobble & Candle block theme (28 custom blocks, 4 style variations)",
+      "Cobble & Candle block theme (33 custom blocks, 13 patterns, 4 style variations)",
       "Cobble & Candle Core plugin (bundled, one-click install)",
       "Room booking engine with iCal import and export",
       "Setup wizard and demo content",
       "Menu CSV import / export",
       "AI search layer: llms.txt, AI crawler rules and read-only assistant tools",
       "Messages inbox, Status & logs screen",
-      "Owner guide (12 pages, including AI search and assistants), FAQ, developer hook reference",
+      "Owner guide (including AI search and assistants), FAQ, developer hook reference",
       "Screenshot, readme, licenses, and changelog"
     ],
     "blocks": [
@@ -154,7 +154,7 @@
     ],
     "metrics": [
       [
-        "28",
+        "33",
         "custom blocks"
       ],
       [
@@ -227,6 +227,12 @@
       ]
     ],
     "demo": "https://cobbleandcandle.matthummel.com/",
+    "demo_tasks": [
+      "Check today's hours and see when the restaurant opens next.",
+      "Open the menu and try a dietary filter.",
+      "Open the table request form and look through the available times."
+    ],
+    "setup_guide_path": "/cobble-candle-setup-guide/",
     "freemius": {
       "store_id": "21514",
       "product_id": "42939",
@@ -251,7 +257,7 @@
       ]
     },
     "github": "",
-    "version": "1.0.1",
+    "version": "1.6.0",
     "compatible": "WordPress 6.6+ (tested up to 7.1), PHP 8.3+",
     "license": "GPLv2 or later",
     "files_included": [

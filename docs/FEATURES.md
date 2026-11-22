@@ -4,6 +4,20 @@ What the 3.x Sage theme does, and where it lives.
 
 WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product page, and the shop listing is `template-shop.blade.php`. Notes below about the WooCommerce cart, checkout, My Account desk, shop archive and download delivery were removed with the code.
 
+Freemius checkout colors live in `resources/css/freemius-checkout.css` (navy `#0d2e57`, blue `#2563eb`, a blue–teal–green stripe, Inter, IBM Plex, `html.mh-dark`). Text, buttons, fields, and links stay readable in the light checkout and in dark mode (3.58.4). Freemius loads that file by URL. It is not imported into `app.css`. The Payment recovery template (`template-payment-recovery.blade.php`) is the page for failed-payment emails and prints `https://checkout.freemius.com/js/v1/` when the page body does not already include it.
+
+## Editor’s notes (3.60.0 Mailchimp newsletter)
+
+- `app/mailchimp-share.php` adds a **Mailchimp newsletter** meta box to the journal post editor. Create draft → Send me a test → Send to subscribers, each a separate click. The theme never sends on publish or save. Sending needs `publish_posts`, a confirmation, and a ready Mailchimp send checklist, and is blocked a second time by `_mh_mailchimp_sending` / `_mh_mailchimp_sent_at` post meta.
+- Credentials are `wp-config.php` constants only (`MH_MAILCHIMP_API_KEY` ending in the data center such as `-us12`, `MH_MAILCHIMP_LIST_ID`). No Customizer field, no option, nothing in the repo. The site's own signup form is still Hostinger Reach (3.7.15); this box only sends to the Mailchimp audience.
+- The email HTML is built in `mh_mailchimp_email_html()` (table layout, inline styles, one button). Filters: `mh/mailchimp_from_name`, `mh/mailchimp_reply_to`, `mh/mailchimp_button_label`.
+
+## Editor’s notes (3.57.0 motion pass)
+
+- `resources/css/motion.css` is the motion layer and is imported in `app.css` just before `polish.css`. Add new transitions there rather than in portfolio.css/studio.css. Transform and opacity only; the FAQ `block-size` tween is the one opt-in exception (`interpolate-size: allow-keywords`). Every rule has a counterpart in the `prefers-reduced-motion` block at the bottom.
+- `resources/js/nav-indicator.js` mounts one sliding capsule per rail listed in `RAILS`. To give another rail the effect, add a row (list selector, item selector, active selector, `followHover`) and style `.your-rail .mh-nav-indicator` in motion.css. The rail gets `.has-nav-indicator` so the static active styles can be turned off only when the capsule exists.
+- Press states use `--press-scale` (.97). Cards press on `(hover: none)` only.
+
 ## Editor’s notes (3.7.15 newsletter is Hostinger Reach)
 
 - The newsletter is the Hostinger Reach plugin, used as it ships. The theme has no list code: `app/newsletter.php` (theme footer list, 3.6.20 to 3.7.14) and `plugins/matthummel-newsletter/` (self-hosted plugin, 3.6.38 to 3.7.14) are gone, with their pack script, workflow, CI step, PHPStan baseline entries, and docs.
@@ -118,7 +132,7 @@ WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product pa
 - Shop: `template-shop.blade.php` renders /shop/, /themes/, /plugins/ from `mh_shop_items()`; product kinds live in `mh_product_types()`. Catalog `coming_soon` hides Buy and shows a badge.
 - Product URLs: themes at `/themes/{slug}/`, plugins at `/plugins/{slug}/` (`mh_product_url_base()`); old `/projects/{slug}/` URLs 301. Free products with a catalog `download` get a Download free button (`mh_project_free_download_url()`).
 - Cobble & Candle copy refreshes once on update (`mh_product_catalog_v14`, that product only).
-- Cobble & Candle's copy leads with AI search and refreshes once on update (`mh_product_catalog_v21`, that product only). Landing cards for benefit positions 14-16 are the AI items: keep them last in the catalog `benefits` list.
+- Cobble & Candle's copy leads with AI search and refreshes once on update (`mh_product_catalog_v22`, that product only). Landing cards for benefit positions 14-16 are the AI items: keep them last in the catalog `benefits` list.
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)

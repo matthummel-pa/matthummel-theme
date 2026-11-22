@@ -48,4 +48,4 @@ One Cloud/local WordPress per product. This theme: `~/wp-site`, folder `matthumm
 
 ## Deploy
 
-Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`. Install the zip on the **staging site** with Appearance -> Update Theme; Matt publishes staging -> live from hPanel (agents never install on `matthummel.com`). Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.md`.
+Push/merge to `main` runs GitHub Actions (`Deploy Roots Production Ecosystem`): Composer + `npm run build`, GitHub Release `theme-latest`. Install the zip on **matthummel.com** with Appearance -> Update Theme, then purge LiteSpeed. Live folder is `wp-content/themes/matthummel`. See `.github/workflows/deploy.yml` and `hostinger-github-wordpress-workflow.md`.

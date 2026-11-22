@@ -15,6 +15,9 @@
 @import "./about-page.css"; /* About layout + section masks (after illustrations so its FAQ overrides win) */
 @import "./resume-timeline.css"; /* resume dates as calendar chips on the line (3.7.35) */
 @import "./hero-collage.css"; /* Home hero "Code collage" background (3.8.1) */
+@import "./motion.css"; /* 3.57.0 motion pass: drawer stagger, sliding nav indicators, press states, FAQ tween; polish.css stays last */
+@import "./project-redesign.css"; /* project pages (3.58.0): Home-style hero, framed video, short reading blocks */
+@import "./polish.css"; /* page polish (3.56.0): green-to-blue edges, prose headings, readability; keep last */
 
 /* Light mode default. Dark visitors still use html.mh-dark. */
 :root { color-scheme: light; }
@@ -23,5 +26,10 @@ html.mh-dark { color-scheme: dark; }
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+/* Tailwind scans the whole repo by default. A class-like word in docs or rules (the footer widget id "block-12" in docs/MAILCHIMP.md)
+   became a real utility, .block-12 { block-size: 3rem }, and clipped the footer signup box. Docs and rules are not templates. */
+@source not "../../docs";
+@source not "../../.claude";
+@source not "../../CHANGELOG.md";
 
 /* Tailwind theme tokens (fonts, radii, brand colors) live in theme-tokens.css, shared with editor.css. */

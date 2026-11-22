@@ -338,3 +338,52 @@ function mh_permalink_from_posts(array $posts): string
 
     return get_permalink($page) ?: '';
 }
+
+/**
+ * Google Tag Manager container. Every tag (GA4 included) loads through it; see .claude/rules/gtm-ga4-analytics.md.
+ * Admins are skipped so their visits stay out of the data. Filter `mh_gtm_container_id` to change or disable (empty string).
+ */
+const MH_CONSENT_REGIONS = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'];
+
+function mh_gtm_container_id(): string
+{
+    if (current_user_can('manage_options')) {
+        return '';
+    }
+
+    return (string) apply_filters('mh_gtm_container_id', 'GTM-5H3KSG9X');
+}
+
+/**
+ * Consent Mode v2 defaults first: analytics granted everywhere except the EEA, the UK and Switzerland (denied there until the visitor says yes); ads denied everywhere, then the container snippet. The marks keep LiteSpeed from delaying either script.
+ */
+add_action('wp_head', function (): void {
+    $id = mh_gtm_container_id();
+    if ($id === '') {
+        return;
+    }
+
+    $js = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+'
+        ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});
+"
+        ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:".wp_json_encode(MH_CONSENT_REGIONS).',wait_for_update:500});
+'
+        ."try{var c=localStorage.getItem('mh-consent');if(c)gtag('consent','update',{analytics_storage:c==='granted'?'granted':'denied'})}catch(e){}
+"
+        ."(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',".wp_json_encode($id).');';
+
+    wp_print_inline_script_tag($js, ['data-no-optimize' => '1', 'data-no-defer' => '1', 'data-cfasync' => 'false']);
+}, 1);
+
+add_action('wp_body_open', function (): void {
+    $id = mh_gtm_container_id();
+    if ($id === '') {
+        return;
+    }
+
+    printf(
+        '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=%s" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'."\n",
+        esc_attr($id)
+    );
+});

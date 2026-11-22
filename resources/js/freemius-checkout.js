@@ -58,7 +58,6 @@ export function initFreemiusCheckout() {
       product_id: productId,
       plan_id: planId,
       public_key: publicKey,
-      title: root.dataset.title || undefined,
     }
     if (root.dataset.sandboxToken && root.dataset.sandboxCtx) {
       config.sandbox = { token: root.dataset.sandboxToken, ctx: root.dataset.sandboxCtx }
@@ -89,9 +88,13 @@ export function initFreemiusCheckout() {
         const licenses = Number(button.dataset.licenses || '1')
         const item = planItem(root, button)
         trackEcommerce('begin_checkout', { currency: CURRENCY, value: item.price, items: [item] })
-        checkout.open({
+        const openOptions = {
           licenses: licenses === 0 ? 'unlimited' : licenses,
           billing_cycle: 'annual',
+          // Title stays the product plus the plan. The renewal line and refund badge repeat the
+          // plan Freemius already has: yearly prices, and a 30-day refund when a defect cannot be fixed.
+          always_show_renewals_amount: true,
+          show_refund_badge: true,
           success: (data) => {
             // The buyer's license, download, and invoices live in the account page. The purchase=complete flag
             // gives ad and analytics tags a page to count as a finished purchase. The GA4 purchase event goes out
@@ -106,7 +109,14 @@ export function initFreemiusCheckout() {
               () => window.location.assign(account.toString())
             )
           },
-        })
+        }
+        if (root.dataset.subtitle) {
+          openOptions.subtitle = root.dataset.subtitle
+        }
+        if (root.dataset.modalTitle) {
+          openOptions.modal_title = root.dataset.modalTitle
+        }
+        checkout.open(openOptions)
       } catch (error) {
         say('Checkout could not load. Check your connection and try again, or use “Ask about this” to write to me.')
       } finally {

@@ -739,7 +739,6 @@ body {
 .page-header-split__copy .lead {
   max-width: 56rem;
 }
-.page-header .display-title.is-hero::after,
 .pf-section > .container > .sec-head .display-title::after {
   background: var(--blue-600);
 }
@@ -3771,13 +3770,16 @@ html.mh-dark .affiliate-note { background: #172233; }
 .site-footer .footer-copy,
 .site-footer .footer-nav a,
 .site-footer .footer-legal-links a,
+.site-footer .footer-legal-links button,
 .site-footer .footer-follow__lede,
 .site-footer .footer-follow__note,
 .site-footer p { color: #c9d9ef; }
 .site-footer .footer-nav a:hover,
 .site-footer .footer-legal-links a:hover,
+.site-footer .footer-legal-links button:hover,
 .site-footer .footer-nav a:focus-visible,
-.site-footer .footer-legal-links a:focus-visible { color: #fff; text-decoration: underline; text-decoration-color: var(--blue-300); }
+.site-footer .footer-legal-links a:focus-visible,
+.site-footer .footer-legal-links button:focus-visible { color: #fff; text-decoration: underline; text-decoration-color: var(--blue-300); }
 .site-footer .soc-link { color: #c9d9ef; border-color: rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .05); }
 .site-footer .soc-link:hover,
 .site-footer .soc-link:focus-visible { color: #fff; border-color: var(--blue-300); background: rgba(29, 111, 224, .25); }
@@ -3994,8 +3996,6 @@ html.mh-dark .h-hero__panel {
 .page-header p,
 .h-hero__lede,
 .h-hero__panel p { color: #c9d9ef; }
-.page-header .display-title::after,
-.h-hero__name::after { background: var(--blue-400); }
 
 .page-header .eyebrow,
 .h-hero__kicker,
@@ -6618,9 +6618,9 @@ html .header-updates__link.header-avail:focus-visible { outline: 2px solid var(-
 @media (max-width: 899px) {
   html .header-updates__link.header-avail { padding: .5rem .7rem; }
 }
-/* 901 to 1139px: the full header (logo, six links, theme and pause toggles, Get updates pill and chevron) needs about
-   1115px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
-@media (min-width: 901px) and (max-width: 1139px) {
+/* 901 to 1099px: the full header (logo, six links, theme toggle, Get updates pill and chevron) needs about
+   1100px, and under that it ran off the right edge. Show only the pill's icon (the aria-label names it) and tighten the nav gaps. */
+@media (min-width: 901px) and (max-width: 1099px) {
   .site-header-inner { gap: .75rem; padding-inline: 1rem; }
   .header-actions { margin-left: 0; gap: .25rem; }
   html .site-header .header-nav-list { gap: .125rem; }
@@ -7347,7 +7347,7 @@ html.mh-dark .hero-feat { background: #16263d; color: #f4f7fb; border-color: rgb
 .hero-feat__blurb { margin: 0 0 .8rem; font-size: 1rem; line-height: 1.5; }
 .hero-feat__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0; }
 
-/* 3.21.3 · Phone header. Logo, dark mode and pause toggles, the updates bell and the Menu button needed about
+/* 3.21.3 · Phone header. Logo, the toggles (the pause toggle was removed in 3.21.4), the updates bell and the Menu button needed about
    375px of a 390px screen and ran off the right edge. Under 480px: drop the "Menu" word (the button keeps its
    aria-label), shrink the two toggles to 36px, tighten the gaps and scale the logo on the smallest phones.
    Tested at 320, 360, 390 and 412px. */
@@ -7884,6 +7884,29 @@ html body :is(.shop-card, .work-card) .project-type-row .spec-badge + .spec-badg
   box-shadow: 0 18px 36px -18px rgba(29, 95, 214, .6);
 }
 .hero-feat .hero-feat__shot img { border-radius: .72rem; }
+/* 3.54.0 · The frame's gradient spins around the screenshot like the About photo ring
+   (--mh-ring-* and mh-ring-spin live in about-page.css; both are global). Hover or focus
+   shifts the colors; with reduced motion it stays still. The card gets the same
+   lime-to-blue background as the About photo card. */
+.hero-feat .hero-feat__shot {
+  --mh-ring-a: #a3e635;
+  --mh-ring-b: #22d3ee;
+  --mh-ring-c: #3b82f6;
+  background: conic-gradient(from var(--mh-ring-angle), var(--mh-ring-a), var(--mh-ring-b), var(--mh-ring-c), #8b5cf6, var(--mh-ring-a));
+}
+.hero-feat:is(:hover, :focus-within) .hero-feat__shot {
+  --mh-ring-a: #3b82f6;
+  --mh-ring-b: #8b5cf6;
+  --mh-ring-c: #a3e635;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-feat .hero-feat__shot {
+    animation: mh-ring-spin 6s linear infinite;
+    transition: --mh-ring-a .4s, --mh-ring-b .4s, --mh-ring-c .4s;
+  }
+}
+.hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 18%, #fff) 0%, #fff 45%, color-mix(in srgb, #3b82f6 16%, #fff) 100%); }
+html.mh-dark .hero-feat { background: linear-gradient(160deg, color-mix(in srgb, #a3e635 12%, #16263d) 0%, #16263d 45%, color-mix(in srgb, #3b82f6 30%, #16263d) 100%); }
 .hero-feat .hero-feat__title {
   margin: 1.1rem 0 .4rem;
   font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.1rem);
@@ -8424,6 +8447,17 @@ html body .mh-cards > * { min-width: 0; }
 html body .about-svc-card,
 html body .about-svc-card .about-svc-card__copy { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 html .shop-link.shop-link { max-width: 100%; }
+/* Card buttons ("How I can help" and the other service cards): the label wraps at every width, not just on phones,
+   so a long label can't run past the pill or the card in the 2- and 3-column grids. */
+html body .about-svc-card .about-svc-card__cta { max-width: 100%; min-width: 0; }
+html body .about-svc-card .about-svc-card__cta .shop-link.shop-link {
+  box-sizing: border-box;
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  border-radius: 1.35rem;
+  overflow-wrap: anywhere;
+}
 @media (max-width: 480px) {
   html .shop-link.shop-link { white-space: normal; text-align: left; border-radius: 1.35rem; }
 }
@@ -9499,3 +9533,103 @@ html body :is(.h-hero, .cta-band:not(.cta-band--panel)) .wp-block-button:is(.is-
   background: rgba(255, 255, 255, .16) !important;
   border-color: #fff !important;
 }
+
+/* === Footer signup panel =============================================================================
+   The Get updates form in the footer (widget area "footer-updates": heading, lede, Hostinger Reach form).
+   Gives it a quiet panel with more room, a clearer type scale, and one full-width field and button.
+   The footer is navy in light and dark mode, so these colors do not branch. Scoped to .footer-follow. */
+html body .site-footer .footer-follow {
+  padding: 2.25rem 2.25rem 2.4rem;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .045);
+}
+html body .site-footer .footer-follow .footer-nav-label {
+  margin: 0 0 .6rem;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+html body .site-footer .footer-follow .footer-follow__lede {
+  max-width: 34ch;
+  margin: 0 0 1.6rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #c9d9ef;
+  text-wrap: pretty;
+}
+/* A widget in this panel is as tall as its content, whatever class WordPress gave it (block-12 once became a fixed 3rem). */
+html body .site-footer .footer-follow .footer-widget { block-size: auto; height: auto; }
+/* The Mailchimp form (custom HTML widget, .mhmc): one full-width field and button, and the fine print stays inside the panel. */
+html body .site-footer .footer-follow .mhmc__row { flex-direction: column; align-items: stretch; gap: 1rem; }
+html body .site-footer .footer-follow .mhmc__row input { flex: 0 0 auto; width: 100%; }
+html body .site-footer .footer-follow .mhmc__btn { width: 100%; }
+html body .site-footer .footer-follow .mhmc__fine { margin: 1rem 0 0; font-size: .875rem; line-height: 1.5; color: #c9d9ef; }
+html body .site-footer .footer-follow .mhmc__fine a { color: #fff; }
+html body .site-footer .footer-follow .hostinger-reach-block-subscription-form-wrapper { margin: 0; }
+html body .site-footer .footer-follow .hostinger-reach-block-form-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.15rem;
+}
+html body .site-footer .footer-follow .hostinger-reach-block-form-field { margin: 0; min-width: 0; }
+html body .site-footer .footer-follow label {
+  display: block;
+  margin: 0 0 .4rem;
+  padding: 0;
+  font: 600 .875rem/1.3 var(--font-display);
+  letter-spacing: .01em;
+  text-transform: none;
+  color: #e2ecf9;
+}
+html body .site-footer .footer-follow label .required { color: var(--lime-300); }
+html body .site-footer .footer-follow .footer-follow__email {
+  box-sizing: border-box;
+  width: 100%;
+  height: 3rem;
+  min-height: 3rem;
+  padding: .7rem 1.1rem;
+  border: 1.5px solid #8fa6c4;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+html body .site-footer .footer-follow .footer-follow__email:hover { border-color: #c9d9ef; }
+html body .site-footer .footer-follow .footer-follow__email:focus,
+html body .site-footer .footer-follow .footer-follow__email:focus-visible {
+  border-color: #fff;
+  background: rgba(255, 255, 255, .12);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+html body .site-footer .footer-follow .mh-reach-submit {
+  width: 100%;
+  min-height: 3rem;
+  position: relative;
+  z-index: 1;
+  margin: .35rem 0 0;
+  justify-content: center;
+  text-align: center;
+}
+html body .site-footer .footer-follow .reach-subscription-message {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .85rem 0 0;
+  padding: .65rem .8rem;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .08);
+  font: 600 .9375rem/1.4 var(--font-display);
+  color: #fff;
+}
+html body .site-footer .footer-follow .reach-subscription-message svg { flex: none; width: 1.25rem; height: 1.25rem; }
+html body .site-footer .footer-follow .reach-subscription-message svg path { fill: currentColor; }
+@media (max-width: 480px) {
+  html body .site-footer .footer-follow { padding: 1.75rem 1.5rem 1.85rem; border-radius: 14px; }
+}
+/* The signup box holds the heading, the line, the email field and the button. A feed link or feed box
+   (an old widget, a pasted block) must not sit on top of the button, so none renders in here. */
+html body .site-footer .footer-follow :is(.write-rss-url, .footer-follow__row, a[href*="/feed"], a[type="application/rss+xml"]) { display: none; }
+/* === /Footer signup panel ============================================================================ */

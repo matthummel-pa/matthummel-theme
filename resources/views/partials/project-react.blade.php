@@ -13,7 +13,10 @@
   data-ajax="{{ esc_url($ajax) }}"
   data-nonce="{{ esc_attr($nonce) }}"
 >
-  <p class="project-react__label">{{ __('Visitor feedback', 'sage') }}</p>
+  <div class="project-react__head">
+    <p class="project-react__label">{{ __('Visitor feedback', 'sage') }}</p>
+    <p class="project-react__sub">{{ __('Like or star this project, or leave a note below.', 'sage') }}</p>
+  </div>
   <div class="project-react__row" role="group" aria-label="{{ __('Like or star this project', 'sage') }}">
     <button
       type="button"
@@ -23,7 +26,7 @@
     >
       {!! \App\mh_svg_icon('heart', 16) !!}
       <span class="project-react__name">{{ __('Like this project', 'sage') }}</span>
-      <span class="project-react__count" data-react-count="like">{{ number_format_i18n($state['likes']) }}</span>
+      <span class="project-react__count" data-react-count="like" @if ((int) $state['likes'] === 0) hidden @endif>{{ number_format_i18n($state['likes']) }}</span>
     </button>
     <button
       type="button"
@@ -33,7 +36,7 @@
     >
       {!! \App\mh_svg_icon('star', 16) !!}
       <span class="project-react__name">{{ __('Star project', 'sage') }}</span>
-      <span class="project-react__count" data-react-count="star">{{ number_format_i18n($state['stars']) }}</span>
+      <span class="project-react__count" data-react-count="star" @if ((int) $state['stars'] === 0) hidden @endif>{{ number_format_i18n($state['stars']) }}</span>
     </button>
     <a class="project-react__jump" href="#comments">
       {!! \App\mh_svg_icon('comment', 15) !!}

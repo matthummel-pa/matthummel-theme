@@ -14,6 +14,7 @@
     @php(wp_body_open())
     <a class="cc-skip" href="#main">{{ __('Skip to main content', 'sage') }}</a>
     @yield('content')
+    @include('partials.consent-banner')
     @php(do_action('get_footer'))
     @php(wp_footer())
   </body>

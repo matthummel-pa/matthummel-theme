@@ -25,6 +25,9 @@ tar -C "$root" \
   --exclude='*.log' \
   --exclude='matthummel.zip' \
   --exclude='.claude' \
+  --exclude='growth' \
+  --exclude='scripts' \
+  --exclude='.cursor' \
   --exclude='.mcp.json' \
   --exclude='.wp-env.json' \
   --exclude='.pa11yci.json' \
@@ -65,6 +68,10 @@ fi
 rm -f "$stage/matthummel/public/hot"
 if [[ -d "$stage/matthummel/plugins" ]]; then
   echo "plugins/ leaked into the theme pack" >&2
+  exit 1
+fi
+if [[ -d "$stage/matthummel/growth" || -d "$stage/matthummel/scripts" ]]; then
+  echo "growth/ or scripts/ leaked into the theme pack" >&2
   exit 1
 fi
 if find "$stage/matthummel" \( -name '*fatal*.txt' -o -name '*.log' \) | grep -q .; then

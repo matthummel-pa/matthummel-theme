@@ -15,6 +15,10 @@ import { initBrandUi } from './brand-ui.js';
 import { initReleaseWatch } from './release-watch.js';
 import { initFreemiusCheckout } from './freemius-checkout.js';
 import { initCardDetails } from './card-details.js';
+import { initNavIndicators } from './nav-indicator.js';
+import { initProjectVideo } from './project-video.js';
+import { initProjectStory } from './project-story.js';
+import { initConsent } from './consent.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -519,6 +523,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductGallery();
   initProjectFeedback();
   initSectionNav();
+  initNavIndicators();
+  initProjectVideo();
+  initProjectStory();
+  initConsent();
   initCheckoutInstallNotes();
   initCopyBrief();
   initPresenceReveal();

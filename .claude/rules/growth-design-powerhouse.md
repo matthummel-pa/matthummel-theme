@@ -19,6 +19,6 @@ This is the **matthummel** Sage 11 theme, not a Next.js/shadcn app. Blend the pe
 - **Design tokens:** Tailwind v4 `@theme` in `resources/css/app.css` plus `resources/css/portfolio.css`. Navy/blue/gray, Inter + IBM Plex. `tailwind.config.js` is Gutenberg/theme.json only. Never invent random hex or spacing.
 - **Icons:** existing `App\mh_svg_icon()` / inline SVG with `currentColor`. Do not add icon-font packs or raster icons.
 - **Motion:** CSS/Tailwind transitions already in the theme. Do not add Framer Motion, GSAP, Aceternity, Radix, or shadcn/ui unless Matt asks.
-- **Analytics:** no PostHog/Mixpanel/GA4 client bundle unless Matt asks. If he does, events belong in a small `resources/js/` module, not inline Blade.
+- **Analytics:** all tags load through one Google Tag Manager container; events go through `resources/js/track.js`. Rules: `gtm-ga4-analytics.md`; container work: the `gtm-setup` skill. No PostHog/Mixpanel or standalone gtag unless Matt asks.
 - **SEO:** semantic Blade (`main`, `article`, `section`), real `alt` text, `language_attributes()`. JSON-LD only when Matt asks for a specific schema; do not spray fake `AggregateRating`.
 - **Dark mode:** `html.mh-dark`. Do not switch to `data-theme`.

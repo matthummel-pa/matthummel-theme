@@ -12,9 +12,13 @@
   }
   $heroAlt = trim((string) ($imageAlt ?? ''));
   $viewport = ! empty($viewport);
+  // Calm gradient instead of a photo: the same look as the Home hero (3.58.0).
+  $calm = ! empty($calm);
 @endphp
 <{{ $tag }} class="page-header page-header--photo{{ $viewport ? ' page-header--viewport' : '' }}{{ $extra !== '' ? ' '.$extra : '' }}">
-  @if ($heroImage !== '')
+  @if ($calm)
+    <div class="page-header__media page-header__calm" aria-hidden="true"></div>
+  @elseif ($heroImage !== '')
     <div class="page-header__media" aria-hidden="true">
       <img
         class="page-header__photo"

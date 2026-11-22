@@ -673,6 +673,32 @@ function mh_reach_form_block_html(mixed $html): mixed
 add_filter('render_block_hostinger-reach/subscription', __NAMESPACE__.'\\mh_reach_form_block_html');
 
 /**
+ * About profile photo (Image block with the "about-portrait-inline" class): wrap the
+ * photo in a gradient ring and add the social icons inside the same figure, under the
+ * caption. Styled in resources/css/about-page.css (3.52.0).
+ *
+ * @param  mixed  $html  Rendered Image block.
+ * @param  array<string, mixed>  $block  Parsed block.
+ */
+function mh_about_portrait_block_html(mixed $html, array $block): mixed
+{
+    if (! is_string($html) || ! str_contains((string) ($block['attrs']['className'] ?? ''), 'about-portrait-inline')) {
+        return $html;
+    }
+
+    $html = (string) preg_replace('/<img\b[^>]*>/i', '<span class="about-portrait__ring">$0</span>', $html, 1);
+    $social = trim(view('partials.social')->render());
+    if ($social === '') {
+        return $html;
+    }
+
+    $end = strrpos($html, '</figure>');
+
+    return $end === false ? $html : substr_replace($html, '<div class="about-portrait__social">'.$social.'</div>', $end, 0);
+}
+add_filter('render_block_core/image', __NAMESPACE__.'\\mh_about_portrait_block_html', 10, 2);
+
+/**
  * Signup fallback where the Hostinger Reach form block is placed but the plugin is not running.
  *
  * With the plugin off, the saved `hostinger-reach/subscription` block is not registered and prints nothing, so

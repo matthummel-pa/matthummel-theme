@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: hostinger-theme-release
-  cancel-in-progress: true
+  # A second push to main waits. Cancelling this job mid-run can publish a partial theme-latest zip.
+  cancel-in-progress: false
 
 permissions:
   contents: write

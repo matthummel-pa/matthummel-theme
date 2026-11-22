@@ -22,6 +22,7 @@
       </main>
       @include('sections.footer')
     </div>
+    @include('partials.consent-banner')
     @php(do_action('get_footer'))
     @php(wp_footer())
   </body>

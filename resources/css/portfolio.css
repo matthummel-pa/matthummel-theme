@@ -5471,6 +5471,10 @@ html.mh-dark .journal-topic-card {
 .footer-legal-links a:hover,
 .footer-legal-links a:focus-visible { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
 .footer-legal-links span { color: var(--color-border); }
+/* "Cookie choices" is a button (it reopens the consent banner) that looks like its neighbours. */
+.footer-legal-links button { padding: 0; border: 0; background: none; color: var(--color-text-muted); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; transition: color .12s; }
+.footer-legal-links button:hover,
+.footer-legal-links button:focus-visible { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
 .footer-stack { font-size: .875rem; color: var(--color-text-muted); margin: 0; text-align: right; }
 .footer-stack a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 2px; }
 .footer-stack a:hover,
@@ -6492,9 +6496,8 @@ html.mh-dark .journal-topic-card {
     linear-gradient(165deg, color-mix(in srgb, var(--blue-50) 55%, transparent) 0%, transparent 42%);
 }
 
-/* Section title accent — calm brand mark */
-.pf-section > .container > .sec-head .display-title::after,
-.page-header .display-title.is-hero::after {
+/* Section title accent — calm brand mark. Hero h1s have no underline bar (removed in 3.21.2). */
+.pf-section > .container > .sec-head .display-title::after {
   content: "";
   display: block;
   width: 2.5rem;

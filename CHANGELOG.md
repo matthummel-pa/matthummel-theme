@@ -1,11 +1,170 @@
 # Changelog
 
-## 3.52.0 — Cobble & Candle: built for AI search
+## 3.61.0 — Cobble & Candle: built for AI search
 
 - Cobble & Candle's product page, shop listing, landing page and search title now lead with what the theme does for AI search: an llms.txt file built from live hours, menus, rooms and events; read-only tools for AI assistants (WordPress 6.9+, through the MCP Adapter); and robots.txt rules for the published AI crawlers. Three new FAQs say plainly what it is not (it does not call an AI service or write content), which services it works with, and what the assistant tools need.
 - The landing page gets three AI cards at the front of the feature grid.
-- Refreshes once on update (`mh_product_catalog_v21`, Cobble & Candle only). Rank Math titles and descriptions edited in wp-admin win.
-- Publish after the theme's AI search release (wp-cobbleandcandle#109) is out in Freemius; the copy describes that release.
+- Refreshes once on update (`mh_product_catalog_v22`, Cobble & Candle only). Rank Math titles and descriptions edited in wp-admin win.
+- The catalog version is now 1.6.0, the Cobble & Candle release with these features (Core 1.6.0, which theme 1.6.0 requires). Release it in Freemius before this goes live.
+
+## 3.60.3 — Shorter footer credit
+
+- The footer credit now reads "Built with WordPress, planned with Claude Code." The Sage and PHP mentions are gone. Claude Code still links to its product page.
+
+## 3.60.2 — Cookie choices sits in the footer menu
+
+- The Cookie choices button is now part of the footer legal menu, after the last link, at the same size and color as Privacy and Terms (it also follows a custom Footer bottom menu). It still reopens the consent banner.
+
+## 3.60.1 — Footer newsletter box holds its contents
+
+- The Get updates box in the footer was cut short: the form, button and the "Sent with Mailchimp" line spilled out below the panel and over the bottom bar. Cause: Tailwind scans the whole repo, found the footer widget id `block-12` in `docs/MAILCHIMP.md`, and built a real `.block-12 { block-size: 3rem }` rule. Docs, rules and the changelog are no longer scanned, and a footer widget is always as tall as its content.
+- The Mailchimp form in the box is one full-width email field and button, and the fine print sits inside the panel in a readable color.
+
+## 3.60.0 — Mailchimp newsletter from the post edit screen
+
+- A **Mailchimp newsletter** box on the journal post editor (side column). Three steps, all by hand: **Create draft**, **Send me a test**, **Send to subscribers**. Nothing is sent when a post is published or saved. Send asks for a confirmation, runs Mailchimp's send checklist first, and a post can only be sent once.
+- The draft is a short, plain email: featured image, title, a summary, and one button to the post, with the unsubscribe link and address Mailchimp requires. The subject is the post title.
+- Set up in `wp-config.php`: `MH_MAILCHIMP_API_KEY` and `MH_MAILCHIMP_LIST_ID`. Optional: `MH_MAILCHIMP_FROM_NAME`, `MH_MAILCHIMP_REPLY_TO`, `MH_MAILCHIMP_SERVER`. The key is never stored in the database or the repo. Without the two required constants the box says it is not set up.
+- The site's own newsletter signup is still Hostinger Reach. The Mailchimp audience has to be the list you want to email.
+
+## 3.59.2 — Roomier footer signup
+
+- The footer signup box has more padding inside (2.25rem on desktop, 1.5rem on phones), more space between the field, the button and the text above them, and the Subscribe button sits above anything near it.
+- No feed link or feed address box can render inside the signup box. The footer social row already had no RSS icon from 3.58.6.
+
+## 3.59.1 — Consent banner only in Europe
+
+- Analytics is denied until the visitor agrees only in the EEA, the UK and Switzerland (Consent Mode region defaults, set by Google from the IP address). Everywhere else it is granted, with no banner. Ads stay denied everywhere.
+- The banner shows automatically only when the browser's time zone is European. A European visitor it misses stays denied and untracked. The footer Cookie choices button works for everyone, and a saved answer is applied on every visit.
+
+## 3.59.0 — Google Tag Manager container
+
+- The site loads one Google Tag Manager container (GTM-5H3KSG9X) from `app/setup.php`: the head script at `wp_head` priority 1 and the noscript frame at `wp_body_open`. Logged-in administrators get neither. Consent Mode v2 defaults (all denied) print before the container. Change or switch it off with the `mh_gtm_container_id` filter.
+- GA4 now goes through the container (Google tag plus 11 event tags; the import file is `docs/gtm/matthummel-gtm-container.json`). Turn off Site Kit's Analytics tag placement when this ships, or each pageview is counted twice.
+- A consent banner (`partials/consent-banner.blade.php`, `resources/js/consent.js`) asks once: Allow analytics or No thanks, same size and weight. The answer is saved in localStorage (`mh-consent`, no cookie) and sent to Tag Manager as a consent update; a saved yes is re-applied before the container loads. A Cookie choices button in the footer reopens it. Ads stay denied.
+- New rule `.claude/rules/gtm-ga4-analytics.md` and skill `.claude/skills/gtm-setup`.
+
+## 3.58.6 — Footer signup panel, no footer RSS icon
+
+- The Get updates form in the footer sits in its own panel with more padding, a clearer heading and intro, a larger label, a full-width pill email field, and a full-width Subscribe button. The success and error message use the same panel style. Contrast stays above 4.5:1 for text and 3:1 for the field border.
+- The footer social row no longer shows the RSS icon. The feed is still linked in the header and on posts.
+
+## 3.58.5 — Payment recovery page stays out of search
+
+- The Payment recovery page is a card-update screen that Freemius links from failed-payment emails. It was indexable, in the sitemap, and linked from nowhere on the site. It now gets `noindex, follow` the same way the thank-you page does, through core `wp_robots` and Rank Math's `rank_math/frontend/robots`. The two templates share one list, `MH_NOINDEX_TEMPLATES`, in `app/filters.php`, and the old `mh_noindex_thankyou_robots()` is now `mh_noindex_utility_robots()`.
+
+## 3.58.4 — Checkout text is readable
+
+- Freemius checkout type, buttons, fields, and links keep WCAG 2.2 AA contrast in the light checkout and in dark mode. The dark scheme was painting near-white words on a white page, because one token is both the page color and the text on a dark panel.
+- The form uses navy, blue, Inter, and IBM Plex. The pay button is blue with white type. A thin blue-to-teal-to-green stripe sits on the button. Teal and green are not used as text colors, because white type on those fills fails contrast.
+- Checkout tells the buyer it is a yearly license, that Freemius emails the receipt and key, and that the renewal total and the existing 30-day defect refund are shown. Prices, trials, and the success redirect are unchanged.
+- The payment recovery page says the charge failed, that a new card is saved, and that Freemius retries and emails the result. A saved card shows a short confirmation. The fallback email is hello@matthummel.com.
+
+## 3.58.3 — Payment recovery script is not delayed
+
+- LiteSpeed was rewriting the Freemius checkout script on the payment recovery page into a delayed tag, so the card form would not open on load. The script now uses the same `data-no-optimize` and `data-no-defer` marks as the dark-mode script.
+
+## 3.58.2 — Payment recovery page no longer hangs
+
+- The Payment recovery template called `the_post()` with `@php()` and then opened a second `@php` block. Blade left the loop pointer unmoved, so the public page never finished. One `@php` block now advances the post and decides the copy.
+
+## 3.58.1 — Freemius checkout colors and a payment recovery template
+
+- Checkout custom CSS for the Cobble & Candle plan lives in `resources/css/freemius-checkout.css`. Freemius loads that file from an HTTPS URL (Plans → Customization). It is not part of the site bundle. Colors follow the navy, blue, and gray palette. Headings use Inter and body text uses IBM Plex Sans. Dark colors apply under `html.mh-dark` and, on the Freemius checkout host, when the operating system is in dark mode.
+- New page template, Payment recovery. Assign it to the page Freemius uses for failed-payment emails. The template loads `https://checkout.freemius.com/js/v1/` so the card form can open. The words on the page stay in the page body.
+- Checkout success redirection stays off.
+
+## 3.58.0 — Project pages: Home-style hero, commercial video, shorter reading blocks
+
+- The project hero now uses the same calm gradient as the Home hero, with the framed media beside the copy. The media also shows on phones, under the copy.
+- A project can show a commercial in the hero: a poster with a play button inside a frame with a slow animated gradient ring. It never autoplays and nothing downloads until the visitor presses play; then the native controls (keyboard, fullscreen) take over. Reduced-motion visitors get a still ring.
+- The video comes from the new "Hero video URL" field on the project, else a video attached to the project, else a video in the media library whose name contains the project slug. No video means the screenshot shows as before.
+- Story steps now read as a one-line lead plus short points. The Handoff text is split the same way. The words are not rewritten, only broken at sentence ends.
+- Reading width is capped near 62 characters, with more space between sections.
+- The at-a-glance stats moved out of the hero copy into a box under the video.
+- All section headings are centred, including Feedback, Ask, Comments and More projects.
+- Round three: more space under the hero and the page nav, and the "On this page" buttons no longer clip on hover. Plan cards lead with a big site count. The call-to-action band has new copy and type. Every button icon sits on the right in a round blue badge, and button arrows are round too. Story and architecture numbers are circles, and the story steps are laid out side by side on phones. Less bold text (intros, spec values, box text), and larger section headings with a green-to-blue gradient. The architecture list lost its connector lines. Handoff is now a numbered "Install and set up" guide; Cobble & Candle has six steps taken from its getting-started guide, and other projects turn their handoff text into numbered steps. The palette boxes are back, with a note that the colors can be changed in the theme settings. Visitor notes and Visitor feedback are one box, and "Copy link" is a "Share project" button.
+- Comments: gradient rule under the head with a speech-bubble badge, a pill-shaped "Leave feedback" link and sort control, a graphic empty state, gradient-edged comment cards with ringed avatars, pill-shaped reply and copy-link buttons, replies on a green-to-blue connector line, and the comment form in one gradient-edged box with a clear focus ring. The name and email fields in the contact box are stacked at full width.
+- Specs: "Live demo" is no longer a spec (it is a button under the video). The spec container has no fill, only the gradient boxes do. Architecture boxes lose the grey bottom rule, get bigger numbers, and show "Label: detail" as a bold label over its detail. Handoff boxes have more room around the dot, and the palette has no boxes. Under "Questions before you buy" there is a gradient line, then the blurb and the Copy link link side by side. The "Ask about..." heading in the contact box is smaller.
+- The Owner guide and Support guide links are outline buttons labelled "Owner guide" and "Support" under the spec tiles, instead of tiles that said "Read online".
+- "Already bought? Open your account" under the plans is an outline button instead of a text link.
+- Specs only have a background on the boxes themselves (the Stack and Languages rows are a label above square boxes). Handoff boxes have more padding. The palette has no box or fill, just swatch, name and code.
+- Specs: Stack and Languages are rows of square tiles with the icon above the name. The other facts are compact tiles in a grid, and repository and demo links get double-width tiles.
+- Under the hood loses its extra backgrounds, so only the individual boxes show. Architecture points are numbered boxes joined by a thin line. The small labels above headings are green-to-blue gradient text, and the pills above the hero title (type, category, place) are filled with the gradient.
+- "Choose a plan" is three cards: plan name, who it fits, a large price, the per-site price worked out from the plan, what every plan includes (a year of updates, email support, the 30-day refund the page already promised), and a full-width Buy button. The plan with the lowest price per site is labelled; nothing is labelled "popular". The intro is plainer. All buttons on the project page now share one look: a green-to-blue gradient pill that shifts on hover, gradient-edged outline buttons, and a clear focus ring.
+- The project hero is a two-column grid with the copy and the video box centred against each other, and the space above and below matches (the wave is allowed for). The screenshot description under the gallery has a gradient bar, a tinted box and heavier type.
+- Check circles and bullet dots are brighter (lime to cyan to blue, with a soft glow). Story steps have numbered boxes joined by a green-to-blue line: it draws in as the section scrolls into view, badges pop in one after another, and a light pulse keeps travelling along it. Reduced motion shows it still; phones get a vertical line.
+- Every box on the project page (features, story, specs, architecture, handoff, palette, pricing tiers, FAQ, screenshots, stats, call-to-action band) now has the same green-to-blue gradient border. Under the hood is rebuilt as separate boxes: spec tiles with the label above the value, and one box per architecture or handoff point.
+- "Live demo" and "Ask about this" moved from the hero copy to directly under the video; the copy keeps the one primary action (buy or download) and "View code".
+- Screenshots: the thumbnails sit in a scrolling rail to the left of the big image (under it on phones), with a green-to-blue scrollbar. Firefox gets a flat green one, since it cannot draw a gradient scrollbar.
+- Lower sections follow a landing-page rhythm: centred section heads, features as three-column cards with a check badge, one dark call-to-action band (same wording as the hero button) before the story, alternating full-width bands, lifted story and spec cards, and a plus/minus FAQ accordion.
+- New `resources/css/project-redesign.css` (imported just before `polish.css`) and `resources/js/project-video.js`.
+
+## 3.57.0 — Motion pass: sliding nav indicators, press states, FAQ tween
+
+- New `resources/css/motion.css` (drawer stagger, press states, FAQ open/close) and `resources/js/nav-indicator.js`. One sliding capsule per rail moves between items in the header nav (follows hover, rests on the current page) and the sticky "On this page" pills (follows the active section).
+- Transform and opacity only; the FAQ `block-size` tween is the one opt-in exception. Every rule has a `prefers-reduced-motion` counterpart, and the script does not run for those visitors, so they keep the static styles.
+- `motion.css` is imported just before `polish.css`, which stays last.
+
+## 3.56.1 — Pause button removed, no bar under hero titles
+
+- The pause-animations button is gone from the header, along with its script and styles. With the button gone, the phone header has more room, and the "Get updates" icon-only range is back to 901 to 1099px.
+- Hero titles no longer have the short blue bar under them (page headers, product and project heroes). Section headings keep theirs.
+
+## 3.56.0 — Page polish: green-to-blue edges and easier reading
+
+- New `resources/css/polish.css`, imported last in `app.css`. It adds colors, edges and small type only; nothing moves except a 1px hairline.
+- Privacy and Terms: section headings (`.legal-prose > h2`) take the same green-to-blue gradient as the section titles and page titles, with a short gradient rule under them that stretches when the heading is the jump target. They were flat black beside gradient page titles. Print and high-contrast modes fall back to plain text.
+- Privacy and Terms: the card gets a gradient top edge in light and dark mode, the dash markers become green-to-blue dots, and "Last updated" is a quiet pill.
+- Jumps from the "On this page" rail now land with the card's top edge and eyebrow in view (`scroll-margin-top: 5.5rem` on legal headings). They cleared the sticky bars by 8px before, with the card's top cut off.
+- Alternate sections (`.pf-section--alt`) get a faded green-to-blue hairline on their top edge, using `border-image` so the light and dark fills are untouched.
+- Supporting lines (`.pf-meta`, `.cta-band__note`, `.gh-panel__note`, `.code-sync`) go from 14px to 15px with a little more leading.
+- Not changed on purpose: the violet accents (quotes, chips, link hover) are part of the lime-and-violet system in `studio.css`, so they stay. Card hover shadows stay as they are because `shop-pages.css` sets its own at higher specificity.
+
+## 3.55.3 — Plainer copy on the Resources page
+
+- Every tool card and stack line on the Resources page is rewritten in plain language for site owners: what the tool does and why I use it, without jargon like CI, IoC container, or cache-busting. Tool names, links and affiliate flags are unchanged.
+- Stack group names are friendlier ("Where I write code", "Hosting and going live", "Design and fonts"), and the jump link reads "More tools" instead of "Stack groups".
+- The page intro, section leads and call-to-action text (block content on the Resources page) were reworded to match.
+
+## 3.55.2 — Resources stack list matches what ships
+
+- Search and analytics: Google Tag Manager is replaced by Site Kit by Google, which is what loads GA4 today (`resources/js/track.js` says there is no Tag Manager container). The GA4 line no longer says it runs through Tag Manager and mentions the product page events from 3.51.0.
+- "Microsoft Clarity / Bing" is now "Bing Webmaster Tools". Nothing in the theme loads Clarity or the UET tag, so the line no longer names them.
+- Hosting and shipping: adds Freemius, the checkout and license keys for the themes for sale (3.12 onward).
+- AI and automation: adds WPVibe, the WordPress connection for posts, pages and settings.
+- Links that redirected now point at the final address: Vite, WP-CLI, Laravel Pint, Power Apps, Power Automate, and Google Analytics.
+
+## 3.55.1 — Cobble & Candle page speaks to buyers
+
+- A product on sale no longer shows the "sample work I built in public" note in its hero. Projects that are not for sale keep it.
+- On a product on sale, the Feedback heading is "Questions before you buy", the form heading names the product, and the closing band offers a setup instead of "Hire me".
+- Like and star buttons hide their number while it is 0, on every project page. The number appears with the first like or star.
+- Cobble & Candle catalog entry matches release 1.5.1: 33 blocks (was 28), 13 patterns, 15 templates, version 1.5.1 (was 1.0.1). The audience line no longer mentions hiring managers. One-time reseed `mh_product_catalog_v21` updates only this product.
+
+## 3.55.0 — Signup card under the home post grid
+
+- Home "What's new": the email signup under the post grid now sits in its own card, well spaced from the posts. The card has the brand gradient border (lime, cyan, blue, violet), a soft lime-to-blue background, a gradient heading, a pill email field and a lime-to-cyan Subscribe button. On wide screens the text is on the left and the form on the right.
+- The card is added when the section renders (`blocks/section.blade.php`), so page content is unchanged, and it reuses the Journal newsletter form styles.
+
+## 3.54.0 — Spinning frame on the home hero theme card
+
+- Home hero "Newest theme" card: the gradient frame around the screenshot now spins like the About photo ring (one turn every 6 seconds) and shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The card has the same lime-to-blue gradient background as the About photo card, with a dark-mode version.
+
+## 3.53.0 — Spinning photo ring and card gradient
+
+- About profile photo: the green-to-blue ring now spins around the photo (one turn every 6 seconds) and still shifts to blue, violet and lime on hover or keyboard focus. With reduced motion it stays still.
+- The photo card has a soft gradient background: a lime tint at the top left fading through the card color to a blue tint at the bottom right, with a deeper navy version in dark mode.
+
+## 3.52.0 — About profile photo card
+
+- The About profile photo (the Image block with the `about-portrait-inline` class) sits in a card: a green-to-blue gradient ring around the photo, a centered caption, and the social icons under it in the same box. On hover or keyboard focus the ring turns and shifts to blue, violet and lime; with reduced motion the colors change without the turn.
+- The ring and icons are added when the block renders (`app/blocks.php`), so the page content is unchanged.
+
+## 3.51.2 — About page card hierarchy
+
+- About page only: glance facts, past resume roles and skill tiles now use a quiet hairline border that turns lime on hover. Lime stays on the main cards (services, How I work, the current role, skill groups), so the page has a clear focus and skill tiles no longer show a lime border inside a lime group.
 
 ## 3.51.1 — Marketing events wait for gtag
 

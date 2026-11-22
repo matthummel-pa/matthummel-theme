@@ -30,6 +30,7 @@ function mh_project_sidebar_meta_keys(): array
         '_mh_project_support',
         '_mh_project_screenshots',
         '_mh_project_brand_tagline',
+        '_mh_project_video_url',
         '_mh_project_brand_palette',
     ];
 }
@@ -644,6 +645,7 @@ function mh_project_sidebar_admin_meta_box(\WP_Post $post): void
     mh_project_sidebar_admin_field(__('Last updated', 'sage'), 'mh_project_last_updated', (string) get_post_meta($post->ID, '_mh_project_last_updated', true), '2026-08-31');
     mh_project_sidebar_admin_field(__('Screenshots (url|caption per line)', 'sage'), 'mh_project_screenshots', (string) get_post_meta($post->ID, '_mh_project_screenshots', true), '', 'textarea');
     mh_project_sidebar_admin_field(__('Brand tagline', 'sage'), 'mh_project_brand_tagline', (string) get_post_meta($post->ID, '_mh_project_brand_tagline', true), 'Farms · land · historic homes');
+    mh_project_sidebar_admin_field(__('Hero video URL (blank = a video attached to this project, or named after it)', 'sage'), 'mh_project_video_url', (string) get_post_meta($post->ID, '_mh_project_video_url', true), 'https://', 'url');
     mh_project_sidebar_admin_field(__('Brand palette (Name|#hex per line)', 'sage'), 'mh_project_brand_palette', (string) get_post_meta($post->ID, '_mh_project_brand_palette', true), "Forest|#1f6b4a\nInk|#141210", 'textarea');
     echo '</tbody></table>';
 }
@@ -710,6 +712,8 @@ function mh_save_project_sidebar_meta(int $post_id): void
     update_post_meta($post_id, '_mh_project_last_updated', sanitize_text_field(wp_unslash($_POST['mh_project_last_updated'] ?? '')));
     update_post_meta($post_id, '_mh_project_screenshots', sanitize_textarea_field(wp_unslash($_POST['mh_project_screenshots'] ?? '')));
     update_post_meta($post_id, '_mh_project_brand_tagline', sanitize_text_field(wp_unslash($_POST['mh_project_brand_tagline'] ?? '')));
+    update_post_meta($post_id, '_mh_project_video_url', esc_url_raw(wp_unslash($_POST['mh_project_video_url'] ?? '')));
+    delete_transient('mh_project_video_'.$post_id);
     update_post_meta($post_id, '_mh_project_brand_palette', sanitize_textarea_field(wp_unslash($_POST['mh_project_brand_palette'] ?? '')));
 }
 

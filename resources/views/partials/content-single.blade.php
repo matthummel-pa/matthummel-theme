@@ -23,34 +23,7 @@
   $shareFb   = $shareUrls['facebook'];
   $shareReddit = $shareUrls['reddit'];
   $hasAffiliateLinks = \App\mh_post_has_affiliate_links($postId);
-
-  // Related posts — same category, exclude current
-  $relatedPosts = [];
-  if ($postCats) {
-    $relQ = new WP_Query([
-      'post_type'      => 'post',
-      'posts_per_page' => 3,
-      'post__not_in'   => [$postId],
-      'category__in'   => array_column($postCats, 'term_id'),
-      'orderby'        => 'date',
-      'order'          => 'DESC',
-      'no_found_rows'  => true,
-      'meta_query'     => \App\mh_exclude_noindex_meta_query(),
-    ]);
-    foreach ($relQ->posts as $rp) {
-      $rc = get_the_category($rp->ID);
-      $relatedPosts[] = [
-        'title' => \App\mh_post_title($rp),
-        'url'   => get_permalink($rp),
-        'date'  => get_the_date('M j, Y', $rp),
-        'cat'   => $rc ? $rc[0]->name : '',
-        'thumb' => \App\mh_post_card_image((int) $rp->ID),
-        'mins'  => \App\mh_reading_minutes($rp),
-        'ex'    => wp_trim_words(get_the_excerpt($rp), 14),
-      ];
-    }
-    wp_reset_postdata();
-  }
+  $relatedPosts = \App\mh_related_journal_posts((int) $postId, is_array($postCats) ? $postCats : []);
 @endphp
 
 <article class="post-single h-entry" id="post-{{ $postId }}"

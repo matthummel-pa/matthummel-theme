@@ -1,0 +1,136 @@
+/* Page polish (3.56.0): readability and green-to-blue gradient accents for page content.
+   Additive layer, imported last in app.css. It changes colors, edges and small type only; no layout moves.
+   Gradient headings are painted by heading-gradients.css (--hg-light / --hg-dark); this file extends the
+   same look to prose headings and adds a shared set of decorative edges. Text never sits on --mh-edge,
+   so contrast is unaffected. */
+
+:root {
+  /* Decorative strokes: green, to cyan, to blue (same stops the .mh-cards top bar uses). */
+  --mh-edge: linear-gradient(90deg, #4ade80 0%, #22d3ee 52%, #3b82f6 100%);
+  --mh-edge-d: linear-gradient(135deg, #4ade80 0%, #22d3ee 50%, #3b82f6 100%); /* small dots: both ends stay visible */
+  --mh-edge-fade: linear-gradient(90deg, transparent 0%, color-mix(in srgb, #4ade80 70%, transparent) 22%, color-mix(in srgb, #3b82f6 70%, transparent) 78%, transparent 100%);
+  --mh-wash-g: color-mix(in srgb, #4ade80 14%, transparent);
+  --mh-wash-b: color-mix(in srgb, #3b82f6 11%, transparent);
+}
+html.mh-dark {
+  --mh-edge-fade: linear-gradient(90deg, transparent 0%, color-mix(in srgb, #4ade80 60%, transparent) 22%, color-mix(in srgb, #38bdf8 60%, transparent) 78%, transparent 100%);
+}
+
+/* ─── Prose headings: same gradient as the section titles ───────────────────
+   Legal pages and default pages used flat black h2s next to gradient page titles. */
+html body .legal-prose > h2,
+html body .page-block .entry-content > h2 {
+  background-image: var(--hg-light) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: .1em;
+  text-wrap: balance;
+}
+html.mh-dark body .legal-prose > h2,
+html.mh-dark body .page-block .entry-content > h2 { background-image: var(--hg-dark) !important; }
+
+/* A short gradient rule under each prose h2. It stretches when the heading is the jump target. */
+.legal-prose > h2::after,
+.page-block .entry-content > h2::after {
+  content: "";
+  display: block;
+  inline-size: 2.75rem;
+  block-size: 3px;
+  margin-block-start: .65rem;
+  border-radius: 2px;
+  background: var(--mh-edge);
+  -webkit-text-fill-color: initial;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .legal-prose > h2::after,
+  .page-block .entry-content > h2::after { transition: inline-size .35s cubic-bezier(.2, .8, .2, 1); }
+}
+.legal-prose > h2:target::after,
+.page-block .entry-content > h2:target::after { inline-size: 5.5rem; }
+
+/* Jumps from the "On this page" rail: land with the card's top edge and eyebrow in view. */
+.legal-prose :is(h2, h3)[id],
+.page-block .entry-content :is(h2, h3)[id] { scroll-margin-top: 5.5rem; }
+
+/* ─── Legal pages ──────────────────────────────────────────────────────────── */
+/* Gradient top edge on the card. Background layer only, so the card keeps its own fill and radius. */
+.legal-prose,
+html.mh-dark .legal-prose { /* studio.css sets a background shorthand on the dark card; match its weight */
+  background-image: var(--mh-edge);
+  background-repeat: no-repeat;
+  background-size: 100% 3px;
+  background-position: top left;
+}
+
+/* Dash markers become gradient dots; rows get a little more room. */
+.legal-bullets li { padding-inline-start: 1.8rem; }
+.legal-bullets li::before {
+  content: "";
+  inset-inline-start: .15rem;
+  inset-block-start: 1.07rem; /* .5rem row padding + half the (1.05rem × 1.75) line, less half the dot */
+  inline-size: .7rem;
+  block-size: .7rem;
+  border-radius: 50%;
+  background: var(--mh-edge-d);
+  box-shadow: 0 0 0 3px color-mix(in srgb, #3b82f6 14%, transparent);
+}
+
+/* "Last updated" as a quiet pill. */
+.legal-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .35rem .9rem;
+  border: 1px solid color-mix(in srgb, #3b82f6 26%, var(--color-border));
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--mh-wash-g), var(--mh-wash-b));
+}
+.legal-meta::before {
+  content: "";
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-radius: 50%;
+  background: var(--mh-edge-d);
+}
+
+/* ─── Section rhythm: a faded green-to-blue hairline on the alternate sections ──
+   border-image, not a background, so the light and dark section fills stay as they are. */
+.pf-section--alt {
+  border-top: 1px solid transparent;
+  border-image: var(--mh-edge-fade) 1 0 0 0;
+}
+
+/* ─── Small type floor: supporting lines were 14px. 15px with a little more leading. ─── */
+:is(.pf-meta, .cta-band__note, .gh-panel__note, .code-sync) {
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+
+/* ─── Guards ───────────────────────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  html body .legal-prose > h2,
+  html body .page-block .entry-content > h2 {
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: CanvasText !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+}
+/* Printers drop background graphics, which would blank gradient-clipped text. */
+@media print {
+  html body .legal-prose > h2,
+  html body .page-block .entry-content > h2 {
+    background-image: none !important;
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+  .legal-prose > h2::after,
+  .legal-bullets li::before,
+  .legal-meta::before { display: none; }
+  .legal-prose { background-image: none; }
+}
