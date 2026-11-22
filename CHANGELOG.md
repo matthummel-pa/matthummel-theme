@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.59.1 — Consent banner only in Europe
+
+- Analytics is denied until the visitor agrees only in the EEA, the UK and Switzerland (Consent Mode region defaults, set by Google from the IP address). Everywhere else it is granted, with no banner. Ads stay denied everywhere.
+- The banner shows automatically only when the browser's time zone is European. A European visitor it misses stays denied and untracked. The footer Cookie choices button works for everyone, and a saved answer is applied on every visit.
+
 ## 3.59.0 — Google Tag Manager container
 
 - The site loads one Google Tag Manager container (GTM-5H3KSG9X) from `app/setup.php`: the head script at `wp_head` priority 1 and the noscript frame at `wp_body_open`. Logged-in administrators get neither. Consent Mode v2 defaults (all denied) print before the container. Change or switch it off with the `mh_gtm_container_id` filter.

@@ -1,6 +1,6 @@
 /**
- * Analytics consent banner. The head script in app/setup.php sets every consent type to denied and re-applies a saved
- * "granted" before the container loads; this file asks once, saves the answer in localStorage (key mh-consent, no cookie),
+ * Analytics consent banner for Europe. The head script in app/setup.php grants analytics outside the EEA, UK and Switzerland,
+ * denies it there, and re-applies a saved answer before the container loads; this file asks once, saves the answer in localStorage (key mh-consent, no cookie),
  * and sends the update to Tag Manager. Ads stay denied: the site runs none.
  */
 const KEY = 'mh-consent'
@@ -24,6 +24,15 @@ function saveChoice(value) {
 function applyChoice(value) {
   if (typeof window.gtag !== 'function') return
   window.gtag('consent', 'update', { analytics_storage: value === 'granted' ? 'granted' : 'denied' })
+}
+
+function inEurope() {
+  try {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    return /^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Azores|Faroe)|Arctic\/Longyearbyen)/.test(zone)
+  } catch (e) {
+    return false
+  }
 }
 
 export function initConsent() {
@@ -59,5 +68,7 @@ export function initConsent() {
     banner.focus()
   })
 
-  if (!readChoice()) show()
+  // Ask only visitors whose clock says Europe (EEA, UK, Switzerland). The head script's region default is what actually
+  // denies analytics there, by IP, so a visitor this check misses stays denied and untracked. Footer link works for all.
+  if (!readChoice() && inEurope()) show()
 }
