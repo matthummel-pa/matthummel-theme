@@ -93,7 +93,8 @@ function mh_mailchimp_request(string $method, string $path, array $body = []): a
         'method' => $method,
         'timeout' => 30,
         'headers' => [
-            'Authorization' => 'Basic '.base64_encode('anystring:'.mh_mailchimp_api_key()),
+            // Mailchimp's API uses HTTP Basic auth, so the key is base64-encoded for the header, not obfuscated.
+            'Authorization' => 'Basic '.base64_encode('anystring:'.mh_mailchimp_api_key()), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'User-Agent' => 'matthummel-theme',
@@ -318,7 +319,7 @@ add_action('init', function (): void {
 
 add_action('wp_ajax_mh_mailchimp', function (): void {
     check_ajax_referer(MH_MAILCHIMP_NONCE, 'nonce');
-    $postId = (int) ($_POST['post_id'] ?? 0);
+    $postId = absint(wp_unslash($_POST['post_id'] ?? 0));
     // Sending to subscribers needs the same capability as publishing.
     if ($postId <= 0 || ! current_user_can('edit_post', $postId) || ! current_user_can('publish_posts')) {
         wp_send_json_error(['message' => 'Forbidden'], 403);
