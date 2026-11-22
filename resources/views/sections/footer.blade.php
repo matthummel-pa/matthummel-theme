@@ -103,6 +103,9 @@
         <a href="{{ home_url('/accessibility/') }}">{{ __('Accessibility', 'sage') }}</a>
       </nav>
     @endif
+    @if (\App\mh_gtm_container_id() !== '')
+      <p class="footer-consent"><button type="button" class="mh-consent-open" data-consent-open>{{ __('Cookie choices', 'sage') }}</button></p>
+    @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://claude.com/product/claude-code" rel="noopener" target="_blank">Claude Code<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
     @endif
   </div>

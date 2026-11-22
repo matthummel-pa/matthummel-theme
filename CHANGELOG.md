@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.59.0 — Google Tag Manager container
+
+- The site loads one Google Tag Manager container (GTM-5H3KSG9X) from `app/setup.php`: the head script at `wp_head` priority 1 and the noscript frame at `wp_body_open`. Logged-in administrators get neither. Consent Mode v2 defaults (all denied) print before the container. Change or switch it off with the `mh_gtm_container_id` filter.
+- GA4 now goes through the container (Google tag plus 11 event tags; the import file is `docs/gtm/matthummel-gtm-container.json`). Turn off Site Kit's Analytics tag placement when this ships, or each pageview is counted twice.
+- A consent banner (`partials/consent-banner.blade.php`, `resources/js/consent.js`) asks once: Allow analytics or No thanks, same size and weight. The answer is saved in localStorage (`mh-consent`, no cookie) and sent to Tag Manager as a consent update; a saved yes is re-applied before the container loads. A Cookie choices button in the footer reopens it. Ads stay denied.
+- New rule `.claude/rules/gtm-ga4-analytics.md` and skill `.claude/skills/gtm-setup`.
+
 ## 3.58.6 — Footer signup panel, no footer RSS icon
 
 - The Get updates form in the footer sits in its own panel with more padding, a clearer heading and intro, a larger label, a full-width pill email field, and a full-width Subscribe button. The success and error message use the same panel style. Contrast stays above 4.5:1 for text and 3:1 for the field border.

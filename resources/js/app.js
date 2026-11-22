@@ -18,6 +18,7 @@ import { initCardDetails } from './card-details.js';
 import { initNavIndicators } from './nav-indicator.js';
 import { initProjectVideo } from './project-video.js';
 import { initProjectStory } from './project-story.js';
+import { initConsent } from './consent.js';
 
 function initPopoutMenu() {
   const menu = document.querySelector('#mh-popout');
@@ -525,6 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavIndicators();
   initProjectVideo();
   initProjectStory();
+  initConsent();
   initCheckoutInstallNotes();
   initCopyBrief();
   initPresenceReveal();
