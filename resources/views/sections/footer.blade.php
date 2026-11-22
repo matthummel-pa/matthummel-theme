@@ -87,6 +87,10 @@
           @if ($i > 0)<span aria-hidden="true">·</span>@endif
           <a href="{{ esc_url($item->url) }}"{{ $item->target ? ' target="'.esc_attr($item->target).'" rel="noopener"' : '' }}>{{ esc_html($item->title) }}</a>
         @endforeach
+        @if (\App\mh_gtm_container_id() !== '')
+        <span aria-hidden="true">·</span>
+        <button type="button" data-consent-open>{{ __('Cookie choices', 'sage') }}</button>
+        @endif
       </nav>
     @else
       <nav class="footer-legal-links" aria-label="{{ __('Legal', 'sage') }}">
@@ -101,10 +105,11 @@
         <a href="{{ home_url('/affiliate-disclosure/') }}">{{ __('Affiliate disclosure', 'sage') }}</a>
         <span aria-hidden="true">·</span>
         <a href="{{ home_url('/accessibility/') }}">{{ __('Accessibility', 'sage') }}</a>
+        @if (\App\mh_gtm_container_id() !== '')
+        <span aria-hidden="true">·</span>
+        <button type="button" data-consent-open>{{ __('Cookie choices', 'sage') }}</button>
+        @endif
       </nav>
-    @endif
-    @if (\App\mh_gtm_container_id() !== '')
-      <p class="footer-consent"><button type="button" class="mh-consent-open" data-consent-open>{{ __('Cookie choices', 'sage') }}</button></p>
     @endif
     <p class="footer-stack">Built with <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>, WordPress, and PHP. Planned with <a href="https://claude.com/product/claude-code" rel="noopener" target="_blank">Claude Code<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
     @endif

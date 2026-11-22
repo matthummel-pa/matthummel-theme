@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.60.2 — Cookie choices sits in the footer menu
+
+- The Cookie choices button is now part of the footer legal menu, after the last link, at the same size and color as Privacy and Terms (it also follows a custom Footer bottom menu). It still reopens the consent banner.
+
 ## 3.60.1 — Footer newsletter box holds its contents
 
 - The Get updates box in the footer was cut short: the form, button and the "Sent with Mailchimp" line spilled out below the panel and over the bottom bar. Cause: Tailwind scans the whole repo, found the footer widget id `block-12` in `docs/MAILCHIMP.md`, and built a real `.block-12 { block-size: 3rem }` rule. Docs, rules and the changelog are no longer scanned, and a footer widget is always as tall as its content.

@@ -3770,13 +3770,16 @@ html.mh-dark .affiliate-note { background: #172233; }
 .site-footer .footer-copy,
 .site-footer .footer-nav a,
 .site-footer .footer-legal-links a,
+.site-footer .footer-legal-links button,
 .site-footer .footer-follow__lede,
 .site-footer .footer-follow__note,
 .site-footer p { color: #c9d9ef; }
 .site-footer .footer-nav a:hover,
 .site-footer .footer-legal-links a:hover,
+.site-footer .footer-legal-links button:hover,
 .site-footer .footer-nav a:focus-visible,
-.site-footer .footer-legal-links a:focus-visible { color: #fff; text-decoration: underline; text-decoration-color: var(--blue-300); }
+.site-footer .footer-legal-links a:focus-visible,
+.site-footer .footer-legal-links button:focus-visible { color: #fff; text-decoration: underline; text-decoration-color: var(--blue-300); }
 .site-footer .soc-link { color: #c9d9ef; border-color: rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .05); }
 .site-footer .soc-link:hover,
 .site-footer .soc-link:focus-visible { color: #fff; border-color: var(--blue-300); background: rgba(29, 111, 224, .25); }
