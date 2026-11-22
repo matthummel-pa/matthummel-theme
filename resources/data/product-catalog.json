@@ -3,7 +3,7 @@
     "title": "Cobble & Candle",
     "cat": "Themes",
     "place": "Restaurants, taverns & inns",
-    "blurb": "A WordPress block theme for restaurants, taverns, and inns: menus with diet filters, live “open now” hours, table and room bookings, events, and a setup wizard. No page builder.",
+    "blurb": "A WordPress block theme for restaurants, taverns, and inns, built for AI search: live “open now” hours, menus with diet filters, table and room bookings, events, and a setup wizard. No page builder.",
     "tech": [
       "Sage",
       "WordPress",
@@ -16,13 +16,13 @@
     "for_sale": false,
     "live": true,
     "price": "",
-    "eyebrow": "Pro theme · Restaurants, taverns & inns",
-    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is sold as a Pro theme with a yearly license for updates and support.",
-    "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
-    "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
-    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
+    "eyebrow": "Pro theme · Restaurants, taverns & inns · Built for AI search",
+    "summary": "Cobble & Candle is a WordPress block theme for restaurants, taverns, and inns. Guests see live “open now” hours, menus they can filter by diet, and book a table or a room. It is also built for AI search: it publishes your hours, menus, rooms and events as an llms.txt file and as read-only tools, so AI search and assistants can quote them correctly. Owners set it up in a five-step wizard, import a menu from a spreadsheet, and confirm bookings from the dashboard. It is sold as a Pro theme with a yearly license for updates and support.",
+    "challenge": "Hospitality sites go stale fast. Hours change on holidays, menus change weekly, and most restaurant themes are page-builder demos with static text. People now ask AI assistants “is it open tonight?” and “where can I get a vegan dinner?”, and an assistant that finds hours in an image or a PDF menu has to guess. An inn with a restaurant downstairs usually needs a second booking plugin and a calendar sync service on top.",
+    "approach": "I built it as a block theme on Sage 11 with a companion plugin that owns the data: locations, hours, menus, events, rooms and bookings. “Open now” is worked out in the visitor’s browser so cached pages stay right. Rooms get a real availability calendar with two-way iCal sync. The same data is published for machines as well as people: schema.org structured data, a public JSON menu feed, an llms.txt summary that rebuilds when you edit, robots.txt rules for the published AI crawlers, and five read-only WordPress Abilities (WordPress 6.9 and newer) that an AI assistant can call for hours, the menu, events, rooms and room availability. Everything is edited in WordPress itself: the Site Editor for design, short field panels for prices and hours.",
+    "result": "A restaurant, bar or inn gets a site that tells guests whether it is open, what is on the menu, and lets them request a table or a room in under a minute, and gives AI search and assistants the same answers in a form they can read. The live demo is at cobbleandcandle.matthummel.com with fiction content. It is sold as a yearly Pro license. Say hello if you want me to set it up for you.",
     "audience": "Restaurant, tavern, and inn owners who want menus, hours, and bookings that stay right without a developer. Agencies that ship hospitality sites. Hiring managers who want to see a full WordPress product: theme, plugin, booking engine, setup wizard, docs, and tests.",
-    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. WCAG 2.2 AA, right-to-left languages, translation-ready.",
+    "architecture": "Sage 11 block theme (Acorn, Blade, Tailwind v4, Vite, Alpine.js) with 28 server-rendered blocks and four Site Editor style variations (Lampwright, Ember & Arch, Ashlar & Iron, Daylight). Cobble & Candle Core plugin (bundled, one-click install) holds locations, menus, events, rooms, bookings and messages as custom post types with REST-registered fields. Booking engine: availability endpoint, pending → confirmed requests, hourly iCal import and a private export feed per room. Restaurant, Menu, Event, HotelRoom, Organization, WebSite and BreadcrumbList schema, joined to Yoast or Rank Math when present. AI search layer in the Core plugin: /llms.txt and /llms-full.txt generated from live data (cached an hour, rebuilt on edit), a robots.txt policy for the published AI crawlers (welcome all, welcome search and assistant crawlers only, or leave alone), and five read-only WordPress Abilities for the MCP Adapter (hours and open now, menu with diet and allergen filters, events, rooms, room availability). No AI service is called and no data leaves the site. WCAG 2.2 AA, right-to-left languages, translation-ready.",
     "handoff": "Upload the theme, click once to install the plugin, and the setup wizard asks for your name, style, currency and clock, imports the demo or your first location, and builds the pages and menus. Hours and holiday hours are set per location; menus import from a CSV. A Status page checks the setup and gives a system report for support.",
     "benefits": [
       "Live “open now” and holiday hours per location, correct on cached pages",
@@ -38,7 +38,10 @@
       "Four style directions, including a bright café style",
       "Restaurant, Menu, Event and HotelRoom structured data for Google",
       "WCAG 2.2 AA tested, right-to-left support, translation-ready",
-      "No page builder, no ACF, fonts bundled locally"
+      "No page builder, no ACF, fonts bundled locally",
+      "llms.txt and llms-full.txt built from your live hours, menus, rooms and events, rebuilt when you edit",
+      "Read-only assistant tools (WordPress 6.9+): hours, menu with diet and allergen filters, events, rooms and room availability",
+      "robots.txt rules for the published AI crawlers: welcome all, welcome search and assistants only, or leave it alone"
     ],
     "deliverables": [
       "Cobble & Candle block theme (28 custom blocks, 4 style variations)",
@@ -46,8 +49,9 @@
       "Room booking engine with iCal import and export",
       "Setup wizard and demo content",
       "Menu CSV import / export",
+      "AI search layer: llms.txt, AI crawler rules and read-only assistant tools",
       "Messages inbox, Status & logs screen",
-      "Owner guide (11 pages), FAQ, developer hook reference",
+      "Owner guide (12 pages, including AI search and assistants), FAQ, developer hook reference",
       "Screenshot, readme, licenses, and changelog"
     ],
     "blocks": [
@@ -160,6 +164,10 @@
       [
         "WCAG 2.2",
         "AA tested"
+      ],
+      [
+        "5",
+        "read-only assistant tools"
       ]
     ],
     "quality": [
@@ -186,8 +194,8 @@
         "No, on purpose. Table and room bookings are requests you confirm, so there is no card handling or refund process to manage. Link your online-ordering system for takeout."
       ],
       [
-        "Will my hours be right for Google?",
-        "Each location publishes Restaurant structured data with opening and holiday hours, address, map coordinates, cuisine and price range. It works alongside Yoast SEO or Rank Math."
+        "Will my hours be right for Google and AI search?",
+        "Each location publishes Restaurant structured data with opening and holiday hours, address, map coordinates, cuisine and price range. It works alongside Yoast SEO or Rank Math. The same hours feed your llms.txt file and the assistant tools, so they never disagree."
       ],
       [
         "Can I import my menu?",
@@ -200,6 +208,22 @@
       [
         "What do I need to run it?",
         "WordPress 6.6 or newer and PHP 8.3 or newer. Caching plugins such as LiteSpeed Cache and WP Rocket are supported."
+      ],
+      [
+        "Is Cobble & Candle an AI theme?",
+        "It is built for AI search, not by AI and not powered by an AI service. It does not call a model or write your content. It publishes your hours, menus, rooms and events in forms AI search and assistants can read: structured data, a JSON menu feed, an llms.txt file, robots.txt rules for AI crawlers, and read-only tools for assistants."
+      ],
+      [
+        "Which AI services does it work with?",
+        "The crawler rules name the published crawlers of OpenAI, Anthropic, Perplexity, Google, Apple, Meta and others. Structured data and llms.txt are open formats any service can read; whether a given service uses them is up to that service. The assistant tools use WordPress’s Abilities API and the Model Context Protocol, so an assistant that supports MCP connectors can use them once the MCP Adapter plugin is installed. Nothing here promises a ranking or a citation."
+      ],
+      [
+        "What do I need for the assistant tools?",
+        "WordPress 6.9 or newer, and WordPress’s MCP Adapter plugin to connect an assistant. On older WordPress the tools are simply not there and the rest of the theme, including llms.txt and the crawler rules, works as normal. The tools are read-only and answer only from what your public pages already show: nothing can be booked or changed."
+      ],
+      [
+        "How is this better than a standard WordPress theme?",
+        "A standard restaurant theme leaves it to you: hours and menus as text, images or a PDF; an llms.txt you would write and keep current by hand; robots.txt edits for each AI crawler; and no way for an assistant to ask for tonight’s hours or whether a room is free. Cobble & Candle keeps all of that in step with the pages you already edit."
       ]
     ],
     "demo": "https://cobbleandcandle.matthummel.com/",
@@ -209,9 +233,21 @@
       "plan_id": "74742",
       "public_key": "pk_773f209ba80bce933bf3a9c0233fa",
       "tiers": [
-        { "label": "1 site", "licenses": 1, "price": "$59.99" },
-        { "label": "5 sites", "licenses": 5, "price": "$99.99" },
-        { "label": "Unlimited sites", "licenses": 0, "price": "$199.99" }
+        {
+          "label": "1 site",
+          "licenses": 1,
+          "price": "$59.99"
+        },
+        {
+          "label": "5 sites",
+          "licenses": 5,
+          "price": "$99.99"
+        },
+        {
+          "label": "Unlimited sites",
+          "licenses": 0,
+          "price": "$199.99"
+        }
       ]
     },
     "github": "",
@@ -234,7 +270,7 @@
       ]
     ],
     "support": "https://github.com/matthummel-pa/wp-cobbleandcandle-docs/blob/main/support.md",
-    "topics": "wordpress-theme, restaurant, bar, inn, bed-and-breakfast, booking, block-theme, sage, gutenberg, full-site-editing",
+    "topics": "wordpress-theme, restaurant, bar, inn, bed-and-breakfast, booking, block-theme, sage, gutenberg, full-site-editing, ai-search, llms-txt, mcp, structured-data",
     "languages": "PHP, Blade, CSS, JavaScript",
     "brand_tagline": "Restaurant · tavern · inn",
     "brand_palette": "Lamp-black|#15110D\nSmoke|#201A14\nBrass|#C79A55\nParchment|#F2E6D3\nOxblood|#5C2A22",
@@ -323,11 +359,14 @@
       "WordPress tavern theme",
       "restaurant website with online booking",
       "WordPress inn theme with booking calendar",
-      "WordPress block theme for restaurants"
+      "WordPress block theme for restaurants",
+      "WordPress theme for AI search",
+      "restaurant website for AI search",
+      "llms.txt WordPress theme"
     ],
     "is_product": false,
-    "seo_title": "Cobble & Candle: WordPress Inn Theme | Matt Hummel",
-    "seo_description": "WordPress block theme for restaurants, taverns, and inns: live hours, diet-filtered menus, table and room bookings with Airbnb sync, and a setup wizard."
+    "seo_title": "Cobble & Candle: AI-ready WordPress Restaurant & Inn Theme",
+    "seo_description": "WordPress block theme for restaurants, taverns and inns, built for AI search: llms.txt, structured data, live hours, diet-filtered menus, bookings and Airbnb sync."
   },
   "acreline": {
     "title": "Acreline",

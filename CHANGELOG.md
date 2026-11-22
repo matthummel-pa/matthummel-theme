@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.52.0 — Cobble & Candle: built for AI search
+
+- Cobble & Candle's product page, shop listing, landing page and search title now lead with what the theme does for AI search: an llms.txt file built from live hours, menus, rooms and events; read-only tools for AI assistants (WordPress 6.9+, through the MCP Adapter); and robots.txt rules for the published AI crawlers. Three new FAQs say plainly what it is not (it does not call an AI service or write content), which services it works with, and what the assistant tools need.
+- The landing page gets three AI cards at the front of the feature grid.
+- Refreshes once on update (`mh_product_catalog_v21`, Cobble & Candle only). Rank Math titles and descriptions edited in wp-admin win.
+- Publish after the theme's AI search release (wp-cobbleandcandle#109) is out in Freemius; the copy describes that release.
+
 ## 3.51.1 — Marketing events wait for gtag
 
 - The GA4 events from 3.51.0 are held in memory until gtag() exists. The cache plugin delays Site Kit's gtag.js until the first tap or scroll, so an event at page load (view_item) found no gtag and was lost. Events now wait up to 30 seconds, then are dropped; nothing is stored in the browser.
