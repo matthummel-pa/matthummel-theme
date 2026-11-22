@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.60.1 — Footer newsletter box holds its contents
+
+- The Get updates box in the footer was cut short: the form, button and the "Sent with Mailchimp" line spilled out below the panel and over the bottom bar. Cause: Tailwind scans the whole repo, found the footer widget id `block-12` in `docs/MAILCHIMP.md`, and built a real `.block-12 { block-size: 3rem }` rule. Docs, rules and the changelog are no longer scanned, and a footer widget is always as tall as its content.
+- The Mailchimp form in the box is one full-width email field and button, and the fine print sits inside the panel in a readable color.
+
 ## 3.60.0 — Mailchimp newsletter from the post edit screen
 
 - A **Mailchimp newsletter** box on the journal post editor (side column). Three steps, all by hand: **Create draft**, **Send me a test**, **Send to subscribers**. Nothing is sent when a post is published or saved. Send asks for a confirmation, runs Mailchimp's send checklist first, and a post can only be sent once.

@@ -9554,6 +9554,14 @@ html body .site-footer .footer-follow .footer-follow__lede {
   color: #c9d9ef;
   text-wrap: pretty;
 }
+/* A widget in this panel is as tall as its content, whatever class WordPress gave it (block-12 once became a fixed 3rem). */
+html body .site-footer .footer-follow .footer-widget { block-size: auto; height: auto; }
+/* The Mailchimp form (custom HTML widget, .mhmc): one full-width field and button, and the fine print stays inside the panel. */
+html body .site-footer .footer-follow .mhmc__row { flex-direction: column; align-items: stretch; gap: 1rem; }
+html body .site-footer .footer-follow .mhmc__row input { flex: 0 0 auto; width: 100%; }
+html body .site-footer .footer-follow .mhmc__btn { width: 100%; }
+html body .site-footer .footer-follow .mhmc__fine { margin: 1rem 0 0; font-size: .875rem; line-height: 1.5; color: #c9d9ef; }
+html body .site-footer .footer-follow .mhmc__fine a { color: #fff; }
 html body .site-footer .footer-follow .hostinger-reach-block-subscription-form-wrapper { margin: 0; }
 html body .site-footer .footer-follow .hostinger-reach-block-form-fields {
   display: flex;

@@ -26,5 +26,10 @@ html.mh-dark { color-scheme: dark; }
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+/* Tailwind scans the whole repo by default. A class-like word in docs or rules (the footer widget id "block-12" in docs/MAILCHIMP.md)
+   became a real utility, .block-12 { block-size: 3rem }, and clipped the footer signup box. Docs and rules are not templates. */
+@source not "../../docs";
+@source not "../../.claude";
+@source not "../../CHANGELOG.md";
 
 /* Tailwind theme tokens (fonts, radii, brand colors) live in theme-tokens.css, shared with editor.css. */
