@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.60.3 — Shorter footer credit
+
+- The footer credit now reads "Built with WordPress, planned with Claude Code." The Sage and PHP mentions are gone. Claude Code still links to its product page.
+
 ## 3.60.2 — Cookie choices sits in the footer menu
 
 - The Cookie choices button is now part of the footer legal menu, after the last link, at the same size and color as Privacy and Terms (it also follows a custom Footer bottom menu). It still reopens the consent banner.
