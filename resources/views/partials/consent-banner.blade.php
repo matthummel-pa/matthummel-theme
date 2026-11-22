@@ -12,8 +12,7 @@
     #mh-consent button[data-consent="denied"]{background:transparent;color:#1d4ed8}
     html.mh-dark #mh-consent button{border-color:#93c5fd;background:#93c5fd;color:#0f172a}
     html.mh-dark #mh-consent button[data-consent="denied"]{background:transparent;color:#93c5fd}
-    #mh-consent button:focus-visible,#mh-consent a:focus-visible,.mh-consent-open:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
-    .mh-consent-open{padding:0;border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
+    #mh-consent button:focus-visible,#mh-consent a:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
   </style>
   <div id="mh-consent" role="region" aria-labelledby="mh-consent-title" hidden tabindex="-1">
     <h2 id="mh-consent-title">{{ __('Analytics cookies', 'sage') }}</h2>
