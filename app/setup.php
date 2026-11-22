@@ -338,3 +338,48 @@ function mh_permalink_from_posts(array $posts): string
 
     return get_permalink($page) ?: '';
 }
+
+/**
+ * Google Tag Manager container. Every tag (GA4 included) loads through it; see .claude/rules/gtm-ga4-analytics.md.
+ * Admins are skipped so their visits stay out of the data. Filter `mh_gtm_container_id` to change or disable (empty string).
+ */
+function mh_gtm_container_id(): string
+{
+    if (current_user_can('manage_options')) {
+        return '';
+    }
+
+    return (string) apply_filters('mh_gtm_container_id', 'GTM-5H3KSG9X');
+}
+
+/**
+ * Consent Mode v2 defaults (denied) first, then the container snippet. The marks keep LiteSpeed from delaying either script.
+ */
+add_action('wp_head', function (): void {
+    $id = mh_gtm_container_id();
+    if ($id === '') {
+        return;
+    }
+
+    $js = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+'
+        ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+"
+        ."try{if(localStorage.getItem('mh-consent')==='granted')gtag('consent','update',{analytics_storage:'granted'})}catch(e){}
+"
+        ."(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',".wp_json_encode($id).');';
+
+    wp_print_inline_script_tag($js, ['data-no-optimize' => '1', 'data-no-defer' => '1', 'data-cfasync' => 'false']);
+}, 1);
+
+add_action('wp_body_open', function (): void {
+    $id = mh_gtm_container_id();
+    if ($id === '') {
+        return;
+    }
+
+    printf(
+        '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=%s" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'."\n",
+        esc_attr($id)
+    );
+});

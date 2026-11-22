@@ -1,6 +1,7 @@
 // Cobble & Candle landing page: Freemius checkout and click events (GA4 and, if one is added, Tag Manager). Nothing else loads here.
 import { initFreemiusCheckout } from './freemius-checkout.js'
 import { trackEvent } from './track.js'
+import { initConsent } from './consent.js'
 
 function initTracking() {
   document.addEventListener('click', (event) => {
@@ -38,3 +39,4 @@ function initStickyBar() {
 initTracking()
 initStickyBar()
 initFreemiusCheckout()
+initConsent()
