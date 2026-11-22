@@ -6,6 +6,12 @@ WooCommerce was removed in 3.12 and 3.13. Checkout is Freemius on the product pa
 
 Freemius checkout colors live in `resources/css/freemius-checkout.css` (navy `#0d2e57`, blue `#2563eb`, a blue–teal–green stripe, Inter, IBM Plex, `html.mh-dark`). Text, buttons, fields, and links stay readable in the light checkout and in dark mode (3.58.4). Freemius loads that file by URL. It is not imported into `app.css`. The Payment recovery template (`template-payment-recovery.blade.php`) is the page for failed-payment emails and prints `https://checkout.freemius.com/js/v1/` when the page body does not already include it.
 
+## Editor’s notes (3.60.0 Mailchimp newsletter)
+
+- `app/mailchimp-share.php` adds a **Mailchimp newsletter** meta box to the journal post editor. Create draft → Send me a test → Send to subscribers, each a separate click. The theme never sends on publish or save. Sending needs `publish_posts`, a confirmation, and a ready Mailchimp send checklist, and is blocked a second time by `_mh_mailchimp_sending` / `_mh_mailchimp_sent_at` post meta.
+- Credentials are `wp-config.php` constants only (`MH_MAILCHIMP_API_KEY` ending in the data center such as `-us12`, `MH_MAILCHIMP_LIST_ID`). No Customizer field, no option, nothing in the repo. The site's own signup form is still Hostinger Reach (3.7.15); this box only sends to the Mailchimp audience.
+- The email HTML is built in `mh_mailchimp_email_html()` (table layout, inline styles, one button). Filters: `mh/mailchimp_from_name`, `mh/mailchimp_reply_to`, `mh/mailchimp_button_label`.
+
 ## Editor’s notes (3.57.0 motion pass)
 
 - `resources/css/motion.css` is the motion layer and is imported in `app.css` just before `polish.css`. Add new transitions there rather than in portfolio.css/studio.css. Transform and opacity only; the FAQ `block-size` tween is the one opt-in exception (`interpolate-size: allow-keywords`). Every rule has a counterpart in the `prefers-reduced-motion` block at the bottom.
