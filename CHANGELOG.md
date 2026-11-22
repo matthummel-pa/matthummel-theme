@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.59.2 — Roomier footer signup
+
+- The footer signup box has more padding inside (2.25rem on desktop, 1.5rem on phones), more space between the field, the button and the text above them, and the Subscribe button sits above anything near it.
+- No feed link or feed address box can render inside the signup box. The footer social row already had no RSS icon from 3.58.6.
+
 ## 3.59.1 — Consent banner only in Europe
 
 - Analytics is denied until the visitor agrees only in the EEA, the UK and Switzerland (Consent Mode region defaults, set by Google from the IP address). Everywhere else it is granted, with no banner. Ads stay denied everywhere.
