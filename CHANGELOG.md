@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.61.0 — Cobble & Candle: built for AI search
+
+- Cobble & Candle's product page, shop listing, landing page and search title now lead with what the theme does for AI search: an llms.txt file built from live hours, menus, rooms and events; read-only tools for AI assistants (WordPress 6.9+, through the MCP Adapter); and robots.txt rules for the published AI crawlers. Three new FAQs say plainly what it is not (it does not call an AI service or write content), which services it works with, and what the assistant tools need.
+- The landing page gets three AI cards at the front of the feature grid.
+- Refreshes once on update (`mh_product_catalog_v22`, Cobble & Candle only). Rank Math titles and descriptions edited in wp-admin win.
+- The catalog version is now 1.6.0, the Cobble & Candle release with these features (Core 1.6.0, which theme 1.6.0 requires). Release it in Freemius before this goes live.
+
 ## 3.60.3 — Shorter footer credit
 
 - The footer credit now reads "Built with WordPress, planned with Claude Code." The Sage and PHP mentions are gone. Claude Code still links to its product page.

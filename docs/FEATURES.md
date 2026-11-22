@@ -132,6 +132,7 @@ Freemius checkout colors live in `resources/css/freemius-checkout.css` (navy `#0
 - Shop: `template-shop.blade.php` renders /shop/, /themes/, /plugins/ from `mh_shop_items()`; product kinds live in `mh_product_types()`. Catalog `coming_soon` hides Buy and shows a badge.
 - Product URLs: themes at `/themes/{slug}/`, plugins at `/plugins/{slug}/` (`mh_product_url_base()`); old `/projects/{slug}/` URLs 301. Free products with a catalog `download` get a Download free button (`mh_project_free_download_url()`).
 - Cobble & Candle copy refreshes once on update (`mh_product_catalog_v14`, that product only).
+- Cobble & Candle's copy leads with AI search and refreshes once on update (`mh_product_catalog_v22`, that product only). Landing cards for benefit positions 14-16 are the AI items: keep them last in the catalog `benefits` list.
 - Not in the theme: `robots.txt` is a host-edge 404 (needs a physical file in the web root with a `Sitemap:` line), the `http://www` → `/wp-admin/` host redirect, LiteSpeed Guest Mode, the `admin` username, schema types on static pages (plugin), and featured-image alt text (Notion: matthummel.com — Site audit notebook).
 
 ## Editor’s notes (3.6.45 feature lists)

@@ -33,7 +33,12 @@
     ['Ashlar & Iron', 'Stone and oxblood', ['#EFE6D6', '#7A2A2E']],
     ['Daylight', 'A bright café style', ['#FBF7F0', '#B14E25', '#4E6644']],
   ];
+  // Benefit positions 14-16 are the AI search items (llms.txt, assistant tools, crawler rules); they lead the grid. Keep the
+  // catalog order in step if benefits are reordered.
   $cards = [
+    [14, 'Ready for AI search'],
+    [15, 'Tools for AI assistants'],
+    [16, 'AI crawler controls'],
     [0, 'Live opening hours'],
     [1, 'Menus guests can filter'],
     [2, 'Table bookings, three ways'],
@@ -78,7 +83,7 @@
   <section class="cc-hero" id="top" aria-labelledby="cc-h1">
     <div class="cc-wrap cc-hero__grid">
       <div>
-        <p class="cc-eyebrow">{{ __('WordPress block theme · Restaurant · Tavern · Inn', 'sage') }}</p>
+        <p class="cc-eyebrow">{{ __('WordPress block theme · Restaurant · Tavern · Inn · Built for AI search', 'sage') }}</p>
         <h1 id="cc-h1">{{ __('A WordPress theme for restaurants, taverns and', 'sage') }} <em>{{ __('inns', 'sage') }}</em></h1>
         <p class="cc-hero__lead">{{ $lead }}</p>
         @if ($lowest !== '')
@@ -119,7 +124,7 @@
       <div class="cc-head">
         <p class="cc-eyebrow">{{ __('What it does', 'sage') }}</p>
         <h2 id="cc-features-h">{{ __('Everything a dining room or an inn needs online', 'sage') }}</h2>
-        <p>{{ __('Hours, menus, bookings, rooms and events, built into the theme. No page builder, no extra plugins to wire together.', 'sage') }}</p>
+        <p>{{ __('Hours, menus, bookings, rooms and events, built into the theme and published for AI search and assistants as well as for guests. No page builder, no extra plugins to wire together.', 'sage') }}</p>
       </div>
       <div class="cc-cards">
         @foreach ($cards as $i => [$bi, $title])
