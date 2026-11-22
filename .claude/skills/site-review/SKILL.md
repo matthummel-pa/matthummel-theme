@@ -3,9 +3,9 @@ name: site-review
 description: "Site review of the staging site: SEO, content and voice, schema, shop pages, accessibility, forms, and repo checks, ending in a numbered findings list. Use when Matt asks for a site review, a staging review, an SEO audit, or a check before publishing staging to live."
 ---
 
-# Site review (staging)
+# Site review (live)
 
-Review the **staging** site: `https://matthummel-com-623249.hostingersite.com/` ("hummel-dev"). Never log in to, install on, or edit `matthummel.com`. Matt publishes staging to live from hPanel. Reading production's public pages is fine when you need to compare.
+Review the **live** site: `https://matthummel.com/` (Matt's standing instruction: live is the default host; staging is not used unless he asks). Read pages without logging in; changes go through a PR.
 
 Report facts you checked. Mark anything you could not verify as unverified. Do not invent numbers, scores, or proof. Rules to apply: `.claude/rules/content.md`, `portfolio-seo-playbook.md`, `seo-ai-search.md`, `product-pages` skill, and the playbook rules for SEO, a11y and marketing copy.
 

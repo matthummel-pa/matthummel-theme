@@ -124,12 +124,12 @@ Add an internal link to the new product page from:
 
 ---
 
-## Step 6: Check, ship to staging
+## Step 6: Check, ship to live
 
 1. `php -l` on changed PHP, `python3 .github/scripts/wp-review`, Pint, and `npm run build` (say what you could not run).
 2. Branch, small PR, CHANGELOG line and a `style.css` / `readme.txt` version bump.
-3. After merge, install on **staging only** (`wp mh theme-update` over SSH, or Appearance → Update Theme), flush caches, then open `/shop/`, the listing for its type, and the product page.
-4. Matt publishes staging to live from hPanel. Do not install on or edit `matthummel.com`.
+3. After merge, install on **matthummel.com** (`wp mh theme-update` over SSH, or Appearance → Update Theme), flush caches, then open `/shop/`, the listing for its type, and the product page.
+4. Matt's standing instruction: live is the default host. Staging is not used unless he asks.
 
 ---
 

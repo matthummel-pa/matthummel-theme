@@ -19,7 +19,7 @@ Read `.claude/rules/gtm-ga4-analytics.md` first. It owns event names, parameters
 3. **Google tag** (type: Google tag) with the Measurement ID, trigger Initialization - All Pages. Consent settings: require `analytics_storage`.
 4. **Custom Event triggers**, one per event in the rule (`generate_lead`, `sign_up`, `begin_checkout`, `purchase`, `view_item`, `cta_click`, `demo_view`, `docs_view`, `faq_expand`, `affiliate_click`, `social_or_repo_click`). Exact match on the event name. Click triggers use `data-track` attributes, never CSS classes.
 5. **GA4 Event tags**, one per trigger, named `GA4 - <event_name>`, with event parameters mapped from the data layer variables. Ecommerce events use "Send Ecommerce data" from the data layer.
-6. **Preview** (Tag Assistant) against the staging site: `https://matthummel-com-623249.hostingersite.com/`. Confirm each tag fires once and carries its parameters.
+6. **Preview** (Tag Assistant) against `https://matthummel.com/` (live is the default host). Confirm each tag fires once and carries its parameters.
 7. In GA4, mark `generate_lead`, `sign_up` and `purchase` as key events (Admin, Events). Register custom dimensions for `user_role`, `signup_source`, `theme_name`, `cta_location` (event scope).
 8. Confirm in GA4 DebugView, then ask Matt before Submit.
 

@@ -35,7 +35,7 @@ This theme is Sage 11.2.1 at repo root, live folder `matthummel`. Apply the dire
 
 Production is **[matthummel.com](https://matthummel.com)** on Hostinger. Deployments use `.github/workflows/deploy.yml` (`Deploy Roots Production Ecosystem`). The theme **is** the repo root (not `web/app/themes/sage`). CI uses **npm** and Node **22**.
 
-CI publishes GitHub Release `theme-latest`. Install the zip on the **staging site** (Appearance -> Update Theme or `wp mh theme-update`). Matt publishes staging -> live from hPanel; agents never install on `matthummel.com` (`hostinger-github-wordpress-workflow.md`). Do not add SiteGround FTP or SSH rsync. Do not add a second production workflow. Never hardcode credentials.
+CI publishes GitHub Release `theme-latest`. Install the zip on **matthummel.com** (Appearance -> Update Theme or `wp mh theme-update`) (`hostinger-github-wordpress-workflow.md`). Do not add SiteGround FTP or SSH rsync. Do not add a second production workflow. Never hardcode credentials.
 
 After a theme swap on Hostinger, purge LiteSpeed / website cache (hPanel or Hostinger MCP `hosting_purgeLiteSpeedCacheV1` / `hosting_clearWebsiteCacheV1`) so visitors are not stuck on old Vite hashes.
 
