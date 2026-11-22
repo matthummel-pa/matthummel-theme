@@ -361,13 +361,15 @@ add_action('wp_head', function (): void {
         return;
     }
 
-    $id = esc_js($id);
-    echo "<script data-no-optimize=\"1\" data-no-defer=\"1\" data-cfasync=\"false\">\n";
-    echo "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}\n";
-    echo "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});\n";
-    echo "try{if(localStorage.getItem('mh-consent')==='granted')gtag('consent','update',{analytics_storage:'granted'})}catch(e){}\n";
-    echo "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{$id}');\n";
-    echo "</script>\n";
+    $js = "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+"
+        ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+"
+        ."try{if(localStorage.getItem('mh-consent')==='granted')gtag('consent','update',{analytics_storage:'granted'})}catch(e){}
+"
+        ."(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',".wp_json_encode($id).');';
+
+    wp_print_inline_script_tag($js, ['data-no-optimize' => '1', 'data-no-defer' => '1', 'data-cfasync' => 'false']);
 }, 1);
 
 add_action('wp_body_open', function (): void {
