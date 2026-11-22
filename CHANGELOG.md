@@ -2,7 +2,7 @@
 
 ## 3.60.3 — Shorter footer credit
 
-- The footer credit now reads "Built with WordPress and Sage." The PHP mention and the Planned with Claude Code line are gone. Sage still links to roots.io.
+- The footer credit now reads "Built with WordPress, planned with Claude Code." The Sage and PHP mentions are gone. Claude Code still links to its product page.
 
 ## 3.60.2 — Cookie choices sits in the footer menu
 

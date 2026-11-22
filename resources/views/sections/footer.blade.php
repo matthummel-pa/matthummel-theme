@@ -111,7 +111,7 @@
         @endif
       </nav>
     @endif
-    <p class="footer-stack">Built with WordPress and <a href="https://roots.io/sage/" rel="noopener" target="_blank">Sage<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
+    <p class="footer-stack">Built with WordPress, planned with <a href="https://claude.com/product/claude-code" rel="noopener" target="_blank">Claude Code<span class="visually-hidden"> {{ __('(opens in a new window)', 'sage') }}</span></a>.</p>
     @endif
   </div>
 </footer>
