@@ -95,10 +95,10 @@
         <figure class="project-hero-media{{ $video !== [] ? ' has-video' : '' }}"{!! $video !== [] ? ' data-project-video' : '' !!}>
           <div class="project-hero-media__frame">
             @if ($video !== [])
-              <video class="project-hero-media__video" preload="none" playsinline{!! $heroImage !== '' ? ' poster="'.esc_url($heroImage).'"' : '' !!} aria-label="{{ esc_attr(sprintf(__('%s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES))) }}">
+              <video class="project-hero-media__video" preload="none" playsinline{!! $heroImage !== '' ? ' poster="'.esc_url($heroImage).'"' : '' !!} aria-label="{{ sprintf(__('%s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES)) }}">
                 <source src="{{ esc_url($video['src']) }}" type="{{ esc_attr($video['type']) }}">
               </video>
-              <button type="button" class="project-hero-media__play" data-project-video-play aria-label="{{ esc_attr(sprintf(__('Play the %s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES))) }}">
+              <button type="button" class="project-hero-media__play" data-project-video-play aria-label="{{ sprintf(__('Play the %s commercial', 'sage'), html_entity_decode($title, ENT_QUOTES)) }}">
                 <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z"/></svg>
               </button>
             @else

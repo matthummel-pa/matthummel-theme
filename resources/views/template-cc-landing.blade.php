@@ -103,7 +103,7 @@
       <div class="cc-hero__shot">
         <div class="cc-shot">
           <div class="cc-shot__bar" aria-hidden="true"><i></i><i></i><i></i></div>
-          <img src="{{ $shot(0) }}" width="1280" height="800" fetchpriority="high" decoding="async" alt="{{ esc_attr($alt(0)) }}">
+          <img src="{{ $shot(0) }}" width="1280" height="800" fetchpriority="high" decoding="async" alt="{{ $alt(0) }}">
         </div>
       </div>
     </div>
@@ -159,7 +159,7 @@
           @if ($shot($i) !== '')
             <div class="cc-screen">
               <figure>
-                <div class="cc-shot"><img src="{{ $shot($i) }}" width="1280" height="800" loading="lazy" decoding="async" alt="{{ esc_attr($alt($i)) }}"></div>
+                <div class="cc-shot"><img src="{{ $shot($i) }}" width="1280" height="800" loading="lazy" decoding="async" alt="{{ $alt($i) }}"></div>
                 <figcaption>{{ $alt($i) }}</figcaption>
               </figure>
             </div>
@@ -185,7 +185,7 @@
           </li>
         @endforeach
       </ul>
-      <div class="cc-shot"><img src="{{ $shot(18) }}" width="1280" height="800" loading="lazy" decoding="async" alt="{{ esc_attr($alt(18)) }}"></div>
+      <div class="cc-shot"><img src="{{ $shot(18) }}" width="1280" height="800" loading="lazy" decoding="async" alt="{{ $alt(18) }}"></div>
     </div>
   </section>
 
@@ -223,7 +223,7 @@
       data-plan="{{ esc_attr($fs['plan_id']) }}"
       data-key="{{ esc_attr($fs['public_key']) }}"
       data-account="{{ esc_url($fs['account_url']) }}"
-      data-title="{{ esc_attr($p['title'] ?? 'Cobble & Candle') }}"
+      data-title="{{ $p['title'] ?? 'Cobble & Candle' }}"
       data-subtitle="{{ __('A yearly license. Freemius emails your receipt and key. I never see the card.', 'sage') }}"
       data-modal-title="{{ sprintf(__('Checkout, %s', 'sage'), $p['title'] ?? __('Cobble & Candle', 'sage')) }}"
       @if ($fs['sandbox'] !== null)

@@ -116,7 +116,7 @@
     </div>
   @else
     <input type="hidden" name="mh_who" value="{{ esc_attr($oldWho !== '' ? $oldWho : $compactWhoFallback) }}">
-    <input type="hidden" name="mh_subject" value="{{ esc_attr($oldSubject) }}">
+    <input type="hidden" name="mh_subject" value="{{ $oldSubject }}">
   @endif
 
   <div class="field">

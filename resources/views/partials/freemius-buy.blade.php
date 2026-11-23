@@ -5,7 +5,7 @@
   data-plan="{{ esc_attr($fs['plan_id']) }}"
   data-key="{{ esc_attr($fs['public_key']) }}"
   data-account="{{ esc_url($fs['account_url']) }}"
-  data-title="{{ esc_attr($title) }}"
+  data-title="{{ $title }}"
   data-subtitle="{{ __('A yearly license. Freemius emails your receipt and key. I never see the card.', 'sage') }}"
   data-modal-title="{{ sprintf(__('Checkout, %s', 'sage'), $title) }}"
   @if ($fs['sandbox'] !== null)
