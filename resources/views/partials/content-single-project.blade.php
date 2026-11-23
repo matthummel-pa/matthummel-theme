@@ -246,11 +246,11 @@
               id="pf-gallery-main"
               data-gallery-open
               data-gallery-index="0"
-              aria-label="{{ esc_attr(sprintf(__('Open screenshot: %s', 'sage'), $heroImageAlt)) }}"
+              aria-label="{{ sprintf(__('Open screenshot: %s', 'sage'), $heroImageAlt) }}"
             >
               <img
                 src="{{ esc_url($heroImage) }}"
-                alt="{{ esc_attr($heroImageAlt) }}"
+                alt="{{ $heroImageAlt }}"
                 width="960"
                 height="600"
                 loading="eager"
@@ -274,14 +274,13 @@
                   aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
                   aria-controls="pf-gallery-panel"
                   tabindex="{{ $i === 0 ? '0' : '-1' }}"
-                  aria-label="{{ esc_attr($slide['alt'] !== '' ? $slide['alt'] : sprintf(__('Screenshot %d', 'sage'), $i + 1)) }}"
                   data-gallery-index="{{ $i }}"
                   data-gallery-src="{{ esc_url($slide['src']) }}"
-                  data-gallery-alt="{{ esc_attr($slide['alt']) }}"
+                  data-gallery-alt="{{ $slide['alt'] }}"
                 >
                   <img
                     src="{{ esc_url($slide['src']) }}"
-                    alt=""
+                    alt="{{ $slide['alt'] !== '' ? $slide['alt'] : sprintf(__('Screenshot %d', 'sage'), $i + 1) }}"
                     width="160"
                     height="100"
                     loading="{{ $i < 4 ? 'eager' : 'lazy' }}"
