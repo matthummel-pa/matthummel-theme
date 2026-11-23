@@ -12,13 +12,13 @@
   $approach = trim((string) ($p['approach'] ?? ''));
   $blurb = trim((string) ($p['blurb'] ?? ''));
 @endphp
-<article class="h-case{{ $featured ? ' h-case--featured' : '' }}" aria-label="{{ esc_attr($p['title'] ?? '') }}">
+<article class="h-case{{ $featured ? ' h-case--featured' : '' }}" aria-label="{{ $p['title'] ?? '' }}">
   <div class="h-case__media" aria-hidden="{{ $desktop === '' ? 'true' : 'false' }}">
     @if ($desktop !== '')
       <figure class="h-case__desktop">
         <img
           src="{{ esc_url($desktop) }}"
-          alt="{{ esc_attr(($p['title'] ?? '') . ' — desktop') }}"
+          alt="{{ ($p['title'] ?? '') . ' — desktop' }}"
           width="960"
           height="600"
           loading="{{ $featured ? 'eager' : 'lazy' }}"
@@ -31,7 +31,7 @@
       <figure class="h-case__mobile">
         <img
           src="{{ esc_url($mobile) }}"
-          alt="{{ esc_attr(($p['title'] ?? '') . ' — secondary view') }}"
+          alt="{{ ($p['title'] ?? '') . ' — secondary view' }}"
           width="360"
           height="640"
           loading="lazy"

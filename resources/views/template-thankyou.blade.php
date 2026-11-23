@@ -141,7 +141,7 @@
         <a class="svc-work-card" href="{{ $href }}">
           @if (! empty($p['image']))
             <div class="svc-work-card__img">
-              <img src="{{ esc_url($p['image']) }}" alt="{{ esc_attr($p['title']) }} — WordPress project" width="480" height="270" loading="lazy" decoding="async">
+              <img src="{{ esc_url($p['image']) }}" alt="{{ $p['title'] }} — WordPress project" width="480" height="270" loading="lazy" decoding="async">
             </div>
           @else
             <div class="svc-work-card__img svc-work-card__img--placeholder">{!! \App\mh_svg_icon('wordpress', 28) !!}</div>

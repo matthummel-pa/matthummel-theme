@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.61.2 — Product names with "&" read correctly in checkout and email
+
+- The Freemius checkout title for Cobble & Candle was sent as "Cobble &amp;amp; Candle", and the "Ask about" form on its page put "Note about Cobble &amp;amp; Candle" in the subject. Both now carry a plain "&".
+- Same fix for screenshot alt text on the Cobble & Candle landing page, product card labels and alt text, the project video labels, and the thank-you page images. Each ran `esc_attr()` inside `{{ }}`, which escapes twice.
+
 ## 3.61.1 — Screenshot thumbnails carry their captions as alt text
 
 - On product pages, each gallery thumbnail now has its screenshot caption as its alt text. Before, the caption was only an `aria-label` on the button and the image's alt was empty, so search engines and AI crawlers read 19 unlabeled images on the Cobble & Candle page.
