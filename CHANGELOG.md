@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.60.4 — Old privacy template matches the live page
+
+- The Privacy Policy page template no longer lists HubSpot, Bing / Microsoft UET or the Meta Pixel. None of them run on the site. The page text, cookie table, sharing list and opt-out cards now say Google Analytics (through Tag Manager, with the consent banner) and Google Fonts. The live Privacy page is block content and was edited in the editor; this keeps the fallback template from showing the old claims.
+
 ## 3.61.0 — Cobble & Candle: built for AI search
 
 - Cobble & Candle's product page, shop listing, landing page and search title now lead with what the theme does for AI search: an llms.txt file built from live hours, menus, rooms and events; read-only tools for AI assistants (WordPress 6.9+, through the MCP Adapter); and robots.txt rules for the published AI crawlers. Three new FAQs say plainly what it is not (it does not call an AI service or write content), which services it works with, and what the assistant tools need.

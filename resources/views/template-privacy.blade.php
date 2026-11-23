@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @php
-  $updated    = '2026-11-02';
+  $updated    = '2026-11-22';
   $contactUrl = home_url('/contact/');
   $siteUrl    = 'https://matthummel.com';
 @endphp
@@ -38,11 +38,11 @@
       <p class="eyebrow">Overview</p>
       <h2 id="priv-overview-heading">The short version</h2>
       <ul class="legal-bullets">
-        <li>This site uses <strong>Google Analytics</strong>, <strong>Google Tag Manager</strong>, <strong>HubSpot</strong>, <strong>Bing / Microsoft Analytics</strong>, and plans to use the <strong>Meta (Facebook) Pixel</strong> for audience measurement, CRM activity, and ad performance.</li>
+        <li>This site uses <strong>Google Analytics</strong>, loaded through <strong>Google Tag Manager</strong>, to see which pages get read. In the EU, the UK and Switzerland it stays off until you say yes in the banner. Everywhere else it is on by default. You can change your choice any time with Cookie choices in the footer.</li>
         <li>The contact form and project brief collect your name, email, and the details you send so I can reply and prepare for a first meeting. That is all they are used for.</li>
         <li>The email signup forms send your address, and your first name if you give it, to <strong>Hostinger Reach</strong>, the service that delivers my notes. It is used only for that list, and every email has an unsubscribe link.</li>
         <li>If you buy a theme, <strong>Freemius</strong> takes the payment and issues your license. I see your name, email address, country and license details. I never see your card number. See <a href="#priv-sharing-heading">who sees your data</a>.</li>
-        <li>Analytics data is aggregated and anonymised — it is not used to identify you personally.</li>
+        <li>Analytics reports are aggregated. They are not used to identify you personally, and no ad or marketing pixels run on this site.</li>
         <li>No data is sold or shared with anyone outside the services listed in this policy.</li>
         <li>You can opt out of analytics tracking at any time — see the <a href="#priv-optout-heading">opt-out options</a> below.</li>
         <li>You can request deletion of any personal data by <a href="{{ $contactUrl }}">writing to me</a>.</li>
@@ -108,19 +108,16 @@
       {{-- Analytics --}}
       <div class="priv-collect-card">
         <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('chart-bar', 20) !!}</div>
-        <h3 class="priv-collect-card__title">Analytics &amp; advertising</h3>
-        <p class="priv-collect-card__intro">Third-party tools used to understand traffic and ad performance:</p>
+        <h3 class="priv-collect-card__title">Analytics</h3>
+        <p class="priv-collect-card__intro">Google Analytics, loaded through Google Tag Manager, shows which pages get read:</p>
         <div class="priv-collect-card__trackers">
           <span class="priv-tracker-pill">Google Analytics 4</span>
           <span class="priv-tracker-pill">Google Tag Manager</span>
-          <span class="priv-tracker-pill">Meta Pixel</span>
-          <span class="priv-tracker-pill">HubSpot</span>
-          <span class="priv-tracker-pill">Bing / Microsoft UET</span>
         </div>
-        <p class="priv-collect-card__tracker-note">These tools collect pages visited, session duration, device type, approximate location, and IP address. See <a href="#priv-optout-heading">opt-out options</a>.</p>
+        <p class="priv-collect-card__tracker-note">It collects pages visited, session length, device type, and approximate location. In the EU, the UK and Switzerland it runs only after you allow it. There are no ad or remarketing tools on this site. See <a href="#priv-optout-heading">opt-out options</a>.</p>
         <div class="priv-collect-card__trust">
           {!! \App\mh_svg_icon('shield', 14) !!}
-          Aggregated data only — never used to identify you personally on this site.
+          Aggregated data only. Never used to identify you personally on this site.
         </div>
       </div>
 
@@ -184,7 +181,7 @@
     <div class="legal-prose">
       <p class="eyebrow">Cookies</p>
       <h2 id="priv-cookies-heading">Cookies</h2>
-      <p>This site sets functional cookies and third-party analytics cookies. The table below lists all cookies in use.</p>
+      <p>This site sets a few functional cookies and, if analytics is on, Google Analytics cookies. The table lists the main cookies and local storage items.</p>
     </div>
     <div class="legal-table-wrap">
       <table class="legal-table">
@@ -217,58 +214,16 @@
             <td>localStorage — no expiry</td>
           </tr>
           <tr>
+            <td><code>mh-consent</code></td>
+            <td>This site</td>
+            <td>Remembers your analytics choice from the cookie banner</td>
+            <td>localStorage — no expiry</td>
+          </tr>
+          <tr>
             <td><code>_ga</code>, <code>_ga_*</code></td>
             <td>Google Analytics</td>
-            <td>Distinguishes unique visitors; tracks sessions, pages, and referrers</td>
+            <td>Distinguishes unique visitors; tracks sessions, pages, and referrers. Set only when analytics is allowed.</td>
             <td>2 years</td>
-          </tr>
-          <tr>
-            <td><code>_gid</code></td>
-            <td>Google Analytics</td>
-            <td>Stores and updates a unique value for each page visited</td>
-            <td>24 hours</td>
-          </tr>
-          <tr>
-            <td><code>_fbp</code></td>
-            <td>Meta (Facebook) Pixel</td>
-            <td>Identifies browsers for ad delivery and measurement (planned)</td>
-            <td>3 months</td>
-          </tr>
-          <tr>
-            <td><code>hubspotutk</code></td>
-            <td>HubSpot</td>
-            <td>Tracks a visitor's identity across sessions and associates form submissions with browsing history</td>
-            <td>13 months</td>
-          </tr>
-          <tr>
-            <td><code>__hstc</code></td>
-            <td>HubSpot</td>
-            <td>Main cookie for tracking visitors — stores session count, timestamps, and original referrer</td>
-            <td>13 months</td>
-          </tr>
-          <tr>
-            <td><code>__hssc</code></td>
-            <td>HubSpot</td>
-            <td>Keeps track of sessions for analytics purposes</td>
-            <td>30 minutes</td>
-          </tr>
-          <tr>
-            <td><code>__hssrc</code></td>
-            <td>HubSpot</td>
-            <td>Determines whether the browser has been restarted between sessions</td>
-            <td>Session</td>
-          </tr>
-          <tr>
-            <td><code>_uetsid</code>, <code>_uetvid</code></td>
-            <td>Microsoft UET</td>
-            <td>Tracks sessions and unique visitors for Bing Ads conversion measurement</td>
-            <td>1 day / 16 days</td>
-          </tr>
-          <tr>
-            <td><code>MUID</code></td>
-            <td>Microsoft</td>
-            <td>Identifies unique web browsers visiting Microsoft sites and services</td>
-            <td>13 months</td>
           </tr>
         </tbody>
       </table>
@@ -287,10 +242,7 @@
       <h2 id="priv-sharing-heading">Who sees your data</h2>
       <p>Your data is not sold, rented, or shared with third parties for marketing purposes. It may reach the following parties in the course of normal operation:</p>
       <ul class="legal-bullets">
-        <li><strong>Google</strong> — Google Analytics 4 and Google Tag Manager receive anonymised usage data (page views, session data, device type, approximate location). Subject to <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Google's privacy policy</a>. IP anonymisation is enabled.</li>
-        <li><strong>Meta (Facebook)</strong> — the Meta Pixel (planned) sends event data to Meta for ad measurement and reach reporting. Subject to <a href="https://www.facebook.com/privacy/policy/" rel="noopener" target="_blank">Meta's privacy policy</a>.</li>
-        <li><strong>HubSpot</strong> — HubSpot tracking is active on this site. It collects IP address, browser and device data, pages visited, and form submissions to support CRM and marketing activity. If you submit the contact form, your name and email may be stored in HubSpot. Subject to <a href="https://legal.hubspot.com/privacy-policy" rel="noopener" target="_blank">HubSpot's privacy policy</a>.</li>
-        <li><strong>Microsoft (Bing)</strong> — Bing Webmaster Tools and the Microsoft UET tag collect aggregated search performance data and conversion events. Data is subject to <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener" target="_blank">Microsoft's privacy statement</a>.</li>
+        <li><strong>Google</strong> — Google Analytics 4 and Google Tag Manager receive usage data (page views, session data, device type, approximate location) when analytics is on. Google Fonts also loads the site's fonts from Google, so Google sees your IP address and browser details when a page loads. Subject to <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Google's privacy policy</a>. IP anonymisation is enabled.</li>
         <li><strong>Freemius</strong> — the merchant of record for theme purchases and the service behind licenses, updates and the customer portal. It handles your payment and billing details and the license and activation data described above. Subject to <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">Freemius's privacy policy</a>.</li>
         <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
         <li><strong>Hostinger Reach</strong> — the email service behind the signup forms. It stores the address and first name you enter, which form you used, and whether you opened or clicked a note, and it handles unsubscribes. Subject to the same <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger privacy policy</a>.</li>
@@ -314,36 +266,10 @@
       <div class="legal-data-card">
         <h3 class="legal-data-card__title">Google Analytics opt-out</h3>
         <ul class="legal-data-card__list">
+          <li>Use Cookie choices in the footer to turn analytics off on this site</li>
           <li>Install the <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">Google Analytics Opt-out Browser Add-on</a></li>
           <li>Enable "Do Not Track" in your browser settings (honoured on a best-effort basis)</li>
           <li>Block <code>*.google-analytics.com</code> via an ad blocker or browser extension</li>
-        </ul>
-      </div>
-
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Meta Pixel opt-out</h3>
-        <ul class="legal-data-card__list">
-          <li>Use the <a href="https://www.facebook.com/help/568137493302217" rel="noopener" target="_blank">Facebook Ad Preferences</a> to limit off-Facebook tracking</li>
-          <li>Install the <a href="https://www.facebook.com/help/247395082112892" rel="noopener" target="_blank">Facebook Container</a> browser extension</li>
-          <li>Block <code>*.facebook.com</code> via an ad blocker</li>
-        </ul>
-      </div>
-
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">Microsoft / Bing opt-out</h3>
-        <ul class="legal-data-card__list">
-          <li>Use <a href="https://choice.microsoft.com" rel="noopener" target="_blank">Microsoft's privacy choice tool</a> to opt out of personalised advertising</li>
-          <li>Block <code>*.bat.bing.com</code> and <code>*.clarity.ms</code> via an ad blocker</li>
-          <li>Delete Microsoft cookies (<code>_uetsid</code>, <code>_uetvid</code>, <code>MUID</code>) from your browser</li>
-        </ul>
-      </div>
-
-      <div class="legal-data-card">
-        <h3 class="legal-data-card__title">HubSpot opt-out</h3>
-        <ul class="legal-data-card__list">
-          <li>Block <code>*.hs-scripts.com</code>, <code>*.hubspot.com</code>, and <code>*.hsforms.com</code> via an ad blocker</li>
-          <li>Delete HubSpot cookies (<code>hubspotutk</code>, <code>__hstc</code>, <code>__hssc</code>, <code>__hssrc</code>) from your browser</li>
-          <li>Submit a data deletion request via <a href="{{ $contactUrl }}">the contact form</a> — I will forward it to HubSpot within 5 business days</li>
         </ul>
       </div>
 
