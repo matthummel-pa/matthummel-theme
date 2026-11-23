@@ -17,6 +17,7 @@ Generic standards load from the `ai-dev-standards-playbook` (`~/.claude/rules/pl
 | `growth-design-powerhouse.md` | CTA, tokens, icons, motion, dark mode |
 | `portfolio-seo-playbook.md` | Skill-first keywords, project SEO facts |
 | `seo-ai-search.md`, `seo-ai-search-blog.md` | Repo facts for GEO and blog drafts |
+| `journal-editorial.md` | Journal positioning, the five pillars, Field Notes format |
 | `product-theme-sync.md` | Sync sellable products into `product-catalog.json` |
 | `mailchimp.md` | Mailchimp brand tokens, email template constraints, copy structure, audience tags |
 | Skills: `product-pages`, `add-product`, `new-blog-post`, `site-review` | On request |

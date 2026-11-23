@@ -21,8 +21,8 @@ This is the **matthummel** Sage 11 theme, not a generic agency case-study site. 
 - **Titles/meta:** WordPress document title and Rank Math (or theme `document` helpers). Do not hardcode a second `<title>` stack in Blade. Format *when writing a title* as below.
 - **Snippets:** blog posts and the Code page use existing highlight.js / `.snippet` windows. Do not add Markdown fences in Blade. Language class belongs on `<code>` in post HTML.
 - **ACF:** do not treat “custom advanced custom fields theme development” as a reason to install ACF. Copy is block content; legacy `mh_f_*` fields are frozen (`content.md`).
-- **Dual audience:** shops and developers. The home and About audience doors already name them; do not add a fifth persona (`portfolio-seo` skill has the layout).
-- **CTA:** one primary **Say hello** → `/contact/`. Local SEO copy must not add a second conversion funnel.
+- **Dual audience:** shops and developers. The home and About audience doors already name them; do not add a fifth persona (`portfolio-seo` skill has the layout). A Journal post picks one primary reader (`journal-editorial.md`).
+- **CTA:** one primary **Say hello** → `/contact/`. Local SEO copy must not add a second conversion funnel. Theme-topic posts: see the exception in `content.md`.
 - **Layout:** do not force a 30/40/30 case-study template onto every Work card. Use that hierarchy when writing a **post** about a build, or if Matt asks for a long project page.
 
 ## SEO keyword blueprint
@@ -33,6 +33,5 @@ Prefer phrases that match work he actually does. Lead with craft, not city.
 | --- | --- | --- |
 | WordPress | `hire a WordPress developer` / custom theme | Sage 11 custom theme, page fields, Vite — not ACF unless he asks |
 | Web apps | `WordPress site for my shop` | custom frontend (Sage, Tailwind, Blade), plugins, other web apps |
-| Power Platform | `automate workflows with Power Platform` | custom connectors / APIs when it fits; it is **not** the main offer |
 
-Do not stuff all three pillars into every H1. One primary phrase per page. Secondary phrases belong in body copy, once or twice.
+Do not stuff both pillars into every H1. One primary phrase per page. Secondary phrases belong in body copy, once or twice.
