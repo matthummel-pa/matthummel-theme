@@ -40,9 +40,9 @@ Pages not yet converted (3.7.0 migration, see `docs/FEATURES.md`) still read **P
 - Glossary: shops, agencies, developers, learners. Not customers, users, or clients unless that wording is already in the text.
 - UI labels in sentence case. Page H1s are short titles (`About`, `Work`). H2 may be Title Case as a label; H3 and body in sentence case.
 - Paragraphs: 3 sentences max on landing pages, 4 in posts. Mix short punches with medium sentences. Active voice.
-- One primary CTA: `Say hello` → `/contact/`. No second funnel.
+- One primary CTA: `Say hello` → `/contact/`. No second funnel. Exception: a Journal post about a theme topic may use that theme's product page as its one CTA instead.
 - No fake proof: no invented metrics, testimonials, client names, or AggregateRating. Proof is GitHub, live demos, and writing.
-- Oxford comma. Periods inside quotation marks. Bold sparingly. Grade 7–8 reading level; keep real technical nouns.
+- Oxford comma. Periods inside quotation marks. Bold sparingly. Grade 6–8 reading level; keep real technical nouns.
 - Skill-first keywords (WordPress, plugins, web apps). No city stuffing; one Gettysburg mention on About is enough.
 
 ## When asked to edit Matt's writing

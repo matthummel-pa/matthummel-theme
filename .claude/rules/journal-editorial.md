@@ -6,7 +6,7 @@ paths:
 
 # Matt Hummel Journal: editorial rules (this repo)
 
-What the Journal covers and how a post is shaped. Voice, reading level, glossary and the one CTA stay in `content.md`. Drafting steps stay in the `new-blog-post` and `geo-blog-post` skills. If this file conflicts with `content.md`, `content.md` wins on voice and copy location.
+What the Journal covers and how a post is shaped. This file owns direction: audience, topics and the Field Notes format. Voice, reading level (grade 6–8), glossary and the CTA stay in `content.md`. Repo mechanics (files, SEO fields, publishing) stay in the `new-blog-post` skill. If this file conflicts with `content.md`, `content.md` wins on voice and copy location.
 
 ## 1. Core positioning and editorial identity
 
@@ -18,6 +18,7 @@ What the Journal covers and how a post is shaped. Voice, reading level, glossary
   - **Developers and agencies:** real implementation patterns, architecture trade-offs, security boundaries, and failure modes.
   - Pick the primary reader before drafting (Rule of One). The other audience gets one short section, not half the post.
 - **Voice:** welcoming, human, direct. No AI buzzwords, hype, or filler. Reading level and glossary: `content.md`.
+- **CTA:** one per post. `Say hello` → `/contact/` by default; a post about a theme topic may link to that theme's product page instead (`content.md`).
 
 ## 2. The five editorial pillars
 
@@ -31,7 +32,7 @@ Shares are a rough mix across a quarter, not a quota per month.
 
 ## 3. Signature format: Field Notes
 
-For posts in the **Field Notes** series (`Field Notes: Research, Test, Explain`), keep this section order.
+For posts in the **Field Notes** series (`Field Notes: Research, Test, Explain`), keep this section order. Field Notes is one series, not the template for every post: other posts use the default outline in the `new-blog-post` skill.
 
 Open with the bottom line: one or two sentences with the finding and what to do about it, before the first heading.
 

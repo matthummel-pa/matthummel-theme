@@ -12,7 +12,7 @@ Source `*.html` bodies are **Gutenberg block markup** (`<!-- wp:paragraph -->`, 
 4. Switch back to the visual editor and confirm paragraphs, headings, and groups validate (no “Attempt recovery” / Custom HTML dump).
 5. Publish. Suggested live URL after permalinks: `/what-actually-gets-faster-with-ai/` (or `/web-development/what-actually-gets-faster-with-ai/` if the site uses `/%category%/%postname%/`).
 
-Write and publish posts on the staging site, `https://matthummel-com-623249.hostingersite.com/`. A local environment cannot publish to matthummel.com, and neither can an agent; Matt publishes staging → live from hPanel. Do not treat a local or staging preview URL as live.
+Create posts as drafts on the live site, `https://matthummel.com` (default host since 22 Nov 2026), and publish when Matt says so. A local environment cannot publish to matthummel.com. Staging (hummel-dev) is not used unless Matt asks. Do not treat a local or staging preview URL as live.
 
 ## Import locally (`~/wp-site`)
 

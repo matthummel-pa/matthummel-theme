@@ -5,14 +5,14 @@ description: "Draft, review, or publish a journal post on matthummel.com (docs/p
 
 # Write and Publish a New Blog Post
 
-Use this skill when Matt asks to draft, review, or publish a blog post on matthummel.com/journal.
+Use this skill when Matt asks to draft, review, or publish a blog post on matthummel.com/blog/ (the Journal).
 
 ## Overview
 
-Posts live as WordPress Gutenberg posts at `/journal/`. Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post body is pasted into the WP editor on the staging site (default host); Matt publishes staging to live from hPanel.
+Posts live as WordPress Gutenberg posts under `/blog/` (`/journal/` redirects there). Source HTML drafts go in `docs/posts/` so they can be version-controlled. The post is created as a draft on the live site, `matthummel.com` (default host); Matt says when to publish.
 
-Voice: first person, plain, specific. No fake metrics. "I" not "we."
-Audience: shops/agencies first, developers second, learners third.
+This skill covers repo mechanics only: files, SEO fields, publishing. Direction (audience, pillars, Field Notes) is `.claude/rules/journal-editorial.md`. Voice, reading level and the CTA are `.claude/rules/content.md`.
+
 
 ---
 
@@ -21,7 +21,7 @@ Audience: shops/agencies first, developers second, learners third.
 Before writing, answer these three questions:
 
 1. **What is the reader's search intent?** (e.g. "WordPress table of contents plugin" → informational/navigational)
-2. **Who is the primary audience?** (shop/agency owner vs. developer)
+2. **Who is the one primary reader, and which pillar is it?** (business owner vs. developer or agency; `journal-editorial.md`)
 3. **What is the one action you want them to take after reading?** (say hello, buy a product, follow on GitHub)
 
 Set the focus keyword now. Check `app/rank-math-fields.php` → `mh_page_focus_keyword_defaults()` for keyword patterns already in use on other pages, and pick something different.
@@ -30,7 +30,7 @@ Set the focus keyword now. Check `app/rank-math-fields.php` → `mh_page_focus_k
 
 ## Step 2 — Post structure
 
-Every post follows this outline. Skip any section that does not apply.
+Default outline for posts outside the Field Notes series (that order is in `journal-editorial.md`). Skip any section that does not apply.
 
 ```
 H1: [Focus keyword phrase] — specific claim or question (60 chars max)
@@ -70,7 +70,7 @@ Rank Math target: **75+**. Check each before publishing:
 - [ ] Meta description ends with a CTA (`Say hello` or `See the demo`)
 - [ ] Post has at least one internal link to a product page or other post
 - [ ] Featured image has descriptive alt text that includes the focus keyword
-- [ ] Post is at least 600 words (Rank Math content length check)
+- [ ] Post is long enough to finish the reader's job. Never pad to a word count, even if Rank Math flags length
 - [ ] No two consecutive paragraphs over 3 sentences
 
 ---
@@ -113,28 +113,28 @@ Use standard Gutenberg block comments around major sections:
 
 ---
 
-## Step 6 — Publish on the staging site
+## Step 6 — Publish on the live site
 
-Write and publish the post on the **staging site**, `https://matthummel-com-623249.hostingersite.com/` (default host; the same steps work there). Do not log in to or edit `matthummel.com`. Matt publishes staging → live from hPanel.
+Create the post as a **draft** on the live site, `https://matthummel.com` (default host, Matt, 22 Nov 2026). Share the preview link and publish only when Matt says so. Staging (hummel-dev) is not used unless he asks.
 
 Publish with option A. Option B is a local preview only and does not publish anything.
 
-**A) Manual paste on the staging site (required to publish):**
+**A) Draft on matthummel.com (WPVibe, or manual paste in wp-admin):**
 1. Go to wp-admin → Posts → Add New.
 2. Set title, slug, category (use existing categories — do not create new ones without Matt's approval).
 3. Switch to Code Editor and paste the HTML from `docs/posts/`.
 4. Set Rank Math focus keyphrase and meta description.
 5. Add tags (3-5 max) and a featured image (1200×630 px).
-6. Publish.
+6. Save as draft and send Matt the preview link. Publish when he says so.
 
 **B) Local preview only (WP-CLI import):**
-The import script writes to the local WordPress at `~/wp-site`, not to staging or `matthummel.com`. Use it to preview a draft locally, then still do option A on the staging site. Check the script for current usage before running: `python3 .github/scripts/import-docs-posts.py`.
+The import script writes to the local WordPress at `~/wp-site`, not to `matthummel.com`. Use it to preview a draft locally, then still do option A on the live site. Check the script for current usage before running: `python3 .github/scripts/import-docs-posts.py`.
 
 ---
 
 ## Step 7 — Cross-post distribution
 
-Only after Matt has published staging → live, so the canonical URL is the live one. After that:
+Only after the post is published on `matthummel.com`, so the canonical URL is the live one. After that:
 
 | Channel | Action | When |
 |---|---|---|
