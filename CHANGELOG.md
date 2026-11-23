@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.61.1 — Screenshot thumbnails carry their captions as alt text
+
+- On product pages, each gallery thumbnail now has its screenshot caption as its alt text. Before, the caption was only an `aria-label` on the button and the image's alt was empty, so search engines and AI crawlers read 19 unlabeled images on the Cobble & Candle page.
+- The text is not in the template. It comes from each product's **Screenshots (url|caption per line)** field, which is seeded from `resources/data/product-catalog.json`. Edit a caption there and the alt text follows. A screenshot with no caption falls back to "Screenshot of [product]".
+- Fixes captions with an ampersand showing as `&amp;` ("Ember &amp; Arch"): the gallery attributes were escaped twice.
+
 ## 3.60.4 — Old privacy template matches the live page
 
 - The Privacy Policy page template no longer lists HubSpot, Bing / Microsoft UET or the Meta Pixel. None of them run on the site. The page text, cookie table, sharing list and opt-out cards now say Google Analytics (through Tag Manager, with the consent banner) and Google Fonts. The live Privacy page is block content and was edited in the editor; this keeps the fallback template from showing the old claims.
