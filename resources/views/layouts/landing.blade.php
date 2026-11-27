@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#15110d">
+    {{-- Colour theme before first paint: the saved choice, else the system setting. Plain inline script so a cache plugin cannot delay it. --}}
+    @php(wp_print_inline_script_tag("(function(){try{var t=localStorage.getItem('cc-theme');if(t!=='light'&&t!=='dark')t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-cc-theme',t)}catch(e){}})();", ['data-no-optimize' => '1', 'data-no-defer' => '1', 'data-cfasync' => 'false']))
     @php(do_action('get_header'))
     @php(wp_head())
     @vite(['resources/css/cc-landing.css', 'resources/js/cc-landing.js'])
