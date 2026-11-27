@@ -31,7 +31,8 @@
 <header class="cc-header">
   <div class="cc-wrap cc-header__in">
     <a class="cc-logo" href="#top" aria-label="{{ esc_attr__('Cobble & Candle, back to the top', 'sage') }}">
-      <img src="{{ $logo('cobble-candle-logo-horizontal-dark.svg') }}" width="640" height="120" alt="Cobble &amp; Candle: Restaurant · Tavern · Inn">
+      <img class="cc-logo--dark" src="{{ $logo('cobble-candle-logo-horizontal-dark.svg') }}" width="640" height="120" alt="Cobble &amp; Candle: Restaurant · Tavern · Inn">
+      <img class="cc-logo--light" src="{{ $logo('cobble-candle-logo-horizontal-light.svg') }}" width="640" height="120" alt="Cobble &amp; Candle: Restaurant · Tavern · Inn">
     </a>
     <nav class="cc-nav" aria-label="{{ esc_attr__('Page sections', 'sage') }}">
       <a href="#features">{{ __('Features', 'sage') }}</a>
@@ -40,7 +41,13 @@
       <a href="#pricing">{{ __('Pricing', 'sage') }}</a>
       <a href="#faq">{{ __('FAQ', 'sage') }}</a>
     </nav>
-    <a class="cc-btn" href="#pricing" data-cc-track="header_see_plans">{{ __('See plans', 'sage') }}</a>
+    <div class="cc-header__actions">
+      <button type="button" class="cc-theme" data-cc-theme-toggle aria-pressed="false">
+        <span class="cc-theme__icon" aria-hidden="true"></span>
+        <span class="cc-theme__label">{{ __('Light mode', 'sage') }}</span>
+      </button>
+      <a class="cc-btn" href="#pricing" data-cc-track="header_see_plans">{{ __('See plans', 'sage') }}</a>
+    </div>
   </div>
 </header>
 
