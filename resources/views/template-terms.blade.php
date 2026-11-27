@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @php
-  $updated    = '2026-11-02';
+  $updated    = '2026-11-27';
   $contactUrl = home_url('/contact/');
   $privacyUrl = \App\mh_privacy_policy_url();
   $siteUrl    = 'https://matthummel.com';
@@ -100,7 +100,7 @@
       <p>These terms apply when you buy a theme from this site, such as Cobble &amp; Candle. They sit alongside the <a href="{{ home_url('/license/') }}">license</a> and the <a href="{{ home_url('/refunds/') }}">refund policy</a>. By buying or using a theme you agree to all three.</p>
 
       <h3>Who you are dealing with</h3>
-      <p>The themes are made and supported by Matt Hummel, a sole proprietor in Gettysburg, Pennsylvania. Purchases are processed by <strong>Freemius, Inc.</strong>, which is the merchant of record: it takes the payment, issues the license key, and collects any sales tax or VAT. <a href="https://freemius.com/terms/" rel="noopener" target="_blank">Freemius's terms</a> and <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">privacy policy</a> apply to checkout and billing.</p>
+      <p>The themes are made and supported by Matt Hummel, a sole proprietor in Gettysburg, Pennsylvania. Purchases are handled by <a href="https://freemius.com/" rel="noopener" target="_blank"><strong>Freemius, Inc.</strong></a>, the <a href="https://freemius.com/merchant-of-record/" rel="noopener" target="_blank">Merchant of Record</a>, which manages payment processing, billing, and applicable sales taxes. Your purchase is also subject to the Freemius terms shown at checkout. I remain responsible for providing the theme and its support under these terms. <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">Freemius's privacy policy</a> applies to checkout and billing.</p>
 
       <h3>Your license key</h3>
       <p>Keep your license key and your Freemius login private. A key activates the theme on the number of sites your plan allows. If you reach the limit, deactivate an old site in your account before you activate a new one.</p>

@@ -4,7 +4,7 @@
 @extends('layouts.app')
 
 @php
-  $updated    = '2026-11-22';
+  $updated    = '2026-11-27';
   $contactUrl = home_url('/contact/');
   $siteUrl    = 'https://matthummel.com';
 @endphp
@@ -125,7 +125,7 @@
       <div class="priv-collect-card">
         <div class="priv-collect-card__icon">{!! \App\mh_svg_icon('cart', 20) !!}</div>
         <h3 class="priv-collect-card__title">Theme purchases &amp; licenses</h3>
-        <p class="priv-collect-card__intro">If you buy a theme, Freemius processes the payment and shares with me:</p>
+        <p class="priv-collect-card__intro">If you buy a theme, Freemius (my Merchant of Record) processes the payment and collects your name, email address, billing details and transaction information. It shares with me:</p>
         <ul class="priv-collect-card__list">
           <li>Name and email address</li>
           <li>Country and the plan you bought</li>
@@ -243,7 +243,7 @@
       <p>Your data is not sold, rented, or shared with third parties for marketing purposes. It may reach the following parties in the course of normal operation:</p>
       <ul class="legal-bullets">
         <li><strong>Google</strong> — Google Analytics 4 and Google Tag Manager receive usage data (page views, session data, device type, approximate location) when analytics is on. Google Fonts also loads the site's fonts from Google, so Google sees your IP address and browser details when a page loads. Subject to <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Google's privacy policy</a>. IP anonymisation is enabled.</li>
-        <li><strong>Freemius</strong> — the merchant of record for theme purchases and the service behind licenses, updates and the customer portal. It handles your payment and billing details and the license and activation data described above. Subject to <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">Freemius's privacy policy</a>.</li>
+        <li><strong>Freemius</strong> — I use <a href="https://freemius.com/" rel="noopener" target="_blank">Freemius, Inc.</a> as my <a href="https://freemius.com/merchant-of-record/" rel="noopener" target="_blank">Merchant of Record</a> for theme purchases. When you buy, personal data such as your name, email address, billing details, and transaction information is collected by or shared with Freemius. Freemius stores it to process payments, manage subscriptions and licenses, and provide billing support. It is also the service behind license activation, updates and the customer portal, using the license and activation data described above. Read <a href="https://freemius.com/privacy/" rel="noopener" target="_blank">Freemius's privacy policy</a> for how it handles your data and what your privacy rights are.</li>
         <li><strong>Hostinger</strong> — the web hosting provider stores the site database and files. <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger's privacy policy</a>.</li>
         <li><strong>Hostinger Reach</strong> — the email service behind the signup forms. It stores the address and first name you enter, which form you used, and whether you opened or clicked a note, and it handles unsubscribes. Subject to the same <a href="https://www.hostinger.com/legal/privacy-policy" rel="noopener" target="_blank">Hostinger privacy policy</a>.</li>
         <li><strong>GitHub</strong> — this site reads public data from the GitHub API to display on the About page. No personal visitor data is sent to GitHub. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">GitHub's privacy policy</a>.</li>
