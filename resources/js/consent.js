@@ -1,7 +1,7 @@
 /**
- * Analytics consent banner for Europe. The head script in app/setup.php grants analytics outside the EEA, UK and Switzerland,
+ * Analytics (and, when switched on, ad) consent banner for Europe. The head script in app/setup.php grants analytics outside the EEA, UK and Switzerland,
  * denies it there, and re-applies a saved answer before the container loads; this file asks once, saves the answer in localStorage (key mh-consent, no cookie),
- * and sends the update to Tag Manager. Ads stay denied: the site runs none.
+ * and sends the update to Tag Manager. Google Ads is off by default (mh_google_ads_enabled filter); when on, one answer covers both.
  */
 const KEY = 'mh-consent'
 
@@ -23,7 +23,11 @@ function saveChoice(value) {
 
 function applyChoice(value) {
   if (typeof window.gtag !== 'function') return
-  window.gtag('consent', 'update', { analytics_storage: value === 'granted' ? 'granted' : 'denied' })
+  const state = value === 'granted' ? 'granted' : 'denied'
+  const update = { analytics_storage: state }
+  // Ad signals follow the answer only when Google Ads is switched on (data-ads on the banner).
+  if (document.querySelector('#mh-consent')?.dataset.ads === '1') Object.assign(update, { ad_storage: state, ad_user_data: state, ad_personalization: state })
+  window.gtag('consent', 'update', update)
 }
 
 function inEurope() {

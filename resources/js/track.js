@@ -1,7 +1,6 @@
 /**
- * Marketing and analytics events. The site sends Google Analytics 4 through Site Kit (gtag.js) and has no Tag Manager
- * container today, so events go two ways: to the dataLayer (a Google Tag Manager container, if one is added later, reads it)
- * and to gtag() when gtag.js is on the page and no container is. Nothing is stored in the browser and no cookie is set here.
+ * Marketing and analytics events. Every tag loads through the Google Tag Manager container (GA4 and Google Ads included), which reads the
+ * dataLayer. Events also go to gtag() as a fallback when gtag.js is on the page and no container is. Nothing is stored in the browser and no cookie is set here.
  * Ad and pixel tags that need consent should be gated by the consent tool, not by this file.
  */
 export const CURRENCY = 'USD'
