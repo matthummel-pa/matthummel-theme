@@ -373,14 +373,15 @@ add_action('wp_head', function (): void {
     }
 
     $ads = mh_google_ads_enabled() ? 'granted' : 'denied';
+    $adsUpdate = $ads === 'granted' ? ',ad_storage:v,ad_user_data:v,ad_personalization:v' : '';
     $js = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 '
         ."gtag('consent','default',{ad_storage:'".$ads."',ad_user_data:'".$ads."',ad_personalization:'".$ads."',analytics_storage:'granted'});
 "
         ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:".wp_json_encode(MH_CONSENT_REGIONS).',wait_for_update:500});
 '
-        ."try{var c=localStorage.getItem('mh-consent');if(c){var v=c==='granted'?'granted':'denied';gtag('consent','update',{analytics_storage:v".($ads === 'granted' ? ",ad_storage:v,ad_user_data:v,ad_personalization:v" : '')."})}}catch(e){}
-"
+        ."try{var c=localStorage.getItem('mh-consent');if(c){var v=c==='granted'?'granted':'denied';gtag('consent','update',{analytics_storage:v".$adsUpdate.'})}}catch(e){}
+'
         ."(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',".wp_json_encode($id).');';
 
     wp_print_inline_script_tag($js, ['data-no-optimize' => '1', 'data-no-defer' => '1', 'data-cfasync' => 'false']);
