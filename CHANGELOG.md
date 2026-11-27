@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.63.0 — Cobble & Candle landing page rebuilt from core blocks
+
+- The landing page copy is now block content, built from core blocks (Group, Heading, Paragraph, Image, Buttons, List and Details) and edited in the block editor on the live site. The Blade template only draws the header, the sticky price bar and the footer around `the_content()`.
+- The plans and the Freemius checkout are one dynamic block, `matthummel/cc-pricing`, which reads prices from the product catalog. A price change is still one edit there.
+- First install seeds the page once from `resources/data/cc-landing.html`, only when the page's content is empty, so later edits in the editor are never overwritten (option `mh_cc_landing_seeded_v1`).
+- Updated copy covers what 1.5.x added: the Journal, newsletter sign-ups and 21 social networks, payments accepted, event tickets and sign-ups, the menu search, allergen filter and print view, and plain edit forms.
+- New sections: **The look** (four styles and the pages in them) and **Theme settings** (the Brand, Look, Blocks, Connect services, Newsletter and Social tabs), plus **What owners see in the dashboard**.
+- Fresh screenshots from Cobble & Candle 1.5.1 are in `resources/images/products/cobbleandcandle/new/` (the front, the Theme Settings tabs, the plain edit forms, bookings and Status). The product catalog's screenshot list now points at them, so product pages and the landing page show the current theme. Cobble & Candle's product entry refreshes once on update (`mh_product_catalog_v23`), the same way as the last copy refresh, so edits made to that entry on the live site are replaced. The October images stay in place and are no longer used by the landing page.
+- Button clicks in the content are tracked from a `cc-track-<name>` class on the Button block (`cc_cta_click`), as the header and sticky buttons are from `data-cc-track`.
+
 ## 3.62.0 — Google Ads switch for the Cobble & Candle landing page (off)
 
 - Added a placeholder switch for Google Ads, `mh_google_ads_enabled()`, **off by default**. While it is off, nothing changes for visitors: ad storage stays denied everywhere and the banner says "Analytics cookies".

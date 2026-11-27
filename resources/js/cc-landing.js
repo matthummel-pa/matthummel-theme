@@ -1,11 +1,12 @@
-// Cobble & Candle landing page: Freemius checkout and click events (GA4 and, if one is added, Tag Manager). Nothing else loads here.
+// Cobble & Candle landing page: Freemius checkout and click events (through Tag Manager). Nothing else loads here.
 import { initFreemiusCheckout } from './freemius-checkout.js'
 import { trackEvent } from './track.js'
 import { initConsent } from './consent.js'
 
 function initTracking() {
   document.addEventListener('click', (event) => {
-    const el = event.target.closest('[data-cc-track], [data-fs-buy]')
+    // Header and sticky buttons carry data-cc-track; core Button blocks in the page content carry a cc-track-<name> class.
+    const el = event.target.closest('[data-cc-track], [data-fs-buy], [class*="cc-track-"]')
     if (!el) return
 
     if (el.hasAttribute('data-fs-buy')) {
@@ -14,7 +15,8 @@ function initTracking() {
       return
     }
 
-    trackEvent('cc_cta_click', { cc_cta: el.dataset.ccTrack })
+    const named = String(el.className).match(/cc-track-([a-z_]+)/)
+    trackEvent('cc_cta_click', { cc_cta: el.dataset.ccTrack || (named ? named[1] : '') })
   })
 }
 

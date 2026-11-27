@@ -256,12 +256,63 @@
 .cc-linkbtn:focus-visible { outline: 3px solid var(--cc-glow); outline-offset: 2px; }
 @media (min-width: 800px) { .cc-footer__in { grid-template-columns: auto 1fr auto; align-items: start; } }
 
+/* Core blocks inside the page: the content is core Group, Heading, Paragraph, Image, Buttons, List and Details blocks that carry these classes. */
+:where(.cc-landing) :is(.wp-block-group, .wp-block-image, .wp-block-buttons, .wp-block-list, .wp-block-details, .wp-block-heading) { margin: 0; }
+:where(.cc-landing) :is(ul.wp-block-list, ol.wp-block-list) { padding: 0; list-style: none; }
+.cc-landing .cc-h1 { font-size: clamp(2.4rem, 7vw, 4.3rem); }
+.cc-landing .cc-h1 em { color: var(--cc-brass); font-style: italic; }
+.cc-landing .wp-block-image img { width: 100%; height: auto; }
+.cc-landing .wp-block-image.cc-shot img { aspect-ratio: 16 / 10; object-fit: cover; object-position: top center; }
+
+/* Buttons: the class sits on the Button block's wrapper, the look on its link. */
+.cc-landing .wp-block-button.cc-btn { display: block; min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; }
+.cc-landing .wp-block-button.cc-btn .wp-block-button__link {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; padding: .7rem 1.5rem;
+  border: 1.5px solid var(--cc-brass); border-radius: 999px; background: var(--cc-brass); color: var(--cc-black);
+  font: 800 .98rem/1.2 var(--cc-text); letter-spacing: .02em; text-decoration: none; transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.cc-landing .wp-block-button.cc-btn .wp-block-button__link:hover { background: var(--cc-brass-2); border-color: var(--cc-brass-2); color: var(--cc-black); transform: translateY(-1px); box-shadow: 0 14px 30px -14px rgba(244, 184, 96, .6); }
+.cc-landing .wp-block-button.cc-btn--ghost .wp-block-button__link { background: transparent; color: var(--cc-parch); border-color: color-mix(in srgb, var(--cc-parch) 55%, transparent); }
+.cc-landing .wp-block-button.cc-btn--ghost .wp-block-button__link:hover { background: color-mix(in srgb, var(--cc-parch) 12%, transparent); border-color: var(--cc-parch); color: var(--cc-parch); box-shadow: none; }
+
+/* Look and settings tiles: a screenshot with a heading and a sentence underneath. */
+.cc-tiles { display: grid; gap: 1.6rem; margin-top: 2.2rem; }
+.cc-tile { display: flex; flex-direction: column; gap: .35rem; }
+.cc-tile .cc-shot { margin-bottom: .8rem; transition: transform .25s ease, box-shadow .25s ease; }
+.cc-tile:hover .cc-shot { transform: translateY(-4px); box-shadow: 0 46px 80px -34px rgba(0, 0, 0, .9), 0 0 0 6px rgba(199, 154, 85, .12); }
+.cc-tile h3 { font-size: 1.4rem; color: var(--cc-parch); }
+.cc-tile p { margin: 0; color: var(--cc-muted); font-size: .98rem; }
+@media (min-width: 720px) { .cc-tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1020px) { .cc-tiles { grid-template-columns: repeat(3, 1fr); } }
+
+/* Style swatches */
+.cc-sw { flex: none; width: 3rem; height: 3rem; margin: 0; border: 2px solid var(--cc-parch); border-radius: 50%; }
+.cc-sw--lamp { background: linear-gradient(135deg, #15110d 50%, #c79a55 50%); }
+.cc-sw--ember { background: linear-gradient(135deg, #1f1410 50%, #e2692a 50%); }
+.cc-sw--ashlar { background: linear-gradient(135deg, #efe6d6 50%, #7a2a2e 50%); }
+.cc-sw--day { background: linear-gradient(135deg, #fbf7f0 50%, #b14e25 50%); }
+.cc-styles { margin-top: 2rem; }
+
+/* Feature cards: a brass rule and a lift on hover. */
+.cc-card { position: relative; transition: transform .25s ease, border-color .25s ease; }
+.cc-card::before { content: ""; position: absolute; inset: 0 auto auto 1.6rem; width: 2.6rem; height: 3px; border-radius: 0 0 3px 3px; background: var(--cc-brass); }
+.cc-card:hover { transform: translateY(-3px); border-color: var(--cc-brass); }
+.cc-card h3 { margin-top: .6rem; }
+
+/* Details blocks as the FAQ */
+.cc-faq .wp-block-details { margin: 0; }
+.cc-faq .wp-block-details > summary { margin: 0; }
+
+/* Lead paragraph and hero list */
+.cc-landing .cc-hero__lead { margin-bottom: 1.6rem; }
+.cc-landing .cc-proof { margin-top: 1.8rem; }
+
 @media (prefers-reduced-motion: reduce) {
   .cc-landing * { transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 .cc-landing { scroll-behavior: smooth; }
 html:has(.cc-landing) { scroll-padding-top: 5rem; scroll-behavior: smooth; }
-@media (forced-colors: active) { .cc-btn, .cc-btn--ghost, .cc-card, .cc-tier { border: 1px solid CanvasText; } }
+@media (forced-colors: active) { .cc-btn, .cc-btn--ghost, .cc-card, .cc-tier, .cc-landing .wp-block-button__link { border: 1px solid CanvasText; } }
 
 /* Phone call to action: a bar with the price and a See plans button once the hero has scrolled away, hidden again at the pricing. */
 .cc-sticky {
