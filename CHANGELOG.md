@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Freemius legal wording
+
+- The Privacy and Terms page templates now carry the wording Freemius asks sellers to publish. Privacy names Freemius, Inc. as Merchant of Record, lists the data it collects (name, email address, billing details, transaction information), says why (payments, subscriptions and licenses, billing support), and links its privacy policy. Terms say Freemius handles payment, billing and sales taxes, that its checkout terms also apply, and that I stay responsible for the theme and its support. "Last updated" is now November 27, 2026.
+- The live Privacy and Terms pages are block content. Paste the same wording into them in the editor; these templates are the fallback.
+
 ## 3.61.2 — Product names with "&" read correctly in checkout and email
 
 - The Freemius checkout title for Cobble & Candle was sent as "Cobble &amp;amp; Candle", and the "Ask about" form on its page put "Note about Cobble &amp;amp; Candle" in the subject. Both now carry a plain "&".
