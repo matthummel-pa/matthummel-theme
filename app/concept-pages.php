@@ -1197,6 +1197,48 @@ function mh_seed_project_concept_narrative(int $post_id, array $seed, bool $forc
 }
 
 /** One-time: enrich CPT projects with on-site concept narrative + flush rewrites. */
+/**
+ * Give the Cobble & Candle landing page its block content once.
+ *
+ * The page copy is core blocks in post_content (edited in the block editor). This copies resources/data/cc-landing.html into the
+ * page that uses the landing template, only when that page has no content yet, so Matt's edits are never overwritten.
+ */
+function mh_seed_cc_landing_content(): void
+{
+    if (get_option('mh_cc_landing_seeded_v1') === '1') {
+        return;
+    }
+
+    $pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => ['publish', 'draft', 'private'],
+        'numberposts' => 5,
+        'no_found_rows' => true,
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'template-cc-landing.blade.php',
+    ]);
+    if ($pages === []) {
+        return;
+    }
+
+    $file = get_theme_file_path('resources/data/cc-landing.html');
+    $markup = is_readable($file) ? (string) file_get_contents($file) : '';
+    if ($markup === '') {
+        return;
+    }
+
+    // The seed is theme-owned markup, so keep the post filters (kses) from stripping classes when no administrator is signed in.
+    kses_remove_filters();
+    foreach ($pages as $page) {
+        if (trim((string) $page->post_content) === '') {
+            wp_update_post(['ID' => $page->ID, 'post_content' => wp_slash($markup)]);
+        }
+    }
+    kses_init();
+    update_option('mh_cc_landing_seeded_v1', '1', false);
+}
+add_action('init', __NAMESPACE__.'\\mh_seed_cc_landing_content', 30);
+
 function mh_seed_concept_pages_v1(): void
 {
     if (get_option('mh_concept_pages_seeded_v1')) {
@@ -2046,6 +2088,23 @@ function mh_apply_product_catalog_v22(): void
 }
 
 /**
+ * One-time: Cobble & Candle's screenshots are the fresh 1.5.1 captures (resources/images/products/cobbleandcandle/new/). Upserts only Cobble & Candle.
+ *
+ * @since 3.63.0
+ */
+function mh_apply_product_catalog_v23(): void
+{
+    if (get_option('mh_product_catalog_v23') || wp_installing()) {
+        return;
+    }
+
+    $catalog = mh_product_catalog_seed_data();
+    if (is_array($catalog['cobbleandcandle'] ?? null) && mh_upsert_catalog_product('cobbleandcandle', $catalog['cobbleandcandle'], true) > 0) {
+        update_option('mh_product_catalog_v23', true);
+    }
+}
+
+/**
  * One-time: TOCflow plugin install path (Plugins, not Appearance → Themes).
  */
 function mh_apply_product_catalog_v8(): void
@@ -2162,6 +2221,7 @@ add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v19', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v20', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v21', 46);
 add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v22', 46);
+add_action('init', __NAMESPACE__.'\\mh_apply_product_catalog_v23', 47);
 add_action('init', __NAMESPACE__.'\\mh_add_product_type_rewrites', 11);
 add_filter('post_type_link', __NAMESPACE__.'\\mh_filter_product_type_permalink', 10, 2);
 add_action('init', __NAMESPACE__.'\\mh_maybe_flush_concept_rewrites', 99);
