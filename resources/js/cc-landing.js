@@ -3,6 +3,103 @@ import { initFreemiusCheckout } from './freemius-checkout.js'
 import { trackEvent } from './track.js'
 import { initConsent } from './consent.js'
 
+// Screenshot viewer. Every screenshot (an image inside .cc-shot) becomes a button that opens the full image, uncropped, in a native
+// dialog with previous / next, a counter, Esc to close and focus returned to the screenshot. Without JavaScript the images stay plain.
+function initLightbox() {
+  const images = Array.from(document.querySelectorAll('.cc-shot img'))
+  if (!images.length || typeof HTMLDialogElement === 'undefined') return
+
+  const make = (tag, className, text) => {
+    const el = document.createElement(tag)
+    if (className) el.className = className
+    if (text) el.textContent = text
+    return el
+  }
+  const iconButton = (className, label, glyph) => {
+    const button = make('button', className)
+    button.type = 'button'
+    button.setAttribute('aria-label', label)
+    button.append(make('span', 'cc-lightbox__glyph', glyph))
+    button.firstChild.setAttribute('aria-hidden', 'true')
+    return button
+  }
+
+  const dialog = make('dialog', 'cc-lightbox')
+  dialog.setAttribute('aria-label', 'Screenshot viewer')
+  const bar = make('div', 'cc-lightbox__bar')
+  const count = make('p', 'cc-lightbox__count')
+  const close = iconButton('cc-lightbox__close', 'Close', '\u00d7')
+  const stage = make('div', 'cc-lightbox__stage')
+  const prev = iconButton('cc-lightbox__nav cc-lightbox__nav--prev', 'Previous screenshot', '\u2039')
+  const next = iconButton('cc-lightbox__nav cc-lightbox__nav--next', 'Next screenshot', '\u203a')
+  const figure = make('figure', 'cc-lightbox__figure')
+  const big = make('img', 'cc-lightbox__img')
+  const caption = make('figcaption', 'cc-lightbox__caption')
+  big.addEventListener('load', () => big.classList.remove('is-loading'))
+  big.addEventListener('error', () => big.classList.remove('is-loading'))
+  figure.append(big, caption)
+  stage.append(prev, figure, next)
+  bar.append(count, close)
+  dialog.append(bar, stage)
+  document.body.append(dialog)
+
+  let index = 0
+  let opener = null
+
+  const show = (i) => {
+    index = (i + images.length) % images.length
+    const source = images[index]
+    const src = source.currentSrc || source.src
+    // Dim the picture until the new one has loaded, so the old image never shows under the new caption.
+    if (big.getAttribute('src') !== src) big.classList.add('is-loading')
+    big.src = src
+    big.alt = source.alt || ''
+    caption.textContent = source.alt || ''
+    count.textContent = `${index + 1} of ${images.length}`
+    prev.hidden = next.hidden = images.length < 2
+  }
+
+  const open = (i, from) => {
+    opener = from
+    show(i)
+    if (!dialog.open) dialog.showModal()
+    document.documentElement.classList.add('cc-lightbox-open')
+    const name = (images[index].src.split('/').pop() || '').replace(/\.[a-z0-9]+$/i, '')
+    trackEvent('cc_screenshot_open', { cc_shot: name })
+  }
+
+  images.forEach((img, i) => {
+    const button = make('button', 'cc-zoom')
+    button.type = 'button'
+    button.setAttribute('aria-label', `Enlarge screenshot: ${img.alt || 'screenshot'}`)
+    img.replaceWith(button)
+    button.append(img)
+    button.addEventListener('click', () => open(i, button))
+  })
+
+  prev.addEventListener('click', () => show(index - 1))
+  next.addEventListener('click', () => show(index + 1))
+  close.addEventListener('click', () => dialog.close())
+  // A click on the dark area around the picture closes it; a click on the picture, bar or buttons does not.
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog || event.target === stage || event.target === figure) dialog.close()
+  })
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      show(index - 1)
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      show(index + 1)
+    }
+  })
+  dialog.addEventListener('close', () => {
+    document.documentElement.classList.remove('cc-lightbox-open')
+    if (opener && typeof opener.focus === 'function') opener.focus()
+    opener = null
+  })
+}
+
 // Light / dark switch. The head script has already set data-cc-theme from the saved choice or the system setting; this wires the
 // button (aria-pressed is true while light mode is on), saves the choice in localStorage (no cookie), and follows the system
 // setting until the visitor picks one.
@@ -80,6 +177,7 @@ function initStickyBar() {
 }
 
 initTheme()
+initLightbox()
 initTracking()
 initStickyBar()
 initFreemiusCheckout()
