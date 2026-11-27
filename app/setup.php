@@ -345,6 +345,15 @@ function mh_permalink_from_posts(array $posts): string
  */
 const MH_CONSENT_REGIONS = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'];
 
+/**
+ * Placeholder switch for Google Ads. Off until the Ads account and its Tag Manager tags exist (docs/gtm/google-ads-setup.md).
+ * Return true from the `mh_google_ads_enabled` filter to grant ad consent outside the consent regions and word the banner for ads.
+ */
+function mh_google_ads_enabled(): bool
+{
+    return (bool) apply_filters('mh_google_ads_enabled', false);
+}
+
 function mh_gtm_container_id(): string
 {
     if (current_user_can('manage_options')) {
@@ -355,7 +364,7 @@ function mh_gtm_container_id(): string
 }
 
 /**
- * Consent Mode v2 defaults first: analytics granted everywhere except the EEA, the UK and Switzerland (denied there until the visitor says yes); ads denied everywhere, then the container snippet. The marks keep LiteSpeed from delaying either script.
+ * Consent Mode v2 defaults first: analytics granted everywhere except the EEA, the UK and Switzerland (denied there until the visitor says yes); ads denied everywhere unless mh_google_ads_enabled() is on, then the container snippet. The marks keep LiteSpeed from delaying either script.
  */
 add_action('wp_head', function (): void {
     $id = mh_gtm_container_id();
@@ -363,13 +372,14 @@ add_action('wp_head', function (): void {
         return;
     }
 
+    $ads = mh_google_ads_enabled() ? 'granted' : 'denied';
     $js = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 '
-        ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});
+        ."gtag('consent','default',{ad_storage:'".$ads."',ad_user_data:'".$ads."',ad_personalization:'".$ads."',analytics_storage:'granted'});
 "
         ."gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:".wp_json_encode(MH_CONSENT_REGIONS).',wait_for_update:500});
 '
-        ."try{var c=localStorage.getItem('mh-consent');if(c)gtag('consent','update',{analytics_storage:c==='granted'?'granted':'denied'})}catch(e){}
+        ."try{var c=localStorage.getItem('mh-consent');if(c){var v=c==='granted'?'granted':'denied';gtag('consent','update',{analytics_storage:v".($ads === 'granted' ? ",ad_storage:v,ad_user_data:v,ad_personalization:v" : '')."})}}catch(e){}
 "
         ."(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',".wp_json_encode($id).');';
 

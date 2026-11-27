@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.62.0 — Google Ads switch for the Cobble & Candle landing page (off)
+
+- Added a placeholder switch for Google Ads, `mh_google_ads_enabled()`, **off by default**. While it is off, nothing changes for visitors: ad storage stays denied everywhere and the banner says "Analytics cookies".
+- When Ads is ready, return `true` from the `mh_google_ads_enabled` filter. Ad storage, ad user data and ad personalization are then granted outside the EEA, UK and Switzerland and denied inside until the visitor says yes, and the banner covers analytics and Google Ads in one answer.
+- The Cobble & Candle landing page is forced to `index, follow` through `wp_robots` and `rank_math/frontend/robots`, overriding the `noindex` set in Rank Math on that page. If the page is still missing from `sitemap_index.xml`, clear the page's Robots Meta in Rank Math, because the sitemap reads that saved setting.
+- The landing page footer has a "Cookie choices" button that reopens the banner, as the main site footer does.
+- Google Ads conversion tags go inside the Tag Manager container, not in the theme. Steps: `docs/gtm/google-ads-setup.md`. The privacy policy page must mention Google Ads cookies before the switch goes on.
+
 ## 3.61.2 — Product names with "&" read correctly in checkout and email
 
 - The Freemius checkout title for Cobble & Candle was sent as "Cobble &amp;amp; Candle", and the "Ask about" form on its page put "Note about Cobble &amp;amp; Candle" in the subject. Both now carry a plain "&".

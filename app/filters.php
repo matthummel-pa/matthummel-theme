@@ -81,6 +81,37 @@ add_filter('rank_math/frontend/robots', function (array $robots): array {
     return $robots;
 }, 20);
 
+/**
+ * Landing pages that must be indexed whatever Rank Math's per-page robots setting says.
+ *
+ * @var list<string>
+ */
+const MH_FORCE_INDEX_TEMPLATES = ['template-cc-landing.blade.php'];
+
+function mh_is_force_index_template(): bool
+{
+    return is_page() && in_array(page_template_key((int) get_queried_object_id()), MH_FORCE_INDEX_TEMPLATES, true);
+}
+
+add_filter('wp_robots', function (array $robots): array {
+    if (! mh_is_force_index_template()) {
+        return $robots;
+    }
+    unset($robots['noindex'], $robots['nofollow']);
+
+    return $robots;
+}, 30);
+
+add_filter('rank_math/frontend/robots', function (array $robots): array {
+    if (! mh_is_force_index_template()) {
+        return $robots;
+    }
+    $robots['index'] = 'index';
+    $robots['follow'] = 'follow';
+
+    return $robots;
+}, 30);
+
 add_filter('document_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('wpseo_title', __NAMESPACE__.'\\mh_filter_document_title', 99);
 add_filter('rank_math/frontend/title', __NAMESPACE__.'\\mh_filter_document_title', 99);

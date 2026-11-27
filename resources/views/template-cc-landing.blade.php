@@ -313,6 +313,9 @@
       @foreach ($links as [$label, $url])
         <a href="{{ esc_url($url) }}">{{ $label }}</a>
       @endforeach
+      @if (\App\mh_gtm_container_id() !== '')
+        <button type="button" class="cc-linkbtn" data-consent-open>{{ __('Cookie choices', 'sage') }}</button>
+      @endif
     </nav>
   </div>
 </footer>

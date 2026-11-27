@@ -251,7 +251,9 @@
 .cc-footer p { margin: 0 0 .4rem; max-width: 42rem; }
 .cc-footer nav { display: flex; flex-wrap: wrap; gap: .4rem 1.3rem; }
 .cc-footer nav a { color: var(--cc-parch); text-decoration: none; font-weight: 700; }
-.cc-footer nav a:hover { color: var(--cc-glow); text-decoration: underline; }
+.cc-footer nav a:hover, .cc-linkbtn:hover { color: var(--cc-glow); text-decoration: underline; }
+.cc-linkbtn { padding: 0; border: 0; background: none; color: var(--cc-parch); font: inherit; font-weight: 700; cursor: pointer; }
+.cc-linkbtn:focus-visible { outline: 3px solid var(--cc-glow); outline-offset: 2px; }
 @media (min-width: 800px) { .cc-footer__in { grid-template-columns: auto 1fr auto; align-items: start; } }
 
 @media (prefers-reduced-motion: reduce) {
