@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.63.1 — Cobble & Candle landing page: screenshot viewer, even spacing, light and dark
+
+- Every screenshot on the landing page opens a larger version in a popup. The popup shows the whole image (the tiles crop it), has previous and next buttons and a counter, closes with Esc, the Close button or a click outside the picture, and returns focus to the screenshot you opened. Arrow keys move between screenshots. Without JavaScript the images stay plain. Each open sends `cc_screenshot_open` (the image name only) to Tag Manager.
+- Spacing: WordPress's block-gap margin and an over-strong reset were flattening the page's own spacing, so cards sat at uneven heights and parts of sections bunched together. The page's spacing rules now apply, with more room between headings, intros and grids, between tiles and their captions, and in the hero. Phones get full-width buttons and larger gaps, and the header "See plans" button no longer wraps.
+- A Light / Dark switch in the header. It follows the visitor's system setting until they choose, saves the choice in the browser (no cookie), and applies it before first paint. The light palette keeps text and accents above 4.5:1 contrast; the pricing panel and closing band keep their colours in both modes, and the header logo swaps to the light version.
+
 ## 3.63.0 — Cobble & Candle landing page rebuilt from core blocks
 
 - The landing page copy is now block content, built from core blocks (Group, Heading, Paragraph, Image, Buttons, List and Details) and edited in the block editor on the live site. The Blade template only draws the header, the sticky price bar and the footer around `the_content()`.
